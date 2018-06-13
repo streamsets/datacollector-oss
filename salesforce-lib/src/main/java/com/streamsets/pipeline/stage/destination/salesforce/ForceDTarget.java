@@ -30,7 +30,7 @@ import com.streamsets.pipeline.lib.salesforce.ForceTargetConfigBean;
     description = "Writes data to Salesforce",
     icon = "salesforce.png",
     recordsByRef = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/Salesforce.html#task_ncv_153_rx"
+    onlineHelpRefUrl ="index.html?contextID=task_ncv_153_rx"
 )
 
 @ConfigGroups(value = Groups.class)

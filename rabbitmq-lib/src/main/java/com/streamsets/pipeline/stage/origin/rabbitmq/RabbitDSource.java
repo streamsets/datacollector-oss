@@ -33,7 +33,7 @@ import com.streamsets.pipeline.lib.rabbitmq.config.Groups;
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     upgrader = RabbitSourceUpgrader.class,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/RabbitMQ.html#task_hrz_mq1_h5"
+    onlineHelpRefUrl ="index.html?contextID=task_hrz_mq1_h5"
 )
 @ConfigGroups(value = Groups.class)
 @HideConfigs(value = {"conf.dataFormatConfig.compression"})

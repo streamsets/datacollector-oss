@@ -41,7 +41,7 @@ import com.streamsets.pipeline.lib.mqtt.MqttClientConfigBean;
 
     },
     recordsByRef = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/MQTTPublisher.html#task_vbn_cyt_lz",
+    onlineHelpRefUrl ="index.html?contextID=task_vbn_cyt_lz",
     upgrader = MqttClientTargetUpgrader.class
 )
 @ConfigGroups(Groups.class)

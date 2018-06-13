@@ -29,7 +29,7 @@ import java.util.List;
     label = "Aerospike",
     description = "Writes data to Aerospike",
     icon = "aerospike.png",
-    onlineHelpRefUrl = "index.html#datacollector/UserGuide/Destinations/Aerospike.html#task_j3q_tpr_4cb"
+    onlineHelpRefUrl = "index.html?contextID=task_j3q_tpr_4cb"
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

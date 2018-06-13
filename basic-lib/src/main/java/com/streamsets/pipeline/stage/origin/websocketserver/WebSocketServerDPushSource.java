@@ -36,7 +36,7 @@ import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
     icon="websockets_multithreaded.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/WebSocketServer.html#task_mzv_cvc_3z",
+    onlineHelpRefUrl ="index.html?contextID=task_mzv_cvc_3z",
     upgrader = WebSocketServerPushSourceUpgrader.class
 )
 @ConfigGroups(Groups.class)

@@ -31,7 +31,7 @@ import com.streamsets.pipeline.stage.config.elasticsearch.Groups;
     description = "Read data from an Elasticsearch cluster",
     icon = "elasticsearch_multithreaded.png",
     resetOffset = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/Elasticsearch.html#task_pmh_xpm_2z"
+    onlineHelpRefUrl ="index.html?contextID=task_pmh_xpm_2z"
 )
 @ConfigGroups(Groups.class)
 public class ElasticsearchDSource extends DPushSource {

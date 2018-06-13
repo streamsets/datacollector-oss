@@ -46,7 +46,7 @@ import java.util.List;
     description = "Write records to JDBC and enrich records with generated columns",
     upgrader = JdbcTeeUpgrader.class,
     icon = "rdbms.png",
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/JDBCTee.html#task_qpj_ncy_hw"
+    onlineHelpRefUrl ="index.html?contextID=task_qpj_ncy_hw"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

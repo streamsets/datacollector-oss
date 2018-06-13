@@ -30,7 +30,7 @@ import java.util.List;
     label = "Field Masker",
     description = "Masks field values",
     icon = "mask.png",
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/FieldMasker.html#task_vgg_z44_wq"
+    onlineHelpRefUrl ="index.html?contextID=task_vgg_z44_wq"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

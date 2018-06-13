@@ -38,7 +38,7 @@ import com.streamsets.pipeline.lib.coap.Groups;
         ExecutionMode.EMR_BATCH
     },
     recordsByRef = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/CoAPClient.html#task_d2p_w3n_sz"
+    onlineHelpRefUrl ="index.html?contextID=task_d2p_w3n_sz"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

@@ -34,7 +34,7 @@ import com.streamsets.pipeline.stage.common.CredentialsConfig;
     icon = "jms.png",
     upgrader = JmsTargetUpgrader.class,
     recordsByRef = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/JMSProducer.html#task_udk_yw5_n1b\n",
+    onlineHelpRefUrl ="index.html?contextID=task_udk_yw5_n1b\n",
     services = @ServiceDependency(
       service = DataFormatGeneratorService.class,
       configuration = {

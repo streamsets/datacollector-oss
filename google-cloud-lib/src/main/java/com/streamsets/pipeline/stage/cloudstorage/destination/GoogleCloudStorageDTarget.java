@@ -29,7 +29,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
     description = "Writes to google cloud storage.",
     icon = "cloud-storage-logo.png",
     producesEvents = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/GCS.html#task_vn4_nrl_nbb"
+    onlineHelpRefUrl ="index.html?contextID=task_vn4_nrl_nbb"
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

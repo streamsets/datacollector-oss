@@ -27,7 +27,7 @@ import com.streamsets.pipeline.config.DataFormat;
     version = 3,
     label = "Write to Kafka",
     description = "Writes records to Kafka as SDC Records",
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Pipeline_Configuration/ErrorHandling.html#concept_kgc_l4y_5r",
+    onlineHelpRefUrl ="index.html?contextID=concept_kgc_l4y_5r",
     upgrader = KafkaTargetUpgrader.class)
 @ErrorStage
 @HideConfigs(preconditions = true, onErrorRecord = true, value = {

@@ -29,7 +29,7 @@ import com.streamsets.pipeline.stage.bigquery.lib.Groups;
     icon="bigquery.png",
     producesEvents = false,
     upgrader = BigQueryTargetUpgrader.class,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/BigQuery.html#task_gxn_dsk_dbb"
+    onlineHelpRefUrl ="index.html?contextID=task_gxn_dsk_dbb"
 )
 @ConfigGroups(Groups.class)
 public class BigQueryDTarget extends DTarget {

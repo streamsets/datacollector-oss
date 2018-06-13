@@ -30,7 +30,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DSource;
   description = "Sensor Reader. For development only.",
   execution = ExecutionMode.EDGE,
   icon = "sensor.png",
-  onlineHelpRefUrl = "index.html#datacollector/UserGuide/Pipeline_Design/DevStages.html#concept_czx_ktn_ht"
+  onlineHelpRefUrl = "index.html?contextID=concept_czx_ktn_ht"
 )
 @ConfigGroups(Groups.class)
 public class SensorReaderDSource extends DSource {

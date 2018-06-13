@@ -28,7 +28,7 @@ import com.streamsets.pipeline.api.StageDef;
     label = "Write to Elasticsearch",
     description = "",
     icon = "",
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/Elasticsearch.html#task_uns_gtv_4r",
+    onlineHelpRefUrl ="index.html?contextID=task_uns_gtv_4r",
     upgrader = ElasticsearchDTargetUpgrader.class
 )
 @ErrorStage

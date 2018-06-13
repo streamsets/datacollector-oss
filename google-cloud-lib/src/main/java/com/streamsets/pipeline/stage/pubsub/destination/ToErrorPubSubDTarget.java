@@ -26,7 +26,7 @@ import com.streamsets.pipeline.config.DataFormat;
     version = 1,
     label = "Write to Google Pub Sub",
     description = "Writes error records to Google Pub Sub",
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Pipeline_Configuration/ErrorHandling.html#concept_kgc_l4y_5r"
+    onlineHelpRefUrl ="index.html?contextID=concept_kgc_l4y_5r"
 )
 @ErrorStage
 @HideConfigs(preconditions = true, onErrorRecord = true, value = {

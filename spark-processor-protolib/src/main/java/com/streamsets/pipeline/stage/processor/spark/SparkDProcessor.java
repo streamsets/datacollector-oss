@@ -31,7 +31,7 @@ import java.util.concurrent.Semaphore;
     description = "Process Records in Spark",
     icon = "spark-logo-hd.png",
     execution = {ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_MESOS_STREAMING, ExecutionMode.CLUSTER_YARN_STREAMING},
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/Spark.html#task_g1p_gqn_zx",
+    onlineHelpRefUrl ="index.html?contextID=task_g1p_gqn_zx",
     privateClassLoader = true
 )
 @GenerateResourceBundle

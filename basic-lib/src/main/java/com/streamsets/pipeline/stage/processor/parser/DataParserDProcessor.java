@@ -38,7 +38,7 @@ import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
       }
     ),
     upgrader = DataParserUpgrader.class,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/DataParser.html#task_cx3_2yk_r1b"
+    onlineHelpRefUrl ="index.html?contextID=task_cx3_2yk_r1b"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

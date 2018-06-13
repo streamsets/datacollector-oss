@@ -28,7 +28,7 @@ import com.streamsets.pipeline.stage.processor.fieldreplacer.config.ReplacerConf
     label="Field Replacer",
     description = "Replaces field values.",
     icon="replacer.png",
-    onlineHelpRefUrl = "index.html#datacollector/UserGuide/Processors/FieldReplacer.html#task_fk5_kd3_4cb"
+    onlineHelpRefUrl = "index.html?contextID=task_fk5_kd3_4cb"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

@@ -35,7 +35,7 @@ import com.streamsets.pipeline.api.impl.ClusterSource;
   icon = "hdfs.png",
   privateClassLoader = true,
   upgrader = ClusterHdfsSourceUpgrader.class,
-  onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/HadoopFS-origin.html#task_hgl_vgn_vs"
+  onlineHelpRefUrl ="index.html?contextID=task_hgl_vgn_vs"
 )
 @ConfigGroups(value = Groups.class)
 @HideConfigs(value = {"clusterHDFSConfigBean.dataFormatConfig.compression", "clusterHDFSConfigBean.dataFormatConfig.includeCustomDelimiterInTheText"})

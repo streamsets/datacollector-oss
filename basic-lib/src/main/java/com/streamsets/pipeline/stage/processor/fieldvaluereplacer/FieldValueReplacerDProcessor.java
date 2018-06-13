@@ -34,7 +34,7 @@ import java.util.List;
     label="Value Replacer",
     description = "Replaces null values with a constant and replaces values with NULL",
     icon="replacer.png",
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/ValueReplacer.html#task_ihq_ymf_zq",
+    onlineHelpRefUrl ="index.html?contextID=task_ihq_ymf_zq",
     upgrader = FieldValueReplacerUpgrader.class
 )
 @ConfigGroups(Groups.class)

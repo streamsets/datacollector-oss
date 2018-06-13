@@ -46,7 +46,7 @@ import java.util.List;
     description = "Insert, update, delete data to a JDBC destination.",
     upgrader = JdbcTargetUpgrader.class,
     icon = "rdbms.png",
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/JDBCProducer.html#task_cx3_lhh_ht"
+    onlineHelpRefUrl ="index.html?contextID=task_cx3_lhh_ht"
 )
 @ConfigGroups(value = Groups.class)
 @HideConfigs(value = {

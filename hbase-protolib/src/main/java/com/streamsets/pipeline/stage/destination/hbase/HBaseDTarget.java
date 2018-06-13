@@ -38,7 +38,7 @@ import java.util.List;
     icon = "hbase.png",
     privateClassLoader = true,
     upgrader = HBaseTargetUpgrader.class,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/HBase.html#task_pyq_qx5_vr"
+    onlineHelpRefUrl ="index.html?contextID=task_pyq_qx5_vr"
 )
 @ConfigGroups(Groups.class)
 public class HBaseDTarget extends DTarget {

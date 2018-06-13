@@ -33,7 +33,7 @@ import com.streamsets.pipeline.lib.eventhubs.Groups;
     icon = "event-hubs-multithreaded.png",
     execution = {ExecutionMode.STANDALONE},
     recordsByRef = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/AzureEventHub.html#task_t14_c5q_1bb"
+    onlineHelpRefUrl ="index.html?contextID=task_t14_c5q_1bb"
 )
 @HideConfigs({
     "consumerConfigBean.dataFormatConfig.jsonContent"

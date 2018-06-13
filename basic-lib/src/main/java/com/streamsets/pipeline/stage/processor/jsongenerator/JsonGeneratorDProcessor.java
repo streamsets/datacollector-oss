@@ -29,7 +29,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     label = "JSON Generator",
     description = "Serializes a field to a string field in JSON format",
     icon = "json.png",
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/JSONGenerator.html#task_kgk_3w1_h1b"
+    onlineHelpRefUrl ="index.html?contextID=task_kgk_3w1_h1b"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

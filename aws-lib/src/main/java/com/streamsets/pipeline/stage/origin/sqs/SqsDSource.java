@@ -34,7 +34,7 @@ import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     resetOffset = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/AmazonSQS.html#task_jxn_nnm_5bb",
+    onlineHelpRefUrl ="index.html?contextID=task_jxn_nnm_5bb",
     upgrader = SqsUpgrader.class,
     services = @ServiceDependency(
       service = DataFormatParserService.class,

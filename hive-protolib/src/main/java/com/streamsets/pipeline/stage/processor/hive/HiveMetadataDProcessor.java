@@ -42,7 +42,7 @@ import java.util.TimeZone;
     icon="metadata.png",
     outputStreams = HiveMetadataOutputStreams.class,
     privateClassLoader = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/HiveMetadata.html#task_hpg_pft_zv",
+    onlineHelpRefUrl ="index.html?contextID=task_hpg_pft_zv",
     upgrader = HiveMetadataProcessorUpgrader.class
 )
 

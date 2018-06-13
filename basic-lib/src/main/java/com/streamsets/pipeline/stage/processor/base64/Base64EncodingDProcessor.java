@@ -28,7 +28,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     label = "Base64 Field Encoder",
     icon = "base64encoder.png",
     description = "Encodes a Byte Array field into a Base64 encoded Byte Array",
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/Base64Encoder.html#task_ekg_ppy_kv"
+    onlineHelpRefUrl ="index.html?contextID=task_ekg_ppy_kv"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

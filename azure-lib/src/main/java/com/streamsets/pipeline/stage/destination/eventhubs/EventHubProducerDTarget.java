@@ -30,7 +30,7 @@ import com.streamsets.pipeline.lib.eventhubs.Groups;
     description = "Writes data to Azure Event Hub",
     icon = "event-hubs.png",
     recordsByRef = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/AzureEventHubProducer.html#task_in4_f5q_1bb"
+    onlineHelpRefUrl ="index.html?contextID=task_in4_f5q_1bb"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

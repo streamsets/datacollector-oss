@@ -36,7 +36,7 @@ import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
     resetOffset = true,
     producesEvents = true,
     upgrader = TableJdbcSourceUpgrader.class,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/MultiTableJDBCConsumer.html#task_kst_m4w_4y"
+    onlineHelpRefUrl ="index.html?contextID=task_kst_m4w_4y"
 )
 
 @ConfigGroups(value = Groups.class)

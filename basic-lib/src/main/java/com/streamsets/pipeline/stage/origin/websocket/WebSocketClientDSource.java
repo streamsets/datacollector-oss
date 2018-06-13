@@ -32,7 +32,7 @@ import com.streamsets.pipeline.lib.websocket.Groups;
     icon = "websockets.png",
     execution = {ExecutionMode.STANDALONE, ExecutionMode.EDGE},
     recordsByRef = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/WebSocketClient.html#task_u4n_rzk_fbb",
+    onlineHelpRefUrl ="index.html?contextID=task_u4n_rzk_fbb",
     upgrader = WebSocketClientSourceUpgrader.class
 )
 @HideConfigs({

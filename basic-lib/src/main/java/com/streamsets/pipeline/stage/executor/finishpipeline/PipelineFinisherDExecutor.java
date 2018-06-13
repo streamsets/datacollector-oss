@@ -26,7 +26,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DExecutor;
     label = "Pipeline Finisher Executor",
     description = "Forces pipeline to transition to Finished after receiving an event.",
     icon = "finisher.png",
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Executors/PipelineFinisher.html#task_lrm_pws_3z"
+    onlineHelpRefUrl ="index.html?contextID=task_lrm_pws_3z"
 )
 
 public class PipelineFinisherDExecutor extends DExecutor {

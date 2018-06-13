@@ -41,7 +41,7 @@ import java.util.List;
     description = "Lookup values via JDBC to enrich records.",
     icon = "rdbms.png",
     upgrader = JdbcLookupProcessorUpgrader.class,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/JDBCLookup.html#task_kbr_2cy_hw"
+    onlineHelpRefUrl ="index.html?contextID=task_kbr_2cy_hw"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

@@ -30,7 +30,7 @@ import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
   description = "Writes data to MapR Streams",
   icon = "mapr_es.png",
     upgrader = MapRStreamsTargetUpgrader.class,
-  onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/MapRStreamsProd.html#task_tbh_nbn_2v"
+  onlineHelpRefUrl ="index.html?contextID=task_tbh_nbn_2v"
 )
 @ConfigGroups(value = MapRStreamsTargetGroups.class)
 @GenerateResourceBundle

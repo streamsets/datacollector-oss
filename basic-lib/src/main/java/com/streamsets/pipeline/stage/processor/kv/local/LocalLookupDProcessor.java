@@ -27,7 +27,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     label = "Static Lookup",
     description = "Performs key-value lookups in static table.",
     icon = "dedup.png",
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/StaticLookup.html#task_xk1_z4r_pv"
+    onlineHelpRefUrl ="index.html?contextID=task_xk1_z4r_pv"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

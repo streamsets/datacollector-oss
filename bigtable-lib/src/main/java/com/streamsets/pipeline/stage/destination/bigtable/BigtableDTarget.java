@@ -29,7 +29,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
     description = "Writes data to Google Cloud Bigtable",
     icon = "bigtable.png",
     privateClassLoader = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/Bigtable.html#task_op4_zmq_tx"
+    onlineHelpRefUrl ="index.html?contextID=task_op4_zmq_tx"
 )
 
 @ConfigGroups(Groups.class)

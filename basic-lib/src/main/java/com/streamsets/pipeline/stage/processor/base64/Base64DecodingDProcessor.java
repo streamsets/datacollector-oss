@@ -28,7 +28,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     label = "Base64 Field Decoder",
     icon = "base64decoder.png",
     description = "Decodes a Base64 encoded Byte Array field",
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/Base64Decoder.html#task_pnn_5py_kv"
+    onlineHelpRefUrl ="index.html?contextID=task_pnn_5py_kv"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

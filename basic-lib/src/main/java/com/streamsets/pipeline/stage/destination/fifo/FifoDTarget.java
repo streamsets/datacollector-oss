@@ -33,7 +33,7 @@ import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
     label = "Named Pipe",
     description = "Sends records to a Named Pipe",
     icon="fifo.png",
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/NamedPipe.html#task_pdv_vdg_gcb"
+    onlineHelpRefUrl ="index.html?contextID=task_pdv_vdg_gcb"
 )
 
 public class FifoDTarget extends DTarget {

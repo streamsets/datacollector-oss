@@ -33,7 +33,7 @@ import java.util.List;
     label = "Field Type Converter",
     description = "Converts the data type of a field(s)",
     icon = "converter.png",
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/FieldTypeConverter.html#task_g23_2tq_wq",
+    onlineHelpRefUrl ="index.html?contextID=task_g23_2tq_wq",
     upgrader = FieldTypeConverterProcessorUpgrader.class
 )
 @ConfigGroups(Groups.class)

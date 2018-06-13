@@ -33,7 +33,7 @@ import com.streamsets.pipeline.lib.mqtt.MqttClientConfigBean;
     icon = "mqtt_multithreaded.png",
     execution = {ExecutionMode.STANDALONE, ExecutionMode.EDGE},
     recordsByRef = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/MQTTSubscriber.html#task_wnz_mxt_lz",
+    onlineHelpRefUrl ="index.html?contextID=task_wnz_mxt_lz",
     upgrader = MqttClientSourceUpgrader.class
 )
 @HideConfigs({

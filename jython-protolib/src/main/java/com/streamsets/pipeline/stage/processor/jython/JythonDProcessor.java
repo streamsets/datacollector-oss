@@ -32,7 +32,7 @@ import com.streamsets.pipeline.stage.processor.scripting.ProcessingModeChooserVa
     icon = "jython.png",
     upgrader = JythonProcessorUpgrader.class,
     producesEvents = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/Jython.html#task_fty_jwx_nr"
+    onlineHelpRefUrl ="index.html?contextID=task_fty_jwx_nr"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

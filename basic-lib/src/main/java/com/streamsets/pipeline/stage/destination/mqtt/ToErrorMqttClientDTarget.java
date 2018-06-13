@@ -37,7 +37,7 @@ import com.streamsets.pipeline.config.DataFormat;
         ExecutionMode.EMR_BATCH
 
     },
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Pipeline_Configuration/ErrorHandling.html#concept_kgc_l4y_5r",
+    onlineHelpRefUrl ="index.html?contextID=concept_kgc_l4y_5r",
     upgrader = MqttClientTargetUpgrader.class
 )
 @HideConfigs(

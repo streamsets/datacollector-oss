@@ -35,7 +35,7 @@ import java.util.List;
     icon="dedup.png",
     outputStreams = OutputStreams.class,
     execution = ExecutionMode.STANDALONE,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/RDeduplicator.html#task_ikr_c2f_zq"
+    onlineHelpRefUrl ="index.html?contextID=task_ikr_c2f_zq"
 )
 @ConfigGroups(Groups.class)
 @HideConfigs(onErrorRecord = true)

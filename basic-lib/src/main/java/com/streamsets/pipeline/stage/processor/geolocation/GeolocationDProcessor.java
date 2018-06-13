@@ -31,7 +31,7 @@ import java.util.List;
     label="Geo IP",
     description = "IP address geolocation using a Maxmind GeoIP2 database file",
     icon="globe.png",
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/GeoIP.html#task_wpz_nhs_ns",
+    onlineHelpRefUrl ="index.html?contextID=task_wpz_nhs_ns",
     upgrader = GeolocationProcessorUpgrader.class
 )
 @ConfigGroups(Groups.class)

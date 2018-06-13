@@ -40,7 +40,7 @@ import com.streamsets.pipeline.stage.origin.lib.MessageConfig;
     execution = ExecutionMode.STANDALONE,
     upgrader = JmsSourceUpgrader.class,
     recordsByRef = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/JMS.html#task_zp1_4ck_dt",
+    onlineHelpRefUrl ="index.html?contextID=task_zp1_4ck_dt",
       services = @ServiceDependency(
       service = DataFormatParserService.class,
       configuration = {

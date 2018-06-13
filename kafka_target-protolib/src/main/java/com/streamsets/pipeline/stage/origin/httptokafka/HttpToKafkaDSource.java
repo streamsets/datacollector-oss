@@ -33,7 +33,7 @@ import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
   execution = ExecutionMode.STANDALONE,
   description = "Receives data via HTTP and writes every HTTP request payload to Kafka",
   icon="httptokafka.png",
-  onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/HTTPtoKafka.html#task_vgx_nqd_dy",
+  onlineHelpRefUrl ="index.html?contextID=task_vgx_nqd_dy",
   upgrader = HttpToKafkaSourceUpgrader.class
 )
 @ConfigGroups(Groups.class)

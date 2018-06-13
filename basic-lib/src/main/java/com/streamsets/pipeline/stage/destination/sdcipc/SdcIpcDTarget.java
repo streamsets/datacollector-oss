@@ -30,7 +30,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
     label = "SDC RPC",
     description = "Sends records via SDC RPC to a Data Collector pipeline that uses an SDC RPC origin",
     icon="sdcipc.png",
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/SDC_RPCdest.html#task_nbl_r2x_dt",
+    onlineHelpRefUrl ="index.html?contextID=task_nbl_r2x_dt",
     upgrader = SdcIpcTargetUpgrader.class
 )
 @ConfigGroups(Groups.class)

@@ -32,7 +32,7 @@ import com.streamsets.pipeline.api.impl.Utils;
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     upgrader = UDPSourceUpgrader.class,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/UDP.html#task_kgn_rcv_1s"
+    onlineHelpRefUrl ="index.html?contextID=task_kgn_rcv_1s"
 )
 
 @ConfigGroups(Groups.class)

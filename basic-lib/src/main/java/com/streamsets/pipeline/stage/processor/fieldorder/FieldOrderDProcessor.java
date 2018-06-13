@@ -29,7 +29,7 @@ import com.streamsets.pipeline.stage.processor.fieldorder.config.OrderConfigBean
   label = "Field Order",
   description = "Order MAP or LIST_MAP fields into LIST_MAP or LIST.",
   icon = "order.png",
-  onlineHelpRefUrl = "index.html#datacollector/UserGuide/Processors/FieldOrder.html#task_myf_wfv_vy"
+  onlineHelpRefUrl = "index.html?contextID=task_myf_wfv_vy"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

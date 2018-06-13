@@ -26,7 +26,7 @@ import com.streamsets.pipeline.stage.destination.hbase.HBaseDTarget;
   label = "MapR DB",
   description = "Writes to a MapR DB",
   icon = "mapr_db.png",
-  onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/MapRDB.html#task_pgk_p2z_yv"
+  onlineHelpRefUrl ="index.html?contextID=task_pgk_p2z_yv"
 )
 @HideConfigs(
   value = {

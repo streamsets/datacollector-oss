@@ -36,7 +36,7 @@ import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
     resetOffset = true,
     producesEvents = true,
     upgrader = AmazonS3SourceUpgrader.class,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/AmazonS3.html#task_gfj_ssv_yq",
+    onlineHelpRefUrl ="index.html?contextID=task_gfj_ssv_yq",
     services = @ServiceDependency(
       service = DataFormatParserService.class,
       configuration = {

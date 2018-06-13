@@ -31,7 +31,7 @@ import com.streamsets.pipeline.stage.bigquery.lib.Groups;
     execution = ExecutionMode.STANDALONE,
     producesEvents = true,
     upgrader = BigQuerySourceUpgrader.class,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/BigQuery.html#task_n5w_ykv_q1b"
+    onlineHelpRefUrl ="index.html?contextID=task_n5w_ykv_q1b"
 )
 @ConfigGroups(Groups.class)
 public class BigQueryDSource extends DSource {

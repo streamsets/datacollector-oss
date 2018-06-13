@@ -34,7 +34,7 @@ import java.util.List;
     label = "Solr",
     description = "Upload data to an Apache Solr",
     icon = "solr.png",
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/Solr.html#task_ld1_phr_wr",
+    onlineHelpRefUrl ="index.html?contextID=task_ld1_phr_wr",
     upgrader = SolrDTargetUpgrader.class
 )
 @ConfigGroups(Groups.class)

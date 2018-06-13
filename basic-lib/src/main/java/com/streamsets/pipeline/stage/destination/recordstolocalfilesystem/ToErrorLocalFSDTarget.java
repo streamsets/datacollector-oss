@@ -32,7 +32,7 @@ import com.streamsets.pipeline.lib.el.TimeEL;
     label = "Write to File",
     description = "Writes records to a local File System as SDC records",
     execution = ExecutionMode.STANDALONE,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/SDCRecordFiles.html#task_e33_3v5_1r"
+    onlineHelpRefUrl ="index.html?contextID=task_e33_3v5_1r"
 )
 @HideConfigs(preconditions = true, onErrorRecord = true)
 @ErrorStage

@@ -31,7 +31,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
     privateClassLoader = true,
     upgrader = HdfsTargetUpgrader.class,
     producesEvents = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/HadoopFS-destination.html#task_m2m_skm_zq"
+    onlineHelpRefUrl ="index.html?contextID=task_m2m_skm_zq"
 )
 @ConfigGroups(Groups.class)
 @HideConfigs(value = {"hdfsTargetConfigBean.dataGeneratorFormatConfig.includeSchema"})

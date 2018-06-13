@@ -29,7 +29,7 @@ import com.streamsets.pipeline.stage.common.mongodb.Groups;
     label = "MongoDB",
     description = "Writes data to MongoDB",
     icon="mongodb.png",
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/MongoDB.html#task_mrc_k5n_4v",
+    onlineHelpRefUrl ="index.html?contextID=task_mrc_k5n_4v",
     upgrader = MongoDBTargetUpgrader.class
 )
 

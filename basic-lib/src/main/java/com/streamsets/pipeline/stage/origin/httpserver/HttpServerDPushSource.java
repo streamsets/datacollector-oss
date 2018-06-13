@@ -39,7 +39,7 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
     icon="httpserver_multithreaded.png",
     execution = {ExecutionMode.STANDALONE, ExecutionMode.EDGE},
     recordsByRef = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/HTTPServer.html#task_pgw_b3b_4y",
+    onlineHelpRefUrl ="index.html?contextID=task_pgw_b3b_4y",
     upgrader = HttpServerPushSourceUpgrader.class
 )
 @ConfigGroups(Groups.class)

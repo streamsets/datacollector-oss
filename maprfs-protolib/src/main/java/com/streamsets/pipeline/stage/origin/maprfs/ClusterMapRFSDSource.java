@@ -30,7 +30,7 @@ import com.streamsets.pipeline.stage.origin.hdfs.cluster.ClusterHdfsDSource;
     libJarsRegex = {"avro-\\d+.*", "avro-mapred.*"},
     icon = "mapr_xd.png",
     privateClassLoader = false,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/MapRFS.html#task_h2p_mb4_lx"
+    onlineHelpRefUrl ="index.html?contextID=task_h2p_mb4_lx"
 )
 @HideConfigs(value =
                  {

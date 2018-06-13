@@ -29,7 +29,7 @@ import com.streamsets.pipeline.config.DataFormat;
     version = 6,
     label = "Write to Kinesis",
     description = "Writes records to Kinesis as SDC Records",
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Pipeline_Configuration/ErrorHandling.html#concept_kgc_l4y_5r",
+    onlineHelpRefUrl ="index.html?contextID=concept_kgc_l4y_5r",
     upgrader = KinesisTargetUpgrader.class
 )
 @ErrorStage

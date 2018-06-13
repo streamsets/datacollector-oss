@@ -30,7 +30,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
     description = "Writes data to Amazon Kinesis",
     icon = "kinesis.png",
     upgrader = KinesisTargetUpgrader.class,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/KinProducer.html#task_q2j_ml4_yr"
+    onlineHelpRefUrl ="index.html?contextID=task_q2j_ml4_yr"
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

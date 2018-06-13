@@ -29,7 +29,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     description = "Flatten XML data into fields of a record",
     upgrader = XMLFlatteningProcessorUpgrader.class,
     icon = "xmlparser.png",
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/XMLFlattener.html#task_pmb_l55_sv"
+    onlineHelpRefUrl ="index.html?contextID=task_pmb_l55_sv"
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

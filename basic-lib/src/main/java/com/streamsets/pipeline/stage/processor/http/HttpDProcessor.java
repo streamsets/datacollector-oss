@@ -31,7 +31,7 @@ import com.streamsets.pipeline.lib.http.Groups;
     icon = "httpclient.png",
     recordsByRef = true,
     upgrader = HttpProcessorUpgrader.class,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/HTTPClient.html#task_z54_1qr_fw"
+    onlineHelpRefUrl ="index.html?contextID=task_z54_1qr_fw"
 )
 @HideConfigs(value = {
     "conf.dataFormatConfig.jsonContent"

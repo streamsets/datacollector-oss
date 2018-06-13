@@ -33,7 +33,7 @@ import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
   description = "Receives records via SDC RPC from a Data Collector pipeline that uses an SDC RPC destination and " +
     "writes them to Kafka",
   icon="sdcipctokafka.png",
-  onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/SDCRPCtoKafka.html#task_il5_gtl_pw",
+  onlineHelpRefUrl ="index.html?contextID=task_il5_gtl_pw",
   upgrader = SdcIpcToKafkaUpgrader.class
 )
 @ConfigGroups(Groups.class)

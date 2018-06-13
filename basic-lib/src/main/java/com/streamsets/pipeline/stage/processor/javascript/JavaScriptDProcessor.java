@@ -42,7 +42,7 @@ import com.streamsets.pipeline.stage.processor.scripting.ProcessingModeChooserVa
     },
     upgrader = JavaScriptProcessorUpgrader.class,
     producesEvents = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/JavaScript.html#task_mzc_1by_nr"
+    onlineHelpRefUrl ="index.html?contextID=task_mzc_1by_nr"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

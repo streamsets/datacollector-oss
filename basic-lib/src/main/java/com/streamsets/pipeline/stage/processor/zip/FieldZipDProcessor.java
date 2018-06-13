@@ -28,7 +28,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     description = "Zips two lists together into one.",
     icon = "zipper.png",
     upgrader = FieldZipProcessorUpgrader.class,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/FieldZip.html#task_nqj_51k_yx"
+    onlineHelpRefUrl ="index.html?contextID=task_nqj_51k_yx"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

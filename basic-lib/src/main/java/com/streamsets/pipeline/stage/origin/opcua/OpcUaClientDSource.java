@@ -31,7 +31,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
     icon = "opcua.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/OPCUAClient.html#task_bqt_mx3_h1b",
+    onlineHelpRefUrl ="index.html?contextID=task_bqt_mx3_h1b",
     upgrader = OpcUaClientSourceUpgrader.class
 )
 @ConfigGroups(Groups.class)

@@ -34,7 +34,7 @@ import java.util.List;
     label="Field Merger",
     description = "Merge fields of like types",
     icon="merge.png",
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/FieldMerger.html#task_ghx_5vl_gt"
+    onlineHelpRefUrl ="index.html?contextID=task_ghx_5vl_gt"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

@@ -28,7 +28,7 @@ import com.streamsets.pipeline.stage.destination.hdfs.metadataexecutor.HdfsMetad
     icon = "mapr_xd.png",
     producesEvents = true,
     privateClassLoader = false,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Executors/MapRFSFileMeta.html#task_v3c_bvh_z1b"
+    onlineHelpRefUrl ="index.html?contextID=task_v3c_bvh_z1b"
 )
 @GenerateResourceBundle
 @PipelineLifecycleStage

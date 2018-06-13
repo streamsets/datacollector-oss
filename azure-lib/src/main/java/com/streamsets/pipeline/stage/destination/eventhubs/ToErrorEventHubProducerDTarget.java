@@ -30,7 +30,7 @@ import com.streamsets.pipeline.config.DataFormat;
     description = "",
     icon = "",
     recordsByRef = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/AzureEventHubProducer.html#task_in4_f5q_1bb"
+    onlineHelpRefUrl ="index.html?contextID=task_in4_f5q_1bb"
 )
 @ErrorStage
 @HideConfigs(preconditions = true, onErrorRecord = true, value = {

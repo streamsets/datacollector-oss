@@ -40,7 +40,7 @@ import com.streamsets.pipeline.lib.websocket.Groups;
         ExecutionMode.EMR_BATCH
 
     },
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/WebSocketClient.html#task_erb_pjn_lz",
+    onlineHelpRefUrl ="index.html?contextID=task_erb_pjn_lz",
     upgrader = WebSocketTargetUpgrader.class
 )
 @ConfigGroups(Groups.class)

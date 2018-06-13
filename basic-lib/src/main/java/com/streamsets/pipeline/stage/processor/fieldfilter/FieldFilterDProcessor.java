@@ -36,7 +36,7 @@ import java.util.List;
     label="Field Remover",
     description="Removes fields from a record",
     icon="filter.png",
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/FieldRemover.html#task_c1j_btr_wq",
+    onlineHelpRefUrl ="index.html?contextID=task_c1j_btr_wq",
     execution = {
         ExecutionMode.STANDALONE,
         ExecutionMode.CLUSTER_BATCH,

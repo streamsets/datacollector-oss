@@ -30,7 +30,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     icon = "kudu.png",
     privateClassLoader = true,
     upgrader = KuduProcessorUpgrader.class,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/KuduLookup.html#task_b5b_dyl_p1b"
+    onlineHelpRefUrl ="index.html?contextID=task_b5b_dyl_p1b"
 )
 
 @ConfigGroups(Groups.class)

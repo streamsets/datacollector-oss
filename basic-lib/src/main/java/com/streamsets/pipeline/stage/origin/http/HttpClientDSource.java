@@ -33,7 +33,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DSource;
     resetOffset = true,
     recordsByRef = true,
     upgrader = HttpClientSourceUpgrader.class,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/HTTPClient.html#task_akl_rkz_5r"
+    onlineHelpRefUrl ="index.html?contextID=task_akl_rkz_5r"
 )
 @HideConfigs(value = {
     "conf.client.numThreads"

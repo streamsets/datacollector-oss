@@ -32,7 +32,7 @@ import java.util.List;
     description="Performs calculations on a field-by-field basis",
     icon="expression.png",
     upgrader = ExpressionProcessorUpgrader.class,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/Expression.html#task_x2h_tv4_yq",
+    onlineHelpRefUrl ="index.html?contextID=task_x2h_tv4_yq",
     execution = {
         ExecutionMode.STANDALONE,
         ExecutionMode.CLUSTER_BATCH,

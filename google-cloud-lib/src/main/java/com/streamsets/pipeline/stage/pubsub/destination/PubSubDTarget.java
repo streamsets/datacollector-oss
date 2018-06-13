@@ -29,7 +29,7 @@ import com.streamsets.pipeline.stage.pubsub.lib.Groups;
     label = "Google Pub Sub Publisher",
     description = "Publishes messages to Google Pub/Sub",
     icon = "pubsub.png",
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/PubSubPublisher.html#task_n1k_sk1_v1b"
+    onlineHelpRefUrl ="index.html?contextID=task_n1k_sk1_v1b"
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

@@ -35,7 +35,7 @@ import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
     resetOffset = true,
     producesEvents = true,
     upgrader = SQLServerCTSourceUpgrader.class,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/SQLServerChange.html#task_vsh_22s_r1b"
+    onlineHelpRefUrl ="index.html?contextID=task_vsh_22s_r1b"
 )
 @GenerateResourceBundle
 @ConfigGroups(Groups.class)

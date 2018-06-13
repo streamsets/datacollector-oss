@@ -35,7 +35,7 @@ import static com.streamsets.pipeline.stage.processor.groovy.GroovyProcessor.GRO
     description = "Processes records using Groovy",
     icon="groovy.png",
     producesEvents = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/Groovy.html#task_asl_bpt_gv"
+    onlineHelpRefUrl ="index.html?contextID=task_asl_bpt_gv"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

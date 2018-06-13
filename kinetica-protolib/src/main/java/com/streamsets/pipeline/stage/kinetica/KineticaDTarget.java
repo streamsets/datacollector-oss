@@ -27,7 +27,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
   label = "KineticaDB",
   description = "Inserts data into KineticaDB",
   icon = "kinetica.png",
-  onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/KineticaDB.html#task_r1q_vxg_qbb"
+  onlineHelpRefUrl ="index.html?contextID=task_r1q_vxg_qbb"
 )
 
 @ConfigGroups(Groups.class)

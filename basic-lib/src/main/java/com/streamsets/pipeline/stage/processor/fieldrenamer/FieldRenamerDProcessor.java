@@ -32,7 +32,7 @@ import java.util.List;
     description = "Rename fields",
     icon="edit.png",
     upgrader = FieldRenamerProcessorUpgrader.class,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/FieldRenamer.html#task_y5g_4hh_ht"
+    onlineHelpRefUrl ="index.html?contextID=task_y5g_4hh_ht"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

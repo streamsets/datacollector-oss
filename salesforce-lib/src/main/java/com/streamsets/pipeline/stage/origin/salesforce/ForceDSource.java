@@ -35,7 +35,7 @@ import com.streamsets.pipeline.lib.salesforce.ForceSourceConfigBean;
     resetOffset = true,
     producesEvents = true,
     upgrader = ForceSourceUpgrader.class,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/Salesforce.html#task_h1n_bs3_rx"
+    onlineHelpRefUrl ="index.html?contextID=task_h1n_bs3_rx"
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

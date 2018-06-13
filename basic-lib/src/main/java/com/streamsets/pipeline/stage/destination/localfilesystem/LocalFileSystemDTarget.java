@@ -31,7 +31,7 @@ import com.streamsets.pipeline.stage.destination.hdfs.HdfsTarget;
     icon = "localfilesystem.png",
     producesEvents = true,
     upgrader = LocalFileSystemTargetUpgrader.class,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/LocalFS.html#task_e33_3v5_1r"
+    onlineHelpRefUrl ="index.html?contextID=task_e33_3v5_1r"
 )
 @ConfigGroups(Groups.class)
 @HideConfigs(value = {

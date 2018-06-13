@@ -26,7 +26,7 @@ import com.streamsets.pipeline.api.*;
     resetOffset = true,
     recordsByRef = true,
     upgrader = MySqlSourceUpgrader.class,
-    onlineHelpRefUrl = "index.html#datacollector/UserGuide/Origins/MySQLBinaryLog.html#task_qbt_kyh_xx"
+    onlineHelpRefUrl = "index.html?contextID=task_qbt_kyh_xx"
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

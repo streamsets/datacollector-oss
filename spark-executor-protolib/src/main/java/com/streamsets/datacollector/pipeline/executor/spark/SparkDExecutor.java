@@ -29,7 +29,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DExecutor;
     label = "Spark Executor",
     description = "Run Spark Applications",
     icon = "spark-logo-hd.png",
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Executors/Spark.html#task_cdw_wxb_1z",
+    onlineHelpRefUrl ="index.html?contextID=task_cdw_wxb_1z",
     producesEvents = true
 )
 @ConfigGroups(Groups.class)

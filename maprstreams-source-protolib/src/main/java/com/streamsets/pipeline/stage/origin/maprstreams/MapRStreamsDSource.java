@@ -40,7 +40,7 @@ import com.streamsets.pipeline.stage.origin.kafka.StandaloneKafkaSourceFactory;
     icon = "mapr_es.png",
     recordsByRef = true,
     upgrader = MapRStreamsSourceUpgrader.class,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/MapRStreamsCons.html#task_bfz_gch_2v"
+    onlineHelpRefUrl ="index.html?contextID=task_bfz_gch_2v"
 )
 @ConfigGroups(value = MapRStreamsSourceGroups.class)
 @HideConfigs(value = {Utils.MAPR_STREAMS_DATA_FORMAT_CONFIG_BEAN_PREFIX + "compression"})

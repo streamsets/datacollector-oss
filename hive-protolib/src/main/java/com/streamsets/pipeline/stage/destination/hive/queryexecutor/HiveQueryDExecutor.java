@@ -34,7 +34,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DExecutor;
     privateClassLoader = true,
     producesEvents = true,
     upgrader = HiveQueryExecutorUpgrader.class,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Executors/HiveQuery.html#task_mgm_4lk_fx"
+    onlineHelpRefUrl ="index.html?contextID=task_mgm_4lk_fx"
 )
 @ConfigGroups(value = Groups.class)
 @HideConfigs({

@@ -35,7 +35,7 @@ import java.util.List;
     label="Log Parser",
     description = "Parses a string field which contains a Log line",
     icon="logparser.png",
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/LogParser.html#task_jm1_b4w_fs"
+    onlineHelpRefUrl ="index.html?contextID=task_jm1_b4w_fs"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

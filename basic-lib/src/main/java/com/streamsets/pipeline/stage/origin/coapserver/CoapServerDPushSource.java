@@ -36,7 +36,7 @@ import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
     icon="coap_multithreaded.png",
     execution = {ExecutionMode.STANDALONE},
     recordsByRef = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/CoAPServer.html#task_hsb_l3n_sz"
+    onlineHelpRefUrl ="index.html?contextID=task_hsb_l3n_sz"
 )
 @ConfigGroups(Groups.class)
 @HideConfigs(value = {

@@ -30,7 +30,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     icon = "hbase.png",
     privateClassLoader = true,
     upgrader = HBaseProcessorUpgrader.class,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/HBaseLookup.html#task_z25_b3q_bw"
+    onlineHelpRefUrl ="index.html?contextID=task_z25_b3q_bw"
 )
 
 @ConfigGroups(Groups.class)

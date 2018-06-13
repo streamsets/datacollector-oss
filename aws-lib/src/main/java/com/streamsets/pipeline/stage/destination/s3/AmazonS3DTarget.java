@@ -34,7 +34,7 @@ import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorServic
   privateClassLoader = true,
   upgrader = AmazonS3TargetUpgrader.class,
   producesEvents = true,
-  onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/AmazonS3.html#task_pxb_j3r_rt",
+  onlineHelpRefUrl ="index.html?contextID=task_pxb_j3r_rt",
   services = @ServiceDependency(
     service = DataFormatGeneratorService.class,
     configuration = {

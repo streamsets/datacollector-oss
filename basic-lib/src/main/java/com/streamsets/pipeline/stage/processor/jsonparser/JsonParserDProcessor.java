@@ -28,7 +28,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     label = "JSON Parser",
     description = "Parses a string field with JSON data",
     icon = "json.png",
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/JSONParser.html#task_kwz_lg2_zq"
+    onlineHelpRefUrl ="index.html?contextID=task_kwz_lg2_zq"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

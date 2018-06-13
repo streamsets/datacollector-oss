@@ -29,7 +29,7 @@ import com.streamsets.pipeline.lib.salesforce.ForceLookupConfigBean;
     label = "Salesforce Lookup",
     description = "Lookup records in Salesforce to enrich records",
     icon = "salesforce.png",
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Processors/SalesforceLookup.html#task_fhn_yrk_yx"
+    onlineHelpRefUrl ="index.html?contextID=task_fhn_yrk_yx"
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

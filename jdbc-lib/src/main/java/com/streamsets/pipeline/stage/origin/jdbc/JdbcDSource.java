@@ -41,7 +41,7 @@ import com.streamsets.pipeline.lib.jdbc.UnknownTypeActionChooserValues;
     recordsByRef = true,
     resetOffset = true,
     producesEvents = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/JDBCConsumer.html#task_ryz_tkr_bs"
+    onlineHelpRefUrl ="index.html?contextID=task_ryz_tkr_bs"
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

@@ -30,7 +30,7 @@ import com.streamsets.pipeline.stage.origin.mongodb.MongoDBDSource;
     icon="mongodb.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/MongoDBOplog.html#task_qj5_drw_4y",
+    onlineHelpRefUrl ="index.html?contextID=task_qj5_drw_4y",
     upgrader = MongoDBOplogSourceUpgrader.class,
     resetOffset = true
 )

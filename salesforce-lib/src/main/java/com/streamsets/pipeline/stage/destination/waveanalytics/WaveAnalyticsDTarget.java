@@ -31,7 +31,7 @@ import com.streamsets.pipeline.lib.waveanalytics.WaveAnalyticsConfigBean;
     icon = "analytics.png",
     recordsByRef = true,
     upgrader = WaveAnalyticsUpgrader.class,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/WaveAnalytics.html#task_mdt_dv3_rx"
+    onlineHelpRefUrl ="index.html?contextID=task_mdt_dv3_rx"
 )
 
 @ConfigGroups(value = Groups.class)

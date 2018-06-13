@@ -32,7 +32,7 @@ import com.streamsets.pipeline.stage.common.mongodb.Groups;
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     producesEvents = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/MongoDB.html#task_mdf_2rs_ns",
+    onlineHelpRefUrl ="index.html?contextID=task_mdf_2rs_ns",
     upgrader = MongoDBSourceUpgrader.class,
     resetOffset = true
 )

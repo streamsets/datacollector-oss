@@ -33,7 +33,7 @@ import com.streamsets.pipeline.api.impl.Utils;
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     upgrader = TCPServerSourceUpgrader.class,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/TCPServer.html#task_w2y_yb1_4z"
+    onlineHelpRefUrl ="index.html?contextID=task_w2y_yb1_4z"
 )
 
 @ConfigGroups(Groups.class)

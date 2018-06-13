@@ -35,7 +35,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
         ExecutionMode.EDGE,
         ExecutionMode.EMR_BATCH
     },
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/Trash.html#task_ad4_qyl_zq"
+    onlineHelpRefUrl ="index.html?contextID=task_ad4_qyl_zq"
 )
 @HideConfigs(preconditions = true, onErrorRecord = true)
 @GenerateResourceBundle

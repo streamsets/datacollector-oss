@@ -32,7 +32,7 @@ import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
     recordsByRef = true,
     producesEvents = true,
     resetOffset = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/OracleCDC.html#task_ehh_mjj_tw",
+    onlineHelpRefUrl ="index.html?contextID=task_ehh_mjj_tw",
     upgrader = OracleCDCSourceUpgrader.class
 )
 @GenerateResourceBundle
