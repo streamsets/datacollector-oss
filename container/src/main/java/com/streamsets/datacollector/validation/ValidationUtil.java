@@ -139,7 +139,7 @@ public class ValidationUtil {
     StageLibraryTask stageLibrary,
     boolean shouldBeSource,
     StageConfiguration stageConf,
-    boolean noInputAndEventLanes,
+    boolean notOnMainCanvas,
     IssueCreator issueCreator,
     boolean isPipelineFragment,
     Map<String, Object> constants,
@@ -190,7 +190,7 @@ public class ValidationUtil {
       }
 
       // Hidden stages can't appear on the main canvas
-      if(!stageDef.getHideStage().isEmpty()) {
+      if(!notOnMainCanvas && !stageDef.getHideStage().isEmpty()) {
         issues.add(issueCreator.create(stageConf.getInstanceName(), ValidationError.VALIDATION_0037));
         preview = false;
       }
@@ -271,7 +271,7 @@ public class ValidationUtil {
           }
           break;
         case PROCESSOR:
-          if (stageConf.getInputLanes().isEmpty() && !isPipelineFragment) {
+          if (!notOnMainCanvas && stageConf.getInputLanes().isEmpty() && !isPipelineFragment) {
             // processor stage must have at least one input lane
             issues.add(
                 issueCreator.create(
@@ -282,27 +282,29 @@ public class ValidationUtil {
             );
             preview = false;
           }
-          if (!stageDef.isVariableOutputStreams()) {
-            // processor stage must match the output stream defined in StageDef
-            if (stageDef.getOutputStreams() != stageConf.getOutputLanes().size()) {
-              issues.add(
+          if(!notOnMainCanvas) {
+            if (!stageDef.isVariableOutputStreams()) {
+              // processor stage must match the output stream defined in StageDef
+              if (stageDef.getOutputStreams() != stageConf.getOutputLanes().size()) {
+                issues.add(
                   issueCreator.create(
-                      stageConf.getInstanceName(),
-                      ValidationError.VALIDATION_0015,
-                      stageDef.getOutputStreams(),
-                      stageConf.getOutputLanes().size()
+                    stageConf.getInstanceName(),
+                    ValidationError.VALIDATION_0015,
+                    stageDef.getOutputStreams(),
+                    stageConf.getOutputLanes().size()
                   )
-              );
+                );
+              }
+            } else if (stageConf.getOutputLanes().isEmpty()) {
+              // processor stage must have at least one output lane
+              issues.add(issueCreator.create(stageConf.getInstanceName(), ValidationError.VALIDATION_0032));
             }
-          } else if (stageConf.getOutputLanes().isEmpty()) {
-            // processor stage must have at least one output lane
-            issues.add(issueCreator.create(stageConf.getInstanceName(), ValidationError.VALIDATION_0032));
           }
           break;
         case EXECUTOR:
         case TARGET:
           // Normal target stage must have at least one input lane
-          if (!noInputAndEventLanes && stageConf.getInputLanes().isEmpty() && !isPipelineFragment) {
+          if (!notOnMainCanvas && stageConf.getInputLanes().isEmpty() && !isPipelineFragment) {
             issues.add(
                 issueCreator.create(
                     stageConf.getInstanceName(),
@@ -313,7 +315,7 @@ public class ValidationUtil {
             preview = false;
           }
           // Error/Stats/Pipeline lifecycle must not have an input lane
-          if (noInputAndEventLanes && !stageConf.getInputLanes().isEmpty()) {
+          if (notOnMainCanvas && !stageConf.getInputLanes().isEmpty()) {
             issues.add(
                 issueCreator.create(
                     stageConf.getInstanceName(),
@@ -336,7 +338,7 @@ public class ValidationUtil {
             );
             preview = false;
           }
-          if (noInputAndEventLanes && !stageConf.getEventLanes().isEmpty()) {
+          if (notOnMainCanvas && !stageConf.getEventLanes().isEmpty()) {
             issues.add(
                 issueCreator.create(
                     stageConf.getInstanceName(),
