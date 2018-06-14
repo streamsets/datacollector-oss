@@ -32,9 +32,12 @@ public class EmrClusterConfig {
   private static final String INSTANCE_COUNT = "instanceCount";
   private static final String MASTER_INSTANCE_TYPE = "masterInstanceType";
   private static final String SLAVE_INSTANCE_TYPE = "slaveInstanceType";
-  private static final String ENABLE_EMR_DEBUGGING = "enableEmrDebugging";
+  private static final String ENABLE_EMR_DEBUGGING = "enableEMRDebugging";
   private static final String S3_LOG_URI = "s3LogUri";
   private static final String CLUSTER_ID = "clusterId";
+  private static final String VISIBLE_TO_ALL_USERS = "visibleToAllUsers";
+  private static final String TERMINATE_CLUSTER = "terminateCluster";
+
 
   Properties props;
 
@@ -44,6 +47,10 @@ public class EmrClusterConfig {
 
   public String getAccessKey() {
     return props.getProperty(ACCESS_KEY);
+  }
+
+  public boolean isVisibleToAllUsers() {
+    return Boolean.parseBoolean(props.getProperty(VISIBLE_TO_ALL_USERS));
   }
 
   public String getSecretKey() {
@@ -72,6 +79,10 @@ public class EmrClusterConfig {
 
   public String getServiceRole() {
     return props.getProperty(SERVICE_ROLE);
+  }
+
+  public boolean isTerminateCluster() {
+    return Boolean.parseBoolean(props.getProperty(TERMINATE_CLUSTER));
   }
 
   public String getJobFlowRole() {

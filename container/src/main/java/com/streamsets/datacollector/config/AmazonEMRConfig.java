@@ -174,7 +174,7 @@ public class AmazonEMRConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      defaultValue = "EMR_DefaultRole",
+      defaultValue = SERVICE_ROLE_DEFAULT,
       label = "Service Role",
       group = "EMR",
       displayPosition = 260,
@@ -188,7 +188,7 @@ public class AmazonEMRConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      defaultValue = "EMR_EC2_DefaultRole",
+      defaultValue = JOB_FLOW_ROLE_DEFAULT,
       label = "Job Flow Role",
       group = "EMR",
       displayPosition = 270,
@@ -347,23 +347,31 @@ public class AmazonEMRConfig {
     }
   }
 
-  private static final String ACCESS_KEY = "accessKey";
-  private static final String SECRET_KEY = "secretKey";
-  private static final String USER_REGION = "userRegion";
-  private static final String S3_STAGING_URI = "s3StagingUri";
-  private static final String PROVISION_NEW_CLUSTER ="provisionNewCluster";
-  private static final String CLUSTER_PREFIX = "clusterPrefix";
-  private static final String CLUSTER_ID = "clusterId";
-  private static final String SERVICE_ROLE = "serviceRole";
-  private static final String JOB_FLOW_ROLE = "jobFlowRole";
-  private static final String EC2_SUBNET_ID = "ec2SubnetId";
-  private static final String MASTER_SECURITY_GROUP = "masterSecurityGroup";
-  private static final String SLAVE_SECURITY_GROUP = "slaveSecurityGroup";
-  private static final String INSTANCE_COUNT = "instanceCount";
-  private static final String MASTER_INSTANCE_TYPE = "masterInstanceType";
-  private static final String SLAVE_INSTANCE_TYPE = "slaveInstanceType";
-  private static final String ENABLE_EMR_DEBUGGING = "enableEmrDebugging";
-  private static final String S3_LOG_URI = "s3LogUri";
+  public static final String ACCESS_KEY = "accessKey";
+  public static final String SECRET_KEY = "secretKey";
+  public static final String USER_REGION = "userRegion";
+  public static final String USER_REGION_CUSTOM = "userRegionCustom";
+  public static final String S3_STAGING_URI = "s3StagingUri";
+  public static final String PROVISION_NEW_CLUSTER ="provisionNewCluster";
+  public static final String CLUSTER_PREFIX = "clusterPrefix";
+  public static final String CLUSTER_ID = "clusterId";
+  public static final String TERMINATE_CLUSTER = "terminateCluster";
+  public static final String SERVICE_ROLE = "serviceRole";
+  public static final String JOB_FLOW_ROLE = "jobFlowRole";
+  public static final String EC2_SUBNET_ID = "ec2SubnetId";
+  public static final String MASTER_SECURITY_GROUP = "masterSecurityGroup";
+  public static final String SLAVE_SECURITY_GROUP = "slaveSecurityGroup";
+  public static final String INSTANCE_COUNT = "instanceCount";
+  public static final String MASTER_INSTANCE_TYPE = "masterInstanceType";
+  public static final String MASTER_INSTANCE_TYPE_CUSTOM = "masterInstanceTypeCustom";
+  public static final String SLAVE_INSTANCE_TYPE = "slaveInstanceType";
+  public static final String SLAVE_INSTANCE_TYPE_CUSTOM = "slaveInstanceTypeCustom";
+  public static final String ENABLE_EMR_DEBUGGING = "enableEMRDebugging";
+  public static final String S3_LOG_URI = "s3LogUri";
+  public static final String SERVICE_ROLE_DEFAULT = "EMR_DefaultRole";
+  public static final String JOB_FLOW_ROLE_DEFAULT = "EMR_EC2_DefaultRole";
+  public static final String VISIBLE_TO_ALL_USERS = "visibleToAllUsers";
+
 
   public Properties convertToProperties() throws StageException {
     Properties props = new Properties();
@@ -377,12 +385,14 @@ public class AmazonEMRConfig {
     props.setProperty(SERVICE_ROLE, serviceRole);
     props.setProperty(JOB_FLOW_ROLE, jobFlowRole);
     props.setProperty(EC2_SUBNET_ID, ec2SubnetId);
+    props.setProperty(TERMINATE_CLUSTER, Boolean.toString(terminateCluster));
     props.setProperty(MASTER_SECURITY_GROUP, masterSecurityGroup);
     props.setProperty(SLAVE_SECURITY_GROUP, slaveSecurityGroup);
     props.setProperty(INSTANCE_COUNT, Integer.toString(instanceCount));
     props.setProperty(MASTER_INSTANCE_TYPE, getMasterInstanceType());
     props.setProperty(SLAVE_INSTANCE_TYPE, getSlaveInstanceType());
     props.setProperty(ENABLE_EMR_DEBUGGING, Boolean.toString(enableEMRDebugging));
+    props.setProperty(VISIBLE_TO_ALL_USERS, Boolean.toString(visibleToAllUsers));
     props.setProperty(S3_LOG_URI, s3LogUri);
     return props;
   }

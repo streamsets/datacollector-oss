@@ -122,7 +122,7 @@ public class EmrClusterJob extends BaseStageLibraryDelegate implements ClusterJo
           .withReleaseLabel(EmrInfo.getVersion())
           .withServiceRole(emrClusterConfig.getServiceRole())
           .withJobFlowRole(emrClusterConfig.getJobFlowRole())
-          .withVisibleToAllUsers(true)
+          .withVisibleToAllUsers(emrClusterConfig.isVisibleToAllUsers())
           .withInstances(new JobFlowInstancesConfig()
               .withEc2SubnetId(emrClusterConfig.getEc2SubnetId())
               .withEmrManagedMasterSecurityGroup(emrClusterConfig.getMasterSecurityGroup())
