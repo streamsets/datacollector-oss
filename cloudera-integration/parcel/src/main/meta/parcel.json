@@ -7,7 +7,7 @@
     "baseVersion": "${dist.version}",
     "patchCount": "0"
   },
-  "depends": "CDH (>= 5.2), CDH (<< 6.0)",
+  "depends": "CDH (>= 5.2), CDH (<< 7.0)",
   "setActiveSymlink": true,
   "scripts": {
     "defines": "sdc_parcel_env.sh"
