@@ -35,6 +35,17 @@ public class SystemMetricsConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
+      label = "Fetch Host Information",
+      description = "",
+      displayPosition = 11,
+      group = "SYSTEM_METRICS",
+      defaultValue = "true"
+  )
+  public boolean fetchHostInfo = true;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
       label = "Fetch CPU Stats",
       description = "",
       displayPosition = 20,
