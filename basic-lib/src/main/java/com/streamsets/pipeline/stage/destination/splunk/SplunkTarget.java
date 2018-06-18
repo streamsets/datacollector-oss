@@ -65,12 +65,12 @@ public class SplunkTarget extends HttpClientTarget {
 
     httpConf.httpMethod = HttpMethod.POST;
     httpConf.singleRequestPerBatch = true;
+    httpConf.client.numThreads = 1;
 
     httpConf.client.transferEncoding = conf.client.transferEncoding;
     httpConf.client.httpCompression = conf.client.httpCompression;
     httpConf.client.connectTimeoutMillis = conf.client.connectTimeoutMillis;
     httpConf.client.readTimeoutMillis = conf.client.readTimeoutMillis;
-    httpConf.client.numThreads = conf.client.numThreads;
     httpConf.client.useProxy = conf.client.useProxy;
     httpConf.client.proxy = conf.client.proxy;
     httpConf.client.tlsConfig = conf.client.tlsConfig;

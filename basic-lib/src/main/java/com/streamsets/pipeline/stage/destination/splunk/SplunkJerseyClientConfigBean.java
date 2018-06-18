@@ -83,17 +83,6 @@ public class SplunkJerseyClientConfigBean {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.NUMBER,
-      label = "Maximum Parallel Requests",
-      defaultValue = "1",
-      description = "Maximum number of requests to make in parallel.",
-      displayPosition = 140,
-      group = "HTTP"
-  )
-  public int numThreads = 1;
-
-  @ConfigDef(
-      required = true,
       type = ConfigDef.Type.MODEL,
       label = "Authentication Type",
       defaultValue = "NONE",
