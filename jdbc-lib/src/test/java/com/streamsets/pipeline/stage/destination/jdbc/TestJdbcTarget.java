@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.destination.jdbc;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
@@ -25,6 +26,7 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.jdbc.*;
 import com.streamsets.pipeline.lib.operation.ChangeLogFormat;
+import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
@@ -47,6 +49,7 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -112,6 +115,9 @@ public class TestJdbcTarget {
         "CREATE TABLE IF NOT EXISTS TEST.DATETIMES (P_ID INT NOT NULL, T TIME, D DATE, DT DATETIME, PRIMARY KEY(P_ID)) "
       );
       statement.addBatch(
+        "CREATE TABLE IF NOT EXISTS TEST.NOT_NULLS (P_ID INT NOT NULL, NAME VARCHAR(255) NOT NULL, SURNAME VARCHAR(255) NOT NULL, PRIMARY KEY(P_ID)) "
+      );
+      statement.addBatch(
           "CREATE TABLE IF NOT EXISTS \"TEST\".\"test_table@\"" +
               "(P_ID INT NOT NULL, FIRST_NAME VARCHAR(255), LAST_NAME VARCHAR(255), TS TIMESTAMP, UNIQUE(P_ID), " +
               "PRIMARY KEY(P_ID));"
@@ -135,6 +141,7 @@ public class TestJdbcTarget {
       statement.execute("DROP TABLE IF EXISTS TEST.TABLE_TWO;");
       statement.execute("DROP TABLE IF EXISTS TEST.TABLE_THREE;");
       statement.execute("DROP TABLE IF EXISTS TEST.DATETIMES;");
+      statement.execute("DROP TABLE IF EXISTS TEST.NOT_NULLS;");
       statement.execute("DROP TABLE IF EXISTS TEST.ARRAY_TABLE;");
       statement.execute("DROP TABLE IF EXISTS \"TEST\".\"test_table@\";");
     }
@@ -995,6 +1002,50 @@ public class TestJdbcTarget {
       assertEquals(null, rs.getTimestamp(4));
       assertFalse(rs.next());
     }
+  }
+
+  @Test  // SDC-9267
+  public void testInsertNullValuesWhenNotAllowed() throws Exception {
+    Target target = new JdbcTarget(
+        schema,
+      "NOT_NULLS",
+        Collections.emptyList(),
+        false,
+        false,
+        false,
+        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
+        PreparedStatementCache.UNLIMITED_CACHE,
+        ChangeLogFormat.NONE,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
+        createConfigBean(h2ConnectionString, username, password)
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target)
+      .setOnRecordError(OnRecordError.TO_ERROR)
+      .build();
+
+    Record noNameSurnameRecord = RecordCreator.create("a", "insert");
+    noNameSurnameRecord.set(Field.create(Field.Type.LIST_MAP, ImmutableMap.of("P_ID", Field.create(2))));
+
+    Record noSurnameRecord = RecordCreator.create("a", "update");
+    noSurnameRecord.set(Field.create(Field.Type.LIST_MAP, ImmutableMap.of("P_ID", Field.create(2), "NAME", Field.create("Secret"))));
+
+    Record correctRecord = RecordCreator.create("a", "update");
+    correctRecord.set(Field.create(Field.Type.LIST_MAP, ImmutableMap.of("P_ID", Field.create(2), "NAME", Field.create("Secret"), "SURNAME", Field.create("Mr. Awesome"))));
+
+    targetRunner.runInit();
+    targetRunner.runWrite(ImmutableList.of(noNameSurnameRecord, noSurnameRecord, correctRecord));
+
+    connection = DriverManager.getConnection(h2ConnectionString, username, password);
+    try (
+      Statement statement = connection.createStatement();
+      ResultSet rs = statement.executeQuery("SELECT count(*) FROM TEST.NOT_NULLS");
+    ) {
+      assertTrue(rs.next());
+      assertEquals(1, rs.getInt(1));
+    }
+
+    assertEquals(2, targetRunner.getErrorRecords().size());
   }
 
   @Test
