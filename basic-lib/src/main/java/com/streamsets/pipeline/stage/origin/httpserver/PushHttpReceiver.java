@@ -45,6 +45,7 @@ public class PushHttpReceiver implements HttpReceiver {
   private static final String PATH_HEADER = "path";
   private static final String QUERY_STRING_HEADER = "queryString";
   public static final String METHOD_HEADER = "method";
+  private static final String REMOTE_HOST = "remoteHost";
   static final String MAXREQUEST_SYS_PROP = "com.streamsets.httpserverpushsource.maxrequest.mb";
 
   private static int getMaxRequestSizeMBLimit() {
@@ -170,6 +171,7 @@ public class PushHttpReceiver implements HttpReceiver {
     customHeaderAttributes.put(PATH_HEADER, StringUtils.stripToEmpty(req.getServletPath()));
     customHeaderAttributes.put(QUERY_STRING_HEADER, StringUtils.stripToEmpty(req.getQueryString()));
     customHeaderAttributes.put(METHOD_HEADER, StringUtils.stripToEmpty(req.getMethod()));
+    customHeaderAttributes.put(REMOTE_HOST, StringUtils.stripToEmpty(req.getRemoteHost()));
     Enumeration<String> headerNames = req.getHeaderNames();
     if (headerNames != null) {
       while (headerNames.hasMoreElements()) {
