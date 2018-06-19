@@ -132,7 +132,7 @@ angular
       },
 
       removeChart: function(chart, index) {
-        $rootScope.$storage.summaryPanelList.splice(index, 1);
+        $rootScope.$storage.summaryPanelList_v1.splice(index, 1);
       },
 
       dateFormat: function() {
@@ -483,7 +483,7 @@ angular
       });
 
       modalInstance.result.then(function (selectedCharts) {
-        $rootScope.$storage.summaryPanelList = selectedCharts;
+        $rootScope.$storage.summaryPanelList_v1 = selectedCharts;
       }, function () {
 
       });
