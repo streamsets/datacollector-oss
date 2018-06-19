@@ -138,6 +138,12 @@ angular
       });
     });
 
+    $scope.chartData.push({
+      instanceName: 'System',
+      key: 'System',
+      value: 0
+    });
+
     $scope.$on('summaryDataUpdated', function() {
       var pipelineMetrics = $rootScope.common.pipelineMetrics,
         values = [];
@@ -149,14 +155,28 @@ angular
       }
 
       angular.forEach($scope.chartData, function(data) {
-        var stageTimer = pipelineMetrics.timers['stage.' + data.instanceName + '.batchProcessing.timer'];
-        if(stageTimer) {
-          data.value = stageTimer.mean;
+        if(data.instanceName === 'System') {
+          // Special entry on the pie chart for all "overhead" entries like interceptors
+          var totalTime = 0;
+          angular.forEach(pipelineMetrics.timers, function(timer, name) {
+            if(name.startsWith('interceptor.stage.') && name.endsWith('.batchProcessing.timer')) {
+              totalTime += timer.mean;
+            }
+          });
+          data.value = totalTime;
+        } else {
+          // Normal stage, let's update it's value
+          var stageTimer = pipelineMetrics.timers['stage.' + data.instanceName + '.batchProcessing.timer'];
+          if(stageTimer) {
+            data.value = stageTimer.mean;
 
-          if(data.value > 0) {
-            $scope.allDataZero = false;
+            if(data.value > 0) {
+              $scope.allDataZero = false;
+            }
           }
         }
+
+        // Push new version of chart entry
         values.push(data);
       });
 

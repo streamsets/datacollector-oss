@@ -123,6 +123,22 @@ public class InterceptorContext implements Interceptor.Context {
     this.containerClassLoader = Thread.currentThread().getContextClassLoader();
   }
 
+  public String getPipelineId() {
+    return pipelineId;
+  }
+
+  public String getRev() {
+    return rev;
+  }
+
+  public String getStageInstanceName() {
+    return stageInstanceName;
+  }
+
+  public MetricRegistry getMetrics() {
+    return metrics;
+  }
+
   @Override
   public ConfigIssue createConfigIssue(ErrorCode errorCode, Object... args) {
     Preconditions.checkNotNull(errorCode, "errorCode cannot be null");

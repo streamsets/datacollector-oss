@@ -15,7 +15,10 @@
  */
 package com.streamsets.datacollector.runner;
 
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Timer;
 import com.streamsets.datacollector.creation.InterceptorBean;
+import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.util.LambdaUtil;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.ConfigIssue;
@@ -33,6 +36,9 @@ public class InterceptorRuntime implements Interceptor {
   private final InterceptorBean bean;
   private InterceptorContext context;
 
+  // Metrics
+  private Timer processingTimer;
+
   public InterceptorRuntime(
     InterceptorBean bean
   ) {
@@ -48,6 +54,20 @@ public class InterceptorRuntime implements Interceptor {
   }
 
   public List<Issue> init() {
+    MetricRegistry metrics = getContext().getMetrics();
+    String metricsBaseName = "interceptor.stage."
+      + this.context.getStageInstanceName()
+      + "."
+      + bean.getDefinition().getKlass().getName().replace(".", "_")
+    ;
+
+    processingTimer = MetricsConfigurator.createStageTimer(
+      metrics,
+      metricsBaseName + ".batchProcessing",
+      context.getPipelineId(),
+      context.getRev()
+    );
+
     return (List)init(context);
   }
 
@@ -61,10 +81,15 @@ public class InterceptorRuntime implements Interceptor {
 
   @Override
   public List<Record> intercept(List<Record> records) {
-   return LambdaUtil.privilegedWithClassLoader(
+    Timer.Context timerContext = processingTimer.time();
+    try {
+      return LambdaUtil.privilegedWithClassLoader(
         bean.getDefinition().getStageClassLoader(),
         () -> bean.getInterceptor().intercept(records)
-    );
+      );
+    } finally {
+     timerContext.stop();
+    }
   }
 
   @Override
