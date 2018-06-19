@@ -52,6 +52,7 @@ public class InterceptorContextTest {
       blobStore,
       configuration,
       "stageInstance",
+      "metricName",
       MockStages.createStageLibrary(),
       "pipelineId",
       "pipelineTitle",

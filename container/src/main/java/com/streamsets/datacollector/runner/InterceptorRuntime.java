@@ -58,7 +58,7 @@ public class InterceptorRuntime implements Interceptor {
     String metricsBaseName = "interceptor.stage."
       + this.context.getStageInstanceName()
       + "."
-      + bean.getDefinition().getKlass().getName().replace(".", "_")
+      + bean.getMetricName()
     ;
 
     processingTimer = MetricsConfigurator.createStageTimer(

@@ -48,4 +48,8 @@ public class InterceptorBean {
   public void releaseClassLoader() {
     classLoaderReleaser.releaseStageClassLoader(interceptor.getClass().getClassLoader());
   }
+
+  public String getMetricName() {
+    return getDefinition().getKlass().getName().replace(".", "_");
+  }
 }
