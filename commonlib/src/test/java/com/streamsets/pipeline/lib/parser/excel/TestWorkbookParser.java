@@ -118,6 +118,9 @@ public class TestWorkbookParser {
     Field expected = Field.createListMap(contentMap);
 
     assertEquals(expected, firstContentRow.get());
+    assertEquals("Sheet1", firstContentRow.getHeader().getAttribute("worksheet"));
+    assertEquals("1", firstContentRow.getHeader().getAttribute("sheetRow"));
+
   }
 
   @Test

@@ -165,6 +165,11 @@ public class WorkbookParser extends AbstractDataParser {
         unsupportedCellTypes.add(e.getCellType().name());
       }
     }
+
+    Record.Header hdr = record.getHeader();
+    hdr.setAttribute("worksheet", row.getSheet().getSheetName());
+    hdr.setAttribute("sheetRow",  Integer.toString(row.getRowNum()));
+
     record.set(Field.createListMap(output));
     if (unsupportedCellTypes.size() > 0) {
       throw new RecoverableDataParserException(record, Errors.EXCEL_PARSER_05, StringUtils.join(unsupportedCellTypes, ", "));
