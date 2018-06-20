@@ -25,3 +25,6 @@ Environment=SDC_LOG=/var/log/sdc
 Environment=SDC_DATA=/var/lib/sdc
 ExecStart=/opt/streamsets-datacollector/bin/streamsets dc -verbose
 TimeoutSec=60
+
+[Install]
+WantedBy=multi-user.target
