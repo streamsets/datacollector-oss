@@ -113,7 +113,7 @@
 
 
     <div ng-switch-when="LIST_BEAN" class="clearfix"
-         ng-init="bulkEdit=(detailPaneConfig.configuration[configIndex].value.length > 9)">
+         ng-init="bulkEdit=(detailPaneConfig.configuration[configIndex].value.length > 50)">
       <ng-include ng-if="configDefinition.label" src="'labelConfigurationTemplate'"></ng-include>
 
       <div class="controls" ng-class="configDefinition.label ? 'col-md-7' : 'col-md-12'">

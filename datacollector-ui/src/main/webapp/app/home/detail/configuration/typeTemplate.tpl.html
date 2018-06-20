@@ -192,7 +192,7 @@
 
 <script type="text/ng-template" id="listConfigurationTemplate">
   <div class="controls col-lg-7 col-md-8 container-fluid"
-       ng-init="bulkEdit=(detailPaneConfig.configuration[configIndex].value.length > 9)">
+       ng-init="bulkEdit=(detailPaneConfig.configuration[configIndex].value.length > 50)">
 
     <div class="row map-list-type"
          ng-if="!bulkEdit"
@@ -277,7 +277,7 @@
 
 <script type="text/ng-template" id="mapConfigurationTemplate">
   <div class="controls col-lg-7 col-md-8"
-       ng-init="bulkEdit=(detailPaneConfig.configuration[configIndex].value.length > 9)">
+       ng-init="bulkEdit=(detailPaneConfig.configuration[configIndex].value.length > 50)">
     <div class="row map-list-type"
          ng-if="!bulkEdit"
          ng-repeat="mapObject in detailPaneConfig.configuration[configIndex].value track by $index">
