@@ -296,8 +296,7 @@ public class DirectorySpooler {
       spoolDirPath = fs.getFile(spoolDir);
 
       if(StringUtils.isEmpty(sourceFile)) {
-        sourceFile = "";
-        this.currentFile = fs.getFile(sourceFile);
+        this.currentFile = null;
       } else {
         // sourceFile can contain: a filename, a partial path (relative to spoolDirPath),
         // or a full path.
@@ -351,7 +350,7 @@ public class DirectorySpooler {
   private void startSpooling(WrappedFile currentFile) throws IOException {
     running = true;
 
-    if(!context.isPreview()) {
+    if(!context.isPreview() && currentFile != null) {
       handleOlderFiles(currentFile);
     }
 
@@ -448,7 +447,7 @@ public class DirectorySpooler {
   private void addFileToQueue(WrappedFile file, boolean checkCurrent) {
     Preconditions.checkNotNull(file, "file cannot be null");
     if (checkCurrent) {
-      boolean valid = StringUtils.isEmpty(currentFile.toString()) || fs.compare(file, currentFile, useLastModified) < 0;
+      boolean valid = currentFile == null || StringUtils.isEmpty(currentFile.toString()) || fs.compare(file, currentFile, useLastModified) < 0;
       if (!valid) {
         LOG.warn("File cannot be added to the queue: " + file.toString());
       }

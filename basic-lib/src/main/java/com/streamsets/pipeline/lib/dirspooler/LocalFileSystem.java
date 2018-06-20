@@ -65,10 +65,16 @@ public class LocalFileSystem implements WrappedFileSystem {
   }
 
   public boolean exists(WrappedFile filePath) {
+    if (filePath == null) {
+      return false;
+    }
     return Files.exists(Paths.get(filePath.getAbsolutePath()));
   }
 
   public void delete(WrappedFile filePath) throws IOException {
+    if (filePath == null) {
+      return;
+    }
     Files.delete(Paths.get(filePath.getAbsolutePath()));
   }
 
@@ -77,10 +83,16 @@ public class LocalFileSystem implements WrappedFileSystem {
   }
 
   public long getLastModifiedTime(WrappedFile filePath) throws IOException {
+    if (filePath == null) {
+      return -1;
+    }
     return getLastModifiedTime(Paths.get(filePath.getAbsolutePath()));
   }
 
   public long getChangedTime(WrappedFile filePath) throws IOException {
+    if (filePath == null) {
+      return -1;
+    }
     return getChangedTime(Paths.get(filePath.getAbsolutePath()));
   }
 
@@ -93,6 +105,9 @@ public class LocalFileSystem implements WrappedFileSystem {
   }
 
   public boolean isDirectory(WrappedFile filePath) {
+    if (filePath == null) {
+      return false;
+    }
     return Files.isDirectory(Paths.get(filePath.getAbsolutePath()));
   }
 
