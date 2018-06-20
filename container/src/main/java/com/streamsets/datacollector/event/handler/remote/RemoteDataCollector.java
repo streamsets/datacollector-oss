@@ -420,6 +420,7 @@ public class RemoteDataCollector implements DataCollector {
 
   @Override
   public void blobDelete(String namespace, String id) throws StageException {
+    LOG.debug("Deleting all blob objects for namespace={} and id={}", namespace, id);
     blobStoreTask.deleteAllVersions(namespace, id);
   }
 

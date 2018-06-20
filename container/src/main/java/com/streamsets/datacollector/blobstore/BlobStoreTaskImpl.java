@@ -114,6 +114,7 @@ public class BlobStoreTaskImpl extends AbstractTask implements BlobStoreTask {
 
   @Override
   public synchronized void store(String namespace, String id, long version, String content) throws StageException {
+    LOG.debug("Store on namespace={}, id={}, version={}", namespace, id, version);
     Preconditions.checkArgument(BlobStore.VALID_NAMESPACE_PATTERN.matcher(namespace).matches());
     Preconditions.checkArgument(BlobStore.VALID_ID_PATTERN.matcher(id).matches());
 
@@ -155,6 +156,7 @@ public class BlobStoreTaskImpl extends AbstractTask implements BlobStoreTask {
 
   @Override
   public synchronized String retrieve(String namespace, String id, long version) throws StageException {
+    LOG.debug("Store on namespace={}, id={}, version={}", namespace, id, version);
     ObjectMetadata objectMetadata = getObjectDieIfNotExists(namespace, id);
 
     if(!objectMetadata.containsVersion(version)) {
@@ -170,6 +172,7 @@ public class BlobStoreTaskImpl extends AbstractTask implements BlobStoreTask {
 
   @Override
   public synchronized void delete(String namespace, String id, long version) throws StageException {
+    LOG.debug("Delete on namespace={}, id={}, version={}", namespace, id, version);
     ObjectMetadata objectMetadata = getObjectDieIfNotExists(namespace, id);
 
     if(!objectMetadata.containsVersion(version)) {
