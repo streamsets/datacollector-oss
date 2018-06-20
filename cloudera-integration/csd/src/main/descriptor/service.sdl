@@ -530,7 +530,7 @@
         },
         {
           "name": "production.maxPipelineErrors",
-          "label": "Max Error Records Per Stage",
+          "label": "Max Pipeline Errors",
           "description": "The max number of errors per pipeline that will be retained in memory when the pipeline is running. If set to zero, error records will not be retained in memory. If the specified limit is reached the oldest records will be discarded to make room for the newest one.The maximum size that the error output file is allowed to reach before being rolled over to backup files",
           "type": "long",
           "default": 100
