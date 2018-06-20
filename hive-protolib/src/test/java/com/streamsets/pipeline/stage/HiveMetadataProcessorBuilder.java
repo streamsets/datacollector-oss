@@ -138,7 +138,7 @@ public class HiveMetadataProcessorBuilder {
       external,
       tablePathTemplate,
       partitionPathTemplate,
-      BaseHiveIT.getHiveConfigBean(),
+      HiveTestUtil.getHiveConfigBean(),
       timeDriver,
       decimalDefaultsConfig,
       timeZone,

@@ -32,8 +32,8 @@ import com.streamsets.pipeline.lib.util.SdcAvroTestUtil;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
-import com.streamsets.pipeline.stage.BaseHiveIT;
 import com.streamsets.pipeline.stage.HiveMetadataProcessorBuilder;
+import com.streamsets.pipeline.stage.HiveTestUtil;
 import com.streamsets.pipeline.stage.PartitionConfigBuilder;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
 import com.streamsets.pipeline.stage.lib.hive.HiveConfigBean;
@@ -57,9 +57,8 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -74,7 +73,7 @@ import java.util.TimeZone;
     HiveConfigBean.class,
     HiveMetadataProcessor.class,
     HiveMetastoreUtil.class,
-    BaseHiveIT.class,
+    HiveTestUtil.class,
     HMSCache.class,
     HMSCache.Builder.class,
     HiveQueryExecutor.class
@@ -179,30 +178,22 @@ public class TestHiveMetadataProcessor {
             HiveConfigBean.class,
             "getHiveConnection"
         )
-    ).with(new InvocationHandler() {
-      @Override
-      public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        return null;
-      }
-    });
+    ).with((proxy, method, args) -> null);
 
     PowerMockito.replace(
         MemberMatcher.method(
-            BaseHiveIT.class,
+            HiveTestUtil.class,
             "getHiveConfigBean"
         )
-    ).with(new InvocationHandler() {
-      @Override
-      public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        HiveConfigBean bean = BaseHiveIT.getHiveConfigBean();
-        bean.setConfiguration(new Configuration());
-        bean.setHiveConf(new HiveConf());
-        return bean;
-      }
+    ).with((proxy, method, args) -> {
+      HiveConfigBean bean = HiveTestUtil.getHiveConfigBean();
+      bean.setConfiguration(new Configuration());
+      bean.setHiveConf(new HiveConf());
+      return bean;
     });
 
     PowerMockito.replace(MemberMatcher.method(HiveQueryExecutor.class, "executeDescribeDatabase"))
-      .with((proxy, method, args) -> "/user/hive/warehouse/" + args[0].toString() + ".db/");
+        .with((proxy, method, args) -> "/user/hive/warehouse/" + args[0].toString() + ".db/");
 
   }
 
@@ -384,6 +375,28 @@ public class TestHiveMetadataProcessor {
   }
 
   @Test
+  public void testSpecialCharactersInPartitionName() throws Exception {
+    List<String> partitionNames = Arrays.asList(
+        "part#part",
+        "part-part",
+        "part$part",
+        "part.part"
+    );
+    for (String partitionName : partitionNames) {
+      HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
+          .partitions(new PartitionConfigBuilder().addPartition(partitionName, HiveType.STRING, "abc").build())
+          .build();
+      ProcessorRunner runner = getProcessRunner(processor);
+      List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+      Assert.assertEquals(
+          Utils.format("Validation did not throw error for partition name : {}", partitionName),
+          1,
+          issues.size()
+      );
+    }
+  }
+
+  @Test
   public void testGenerateNewPartitionRecord() throws Exception {
 
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder().build();
@@ -562,10 +575,10 @@ public class TestHiveMetadataProcessor {
 
     // Invalid precision evaluation
     processor = new HiveMetadataProcessorBuilder()
-      .decimalConfig(
-        "${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.precision'))}",
-        "2")
-      .build();
+        .decimalConfig(
+            "${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.precision'))}",
+            "2")
+        .build();
     runner = getProcessRunner(processor);
     runner.runInit();
     runner.runProcess(ImmutableList.of(record));
@@ -577,10 +590,10 @@ public class TestHiveMetadataProcessor {
 
     // Invalid scale evaluation
     processor = new HiveMetadataProcessorBuilder()
-      .decimalConfig(
-        "2",
-        "${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.scale'))}")
-      .build();
+        .decimalConfig(
+            "2",
+            "${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.scale'))}")
+        .build();
     runner = getProcessRunner(processor);
     runner.runInit();
     runner.runProcess(ImmutableList.of(record));
