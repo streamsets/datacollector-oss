@@ -18,6 +18,11 @@ angular.module('commonUI.codemirrorDirectives')
     'use strict';
     var fnDefMapping = {};
 
+    // Note(chab) we will have one shared for all instances of the codeMirrorDirectice
+    // if we want to have a dedicated for each instance, there are some work needed in order
+    // to have dedicated event handling for each instance of the directive
+    var tooltip = null;
+
     return {
       restrict: 'A',
       priority: 2, // higher than ui-codemirror which is 1.
@@ -169,7 +174,6 @@ angular.module('commonUI.codemirrorDirectives')
               to: CodeMirror.Pos(cur.line, end)
             };
 
-            var tooltip = null;
             CodeMirror.on(obj, "close", function() {
               remove(tooltip);
               activeAutoComplete = false;
@@ -223,10 +227,10 @@ angular.module('commonUI.codemirrorDirectives')
                   angular.element('.CodeMirror-hint-active').removeClass('CodeMirror-hint-active');
                   angular.element('.CodeMirror-EL-tooltip').remove();
                   var hint = angular.element(e.target).addClass('CodeMirror-hint-active');
-                  var tip = makeTooltip(e.target.parentNode.getBoundingClientRect().right + window.pageXOffset,
+                  tooltip = makeTooltip(e.target.parentNode.getBoundingClientRect().right + window.pageXOffset,
                       e.target.getBoundingClientRect().top + window.pageYOffset,
                       fnDefMapping[hint.text()]);
-                  tip.className += " " + cls + "hint-doc";
+                  tooltip.className += " " + cls + "hint-doc";
                 });
               }
               $timeout(function() {});
