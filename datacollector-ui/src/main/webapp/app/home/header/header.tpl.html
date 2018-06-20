@@ -25,8 +25,8 @@
 
           <li role="presentation"
               ng-if="!isPipelineRunning && isAuthorized([userRoles.admin, userRoles.manager])"
-              ng-class="{'disabled': !pipelineConfig.valid || activeConfigStatus.executionMode != pipelineConstant.STANDALONE}">
-            <a href="#" dropdown-toggle ng-click="(!pipelineConfig.valid || activeConfigStatus.executionMode != pipelineConstant.STANDALONE) || resetOffset()">
+              ng-class="{'disabled': !pipelineConfig.valid || activeConfigStatus.executionMode !== pipelineConstant.STANDALONE}">
+            <a href="#" dropdown-toggle ng-click="(!pipelineConfig.valid || activeConfigStatus.executionMode !== pipelineConstant.STANDALONE) || resetOffset()">
               <i class="fa fa-power-off"></i> {{'home.resetOffset.title' | translate}}
             </a>
           </li>
@@ -69,7 +69,12 @@
           </li>
 
           <li role="presentation"
-              ng-if="!isPipelineRunning && isAuthorized([userRoles.admin, userRoles.manager]) && activeConfigStatus.executionMode != pipelineConstant.CLUSTER  && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_YARN_STREAMING && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_MESOS_STREAMING">
+              ng-if="!isPipelineRunning && isAuthorized([userRoles.admin, userRoles.manager]) &&
+                activeConfigStatus.executionMode !== pipelineConstant.CLUSTER  &&
+                activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH &&
+                activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_EMR_BATCH &&
+                activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_YARN_STREAMING &&
+                activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_MESOS_STREAMING">
             <a href="#" dropdown-toggle ng-click="viewSnapshots()">
               <i class="glyphicon glyphicon-camera"></i> {{'home.header.snapshots' | translate}}
             </a>
@@ -87,7 +92,11 @@
             </a>
           </li>
 
-          <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && canExecute && pipelineConfig.previewable && activeConfigStatus.executionMode != pipelineConstant.SLAVE && !(isPipelineRunning || previewMode || snapshotMode)">
+          <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator]) &&
+            canExecute &&
+            pipelineConfig.previewable &&
+            activeConfigStatus.executionMode !== pipelineConstant.SLAVE &&
+             !(isPipelineRunning || previewMode || snapshotMode)">
             <a href="#" dropdown-toggle ng-click="!pipelineConfig.previewable || previewPipeline(true)">
               <i class="glyphicon glyphicon-eye-open"></i> {{'home.header.previewConfig' | translate}}
             </a>
@@ -263,7 +272,13 @@
           tooltip-placement="bottom" tooltip="{{'home.header.snapshots' | translate}}"
           tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
           tooltip-popup-delay="500"
-          ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && activeConfigStatus.executionMode != pipelineConstant.CLUSTER  && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_YARN_STREAMING && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_MESOS_STREAMING && isPipelineRunning && !snapshotMode && activeConfigStatus.status != 'CONNECT_ERROR' && activeConfigStatus.status != 'RETRY'"
+          ng-if="isAuthorized([userRoles.admin, userRoles.manager]) &&
+          activeConfigStatus.executionMode !== pipelineConstant.CLUSTER  &&
+          activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH &&
+          activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_EMR_BATCH &&
+          activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_YARN_STREAMING &&
+          activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_MESOS_STREAMING &&
+          isPipelineRunning && !snapshotMode && activeConfigStatus.status != 'CONNECT_ERROR' && activeConfigStatus.status != 'RETRY'"
           ng-click="viewSnapshots()">
         <span class="glyphicon glyphicon-camera fa-14x"></span>
       </a>
@@ -281,7 +296,9 @@
           tooltip-placement="bottom" tooltip="{{'home.header.preview' | translate}}"
           tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
           tooltip-popup-delay="500"
-          ng-if="isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager]) && activeConfigStatus.executionMode != pipelineConstant.SLAVE && !(isPipelineRunning || previewMode || snapshotMode)"
+          ng-if="isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager]) &&
+          activeConfigStatus.executionMode != pipelineConstant.SLAVE &&
+          !(isPipelineRunning || previewMode || snapshotMode)"
           ng-disabled="!pipelineConfig.previewable"
           ng-click="!pipelineConfig.previewable || previewPipeline()">
         <span class="glyphicon glyphicon-eye-open fa-14x"></span>
@@ -350,14 +367,24 @@
       </a>
     </div>
 
-    <div class="pull-right" ng-if="pipelineConfig && (activeConfigStatus.status === 'STOPPING' || activeConfigStatus.status === 'STARTING_ERROR' || activeConfigStatus.status === 'RUNNING_ERROR' || activeConfigStatus.status === 'STOPPING_ERROR' || activeConnfigStatus.status === 'FINISHING')">
+    <div class="pull-right" ng-if="pipelineConfig && (activeConfigStatus.status === 'STOPPING' || activeConfigStatus.status === 'STARTING_ERROR' || activeConfigStatus.status === 'RUNNING_ERROR' || activeConfigStatus.status === 'STOPPING_ERROR' || activeConfigStatus.status === 'FINISHING')">
       <a class="btn btn-link icon-button-danger"
-         ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && canExecute && activeConfigStatus.executionMode != pipelineConstant.SLAVE && activeConfigStatus.executionMode != pipelineConstant.CLUSTER  && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_YARN_STREAMING && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_MESOS_STREAMING"
+         ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && canExecute &&
+         activeConfigStatus.executionMode !== pipelineConstant.SLAVE &&
+         activeConfigStatus.executionMode !== pipelineConstant.CLUSTER  &&
+         activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH &&
+         activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_EMR_BATCH &&
+         activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_YARN_STREAMING &&
+         activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_MESOS_STREAMING"
          ng-click="stopPipeline(true)">{{'home.header.forceStop' | translate}}</a>
     </div>
 
     <div class="pull-left" ng-switch="activeConfigStatus.status">
-      <div class="panel-title pull-left" ng-if="activeConfigStatus.executionMode === pipelineConstant.CLUSTER || activeConfigStatus.executionMode === pipelineConstant.CLUSTER_BATCH || activeConfigStatus.executionMode === pipelineConstant.CLUSTER_YARN_STREAMING || activeConfigStatus.executionMode === pipelineConstant.CLUSTER_MESOS_STREAMING">
+      <div class="panel-title pull-left" ng-if="activeConfigStatus.executionMode === pipelineConstant.CLUSTER ||
+       activeConfigStatus.executionMode === pipelineConstant.CLUSTER_EMR_BATCH ||
+       activeConfigStatus.executionMode === pipelineConstant.CLUSTER_BATCH ||
+       activeConfigStatus.executionMode === pipelineConstant.CLUSTER_YARN_STREAMING ||
+       activeConfigStatus.executionMode === pipelineConstant.CLUSTER_MESOS_STREAMING">
         <h3 class="pull-left" translate="home.header.clusterManagerNode">Cluster Manager: </h3>
       </div>
 

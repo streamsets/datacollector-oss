@@ -56,6 +56,7 @@ angular
     });
 
     if (pipelineStatus.executionMode !== pipelineConstant.CLUSTER &&
+        pipelineStatus.executionMode !== pipelineConstant.CLUSTER_EMR_BATCH &&
         pipelineStatus.executionMode !== pipelineConstant.CLUSTER_BATCH &&
         pipelineStatus.executionMode !== pipelineConstant.CLUSTER_YARN_STREAMING &&
         pipelineStatus.executionMode !== pipelineConstant.CLUSTER_MESOS_STREAMING) {

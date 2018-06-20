@@ -631,6 +631,7 @@ angular
 
     if ($scope.activeConfigStatus.executionMode !== pipelineConstant.CLUSTER &&
         $scope.activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH &&
+        $scope.activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_EMR_BATCH &&
         $scope.activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_YARN_STREAMING &&
         $scope.activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_MESOS_STREAMING) {
       api.pipelineAgent.getSnapshotsInfo().then(function(res) {

@@ -37,7 +37,9 @@ angular.module('dataCollectorApp.common')
     STANDALONE: 'STANDALONE',
     CLUSTER: 'CLUSTER',
     CLUSTER_BATCH: 'CLUSTER_BATCH',
+    CLUSTER_EMR_BATCH: 'EMR_BATCH',
     CLUSTER_YARN_STREAMING: 'CLUSTER_YARN_STREAMING',
+    EDGE: 'EDGE',
     CLUSTER_MESOS_STREAMING: 'CLUSTER_MESOS_STREAMING',
     SLAVE: 'SLAVE',
     NON_LIST_MAP_ROOT: 'root',
@@ -61,6 +63,7 @@ angular.module('dataCollectorApp.common')
     CLUSTER_MODES: [
       'CLUSTER',
       'CLUSTER_BATCH',
+      'EMR_BATCH',
       'CLUSTER_YARN_STREAMING',
       'CLUSTER_MESOS_STREAMING'
     ]
