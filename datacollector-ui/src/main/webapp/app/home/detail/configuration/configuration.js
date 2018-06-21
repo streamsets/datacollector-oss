@@ -104,6 +104,12 @@ angular
             lineWrapping: $rootScope.$storage.lineWrapping
           };
         }
+        // NOTE(chab) the mode is 'text/plain' for bulk edit, even if we are waiting for a json object
+        // should not we get an application/json mode instead ?
+        if (configDefinition.type === 'MODEL' || configDefinition.mode === "text/javascript") {
+          codeMirrorOptions.gutters = ['CodeMirror-lint-markers'];
+          codeMirrorOptions.lint = true;
+        }
 
         return angular.extend(codeMirrorOptions, pipelineService.getDefaultELEditorOptions(), options);
       },
