@@ -17,6 +17,7 @@ package com.streamsets.datacollector.record;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -26,10 +27,13 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable, Serializable {
   private static final String RESERVED_PREFIX = "_.";
@@ -50,6 +54,9 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable, 
   private static final String ERROR_PIPELINE_NAME_ATTR = RESERVED_PREFIX + "pipelineName";
   private static final String ERROR_STACKTRACE = RESERVED_PREFIX + "errorStackTrace";
   private static final String ERROR_JOB_ID = RESERVED_PREFIX + "errorJobId";
+  private static final List<String> REQUIRED_ATTRIBUTES = ImmutableList.of(STAGE_CREATOR_INSTANCE_ATTR,
+      RECORD_SOURCE_ID_ATTR);
+
   //Note: additional fields should also define in ScriptRecord
 
   private Map<String, Object> map;
@@ -163,9 +170,9 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable, 
     return ImmutableSet.copyOf(Sets.filter(map.keySet(), this));
   }
 
+  private static final String REQUIRED_ATTR_EXCEPTION_MSG = "Does not have required attributes";
   private static final String RESERVED_PREFIX_EXCEPTION_MSG = "Header attributes cannot start with '" +
                                                               RESERVED_PREFIX + "'";
-
   @Override
   public String getAttribute(String name) {
     Preconditions.checkNotNull(name, "name cannot be null");
@@ -397,10 +404,72 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable, 
     return Collections.unmodifiableMap(map);
   }
 
-  public Map<String, Object> setAllAttributes(Map<String, Object> newAttrs) {
+  private boolean isReservedAttribute(String attribute) {
+    return attribute.startsWith(RESERVED_PREFIX);
+  }
+
+  private Map<String, Object> getSystemAttributes() {
+    Map<String, Object> existingSystemAttr = new HashMap<>();
+
+    //Need to do this way due to valid null values
+    List<String> existingReservedKeys = map.keySet()
+        .stream()
+        .filter(key -> key.startsWith(RESERVED_PREFIX))
+        .collect(Collectors.toList());
+    existingReservedKeys.forEach( (key) -> existingSystemAttr.put(key, map.get(key)));
+
+    return existingSystemAttr;
+  }
+
+  private boolean hasRequiredAttributes(Set<String> keys) {
+    /* Any new header map MUST have the MINIMUM required reserved header attributes AND if any
+    reserved attributes exist in existing map the MUST exist in new map's keys
+    */
+
+    // Check that new map's keys have the minimum required attributes of a header impl.
+    if(!keys.containsAll(REQUIRED_ATTRIBUTES)) {
+      return false;
+    }
+
+    // Check that new map's keys also contain any existing reserved attributes.
+    Set<String> existingReservedKeys = getSystemAttributes().keySet();
+    if (!keys.containsAll(existingReservedKeys)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  public Map<String, Object> overrideUserAndSystemAttributes(Map<String, Object> newAttrs) {
+    /* Any new header map MUST have the MINIMUM required reserved header attributes AND if any
+      reserved attributes exist in existing map the MUST exist in new map's keys
+    */
+    if (!hasRequiredAttributes(newAttrs.keySet())) {
+      throw new IllegalArgumentException(REQUIRED_ATTR_EXCEPTION_MSG);
+    }
+
     // ImmutableMap can't have null values and our map could have, so use unmodifiable map
     Map<String, Object> old = Collections.unmodifiableMap(map);
     map = new HashMap<>(newAttrs);
     return old;
   }
+
+  public Map<String, Object> getUserAttributes() {
+    return map.entrySet()
+        .stream()
+        .filter(map -> !map.getKey().startsWith(RESERVED_PREFIX))
+        .collect(Collectors.toMap(map -> map.getKey(), map -> map.getValue()));
+  }
+
+  public Map<String, Object> setUserAttributes(Map<String, Object> newAttributes) {
+    // ImmutableMap can't have null values and our map could have, so use unmodifiable map
+    Map<String, Object> old = Collections.unmodifiableMap(getUserAttributes());
+
+    //Set current map to just the Reserved System Attributes
+    map = getSystemAttributes();
+    // Add and validate each of the new user attributes
+    newAttributes.forEach((k,v) -> setAttribute(k, v.toString()));
+    return old;
+  }
+
 }

@@ -261,9 +261,10 @@ public class TestMapRDBCDCSource {
       int numMessages = rand.nextInt(40)+1;
       totalMessages += numMessages;
       ConsumerRecords<byte[], ChangeDataRecord> consumerRecords =
-          generateConsumerRecords(numMessages, 1, "topic"+rand.nextInt(numTopics), 0, ChangeDataRecordType.RECORD_UPDATE);
+          generateConsumerRecords(numMessages, 1, "topic-"+rand.nextInt(numTopics), 0, ChangeDataRecordType
+              .RECORD_UPDATE);
       ConsumerRecords<byte[], ChangeDataRecord> emptyRecords =
-          generateConsumerRecords(1, 0, "topic"+rand.nextInt(numTopics), 0, ChangeDataRecordType.RECORD_UPDATE);
+          generateConsumerRecords(1, 0, "topic-"+rand.nextInt(numTopics), 0, ChangeDataRecordType.RECORD_UPDATE);
 
       KafkaConsumer mockConsumer = Mockito.mock(KafkaConsumer.class);
       consumerList.add(mockConsumer);

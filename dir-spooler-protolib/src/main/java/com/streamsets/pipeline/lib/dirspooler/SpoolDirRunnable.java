@@ -50,6 +50,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+
 public class SpoolDirRunnable implements Runnable {
   public static final String SPOOL_DIR_METRICS = "Spool Directory Metrics for Thread - ";
   public static final String CURRENT_FILE = "Current File";
@@ -514,7 +515,7 @@ public class SpoolDirRunnable implements Runnable {
   }
 
   private void setHeaders(Record record, Map<String, Object> recordHeaderAttr) throws IOException {
-    record.getHeader().setAllAttributes(recordHeaderAttr);
+    recordHeaderAttr.forEach((k,v) -> record.getHeader().setAttribute(k, v.toString()));
   }
 
   private enum Status {

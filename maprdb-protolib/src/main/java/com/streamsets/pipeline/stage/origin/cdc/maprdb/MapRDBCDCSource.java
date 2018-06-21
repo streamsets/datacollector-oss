@@ -156,7 +156,7 @@ public class MapRDBCDCSource extends BasePushSource {
                 (String) attributes.get(HeaderAttributeConstants.OFFSET)
             ));
             Record.Header recordHeader = record.getHeader();
-            recordHeader.setAllAttributes(attributes);
+            recordHeader.setUserAttributes(attributes);
             recordHeader.setAttribute(MAPR_OP_TIMESTAMP, String.valueOf(node.getOpTimestamp()));
             recordHeader.setAttribute(MAPR_SERVER_TIMESTAMP, String.valueOf(node.getServerTimestamp()));
             if(node.getType() == Value.Type.MAP) {
@@ -192,7 +192,7 @@ public class MapRDBCDCSource extends BasePushSource {
               (String) attributes.get(HeaderAttributeConstants.OFFSET)
           ));
           Record.Header recordHeader = record.getHeader();
-          recordHeader.setAllAttributes(attributes);
+          recordHeader.setUserAttributes(attributes);
 
           HashMap<String, Field> root = new HashMap<>();
           record.set(Field.create(root));

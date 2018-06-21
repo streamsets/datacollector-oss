@@ -153,10 +153,17 @@ public class TestRecordSampler {
           }
 
           @Override
-          public Map<String, Object> setAllAttributes(Map<String, Object> newAttrs) {
+          public Map<String, Object> overrideUserAndSystemAttributes(Map<String, Object> newAttrs) {
             return null;
           }
+          @Override
+          public Map<String, Object> getUserAttributes() {return null;}
+
+          @Override
+          public Map<String, Object> setUserAttributes(Map<String, Object> newAttributes) {return null;}
+
         };
+
         @Override
         public Header getHeader() {
           return header;
