@@ -54,7 +54,7 @@ public class RecordCloner {
     // So create a new record and set its root field to be the deserialized one's root field.
     Record r = context.createRecord(record);
     r.set(record.get());
-    r.getHeader().setAllAttributes(record.getHeader().getAllAttributes());
+    r.getHeader().overrideUserAndSystemAttributes(record.getHeader().getAllAttributes());
     return r;
   }
 
@@ -65,7 +65,7 @@ public class RecordCloner {
       Object origHeaders = record.getClass().getMethod("getHeader").invoke(record);
       Map<String, Object> headers =
           (Map<String, Object>) origHeaders.getClass().getMethod("getAllAttributes").invoke(origHeaders);
-      newRecord.getHeader().setAllAttributes(headers);
+      newRecord.getHeader().overrideUserAndSystemAttributes(headers);
       newRecord.set(RecordCloner.cloneField(record.getClass().getMethod("get").invoke(record)));
       return newRecord;
     } catch(Exception ex) {

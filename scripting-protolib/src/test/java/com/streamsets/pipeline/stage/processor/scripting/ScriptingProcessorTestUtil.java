@@ -790,7 +790,7 @@ public class ScriptingProcessorTestUtil {
         errorStackTrace,
         map
     );
-    record.getHeader().setAllAttributes(recordHeaderAttributes);
+    record.getHeader().overrideUserAndSystemAttributes(recordHeaderAttributes);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(clazz, processor)
         .addOutputLane("lane")
