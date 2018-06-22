@@ -427,6 +427,11 @@ public class StageContext extends ProtoContext implements
   }
 
   @Override
+  public boolean isErrorStage() {
+    return false;
+  }
+
+  @Override
   public EventRecord createEventRecord(String type, int version, String recordSourceId) {
     return new EventRecordImpl(type, version, stageInfo.getInstanceName(), recordSourceId, null, null);
   }
