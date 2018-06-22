@@ -646,7 +646,8 @@ public class Pipeline {
           new ConcurrentHashMap<>(),
           startTime,
           blobStore,
-          lineagePublisherTask
+          lineagePublisherTask,
+          false
         );
 
         SourcePipe originPipe = createOriginPipe(originRuntime, runner);
@@ -696,7 +697,8 @@ public class Pipeline {
           new ConcurrentHashMap<>(),
           startTime,
           blobStore,
-          lineagePublisherTask
+          lineagePublisherTask,
+          true
         );
         BadRecordsHandler badRecordsHandler = new BadRecordsHandler(
           pipelineBean.getConfig().errorRecordPolicy,
@@ -724,7 +726,8 @@ public class Pipeline {
             new ConcurrentHashMap<>(),
             startTime,
             blobStore,
-            lineagePublisherTask
+            lineagePublisherTask,
+            false
           );
 
           statsAggregationHandler = new StatsAggregationHandler(statsAggregator);
@@ -758,7 +761,8 @@ public class Pipeline {
             new ConcurrentHashMap<>(),
             startTime,
             blobStore,
-            lineagePublisherTask
+            lineagePublisherTask,
+            false
           );
         }
         if(pipelineBean.getStopEventStages().size() == 1) {
@@ -778,7 +782,8 @@ public class Pipeline {
             new ConcurrentHashMap<>(),
             startTime,
             blobStore,
-            lineagePublisherTask
+            lineagePublisherTask,
+            false
           );
         }
 
@@ -888,7 +893,8 @@ public class Pipeline {
         sharedRunnerMap,
         startTime,
         blobStore,
-        lineagePublisherTask
+        lineagePublisherTask,
+        false
       ));
     }
 
@@ -1002,7 +1008,8 @@ public class Pipeline {
     Map<String, Object> runnerSharedMap,
     long startTime,
     BlobStoreTask blobStore,
-    LineagePublisherTask lineagePublisherTask
+    LineagePublisherTask lineagePublisherTask,
+    boolean isErrorStage
   ) {
     EmailSender emailSender = new EmailSender(configuration);
 
@@ -1122,7 +1129,8 @@ public class Pipeline {
         runnerSharedMap,
         startTime,
         new LineagePublisherDelegator.TaskDelegator(lineagePublisherTask),
-        services
+        services,
+        isErrorStage
       )
     );
 

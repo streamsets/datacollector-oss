@@ -86,6 +86,7 @@ public class StageContext extends ProtoContext implements
   private PipelineFinisherDelegate pipelineFinisherDelegate;
   private RuntimeInfo runtimeInfo;
   private final Map services;
+  private final boolean isErrorStage;
 
   //for SDK
   public StageContext(
@@ -165,6 +166,7 @@ public class StageContext extends ProtoContext implements
     this.sharedRunnerMap = new ConcurrentHashMap<>();
     this.runtimeInfo = runtimeInfo;
     this.services = services;
+    this.isErrorStage = false;
 
     // sample all records while testing
     this.startTime = System.currentTimeMillis();
@@ -195,7 +197,8 @@ public class StageContext extends ProtoContext implements
       Map<String, Object> sharedRunnerMap,
       long startTime,
       LineagePublisherDelegator lineagePublisherDelegator,
-      Map<Class, ServiceRuntime> services
+      Map<Class, ServiceRuntime> services,
+      boolean isErrorStage
   ) {
     super(
       configuration,
@@ -228,6 +231,7 @@ public class StageContext extends ProtoContext implements
     this.startTime = startTime;
     this.lineagePublisherDelegator = lineagePublisherDelegator;
     this.services = services;
+    this.isErrorStage = isErrorStage;
   }
 
   @Override
@@ -428,7 +432,7 @@ public class StageContext extends ProtoContext implements
 
   @Override
   public boolean isErrorStage() {
-    return false;
+    return isErrorStage;
   }
 
   @Override

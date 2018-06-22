@@ -198,7 +198,8 @@ public abstract class DetachedStage {
       Collections.emptyMap(),
       startTime,
       lineagePublisherDelegator,
-      Collections.emptyMap()
+      Collections.emptyMap(),
+      false
     );
 
     return new DetachedStageRuntime(stageBean, stageInfo, context);
