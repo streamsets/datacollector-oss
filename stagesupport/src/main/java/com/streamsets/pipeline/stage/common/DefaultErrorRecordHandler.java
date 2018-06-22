@@ -152,7 +152,12 @@ public class DefaultErrorRecordHandler implements ErrorRecordHandler {
         LOG.error("Can't propagate error to error stream: {} with params {}", errorCode, params);
       }
 
-      throw new IllegalStateException(Utils.format("Component {} doesn't have configured error record action.", context.getStageInfo().getInstanceName()));
+      // We throw "nicer" exception when this stage is in place of an error stage, otherwise generally sounding error
+      if(context.isErrorStage()) {
+        throw new IllegalStateException(Utils.format("Error stage {} itself generated error record, shutting pipeline down to prevent data loss.", context.getStageInfo().getInstanceName()));
+      } else {
+        throw new IllegalStateException(Utils.format("Component {} doesn't have configured error record action.", context.getStageInfo().getInstanceName()));
+      }
     }
   }
 
