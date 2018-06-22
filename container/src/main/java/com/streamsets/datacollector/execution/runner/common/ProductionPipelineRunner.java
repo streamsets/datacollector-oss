@@ -781,7 +781,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
 
   private boolean processPipe(
     Pipe pipe,
-    PipeBatch pipeBatch,
+    FullPipeBatch pipeBatch,
     boolean committed,
     String entityName,
     String newOffset,
@@ -792,13 +792,15 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     // Set the last batch time in the stage context of each pipe
     ((StageContext)pipe.getStage().getContext()).setLastBatchTime(offsetTracker.getLastBatchTime());
 
-    if (deliveryGuarantee == DeliveryGuarantee.AT_MOST_ONCE
+    if(!pipeBatch.isIdleBatch()) {
+      if (deliveryGuarantee == DeliveryGuarantee.AT_MOST_ONCE
         && pipe.getStage().getDefinition().getType() == StageType.TARGET
         && !committed
       ) {
-      // target cannot control offset commit in AT_MOST_ONCE mode
-      offsetTracker.commitOffset(entityName, newOffset);
-      committed = true;
+        // target cannot control offset commit in AT_MOST_ONCE mode
+        offsetTracker.commitOffset(entityName, newOffset);
+        committed = true;
+      }
     }
     pipe.process(pipeBatch);
     if (pipe instanceof StagePipe) {
@@ -851,12 +853,14 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
 
     enforceMemoryLimit(memoryConsumedByStage);
     badRecordsHandler.handle(entityName, newOffset, pipeBatch.getErrorSink());
-    if (deliveryGuarantee == DeliveryGuarantee.AT_LEAST_ONCE) {
-      // When AT_LEAST_ONCE commit only if
-      // 1. There is no offset commit trigger for this pipeline or
-      // 2. there is a commit trigger and it is on
-      if (offsetCommitTrigger == null || offsetCommitTrigger.commit()) {
-        offsetTracker.commitOffset(entityName, newOffset);
+    if(!pipeBatch.isIdleBatch()) {
+      if (deliveryGuarantee == DeliveryGuarantee.AT_LEAST_ONCE) {
+        // When AT_LEAST_ONCE commit only if
+        // 1. There is no offset commit trigger for this pipeline or
+        // 2. there is a commit trigger and it is on
+        if (offsetCommitTrigger == null || offsetCommitTrigger.commit()) {
+          offsetTracker.commitOffset(entityName, newOffset);
+        }
       }
     }
 
@@ -942,8 +946,9 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
    * for more then idleTime.
    *
    * @param idleTime Number of milliseconds after which a runner is considered "idle"
+   * @return Number of idle batches generated in this iteration
    */
-  public void produceEmptyBatchesForIdleRunners(long idleTime) throws PipelineException, StageException {
+  public int produceEmptyBatchesForIdleRunners(long idleTime) throws PipelineException, StageException {
     LOG.debug("Checking if any active runner is idle");
 
     // The empty batch is suppose to be fast - almost as a zero time. It could however happened that from some reason it
@@ -963,7 +968,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
 
           // No more idle runners, simply stop the idle execution now
           if(runner == null) {
-            return;
+            return counter;
           }
 
           LOG.debug("Generating empty batch for runner: {}", runner.getRunnerId());
@@ -971,6 +976,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
 
           // Pipe batch to keep the batch info
           FullPipeBatch pipeBatch = new FullPipeBatch(null, null, 0, false);
+          pipeBatch.setIdleBatch(true);
 
           // We're explicitly skipping origin because this is framework generated, empty batch
           pipeBatch.skipStage(originPipe);
@@ -993,6 +999,8 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     } finally {
       destroyLock.unlock();
     }
+
+    return counter;
   }
 
   private void enforceMemoryLimit(Map<String, Long> memoryConsumedByStage) throws PipelineRuntimeException {

@@ -70,6 +70,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -85,15 +87,20 @@ import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Exchanger;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class TestProductionPipeline {
 
+  private static final Logger LOG = LoggerFactory.getLogger(TestProductionPipeline.class);
   private static final String PIPELINE_NAME = "myPipeline";
   private static final String REVISION = "0";
   private static final String SNAPSHOT_NAME = "snapshot";
   private MetricRegistry runtimeInfoMetrics;
   private MemoryLimitConfiguration memoryLimit;
   private RuntimeInfo runtimeInfo;
+  private ProductionPipelineRunner lastCreatedRunner;
 
   // Private enum for this testcase to figure out which pipeline should be used for test
   private enum PipelineType {
@@ -418,6 +425,7 @@ public class TestProductionPipeline {
     if (rateLimit > 0) {
       runner.setRateLimit(rateLimit);
     }
+    this.lastCreatedRunner = runner;
     PipelineConfiguration pConf = null;
     switch(type) {
       case DEFAULT:
@@ -449,6 +457,7 @@ public class TestProductionPipeline {
       pConf,
       System.currentTimeMillis()
     );
+    pipeline.registerStatusListener(Mockito.mock(StateListener.class));
     runner.setOffsetTracker(tracker);
 
     if (captureNextBatch) {
@@ -848,6 +857,62 @@ public class TestProductionPipeline {
         Mockito.anyList()
     );
     Mockito.verifyNoMoreInteractions(statsAggregationHandler);
+  }
+
+  private static class OffsetCommitSource extends BaseSource implements OffsetCommitter {
+    boolean shouldContinue = true;
+    boolean running = false;
+    boolean committed = false;
+
+    @Override
+    public void commit(String offset) throws StageException {
+      committed = true;
+    }
+
+    @Override
+    public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+      LOG.info("Pausing execution in the origin");
+      running = true;
+      while(shouldContinue) {
+        try {
+          Thread.sleep(1000);
+        } catch (InterruptedException e) {
+          Assert.fail("Unexpected interruption");
+        }
+      }
+
+      return null;
+    }
+  }
+  @Test // SDC-9320
+  public void testSourceOffsetTrackerNotCalledForIdleBatch() throws Exception {
+    OffsetCommitSource source = new OffsetCommitSource();
+    MockStages.setSourceCapture(source);
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_LEAST_ONCE, false, -1, PipelineType.OFFSET_COMMITTERS);
+    Assert.assertNotNull(lastCreatedRunner);
+
+    ExecutorService executor = Executors.newSingleThreadExecutor();
+    Future future = executor.submit(() -> {
+      try {
+        LOG.info("Starting the pipeline execution");
+        pipeline.run();
+      } catch (StageException|PipelineRuntimeException e) {
+        Assert.fail("Pipeline execution failed: " + e.toString());
+      }
+    });
+
+    // Wait on the pipeline to "freeze" in running state.
+    while(!source.running) {
+      Thread.sleep(100);
+    }
+
+    // Generating idle batches should result in no commit operation
+    int idleBatches = lastCreatedRunner.produceEmptyBatchesForIdleRunners(0);
+    Assert.assertEquals(1, idleBatches);
+    Assert.assertFalse(source.committed);
+
+    source.shouldContinue = false;
+    future.get();
   }
 
 }
