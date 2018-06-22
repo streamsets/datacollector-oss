@@ -20,7 +20,7 @@
 angular
   .module('dataCollectorApp.home')
   .controller('ConfigurationController', function (
-    $scope, $rootScope, $q, $modal, _, $timeout, api, previewService, pipelineConstant, pipelineService
+    $scope, $rootScope, $q, $modal, _, $timeout, api, previewService, pipelineConstant, pipelineService, lintService
   ) {
 
     var getIssues = function(config, issues, instanceName, serviceName, configDefinition) {
@@ -91,7 +91,7 @@ angular
        * @param configDefinition
        * @returns {*}
        */
-      getCodeMirrorOptions: function(options, configDefinition) {
+      getCodeMirrorOptions: function(options, configDefinition, bulkEdit) {
         var codeMirrorOptions = {};
 
         if (configDefinition.type !== 'TEXT') {
@@ -108,15 +108,18 @@ angular
         if (!$scope.codeMirrorErrors[configDefinition.name]) {
           $scope.codeMirrorErrors[configDefinition.name] = [];
         }
-        // NOTE(chab) the mode is 'text/plain' for bulk edit, even if we are waiting for a json object
-        // should not we get an application/json mode instead ?
-        if (configDefinition.type === 'MODEL' || configDefinition.mode === "text/javascript") {
+
+        var linter = lintService.determineLinter(configDefinition, bulkEdit);
+        if (linter) {
           codeMirrorOptions.gutters = ['CodeMirror-lint-markers'];
           codeMirrorOptions.lint = {
             "getAnnotations": function(cm, updateLinting, options) {
-              // call the built in javascript linter, we cannot pass directly options, as JSHINT
-              var errors = CodeMirror.lint.javascript(cm,{ indent: options.indent});
-              $scope.codeMirrorErrors[configDefinition.name] = errors;
+              options = { indent: options.indent};
+              var errors = lintService.performLint(linter, cm, options),
+                errorSeverityFilter = 'error';
+              $scope.codeMirrorErrors[configDefinition.name] = !!errorSeverityFilter ? errors.filter(function(err) {
+                return err.severity === errorSeverityFilter;
+              }) : errors;
               // use $timeout to trigger safely a digest loop in the next event loop, so changes can
               // be applied, we need to do this as this code is not called by angular
               $timeout(0, {});
@@ -125,7 +128,6 @@ angular
             "async": true
           }
         }
-
         return angular.extend(codeMirrorOptions, pipelineService.getDefaultELEditorOptions(), options);
       },
 

@@ -112,6 +112,7 @@ module.exports = function(grunt) {
         'bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.js',
         'bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.templates.js',
         'bower_components/jshint/dist/jshint.js',
+        'bower_components/jsonlint/lib/jsonlint.js',
         'bower_components/codemirror/lib/codemirror.js',
         'bower_components/codemirror/mode/clike/clike.js',
         'bower_components/codemirror/mode/python/python.js',
@@ -130,6 +131,7 @@ module.exports = function(grunt) {
         'bower_components/codemirror/addon/hint/sql-hint.js',
         'bower_components/codemirror/addon/lint/lint.js',
         'bower_components/codemirror/addon/lint/javascript-lint.js',
+        'bower_components/codemirror/addon/lint/json-lint.js',
         'bower_components/angular-xeditable/dist/js/xeditable.js'
       ],
       css: [
