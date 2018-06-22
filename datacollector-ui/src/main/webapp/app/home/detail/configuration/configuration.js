@@ -59,6 +59,7 @@ angular
 
     angular.extend($scope, {
       fieldPaths: [],
+      codeMirrorErrors: {},
       dFieldPaths: [],
       fieldPathsType: [],
       fieldSelectorPaths: [],
@@ -104,11 +105,25 @@ angular
             lineWrapping: $rootScope.$storage.lineWrapping
           };
         }
+        if (!$scope.codeMirrorErrors[configDefinition.name]) {
+          $scope.codeMirrorErrors[configDefinition.name] = [];
+        }
         // NOTE(chab) the mode is 'text/plain' for bulk edit, even if we are waiting for a json object
         // should not we get an application/json mode instead ?
         if (configDefinition.type === 'MODEL' || configDefinition.mode === "text/javascript") {
           codeMirrorOptions.gutters = ['CodeMirror-lint-markers'];
-          codeMirrorOptions.lint = true;
+          codeMirrorOptions.lint = {
+            "getAnnotations": function(cm, updateLinting, options) {
+              // call the built in javascript linter, we cannot pass directly options, as JSHINT
+              var errors = CodeMirror.lint.javascript(cm,{ indent: options.indent});
+              $scope.codeMirrorErrors[configDefinition.name] = errors;
+              // use $timeout to trigger safely a digest loop in the next event loop, so changes can
+              // be applied, we need to do this as this code is not called by angular
+              $timeout(0, {});
+              updateLinting(errors);
+            },
+            "async": true
+          }
         }
 
         return angular.extend(codeMirrorOptions, pipelineService.getDefaultELEditorOptions(), options);
