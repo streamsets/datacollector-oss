@@ -50,6 +50,9 @@ public class FullPipeBatch implements PipeBatch {
   private int outputRecords;
   private RateLimiter rateLimiter;
 
+  // True if the batch was created by a framework rather then origin
+  private boolean isIdleBatch;
+
   public FullPipeBatch(String sourceEntity, String lastOffset, int batchSize, boolean snapshotStagesOutput) {
     this.sourceEntity = sourceEntity;
     this.lastOffset = lastOffset;
@@ -335,4 +338,11 @@ public class FullPipeBatch implements PipeBatch {
     );
   }
 
+  public void setIdleBatch(boolean idleBatch) {
+    this.isIdleBatch = idleBatch;
+  }
+
+  public boolean isIdleBatch() {
+    return isIdleBatch;
+  }
 }
