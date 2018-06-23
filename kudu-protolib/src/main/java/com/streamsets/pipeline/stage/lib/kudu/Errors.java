@@ -36,7 +36,7 @@ public enum Errors implements ErrorCode {
   KUDU_14("Unknown action for unsupported operation: {}"),
   KUDU_15("Row key '{}' not found"),
 
-  KUDU_30("Column mappings must be specified for lookup processor: {}"),
+  KUDU_30("Column mappings must be specified for lookup processor"),
   KUDU_31("No rows found"),
   KUDU_32("Primary key field '{}' not found in record"),
   KUDU_33("Unsupported column type: {}"),

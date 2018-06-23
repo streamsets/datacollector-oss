@@ -44,7 +44,7 @@ public class KuduUtils {
                                      final List<Stage.ConfigIssue> issues
   ){
     try {
-      kuduClient.getTablesList();
+      kuduClient.getTablesList().join();
     } catch (Exception ex) {
       issues.add(
           context.createConfigIssue(

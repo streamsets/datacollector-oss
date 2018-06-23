@@ -97,6 +97,9 @@ public class KuduTarget extends BaseTarget {
   private static final String CONSISTENCY_MODE = "consistencyMode";
   private static final String TABLE_NAME_TEMPLATE = "tableNameTemplate";
   private static final String FIELD_MAPPING_CONFIGS = "fieldMappingConfigs";
+  private static final String OPERATION_TIMEOUT = "operationTimeout";
+  private static final String ADMIN_OPERATION_TIMEOUT = "adminOperationTimeout";
+
 
   private final String kuduMaster;
   private final String tableNameTemplate;
@@ -117,6 +120,7 @@ public class KuduTarget extends BaseTarget {
 
   private KuduOperationType defaultOperation;
   private Set<String> accessedTables;
+  private long CACHE_EXPIRATION_PERIOD = 60;
 
   public KuduTarget(KuduConfigBean configBean) {
     this.configBean = configBean;
@@ -129,7 +133,7 @@ public class KuduTarget extends BaseTarget {
 
     CacheBuilder cacheBuilder = CacheBuilder.newBuilder()
         .maximumSize(tableCacheSize)
-        .expireAfterAccess(1, TimeUnit.HOURS);
+        .expireAfterAccess(CACHE_EXPIRATION_PERIOD, TimeUnit.MINUTES);
 
     if(LOG.isDebugEnabled()) {
       // recordStats is available only in Guava 12.0 and above, but
@@ -197,24 +201,46 @@ public class KuduTarget extends BaseTarget {
       );
     }
 
-    kuduClient = buildKuduClient();
+    if (configBean.operationTimeout < 0) {
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.ADVANCED.name(),
+              KuduConfigBean.CONF_PREFIX + OPERATION_TIMEOUT,
+              Errors.KUDU_02
+          )
+      );
+    }
+
+    if (configBean.adminOperationTimeout < 0) {
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.ADVANCED.name(),
+              KuduConfigBean.CONF_PREFIX + ADMIN_OPERATION_TIMEOUT,
+              Errors.KUDU_02
+          )
+      );
+    }
+
     if (issues.isEmpty()) {
+      kuduClient = buildKuduClient();
       kuduSession = openKuduSession(issues);
     }
 
-    // Check if SDC can reach the Kudu Master
-    try {
-      kuduClient.getTablesList();
-    } catch (KuduException ex) {
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.KUDU.name(),
-              KuduConfigBean.CONF_PREFIX + KUDU_MASTER,
-              Errors.KUDU_00,
-              ex.toString(),
-              ex
-          )
-      );
+    if (issues.isEmpty()) {
+      try {
+        // Check if SDC can reach the Kudu Master
+        kuduClient.getTablesList();
+      } catch (KuduException ex) {
+        issues.add(
+            getContext().createConfigIssue(
+                Groups.KUDU.name(),
+                KuduConfigBean.CONF_PREFIX + KUDU_MASTER,
+                Errors.KUDU_00,
+                ex.toString(),
+                ex
+            )
+        );
+      }
     }
 
     if (tableNameTemplate.contains(EL_PREFIX)) {
@@ -267,7 +293,16 @@ public class KuduTarget extends BaseTarget {
   @NotNull
   @VisibleForTesting
   KuduClient buildKuduClient() {
-    return new KuduClient.KuduClientBuilder(kuduMaster).defaultOperationTimeoutMs(configBean.operationTimeout).build();
+    KuduClient.KuduClientBuilder builder = new KuduClient.KuduClientBuilder(kuduMaster)
+      .defaultOperationTimeoutMs(configBean.operationTimeout)
+      .defaultAdminOperationTimeoutMs(configBean.adminOperationTimeout);
+
+    // Caution: if number of worker thread is not configured, Kudu client may start a massive amount of worker threads.
+    // The formula is "2 x available cores"
+    if (configBean.numWorkers > 0) {
+      builder.workerCount(configBean.numWorkers);
+    }
+    return builder.build();
   }
 
   private KuduSession openKuduSession(List<ConfigIssue> issues) {
@@ -392,7 +427,7 @@ public class KuduTarget extends BaseTarget {
       } catch (ExecutionException ex) {
         // if table doesn't exist, send records to the error handler and continue
         while (it.hasNext()) {
-          errorRecordHandler.onError(new OnRecordErrorException(it.next(), Errors.KUDU_01, tableName));
+          errorRecordHandler.onError(new OnRecordErrorException(it.next(), Errors.KUDU_03, ex.getMessage(), ex));
         }
         continue;
       }

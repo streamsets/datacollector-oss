@@ -105,29 +105,6 @@ public class TestKuduLookup {
     }
   }
 
-  /**
-   * If table name template is not EL, we access Kudu and check if the table exists.
-   * This test checks when Kudu's tableExists() method returns false.
-   * @throws Exception
-   */
-  @Test
-  public void testTableDoesNotExistNoEL() throws Exception{
-    // Mock table doesn't exist in Kudu.
-    PowerMockito.stub(
-        PowerMockito.method(AsyncKuduClient.class, "tableExists"))
-        .toThrow(PowerMockito.mock(KuduException.class));
-    ProcessorRunner runner = getProcessorRunner(tableName);
-
-    try {
-      List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
-      Assert.assertEquals(1, issues.size());
-      Stage.ConfigIssue issue = issues.get(0);
-      assertThat(issue.toString(), Matchers.containsIgnoringCase(KuduException.class.getSimpleName()));
-    } catch (StageException e){
-      Assert.fail();
-    }
-  }
-
   private ProcessorRunner getProcessorRunner(String tableName) {
     KuduLookupProcessor processor = getKuduLookupConfig(tableName);
     return getProcessorRunner(processor);

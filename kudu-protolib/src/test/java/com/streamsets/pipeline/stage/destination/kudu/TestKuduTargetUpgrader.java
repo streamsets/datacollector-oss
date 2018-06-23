@@ -13,41 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.processor.kudulookup;
+
+package com.streamsets.pipeline.stage.destination.kudu;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.stage.common.MissingValuesBehavior;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestKuduProcessorUpgrader {
+public class TestKuduTargetUpgrader {
 
   @Test
-  public void testUpgradeV1toV2() throws StageException {
+  public void testUpgradeV3toV4() throws StageException {
     List<Config> configs = new ArrayList<>();
-    KuduProcessorUpgrader upgrader = new KuduProcessorUpgrader();
-    List<Config> upgradedConfigs = upgrader.upgrade("lib", "stage", "stageInst", 1, 2, configs);
+    String upsert = KuduConfigBean.CONF_PREFIX + "upsert";
+    configs.add(new Config(upsert, true));
+    KuduTargetUpgrader upgrader = new KuduTargetUpgrader();
+    List<Config> upgradedConfigs = upgrader.upgrade("lib", "stage", "stageInst", 3, 4, configs);
     Assert.assertEquals(1, upgradedConfigs.size());
     Config addedConf1 = upgradedConfigs.get(0);
-    Assert.assertEquals("conf.missingLookupBehavior", addedConf1.getName());
-    Assert.assertEquals(MissingValuesBehavior.SEND_TO_ERROR, addedConf1.getValue());
+    Assert.assertEquals("kuduConfigBean.defaultOperation", addedConf1.getName());
   }
 
   @Test
-  public void testUpgradeV2toV3() throws StageException {
+  public void testUpgradeV4toV5() throws StageException {
     List<Config> configs = new ArrayList<>();
-    KuduProcessorUpgrader upgrader = new KuduProcessorUpgrader();
-    List<Config> upgradedConfigs = upgrader.upgrade("lib", "stage", "stageInst", 2, 3, configs);
+    KuduTargetUpgrader upgrader = new KuduTargetUpgrader();
+    List<Config> upgradedConfigs = upgrader.upgrade("lib", "stage", "stageInst", 4, 5, configs);
     Assert.assertEquals(2, upgradedConfigs.size());
     Config addedConf1 = upgradedConfigs.get(0);
-    Assert.assertEquals("conf.adminOperationTimeout", addedConf1.getName());
+    Assert.assertEquals("kuduConfigBean.adminOperationTimeout", addedConf1.getName());
     Assert.assertEquals(30000, addedConf1.getValue());
     Config addedConf2 = upgradedConfigs.get(1);
-    Assert.assertEquals("conf.numWorkers", addedConf2.getName());
+    Assert.assertEquals("kuduConfigBean.numWorkers", addedConf2.getName());
     Assert.assertEquals(0, addedConf2.getValue());
   }
 }
