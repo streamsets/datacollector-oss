@@ -118,15 +118,39 @@ public class KuduConfigBean {
   public int mutationBufferSpace;
 
   @ConfigDef(
-      required = true,
+      required = false,
       type = ConfigDef.Type.NUMBER,
-      defaultValue = "10000",
-      label = "Operation Timeout Milliseconds",
-      description = "Sets the default timeout used for user operations (using sessions and scanners)",
+      defaultValue = "",
+      label = "Maximum Number of Worker Threads",
+      description = "Set the maximum number of worker threads. If not provided or set to 0, " +
+          "the default (2 * the number of available processors) is used.",
       displayPosition = 20,
       group = "ADVANCED"
   )
-  public int operationTimeout;
+  public int numWorkers;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "10000",
+      label = "Operation Timeout (milliseconds)",
+      description = "Default timeout used for user operations (using sessions and scanners). A value of 0 disables the timeout.",
+      displayPosition = 25,
+      group = "ADVANCED"
+  )
+  public int operationTimeout = 10000;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "30000",
+      label = "Admin Operation Timeout (milliseconds)",
+      description = "Default timeout used for admin operations (openTable, getTableSchema, connectionRetry). " +
+          "A value of 0 disables the timeout.",
+      displayPosition = 30,
+      group = "ADVANCED"
+  )
+  public int adminOperationTimeout = 30000;
 
   @ConfigDef(
       required = true,
@@ -134,7 +158,7 @@ public class KuduConfigBean {
       defaultValue= "DISCARD",
       label = "Unsupported Operation Handling",
       description = "Action to take when operation type is not supported",
-      displayPosition = 30,
+      displayPosition = 35,
       group = "ADVANCED"
   )
   @ValueChooserModel(UnsupportedOperationActionChooserValues.class)

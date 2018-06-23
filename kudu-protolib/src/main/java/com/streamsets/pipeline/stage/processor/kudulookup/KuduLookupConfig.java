@@ -29,7 +29,7 @@ import com.streamsets.pipeline.stage.processor.kv.CacheConfig;
 import java.util.List;
 
 public class KuduLookupConfig {
-  public static final String CONF_PREFIX = "kuduLookupConfig.";
+  public static final String CONF_PREFIX = "conf.";
 
   // kudu tab
   @ConfigDef(
@@ -121,15 +121,40 @@ public class KuduLookupConfig {
   public MultipleValuesBehavior multipleValuesBehavior = MultipleValuesBehavior.DEFAULT;
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "",
+      label = "Maximum Number of Worker Threads",
+      description = "Set the maximum number of threads to perform lookup processing. If not provided or set to 0, " +
+          "the default number (2 * the number of available processors) is used.",
+      displayPosition = 20,
+      group = "ADVANCED"
+  )
+  public int numWorkers;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "10000",
-      label = "Operation Timeout Milliseconds",
-      description = "Sets the default timeout used for user operations (using sessions and scanners)",
+      label = "Operation Timeout (milliseconds)",
+      description = "Sets the default timeout used for user operations (using sessions and scanners). A value of 0 disables the timeout.",
       displayPosition = 30,
       group = "ADVANCED"
   )
-  public int operationTimeout;
+  public int operationTimeout = 10000;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "30000",
+      label = "Admin Operation Timeout (milliseconds)",
+      description = "Default timeout used for admin operations (openTable, getTableSchema, connectionRetry). " +
+          "A value of 0 disables the timeout.",
+      displayPosition = 35,
+      group = "ADVANCED"
+  )
+  public int adminOperationTimeout = 30000;
+
 
   @ConfigDef(
       required = true,

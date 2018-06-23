@@ -42,6 +42,12 @@ public class KuduTargetUpgrader implements StageUpgrader {
         // fall through
       case 3:
         upgradeV3ToV4(configs);
+        if (toVersion == 4) {
+          break;
+        }
+        // fall through
+      case 4:
+        upgradeV4ToV5(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -107,9 +113,10 @@ public class KuduTargetUpgrader implements StageUpgrader {
   private void upgradeV3ToV4(List<Config> configs) {
     List<Config> configsToRemove = new ArrayList<>();
     List<Config> configsToAdd = new ArrayList<>();
+    String upsert = KuduConfigBean.CONF_PREFIX + "upsert";
 
     for (Config config : configs) {
-      if (config.getName().equals(KuduConfigBean.CONF_PREFIX + "upsert")){
+      if (config.getName().equals(upsert)){
         if ((Boolean)config.getValue()){
           configsToAdd.add(new Config(KuduConfigBean.CONF_PREFIX + "defaultOperation", "UPSERT"));
         } else {
@@ -121,5 +128,10 @@ public class KuduTargetUpgrader implements StageUpgrader {
     }
     configs.addAll(configsToAdd);
     configs.removeAll(configsToRemove);
+  }
+
+  private void upgradeV4ToV5(List<Config> configs) {
+    configs.add(new Config(KuduConfigBean.CONF_PREFIX + "adminOperationTimeout", 30000));
+    configs.add(new Config(KuduConfigBean.CONF_PREFIX + "numWorkers", 0)); // use default
   }
 }

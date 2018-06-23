@@ -55,6 +55,8 @@ public class KuduLookupProcessor extends SingleLaneRecordProcessor {
   private static final String KEY_MAPPING_CONFIGS = "keyColumnMapping";
   private static final String OUTPUT_MAPPING_CONFIG = "outputColumnMapping";
   private static final String EL_PREFIX = "${";
+  private static final String OPERATION_TIMEOUT = "operationTimeout";
+  private static final String ADMIN_OPERATION_TIMEOUT = "adminOperationTimeout";
 
   private static final Logger LOG = LoggerFactory.getLogger(KuduLookupProcessor.class);
   private KuduLookupConfig conf;
@@ -105,7 +107,38 @@ public class KuduLookupProcessor extends SingleLaneRecordProcessor {
       keyColumns.add(columnName);
       columnToField.put(columnName, fieldConfig.field);
     }
-    kuduClient = new AsyncKuduClient.AsyncKuduClientBuilder(conf.kuduMaster).defaultOperationTimeoutMs(conf.operationTimeout).build();
+
+    if (conf.operationTimeout < 0) {
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.ADVANCED.name(),
+              KuduLookupConfig.CONF_PREFIX + OPERATION_TIMEOUT,
+              Errors.KUDU_02
+          )
+      );
+    }
+
+    if (conf.adminOperationTimeout < 0) {
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.ADVANCED.name(),
+              KuduLookupConfig.CONF_PREFIX + ADMIN_OPERATION_TIMEOUT,
+              Errors.KUDU_02
+          )
+      );
+    }
+
+    AsyncKuduClient.AsyncKuduClientBuilder builder = new AsyncKuduClient.AsyncKuduClientBuilder(conf.kuduMaster)
+      .defaultOperationTimeoutMs(conf.operationTimeout)
+      .defaultAdminOperationTimeoutMs(conf.adminOperationTimeout);
+
+    // Caution: if number of worker thread is not configured, Kudu client may start a massive amount of worker threads.
+    // The formula is "2 x available cores"
+    if (conf.numWorkers > 0) {
+      builder.workerCount(conf.numWorkers);
+    }
+    kuduClient = builder.build();
+
     if (issues.isEmpty()) {
       kuduSession = kuduClient.newSession();
     }
@@ -135,9 +168,9 @@ public class KuduLookupProcessor extends SingleLaneRecordProcessor {
             issues.add(
                 getContext().createConfigIssue(
                     Groups.KUDU.name(),
-                    KuduLookupConfig.CONF_PREFIX + tableName,
+                    KuduLookupConfig.CONF_PREFIX + KUDU_TABLE,
                     Errors.KUDU_01,
-                    conf.kuduTableTemplate
+                    tableName
                 )
             );
           }
@@ -145,7 +178,7 @@ public class KuduLookupProcessor extends SingleLaneRecordProcessor {
           issues.add(
               getContext().createConfigIssue(
                   Groups.KUDU.name(),
-                  KuduLookupConfig.CONF_PREFIX + tableName,
+                  KuduLookupConfig.CONF_PREFIX + KUDU_TABLE,
                   Errors.KUDU_03,
                   ex
               )
