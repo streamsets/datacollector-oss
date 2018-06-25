@@ -36,24 +36,33 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class TestTableExclusion {
   private static final String USER_NAME = "sa";
   private static final String PASSWORD = "sa";
-  protected static final String database = "TEST";
-  private static final String JDBC_URL = "jdbc:h2:mem:" + database;
-  private static final String CREATE_TABLE_PATTERN = "CREATE TABLE IF NOT EXISTS TEST.%s (p_id INT NOT NULL PRIMARY KEY);";
-  private static final String DELETE_TABLE_PATTERN = "DROP TABLE IF EXISTS TEST.%s;";
+  protected static final String SCHEMA = "TEST";
+  private static final String JDBC_URL = "jdbc:h2:mem:" + SCHEMA;
+  private static final String CREATE_TABLE_PATTERN = "CREATE TABLE IF NOT EXISTS %s.%s (p_id INT NOT NULL PRIMARY KEY);";
+  private static final String DELETE_TABLE_PATTERN = "DROP TABLE IF EXISTS %s.%s;";
 
   private static final Set<String> TABLE_NAMES =
       ImmutableSet.of(
           "TABLEA", "TABLEB", "TABLEC", "TABLED", "TABLEE",
           "TABLE1", "TABLE2", "TABLE3", "TABLE4", "TABLE5"
       );
+
+  private static final Map<String, List<String>> multipleSchemaTables = new HashMap<>();
+
+  private static final String MULTISCHEMA_SCHEMA_1 = "SCHEMA1";
+  private static final String MULTISCHEMA_SCHEMA_2 = "SCHEMA2";
+  private static final String MULTISCHEMA_SCHEMA_3 = "THIRD_SCHEMA";
 
   private static Connection connection;
   private static TableJdbcELEvalContext tableJdbcELEvalContext;
@@ -62,10 +71,17 @@ public class TestTableExclusion {
   public static void setup() throws SQLException {
     connection = DriverManager.getConnection(JDBC_URL, USER_NAME, PASSWORD);
     try (Statement s = connection.createStatement()) {
-      s.addBatch("CREATE SCHEMA IF NOT EXISTS TEST;");
-      for (String tableName : TABLE_NAMES) {
-        s.addBatch(String.format(CREATE_TABLE_PATTERN, tableName));
-      }
+      Arrays.asList(SCHEMA, MULTISCHEMA_SCHEMA_1, MULTISCHEMA_SCHEMA_2, MULTISCHEMA_SCHEMA_3).forEach(schema -> {
+        try {
+          s.addBatch(String.format("CREATE SCHEMA IF NOT EXISTS %s;", schema));
+          for (String tableName : TABLE_NAMES) {
+            s.addBatch(String.format(CREATE_TABLE_PATTERN, schema, tableName));
+          }
+        } catch (SQLException e) {
+          throw new RuntimeException("Failed to set up schemas for test", e);
+        }
+      });
+
       s.executeBatch();
     }
     Stage.Context context =
@@ -83,10 +99,16 @@ public class TestTableExclusion {
   @AfterClass
   public static void tearDown() throws SQLException {
     try (Statement s = connection.createStatement()) {
-      for (String tableName : TABLE_NAMES) {
-        s.addBatch(String.format(DELETE_TABLE_PATTERN, tableName));
-      }
-      s.addBatch("DROP SCHEMA IF EXISTS TEST;");
+      Arrays.asList(SCHEMA, MULTISCHEMA_SCHEMA_1, MULTISCHEMA_SCHEMA_2, MULTISCHEMA_SCHEMA_3).forEach(schema -> {
+        try {
+          for (String tableName : TABLE_NAMES) {
+            s.addBatch(String.format(DELETE_TABLE_PATTERN, schema, tableName));
+          }
+          s.addBatch(String.format("DROP SCHEMA %s;", schema));
+        } catch (SQLException e) {
+          throw new RuntimeException("Failed to set up schemas for test", e);
+        }
+      });
       s.executeBatch();
     }
     connection.close();
@@ -111,7 +133,7 @@ public class TestTableExclusion {
   public void testNoExclusionPattern() throws Exception {
     TableConfigBean tableConfigBean = new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern("%")
-        .schema(database)
+        .schema(SCHEMA)
         .build();
     Assert.assertEquals(
         TABLE_NAMES.size(),
@@ -130,7 +152,7 @@ public class TestTableExclusion {
   public void testExcludeEverything() throws Exception {
     TableConfigBean tableConfigBean = new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern("%")
-        .schema(database)
+        .schema(SCHEMA)
         .tableExclusionPattern(".*")
         .build();
     Assert.assertEquals(
@@ -143,7 +165,7 @@ public class TestTableExclusion {
   public void testExcludeEndingWithNumbers() throws Exception {
     TableConfigBean tableConfigBean = new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern("TABLE%")
-        .schema(database)
+        .schema(SCHEMA)
         //Exclude tables ending with [0-9]+
         .tableExclusionPattern("TABLE[0-9]+")
         .build();
@@ -157,7 +179,7 @@ public class TestTableExclusion {
   public void testExcludeTableNameAsRegex() throws Exception {
     TableConfigBean tableConfigBean = new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern("TABLE%")
-        .schema(database)
+        .schema(SCHEMA)
         .tableExclusionPattern("TABLE1")
         .build();
 
@@ -171,11 +193,41 @@ public class TestTableExclusion {
   public void testExcludeUsingOrRegex() throws Exception {
     TableConfigBean tableConfigBean = new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern("TABLE%")
-        .schema(database)
+        .schema(SCHEMA)
         .tableExclusionPattern("TABLE1|TABLE2")
         .build();
     Assert.assertEquals(
         8,
+        listTablesForConfig(connection, tableConfigBean, tableJdbcELEvalContext).size()
+    );
+  }
+
+  @Test
+  public void testSchemaExclusion() throws Exception {
+    TableConfigBean tableConfigBean = new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+        .tablePattern("TABLE%")
+        .schema("%")
+        // exclude schemas SCHEMA1 and SCHEMA2, via a single character wildcard
+        .schemaExclusionPattern("SCHEMA.")
+        .build();
+    Assert.assertEquals(
+        // should include the test tables from TEST and THIRD_SCHEMA
+        TABLE_NAMES.size() * 2,
+        listTablesForConfig(connection, tableConfigBean, tableJdbcELEvalContext).size()
+    );
+  }
+
+  @Test
+  public void testSchemaExclusionDisjunction() throws Exception {
+    TableConfigBean tableConfigBean = new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+        .tablePattern("TABLE%")
+        .schema("%")
+        // exclude schemas TEST and THIRD_SCHEMA
+        .schemaExclusionPattern("TEST|THIRD.*")
+        .build();
+    Assert.assertEquals(
+        // should include the test tables from TSCHEMA1 and SCHEMA2
+        TABLE_NAMES.size() * 2,
         listTablesForConfig(connection, tableConfigBean, tableJdbcELEvalContext).size()
     );
   }
