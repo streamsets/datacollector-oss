@@ -15,10 +15,6 @@
  */
 package com.streamsets.datacollector.event.binding;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -43,6 +39,7 @@ import com.streamsets.datacollector.event.dto.PipelineStatusEvent;
 import com.streamsets.datacollector.event.dto.PipelineStatusEvents;
 import com.streamsets.datacollector.event.dto.PipelineStopAndDeleteEvent;
 import com.streamsets.datacollector.event.dto.SDCInfoEvent;
+import com.streamsets.datacollector.event.dto.SDCProcessMetricsEvent;
 import com.streamsets.datacollector.event.dto.ServerEvent;
 import com.streamsets.datacollector.event.dto.SyncAclEvent;
 import com.streamsets.datacollector.event.json.AckEventJson;
@@ -61,8 +58,13 @@ import com.streamsets.datacollector.event.json.PipelineStatusEventJson;
 import com.streamsets.datacollector.event.json.PipelineStatusEventsJson;
 import com.streamsets.datacollector.event.json.PipelineStopAndDeleteEventJson;
 import com.streamsets.datacollector.event.json.SDCInfoEventJson;
+import com.streamsets.datacollector.event.json.SDCProcessMetricsEventJson;
 import com.streamsets.datacollector.event.json.ServerEventJson;
 import com.streamsets.datacollector.event.json.SyncAclEventJson;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MessagingJsonToFromDto {
@@ -115,6 +117,9 @@ public class MessagingJsonToFromDto {
         break;
       case SDC_INFO_EVENT:
         eventJson = MessagingDtoJsonMapper.INSTANCE.toSDCInfoEventJson((SDCInfoEvent) event);
+        break;
+      case SDC_PROCESS_METRICS_EVENT:
+        eventJson = MessagingDtoJsonMapper.INSTANCE.toSDCMetricsEventJson((SDCProcessMetricsEvent) event);
         break;
       case SYNC_ACL:
         eventJson = MessagingDtoJsonMapper.INSTANCE.toSyncAclEventJson((SyncAclEvent)event);
@@ -205,6 +210,13 @@ public class MessagingJsonToFromDto {
         };
         SDCInfoEventJson sdcInfoEventJson = deserialize(serverEventJson.getPayload(), typeRef);
         serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asSDCInfoEventDto(sdcInfoEventJson));
+        break;
+      }
+      case SDC_PROCESS_METRICS_EVENT: {
+        TypeReference<SDCProcessMetricsEventJson> typeRef = new TypeReference<SDCProcessMetricsEventJson>() {
+        };
+        SDCProcessMetricsEventJson SDCProcessMetricsEventJson = deserialize(serverEventJson.getPayload(), typeRef);
+        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asSDCMetricsEventDto(SDCProcessMetricsEventJson));
         break;
       }
       case STATUS_PIPELINE: {

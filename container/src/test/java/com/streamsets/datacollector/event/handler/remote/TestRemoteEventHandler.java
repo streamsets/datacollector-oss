@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.DataRuleDefinition;
 import com.streamsets.datacollector.config.DriftRuleDefinition;
@@ -579,17 +580,18 @@ public class TestRemoteEventHandler {
         new MockBaseEventSenderReceiver(),
         jsonToFromDto,
         ackEventJsonList,
-
         new ArrayList<ClientEvent>(),
         null,
         null,
         -1,
         Arrays.asList("JOB_RUNNER"),
+        ImmutableList.of("jobrunner-app", "timeseries-app"),
         new HashMap<String, String>(),
         Stopwatch.createStarted(),
         -1,
         null,
-        new HashMap<>()
+        new HashMap<>(),
+        null
     );
     remoteEventHandler.callRemoteControl();
     assertEquals(-1, remoteEventHandler.getDelay());
@@ -657,11 +659,13 @@ public class TestRemoteEventHandler {
         null,
         -1,
         Arrays.asList("JOB_RUNNER"),
+        ImmutableList.of("jobrunner-app", "timeseries-app"),
         new HashMap<String, String>(),
         Stopwatch.createStarted(),
         -1,
         dataStore,
-        new HashMap<>()
+        new HashMap<>(),
+        null
     );
     remoteEventHandler.callRemoteControl();
     assertEquals(-1, remoteEventHandler.getDelay());
@@ -688,11 +692,13 @@ public class TestRemoteEventHandler {
         null,
         -1,
         Arrays.asList("JOB_RUNNER"),
+        ImmutableList.of("jobrunner-app", "timeseries-app"),
         new HashMap<String, String>(),
         Stopwatch.createStarted(),
         -1,
         null,
-        new HashMap<>()
+        new HashMap<>(),
+        null
     );
     // start event in error
     mockRemoteDataCollector.errorInjection = true;
@@ -719,11 +725,13 @@ public class TestRemoteEventHandler {
         null,
         -1,
         Arrays.asList("JOB_RUNNER"),
+        ImmutableList.of("jobrunner-app", "timeseries-app"),
         new HashMap<>(),
         Stopwatch.createStarted(),
         -1,
         null,
-        new HashMap<>()
+        new HashMap<>(),
+        null
     );
     remoteEventHandler.callRemoteControl();
     assertEquals(PING_FREQUENCY, remoteEventHandler.getDelay());
@@ -755,11 +763,13 @@ public class TestRemoteEventHandler {
         null,
         -1,
         Arrays.asList("JOB_RUNNER"),
+        ImmutableList.of("jobrunner-app", "timeseries-app"),
         new HashMap<>(),
         stopwatch,
         60000,
         null,
-        new HashMap<>()
+        new HashMap<>(),
+        null
     );
     remoteEventHandler.callRemoteControl();
     assertEquals(1, mockBaseEventSenderReceiver.clientJson.size());
@@ -781,11 +791,13 @@ public class TestRemoteEventHandler {
         null,
         -1,
         Arrays.asList("JOB_RUNNER"),
+        ImmutableList.of("jobrunner-app", "timeseries-app"),
         new HashMap<>(),
         stopwatch,
         5,
         null,
-        new HashMap<>()
+        new HashMap<>(),
+        null
     );
     remoteEventHandler.callRemoteControl();
     assertEquals(1, mockBaseEventSenderReceiver.clientJson.size());
@@ -826,7 +838,8 @@ public class TestRemoteEventHandler {
         sdcBuildInfo,
         Arrays.asList("label_1", "label_2"),
         2,
-        "foo"
+        "foo",
+        10000
     );
     ClientEvent clientEvent = new ClientEvent(
         id1.toString(),
@@ -846,11 +859,13 @@ public class TestRemoteEventHandler {
         null,
         -1,
         Arrays.asList("JOB_RUNNER"),
+        ImmutableList.of("jobrunner-app", "timeseries-app"),
         new HashMap<>(),
         Stopwatch.createStarted(),
         -1,
         null,
-        new HashMap<>()
+        new HashMap<>(),
+        null
     );
     remoteEventHandler.callRemoteControl();
     assertEquals(2, mockBaseEventSenderReceiver.clientJson.size());
@@ -898,11 +913,13 @@ public class TestRemoteEventHandler {
         null,
         -1,
         Arrays.asList("JOB_RUNNER"),
+        ImmutableList.of("jobrunner-app", "timeseries-app"),
         new HashMap<>(),
         Stopwatch.createStarted(),
         -1,
         dataStore,
-        new HashMap<>()
+        new HashMap<>(),
+        null
     );
     remoteEventHandler.callRemoteControl();
     Mockito.verify(dataStore, Mockito.times(1)).commit(Mockito.any(OutputStream.class));
@@ -923,11 +940,13 @@ public class TestRemoteEventHandler {
         null,
         -1,
         Arrays.asList("JOB_RUNNER"),
+        ImmutableList.of("jobrunner-app", "timeseries-app"),
         new HashMap<>(),
         Stopwatch.createStarted(),
         -1,
         null,
-        new HashMap<>()
+        new HashMap<>(),
+        null
     );
     ServerEventJson serverEventJson = new ServerEventJson();
     serverEventJson.setRequiresAck(true);
