@@ -156,7 +156,7 @@ public class BlobStoreTaskImpl extends AbstractTask implements BlobStoreTask {
 
   @Override
   public synchronized String retrieve(String namespace, String id, long version) throws StageException {
-    LOG.debug("Store on namespace={}, id={}, version={}", namespace, id, version);
+    LOG.debug("Retrieve on namespace={}, id={}, version={}", namespace, id, version);
     ObjectMetadata objectMetadata = getObjectDieIfNotExists(namespace, id);
 
     if(!objectMetadata.containsVersion(version)) {
