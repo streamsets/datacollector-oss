@@ -358,7 +358,7 @@ public class FullPipeBatch implements PipeBatch {
   /**
    * Intercept given records with all the interceptors.
    *
-   * TODO: Do we need to clone the records at the begging of each iteration?
+   * We're not cloning records during interception as we aim at changing their original form.
    */
   private List<Record> intercept(List<Record> records, List<? extends Interceptor> interceptors) {
     for(Interceptor interceptor : interceptors)  {
