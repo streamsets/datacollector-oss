@@ -362,14 +362,20 @@ public final class TableContextUtil {
       QuoteChar quoteChar
   ) throws SQLException, StageException {
     Map<String, TableContext> tableContextMap = new LinkedHashMap<>();
-    Pattern p =
+    Pattern tableExclusion =
         StringUtils.isEmpty(tableConfigBean.tableExclusionPattern)?
             null : Pattern.compile(tableConfigBean.tableExclusionPattern);
+    Pattern schemaExclusion =
+        StringUtils.isEmpty(tableConfigBean.schemaExclusionPattern)?
+            null : Pattern.compile(tableConfigBean.schemaExclusionPattern);
     try (ResultSet rs = JdbcUtil.getTableMetadata(connection, null, tableConfigBean.schema, tableConfigBean.tablePattern, true)) {
       while (rs.next()) {
         String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
         String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);
-        if (p == null || !p.matcher(tableName).matches()) {
+        if (
+            (tableExclusion == null || !tableExclusion.matcher(tableName).matches()) &&
+            (schemaExclusion == null || !schemaExclusion.matcher(schemaName).matches())
+        ) {
           TableContext tableContext = createTableContext(
               context,
               issues,

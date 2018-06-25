@@ -79,6 +79,17 @@ public final class TableConfigBean {
   public String tableExclusionPattern;
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Schema Exclusion Pattern",
+      description = "Pattern of the schema names to exclude from being read. Use a Java regex syntax." +
+          " Leave empty if no schema exclusions are needed.",
+      displayPosition = 45,
+      group = "TABLE"
+  )
+  public String schemaExclusionPattern;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Override Offset Columns",

@@ -242,6 +242,7 @@ public class TableJdbcSourceTestBuilder {
     private String schema;
     private String tablePattern;
     private String tableExclusionPattern;
+    private String schemaExclusionPattern;
     private boolean overrideDefaultOffsetColumns;
     private List<String> offsetColumns;
     private Map<String, String> offsetColumnToInitialOffsetValue;
@@ -255,6 +256,7 @@ public class TableJdbcSourceTestBuilder {
       this.schema = "";
       this.tablePattern = "%";
       this.tableExclusionPattern = "";
+      this.schemaExclusionPattern = "";
       this.overrideDefaultOffsetColumns = false;
       this.offsetColumns = new ArrayList<>();
       this.offsetColumnToInitialOffsetValue = Collections.emptyMap();
@@ -277,6 +279,11 @@ public class TableJdbcSourceTestBuilder {
 
     public TableConfigBeanTestBuilder tableExclusionPattern(String tableExclusionPattern) {
       this.tableExclusionPattern = tableExclusionPattern;
+      return this;
+    }
+
+    public TableConfigBeanTestBuilder schemaExclusionPattern(String schemaExclusionPattern) {
+      this.schemaExclusionPattern = schemaExclusionPattern;
       return this;
     }
 
@@ -325,6 +332,7 @@ public class TableJdbcSourceTestBuilder {
       tableConfigBean.schema = schema;
       tableConfigBean.tablePattern = tablePattern;
       tableConfigBean.tableExclusionPattern = tableExclusionPattern;
+      tableConfigBean.schemaExclusionPattern = schemaExclusionPattern;
       tableConfigBean.offsetColumnToInitialOffsetValue = offsetColumnToInitialOffsetValue;
       tableConfigBean.overrideDefaultOffsetColumns = overrideDefaultOffsetColumns;
       tableConfigBean.offsetColumns = offsetColumns;
