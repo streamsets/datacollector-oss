@@ -473,13 +473,15 @@ public class JdbcSource extends BaseSource {
         }
         String formattedError = JdbcUtil.formatSqlException(e);
         LOG.error(formattedError, e);
-        try {
-          statement = resultSet.getStatement();
-        } catch (SQLException e1) {
-          LOG.debug("Error while getting statement from result set: {}", e1.toString(), e1);
+        if (resultSet != null) {
+          try {
+            statement = resultSet.getStatement();
+          } catch (SQLException e1) {
+            LOG.debug("Error while getting statement from result set: {}", e1.toString(), e1);
+          }
+          closeQuietly(resultSet);
+          closeQuietly(statement);
         }
-        closeQuietly(resultSet);
-        closeQuietly(statement);
         closeQuietly(connection);
         lastQueryCompletedTime = System.currentTimeMillis();
         QUERY_FAILURE.create(getContext())
