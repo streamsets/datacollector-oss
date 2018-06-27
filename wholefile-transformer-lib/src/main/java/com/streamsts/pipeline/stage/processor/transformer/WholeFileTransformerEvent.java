@@ -15,21 +15,12 @@
  */
 package com.streamsts.pipeline.stage.processor.transformer;
 
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.lib.event.EventCreator;
+import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 
-public enum Groups implements Label {
-  JOB("Job"),
-  AVRO_PARQUET("Avro to Parquet")
-  ;
-
-  private final String label;
-
-  Groups(String label) {
-    this.label = label;
-  }
-
-  public String getLabel() {
-    return label;
-  }
+public final class WholeFileTransformerEvent {
+  /**
+   * Fired when the file transfer is complete.
+   */
+  public static EventCreator FILE_TRANSFER_COMPLETE_EVENT = FileRefUtil.FILE_TRANSFER_COMPLETE_EVENT;
 }
-

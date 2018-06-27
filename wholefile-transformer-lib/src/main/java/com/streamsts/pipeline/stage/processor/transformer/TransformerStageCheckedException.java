@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 StreamSets Inc.
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,21 +15,13 @@
  */
 package com.streamsts.pipeline.stage.processor.transformer;
 
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.StageException;
 
-public enum Groups implements Label {
-  JOB("Job"),
-  AVRO_PARQUET("Avro to Parquet")
-  ;
 
-  private final String label;
+public class TransformerStageCheckedException extends StageException {
 
-  Groups(String label) {
-    this.label = label;
-  }
-
-  public String getLabel() {
-    return label;
+  public TransformerStageCheckedException(ErrorCode errorCode, Object... params) {
+    super(errorCode, params);
   }
 }
-

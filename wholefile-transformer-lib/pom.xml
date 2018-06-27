@@ -71,6 +71,14 @@
     <!-- Compile Dependencies -->
     <dependency>
       <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-stagesupport</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-guavasupport</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-wholefile-converter-protolib</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>

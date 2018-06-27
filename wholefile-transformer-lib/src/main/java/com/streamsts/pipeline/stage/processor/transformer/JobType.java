@@ -17,19 +17,18 @@ package com.streamsts.pipeline.stage.processor.transformer;
 
 import com.streamsets.pipeline.api.Label;
 
-public enum Groups implements Label {
-  JOB("Job"),
-  AVRO_PARQUET("Avro to Parquet")
+public enum JobType implements Label {
+  AVRO_PARQUET("Convert Avro to Parquet"),
   ;
 
   private final String label;
 
-  Groups(String label) {
+  JobType(String label) {
     this.label = label;
   }
 
+  @Override
   public String getLabel() {
     return label;
   }
 }
-

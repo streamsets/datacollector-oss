@@ -15,21 +15,11 @@
  */
 package com.streamsts.pipeline.stage.processor.transformer;
 
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public enum Groups implements Label {
-  JOB("Job"),
-  AVRO_PARQUET("Avro to Parquet")
-  ;
+public class JobTypeChooserValues extends BaseEnumChooserValues<JobType> {
 
-  private final String label;
-
-  Groups(String label) {
-    this.label = label;
-  }
-
-  public String getLabel() {
-    return label;
+  public JobTypeChooserValues() {
+    super(JobType.class);
   }
 }
-

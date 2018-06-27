@@ -18,6 +18,18 @@ package com.streamsts.pipeline.stage.processor.transformer;
 import com.streamsets.pipeline.api.ErrorCode;
 
 public enum Errors implements ErrorCode {
+  CONVERT_01("Failed to validate record is a whole file data format : {}"),
+  CONVERT_02("Directory Path cannot be empty : {}"),
+  CONVERT_03("File Name cannot be empty : {}"),
+  CONVERT_04("Failed to evaluate expression : {}"),
+  CONVERT_05("Directory Path should be absolute : {}"),
+  CONVERT_06("Failed to delete old temporary file : {}"),
+  CONVERT_07("Failed to get temp file info : {}"),
+  CONVERT_08("Error while converting avro record: '{}' at {}"),
+  CONVERT_09("Failed to generate header attrs"),
+  CONVERT_10("Failed to get Directory Path : {}"),
+  CONVERT_11("Failed to get avro file stream : {}"),
+
   ;
 
   private final String message;
