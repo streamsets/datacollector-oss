@@ -393,7 +393,7 @@ public class TestPipeBatch {
   }
 
   @Test
-  public void testInterceptors() {
+  public void testInterceptors() throws Exception {
     PipeBatch pipeBatch = new FullPipeBatch(null,null, -1, true);
 
     PipelineBean pipelineBean = getPipelineBean();

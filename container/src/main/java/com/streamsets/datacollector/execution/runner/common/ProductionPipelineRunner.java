@@ -464,13 +464,13 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     Map<String, Long> memoryConsumedByStage = new HashMap<>();
     Map<String, Object> stageBatchMetrics = new HashMap<>();
 
-    Map<String, Object> batchMetrics = originPipe.finishBatchContext(batchContext);
-
-    if (isStatsAggregationEnabled()) {
-      stageBatchMetrics.put(originPipe.getStage().getInfo().getInstanceName(), batchMetrics);
-    }
-
     try {
+      Map<String, Object> batchMetrics = originPipe.finishBatchContext(batchContext);
+
+      if (isStatsAggregationEnabled()) {
+        stageBatchMetrics.put(originPipe.getStage().getInfo().getInstanceName(), batchMetrics);
+      }
+
       runSourceLessBatch(
         batchContext.getStartTime(),
         batchContext.getPipeBatch(),

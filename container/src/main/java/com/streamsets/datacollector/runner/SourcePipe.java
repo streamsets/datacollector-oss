@@ -102,7 +102,7 @@ public class SourcePipe extends StagePipe implements ReportErrorDelegate {
    * @param batchContext Batch context enriched by prepareBatchContext
    * @return Map with statistics that are usually stored inside the Pipe object itself.
    */
-  public Map<String, Object> finishBatchContext(BatchContextImpl batchContext) {
+  public Map<String, Object> finishBatchContext(BatchContextImpl batchContext) throws StageException {
     return finishBatchAndCalculateMetrics(
       batchContext.getStartTime(),
       batchContext.getPipeBatch(),

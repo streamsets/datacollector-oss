@@ -274,7 +274,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     ErrorSink errorSink,
     EventSink eventSink,
     String newOffset
-  ) {
+  ) throws StageException {
     long processingTime = System.currentTimeMillis() - startTimeInStage;
     processingTimer.update(processingTime, TimeUnit.MILLISECONDS);
 
