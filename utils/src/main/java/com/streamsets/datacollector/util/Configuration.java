@@ -31,9 +31,14 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 public class Configuration {
   private static File fileRefsBaseDir;
+
+  private static final String SENSITIVE_PROPERTIES = "sensitive.properties";
+  private static final String SENSITIVE_PROPERTIES_DEFAULT = ".*password.*";
+  static final String SENSITIVE_MASK = "-- MASKED --";
 
   // Only RuntimeModules should be calling this
   public static void setFileRefsBaseDir(File dir) {
@@ -232,6 +237,24 @@ public class Configuration {
     Map<String, Ref> subSetMap = new LinkedHashMap<>();
     for (Map.Entry<String, Ref> entry : map.entrySet()) {
       subSetMap.put(entry.getKey(), new StringRef(entry.getValue().getUnresolvedValue()));
+    }
+    return new Configuration(subSetMap);
+  }
+
+  public Configuration maskSensitiveConfigs() {
+    Pattern sensitiveProperties = Pattern.compile(
+      get(SENSITIVE_PROPERTIES, SENSITIVE_PROPERTIES_DEFAULT),
+      Pattern.CASE_INSENSITIVE
+    );
+
+    Map<String, Ref> subSetMap = new LinkedHashMap<>();
+    for (Map.Entry<String, Ref> entry : map.entrySet()) {
+      String key = entry.getKey();
+      Ref value = new StringRef(
+        sensitiveProperties.matcher(key).matches() ? SENSITIVE_MASK : entry.getValue().getUnresolvedValue()
+      );
+
+      subSetMap.put(key, value);
     }
     return new Configuration(subSetMap);
   }

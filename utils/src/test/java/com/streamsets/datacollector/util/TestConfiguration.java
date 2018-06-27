@@ -128,6 +128,16 @@ public class TestConfiguration {
   }
 
   @Test
+  public void testFilterSensitive() {
+    Configuration conf = new Configuration();
+
+    conf.set("realPassword", "secret password");
+
+    Configuration redacted = conf.maskSensitiveConfigs();
+    Assert.assertEquals(Configuration.SENSITIVE_MASK, redacted.get("realPassword", null));
+  }
+
+  @Test
   public void testSaveLoad() throws IOException {
     Configuration conf = new Configuration();
 
