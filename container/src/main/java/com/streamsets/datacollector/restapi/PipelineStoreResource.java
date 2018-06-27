@@ -1076,6 +1076,11 @@ public class PipelineStoreResource {
         fetchStageDefinition(errorStageConfig, stageDefinitions, stageIcons);
       }
 
+      StageConfiguration originStageConfig = pipelineConfig.getTestOriginStage();
+      if (originStageConfig != null) {
+        fetchStageDefinition(originStageConfig, stageDefinitions, stageIcons);
+      }
+
       StageConfiguration statsAggregatorStageConfig = pipelineConfig.getStatsAggregatorStage();
       if (statsAggregatorStageConfig != null) {
         fetchStageDefinition(statsAggregatorStageConfig, stageDefinitions, stageIcons);
