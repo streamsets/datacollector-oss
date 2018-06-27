@@ -24,17 +24,21 @@
 -->
   <script type="text/javascript">
     <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
-
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
+   var parentWindow = window.name;
+   console.log("1. " + parentWindow);
+   if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+    var currHash = window.location.hash.substr(1);
+    var currentLocation = window.location.href
+    if (currHash) {
+       console.log("2. Current Hash Before:" + currHash);
+       if (currHash.indexOf("datacollector/UserGuide/") == -1 && currentLocation.indexOf("datacollector/UserGuide/") == -1) {
+           currHash = "#datacollector/UserGuide/" + currHash;
+       }
+       currHash = decodeURIComponent(currHash)
+       window.location.hash = currHash
+       console.log("3. Current Hash After:" + currHash)
+   }
+}         
 -->
   </script>
 </head>
@@ -82,11 +86,11 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d480247e80"><samp class="ph codeph">order</samp></th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d482703e80"><samp class="ph codeph">order</samp></th>
 
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d480247e84"><samp class="ph codeph">itemID</samp></th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d482703e84"><samp class="ph codeph">itemID</samp></th>
 
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d480247e88"><samp class="ph codeph">cost</samp></th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d482703e88"><samp class="ph codeph">cost</samp></th>
 
                         </tr>
 
@@ -94,9 +98,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d480247e80 ">23523482</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d482703e80 ">23523482</td>
 
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d480247e84 ">
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d482703e84 ">
                                 <ul class="ul" id="concept_ifv_3h1_hy__ul_op1_lj1_hy">
                                     <li class="li">2</li>
 
@@ -110,7 +114,7 @@
 
                             </td>
 
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d480247e88 ">
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d482703e88 ">
                                 <ul class="ul" id="concept_ifv_3h1_hy__ul_dbm_qk1_hy">
                                     <li class="li">89.95</li>
 
@@ -167,9 +171,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="50%" id="d480247e186"><samp class="ph codeph">basics</samp></th>
+                            <th class="entry" valign="top" width="50%" id="d482703e186"><samp class="ph codeph">basics</samp></th>
 
-                            <th class="entry" valign="top" width="50%" id="d480247e190"><samp class="ph codeph">additional</samp></th>
+                            <th class="entry" valign="top" width="50%" id="d482703e190"><samp class="ph codeph">additional</samp></th>
 
                         </tr>
 
@@ -177,7 +181,7 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d480247e186 ">0<ul class="ul" id="concept_gf1_sz2_3y__ul_sbt_l1f_3y">
+                            <td class="entry" valign="top" width="50%" headers="d482703e186 ">0<ul class="ul" id="concept_gf1_sz2_3y__ul_sbt_l1f_3y">
                                     <li class="li">id: 23</li>
 
                                     <li class="li">color: 20005</li>
@@ -187,7 +191,7 @@
                                 </ul>
 </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d480247e190 ">0<ul class="ul" id="concept_gf1_sz2_3y__ul_hbq_r1f_3y">
+                            <td class="entry" valign="top" width="50%" headers="d482703e190 ">0<ul class="ul" id="concept_gf1_sz2_3y__ul_hbq_r1f_3y">
                                     <li class="li">inventory: 80</li>
 
                                     <li class="li">cost: $5.98</li>
@@ -247,15 +251,15 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="14.804845222072679%" id="d480247e298">Order</th>
+                            <th class="entry" valign="top" width="14.804845222072679%" id="d482703e298">Order</th>
 
-                            <th class="entry" valign="top" width="13.458950201884253%" id="d480247e301">ItemID</th>
+                            <th class="entry" valign="top" width="13.458950201884253%" id="d482703e301">ItemID</th>
 
-                            <th class="entry" valign="top" width="14.939434724091521%" id="d480247e304">Cost</th>
+                            <th class="entry" valign="top" width="14.939434724091521%" id="d482703e304">Cost</th>
 
-                            <th class="entry" valign="top" width="28.802153432032306%" id="d480247e307">Purchase</th>
+                            <th class="entry" valign="top" width="28.802153432032306%" id="d482703e307">Purchase</th>
 
-                            <th class="entry" valign="top" width="27.99461641991925%" id="d480247e310">Purchased_Item</th>
+                            <th class="entry" valign="top" width="27.99461641991925%" id="d482703e310">Purchased_Item</th>
 
                         </tr>
 
@@ -263,9 +267,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="14.804845222072679%" headers="d480247e298 ">23523482</td>
+                            <td class="entry" valign="top" width="14.804845222072679%" headers="d482703e298 ">23523482</td>
 
-                            <td class="entry" valign="top" width="13.458950201884253%" headers="d480247e301 ">
+                            <td class="entry" valign="top" width="13.458950201884253%" headers="d482703e301 ">
                                 <ul class="ul" id="concept_bmt_s41_hy__ul_op1_lj1_hy">
                                     <li class="li">2</li>
 
@@ -279,7 +283,7 @@
 
                             </td>
 
-                            <td class="entry" valign="top" width="14.939434724091521%" headers="d480247e304 ">
+                            <td class="entry" valign="top" width="14.939434724091521%" headers="d482703e304 ">
                                 <ul class="ul" id="concept_bmt_s41_hy__ul_dbm_qk1_hy">
                                     <li class="li">89.95</li>
 
@@ -291,7 +295,7 @@
 
                             </td>
 
-                            <td class="entry" valign="top" width="28.802153432032306%" headers="d480247e307 ">
+                            <td class="entry" valign="top" width="28.802153432032306%" headers="d482703e307 ">
                                 <ol class="ol" id="concept_bmt_s41_hy__ol_vqc_4r1_hy">
                                     <li class="li">
                                         <ul class="ul" id="concept_bmt_s41_hy__ul_wqc_4r1_hy">
@@ -345,7 +349,7 @@
 
                             </td>
 
-                            <td class="entry" valign="top" width="27.99461641991925%" headers="d480247e310 ">
+                            <td class="entry" valign="top" width="27.99461641991925%" headers="d482703e310 ">
                                 <ul class="ul" id="concept_bmt_s41_hy__ul_uqc_lr1_hy">
                                     <li class="li">
                                         <ul class="ul" id="concept_bmt_s41_hy__ul_lpr_jr1_hy">
@@ -364,9 +368,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="14.804845222072679%" headers="d480247e298 ">23523482</td>
+                            <td class="entry" valign="top" width="14.804845222072679%" headers="d482703e298 ">23523482</td>
 
-                            <td class="entry" valign="top" width="13.458950201884253%" headers="d480247e301 ">
+                            <td class="entry" valign="top" width="13.458950201884253%" headers="d482703e301 ">
                                 <ul class="ul" id="concept_bmt_s41_hy__ul_csl_qq1_hy">
                                     <li class="li">2</li>
 
@@ -380,7 +384,7 @@
 
                             </td>
 
-                            <td class="entry" valign="top" width="14.939434724091521%" headers="d480247e304 ">
+                            <td class="entry" valign="top" width="14.939434724091521%" headers="d482703e304 ">
                                 <ul class="ul" id="concept_bmt_s41_hy__ul_fd1_rq1_hy">
                                     <li class="li">89.95</li>
 
@@ -392,7 +396,7 @@
 
                             </td>
 
-                            <td class="entry" valign="top" width="28.802153432032306%" headers="d480247e307 ">
+                            <td class="entry" valign="top" width="28.802153432032306%" headers="d482703e307 ">
                                 <ol class="ol" id="concept_bmt_s41_hy__ol_p4v_nr1_hy">
                                     <li class="li">
                                         <ul class="ul" id="concept_bmt_s41_hy__ul_q4v_nr1_hy">
@@ -446,7 +450,7 @@
 
                             </td>
 
-                            <td class="entry" valign="top" width="27.99461641991925%" headers="d480247e310 ">
+                            <td class="entry" valign="top" width="27.99461641991925%" headers="d482703e310 ">
                                 <ul class="ul" id="concept_bmt_s41_hy__ul_zqq_kr1_hy">
                                     <li class="li">
                                         <ul class="ul" id="concept_bmt_s41_hy__ul_a4r_kr1_hy">
@@ -465,9 +469,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="14.804845222072679%" headers="d480247e298 ">23523482</td>
+                            <td class="entry" valign="top" width="14.804845222072679%" headers="d482703e298 ">23523482</td>
 
-                            <td class="entry" valign="top" width="13.458950201884253%" headers="d480247e301 ">
+                            <td class="entry" valign="top" width="13.458950201884253%" headers="d482703e301 ">
                                 <ul class="ul" id="concept_bmt_s41_hy__ul_itn_qq1_hy">
                                     <li class="li">2</li>
 
@@ -481,7 +485,7 @@
 
                             </td>
 
-                            <td class="entry" valign="top" width="14.939434724091521%" headers="d480247e304 ">
+                            <td class="entry" valign="top" width="14.939434724091521%" headers="d482703e304 ">
                                 <ul class="ul" id="concept_bmt_s41_hy__ul_w2b_rq1_hy">
                                     <li class="li">89.95</li>
 
@@ -493,7 +497,7 @@
 
                             </td>
 
-                            <td class="entry" valign="top" width="28.802153432032306%" headers="d480247e307 ">
+                            <td class="entry" valign="top" width="28.802153432032306%" headers="d482703e307 ">
                                 <ol class="ol" id="concept_bmt_s41_hy__ol_upv_cr1_hy">
                                     <li class="li">
                                         <ul class="ul" id="concept_bmt_s41_hy__ul_dj2_mr1_hy">
@@ -547,7 +551,7 @@
 
                             </td>
 
-                            <td class="entry" valign="top" width="27.99461641991925%" headers="d480247e310 ">
+                            <td class="entry" valign="top" width="27.99461641991925%" headers="d482703e310 ">
                                 <ul class="ul" id="concept_bmt_s41_hy__ul_hrq_lr1_hy">
                                     <li class="li">
                                         <ul class="ul" id="concept_bmt_s41_hy__ul_u2r_lr1_hy">
@@ -589,14 +593,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_nqj_51k_yx__d91587e5695" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_nqj_51k_yx__d92130e5695" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d480247e716">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d482703e716">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d480247e719">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d482703e719">Description</th>
 
                                 </tr>
 
@@ -604,24 +608,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d480247e716 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d482703e716 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d480247e719 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d480247e716 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d480247e719 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d482703e719 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d480247e716 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_nqj_51k_yx__d91587e5741" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d482703e716 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d480247e719 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d482703e719 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d482703e716 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_nqj_51k_yx__d92130e5741" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d482703e719 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -633,10 +637,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d480247e716 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_nqj_51k_yx__d91587e5757" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d482703e716 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_nqj_51k_yx__d92130e5757" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d480247e719 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d482703e719 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -647,10 +651,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d480247e716 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_nqj_51k_yx__d91587e5774" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d482703e716 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_nqj_51k_yx__d92130e5774" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d480247e719 ">Error record handling for the stage: <ul class="ul" id="task_nqj_51k_yx__d91587e5778">
+                                    <td class="entry" valign="top" width="70%" headers="d482703e719 ">Error record handling for the stage: <ul class="ul" id="task_nqj_51k_yx__d92130e5778">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -679,9 +683,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d480247e830">Field Zip Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d482703e830">Field Zip Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d480247e833">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d482703e833">Description</th>
 
                                 </tr>
 
@@ -689,9 +693,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d480247e830 ">Fields to Zip</td>
+                                    <td class="entry" valign="top" width="30%" headers="d482703e830 ">Fields to Zip</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d480247e833 ">Configure the fields to merge and the output field as
+                                    <td class="entry" valign="top" width="70%" headers="d482703e833 ">Configure the fields to merge and the output field as
                                             follows:<ul class="ul" id="task_nqj_51k_yx__ul_edc_bw1_hy">
                                             <li class="li">First Field - The first List or List-Map field to
                                                 use. </li>
@@ -708,9 +712,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d480247e830 ">Zip Values Only</td>
+                                    <td class="entry" valign="top" width="30%" headers="d482703e830 ">Zip Values Only</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d480247e833 ">Includes only field values when merging lists. When not
+                                    <td class="entry" valign="top" width="70%" headers="d482703e833 ">Includes only field values when merging lists. When not
                                         selected, the processor includes field names and values.
                                             <p class="p">For more information about how the processor merges
                                             list data, see <a class="xref" href="FieldZip.html#concept_ifv_3h1_hy">Merging List Data</a>.</p>
@@ -719,9 +723,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d480247e830 ">Field Does Not Exist</td>
+                                    <td class="entry" valign="top" width="30%" headers="d482703e830 ">Field Does Not Exist</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d480247e833 ">
+                                    <td class="entry" valign="top" width="70%" headers="d482703e833 ">
                                         <div class="p">Action to take when one or both list fields do not exist
                                             in a record:<ul class="ul" id="task_nqj_51k_yx__ul_mtx_rw1_hy">
                                                 <li class="li">Include without Processing - Passes the record

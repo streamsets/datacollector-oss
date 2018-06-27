@@ -25,17 +25,21 @@
 -->
   <script type="text/javascript">
     <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
-
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
+   var parentWindow = window.name;
+   console.log("1. " + parentWindow);
+   if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+    var currHash = window.location.hash.substr(1);
+    var currentLocation = window.location.href
+    if (currHash) {
+       console.log("2. Current Hash Before:" + currHash);
+       if (currHash.indexOf("datacollector/UserGuide/") == -1 && currentLocation.indexOf("datacollector/UserGuide/") == -1) {
+           currHash = "#datacollector/UserGuide/" + currHash;
+       }
+       currHash = decodeURIComponent(currHash)
+       window.location.hash = currHash
+       console.log("3. Current Hash After:" + currHash)
+   }
+}         
 -->
   </script>
 </head>
@@ -83,9 +87,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d185188e90">Stage Type</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d185267e90">Stage Type</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d185188e93">Supported Stages</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d185267e93">Supported Stages</th>
 
                         </tr>
 
@@ -93,9 +97,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d185188e90 ">Origins</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d185267e90 ">Origins</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d185188e93 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d185267e93 ">
                                 <ul class="ul" id="concept_lqx_vtq_4bb__ul_npd_drs_4bb">
                                     <li class="li">CoAP Server</li>
 
@@ -112,23 +116,23 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d185188e90 ">Processors</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d185267e90 ">Processors</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d185188e93 ">Any</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d185188e90 ">Destinations</td>
-
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d185188e93 ">Any</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d185267e93 ">Any</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d185188e90 ">Executors</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d185267e90 ">Destinations</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d185188e93 ">Any</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d185267e93 ">Any</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d185267e90 ">Executors</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d185267e93 ">Any</td>
 
                         </tr>
 

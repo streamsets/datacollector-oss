@@ -24,17 +24,21 @@
 -->
   <script type="text/javascript">
     <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
-
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
+   var parentWindow = window.name;
+   console.log("1. " + parentWindow);
+   if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+    var currHash = window.location.hash.substr(1);
+    var currentLocation = window.location.href
+    if (currHash) {
+       console.log("2. Current Hash Before:" + currHash);
+       if (currHash.indexOf("datacollector/UserGuide/") == -1 && currentLocation.indexOf("datacollector/UserGuide/") == -1) {
+           currHash = "#datacollector/UserGuide/" + currHash;
+       }
+       currHash = decodeURIComponent(currHash)
+       window.location.hash = currHash
+       console.log("3. Current Hash After:" + currHash)
+   }
+}         
 -->
   </script>
 </head>
@@ -202,9 +206,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="50%" id="d448944e272">Supported Cipher Suite</th>
+                            <th class="entry" valign="top" width="50%" id="d451403e272">Supported Cipher Suite</th>
 
-                            <th class="entry" valign="top" width="50%" id="d448944e275">Java Secure Socket Extension (JSSE) Name</th>
+                            <th class="entry" valign="top" width="50%" id="d451403e275">Java Secure Socket Extension (JSSE) Name</th>
 
                         </tr>
 
@@ -212,58 +216,58 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d448944e272 ">ECDHE-ECDSA-AES256-GCM-SHA384</td>
+                            <td class="entry" valign="top" width="50%" headers="d451403e272 ">ECDHE-ECDSA-AES256-GCM-SHA384</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d448944e275 ">TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d448944e272 ">ECDHE-RSA-AES256-GCM-SHA384</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d448944e275 ">TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384</td>
+                            <td class="entry" valign="top" width="50%" headers="d451403e275 ">TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d448944e272 ">ECDHE-ECDSA-AES128-GCM-SHA256</td>
+                            <td class="entry" valign="top" width="50%" headers="d451403e272 ">ECDHE-RSA-AES256-GCM-SHA384</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d448944e275 ">TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d448944e272 ">ECDHE-RSA-AES128-GCM-SHA256</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d448944e275 ">TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256</td>
+                            <td class="entry" valign="top" width="50%" headers="d451403e275 ">TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d448944e272 ">ECDHE-ECDSA-AES256-SHA384 </td>
+                            <td class="entry" valign="top" width="50%" headers="d451403e272 ">ECDHE-ECDSA-AES128-GCM-SHA256</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d448944e275 ">TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d448944e272 ">ECDHE-RSA-AES256-SHA384 </td>
-
-                            <td class="entry" valign="top" width="50%" headers="d448944e275 ">TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384</td>
+                            <td class="entry" valign="top" width="50%" headers="d451403e275 ">TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d448944e272 ">ECDHE-ECDSA-AES128-SHA256</td>
+                            <td class="entry" valign="top" width="50%" headers="d451403e272 ">ECDHE-RSA-AES128-GCM-SHA256</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d448944e275 ">TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256</td>
+                            <td class="entry" valign="top" width="50%" headers="d451403e275 ">TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d448944e272 ">ECDHE-RSA-AES128-SHA256 </td>
+                            <td class="entry" valign="top" width="50%" headers="d451403e272 ">ECDHE-ECDSA-AES256-SHA384 </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d448944e275 ">TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256</td>
+                            <td class="entry" valign="top" width="50%" headers="d451403e275 ">TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d451403e272 ">ECDHE-RSA-AES256-SHA384 </td>
+
+                            <td class="entry" valign="top" width="50%" headers="d451403e275 ">TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d451403e272 ">ECDHE-ECDSA-AES128-SHA256</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d451403e275 ">TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d451403e272 ">ECDHE-RSA-AES128-SHA256 </td>
+
+                            <td class="entry" valign="top" width="50%" headers="d451403e275 ">TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256</td>
 
                         </tr>
 

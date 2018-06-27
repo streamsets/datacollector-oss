@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="" /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Installation" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/InstallationAndConfig.html#concept_gbn_4lv_1r" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/InstallationAndConfig.html#concept_gbn_4lv_1r" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/Installing_the_DC.html#task_bt1_zcp_kq" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/FullInstall_ServiceStart.html#concept_e45_3dr_bx" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/CoreInstall_Overview.html#concept_vvw_p3m_s5" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/AddtionalStageLibs.html#concept_fb2_qmn_bz" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/Installing_the_DC-Docker.html#concept_jxh_qxr_kv" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/CMInstall-Overview.html#concept_nb5_c3m_25" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/MapR-Prerequisites.html#concept_jgs_qpg_2v" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/CreateAnotherDC.html#concept_p2w_x3z_yx" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/Uninstall.html#concept_fc3_vly_py" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_l4q_flb_kr" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Installation</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="" /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Installation" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/InstallationAndConfig.html#concept_gbn_4lv_1r" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/InstallationAndConfig.html#concept_gbn_4lv_1r" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/Installing_the_DC.html#task_bt1_zcp_kq" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/FullInstall_ServiceStart.html#concept_e45_3dr_bx" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/CoreInstall_Overview.html#concept_vvw_p3m_s5" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/AddtionalStageLibs.html#concept_fb2_qmn_bz" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/CMInstall-Overview.html#concept_nb5_c3m_25" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/Installing_the_DC-Docker.html#concept_jxh_qxr_kv" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/CloudInstall.html#concept_dsp_5j2_wdb" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/MapR-Prerequisites.html#concept_jgs_qpg_2v" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/CreateAnotherDC.html#concept_p2w_x3z_yx" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Installation/Uninstall.html#concept_fc3_vly_py" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_l4q_flb_kr" /><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/commonltr.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><title>Installation</title><!--  Generated with Oxygen version @@WEBHELP_VERSION@@, build number @@WEBHELP_BUILD_NUMBER@@.  --><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/css/webhelp_topic.css?buildId=@@WEBHELP_BUILD_NUMBER@@"><!----></link><link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/resources/skins/skin.css?buildId=@@WEBHELP_BUILD_NUMBER@@" /><script type="text/javascript"><!--
           
           var prefix = "../../../index.html";
           
@@ -24,17 +24,21 @@
 -->
   <script type="text/javascript">
     <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
-
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
+   var parentWindow = window.name;
+   console.log("1. " + parentWindow);
+   if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+    var currHash = window.location.hash.substr(1);
+    var currentLocation = window.location.href
+    if (currHash) {
+       console.log("2. Current Hash Before:" + currHash);
+       if (currHash.indexOf("datacollector/UserGuide/") == -1 && currentLocation.indexOf("datacollector/UserGuide/") == -1) {
+           currHash = "#datacollector/UserGuide/" + currHash;
+       }
+       currHash = decodeURIComponent(currHash)
+       window.location.hash = currHash
+       console.log("3. Current Hash After:" + currHash)
+   }
+}         
 -->
   </script>
 </head>
@@ -58,9 +62,11 @@
 </li>
 <li class="link ulchildlink"><strong><a href="../../../datacollector/UserGuide/Installation/AddtionalStageLibs.html#concept_fb2_qmn_bz">Install Additional Stage Libraries</a></strong><br />
 </li>
+<li class="link ulchildlink"><strong><a href="../../../datacollector/UserGuide/Installation/CMInstall-Overview.html#concept_nb5_c3m_25">Installation with Cloudera Manager</a></strong><br />
+</li>
 <li class="link ulchildlink"><strong><a href="../../../datacollector/UserGuide/Installation/Installing_the_DC-Docker.html#concept_jxh_qxr_kv">Run Data Collector from Docker</a></strong><br />
 </li>
-<li class="link ulchildlink"><strong><a href="../../../datacollector/UserGuide/Installation/CMInstall-Overview.html#concept_nb5_c3m_25">Installation with Cloudera Manager</a></strong><br />
+<li class="link ulchildlink"><strong><a href="../../../datacollector/UserGuide/Installation/CloudInstall.html#concept_dsp_5j2_wdb">Installation with Cloud Service Providers</a></strong><br />
 </li>
 <li class="link ulchildlink"><strong><a href="../../../datacollector/UserGuide/Installation/MapR-Prerequisites.html#concept_jgs_qpg_2v">MapR Prerequisites</a></strong><br />
 </li>

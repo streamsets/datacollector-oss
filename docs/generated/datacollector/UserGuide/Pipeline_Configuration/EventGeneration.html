@@ -24,17 +24,21 @@
 -->
   <script type="text/javascript">
     <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
-
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
+   var parentWindow = window.name;
+   console.log("1. " + parentWindow);
+   if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+    var currHash = window.location.hash.substr(1);
+    var currentLocation = window.location.href
+    if (currHash) {
+       console.log("2. Current Hash Before:" + currHash);
+       if (currHash.indexOf("datacollector/UserGuide/") == -1 && currentLocation.indexOf("datacollector/UserGuide/") == -1) {
+           currHash = "#datacollector/UserGuide/" + currHash;
+       }
+       currHash = decodeURIComponent(currHash)
+       window.location.hash = currHash
+       console.log("3. Current Hash After:" + currHash)
+   }
+}         
 -->
   </script>
 </head>
@@ -69,9 +73,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d445272e65">Record Header Attribute</th>
+                            <th class="entry" valign="top" width="30%" id="d447731e65">Record Header Attribute</th>
 
-                            <th class="entry" valign="top" width="70%" id="d445272e68">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d447731e68">Description</th>
 
                         </tr>
 
@@ -79,9 +83,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d445272e65 ">sdc.event.type</td>
+                            <td class="entry" valign="top" width="30%" headers="d447731e65 ">sdc.event.type</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d445272e68 ">Event type. Uses one of the following types:<ul class="ul" id="concept_cv3_nqt_51b__ul_m12_mgp_qx">
+                            <td class="entry" valign="top" width="70%" headers="d447731e68 ">Event type. Uses one of the following types:<ul class="ul" id="concept_cv3_nqt_51b__ul_m12_mgp_qx">
                                     <li class="li">start - Generated as the pipeline starts. </li>
 
                                     <li class="li">stop - Generated as the pipeline stops.</li>
@@ -92,16 +96,16 @@
                         </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d445272e65 ">sdc.event.version</td>
+       <td class="entry" valign="top" width="30%" headers="d447731e65 ">sdc.event.version</td>
 
-       <td class="entry" valign="top" width="70%" headers="d445272e68 ">An integer that indicates the version of the event record type.</td>
+       <td class="entry" valign="top" width="70%" headers="d447731e68 ">An integer that indicates the version of the event record type.</td>
 
       </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d445272e65 ">sdc.event.creation_timestamp</td>
+       <td class="entry" valign="top" width="30%" headers="d447731e65 ">sdc.event.creation_timestamp</td>
 
-       <td class="entry" id="concept_cv3_nqt_51b__d87462e2127" valign="top" width="70%" headers="d445272e68 ">Epoch timestamp when the stage created the event.
+       <td class="entry" id="concept_cv3_nqt_51b__d87949e2118" valign="top" width="70%" headers="d447731e68 ">Epoch timestamp when the stage created the event.
        </td>
 
       </tr>
@@ -127,9 +131,9 @@
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="30%" id="d445272e143">Pipeline Start Event Field</th>
+                                        <th class="entry" valign="top" width="30%" id="d447731e143">Pipeline Start Event Field</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d445272e146">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d447731e146">Description</th>
 
                                     </tr>
 
@@ -137,31 +141,31 @@
 
                                 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d445272e143 ">pipelineId</td>
+                                        <td class="entry" valign="top" width="30%" headers="d447731e143 ">pipelineId</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d445272e146 ">The ID of the pipeline that started.</td>
+                                        <td class="entry" valign="top" width="70%" headers="d447731e146 ">The ID of the pipeline that started.</td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d445272e143 ">pipelineName</td>
+                                        <td class="entry" valign="top" width="30%" headers="d447731e143 ">pipelineName</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d445272e146 ">The user-defined name of the pipeline that
+                                        <td class="entry" valign="top" width="70%" headers="d447731e146 ">The user-defined name of the pipeline that
                                             started.</td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d445272e143 ">user</td>
+                                        <td class="entry" valign="top" width="30%" headers="d447731e143 ">user</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d445272e146 ">The user who started the pipeline.</td>
+                                        <td class="entry" valign="top" width="70%" headers="d447731e146 ">The user who started the pipeline.</td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d445272e143 ">parameters</td>
+                                        <td class="entry" valign="top" width="30%" headers="d447731e143 ">parameters</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d445272e146 ">Any parameters used when starting the
+                                        <td class="entry" valign="top" width="70%" headers="d447731e146 ">Any parameters used when starting the
                                             pipeline.</td>
 
                                     </tr>
@@ -192,9 +196,9 @@
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="30%" id="d445272e221">Pipeline Stop Event Field</th>
+                                        <th class="entry" valign="top" width="30%" id="d447731e221">Pipeline Stop Event Field</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d445272e224">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d447731e224">Description</th>
 
                                     </tr>
 
@@ -202,24 +206,24 @@
 
                                 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d445272e221 ">pipelineId</td>
+                                        <td class="entry" valign="top" width="30%" headers="d447731e221 ">pipelineId</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d445272e224 ">The ID of the pipeline that stopped.</td>
+                                        <td class="entry" valign="top" width="70%" headers="d447731e224 ">The ID of the pipeline that stopped.</td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d445272e221 ">pipelineName</td>
+                                        <td class="entry" valign="top" width="30%" headers="d447731e221 ">pipelineName</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d445272e224 ">The user-defined name of the pipeline that
+                                        <td class="entry" valign="top" width="70%" headers="d447731e224 ">The user-defined name of the pipeline that
                                             stopped.</td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d445272e221 ">reason</td>
+                                        <td class="entry" valign="top" width="30%" headers="d447731e221 ">reason</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d445272e224 ">The reason why the pipeline stopped. Can be set to
+                                        <td class="entry" valign="top" width="70%" headers="d447731e224 ">The reason why the pipeline stopped. Can be set to
                                             the following reasons:<ul class="ul" id="concept_cv3_nqt_51b__ul_iwt_fxy_t1b">
                                                 <li class="li">Error - An error occurred as the pipeline was
                                                   running.</li>
@@ -235,9 +239,9 @@
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d445272e221 ">user</td>
+                                        <td class="entry" valign="top" width="30%" headers="d447731e221 ">user</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d445272e224 ">The user who stopped the pipeline, when
+                                        <td class="entry" valign="top" width="70%" headers="d447731e224 ">The user who stopped the pipeline, when
                                             relevant.</td>
 
                                     </tr>

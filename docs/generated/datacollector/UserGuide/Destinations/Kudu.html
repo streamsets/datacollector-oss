@@ -25,17 +25,21 @@
 -->
   <script type="text/javascript">
     <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
-
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
+   var parentWindow = window.name;
+   console.log("1. " + parentWindow);
+   if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+    var currHash = window.location.hash.substr(1);
+    var currentLocation = window.location.href
+    if (currHash) {
+       console.log("2. Current Hash Before:" + currHash);
+       if (currHash.indexOf("datacollector/UserGuide/") == -1 && currentLocation.indexOf("datacollector/UserGuide/") == -1) {
+           currHash = "#datacollector/UserGuide/" + currHash;
+       }
+       currHash = decodeURIComponent(currHash)
+       window.location.hash = currHash
+       console.log("3. Current Hash After:" + currHash)
+   }
+}         
 -->
   </script>
 </head>
@@ -142,9 +146,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d139929e169">Data Collector Data Type</th>
+                            <th class="entry" valign="top" width="30%" id="d139999e169">Data Collector Data Type</th>
 
-                            <th class="entry" valign="top" width="70%" id="d139929e172">Kudu Data Type</th>
+                            <th class="entry" valign="top" width="70%" id="d139999e172">Kudu Data Type</th>
 
                         </tr>
 
@@ -152,51 +156,51 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d139929e169 ">Boolean</td>
+                            <td class="entry" valign="top" width="30%" headers="d139999e169 ">Boolean</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d139929e172 ">Bool</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="30%" headers="d139929e169 ">Byte</td>
-
-                            <td class="entry" valign="top" width="70%" headers="d139929e172 ">Int8</td>
+                            <td class="entry" valign="top" width="70%" headers="d139999e172 ">Bool</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d139929e169 ">Byte Array</td>
+                            <td class="entry" valign="top" width="30%" headers="d139999e169 ">Byte</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d139929e172 ">Binary </td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="30%" headers="d139929e169 ">Double</td>
-
-                            <td class="entry" valign="top" width="70%" headers="d139929e172 ">Double</td>
+                            <td class="entry" valign="top" width="70%" headers="d139999e172 ">Int8</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d139929e169 ">Float</td>
+                            <td class="entry" valign="top" width="30%" headers="d139999e169 ">Byte Array</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d139929e172 ">Float</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="30%" headers="d139929e169 ">Integer</td>
-
-                            <td class="entry" valign="top" width="70%" headers="d139929e172 ">Int32</td>
+                            <td class="entry" valign="top" width="70%" headers="d139999e172 ">Binary </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d139929e169 ">Long</td>
+                            <td class="entry" valign="top" width="30%" headers="d139999e169 ">Double</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d139929e172 ">Int64 or Unixtime_micros<p class="p">The destination determines the data
+                            <td class="entry" valign="top" width="70%" headers="d139999e172 ">Double</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d139999e169 ">Float</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d139999e172 ">Float</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d139999e169 ">Integer</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d139999e172 ">Int32</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d139999e169 ">Long</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d139999e172 ">Int64 or Unixtime_micros<p class="p">The destination determines the data
                                     type to use based on the mapped Kudu column. </p>
 <p class="p">The <span class="ph">Data Collector</span> Long data type stores millisecond values. The Kudu
                                     Unixtime_micros data type stores microsecond values. When
@@ -208,16 +212,16 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d139929e169 ">Short</td>
+                            <td class="entry" valign="top" width="30%" headers="d139999e169 ">Short</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d139929e172 ">Int16</td>
+                            <td class="entry" valign="top" width="70%" headers="d139999e172 ">Int16</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d139929e169 ">String</td>
+                            <td class="entry" valign="top" width="30%" headers="d139999e169 ">String</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d139929e172 ">String</td>
+                            <td class="entry" valign="top" width="70%" headers="d139999e172 ">String</td>
 
                         </tr>
 
@@ -269,46 +273,46 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_c4x_tmh_4v__d18242e5817" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_c4x_tmh_4v__d18295e5817" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d139929e357">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d139999e357">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d139929e360">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d139999e360">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr id="task_c4x_tmh_4v__d18242e5839">
-                                    <td class="entry" valign="top" width="30%" headers="d139929e357 ">Name</td>
+                                <tr id="task_c4x_tmh_4v__d18295e5839">
+                                    <td class="entry" valign="top" width="30%" headers="d139999e357 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d139929e360 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr id="task_c4x_tmh_4v__d18242e5848">
-                                    <td class="entry" valign="top" width="30%" headers="d139929e357 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d139929e360 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d139999e360 ">Stage name.</td>
 
                                 </tr>
 
-                                <tr id="task_c4x_tmh_4v__d18242e5857">
-                                    <td class="entry" valign="top" width="30%" headers="d139929e357 ">Stage Library</td>
+                                <tr id="task_c4x_tmh_4v__d18295e5848">
+                                    <td class="entry" valign="top" width="30%" headers="d139999e357 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d139929e360 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d139999e360 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr id="task_c4x_tmh_4v__d18295e5857">
+                                    <td class="entry" valign="top" width="30%" headers="d139999e357 ">Stage Library</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d139999e360 ">Library version that you want to use. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d139929e357 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_c4x_tmh_4v__d18242e5872" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d139999e357 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_c4x_tmh_4v__d18295e5872" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d139929e360 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d139999e360 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -320,10 +324,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d139929e357 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_c4x_tmh_4v__d18242e5888" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d139999e357 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_c4x_tmh_4v__d18295e5888" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d139929e360 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d139999e360 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -333,11 +337,11 @@
 
                                 </tr>
 
-                                <tr id="task_c4x_tmh_4v__d18242e5900">
-                                    <td class="entry" valign="top" width="30%" headers="d139929e357 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_c4x_tmh_4v__d18242e5906" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                <tr id="task_c4x_tmh_4v__d18295e5900">
+                                    <td class="entry" valign="top" width="30%" headers="d139999e357 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_c4x_tmh_4v__d18295e5906" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d139929e360 ">Error record handling for the stage: <ul class="ul" id="task_c4x_tmh_4v__d18242e5910">
+                                    <td class="entry" valign="top" width="70%" headers="d139999e360 ">Error record handling for the stage: <ul class="ul" id="task_c4x_tmh_4v__d18295e5910">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -366,9 +370,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d139929e481">Kudu Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d139999e481">Kudu Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d139929e484">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d139999e484">Description</th>
 
                                 </tr>
 
@@ -376,18 +380,18 @@
 
                             <tbody class="tbody">
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d139929e481 ">Kudu Masters</td>
+      <td class="entry" valign="top" width="30%" headers="d139999e481 ">Kudu Masters</td>
 
-      <td class="entry" valign="top" width="70%" headers="d139929e484 ">Comma-separated list of connection information for the Kudu masters to use. Use the
+      <td class="entry" valign="top" width="70%" headers="d139999e484 ">Comma-separated list of connection information for the Kudu masters to use. Use the
        following format: <pre class="pre codeblock">&lt;host&gt;:&lt;port&gt;</pre>
 </td>
 
      </tr>
 <tr>
-      <td class="entry" valign="top" width="30%" headers="d139929e481 ">Table Name</td>
+      <td class="entry" valign="top" width="30%" headers="d139999e481 ">Table Name</td>
 
-      <td class="entry" valign="top" width="70%" headers="d139929e484 ">Table to write to. Enter one of the following: <div class="p">
-        <ul class="ul" id="task_c4x_tmh_4v__d18372e5025">
+      <td class="entry" valign="top" width="70%" headers="d139999e484 ">Table to write to. Enter one of the following: <div class="p">
+        <ul class="ul" id="task_c4x_tmh_4v__d18439e5021">
          <li class="li">Name of an existing Kudu table. If the table doesn't exist, the pipeline fails to
           start.</li>
 
@@ -400,7 +404,7 @@ If the table doesn't
         </ul>
 
        </div>
-<div class="p" id="task_c4x_tmh_4v__d18372e5037">
+<div class="p" id="task_c4x_tmh_4v__d18439e5033">
         <div class="note note"><span class="notetitle">Note:</span> When using tables created by Impala, use the prefix <samp class="ph codeph">impala::</samp> followed
          by the database name and table name. For example:
          <pre class="pre codeblock">impala::&lt;database name&gt;.&lt;table name&gt; </pre>
@@ -412,29 +416,29 @@ If the table doesn't
      </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d139929e481 ">Field to Column Mapping</td>
+                                    <td class="entry" valign="top" width="30%" headers="d139999e481 ">Field to Column Mapping</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d139929e484 ">Use to define specific mappings between record fields and
+                                    <td class="entry" valign="top" width="70%" headers="d139999e484 ">Use to define specific mappings between record fields and
                                         Kudu columns. By default, the destination writes field data
                                         to columns with matching names.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d139929e481 ">Default Operation 
+                                    <td class="entry" valign="top" width="30%" headers="d139999e481 ">Default Operation 
                                         <a class="xref" href="Kudu.html#concept_dvg_vvj_wx">
                                             <img class="image" id="task_c4x_tmh_4v__image_m6p_rfp_vv" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d139929e484 ">Default CRUD operation to
+                                    <td class="entry" valign="top" width="70%" headers="d139999e484 ">Default CRUD operation to
                                         perform if the sdc.operation.type record header attribute is
                                         not set. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d139929e481 ">Change Log Format</td>
+                                    <td class="entry" valign="top" width="30%" headers="d139999e481 ">Change Log Format</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d139929e484 ">If the incoming data is a change data capture log read
+                                    <td class="entry" valign="top" width="70%" headers="d139999e484 ">If the incoming data is a change data capture log read
                                         from the following source systems, select the source system
                                         so that the destination can determine the format of the
                                             log:<ul class="ul" id="task_c4x_tmh_4v__ul_add_3ph_vbb">
@@ -469,9 +473,9 @@ If the table doesn't
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d139929e608">Advanced Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d139999e608">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d139929e611">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d139999e611">Description</th>
 
                                 </tr>
 
@@ -479,9 +483,9 @@ If the table doesn't
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d139929e608 ">External Consistency</td>
+                                    <td class="entry" valign="top" width="30%" headers="d139999e608 ">External Consistency</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d139929e611 ">External consistency mode used to write to Kudu:<ul class="ul" id="task_c4x_tmh_4v__ul_hrm_wsh_4v">
+                                    <td class="entry" valign="top" width="70%" headers="d139999e611 ">External consistency mode used to write to Kudu:<ul class="ul" id="task_c4x_tmh_4v__ul_hrm_wsh_4v">
                                             <li class="li">Client Propagated - Ensures that writes from a
                                                 single client are automatically externally
                                                 consistent. </li>
@@ -499,9 +503,9 @@ If the table doesn't
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d139929e608 ">Mutation Buffer Space</td>
+                                    <td class="entry" valign="top" width="30%" headers="d139999e608 ">Mutation Buffer Space</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d139929e611 ">The size of the buffer that Kudu uses to write a single
+                                    <td class="entry" valign="top" width="70%" headers="d139999e611 ">The size of the buffer that Kudu uses to write a single
                                         batch of data, in records. Should be equal to or greater
                                         than the number of records in the batch passed from the
                                             pipeline.<p class="p">Default is 1000 records. </p>
@@ -510,21 +514,21 @@ If the table doesn't
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d139929e608 ">Operation Timeout (ms)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d139999e608 ">Operation Timeout (ms)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d139929e611 ">Number of milliseconds the destination waits to allow an
+                                    <td class="entry" valign="top" width="70%" headers="d139999e611 ">Number of milliseconds the destination waits to allow an
                                         operation to complete.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d139929e608 ">Unsupported Operation Handling
+                                    <td class="entry" valign="top" width="30%" headers="d139999e608 ">Unsupported Operation Handling
                                         <a class="xref" href="Kudu.html#concept_dvg_vvj_wx">
                                             <img class="image" id="task_c4x_tmh_4v__image_m9p_rfp_ov" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d139929e611 ">Action to take when the
+                                    <td class="entry" valign="top" width="70%" headers="d139999e611 ">Action to take when the
                                         CRUD operation type defined in the sdc.operation.type record
-                                        header attribute is not supported:<ul class="ul" id="task_c4x_tmh_4v__d18242e8212">
+                                        header attribute is not supported:<ul class="ul" id="task_c4x_tmh_4v__d18295e8212">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for

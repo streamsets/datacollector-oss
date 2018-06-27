@@ -24,17 +24,21 @@
 -->
   <script type="text/javascript">
     <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
-
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
+   var parentWindow = window.name;
+   console.log("1. " + parentWindow);
+   if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+    var currHash = window.location.hash.substr(1);
+    var currentLocation = window.location.href
+    if (currHash) {
+       console.log("2. Current Hash Before:" + currHash);
+       if (currHash.indexOf("datacollector/UserGuide/") == -1 && currentLocation.indexOf("datacollector/UserGuide/") == -1) {
+           currHash = "#datacollector/UserGuide/" + currHash;
+       }
+       currHash = decodeURIComponent(currHash)
+       window.location.hash = currHash
+       console.log("3. Current Hash After:" + currHash)
+   }
+}         
 -->
   </script>
 </head>
@@ -152,20 +156,28 @@ For Ubuntu
                 <div class="itemgroup info"><a class="xref" href="https://archives.streamsets.com/index.html" target="_blank">https://archives.streamsets.com/index.html</a></div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Copy the StreamSets parcel and checksum files to the <span class="ph uicontrol">Cloudera
-                        Manager Local Parcel Repository Path</span>. </span>
+                <span class="ph cmd">Copy the StreamSets parcel and checksum file to the <span class="ph uicontrol">Cloudera Manager
+                        Local Parcel Repository Path</span>. </span>
                 <div class="itemgroup info">By default, the path is <samp class="ph codeph">/opt/cloudera/parcel-repo</samp>.</div>
                 <div class="itemgroup info">To verify the path to use, click <span class="ph menucascade"><span class="ph uicontrol">Administration</span> &gt; <span class="ph uicontrol">Settings</span></span>. In the navigation panel, select the
                         <span class="ph uicontrol">Parcels</span> category. Place the StreamSets parcel file in
                     the path configured for <span class="ph uicontrol">Local Parcel Repository Path</span>.
                 </div>
             </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Change ownership on the parcel and checksum file to the user that runs the
+                    Cloudera Manager process.</span>
+                <div class="itemgroup info">For example, if the Cloudera Manager process runs as the cloudera-scm user,
+                    use the following command to change ownership to
+                    cloudera-scm:<pre class="pre codeblock">sudo chown cloudera-scm:cloudera-scm /opt/cloudera/parcel-repo/STREAMSETS_DATACOLLECTOR*</pre>
+</div>
+            </li>
 </ol>
 
     </div>
 
 </div>
-<div class="topic task nested1" id="unique_1131175883">
+<div class="topic task nested1" id="unique_1230653636">
     <h2 class="title topictitle2">Step 3. Distribute and Activate the StreamSets Parcel</h2>
 
     <div class="body taskbody">
@@ -187,7 +199,7 @@ For Ubuntu
 
         </div>
 
-        <ol class="ol steps" id="unique_1131175883__steps_zj3_4sm_25"><li class="li step stepexpand">
+        <ol class="ol steps" id="unique_1230653636__steps_zj3_4sm_25"><li class="li step stepexpand">
                 <span class="ph cmd">To view the list of available parcels, in the menu bar, click the
                         <span class="ph uicontrol">Parcels</span> icon. </span>
                 <div class="itemgroup info">The StreamSets parcel displays in the list of available parcels. If it doesn't

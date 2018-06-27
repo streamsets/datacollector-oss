@@ -24,17 +24,21 @@
 -->
   <script type="text/javascript">
     <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
-
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
+   var parentWindow = window.name;
+   console.log("1. " + parentWindow);
+   if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+    var currHash = window.location.hash.substr(1);
+    var currentLocation = window.location.href
+    if (currHash) {
+       console.log("2. Current Hash Before:" + currHash);
+       if (currHash.indexOf("datacollector/UserGuide/") == -1 && currentLocation.indexOf("datacollector/UserGuide/") == -1) {
+           currHash = "#datacollector/UserGuide/" + currHash;
+       }
+       currHash = decodeURIComponent(currHash)
+       window.location.hash = currHash
+       console.log("3. Current Hash After:" + currHash)
+   }
+}         
 -->
   </script>
 </head>
@@ -197,27 +201,27 @@
   <p class="p"><img class="image" id="concept_yth_5n5_jq__image_k5j_5pz_sq" src="../Graphics/CanvasOverview.png" height="476" width="655" /></p>
 
   <table cellpadding="4" cellspacing="0" summary="" id="concept_yth_5n5_jq__simpletable_v4t_zhc_pq" border="1" class="simpletable"><tr class="sthead">
-        <th valign="bottom" align="left" id="d219563e335" class="stentry" width="15.625%">Area/Icon</th>
+        <th valign="bottom" align="left" id="d219657e335" class="stentry" width="15.625%">Area/Icon</th>
 
-        <th valign="bottom" align="left" id="d219563e338" class="stentry" width="24.21875%">Name</th>
+        <th valign="bottom" align="left" id="d219657e338" class="stentry" width="24.21875%">Name</th>
 
-        <th valign="bottom" align="left" id="d219563e341" class="stentry" width="60.15625%">Description</th>
-
-      </tr>
-<tr class="strow">
-        <td valign="top" headers="d219563e335" class="stentry">1</td>
-
-        <td valign="top" headers="d219563e338" class="stentry">Pipeline canvas</td>
-
-        <td valign="top" headers="d219563e341" class="stentry">Canvas for configuring, previewing, or monitoring a pipeline. </td>
+        <th valign="bottom" align="left" id="d219657e341" class="stentry" width="60.15625%">Description</th>
 
       </tr>
 <tr class="strow">
-        <td valign="top" headers="d219563e335" class="stentry">2</td>
+        <td valign="top" headers="d219657e335" class="stentry">1</td>
 
-        <td valign="top" headers="d219563e338" class="stentry">Properties panel / Preview panel / Monitor panel </td>
+        <td valign="top" headers="d219657e338" class="stentry">Pipeline canvas</td>
 
-        <td valign="top" headers="d219563e341" class="stentry">When you configure a pipeline, the Properties panel displays the properties of the
+        <td valign="top" headers="d219657e341" class="stentry">Canvas for configuring, previewing, or monitoring a pipeline. </td>
+
+      </tr>
+<tr class="strow">
+        <td valign="top" headers="d219657e335" class="stentry">2</td>
+
+        <td valign="top" headers="d219657e338" class="stentry">Properties panel / Preview panel / Monitor panel </td>
+
+        <td valign="top" headers="d219657e341" class="stentry">When you configure a pipeline, the Properties panel displays the properties of the
           pipeline or selected stage. You can resize, minimize and maximize the panel.<p class="p">When you
             preview data, the Preview panel displays the data that enters and exits the selected
             stage or group of stages. It can also display stage properties and preview
@@ -234,85 +238,85 @@
 
       </tr>
 <tr class="strow">
-     <td valign="top" headers="d219563e335" class="stentry"><img class="image" id="concept_yth_5n5_jq__d41663e105" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_DPM.png" height="21" width="28" /></td>
+     <td valign="top" headers="d219657e335" class="stentry"><img class="image" id="concept_yth_5n5_jq__d41911e105" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_DPM.png" height="21" width="28" /></td>
 
-     <td valign="top" headers="d219563e338" class="stentry"><span class="ph">StreamSets Control Hub</span> icon</td>
+     <td valign="top" headers="d219657e338" class="stentry"><span class="ph">StreamSets Control Hub</span> icon</td>
 
-     <td valign="top" headers="d219563e341" class="stentry">Provides information about <span class="ph">StreamSets Control Hub</span> and lets you register this <span class="ph">Data Collector</span> with <span class="ph">Control Hub</span>.</td>
+     <td valign="top" headers="d219657e341" class="stentry">Provides information about <span class="ph">StreamSets Control Hub</span> and lets you register this <span class="ph">Data Collector</span> with <span class="ph">Control Hub</span>.</td>
 
     </tr>
 <tr class="strow">
-     <td valign="top" headers="d219563e335" class="stentry"><img class="image" id="concept_yth_5n5_jq__d41663e124" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_OverHome.png" /></td>
+     <td valign="top" headers="d219657e335" class="stentry"><img class="image" id="concept_yth_5n5_jq__d41911e124" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_OverHome.png" /></td>
 
-     <td valign="top" headers="d219563e338" class="stentry">Home icon</td>
+     <td valign="top" headers="d219657e338" class="stentry">Home icon</td>
 
-     <td valign="top" headers="d219563e341" class="stentry">Displays a home page with a list of pipelines and their statuses, allowing you to
+     <td valign="top" headers="d219657e341" class="stentry">Displays a home page with a list of pipelines and their statuses, allowing you to
       perform pipeline maintenance and navigate to individual pipelines.</td>
 
     </tr>
 <tr class="strow">
-     <td valign="top" headers="d219563e335" class="stentry"><img class="image" id="concept_yth_5n5_jq__d41663e136" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_PackageManager.png" height="15" width="18" /></td>
+     <td valign="top" headers="d219657e335" class="stentry"><img class="image" id="concept_yth_5n5_jq__d41911e136" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_PackageManager.png" height="15" width="18" /></td>
 
-     <td valign="top" headers="d219563e338" class="stentry">Package Manager icon</td>
+     <td valign="top" headers="d219657e338" class="stentry">Package Manager icon</td>
 
-     <td valign="top" headers="d219563e341" class="stentry">Displays the Package Manager which allows you to install additional stage libraries
+     <td valign="top" headers="d219657e341" class="stentry">Displays the Package Manager which allows you to install additional stage libraries
       for a core <span class="ph">Data Collector</span>
       installation.</td>
 
     </tr>
 <tr class="strow">
-     <td valign="top" headers="d219563e335" class="stentry"><img class="image" id="concept_yth_5n5_jq__d41663e150" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_MonAlert.png" /></td>
+     <td valign="top" headers="d219657e335" class="stentry"><img class="image" id="concept_yth_5n5_jq__d41911e150" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_MonAlert.png" /></td>
 
-     <td valign="top" headers="d219563e338" class="stentry">Notifications icon</td>
+     <td valign="top" headers="d219657e338" class="stentry">Notifications icon</td>
 
-     <td valign="top" headers="d219563e341" class="stentry">Displays notifications.</td>
+     <td valign="top" headers="d219657e341" class="stentry">Displays notifications.</td>
 
     </tr>
 <tr class="strow">
-     <td valign="top" headers="d219563e335" class="stentry"><img class="image" id="concept_yth_5n5_jq__d41663e162" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_OverAdministration.png" /></td>
+     <td valign="top" headers="d219657e335" class="stentry"><img class="image" id="concept_yth_5n5_jq__d41911e162" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_OverAdministration.png" /></td>
 
-     <td valign="top" headers="d219563e338" class="stentry">Administration icon</td>
+     <td valign="top" headers="d219657e338" class="stentry">Administration icon</td>
 
-     <td valign="top" headers="d219563e341" class="stentry">Provides access to <span class="ph">Data Collector</span>
+     <td valign="top" headers="d219657e341" class="stentry">Provides access to <span class="ph">Data Collector</span>
       configuration properties, directories, and log. Also allows you to shut down <span class="ph">Data Collector</span>.</td>
 
     </tr>
 <tr class="strow">
-     <td valign="top" headers="d219563e335" class="stentry"><img class="image" id="concept_yth_5n5_jq__d41663e179" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_OverUser.png" /></td>
+     <td valign="top" headers="d219657e335" class="stentry"><img class="image" id="concept_yth_5n5_jq__d41911e179" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_OverUser.png" /></td>
 
-     <td valign="top" headers="d219563e338" class="stentry">User icon</td>
+     <td valign="top" headers="d219657e338" class="stentry">User icon</td>
 
-     <td valign="top" headers="d219563e341" class="stentry">Displays the active user and the roles assigned to the user. Also allows you to log
+     <td valign="top" headers="d219657e341" class="stentry">Displays the active user and the roles assigned to the user. Also allows you to log
       out of <span class="ph">Data Collector</span>.</td>
 
     </tr>
 <tr class="strow">
-     <td valign="top" headers="d219563e335" class="stentry"><img class="image" id="concept_yth_5n5_jq__d41663e193" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_OverCHelp.png" /></td>
+     <td valign="top" headers="d219657e335" class="stentry"><img class="image" id="concept_yth_5n5_jq__d41911e193" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_OverCHelp.png" /></td>
 
-     <td valign="top" headers="d219563e338" class="stentry">Help icon</td>
+     <td valign="top" headers="d219657e338" class="stentry">Help icon</td>
 
-     <td valign="top" headers="d219563e341" class="stentry">Provides context-sensitive help based on the information in the panel. Allows you to
+     <td valign="top" headers="d219657e341" class="stentry">Provides context-sensitive help based on the information in the panel. Allows you to
       configure display settings and to specify whether to use a local or hosted version of the
        help.<p class="p">Provides access to the REST API and the <span class="ph">Data Collector</span> version.</p>
 </td>
 
     </tr>
 <tr class="strow">
-     <td valign="top" headers="d219563e335" class="stentry"><img class="image" id="concept_yth_5n5_jq__d41663e209" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_PipelineList.png" height="19" width="65" /></td>
+     <td valign="top" headers="d219657e335" class="stentry"><img class="image" id="concept_yth_5n5_jq__d41911e209" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_PipelineList.png" height="19" width="65" /></td>
 
-     <td valign="top" headers="d219563e338" class="stentry">Link to a pipeline list</td>
+     <td valign="top" headers="d219657e338" class="stentry">Link to a pipeline list</td>
 
-     <td valign="top" headers="d219563e341" class="stentry">Link to a <a class="xref" href="GettingStarted_Title.html#concept_wc5_ysp_1w" title="Data Collector displays a list of all available pipelines and related information on the Home page. You can select a category of pipelines, such as Running Pipelines, to view a subset of all available pipelines.">pipeline list on the Home page</a>. Use to view a list of available pipelines, perform
+     <td valign="top" headers="d219657e341" class="stentry">Link to a <a class="xref" href="GettingStarted_Title.html#concept_wc5_ysp_1w" title="Data Collector displays a list of all available pipelines and related information on the Home page. You can select a category of pipelines, such as Running Pipelines, to view a subset of all available pipelines.">pipeline list on the Home page</a>. Use to view a list of available pipelines, perform
       pipeline maintenance like starting or sharing a pipeline, and navigate to individual
       pipelines. </td>
 
     </tr>
 <tr class="strow">
-        <td valign="top" headers="d219563e335" class="stentry"><img class="image" id="concept_yth_5n5_jq__image_wsc_zvp_1w" src="../Graphics/icon_MonMore.png" /></td>
+        <td valign="top" headers="d219657e335" class="stentry"><img class="image" id="concept_yth_5n5_jq__image_wsc_zvp_1w" src="../Graphics/icon_MonMore.png" /></td>
 
-        <td valign="top" headers="d219563e338" class="stentry">More icon</td>
+        <td valign="top" headers="d219657e338" class="stentry">More icon</td>
 
-        <td valign="top" headers="d219563e341" class="stentry">
+        <td valign="top" headers="d219657e341" class="stentry">
           <p class="p">Provides additional actions for the pipeline.</p>
 
         </td>
@@ -351,9 +355,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="29.49852507374631%" id="d219563e624">Display Setting</th>
+                                    <th class="entry" valign="top" width="29.49852507374631%" id="d219657e624">Display Setting</th>
 
-                                    <th class="entry" valign="top" width="70.50147492625369%" id="d219563e627">Description</th>
+                                    <th class="entry" valign="top" width="70.50147492625369%" id="d219657e627">Description</th>
 
                                 </tr>
 
@@ -361,9 +365,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d219563e624 ">Timezone</td>
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d219657e624 ">Timezone</td>
 
-                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d219563e627 ">Display time zone. Used to display dates and times in the
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d219657e627 ">Display time zone. Used to display dates and times in the
                                             <span class="ph">Data Collector</span> UI, such as datetime data in data preview or snapshot
                                         data. <div class="p">You can choose between the following options:<ul class="ul" id="task_r3q_fnx_pr__ul_oxv_nq4_cy">
                                                 <li class="li">UTC</li>
@@ -381,17 +385,17 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d219563e624 ">Display Density</td>
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d219657e624 ">Display Density</td>
 
-                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d219563e627 ">Defines the density of the information that displays in
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d219657e627 ">Defines the density of the information that displays in
                                         the panel.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d219563e624 ">Help</td>
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d219657e624 ">Help</td>
 
-                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d219563e627 ">Defines the help project that <span class="ph">Data Collector</span> uses:<ul class="ul" id="task_r3q_fnx_pr__ul_pzd_kqx_pr">
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d219657e627 ">Defines the help project that <span class="ph">Data Collector</span> uses:<ul class="ul" id="task_r3q_fnx_pr__ul_pzd_kqx_pr">
                                             <li class="li">Local help - Uses the help project installed with
                                                   <span class="ph">Data Collector</span>.</li>
 
@@ -410,26 +414,26 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d219563e624 ">Hide Pipeline Creation Help Bar </td>
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d219657e624 ">Hide Pipeline Creation Help Bar </td>
 
-                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d219563e627 ">Hides the pipeline configuration help bar that displays
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d219657e627 ">Hides the pipeline configuration help bar that displays
                                         by default when a pipeline is incomplete. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d219563e624 ">Hide REST Response Menu</td>
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d219657e624 ">Hide REST Response Menu</td>
 
-                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d219563e627 ">Hides the REST Response menu so you cannot request REST
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d219657e627 ">Hides the REST Response menu so you cannot request REST
                                         API response information.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d219563e624 ">Run preview in background to display available
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d219657e624 ">Run preview in background to display available
                                         fields</td>
 
-                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d219563e627 ">Runs preview in the background to display lists of
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d219657e627 ">Runs preview in the background to display lists of
                                         available fields and the Select Fields with Preview Data
                                         option as you configure pipeline and stage properties.
                                             <p class="p">Running preview in the background can freeze the
@@ -440,9 +444,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d219563e624 ">Wrap long lines in properties</td>
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d219657e624 ">Wrap long lines in properties</td>
 
-                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d219563e627 ">Wraps long lines of text that you enter in properties.
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d219657e627 ">Wraps long lines of text that you enter in properties.
                                         For example, you might enter a long line of text when you
                                         configure the preconditions for a stage. <p class="p">When cleared,
                                             displays long lines of text with a scroll
@@ -486,19 +490,19 @@
 
         <img class="image" id="concept_wc5_ysp_1w__image_a41_tlq_1w" src="../Graphics/DCConsoleAllPipelines.png" height="363" width="781" />
         <table cellpadding="4" cellspacing="0" summary="" id="concept_wc5_ysp_1w__simpletable_v4t_zhc_pq" border="1" class="simpletable"><tr class="sthead">
-                <th valign="bottom" align="left" id="d219563e827" class="stentry" width="15.625%">Area/Icon</th>
+                <th valign="bottom" align="left" id="d219657e827" class="stentry" width="15.625%">Area/Icon</th>
 
-                <th valign="bottom" align="left" id="d219563e830" class="stentry" width="24.21875%">Name</th>
+                <th valign="bottom" align="left" id="d219657e830" class="stentry" width="24.21875%">Name</th>
 
-                <th valign="bottom" align="left" id="d219563e833" class="stentry" width="60.15625%">Description</th>
+                <th valign="bottom" align="left" id="d219657e833" class="stentry" width="60.15625%">Description</th>
 
             </tr>
 <tr class="strow">
-                <td valign="top" headers="d219563e827" class="stentry">1</td>
+                <td valign="top" headers="d219657e827" class="stentry">1</td>
 
-                <td valign="top" headers="d219563e830" class="stentry">Pipeline library</td>
+                <td valign="top" headers="d219657e830" class="stentry">Pipeline library</td>
 
-                <td valign="top" headers="d219563e833" class="stentry">Library of pipelines associated with this <span class="ph">Data Collector</span>. <div class="p">The library lists:<ul class="ul" id="concept_wc5_ysp_1w__ul_hgb_5vb_cw">
+                <td valign="top" headers="d219657e833" class="stentry">Library of pipelines associated with this <span class="ph">Data Collector</span>. <div class="p">The library lists:<ul class="ul" id="concept_wc5_ysp_1w__ul_hgb_5vb_cw">
                             <li class="li">Pipeline states - Select a pipeline state to filter pipelines in the
                                 list by state.</li>
 
@@ -511,109 +515,109 @@
 
             </tr>
 <tr class="strow">
-                <td valign="top" headers="d219563e827" class="stentry">2</td>
+                <td valign="top" headers="d219657e827" class="stentry">2</td>
 
-                <td valign="top" headers="d219563e830" class="stentry">Pipeline list</td>
+                <td valign="top" headers="d219657e830" class="stentry">Pipeline list</td>
 
-                <td valign="top" headers="d219563e833" class="stentry">Allows you to select one or more pipelines and then perform an action on
+                <td valign="top" headers="d219657e833" class="stentry">Allows you to select one or more pipelines and then perform an action on
                     the pipelines, such as starting, stopping, or exporting the pipelines.</td>
 
             </tr>
 <tr class="strow">
-                <td valign="top" headers="d219563e827" class="stentry">3</td>
+                <td valign="top" headers="d219657e827" class="stentry">3</td>
 
-                <td valign="top" headers="d219563e830" class="stentry">Filter field</td>
+                <td valign="top" headers="d219657e830" class="stentry">Filter field</td>
 
-                <td valign="top" headers="d219563e833" class="stentry">Allows you to filter for pipelines by name.</td>
+                <td valign="top" headers="d219657e833" class="stentry">Allows you to filter for pipelines by name.</td>
 
             </tr>
 <tr class="strow">
-                <td valign="top" headers="d219563e827" class="stentry">4</td>
+                <td valign="top" headers="d219657e827" class="stentry">4</td>
 
-                <td valign="top" headers="d219563e830" class="stentry">Show Details</td>
+                <td valign="top" headers="d219657e830" class="stentry">Show Details</td>
 
-                <td valign="top" headers="d219563e833" class="stentry">Displays details about error messages and alert texts for each pipeline in
+                <td valign="top" headers="d219657e833" class="stentry">Displays details about error messages and alert texts for each pipeline in
                     the list.</td>
 
             </tr>
 <tr class="strow">
-     <td valign="top" headers="d219563e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__d41663e105" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_DPM.png" height="21" width="28" /></td>
+     <td valign="top" headers="d219657e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__d41911e105" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_DPM.png" height="21" width="28" /></td>
 
-     <td valign="top" headers="d219563e830" class="stentry"><span class="ph">StreamSets Control Hub</span> icon</td>
+     <td valign="top" headers="d219657e830" class="stentry"><span class="ph">StreamSets Control Hub</span> icon</td>
 
-     <td valign="top" headers="d219563e833" class="stentry">Provides information about <span class="ph">StreamSets Control Hub</span> and lets you register this <span class="ph">Data Collector</span> with <span class="ph">Control Hub</span>.</td>
+     <td valign="top" headers="d219657e833" class="stentry">Provides information about <span class="ph">StreamSets Control Hub</span> and lets you register this <span class="ph">Data Collector</span> with <span class="ph">Control Hub</span>.</td>
 
     </tr>
 <tr class="strow">
-     <td valign="top" headers="d219563e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__d41663e124" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_OverHome.png" /></td>
+     <td valign="top" headers="d219657e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__d41911e124" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_OverHome.png" /></td>
 
-     <td valign="top" headers="d219563e830" class="stentry">Home icon</td>
+     <td valign="top" headers="d219657e830" class="stentry">Home icon</td>
 
-     <td valign="top" headers="d219563e833" class="stentry">Displays a home page with a list of pipelines and their statuses, allowing you to
+     <td valign="top" headers="d219657e833" class="stentry">Displays a home page with a list of pipelines and their statuses, allowing you to
       perform pipeline maintenance and navigate to individual pipelines.</td>
 
     </tr>
 <tr class="strow">
-     <td valign="top" headers="d219563e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__d41663e136" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_PackageManager.png" height="15" width="18" /></td>
+     <td valign="top" headers="d219657e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__d41911e136" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_PackageManager.png" height="15" width="18" /></td>
 
-     <td valign="top" headers="d219563e830" class="stentry">Package Manager icon</td>
+     <td valign="top" headers="d219657e830" class="stentry">Package Manager icon</td>
 
-     <td valign="top" headers="d219563e833" class="stentry">Displays the Package Manager which allows you to install additional stage libraries
+     <td valign="top" headers="d219657e833" class="stentry">Displays the Package Manager which allows you to install additional stage libraries
       for a core <span class="ph">Data Collector</span>
       installation.</td>
 
     </tr>
 <tr class="strow">
-     <td valign="top" headers="d219563e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__d41663e150" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_MonAlert.png" /></td>
+     <td valign="top" headers="d219657e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__d41911e150" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_MonAlert.png" /></td>
 
-     <td valign="top" headers="d219563e830" class="stentry">Notifications icon</td>
+     <td valign="top" headers="d219657e830" class="stentry">Notifications icon</td>
 
-     <td valign="top" headers="d219563e833" class="stentry">Displays notifications.</td>
+     <td valign="top" headers="d219657e833" class="stentry">Displays notifications.</td>
 
     </tr>
 <tr class="strow">
-     <td valign="top" headers="d219563e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__d41663e162" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_OverAdministration.png" /></td>
+     <td valign="top" headers="d219657e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__d41911e162" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_OverAdministration.png" /></td>
 
-     <td valign="top" headers="d219563e830" class="stentry">Administration icon</td>
+     <td valign="top" headers="d219657e830" class="stentry">Administration icon</td>
 
-     <td valign="top" headers="d219563e833" class="stentry">Provides access to <span class="ph">Data Collector</span>
+     <td valign="top" headers="d219657e833" class="stentry">Provides access to <span class="ph">Data Collector</span>
       configuration properties, directories, and log. Also allows you to shut down <span class="ph">Data Collector</span>.</td>
 
     </tr>
 <tr class="strow">
-     <td valign="top" headers="d219563e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__d41663e179" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_OverUser.png" /></td>
+     <td valign="top" headers="d219657e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__d41911e179" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_OverUser.png" /></td>
 
-     <td valign="top" headers="d219563e830" class="stentry">User icon</td>
+     <td valign="top" headers="d219657e830" class="stentry">User icon</td>
 
-     <td valign="top" headers="d219563e833" class="stentry">Displays the active user and the roles assigned to the user. Also allows you to log
+     <td valign="top" headers="d219657e833" class="stentry">Displays the active user and the roles assigned to the user. Also allows you to log
       out of <span class="ph">Data Collector</span>.</td>
 
     </tr>
 <tr class="strow">
-     <td valign="top" headers="d219563e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__d41663e193" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_OverCHelp.png" /></td>
+     <td valign="top" headers="d219657e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__d41911e193" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_OverCHelp.png" /></td>
 
-     <td valign="top" headers="d219563e830" class="stentry">Help icon</td>
+     <td valign="top" headers="d219657e830" class="stentry">Help icon</td>
 
-     <td valign="top" headers="d219563e833" class="stentry">Provides context-sensitive help based on the information in the panel. Allows you to
+     <td valign="top" headers="d219657e833" class="stentry">Provides context-sensitive help based on the information in the panel. Allows you to
       configure display settings and to specify whether to use a local or hosted version of the
        help.<p class="p">Provides access to the REST API and the <span class="ph">Data Collector</span> version.</p>
 </td>
 
     </tr>
 <tr class="strow">
-                <td valign="top" headers="d219563e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__image_kgq_klq_rq" src="../Graphics/icon_OverLibraryToggle.png" height="28" width="28" /></td>
+                <td valign="top" headers="d219657e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__image_kgq_klq_rq" src="../Graphics/icon_OverLibraryToggle.png" height="28" width="28" /></td>
 
-                <td valign="top" headers="d219563e830" class="stentry">Toggle Library Pane icon</td>
+                <td valign="top" headers="d219657e830" class="stentry">Toggle Library Pane icon</td>
 
-                <td valign="top" headers="d219563e833" class="stentry">Icon to show or hide the pipeline library.</td>
+                <td valign="top" headers="d219657e833" class="stentry">Icon to show or hide the pipeline library.</td>
 
             </tr>
 <tr class="strow">
-                <td valign="top" headers="d219563e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__image_s3s_wt1_xx" src="../Graphics/icon_MonMore.png" /></td>
+                <td valign="top" headers="d219657e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__image_s3s_wt1_xx" src="../Graphics/icon_MonMore.png" /></td>
 
-                <td valign="top" headers="d219563e830" class="stentry">More icon</td>
+                <td valign="top" headers="d219657e830" class="stentry">More icon</td>
 
-                <td valign="top" headers="d219563e833" class="stentry">
+                <td valign="top" headers="d219657e833" class="stentry">
                     <p class="p">Provides additional actions for pipelines. Use to reset origins for
                         pipelines, add labels to pipelines, export pipelines, and display pipeline
                         IDs.</p>
@@ -622,84 +626,84 @@
 
             </tr>
 <tr class="strow">
-                <td valign="top" headers="d219563e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__image_ndy_cyp_1w" src="../Graphics/icon_PrevRefresh.png" /></td>
+                <td valign="top" headers="d219657e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__image_ndy_cyp_1w" src="../Graphics/icon_PrevRefresh.png" /></td>
 
-                <td valign="top" headers="d219563e830" class="stentry">Refresh icon</td>
+                <td valign="top" headers="d219657e830" class="stentry">Refresh icon</td>
 
-                <td valign="top" headers="d219563e833" class="stentry">Refreshes the pipeline list.</td>
-
-            </tr>
-<tr class="strow">
-                <td valign="top" headers="d219563e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__image_t2z_gyp_1w" src="../Graphics/icon_ConfigDelete.png" /></td>
-
-                <td valign="top" headers="d219563e830" class="stentry">Delete icon</td>
-
-                <td valign="top" headers="d219563e833" class="stentry">Deletes the selected pipelines.</td>
+                <td valign="top" headers="d219657e833" class="stentry">Refreshes the pipeline list.</td>
 
             </tr>
 <tr class="strow">
-                <td valign="top" headers="d219563e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__image_upt_3yp_1w" src="../Graphics/icon_ConfigCopy.png" /></td>
+                <td valign="top" headers="d219657e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__image_t2z_gyp_1w" src="../Graphics/icon_ConfigDelete.png" /></td>
 
-                <td valign="top" headers="d219563e830" class="stentry">Duplicate icon</td>
+                <td valign="top" headers="d219657e830" class="stentry">Delete icon</td>
 
-                <td valign="top" headers="d219563e833" class="stentry">Duplicates the selected pipelines.</td>
+                <td valign="top" headers="d219657e833" class="stentry">Deletes the selected pipelines.</td>
 
             </tr>
 <tr class="strow">
-                <td valign="top" headers="d219563e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__image_eqt_wbv_xy" src="../Graphics/icon-Share.png" height="18" width="24" /></td>
+                <td valign="top" headers="d219657e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__image_upt_3yp_1w" src="../Graphics/icon_ConfigCopy.png" /></td>
 
-                <td valign="top" headers="d219563e830" class="stentry">Share icon</td>
+                <td valign="top" headers="d219657e830" class="stentry">Duplicate icon</td>
 
-                <td valign="top" headers="d219563e833" class="stentry">Shares the pipeline with users and groups. Use to configure pipeline
+                <td valign="top" headers="d219657e833" class="stentry">Duplicates the selected pipelines.</td>
+
+            </tr>
+<tr class="strow">
+                <td valign="top" headers="d219657e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__image_eqt_wbv_xy" src="../Graphics/icon-Share.png" height="18" width="24" /></td>
+
+                <td valign="top" headers="d219657e830" class="stentry">Share icon</td>
+
+                <td valign="top" headers="d219657e833" class="stentry">Shares the pipeline with users and groups. Use to configure pipeline
                     permissions.</td>
 
             </tr>
 <tr class="strow">
-                <td valign="top" headers="d219563e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__image_qs4_kyp_1w" src="../Graphics/icon_ConfigStartPipeline.png" /></td>
+                <td valign="top" headers="d219657e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__image_qs4_kyp_1w" src="../Graphics/icon_ConfigStartPipeline.png" /></td>
 
-                <td valign="top" headers="d219563e830" class="stentry">Start icon</td>
+                <td valign="top" headers="d219657e830" class="stentry">Start icon</td>
 
-                <td valign="top" headers="d219563e833" class="stentry">Starts the selected pipelines.</td>
-
-            </tr>
-<tr class="strow">
-                <td valign="top" headers="d219563e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__image_gpp_cjx_1w" src="../Graphics/icon_HomeStop.png" /></td>
-
-                <td valign="top" headers="d219563e830" class="stentry">Stop icon</td>
-
-                <td valign="top" headers="d219563e833" class="stentry">Stops the selected pipelines.</td>
+                <td valign="top" headers="d219657e833" class="stentry">Starts the selected pipelines.</td>
 
             </tr>
 <tr class="strow">
-                <td valign="top" headers="d219563e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__image_cbx_kp2_bw" src="../Graphics/icon_HomeListView.png" /></td>
+                <td valign="top" headers="d219657e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__image_gpp_cjx_1w" src="../Graphics/icon_HomeStop.png" /></td>
 
-                <td valign="top" headers="d219563e830" class="stentry">List View icon</td>
+                <td valign="top" headers="d219657e830" class="stentry">Stop icon</td>
 
-                <td valign="top" headers="d219563e833" class="stentry">Displays the pipelines in a list.</td>
-
-            </tr>
-<tr class="strow">
-                <td valign="top" headers="d219563e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__image_hws_xp2_bw" src="../Graphics/icon_HomeGridView.png" /></td>
-
-                <td valign="top" headers="d219563e830" class="stentry">Grid View icon</td>
-
-                <td valign="top" headers="d219563e833" class="stentry">Displays the pipelines in a grid.</td>
+                <td valign="top" headers="d219657e833" class="stentry">Stops the selected pipelines.</td>
 
             </tr>
 <tr class="strow">
-                <td valign="top" headers="d219563e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__image_clc_5yp_1w" src="../Graphics/icon_ConfigPipeError.png" /></td>
+                <td valign="top" headers="d219657e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__image_cbx_kp2_bw" src="../Graphics/icon_HomeListView.png" /></td>
 
-                <td valign="top" headers="d219563e830" class="stentry">Error icon</td>
+                <td valign="top" headers="d219657e830" class="stentry">List View icon</td>
 
-                <td valign="top" headers="d219563e833" class="stentry">Indicates that the pipeline has errors.</td>
+                <td valign="top" headers="d219657e833" class="stentry">Displays the pipelines in a list.</td>
 
             </tr>
 <tr class="strow">
-                <td valign="top" headers="d219563e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__image_vd2_jpq_rq" src="../Graphics/icon_OverActions.png" height="31" width="19" /></td>
+                <td valign="top" headers="d219657e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__image_hws_xp2_bw" src="../Graphics/icon_HomeGridView.png" /></td>
 
-                <td valign="top" headers="d219563e830" class="stentry">Actions icon</td>
+                <td valign="top" headers="d219657e830" class="stentry">Grid View icon</td>
 
-                <td valign="top" headers="d219563e833" class="stentry">Allows you to import, export, duplicate, or delete a single
+                <td valign="top" headers="d219657e833" class="stentry">Displays the pipelines in a grid.</td>
+
+            </tr>
+<tr class="strow">
+                <td valign="top" headers="d219657e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__image_clc_5yp_1w" src="../Graphics/icon_ConfigPipeError.png" /></td>
+
+                <td valign="top" headers="d219657e830" class="stentry">Error icon</td>
+
+                <td valign="top" headers="d219657e833" class="stentry">Indicates that the pipeline has errors.</td>
+
+            </tr>
+<tr class="strow">
+                <td valign="top" headers="d219657e827" class="stentry"><img class="image" id="concept_wc5_ysp_1w__image_vd2_jpq_rq" src="../Graphics/icon_OverActions.png" height="31" width="19" /></td>
+
+                <td valign="top" headers="d219657e830" class="stentry">Actions icon</td>
+
+                <td valign="top" headers="d219657e833" class="stentry">Allows you to import, export, duplicate, or delete a single
                     pipeline.</td>
 
             </tr>

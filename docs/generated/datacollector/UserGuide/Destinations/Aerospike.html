@@ -25,17 +25,21 @@
 -->
   <script type="text/javascript">
     <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
-
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
+   var parentWindow = window.name;
+   console.log("1. " + parentWindow);
+   if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+    var currHash = window.location.hash.substr(1);
+    var currentLocation = window.location.href
+    if (currHash) {
+       console.log("2. Current Hash Before:" + currHash);
+       if (currHash.indexOf("datacollector/UserGuide/") == -1 && currentLocation.indexOf("datacollector/UserGuide/") == -1) {
+           currHash = "#datacollector/UserGuide/" + currHash;
+       }
+       currHash = decodeURIComponent(currHash)
+       window.location.hash = currHash
+       console.log("3. Current Hash After:" + currHash)
+   }
+}         
 -->
   </script>
 </head>
@@ -75,14 +79,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_j3q_tpr_4cb__d18242e5695" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_j3q_tpr_4cb__d18295e5695" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d77057e89">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d77108e89">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d77057e92">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d77108e92">Description</th>
 
                                 </tr>
 
@@ -90,24 +94,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d77057e89 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d77108e89 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d77057e92 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d77057e89 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d77057e92 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d77108e92 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d77057e89 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_j3q_tpr_4cb__d18242e5741" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d77108e89 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d77057e92 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d77108e92 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d77108e89 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_j3q_tpr_4cb__d18295e5741" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d77108e92 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -119,10 +123,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d77057e89 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_j3q_tpr_4cb__d18242e5757" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d77108e89 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_j3q_tpr_4cb__d18295e5757" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d77057e92 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d77108e92 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -133,10 +137,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d77057e89 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_j3q_tpr_4cb__d18242e5774" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d77108e89 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_j3q_tpr_4cb__d18295e5774" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d77057e92 ">Error record handling for the stage: <ul class="ul" id="task_j3q_tpr_4cb__d18242e5778">
+                                    <td class="entry" valign="top" width="70%" headers="d77108e92 ">Error record handling for the stage: <ul class="ul" id="task_j3q_tpr_4cb__d18295e5778">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -166,9 +170,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d77057e203">Aerospike Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d77108e203">Aerospike Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d77057e206">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d77108e206">Description</th>
 
                                 </tr>
 
@@ -176,9 +180,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d77057e203 ">Aerospike Nodes</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d77108e203 ">Aerospike Nodes</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d77057e206 ">Aerospike nodes to use. Use the following
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d77108e206 ">Aerospike nodes to use. Use the following
                                             format:<pre class="pre codeblock">&lt;host name&gt;:&lt;port number&gt;</pre>
 <p class="p">For
                                             example: <samp class="ph codeph">localhost:3000</samp></p>
@@ -192,9 +196,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d77057e203 ">Retry Attempts</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d77108e203 ">Retry Attempts</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d77057e206 ">Maximum number of times to attempt to connect to the
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d77108e206 ">Maximum number of times to attempt to connect to the
                                         Aerospike database.<p class="p">Default is 0, which means that the
                                             destination does not attempt any retries.</p>
 </td>
@@ -218,9 +222,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d77057e275">Mapping Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d77108e275">Mapping Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d77057e278">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d77108e278">Description</th>
 
                                 </tr>
 
@@ -228,35 +232,35 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d77057e275 ">Namespace</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d77108e275 ">Namespace</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d77057e278 ">Aerospike namespace to use. Enter a namespace name or
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d77108e278 ">Aerospike namespace to use. Enter a namespace name or
                                         enter an expression that defines the namespace.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d77057e275 ">Set</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d77108e275 ">Set</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d77057e278 ">Optional Aerospike set within the namespace to use. Enter
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d77108e278 ">Optional Aerospike set within the namespace to use. Enter
                                         a set name or enter an expression that defines the
                                         set.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d77057e275 ">Key</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d77108e275 ">Key</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d77057e278 ">Key, or unique identifier, of the Aerospike record to
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d77108e278 ">Key, or unique identifier, of the Aerospike record to
                                         use. Enter a key name or enter an expression that defines
                                         the key.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d77057e275 ">Bins</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d77108e275 ">Bins</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d77057e278 ">Map fields in the <span class="ph">Data Collector</span> record to bins in the Aerospike record. Enter the
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d77108e278 ">Map fields in the <span class="ph">Data Collector</span> record to bins in the Aerospike record. Enter the
                                             following:<ul class="ul" id="task_j3q_tpr_4cb__ul_xr5_4xs_4cb">
                                             <li class="li">Bin Name Expression - Expression that defines the
                                                 name of the Aerospike bin to write to.</li>

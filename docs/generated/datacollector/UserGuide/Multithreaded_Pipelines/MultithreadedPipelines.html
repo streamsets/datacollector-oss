@@ -24,17 +24,21 @@
 -->
   <script type="text/javascript">
     <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
-
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
+   var parentWindow = window.name;
+   console.log("1. " + parentWindow);
+   if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+    var currHash = window.location.hash.substr(1);
+    var currentLocation = window.location.href
+    if (currHash) {
+       console.log("2. Current Hash Before:" + currHash);
+       if (currHash.indexOf("datacollector/UserGuide/") == -1 && currentLocation.indexOf("datacollector/UserGuide/") == -1) {
+           currHash = "#datacollector/UserGuide/" + currHash;
+       }
+       currHash = decodeURIComponent(currHash)
+       window.location.hash = currHash
+       console.log("3. Current Hash After:" + currHash)
+   }
+}         
 -->
   </script>
 </head>
@@ -86,13 +90,16 @@
         <p class="p">When you start the pipeline, the origin creates a number of threads based on the
             multithreaded property configured in the origin. <span class="ph">And <span class="ph">Data Collector</span> creates a
                         number of pipeline runners based on the pipeline Max Runners property to
-                        perform pipeline processing. <span class="ph" id="concept_xl3_ncd_py__d47117e2179">Each thread
+                        perform pipeline processing. <span class="ph" id="concept_xl3_ncd_py__d47864e2179">Each thread
                               connects to the origin system and creates a batch of data, and passes
                               the batch to an available pipeline runner.</span></span></p>
 
         <p class="p"><span class="ph"> Each pipeline runner processes one batch at a time,
                         just like a pipeline that runs on a single thread. When the flow of data
-                        slows, the pipeline runners wait idly until they are needed.</span></p>
+                        slows, the pipeline runners wait idly until they are needed, generating an
+                        empty batch at regular intervals. You can configure the Runner Idle Time
+                        pipeline property specify the interval or to opt out of empty batch
+                        generation.</span></p>
 
         <p class="p"><span class="ph">Multithreaded pipelines preserve the order of
                         records within each batch, just like a single-threaded pipeline. But since
@@ -107,8 +114,7 @@
         <p class="p"><img class="image" id="concept_xl3_ncd_py__image_mxx_5sd_ry" src="../Graphics/Multithread-HTTPPipeline.png" height="263" width="470" /></p>
 
         <p class="p">Let's say you configure the pipeline to opt out of the Max Runners property. When you do
-            this, <span class="ph">Data Collector</span>
-            generates a matching number of pipeline runners for the number of threads.</p>
+            this, <span class="ph">Data Collector</span> generates a matching number of pipeline runners for the number of threads.</p>
 
         <p class="p">With Max Concurrent Requests set to 5, when you start the pipeline the origin creates
             five threads and <span class="ph">Data Collector</span>
@@ -241,9 +247,9 @@
 </div>
 </div>
 <div class="topic concept nested1" id="concept_tdn_vwy_ry">
- <h2 class="title topictitle2">Monitoring</h2>
+    <h2 class="title topictitle2">Monitoring</h2>
 
- <div class="body conbody">
+    <div class="body conbody">
         <p class="p">When you monitor a multithreaded pipeline, the
             pipeline and stage statistics that display are for the entire pipeline, aggregated
             across all pipeline runners.</p>
@@ -252,12 +258,17 @@
 
         <p class="p"><img class="image" id="concept_tdn_vwy_ry__image_bzb_yxf_sy" src="../Graphics/Multithreaded-Stats.png" height="270" width="284" /></p>
 
-        <p class="p">The histogram shows a changing snapshot of the frequency of available pipeline runners and
-            the number of runners that are currently available. If you are uncertain of the number
-            that a column displays, hover over it to view the column detail.</p>
+        <p class="p">The histogram shows a changing snapshot of the frequency of available pipeline runners
+            and the number of runners that are currently available. If you are uncertain of the
+            number that a column displays, hover over it to view the column detail.</p>
 
         <p class="p">For example, the histogram above indicates that the mean is 1.4 available runners, and
             the standard deviation is one runner.</p>
+
+        <p class="p">The runtime statistics available in monitor mode provides the idle batch count, which
+            represents the number of empty batches that have been generated by the pipeline runners.
+            Pipeline runners generate empty batches by default based on the Runner Idle Time
+            pipeline property. </p>
 
     </div>
 

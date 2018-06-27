@@ -25,17 +25,21 @@
 -->
   <script type="text/javascript">
     <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
-
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
+   var parentWindow = window.name;
+   console.log("1. " + parentWindow);
+   if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+    var currHash = window.location.hash.substr(1);
+    var currentLocation = window.location.href
+    if (currHash) {
+       console.log("2. Current Hash Before:" + currHash);
+       if (currHash.indexOf("datacollector/UserGuide/") == -1 && currentLocation.indexOf("datacollector/UserGuide/") == -1) {
+           currHash = "#datacollector/UserGuide/" + currHash;
+       }
+       currHash = decodeURIComponent(currHash)
+       window.location.hash = currHash
+       console.log("3. Current Hash After:" + currHash)
+   }
+}         
 -->
   </script>
 </head>
@@ -169,9 +173,9 @@ system disableDPM</pre>
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d69657e317">Basic Option</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d69708e317">Basic Option</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d69657e320">Description</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d69708e320">Description</th>
 
                         </tr>
 
@@ -179,31 +183,31 @@ system disableDPM</pre>
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d69657e317 ">-U &lt;sdcURL&gt;<p class="p">or</p>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d69708e317 ">-U &lt;sdcURL&gt;<p class="p">or</p>
 --url &lt;sdcURL&gt;</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d69657e320 ">Required. URL of the <span class="ph">Data Collector</span>.<p class="p">The default URL is
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d69708e320 ">Required. URL of the <span class="ph">Data Collector</span>.<p class="p">The default URL is
                                         <samp class="ph systemoutput">http://localhost:18630</samp>.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d69657e317 ">-a &lt;sdcAuthType&gt;<p class="p">or</p>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d69708e317 ">-a &lt;sdcAuthType&gt;<p class="p">or</p>
 --auth-type &lt;sdcAuthType&gt;</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d69657e320 ">Required. Authentication type used by the <span class="ph">Data Collector</span>. Set to <samp class="ph codeph">dpm</samp>.<p class="p">If you omit this option, <span class="ph">Data Collector</span> uses the Form authentication type, which causes the
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d69708e320 ">Required. Authentication type used by the <span class="ph">Data Collector</span>. Set to <samp class="ph codeph">dpm</samp>.<p class="p">If you omit this option, <span class="ph">Data Collector</span> uses the Form authentication type, which causes the
                                     disableDPM command to fail.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d69657e317 ">-D &lt;dpmURL&gt;<p class="p">or</p>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d69708e317 ">-D &lt;dpmURL&gt;<p class="p">or</p>
 <p class="p">--dpmURL &lt;dpmURL&gt;</p>
 </td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d69657e320 ">Required. Enter the appropriate URL:<ul class="ul" id="concept_r4v_fwf_nx__ul_c2n_5kd_j1b">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d69708e320 ">Required. Enter the appropriate URL:<ul class="ul" id="concept_r4v_fwf_nx__ul_c2n_5kd_j1b">
                                     <li class="li">For <span class="ph">Control Hub</span> cloud, use
                                             <samp class="ph codeph">https://cloud.streamsets.com</samp>.</li>
 
@@ -217,11 +221,11 @@ system disableDPM</pre>
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d69657e317 ">-u &lt;sdcUser&gt;<p class="p">or</p>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d69708e317 ">-u &lt;sdcUser&gt;<p class="p">or</p>
 <p class="p">--user &lt;sdcUser&gt;</p>
 </td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d69657e320 ">Required. Enter your <span class="ph">Control Hub</span> user ID using the following format:<div class="p">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d69708e320 ">Required. Enter your <span class="ph">Control Hub</span> user ID using the following format:<div class="p">
                   <pre class="pre codeblock">&lt;ID&gt;@&lt;organization ID&gt;</pre>
 
             </div>
@@ -232,12 +236,12 @@ system disableDPM</pre>
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d69657e317 ">-p &lt;sdcPassword&gt;<p class="p">or</p>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d69708e317 ">-p &lt;sdcPassword&gt;<p class="p">or</p>
 <p class="p">--password
                                 &lt;sdcPassword&gt;</p>
 </td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d69657e320 ">Required. Enter the password for your <span class="ph">Control Hub</span> user account.</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d69708e320 ">Required. Enter the password for your <span class="ph">Control Hub</span> user account.</td>
 
                         </tr>
 

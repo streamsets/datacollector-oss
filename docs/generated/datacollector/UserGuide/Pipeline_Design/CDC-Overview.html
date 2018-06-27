@@ -24,17 +24,21 @@
 -->
   <script type="text/javascript">
     <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
-
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
+   var parentWindow = window.name;
+   console.log("1. " + parentWindow);
+   if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+    var currHash = window.location.hash.substr(1);
+    var currentLocation = window.location.href
+    if (currHash) {
+       console.log("2. Current Hash Before:" + currHash);
+       if (currHash.indexOf("datacollector/UserGuide/") == -1 && currentLocation.indexOf("datacollector/UserGuide/") == -1) {
+           currHash = "#datacollector/UserGuide/" + currHash;
+       }
+       currHash = decodeURIComponent(currHash)
+       window.location.hash = currHash
+       console.log("3. Current Hash After:" + currHash)
+   }
+}         
 -->
   </script>
 </head>
@@ -123,22 +127,22 @@
 </div>
 </div>
 <div class="topic concept nested1" id="concept_iws_mhd_ty">
- <h2 class="title topictitle2">CDC-Enabled Origins</h2>
+ <h2 class="title topictitle2">CDC-Enabled Stages</h2>
 
  <div class="body conbody">
-  <p class="p">CDC-enabled origins provide the CRUD operation
+  <p class="p">CDC-enabled stages provide the CRUD operation
             type in the sdc.operation.type record header attribute. Some origins provide alternate
             and additional header attributes. </p>
 
-        <div class="p">The following origins provide CRUD record header attributes: 
+        <div class="p">The following stages provide CRUD record header attributes: 
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_iws_mhd_ty__table_mg5_ljc_ty" class="table" frame="border" border="1" rules="all">
                     
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d450524e155">CDC-Enabled Origin</th>
+                            <th class="entry" valign="top" width="30%" id="d452983e155">CDC-Enabled Stage</th>
 
-                            <th class="entry" valign="top" width="70%" id="d450524e158">CRUD Record Header Attributes</th>
+                            <th class="entry" valign="top" width="70%" id="d452983e158">CRUD Record Header Attributes</th>
 
                         </tr>
 
@@ -146,18 +150,18 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d450524e155 ">JDBC Query Consumer for Microsoft SQL Server</td>
+                            <td class="entry" valign="top" width="30%" headers="d452983e155 ">JDBC Query Consumer for Microsoft SQL Server</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d450524e158 ">Includes the CRUD operation type in the sdc.operation.type record
+                            <td class="entry" valign="top" width="70%" headers="d452983e158 ">Includes the CRUD operation type in the sdc.operation.type record
                                 header attribute.<p class="p">For more information, see <a class="xref" href="../Origins/JDBCConsumer.html#concept_bnh_hry_ty">CRUD Record Header Attribute</a>.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d450524e155 ">MapR DB CDC</td>
+                            <td class="entry" valign="top" width="30%" headers="d452983e155 ">MapR DB CDC</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d450524e158 ">Includes the CRUD operation type in the sdc.operation.type record
+                            <td class="entry" valign="top" width="70%" headers="d452983e158 ">Includes the CRUD operation type in the sdc.operation.type record
                                 header attribute. <p class="p">Includes additional CDC information in record
                                     header attributes. </p>
 <p class="p">For more information, see <a class="xref" href="../Origins/MapRdbCDC.html#concept_oq4_mhh_qbb">CRUD Operation and CDC Header Attributes</a>.</p>
@@ -166,9 +170,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d450524e155 ">MongoDB Oplog</td>
+                            <td class="entry" valign="top" width="30%" headers="d452983e155 ">MongoDB Oplog</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d450524e158 ">Includes the CRUD operation type in the sdc.operation.type record
+                            <td class="entry" valign="top" width="70%" headers="d452983e158 ">Includes the CRUD operation type in the sdc.operation.type record
                                 header attribute. <p class="p">Can include additional CDC information in
                                     record header attributes, such as the op and ns
                                     attributes.</p>
@@ -178,9 +182,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d450524e155 ">MySQL Binary Log</td>
+                            <td class="entry" valign="top" width="30%" headers="d452983e155 ">MySQL Binary Log</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d450524e158 ">Includes the CRUD operation type in the sdc.operation.type record
+                            <td class="entry" valign="top" width="70%" headers="d452983e158 ">Includes the CRUD operation type in the sdc.operation.type record
                                 header attribute. <p class="p">Includes additional CDC information in record
                                     fields. </p>
 <p class="p">For more information, see <a class="xref" href="../Origins/MySQLBinaryLog.html#concept_rfd_15l_dy">Generated Records</a>.</p>
@@ -189,9 +193,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d450524e155 ">Oracle CDC Client</td>
+                            <td class="entry" valign="top" width="30%" headers="d452983e155 ">Oracle CDC Client</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d450524e158 ">Includes the CRUD operation type in both of the following
+                            <td class="entry" valign="top" width="70%" headers="d452983e158 ">Includes the CRUD operation type in both of the following
                                     headers:<ul class="ul" id="concept_iws_mhd_ty__ul_i32_xzy_t1b">
                                     <li class="li">sdc.operation.type</li>
 
@@ -209,18 +213,35 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d450524e155 ">Salesforce</td>
+                            <td class="entry" valign="top" width="30%" headers="d452983e155 ">Salesforce</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d450524e158 ">Includes the CRUD operation type in the sdc.operation.type record
+                            <td class="entry" valign="top" width="70%" headers="d452983e158 ">Includes the CRUD operation type in the sdc.operation.type record
                                 header attribute. <p class="p">For more information, see <a class="xref" href="../Origins/Salesforce.html#concept_yns_y2m_5y">CRUD Operation Header Attribute</a>.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d450524e155 ">SQL Server CDC Client</td>
+                            <td class="entry" valign="top" width="30%" headers="d452983e155 ">SQL Parser</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d450524e158 ">Includes the CRUD operation type in the sdc.operation.type record
+                            <td class="entry" valign="top" width="70%" headers="d452983e158 ">Includes the CRUD operation type in both of the following
+                                    headers:<ul class="ul" id="concept_iws_mhd_ty__ul_bsl_hwg_xdb">
+                                    <li class="li">sdc.operation.type</li>
+
+                                </ul>
+<ul class="ul" id="concept_iws_mhd_ty__ul_csl_hwg_xdb">
+                                    <li class="li">oracle.cdc.operation</li>
+
+                                </ul>
+<p class="p">For more information, see <a class="xref" href="../Processors/SQLParser.html#concept_qwp_cwf_wdb">Generated Records</a>.</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d452983e155 ">SQL Server CDC Client</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d452983e158 ">Includes the CRUD operation type in the sdc.operation.type record
                                 header attribute. <p class="p">Includes CDC information in header attributes
                                     named jdbc.&lt;CDC column name&gt;. For more information, see <a class="xref" href="../Origins/SQLServerCDC.html#concept_pc4_xts_r1b">Record Header Attributes</a>.</p>
 </td>
@@ -228,9 +249,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d450524e155 ">SQL Server Change Tracking</td>
+                            <td class="entry" valign="top" width="30%" headers="d452983e155 ">SQL Server Change Tracking</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d450524e158 ">Includes the CRUD operation type in the sdc.operation.type record
+                            <td class="entry" valign="top" width="70%" headers="d452983e158 ">Includes the CRUD operation type in the sdc.operation.type record
                                 header attribute. <p class="p">Includes additional information from change
                                     tables in the jdbc.SYS_CHANGE header attributes. For more
                                     information, see <a class="xref" href="../Origins/SQLServerChange.html#concept_pc4_xts_r1b">Record Header Attributes</a>.</p>
@@ -261,11 +282,11 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="23.636363636363637%" id="d450524e342">CRUD-Enabled Stage</th>
+                            <th class="entry" valign="top" width="23.636363636363637%" id="d452983e367">CRUD-Enabled Stage</th>
 
-                            <th class="entry" valign="top" width="21.818181818181817%" id="d450524e345">Supported Operations</th>
+                            <th class="entry" valign="top" width="21.818181818181817%" id="d452983e370">Supported Operations</th>
 
-                            <th class="entry" valign="top" width="54.54545454545454%" id="d450524e348">Stage Processing</th>
+                            <th class="entry" valign="top" width="54.54545454545454%" id="d452983e373">Stage Processing</th>
 
                         </tr>
 
@@ -273,9 +294,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="23.636363636363637%" headers="d450524e342 ">JDBC Tee processor</td>
+                            <td class="entry" valign="top" width="23.636363636363637%" headers="d452983e367 ">JDBC Tee processor</td>
 
-                            <td class="entry" valign="top" width="21.818181818181817%" headers="d450524e345 ">
+                            <td class="entry" valign="top" width="21.818181818181817%" headers="d452983e370 ">
                                 <ul class="ul" id="concept_lfb_phd_ty__ul_c4w_xbd_ty">
                                     <li class="li">INSERT</li>
 
@@ -287,7 +308,7 @@
 
                             </td>
 
-                            <td class="entry" valign="top" width="54.54545454545454%" headers="d450524e348 ">Determines the operation to use based on either of the
+                            <td class="entry" valign="top" width="54.54545454545454%" headers="d452983e373 ">Determines the operation to use based on either of the
                                     following:<ul class="ul" id="concept_lfb_phd_ty__ul_ls4_pbd_ty">
                                     <li class="li">sdc.operation.type record header attribute</li>
 
@@ -303,9 +324,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="23.636363636363637%" headers="d450524e342 ">Elasticsearch destination</td>
+                            <td class="entry" valign="top" width="23.636363636363637%" headers="d452983e367 ">Elasticsearch destination</td>
 
-                            <td class="entry" valign="top" width="21.818181818181817%" headers="d450524e345 ">
+                            <td class="entry" valign="top" width="21.818181818181817%" headers="d452983e370 ">
                                 <ul class="ul" id="concept_lfb_phd_ty__ul_x3w_sbd_ty">
                                     <li class="li">CREATE (INSERT)</li>
 
@@ -321,7 +342,7 @@
 
                             </td>
 
-                            <td class="entry" valign="top" width="54.54545454545454%" headers="d450524e348 ">Determines the operation to use based on either of the
+                            <td class="entry" valign="top" width="54.54545454545454%" headers="d452983e373 ">Determines the operation to use based on either of the
                                     following:<ul class="ul" id="concept_lfb_phd_ty__ul_l14_jbd_ty">
                                     <li class="li">sdc.operation.type record header attribute</li>
 
@@ -335,9 +356,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="23.636363636363637%" headers="d450524e342 ">JDBC Producer destination </td>
+                            <td class="entry" valign="top" width="23.636363636363637%" headers="d452983e367 ">JDBC Producer destination </td>
 
-                            <td class="entry" valign="top" width="21.818181818181817%" headers="d450524e345 ">
+                            <td class="entry" valign="top" width="21.818181818181817%" headers="d452983e370 ">
                                 <ul class="ul" id="concept_lfb_phd_ty__ul_jxl_zbd_ty">
                                     <li class="li">INSERT</li>
 
@@ -349,7 +370,7 @@
 
                             </td>
 
-                            <td class="entry" valign="top" width="54.54545454545454%" headers="d450524e348 ">Determines the operation to use based on:<ul class="ul" id="concept_lfb_phd_ty__ul_o2w_qbd_ty">
+                            <td class="entry" valign="top" width="54.54545454545454%" headers="d452983e373 ">Determines the operation to use based on:<ul class="ul" id="concept_lfb_phd_ty__ul_o2w_qbd_ty">
                                     <li class="li">sdc.operation.type record header attribute</li>
 
                                     <li class="li">Default Operation and Unsupported Operation Handling
@@ -364,9 +385,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="23.636363636363637%" headers="d450524e342 ">Kudu destination </td>
+                            <td class="entry" valign="top" width="23.636363636363637%" headers="d452983e367 ">Kudu destination </td>
 
-                            <td class="entry" valign="top" width="21.818181818181817%" headers="d450524e345 ">
+                            <td class="entry" valign="top" width="21.818181818181817%" headers="d452983e370 ">
                                 <ul class="ul" id="concept_lfb_phd_ty__ul_ix1_bcd_ty">
                                     <li class="li">INSERT</li>
 
@@ -380,7 +401,7 @@
 
                             </td>
 
-                            <td class="entry" valign="top" width="54.54545454545454%" headers="d450524e348 ">Determines the operation to use based on:<ul class="ul" id="concept_lfb_phd_ty__ul_irr_ccd_ty">
+                            <td class="entry" valign="top" width="54.54545454545454%" headers="d452983e373 ">Determines the operation to use based on:<ul class="ul" id="concept_lfb_phd_ty__ul_irr_ccd_ty">
                                     <li class="li">sdc.operation.type record header attribute</li>
 
                                     <li class="li">Default Operation and Unsupported Operation Handling
@@ -393,9 +414,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="23.636363636363637%" headers="d450524e342 ">MapR DB JSON destination</td>
+                            <td class="entry" valign="top" width="23.636363636363637%" headers="d452983e367 ">MapR DB JSON destination</td>
 
-                            <td class="entry" valign="top" width="21.818181818181817%" headers="d450524e345 ">
+                            <td class="entry" valign="top" width="21.818181818181817%" headers="d452983e370 ">
                                 <ul class="ul" id="concept_lfb_phd_ty__ul_wwt_l1b_xbb">
                                     <li class="li">INSERT</li>
 
@@ -407,7 +428,7 @@
 
                             </td>
 
-                            <td class="entry" valign="top" width="54.54545454545454%" headers="d450524e348 ">Determines the operation to use based on:<ul class="ul" id="concept_lfb_phd_ty__ul_etm_dbb_xbb">
+                            <td class="entry" valign="top" width="54.54545454545454%" headers="d452983e373 ">Determines the operation to use based on:<ul class="ul" id="concept_lfb_phd_ty__ul_etm_dbb_xbb">
                                     <li class="li">sdc.operation.type record header attribute</li>
 
                                     <li class="li">Insert API and Set API properties in the stage</li>
@@ -419,9 +440,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="23.636363636363637%" headers="d450524e342 ">MongoDB destination</td>
+                            <td class="entry" valign="top" width="23.636363636363637%" headers="d452983e367 ">MongoDB destination</td>
 
-                            <td class="entry" valign="top" width="21.818181818181817%" headers="d450524e345 ">
+                            <td class="entry" valign="top" width="21.818181818181817%" headers="d452983e370 ">
                                 <ul class="ul" id="concept_lfb_phd_ty__ul_qkk_jcd_ty">
                                     <li class="li">INSERT</li>
 
@@ -435,7 +456,7 @@
 
                             </td>
 
-                            <td class="entry" valign="top" width="54.54545454545454%" headers="d450524e348 ">Determines the operation to use based on: <ul class="ul" id="concept_lfb_phd_ty__ul_fz3_hcd_ty">
+                            <td class="entry" valign="top" width="54.54545454545454%" headers="d452983e373 ">Determines the operation to use based on: <ul class="ul" id="concept_lfb_phd_ty__ul_fz3_hcd_ty">
                                     <li class="li">sdc.operation.type record header attribute</li>
 
                                     <li class="li">Upsert property in the stage</li>
@@ -447,9 +468,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="23.636363636363637%" headers="d450524e342 ">Redis destination</td>
+                            <td class="entry" valign="top" width="23.636363636363637%" headers="d452983e367 ">Redis destination</td>
 
-                            <td class="entry" valign="top" width="21.818181818181817%" headers="d450524e345 ">
+                            <td class="entry" valign="top" width="21.818181818181817%" headers="d452983e370 ">
                                 <ul class="ul" id="concept_lfb_phd_ty__ul_gkd_51d_ybb">
                                     <li class="li">INSERT</li>
 
@@ -463,7 +484,7 @@
 
                             </td>
 
-                            <td class="entry" valign="top" width="54.54545454545454%" headers="d450524e348 ">Determines the operation to use based on: <ul class="ul" id="concept_lfb_phd_ty__ul_bbz_51d_ybb">
+                            <td class="entry" valign="top" width="54.54545454545454%" headers="d452983e373 ">Determines the operation to use based on: <ul class="ul" id="concept_lfb_phd_ty__ul_bbz_51d_ybb">
                                     <li class="li">sdc.operation.type record header attribute</li>
 
                                 </ul>
@@ -473,9 +494,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="23.636363636363637%" headers="d450524e342 ">Salesforce destination</td>
+                            <td class="entry" valign="top" width="23.636363636363637%" headers="d452983e367 ">Salesforce destination</td>
 
-                            <td class="entry" valign="top" width="21.818181818181817%" headers="d450524e345 ">
+                            <td class="entry" valign="top" width="21.818181818181817%" headers="d452983e370 ">
                                 <ul class="ul" id="concept_lfb_phd_ty__ul_bm4_yxg_4z">
                                     <li class="li">INSERT</li>
 
@@ -491,7 +512,7 @@
 
                             </td>
 
-                            <td class="entry" valign="top" width="54.54545454545454%" headers="d450524e348 ">Determines the operation to use based on:<ul class="ul" id="concept_lfb_phd_ty__ul_rdx_zxg_4z">
+                            <td class="entry" valign="top" width="54.54545454545454%" headers="d452983e373 ">Determines the operation to use based on:<ul class="ul" id="concept_lfb_phd_ty__ul_rdx_zxg_4z">
                                     <li class="li">sdc.operation.type record header attribute</li>
 
                                     <li class="li">Default Operation and Unsupported Operation Handling

@@ -24,17 +24,21 @@
 -->
   <script type="text/javascript">
     <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
-
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
+   var parentWindow = window.name;
+   console.log("1. " + parentWindow);
+   if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+    var currHash = window.location.hash.substr(1);
+    var currentLocation = window.location.href
+    if (currHash) {
+       console.log("2. Current Hash Before:" + currHash);
+       if (currHash.indexOf("datacollector/UserGuide/") == -1 && currentLocation.indexOf("datacollector/UserGuide/") == -1) {
+           currHash = "#datacollector/UserGuide/" + currHash;
+       }
+       currHash = decodeURIComponent(currHash)
+       window.location.hash = currHash
+       console.log("3. Current Hash After:" + currHash)
+   }
+}         
 -->
   </script>
 </head>
@@ -274,7 +278,7 @@
 
         <div class="section context">
             You can reset the origin for the following origin
-                stages:<ul class="ul" id="task_hdg_j1s_5q__ul_k1q_35k_2s">
+                stages:<ul class="ul" id="task_hdg_j1s_5q__ul_q4f_sqd_12b">
                 <li class="li">Amazon S3</li>
 
                 <li class="li">Directory</li>
@@ -287,11 +291,13 @@
 
                 <li class="li">Hadoop FS Standalone</li>
 
+                <li class="li">HTTP Client</li>
+
                 <li class="li">JDBC Multitable Consumer</li>
 
                 <li class="li">JDBC Query Consumer</li>
 
-                <li class="li">Kinesis Consumer - For unique details about resetting this origin, see <a class="xref" href="../Origins/KinConsumer.html#concept_dt1_4mq_h1b">Resetting the Origin</a>.</li>
+                <li class="li">Kinesis Consumer</li>
 
                 <li class="li">MapR DB JSON</li>
 
@@ -318,11 +324,12 @@
                 notes where it stopped processing data. When you restart the pipeline, it continues
                 from where it left off by default. When you want the <span class="ph">Data Collector</span>
                 to process all available data instead of continuing from where it stopped, reset the
-                origin.</p>
-<p class="p">You can configure the Kafka and MapR Streams origins to process all
-                available data by specifying an additional Kafka configuration property. For more
-                information, see "Processing All Unread Data" in the stage documentation. You can
-                reset the Azure IoT/Event Hub Consumer origin by <a class="xref" href="../Origins/AzureEventHub.html#concept_zbd_tsf_bbb">deleting
+                origin. For unique details about resetting this origin, see <a class="xref" href="../Origins/KinConsumer.html#concept_dt1_4mq_h1b">Resetting the Origin</a>.</p>
+<p class="p">You
+                can configure the Kafka and MapR Streams origins to process all available data by
+                specifying an additional Kafka configuration property. For more information, see
+                "Processing All Unread Data" in the stage documentation. You can reset the Azure
+                IoT/Event Hub Consumer origin by <a class="xref" href="../Origins/AzureEventHub.html#concept_zbd_tsf_bbb">deleting
                     offset details</a> in the Microsoft Azure portal. The remaining origin stages
                 process transient data where resetting the origin has no effect.</p>
 <p class="p">You can reset
@@ -487,9 +494,9 @@
      
      <thead class="thead" align="left">
       <tr>
-       <th class="entry" valign="top" width="30%" id="d457379e920">Permission</th>
+       <th class="entry" valign="top" width="30%" id="d459890e923">Permission</th>
 
-       <th class="entry" valign="top" width="70%" id="d457379e923">Description</th>
+       <th class="entry" valign="top" width="70%" id="d459890e926">Description</th>
 
       </tr>
 
@@ -497,23 +504,23 @@
 
      <tbody class="tbody">
       <tr>
-       <td class="entry" valign="top" width="30%" headers="d457379e920 ">Read</td>
+       <td class="entry" valign="top" width="30%" headers="d459890e923 ">Read</td>
 
-       <td class="entry" valign="top" width="70%" headers="d457379e923 ">View <span class="ph">and monitor </span>the pipeline, and see alerts. <span class="ph">View existing snapshot data.</span></td>
-
-      </tr>
-
-      <tr>
-       <td class="entry" valign="top" width="30%" headers="d457379e920 ">Write</td>
-
-       <td class="entry" valign="top" width="70%" headers="d457379e923 ">Edit the pipeline and alerts.</td>
+       <td class="entry" valign="top" width="70%" headers="d459890e926 ">View <span class="ph">and monitor </span>the pipeline, and see alerts. <span class="ph">View existing snapshot data.</span></td>
 
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="30%" headers="d457379e920 ">Execute</td>
+       <td class="entry" valign="top" width="30%" headers="d459890e923 ">Write</td>
 
-       <td class="entry" valign="top" width="70%" headers="d457379e923 ">Start and stop the pipeline. Preview data<span class="ph"> and take a
+       <td class="entry" valign="top" width="70%" headers="d459890e926 ">Edit the pipeline and alerts.</td>
+
+      </tr>
+
+      <tr>
+       <td class="entry" valign="top" width="30%" headers="d459890e923 ">Execute</td>
+
+       <td class="entry" valign="top" width="70%" headers="d459890e926 ">Start and stop the pipeline. Preview data<span class="ph"> and take a
         snapshot</span>.</td>
 
       </tr>

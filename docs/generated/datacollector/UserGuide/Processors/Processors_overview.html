@@ -24,17 +24,21 @@
 -->
   <script type="text/javascript">
     <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
-
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
+   var parentWindow = window.name;
+   console.log("1. " + parentWindow);
+   if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+    var currHash = window.location.hash.substr(1);
+    var currentLocation = window.location.href
+    if (currHash) {
+       console.log("2. Current Hash Before:" + currHash);
+       if (currHash.indexOf("datacollector/UserGuide/") == -1 && currentLocation.indexOf("datacollector/UserGuide/") == -1) {
+           currHash = "#datacollector/UserGuide/" + currHash;
+       }
+       currHash = decodeURIComponent(currHash)
+       window.location.hash = currHash
+       console.log("3. Current Hash After:" + currHash)
+   }
+}         
 -->
   </script>
 </head>
@@ -163,6 +167,9 @@
 
         <li class="li"><a class="xref" href="Spark.html#concept_cpx_1lm_zx" title="The Spark Evaluator performs custom processing within a pipeline based on a Spark application that you develop.">Spark Evaluator</a> - Processes data based
           on a custom Spark application.</li>
+
+        <li class="li"><a class="xref" href="SQLParser.html#concept_zh2_kfj_tdb">SQL Parser</a> - Parses SQL queries
+          in a string field.</li>
 
         <li class="li"><a class="xref" href="StaticLookup.html#concept_aqz_t4r_pv" title="The Static Lookup processor performs lookups of key-value pairs that are stored in local memory and passes the lookup values to fields. Use the Static Lookup to store String values in memory that the pipeline can look up at runtime to enrich records with additional data.">Static Lookup</a> - Performs
           key-value lookups in local memory.</li>

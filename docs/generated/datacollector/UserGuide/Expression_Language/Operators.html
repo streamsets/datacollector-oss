@@ -24,17 +24,21 @@
 -->
   <script type="text/javascript">
     <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
-
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
+   var parentWindow = window.name;
+   console.log("1. " + parentWindow);
+   if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+    var currHash = window.location.hash.substr(1);
+    var currentLocation = window.location.href
+    if (currHash) {
+       console.log("2. Current Hash Before:" + currHash);
+       if (currHash.indexOf("datacollector/UserGuide/") == -1 && currentLocation.indexOf("datacollector/UserGuide/") == -1) {
+           currHash = "#datacollector/UserGuide/" + currHash;
+       }
+       currHash = decodeURIComponent(currHash)
+       window.location.hash = currHash
+       console.log("3. Current Hash After:" + currHash)
+   }
+}         
 -->
   </script>
 </head>
@@ -52,9 +56,9 @@
      
      <thead class="thead" align="left">
       <tr>
-       <th class="entry" valign="top" width="25.510204081632654%" id="d219018e37">Category</th>
+       <th class="entry" valign="top" width="25.510204081632654%" id="d219112e37">Category</th>
 
-       <th class="entry" valign="top" width="74.48979591836735%" id="d219018e40">Description</th>
+       <th class="entry" valign="top" width="74.48979591836735%" id="d219112e40">Description</th>
 
       </tr>
 
@@ -62,9 +66,9 @@
 
      <tbody class="tbody">
       <tr>
-       <td class="entry" valign="top" width="25.510204081632654%" headers="d219018e37 ">Arithmetic</td>
+       <td class="entry" valign="top" width="25.510204081632654%" headers="d219112e37 ">Arithmetic</td>
 
-       <td class="entry" valign="top" width="74.48979591836735%" headers="d219018e40 ">
+       <td class="entry" valign="top" width="74.48979591836735%" headers="d219112e40 ">
         <ul class="ul" id="concept_ltp_5mj_wq__ul_ef5_nnj_wq">
          <li class="li">+ </li>
 
@@ -83,9 +87,9 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="25.510204081632654%" headers="d219018e37 ">Logical</td>
+       <td class="entry" valign="top" width="25.510204081632654%" headers="d219112e37 ">Logical</td>
 
-       <td class="entry" valign="top" width="74.48979591836735%" headers="d219018e40 ">
+       <td class="entry" valign="top" width="74.48979591836735%" headers="d219112e40 ">
         <ul class="ul" id="concept_ltp_5mj_wq__ul_mmb_2rj_wq">
          <li class="li">and</li>
 
@@ -106,9 +110,9 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="25.510204081632654%" headers="d219018e37 ">Relational</td>
+       <td class="entry" valign="top" width="25.510204081632654%" headers="d219112e37 ">Relational</td>
 
-       <td class="entry" valign="top" width="74.48979591836735%" headers="d219018e40 ">You can use the following operators to compare against other values, or against
+       <td class="entry" valign="top" width="74.48979591836735%" headers="d219112e40 ">You can use the following operators to compare against other values, or against
         boolean, string, integer, or floating point literals. <ul class="ul" id="concept_ltp_5mj_wq__ul_h1c_fwp_1r">
          <li class="li"> ==</li>
 
@@ -140,18 +144,18 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="25.510204081632654%" headers="d219018e37 ">Empty</td>
+       <td class="entry" valign="top" width="25.510204081632654%" headers="d219112e37 ">Empty</td>
 
-       <td class="entry" valign="top" width="74.48979591836735%" headers="d219018e40 "><p class="p"><samp class="ph codeph">empty</samp></p>
+       <td class="entry" valign="top" width="74.48979591836735%" headers="d219112e40 "><p class="p"><samp class="ph codeph">empty</samp></p>
 The <span class="ph">empty</span> operator is a prefix operation that
         can be used to determine whether a value is null or empty.</td>
 
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="25.510204081632654%" headers="d219018e37 ">Conditional</td>
+       <td class="entry" valign="top" width="25.510204081632654%" headers="d219112e37 ">Conditional</td>
 
-       <td class="entry" valign="top" width="74.48979591836735%" headers="d219018e40 "> ?<p class="p">For example, <samp class="ph codeph">A ? B : C</samp> states that if A is true, then B. If A is
+       <td class="entry" valign="top" width="74.48979591836735%" headers="d219112e40 "> ?<p class="p">For example, <samp class="ph codeph">A ? B : C</samp> states that if A is true, then B. If A is
          not true, then C. </p>
 </td>
 

@@ -25,17 +25,21 @@
 -->
   <script type="text/javascript">
     <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
-
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
+   var parentWindow = window.name;
+   console.log("1. " + parentWindow);
+   if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+    var currHash = window.location.hash.substr(1);
+    var currentLocation = window.location.href
+    if (currHash) {
+       console.log("2. Current Hash Before:" + currHash);
+       if (currHash.indexOf("datacollector/UserGuide/") == -1 && currentLocation.indexOf("datacollector/UserGuide/") == -1) {
+           currHash = "#datacollector/UserGuide/" + currHash;
+       }
+       currHash = decodeURIComponent(currHash)
+       window.location.hash = currHash
+       console.log("3. Current Hash After:" + currHash)
+   }
+}         
 -->
   </script>
 </head>
@@ -107,14 +111,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_nbl_r2x_dt__d18242e5201" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_nbl_r2x_dt__d18295e5201" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d173057e141">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d173136e141">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d173057e144">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d173136e144">Description</th>
 
                                 </tr>
 
@@ -122,24 +126,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d173057e141 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d173136e141 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d173057e144 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d173057e141 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d173057e144 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d173136e144 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d173057e141 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_nbl_r2x_dt__d18242e5247" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d173136e141 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d173057e144 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d173136e144 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d173136e141 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_nbl_r2x_dt__d18295e5247" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d173136e144 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -151,10 +155,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d173057e141 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_nbl_r2x_dt__d18242e5263" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d173136e141 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_nbl_r2x_dt__d18295e5263" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d173057e144 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d173136e144 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -165,10 +169,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d173057e141 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_nbl_r2x_dt__d18242e5280" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d173136e141 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_nbl_r2x_dt__d18295e5280" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d173057e144 ">Error record handling for the stage: <ul class="ul" id="task_nbl_r2x_dt__d18242e5284">
+                                    <td class="entry" valign="top" width="70%" headers="d173136e144 ">Error record handling for the stage: <ul class="ul" id="task_nbl_r2x_dt__d18295e5284">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -198,20 +202,20 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d173057e255">RPC Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d173136e255">RPC Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d173057e258">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d173136e258">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr id="task_nbl_r2x_dt__d18242e9165">
-                                    <td class="entry" valign="top" width="30%" headers="d173057e255 ">SDC RPC Connection <a class="xref" href="SDC_RPCdest.html#concept_icz_wzw_dt" title="In an SDC RPC destination, the RPC connections define where the destination passes data.">
-                                            <img class="image" id="task_nbl_r2x_dt__d18242e9171" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                <tr id="task_nbl_r2x_dt__d18295e9170">
+                                    <td class="entry" valign="top" width="30%" headers="d173136e255 ">SDC RPC Connection <a class="xref" href="SDC_RPCdest.html#concept_icz_wzw_dt" title="In an SDC RPC destination, the RPC connections define where the destination passes data.">
+                                            <img class="image" id="task_nbl_r2x_dt__d18295e9176" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d173057e258 ">Connection information for the destination pipeline to
+                                    <td class="entry" valign="top" width="70%" headers="d173136e258 ">Connection information for the destination pipeline to
                                         continue processing data. Use the following format:
                                             <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>. <p class="p">Use a single
                                             RPC connection for each destination pipeline. Using
@@ -224,19 +228,19 @@
 
                                 </tr>
 
-                                <tr id="task_nbl_r2x_dt__d18242e9187">
-                                    <td class="entry" valign="top" width="30%" headers="d173057e255 ">SDC RPC ID</td>
+                                <tr id="task_nbl_r2x_dt__d18295e9192">
+                                    <td class="entry" valign="top" width="30%" headers="d173136e255 ">SDC RPC ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d173057e258 ">User-defined ID to allow the destination to pass data to
+                                    <td class="entry" valign="top" width="70%" headers="d173136e258 ">User-defined ID to allow the destination to pass data to
                                         an SDC RPC origin. Use this ID in all SDC RPC origins to
                                         process data from the destination.</td>
 
                                 </tr>
 
-                                <tr id="task_nbl_r2x_dt__d18242e9196">
-                                    <td class="entry" valign="top" width="30%" headers="d173057e255 ">Verify Host in Server Certificate</td>
+                                <tr id="task_nbl_r2x_dt__d18295e9201">
+                                    <td class="entry" valign="top" width="30%" headers="d173136e255 ">Verify Host in Server Certificate</td>
 
-                                    <td class="entry" id="task_nbl_r2x_dt__d18242e9201" valign="top" width="70%" headers="d173057e258 ">Verifies the host in the SDC RPC
+                                    <td class="entry" id="task_nbl_r2x_dt__d18295e9206" valign="top" width="70%" headers="d173136e258 ">Verifies the host in the SDC RPC
                                         origin keystore file.</td>
 
                                 </tr>
@@ -253,37 +257,37 @@
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_nbl_r2x_dt__d18242e9231" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_nbl_r2x_dt__d18295e9236" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d173057e337">Advanced Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d173136e337">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d173057e340">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d173136e340">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr id="task_nbl_r2x_dt__d18242e9253">
-                                    <td class="entry" valign="top" width="30%" headers="d173057e337 ">Retries Per Batch</td>
+                                <tr id="task_nbl_r2x_dt__d18295e9258">
+                                    <td class="entry" valign="top" width="30%" headers="d173136e337 ">Retries Per Batch</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d173057e340 ">Number of times the destination tries to write a batch to
-                                        the SDC RPC origin. <p class="p" id="task_nbl_r2x_dt__d18242e9260">When the
+                                    <td class="entry" valign="top" width="70%" headers="d173136e340 ">Number of times the destination tries to write a batch to
+                                        the SDC RPC origin. <p class="p" id="task_nbl_r2x_dt__d18295e9265">When the
                                             destination cannot write the batch within the configured
                                             number of retries, it fails the batch.</p>
-<p class="p" id="task_nbl_r2x_dt__d18242e9262">Default is 3.</p>
+<p class="p" id="task_nbl_r2x_dt__d18295e9267">Default is 3.</p>
 </td>
 
                                 </tr>
 
-                                <tr id="task_nbl_r2x_dt__d18242e9266">
-                                    <td class="entry" valign="top" width="30%" headers="d173057e337 ">Back Off Period</td>
+                                <tr id="task_nbl_r2x_dt__d18295e9271">
+                                    <td class="entry" valign="top" width="30%" headers="d173136e337 ">Back Off Period</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d173057e340 ">Milliseconds to wait before retrying writing a batch to
-                                        the SDC RPC origin.<p class="p" id="task_nbl_r2x_dt__d18242e9273">The value that
+                                    <td class="entry" valign="top" width="70%" headers="d173136e340 ">Milliseconds to wait before retrying writing a batch to
+                                        the SDC RPC origin.<p class="p" id="task_nbl_r2x_dt__d18295e9278">The value that
                                             you enter increases exponentially after each retry,
                                             until it reaches the maximum wait time of 5 minutes. For
                                             example, if you set the back off period to 10, the
@@ -293,16 +297,16 @@
                                             waiting 1,000 milliseconds. </p>
 <p class="p">Set to 0 to retry
                                             immediately.</p>
-<p class="p" id="task_nbl_r2x_dt__d18242e9277">Default is
+<p class="p" id="task_nbl_r2x_dt__d18295e9282">Default is
                                             0.</p>
 </td>
 
                                 </tr>
 
-                                <tr id="task_nbl_r2x_dt__d18242e9281">
-                                    <td class="entry" valign="top" width="30%" headers="d173057e337 ">Connection Timeout (ms)</td>
+                                <tr id="task_nbl_r2x_dt__d18295e9286">
+                                    <td class="entry" valign="top" width="30%" headers="d173136e337 ">Connection Timeout (ms)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d173057e340 ">Milliseconds to establish a connection to the SDC RPC
+                                    <td class="entry" valign="top" width="70%" headers="d173136e340 ">Milliseconds to establish a connection to the SDC RPC
                                         origin. <p class="p">The destination retries the connection based on
                                             the Retries Per Batch property.</p>
 <p class="p">Default is 5000
@@ -311,23 +315,23 @@
 
                                 </tr>
 
-                                <tr id="task_nbl_r2x_dt__d18242e9294">
-                                    <td class="entry" valign="top" width="30%" headers="d173057e337 ">Read Timeout (ms)</td>
+                                <tr id="task_nbl_r2x_dt__d18295e9299">
+                                    <td class="entry" valign="top" width="30%" headers="d173136e337 ">Read Timeout (ms)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d173057e340 ">Milliseconds to wait for the SDC RPC origin to read data
-                                        from a batch. <p class="p" id="task_nbl_r2x_dt__d18242e9301">The destination retries
+                                    <td class="entry" valign="top" width="70%" headers="d173136e340 ">Milliseconds to wait for the SDC RPC origin to read data
+                                        from a batch. <p class="p" id="task_nbl_r2x_dt__d18295e9306">The destination retries
                                             the write based on the Retries Per Batch property.</p>
-<p class="p" id="task_nbl_r2x_dt__d18242e9303">Default is 2000
+<p class="p" id="task_nbl_r2x_dt__d18295e9308">Default is 2000
                                             milliseconds.</p>
 </td>
 
                                 </tr>
 
-                                <tr id="task_nbl_r2x_dt__d18242e9307">
-                                    <td class="entry" valign="top" width="30%" headers="d173057e337 ">Use Compression <a class="xref" href="SDC_RPCdest.html#concept_zdq_rdj_r5" title="The SDC RPC destination compresses data by default when passing data to an SDC RPC origin. When necessary, you can disable compression in the destination.">
+                                <tr id="task_nbl_r2x_dt__d18295e9312">
+                                    <td class="entry" valign="top" width="30%" headers="d173136e337 ">Use Compression <a class="xref" href="SDC_RPCdest.html#concept_zdq_rdj_r5" title="The SDC RPC destination compresses data by default when passing data to an SDC RPC origin. When necessary, you can disable compression in the destination.">
                                             <img class="image" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d173057e340 ">Enables the destination to use compression to pass data
+                                    <td class="entry" valign="top" width="70%" headers="d173136e340 ">Enables the destination to use compression to pass data
                                         to the SDC RPC origin. Enabled by default. </td>
 
                                 </tr>
@@ -349,9 +353,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d173057e444">TLS Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d173136e444">TLS Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d173057e447">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d173136e447">Description</th>
 
                                 </tr>
 
@@ -359,10 +363,10 @@
 
                             <tbody class="tbody">
                                 <tr id="task_nbl_r2x_dt__TLS-EnableTLS-row">
-                                    <td class="entry" valign="top" width="30%" headers="d173057e444 ">Enable TLS <a class="xref" href="../RPC_Pipelines/SDC_RPCpipelines_title.html#concept_mrm_qhf_2t" title="You can enable SDC RPC pipelines to transfer data securely using SSL/TLS. To use SSL/TLS, enable TLS in both the SDC RPC destination and the SDC RPC origin.">
+                                    <td class="entry" valign="top" width="30%" headers="d173136e444 ">Enable TLS <a class="xref" href="../RPC_Pipelines/SDC_RPCpipelines_title.html#concept_mrm_qhf_2t" title="You can enable SDC RPC pipelines to transfer data securely using SSL/TLS. To use SSL/TLS, enable TLS in both the SDC RPC destination and the SDC RPC origin.">
                                             <img class="image" id="task_nbl_r2x_dt__image_a5x_jzn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d173057e447 ">
+                                    <td class="entry" valign="top" width="70%" headers="d173136e447 ">
                                         <p class="p">Enables the use of TLS. </p>
 
                                     </td>
@@ -370,10 +374,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d173057e444 ">Truststore File <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_kqb_rqf_5z">
+                                    <td class="entry" valign="top" width="30%" headers="d173136e444 ">Truststore File <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_kqb_rqf_5z">
                                             <img class="image" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d173057e447 ">The path to the truststore file. Enter an absolute path
+                                    <td class="entry" valign="top" width="70%" headers="d173136e447 ">The path to the truststore file. Enter an absolute path
                                         to the file or a path relative to the <span class="ph">Data Collector</span> resources directory: <span class="ph filepath">$SDC_RESOURCES</span>.
                                                 <p class="p"><span class="ph">For more information about environment variables, see
                               <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="Data Collector includes environment variables that define the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the SDC_ROOT_CLASSPATH environment variable to define the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</span></p>
@@ -383,9 +387,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d173057e444 ">Truststore Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d173136e444 ">Truststore Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d173057e447 ">Type of truststore to use. Use one of the following types:<ul class="ul">
+                                    <td class="entry" valign="top" width="70%" headers="d173136e447 ">Type of truststore to use. Use one of the following types:<ul class="ul">
                                             <li class="li">Java Keystore File (JKS)</li>
 
                                             <li class="li">PKCS-12 (p12 file)</li>
@@ -397,9 +401,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d173057e444 ">Truststore Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d173136e444 ">Truststore Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d173057e447 ">Password to the truststore file. A password is optional,
+                                    <td class="entry" valign="top" width="70%" headers="d173136e447 ">Password to the truststore file. A password is optional,
                                         but recommended.<div class="p">
                                             <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
                   passwords, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
@@ -410,27 +414,27 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d173057e444 ">Truststore Trust Algorithm</td>
+                                    <td class="entry" valign="top" width="30%" headers="d173136e444 ">Truststore Trust Algorithm</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d173057e447 ">The algorithm used to manage the truststore. <p class="p">Default
-                                            is <span class="ph" id="task_nbl_r2x_dt__d18242e3487">SunX509</span>.</p>
+                                    <td class="entry" valign="top" width="70%" headers="d173136e447 ">The algorithm used to manage the truststore. <p class="p">Default
+                                            is <span class="ph" id="task_nbl_r2x_dt__d18295e3487">SunX509</span>.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d173057e444 ">Use Default Protocols</td>
+                                    <td class="entry" valign="top" width="30%" headers="d173136e444 ">Use Default Protocols</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d173057e447 ">Determines the transport layer security (TLS) protocol to
+                                    <td class="entry" valign="top" width="70%" headers="d173136e447 ">Determines the transport layer security (TLS) protocol to
                                         use. The default protocol is <span class="ph">TLSv1.2</span>. To use a different protocol, clear this option.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d173057e444 ">Transport Protocols <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_mvs_cxf_5z">
-                                            <img class="image" id="task_nbl_r2x_dt__d18242e3509" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d173136e444 ">Transport Protocols <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_mvs_cxf_5z">
+                                            <img class="image" id="task_nbl_r2x_dt__d18295e3509" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d173057e447 ">The TLS protocols to use. To use a protocol other than
+                                    <td class="entry" valign="top" width="70%" headers="d173136e447 ">The TLS protocols to use. To use a protocol other than
                                         the default <span class="ph">TLSv1.2</span>, click the <span class="ph uicontrol">Add</span> icon and enter the
                                         protocol name. You can use <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add
                                             protocols.<div class="note note"><span class="notetitle">Note:</span> Older protocols are not as secure as <span class="ph">TLSv1.2</span>.</div>
@@ -439,9 +443,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d173057e444 ">Use Default Cipher Suites</td>
+                                    <td class="entry" valign="top" width="30%" headers="d173136e444 ">Use Default Cipher Suites</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d173057e447 ">Determines the cipher suite to use when performing the
+                                    <td class="entry" valign="top" width="70%" headers="d173136e447 ">Determines the cipher suite to use when performing the
                                         SSL/TLS handshake. <p class="p"><span class="ph">Data Collector</span> provides a set of cipher suites that it can use by
                                             default. For a full list, see <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_cwx_dyf_5z">Cipher Suites</a>.</p>
 </td>
@@ -449,9 +453,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d173057e444 ">Cipher Suites</td>
+                                    <td class="entry" valign="top" width="30%" headers="d173136e444 ">Cipher Suites</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d173057e447 ">Cipher suites to use. To use a cipher suite that is not a
+                                    <td class="entry" valign="top" width="70%" headers="d173136e447 ">Cipher suites to use. To use a cipher suite that is not a
                                         part of the default set, click the
                                             <span class="ph uicontrol">Add</span> icon and enter the name of
                                         the cipher suite. You can use <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add cipher

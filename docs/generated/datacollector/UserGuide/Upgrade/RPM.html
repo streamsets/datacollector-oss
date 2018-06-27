@@ -25,17 +25,21 @@
 -->
   <script type="text/javascript">
     <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
-
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
+   var parentWindow = window.name;
+   console.log("1. " + parentWindow);
+   if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+    var currHash = window.location.hash.substr(1);
+    var currentLocation = window.location.href
+    if (currHash) {
+       console.log("2. Current Hash Before:" + currHash);
+       if (currHash.indexOf("datacollector/UserGuide/") == -1 && currentLocation.indexOf("datacollector/UserGuide/") == -1) {
+           currHash = "#datacollector/UserGuide/" + currHash;
+       }
+       currHash = decodeURIComponent(currHash)
+       window.location.hash = currHash
+       console.log("3. Current Hash After:" + currHash)
+   }
+}         
 -->
   </script>
 </head>
@@ -119,13 +123,12 @@
     <h2 class="title topictitle2">Step 2. Back Up the Previous Version</h2>
 
     <div class="body conbody">
-        <p class="p">Before you install the new version, create a backup of the files in the previous version
-            by copying and renaming the data and resource directories. You’ll also need to create a
-            backup of the environment configuration file so that the file is not overwritten when
-            you install the new version. That way, you can continue to run the previous version if
-            needed. </p>
+        <p class="p">Before you install the new version, create a backup of the files in the data and resource
+            directories in the previous version. You’ll also need to create a backup of the
+            environment configuration file so that the file is not overwritten when you install the
+            new version. That way, you can continue to run the previous version if needed. </p>
 
-        <div class="p">Copy and rename the following directories and files:<ul class="ul" id="concept_nzl_hkb_mw__ul_grw_zch_1z">
+        <div class="p">Back up the following directories and files:<ul class="ul" id="concept_nzl_hkb_mw__ul_grw_zch_1z">
                 <li class="li">Data directory defined in the SDC_DATA environment variable. Default is
                         <samp class="ph codeph">/var/lib/sdc</samp>.</li>
 
@@ -143,9 +146,10 @@
             </ul>
 </div>
 
-        <p class="p">For example, if you are upgrading version 3.0.0.0 on <span class="ph">CentOS 6 or Red Hat Enterprise Linux 6</span>, copy the Data Collector data directory and rename it as follows:
-                <samp class="ph codeph">/var/lib/sdc3000</samp>. Create a backup of the environment configuration
-            file by renaming the file as follows: <samp class="ph codeph">sdcd-env-3000.sh</samp>.</p>
+        <p class="p">For example, if you are upgrading version 3.0.0.0 on <span class="ph">CentOS 6 or Red Hat Enterprise Linux 6</span>, back up the <span class="ph">Data Collector</span>
+            data directory and name it as follows: <samp class="ph codeph">/var/lib/sdc3000</samp>. Create a
+            backup of the environment configuration file and name the backup file as follows:
+                <samp class="ph codeph">sdcd-env-3000.sh</samp>.</p>
 
     </div>
 
@@ -164,7 +168,7 @@
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">Use the following URL to download the <span class="ph">Data Collector</span> RPM package for
                     your operating system from the StreamSets website: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>:</span>
-                <ul class="ul choices" id="task_ofc_2zl_5v__d100544e38">
+                <ul class="ul choices" id="task_ofc_2zl_5v__d101094e38">
                     <li class="li choice">For <span class="ph">CentOS 6 or Red Hat Enterprise Linux 6</span>, download the RPM EL6 package.</li>
 
                     <li class="li choice">For <span class="ph">CentOS 7 or Red Hat Enterprise Linux 7</span>, download the RPM EL7 package.</li>

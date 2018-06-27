@@ -25,17 +25,21 @@
 -->
   <script type="text/javascript">
     <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
-
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
+   var parentWindow = window.name;
+   console.log("1. " + parentWindow);
+   if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+    var currHash = window.location.hash.substr(1);
+    var currentLocation = window.location.href
+    if (currHash) {
+       console.log("2. Current Hash Before:" + currHash);
+       if (currHash.indexOf("datacollector/UserGuide/") == -1 && currentLocation.indexOf("datacollector/UserGuide/") == -1) {
+           currHash = "#datacollector/UserGuide/" + currHash;
+       }
+       currHash = decodeURIComponent(currHash)
+       window.location.hash = currHash
+       console.log("3. Current Hash After:" + currHash)
+   }
+}         
 -->
   </script>
 </head>
@@ -61,10 +65,9 @@
             processor, and the Spark executor was deprecated as of version 3.2.0.0. Support for
             Spark 1.x is now removed in version 3.3.0. If you are using cluster streaming mode, the
             Spark Evaluator processor, or the Spark executor, you must upgrade to Spark 2.1 or later
-            in version 3.3.0. In addition, if you are using cluster streaming mode for Kafka with or
-            without security features, you must also upgrade to Kafka 0.10.0.0 or later.<div class="note note"><span class="notetitle">Note:</span> You
-                can continue to use Kafka 0.9.0.0 in standalone pipelines. Or you can continue to
-                use an earlier version of <span class="ph">Data Collector</span>
+            in version 3.3.0. In addition, if you are using cluster streaming mode for Kafka, you
+            must also upgrade to Kafka 0.10.0.0 or later.<div class="note note"><span class="notetitle">Note:</span> You can continue to use Kafka 0.9.0.0
+                in standalone pipelines. Or you can continue to use an earlier version of <span class="ph">Data Collector</span>
                 to use Kafka 0.9.0.0 in cluster pipelines until you can upgrade Kafka.</div>
 </div>
 
@@ -75,9 +78,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d532945e61">Category</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d537060e61">Category</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d532945e64">Stage Libraries</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d537060e64">Stage Libraries</th>
 
                         </tr>
 
@@ -85,9 +88,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d532945e61 ">New stage libraries</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d537060e61 ">New stage libraries</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d532945e64 ">The following new stage libraries include the Kafka Consumer
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d537060e64 ">The following new stage libraries include the Kafka Consumer
                                 origin for cluster mode pipelines:<ul class="ul" id="concept_zgm_vj2_mdb__ul_qpl_2y1_wdb">
                                     <li class="li">streamsets-datacollector-cdh-spark_2_1-lib</li>
 
@@ -101,9 +104,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d532945e61 ">Changed stage libraries</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d537060e61 ">Changed stage libraries</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d532945e64 ">The following stage library no longer includes the Kafka Consumer
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d537060e64 ">The following stage library no longer includes the Kafka Consumer
                                 origin for cluster mode pipelines:<ul class="ul" id="concept_zgm_vj2_mdb__ul_vzl_np2_wdb">
                                     <li class="li">streamsets-datacollector-hdp_2_4-lib</li>
 
@@ -123,9 +126,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d532945e61 ">Removed stage libraries</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d537060e61 ">Removed stage libraries</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d532945e64 ">The following stage libraries are removed:<ul class="ul" id="concept_zgm_vj2_mdb__ul_e1m_hy1_wdb">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d537060e64 ">The following stage libraries are removed:<ul class="ul" id="concept_zgm_vj2_mdb__ul_e1m_hy1_wdb">
                                     <li class="li">streamsets-datacollector-cdh_5_8-cluster-cdh_kafka_2_0-lib</li>
 
                                     <li class="li">streamsets-datacollector-cdh_5_9-cluster-cdh_kafka_2_0-lib </li>
@@ -150,9 +153,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d532945e61 ">Removed legacy stage libraries</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d537060e61 ">Removed legacy stage libraries</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d532945e64 ">The following legacy stage libraries are removed:<ul class="ul" id="concept_zgm_vj2_mdb__ul_cqy_3y1_wdb">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d537060e64 ">The following legacy stage libraries are removed:<ul class="ul" id="concept_zgm_vj2_mdb__ul_cqy_3y1_wdb">
                                     <li class="li">streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_2-lib</li>
 
                                     <li class="li">streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_3-lib</li>
@@ -167,9 +170,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d532945e61 ">Changed legacy stage libraries</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d537060e61 ">Changed legacy stage libraries</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d532945e64 ">The following legacy stage libraries no longer include the Spark
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d537060e64 ">The following legacy stage libraries no longer include the Spark
                                 Evaluator processor:<ul class="ul" id="concept_zgm_vj2_mdb__ul_hxx_jy1_wdb">
                                     <li class="li">streamsets-datacollector-cdh_5_4-lib</li>
 

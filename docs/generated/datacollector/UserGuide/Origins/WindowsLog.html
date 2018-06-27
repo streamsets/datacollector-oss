@@ -25,17 +25,21 @@
 -->
   <script type="text/javascript">
     <!--
-    var parentWindow = window.name;
-    console.log("1. " + parentWindow);
-    if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
-        var currHash = window.location.hash.substr(1);
-        console.log("2. " + currHash);
-        console.log("3. " + currHash.indexOf("datacollector/UserGuide/"));
-
-        if ( currHash.indexOf("datacollector/UserGuide/") == -1 ) {
-            window.location.hash = "#datacollector/UserGuide/" + currHash;
-        }
-    }
+   var parentWindow = window.name;
+   console.log("1. " + parentWindow);
+   if (!(parentWindow == "frm" || parentWindow == "contentwin")) {
+    var currHash = window.location.hash.substr(1);
+    var currentLocation = window.location.href
+    if (currHash) {
+       console.log("2. Current Hash Before:" + currHash);
+       if (currHash.indexOf("datacollector/UserGuide/") == -1 && currentLocation.indexOf("datacollector/UserGuide/") == -1) {
+           currHash = "#datacollector/UserGuide/" + currHash;
+       }
+       currHash = decodeURIComponent(currHash)
+       window.location.hash = currHash
+       console.log("3. Current Hash After:" + currHash)
+   }
+}         
 -->
   </script>
 </head>
@@ -94,14 +98,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lmc_yjv_sbb__d47645e425" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lmc_yjv_sbb__d48392e425" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d436095e130">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d438484e130">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d436095e133">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d438484e133">Description</th>
 
                                 </tr>
 
@@ -109,24 +113,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d436095e130 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d438484e130 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d436095e133 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d436095e130 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d436095e133 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d438484e133 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d436095e130 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_lmc_yjv_sbb__d47645e471" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d438484e130 ">Description</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d436095e133 ">Error record handling for the stage: <ul class="ul" id="task_lmc_yjv_sbb__d47645e475">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d438484e133 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d438484e130 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_lmc_yjv_sbb__d48392e471" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d438484e133 ">Error record handling for the stage: <ul class="ul" id="task_lmc_yjv_sbb__d48392e475">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -156,9 +160,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d436095e209">Windows Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d438484e209">Windows Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d436095e212">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d438484e212">Description</th>
 
                                 </tr>
 
@@ -166,9 +170,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d436095e209 ">Log Name</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d438484e209 ">Log Name</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d436095e212 ">Name of the Windows log to read from:<ul class="ul" id="task_lmc_yjv_sbb__ul_awt_xwv_sbb">
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d438484e212 ">Name of the Windows log to read from:<ul class="ul" id="task_lmc_yjv_sbb__ul_awt_xwv_sbb">
                                             <li class="li">Application</li>
 
                                             <li class="li">System</li>
@@ -181,9 +185,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d436095e209 ">Read Mode</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d438484e209 ">Read Mode</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d436095e212 ">Determines how the origin reads the log:<ul class="ul" id="task_lmc_yjv_sbb__ul_vnv_1xv_sbb">
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d438484e212 ">Determines how the origin reads the log:<ul class="ul" id="task_lmc_yjv_sbb__ul_vnv_1xv_sbb">
                                             <li class="li">All - Read all events in the log.</li>
 
                                             <li class="li">New - Read only new events in the log that occur
