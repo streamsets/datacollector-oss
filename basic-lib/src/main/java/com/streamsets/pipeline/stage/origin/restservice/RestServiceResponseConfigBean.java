@@ -19,7 +19,6 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.lib.http.DataFormatChooserValues;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 
 public class RestServiceResponseConfigBean {
@@ -28,12 +27,13 @@ public class RestServiceResponseConfigBean {
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Data Format",
+      defaultValue = "JSON",
       description = "HTTP payload data format",
       displayPosition = 220,
       group = "HTTP_RESPONSE"
   )
-  @ValueChooserModel(DataFormatChooserValues.class)
-  public DataFormat dataFormat;
+  @ValueChooserModel(ResponseDataFormatChooserValues.class)
+  public DataFormat dataFormat = DataFormat.JSON;
 
   @ConfigDefBean(groups = {"HTTP_RESPONSE"})
   public DataGeneratorFormatConfig dataGeneratorFormatConfig;

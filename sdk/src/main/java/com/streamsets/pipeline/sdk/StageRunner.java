@@ -21,6 +21,7 @@ import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.json.JsonMapperImpl;
 import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.runner.SourceResponseSink;
 import com.streamsets.datacollector.runner.StageContext;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
@@ -318,6 +319,14 @@ public abstract class StageRunner<S extends Stage> extends ProtoRunner {
 
   public void clearLineageEvents() {
     this.lineageEvents.clear();
+  }
+
+  public SourceResponseSink getSourceResponseSink() {
+    return context.getSourceResponseSink();
+  }
+
+  public void setSourceResponseSink(SourceResponseSink sourceResponseSink) {
+    context.setSourceResponseSink(sourceResponseSink);
   }
 
   public static class Output {

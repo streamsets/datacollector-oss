@@ -31,6 +31,7 @@ import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.runner.ErrorSink;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.runner.Pipeline;
+import com.streamsets.datacollector.runner.SourceResponseSink;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.TestUtil;
@@ -227,9 +228,14 @@ public class TestErrorRecord {
         0
     );
 
-    PowerMockito.replace(
-        MemberMatcher.method(BadRecordsHandler.class, "handle", String.class, String.class, ErrorSink.class)
-    ).with((proxy, method, args) -> {
+    PowerMockito.replace(MemberMatcher.method(
+        BadRecordsHandler.class,
+        "handle",
+        String.class,
+        String.class,
+        ErrorSink.class,
+        SourceResponseSink.class
+    )).with((proxy, method, args) -> {
       ErrorSink errorSink = (ErrorSink) args[2];
       for (Map.Entry<String, List<Record>> entry : errorSink.getErrorRecords().entrySet()) {
         for (Record record : entry.getValue()) {

@@ -33,12 +33,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class RestServiceReceiver extends PushHttpReceiver {
 
+  public final static String STATUS_CODE_RECORD_HEADER_ATTR_NAME = "responseStatusCode";
   final static String EMPTY_PAYLOAD_RECORD_HEADER_ATTR_NAME = "emptyPayloadRecord";
   private final RestServiceResponseConfigBean responseConfig;
   private DataGeneratorFactory dataGeneratorFactory;
@@ -87,17 +91,47 @@ public class RestServiceReceiver extends PushHttpReceiver {
     boolean returnValue = getContext().processBatch(batchContext);
 
     // Send response
-    List<Record> responseRecords = batchContext.getSourceResponseRecords();
-    if (CollectionUtils.isNotEmpty(responseRecords)) {
-      resp.setContentType(HttpStageUtil.getContentType(responseConfig.dataFormat));
-      try (DataGenerator dataGenerator = getGeneratorFactory().getGenerator(resp.getOutputStream())) {
-        for (Record responseRecord : batchContext.getSourceResponseRecords()) {
-          dataGenerator.write(responseRecord);
-        }
-        dataGenerator.flush();
-      } catch (DataGeneratorException e) {
-        throw new IOException(e);
+    int responseStatusCode = HttpServletResponse.SC_OK;
+    Set<Integer> statusCodesFromResponse = new HashSet<>();
+    String errorMessage = null;
+
+    List<Record> successRecords = new ArrayList<>();
+    List<Record> errorRecords = new ArrayList<>();
+    for (Record responseRecord : batchContext.getSourceResponseRecords()) {
+      String statusCode = responseRecord.getHeader().getAttribute(STATUS_CODE_RECORD_HEADER_ATTR_NAME);
+      if (statusCode != null) {
+        statusCodesFromResponse.add(Integer.valueOf(statusCode));
       }
+      if (responseRecord.getHeader().getErrorMessage() == null) {
+        successRecords.add(responseRecord);
+      } else {
+        errorMessage = responseRecord.getHeader().getErrorMessage();
+        errorRecords.add(responseRecord);
+      }
+    }
+
+    if (statusCodesFromResponse.size() == 1) {
+      responseStatusCode = statusCodesFromResponse.iterator().next();
+    } else if (statusCodesFromResponse.size() > 1) {
+      // If we received more than one status code, return 207 MULTI-STATUS Code
+      // https://httpstatuses.com/207
+      responseStatusCode = 207;
+    }
+
+    Record responseEnvelopeRecord = createEnvelopeRecord(
+        successRecords,
+        errorRecords,
+        responseStatusCode,
+        errorMessage
+    );
+    resp.setStatus(responseStatusCode);
+    resp.setContentType(HttpStageUtil.getContentType(responseConfig.dataFormat));
+
+    try (DataGenerator dataGenerator = getGeneratorFactory().getGenerator(resp.getOutputStream())) {
+      dataGenerator.write(responseEnvelopeRecord);
+      dataGenerator.flush();
+    } catch (DataGeneratorException e) {
+      throw new IOException(e);
     }
 
     return returnValue;
@@ -110,6 +144,30 @@ public class RestServiceReceiver extends PushHttpReceiver {
     customHeaderAttributes.forEach((key, value) -> placeholderRecord.getHeader().setAttribute(key, value));
     placeholderRecord.getHeader().setAttribute(EMPTY_PAYLOAD_RECORD_HEADER_ATTR_NAME, "true");
     return placeholderRecord;
+  }
+
+  private Record createEnvelopeRecord(
+      List<Record> successRecords,
+      List<Record> errorRecords,
+      int statusCode,
+      String errorMessage
+  ) {
+    LinkedHashMap<String,Field> envelopeRecordVal = new LinkedHashMap<>();
+    envelopeRecordVal.put("httpStatusCode", Field.create(statusCode));
+    envelopeRecordVal.put("data", Field.create(convertRecordsToFields(successRecords)));
+    envelopeRecordVal.put("error", Field.create(convertRecordsToFields(errorRecords)));
+    envelopeRecordVal.put("errorMessage", Field.create(errorMessage));
+    Record envelopeRecord = getContext().createRecord("envelopeRecord");
+    envelopeRecord.set(Field.createListMap(envelopeRecordVal));
+    return envelopeRecord;
+  }
+
+  private List<Field> convertRecordsToFields(List<Record> recordList) {
+    List<Field> fieldList = new ArrayList<>();
+    recordList.forEach(record -> {
+      fieldList.add(record.get());
+    });
+    return fieldList;
   }
 
 }

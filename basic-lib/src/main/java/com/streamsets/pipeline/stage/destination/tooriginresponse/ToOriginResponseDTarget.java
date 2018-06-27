@@ -15,11 +15,14 @@
  */
 package com.streamsets.pipeline.stage.destination.tooriginresponse;
 
+import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.configurablestage.DTarget;
+
+import javax.servlet.http.HttpServletResponse;
 
 @StageDef(
     version = 1,
@@ -32,9 +35,19 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 @GenerateResourceBundle
 public class ToOriginResponseDTarget extends DTarget {
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = "Status Code",
+      defaultValue = "200",
+      description = "Response Status Code",
+      displayPosition = 10
+  )
+  public int statusCode = HttpServletResponse.SC_OK;
+
   @Override
   protected Target createTarget() {
-    return new ToOriginResponseTarget();
+    return new ToOriginResponseTarget(statusCode);
   }
 
 }

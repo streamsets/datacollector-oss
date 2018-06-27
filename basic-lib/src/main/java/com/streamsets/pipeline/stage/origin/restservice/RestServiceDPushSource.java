@@ -35,7 +35,7 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
 @StageDef(
     version = 1,
     label = "REST Service",
-    description = "Listens for requests on an HTTP endpoint",
+    description = "Listens for requests on an HTTP endpoint and send response back",
     icon="api.png",
     execution = {ExecutionMode.STANDALONE},
     recordsByRef = true,
@@ -48,7 +48,8 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
     "httpConfigs.tlsConfigBean.trustStoreFilePath",
     "httpConfigs.tlsConfigBean.trustStoreType",
     "httpConfigs.tlsConfigBean.trustStorePassword",
-    "httpConfigs.tlsConfigBean.trustStoreAlgorithm"
+    "httpConfigs.tlsConfigBean.trustStoreAlgorithm",
+    "responseConfig.dataGeneratorFormatConfig.jsonMode"
 })
 @GenerateResourceBundle
 public class RestServiceDPushSource extends DPushSource {
@@ -73,11 +74,12 @@ public class RestServiceDPushSource extends DPushSource {
       type = ConfigDef.Type.MODEL,
       label = "Data Format",
       description = "HTTP payload data format",
+      defaultValue = "JSON",
       displayPosition = 1,
       group = "DATA_FORMAT"
   )
   @ValueChooserModel(DataFormatChooserValues.class)
-  public DataFormat dataFormat;
+  public DataFormat dataFormat = DataFormat.JSON;
 
   @ConfigDefBean(groups = "DATA_FORMAT")
   public DataParserFormatConfig dataFormatConfig = new DataParserFormatConfig();

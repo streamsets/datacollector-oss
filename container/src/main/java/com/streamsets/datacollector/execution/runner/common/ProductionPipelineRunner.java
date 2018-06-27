@@ -51,17 +51,16 @@ import com.streamsets.datacollector.runner.EventSink;
 import com.streamsets.datacollector.runner.FullPipeBatch;
 import com.streamsets.datacollector.runner.Observer;
 import com.streamsets.datacollector.runner.Pipe;
-import com.streamsets.datacollector.runner.PipeBatch;
 import com.streamsets.datacollector.runner.PipeContext;
 import com.streamsets.datacollector.runner.PipeRunner;
 import com.streamsets.datacollector.runner.PipelineRunner;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.ProcessedSink;
 import com.streamsets.datacollector.runner.PushSourceContextDelegate;
-import com.streamsets.datacollector.runner.SourceResponseSink;
 import com.streamsets.datacollector.runner.RunnerPool;
 import com.streamsets.datacollector.runner.SourceOffsetTracker;
 import com.streamsets.datacollector.runner.SourcePipe;
+import com.streamsets.datacollector.runner.SourceResponseSink;
 import com.streamsets.datacollector.runner.StageContext;
 import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.runner.StagePipe;
@@ -705,7 +704,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
           }
         });
 
-        badRecordsHandler.handle(null, null, pipeBatch.getErrorSink());
+        badRecordsHandler.handle(null, null, pipeBatch.getErrorSink(), pipeBatch.getSourceResponseSink());
 
         // Next iteration should have new and empty PipeBatch
         pipeBatch = new FullPipeBatch(null, null, batchSize, false);
@@ -852,7 +851,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     });
 
     enforceMemoryLimit(memoryConsumedByStage);
-    badRecordsHandler.handle(entityName, newOffset, pipeBatch.getErrorSink());
+    badRecordsHandler.handle(entityName, newOffset, pipeBatch.getErrorSink(), pipeBatch.getSourceResponseSink());
     if(!pipeBatch.isIdleBatch()) {
       if (deliveryGuarantee == DeliveryGuarantee.AT_LEAST_ONCE) {
         // When AT_LEAST_ONCE commit only if

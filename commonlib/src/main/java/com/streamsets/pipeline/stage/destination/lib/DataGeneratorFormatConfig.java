@@ -208,7 +208,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
     triggeredByValue = "JSON"
   )
   @ValueChooserModel(JsonModeChooserValues.class)
-  public JsonMode jsonMode;
+  public JsonMode jsonMode = JsonMode.MULTIPLE_OBJECTS;
 
   /** For TEXT Content **/
 

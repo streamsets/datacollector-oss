@@ -156,13 +156,7 @@ public class HttpReceiverServlet extends HttpServlet {
             }
           }
           LOG.debug("Processing request from '{}'", requestor);
-          if (getReceiver().process(req, is, resp)) {
-            resp.setStatus(HttpServletResponse.SC_OK);
-            requestMeter.mark();
-          } else {
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Record(s) didn't reach all destinations");
-            errorRequestMeter.mark();
-          }
+          processRequest(req, is, resp);
         } catch (Exception ex) {
           errorQueue.offer(ex);
           errorRequestMeter.mark();
@@ -175,6 +169,16 @@ public class HttpReceiverServlet extends HttpServlet {
       } else {
         invalidRequestMeter.mark();
       }
+    }
+  }
+
+  protected void processRequest(HttpServletRequest req, InputStream is, HttpServletResponse resp) throws IOException {
+    if (getReceiver().process(req, is, resp)) {
+      resp.setStatus(HttpServletResponse.SC_OK);
+      requestMeter.mark();
+    } else {
+      resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Record(s) didn't reach all destinations");
+      errorRequestMeter.mark();
     }
   }
 

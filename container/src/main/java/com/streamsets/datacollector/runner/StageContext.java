@@ -168,6 +168,8 @@ public class StageContext extends ProtoContext implements
     this.services = services;
     this.isErrorStage = false;
 
+    this.sourceResponseSink = new SourceResponseSink();
+
     // sample all records while testing
     this.startTime = System.currentTimeMillis();
     this.lineagePublisherDelegator = lineagePublisherDelegator;
@@ -334,6 +336,11 @@ public class StageContext extends ProtoContext implements
 
   public void setProcessedSink(ProcessedSink sink) {
     processedSink = sink;
+  }
+
+  // for SDK
+  public SourceResponseSink getSourceResponseSink() {
+    return sourceResponseSink;
   }
 
   public void setSourceResponseSink(SourceResponseSink sourceResponseSink) {

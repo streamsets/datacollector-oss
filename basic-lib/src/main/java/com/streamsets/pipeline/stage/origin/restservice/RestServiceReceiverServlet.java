@@ -23,6 +23,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.BlockingQueue;
 
 public class RestServiceReceiverServlet extends HttpReceiverServlet {
@@ -63,4 +64,13 @@ public class RestServiceReceiverServlet extends HttpReceiverServlet {
     doPost(req, res);
   }
 
+  @Override
+  protected void processRequest(HttpServletRequest req, InputStream is, HttpServletResponse resp) throws IOException {
+    if (getReceiver().process(req, is, resp)) {
+      requestMeter.mark();
+    } else {
+      resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Record(s) didn't reach all destinations");
+      errorRequestMeter.mark();
+    }
+  }
 }

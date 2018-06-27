@@ -23,7 +23,6 @@ import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Record;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -76,7 +75,7 @@ public class BatchContextSdkImpl implements BatchContext {
 
   @Override
   public List<Record> getSourceResponseRecords() {
-    return Collections.emptyList();
+    return context.getSourceResponseSink().getResponseRecords();
   }
 
 }

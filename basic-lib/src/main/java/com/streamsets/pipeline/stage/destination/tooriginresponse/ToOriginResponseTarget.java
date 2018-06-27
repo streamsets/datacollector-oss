@@ -17,11 +17,22 @@ package com.streamsets.pipeline.stage.destination.tooriginresponse;
 
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.base.RecordTarget;
+import com.streamsets.pipeline.stage.origin.restservice.RestServiceReceiver;
 
 public class ToOriginResponseTarget extends RecordTarget {
 
+  private final int statusCode;
+
+  ToOriginResponseTarget(int statusCode) {
+    this.statusCode = statusCode;
+  }
+
   @Override
   protected void write(Record record) {
+    record.getHeader().setAttribute(
+        RestServiceReceiver.STATUS_CODE_RECORD_HEADER_ATTR_NAME,
+        String.valueOf(this.statusCode)
+    );
     getContext().toSourceResponse(record);
   }
 
