@@ -26,6 +26,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.StringWriter;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class TestJsonRecordWriterImpl {
@@ -62,6 +64,20 @@ public class TestJsonRecordWriterImpl {
     jsonRecordWriter.close();
 
     Assert.assertEquals("[666,666,666]", writer.toString());
+  }
+
+  @Test
+  public void testZonedDateTime() throws Exception {
+    ZonedDateTime now = ZonedDateTime.now();
+    StringWriter writer = new StringWriter();
+    JsonRecordWriterImpl jsonRecordWriter = new JsonRecordWriterImpl(writer, Mode.MULTIPLE_OBJECTS);
+
+    Record record = new RecordImpl("stage", "id", null, null);
+    record.set(Field.createZonedDateTime(now));
+    jsonRecordWriter.write(record);
+    jsonRecordWriter.close();
+
+    Assert.assertEquals("\"" + now.format(DateTimeFormatter.ISO_ZONED_DATE_TIME) + "\"", writer.toString());
   }
 
   @Test

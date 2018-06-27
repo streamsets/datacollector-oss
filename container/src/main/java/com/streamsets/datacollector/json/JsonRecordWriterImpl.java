@@ -145,6 +145,9 @@ public class JsonRecordWriterImpl implements JsonRecordWriter {
       case BYTE_ARRAY:
         generator.writeBinary(field.getValueAsByteArray());
         break;
+      case ZONED_DATETIME:
+        generator.writeString(field.getValueAsString());
+        break;
       default:
         throw new IllegalStateException(String.format(
             "Unrecognized field type (%s) in field: %s",
