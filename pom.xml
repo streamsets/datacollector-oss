@@ -66,6 +66,7 @@
     <aws-lib>aws-lib</aws-lib>
     <basic-lib>basic-lib</basic-lib>
     <bigtable-lib>bigtable-lib</bigtable-lib>
+    <couchbase-lib>couchbase-lib</couchbase-lib>
     <cyberark-credentialstore-lib>cyberark-credentialstore-lib</cyberark-credentialstore-lib>
     <dev-lib>dev-lib</dev-lib>
     <dataformats-lib>dataformats-lib</dataformats-lib>
@@ -219,6 +220,7 @@
     <module>azure-lib</module>
     <module>basic-lib</module>
     <module>bigtable-lib</module>
+    <module>couchbase-lib</module>
     <module>cyberark-credentialstore-lib</module>
     <module>dev-lib</module>
     <module>dataformats-lib</module>
