@@ -234,12 +234,21 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
     int rowCount = 0;
     // Assume that columns are all same for the same operation to the same table
     // If some columns are missing in record, the record goes to error.
+    final Record first = queue.getFirst();
     SortedMap<String, String> columnsToParameters = recordReader.getColumnsToParameters(
-        queue.getFirst(),
+        first,
         opCode,
         getColumnsToParameters(),
         opCode == OperationType.UPDATE_CODE ? getColumnsToFieldNoPK() : getColumnsToFields()
     );
+
+    if (columnsToParameters.isEmpty()) {
+      // no parameters found for configured columns
+      if (LOG.isWarnEnabled()) {
+        LOG.warn("No parameters found for record with ID {}; skipping", first.getHeader().getSourceId());
+      }
+      return;
+    }
 
     String query = generateQueryForMultiRow(
         opCode,
@@ -368,9 +377,6 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
     Map<String, String> parameters = getColumnsToParameters();
     SortedMap<String, String> columnsToParameters
         = recordReader.getColumnsToParameters(record, op, parameters, getColumnsToFields());
-    if (columnsToParameters.isEmpty()){
-      throw new OnRecordErrorException(JdbcErrors.JDBC_22);
-    }
     return columnHashFunction.newHasher().putObject(columnsToParameters, stringMapFunnel).hash();
   }
 }

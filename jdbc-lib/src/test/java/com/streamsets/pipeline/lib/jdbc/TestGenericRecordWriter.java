@@ -46,6 +46,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TestGenericRecordWriter {
 
@@ -377,6 +378,32 @@ public class TestGenericRecordWriter {
     fields.put("field2", Field.create("This is an updated message"));
     columnsToParameters.remove("P_ID");
     executeSetParameters(OperationType.UPDATE_CODE, query, writer, columnsToParameters, record);
+  }
+
+  @Test
+  public void testEmptyRecord() throws Exception {
+    Record record = RecordCreator.create();
+    Map<String, Field> fields = new HashMap<>();
+    record.set(Field.create(fields));
+    // record doesn't have operation code in header, but default is set to INSERT.
+    boolean caseSensitive = false;
+
+    JdbcGenericRecordWriter writer = new JdbcGenericRecordWriter(
+        connectionString,
+        dataSource,
+        "TEST",
+        "TEST_TABLE",
+        false, //rollback set to false
+        new LinkedList<>(),
+        PreparedStatementCache.UNLIMITED_CACHE,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.USE_DEFAULT,
+        new JdbcRecordReader(),
+        caseSensitive
+    );
+    List<Record> batch = ImmutableList.of(record);
+    final List<OnRecordErrorException> errors = writer.writeBatch(batch);
+    assertTrue(errors.isEmpty());
   }
 
   private void executeSetParameters(

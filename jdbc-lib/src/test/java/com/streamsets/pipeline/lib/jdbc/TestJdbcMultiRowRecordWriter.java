@@ -41,6 +41,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -250,35 +251,6 @@ public class TestJdbcMultiRowRecordWriter {
     }
   }
 
-  @Test(expected = OnRecordErrorException.class)
-  public void testEmptyColumnMappingError() throws Exception {
-    List<JdbcFieldColumnParamMapping> mappings = new ArrayList<>();
-
-    boolean caseSensitive = false;
-    JdbcRecordWriter writer = new JdbcMultiRowRecordWriter(
-        connectionString,
-        dataSource,
-        "TEST",
-        "TEST_TABLE",
-        false,
-        mappings,
-        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
-        JDBCOperationType.INSERT,
-        UnsupportedOperationAction.DISCARD,
-        new JdbcRecordReader(),
-        caseSensitive
-    );
-
-    Collection<Record> records = new ArrayList<>();
-    records.add(RecordCreator.create());
-    try {
-      writer.writeBatch(records);
-    } catch (StageException e) {
-      assertEquals(JdbcErrors.JDBC_22.getCode(), e.getErrorCode().toString());
-      throw e;
-    }
-  }
-
   @Test
   public void testGenerateQueryForMultiRow() throws StageException {
     SortedMap<String, String> columns = new TreeMap<>();
@@ -431,6 +403,28 @@ public class TestJdbcMultiRowRecordWriter {
       assertEquals(200, rs.getInt(1));
       assertEquals(2000, rs.getInt(2));
     }
+  }
+
+  @Test
+  public void testEmptyRecord() throws Exception {
+    List<JdbcFieldColumnParamMapping> mappings = new ArrayList<>();
+
+    JdbcRecordWriter writer = new JdbcMultiRowRecordWriter(
+        connectionString,
+        dataSource,
+        "TEST",
+        "TEST_TABLE",
+        false,
+        mappings,
+        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
+        new JdbcRecordReader(),
+        false
+    );
+    List<Record> batch = Collections.singletonList(RecordCreator.create());
+    List<OnRecordErrorException> errors = writer.writeBatch(batch);
+    Assert.assertTrue(errors.isEmpty());
   }
 
   private List<Record> generateRecords(int numRecords) {

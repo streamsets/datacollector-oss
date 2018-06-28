@@ -163,6 +163,15 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
             getColumnsToParameters(),
             opCode == OperationType.UPDATE_CODE ? getColumnsToFieldNoPK() : getColumnsToFields()
         );
+
+        if (columnsToParameters.isEmpty()) {
+          // no parameters found for configured columns
+          if (LOG.isWarnEnabled()) {
+            LOG.warn("No parameters found for record with ID {}; skipping", record.getHeader().getSourceId());
+          }
+          continue;
+        }
+
         PreparedStatement statement;
         try {
           statement = statementsForBatch.getPreparedStatement(opCode, columnsToParameters);
