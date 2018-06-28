@@ -16,20 +16,25 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-stage-lib-parent</artifactId>
-      <version>3.4.0-SNAPSHOT</version>
-      <relativePath>../stage-lib-parent</relativePath>
-    </parent>
-    <artifactId>streamsets-datacollector-couchbase-lib</artifactId>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.streamsets</groupId>
+    <artifactId>streamsets-datacollector-root-lib</artifactId>
     <version>3.4.0-SNAPSHOT</version>
-    <description>StreamSets Data Collector Couchbase Library</description>
-    <name>StreamSets Data Collector Couchbase Library</name>
-    <packaging>jar</packaging> 
-    <!-- Core StreamSets Dependencies for Stage Libraries -->
-    <dependencies>
+    <relativePath>../root-lib</relativePath>
+  </parent>
+  <artifactId>streamsets-datacollector-couchbase-protolib</artifactId>
+  <version>3.4.0-SNAPSHOT</version>
+  <description>StreamSets Data Collector Couchbase Proto Library</description>
+  <name>StreamSets Data Collector Couchbase Proto Library</name>
+  <packaging>jar</packaging>
+
+  <properties>
+    <couchbase.version>2.5.9</couchbase.version>
+  </properties>
+
+  <!-- Core StreamSets Dependencies for Stage Libraries -->
+  <dependencies>
     <dependency>
       <groupId>org.codehaus.jettison</groupId>
       <artifactId>jettison</artifactId>
@@ -38,8 +43,7 @@
     <dependency>
       <groupId>com.couchbase.client</groupId>
       <artifactId>java-client</artifactId>
-      <version>2.5.5</version>
-      <scope>provided</scope>
+      <version>${couchbase.version}</version>
     </dependency>
         <dependency>
       <groupId>com.streamsets</groupId>
@@ -48,44 +52,23 @@
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-commonlib</artifactId>
-      <scope>provided</scope>
     </dependency>
-     <dependency>
+    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>${slf4j.version}</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
       <version>${slf4j.version}</version>
-      <scope>provided</scope>
     </dependency>
-    
-     <!-- Test Dependencies -->
+
+    <!-- Test Dependencies -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.seleniumhq.selenium</groupId>
-      <artifactId>selenium-java</artifactId>
-      <scope>test</scope>
-      <version>2.44.0</version>
-    </dependency>
-        <dependency>
-      <groupId>com.opera</groupId>
-      <artifactId>operadriver</artifactId>
-      <scope>test</scope>
-      <version>1.5</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.seleniumhq.selenium</groupId>
-          <artifactId>selenium-remote-driver</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
   </dependencies>
 

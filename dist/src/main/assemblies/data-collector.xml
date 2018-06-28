@@ -450,6 +450,12 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+    <!-- CouchBase libs -->
+     <fileSet>
+      <directory>${basedir}/../${couchbase_5_0-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
     <!-- Jython libs -->
     <fileSet>
       <directory>${basedir}/../${jython_2_7-lib}/target/streamsets-libs/</directory>
