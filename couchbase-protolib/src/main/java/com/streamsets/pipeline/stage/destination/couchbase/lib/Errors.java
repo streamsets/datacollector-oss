@@ -20,10 +20,9 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
-
   ERROR_00("Document Key is Null"),
   ERROR_01("Error IO writing JSON Object from Record"),
-  ERROR_02("Error generating JSON Object from Record")
+  ERROR_03("Can't connect to CouchBase: {}"),
   ;
   private final String msg;
 
@@ -31,13 +30,11 @@ public enum Errors implements ErrorCode {
     this.msg = msg;
   }
 
-  /** {@inheritDoc} */
   @Override
   public String getCode() {
     return name();
   }
 
-  /** {@inheritDoc} */
   @Override
   public String getMessage() {
     return msg;

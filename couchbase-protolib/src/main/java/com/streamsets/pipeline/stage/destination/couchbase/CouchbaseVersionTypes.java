@@ -18,22 +18,20 @@ package com.streamsets.pipeline.stage.destination.couchbase;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
-/**
- * Couchbase Version Emuns for Couchbase Destination Configuration Tab
- */
 @GenerateResourceBundle
 public enum CouchbaseVersionTypes implements Label {
-    VERSION4("Version 4"),
-    VERSION5("Version 5");
-    
-    private final String label;
+  VERSION4("Version 4"),
+  VERSION5("Version 5")
+  ;
 
-    CouchbaseVersionTypes(String label) {
-        this.label = label;
-    }
-    
-    @Override
-    public String getLabel() {
-        return this.label;
-    }
+  private final String label;
+
+  CouchbaseVersionTypes(String label) {
+    this.label = label;
+  }
+
+  @Override
+  public String getLabel() {
+    return this.label;
+  }
 }

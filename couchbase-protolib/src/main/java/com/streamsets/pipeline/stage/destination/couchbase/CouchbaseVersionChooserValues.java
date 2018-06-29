@@ -16,18 +16,9 @@
 package com.streamsets.pipeline.stage.destination.couchbase;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
-import com.streamsets.pipeline.stage.destination.couchbase.CouchbaseVersionTypes;
 
-/**
- *
- * @author nickc
- */
 public class CouchbaseVersionChooserValues extends BaseEnumChooserValues<CouchbaseVersionTypes> {
-    
-    public CouchbaseVersionChooserValues() {
-        super(
-            CouchbaseVersionTypes.VERSION4,
-            CouchbaseVersionTypes.VERSION5);
-    }
-    
+  public CouchbaseVersionChooserValues() {
+    super(CouchbaseVersionTypes.class);
+  }
 }

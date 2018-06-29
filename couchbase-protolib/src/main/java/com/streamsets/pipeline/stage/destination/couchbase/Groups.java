@@ -24,16 +24,16 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum Groups implements Label {
-  COUCHBASE_TARGET("Couchbase Destination"),
+  CONNECTION("Connection"),
+  DOCUMENT("Document"),
   ;
 
   private final String label;
 
-  private Groups(String label) {
+  Groups(String label) {
     this.label = label;
   }
 
-  /** {@inheritDoc} */
   @Override
   public String getLabel() {
     return this.label;
