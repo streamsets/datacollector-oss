@@ -47,12 +47,12 @@
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations">Destinations</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
 <span class="navparent"><a class="link" href="../../../datacollector/UserGuide/Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </span></td></tr></tbody></table>
 <div class="nested0" id="concept_chy_xxg_4v">
- <h1 class="title topictitle1">Kudu </h1>
+    <h1 class="title topictitle1">Kudu </h1>
 
- 
- <div class="body conbody"><p class="shortdesc">The Kudu destination writes data to a Kudu cluster.</p>
+    
+    <div class="body conbody"><p class="shortdesc">The Kudu destination writes data to a Kudu cluster.</p>
 
-  <p class="p">When
+        <p class="p">When
             you configure the Kudu destination, you specify the connection information for one or
             more Kudu masters, define the table to use, and optionally define field mappings. By
             default, the destination writes field data to columns with matching names. </p>
@@ -67,10 +67,10 @@
         <p class="p">If the destination receives a change data capture log from some origin systems, you must
             select the format of the change log.</p>
 
-        <p class="p">You can also configure the external consistency mode and the operation timeout for the
-            destination.</p>
+        <p class="p">You can also configure the external consistency mode, operation timeouts, and the maximum
+            number of worker threads to use. </p>
 
- </div>
+    </div>
 
 <div class="related-links"></div>
 <div class="topic concept nested1" id="concept_dvg_vvj_wx">
@@ -425,8 +425,7 @@ If the table doesn't
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d139999e481 ">Default Operation 
-                                        <a class="xref" href="Kudu.html#concept_dvg_vvj_wx">
+                                    <td class="entry" valign="top" width="30%" headers="d139999e481 ">Default Operation <a class="xref" href="Kudu.html#concept_dvg_vvj_wx">
                                             <img class="image" id="task_c4x_tmh_4v__image_m6p_rfp_vv" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                     <td class="entry" valign="top" width="70%" headers="d139999e484 ">Default CRUD operation to
@@ -490,7 +489,6 @@ If the table doesn't
                                                 single client are automatically externally
                                                 consistent. </li>
 
-
                                             <li class="li">Commit Wait - An experimental external consistency
                                                 model that tightly synchronizes the clocks on all
                                                 machines in the cluster.</li>
@@ -514,16 +512,37 @@ If the table doesn't
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d139999e608 ">Operation Timeout (ms)</td>
+      <td class="entry" valign="top" width="30%" headers="d139999e608 ">Maximum Number of Worker Threads</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d139999e611 ">Number of milliseconds the destination waits to allow an
-                                        operation to complete.</td>
+      <td class="entry" valign="top" width="70%" headers="d139999e611 ">The maximum number of threads to use to perform processing for the stage. <p class="p">Default is
+        the Kudu default – twice the number of available cores on the <span class="ph">Data Collector</span> machine. Use this property to
+        limit the number of threads that can be used. </p>
+To use the default, leave empty or enter
+       0.</td>
+
+     </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d139999e608 ">Operation Timeout (milliseconds)</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d139999e611 ">Number of milliseconds to allow for operations such as
+                                            writes.<p class="p">Default is 10000, or 10 seconds.</p>
+</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d139999e608 ">Unsupported Operation Handling
-                                        <a class="xref" href="Kudu.html#concept_dvg_vvj_wx">
+                                    <td class="entry" valign="top" width="30%" headers="d139999e608 ">Admin Operation Timeout (milliseconds)</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d139999e611 ">Number of milliseconds to allow for admin-type
+                                        operations, such as opening a table or getting a table
+                                            schema.<p class="p">Default is 30000, or 30 seconds.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d139999e608 ">Unsupported Operation Handling <a class="xref" href="Kudu.html#concept_dvg_vvj_wx">
                                             <img class="image" id="task_c4x_tmh_4v__image_m9p_rfp_ov" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                     <td class="entry" valign="top" width="70%" headers="d139999e611 ">Action to take when the

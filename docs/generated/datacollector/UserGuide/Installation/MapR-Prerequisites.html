@@ -77,9 +77,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="50%" id="d236467e80">Supported MapR Version</th>
+                            <th class="entry" valign="top" width="50%" id="d236551e80">Supported MapR Version</th>
 
-                            <th class="entry" valign="top" width="50%" id="d236467e83">Supported MEP Version</th>
+                            <th class="entry" valign="top" width="50%" id="d236551e83">Supported MEP Version</th>
 
                         </tr>
 
@@ -87,23 +87,23 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d236467e80 ">MapR 5.1.0</td>
+                            <td class="entry" valign="top" width="50%" headers="d236551e80 ">MapR 5.1.0</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d236467e83 ">N/A</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d236467e80 ">MapR 5.2.0</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d236467e83 ">MEP 4.0</td>
+                            <td class="entry" valign="top" width="50%" headers="d236551e83 ">N/A</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d236467e80 ">MapR 6.0.0</td>
+                            <td class="entry" valign="top" width="50%" headers="d236551e80 ">MapR 5.2.0</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d236467e83 ">MEP 4.0</td>
+                            <td class="entry" valign="top" width="50%" headers="d236551e83 ">MEP 4.0</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d236551e80 ">MapR 6.0.0</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d236551e83 ">MEP 4.0</td>
 
                         </tr>
 
@@ -138,7 +138,7 @@
                         5.1.0, you can download the files for your operating system here:
                         <pre class="pre codeblock"><a class="xref" href="http://package.mapr.com/releases/" target="_blank">http://package.mapr.com/releases/</a>ecosystem-&lt;version&gt;/</pre>
 For
-                        MapR versions 5.2.0 or 6.0.0, you can download the files for your operating
+                        MapR versions 5.2.0 or later, you can download the files for your operating
                         system here:
                         <pre class="pre codeblock"><a class="xref" href="http://package.mapr.com/releases/MEP/" target="_blank">http://package.mapr.com/releases/MEP/</a>MEP-&lt;version&gt;/</pre>
 </div>
@@ -183,9 +183,9 @@ For
                         
                         <thead class="thead" align="left">
                             <tr>
-                                <th class="entry" valign="top" width="30%" id="d236467e230">Environment Variable</th>
+                                <th class="entry" valign="top" width="30%" id="d236551e230">Environment Variable</th>
 
-                                <th class="entry" valign="top" width="70%" id="d236467e233">Description</th>
+                                <th class="entry" valign="top" width="70%" id="d236551e233">Description</th>
 
                             </tr>
 
@@ -193,9 +193,9 @@ For
 
                         <tbody class="tbody">
                             <tr>
-                        <td class="entry" valign="top" width="30%" headers="d236467e230 ">SDC_HOME</td>
+                        <td class="entry" valign="top" width="30%" headers="d236551e230 ">SDC_HOME</td>
 
-                        <td class="entry" valign="top" width="70%" headers="d236467e233 "><span class="ph">Data Collector</span>
+                        <td class="entry" valign="top" width="70%" headers="d236551e233 "><span class="ph">Data Collector</span>
                             home directory.<div class="p">
                                 <div class="note note"><span class="notetitle">Note:</span> The default home directory for an RPM installation is
                                         <samp class="ph codeph">/opt/streamsets-datacollector</samp>. The tarball
@@ -208,17 +208,17 @@ For
                     </tr>
 
                             <tr>
-                        <td class="entry" valign="top" width="30%" headers="d236467e230 ">SDC_CONF</td>
+                        <td class="entry" valign="top" width="30%" headers="d236551e230 ">SDC_CONF</td>
 
-                        <td class="entry" valign="top" width="70%" headers="d236467e233 "><span class="ph">Data Collector</span>
+                        <td class="entry" valign="top" width="70%" headers="d236551e233 "><span class="ph">Data Collector</span>
                             configuration directory.</td>
 
                     </tr>
 
                             <tr>
-                        <td class="entry" valign="top" width="30%" headers="d236467e230 ">MAPR_MEP_VERSION</td>
+                        <td class="entry" valign="top" width="30%" headers="d236551e230 ">MAPR_MEP_VERSION</td>
 
-                        <td class="entry" valign="top" width="70%" headers="d236467e233 ">Required for MEP 4.0. <p class="p">Use this environment variable to use both of
+                        <td class="entry" valign="top" width="70%" headers="d236551e233 ">Required for MEP 4.0. <p class="p">Use this environment variable to use both of
                                 the MapR 6.0 and the MapR 6.0 MEP 4 stage libraries, or to use just
                                 the MapR 6.0 MEP 4 stage library. </p>
 <p class="p">This variable is not
@@ -281,9 +281,9 @@ export MAPR_MEP_VERSION=4</pre>
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d236467e390">Environment Variable</th>
+                                    <th class="entry" valign="top" width="30%" id="d236551e390">Environment Variable</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d236467e393">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d236551e393">Description</th>
 
                                 </tr>
 
@@ -291,9 +291,9 @@ export MAPR_MEP_VERSION=4</pre>
 
                             <tbody class="tbody">
                                 <tr>
-                        <td class="entry" valign="top" width="30%" headers="d236467e390 ">SDC_HOME</td>
+                        <td class="entry" valign="top" width="30%" headers="d236551e390 ">SDC_HOME</td>
 
-                        <td class="entry" valign="top" width="70%" headers="d236467e393 "><span class="ph">Data Collector</span>
+                        <td class="entry" valign="top" width="70%" headers="d236551e393 "><span class="ph">Data Collector</span>
                             home directory.<div class="p">
                                 <div class="note note"><span class="notetitle">Note:</span> The default home directory for an RPM installation is
                                         <samp class="ph codeph">/opt/streamsets-datacollector</samp>. The tarball
@@ -305,31 +305,31 @@ export MAPR_MEP_VERSION=4</pre>
 
                     </tr>
 <tr>
-                        <td class="entry" valign="top" width="30%" headers="d236467e390 ">SDC_CONF</td>
+                        <td class="entry" valign="top" width="30%" headers="d236551e390 ">SDC_CONF</td>
 
-                        <td class="entry" valign="top" width="70%" headers="d236467e393 "><span class="ph">Data Collector</span>
+                        <td class="entry" valign="top" width="70%" headers="d236551e393 "><span class="ph">Data Collector</span>
                             configuration directory.</td>
 
                     </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d236467e390 ">MAPR_HOME</td>
+                                    <td class="entry" valign="top" width="30%" headers="d236551e390 ">MAPR_HOME</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d236467e393 ">MapR home directory, usually /opt/mapr.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d236467e390 ">MAPR_VERSION</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d236467e393 ">MapR version: 5.1.0, 5.2.0, or 6.0.0.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d236551e393 ">MapR home directory, usually /opt/mapr.</td>
 
                                 </tr>
 
                                 <tr>
-                        <td class="entry" valign="top" width="30%" headers="d236467e390 ">MAPR_MEP_VERSION</td>
+                                    <td class="entry" valign="top" width="30%" headers="d236551e390 ">MAPR_VERSION</td>
 
-                        <td class="entry" valign="top" width="70%" headers="d236467e393 ">Required for MEP 4.0. <p class="p">Use this environment variable to use both of
+                                    <td class="entry" valign="top" width="70%" headers="d236551e393 ">MapR version: 5.1.0, 5.2.0, or 6.0.0.</td>
+
+                                </tr>
+
+                                <tr>
+                        <td class="entry" valign="top" width="30%" headers="d236551e390 ">MAPR_MEP_VERSION</td>
+
+                        <td class="entry" valign="top" width="70%" headers="d236551e393 ">Required for MEP 4.0. <p class="p">Use this environment variable to use both of
                                 the MapR 6.0 and the MapR 6.0 MEP 4 stage libraries, or to use just
                                 the MapR 6.0 MEP 4 stage library. </p>
 <p class="p">This variable is not

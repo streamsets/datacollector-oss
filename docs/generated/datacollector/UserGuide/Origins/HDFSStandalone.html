@@ -603,14 +603,14 @@ Though the host name for the
 
     
     <div class="body conbody"><p class="shortdesc">The Hadoop FS Standalone origin <span class="ph">creates record header
-                attributes that include <span class="ph" id="d53524e19">information about the originating file for
+                attributes that include <span class="ph" id="d53544e19">information about the originating file for
                     the record</span>.</span>
     </p>
 
         <p class="p">When the origin <span class="ph">processes Avro data, it includes the Avro schema in
                         an avroSchema record header attribute.</span></p>
 
-        <p class="p"><span class="ph" id="concept_asp_lfh_ldb__d49381e20">You can use the record:attribute or
+        <p class="p"><span class="ph" id="concept_asp_lfh_ldb__d49401e20">You can use the record:attribute or
                 record:attributeOrDefault functions to access the information in the attributes. For
                 more information about working with record header attributes, see <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_rd2_ghz_dz">Working with Header Attributes</a>.</span></p>
 
@@ -623,15 +623,15 @@ Though the host name for the
 
             </ul>
 <ul class="ul" id="concept_asp_lfh_ldb__ul_wqg_nk1_2z">
-                <li class="li" id="concept_asp_lfh_ldb__d53524e31">filename - Provides the name of the file where the record
+                <li class="li" id="concept_asp_lfh_ldb__d53544e31">filename - Provides the name of the file where the record
                     originated.</li>
 
-                <li class="li" id="concept_asp_lfh_ldb__d53524e34">file - Provides the file path and file name where the record
+                <li class="li" id="concept_asp_lfh_ldb__d53544e34">file - Provides the file path and file name where the record
                     originated.</li>
 
-                <li class="li" id="concept_asp_lfh_ldb__d53524e37">mtime - Provides the last-modified time for the file.</li>
+                <li class="li" id="concept_asp_lfh_ldb__d53544e37">mtime - Provides the last-modified time for the file.</li>
 
-                <li class="li" id="concept_asp_lfh_ldb__d53524e40">offset - Provides the file offset in bytes. The file offset is
+                <li class="li" id="concept_asp_lfh_ldb__d53544e40">offset - Provides the file offset in bytes. The file offset is
                     the location in the file where the record originated.</li>
 
             </ul>
@@ -710,9 +710,9 @@ Though the host name for the
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d279864e1055">Record Header Attribute</th>
+                            <th class="entry" valign="top" width="30%" id="d279948e1055">Record Header Attribute</th>
 
-                            <th class="entry" valign="top" width="70%" id="d279864e1058">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d279948e1058">Description</th>
 
                         </tr>
 
@@ -720,9 +720,9 @@ Though the host name for the
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d279864e1055 ">sdc.event.type</td>
+                            <td class="entry" valign="top" width="30%" headers="d279948e1055 ">sdc.event.type</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d279864e1058 ">Event type. Uses one of the following types:<ul class="ul" id="concept_p5x_2d3_ldb__ul_m12_mgp_qx">
+                            <td class="entry" valign="top" width="70%" headers="d279948e1058 ">Event type. Uses one of the following types:<ul class="ul" id="concept_p5x_2d3_ldb__ul_m12_mgp_qx">
                                     <li class="li">new-file - Generated when the origin starts processing a new
                                         file. </li>
 
@@ -739,16 +739,16 @@ Though the host name for the
                         </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e1055 ">sdc.event.version</td>
+       <td class="entry" valign="top" width="30%" headers="d279948e1055 ">sdc.event.version</td>
 
-       <td class="entry" valign="top" width="70%" headers="d279864e1058 ">An integer that indicates the version of the event record type.</td>
+       <td class="entry" valign="top" width="70%" headers="d279948e1058 ">An integer that indicates the version of the event record type.</td>
 
       </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e1055 ">sdc.event.creation_timestamp</td>
+       <td class="entry" valign="top" width="30%" headers="d279948e1055 ">sdc.event.creation_timestamp</td>
 
-       <td class="entry" id="concept_p5x_2d3_ldb__d48189e2118" valign="top" width="70%" headers="d279864e1058 ">Epoch timestamp when the stage created the event.
+       <td class="entry" id="concept_p5x_2d3_ldb__d48209e2118" valign="top" width="70%" headers="d279948e1058 ">Epoch timestamp when the stage created the event.
        </td>
 
       </tr>
@@ -775,9 +775,9 @@ Though the host name for the
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d279864e1133">Event Record Field</th>
+                                    <th class="entry" valign="top" width="30%" id="d279948e1133">Event Record Field</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d279864e1136">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d279948e1136">Description</th>
 
                                 </tr>
 
@@ -785,9 +785,9 @@ Though the host name for the
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d279864e1133 ">filepath</td>
+                                    <td class="entry" valign="top" width="30%" headers="d279948e1133 ">filepath</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e1136 ">Path and name of the file that the origin started or
+                                    <td class="entry" valign="top" width="70%" headers="d279948e1136 ">Path and name of the file that the origin started or
                                         finished processing.</td>
 
                                 </tr>
@@ -812,9 +812,9 @@ Though the host name for the
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d279864e1178">Event Record Field</th>
+                                    <th class="entry" valign="top" width="30%" id="d279948e1178">Event Record Field</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d279864e1181">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d279948e1181">Description</th>
 
                                 </tr>
 
@@ -822,25 +822,25 @@ Though the host name for the
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d279864e1178 ">filepath</td>
+                                    <td class="entry" valign="top" width="30%" headers="d279948e1178 ">filepath</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e1181 ">Path and name of the file that the origin started or
+                                    <td class="entry" valign="top" width="70%" headers="d279948e1181 ">Path and name of the file that the origin started or
                                         finished processing.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d279864e1178 ">record-count</td>
+                                    <td class="entry" valign="top" width="30%" headers="d279948e1178 ">record-count</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e1181 ">Number of records successfully generated from the
+                                    <td class="entry" valign="top" width="70%" headers="d279948e1181 ">Number of records successfully generated from the
                                         file.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d279864e1178 ">error-count</td>
+                                    <td class="entry" valign="top" width="30%" headers="d279948e1178 ">error-count</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e1181 ">Number of error records generated from the file. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d279948e1181 ">Number of error records generated from the file. </td>
 
                                 </tr>
 
@@ -866,9 +866,9 @@ Though the host name for the
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d279864e1241">Event Record Field</th>
+                                    <th class="entry" valign="top" width="30%" id="d279948e1241">Event Record Field</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d279864e1244">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d279948e1244">Description</th>
 
                                 </tr>
 
@@ -876,25 +876,25 @@ Though the host name for the
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e1241 ">record-count</td>
+       <td class="entry" valign="top" width="30%" headers="d279948e1241 ">record-count</td>
 
-       <td class="entry" valign="top" width="70%" headers="d279864e1244 ">Number of records successfully generated since the pipeline started or since the last
+       <td class="entry" valign="top" width="70%" headers="d279948e1244 ">Number of records successfully generated since the pipeline started or since the last
         no-more-data event was created. </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e1241 ">error-count</td>
+       <td class="entry" valign="top" width="30%" headers="d279948e1241 ">error-count</td>
 
-       <td class="entry" valign="top" width="70%" headers="d279864e1244 ">Number of error records generated since the pipeline started or since the last
+       <td class="entry" valign="top" width="70%" headers="d279948e1244 ">Number of error records generated since the pipeline started or since the last
         no-more-data event was created.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d279864e1241 ">file-count</td>
+                                    <td class="entry" valign="top" width="30%" headers="d279948e1241 ">file-count</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e1244 ">Number of files the origin attempted to process. Can
+                                    <td class="entry" valign="top" width="70%" headers="d279948e1244 ">Number of files the origin attempted to process. Can
                                         include files that were unable to be processed or were not
                                         fully processed.</td>
 
@@ -958,7 +958,7 @@ Though the host name for the
                             an alert and </span>in the pipeline history. </dd>
 
                     <dd class="dd">
-                        <div class="note note" id="concept_jbn_md3_ldb__d52316e112"><span class="notetitle">Note:</span> You can also check the <span class="ph">Data Collector</span> log file for error details. </div>
+                        <div class="note note" id="concept_jbn_md3_ldb__d52336e112"><span class="notetitle">Note:</span> You can also check the <span class="ph">Data Collector</span> log file for error details. </div>
 
                     </dd>
 
@@ -1055,7 +1055,7 @@ Though the host name for the
                   information about Hadoop impersonation and the Data Collector property, see <a class="xref" href="../Configuration/DCConfig.html#concept_pmr_sy5_nz" title="When Data Collector is registered with Control Hub, you can configure Data Collector to use an abbreviated version of the Control Hub user ID to impersonate a Hadoop user.">Hadoop Impersonation Mode</a>. </p>
 
         <p class="p">Note that the origin <span class="ph">uses a different user account to
-                        connect to HDFS. <span class="ph" id="concept_ub1_zwp_ldb__d48099e3612">By default, <span class="ph">Data Collector</span> uses
+                        connect to HDFS. <span class="ph" id="concept_ub1_zwp_ldb__d48119e3612">By default, <span class="ph">Data Collector</span> uses
                               the user account who started it to connect to external systems. When
                               using Kerberos, <span class="ph">Data Collector</span> uses
                               the Kerberos principal.</span>
@@ -1148,7 +1148,7 @@ Though the host name for the
                                     origin cannot continue processing data in the file. Records
                                     already processed from the file are passed to the pipeline. The
                                     behavior of the origin is then based on the error handling
-                                    configured for the stage:<ul class="ul" id="concept_vym_zd3_ldb__d48099e1247">
+                                    configured for the stage:<ul class="ul" id="concept_vym_zd3_ldb__d48119e1247">
                                           <li class="li">Discard - The origin continues processing with the
                                                 next file, leaving the partially-processed file in
                                                 the directory. </li>
@@ -1176,7 +1176,7 @@ Though the host name for the
                                     origin, the origin cannot continue processing data in the file.
                                     Records already processed from the file are passed to the
                                     pipeline. The behavior of the origin is then based on the error
-                                    handling configured for the stage:<ul class="ul" id="concept_vym_zd3_ldb__d48099e1282">
+                                    handling configured for the stage:<ul class="ul" id="concept_vym_zd3_ldb__d48119e1282">
                                           <li class="li">Discard - The origin continues processing with the
                                                 next file, leaving the partially-processed file in
                                                 the directory. </li>
@@ -1294,7 +1294,7 @@ Though the host name for the
                                     origin cannot continue processing data in the file. Records
                                     already processed from the file are passed to the pipeline. The
                                     behavior of the origin is then based on the error handling
-                                    configured for the stage:<ul class="ul" id="concept_vym_zd3_ldb__d48099e1563">
+                                    configured for the stage:<ul class="ul" id="concept_vym_zd3_ldb__d48119e1563">
                                           <li class="li">Discard - The origin continues processing with the
                                                 next file, leaving the partially-processed file in
                                                 the directory. </li>
@@ -1311,7 +1311,7 @@ Though the host name for the
 </dd>
 
                               <dd class="dd">Use the XML data format to process valid XML documents. For more
-                                    information about XML processing, see <a class="xref" href="../Data_Formats/XMLDFormat.html#concept_lty_42b_dy">Reading and Processing XML Data</a>. <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="concept_vym_zd3_ldb__d48099e1580">If
+                                    information about XML processing, see <a class="xref" href="../Data_Formats/XMLDFormat.html#concept_lty_42b_dy">Reading and Processing XML Data</a>. <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="concept_vym_zd3_ldb__d48119e1580">If
                                                 you want to process invalid XML documents, you can
                                                 try using the text data format with custom
                                                 delimiters. For more information, see <a class="xref" href="../Data_Formats/TextCDelim.html#concept_okt_kmg_jx">Processing XML Data with Custom Delimiters</a>.</span>
@@ -1342,9 +1342,9 @@ Though the host name for the
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d279864e1951">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d279948e1951">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d279864e1954">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d279948e1954">Description</th>
 
                                 </tr>
 
@@ -1352,34 +1352,34 @@ Though the host name for the
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e1951 ">Name</td>
+       <td class="entry" valign="top" width="30%" headers="d279948e1951 ">Name</td>
 
-       <td class="entry" valign="top" width="70%" headers="d279864e1954 ">Stage name.</td>
-
-      </tr>
-
-                                <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e1951 ">Description</td>
-
-       <td class="entry" valign="top" width="70%" headers="d279864e1954 ">Optional description.</td>
+       <td class="entry" valign="top" width="70%" headers="d279948e1954 ">Stage name.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d279864e1951 ">Produce Events <a class="xref" href="HDFSStandalone.html#concept_zlx_5rh_ldb">
+       <td class="entry" valign="top" width="30%" headers="d279948e1951 ">Description</td>
+
+       <td class="entry" valign="top" width="70%" headers="d279948e1954 ">Optional description.</td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d279948e1951 ">Produce Events <a class="xref" href="HDFSStandalone.html#concept_zlx_5rh_ldb">
                                             <img class="image" id="task_l3t_sdm_hdb__image_plp_tp2_px" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e1954 ">Generates event records when events occur. Use for event
+                                    <td class="entry" valign="top" width="70%" headers="d279948e1954 ">Generates event records when events occur. Use for event
         handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
-         <img class="image" id="task_l3t_sdm_hdb__d48189e798" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+         <img class="image" id="task_l3t_sdm_hdb__d48209e798" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e1951 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-         <img class="image" id="task_l3t_sdm_hdb__d48189e807" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d279948e1951 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+         <img class="image" id="task_l3t_sdm_hdb__d48209e807" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d279864e1954 ">Error record handling for the stage: <ul class="ul" id="task_l3t_sdm_hdb__d48189e811">
+       <td class="entry" valign="top" width="70%" headers="d279948e1954 ">Error record handling for the stage: <ul class="ul" id="task_l3t_sdm_hdb__d48209e811">
          <li class="li">Discard - Discards the record.</li>
 
          <li class="li">Send to Error - Sends the record to the pipeline for error handling.</li>
@@ -1408,9 +1408,9 @@ Though the host name for the
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d279864e2047">Hadoop FS Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d279948e2047">Hadoop FS Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d279864e2050">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d279948e2050">Description</th>
 
                                 </tr>
 
@@ -1418,9 +1418,9 @@ Though the host name for the
 
                             <tbody class="tbody">
                                 <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d279864e2047 ">Hadoop FS URI</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d279948e2047 ">Hadoop FS URI</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d279864e2050 ">Optional HDFS URI. <p class="p" id="task_l3t_sdm_hdb__d52316e500">When not configured,
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d279948e2050 ">Optional HDFS URI. <p class="p" id="task_l3t_sdm_hdb__d52336e500">When not configured,
                                     the destination uses the URI defined by the fs.defaultFS
                                     property in the core-site.xml file. </p>
 </td>
@@ -1428,10 +1428,10 @@ Though the host name for the
                         </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d279864e2047 ">HDFS User <a class="xref" href="HDFSStandalone.html#concept_ub1_zwp_ldb">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d279948e2047 ">HDFS User <a class="xref" href="HDFSStandalone.html#concept_ub1_zwp_ldb">
                                             <img class="image" id="task_l3t_sdm_hdb__image_byg_yqg_xs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d279864e2050 ">The HDFS user to use to access HDFS. When
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d279948e2050 ">The HDFS user to use to access HDFS. When
                                 using this property, make sure HDFS is configured
                                     appropriately.<p class="p">When not configured, the pipeline uses the
                                     currently logged in <span class="ph">Data Collector</span> user. </p>
@@ -1441,10 +1441,10 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d279864e2047 ">Kerberos Authentication <a class="xref" href="HDFSStandalone.html#concept_vvd_4zp_ldb">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d279948e2047 ">Kerberos Authentication <a class="xref" href="HDFSStandalone.html#concept_vvd_4zp_ldb">
                                             <img class="image" id="task_l3t_sdm_hdb__image_a5x_jzn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d279864e2050 ">Uses Kerberos credentials to connect to HDFS.
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d279948e2050 ">Uses Kerberos credentials to connect to HDFS.
                                     <p class="p">When selected, uses the Kerberos principal and keytab defined
                                     in the <span class="ph">Data Collector</span> configuration file,
                                     <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>. </p>
@@ -1453,10 +1453,10 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d279864e2047 ">Hadoop FS Configuration Directory <a class="xref" href="HDFSStandalone.html#concept_zx5_yzp_ldb">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d279948e2047 ">Hadoop FS Configuration Directory <a class="xref" href="HDFSStandalone.html#concept_zx5_yzp_ldb">
                                             <img class="image" id="task_l3t_sdm_hdb__image_br4_fgs_5r" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d279864e2050 ">Location of the HDFS configuration
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d279948e2050 ">Location of the HDFS configuration
                                     files.<p class="p">For a Cloudera Manager installation, enter
                                         <samp class="ph codeph">hadoop-conf</samp>. For all other installations,
                                     use a directory or symlink within the <span class="ph">Data Collector</span> resources directory.</p>
@@ -1476,9 +1476,9 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d279864e2047 ">Hadoop FS Configuration</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d279948e2047 ">Hadoop FS Configuration</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d279864e2050 ">Additional HDFS properties to use. <p class="p">To add properties, click
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d279948e2050 ">Additional HDFS properties to use. <p class="p">To add properties, click
                                         <span class="ph uicontrol">Add</span> and define the property name and
                                     value. Use the property names and values as expected by
                                     HDFS.</p>
@@ -1503,9 +1503,9 @@ Though the host name for the
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="27.77777777777778%" id="d279864e2210">File Property</th>
+                                    <th class="entry" valign="top" width="27.77777777777778%" id="d279948e2210">File Property</th>
 
-                                    <th class="entry" valign="top" width="72.22222222222221%" id="d279864e2213">Description</th>
+                                    <th class="entry" valign="top" width="72.22222222222221%" id="d279948e2213">Description</th>
 
                                 </tr>
 
@@ -1513,18 +1513,18 @@ Though the host name for the
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d279864e2210 ">File Directory</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d279948e2210 ">File Directory</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d279864e2213 ">The HDFS directory where source files are stored. Enter
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d279948e2213 ">The HDFS directory where source files are stored. Enter
                                         an absolute path.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d279864e2210 ">Number of Threads <a class="xref" href="HDFSStandalone.html#concept_fgx_1jh_ldb" title="The Hadoop FS Standalone origin uses multiple concurrent threads to process data based on the Number of Threads property.">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d279948e2210 ">Number of Threads <a class="xref" href="HDFSStandalone.html#concept_fgx_1jh_ldb" title="The Hadoop FS Standalone origin uses multiple concurrent threads to process data based on the Number of Threads property.">
                                             <img class="image" id="task_l3t_sdm_hdb__image_trk_mj4_qbb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d279864e2213 ">
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d279948e2213 ">
                                 <p class="p">Number of threads the origin generates and uses for multithreaded
                                     processing. </p>
 
@@ -1535,29 +1535,29 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                            <td class="entry" valign="top" width="27.77777777777778%" headers="d279864e2210 ">File Name Pattern Mode</td>
+                            <td class="entry" valign="top" width="27.77777777777778%" headers="d279948e2210 ">File Name Pattern Mode</td>
 
-                            <td class="entry" valign="top" width="72.22222222222221%" headers="d279864e2213 ">Indicates whether the file name pattern uses glob patterns or
+                            <td class="entry" valign="top" width="72.22222222222221%" headers="d279948e2213 ">Indicates whether the file name pattern uses glob patterns or
                                 regular expressions.</td>
 
                         </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d279864e2210 ">File Name Pattern <a class="xref" href="HDFSStandalone.html#concept_exc_22h_ldb" title="Use a file name pattern to define the files that the Hadoop FS Standalone origin processes. You can use either a glob pattern or a regular expression to define the file name pattern.">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d279948e2210 ">File Name Pattern <a class="xref" href="HDFSStandalone.html#concept_exc_22h_ldb" title="Use a file name pattern to define the files that the Hadoop FS Standalone origin processes. You can use either a glob pattern or a regular expression to define the file name pattern.">
                                             <img class="image" id="task_l3t_sdm_hdb__image_lwb_zcp_4y" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d279864e2213 ">Pattern of the file names to process.
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d279948e2213 ">Pattern of the file names to process.
                                 Use glob patterns or regular expressions based on the specified file
                                 name pattern mode. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d279864e2210 ">Read Order <a class="xref" href="HDFSStandalone.html#concept_ogz_q3h_ldb">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d279948e2210 ">Read Order <a class="xref" href="HDFSStandalone.html#concept_ogz_q3h_ldb">
                                             <img class="image" id="task_l3t_sdm_hdb__image_f2g_d54_xv" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d279864e2213 ">The order to use when reading
-                                    files:<ul class="ul" id="task_l3t_sdm_hdb__d52316e234">
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d279948e2213 ">The order to use when reading
+                                    files:<ul class="ul" id="task_l3t_sdm_hdb__d52336e234">
                                     <li class="li">Last-Modified Timestamp - Reads files in ascending order
                                         based on the last-modified timestamp. When files have
                                         matching timestamps, reads files in lexicographically
@@ -1572,10 +1572,10 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d279864e2210 ">Process Subdirectories <a class="xref" href="HDFSStandalone.html#concept_bwq_nyj_mdb" title="When using the Last Modified Timestamp read order, the Hadoop FS Standalone origin can read files in subdirectories of the specified file directory.">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d279948e2210 ">Process Subdirectories <a class="xref" href="HDFSStandalone.html#concept_bwq_nyj_mdb" title="When using the Last Modified Timestamp read order, the Hadoop FS Standalone origin can read files in subdirectories of the specified file directory.">
                                             <img class="image" id="task_l3t_sdm_hdb__image_n4r_2l3_cy" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d279864e2213 ">Reads files in any subdirectory
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d279948e2213 ">Reads files in any subdirectory
                                 of the specified file directory. Reads files in ascending order
                                 based on the last-modified timestamp, regardless of the location
                                 within the file directory. <p class="p">Uses the subdirectory for any
@@ -1587,29 +1587,29 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                            <td class="entry" valign="top" width="27.77777777777778%" headers="d279864e2210 ">Batch Size (recs)</td>
+                            <td class="entry" valign="top" width="27.77777777777778%" headers="d279948e2210 ">Batch Size (recs)</td>
 
-                            <td class="entry" valign="top" width="72.22222222222221%" headers="d279864e2213 ">Number of records to pass through the pipeline at one time.
+                            <td class="entry" valign="top" width="72.22222222222221%" headers="d279948e2213 ">Number of records to pass through the pipeline at one time.
                                 Honors values up to the <span class="ph">Data Collector</span> maximum batch size. <p class="p">Default is 1000. The <span class="ph">Data Collector</span> default is 1000.</p>
 </td>
 
                         </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d279864e2210 ">Batch Wait Time (secs) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d279948e2210 ">Batch Wait Time (secs) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q">
                                             <img class="image" id="task_l3t_sdm_hdb__image_mgp_2q3_br" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d279864e2213 ">Number of seconds to wait before sending
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d279948e2213 ">Number of seconds to wait before sending
                                 a partial or empty batch.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d279864e2210 ">First File to Process <a class="xref" href="HDFSStandalone.html#concept_a2q_4kh_ldb" title="Configure a first file for processing when you want Hadoop FS Standalone to ignore one or more existing files in the directory.">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d279948e2210 ">First File to Process <a class="xref" href="HDFSStandalone.html#concept_a2q_4kh_ldb" title="Configure a first file for processing when you want Hadoop FS Standalone to ignore one or more existing files in the directory.">
                                             <img class="image" id="task_l3t_sdm_hdb__image_tcz_pj2_br" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d279864e2213 ">Name of the first file to process.
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d279948e2213 ">Name of the first file to process.
                                     <p class="p">When you do not enter a first file name, the origin reads all
                                     files in the directory with the specified file name
                                 pattern.</p>
@@ -1618,9 +1618,9 @@ Though the host name for the
                                 </tr>
 
                                 <tr>
-                            <td class="entry" valign="top" width="27.77777777777778%" headers="d279864e2210 ">Max Files Soft Limit </td>
+                            <td class="entry" valign="top" width="27.77777777777778%" headers="d279948e2210 ">Max Files Soft Limit </td>
 
-                            <td class="entry" valign="top" width="72.22222222222221%" headers="d279864e2213 ">
+                            <td class="entry" valign="top" width="72.22222222222221%" headers="d279948e2213 ">
                                 <p class="p">Maximum number of files that the origin can add to the processing
                                     queue at one time. This value is a soft limit - meaning that the
                                     origin can temporarily exceed it. </p>
@@ -1643,9 +1643,9 @@ Though the host name for the
                         </tr>
 
                                 <tr>
-                            <td class="entry" valign="top" width="27.77777777777778%" headers="d279864e2210 ">Spooling Period (secs)</td>
+                            <td class="entry" valign="top" width="27.77777777777778%" headers="d279948e2210 ">Spooling Period (secs)</td>
 
-                            <td class="entry" valign="top" width="72.22222222222221%" headers="d279864e2213 ">Number of seconds to continue adding files to the processing
+                            <td class="entry" valign="top" width="72.22222222222221%" headers="d279948e2213 ">Number of seconds to continue adding files to the processing
                                 queue after the maximum files soft limit has been exceeded. When the
                                 spooling period expires, no additional files are added to the
                                 processing queue until the queue goes below the soft
@@ -1655,10 +1655,10 @@ Though the host name for the
                         </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d279864e2210 ">Buffer Limit (KB) <a class="xref" href="HDFSStandalone.html#concept_jbn_md3_ldb" title="The Hadoop FS Standalone origin passes each record to a buffer. The size of the buffer determines the maximum size of the record that can be processed. Decrease the buffer limit when memory on the Data Collector machine is limited. Increase the buffer limit to process larger records when memory is available.">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d279948e2210 ">Buffer Limit (KB) <a class="xref" href="HDFSStandalone.html#concept_jbn_md3_ldb" title="The Hadoop FS Standalone origin passes each record to a buffer. The size of the buffer determines the maximum size of the record that can be processed. Decrease the buffer limit when memory on the Data Collector machine is limited. Increase the buffer limit to process larger records when memory is available.">
                                             <img class="image" id="task_l3t_sdm_hdb__image_mfn_hwx_5r" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d279864e2213 ">Maximum buffer size. The buffer size
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d279948e2213 ">Maximum buffer size. The buffer size
                                 determines the size of the record that can be processed. <p class="p">Decrease
                                     when memory on the <span class="ph">Data Collector</span> machine is limited. Increase to process larger records when
                                     memory is available. </p>
@@ -1683,9 +1683,9 @@ Though the host name for the
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="22.22222222222222%" id="d279864e2455">Post Processing Property</th>
+                            <th class="entry" valign="top" width="22.22222222222222%" id="d279948e2455">Post Processing Property</th>
 
-                            <th class="entry" valign="top" width="77.77777777777779%" id="d279864e2458">Description</th>
+                            <th class="entry" valign="top" width="77.77777777777779%" id="d279948e2458">Description</th>
 
                         </tr>
 
@@ -1693,9 +1693,9 @@ Though the host name for the
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="22.22222222222222%" headers="d279864e2455 ">Error Directory</td>
+                            <td class="entry" valign="top" width="22.22222222222222%" headers="d279948e2455 ">Error Directory</td>
 
-                            <td class="entry" valign="top" width="77.77777777777779%" headers="d279864e2458 ">The directory for files that cannot be fully processed due to
+                            <td class="entry" valign="top" width="77.77777777777779%" headers="d279948e2458 ">The directory for files that cannot be fully processed due to
                                 data handling errors. <p class="p">When you specify an error directory, files
                                     that cannot be fully processed are moved to this directory.
                                     </p>
@@ -1706,9 +1706,9 @@ Though the host name for the
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="22.22222222222222%" headers="d279864e2455 ">File Post Processing</td>
+                            <td class="entry" valign="top" width="22.22222222222222%" headers="d279948e2455 ">File Post Processing</td>
 
-                            <td class="entry" valign="top" width="77.77777777777779%" headers="d279864e2458 ">The action taken after processing a file: <ul class="ul" id="task_l3t_sdm_hdb__d52316e429">
+                            <td class="entry" valign="top" width="77.77777777777779%" headers="d279948e2458 ">The action taken after processing a file: <ul class="ul" id="task_l3t_sdm_hdb__d52336e429">
                                     <li class="li">None - Keeps the file in place.</li>
 
                                     <li class="li">Archive - Moves the file to the archive directory.</li>
@@ -1721,9 +1721,9 @@ Though the host name for the
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="22.22222222222222%" headers="d279864e2455 ">Archiving Directory</td>
+                            <td class="entry" valign="top" width="22.22222222222222%" headers="d279948e2455 ">Archiving Directory</td>
 
-                            <td class="entry" valign="top" width="77.77777777777779%" headers="d279864e2458 ">The directory for files that are fully processed. <p class="p">When you
+                            <td class="entry" valign="top" width="77.77777777777779%" headers="d279948e2458 ">The directory for files that are fully processed. <p class="p">When you
                                     specify an archiving directory, files are moved to this
                                     directory after being fully processed.</p>
 Use to archive
@@ -1732,9 +1732,9 @@ Use to archive
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="22.22222222222222%" headers="d279864e2455 ">Archive Retention Time (mins)</td>
+                            <td class="entry" valign="top" width="22.22222222222222%" headers="d279948e2455 ">Archive Retention Time (mins)</td>
 
-                            <td class="entry" valign="top" width="77.77777777777779%" headers="d279864e2458 ">Number of minutes processed files are saved in the archive
+                            <td class="entry" valign="top" width="77.77777777777779%" headers="d279948e2458 ">Number of minutes processed files are saved in the archive
                                 directory. Use 0 to keep archived files indefinitely.</td>
 
                         </tr>
@@ -1756,9 +1756,9 @@ Use to archive
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d279864e2546">Data Format Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d279948e2546">Data Format Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d279864e2549">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d279948e2549">Description</th>
 
                                 </tr>
 
@@ -1766,12 +1766,12 @@ Use to archive
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d279864e2546 ">Data Format <a class="xref" href="HDFSStandalone.html#concept_vym_zd3_ldb">
+                                    <td class="entry" valign="top" width="30%" headers="d279948e2546 ">Data Format <a class="xref" href="HDFSStandalone.html#concept_vym_zd3_ldb">
                                             <img class="image" id="task_l3t_sdm_hdb__image_w4w_q3p_ht" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e2549 ">Data format for source files. Use one of the following
-         formats:<ul class="ul" id="task_l3t_sdm_hdb__d48189e1262">
+                                    <td class="entry" valign="top" width="70%" headers="d279948e2549 ">Data format for source files. Use one of the following
+         formats:<ul class="ul" id="task_l3t_sdm_hdb__d48209e1262">
          <li class="li">Avro</li>
 
          <li class="li">Delimited</li>
@@ -1783,12 +1783,12 @@ Use to archive
          <li class="li">Protobuf</li>
 
          <li class="li">SDC Record <a class="xref" href="../Pipeline_Design/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that Data Collector uses to generate error records. Data Collector can also use the data format to read and write data.">
-           <img class="image" id="task_l3t_sdm_hdb__d48189e1284" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
+           <img class="image" id="task_l3t_sdm_hdb__d48209e1284" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
 
          <li class="li">Text</li>
 
          <li class="li">Whole File <a class="xref" href="../Data_Formats/WholeFile.html#concept_nfc_qkh_xw">
-           <img class="image" id="task_l3t_sdm_hdb__d48189e1293" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
+           <img class="image" id="task_l3t_sdm_hdb__d48209e1293" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
 
          <li class="li">XML</li>
 
@@ -1809,14 +1809,14 @@ Use to archive
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_l3t_sdm_hdb__d48392e1380" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_l3t_sdm_hdb__d48412e1380" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d279864e2645">Delimited Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d279948e2645">Delimited Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d279864e2648">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d279948e2648">Description</th>
 
                                 </tr>
 
@@ -1824,10 +1824,10 @@ Use to archive
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e2645 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_l3t_sdm_hdb__d48189e1220" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d279948e2645 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_l3t_sdm_hdb__d48209e1220" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d279864e2648 ">The compression format of the files:<ul class="ul" id="task_l3t_sdm_hdb__d48189e1224">
+       <td class="entry" valign="top" width="70%" headers="d279948e2648 ">The compression format of the files:<ul class="ul" id="task_l3t_sdm_hdb__d48209e1224">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -1843,9 +1843,9 @@ Use to archive
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e2645 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d279948e2645 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d279864e2648 ">For archive and compressed archive files, file name pattern that represents the files
+       <td class="entry" valign="top" width="70%" headers="d279948e2648 ">For archive and compressed archive files, file name pattern that represents the files
         to process within the compressed directory. You can use UNIX-style wildcards, such as an
         asterisk or question mark. For example, *.json.<p class="p">Default is *, which processes all
          files.</p>
@@ -1853,10 +1853,10 @@ Use to archive
 
       </tr>
 
-                                <tr id="task_l3t_sdm_hdb__d48392e1412">
-                                    <td class="entry" valign="top" width="30%" headers="d279864e2645 ">Delimiter Format Type</td>
+                                <tr id="task_l3t_sdm_hdb__d48412e1412">
+                                    <td class="entry" valign="top" width="30%" headers="d279948e2645 ">Delimiter Format Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e2648 ">Delimiter format type. Use one of the following options:
+                                    <td class="entry" valign="top" width="70%" headers="d279948e2648 ">Delimiter format type. Use one of the following options:
                                             <ul class="ul" id="task_l3t_sdm_hdb__ul_s5z_b3z_3r">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
@@ -1885,27 +1885,27 @@ Use to archive
 
                                 </tr>
 
-                                <tr id="task_l3t_sdm_hdb__d48392e1425">
-                                    <td class="entry" valign="top" width="30%" headers="d279864e2645 ">Header Line</td>
+                                <tr id="task_l3t_sdm_hdb__d48412e1425">
+                                    <td class="entry" valign="top" width="30%" headers="d279948e2645 ">Header Line</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e2648 ">Indicates whether a file contains a header line, and
+                                    <td class="entry" valign="top" width="70%" headers="d279948e2648 ">Indicates whether a file contains a header line, and
                                         whether to use the header line.</td>
 
                                 </tr>
 
-                                <tr id="task_l3t_sdm_hdb__d48392e1434">
-                                    <td class="entry" valign="top" width="30%" headers="d279864e2645 ">Allow Extra Columns</td>
+                                <tr id="task_l3t_sdm_hdb__d48412e1434">
+                                    <td class="entry" valign="top" width="30%" headers="d279948e2645 ">Allow Extra Columns</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e2648 ">When processing data with a header line, allows
+                                    <td class="entry" valign="top" width="70%" headers="d279948e2648 ">When processing data with a header line, allows
                                         processing records with more columns than exist in the
                                         header line.</td>
 
                                 </tr>
 
-                                <tr id="task_l3t_sdm_hdb__d48392e1444">
-                                    <td class="entry" valign="top" width="30%" headers="d279864e2645 ">Extra Column Prefix</td>
+                                <tr id="task_l3t_sdm_hdb__d48412e1444">
+                                    <td class="entry" valign="top" width="30%" headers="d279948e2645 ">Extra Column Prefix</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e2648 ">Prefix to use for any additional columns. Extra columns
+                                    <td class="entry" valign="top" width="70%" headers="d279948e2648 ">Prefix to use for any additional columns. Extra columns
                                         are named using the prefix and sequential increasing
                                         integers as follows:
                                             <samp class="ph codeph">&lt;prefix&gt;&lt;integer&gt;</samp>. <p class="p">For
@@ -1914,20 +1914,20 @@ Use to archive
 
                                 </tr>
 
-                                <tr id="task_l3t_sdm_hdb__d48392e1458">
-                                    <td class="entry" valign="top" width="30%" headers="d279864e2645 ">Max Record Length (chars)</td>
+                                <tr id="task_l3t_sdm_hdb__d48412e1458">
+                                    <td class="entry" valign="top" width="30%" headers="d279948e2645 ">Max Record Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e2648 ">Maximum length of a record in characters. Longer records
+                                    <td class="entry" valign="top" width="70%" headers="d279948e2648 ">Maximum length of a record in characters. Longer records
                                         are not read. <p class="p"><span class="ph">This property can be limited by the <span class="ph">Data Collector</span> parser
                         buffer size. For more information, see <a class="xref" href="Origins_overview.html#concept_svg_2zl_d1b">Maximum Record Size</a>.</span></p>
 </td>
 
                                 </tr>
 
-                                <tr id="task_l3t_sdm_hdb__d48392e1469">
-                                    <td class="entry" valign="top" width="30%" headers="d279864e2645 ">Delimiter Character</td>
+                                <tr id="task_l3t_sdm_hdb__d48412e1469">
+                                    <td class="entry" valign="top" width="30%" headers="d279948e2645 ">Delimiter Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e2648 ">Delimiter character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="70%" headers="d279948e2648 ">Delimiter character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                             character.<p class="p">You can enter a Unicode control character
                                             using the format \u<em class="ph i">NNNN</em>, where ​<em class="ph i">N</em> is a
@@ -1941,25 +1941,25 @@ Use to archive
 
                                 </tr>
 
-                                <tr id="task_l3t_sdm_hdb__d48392e1488">
-                                    <td class="entry" valign="top" width="30%" headers="d279864e2645 ">Escape Character</td>
+                                <tr id="task_l3t_sdm_hdb__d48412e1488">
+                                    <td class="entry" valign="top" width="30%" headers="d279948e2645 ">Escape Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e2648 ">Escape character for a custom file type.</td>
-
-                                </tr>
-
-                                <tr id="task_l3t_sdm_hdb__d48392e1497">
-                                    <td class="entry" valign="top" width="30%" headers="d279864e2645 ">Quote Character</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d279864e2648 ">Quote character for a custom file type.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d279948e2648 ">Escape character for a custom file type.</td>
 
                                 </tr>
 
-                                <tr id="task_l3t_sdm_hdb__d48392e1506">
-                                    <td class="entry" valign="top" width="30%" headers="d279864e2645 ">Root Field Type <a class="xref" href="../Data_Formats/DelimitedDataRootFieldTypes.html">
-                                            <img class="image" id="task_l3t_sdm_hdb__d48392e1512" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                <tr id="task_l3t_sdm_hdb__d48412e1497">
+                                    <td class="entry" valign="top" width="30%" headers="d279948e2645 ">Quote Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e2648 ">Root field type to use:<ul class="ul" id="task_l3t_sdm_hdb__d48392e1516">
+                                    <td class="entry" valign="top" width="70%" headers="d279948e2648 ">Quote character for a custom file type.</td>
+
+                                </tr>
+
+                                <tr id="task_l3t_sdm_hdb__d48412e1506">
+                                    <td class="entry" valign="top" width="30%" headers="d279948e2645 ">Root Field Type <a class="xref" href="../Data_Formats/DelimitedDataRootFieldTypes.html">
+                                            <img class="image" id="task_l3t_sdm_hdb__d48412e1512" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d279948e2648 ">Root field type to use:<ul class="ul" id="task_l3t_sdm_hdb__d48412e1516">
                                             <li class="li">List-Map - Generates an indexed list of data.
                                                 Enables you to use standard functions to process
                                                 data. Use for new pipelines.</li>
@@ -1974,40 +1974,40 @@ Use to archive
 
                                 </tr>
 
-                                <tr id="task_l3t_sdm_hdb__d48392e1527">
-                                    <td class="entry" valign="top" width="30%" headers="d279864e2645 ">Lines to Skip</td>
+                                <tr id="task_l3t_sdm_hdb__d48412e1527">
+                                    <td class="entry" valign="top" width="30%" headers="d279948e2645 ">Lines to Skip</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e2648 ">Lines to skip before reading data. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d279948e2648 ">Lines to skip before reading data. </td>
 
                                 </tr>
 
-                                <tr id="task_l3t_sdm_hdb__d48392e1536">
-                                    <td class="entry" valign="top" width="30%" headers="d279864e2645 ">Parse NULLs</td>
+                                <tr id="task_l3t_sdm_hdb__d48412e1536">
+                                    <td class="entry" valign="top" width="30%" headers="d279948e2645 ">Parse NULLs</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e2648 ">Replaces the specified string constant with null
+                                    <td class="entry" valign="top" width="70%" headers="d279948e2648 ">Replaces the specified string constant with null
                                         values.</td>
 
                                 </tr>
 
-                                <tr id="task_l3t_sdm_hdb__d48392e1545">
-                                    <td class="entry" valign="top" width="30%" headers="d279864e2645 ">NULL Constant</td>
+                                <tr id="task_l3t_sdm_hdb__d48412e1545">
+                                    <td class="entry" valign="top" width="30%" headers="d279948e2645 ">NULL Constant</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e2648 ">String constant to replace with null values.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d279948e2648 ">String constant to replace with null values.</td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e2645 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d279948e2645 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d279864e2648 ">Character encoding of the files to be processed.</td>
+       <td class="entry" valign="top" width="70%" headers="d279948e2648 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e2645 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_l3t_sdm_hdb__d48189e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d279948e2645 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_l3t_sdm_hdb__d48209e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d279864e2648 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d279948e2648 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
@@ -2024,14 +2024,14 @@ Use to archive
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_l3t_sdm_hdb__d48392e1590" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_l3t_sdm_hdb__d48412e1590" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d279864e2938">JSON Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d279948e2938">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d279864e2941">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d279948e2941">Description</th>
 
                                 </tr>
 
@@ -2039,10 +2039,10 @@ Use to archive
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e2938 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_l3t_sdm_hdb__d48189e1220" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d279948e2938 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_l3t_sdm_hdb__d48209e1220" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d279864e2941 ">The compression format of the files:<ul class="ul" id="task_l3t_sdm_hdb__d48189e1224">
+       <td class="entry" valign="top" width="70%" headers="d279948e2941 ">The compression format of the files:<ul class="ul" id="task_l3t_sdm_hdb__d48209e1224">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -2058,9 +2058,9 @@ Use to archive
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e2938 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d279948e2938 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d279864e2941 ">For archive and compressed archive files, file name pattern that represents the files
+       <td class="entry" valign="top" width="70%" headers="d279948e2941 ">For archive and compressed archive files, file name pattern that represents the files
         to process within the compressed directory. You can use UNIX-style wildcards, such as an
         asterisk or question mark. For example, *.json.<p class="p">Default is *, which processes all
          files.</p>
@@ -2068,11 +2068,11 @@ Use to archive
 
       </tr>
 
-                                <tr id="task_l3t_sdm_hdb__d48392e1622">
-                                    <td class="entry" valign="top" width="30%" headers="d279864e2938 ">JSON Content</td>
+                                <tr id="task_l3t_sdm_hdb__d48412e1622">
+                                    <td class="entry" valign="top" width="30%" headers="d279948e2938 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e2941 ">Type of JSON content. Use one of the following options: <div class="p">
-                                            <ul class="ul" id="task_l3t_sdm_hdb__d48392e1631">
+                                    <td class="entry" valign="top" width="70%" headers="d279948e2941 ">Type of JSON content. Use one of the following options: <div class="p">
+                                            <ul class="ul" id="task_l3t_sdm_hdb__d48412e1631">
                                                 <li class="li">Array of Objects </li>
 
                                                 <li class="li">Multiple Objects</li>
@@ -2084,10 +2084,10 @@ Use to archive
 
                                 </tr>
 
-                                <tr id="task_l3t_sdm_hdb__d48392e1642">
-                                    <td class="entry" valign="top" width="30%" headers="d279864e2938 ">Maximum Object Length (chars)</td>
+                                <tr id="task_l3t_sdm_hdb__d48412e1642">
+                                    <td class="entry" valign="top" width="30%" headers="d279948e2938 ">Maximum Object Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e2941 ">Maximum number of characters in a JSON object. <p class="p">Longer
+                                    <td class="entry" valign="top" width="70%" headers="d279948e2941 ">Maximum number of characters in a JSON object. <p class="p">Longer
                                             objects are diverted to the pipeline for error handling.
                                                 </p>
 <p class="p"><span class="ph">This property can be limited by the <span class="ph">Data Collector</span> parser
@@ -2097,17 +2097,17 @@ Use to archive
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e2938 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d279948e2938 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d279864e2941 ">Character encoding of the files to be processed.</td>
+       <td class="entry" valign="top" width="70%" headers="d279948e2941 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e2938 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_l3t_sdm_hdb__d48189e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d279948e2938 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_l3t_sdm_hdb__d48209e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d279864e2941 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d279948e2941 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
@@ -2124,14 +2124,14 @@ Use to archive
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_l3t_sdm_hdb__d48392e1701" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_l3t_sdm_hdb__d48412e1701" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d279864e3083">Log Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d279948e3083">Log Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d279864e3086">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d279948e3086">Description</th>
 
                                 </tr>
 
@@ -2139,10 +2139,10 @@ Use to archive
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e3083 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_l3t_sdm_hdb__d48189e1220" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d279948e3083 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_l3t_sdm_hdb__d48209e1220" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d279864e3086 ">The compression format of the files:<ul class="ul" id="task_l3t_sdm_hdb__d48189e1224">
+       <td class="entry" valign="top" width="70%" headers="d279948e3086 ">The compression format of the files:<ul class="ul" id="task_l3t_sdm_hdb__d48209e1224">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -2158,9 +2158,9 @@ Use to archive
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e3083 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d279948e3083 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d279864e3086 ">For archive and compressed archive files, file name pattern that represents the files
+       <td class="entry" valign="top" width="70%" headers="d279948e3086 ">For archive and compressed archive files, file name pattern that represents the files
         to process within the compressed directory. You can use UNIX-style wildcards, such as an
         asterisk or question mark. For example, *.json.<p class="p">Default is *, which processes all
          files.</p>
@@ -2168,12 +2168,12 @@ Use to archive
 
       </tr>
 
-                                <tr id="task_l3t_sdm_hdb__d48392e1733">
-                                    <td class="entry" valign="top" width="30%" headers="d279864e3083 ">Log Format <a class="xref" href="../Data_Formats/LogFormats.html" title="When you use an origin to read log data, you define the format of the log files to be read.">
-                                            <img class="image" id="task_l3t_sdm_hdb__d48392e1739" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                <tr id="task_l3t_sdm_hdb__d48412e1733">
+                                    <td class="entry" valign="top" width="30%" headers="d279948e3083 ">Log Format <a class="xref" href="../Data_Formats/LogFormats.html" title="When you use an origin to read log data, you define the format of the log files to be read.">
+                                            <img class="image" id="task_l3t_sdm_hdb__d48412e1739" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e3086 ">Format of the log files. Use one of the following
-                                            options:<ul class="ul" id="task_l3t_sdm_hdb__d48392e1743">
+                                    <td class="entry" valign="top" width="70%" headers="d279948e3086 ">Format of the log files. Use one of the following
+                                            options:<ul class="ul" id="task_l3t_sdm_hdb__d48412e1743">
                                             <li class="li">Common Log Format</li>
 
                                             <li class="li">Combined Log Format</li>
@@ -2197,20 +2197,20 @@ Use to archive
 
                                 </tr>
 
-                                <tr id="task_l3t_sdm_hdb__d48392e1775">
-                                    <td class="entry" valign="top" width="30%" headers="d279864e3083 ">Max Line Length</td>
+                                <tr id="task_l3t_sdm_hdb__d48412e1775">
+                                    <td class="entry" valign="top" width="30%" headers="d279948e3083 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e3086 ">Maximum length of a log line. The origin truncates longer
+                                    <td class="entry" valign="top" width="70%" headers="d279948e3086 ">Maximum length of a log line. The origin truncates longer
                                         lines. <p class="p"><span class="ph">This property can be limited by the <span class="ph">Data Collector</span> parser
                         buffer size. For more information, see <a class="xref" href="Origins_overview.html#concept_svg_2zl_d1b">Maximum Record Size</a>.</span></p>
 </td>
 
                                 </tr>
 
-                                <tr id="task_l3t_sdm_hdb__d48392e1786">
-                                    <td class="entry" valign="top" width="30%" headers="d279864e3083 ">Retain Original Line</td>
+                                <tr id="task_l3t_sdm_hdb__d48412e1786">
+                                    <td class="entry" valign="top" width="30%" headers="d279948e3083 ">Retain Original Line</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e3086 ">Determines how to treat the original log line. Select to
+                                    <td class="entry" valign="top" width="70%" headers="d279948e3086 ">Determines how to treat the original log line. Select to
                                         include the original log line as a field in the resulting
                                             record.<p class="p">By default, the original line is
                                             discarded.</p>
@@ -2219,17 +2219,17 @@ Use to archive
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e3083 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d279948e3083 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d279864e3086 ">Character encoding of the files to be processed.</td>
+       <td class="entry" valign="top" width="70%" headers="d279948e3086 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e3083 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_l3t_sdm_hdb__d48189e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d279948e3083 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_l3t_sdm_hdb__d48209e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d279864e3086 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d279948e3086 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
@@ -2239,7 +2239,7 @@ Use to archive
                         </table>
 </div>
 
-                    <ul class="ul" id="task_l3t_sdm_hdb__d48392e1811">
+                    <ul class="ul" id="task_l3t_sdm_hdb__d48412e1811">
                         <li class="li">When you select <span class="ph uicontrol">Apache Access Log Custom Format</span>,
                             use Apache log format strings to define the <span class="ph uicontrol">Custom Log
                                 Format</span>.</li>
@@ -2262,14 +2262,14 @@ Use to archive
 
                         <li class="li">When you select <span class="ph uicontrol">Log4j</span>, define the following properties:<div class="p">
                                 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_l3t_sdm_hdb__d48392e1856" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_l3t_sdm_hdb__d48412e1856" class="table" frame="border" border="1" rules="all">
                                         
                                         
                                         <thead class="thead" align="left">
                                             <tr>
-                                                <th class="entry" valign="top" width="22.22222222222222%" id="d279864e3301">Log4j Property</th>
+                                                <th class="entry" valign="top" width="22.22222222222222%" id="d279948e3301">Log4j Property</th>
 
-                                                <th class="entry" valign="top" width="77.77777777777779%" id="d279864e3304">Description</th>
+                                                <th class="entry" valign="top" width="77.77777777777779%" id="d279948e3304">Description</th>
 
                                             </tr>
 
@@ -2277,10 +2277,10 @@ Use to archive
 
                                         <tbody class="tbody">
                                             <tr>
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d279864e3301 ">On Parse Error</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d279948e3301 ">On Parse Error</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d279864e3304 ">Determines how to handle information that
-                                                  cannot be parsed:<ul class="ul" id="task_l3t_sdm_hdb__d48392e1885">
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d279948e3304 ">Determines how to handle information that
+                                                  cannot be parsed:<ul class="ul" id="task_l3t_sdm_hdb__d48412e1885">
                                                   <li class="li">Skip and Log Error - Skips reading the line
                                                   and logs a stage error.</li>
 
@@ -2299,17 +2299,17 @@ Use to archive
                                             </tr>
 
                                             <tr>
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d279864e3301 ">Use Custom Log Format</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d279948e3301 ">Use Custom Log Format</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d279864e3304 ">Allows you to define a custom log
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d279948e3304 ">Allows you to define a custom log
                                                   format.</td>
 
                                             </tr>
 
                                             <tr>
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d279864e3301 ">Custom Format</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d279948e3301 ">Custom Format</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d279864e3304 ">Use log4j variables to define a custom log
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d279948e3304 ">Use log4j variables to define a custom log
                                                   format. </td>
 
                                             </tr>
@@ -2331,14 +2331,14 @@ Use to archive
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_l3t_sdm_hdb__d48392e2055" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_l3t_sdm_hdb__d48412e2055" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d279864e3378">Protobuf Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d279948e3378">Protobuf Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d279864e3381">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d279948e3381">Description</th>
 
                                 </tr>
 
@@ -2346,10 +2346,10 @@ Use to archive
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e3378 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_l3t_sdm_hdb__d48189e1220" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d279948e3378 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_l3t_sdm_hdb__d48209e1220" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d279864e3381 ">The compression format of the files:<ul class="ul" id="task_l3t_sdm_hdb__d48189e1224">
+       <td class="entry" valign="top" width="70%" headers="d279948e3381 ">The compression format of the files:<ul class="ul" id="task_l3t_sdm_hdb__d48209e1224">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -2365,9 +2365,9 @@ Use to archive
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e3378 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d279948e3378 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d279864e3381 ">For archive and compressed archive files, file name pattern that represents the files
+       <td class="entry" valign="top" width="70%" headers="d279948e3381 ">For archive and compressed archive files, file name pattern that represents the files
         to process within the compressed directory. You can use UNIX-style wildcards, such as an
         asterisk or question mark. For example, *.json.<p class="p">Default is *, which processes all
          files.</p>
@@ -2376,9 +2376,9 @@ Use to archive
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d279864e3378 ">Protobuf Descriptor File </td>
+                                    <td class="entry" valign="top" width="30%" headers="d279948e3378 ">Protobuf Descriptor File </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e3381 ">Descriptor file (.desc) to use. The descriptor file must
+                                    <td class="entry" valign="top" width="70%" headers="d279948e3381 ">Descriptor file (.desc) to use. The descriptor file must
                                         be in the <span class="ph">Data Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>.
                                                 <p class="p"><span class="ph">For more information about environment variables, see
                               <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="Data Collector includes environment variables that define the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the SDC_ROOT_CLASSPATH environment variable to define the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</span> For information about generating the descriptor file,
@@ -2388,9 +2388,9 @@ Use to archive
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d279864e3378 ">Message Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d279948e3378 ">Message Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e3381 ">The fully-qualified name for the message type to use when
+                                    <td class="entry" valign="top" width="70%" headers="d279948e3381 ">The fully-qualified name for the message type to use when
                                         reading data.<p class="p">Use the following format:
                                                 <samp class="ph codeph">&lt;package name&gt;.&lt;message
                                             type&gt;</samp>. </p>
@@ -2400,9 +2400,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d279864e3378 ">Delimited Messages</td>
+                                    <td class="entry" valign="top" width="30%" headers="d279948e3378 ">Delimited Messages</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e3381 ">Indicates if a file might include more than one protobuf
+                                    <td class="entry" valign="top" width="70%" headers="d279948e3381 ">Indicates if a file might include more than one protobuf
                                         message.</td>
 
                                 </tr>
@@ -2419,14 +2419,14 @@ Use a message type defined in the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_l3t_sdm_hdb__d48392e2157" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_l3t_sdm_hdb__d48412e2157" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d279864e3540">SDC Record Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d279948e3540">SDC Record Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d279864e3543">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d279948e3543">Description</th>
 
                                 </tr>
 
@@ -2434,10 +2434,10 @@ Use a message type defined in the
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e3540 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_l3t_sdm_hdb__d48189e1220" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d279948e3540 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_l3t_sdm_hdb__d48209e1220" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d279864e3543 ">The compression format of the files:<ul class="ul" id="task_l3t_sdm_hdb__d48189e1224">
+       <td class="entry" valign="top" width="70%" headers="d279948e3543 ">The compression format of the files:<ul class="ul" id="task_l3t_sdm_hdb__d48209e1224">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -2453,9 +2453,9 @@ Use a message type defined in the
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e3540 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d279948e3540 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d279864e3543 ">For archive and compressed archive files, file name pattern that represents the files
+       <td class="entry" valign="top" width="70%" headers="d279948e3543 ">For archive and compressed archive files, file name pattern that represents the files
         to process within the compressed directory. You can use UNIX-style wildcards, such as an
         asterisk or question mark. For example, *.json.<p class="p">Default is *, which processes all
          files.</p>
@@ -2475,14 +2475,14 @@ Use a message type defined in the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_l3t_sdm_hdb__d48392e2307" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_l3t_sdm_hdb__d48412e2307" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d279864e3618">Text Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d279948e3618">Text Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d279864e3621">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d279948e3621">Description</th>
 
                                 </tr>
 
@@ -2490,10 +2490,10 @@ Use a message type defined in the
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e3618 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_l3t_sdm_hdb__d48189e1220" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d279948e3618 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_l3t_sdm_hdb__d48209e1220" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d279864e3621 ">The compression format of the files:<ul class="ul" id="task_l3t_sdm_hdb__d48189e1224">
+       <td class="entry" valign="top" width="70%" headers="d279948e3621 ">The compression format of the files:<ul class="ul" id="task_l3t_sdm_hdb__d48209e1224">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -2509,9 +2509,9 @@ Use a message type defined in the
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e3618 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d279948e3618 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d279864e3621 ">For archive and compressed archive files, file name pattern that represents the files
+       <td class="entry" valign="top" width="70%" headers="d279948e3621 ">For archive and compressed archive files, file name pattern that represents the files
         to process within the compressed directory. You can use UNIX-style wildcards, such as an
         asterisk or question mark. For example, *.json.<p class="p">Default is *, which processes all
          files.</p>
@@ -2519,10 +2519,10 @@ Use a message type defined in the
 
       </tr>
 
-                                <tr id="task_l3t_sdm_hdb__d48392e2339">
-                                    <td class="entry" valign="top" width="30%" headers="d279864e3618 ">Max Line Length</td>
+                                <tr id="task_l3t_sdm_hdb__d48412e2339">
+                                    <td class="entry" valign="top" width="30%" headers="d279948e3618 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e3621 ">Maximum number of characters allowed for a line. Longer
+                                    <td class="entry" valign="top" width="70%" headers="d279948e3621 ">Maximum number of characters allowed for a line. Longer
                                         lines are truncated.<p class="p">Adds a boolean field to the record to
                                             indicate if it was truncated. The field name is
                                             Truncated. </p>
@@ -2532,41 +2532,41 @@ Use a message type defined in the
 
                                 </tr>
 
-                                <tr id="task_l3t_sdm_hdb__d48392e2352">
-                                    <td class="entry" valign="top" width="30%" headers="d279864e3618 ">Use Custom Delimiter <a class="xref" href="../Data_Formats/TextCDelim.html#concept_lg2_gcg_jx">
-                                            <img class="image" id="task_l3t_sdm_hdb__d48392e2358" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                <tr id="task_l3t_sdm_hdb__d48412e2352">
+                                    <td class="entry" valign="top" width="30%" headers="d279948e3618 ">Use Custom Delimiter <a class="xref" href="../Data_Formats/TextCDelim.html#concept_lg2_gcg_jx">
+                                            <img class="image" id="task_l3t_sdm_hdb__d48412e2358" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e3621 ">Uses custom delimiters to define records instead of line
+                                    <td class="entry" valign="top" width="70%" headers="d279948e3621 ">Uses custom delimiters to define records instead of line
                                         breaks. </td>
 
                                 </tr>
 
-                                <tr id="task_l3t_sdm_hdb__d48392e2364">
-                                    <td class="entry" valign="top" width="30%" headers="d279864e3618 ">Custom Delimiter</td>
+                                <tr id="task_l3t_sdm_hdb__d48412e2364">
+                                    <td class="entry" valign="top" width="30%" headers="d279948e3618 ">Custom Delimiter</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e3621 ">One or more characters to use to define records. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d279948e3621 ">One or more characters to use to define records. </td>
 
                                 </tr>
 
-                                <tr id="task_l3t_sdm_hdb__d48392e2374">
-                                    <td class="entry" valign="top" width="30%" headers="d279864e3618 ">Include Custom Delimiter</td>
+                                <tr id="task_l3t_sdm_hdb__d48412e2374">
+                                    <td class="entry" valign="top" width="30%" headers="d279948e3618 ">Include Custom Delimiter</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e3621 ">Includes delimiter characters in the record.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d279948e3621 ">Includes delimiter characters in the record.</td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e3618 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d279948e3618 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d279864e3621 ">Character encoding of the files to be processed.</td>
+       <td class="entry" valign="top" width="70%" headers="d279948e3621 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e3618 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_l3t_sdm_hdb__d48189e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d279948e3618 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_l3t_sdm_hdb__d48209e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d279864e3621 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d279948e3621 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
@@ -2583,14 +2583,14 @@ Use a message type defined in the
                     following property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_l3t_sdm_hdb__d48392e2420" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_l3t_sdm_hdb__d48412e2420" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d279864e3775">Whole File Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d279948e3775">Whole File Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d279864e3778">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d279948e3778">Description</th>
 
                                 </tr>
 
@@ -2598,17 +2598,17 @@ Use a message type defined in the
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d279864e3775 ">Buffer Size (bytes)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d279948e3775 ">Buffer Size (bytes)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e3778 ">Size of the buffer to use to transfer data.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d279948e3778 ">Size of the buffer to use to transfer data.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d279864e3775 ">Rate per Second <a class="xref" href="../Data_Formats/WholeFile.html#concept_prp_jzd_py">
+                                    <td class="entry" valign="top" width="30%" headers="d279948e3775 ">Rate per Second <a class="xref" href="../Data_Formats/WholeFile.html#concept_prp_jzd_py">
                                             <img class="image" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e3778 ">Transfer rate to use. <p class="p">Enter a number to specify a rate
+                                    <td class="entry" valign="top" width="70%" headers="d279948e3778 ">Transfer rate to use. <p class="p">Enter a number to specify a rate
                                             in bytes per second. Use an expression to specify a rate
                                             that uses a different unit of measure per second, e.g.
                                             ${5 * MB}. Use -1 to opt out of this property. </p>
@@ -2631,14 +2631,14 @@ Use a message type defined in the
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_l3t_sdm_hdb__d48392e2575" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_l3t_sdm_hdb__d48412e2575" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d279864e3838">XML Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d279948e3838">XML Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d279864e3841">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d279948e3841">Description</th>
 
                                 </tr>
 
@@ -2646,10 +2646,10 @@ Use a message type defined in the
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e3838 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_l3t_sdm_hdb__d48189e1220" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d279948e3838 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_l3t_sdm_hdb__d48209e1220" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d279864e3841 ">The compression format of the files:<ul class="ul" id="task_l3t_sdm_hdb__d48189e1224">
+       <td class="entry" valign="top" width="70%" headers="d279948e3841 ">The compression format of the files:<ul class="ul" id="task_l3t_sdm_hdb__d48209e1224">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -2664,14 +2664,14 @@ Use a message type defined in the
 
       </tr>
 
-                                <tr id="task_l3t_sdm_hdb__d48392e2602">
-                                    <td class="entry" valign="top" width="30%" headers="d279864e3838 ">Delimiter Element <a class="xref" href="../Data_Formats/XMLDFormat.html#concept_tmc_4bc_dy">
-                                            <img class="image" id="task_l3t_sdm_hdb__d48392e2608" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                <tr id="task_l3t_sdm_hdb__d48412e2602">
+                                    <td class="entry" valign="top" width="30%" headers="d279948e3838 ">Delimiter Element <a class="xref" href="../Data_Formats/XMLDFormat.html#concept_tmc_4bc_dy">
+                                            <img class="image" id="task_l3t_sdm_hdb__d48412e2608" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e3841 ">
+                                    <td class="entry" valign="top" width="70%" headers="d279948e3841 ">
                                         <div class="p">Delimiter to use to generate records. Omit a delimiter to
                                             treat the entire XML document as one record. Use one of
-                                            the following:<ul class="ul" id="task_l3t_sdm_hdb__d48392e2614">
+                                            the following:<ul class="ul" id="task_l3t_sdm_hdb__d48412e2614">
                                                 <li class="li">An XML element directly under the root element.
                                                   <p class="p">Use the XML element name without surrounding
                                                   angle brackets ( &lt; &gt; ) . For example, msg
@@ -2694,11 +2694,11 @@ Use a message type defined in the
 
                                 </tr>
 
-                                <tr id="task_l3t_sdm_hdb__d48392e2633">
-                                    <td class="entry" valign="top" width="30%" headers="d279864e3838 ">Include Field XPaths <a class="xref" href="../Data_Formats/XMLDFormat.html#concept_w3k_1ch_qz">
+                                <tr id="task_l3t_sdm_hdb__d48412e2633">
+                                    <td class="entry" valign="top" width="30%" headers="d279948e3838 ">Include Field XPaths <a class="xref" href="../Data_Formats/XMLDFormat.html#concept_w3k_1ch_qz">
                                             <img class="image" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e3841 ">Includes the XPath to each parsed XML element and XML
+                                    <td class="entry" valign="top" width="70%" headers="d279948e3841 ">Includes the XPath to each parsed XML element and XML
                                         attribute in field attributes. Also includes each namespace
                                         in an xmlns record header attribute. <p class="p">When not selected,
                                             this information is not included in the record. By
@@ -2715,10 +2715,10 @@ Use a message type defined in the
 
                                 </tr>
 
-                                <tr id="task_l3t_sdm_hdb__d48392e2652">
-                                    <td class="entry" valign="top" width="30%" headers="d279864e3838 ">Namespaces </td>
+                                <tr id="task_l3t_sdm_hdb__d48412e2652">
+                                    <td class="entry" valign="top" width="30%" headers="d279948e3838 ">Namespaces </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e3841 ">Namespace prefix and URI to use when parsing the XML
+                                    <td class="entry" valign="top" width="70%" headers="d279948e3841 ">Namespace prefix and URI to use when parsing the XML
                                         document. Define namespaces when the XML element being used
                                         includes a namespace prefix or when the XPath expression
                                         includes namespaces.<p class="p">For information about using
@@ -2732,10 +2732,10 @@ Use a message type defined in the
 
                                 </tr>
 
-                                <tr id="task_l3t_sdm_hdb__d48392e2677">
-                                    <td class="entry" valign="top" width="30%" headers="d279864e3838 ">Output Field Attributes</td>
+                                <tr id="task_l3t_sdm_hdb__d48412e2677">
+                                    <td class="entry" valign="top" width="30%" headers="d279948e3838 ">Output Field Attributes</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e3841 ">Includes XML attributes and namespace declarations in the
+                                    <td class="entry" valign="top" width="70%" headers="d279948e3841 ">Includes XML attributes and namespace declarations in the
                                         record as field attributes. When not selected, XML
                                         attributes and namespace declarations are included in the
                                         record as fields.<div class="note note"><span class="notetitle">Note:</span> <span class="ph">Field attributes are automatically included in
@@ -2748,10 +2748,10 @@ Use a message type defined in the
 
                                 </tr>
 
-                                <tr id="task_l3t_sdm_hdb__d48392e2694">
-                                    <td class="entry" valign="top" width="30%" headers="d279864e3838 ">Max Record Length (chars) </td>
+                                <tr id="task_l3t_sdm_hdb__d48412e2694">
+                                    <td class="entry" valign="top" width="30%" headers="d279948e3838 ">Max Record Length (chars) </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d279864e3841 ">
+                                    <td class="entry" valign="top" width="70%" headers="d279948e3841 ">
                                         <p class="p">The maximum number of characters in a record. Longer
                                             records are diverted to the pipeline for error handling. </p>
 
@@ -2763,17 +2763,17 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e3838 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d279948e3838 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d279864e3841 ">Character encoding of the files to be processed.</td>
+       <td class="entry" valign="top" width="70%" headers="d279948e3841 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d279864e3838 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_l3t_sdm_hdb__d48189e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d279948e3838 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_l3t_sdm_hdb__d48209e731" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d279864e3841 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d279948e3841 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>

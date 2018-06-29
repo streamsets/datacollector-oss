@@ -144,7 +144,7 @@
 </div>
 
         <div class="p">
-            <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph"><span class="ph" id="concept_mtm_dqx_m1b__d37823e4289">Stage-generated event records
+            <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph"><span class="ph" id="concept_mtm_dqx_m1b__d37843e4289">Stage-generated event records
                               differ from stage to stage.</span> For a description of stage events,
                         see "Event Record" in the documentation for the event-generating stage. For
                         a description of pipeline events, see <a class="xref" href="../Pipeline_Configuration/EventGeneration.html#concept_cv3_nqt_51b">Pipeline Event Records</a>.</span></div>
@@ -193,14 +193,14 @@ value: ${record:value('/recordCount')}</pre>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_nky_cnm_f1b__d37885e5695" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_nky_cnm_f1b__d37905e5695" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d193072e272">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d193156e272">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d193072e275">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d193156e275">Description</th>
 
                                 </tr>
 
@@ -208,24 +208,24 @@ value: ${record:value('/recordCount')}</pre>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d193072e272 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d193156e272 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d193072e275 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d193072e272 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d193072e275 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d193156e275 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d193072e272 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_nky_cnm_f1b__d37885e5741" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d193156e272 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d193072e275 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d193156e275 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d193156e272 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_nky_cnm_f1b__d37905e5741" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d193156e275 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -237,10 +237,10 @@ value: ${record:value('/recordCount')}</pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d193072e272 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_nky_cnm_f1b__d37885e5757" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d193156e272 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_nky_cnm_f1b__d37905e5757" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d193072e275 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d193156e275 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -251,10 +251,10 @@ value: ${record:value('/recordCount')}</pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d193072e272 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_nky_cnm_f1b__d37885e5774" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d193156e272 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_nky_cnm_f1b__d37905e5774" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d193072e275 ">Error record handling for the stage: <ul class="ul" id="task_nky_cnm_f1b__d37885e5778">
+                                    <td class="entry" valign="top" width="70%" headers="d193156e275 ">Error record handling for the stage: <ul class="ul" id="task_nky_cnm_f1b__d37905e5778">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -284,9 +284,9 @@ value: ${record:value('/recordCount')}</pre>
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d193072e386">Amazon S3 Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d193156e386">Amazon S3 Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d193072e389">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d193156e389">Description</th>
 
                                 </tr>
 
@@ -294,11 +294,11 @@ value: ${record:value('/recordCount')}</pre>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d193072e386 ">Access Key ID <a class="xref" href="AmazonS3.html#concept_bmp_zlg_vw" title="When Data Collector uses the Amazon S3 executor, it must pass credentials to Amazon Web Services.">
+                                    <td class="entry" valign="top" width="30%" headers="d193156e386 ">Access Key ID <a class="xref" href="AmazonS3.html#concept_bmp_zlg_vw" title="When Data Collector uses the Amazon S3 executor, it must pass credentials to Amazon Web Services.">
                                             <img class="image" id="task_nky_cnm_f1b__image_v94_wcr_yv" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d193072e389 ">
+                                    <td class="entry" valign="top" width="70%" headers="d193156e389 ">
         <p class="p">AWS access key ID.</p>
 
         <p class="p">Required when not using IAM roles with IAM instance profile credentials.</p>
@@ -308,11 +308,11 @@ value: ${record:value('/recordCount')}</pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d193072e386 ">Secret Access Key <a class="xref" href="AmazonS3.html#concept_bmp_zlg_vw" title="When Data Collector uses the Amazon S3 executor, it must pass credentials to Amazon Web Services.">
+                                    <td class="entry" valign="top" width="30%" headers="d193156e386 ">Secret Access Key <a class="xref" href="AmazonS3.html#concept_bmp_zlg_vw" title="When Data Collector uses the Amazon S3 executor, it must pass credentials to Amazon Web Services.">
                                             <img class="image" id="task_nky_cnm_f1b__image_v64_wcr_yv" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d193072e389 ">
+                                    <td class="entry" valign="top" width="70%" headers="d193156e389 ">
         <p class="p">AWS secret access key. </p>
 
         <p class="p">Required when not using IAM roles with IAM instance profile credentials. </p>
@@ -322,24 +322,24 @@ value: ${record:value('/recordCount')}</pre>
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d193072e386 ">Region</td>
+       <td class="entry" valign="top" width="30%" headers="d193156e386 ">Region</td>
 
-       <td class="entry" valign="top" width="70%" headers="d193072e389 ">Amazon S3 region. </td>
+       <td class="entry" valign="top" width="70%" headers="d193156e389 ">Amazon S3 region. </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d193072e386 ">Endpoint</td>
+       <td class="entry" valign="top" width="30%" headers="d193156e386 ">Endpoint</td>
 
-       <td class="entry" valign="top" width="70%" headers="d193072e389 ">Endpoint to connect to when you select Other for the region. Enter the endpoint
+       <td class="entry" valign="top" width="70%" headers="d193156e389 ">Endpoint to connect to when you select Other for the region. Enter the endpoint
         name.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d193072e386 ">Bucket</td>
+                                    <td class="entry" valign="top" width="30%" headers="d193156e386 ">Bucket</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d193072e389 ">Bucket that contains the objects to be created or
+                                    <td class="entry" valign="top" width="70%" headers="d193156e389 ">Bucket that contains the objects to be created or
                                             updated.<div class="note note"><span class="notetitle">Note:</span> The bucket name must be DNS compliant. For more
                   information about bucket naming conventions, see the <a class="xref" href="https://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html" target="_blank">Amazon S3 documentation</a>.</div>
 </td>
@@ -363,9 +363,9 @@ value: ${record:value('/recordCount')}</pre>
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d193072e508">Task Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d193156e508">Task Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d193072e511">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d193156e511">Description</th>
 
                                 </tr>
 
@@ -373,9 +373,9 @@ value: ${record:value('/recordCount')}</pre>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d193072e508 ">Task</td>
+                                    <td class="entry" valign="top" width="30%" headers="d193156e508 ">Task</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d193072e511 ">Task to perform upon receiving an event record. Select
+                                    <td class="entry" valign="top" width="70%" headers="d193156e511 ">Task to perform upon receiving an event record. Select
                                         one of the following options:<ul class="ul" id="task_nky_cnm_f1b__ul_m5s_xkx_m1b">
                                             <li class="li">Create New Object</li>
 
@@ -387,9 +387,9 @@ value: ${record:value('/recordCount')}</pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d193072e508 ">Object</td>
+                                    <td class="entry" valign="top" width="30%" headers="d193156e508 ">Object</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d193072e511 ">Path to the object to create or update. To create or
+                                    <td class="entry" valign="top" width="70%" headers="d193156e511 ">Path to the object to create or update. To create or
                                         update the object whose closure generated the event record,
                                         use the following expression:
                                             <pre class="pre codeblock">${record:value('/bucket')}/${record:value('/objectKey)}</pre>
@@ -403,20 +403,20 @@ value: ${record:value('/recordCount')}</pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d193072e508 ">Content</td>
+                                    <td class="entry" valign="top" width="30%" headers="d193156e508 ">Content</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d193072e511 ">The content to write to new objects. You can use
+                                    <td class="entry" valign="top" width="70%" headers="d193156e511 ">The content to write to new objects. You can use
                                         expressions to represent the content to use. For more
                                         information, see <a class="xref" href="AmazonS3.html#concept_mtm_dqx_m1b">Create New Objects</a>.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d193072e508 ">Tags <a class="xref" href="AmazonS3.html#concept_gjz_m42_31b">
+                                    <td class="entry" valign="top" width="30%" headers="d193156e508 ">Tags <a class="xref" href="AmazonS3.html#concept_gjz_m42_31b">
                                             <img class="image" id="task_nky_cnm_f1b__image_npg_nc1_j1b" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d193072e511 ">The tags to add to an existing object. Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
+                                    <td class="entry" valign="top" width="70%" headers="d193156e511 ">The tags to add to an existing object. Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                             <span class="ph uicontrol">Add</span> icon to configure a tag.
                                                 <p class="p"><span class="ph">You can configure multiple tags. When you configure a tag,
                         you can define a tag with just the key or specify a key and value. You can
@@ -442,9 +442,9 @@ value: ${record:value('/recordCount')}</pre>
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d193072e614">Advanced Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d193156e614">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d193072e617">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d193156e617">Description</th>
 
                                 </tr>
 
@@ -452,37 +452,37 @@ value: ${record:value('/recordCount')}</pre>
 
                             <tbody class="tbody">
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d193072e614 ">Use Proxy</td>
+      <td class="entry" valign="top" width="30%" headers="d193156e614 ">Use Proxy</td>
 
-      <td class="entry" valign="top" width="70%" headers="d193072e617 ">Specifies whether to use a proxy to connect.</td>
-
-     </tr>
-
-                                <tr>
-      <td class="entry" valign="top" width="30%" headers="d193072e614 ">Proxy Host</td>
-
-      <td class="entry" valign="top" width="70%" headers="d193072e617 ">Proxy host.</td>
+      <td class="entry" valign="top" width="70%" headers="d193156e617 ">Specifies whether to use a proxy to connect.</td>
 
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d193072e614 ">Proxy Port</td>
+      <td class="entry" valign="top" width="30%" headers="d193156e614 ">Proxy Host</td>
 
-      <td class="entry" valign="top" width="70%" headers="d193072e617 ">Proxy port.</td>
-
-     </tr>
-
-                                <tr>
-      <td class="entry" valign="top" width="30%" headers="d193072e614 ">Proxy User</td>
-
-      <td class="entry" valign="top" width="70%" headers="d193072e617 ">User name for proxy credentials.</td>
+      <td class="entry" valign="top" width="70%" headers="d193156e617 ">Proxy host.</td>
 
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d193072e614 ">Proxy Password</td>
+      <td class="entry" valign="top" width="30%" headers="d193156e614 ">Proxy Port</td>
 
-      <td class="entry" valign="top" width="70%" headers="d193072e617 ">Password for proxy credentials.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_nky_cnm_f1b__d37823e4741">To
+      <td class="entry" valign="top" width="70%" headers="d193156e617 ">Proxy port.</td>
+
+     </tr>
+
+                                <tr>
+      <td class="entry" valign="top" width="30%" headers="d193156e614 ">Proxy User</td>
+
+      <td class="entry" valign="top" width="70%" headers="d193156e617 ">User name for proxy credentials.</td>
+
+     </tr>
+
+                                <tr>
+      <td class="entry" valign="top" width="30%" headers="d193156e614 ">Proxy Password</td>
+
+      <td class="entry" valign="top" width="70%" headers="d193156e617 ">Password for proxy credentials.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_nky_cnm_f1b__d37843e4741">To
                         secure sensitive information such as usernames and passwords, you can use
                               <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
 </td>

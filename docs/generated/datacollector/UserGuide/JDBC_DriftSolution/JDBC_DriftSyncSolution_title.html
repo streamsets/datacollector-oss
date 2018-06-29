@@ -265,7 +265,7 @@
                               <a class="xref" href="../Configuration/ExternalLibs.html#concept_pdv_qlw_ft" title="After you've set up the external directory, use the Package Manager within Data Collector to install external libraries.To manually install external libraries, use the required procedure for your installation type.">Install External Libraries</a>.</span></li>
 
                         <li class="li">Configure the connection information.<p class="p"><span class="ph">The user account used for the connection
-                        credentials <span class="ph" id="concept_s2c_qht_pcb__d46986e5660">must have both the Create Table and
+                        credentials <span class="ph" id="concept_s2c_qht_pcb__d47006e5660">must have both the Create Table and
                               Alter Table permissions on the database.</span></span>
                             </p>
 <div class="p">
@@ -303,14 +303,14 @@
 </li>
 
                         <li class="li">Configure the decimal field precision
-                              and scale attribute names.<p class="p" id="concept_s2c_qht_pcb__d46986e5725">When
+                              and scale attribute names.<p class="p" id="concept_s2c_qht_pcb__d47006e5725">When
                                     processing data from the JDBC Query Consumer or JDBC Multitable
                                     Consumer origins, use the default attribute names, "precision"
-                                    and "scale". Both <span class="ph" id="concept_s2c_qht_pcb__d46986e5727">origins
+                                    and "scale". Both <span class="ph" id="concept_s2c_qht_pcb__d47006e5727">origins
                                           store the precision and scale of Decimal columns in
                                           "precision" and "scale" field attributes for each Decimal
                                           field.</span></p>
-<p class="p"><span class="ph" id="concept_s2c_qht_pcb__d46986e5730">When processing data from other origins, you can use the
+<p class="p"><span class="ph" id="concept_s2c_qht_pcb__d47006e5730">When processing data from other origins, you can use the
                                           Expression Evaluator processor earlier in the pipeline to
                                           create precision and scale field attributes for Decimal
                                           fields. </span></p>
@@ -368,7 +368,7 @@
     <h3 class="title topictitle3">The JDBC Multitable Consumer Origin</h3>
 
     <div class="body conbody">
-        <p class="p">The <a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="You define the group of tables that the JDBC Multitable Consumer origin reads by defining a table name pattern for the table configuration. The origin reads all tables whose names match the pattern. The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.The JDBC Multitable Consumer origin can read from views in addition to tables. You can define the initial order that the origin uses to read the tables.">JDBC
+        <p class="p">The <a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="You define the group of tables that the JDBC Multitable Consumer origin reads by defining schema and table name patterns for the table configuration. The origin reads all tables whose names match the table pattern in the schemas whose names match the schema pattern. The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.The JDBC Multitable Consumer origin can read from views in addition to tables. You can define the initial order that the origin uses to read the tables.">JDBC
                 Multitable Consumer origin</a> can use multiple threads to process data from
             database tables, up to one thread per table, so it is an ideal origin to process data
             from a large set of database tables.</p>
@@ -409,7 +409,7 @@
 
         <p class="p">When you configure the <span class="ph">Postgres Metadata processor</span>, you configure the connection information for the PostgreSQL database and other
             standard properties. <span class="ph">The user account used for the connection
-                        credentials <span class="ph" id="concept_vdv_j4p_qcb__d46986e5660">must have both the Create Table and
+                        credentials <span class="ph" id="concept_vdv_j4p_qcb__d47006e5660">must have both the Create Table and
                               Alter Table permissions on the database.</span></span></p>
 
         <p class="p">Then, since the JDBC Multitable Consumer writes the table name to the jdbc.tables record

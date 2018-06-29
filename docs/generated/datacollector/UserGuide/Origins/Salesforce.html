@@ -197,11 +197,11 @@
                     </dd>
 
                     <dd class="dd">
-                        <p class="p"><span class="ph" id="concept_vdt_dxc_tx__d48099e1843">When necessary, you can
+                        <p class="p"><span class="ph" id="concept_vdt_dxc_tx__d48119e1843">When necessary, you can
                         configure the origin to skip validating the query. Skip query validation
                         when you know that the query is valid but it does not match validation
                         requirements.</span> For example, you might disable query validation to
-                  improve performance on a large query by omitting the ORDER BY clause. <span class="ph" id="concept_vdt_dxc_tx__d48099e1846">To disable query validation, use the Disable
+                  improve performance on a large query by omitting the ORDER BY clause. <span class="ph" id="concept_vdt_dxc_tx__d48119e1846">To disable query validation, use the Disable
                         Query Validation property on the Advanced tab.</span></p>
 
                     </dd>
@@ -623,9 +623,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d411111e823">Salesforce Header Attribute</th>
+                            <th class="entry" valign="top" width="30%" id="d411330e823">Salesforce Header Attribute</th>
 
-                            <th class="entry" valign="top" width="70%" id="d411111e826">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d411330e826">Description</th>
 
                         </tr>
 
@@ -633,9 +633,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d411111e823 ">&lt;Salesforce prefix&gt;.sobjectType</td>
+                            <td class="entry" valign="top" width="30%" headers="d411330e823 ">&lt;Salesforce prefix&gt;.sobjectType</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d411111e826 ">Provides the Salesforce source object for the record.
+                            <td class="entry" valign="top" width="70%" headers="d411330e826 ">Provides the Salesforce source object for the record.
                                     <p class="p">Generated when the origin executes a query or subscribes to
                                     notifications.</p>
 </td>
@@ -643,9 +643,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d411111e823 ">&lt;Salesforce prefix&gt;.cdc.createdDate</td>
+                            <td class="entry" valign="top" width="30%" headers="d411330e823 ">&lt;Salesforce prefix&gt;.cdc.createdDate</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d411111e826 ">Provides the date that the Salesforce PushTopic encountered the
+                            <td class="entry" valign="top" width="70%" headers="d411330e826 ">Provides the date that the Salesforce PushTopic encountered the
                                 change event.<p class="p">Generated when the origin subscribes to
                                     notifications.</p>
 </td>
@@ -653,9 +653,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d411111e823 ">&lt;Salesforce prefix&gt;.cdc.type</td>
+                            <td class="entry" valign="top" width="30%" headers="d411330e823 ">&lt;Salesforce prefix&gt;.cdc.type</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d411111e826 ">Provides the type of change that the Salesforce PushTopic
+                            <td class="entry" valign="top" width="70%" headers="d411330e826 ">Provides the type of change that the Salesforce PushTopic
                                 encountered - created, updated, deleted, or undeleted.<p class="p">Generated
                                     when the origin subscribes to notifications.</p>
 </td>
@@ -730,9 +730,9 @@
     
     <thead class="thead" align="left">
      <tr>
-      <th class="entry" valign="top" width="30%" id="d411111e974">Salesforce Field Attribute</th>
+      <th class="entry" valign="top" width="30%" id="d411330e974">Salesforce Field Attribute</th>
 
-      <th class="entry" valign="top" width="70%" id="d411111e977">Description</th>
+      <th class="entry" valign="top" width="70%" id="d411330e977">Description</th>
 
      </tr>
 
@@ -740,38 +740,38 @@
 
     <tbody class="tbody">
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d411111e974 ">&lt;Salesforce prefix&gt;salesforceType</td>
+      <td class="entry" valign="top" width="30%" headers="d411330e974 ">&lt;Salesforce prefix&gt;salesforceType</td>
 
-      <td class="entry" id="concept_ysd_532_kz__d48189e4149" valign="top" width="70%" headers="d411111e977 ">Provides the original Salesforce data type for the field.</td>
+      <td class="entry" id="concept_ysd_532_kz__d48209e4149" valign="top" width="70%" headers="d411330e977 ">Provides the original Salesforce data type for the field.</td>
 
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d411111e974 ">&lt;Salesforce prefix&gt;length</td>
+      <td class="entry" valign="top" width="30%" headers="d411330e974 ">&lt;Salesforce prefix&gt;length</td>
 
-      <td class="entry" id="concept_ysd_532_kz__d48189e4158" valign="top" width="70%" headers="d411111e977 ">Provides the original length for all string and textarea
+      <td class="entry" id="concept_ysd_532_kz__d48209e4158" valign="top" width="70%" headers="d411330e977 ">Provides the original length for all string and textarea
        fields. </td>
 
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d411111e974 ">&lt;Salesforce prefix&gt;precision</td>
+      <td class="entry" valign="top" width="30%" headers="d411330e974 ">&lt;Salesforce prefix&gt;precision</td>
 
-      <td class="entry" valign="top" width="70%" headers="d411111e977 ">Provides the original precision for all double fields. </td>
-
-     </tr>
-
-     <tr>
-      <td class="entry" valign="top" width="30%" headers="d411111e974 ">&lt;Salesforce prefix&gt;scale</td>
-
-      <td class="entry" id="concept_ysd_532_kz__d48189e4176" valign="top" width="70%" headers="d411111e977 ">Provides the original scale for all double fields. </td>
+      <td class="entry" valign="top" width="70%" headers="d411330e977 ">Provides the original precision for all double fields. </td>
 
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d411111e974 ">&lt;Salesforce prefix&gt;digits</td>
+      <td class="entry" valign="top" width="30%" headers="d411330e974 ">&lt;Salesforce prefix&gt;scale</td>
 
-      <td class="entry" valign="top" width="70%" headers="d411111e977 ">Provides the maximum number of digits for all integer fields.</td>
+      <td class="entry" id="concept_ysd_532_kz__d48209e4176" valign="top" width="70%" headers="d411330e977 ">Provides the original scale for all double fields. </td>
+
+     </tr>
+
+     <tr>
+      <td class="entry" valign="top" width="30%" headers="d411330e974 ">&lt;Salesforce prefix&gt;digits</td>
+
+      <td class="entry" valign="top" width="70%" headers="d411330e977 ">Provides the maximum number of digits for all integer fields.</td>
 
      </tr>
 
@@ -790,7 +790,7 @@
  <h2 class="title topictitle2">Event Generation</h2>
 
     <div class="body conbody">
-        <p class="p">The Salesforce origin <span class="ph"><span class="ph" id="concept_cvb_bvr_kz__d48099e2110">can generate events that you can use in an event stream. When you
+        <p class="p">The Salesforce origin <span class="ph"><span class="ph" id="concept_cvb_bvr_kz__d48119e2110">can generate events that you can use in an event stream. When you
                               enable event generation, the origin generates an event when it
                               completes processing the data returned by the specified</span> query.
                   </span></p>
@@ -841,9 +841,9 @@
      
      <thead class="thead" align="left">
       <tr>
-       <th class="entry" valign="top" width="30%" id="d411111e1150">Record Header Attribute</th>
+       <th class="entry" valign="top" width="30%" id="d411330e1150">Record Header Attribute</th>
 
-       <th class="entry" valign="top" width="70%" id="d411111e1153">Description</th>
+       <th class="entry" valign="top" width="70%" id="d411330e1153">Description</th>
 
       </tr>
 
@@ -851,10 +851,10 @@
 
      <tbody class="tbody">
       <tr>
-       <td class="entry" valign="top" width="30%" headers="d411111e1150 ">sdc.event.type</td>
+       <td class="entry" valign="top" width="30%" headers="d411330e1150 ">sdc.event.type</td>
 
-       <td class="entry" valign="top" width="70%" headers="d411111e1153 ">Event type. Uses the following type:<ul class="ul" id="concept_gym_czr_kz__d48189e2163">
-         <li class="li" id="concept_gym_czr_kz__d48189e2165">no-more-data - Generated when the origin completes processing
+       <td class="entry" valign="top" width="70%" headers="d411330e1153 ">Event type. Uses the following type:<ul class="ul" id="concept_gym_czr_kz__d48209e2163">
+         <li class="li" id="concept_gym_czr_kz__d48209e2165">no-more-data - Generated when the origin completes processing
           all data returned by a query.</li>
 
         </ul>
@@ -863,16 +863,16 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="30%" headers="d411111e1150 ">sdc.event.version</td>
+       <td class="entry" valign="top" width="30%" headers="d411330e1150 ">sdc.event.version</td>
 
-       <td class="entry" valign="top" width="70%" headers="d411111e1153 ">An integer that indicates the version of the event record type.</td>
+       <td class="entry" valign="top" width="70%" headers="d411330e1153 ">An integer that indicates the version of the event record type.</td>
 
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="30%" headers="d411111e1150 ">sdc.event.creation_timestamp</td>
+       <td class="entry" valign="top" width="30%" headers="d411330e1150 ">sdc.event.creation_timestamp</td>
 
-       <td class="entry" id="concept_gym_czr_kz__d48189e2118" valign="top" width="70%" headers="d411111e1153 ">Epoch timestamp when the stage created the event.
+       <td class="entry" id="concept_gym_czr_kz__d48209e2118" valign="top" width="70%" headers="d411330e1153 ">Epoch timestamp when the stage created the event.
        </td>
 
       </tr>
@@ -908,7 +908,7 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">Download the relevant version of the following JAR files from Salesforce Web
                     Services Connector (WSC):</span>
-                <ul class="ul choices" id="task_ssp_krd_dy__d81952e48">
+                <ul class="ul choices" id="task_ssp_krd_dy__d81976e48">
                     <li class="li choice">
                         <p class="p">WSC JAR file - force-wsc-&lt;version&gt;.0.0.jar </p>
 
@@ -966,9 +966,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d411111e1345">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d411330e1345">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d411111e1348">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d411330e1348">Description</th>
 
                                 </tr>
 
@@ -976,34 +976,34 @@
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d411111e1345 ">Name</td>
+       <td class="entry" valign="top" width="30%" headers="d411330e1345 ">Name</td>
 
-       <td class="entry" valign="top" width="70%" headers="d411111e1348 ">Stage name.</td>
-
-      </tr>
-
-                                <tr>
-       <td class="entry" valign="top" width="30%" headers="d411111e1345 ">Description</td>
-
-       <td class="entry" valign="top" width="70%" headers="d411111e1348 ">Optional description.</td>
+       <td class="entry" valign="top" width="70%" headers="d411330e1348 ">Stage name.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d411111e1345 ">Produce Events <a class="xref" href="Salesforce.html#concept_cvb_bvr_kz">
+       <td class="entry" valign="top" width="30%" headers="d411330e1345 ">Description</td>
+
+       <td class="entry" valign="top" width="70%" headers="d411330e1348 ">Optional description.</td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d411330e1345 ">Produce Events <a class="xref" href="Salesforce.html#concept_cvb_bvr_kz">
                                             <img class="image" id="task_h1n_bs3_rx__image_plp_tp2_px" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d411111e1348 ">Generates event records when events occur. Use for event
+                                    <td class="entry" valign="top" width="70%" headers="d411330e1348 ">Generates event records when events occur. Use for event
         handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
-         <img class="image" id="task_h1n_bs3_rx__d48189e798" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+         <img class="image" id="task_h1n_bs3_rx__d48209e798" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d411111e1345 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-         <img class="image" id="task_h1n_bs3_rx__d48189e807" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d411330e1345 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+         <img class="image" id="task_h1n_bs3_rx__d48209e807" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d411111e1348 ">Error record handling for the stage: <ul class="ul" id="task_h1n_bs3_rx__d48189e811">
+       <td class="entry" valign="top" width="70%" headers="d411330e1348 ">Error record handling for the stage: <ul class="ul" id="task_h1n_bs3_rx__d48209e811">
          <li class="li">Discard - Discards the record.</li>
 
          <li class="li">Send to Error - Sends the record to the pipeline for error handling.</li>
@@ -1032,9 +1032,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d411111e1441">Salesforce Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d411330e1441">Salesforce Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d411111e1444">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d411330e1444">Description</th>
 
                                 </tr>
 
@@ -1042,24 +1042,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1441 ">Username</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1441 ">Username</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1444 ">Salesforce username in the following email format:
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1444 ">Salesforce username in the following email format:
         <samp class="ph codeph">&lt;text&gt;@&lt;text&gt;.com</samp>. </td>
 
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1441 ">Password</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1441 ">Password</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1444 ">Salesforce password.<p class="p">If the machine running <span class="ph">Data Collector</span> is outside the trusted IP range
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1444 ">Salesforce password.<p class="p">If the machine running <span class="ph">Data Collector</span> is outside the trusted IP range
         configured in your Salesforce environment, you must generate a security token and then set
         this property to the password followed by the security token. </p>
 <p class="p">For example, if the
         password is abcd and the security token is 1234, then set this property to abcd1234. For
         more information on generating a security token, see <a class="xref" href="https://help.salesforce.com/articleView?id=user_security_token.htm&amp;type=0" target="_blank">Reset Your Security Token</a>.</p>
 
-       <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_h1n_bs3_rx__d48099e4741">To
+       <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_h1n_bs3_rx__d48119e4741">To
                         secure sensitive information such as usernames and passwords, you can use
                               <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
 </td>
@@ -1067,9 +1067,9 @@
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1441 ">Auth Endpoint</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1441 ">Auth Endpoint</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1444 ">Salesforce SOAP API authentication endpoint. Enter one of the following values:<ul class="ul" id="task_h1n_bs3_rx__d48189e3602">
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1444 ">Salesforce SOAP API authentication endpoint. Enter one of the following values:<ul class="ul" id="task_h1n_bs3_rx__d48209e3602">
         <li class="li">login.salesforce.com - Use to connect to a Production or Developer Edition
          organization.</li>
 
@@ -1082,10 +1082,10 @@
      </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1441 ">API Version <a class="xref" href="Salesforce.html#task_ssp_krd_dy">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1441 ">API Version <a class="xref" href="Salesforce.html#task_ssp_krd_dy">
                                             <img class="image" id="task_h1n_bs3_rx__image_wgh_xch_er" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1444 ">Salesforce API version to use to connect to Salesforce.
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1444 ">Salesforce API version to use to connect to Salesforce.
         <p class="p">Default is <span class="ph">39.0</span>. If you change the version, you also must download the relevant JAR files from Salesforce
         Web Services Connector (WSC).</p>
 </td>
@@ -1093,25 +1093,25 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1441 ">Query Existing Data</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1441 ">Query Existing Data</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1444 ">Determines whether to execute a query to read existing
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1444 ">Determines whether to execute a query to read existing
                                         data from Salesforce.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1441 ">Subscribe to Notifications</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1441 ">Subscribe to Notifications</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1444 ">Determines whether to subscribe to notifications to
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1444 ">Determines whether to subscribe to notifications to
                                         process event messages.</td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1441 ">Max Batch Size (records)</td>
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1441 ">Max Batch Size (records)</td>
 
-       <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1444 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data Collector</span> maximum batch size. <p class="p">Default is
+       <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1444 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data Collector</span> maximum batch size. <p class="p">Default is
          1000. The <span class="ph">Data Collector</span> default is
          1000.</p>
 </td>
@@ -1119,10 +1119,10 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1441 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q">
-         <img class="image" id="task_h1n_bs3_rx__d48189e895" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1441 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q">
+         <img class="image" id="task_h1n_bs3_rx__d48209e895" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1444 ">Number of milliseconds to wait before sending a partial or empty batch. </td>
+       <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1444 ">Number of milliseconds to wait before sending a partial or empty batch. </td>
 
       </tr>
 
@@ -1143,10 +1143,10 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d411111e1619">Query Property <a class="xref" href="Salesforce.html#concept_djn_x4c_tx" title="The Salesforce origin can execute a query to read existing data from Salesforce. Use the Salesforce Object Query Language (SOQL) to write the query.">
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d411330e1619">Query Property <a class="xref" href="Salesforce.html#concept_djn_x4c_tx" title="The Salesforce origin can execute a query to read existing data from Salesforce. Use the Salesforce Object Query Language (SOQL) to write the query.">
                                             <img class="image" id="task_h1n_bs3_rx__image_wjh_ycl_br" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d411111e1629">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d411330e1629">Description</th>
 
                                 </tr>
 
@@ -1154,19 +1154,19 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1619 ">Use Bulk API</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1619 ">Use Bulk API</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1629 ">Determines whether the stage uses the Salesforce Bulk API
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1629 ">Determines whether the stage uses the Salesforce Bulk API
                                         or SOAP API to write to Salesforce. Select to use the Bulk
                                         API. Clear to use the SOAP API.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1619 ">Use PK Chunking <a class="xref" href="Salesforce.html#concept_aq1_kd1_5cb">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1619 ">Use PK Chunking <a class="xref" href="Salesforce.html#concept_aq1_kd1_5cb">
                                             <img class="image" id="task_h1n_bs3_rx__image_dfq_wsg_5cb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1629 ">Enables the use of PK Chunking to process large volumes
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1629 ">Enables the use of PK Chunking to process large volumes
                                         of data. Requires configuring the SOQL query and additional
                                         properties. <p class="p">For the Bulk API only.</p>
 </td>
@@ -1174,9 +1174,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1619 ">Chunk Size</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1619 ">Chunk Size</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1629 "><span class="ph">The range of values in the <samp class="ph systemoutput">Id</samp>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1629 "><span class="ph">The range of values in the <samp class="ph systemoutput">Id</samp>
                         field to be queried at one time.</span><p class="p"><span class="ph">The default is 100,000 and the maximum size is
                         250,000.</span></p>
 <p class="p">For PK Chunking only.</p>
@@ -1185,28 +1185,28 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1619 ">Start ID</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1619 ">Start ID</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1629 "><span class="ph">An optional lower boundary for the first chunk. When omitted,
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1629 "><span class="ph">An optional lower boundary for the first chunk. When omitted,
                         the origin begins processing with the first record in the object.</span><p class="p">For PK Chunking only.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1619 ">SOQL Query</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1619 ">SOQL Query</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1629 ">SOQL query to use when reading existing data from
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1629 ">SOQL query to use when reading existing data from
                                         Salesforce. <p class="p">The SOQL query requirements differ <span class="ph">based on whether you use the <a class="xref" href="Salesforce.html#concept_vdt_dxc_tx">SOAP or Bulk API without PK Chunking</a> or the <a class="xref" href="Salesforce.html#concept_aq1_kd1_5cb">Bulk API with PK Chunking</a>.</span></p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1619 ">Include Deleted Records <a class="xref" href="Salesforce.html#concept_r24_j11_5cb">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1619 ">Include Deleted Records <a class="xref" href="Salesforce.html#concept_r24_j11_5cb">
                                             <img class="image" id="task_h1n_bs3_rx__image_lhh_34h_5cb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1629 "><span class="ph">Determines whether the SOQL query also retrieves deleted
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1629 "><span class="ph">Determines whether the SOQL query also retrieves deleted
         records from the Salesforce recycle bin.</span><p class="p">The query can retrieve deleted records when the
                                             stage uses the Salesforce SOAP API or the Bulk API
                                             version 39.0 or later. </p>
@@ -1218,10 +1218,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1619 ">Repeat Query <a class="xref" href="Salesforce.html#concept_owv_nj5_2z">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1619 ">Repeat Query <a class="xref" href="Salesforce.html#concept_owv_nj5_2z">
                                             <img class="image" id="task_h1n_bs3_rx__image_fxy_vkw_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1629 ">Determines whether the origin runs the query more than
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1629 ">Determines whether the origin runs the query more than
                                         once. Available when the origin processes existing data and
                                         is not subscribed to notifications. Uses one of the
                                         following properties:<ul class="ul" id="task_h1n_bs3_rx__ul_zkg_qkw_2z">
@@ -1239,9 +1239,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1619 ">Query Interval</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1619 ">Query Interval</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1629 ">Amount of time to wait between queries. Enter an
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1629 ">Amount of time to wait between queries. Enter an
                                         expression based on a unit of time. You can use SECONDS,
                                         MINUTES, or HOURS. <p class="p">Default is 1 minute: ${1 * MINUTES}.
                                         </p>
@@ -1250,9 +1250,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1619 ">Initial Offset</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1619 ">Initial Offset</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1629 "><span class="ph">First offset value to use when the pipeline starts or
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1629 "><span class="ph">First offset value to use when the pipeline starts or
                         after you reset the origin.</span><p class="p">Default is fifteen zeros:
                                                 <samp class="ph codeph">000000000000000</samp>.</p>
 <p class="p">Not used
@@ -1262,9 +1262,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1619 ">Offset Field </td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1619 ">Offset Field </td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1629 ">Typically the <samp class="ph systemoutput">Id</samp> system
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1629 ">Typically the <samp class="ph systemoutput">Id</samp> system
                                         field, the offset field should be an indexed field in the
                                         record. <p class="p">Default is the <samp class="ph systemoutput">Id</samp>
                                             field. Use the default when enabling PK Chunking.
@@ -1290,9 +1290,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d411111e1823">Subscribe Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d411330e1823">Subscribe Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d411111e1826">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d411330e1826">Description</th>
 
                                 </tr>
 
@@ -1300,10 +1300,10 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1823 ">Subscription Type <a class="xref" href="Salesforce.html#concept_nnd_y4c_tx">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1823 ">Subscription Type <a class="xref" href="Salesforce.html#concept_nnd_y4c_tx">
                                             <img class="image" id="task_h1n_bs3_rx__image_sch_nol_br" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1826 ">Select the subscription type to use:<ul class="ul" id="task_h1n_bs3_rx__ul_ey4_1zy_tcb">
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1826 ">Select the subscription type to use:<ul class="ul" id="task_h1n_bs3_rx__ul_ey4_1zy_tcb">
                                             <li class="li"><a class="xref" href="Salesforce.html#concept_xws_n3g_5cb">Push Topic</a> - Use to process PushTopic
                                                 events.</li>
 
@@ -1316,9 +1316,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1823 ">Platform Event API Name</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1823 ">Platform Event API Name</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1826 ">Name of the platform event channel or topic to use, such
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1826 ">Name of the platform event channel or topic to use, such
                                         as Notification__e. The platform event must be defined in
                                         your Salesforce environment.<p class="p">For platform events
                                         only.</p>
@@ -1327,9 +1327,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1823 ">Replay Option</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1823 ">Replay Option</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1826 ">Determines the platform events that are processed:<ul class="ul" id="task_h1n_bs3_rx__ul_yf2_szy_tcb">
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1826 ">Determines the platform events that are processed:<ul class="ul" id="task_h1n_bs3_rx__ul_yf2_szy_tcb">
                                             <li class="li">New events - Only the events broadcast after the
                                                 pipeline starts.</li>
 
@@ -1344,9 +1344,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1823 ">Push Topic</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1823 ">Push Topic</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1826 ">The name of the PushTopic to use. The PushTopic must be
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1826 ">The name of the PushTopic to use. The PushTopic must be
                                         defined in your Salesforce environment. <p class="p">For PushTopic
                                             events only.</p>
 </td>
@@ -1370,9 +1370,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d411111e1928">Advanced Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d411330e1928">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d411111e1931">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d411330e1931">Description</th>
 
                                 </tr>
 
@@ -1380,64 +1380,64 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1928 ">Create Salesforce Attributes <a class="xref" href="Salesforce.html#concept_qgj_hd2_kz" title="The Salesforce origin generates Salesforce record header attributes and Salesforce field attributes that provide additional information about each record and field. The origin receives these details from Salesforce.">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1928 ">Create Salesforce Attributes <a class="xref" href="Salesforce.html#concept_qgj_hd2_kz" title="The Salesforce origin generates Salesforce record header attributes and Salesforce field attributes that provide additional information about each record and field. The origin receives these details from Salesforce.">
                                             <img class="image" id="task_h1n_bs3_rx__image_fjk_vkg_6z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1931 ">Adds Salesforce header attributes to records and field
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1931 ">Adds Salesforce header attributes to records and field
                                         attributes to fields. The origin creates Salesforce
                                         attributes by default. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1928 ">Salesforce Attribute Prefix</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1928 ">Salesforce Attribute Prefix</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1931 ">Prefix for Salesforce attributes.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1931 ">Prefix for Salesforce attributes.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1928 ">Disable Query Validation</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1928 ">Disable Query Validation</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1931 ">Disables query validation for SOQL queries. Query
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1931 ">Disables query validation for SOQL queries. Query
                                         validation <span class="ph">differs <span class="ph">based on whether you use the <a class="xref" href="Salesforce.html#concept_vdt_dxc_tx">SOAP or Bulk API without PK Chunking</a> or the <a class="xref" href="Salesforce.html#concept_aq1_kd1_5cb">Bulk API with PK Chunking</a>.</span></span></td>
 
                                 </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1928 ">Use Proxy</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1928 ">Use Proxy</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1931 ">Specifies whether to use an HTTP proxy to connect to Salesforce.</td>
-
-     </tr>
-<tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1928 ">Proxy Hostname</td>
-
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1931 ">Proxy host.</td>
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1931 ">Specifies whether to use an HTTP proxy to connect to Salesforce.</td>
 
      </tr>
 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1928 ">Proxy Port</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1928 ">Proxy Hostname</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1931 ">Proxy port.</td>
-
-     </tr>
-<tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1928 ">Proxy Requires Credentials</td>
-
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1931 ">Specifies whether the proxy requires a user name and password.</td>
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1931 ">Proxy host.</td>
 
      </tr>
 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1928 ">Proxy Username</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1928 ">Proxy Port</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1931 ">User name for proxy credentials.</td>
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1931 ">Proxy port.</td>
 
      </tr>
 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1928 ">Proxy Password</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1928 ">Proxy Requires Credentials</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1931 ">Password for proxy credentials.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_h1n_bs3_rx__d48099e4741">To
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1931 ">Specifies whether the proxy requires a user name and password.</td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1928 ">Proxy Username</td>
+
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1931 ">User name for proxy credentials.</td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1928 ">Proxy Password</td>
+
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1931 ">Password for proxy credentials.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_h1n_bs3_rx__d48119e4741">To
                         secure sensitive information such as usernames and passwords, you can use
                               <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
 </td>
@@ -1445,9 +1445,9 @@
      </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1928 ">Use Mutual Authentication</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1928 ">Use Mutual Authentication</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1931 ">When enabled in Salesforce, you can use SSL/TLS mutual
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1931 ">When enabled in Salesforce, you can use SSL/TLS mutual
                                         authentication to connect to Salesforce. <p class="p">Mutual
                                             authentication is not enabled in Salesforce by default.
                                             To enable mutual authentication, contact Salesforce.
@@ -1461,10 +1461,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1928 ">Keystore File <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_kqb_rqf_5z">
-                                            <img class="image" id="task_h1n_bs3_rx__d48392e3363" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1928 ">Keystore File <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_kqb_rqf_5z">
+                                            <img class="image" id="task_h1n_bs3_rx__d48412e3363" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1931 ">The path to the keystore file. Enter an absolute path to
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1931 ">The path to the keystore file. Enter an absolute path to
                                         the file or a path relative to the <span class="ph">Data Collector</span> resources directory: <span class="ph filepath">$SDC_RESOURCES</span>.
                                                 <p class="p"><span class="ph">For more information about environment variables, see
                               <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="Data Collector includes environment variables that define the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the SDC_ROOT_CLASSPATH environment variable to define the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</span></p>
@@ -1474,10 +1474,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1928 ">Keystore Type</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1928 ">Keystore Type</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1931 ">Type of keystore to use. Use one of the following
-                                            types:<ul class="ul" id="task_h1n_bs3_rx__d48392e3385">
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1931 ">Type of keystore to use. Use one of the following
+                                            types:<ul class="ul" id="task_h1n_bs3_rx__d48412e3385">
                                             <li class="li">Java Keystore File (JKS)</li>
 
                                             <li class="li">PKCS-12 (p12 file)</li>
@@ -1489,9 +1489,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1928 ">Keystore Password</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1928 ">Keystore Password</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1931 ">Password to the keystore file. A password is optional,
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1931 ">Password to the keystore file. A password is optional,
                                         but recommended.<div class="p">
                                             <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
                   passwords, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
@@ -1502,9 +1502,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411111e1928 ">Keystore Key Algorithm</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411330e1928 ">Keystore Key Algorithm</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411111e1931 ">The algorithm used to manage the keystore. <p class="p">Default is
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411330e1931 ">The algorithm used to manage the keystore. <p class="p">Default is
                                                 <span class="ph">SunX509</span>.</p>
 </td>
 
