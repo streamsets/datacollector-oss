@@ -44,6 +44,10 @@ public enum ChecksumAlgorithm implements Label {
   }
 
   public static ChecksumAlgorithm forApi(WholeFileChecksumAlgorithm other) {
+    if(other == null) {
+      return null;
+    }
+
     switch (other) {
       case MD5: return MD5;
       case SHA1: return SHA1;
