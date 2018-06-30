@@ -27,14 +27,10 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
-import com.streamsets.pipeline.config.CsvHeader;
-import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.sdk.SourceRunner;
@@ -49,7 +45,6 @@ import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
-import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -183,54 +178,60 @@ public class TestAmazonS3Source extends AmazonS3TestSuite {
 
   @Test
   public void testProduceFullFile() throws Exception {
-    AmazonS3Source source = createSource();
-    SourceRunner runner = new SourceRunner.Builder(AmazonS3DSource.class, source)
-      .addService(DataFormatParserService.class, new SdkJsonDataFormatParserService())
-      .addOutputLane("lane")
-      .build();
-    runner.runInit();
     try {
+      AmazonS3Source source = createSource();
+      SourceRunner runner = new SourceRunner.Builder(AmazonS3DSource.class, source)
+        .addService(DataFormatParserService.class, new SdkJsonDataFormatParserService())
+        .addOutputLane("lane")
+        .build();
+      runner.runInit();
+      try {
 
-      BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
-      String offset = source.produce(null, 60000, batchMaker);
-      Assert.assertNotNull(offset);
-      Assert.assertTrue(offset.contains("file1.log::-1::"));
+        BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
+        String offset = source.produce(null, 60000, batchMaker);
+        Assert.assertNotNull(offset);
+        Assert.assertTrue(offset.contains("file1.log::-1::"));
 
-      StageRunner.Output output = SourceRunner.getOutput(batchMaker);
-      List<Record> records = output.getRecords().get("lane");
-      Assert.assertEquals(1, records.size());
+        StageRunner.Output output = SourceRunner.getOutput(batchMaker);
+        List<Record> records = output.getRecords().get("lane");
+        Assert.assertEquals(1, records.size());
 
-      //produce records from next file
-      batchMaker = SourceRunner.createTestBatchMaker("lane");
-      offset = source.produce(offset, 60000, batchMaker);
-      Assert.assertNotNull(offset);
-      Assert.assertTrue(offset.contains("file2.log::-1::"));
+        //produce records from next file
+        batchMaker = SourceRunner.createTestBatchMaker("lane");
+        offset = source.produce(offset, 60000, batchMaker);
+        Assert.assertNotNull(offset);
+        Assert.assertTrue(offset.contains("file2.log::-1::"));
 
-      output = SourceRunner.getOutput(batchMaker);
-      records = output.getRecords().get("lane");
-      Assert.assertEquals(1, records.size());
+        output = SourceRunner.getOutput(batchMaker);
+        records = output.getRecords().get("lane");
+        Assert.assertEquals(1, records.size());
 
-      //produce records from next file
-      batchMaker = SourceRunner.createTestBatchMaker("lane");
-      offset = source.produce(offset, 60000, batchMaker);
-      Assert.assertNotNull(offset);
-      Assert.assertTrue(offset.contains("file3.log::-1::"));
+        //produce records from next file
+        batchMaker = SourceRunner.createTestBatchMaker("lane");
+        offset = source.produce(offset, 60000, batchMaker);
+        Assert.assertNotNull(offset);
+        Assert.assertTrue(offset.contains("file3.log::-1::"));
 
-      output = SourceRunner.getOutput(batchMaker);
-      records = output.getRecords().get("lane");
-      Assert.assertEquals(1, records.size());
+        output = SourceRunner.getOutput(batchMaker);
+        records = output.getRecords().get("lane");
+        Assert.assertEquals(1, records.size());
 
-      batchMaker = SourceRunner.createTestBatchMaker("lane");
-      offset = source.produce(offset, 60000, batchMaker);
-      Assert.assertNotNull(offset);
-      Assert.assertTrue(offset.contains("file3.log::-1::"));
+        batchMaker = SourceRunner.createTestBatchMaker("lane");
+        offset = source.produce(offset, 60000, batchMaker);
+        Assert.assertNotNull(offset);
+        Assert.assertTrue(offset.contains("file3.log::-1::"));
 
-      output = SourceRunner.getOutput(batchMaker);
-      records = output.getRecords().get("lane");
-      Assert.assertEquals(0, records.size());
+        output = SourceRunner.getOutput(batchMaker);
+        records = output.getRecords().get("lane");
+        Assert.assertEquals(0, records.size());
 
-    } finally {
-      runner.runDestroy();
+      } finally {
+        runner.runDestroy();
+      }
+    } catch (Exception e) {
+      System.out.println("Hoops");
+      e.printStackTrace();
+      throw  e;
     }
   }
 

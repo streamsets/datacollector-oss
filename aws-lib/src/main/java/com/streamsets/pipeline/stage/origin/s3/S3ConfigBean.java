@@ -19,24 +19,12 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.common.InterfaceAudience;
 import com.streamsets.pipeline.common.InterfaceStability;
-import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
-import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
-import com.streamsets.pipeline.stage.origin.s3.DataFormatChooserValues;
-import com.streamsets.pipeline.stage.origin.s3.Errors;
-import com.streamsets.pipeline.stage.origin.s3.Groups;
-import com.streamsets.pipeline.stage.origin.s3.S3ArchivingOption;
-import com.streamsets.pipeline.stage.origin.s3.S3ConnectionSourceConfig;
-import com.streamsets.pipeline.stage.origin.s3.S3ErrorConfig;
-import com.streamsets.pipeline.stage.origin.s3.S3FileConfig;
-import com.streamsets.pipeline.stage.origin.s3.S3PostProcessingConfig;
-import com.streamsets.pipeline.stage.origin.s3.S3SSEConfigBean;
 
 import java.util.List;
 

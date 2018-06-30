@@ -20,7 +20,6 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
-import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 
@@ -71,7 +70,7 @@ public class AmazonS3SourceUpgrader implements StageUpgrader {
     configs.add(new Config(S3ConfigBean.S3_CONFIG_BEAN_PREFIX + "advancedConfig.proxyPort", 0));
     configs.add(new Config(S3ConfigBean.S3_CONFIG_BEAN_PREFIX + "advancedConfig.proxyUser", ""));
     configs.add(new Config(S3ConfigBean.S3_CONFIG_BEAN_PREFIX + "advancedConfig.proxyPassword", ""));
-    configs.add(new Config(S3ConfigBean.S3_DATA_FORMAT_CONFIG_PREFIX + "compression", Compression.NONE));
+    configs.add(new Config(S3ConfigBean.S3_DATA_FORMAT_CONFIG_PREFIX + "compression", "NONE"));
     configs.add(new Config(S3ConfigBean.S3_DATA_FORMAT_CONFIG_PREFIX + "filePatternInArchive", "*"));
     configs.add(new Config(S3ConfigBean.S3_DATA_FORMAT_CONFIG_PREFIX + "csvSkipStartLines", 0));
   }

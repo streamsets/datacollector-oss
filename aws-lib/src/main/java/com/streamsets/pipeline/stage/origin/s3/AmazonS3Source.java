@@ -34,7 +34,6 @@ import com.streamsets.pipeline.api.ext.io.OverrunException;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +69,14 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
 
   @Override
   public void destroy() {
-    IOUtils.closeQuietly(parser);
+    try {
+      if(parser != null) {
+        parser.close();
+      }
+    } catch (IOException e) {
+      // Quiet close
+    }
+
     super.destroy();
   }
 

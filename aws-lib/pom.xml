@@ -87,13 +87,11 @@
     <!-- Compile Dependencies -->
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-common</artifactId>
-      <scope>compile</scope>
+      <artifactId>streamsets-datacollector-stagesupport</artifactId>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-commonlib</artifactId>
-      <scope>compile</scope>
+      <artifactId>streamsets-datacollector-guavasupport</artifactId>
     </dependency>
     <dependency>
       <groupId>com.amazonaws</groupId>
