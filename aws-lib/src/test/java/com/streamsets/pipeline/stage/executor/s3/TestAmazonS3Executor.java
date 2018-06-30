@@ -28,6 +28,7 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.Tag;
 import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
@@ -132,6 +133,9 @@ public class TestAmazonS3Executor {
       List<String> stringList = IOUtils.readLines(objectContent);
       Assert.assertEquals(1, stringList.size());
       Assert.assertEquals("Secret", stringList.get(0));
+
+      Assert.assertEquals(1, runner.getEventRecords().size());
+      assertEvent(runner.getEventRecords().get(0), objectName);
     } finally {
       runner.runDestroy();
     }
@@ -162,6 +166,9 @@ public class TestAmazonS3Executor {
       Assert.assertEquals("content", stringList.get(0));
 
       Assert.assertTrue(s3client.doesObjectExist(BUCKET_NAME, objectName));
+
+      Assert.assertEquals(1, runner.getEventRecords().size());
+      assertEvent(runner.getEventRecords().get(0), newName);
     } finally {
       runner.runDestroy();
     }
@@ -193,6 +200,9 @@ public class TestAmazonS3Executor {
       Assert.assertEquals("dropAfterCopy", stringList.get(0));
 
       Assert.assertFalse(s3client.doesObjectExist(BUCKET_NAME, objectName));
+
+      Assert.assertEquals(1, runner.getEventRecords().size());
+      assertEvent(runner.getEventRecords().get(0), newName);
     } finally {
       runner.runDestroy();
     }
@@ -219,6 +229,8 @@ public class TestAmazonS3Executor {
       Assert.assertEquals("Owner", tags.get(0).getKey());
       Assert.assertEquals("Earth", tags.get(0).getValue());
 
+      Assert.assertEquals(1, runner.getEventRecords().size());
+      assertEvent(runner.getEventRecords().get(0), objectName);
     } finally {
       runner.runDestroy();
     }
@@ -315,4 +327,13 @@ public class TestAmazonS3Executor {
 
     return record;
   }
+
+  private void assertEvent(EventRecord eventRecord, String objectName) {
+    Assert.assertNotNull(eventRecord);
+    Assert.assertNotNull(objectName);
+
+    Assert.assertTrue(eventRecord.has("/object_key"));
+    Assert.assertEquals(objectName, eventRecord.get("/object_key").getValueAsString());
+  }
+
 }

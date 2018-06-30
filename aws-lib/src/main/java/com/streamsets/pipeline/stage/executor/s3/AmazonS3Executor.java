@@ -143,6 +143,10 @@ public class AmazonS3Executor extends BaseExecutor {
     if(config.taskConfig.dropAfterCopy) {
       config.s3Config.getS3Client().deleteObject(bucket, objectPath);
     }
+
+    Events.FILE_COPIED.create(getContext())
+      .with("object_key", newLocation)
+      .createAndSend();
   }
 
   private void createNewObject(
@@ -155,6 +159,10 @@ public class AmazonS3Executor extends BaseExecutor {
     String content = evaluate(record, "content", variables, config.taskConfig.content);
 
     config.s3Config.getS3Client().putObject(bucket, objectPath, content);
+
+    Events.FILE_CREATED.create(getContext())
+      .with("object_key", objectPath)
+      .createAndSend();
   }
 
   private void changeExistingObject(
@@ -181,6 +189,10 @@ public class AmazonS3Executor extends BaseExecutor {
         objectPath,
         new ObjectTagging(newTags)
       ));
+
+      Events.FILE_CHANGED.create(getContext())
+        .with("object_key", objectPath)
+        .createAndSend();
     }
   }
 

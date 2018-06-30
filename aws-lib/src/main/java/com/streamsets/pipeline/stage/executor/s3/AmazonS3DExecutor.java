@@ -30,6 +30,7 @@ import com.streamsets.pipeline.stage.executor.s3.config.AmazonS3ExecutorConfig;
   label = "Amazon S3",
   description = "Executes metadata operation on Amazon Simple Storage (S3).",
   icon = "s3.png",
+  producesEvents = true,
   onlineHelpRefUrl ="index.html?contextID=task_nky_cnm_f1b"
 )
 @ConfigGroups(Groups.class)
