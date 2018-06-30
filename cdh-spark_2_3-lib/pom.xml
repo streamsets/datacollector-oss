@@ -41,17 +41,6 @@
     <zkclient.version>0.8</zkclient.version>
   </properties>
 
-  <repositories>
-    <repository>
-      <id>cdh.repo</id>
-      <url>https://repository.cloudera.com/content/groups/cloudera-repos</url>
-      <name>Cloudera Repositories</name>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
-
   <dependencies>
     <dependency>
       <groupId>org.apache.spark</groupId>

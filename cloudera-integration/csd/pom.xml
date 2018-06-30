@@ -36,17 +36,6 @@
     <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
   </properties>
 
-  <pluginRepositories>
-    <pluginRepository>
-      <id>cdh.repo</id>
-      <url>https://repository.cloudera.com/content/groups/cloudera-repos</url>
-      <name>Cloudera Repositories</name>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </pluginRepository>
-  </pluginRepositories>
-
   <dependencies>
     <dependency>
       <groupId>com.streamsets</groupId>
