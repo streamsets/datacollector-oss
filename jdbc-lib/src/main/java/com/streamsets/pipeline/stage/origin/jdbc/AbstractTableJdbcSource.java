@@ -373,6 +373,14 @@ public abstract class AbstractTableJdbcSource extends BasePushSource {
             JdbcUtil.generateNoMoreDataEvent(getContext());
           }
         }
+
+        // This loop is only a checker for isStopped() -> hence running it as fast as possible leads to high CPU
+        // usage even for no-data passing through use case. We're currently hard coding the sleep for few milliseconds.
+        try {
+          Thread.sleep(100);
+        } catch (InterruptedException e) {
+          LOG.debug("Interrupted wait");
+        }
       }
 
       for (Future future : allFutures) {
