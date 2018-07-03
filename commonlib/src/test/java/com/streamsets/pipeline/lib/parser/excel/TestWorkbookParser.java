@@ -107,7 +107,7 @@ public class TestWorkbookParser {
   public void testParseCorrectlyHandlesFilesWithHeaders() throws IOException, InvalidFormatException, DataParserException {
     Workbook workbook = createWorkbook("/excel/TestExcel.xlsx");
 
-    WorkbookParser parser = new WorkbookParser(settingsWithHeader, getContext(), workbook, "Sheet1::1");
+    WorkbookParser parser = new WorkbookParser(settingsWithHeader, getContext(), workbook, "Sheet1::0");
 
     Record firstContentRow = parser.parse();
 
@@ -119,15 +119,41 @@ public class TestWorkbookParser {
 
     assertEquals(expected, firstContentRow.get());
     assertEquals("Sheet1", firstContentRow.getHeader().getAttribute("worksheet"));
-    assertEquals("1", firstContentRow.getHeader().getAttribute("sheetRow"));
 
+  }
+
+  @Test
+  public void testParseCorrectlyEmptyLeadingRowsAndColumns() throws IOException, InvalidFormatException, DataParserException {
+    Workbook workbook = createWorkbook("/excel/TestExcelEmptyRowsCols.xlsx");
+
+    WorkbookParser parser = new WorkbookParser(settingsWithHeader, getContext(), workbook, "Sheet1::0");
+
+    // column header prefix, row value multiplier
+    List<Pair<String, Integer>> sheetParameters = Arrays.asList(
+            Pair.of("column", 1),
+            Pair.of("header", 10)
+    );
+
+    for (int sheet = 1; sheet <= sheetParameters.size(); sheet++) {
+      for (int row = 1; row <= 2; row++) {
+        Record parsedRow = parser.parse();
+        LinkedHashMap<String, Field> contentMap = new LinkedHashMap<>();
+        String columnPrefix = sheetParameters.get(sheet - 1).getLeft();
+        Integer valueMultiplier = sheetParameters.get(sheet - 1).getRight();
+        for (int column = 1; column <= 3+sheet; column++) {
+            contentMap.put(columnPrefix + column, Field.create(BigDecimal.valueOf(column * valueMultiplier)));
+        }
+        Field expectedRow = Field.createListMap(contentMap);
+        assertEquals(String.format("Parsed value for sheet %1d, row %2d did not match expected value", sheet, row), expectedRow, parsedRow.get());
+      }
+    }
   }
 
   @Test
   public void testParseCorrectlyHandlesFileThatIgnoresHeaders() throws IOException, DataParserException, InvalidFormatException {
     Workbook workbook = createWorkbook("/excel/TestExcel.xlsx");
 
-    WorkbookParser parser = new WorkbookParser(settingsIgnoreHeader, getContext(), workbook, "Sheet1::1");
+    WorkbookParser parser = new WorkbookParser(settingsIgnoreHeader, getContext(), workbook, "Sheet1::0");
 
     Record firstContentRow = parser.parse();
 
@@ -182,7 +208,7 @@ public class TestWorkbookParser {
   public void testParseHandlesMultipleSheets() throws IOException, InvalidFormatException, DataParserException {
     Workbook workbook = createWorkbook("/excel/TestMultipleSheets.xlsx");
 
-    WorkbookParser parser = new WorkbookParser(settingsWithHeader, getContext(), workbook, "Sheet1::1");
+    WorkbookParser parser = new WorkbookParser(settingsWithHeader, getContext(), workbook, "Sheet1::0");
 
     // column header prefix, row value multiplier
     List<Pair<String, Integer>> sheetParameters = Arrays.asList(
@@ -208,7 +234,7 @@ public class TestWorkbookParser {
   public void testParseHandlesBlanksCells() throws IOException, InvalidFormatException, DataParserException {
     Workbook workbook = createWorkbook("/excel/TestBlankCells.xlsx");
 
-    WorkbookParser parser = new WorkbookParser(settingsWithHeader, getContext(), workbook, "Sheet1::1");
+    WorkbookParser parser = new WorkbookParser(settingsWithHeader, getContext(), workbook, "Sheet1::0");
 
     Record recordFirstRow = parser.parse();
 
@@ -226,7 +252,7 @@ public class TestWorkbookParser {
   @Test
   public void testParseThrowsRecoverableDataExceptionForUnsupportedCellType() throws IOException, InvalidFormatException, DataParserException {
     Workbook workbook = createWorkbook("/excel/TestErrorCells.xlsx");
-    WorkbookParser parser = new WorkbookParser(settingsWithHeader, getContext(), workbook, "Sheet1::1");
+    WorkbookParser parser = new WorkbookParser(settingsWithHeader, getContext(), workbook, "Sheet1::0");
 
     exception.expect(RecoverableDataParserException.class);
     exception.expectMessage("EXCEL_PARSER_05 - Unsupported cell type ERROR");
