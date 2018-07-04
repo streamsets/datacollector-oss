@@ -21,6 +21,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.ss.usermodel.DateUtil;
 
 import java.math.BigDecimal;
 
@@ -37,6 +38,11 @@ class Cells {
       case STRING:
         return Field.create(cell.getStringCellValue());
       case NUMERIC:
+        if (DateUtil.isCellDateFormatted(cell)) {
+          // It's a date, not a number
+          java.util.Date dt = cell.getDateCellValue();
+          return Field.createDate(dt);
+        }
         if (cell.getCellTypeEnum().equals(CellType.FORMULA)) {
           return Field.create(new BigDecimal(evaluator.evaluate(cell).formatAsString()));
         } else {
