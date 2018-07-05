@@ -481,7 +481,7 @@ public abstract class AbstractTableJdbcSource extends BasePushSource {
     }
   }
 
-  protected Map<String, String> getOffsets() {
+  public Map<String, String> getOffsets() {
     return offsets;
   }
 

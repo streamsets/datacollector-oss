@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.origin.jdbc.cdc.sqlserver;
 
 import com.google.common.cache.CacheLoader;
 import com.streamsets.pipeline.api.PushSource;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
@@ -64,7 +65,17 @@ public class SQLServerCDCSource extends AbstractTableJdbcSource {
   @Override
   protected void handleLastOffset(Map<String, String> lastOffsets) throws StageException {
     if (lastOffsets != null) {
-      getOffsets().putAll(lastOffsets);
+      for (String key : lastOffsets.keySet()) {
+        if (key.equals(Source.POLL_SOURCE_OFFSET_KEY)) {
+          // skip
+          continue;
+        }
+        if (lastOffsets.get(key) != null) {
+          getOffsets().put(key, lastOffsets.get(key));
+        } else {
+          LOG.warn("last offset value is null: '{}'", key);
+        }
+      }
       //Only if it is not already committed
       if (!lastOffsets.containsKey(OFFSET_VERSION)) {
         //Version the offset so as to allow for future evolution.
