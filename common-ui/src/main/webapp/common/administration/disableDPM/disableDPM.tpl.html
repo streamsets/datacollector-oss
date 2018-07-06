@@ -14,8 +14,10 @@
 
     </div>
 
-    <div ng-if="dpmDisabled && !isRestartInProgress" class="alert alert-success alert-dismissible" role="alert"
-         translate="home.disableDPM.successMessage">
+    <div ng-if="dpmDisabled && !isRestartInProgress">
+      <div class="alert alert-success alert-dismissible" role="alert"
+         translate="home.disableDPM.successMessage"/>
+      <ng-include src="'common/administration/enableDPM/restartDPM.tpl.html'"></ng-include>
     </div>
 
     <div class="alert alert-success alert-dismissible" role="alert"
@@ -25,7 +27,9 @@
 
   </div>
   <div class="modal-footer">
-    <button type="reset" class="btn btn-default" ng-click="cancel()" ng-if="!isDisableInProgress"
+    <button type="reset" class="btn btn-default"
+            ng-click="cancel()"
+            ng-if="!isDisableInProgress  && !(dpmDisabled && !isRestartInProgress)"
             translate="global.form.cancel">Cancel</button>
 
     <button type="submit" class="btn btn-primary" ng-if="!isDisableInProgress && !dpmDisabled"
@@ -33,9 +37,5 @@
 
     <button type="submit" class="btn btn-primary" ng-if="isDisableInProgress && !dpmDisabled" disabled
             translate="home.disableDPM.isDisableInProgress">Disabling Control Hub...</button>
-
-    <button ng-if="!isDisableInProgress && dpmDisabled && !isRestartInProgress"
-            ng-click="restart()"
-            class="btn btn-primary" translate="global.form.restart">Restart</button>
   </div>
 </form>

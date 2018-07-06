@@ -1,0 +1,40 @@
+<accordion close-others="true" style="min-height:135px;display:block;">
+    <div accordion-group
+         class="panel-default"
+         heading="Streamsets Data Collector was started manually"
+         is-open="false"
+         is-disabled="false">
+        <p>Click the button below to restart this data collector:</p>
+        <button ng-click="restart()"
+                class="btn btn-primary ng-scope"
+                translate="global.form.restart"></button>
+    </div>
+    <div accordion-group
+         class="panel-default"
+         heading="Streamsets Data Collector was started as a service"
+         is-open="false"
+         is-disabled="false">
+        <p>Run this command to restart this data collector:</p>
+        <p style="font-family: monospace;">
+            service sdc start
+        </p>
+    </div>
+    <div accordion-group
+         class="panel-default"
+         heading="Streamsets Data Collector was started from Cloudera Manager"
+         is-open="false"
+         is-disabled="false">
+        <p>You must use Cloudera Manager to restart Data Collector. For information about
+            how to restart a service through Cloudera Manager, see the Cloudera documentation.</p>
+    </div>
+    <div accordion-group
+         class="panel-default"
+         heading="Streamsets Data Collector was started from Docker"
+         is-open="false"
+         is-disabled="false">
+        <p>Run this command to restart this data collector:</p>
+        <p style="font-family: monospace;">
+            docker restart &lt;containerId&gt;
+        </p>
+    </div>
+</accordion>

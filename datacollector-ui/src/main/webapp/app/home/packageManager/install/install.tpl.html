@@ -4,9 +4,9 @@
 <div class="modal-body package-manager-modal-body">
   <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
 
-  <div ng-if="operationStatus === 'complete' && !hasErrors()"
-       class="alert alert-success alert-dismissible" role="alert"
-       translate="packageManager.install.successMessage">
+  <div ng-if="operationStatus === 'complete' && !hasErrors()">
+    <div   class="alert alert-success alert-dismissible" role="alert" translate="packageManager.install.successMessage"/>
+    <ng-include src="'common/administration/enableDPM/restartDPM.tpl.html'"></ng-include>
   </div>
 
   <div ng-if="operationStatus === 'restarting'"
@@ -38,7 +38,9 @@
 <div class="modal-footer">
   <button type="button" class="btn btn-default" ng-click="cancel()"
           ng-if="operationStatus !== 'installing' && operationStatus !== 'restarting'"
-          translate="global.form.cancel">Cancel</button>
+          translate="global.form.cancel">
+    Cancel
+  </button>
 
   <button type="button" class="btn btn-primary" ng-click="install()"
           ng-if="operationStatus === 'incomplete'"
@@ -52,7 +54,4 @@
           ng-if="operationStatus === 'installing'"
           translate="global.form.installing">Installing...</button>
 
-  <button ng-click="restart()" class="btn btn-primary"
-          ng-if="operationStatus === 'complete'"
-          translate="global.form.restart">Restart</button>
 </div>

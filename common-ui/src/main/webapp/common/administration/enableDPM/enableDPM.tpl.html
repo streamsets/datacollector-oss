@@ -76,55 +76,54 @@
 
     </div>
 
-    <div ng-if="(dpmEnabled && !isRestartInProgress)" class="alert alert-success alert-dismissible" role="alert">
-
-      <ul class="clearfix">
-        <li>
-          <span translate="home.enableDPM.successMessage"></span>
-        </li>
-
-        <li>
-          <span><a href="javascript:;" ng-click="onCreateDPMUsersClick()">Click here</a> to create a Control Hub user account for each Data Collector user account.</span>
-        </li>
-
-        <li>
-          <span translate="home.enableDPM.restartMessage"></span>
-        </li>
-
-      </ul>
+    <div ng-if="(dpmEnabled && !isRestartInProgress)" >
+      <div class="alert alert-success alert-dismissible" role="alert">
+        <ul class="clearfix">
+          <li>
+            <span translate="home.enableDPM.successMessage"></span>
+          </li>
+          <li>
+            <span><a href="javascript:;" ng-click="onCreateDPMUsersClick()">Click here</a>
+              to create a Control Hub user account for each Data Collector user account.</span>
+          </li>
+          <li>
+            <span translate="home.enableDPM.restartMessage"></span>
+          </li>
+        </ul>
+      </div>
+      <ng-include src="'common/administration/enableDPM/restartDPM.tpl.html'"></ng-include>
     </div>
 
     <div ng-if="dpmEnabled && !isRestartInProgress && !isStatsLibraryInstalled"
-         class="alert alert-info alert-dismissible" role="alert"
+         class="alert alert-info alert-dismissible"
+         role="alert"
          translate="home.enableDPM.installStatsLibraryMessage">
     </div>
 
-    <div class="alert alert-success alert-dismissible" role="alert"
+    <div class="alert alert-success alert-dismissible"
+         role="alert"
          ng-show="isRestartInProgress"
          translate="home.restart.successMessage">
     </div>
 
   </div>
   <div class="modal-footer">
-    <button type="reset" class="btn btn-default" ng-click="cancel()" ng-if="!isEnableInProgress"
+    <button type="reset" class="btn btn-default" ng-click="cancel()"
+            ng-if="!isEnableInProgress && !(dpmEnabled && !isRestartInProgress)"
             translate="global.form.cancel">Cancel</button>
 
-    <button class="btn btn-primary" ng-click="onInstallStatisticsLibraryClick()"
+    <button class="btn btn-primary"
+            ng-click="onInstallStatisticsLibraryClick()"
             ng-if="!isEnableInProgress && dpmEnabled && !isRestartInProgress && !isStatsLibraryInstalled"
             translate="home.enableDPM.installStatistics">Install Statistics Library</button>
 
-    <button type="submit" class="btn btn-primary" ng-if="!isEnableInProgress && !dpmEnabled"
+    <button type="submit" class="btn btn-primary"
+            ng-if="!isEnableInProgress && !dpmEnabled"
             translate="global.form.enable">Enable</button>
 
-    <button class="btn btn-primary" ng-if="isEnableInProgress && !dpmEnabled" disabled
+    <button class="btn btn-primary"
+            ng-if="isEnableInProgress && !dpmEnabled"
+            disabled
             translate="home.enableDPM.isEnableInProgress">Enabling Control Hub...</button>
-
-    <button ng-if="!isEnableInProgress && dpmEnabled && !isRestartInProgress"
-            ng-click="onCreateDPMUsersClick()"
-            class="btn btn-primary" translate="home.createDPMUsers.title">Create Control Hub Users</button>
-
-    <button ng-if="!isEnableInProgress && dpmEnabled && !isRestartInProgress"
-            ng-click="restart()"
-            class="btn btn-primary" translate="global.form.restart">Restart</button>
   </div>
 </form>
