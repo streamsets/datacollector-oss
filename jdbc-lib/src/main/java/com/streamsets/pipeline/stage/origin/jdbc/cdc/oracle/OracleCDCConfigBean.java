@@ -225,8 +225,8 @@ public class OracleCDCConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Use PEG-based SQL parser (experimental)",
-      description = "Use the new experimental SQL Parser, which may improve parsing performance",
+      label = "Use PEG Parser (beta)",
+      description = "Optionally use the alternate parser to enhance performance",
       displayPosition = 5, // display at the top of the advanced tab
       group = "ADVANCED",
       dependsOn = "parseQuery",
@@ -238,7 +238,7 @@ public class OracleCDCConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      label = "Parse Threadpool size",
+      label = "Parsing Thread Pool Size",
       description = "Number of threads to use to parse",
       displayPosition = 6,
       group = "ADVANCED",

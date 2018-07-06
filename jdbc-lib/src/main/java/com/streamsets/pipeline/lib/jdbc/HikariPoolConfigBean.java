@@ -238,7 +238,7 @@ public class HikariPoolConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      label = "Transaction isolation",
+      label = "Transaction Isolation",
       description = "Transaction isolation that should be used for all database connections.",
       defaultValue = "DEFAULT",
       displayPosition = 70,
