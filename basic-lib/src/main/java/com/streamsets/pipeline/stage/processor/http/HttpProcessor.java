@@ -159,6 +159,8 @@ public class HttpProcessor extends SingleLaneProcessor {
       String resolvedUrl = httpClientCommon.getResolvedUrl(conf.resourceUrl, record);
       WebTarget target = httpClientCommon.getClient().target(resolvedUrl);
 
+      LOG.debug("Resolved HTTP Client URL: '{}'",resolvedUrl);
+
       // If the request (headers or body) contain a known sensitive EL and we're not using https then fail the request.
       if (httpClientCommon.requestContainsSensitiveInfo(conf.headers, conf.requestBody) &&
           !target.getUri().getScheme().toLowerCase().startsWith("https")) {
