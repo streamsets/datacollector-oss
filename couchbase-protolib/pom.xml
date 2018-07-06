@@ -45,9 +45,10 @@
       <artifactId>java-client</artifactId>
       <version>${couchbase.version}</version>
     </dependency>
-        <dependency>
+    <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-api</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
