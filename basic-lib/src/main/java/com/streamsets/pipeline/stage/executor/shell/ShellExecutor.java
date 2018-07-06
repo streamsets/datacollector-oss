@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
@@ -61,6 +62,34 @@ public class ShellExecutor extends BaseExecutor {
   private String shell;
   private String sudo;
   private long timeout;
+
+  private static final String UNIX_PROCESS_CLASS_NAME = "java.lang.UNIXProcess";
+  private static final String PID_FIELD_NAME = "pid";
+  private static final int UNDETERMINED_PID = -1;
+  private static final Class unixProcessClass;
+  private static final Field pidField;
+  static {
+    // Reflection facility to retrieve process id (we do not depend on this behavior, it's only for troubleshooting)
+    Class processClass = null;
+    try {
+      processClass = Class.forName(UNIX_PROCESS_CLASS_NAME);
+    } catch (ClassNotFoundException e) {
+      LOG.warn("JVM does not contain class {}", UNIX_PROCESS_CLASS_NAME);
+    }
+
+    Field field = null;
+    if(processClass != null) {
+      try {
+        field = processClass.getDeclaredField(PID_FIELD_NAME);
+        field.setAccessible(true);
+      } catch (NoSuchFieldException e) {
+        LOG.warn("Class {} does not contain field {}", UNIX_PROCESS_CLASS_NAME, PID_FIELD_NAME);
+      }
+    }
+
+    unixProcessClass = processClass;
+    pidField = field;
+  }
 
   public ShellExecutor(ShellConfig config) {
     this.config = config;
@@ -157,6 +186,9 @@ public class ShellExecutor extends BaseExecutor {
       new Thread(new ProcessStdIOForwarder(false, process.getInputStream())).start();
       new Thread(new ProcessStdIOForwarder(true, process.getErrorStream())).start();
 
+      int pid = retrievePidIfFeasible(process);
+      LOG.debug("Created process with PID {}", pid);
+
       // User configures the maximal time for the script execution
       boolean finished = process.waitFor(timeout, TimeUnit.MILLISECONDS);
       if(!finished) {
@@ -176,6 +208,30 @@ public class ShellExecutor extends BaseExecutor {
         script.delete();
       }
     }
+  }
+
+  /**
+   * Attempts to retrieve PID from internal JVM classes. This method is not guaranteed to work as JVM is free
+   * to change their implementation at will. Hence the return value should be only used for troubleshooting or
+   * debug and not for main functionality.
+   */
+  private static int retrievePidIfFeasible(Process process) {
+    if(unixProcessClass == null) {
+      return UNDETERMINED_PID;
+    }
+
+    if(!unixProcessClass.isInstance(process)) {
+      LOG.debug("Do not support retrieving PID from {}", process.getClass().getName());
+      return UNDETERMINED_PID;
+    }
+
+    try {
+      return (int)pidField.get(process);
+    } catch (IllegalAccessException e) {
+      LOG.debug("Can't retrieve PID value from the field", e);
+      return UNDETERMINED_PID;
+    }
+
   }
 
   /**
