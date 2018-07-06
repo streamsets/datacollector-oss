@@ -43,11 +43,11 @@ import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.util.http.HttpStageUtil;
+import org.apache.commons.lang.StringUtils;
 import org.glassfish.jersey.client.oauth1.AccessToken;
 import org.glassfish.jersey.client.oauth1.OAuth1ClientSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.commons.lang.StringUtils;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -291,6 +291,7 @@ public class HttpClientSource extends BaseSource {
 
     // If the request (headers or body) contain a known sensitive EL and we're not using https then fail the request.
     if (requestContainsSensitiveInfo() && !target.getUri().getScheme().toLowerCase().startsWith("https")) {
+      LOG.error(Errors.HTTP_07.getMessage());
       throw new StageException(Errors.HTTP_07);
     }
 
@@ -435,6 +436,7 @@ public class HttpClientSource extends BaseSource {
         final boolean statusOk = status >= 200 && status < 300;
         if (conf.client.useOAuth2 && status == 403) { // Token may have expired
           if (gotNewToken) {
+            LOG.error(HTTP_21.getMessage());
             throw new StageException(HTTP_21);
           }
           gotNewToken = HttpStageUtil.getNewOAuth2Token(conf.client.oauth2, client);
@@ -445,7 +447,15 @@ public class HttpClientSource extends BaseSource {
           keepRequesting = applyResponseAction(
               actionConf,
               statusChanged,
-              input -> new StageException(Errors.HTTP_14, status, response.readEntity(String.class))
+              input -> {
+                final StageException stageException = new StageException(
+                    Errors.HTTP_14,
+                    status,
+                    response.readEntity(String.class)
+                );
+                LOG.error(stageException.getMessage());
+                return stageException;
+              }
           );
 
         } else {
@@ -469,7 +479,11 @@ public class HttpClientSource extends BaseSource {
 
             final boolean firstTimeout = !lastRequestTimedOut;
 
-            applyResponseAction(actionConf, firstTimeout, input -> new StageException(Errors.HTTP_18));
+            applyResponseAction(actionConf, firstTimeout, input -> {
+                  LOG.error(Errors.HTTP_18.getMessage());
+                  return new StageException(Errors.HTTP_18);
+                }
+            );
 
           }
 
@@ -491,7 +505,9 @@ public class HttpClientSource extends BaseSource {
             ),
           e);
           Throwable reportEx = cause != null ? cause : e;
-          throw new StageException(Errors.HTTP_32, reportEx.toString(), reportEx);
+          final StageException stageException = new StageException(Errors.HTTP_32, reportEx.toString(), reportEx);
+          LOG.error(stageException.getMessage());
+          throw stageException;
         }
       }
       keepRequesting &= !getContext().isStopped();
@@ -512,7 +528,9 @@ public class HttpClientSource extends BaseSource {
       retryCount++;
     }
     if (actionConf.getMaxNumRetries() > 0 && retryCount > actionConf.getMaxNumRetries()) {
-      throw new StageException(Errors.HTTP_19, actionConf.getMaxNumRetries());
+      final StageException stageException = new StageException(Errors.HTTP_19, actionConf.getMaxNumRetries());
+      LOG.error(stageException.getMessage());
+      throw stageException;
     }
 
     boolean uninterrupted = true;
@@ -585,6 +603,7 @@ public class HttpClientSource extends BaseSource {
           LOG.warn("No data returned in HTTP response body.", e);
           return sourceOffset.toString();
         }
+        LOG.warn("Error parsing response", e);
         throw e;
       }
     }
@@ -624,6 +643,7 @@ public class HttpClientSource extends BaseSource {
       } while (recordCount < maxRecords && !waitTimeExpired(start));
 
     } catch (IOException e) {
+      LOG.error(Errors.HTTP_00.getMessage(), e.toString(), e);
       errorRecordHandler.onError(Errors.HTTP_00, e.toString(), e);
 
     } finally {
@@ -635,6 +655,7 @@ public class HttpClientSource extends BaseSource {
           incrementSourceOffset(sourceOffset, subRecordCount);
         }
       } catch(IOException e) {
+        LOG.warn(Errors.HTTP_28.getMessage(), e.toString(), e);
         errorRecordHandler.onError(Errors.HTTP_28, e.toString(), e);
       }
     }
@@ -713,6 +734,7 @@ public class HttpClientSource extends BaseSource {
       try {
         in.close();
       } catch(IOException e) {
+        LOG.warn("Error closing input stream", ex);
         ex = e;
       }
     }
@@ -723,6 +745,7 @@ public class HttpClientSource extends BaseSource {
     try {
       parser.close();
     } catch(IOException e) {
+      LOG.warn("Error closing parser", ex);
       ex = e;
     }
     parser = null;
@@ -762,12 +785,16 @@ public class HttpClientSource extends BaseSource {
     int numSubRecords = 0;
 
     if (!record.has(conf.pagination.resultFieldPath)) {
-      throw new StageException(Errors.HTTP_12, conf.pagination.resultFieldPath);
+      final StageException stageException = new StageException(Errors.HTTP_12, conf.pagination.resultFieldPath);
+      LOG.error(stageException.getMessage());
+      throw stageException;
     }
     Field resultField = record.get(conf.pagination.resultFieldPath);
 
     if (resultField.getType() != Field.Type.LIST) {
-      throw new StageException(Errors.HTTP_08, resultField.getType());
+      final StageException stageException = new StageException(Errors.HTTP_08, resultField.getType());
+      LOG.error(stageException.getMessage());
+      throw stageException;
     }
 
     List<Field> results = resultField.getValueAsList();
@@ -871,7 +898,10 @@ public class HttpClientSource extends BaseSource {
       getResponse().close();
       setResponse(null);
 
-      errorRecordHandler.onError(Errors.HTTP_01, status, reason + " : " + respString);
+
+      final String errorMsg = reason + " : " + respString;
+      LOG.warn(Errors.HTTP_01.getMessage(), status, errorMsg);
+      errorRecordHandler.onError(Errors.HTTP_01, status, errorMsg);
 
       return newSourceOffset;
     }
