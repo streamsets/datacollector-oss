@@ -344,7 +344,7 @@ angular
           if ($scope.customStageMeters === undefined) {
             $scope.customStageMeters = [];
             angular.forEach(pipelineMetrics.meters, function(meterObj, meterKey) {
-              if (meterKey.indexOf('custom.' + currentSelection.instanceName) !== -1) {
+              if (meterKey.startsWith('custom.' + currentSelection.instanceName)) {
                 var label = meterKey
                   .replace('custom.' + currentSelection.instanceName + '.', '')
                   .replace('.meter', '')
@@ -362,7 +362,7 @@ angular
           if ($scope.customStageTimers === undefined) {
             $scope.customStageTimers = [];
             angular.forEach(pipelineMetrics.timers, function(timerObj, timerKey) {
-              if (timerKey.indexOf('custom.' + currentSelection.instanceName) !== -1) {
+              if (timerKey.startsWith('custom.' + currentSelection.instanceName)) {
                 var label = timerKey
                   .replace('custom.' + currentSelection.instanceName + '.', '')
                   .replace('.timer', '')
@@ -380,7 +380,7 @@ angular
           if ($scope.customStageHistograms === undefined) {
             $scope.customStageHistograms = [];
             angular.forEach(pipelineMetrics.histograms, function(histogramObj, histogramKey) {
-              if (histogramKey.indexOf('custom.' + currentSelection.instanceName) !== -1) {
+              if (histogramKey.startsWith('custom.' + currentSelection.instanceName)) {
                 var label = histogramKey
                   .replace('custom.' + currentSelection.instanceName + '.', '')
                   .replace('.histogram', '')
@@ -398,7 +398,7 @@ angular
           if ($scope.customStageGauges === undefined) {
             $scope.customStageGauges = [];
             angular.forEach(pipelineMetrics.gauges, function(gaugeObj, gaugeKey) {
-              if (gaugeKey.indexOf('custom.' + currentSelection.instanceName) !== -1) {
+              if (gaugeKey.startsWith('custom.' + currentSelection.instanceName)) {
                 var label = gaugeKey
                   .replace('custom.' + currentSelection.instanceName + '.', '')
                   .replace('.gauge', '')
