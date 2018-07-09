@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.devtest;
 
+import com.codahale.metrics.Timer;
 import com.github.javafaker.Faker;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.ConfigDef;
@@ -147,6 +148,8 @@ public class RandomDataGeneratorSource extends BasePushSource {
    */
   private int maxBatchSize;
 
+  private Timer dataGeneratorTimer;
+
   @Override
   protected List<ConfigIssue> init() {
     counter = 0;
@@ -160,6 +163,8 @@ public class RandomDataGeneratorSource extends BasePushSource {
     }
     event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, names.isEmpty() ? "No fields" : String.join(", ", names));
     getContext().publishLineageEvent(event);
+
+    this.dataGeneratorTimer = getContext().createTimer("Data Generator");
 
     return super.init();
   }
@@ -226,9 +231,11 @@ public class RandomDataGeneratorSource extends BasePushSource {
         BatchContext batchContext = getContext().startBatch();
 
         // Fill it with random records
+        Timer.Context tc  = dataGeneratorTimer.time();
         for (int i = 0; i < maxBatchSize; i++) {
           createRecord(threadId, i, batchContext);
         }
+        tc.stop();
 
         // And finally send them the rest of the pipeline for further processing
         getContext().processBatch(batchContext);
