@@ -37,6 +37,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.streamsets.pipeline.Utils.KAFKA_CONFIG_BEAN_PREFIX;
+
 /**
  * Ingests kafka produce data from spark streaming
  */
@@ -145,6 +147,19 @@ public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitt
           ClusterModeConstants.EXTRA_KAFKA_CONFIG_PREFIX + k,
           v
       ));
+
+      configBeanPrefixedMap.put(
+          KAFKA_CONFIG_BEAN_PREFIX + BROKER_LIST,
+          conf.metadataBrokerList);
+      configBeanPrefixedMap.put(
+          KAFKA_CONFIG_BEAN_PREFIX + ZOOKEEPER_CONNECT,
+          conf.zookeeperConnect);
+      configBeanPrefixedMap.put(
+          KAFKA_CONFIG_BEAN_PREFIX + TOPIC,
+          conf.topic);
+      configBeanPrefixedMap.put(
+          KAFKA_CONFIG_BEAN_PREFIX + CONSUMER_GROUP,
+          conf.consumerGroup);
       return new ImmutableMap.Builder<String, String>().put(NO_OF_PARTITIONS, String.valueOf(getParallelism())).putAll(
           configBeanPrefixedMap).build();
     } catch (StageException e) {
