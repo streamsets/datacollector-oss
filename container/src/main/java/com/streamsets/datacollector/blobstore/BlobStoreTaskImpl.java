@@ -18,6 +18,7 @@ package com.streamsets.datacollector.blobstore;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.blobstore.meta.BlobStoreMetadata;
 import com.streamsets.datacollector.blobstore.meta.NamespaceMetadata;
@@ -50,6 +51,8 @@ public class BlobStoreTaskImpl extends AbstractTask implements BlobStoreTask {
   private static final String BASE_DIR = "blobstore";
   // File name of stored version of our metadata database
   private static final String METADATA_FILE = "metadata.json";
+  // Temporary name for a three-phase commit
+  private static final String NEW_METADATA_FILE = "updated.metadata.json";
 
   // JSON ObjectMapper for storing and reading metadata database to/from disk
   private static final ObjectMapper jsonMapper = new ObjectMapper();
@@ -60,7 +63,8 @@ public class BlobStoreTaskImpl extends AbstractTask implements BlobStoreTask {
   private final RuntimeInfo runtimeInfo;
 
   private Path baseDir;
-  private Path metadataFile;
+  @VisibleForTesting Path metadataFile;
+  @VisibleForTesting Path newMetadataFile;
   private BlobStoreMetadata metadata;
 
   @Inject
@@ -75,6 +79,7 @@ public class BlobStoreTaskImpl extends AbstractTask implements BlobStoreTask {
   public void initTask() {
     this.baseDir = Paths.get(runtimeInfo.getDataDir(), BASE_DIR);
     this.metadataFile = this.baseDir.resolve(METADATA_FILE);
+    this.newMetadataFile = this.baseDir.resolve(NEW_METADATA_FILE);
 
     if (!Files.exists(baseDir)) {
       initializeFreshInstall();
@@ -101,13 +106,29 @@ public class BlobStoreTaskImpl extends AbstractTask implements BlobStoreTask {
 
   private void initializeFromDisk() {
     try {
-      this.metadata = loadMetadata();
+      if(Files.exists(metadataFile)) {
+        // Most happy path - the metadata file exists
+        this.metadata = loadMetadata();
+
+        if(Files.exists(newMetadataFile)) {
+          LOG.error("Old temporary file already exists, using older state and dropping new state");
+          Files.delete(newMetadataFile);
+        }
+      } else if(Files.exists(newMetadataFile)) {
+        LOG.error("Missing primary metadata file, recovering new state");
+        Files.move(newMetadataFile, metadataFile);
+
+        this.metadata = loadMetadata();
+      } else {
+        throw new StageException(BlobStoreError.BLOB_STORE_0013);
+      }
+
       LOG.debug(
         "Loaded blob store metadata of version {} with {} namespaces",
         metadata.getVersion(),
         metadata.getNamespaces().size()
       );
-    } catch (StageException e) {
+    } catch (StageException|IOException e) {
       throw new RuntimeException(Utils.format("Can't initialize blob store: {}", e.toString()), e);
     }
   }
@@ -202,16 +223,43 @@ public class BlobStoreTaskImpl extends AbstractTask implements BlobStoreTask {
     saveMetadata();
   }
 
-  private void saveMetadata() throws StageException {
-    // TODO: This is unsafe, we could truncate the metadata file and then die in middle of writing. We need to make a
-    // three phase commit here. Write the metadata temp file, drop primary file, move the temporary. To keep this patch
-    // simple this will be done in subsequent patch.
+  /**
+   * Commit metadata content to a file to disk.
+   *
+   * This method does three-phased commit:
+   * 1) New content is written into a new temporary file.
+   * 2) Old metadata is dropped
+   * 3) Rename from new to old is done
+   */
+  synchronized private void saveMetadata() throws StageException {
+    // 0) Validate pre-conditions
+    if(Files.exists(newMetadataFile))  {
+      throw new StageException(BlobStoreError.BLOB_STORE_0010);
+    }
+
+    // 1) New content is written into a new temporary file.
     try (
-      OutputStream os = Files.newOutputStream(metadataFile, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
+      OutputStream os = Files.newOutputStream(newMetadataFile, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
     ) {
       jsonMapper.writeValue(os, metadata);
     } catch (IOException e) {
       throw new StageException(BlobStoreError.BLOB_STORE_0001, e.toString(), e);
+    }
+
+    // 2) Old metadata is dropped
+    try {
+      if(Files.exists(metadataFile)) {
+        Files.delete(metadataFile);
+      }
+    } catch (IOException e) {
+      throw new StageException(BlobStoreError.BLOB_STORE_0011, e.toString(), e);
+    }
+
+    // 3) Rename from new to old is done
+    try {
+      Files.move(newMetadataFile, metadataFile);
+    } catch (IOException e) {
+      throw new StageException(BlobStoreError.BLOB_STORE_0012, e.toString(), e);
     }
   }
 

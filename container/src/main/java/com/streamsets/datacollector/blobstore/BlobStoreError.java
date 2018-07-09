@@ -27,6 +27,10 @@ public enum  BlobStoreError implements ErrorCode {
   BLOB_STORE_0007("Object doesn't exists: namespace={}, object={}, version={}"),
   BLOB_STORE_0008("Can't read object: {}"),
   BLOB_STORE_0009("Can't remove object: {}"),
+  BLOB_STORE_0010("Temporary file for three-phase commit already exists"),
+  BLOB_STORE_0011("Can't delete old metadata file: {}"),
+  BLOB_STORE_0012("Can't promote new metadata file: {}"),
+  BLOB_STORE_0013("Can't locate metadata files"),
   ;
 
   private final String message;
