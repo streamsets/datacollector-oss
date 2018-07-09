@@ -57,6 +57,11 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
   private DataParserFactory parserFactory;
   private int originParallelism = 0;
   private SdcKafkaValidationUtil kafkaValidationUtil;
+  protected static final String ZOOKEEPER_CONNECT = "zookeeperConnect";
+  protected static final String CONSUMER_GROUP = "consumerGroup";
+  protected static final String TOPIC = "topic";
+  protected static final String BROKER_LIST = "metadataBrokerList";
+
 
   public BaseKafkaSource(KafkaConfigBean conf) {
     this.conf = conf;
@@ -72,7 +77,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
       issues.add(
           getContext().createConfigIssue(
               KafkaOriginGroups.KAFKA.name(),
-              KAFKA_CONFIG_BEAN_PREFIX + "topic",
+              KAFKA_CONFIG_BEAN_PREFIX + TOPIC,
               KafkaErrors.KAFKA_05
           )
       );
@@ -114,7 +119,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
         issues,
         conf.metadataBrokerList,
         KafkaOriginGroups.KAFKA.name(),
-        KAFKA_CONFIG_BEAN_PREFIX + "metadataBrokerList",
+        KAFKA_CONFIG_BEAN_PREFIX + BROKER_LIST,
         getContext()
     );
 
@@ -128,7 +133,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
       );
       if (partitionCount < 1) {
         issues.add(getContext().createConfigIssue(KafkaOriginGroups.KAFKA.name(),
-            KAFKA_CONFIG_BEAN_PREFIX + "topic",
+            KAFKA_CONFIG_BEAN_PREFIX + TOPIC,
             KafkaErrors.KAFKA_42,
             conf.topic
         ));
@@ -138,7 +143,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
       }
     } catch (StageException e) {
       issues.add(getContext().createConfigIssue(KafkaOriginGroups.KAFKA.name(),
-          KAFKA_CONFIG_BEAN_PREFIX + "topic",
+          KAFKA_CONFIG_BEAN_PREFIX + TOPIC,
           KafkaErrors.KAFKA_41,
           conf.topic,
           e.toString(),
@@ -151,7 +156,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
         issues,
         conf.zookeeperConnect,
         KafkaOriginGroups.KAFKA.name(),
-        KAFKA_CONFIG_BEAN_PREFIX + "zookeeperConnect",
+        KAFKA_CONFIG_BEAN_PREFIX + ZOOKEEPER_CONNECT,
         getContext()
     );
 
@@ -160,7 +165,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
       issues.add(
           getContext().createConfigIssue(
               KafkaOriginGroups.KAFKA.name(),
-              KAFKA_CONFIG_BEAN_PREFIX + "consumerGroup",
+              KAFKA_CONFIG_BEAN_PREFIX + CONSUMER_GROUP,
               KafkaErrors.KAFKA_33
           )
       );

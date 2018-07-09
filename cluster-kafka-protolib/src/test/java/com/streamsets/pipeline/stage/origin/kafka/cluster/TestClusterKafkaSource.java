@@ -23,6 +23,8 @@ import org.mockito.Mockito;
 
 import java.util.Map;
 
+import static com.streamsets.pipeline.Utils.KAFKA_CONFIG_BEAN_PREFIX;
+
 public class TestClusterKafkaSource {
 
   @Test
@@ -30,12 +32,19 @@ public class TestClusterKafkaSource {
     KafkaConfigBean kafkaConfigBean = new KafkaConfigBean();
     kafkaConfigBean.kafkaConsumerConfigs.put("AAA", "ValueAAA");
     kafkaConfigBean.kafkaConsumerConfigs.put("BBB", "ValueBBB");
+    kafkaConfigBean.metadataBrokerList = "localhost:9092";
+    kafkaConfigBean.zookeeperConnect = "localhost:2181";
+    kafkaConfigBean.consumerGroup = "group1";
+    kafkaConfigBean.topic = "sdctopic";
     ClusterKafkaSource clusterKafkaSource = Mockito.spy(new ClusterKafkaSource(kafkaConfigBean));
     Mockito.doReturn(3).when(clusterKafkaSource).getParallelism();
-    Assert.assertEquals(3, clusterKafkaSource.getConfigsToShip().size());
+    Assert.assertEquals(7, clusterKafkaSource.getConfigsToShip().size());
     Map<String, String> gotMap = clusterKafkaSource.getConfigsToShip();
-    Assert.assertEquals("ValueAAA", gotMap.get(ClusterModeConstants.EXTRA_KAFKA_CONFIG_PREFIX+ "AAA"));
-    Assert.assertEquals("ValueBBB", gotMap.get(ClusterModeConstants.EXTRA_KAFKA_CONFIG_PREFIX+ "BBB"));
+    Assert.assertEquals("ValueAAA", gotMap.get(ClusterModeConstants.EXTRA_KAFKA_CONFIG_PREFIX + "AAA"));
+    Assert.assertEquals("ValueBBB", gotMap.get(ClusterModeConstants.EXTRA_KAFKA_CONFIG_PREFIX + "BBB"));
+    Assert.assertEquals("localhost:9092", gotMap.get(KAFKA_CONFIG_BEAN_PREFIX + "metadataBrokerList"));
+    Assert.assertEquals("localhost:2181", gotMap.get(KAFKA_CONFIG_BEAN_PREFIX + "zookeeperConnect"));
+    Assert.assertEquals("group1", gotMap.get(KAFKA_CONFIG_BEAN_PREFIX + "consumerGroup"));
+    Assert.assertEquals("sdctopic", gotMap.get(KAFKA_CONFIG_BEAN_PREFIX + "topic"));
   }
-
 }
