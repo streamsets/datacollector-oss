@@ -266,9 +266,9 @@
 <script type="text/ng-template" id="summaryRecordHistogramTemplate">
   <div class="col-sm-4"
        ng-if="activeConfigStatus.executionMode !== pipelineConstant.CLUSTER &&
-       activeConfigStatus.executionMode !== pipelineConstant. &&
+       activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH &&
        activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_EMR_BATCH &&
-       activeConfigStatus.executionMode !== pipelineConstCLUSTER_BATCHant.CLUSTER_YARN_STREAMING &&
+       activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_YARN_STREAMING &&
        activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_MESOS_STREAMING && timeRange === 'latest'"
        ng-controller="HistogramChartController">
     <div class="panel panel-default">
@@ -278,6 +278,7 @@
         <button type="button" class="close" aria-label="Close" ng-click="removeChart(chart, chartIndex)">
           <span aria-hidden="true">&times;</span>
         </button>
+      </div>
       </div>
       <div class="panel-body">
         <nvd3 ng-if="timeRange === 'latest'"
