@@ -46,6 +46,7 @@ import org.slf4j.LoggerFactory;
 public abstract class MysqlSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(MysqlSource.class);
 
+  private static final String CONFIG_PREFIX = "config.";
   private BinaryLogConsumer consumer;
 
   private BinaryLogClient client;
@@ -99,7 +100,7 @@ public abstract class MysqlSource extends BaseSource {
     } catch (IOException | TimeoutException e) {
       LOG.error("Error connecting to MySql binlog: {}", e.getMessage(), e);
       issues.add(getContext().createConfigIssue(
-          Groups.MYSQL.name(), null, Errors.MYSQL_003, e.getMessage(), e
+          Groups.MYSQL.name(), CONFIG_PREFIX + "hostname", Errors.MYSQL_003, e.getMessage(), e
       ));
     } finally {
       try {
@@ -116,7 +117,7 @@ public abstract class MysqlSource extends BaseSource {
     } catch (IllegalArgumentException e) {
       LOG.error("Error creating include tables filter: {}", e.getMessage(), e);
       issues.add(getContext().createConfigIssue(
-          Groups.ADVANCED.name(), "includeTables", Errors.MYSQL_008, e.getMessage(), e
+          Groups.ADVANCED.name(), CONFIG_PREFIX  + "includeTables", Errors.MYSQL_008, e.getMessage(), e
       ));
     }
 
@@ -126,7 +127,7 @@ public abstract class MysqlSource extends BaseSource {
     } catch (IllegalArgumentException e) {
       LOG.error("Error creating ignore tables filter: {}", e.getMessage(), e);
       issues.add(getContext().createConfigIssue(
-          Groups.ADVANCED.name(), "ignoreTables", Errors.MYSQL_007, e.getMessage(), e
+          Groups.ADVANCED.name(), CONFIG_PREFIX + "ignoreTables", Errors.MYSQL_007, e.getMessage(), e
       ));
     }
 
