@@ -452,7 +452,7 @@
 
     <!-- CouchBase libs -->
      <fileSet>
-      <directory>${basedir}/../${couchbase_5_0-lib}/target/streamsets-libs/</directory>
+      <directory>${basedir}/../${couchbase_5-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
