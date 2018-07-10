@@ -160,6 +160,7 @@ public class PipelineStoreResource {
   private static final String DPM_PIPELINE_ID = "dpm.pipeline.id";
 
   private static final String SYSTEM_ALL_PIPELINES = "system:allPipelines";
+  private static final String SYSTEM_EDGE_PIPELINES = "system:edgePipelines";
   private static final String SYSTEM_PUBLISHED_PIPELINES = "system:publishedPipelines";
   private static final String SYSTEM_DPM_CONTROLLED_PIPELINES = "system:dpmControlledPipelines";
   private static final String SYSTEM_LOCAL_PIPELINES = "system:localPipelines";
@@ -173,6 +174,7 @@ public class PipelineStoreResource {
 
   private static final List<String> SYSTEM_PIPELINE_LABELS = ImmutableList.of(
       SYSTEM_ALL_PIPELINES,
+      SYSTEM_EDGE_PIPELINES,
       SYSTEM_RUNNING_PIPELINES,
       SYSTEM_NON_RUNNING_PIPELINES,
       SYSTEM_INVALID_PIPELINES,
@@ -185,6 +187,7 @@ public class PipelineStoreResource {
       SYSTEM_PUBLISHED_PIPELINES,
       SYSTEM_DPM_CONTROLLED_PIPELINES,
       SYSTEM_LOCAL_PIPELINES,
+      SYSTEM_EDGE_PIPELINES,
       SYSTEM_RUNNING_PIPELINES,
       SYSTEM_NON_RUNNING_PIPELINES,
       SYSTEM_INVALID_PIPELINES,
@@ -311,8 +314,12 @@ public class PipelineStoreResource {
           switch (label) {
             case SYSTEM_ALL_PIPELINES:
               return true;
-            case SYSTEM_RUNNING_PIPELINES:
+            case SYSTEM_EDGE_PIPELINES:
               PipelineState state = manager.getPipelineState(pipelineInfo.getPipelineId(), pipelineInfo.getLastRev());
+              pipelineStateCache.put(pipelineInfo.getPipelineId(), state);
+              return state.getExecutionMode().equals(ExecutionMode.EDGE);
+            case SYSTEM_RUNNING_PIPELINES:
+              state = manager.getPipelineState(pipelineInfo.getPipelineId(), pipelineInfo.getLastRev());
               pipelineStateCache.put(pipelineInfo.getPipelineId(), state);
               return state.getStatus().isActive();
             case SYSTEM_NON_RUNNING_PIPELINES:
