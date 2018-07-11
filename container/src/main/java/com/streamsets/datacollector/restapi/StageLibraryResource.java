@@ -21,6 +21,7 @@ import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
 import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
+import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.definition.ConcreteELDefinitionExtractor;
 import com.streamsets.datacollector.el.RuntimeEL;
 import com.streamsets.datacollector.execution.alerts.DataRuleEvaluator;
@@ -204,54 +205,15 @@ public class StageLibraryResource {
   ) throws IOException {
     List<StageLibraryJson> installedLibraries = new ArrayList<>();
     List<StageLibraryJson> libraries = new ArrayList<>();
-
-    List<StageDefinition> stageDefinitions = stageLibrary.getStages();
     Map<String, Boolean> installedLibrariesMap = new HashMap<>();
-    for(StageDefinition stageDefinition: stageDefinitions) {
-      if (!installedLibrariesMap.containsKey(stageDefinition.getLibrary())) {
-        installedLibrariesMap.put(stageDefinition.getLibrary(), true);
-        installedLibraries.add(new StageLibraryJson(
-            stageDefinition.getLibrary(),
-            stageDefinition.getLibraryLabel(),
-            true
-        ));
-      }
-    }
 
-    List<ServiceDefinition> serviceDefinitions = stageLibrary.getServiceDefinitions();
-    for(ServiceDefinition serviceDefinition: serviceDefinitions) {
-      if (!installedLibrariesMap.containsKey(serviceDefinition.getLibraryDefinition().getName())) {
-        installedLibrariesMap.put(serviceDefinition.getLibraryDefinition().getName(), true);
-        installedLibraries.add(new StageLibraryJson(
-            serviceDefinition.getLibraryDefinition().getName(),
-            serviceDefinition.getLibraryDefinition().getLabel(),
-            true
-        ));
-      }
-    }
-
-    List<CredentialStoreDefinition> credentialStoreDefinitions = stageLibrary.getCredentialStoreDefinitions();
-    for(CredentialStoreDefinition credentialStoreDefinition: credentialStoreDefinitions) {
-      if (!installedLibrariesMap.containsKey(credentialStoreDefinition.getStageLibraryDefinition().getName())) {
-        installedLibrariesMap.put(credentialStoreDefinition.getStageLibraryDefinition().getName(), true);
-        installedLibraries.add(new StageLibraryJson(
-            credentialStoreDefinition.getStageLibraryDefinition().getName(),
-            credentialStoreDefinition.getStageLibraryDefinition().getLabel(),
-            true
-        ));
-      }
-    }
-
-    List<LineagePublisherDefinition> lineagePublisherDefinitions = stageLibrary.getLineagePublisherDefinitions();
-    for(LineagePublisherDefinition lineagePublisherDefinition: lineagePublisherDefinitions) {
-      if (!installedLibrariesMap.containsKey(lineagePublisherDefinition.getLibraryDefinition().getName())) {
-        installedLibrariesMap.put(lineagePublisherDefinition.getLibraryDefinition().getName(), true);
-        installedLibraries.add(new StageLibraryJson(
-            lineagePublisherDefinition.getLibraryDefinition().getName(),
-            lineagePublisherDefinition.getLibraryDefinition().getLabel(),
-            true
-        ));
-      }
+    for(StageLibraryDefinition libDef : stageLibrary.getLoadedStageLibraries()) {
+      installedLibrariesMap.put(libDef.getName(), true);
+      installedLibraries.add(new StageLibraryJson(
+        libDef.getName(),
+        libDef.getLabel(),
+        true
+      ));
     }
 
     if (!installedOnly) {

@@ -174,6 +174,11 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
   }
 
   @Override
+  public List<StageLibraryDefinition> getLoadedStageLibraries() {
+    return library.getLoadedStageLibraries();
+  }
+
+  @Override
   public void releaseStageClassLoader(ClassLoader classLoader) {
     if (classLoader != PLUG_STAGE.getClass().getClassLoader()) {
       library.releaseStageClassLoader(classLoader);

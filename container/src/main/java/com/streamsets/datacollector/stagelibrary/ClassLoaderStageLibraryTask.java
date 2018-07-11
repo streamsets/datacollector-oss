@@ -79,6 +79,7 @@ import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -118,6 +119,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private final Map<String,String> stageNameAliases;
   private final Configuration configuration;
   private List<? extends ClassLoader> stageClassLoaders;
+  private List<StageLibraryDefinition> stageLibraries;
   private Map<String, StageDefinition> stageMap;
   private List<StageDefinition> stageList;
   private List<LineagePublisherDefinition> lineagePublisherDefinitions;
@@ -230,6 +232,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
     // Load all stages and other objects from the libraries
     json = ObjectMapperFactory.get();
+    stageLibraries = new ArrayList<>();
     stageList = new ArrayList<>();
     stageMap = new HashMap<>();
     lineagePublisherDefinitions = new ArrayList<>();
@@ -241,6 +244,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     delegateList = new ArrayList<>();
     delegateMap = new HashMap<>();
     loadStages();
+    stageLibraries = ImmutableList.copyOf(stageLibraries);
     stageList = ImmutableList.copyOf(stageList);
     stageMap = ImmutableMap.copyOf(stageMap);
     lineagePublisherDefinitions = ImmutableList.copyOf(lineagePublisherDefinitions);
@@ -469,6 +473,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
           // Load stages from the stage library
           StageLibraryDefinition libDef = StageLibraryDefinitionExtractor.get().extract(cl);
           LOG.debug("Loading stages and plugins from library '{}'", libDef.getName());
+          stageLibraries.add(libDef);
           libs++;
 
           // Load Stages
@@ -776,6 +781,11 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   @Override
   public StageLibraryDelegateDefinitition getStageLibraryDelegateDefinition(String stageLibrary, Class exportedInterface) {
     return delegateMap.get(createKey(stageLibrary, exportedInterface.getCanonicalName()));
+  }
+
+  @Override
+  public List<StageLibraryDefinition> getLoadedStageLibraries() {
+    return stageLibraries;
   }
 
   ClassLoader getStageClassLoader(PrivateClassLoaderDefinition stageDefinition) {
