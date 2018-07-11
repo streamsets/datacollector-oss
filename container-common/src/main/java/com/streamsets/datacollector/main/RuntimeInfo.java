@@ -30,11 +30,13 @@ import org.slf4j.LoggerFactory;
 import javax.net.ssl.SSLContext;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -52,6 +54,7 @@ public abstract class RuntimeInfo {
   public static final String TRANSIENT_ENVIRONMENT = "sdc.transient-env";
   public static final String UNDEF = "UNDEF";
   public static final String CALLBACK_URL = "/public-rest/v1/cluster/callbackWithResponse";
+  public static final String SCH_CONF_OVERRIDE = "control-hub-pushed.properties";
 
 
   public static final String SECURITY_PREFIX = "java.security.";
@@ -298,6 +301,7 @@ public abstract class RuntimeInfo {
   }
 
   public static void loadOrReloadConfigs(RuntimeInfo runtimeInfo, Configuration conf) {
+    // Load main SDC configuration as specified by the SDC admin
     File configFile = new File(runtimeInfo.getConfigDir(), "sdc.properties");
     if (configFile.exists()) {
       try(FileReader reader = new FileReader(configFile)) {
@@ -323,12 +327,63 @@ public abstract class RuntimeInfo {
       LOG.error("Error did not find sdc.properties at expected location: {}", configFile);
     }
 
+    // Load separate configuration that was pushed down by control hub
+    configFile = new File(runtimeInfo.getDataDir(), SCH_CONF_OVERRIDE);
+    if(configFile.exists()) {
+      try (FileReader reader = new FileReader(configFile)) {
+        conf.load(reader);
+      } catch (IOException ex) {
+        LOG.error("Error did not find {} at expected location: {}", SCH_CONF_OVERRIDE, configFile);
+      }
+    }
+
     // Transfer all security properties to the JVM configuration
     for(Map.Entry<String, String> entry : conf.getSubSetConfiguration(SECURITY_PREFIX).getValues().entrySet()) {
       java.security.Security.setProperty(
           entry.getKey().substring(SECURITY_PREFIX.length()),
           entry.getValue()
       );
+    }
+  }
+
+  /**
+   * Store configuration from control hub in persistent manner inside data directory. This configuration will be
+   * loaded on data collector start and will override any configuration from sdc.properties.
+   *
+   * This method call is able to remove existing properties if the value is "null". Please note that the removal will
+   * only happen from the 'override' file. This method does not have the capability to remove configuration directly
+   * from sdc.properties.
+   *
+   * @param runtimeInfo RuntimeInfo instance
+   * @param newConfigs New set of config properties
+   * @throws IOException
+   */
+  public static void storeControlHubConfigs(
+      RuntimeInfo runtimeInfo,
+      Map<String, String> newConfigs
+  ) throws IOException {
+    File configFile = new File(runtimeInfo.getDataDir(), SCH_CONF_OVERRIDE);
+    Properties properties = new Properties();
+
+    // Load existing properties from disk if they exists
+    if(configFile.exists()) {
+      try (FileReader reader = new FileReader(configFile)) {
+        properties.load(reader);
+      }
+    }
+
+    // Propagate updated configuration
+    for(Map.Entry<String, String> entry : newConfigs.entrySet()) {
+      if(entry.getValue() == null) {
+        properties.remove(entry.getKey());
+      } else {
+        properties.setProperty(entry.getKey(), entry.getValue());
+      }
+    }
+
+    // Store the new updated configuration back to disk
+    try(FileWriter writer = new FileWriter(configFile)) {
+      properties.store(writer, null);
     }
   }
 
