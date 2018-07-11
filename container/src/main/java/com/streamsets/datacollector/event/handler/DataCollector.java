@@ -18,6 +18,7 @@ package com.streamsets.datacollector.event.handler;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Future;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
@@ -80,4 +81,9 @@ public interface DataCollector {
    * Remove object from DataCollector's blob store.
    */
   void blobDelete(String namespace, String id, long version) throws StageException;
+
+  /**
+   * Store new configuration from control hub inside this data collector in a persistent manner.
+   */
+  void storeConfiguration(Map<String, String> newConfiguration) throws IOException;
 }

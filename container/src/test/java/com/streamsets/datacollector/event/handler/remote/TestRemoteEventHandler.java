@@ -564,6 +564,10 @@ public class TestRemoteEventHandler {
     }
 
     @Override
+    public void storeConfiguration(Map<String, String> newConfiguration) throws IOException {
+    }
+
+    @Override
     public Future<AckEvent> stopAndDelete(String user, String name, String rev, long forceStopTimeout) throws PipelineException,
         StageException {
       stopDeletePipelineCalled = true;

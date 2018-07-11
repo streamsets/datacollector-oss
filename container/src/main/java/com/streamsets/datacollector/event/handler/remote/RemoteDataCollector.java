@@ -48,6 +48,7 @@ import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.LogUtil;
 import com.streamsets.datacollector.util.PipelineException;
@@ -84,6 +85,7 @@ public class RemoteDataCollector implements DataCollector {
   public static final String IS_REMOTE_PIPELINE = "IS_REMOTE_PIPELINE";
   private static final String NAME_AND_REV_SEPARATOR = "::";
   private static final Logger LOG = LoggerFactory.getLogger(RemoteDataCollector.class);
+  private final Configuration configuration;
   private final Manager manager;
   private final PipelineStoreTask pipelineStore;
   private final List<String> validatorIdList;
@@ -98,6 +100,7 @@ public class RemoteDataCollector implements DataCollector {
 
   @Inject
   public RemoteDataCollector(
+      Configuration configuration,
       Manager manager,
       PipelineStoreTask pipelineStore,
       PipelineStateStore pipelineStateStore,
@@ -109,6 +112,7 @@ public class RemoteDataCollector implements DataCollector {
       BlobStoreTask blobStoreTask,
       @Named("eventHandlerExecutor")  SafeScheduledExecutorService eventHandlerExecutor
   ) {
+    this.configuration = configuration;
     this.manager = manager;
     this.pipelineStore = pipelineStore;
     this.pipelineStateStore = pipelineStateStore;
@@ -427,6 +431,18 @@ public class RemoteDataCollector implements DataCollector {
   @Override
   public void blobDelete(String namespace, String id, long version) throws StageException {
     blobStoreTask.delete(namespace, id, version);
+  }
+
+  @Override
+  public void storeConfiguration(Map<String, String> newConfiguration) throws IOException {
+    RuntimeInfo.storeControlHubConfigs(runtimeInfo, newConfiguration);
+    for(Map.Entry<String, String> entry : newConfiguration.entrySet()) {
+      if(entry.getValue() == null) {
+        configuration.unset(entry.getKey());
+      } else {
+        configuration.set(entry.getKey(), entry.getValue());
+      }
+    }
   }
 
   private List<WorkerInfo> getWorkers(Collection<CallbackInfo> callbackInfos) {
