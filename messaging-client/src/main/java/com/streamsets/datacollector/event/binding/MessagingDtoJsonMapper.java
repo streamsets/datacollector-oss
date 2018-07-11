@@ -31,6 +31,7 @@ import com.streamsets.datacollector.event.dto.PipelineStatusEvents;
 import com.streamsets.datacollector.event.dto.PipelineStopAndDeleteEvent;
 import com.streamsets.datacollector.event.dto.SDCInfoEvent;
 import com.streamsets.datacollector.event.dto.SDCProcessMetricsEvent;
+import com.streamsets.datacollector.event.dto.SaveConfigurationEvent;
 import com.streamsets.datacollector.event.dto.ServerEvent;
 import com.streamsets.datacollector.event.dto.SyncAclEvent;
 import com.streamsets.datacollector.event.json.AckEventJson;
@@ -49,6 +50,7 @@ import com.streamsets.datacollector.event.json.PipelineStatusEventsJson;
 import com.streamsets.datacollector.event.json.PipelineStopAndDeleteEventJson;
 import com.streamsets.datacollector.event.json.SDCInfoEventJson;
 import com.streamsets.datacollector.event.json.SDCProcessMetricsEventJson;
+import com.streamsets.datacollector.event.json.SaveConfigurationEventJson;
 import com.streamsets.datacollector.event.json.ServerEventJson;
 import com.streamsets.datacollector.event.json.SyncAclEventJson;
 import com.streamsets.lib.security.http.DisconnectedSecurityInfo;
@@ -152,4 +154,8 @@ public abstract class MessagingDtoJsonMapper {
   public abstract BlobDeleteVersionEvent asBlobDeleteVersionEventDto(BlobDeleteVersionEventJson blobDeleteEventJson);
 
   public abstract BlobDeleteVersionEventJson toBlobDeleteVersionEventJson(BlobDeleteVersionEvent blobDeleteEvent);
+
+  public abstract SaveConfigurationEvent asSaveConfigurationEventDto(SaveConfigurationEventJson saveConfigurationEventJson);
+
+  public abstract SaveConfigurationEventJson toSaveConfigurationEventJson(SaveConfigurationEvent saveConfigurationEvent);
 }

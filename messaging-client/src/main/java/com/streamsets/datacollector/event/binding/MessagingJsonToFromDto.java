@@ -40,6 +40,7 @@ import com.streamsets.datacollector.event.dto.PipelineStatusEvents;
 import com.streamsets.datacollector.event.dto.PipelineStopAndDeleteEvent;
 import com.streamsets.datacollector.event.dto.SDCInfoEvent;
 import com.streamsets.datacollector.event.dto.SDCProcessMetricsEvent;
+import com.streamsets.datacollector.event.dto.SaveConfigurationEvent;
 import com.streamsets.datacollector.event.dto.ServerEvent;
 import com.streamsets.datacollector.event.dto.SyncAclEvent;
 import com.streamsets.datacollector.event.json.AckEventJson;
@@ -59,6 +60,7 @@ import com.streamsets.datacollector.event.json.PipelineStatusEventsJson;
 import com.streamsets.datacollector.event.json.PipelineStopAndDeleteEventJson;
 import com.streamsets.datacollector.event.json.SDCInfoEventJson;
 import com.streamsets.datacollector.event.json.SDCProcessMetricsEventJson;
+import com.streamsets.datacollector.event.json.SaveConfigurationEventJson;
 import com.streamsets.datacollector.event.json.ServerEventJson;
 import com.streamsets.datacollector.event.json.SyncAclEventJson;
 
@@ -145,6 +147,9 @@ public class MessagingJsonToFromDto {
         break;
       case BLOB_DELETE_VERSION:
         eventJson = MessagingDtoJsonMapper.INSTANCE.toBlobDeleteVersionEventJson((BlobDeleteVersionEvent) event);
+        break;
+      case SAVE_CONFIGURATION:
+        eventJson = MessagingDtoJsonMapper.INSTANCE.toSaveConfigurationEventJson((SaveConfigurationEvent) event);
         break;
       case SSO_DISCONNECTED_MODE_CREDENTIALS:
         eventJson =
@@ -291,6 +296,13 @@ public class MessagingJsonToFromDto {
         };
         BlobDeleteEventJson eventJson = deserialize(serverEventJson.getPayload(), typeRef);
         serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asBlobDeleteEventDto(eventJson));
+        break;
+      }
+      case SAVE_CONFIGURATION: {
+        TypeReference<SaveConfigurationEventJson> typeRef = new TypeReference<SaveConfigurationEventJson>() {
+        };
+        SaveConfigurationEventJson eventJson = deserialize(serverEventJson.getPayload(), typeRef);
+        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asSaveConfigurationEventDto(eventJson));
         break;
       }
       case SSO_DISCONNECTED_MODE_CREDENTIALS: {

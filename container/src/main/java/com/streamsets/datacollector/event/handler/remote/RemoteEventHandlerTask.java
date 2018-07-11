@@ -47,6 +47,7 @@ import com.streamsets.datacollector.event.dto.PipelineStopAndDeleteEvent;
 import com.streamsets.datacollector.event.dto.SDCBuildInfo;
 import com.streamsets.datacollector.event.dto.SDCInfoEvent;
 import com.streamsets.datacollector.event.dto.SDCProcessMetricsEvent;
+import com.streamsets.datacollector.event.dto.SaveConfigurationEvent;
 import com.streamsets.datacollector.event.dto.ServerEvent;
 import com.streamsets.datacollector.event.dto.StageInfo;
 import com.streamsets.datacollector.event.dto.SyncAclEvent;
@@ -608,6 +609,10 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
                 blobDeleteVersionEvent.getId(),
                 blobDeleteVersionEvent.getVersion()
             );
+            break;
+          case SAVE_CONFIGURATION:
+            SaveConfigurationEvent saveConfigurationEvent = (SaveConfigurationEvent)event;
+            remoteDataCollector.storeConfiguration(saveConfigurationEvent.getConfiguration());
             break;
           case SYNC_ACL:
             remoteDataCollector.syncAcl(((SyncAclEvent) event).getAcl());
