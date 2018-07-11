@@ -23,6 +23,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Sets;
 import com.streamsets.datacollector.classpath.ClasspathValidator;
 import com.streamsets.datacollector.classpath.ClasspathValidatorResult;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
@@ -79,6 +80,7 @@ import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -91,6 +93,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLibraryTask {
   public static final String MAX_PRIVATE_STAGE_CLASS_LOADERS_KEY = "max.stage.private.classloaders";
@@ -110,6 +113,9 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
   private static final String CONFIG_CP_VALIDATION_RESULT = "stagelibs.classpath.validation.terminate";
   private static final boolean DEFAULT_CP_VALIDATION_RESULT = false;
+
+  @VisibleForTesting static final String CONFIG_REQUIRED_STAGELIBS= "stagelibs.required";
+  private static final String DEFAULT_REQUIRED_STAGELIBS = "";
 
   private static final Logger LOG = LoggerFactory.getLogger(ClassLoaderStageLibraryTask.class);
 
@@ -271,6 +277,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     validateStageVersions(stageList);
     validateServices(stageList, serviceList);
     validateDelegates(delegateList);
+    validateRequiredStageLibraries();
 
     // initializing the list of targets that can be used for error handling
     ErrorHandlingChooserValues.setErrorHandlingOptions(this);
@@ -297,6 +304,33 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     poolConfig.setBlockWhenExhausted(false);
     poolConfig.setMaxWaitMillis(0);
     privateClassLoaderPool = new GenericKeyedObjectPool<>(new ClassLoaderFactory(stageClassLoaders), poolConfig);
+  }
+
+  /**
+   * Validate that all required libraries are available and loaded.
+   */
+  @VisibleForTesting void validateRequiredStageLibraries() {
+    // Name of all installed libraries
+    Set<String> installedLibraries = stageLibraries.stream()
+      .map(StageLibraryDefinition::getName)
+      .collect(Collectors.toSet());
+
+    // Required libraries
+    Set<String> requiredLibraries = new HashSet<>();
+    String config = configuration.get(CONFIG_REQUIRED_STAGELIBS, DEFAULT_REQUIRED_STAGELIBS);
+    for(String stageLib : config.split(",")) {
+      if(!stageLib.isEmpty()) {
+        requiredLibraries.add(stageLib);
+      }
+    }
+
+    Set<String> missingLibraries = Sets.difference(requiredLibraries, installedLibraries);
+    if(!missingLibraries.isEmpty()) {
+      throw new RuntimeException(Utils.format(
+        "Some required stage libraries are missing: {}",
+        StringUtils.join(missingLibraries, ", ")
+      ));
+    }
   }
 
   private void validateStageClasspaths() {

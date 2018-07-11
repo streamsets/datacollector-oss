@@ -201,4 +201,13 @@ public class TestClassLoaderStageLibraryTask {
 
     library.validateDelegates(ImmutableList.of(def, def));
   }
+
+  @Test(expected = RuntimeException.class)
+  public void testMissingRequiredLibraries() {
+    Configuration configuration = new Configuration();
+    configuration.set(ClassLoaderStageLibraryTask.CONFIG_REQUIRED_STAGELIBS, "random-non-existing-stagelib");
+    ClassLoaderStageLibraryTask library = new ClassLoaderStageLibraryTask(null, null, new Configuration());
+
+    library.validateRequiredStageLibraries();
+  }
 }
