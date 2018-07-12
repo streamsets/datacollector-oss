@@ -64,11 +64,18 @@ public class PipelineConfigBean implements Stage {
 
   public static final int VERSION = 10;
 
+  public static final String DEFAULT_STATS_AGGREGATOR_LIBRARY_NAME = "streamsets-datacollector-basic-lib";
+
+  public static final String DEFAULT_STATS_AGGREGATOR_STAGE_NAME =
+      "com_streamsets_pipeline_stage_destination_devnull_StatsDpmDirectlyDTarget";
+
+  public static final String DEFAULT_STATS_AGGREGATOR_STAGE_VERSION = "1";
+
+  public static final String STATS_DPM_DIRECTLY_TARGET = DEFAULT_STATS_AGGREGATOR_LIBRARY_NAME + "::" +
+      DEFAULT_STATS_AGGREGATOR_STAGE_NAME + "::" + DEFAULT_STATS_AGGREGATOR_STAGE_VERSION;
+
   public static final String STATS_AGGREGATOR_DEFAULT = "streamsets-datacollector-basic-lib" +
       "::com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget::1";
-
-  public static final String STATS_DPM_DIRECTLY_TARGET = "streamsets-datacollector-basic-lib" +
-      "::com_streamsets_pipeline_stage_destination_devnull_StatsDpmDirectlyDTarget::1";
 
   private static final String TRASH_TARGET = "streamsets-datacollector-basic-lib" +
       "::com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget::1";
@@ -270,12 +277,12 @@ public class PipelineConfigBean implements Stage {
       required = false,
       type = ConfigDef.Type.MODEL,
       label = "Statistics Aggregator",
-      defaultValue = STATS_AGGREGATOR_DEFAULT,
+      defaultValue = STATS_DPM_DIRECTLY_TARGET,
       displayPosition = 95,
       group = "STATS"
   )
   @ValueChooserModel(StatsTargetChooserValues.class)
-  public String statsAggregatorStage;
+  public String statsAggregatorStage = STATS_DPM_DIRECTLY_TARGET;
 
   @ConfigDef(
       required = true,

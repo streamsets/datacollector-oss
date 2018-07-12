@@ -227,7 +227,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
           null,
           Collections.emptyList(),
           null,
-          null,
+          getDefaultStatsAggrStageInstance(),
           Collections.emptyList(),
           Collections.emptyList(),
           getDefaultTestOriginStageInstance()
@@ -708,6 +708,16 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       );
     }
     return testOriginStageInstance;
+  }
+
+  private StageConfiguration getDefaultStatsAggrStageInstance() {
+    return PipelineConfigurationUtil.getStageConfigurationWithDefaultValues(
+        stageLibrary,
+        PipelineConfigBean.DEFAULT_STATS_AGGREGATOR_LIBRARY_NAME,
+        PipelineConfigBean.DEFAULT_STATS_AGGREGATOR_STAGE_NAME,
+         "statsAggregatorStageInstance",
+        "Stats Aggregator -"
+    );
   }
 
 }
