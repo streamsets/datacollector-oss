@@ -34,8 +34,7 @@ log4j.appender.streamsets.layout=org.apache.log4j.PatternLayout
 log4j.appender.streamsets.layout.ConversionPattern=%d{ISO8601} [user:%X{s-user}] [pipeline:%X{s-entity}] [runner:%X{s-runner}] [thread:%t] %-5p %c{1} - %m%n
 
 log4j.rootLogger=INFO, streamsets
-log4j.logger.com.streamsets.pipeline=${sdc.log4j.level}
-log4j.logger.com.streamsets.datacollector=${sdc.log4j.level}
+log4j.logger.com.streamsets=${sdc.log4j.level}
 log4j.logger.org.eclipse.jetty=WARN
 log4j.logger.com.amazonaws.services.kinesis.clientlibrary.lib.worker.SequenceNumberValidator=WARN
 log4j.logger.org.apache.kafka=WARN
