@@ -22,8 +22,9 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.streamsets</groupId>
-    <artifactId>streamsets-datacollector-root</artifactId>
+    <artifactId>streamsets-datacollector-root-lib</artifactId>
     <version>3.4.0-SNAPSHOT</version>
+    <relativePath>../root-lib</relativePath>
   </parent>
   <artifactId>streamsets-datacollector-wholefile-converter-protolib</artifactId>
   <version>3.4.0-SNAPSHOT</version>
