@@ -54,24 +54,11 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
   @Inject PipelineStoreTask pipelineStoreTask;
   @Inject PipelineStateStore pipelineStateStore;
 
-  private final String pipelineId;
   private String pipelineTitle = null;
-  private final String rev;
 
   public EdgeRunner(String name, String rev, ObjectGraph objectGraph) {
-    this.pipelineId = name;
-    this.rev = rev;
+    super(name, rev);
     objectGraph.inject(this);
-  }
-
-  @Override
-  public String getName() {
-    return pipelineId;
-  }
-
-  @Override
-  public String getRev() {
-    return rev;
   }
 
   @Override
@@ -81,12 +68,12 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
 
   @Override
   public PipelineConfiguration getPipelineConfiguration() throws PipelineException {
-    return pipelineStoreTask.load(pipelineId, rev);
+    return pipelineStoreTask.load(getName(), getRev());
   }
 
   @Override
   public void resetOffset(String user) throws PipelineException {
-    PipelineConfiguration pipelineConfiguration = pipelineStoreTask.load(pipelineId, rev);
+    PipelineConfiguration pipelineConfiguration = pipelineStoreTask.load(getName(), getRev());
     EdgeUtil.resetOffset(pipelineConfiguration);
   }
 
@@ -102,7 +89,7 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
 
   @Override
   public PipelineState getState() throws PipelineStoreException {
-    return pipelineStateStore.getState(pipelineId, rev);
+    return pipelineStateStore.getState(getName(), getRev());
   }
 
   @Override
@@ -125,12 +112,12 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
     PipelineStateJson currentState;
     PipelineStateJson toState;
 
-    PipelineConfiguration pipelineConfiguration = pipelineStoreTask.load(pipelineId, rev);
+    PipelineConfiguration pipelineConfiguration = pipelineStoreTask.load(getName(), getRev());
     currentState = EdgeUtil.getEdgePipelineState(pipelineConfiguration);
     if (currentState != null && !currentState.getPipelineState().getStatus().isActive()) {
       LOG.warn("Pipeline {}:{} is already in stopped state {}",
-          pipelineId,
-          rev,
+          getName(),
+          getRev(),
           currentState.getPipelineState().getStatus()
       );
       toState = currentState;
@@ -141,8 +128,8 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
     if (toState != null) {
       this.pipelineStateStore.saveState(
           user,
-          pipelineId,
-          rev,
+          getName(),
+          getRev(),
           BeanHelper.unwrapState(toState.getStatus()),
           toState.getMessage(),
           toState.getAttributes(),
@@ -170,12 +157,12 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
     PipelineStateJson currentState;
     PipelineStateJson toState;
 
-    PipelineConfiguration pipelineConfiguration = pipelineStoreTask.load(pipelineId, rev);
+    PipelineConfiguration pipelineConfiguration = pipelineStoreTask.load(getName(), getRev());
     currentState = EdgeUtil.getEdgePipelineState(pipelineConfiguration);
     if (currentState != null && currentState.getPipelineState().getStatus().isActive()) {
       LOG.warn("Pipeline {}:{} is already in active state {}",
-          pipelineId,
-          rev,
+          getName(),
+          getRev(),
           currentState.getPipelineState().getStatus()
       );
       toState = currentState;
@@ -187,8 +174,8 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
     if (toState != null) {
       this.pipelineStateStore.saveState(
           context.getUser(),
-          pipelineId,
-          rev,
+          getName(),
+          getRev(),
           BeanHelper.unwrapState(toState.getStatus()),
           toState.getMessage(),
           toState.getAttributes(),
@@ -269,7 +256,7 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
 
   @Override
   public Object getMetrics() throws PipelineException {
-    PipelineConfiguration pipelineConfiguration = pipelineStoreTask.load(pipelineId, rev);
+    PipelineConfiguration pipelineConfiguration = pipelineStoreTask.load(getName(), getRev());
     return EdgeUtil.getEdgePipelineMetrics(pipelineConfiguration);
   }
 

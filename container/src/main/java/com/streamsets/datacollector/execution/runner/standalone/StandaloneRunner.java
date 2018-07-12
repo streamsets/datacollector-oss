@@ -146,9 +146,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   @Inject ResourceManager resourceManager;
 
   private final ObjectGraph objectGraph;
-  private final String name;
   private String pipelineTitle = null;
-  private final String rev;
   // User context for the user who started the pipeline
   private String token;
 
@@ -244,8 +242,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     .build();
 
   public StandaloneRunner(String name, String rev, ObjectGraph objectGraph) {
-    this.name = name;
-    this.rev = rev;
+    super(name, rev);
     this.objectGraph = objectGraph;
     this.errorListeners = new ArrayList<>();
     objectGraph.inject(this);
@@ -261,7 +258,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     try {
       MDC.put(LogConstants.USER, user);
       LogUtil.injectPipelineInMDC(getPipelineTitle(), getName());
-      LOG.info("Pipeline " + name + " with rev " + rev + " is in state: " + status);
+      LOG.info("Pipeline " + getName() + " with rev " + getRev() + " is in state: " + status);
       String msg = null;
       List<PipelineStatus> transitions = new ArrayList<>();
       switch (status) {
@@ -343,7 +340,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
       PipelineState pipelineState = getState();
       PipelineStatus status = pipelineState.getStatus();
       Map<String, Object> attributes = pipelineState.getAttributes();
-      LOG.info("Pipeline '{}::{}' has status: '{}'", name, rev, status);
+      LOG.info("Pipeline '{}::{}' has status: '{}'", getName(), getRev(), status);
       //if the pipeline was running and capture snapshot in progress, then cancel and delete snapshots
       for(SnapshotInfo snapshotInfo : getSnapshotsInfo()) {
         if(snapshotInfo.isInProgress()) {
@@ -387,17 +384,17 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
       MDC.put(LogConstants.USER, user);
       LogUtil.injectPipelineInMDC(getPipelineTitle(), getName());
       if (getState().getStatus() == PipelineStatus.RETRY) {
-        LOG.info("Pipeline '{}'::'{}' is in retry", name, rev);
+        LOG.info("Pipeline '{}'::'{}' is in retry", getName(), getRev());
         retryFuture.cancel(true);
         validateAndSetStateTransition(user, PipelineStatus.DISCONNECTING, null, null);
         validateAndSetStateTransition(user, PipelineStatus.DISCONNECTED, "Disconnected as SDC is shutting down", null);
         return;
       }
       if (!getState().getStatus().isActive() || getState().getStatus() == PipelineStatus.DISCONNECTED) {
-        LOG.info("Pipeline '{}'::'{}' is no longer active", name, rev);
+        LOG.info("Pipeline '{}'::'{}' is no longer active", getName(), getRev());
         return;
       }
-      LOG.info("Stopping pipeline {}::{}", name, rev);
+      LOG.info("Stopping pipeline {}::{}", getName(), getRev());
       try {
         try {
           validateAndSetStateTransition(user, PipelineStatus.DISCONNECTING, "Stopping the pipeline as SDC is shutting down",
@@ -416,19 +413,9 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
-  public String getName() {
-    return name;
-  }
-
-  @Override
-  public String getRev() {
-    return rev;
-  }
-
-  @Override
   public String getPipelineTitle() throws PipelineException {
     if (pipelineTitle == null) {
-      PipelineInfo pipelineInfo = pipelineStoreTask.getInfo(name);
+      PipelineInfo pipelineInfo = pipelineStoreTask.getInfo(getName());
       pipelineTitle = pipelineInfo.getTitle();
     }
     return pipelineTitle;
@@ -442,29 +429,29 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   @Override
   public synchronized void resetOffset(String user) throws PipelineStoreException, PipelineRunnerException {
     PipelineStatus status = getState().getStatus();
-    LOG.debug("Resetting offset for pipeline {}, {}", name, rev);
+    LOG.debug("Resetting offset for pipeline {}, {}", getName(), getRev());
     if (RESET_OFFSET_DISALLOWED_STATUSES.contains(status)) {
-      throw new PipelineRunnerException(ContainerError.CONTAINER_0104, name);
+      throw new PipelineRunnerException(ContainerError.CONTAINER_0104, getName());
     }
-    ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(name, rev, runtimeInfo);
-    offsetTracker.resetOffset(name, rev);
+    ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(getName(), getRev(), runtimeInfo);
+    offsetTracker.resetOffset(getName(), getRev());
   }
 
   public SourceOffset getCommittedOffsets() throws PipelineException {
-    return OffsetFileUtil.getOffset(runtimeInfo, name, rev);
+    return OffsetFileUtil.getOffset(runtimeInfo, getName(), getRev());
   }
 
   public void updateCommittedOffsets(SourceOffset sourceOffset) throws PipelineException {
     PipelineStatus status = getState().getStatus();
     if (status.isActive()) {
-      throw new PipelineRunnerException(ContainerError.CONTAINER_0118, name);
+      throw new PipelineRunnerException(ContainerError.CONTAINER_0118, getName());
     }
-    OffsetFileUtil.saveSourceOffset(runtimeInfo, name, rev, sourceOffset);
+    OffsetFileUtil.saveSourceOffset(runtimeInfo, getName(), getRev(), sourceOffset);
   }
 
   @Override
   public PipelineState getState() throws PipelineStoreException {
-    return pipelineStateStore.getState(name, rev);
+    return pipelineStateStore.getState(getName(), getRev());
   }
 
   @Override
@@ -475,7 +462,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   @Override
   public void forceQuit(String user) throws PipelineException {
     if (pipelineRunnable != null && FORCE_QUIT_ALLOWED_STATES.contains(getState().getStatus())) {
-      LOG.debug("Force Quit the pipeline '{}'::'{}'", name,  rev);
+      LOG.debug("Force Quit the pipeline '{}'::'{}'", getName(),  getRev());
       pipelineRunnable.forceQuit();
     } else {
       LOG.info("Ignoring force quit request because pipeline is in {} state", getState().getStatus());
@@ -528,7 +515,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     if (checkState) {
       checkState(getState().getStatus().equals(PipelineStatus.RUNNING), ContainerError.CONTAINER_0105);
     }
-    SnapshotInfo snapshotInfo = snapshotStore.create(user, name, rev, snapshotName, snapshotLabel);
+    SnapshotInfo snapshotInfo = snapshotStore.create(user, getName(), getRev(), snapshotName, snapshotLabel);
     prodPipeline.captureSnapshot(snapshotName, batchSize, batches);
     return snapshotInfo.getId();
   }
@@ -536,7 +523,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   @Override
   public String updateSnapshotLabel(String snapshotName, String snapshotLabel)
       throws PipelineException {
-    SnapshotInfo snapshotInfo = snapshotStore.updateLabel(name, rev, snapshotName, snapshotLabel);
+    SnapshotInfo snapshotInfo = snapshotStore.updateLabel(getName(), getRev(), snapshotName, snapshotLabel);
     if(snapshotInfo != null) {
       return snapshotInfo.getId();
     }
@@ -546,12 +533,12 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
 
   @Override
   public Snapshot getSnapshot(String id) throws PipelineException {
-    return snapshotStore.get(name, rev, id);
+    return snapshotStore.get(getName(), getRev(), id);
   }
 
   @Override
   public List<SnapshotInfo> getSnapshotsInfo() throws PipelineException {
-    return snapshotStore.getSummaryForPipeline(name, rev);
+    return snapshotStore.getSummaryForPipeline(getName(), getRev());
   }
 
   @Override
@@ -560,17 +547,17 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     if(snapshot != null && snapshot.getInfo() != null && snapshot.getInfo().isInProgress()) {
       prodPipeline.cancelSnapshot(snapshot.getInfo().getId());
     }
-    snapshotStore.deleteSnapshot(name, rev, id);
+    snapshotStore.deleteSnapshot(getName(), getRev(), id);
   }
 
   @Override
   public List<PipelineState> getHistory() throws PipelineStoreException {
-    return pipelineStateStore.getHistory(name, rev, false);
+    return pipelineStateStore.getHistory(getName(), getRev(), false);
   }
 
   @Override
   public void deleteHistory() {
-    pipelineStateStore.deleteHistory(name, rev);
+    pipelineStateStore.deleteHistory(getName(), getRev());
   }
 
   @Override
@@ -598,14 +585,14 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     MetricRegistry metrics = (MetricRegistry)getMetrics();
 
     if(metrics != null) {
-      RuleDefinitions ruleDefinitions = pipelineStoreTask.retrieveRules(name, rev);
+      RuleDefinitions ruleDefinitions = pipelineStoreTask.retrieveRules(getName(), getRev());
 
       for(RuleDefinition ruleDefinition: ruleDefinitions.getMetricsRuleDefinitions()) {
         Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
           AlertsUtil.getAlertGaugeName(ruleDefinition.getId()));
 
         if(gauge != null) {
-          alertInfoList.add(new AlertInfo(name, ruleDefinition, gauge));
+          alertInfoList.add(new AlertInfo(getName(), ruleDefinition, gauge));
         }
       }
 
@@ -614,7 +601,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
           AlertsUtil.getAlertGaugeName(ruleDefinition.getId()));
 
         if(gauge != null) {
-          alertInfoList.add(new AlertInfo(name, ruleDefinition, gauge));
+          alertInfoList.add(new AlertInfo(getName(), ruleDefinition, gauge));
         }
       }
     }
@@ -626,7 +613,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   public boolean deleteAlert(String alertId) throws PipelineRunnerException, PipelineStoreException {
     checkState(getState().getStatus().isActive(), ContainerError.CONTAINER_0402);
     MetricsConfigurator.resetCounter((MetricRegistry) getMetrics(), AlertsUtil.getUserMetricName(alertId));
-    return MetricsConfigurator.removeGauge((MetricRegistry) getMetrics(), AlertsUtil.getAlertGaugeName(alertId), name, rev);
+    return MetricsConfigurator.removeGauge((MetricRegistry) getMetrics(), AlertsUtil.getAlertGaugeName(alertId), getName(), getRev());
   }
 
   @Override
@@ -682,14 +669,14 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
           } catch (JsonProcessingException e) {
             throw new PipelineStoreException(ContainerError.CONTAINER_0210, e.toString(), e);
           }
-          eventListenerManager.broadcastMetrics(name, metricString);
+          eventListenerManager.broadcastMetrics(getName(), metricString);
         }
         if (metricString == null) {
           metricString = getState().getMetrics();
         }
       }
       pipelineState =
-        pipelineStateStore.saveState(user, name, rev, toStatus, message, attributes, ExecutionMode.STANDALONE,
+        pipelineStateStore.saveState(user, getName(), getRev(), toStatus, message, attributes, ExecutionMode.STANDALONE,
           metricString, retryAttempt, nextRetryTimeStamp);
       if (toStatus == PipelineStatus.RETRY) {
         retryFuture = scheduleForRetries(runnerExecutor);
@@ -699,7 +686,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         fromState,
         pipelineState,
         ThreadUsage.STANDALONE,
-        OffsetFileUtil.getOffsets(runtimeInfo, name, rev)
+        OffsetFileUtil.getOffsets(runtimeInfo, getName(), getRev())
     );
   }
 
@@ -737,9 +724,9 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         fromState.getStatus(), PipelineStatus.STARTING);
 
     if(!resourceManager.requestRunnerResources(ThreadUsage.STANDALONE)) {
-      throw new PipelineRunnerException(ContainerError.CONTAINER_0166, name);
+      throw new PipelineRunnerException(ContainerError.CONTAINER_0166, getName());
     }
-    LOG.info("Preparing to start pipeline '{}::{}'", name, rev);
+    LOG.info("Preparing to start pipeline '{}::{}'", getName(), getRev());
     validateAndSetStateTransition(context.getUser(), PipelineStatus.STARTING, null, context.getRuntimeParameters());
     token = UUID.randomUUID().toString();
   }
@@ -759,7 +746,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   @Override
   public void start(StartPipelineContext context) throws PipelineException, StageException {
     startPipeline(context);
-    LOG.debug("Starting the runnable for pipeline {} {}", name, rev);
+    LOG.debug("Starting the runnable for pipeline {} {}", getName(), getRev());
     if(!pipelineRunnable.isStopped()) {
       pipelineRunnable.run();
     }
@@ -767,11 +754,11 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
 
   private void startPipeline(StartPipelineContext context) throws PipelineException, StageException {
     Utils.checkState(!isClosed,
-        Utils.formatL("Cannot start the pipeline '{}::{}' as the runner is already closed", name, rev));
+        Utils.formatL("Cannot start the pipeline '{}::{}' as the runner is already closed", getName(), getRev()));
 
     synchronized (this) {
       try {
-        LOG.info("Starting pipeline {} {}", name, rev);
+        LOG.info("Starting pipeline {} {}", getName(), getRev());
         UserContext runningUser = new UserContext(context.getUser(),
             runtimeInfo.isDPMEnabled(),
             configuration.get(
@@ -790,7 +777,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
        * Manager - responsible for creating alerts and sending email.
        */
 
-        PipelineConfiguration pipelineConfiguration = getPipelineConf(name, rev);
+        PipelineConfiguration pipelineConfiguration = getPipelineConf(getName(), getRev());
         List<Issue> errors = new ArrayList<>();
         PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(
             pipelineConfiguration,
@@ -829,9 +816,9 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         //with fresh instances of MetricRegistry, alert manager, observer etc etc..
         ObjectGraph objectGraph = this.objectGraph.plus(
             new PipelineProviderModule(
-                name,
+                getName(),
                 pipelineConfiguration.getTitle(),
-                rev,
+                getRev(),
                 statsAggregationEnabled,
                 pipelineConfigBean.constants
             )
@@ -869,8 +856,8 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         ProductionPipelineBuilder builder = objectGraph.get(ProductionPipelineBuilder.class);
 
         //register email notifier & webhook notifier with event listener manager
-        registerEmailNotifierIfRequired(pipelineConfigBean, name, pipelineConfiguration.getTitle(),rev);
-        registerWebhookNotifierIfRequired(pipelineConfigBean, name, pipelineConfiguration.getTitle(), rev);
+        registerEmailNotifierIfRequired(pipelineConfigBean, getName(), pipelineConfiguration.getTitle(), getRev());
+        registerWebhookNotifierIfRequired(pipelineConfigBean, getName(), pipelineConfiguration.getTitle(), getRev());
 
         //This which are not injected as of now.
         productionObserver.setObserveRequests(productionObserveRequests);
@@ -908,7 +895,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         try {
           rulesConfigLoader.load(productionObserver);
         } catch (InterruptedException e) {
-          throw new PipelineRuntimeException(ContainerError.CONTAINER_0403, name, e.toString(), e);
+          throw new PipelineRuntimeException(ContainerError.CONTAINER_0403, getName(), e.toString(), e);
         }
         ScheduledFuture<?> configLoaderFuture = runnerExecutor.scheduleWithFixedDelay(
           rulesConfigLoaderRunnable,
@@ -955,7 +942,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         Future<?> observerFuture = runnerExecutor.submit(observerRunnable);
         taskBuilder.add(observerFuture);
 
-        pipelineRunnable = new ProductionPipelineRunnable(threadHealthReporter, this, prodPipeline, name, rev, taskBuilder.build());
+        pipelineRunnable = new ProductionPipelineRunnable(threadHealthReporter, this, prodPipeline, getName(), getRev(), taskBuilder.build());
       } catch (Exception e) {
         validateAndSetStateTransition(context.getUser(), PipelineStatus.START_ERROR, e.toString(), null);
         throw e;
@@ -973,7 +960,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   ) throws PipelineException, StageException {
     startPipeline(context);
     captureSnapshot(context.getUser(), snapshotName, snapshotLabel, batches, batchSize, false);
-    LOG.debug("Starting the runnable for pipeline {} {}", name, rev);
+    LOG.debug("Starting the runnable for pipeline {} {}", getName(), getRev());
     if(!pipelineRunnable.isStopped()) {
       pipelineRunnable.run();
     }

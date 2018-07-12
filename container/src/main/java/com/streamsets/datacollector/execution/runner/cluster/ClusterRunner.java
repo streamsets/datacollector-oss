@@ -133,8 +133,6 @@ public class ClusterRunner extends AbstractRunner {
   @Inject LineagePublisherTask lineagePublisherTask;
   @Inject SupportBundleManager supportBundleManager;
 
-  private final String name;
-  private final String rev;
   private String pipelineTitle = null;
   private ObjectGraph objectGraph;
   private ClusterHelper clusterHelper;
@@ -179,14 +177,13 @@ public class ClusterRunner extends AbstractRunner {
     PipelineStoreTask pipelineStore, PipelineStateStore pipelineStateStore, StageLibraryTask stageLibrary,
     SafeScheduledExecutorService executorService, ClusterHelper clusterHelper, ResourceManager resourceManager,
     EventListenerManager eventListenerManager, String sdcToken, AclStoreTask aclStoreTask) {
+    super(name, rev);
     this.runtimeInfo = runtimeInfo;
     this.configuration = configuration;
     this.pipelineStateStore = pipelineStateStore;
     this.pipelineStore = pipelineStore;
     this.stageLibrary = stageLibrary;
     this.runnerExecutor = executorService;
-    this.name = name;
-    this.rev = rev;
     this.tempDir = Files.createTempDir();
     if (clusterHelper == null) {
       this.clusterHelper = new ClusterHelper(runtimeInfo, null, tempDir, configuration, stageLibrary);
@@ -202,8 +199,7 @@ public class ClusterRunner extends AbstractRunner {
 
   @SuppressWarnings("deprecation")
   public ClusterRunner(String name, String rev, ObjectGraph objectGraph) {
-    this.name = name;
-    this.rev = rev;
+    super(name, rev);
     this.objectGraph = objectGraph;
     this.objectGraph.inject(this);
     this.tempDir = new File(new File(runtimeInfo.getDataDir(), "temp"), PipelineUtils.
@@ -253,7 +249,7 @@ public class ClusterRunner extends AbstractRunner {
   @Override
   public void prepareForDataCollectorStart(String user) throws PipelineStoreException, PipelineRunnerException {
     PipelineStatus status = getState().getStatus();
-    LOG.info("Pipeline '{}::{}' has status: '{}'", name, rev, status);
+    LOG.info("Pipeline '{}::{}' has status: '{}'", getName(), getRev(), status);
     String msg;
     switch (status) {
       case STARTING:
@@ -291,7 +287,7 @@ public class ClusterRunner extends AbstractRunner {
   @Override
   public void onDataCollectorStart(String user) throws PipelineException, StageException {
     PipelineStatus status = getState().getStatus();
-    LOG.info("Pipeline '{}::{}' has status: '{}'", name, rev, status);
+    LOG.info("Pipeline '{}::{}' has status: '{}'", getName(), getRev(), status);
     switch (status) {
       case DISCONNECTED:
         String msg = "Pipeline was in DISCONNECTED state, changing it to CONNECTING";
@@ -306,19 +302,9 @@ public class ClusterRunner extends AbstractRunner {
   }
 
   @Override
-  public String getName() {
-    return name;
-  }
-
-  @Override
-  public String getRev() {
-    return rev;
-  }
-
-  @Override
   public String getPipelineTitle() throws PipelineException {
     if (pipelineTitle == null) {
-      PipelineInfo pipelineInfo = pipelineStore.getInfo(name);
+      PipelineInfo pipelineInfo = pipelineStore.getInfo(getName());
       pipelineTitle = pipelineInfo.getTitle();
     }
     return pipelineTitle;
@@ -370,7 +356,7 @@ public class ClusterRunner extends AbstractRunner {
           + "pipeline in " + getState().getExecutionMode() + " mode");
       } else {
         ApplicationState appState = new ApplicationState((Map) getState().getAttributes().get(APPLICATION_STATE));
-        PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(getPipelineConf(name, rev), new
+        PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(getPipelineConf(getName(), getRev()), new
                 ArrayList<>(),
             runtimeParameters);
         stop(user, appState, pipelineConf, pipelineConfigBean);
@@ -381,7 +367,7 @@ public class ClusterRunner extends AbstractRunner {
   }
 
   private Map<String, Object> getAttributes() throws PipelineStoreException {
-    return pipelineStateStore.getState(name, rev).getAttributes();
+    return pipelineStateStore.getState(getName(), getRev()).getAttributes();
   }
 
   @SuppressWarnings("unchecked")
@@ -395,7 +381,7 @@ public class ClusterRunner extends AbstractRunner {
     } else {
       try {
         slaveCallbackManager.setClusterToken(appState.getSdcToken());
-        pipelineConf = getPipelineConf(name, rev);
+        pipelineConf = getPipelineConf(getName(), getRev());
       } catch (PipelineRunnerException | PipelineStoreException e) {
         validateAndSetStateTransition(context.getUser(), PipelineStatus.CONNECT_ERROR, e.toString(), attributes);
         throw e;
@@ -425,15 +411,15 @@ public class ClusterRunner extends AbstractRunner {
     checkState(VALID_TRANSITIONS.get(fromState.getStatus()).contains(PipelineStatus.STARTING), ContainerError.CONTAINER_0102,
         fromState.getStatus(), PipelineStatus.STARTING);
     if(!resourceManager.requestRunnerResources(ThreadUsage.CLUSTER)) {
-      throw new PipelineRunnerException(ContainerError.CONTAINER_0166, name);
+      throw new PipelineRunnerException(ContainerError.CONTAINER_0166, getName());
     }
-    LOG.info("Preparing to start pipeline '{}::{}'", name, rev);
+    LOG.info("Preparing to start pipeline '{}::{}'", getName(), getRev());
     validateAndSetStateTransition(context.getUser(), PipelineStatus.STARTING, "Starting pipeline in " + getState().getExecutionMode() + " mode");
   }
 
   @Override
   public void prepareForStop(String user) throws PipelineStoreException, PipelineRunnerException {
-    LOG.info("Preparing to stop pipeline '{}::{}'", name, rev);
+    LOG.info("Preparing to stop pipeline '{}::{}'", getName(), getRev());
     if (getState().getStatus() == PipelineStatus.RETRY) {
       retryFuture.cancel(true);
       validateAndSetStateTransition(user, PipelineStatus.STOPPING, null);
@@ -448,14 +434,14 @@ public class ClusterRunner extends AbstractRunner {
   public synchronized void start(StartPipelineContext context) throws PipelineException, StageException {
     try {
       Utils.checkState(!isClosed,
-        Utils.formatL("Cannot start the pipeline '{}::{}' as the runner is already closed", name, rev));
-      ExecutionMode executionMode = pipelineStateStore.getState(name, rev).getExecutionMode();
+        Utils.formatL("Cannot start the pipeline '{}::{}' as the runner is already closed", getName(), getRev()));
+      ExecutionMode executionMode = pipelineStateStore.getState(getName(), getRev()).getExecutionMode();
       if (executionMode != ExecutionMode.CLUSTER_BATCH && executionMode != ExecutionMode.CLUSTER_YARN_STREAMING
           && executionMode != ExecutionMode.CLUSTER_MESOS_STREAMING && executionMode != ExecutionMode.EMR_BATCH) {
         throw new PipelineRunnerException(ValidationError.VALIDATION_0073);
       }
-      LOG.debug("State of pipeline for '{}::{}' is '{}' ", name, rev, getState());
-      pipelineConf = getPipelineConf(name, rev);
+      LOG.debug("State of pipeline for '{}::{}' is '{}' ", getName(), getRev(), getState());
+      pipelineConf = getPipelineConf(getName(), getRev());
       if (context.getRuntimeParameters() != null) {
         // merge pipeline parameters with runtime parameters
         List<Config> pipelineConfiguration = pipelineConf.getConfiguration();
@@ -481,7 +467,7 @@ public class ClusterRunner extends AbstractRunner {
       );
       PipelineEL.setConstantsInContext(pipelineConf, runningUser);
       this.startPipelineContext = context;
-      doStart(context.getUser(), pipelineConf, getClusterSourceInfo(context, name, rev, pipelineConf), getAcl(name), runtimeParameters);
+      doStart(context.getUser(), pipelineConf, getClusterSourceInfo(context, getName(), getRev(), pipelineConf), getAcl(getName()), runtimeParameters);
     } catch (Exception e) {
       validateAndSetStateTransition(context.getUser(), PipelineStatus.START_ERROR, e.toString(), getAttributes());
       throw e;
@@ -490,7 +476,7 @@ public class ClusterRunner extends AbstractRunner {
 
   @Override
   public PipelineState getState() throws PipelineStoreException {
-    return pipelineStateStore.getState(name, rev);
+    return pipelineStateStore.getState(getName(), getRev());
   }
 
   @Override
@@ -531,12 +517,12 @@ public class ClusterRunner extends AbstractRunner {
 
   @Override
   public List<PipelineState> getHistory() throws PipelineStoreException {
-    return pipelineStateStore.getHistory(name, rev, false);
+    return pipelineStateStore.getHistory(getName(), getRev(), false);
   }
 
   @Override
   public void deleteHistory() {
-    pipelineStateStore.deleteHistory(name ,rev);
+    pipelineStateStore.deleteHistory(getName(), getRev());
   }
 
   @Override
@@ -642,7 +628,7 @@ public class ClusterRunner extends AbstractRunner {
           }
         }
         pipelineState =
-          pipelineStateStore.saveState(user, name, rev, toStatus, message, attributes, getState().getExecutionMode(),
+          pipelineStateStore.saveState(user, getName(), getRev(), toStatus, message, attributes, getState().getExecutionMode(),
             metricsJSONStr, retryAttempt, nextRetryTimeStamp);
         if (toStatus == PipelineStatus.RETRY) {
           retryFuture = scheduleForRetries(runnerExecutor);
@@ -654,7 +640,7 @@ public class ClusterRunner extends AbstractRunner {
             fromState,
             pipelineState,
             ThreadUsage.CLUSTER,
-            OffsetFileUtil.getOffsets(runtimeInfo, name, rev)
+            OffsetFileUtil.getOffsets(runtimeInfo, getName(), getRev())
         );
       }
     }
@@ -942,16 +928,16 @@ public class ClusterRunner extends AbstractRunner {
       maxRetries = pipelineConfigBean.retryAttempts;
       shouldRetry = pipelineConfigBean.shouldRetry;
       rateLimit = pipelineConfigBean.rateLimit;
-      registerEmailNotifierIfRequired(pipelineConfigBean, name, pipelineConf.getTitle(),rev);
-      registerWebhookNotifierIfRequired(pipelineConfigBean, name, pipelineConf.getTitle(), rev);
+      registerEmailNotifierIfRequired(pipelineConfigBean, getName(), pipelineConf.getTitle(), getRev());
+      registerWebhookNotifierIfRequired(pipelineConfigBean, getName(), pipelineConf.getTitle(), getRev());
 
       Map<String, String> sourceInfo = new HashMap<>();
       File bootstrapDir = new File(this.runtimeInfo.getLibexecDir(), "bootstrap-libs");
       // create pipeline and get the parallelism info from the source
       sourceInfo.put(ClusterModeConstants.NUM_EXECUTORS_KEY, String.valueOf(clusterSourceInfo.getParallelism()));
-      sourceInfo.put(ClusterModeConstants.CLUSTER_PIPELINE_NAME, name);
+      sourceInfo.put(ClusterModeConstants.CLUSTER_PIPELINE_NAME, getName());
       sourceInfo.put(ClusterModeConstants.CLUSTER_PIPELINE_TITLE, pipelineConf.getTitle());
-      sourceInfo.put(ClusterModeConstants.CLUSTER_PIPELINE_REV, rev);
+      sourceInfo.put(ClusterModeConstants.CLUSTER_PIPELINE_REV, getRev());
       sourceInfo.put(ClusterModeConstants.CLUSTER_PIPELINE_USER, user);
       sourceInfo.put(ClusterModeConstants.CLUSTER_PIPELINE_REMOTE, String.valueOf(isRemotePipeline()));
       for (Map.Entry<String, String> configsToShip : clusterSourceInfo.getConfigsToShip().entrySet()) {
@@ -1069,7 +1055,7 @@ public class ClusterRunner extends AbstractRunner {
   }
 
   RuleDefinitions getRules() throws PipelineException {
-    return pipelineStore.retrieveRules(name, rev);
+    return pipelineStore.retrieveRules(getName(), getRev());
   }
 
   @Override

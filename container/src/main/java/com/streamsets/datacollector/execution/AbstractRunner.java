@@ -53,6 +53,9 @@ import java.util.concurrent.TimeUnit;
 public abstract  class AbstractRunner implements Runner {
   private static final Logger LOG = LoggerFactory.getLogger(AbstractRunner.class);
 
+  private final String name;
+  private final String rev;
+
   @Inject protected AclStoreTask aclStoreTask;
   @Inject protected EventListenerManager eventListenerManager;
   @Inject protected PipelineStoreTask pipelineStore;
@@ -64,6 +67,20 @@ public abstract  class AbstractRunner implements Runner {
   // Start Pipeline Context that was used during last start() and will be reused on pipeline retry
   protected StartPipelineContext startPipelineContext;
 
+  public AbstractRunner(String name, String rev) {
+    this.name = name;
+    this.rev = rev;
+  }
+
+  @Override
+  public String getName() {
+    return name;
+  }
+
+  @Override
+  public String getRev() {
+    return rev;
+  }
 
   protected PipelineConfiguration getPipelineConf(String name, String rev) throws PipelineException {
     PipelineConfiguration load = pipelineStore.load(name, rev);
