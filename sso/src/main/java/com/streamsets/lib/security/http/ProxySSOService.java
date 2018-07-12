@@ -81,4 +81,9 @@ public class ProxySSOService implements SSOService {
     ssoService.clearCaches();
   }
 
+  @Override
+  public void setRegistrationResponseDelegate(RegistrationResponseDelegate delegate) {
+    ssoService.setRegistrationResponseDelegate(delegate);
+  }
+
 }

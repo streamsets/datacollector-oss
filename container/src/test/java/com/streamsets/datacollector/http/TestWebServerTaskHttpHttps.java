@@ -24,6 +24,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.lib.security.http.RegistrationResponseDelegate;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.lib.security.http.SSOPrincipal;
 import com.streamsets.lib.security.http.SSOService;
@@ -500,6 +501,10 @@ public class TestWebServerTaskHttpHttps {
     @Override
     public void clearCaches() {
 
+    }
+
+    @Override
+    public void setRegistrationResponseDelegate(RegistrationResponseDelegate delegate) {
     }
   }
 

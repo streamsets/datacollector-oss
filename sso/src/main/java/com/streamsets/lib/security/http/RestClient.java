@@ -189,6 +189,10 @@ public class RestClient {
       return conn.getContentType();
     }
 
+    public boolean haveData() {
+      return conn.getContentType() != null;
+    }
+
     public boolean isJson() {
       String contentType = conn.getContentType();
       return contentType != null && contentType.toLowerCase().trim().startsWith(APPLICATION_JSON);

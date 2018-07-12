@@ -169,4 +169,10 @@ public class FailoverSSOService implements SSOService {
     getActiveService().clearCaches();
   }
 
+  @Override
+  public void setRegistrationResponseDelegate(RegistrationResponseDelegate delegate) {
+    remoteService.setRegistrationResponseDelegate(delegate);
+    disconnectedService.setRegistrationResponseDelegate(delegate);
+  }
+
 }

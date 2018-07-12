@@ -51,4 +51,6 @@ public interface SSOService {
 
   void clearCaches();
 
+  void setRegistrationResponseDelegate(RegistrationResponseDelegate delegate);
+
 }

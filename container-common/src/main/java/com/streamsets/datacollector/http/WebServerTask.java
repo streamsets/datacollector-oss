@@ -26,10 +26,12 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.WebServerAgentCondition;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.lib.security.RegistrationResponseJson;
 import com.streamsets.lib.security.http.DisconnectedSSOManager;
 import com.streamsets.lib.security.http.DisconnectedSSOService;
 import com.streamsets.lib.security.http.FailoverSSOService;
 import com.streamsets.lib.security.http.ProxySSOService;
+import com.streamsets.lib.security.http.RegistrationResponseDelegate;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.lib.security.http.SSOAuthenticator;
 import com.streamsets.lib.security.http.SSOConstants;
@@ -111,7 +113,8 @@ import java.util.Set;
  * protected means authentication IS required.
  *
  */
-public abstract class WebServerTask extends AbstractTask {
+public abstract class WebServerTask extends AbstractTask implements RegistrationResponseDelegate {
+
   public static final String HTTP_BIND_HOST = "http.bindHost";
   private static final String HTTP_BIND_HOST_DEFAULT = "0.0.0.0";
 
@@ -457,9 +460,22 @@ public abstract class WebServerTask extends AbstractTask {
     }
   }
 
+  @Override
+  public void processRegistrationResponse(RegistrationResponseJson response) {
+    LOG.info("Received registration command from Control Hub");
+
+    // Propagate new configuration
+    try {
+      RuntimeInfo.storeControlHubConfigs(runtimeInfo, response.getConfiguration());
+    } catch (IOException e) {
+      throw new RuntimeException(e.toString(), e);
+    }
+  }
+
   RemoteSSOService createRemoteSSOService(Configuration appConf) {
     RemoteSSOService remoteSsoService = new RemoteSSOService();
     remoteSsoService.setConfiguration(appConf);
+    remoteSsoService.setRegistrationResponseDelegate(this);
     return remoteSsoService;
   }
 

@@ -17,6 +17,7 @@ package com.streamsets.lib.security.http;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.lib.security.RegistrationResponseJson;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -189,6 +190,7 @@ public class RemoteSSOService extends AbstractSSOService {
           RestClient.Response response = restClient.post(registrationData);
           if (response.getStatus() == HttpURLConnection.HTTP_OK) {
             updateConnectionTimeout(response);
+            processRegistrationResponse(response);
             LOG.info("Registered with DPM");
             registered = true;
             break;
@@ -214,6 +216,18 @@ public class RemoteSSOService extends AbstractSSOService {
       } else {
         LOG.warn("DPM registration failed after '{}' attempts", attempts);
       }
+    }
+  }
+
+  private void processRegistrationResponse(RestClient.Response response) throws IOException {
+    if(!response.haveData()) {
+      LOG.debug("Received empty registration response from Control Hub");
+      return;
+    }
+
+    if(registrationResponseDelegate != null) {
+      RegistrationResponseJson registrationResponse = response.getData(RegistrationResponseJson.class);
+      registrationResponseDelegate.processRegistrationResponse(registrationResponse);
     }
   }
 

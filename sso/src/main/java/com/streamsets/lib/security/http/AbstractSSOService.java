@@ -43,6 +43,8 @@ public abstract class AbstractSSOService implements SSOService {
   private PrincipalCache userPrincipalCache;
   private PrincipalCache appPrincipalCache;
 
+  protected RegistrationResponseDelegate registrationResponseDelegate;
+
   @Override
   public void setDelegateTo(SSOService ssoService) {
     throw new UnsupportedOperationException();
@@ -147,6 +149,11 @@ public abstract class AbstractSSOService implements SSOService {
     getUserPrincipalCache().clear();
     getAppPrincipalCache().clear();
     LOG.info("Flushed user and application principal caches");
+  }
+
+  @Override
+  public void setRegistrationResponseDelegate(RegistrationResponseDelegate delegate) {
+    this.registrationResponseDelegate = delegate;
   }
 
   // returns principal if OK, throws ForbiddenException if invalid credentials (will add to invalid cache) or
