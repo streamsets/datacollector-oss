@@ -18,6 +18,8 @@ package com.streamsets.datacollector.runner;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.BlobStore;
+import com.streamsets.pipeline.api.DeliveryGuarantee;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageType;
 import com.streamsets.pipeline.api.interceptor.InterceptorCreator;
 
@@ -39,19 +41,25 @@ public class InterceptorCreatorContextBuilder {
     private final StageType stageType;
     private final InterceptorCreator.InterceptorType interceptorType;
     private final Map<String, String> parameters;
+    private final ExecutionMode executionMode;
+    private final DeliveryGuarantee deliveryGuarantee;
 
     ContextImpl(
       BlobStore blobStore,
       Configuration configuration,
       StageType stageType,
       InterceptorCreator.InterceptorType interceptorType,
-      Map<String, String> parameters
+      Map<String, String> parameters,
+      ExecutionMode executionMode,
+      DeliveryGuarantee deliveryGuarantee
     ) {
       this.blobStore = blobStore;
       this.configuration = configuration;
       this.stageType = stageType;
       this.interceptorType = interceptorType;
       this.parameters = parameters;
+      this.executionMode = executionMode;
+      this.deliveryGuarantee = deliveryGuarantee;
     }
 
     @Override
@@ -78,11 +86,23 @@ public class InterceptorCreatorContextBuilder {
     public Map<String, String> getParameters() {
       return parameters;
     }
+
+    @Override
+    public ExecutionMode getExecutionMode() {
+      return executionMode;
+    }
+
+    @Override
+    public DeliveryGuarantee getDeliveryGuarantee() {
+      return deliveryGuarantee;
+    }
   }
 
   private final BlobStore blobStore;
   private final Configuration sdcConf;
   private final List<PipelineStartEvent.InterceptorConfiguration> interceptorConf;
+  private ExecutionMode executionMode;
+  private DeliveryGuarantee deliveryGuarantee;
 
   public InterceptorCreatorContextBuilder(
     BlobStore blobStore,
@@ -99,6 +119,16 @@ public class InterceptorCreatorContextBuilder {
     this.blobStore = blobStore;
     this.sdcConf = configuration;
     this.interceptorConf = interceptorConf;
+  }
+
+  public InterceptorCreatorContextBuilder withExecutionMode(ExecutionMode executionMode) {
+    this.executionMode = executionMode;
+    return this;
+  }
+
+  public InterceptorCreatorContextBuilder withDeliveryGuarantee(DeliveryGuarantee deliveryGuarantee) {
+    this.deliveryGuarantee = deliveryGuarantee;
+    return this;
   }
 
   public InterceptorCreator.Context buildFor(
@@ -122,7 +152,9 @@ public class InterceptorCreatorContextBuilder {
         sdcConf,
         stageType,
         interceptorType,
-        actualParameters
+        actualParameters,
+        executionMode,
+        deliveryGuarantee
     );
   }
 

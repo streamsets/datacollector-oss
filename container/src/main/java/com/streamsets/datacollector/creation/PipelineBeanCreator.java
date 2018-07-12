@@ -176,8 +176,13 @@ public abstract class PipelineBeanCreator {
     PipelineStageBeans startEventBeans = null;
     PipelineStageBeans stopEventBeans = null;
     if (pipelineConfigBean != null && pipelineConfigBean.constants != null) {
-
       Map<String, Object> resolvedConstants = pipelineConfigBean.constants;
+      if(interceptorContextBuilder != null) {
+        interceptorContextBuilder
+          .withExecutionMode(pipelineConfigBean.executionMode)
+          .withDeliveryGuarantee(pipelineConfigBean.deliveryGuarantee)
+        ;
+      }
 
       // Instantiate usual stages
       if(!pipelineConf.getStages().isEmpty()) {
