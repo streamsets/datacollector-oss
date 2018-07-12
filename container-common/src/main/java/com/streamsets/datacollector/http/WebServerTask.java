@@ -466,7 +466,9 @@ public abstract class WebServerTask extends AbstractTask implements Registration
 
     // Propagate new configuration
     try {
-      RuntimeInfo.storeControlHubConfigs(runtimeInfo, response.getConfiguration());
+      if(!response.getConfiguration().isEmpty()) {
+        RuntimeInfo.storeControlHubConfigs(runtimeInfo, response.getConfiguration());
+      }
     } catch (IOException e) {
       throw new RuntimeException(e.toString(), e);
     }
