@@ -29,7 +29,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     description = "Tranform Whole File Data Format into Different Types",
     execution = {ExecutionMode.STANDALONE,},
     icon = "whole_file_transformer.png",
-    onlineHelpRefUrl =""
+    onlineHelpRefUrl ="index.html?contextID=task_jzd_dz4_l2b"
 )
 @GenerateResourceBundle
 @ConfigGroups(Groups.class)
