@@ -56,8 +56,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import static org.apache.hadoop.hbase.util.Strings.isEmpty;
-
 public final class HBaseUtil {
   private static final String TABLE_NAME = "tableName";
   private static final Logger LOG = LoggerFactory.getLogger(HBaseUtil.class);
@@ -145,7 +143,7 @@ public final class HBaseUtil {
       int clientPort
       //String tableName
   ) {
-    if (isEmpty(zookeeperQuorum)) {
+    if (zookeeperQuorum != null && !zookeeperQuorum.isEmpty()) {
       issues.add(context.createConfigIssue(hbaseName, "zookeeperQuorum", Errors.HBASE_04));
     } else {
       List<String> zkQuorumList = Lists.newArrayList(Splitter.on(",").trimResults().omitEmptyStrings().split(
