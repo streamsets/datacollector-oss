@@ -51,8 +51,6 @@ import java.util.Map;
 
 public class EdgeRunner extends AbstractRunner implements StateListener {
   private static final Logger LOG = LoggerFactory.getLogger(EdgeRunner.class);
-  @Inject PipelineStoreTask pipelineStoreTask;
-  @Inject PipelineStateStore pipelineStateStore;
 
   private String pipelineTitle = null;
 
@@ -67,13 +65,8 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
-  public PipelineConfiguration getPipelineConfiguration() throws PipelineException {
-    return pipelineStoreTask.load(getName(), getRev());
-  }
-
-  @Override
   public void resetOffset(String user) throws PipelineException {
-    PipelineConfiguration pipelineConfiguration = pipelineStoreTask.load(getName(), getRev());
+    PipelineConfiguration pipelineConfiguration = getPipelineConfiguration();
     EdgeUtil.resetOffset(pipelineConfiguration);
   }
 
@@ -84,27 +77,18 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
 
   @Override
   public void updateCommittedOffsets(SourceOffset sourceOffset) {
-
-  }
-
-  @Override
-  public PipelineState getState() throws PipelineStoreException {
-    return pipelineStateStore.getState(getName(), getRev());
   }
 
   @Override
   public void prepareForDataCollectorStart(String user) {
-
   }
 
   @Override
   public void onDataCollectorStart(String user) {
-
   }
 
   @Override
   public void onDataCollectorStop(String user) {
-
   }
 
   @Override
@@ -112,7 +96,7 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
     PipelineStateJson currentState;
     PipelineStateJson toState;
 
-    PipelineConfiguration pipelineConfiguration = pipelineStoreTask.load(getName(), getRev());
+    PipelineConfiguration pipelineConfiguration = getPipelineConfiguration();
     currentState = EdgeUtil.getEdgePipelineState(pipelineConfiguration);
     if (currentState != null && !currentState.getPipelineState().getStatus().isActive()) {
       LOG.warn("Pipeline {}:{} is already in stopped state {}",
@@ -126,7 +110,7 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
     }
 
     if (toState != null) {
-      this.pipelineStateStore.saveState(
+      this.getPipelineStateStore().saveState(
           user,
           getName(),
           getRev(),
@@ -138,7 +122,7 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
           toState.getRetryAttempt(),
           toState.getNextRetryTimeStamp()
       );
-      eventListenerManager.broadcastStateChange(
+      getEventListenerManager().broadcastStateChange(
           currentState != null ? currentState.getPipelineState() : toState.getPipelineState(),
           toState.getPipelineState(),
           ThreadUsage.STANDALONE,
@@ -157,7 +141,7 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
     PipelineStateJson currentState;
     PipelineStateJson toState;
 
-    PipelineConfiguration pipelineConfiguration = pipelineStoreTask.load(getName(), getRev());
+    PipelineConfiguration pipelineConfiguration = getPipelineConfiguration();
     currentState = EdgeUtil.getEdgePipelineState(pipelineConfiguration);
     if (currentState != null && currentState.getPipelineState().getStatus().isActive()) {
       LOG.warn("Pipeline {}:{} is already in active state {}",
@@ -172,7 +156,7 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
     }
 
     if (toState != null) {
-      this.pipelineStateStore.saveState(
+      this.getPipelineStateStore().saveState(
           context.getUser(),
           getName(),
           getRev(),
@@ -184,7 +168,7 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
           toState.getRetryAttempt(),
           toState.getNextRetryTimeStamp()
       );
-      eventListenerManager.broadcastStateChange(
+      getEventListenerManager().broadcastStateChange(
           currentState != null ? currentState.getPipelineState() : toState.getPipelineState(),
           toState.getPipelineState(),
           ThreadUsage.STANDALONE,
@@ -245,18 +229,8 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
-  public List<PipelineState> getHistory() {
-    return null;
-  }
-
-  @Override
-  public void deleteHistory() {
-
-  }
-
-  @Override
   public Object getMetrics() throws PipelineException {
-    PipelineConfiguration pipelineConfiguration = pipelineStoreTask.load(getName(), getRev());
+    PipelineConfiguration pipelineConfiguration = getPipelineConfiguration();
     return EdgeUtil.getEdgePipelineMetrics(pipelineConfiguration);
   }
 

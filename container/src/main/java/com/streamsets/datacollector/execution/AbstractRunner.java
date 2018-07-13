@@ -32,12 +32,9 @@ import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
-import com.streamsets.datacollector.util.ValidationUtil;
 import com.streamsets.datacollector.validation.Issue;
-import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
 import com.streamsets.lib.security.acl.dto.Acl;
-import com.streamsets.pipeline.api.StageException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,13 +53,15 @@ public abstract  class AbstractRunner implements Runner {
   private final String name;
   private final String rev;
 
-  @Inject protected AclStoreTask aclStoreTask;
-  @Inject protected EventListenerManager eventListenerManager;
-  @Inject protected PipelineStoreTask pipelineStore;
-  @Inject protected StageLibraryTask stageLibrary;
-  @Inject protected CredentialStoresTask credentialStoresTask;
-  @Inject protected RuntimeInfo runtimeInfo;
-  @Inject protected Configuration configuration;
+  @Inject AclStoreTask aclStoreTask;
+  @Inject EventListenerManager eventListenerManager;
+  @Inject PipelineStoreTask pipelineStore;
+  @Inject PipelineStateStore pipelineStateStore;
+  @Inject StageLibraryTask stageLibrary;
+  @Inject CredentialStoresTask credentialStoresTask;
+  @Inject RuntimeInfo runtimeInfo;
+  @Inject Configuration configuration;
+
   protected Map<String, Object> runtimeParameters;
   // Start Pipeline Context that was used during last start() and will be reused on pipeline retry
   protected StartPipelineContext startPipelineContext;
@@ -70,6 +69,27 @@ public abstract  class AbstractRunner implements Runner {
   public AbstractRunner(String name, String rev) {
     this.name = name;
     this.rev = rev;
+  }
+
+  protected AbstractRunner(
+      String name,
+      String rev,
+      RuntimeInfo runtimeInfo,
+      Configuration configuration,
+      PipelineStateStore pipelineStateStore,
+      PipelineStoreTask pipelineStore,
+      StageLibraryTask stageLibrary,
+      EventListenerManager eventListenerManager,
+      AclStoreTask aclStore
+  ) {
+    this(name, rev);
+    this.aclStoreTask = aclStore;
+    this.configuration = configuration;
+    this.runtimeInfo = runtimeInfo;
+    this.pipelineStateStore = pipelineStateStore;
+    this.pipelineStore = pipelineStore;
+    this.stageLibrary = stageLibrary;
+    this.eventListenerManager = eventListenerManager;
   }
 
   @Override
@@ -80,6 +100,58 @@ public abstract  class AbstractRunner implements Runner {
   @Override
   public String getRev() {
     return rev;
+  }
+
+  protected AclStoreTask getAclStore() {
+    return aclStoreTask;
+  }
+
+  protected EventListenerManager getEventListenerManager() {
+    return eventListenerManager;
+  }
+
+  protected PipelineStoreTask getPipelineStore() {
+    return pipelineStore;
+  }
+
+  protected PipelineStateStore getPipelineStateStore() {
+    return pipelineStateStore;
+  }
+
+  protected StageLibraryTask getStageLibrary() {
+    return stageLibrary;
+  }
+
+  protected CredentialStoresTask getCredentialStores() {
+    return credentialStoresTask;
+  }
+
+  protected RuntimeInfo getRuntimeInfo() {
+    return runtimeInfo;
+  }
+
+  protected Configuration getConfiguration() {
+    return configuration;
+  }
+
+  @Override
+  public PipelineConfiguration getPipelineConfiguration() throws PipelineException {
+    return pipelineStore.load(getName(), getRev());
+  }
+
+  @Override
+  public PipelineState getState() throws PipelineStoreException {
+    return pipelineStateStore.getState(getName(), getRev());
+  }
+
+  @Override
+  public List<PipelineState> getHistory() throws PipelineStoreException {
+    return pipelineStateStore.getHistory(getName(), getRev(), false);
+  }
+
+  @Override
+  public void deleteHistory() {
+    pipelineStateStore.deleteHistory(getName(), getRev());
   }
 
   protected PipelineConfiguration getPipelineConf(String name, String rev) throws PipelineException {
