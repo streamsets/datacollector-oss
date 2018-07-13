@@ -180,6 +180,11 @@ public interface Runner {
 
   Collection<CallbackInfo> getSlaveCallbackList(CallbackObjectType callbackObjectType);
 
+  /**
+   * Create attributes to be saved in the state file.
+   */
+  public Map<String, Object> createStateAttributes() throws PipelineStoreException;
+
   void close();
 
   void updateSlaveCallbackInfo(CallbackInfo callbackInfo);

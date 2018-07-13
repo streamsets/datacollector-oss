@@ -365,7 +365,7 @@ public class TestClusterRunner {
   public void testPipelineStatusDisconnected() throws Exception {
     attributes.put(ClusterRunner.APPLICATION_STATE, APPLICATION_STATE.getMap());
     setState(PipelineStatus.RUNNING);
-    Runner clusterRunner = createClusterRunner();
+    ClusterRunner clusterRunner = createClusterRunner();
     clusterRunner.prepareForDataCollectorStart("admin");
     clusterRunner.onDataCollectorStop("stop");
     Assert.assertEquals(PipelineStatus.DISCONNECTED, clusterRunner.getState().getStatus());
@@ -377,7 +377,7 @@ public class TestClusterRunner {
     setState(PipelineStatus.RUNNING);
     ClusterRunner clusterRunner = Mockito.spy(createClusterRunner());
     Mockito.doReturn(Mockito.mock(PipelineConfiguration.class)).when(clusterRunner).getPipelineConfiguration();
-    Mockito.doReturn(new StartPipelineContextBuilder("pipeline").build()).when(clusterRunner).getStartPipelineContext();
+    clusterRunner.loadStartPipelineContextFromState("admin");
     clusterRunner.prepareForStop("admin");
     clusterRunner.stop("admin");
     Assert.assertEquals(PipelineStatus.STOPPED, clusterRunner.getState().getStatus());
@@ -388,7 +388,7 @@ public class TestClusterRunner {
     attributes.put(ClusterRunner.APPLICATION_STATE, APPLICATION_STATE.getMap());
     setState(PipelineStatus.RUNNING);
     ClusterRunner clusterRunner = Mockito.spy(createClusterRunner());
-    Mockito.doReturn(new StartPipelineContextBuilder("pipeline").build()).when(clusterRunner).getStartPipelineContext();
+    clusterRunner.loadStartPipelineContextFromState("admin");
     clusterProvider.killTimesOut = true;
     clusterRunner.prepareForStop("admin");
     clusterRunner.stop("admin");

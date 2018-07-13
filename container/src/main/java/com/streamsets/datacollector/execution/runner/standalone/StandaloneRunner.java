@@ -701,7 +701,8 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
       throw new PipelineRunnerException(ContainerError.CONTAINER_0166, getName());
     }
     LOG.info("Preparing to start pipeline '{}::{}'", getName(), getRev());
-    validateAndSetStateTransition(context.getUser(), PipelineStatus.STARTING, null, context.getRuntimeParameters());
+    setStartPipelineContext(context);
+    validateAndSetStateTransition(context.getUser(), PipelineStatus.STARTING, null, createStateAttributes());
     token = UUID.randomUUID().toString();
   }
 

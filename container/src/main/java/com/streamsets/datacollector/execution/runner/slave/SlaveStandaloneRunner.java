@@ -46,6 +46,7 @@ import org.slf4j.MDC;
 
 import javax.inject.Inject;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -244,6 +245,11 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
   @Override
   public Collection<CallbackInfo> getSlaveCallbackList(CallbackObjectType callbackObjectType) {
     return standaloneRunner.getSlaveCallbackList(callbackObjectType);
+  }
+
+  @Override
+  public Map<String, Object> createStateAttributes() {
+    return new HashMap<>();
   }
 
   @Override

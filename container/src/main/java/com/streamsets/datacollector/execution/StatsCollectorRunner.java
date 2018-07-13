@@ -218,6 +218,11 @@ public class StatsCollectorRunner implements Runner {
   }
 
   @Override
+  public Map<String, Object> createStateAttributes() throws PipelineStoreException {
+    return runner.createStateAttributes();
+  }
+
+  @Override
   public void close() {
     runner.close();
   }

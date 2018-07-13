@@ -25,7 +25,6 @@ import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
 import com.streamsets.datacollector.execution.alerts.EmailNotifier;
 import com.streamsets.datacollector.execution.alerts.WebHookNotifier;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
-import com.streamsets.datacollector.execution.runner.common.ProductionPipeline;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.AclStoreTask;
@@ -41,6 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +51,8 @@ import java.util.concurrent.TimeUnit;
 
 public abstract  class AbstractRunner implements Runner {
   private static final Logger LOG = LoggerFactory.getLogger(AbstractRunner.class);
+
+  public static final String RUNTIME_PARAMETERS_ATTR = "RUNTIME_PARAMETERS";
 
   private final String name;
   private final String rev;
@@ -155,6 +157,21 @@ public abstract  class AbstractRunner implements Runner {
     pipelineStateStore.deleteHistory(getName(), getRev());
   }
 
+  @Override
+  public Map<String, Object> createStateAttributes() throws PipelineStoreException {
+    Map<String, Object> attributes = new HashMap<>();
+    attributes.put(RUNTIME_PARAMETERS_ATTR, startPipelineContext.getRuntimeParameters());
+
+    // We're persisting information whether this is remote pipeline in the state file rather then in some metadata file
+    // and hence we need to transition that information from previous state.
+    Map<String, Object> oldAttributes = getState().getAttributes();
+    if(oldAttributes != null && oldAttributes.containsKey(RemoteDataCollector.IS_REMOTE_PIPELINE)) {
+      attributes.put(RemoteDataCollector.IS_REMOTE_PIPELINE, oldAttributes.get(RemoteDataCollector.IS_REMOTE_PIPELINE));
+    }
+
+    return attributes;
+  }
+
   protected void setStartPipelineContext(StartPipelineContext context) {
     this.startPipelineContext = context;
   }
@@ -164,13 +181,14 @@ public abstract  class AbstractRunner implements Runner {
     return startPipelineContext;
   }
 
-  protected void loadStartPipelineContextFromState(String user) throws PipelineStoreException {
+  @VisibleForTesting
+  public void loadStartPipelineContextFromState(String user) throws PipelineStoreException {
     PipelineState pipelineState = getState();
     Map<String, Object> attributes = pipelineState.getAttributes();
     Map<String, Object> runtimeParameters = null;
 
-    if (attributes != null && attributes.containsKey(ProductionPipeline.RUNTIME_PARAMETERS_ATTR)) {
-      runtimeParameters = (Map<String, Object>) attributes.get(ProductionPipeline.RUNTIME_PARAMETERS_ATTR);
+    if (attributes != null && attributes.containsKey(RUNTIME_PARAMETERS_ATTR)) {
+      runtimeParameters = (Map<String, Object>) attributes.get(RUNTIME_PARAMETERS_ATTR);
     }
     setStartPipelineContext(new StartPipelineContextBuilder(user)
       .withRuntimeParameters(runtimeParameters)

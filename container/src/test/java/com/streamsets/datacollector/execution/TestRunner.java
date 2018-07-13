@@ -31,6 +31,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -189,6 +190,11 @@ public class TestRunner {
     @Override
     public Collection<CallbackInfo> getSlaveCallbackList(CallbackObjectType callbackObjectType) {
       return null;
+    }
+
+    @Override
+    public Map<String, Object> createStateAttributes() {
+      return new HashMap<>();
     }
 
     @Override
@@ -379,6 +385,11 @@ public class TestRunner {
     @Override
     public Collection<CallbackInfo> getSlaveCallbackList(CallbackObjectType callbackObjectType) {
       return null;
+    }
+
+    @Override
+    public Map<String, Object> createStateAttributes() {
+      return new HashMap<>();
     }
 
     @Override

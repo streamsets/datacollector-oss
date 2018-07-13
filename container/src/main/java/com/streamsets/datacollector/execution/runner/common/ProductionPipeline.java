@@ -43,7 +43,6 @@ import java.util.Map;
 public class ProductionPipeline {
 
   private static final Logger LOG = LoggerFactory.getLogger(ProductionPipeline.class);
-  public static final String RUNTIME_PARAMETERS_ATTR = "RUNTIME_PARAMETERS";
   private final PipelineConfiguration pipelineConf;
   private final Pipeline pipeline;
   private final ProductionPipelineRunner pipelineRunner;
@@ -105,9 +104,7 @@ public class ProductionPipeline {
         }
         if (issues.isEmpty()) {
           try {
-            Map<String, Object> attributes = new HashMap<>();
-            attributes.put(RUNTIME_PARAMETERS_ATTR, pipeline.getRuntimeParameters());
-            stateChanged(PipelineStatus.RUNNING, null, attributes);
+            stateChanged(PipelineStatus.RUNNING, null, null);
             LOG.debug("Running");
             pipeline.run();
             if (!wasStopped()) {

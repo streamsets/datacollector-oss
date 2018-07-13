@@ -18,6 +18,7 @@ package com.streamsets.datacollector.execution.runner;
 import com.codahale.metrics.MetricRegistry;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.GreenMailUtil;
+import com.streamsets.datacollector.execution.AbstractRunner;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
@@ -27,12 +28,10 @@ import com.streamsets.datacollector.execution.Snapshot;
 import com.streamsets.datacollector.execution.SnapshotInfo;
 import com.streamsets.datacollector.execution.StartPipelineContextBuilder;
 import com.streamsets.datacollector.execution.StateListener;
-import com.streamsets.datacollector.execution.StatsCollectorRunner;
 import com.streamsets.datacollector.execution.common.ExecutorConstants;
 import com.streamsets.datacollector.execution.manager.standalone.StandaloneAndClusterPipelineManager;
 import com.streamsets.datacollector.execution.runner.common.AsyncRunner;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
-import com.streamsets.datacollector.execution.runner.common.ProductionPipeline;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
@@ -135,9 +134,10 @@ public class TestStandaloneRunner {
     waitForState(runner, PipelineStatus.RUNNING);
     PipelineState pipelineState = runner.getState();
     Map<String, Object> runtimeConstantsInState = (Map<String, Object>) pipelineState.getAttributes()
-        .get(ProductionPipeline.RUNTIME_PARAMETERS_ATTR);
+        .get(AbstractRunner.RUNTIME_PARAMETERS_ATTR);
     assertNotNull(runtimeConstantsInState);
     assertEquals(runtimeParameters.get("param1"), runtimeConstantsInState.get("param1"));
+    assertFalse(pipelineState.getAttributes().containsKey("param1")); // Ensure that the parameters are not in the root of the attributes
     runner.getRunner(AsyncRunner.class).getDelegatingRunner().prepareForStop("admin");
     runner.getRunner(AsyncRunner.class).getDelegatingRunner().stop("admin");
     waitForState(runner, PipelineStatus.STOPPED);

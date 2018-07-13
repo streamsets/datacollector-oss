@@ -365,6 +365,9 @@ public class TestStandalonePipelineManager {
     pipelineStateStore.saveState("user", "remote", "0", PipelineStatus.CONNECTING, "blah", null, ExecutionMode
         .STANDALONE, null, 0, 0);
 
+    // Make sure that handover between the sub-tests is done properly
+    assertFalse(((StandaloneAndClusterPipelineManager) pipelineManager).isRunnerPresent("remote", "0"));
+
     setUpManager(StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INTERVAL,
         StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INITIAL_DELAY,
         false);

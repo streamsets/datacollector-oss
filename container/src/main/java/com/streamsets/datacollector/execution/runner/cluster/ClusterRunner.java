@@ -298,6 +298,7 @@ public class ClusterRunner extends AbstractRunner {
         throw new IllegalStateException(Utils.format("Pipeline in undefined state: '{}'", status));
     }
     LOG.debug(msg);
+    loadStartPipelineContextFromState(user);
     validateAndSetStateTransition(user, PipelineStatus.DISCONNECTED, msg);
   }
 
@@ -309,8 +310,8 @@ public class ClusterRunner extends AbstractRunner {
       case DISCONNECTED:
         String msg = "Pipeline was in DISCONNECTED state, changing it to CONNECTING";
         LOG.debug(msg);
-        validateAndSetStateTransition(user, PipelineStatus.CONNECTING, msg);
         loadStartPipelineContextFromState(user);
+        validateAndSetStateTransition(user, PipelineStatus.CONNECTING, msg);
         connectOrStart(getStartPipelineContext());
         break;
       default:
@@ -431,6 +432,7 @@ public class ClusterRunner extends AbstractRunner {
       throw new PipelineRunnerException(ContainerError.CONTAINER_0166, getName());
     }
     LOG.info("Preparing to start pipeline '{}::{}'", getName(), getRev());
+    setStartPipelineContext(context);
     validateAndSetStateTransition(context.getUser(), PipelineStatus.STARTING, "Starting pipeline in " + getState().getExecutionMode() + " mode");
   }
 
@@ -573,7 +575,7 @@ public class ClusterRunner extends AbstractRunner {
 
   private void validateAndSetStateTransition(String user, PipelineStatus toStatus, String message)
     throws PipelineStoreException, PipelineRunnerException {
-    final Map<String, Object> attributes = new HashMap<>();
+    final Map<String, Object> attributes = createStateAttributes();
     attributes.putAll(getAttributes());
     validateAndSetStateTransition(user, toStatus, message, attributes);
   }
@@ -967,7 +969,7 @@ public class ClusterRunner extends AbstractRunner {
           acl
       );
       // set state of running before adding callback which modified attributes
-      Map<String, Object> attributes = new HashMap<>();
+      Map<String, Object> attributes = createStateAttributes();
       attributes.putAll(getAttributes());
       attributes.put(APPLICATION_STATE, applicationState.getMap());
       attributes.put(APPLICATION_STATE_START_TIME, System.currentTimeMillis());

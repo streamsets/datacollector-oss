@@ -451,6 +451,11 @@ public class TestRemoteDataCollector {
     }
 
     @Override
+    public Map<String, Object> createStateAttributes() {
+      return new HashMap<>();
+    }
+
+    @Override
     public void close() {
       // TODO Auto-generated method stub
 

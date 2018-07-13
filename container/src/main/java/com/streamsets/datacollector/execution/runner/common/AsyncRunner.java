@@ -251,6 +251,11 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
+  public Map<String, Object> createStateAttributes() throws PipelineStoreException {
+    return runner.createStateAttributes();
+  }
+
+  @Override
   public Pipeline getPipeline() {
     if (runner instanceof PipelineInfo) {
       return ((PipelineInfo) runner).getPipeline();
