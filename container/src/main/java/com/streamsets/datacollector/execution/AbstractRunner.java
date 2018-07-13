@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.execution;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
@@ -24,6 +25,7 @@ import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
 import com.streamsets.datacollector.execution.alerts.EmailNotifier;
 import com.streamsets.datacollector.execution.alerts.WebHookNotifier;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
+import com.streamsets.datacollector.execution.runner.common.ProductionPipeline;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.AclStoreTask;
@@ -62,9 +64,8 @@ public abstract  class AbstractRunner implements Runner {
   @Inject RuntimeInfo runtimeInfo;
   @Inject Configuration configuration;
 
-  protected Map<String, Object> runtimeParameters;
   // Start Pipeline Context that was used during last start() and will be reused on pipeline retry
-  protected StartPipelineContext startPipelineContext;
+  private StartPipelineContext startPipelineContext;
 
   public AbstractRunner(String name, String rev) {
     this.name = name;
@@ -152,6 +153,29 @@ public abstract  class AbstractRunner implements Runner {
   @Override
   public void deleteHistory() {
     pipelineStateStore.deleteHistory(getName(), getRev());
+  }
+
+  protected void setStartPipelineContext(StartPipelineContext context) {
+    this.startPipelineContext = context;
+  }
+
+  @VisibleForTesting
+  public StartPipelineContext getStartPipelineContext() {
+    return startPipelineContext;
+  }
+
+  protected void loadStartPipelineContextFromState(String user) throws PipelineStoreException {
+    PipelineState pipelineState = getState();
+    Map<String, Object> attributes = pipelineState.getAttributes();
+    Map<String, Object> runtimeParameters = null;
+
+    if (attributes != null && attributes.containsKey(ProductionPipeline.RUNTIME_PARAMETERS_ATTR)) {
+      runtimeParameters = (Map<String, Object>) attributes.get(ProductionPipeline.RUNTIME_PARAMETERS_ATTR);
+    }
+    setStartPipelineContext(new StartPipelineContextBuilder(user)
+      .withRuntimeParameters(runtimeParameters)
+      .build()
+    );
   }
 
   protected PipelineConfiguration getPipelineConf(String name, String rev) throws PipelineException {
@@ -243,7 +267,7 @@ public abstract  class AbstractRunner implements Runner {
           rev,
           pipelineConfigBean,
           runtimeInfo,
-          runtimeParameters
+          startPipelineContext.getRuntimeParameters()
       );
       eventListenerManager.addStateEventListener(webHookNotifier);
     }

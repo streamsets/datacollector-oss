@@ -44,7 +44,6 @@ import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.Snapshot;
 import com.streamsets.datacollector.execution.SnapshotInfo;
-import com.streamsets.datacollector.execution.StartPipelineContextBuilder;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
 import com.streamsets.datacollector.execution.cluster.ClusterHelper;
 import com.streamsets.datacollector.execution.metrics.MetricsEventRunnable;
@@ -311,8 +310,8 @@ public class ClusterRunner extends AbstractRunner {
         String msg = "Pipeline was in DISCONNECTED state, changing it to CONNECTING";
         LOG.debug(msg);
         validateAndSetStateTransition(user, PipelineStatus.CONNECTING, msg);
-        startPipelineContext = new StartPipelineContextBuilder(user).build();
-        connectOrStart(startPipelineContext);
+        loadStartPipelineContextFromState(user);
+        connectOrStart(getStartPipelineContext());
         break;
       default:
         LOG.error(Utils.format("Pipeline has unexpected status: '{}' on data collector start", status));
@@ -369,9 +368,11 @@ public class ClusterRunner extends AbstractRunner {
           + "pipeline in " + getState().getExecutionMode() + " mode");
       } else {
         ApplicationState appState = new ApplicationState((Map) getState().getAttributes().get(APPLICATION_STATE));
-        PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(getPipelineConf(getName(), getRev()), new
-                ArrayList<>(),
-            runtimeParameters);
+        PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(
+          getPipelineConfiguration(),
+          new ArrayList<>(),
+          getStartPipelineContext().getRuntimeParameters()
+        );
         stop(user, appState, pipelineConf, pipelineConfigBean);
       }
     } finally {
@@ -399,8 +400,11 @@ public class ClusterRunner extends AbstractRunner {
         validateAndSetStateTransition(context.getUser(), PipelineStatus.CONNECT_ERROR, e.toString(), attributes);
         throw e;
       }
-      PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(pipelineConf, new ArrayList<>(),
-          runtimeParameters);
+      PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(
+          pipelineConf,
+          new ArrayList<>(),
+          getStartPipelineContext().getRuntimeParameters()
+      );
       connect(context.getUser(), appState, pipelineConf, pipelineConfigBean);
       if (getState().getStatus().isActive()) {
         scheduleRunnable(context.getUser(), pipelineConf, pipelineConfigBean);
@@ -453,6 +457,8 @@ public class ClusterRunner extends AbstractRunner {
           && executionMode != ExecutionMode.CLUSTER_MESOS_STREAMING && executionMode != ExecutionMode.EMR_BATCH) {
         throw new PipelineRunnerException(ValidationError.VALIDATION_0073);
       }
+
+      setStartPipelineContext(context);
       LOG.debug("State of pipeline for '{}::{}' is '{}' ", getName(), getRev(), getState());
       pipelineConf = getPipelineConf(getName(), getRev());
       if (context.getRuntimeParameters() != null) {
@@ -463,8 +469,8 @@ public class ClusterRunner extends AbstractRunner {
             List<Map<String, Object>> parameters = (List<Map<String, Object>>) config.getValue();
             for (Map<String, Object> parameter : parameters) {
               String key = (String) parameter.get(KEY);
-              if (runtimeParameters.containsKey(key)) {
-                parameter.put(VALUE, runtimeParameters.get(key));
+              if (context.getRuntimeParameters().containsKey(key)) {
+                parameter.put(VALUE, context.getRuntimeParameters().get(key));
               }
             }
           }
@@ -479,8 +485,7 @@ public class ClusterRunner extends AbstractRunner {
           )
       );
       PipelineEL.setConstantsInContext(pipelineConf, runningUser);
-      this.startPipelineContext = context;
-      doStart(context.getUser(), pipelineConf, getClusterSourceInfo(context, getName(), getRev(), pipelineConf), getAcl(getName()), runtimeParameters);
+      doStart(context.getUser(), pipelineConf, getClusterSourceInfo(context, getName(), getRev(), pipelineConf), getAcl(getName()), context.getRuntimeParameters());
     } catch (Exception e) {
       validateAndSetStateTransition(context.getUser(), PipelineStatus.START_ERROR, e.toString(), getAttributes());
       throw e;

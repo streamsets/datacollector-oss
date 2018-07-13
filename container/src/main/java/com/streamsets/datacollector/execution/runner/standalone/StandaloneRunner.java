@@ -349,12 +349,8 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         case DISCONNECTED:
           String msg = "Pipeline was in DISCONNECTED state, changing it to CONNECTING";
           LOG.debug(msg);
-          // Ger Runtime Constants from Pipeline State
-          if (attributes != null && attributes.containsKey(ProductionPipeline.RUNTIME_PARAMETERS_ATTR)) {
-            runtimeParameters = (Map<String, Object>) attributes.get(ProductionPipeline.RUNTIME_PARAMETERS_ATTR);
-          }
-          this.startPipelineContext = new StartPipelineContextBuilder(user).withRuntimeParameters(runtimeParameters).build();
-          retryOrStart(startPipelineContext);
+          loadStartPipelineContextFromState(user);
+          retryOrStart(getStartPipelineContext());
           break;
         default:
           LOG.error(Utils.format("Pipeline cannot start with status: '{}'", status));
@@ -737,6 +733,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     synchronized (this) {
       try {
         LOG.info("Starting pipeline {} {}", getName(), getRev());
+        setStartPipelineContext(context);
         UserContext runningUser = new UserContext(context.getUser(),
             getRuntimeInfo().isDPMEnabled(),
             getConfiguration().get(
@@ -760,14 +757,12 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(
             pipelineConfiguration,
             errors,
-            runtimeParameters
+            getStartPipelineContext().getRuntimeParameters()
         );
         if (pipelineConfigBean == null) {
           throw new PipelineRuntimeException(ContainerError.CONTAINER_0116, errors);
         }
         maxRetries = pipelineConfigBean.retryAttempts;
-        this.runtimeParameters = context.getRuntimeParameters();
-        this.startPipelineContext = context;
 
         MemoryLimitConfiguration memoryLimitConfiguration = getMemoryLimitConfiguration(pipelineConfigBean);
 
@@ -850,7 +845,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
           pipelineConfiguration,
           getState().getTimeStamp(),
           context.getInterceptorConfigurations(),
-          runtimeParameters
+          context.getRuntimeParameters()
         );
         prodPipeline.registerStatusListener(this);
 

@@ -106,7 +106,7 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
       );
       toState = currentState;
     } else {
-      toState = EdgeUtil.stopEdgePipeline(pipelineConfiguration, runtimeParameters);
+      toState = EdgeUtil.stopEdgePipeline(pipelineConfiguration, getStartPipelineContext().getRuntimeParameters());
     }
 
     if (toState != null) {
@@ -141,6 +141,7 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
     PipelineStateJson currentState;
     PipelineStateJson toState;
 
+    setStartPipelineContext(context);
     PipelineConfiguration pipelineConfiguration = getPipelineConfiguration();
     currentState = EdgeUtil.getEdgePipelineState(pipelineConfiguration);
     if (currentState != null && currentState.getPipelineState().getStatus().isActive()) {
@@ -152,7 +153,7 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
       toState = currentState;
     } else {
       EdgeUtil.publishEdgePipeline(pipelineConfiguration, null);
-      toState = EdgeUtil.startEdgePipeline(pipelineConfiguration, runtimeParameters);
+      toState = EdgeUtil.startEdgePipeline(pipelineConfiguration, context.getRuntimeParameters());
     }
 
     if (toState != null) {
