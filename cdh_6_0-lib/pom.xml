@@ -271,8 +271,6 @@
             </exclusions>
         </dependency>
 
-
-        <!--
         <dependency>
             <groupId>com.streamsets</groupId>
             <artifactId>streamsets-datacollector-hbase-protolib</artifactId>
@@ -285,7 +283,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        -->
 
         <!-- Hive related -->
         <!--
@@ -437,7 +434,6 @@
             </exclusions>
         </dependency>
 
-        <!--
         <dependency>
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase-client</artifactId>
@@ -467,7 +463,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        -->
 
         <!-- Solr related -->
         <!--
@@ -738,8 +733,8 @@
                                 -->
                                 <source>${basedir}/../flume-protolib/src/test/java</source>
                                 <source>${basedir}/../hdfs-protolib/src/test/java</source>
+                                <source>${basedir}/../hbase-protolib/src/test/java</source>
                                 <!-- Tests are failing compilation -->
-                                <!--                                <source>${basedir}/../hbase-protolib/src/test/java</source> -->
                                 <!--                                <source>${basedir}/../hive-protolib/src/test/java</source> -->
                                 <source>${basedir}/../kudu-protolib/src/test/java</source>
                                 <source>${basedir}/../mapreduce-protolib/src/test/java</source>
@@ -768,11 +763,9 @@
                                     <directory>${basedir}/../hive-protolib/src/test/resources</directory>
                                 </resource>
                                  -->
-                                  <!--
                                 <resource>
                                     <directory>${basedir}/../hbase-protolib/src/test/resources</directory>
                                 </resource>
-                                -->
                                 <resource>
                                     <directory>${basedir}/../kudu-protolib/src/test/resources</directory>
                                 </resource>
