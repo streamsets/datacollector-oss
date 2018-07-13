@@ -15,13 +15,21 @@
  */
 package com.streamsets.datacollector.execution;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.email.EmailSender;
+import com.streamsets.datacollector.event.binding.MessagingDtoJsonMapper;
+import com.streamsets.datacollector.event.binding.MessagingJsonToFromDto;
+import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
+import com.streamsets.datacollector.event.json.PipelineStartEventJson;
 import com.streamsets.datacollector.execution.alerts.EmailNotifier;
 import com.streamsets.datacollector.execution.alerts.WebHookNotifier;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
@@ -40,6 +48,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -53,6 +63,7 @@ public abstract  class AbstractRunner implements Runner {
   private static final Logger LOG = LoggerFactory.getLogger(AbstractRunner.class);
 
   public static final String RUNTIME_PARAMETERS_ATTR = "RUNTIME_PARAMETERS";
+  public static final String INTERCEPTOR_CONFIGS_ATTR = "INTERCEPTOR_CONFIGS";
 
   private final String name;
   private final String rev;
@@ -162,6 +173,18 @@ public abstract  class AbstractRunner implements Runner {
     Map<String, Object> attributes = new HashMap<>();
     attributes.put(RUNTIME_PARAMETERS_ATTR, startPipelineContext.getRuntimeParameters());
 
+    List<String> interceptors = new ArrayList<>();
+    try {
+      for(PipelineStartEvent.InterceptorConfiguration config : startPipelineContext.getInterceptorConfigurations()) {
+        interceptors.add(MessagingJsonToFromDto.INSTANCE.serialize(
+          MessagingDtoJsonMapper.INSTANCE.toInterceptorConfigurationJson(config)
+        ));
+      }
+    } catch (JsonProcessingException e) {
+      throw new PipelineStoreException(ContainerError.CONTAINER_0214, e);
+    }
+    attributes.put(INTERCEPTOR_CONFIGS_ATTR, interceptors);
+
     // We're persisting information whether this is remote pipeline in the state file rather then in some metadata file
     // and hence we need to transition that information from previous state.
     Map<String, Object> oldAttributes = getState().getAttributes();
@@ -182,18 +205,38 @@ public abstract  class AbstractRunner implements Runner {
   }
 
   @VisibleForTesting
-  public void loadStartPipelineContextFromState(String user) throws PipelineStoreException {
+  public StartPipelineContext loadStartPipelineContextFromState(String user) throws PipelineStoreException {
     PipelineState pipelineState = getState();
     Map<String, Object> attributes = pipelineState.getAttributes();
     Map<String, Object> runtimeParameters = null;
+    List<PipelineStartEvent.InterceptorConfiguration> interceptors = null;
 
     if (attributes != null && attributes.containsKey(RUNTIME_PARAMETERS_ATTR)) {
       runtimeParameters = (Map<String, Object>) attributes.get(RUNTIME_PARAMETERS_ATTR);
     }
-    setStartPipelineContext(new StartPipelineContextBuilder(user)
+
+    if(attributes != null && attributes.containsKey(INTERCEPTOR_CONFIGS_ATTR)) {
+      TypeReference<PipelineStartEventJson.InterceptorConfigurationJson> typeRef = new TypeReference<PipelineStartEventJson.InterceptorConfigurationJson>() {
+      };
+
+      try {
+        interceptors = new ArrayList<>();
+        for (String jsonConfig : (List<String>) attributes.get(INTERCEPTOR_CONFIGS_ATTR)) {
+          PipelineStartEventJson.InterceptorConfigurationJson config = MessagingJsonToFromDto.INSTANCE.deserialize(jsonConfig, typeRef);
+          interceptors.add(MessagingDtoJsonMapper.INSTANCE.asInterceptorConfigurationDto(config));
+        }
+      } catch (IOException e) {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0214, e);
+      }
+    }
+
+    StartPipelineContext newContext = new StartPipelineContextBuilder(user)
       .withRuntimeParameters(runtimeParameters)
-      .build()
-    );
+      .withInterceptorConfigurations(interceptors)
+      .build();
+
+    setStartPipelineContext(newContext);
+    return newContext;
   }
 
   protected PipelineConfiguration getPipelineConf(String name, String rev) throws PipelineException {

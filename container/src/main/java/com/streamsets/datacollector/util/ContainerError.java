@@ -97,6 +97,7 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0212("Cannot save state of pipeline '{}::{}' in execution mode: '{}' as there is already an existing"
     + "pipeline '{}::{}'"),
   CONTAINER_0213("Could not retrieve pipelines from Pipeline Store. See stacktrace for additional details: '{}'"),
+  CONTAINER_0214("Can't store new pipeline state: {}"),
 
   //Previewr
   CONTAINER_0250("Cannot create previewer: '{}'"),

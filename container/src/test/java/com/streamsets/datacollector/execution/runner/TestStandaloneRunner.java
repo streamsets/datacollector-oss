@@ -18,6 +18,7 @@ package com.streamsets.datacollector.execution.runner;
 import com.codahale.metrics.MetricRegistry;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.GreenMailUtil;
+import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.execution.AbstractRunner;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineState;
@@ -32,6 +33,7 @@ import com.streamsets.datacollector.execution.common.ExecutorConstants;
 import com.streamsets.datacollector.execution.manager.standalone.StandaloneAndClusterPipelineManager;
 import com.streamsets.datacollector.execution.runner.common.AsyncRunner;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
+import com.streamsets.datacollector.execution.runner.standalone.StandaloneRunner;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
@@ -126,18 +128,61 @@ public class TestStandaloneRunner {
   }
 
   @Test(timeout = 20000)
-  public void testPipelineStartWithParameters() throws Exception {
+  public void testPipelineStartWithParametersAndInterceptors() throws Exception {
     Runner runner = pipelineManager.getRunner(TestUtil.MY_PIPELINE, "0");
+
     Map<String, Object> runtimeParameters = new HashMap<>();
     runtimeParameters.put("param1", "Param1 Value");
-    runner.start(new StartPipelineContextBuilder("admin").withRuntimeParameters(runtimeParameters).build());
+
+    PipelineStartEvent.InterceptorConfiguration interceptorConfig = new PipelineStartEvent.InterceptorConfiguration();
+    runner.start(new StartPipelineContextBuilder("admin")
+      .withRuntimeParameters(runtimeParameters)
+      .withInterceptorConfigurations(Collections.singletonList(interceptorConfig))
+      .build()
+    );
     waitForState(runner, PipelineStatus.RUNNING);
+
     PipelineState pipelineState = runner.getState();
     Map<String, Object> runtimeConstantsInState = (Map<String, Object>) pipelineState.getAttributes()
         .get(AbstractRunner.RUNTIME_PARAMETERS_ATTR);
     assertNotNull(runtimeConstantsInState);
     assertEquals(runtimeParameters.get("param1"), runtimeConstantsInState.get("param1"));
     assertFalse(pipelineState.getAttributes().containsKey("param1")); // Ensure that the parameters are not in the root of the attributes
+
+    List<String> interceptorConfigsInState = (List<String>) pipelineState.getAttributes().get(AbstractRunner.INTERCEPTOR_CONFIGS_ATTR);
+    assertNotNull(interceptorConfigsInState);
+    assertEquals(1, interceptorConfigsInState.size());
+
+    runner.getRunner(AsyncRunner.class).getDelegatingRunner().prepareForStop("admin");
+    runner.getRunner(AsyncRunner.class).getDelegatingRunner().stop("admin");
+    waitForState(runner, PipelineStatus.STOPPED);
+  }
+
+  @Test(timeout = 20000)
+  public void testPipelineLoadInterceptorsFromStateFile() throws Exception {
+    Runner runner = pipelineManager.getRunner(TestUtil.MY_PIPELINE, "0");
+
+    PipelineStartEvent.InterceptorConfiguration interceptorConfig = new PipelineStartEvent.InterceptorConfiguration();
+    interceptorConfig.setStageLibrary("my-favourite");
+    interceptorConfig.setInterceptorClassName("earth.us.sf.Klass");
+    interceptorConfig.setParameters(Collections.singletonMap("enabled", "sure"));
+
+    runner.start(new StartPipelineContextBuilder("admin")
+      .withInterceptorConfigurations(Collections.singletonList(interceptorConfig))
+      .build()
+    );
+    waitForState(runner, PipelineStatus.RUNNING);
+
+    Runner.StartPipelineContext startContext = runner.getRunner(StandaloneRunner.class).loadStartPipelineContextFromState("user");
+    assertNotNull(startContext);
+    assertEquals(1, startContext.getInterceptorConfigurations().size());
+    PipelineStartEvent.InterceptorConfiguration interceptorInState = startContext.getInterceptorConfigurations().get(0);
+    assertNotNull(interceptorInState);
+    assertEquals("my-favourite", interceptorInState.getStageLibrary());
+    assertEquals("earth.us.sf.Klass", interceptorInState.getInterceptorClassName());
+    assertEquals(1, interceptorInState.getParameters().size());
+    assertEquals("sure", interceptorInState.getParameters().get("enabled"));
+
     runner.getRunner(AsyncRunner.class).getDelegatingRunner().prepareForStop("admin");
     runner.getRunner(AsyncRunner.class).getDelegatingRunner().stop("admin");
     waitForState(runner, PipelineStatus.STOPPED);
