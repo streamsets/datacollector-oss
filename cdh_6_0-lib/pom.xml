@@ -65,67 +65,6 @@
     </repositories>
 
     <dependencies>
-        <!--Dependency for Solr Unit Tests to override SDC Jetty Artifacts -->
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-continuation</artifactId>
-            <version>${solr.test.jetty.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-deploy</artifactId>
-            <version>${solr.test.jetty.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-http</artifactId>
-            <version>${solr.test.jetty.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-jmx</artifactId>
-            <version>${solr.test.jetty.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-security</artifactId>
-            <version>${solr.test.jetty.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-            <version>${solr.test.jetty.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-servlet</artifactId>
-            <version>${solr.test.jetty.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-util</artifactId>
-            <version>${solr.test.jetty.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-webapp</artifactId>
-            <version>${solr.test.jetty.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-xml</artifactId>
-            <version>${solr.test.jetty.version}</version>
-            <scope>test</scope>
-        </dependency>
 
         <!--
         <dependency>
@@ -465,7 +404,6 @@
         </dependency>
 
         <!-- Solr related -->
-        <!--
         <dependency>
             <groupId>org.apache.solr</groupId>
             <artifactId>solr-solrj</artifactId>
@@ -540,7 +478,6 @@
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
-        -->
 
         <dependency>
             <groupId>com.streamsets</groupId>
@@ -738,6 +675,7 @@
                                 <!--                                <source>${basedir}/../hive-protolib/src/test/java</source> -->
                                 <source>${basedir}/../kudu-protolib/src/test/java</source>
                                 <source>${basedir}/../mapreduce-protolib/src/test/java</source>
+                                <source>${basedir}/../solr-protolib/src/test/java</source>
 
                                 <source>${basedir}/../spark-executor-protolib/src/test/java</source>
                                 <source>${basedir}/../spark-processor-protolib/src/test/java</source>
@@ -769,11 +707,9 @@
                                 <resource>
                                     <directory>${basedir}/../kudu-protolib/src/test/resources</directory>
                                 </resource>
-                                <!--
                                 <resource>
                                     <directory>${basedir}/../solr-protolib/src/test/resources</directory>
                                 </resource>
-                                -->
                                 <resource>
                                     <directory>${basedir}/../flume-protolib/src/test/resources</directory>
                                 </resource>
