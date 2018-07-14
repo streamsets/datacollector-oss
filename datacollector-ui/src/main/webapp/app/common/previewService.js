@@ -171,7 +171,7 @@ angular.module('dataCollectorApp.common')
         )
         .then(
           function(previewData) {
-            var stagePreviewData = self.getPreviewDataForStage(pipelineId, previewData.batchesOutput[0], stageInstance);
+            var stagePreviewData = self.getPreviewDataForStage(previewData.batchesOutput[0], stageInstance);
             deferred.resolve(stagePreviewData.input);
           },
           function(res) {
