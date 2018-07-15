@@ -252,6 +252,7 @@
     "createPipeline": "Create New Pipeline",
     "statsOptIn": {
       "headerLabel": "Usage Statistics",
+      "headerTitle": "Improve Data Collector with Usage Statistics",
       "optInLabel": "Improve Data Collector by sending anonymized usage data."
     },
     "commitPipelineHistory": {
