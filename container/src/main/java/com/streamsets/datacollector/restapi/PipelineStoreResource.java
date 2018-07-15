@@ -822,7 +822,12 @@ public class PipelineStoreResource {
 
     if (draft) {
       return Response.created(UriBuilder.fromUri(uri).path(pipelineId).build())
-          .entity(getPipelineFragmentEnvelope(pipelineFragmentConfig, ruleDefinitions, false))
+          .entity(getPipelineFragmentEnvelope(
+              pipelineFragmentConfig,
+              ruleDefinitions,
+              stageLibrary.getServiceDefinitions(),
+              false
+          ))
           .build();
     } else {
       return Response.created(UriBuilder.fromUri(uri).path(pipelineId).build()).entity(
@@ -1137,6 +1142,7 @@ public class PipelineStoreResource {
   private PipelineFragmentEnvelopeJson getPipelineFragmentEnvelope(
       PipelineFragmentConfiguration pipelineFragmentConfig,
       RuleDefinitions ruleDefinitions,
+      List<ServiceDefinition> serviceDefinitions,
       boolean includeLibraryDefinitions
   ) {
     PipelineFragmentEnvelopeJson pipelineFragmentEnvelope = new PipelineFragmentEnvelopeJson();
@@ -1153,6 +1159,11 @@ public class PipelineStoreResource {
 
       for (StageConfiguration conf : pipelineFragmentConfig.getStages()) {
         fetchStageDefinition(conf, stageDefinitions, stageIcons);
+      }
+
+      StageConfiguration originStageConfig = pipelineFragmentConfig.getTestOriginStage();
+      if (originStageConfig != null) {
+        fetchStageDefinition(originStageConfig, stageDefinitions, stageIcons);
       }
 
       // add from fragments
@@ -1176,6 +1187,19 @@ public class PipelineStoreResource {
       List<PipelineRulesDefinitionJson> pipelineRules = new ArrayList<>(1);
       pipelineRules.add(BeanHelper.wrapPipelineRulesDefinition(stageLibrary.getPipelineRules()));
       definitions.setPipelineRules(pipelineRules);
+
+      Map<Class, ServiceDefinition> serviceByClass = serviceDefinitions.stream()
+          .collect(Collectors.toMap(ServiceDefinition::getProvides, Function.identity()));
+
+      List<ServiceDefinition> pipelineServices = stageDefinitions.stream()
+          .flatMap(stageDefinition -> stageDefinition.getServices().stream())
+          .map(ServiceDependencyDefinition::getService)
+          .distinct()
+          .map(serviceClass -> serviceByClass.get(serviceClass))
+          .filter(Objects::nonNull)
+          .collect(Collectors.toList());
+
+      definitions.setServices(BeanHelper.wrapServiceDefinitions(pipelineServices));
 
       pipelineFragmentEnvelope.setLibraryDefinitions(definitions);
     }
@@ -1330,7 +1354,12 @@ public class PipelineStoreResource {
     );
     ruleDefinitionValidator.validateRuleDefinition();
 
-    return getPipelineFragmentEnvelope(fragmentConfig, ruleDefinitions, includeLibraryDefinitions);
+    return getPipelineFragmentEnvelope(
+        fragmentConfig,
+        ruleDefinitions,
+        stageLibrary.getServiceDefinitions(),
+        includeLibraryDefinitions
+    );
   }
 
   @Path("/pipelines/addLabels")
