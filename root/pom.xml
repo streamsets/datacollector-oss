@@ -489,6 +489,11 @@
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
+        <artifactId>streamsets-datacollector-mapr-cluster-bootstrap_2_2</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-mesos-bootstrap</artifactId>
         <version>${project.version}</version>
       </dependency>

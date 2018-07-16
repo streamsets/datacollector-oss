@@ -198,6 +198,7 @@
     <module>cluster-bootstrap-api</module>
     <module>cluster-bootstrap</module>
     <module>mapr-cluster-bootstrap</module>
+    <module>mapr-cluster-bootstrap_2_2</module>
     <module>mesos-bootstrap</module>
     <module>client-api</module>
     <module>cli</module>
@@ -509,6 +510,7 @@
         <mapr_5_2-lib>mapr_5_2-lib</mapr_5_2-lib>
         <mapr_6_0-lib>mapr_6_0-lib</mapr_6_0-lib>
         <mapr_6_0-mep4-lib>mapr_6_0-mep4-lib</mapr_6_0-mep4-lib>
+        <mapr_6_0_mep5-lib>mapr_6_0-mep5-lib</mapr_6_0_mep5-lib>
         <mapr_spark_2_1_mep_3_0-lib>mapr_spark_2_1_mep_3_0-lib</mapr_spark_2_1_mep_3_0-lib>
         <mongodb_3-lib>mongodb_3-lib</mongodb_3-lib>
       </properties>
@@ -583,6 +585,7 @@
         <module>mapr_5_2-lib</module>
         <module>mapr_6_0-lib</module>
         <module>mapr_6_0-mep4-lib</module>
+        <module>mapr_6_0-mep5-lib</module>
         <module>mapr_spark_2_1_mep_3_0-lib</module>
         <module>mongodb_3-lib</module>
       </modules>
@@ -625,7 +628,7 @@
         <hdp_2_6-flume-lib>hdp_2_6-flume-lib</hdp_2_6-flume-lib>
         <jython_2_7-lib>jython_2_7-lib</jython_2_7-lib>
         <mapr_6_0-lib>mapr_6_0-lib</mapr_6_0-lib>
-        <mapr_6_0-mep4-lib>mapr_6_0-mep4-lib</mapr_6_0-mep4-lib>
+        <mapr_6_0-mep5-lib>mapr_6_0-mep5-lib</mapr_6_0-mep5-lib>
         <mapr_spark_2_1_mep_3_0-lib>mapr_spark_2_1_mep_3_0-lib</mapr_spark_2_1_mep_3_0-lib>
         <mongodb_3-lib>mongodb_3-lib</mongodb_3-lib>
         <azure-lib>azure_lib</azure-lib>
@@ -659,7 +662,7 @@
         <module>hdp_2_6-flume-lib</module>
         <module>jython_2_7-lib</module>
         <module>mapr_6_0-lib</module>
-        <module>mapr_6_0-mep4-lib</module>
+        <module>mapr_6_0-mep5-lib</module>
         <module>mapr_spark_2_1_mep_3_0-lib</module>
         <module>mongodb_3-lib</module>
       </modules>

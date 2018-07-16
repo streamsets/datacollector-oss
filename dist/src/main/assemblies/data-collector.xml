@@ -316,7 +316,10 @@
       <directory>${basedir}/../${mapr_6_0-mep4-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
-
+    <fileSet>
+      <directory>${basedir}/../${mapr_6_0-mep5-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
     <!-- Apache Kudu libs -->
     <fileSet>
       <directory>${basedir}/../${apache-kudu_1_3-lib}/target/streamsets-libs/</directory>
@@ -601,6 +604,7 @@
         <include>com.streamsets:streamsets-datacollector-cluster-bootstrap-api</include>
         <include>com.streamsets:streamsets-datacollector-cluster-bootstrap</include>
         <include>com.streamsets:streamsets-datacollector-mapr-cluster-bootstrap</include>
+        <include>com.streamsets:streamsets-datacollector-mapr-cluster-bootstrap_2_2</include>
         <include>com.streamsets:streamsets-datacollector-mesos-bootstrap</include>
         <include>com.streamsets:streamsets-datacollector-spark-api</include>
       </includes>
