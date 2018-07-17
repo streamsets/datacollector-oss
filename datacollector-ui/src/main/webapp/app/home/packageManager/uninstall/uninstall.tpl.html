@@ -9,8 +9,12 @@
     <p class="stage-library-label" ng-repeat="library in libraryList">{{library.label}}</p>
   </div>
 
-  <div ng-if="libraryUninstalled && !isRestartInProgress" class="alert alert-success alert-dismissible" role="alert"
-       translate="packageManager.uninstall.successMessage">
+  <div ng-if="libraryUninstalled && !isRestartInProgress">
+    <div class="alert alert-success alert-dismissible"
+         role="alert"
+         translate="packageManager.uninstall.successMessage">
+    </div>
+    <ng-include src="'common/administration/enableDPM/restartDPM.tpl.html'"></ng-include>
   </div>
 
   <div class="alert alert-success alert-dismissible" role="alert"

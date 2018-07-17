@@ -246,7 +246,7 @@
       "installStatsLibraryMessage": "Important: Control Hub requires that the statistics stage library be installed on each registered Data Collector. Control Hub requires the library to run system pipelines on the Data Collector.",
       "isEnableInProgress": "Enabling Control Hub...",
       "isManagedByClouderaManager": "For an installation with Cloudera Manager, you must use the Cloudera Manager to enable Data Collector to work with Control Hub. <a href=\"https://streamsets.com/documentation/datacollector/latest/help/#datacollector/UserGuide/DPM/RegisterSDCwithDPM.html\" target=\"_blank\">Learn More...</a>",
-      "restartMessage": "Restart the Data Collector for the changes to take effect. If you started the Data Collector manually, click Restart Data Collector. If you started the Data Collector as a service, click Cancel and then run the following command: service sdc restart",
+      "restartMessage": "Restart the Data Collector for the changes to take effect. Select how this Data Collector was started to see instructions.",
       "successMessage": "Successfully generated the authentication token and updated the files 'etc/application-token.txt' and 'etc/dpm.properties'."
     },
     "createPipeline": "Create New Pipeline",
@@ -273,7 +273,7 @@
       "isDisableInProgress": "Disabling Control Hub...",
       "isManagedByClouderaManager": "For an installation with Cloudera Manager, you must use the Control Hub console to disable Control Hub.",
       "confirmationMessage": "Are you sure you want to disable Control Hub?",
-      "successMessage": "Successfully disabled Control Hub by updating file'etc/dpm.properties'. Restart the Data Collector for the changes to take effect. If you started the Data Collector manually, click Restart Data Collector. If you started the Data Collector as a service, click Cancel and then run the following command: sdc service restart"
+      "successMessage": "Successfully disabled Control Hub by updating file'etc/dpm.properties'. Restart the Data Collector for the changes to take effect. Select how this Data Collector was started to see instructions."
     },
     "downloadRemotePipeline": "Download Published Pipeline",
     "downloadRemote": {
@@ -846,7 +846,7 @@
     },
     "deleteExtras": {
       "confirmationMessage": "Are you sure you want to delete below additional drivers?",
-      "successMessage": "Successfully deleted additional driver. Restart the Data Collector for the changes to take effect. If you started the Data Collector manually, click Restart Data Collector. If you started the Data Collector as a service, click Cancel and then run the following command: sdc service restart",
+      "successMessage": "Successfully deleted additional driver. Restart the Data Collector for the changes to take effect. Select how this Data Collector was started to see instructions.",
       "title": "Delete Additional Drivers"
     },
     "header": {
@@ -856,7 +856,7 @@
     },
     "install": {
       "confirmationMessage": "Are you sure you want to install below stage libraries?",
-      "successMessage": "Successfully installed stage libraries. Restart the Data Collector for the changes to take effect. If you started the Data Collector manually, click Restart Data Collector. If you started the Data Collector as a service, click Cancel and then run the following command: sdc service restart",
+      "successMessage": "Successfully installed stage libraries. Restart the Data Collector for the changes to take effect. Select how this Data Collector was started to see instructions.",
       "title": "Install Stage Library"
     },
     "manifestURL": "Manifest URL",
@@ -865,12 +865,12 @@
     "title": "Package Manager",
     "uninstall": {
       "confirmationMessage": "Are you sure you want to uninstall below stage libraries?",
-      "successMessage": "Successfully uninstalled stage libraries. Restart the Data Collector for the changes to take effect. If you started the Data Collector manually, click Restart Data Collector. If you started the Data Collector as a service, click Cancel and then run the following command: sdc service restart",
+      "successMessage": "Successfully uninstalled stage libraries. Restart the Data Collector for the changes to take effect. Select how this Data Collector was started to see instructions.",
       "title": "Uninstall Stage Library"
     },
     "uploadExtras": {
       "library": "Stage Library",
-      "successMessage": "Successfully installed external library. Restart the Data Collector for the changes to take effect. If you started the Data Collector manually, click Restart Data Collector. If you started the Data Collector as a service, click Cancel and then run the following command: sdc service restart",
+      "successMessage": "Successfully installed external library. Restart the Data Collector for the changes to take effect. Select how this Data Collector was started to see instructions.",
       "title": "Install External Libraries"
     }
   },
