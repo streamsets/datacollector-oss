@@ -174,6 +174,9 @@ public class PostgresCDCSource extends BaseSource {
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, final BatchMaker batchMaker) throws StageException {
+
+    Long offsetAsLong = Long.valueOf(0);
+
     if (dummyRecord == null) {
       dummyRecord = getContext().createRecord("DUMMY");
     }
@@ -183,6 +186,10 @@ public class PostgresCDCSource extends BaseSource {
     boolean recordsProduced = false;
     if (lastSourceOffset != null) {
       setOffset(StringUtils.trimToEmpty(lastSourceOffset));
+    }
+
+    if (getOffset() != null) {
+      offsetAsLong = LogSequenceNumber.valueOf(getOffset()).asLong();
     }
 
     PostgresWalRecord postgresWalRecord = null;
@@ -204,7 +211,9 @@ public class PostgresCDCSource extends BaseSource {
 
       postgresWalRecord = cdcQueue.poll();
 
-      if (postgresWalRecord != null) {
+      if ((postgresWalRecord != null) &&
+          (postgresWalRecord.getLsn().asLong() > offsetAsLong)) {
+
         final Record record = processWalRecord(postgresWalRecord);
         if (record != null) {
           Map<String, String> attributes = new HashMap<>();
