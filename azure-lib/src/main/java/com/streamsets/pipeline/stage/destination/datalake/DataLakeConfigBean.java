@@ -252,7 +252,7 @@ public class DataLakeConfigBean {
   @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat;
 
-  @ConfigDefBean(groups = {"DATALAKE"})
+  @ConfigDefBean(groups = {"DATA_FORMAT"})
   public DataGeneratorFormatConfig dataFormatConfig = new DataGeneratorFormatConfig();
 
   public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {

@@ -78,7 +78,7 @@ public class KafkaTargetConfig {
   @ValueChooserModel(ProducerDataFormatChooserValues.class)
   public DataFormat dataFormat;
 
-  @ConfigDefBean
+  @ConfigDefBean(groups = {"DATA_FORMAT"})
   public DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
 
   @ConfigDef(

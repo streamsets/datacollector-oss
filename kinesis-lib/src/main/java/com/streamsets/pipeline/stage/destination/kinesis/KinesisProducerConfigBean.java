@@ -27,7 +27,7 @@ import java.util.Map;
 
 public class KinesisProducerConfigBean extends KinesisConfigBean {
 
-  @ConfigDefBean(groups = "KINESIS")
+  @ConfigDefBean(groups = "DATA_FORMAT")
   public DataGeneratorFormatConfig dataFormatConfig;
 
   @ConfigDef(

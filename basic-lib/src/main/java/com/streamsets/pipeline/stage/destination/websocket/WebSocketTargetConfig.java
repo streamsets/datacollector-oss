@@ -32,7 +32,7 @@ import java.util.List;
  * Bean specifying the configuration for an WebSocket Client Target instance.
  */
 public class WebSocketTargetConfig {
-  @ConfigDefBean(groups = {"WEB_SOCKET"})
+  @ConfigDefBean(groups = {"DATA_FORMAT"})
   public DataGeneratorFormatConfig dataGeneratorFormatConfig;
 
   @ConfigDef(

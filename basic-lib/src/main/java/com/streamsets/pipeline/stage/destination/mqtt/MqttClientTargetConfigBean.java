@@ -58,7 +58,7 @@ public class MqttClientTargetConfigBean {
   @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat = DataFormat.JSON;
 
-  @ConfigDefBean(groups = {"MQTT"})
+  @ConfigDefBean(groups = {"DATA_FORMAT"})
   public DataGeneratorFormatConfig dataGeneratorFormatConfig;
 
 }

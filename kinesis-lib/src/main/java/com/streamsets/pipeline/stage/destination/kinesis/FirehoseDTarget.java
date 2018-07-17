@@ -34,7 +34,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 @GenerateResourceBundle
 public class FirehoseDTarget extends DTarget {
 
-  @ConfigDefBean(groups = "KINESIS")
+  @ConfigDefBean(groups = {"KINESIS", "DATA_FORMAT"})
   public FirehoseConfigBean kinesisConfig;
 
   @Override

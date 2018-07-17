@@ -43,7 +43,7 @@ import com.streamsets.pipeline.config.DataFormat;
 @GenerateResourceBundle
 public class StatsKinesisDTarget extends DTarget {
 
-  @ConfigDefBean(groups = "KINESIS")
+  @ConfigDefBean(groups = {"KINESIS", "DATA_FORMAT"})
   public KinesisProducerConfigBean kinesisConfig;
 
   @Override

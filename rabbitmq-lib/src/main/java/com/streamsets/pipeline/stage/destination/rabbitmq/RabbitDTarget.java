@@ -37,7 +37,7 @@ import com.streamsets.pipeline.lib.rabbitmq.config.Groups;
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
 public class RabbitDTarget extends DTarget {
-  @ConfigDefBean(groups = {"RABBITMQ", "QUEUE", "EXCHANGE", "ADVANCED"})
+  @ConfigDefBean(groups = {"RABBITMQ", "QUEUE", "EXCHANGE", "ADVANCED", "DATA_FORMAT"})
   public RabbitTargetConfigBean conf;
 
   @Override

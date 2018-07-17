@@ -60,7 +60,7 @@ public class RabbitTargetConfigBean extends BaseRabbitConfigBean{
   @ValueChooserModel(ProducerDataFormatChooserValues.class)
   public DataFormat dataFormat = DataFormat.JSON;
 
-  @ConfigDefBean(groups = "RABBITMQ")
+  @ConfigDefBean(groups = {"DATA_FORMAT"})
   public DataGeneratorFormatConfig dataFormatConfig = new DataGeneratorFormatConfig();
 
 }

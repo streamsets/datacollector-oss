@@ -33,7 +33,7 @@ import java.util.Map;
  * Bean specifying the configuration for an HttpClientTarget instance.
  */
 public class HttpClientTargetConfig {
-  @ConfigDefBean(groups = {"HTTP"})
+  @ConfigDefBean(groups = {"DATA_FORMAT"})
   public DataGeneratorFormatConfig dataGeneratorFormatConfig;
 
   @ConfigDef(

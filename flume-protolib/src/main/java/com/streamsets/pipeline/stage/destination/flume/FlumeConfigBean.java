@@ -40,7 +40,7 @@ public class FlumeConfigBean {
   @ValueChooserModel(FlumeDestinationDataFormatChooserValues.class)
   public DataFormat dataFormat;
 
-  @ConfigDefBean(groups = {"FLUME"})
+  @ConfigDefBean(groups = {"DATA_FORMAT"})
   public DataGeneratorFormatConfig dataGeneratorFormatConfig;
 
   public boolean init (Stage.Context context, List<Stage.ConfigIssue> issues) {

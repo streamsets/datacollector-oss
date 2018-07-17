@@ -125,7 +125,7 @@ public class RedisTargetConfig {
   )
   public List<String> channel;
 
-  @ConfigDefBean(groups = "REDIS")
+  @ConfigDefBean(groups = {"DATA_FORMAT"})
   public DataGeneratorFormatConfig dataFormatConfig = new DataGeneratorFormatConfig();
 
 }

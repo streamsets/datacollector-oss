@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -73,7 +72,7 @@ public class DataGeneratorServiceImpl extends BaseService implements DataFormatG
   @ValueChooserModel(value = DataFormatChooserValues.class, filteringConfig = "displayFormats")
   public DataFormat dataFormat;
 
-  @ConfigDefBean()
+  @ConfigDefBean(groups = {"DATA_FORMAT"})
   public DataGeneratorFormatConfig dataGeneratorFormatConfig;
 
   @Override

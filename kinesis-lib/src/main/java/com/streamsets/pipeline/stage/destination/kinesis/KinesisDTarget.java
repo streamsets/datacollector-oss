@@ -36,7 +36,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 @GenerateResourceBundle
 public class KinesisDTarget extends DTarget {
 
-  @ConfigDefBean(groups = "KINESIS")
+  @ConfigDefBean(groups = {"KINESIS", "DATA_FORMAT"})
   public KinesisProducerConfigBean kinesisConfig;
 
   @Override

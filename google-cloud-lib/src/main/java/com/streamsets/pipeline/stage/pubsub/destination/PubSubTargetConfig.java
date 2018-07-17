@@ -35,7 +35,7 @@ public class PubSubTargetConfig {
   @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat;
 
-  @ConfigDefBean
+  @ConfigDefBean(groups = {"DATA_FORMAT"})
   public DataGeneratorFormatConfig dataFormatConfig = new DataGeneratorFormatConfig();
 
   @ConfigDef(

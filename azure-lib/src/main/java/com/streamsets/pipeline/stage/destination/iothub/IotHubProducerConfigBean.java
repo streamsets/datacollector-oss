@@ -36,7 +36,7 @@ public class IotHubProducerConfigBean {
   @ValueChooserModel(DestinationDataFormatChooserValues.class)
   public DataFormat dataFormat = DataFormat.JSON;
 
-  @ConfigDefBean(groups = {"IOT_HUB"})
+  @ConfigDefBean(groups = {"DATA_FORMAT"})
   public DataGeneratorFormatConfig dataGeneratorFormatConfig;
 
   @ConfigDef(

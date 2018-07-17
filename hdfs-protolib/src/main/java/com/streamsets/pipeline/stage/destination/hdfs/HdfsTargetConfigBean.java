@@ -18,7 +18,6 @@ package com.streamsets.pipeline.stage.destination.hdfs;
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
 import com.google.common.annotations.VisibleForTesting;
-import com.streamsets.datacollector.security.HadoopSecurityUtil;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Stage;
@@ -35,14 +34,13 @@ import com.streamsets.pipeline.lib.el.DataUtilEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.lib.hdfs.common.Errors;
+import com.streamsets.pipeline.lib.hdfs.common.HdfsBaseConfigBean;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.ActiveRecordWriters;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.RecordWriterManager;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
-import com.streamsets.pipeline.lib.hdfs.common.Errors;
-import com.streamsets.pipeline.lib.hdfs.common.HdfsBaseConfigBean;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.SequenceFile;
@@ -380,7 +378,7 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
   )
   public boolean skipOldTempFileRecovery = false;
 
-  @ConfigDefBean()
+  @ConfigDefBean(groups = {"DATA_FORMAT"})
   public DataGeneratorFormatConfig dataGeneratorFormatConfig;
 
   //private members

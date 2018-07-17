@@ -125,7 +125,7 @@ public class GCSTargetConfig {
   @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat;
 
-  @ConfigDefBean()
+  @ConfigDefBean(groups = {"DATA_FORMAT"})
   public DataGeneratorFormatConfig dataGeneratorFormatConfig;
 
   @ConfigDefBean(groups = "CREDENTIALS")

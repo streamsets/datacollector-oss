@@ -35,7 +35,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 @GenerateResourceBundle
 public class RedisDTarget extends DTarget {
 
-  @ConfigDefBean(groups = {"REDIS"})
+  @ConfigDefBean
   public RedisTargetConfig conf;
 
   @Override

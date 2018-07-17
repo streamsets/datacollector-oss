@@ -36,7 +36,7 @@ public class EventHubProducerConfigBean {
   @ValueChooserModel(DestinationDataFormatChooserValues.class)
   public DataFormat dataFormat = DataFormat.JSON;
 
-  @ConfigDefBean(groups = {"EVENT_HUB"})
+  @ConfigDefBean(groups = {"DATA_FORMAT"})
   public DataGeneratorFormatConfig dataGeneratorFormatConfig;
 
 }

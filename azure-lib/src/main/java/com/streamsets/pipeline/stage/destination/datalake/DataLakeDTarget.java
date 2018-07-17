@@ -34,7 +34,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
 public class DataLakeDTarget extends DTarget {
-  @ConfigDefBean(groups = {"DATALAKE"})
+  @ConfigDefBean(groups = {"DATALAKE", "DATA_FORMAT"})
   public DataLakeConfigBean dataLakeConfig;
 
   @Override

@@ -46,7 +46,7 @@ public class FirehoseConfigBean extends KinesisConfigBean {
   @ValueChooserModel(FirehoseDestinationChooserValues.class)
   public FirehoseDestinationType destinationType;
 
-  @ConfigDefBean(groups = "KINESIS")
+  @ConfigDefBean(groups = {"DATA_FORMAT"})
   public DataGeneratorFormatConfig dataFormatConfig;
 
   @ConfigDef(
