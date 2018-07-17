@@ -200,7 +200,9 @@ public class MetricsEventRunnable implements Runnable {
             statsQueue,
             configuration
           );
-        } else if (isDPMPipeline && isWriteStatsToDPMDirectlyEnabled()) {
+        } else if (isDPMPipeline && isWriteStatsToDPMDirectlyEnabled() &&
+            state.getExecutionMode() != ExecutionMode.SLAVE) {
+          // Write Stats to Control hub is not supported for slave nodes
           sendMetricsToDPM(pipelineConfiguration, metricsJSONStr);
         }
       }
