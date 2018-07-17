@@ -302,11 +302,6 @@ public class StageContext extends ProtoContext implements
   }
 
   @Override
-  public int getRunnerId() {
-    return runnerId;
-  }
-
-  @Override
   public List<Stage.Info> getPipelineInfo() {
     return pipelineInfo;
   }

@@ -161,6 +161,10 @@ public abstract class ProtoContext implements ProtoConfigurableEntity.Context, C
     return configuration.get(STAGE_CONF_PREFIX + configName, null);
   }
 
+  @Override
+  public int getRunnerId() {
+    return runnerId;
+  }
 
   @Override
   public String getResourcesDirectory() {
