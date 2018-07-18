@@ -143,7 +143,7 @@ public final class HBaseUtil {
       int clientPort
       //String tableName
   ) {
-    if (zookeeperQuorum == null || zookeeperQuorum.isEmpty()) {
+    if (zookeeperQuorum != null && !zookeeperQuorum.isEmpty()) {
       issues.add(context.createConfigIssue(hbaseName, "zookeeperQuorum", Errors.HBASE_04));
     } else {
       List<String> zkQuorumList = Lists.newArrayList(Splitter.on(",").trimResults().omitEmptyStrings().split(
