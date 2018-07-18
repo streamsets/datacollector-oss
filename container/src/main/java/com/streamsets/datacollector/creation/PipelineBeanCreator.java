@@ -716,6 +716,7 @@ public abstract class PipelineBeanCreator {
     InterceptorCreator.InterceptorType interceptorType,
     List<Issue> issues
   ) {
+    /*
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     try {
       Thread.currentThread().setContextClassLoader(definition.getStageClassLoader());
@@ -746,6 +747,7 @@ public abstract class PipelineBeanCreator {
     } finally {
       Thread.currentThread().setContextClassLoader(classLoader);
     }
+    */
 
     return null;
   }

@@ -469,7 +469,6 @@
         <cdh-spark_2_1-lib>cdh-spark_2_1-lib</cdh-spark_2_1-lib>
         <cdh-spark_2_2-lib>cdh-spark_2_2-lib</cdh-spark_2_2-lib>
         <cdh-spark_2_3-lib>cdh-spark_2_3-lib</cdh-spark_2_3-lib>
-        <cdh_6_0-lib>cdh_6_0-lib</cdh_6_0-lib>
         <cdh_kafka_1_2-lib>cdh_kafka_1_2-lib</cdh_kafka_1_2-lib>
         <cdh_kafka_1_3-lib>cdh_kafka_1_3-lib</cdh_kafka_1_3-lib>
         <cdh_kafka_2_0-lib>cdh_kafka_2_0-lib</cdh_kafka_2_0-lib>
