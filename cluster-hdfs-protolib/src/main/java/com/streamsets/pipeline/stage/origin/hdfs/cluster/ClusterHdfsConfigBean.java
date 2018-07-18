@@ -146,7 +146,8 @@ public class ClusterHdfsConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.CREDENTIAL,
-      label = "AWS access key",
+      label = "Access Key ID",
+      description = "AWS access key ID",
       group = "S3",
       displayPosition = 110
   )
@@ -155,7 +156,8 @@ public class ClusterHdfsConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.CREDENTIAL,
-      label = "AWS secret key",
+      label = "Secret Access Key",
+      description = "AWS secret access key",
       group = "S3",
       displayPosition = 120
   )
