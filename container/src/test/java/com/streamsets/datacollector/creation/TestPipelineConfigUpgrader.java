@@ -145,6 +145,7 @@ public class TestPipelineConfigUpgrader {
     Assert.assertTrue(emrConfigList.contains(AmazonEMRConfig.USER_REGION_CUSTOM));
     Assert.assertTrue(emrConfigList.contains(AmazonEMRConfig.TERMINATE_CLUSTER));
     Assert.assertTrue(emrConfigList.contains(AmazonEMRConfig.VISIBLE_TO_ALL_USERS));
+    Assert.assertTrue(emrConfigList.contains(AmazonEMRConfig.LOGGING_ENABLED));
   }
 
 }

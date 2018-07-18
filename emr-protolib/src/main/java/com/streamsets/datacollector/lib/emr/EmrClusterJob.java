@@ -132,17 +132,20 @@ public class EmrClusterJob extends BaseStageLibraryDelegate implements ClusterJo
               .withMasterInstanceType(emrClusterConfig.getMasterInstanceType())
               .withSlaveInstanceType(emrClusterConfig.getSlaveInstanceType()));
 
-      if (emrClusterConfig.isEnableEmrDebugging()) {
-        String COMMAND_RUNNER = "command-runner.jar";
-        String DEBUGGING_COMMAND = "state-pusher-script";
-        String DEBUGGING_NAME = "Setup Hadoop Debugging";
-        StepConfig enabledebugging = new StepConfig()
-            .withName(DEBUGGING_NAME)
-            .withActionOnFailure(ActionOnFailure.CONTINUE)
-            .withHadoopJarStep(new HadoopJarStepConfig()
-                .withJar(COMMAND_RUNNER)
-                .withArgs(DEBUGGING_COMMAND));
-        request.withSteps(enabledebugging).withLogUri(emrClusterConfig.getS3LogUri());
+      if (emrClusterConfig.isLoggingEnabled()) {
+        request.withLogUri(emrClusterConfig.getS3LogUri());
+        if (emrClusterConfig.isEnableEmrDebugging()) {
+          String COMMAND_RUNNER = "command-runner.jar";
+          String DEBUGGING_COMMAND = "state-pusher-script";
+          String DEBUGGING_NAME = "Setup Hadoop Debugging";
+          StepConfig enabledebugging = new StepConfig()
+              .withName(DEBUGGING_NAME)
+              .withActionOnFailure(ActionOnFailure.CONTINUE)
+              .withHadoopJarStep(new HadoopJarStepConfig()
+                  .withJar(COMMAND_RUNNER)
+                  .withArgs(DEBUGGING_COMMAND));
+          request.withSteps(enabledebugging);
+        }
       }
       RunJobFlowResult result = getEmrClient(emrClusterConfig).runJobFlow(request);
       return result.getJobFlowId();

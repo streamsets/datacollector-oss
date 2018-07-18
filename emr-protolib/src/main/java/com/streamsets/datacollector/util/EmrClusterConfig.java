@@ -37,6 +37,7 @@ public class EmrClusterConfig {
   private static final String CLUSTER_ID = "clusterId";
   private static final String VISIBLE_TO_ALL_USERS = "visibleToAllUsers";
   private static final String TERMINATE_CLUSTER = "terminateCluster";
+  private static final String LOGGING_ENABLED = "loggingEnabled";
 
 
   Properties props;
@@ -63,6 +64,10 @@ public class EmrClusterConfig {
 
   public String getS3StagingUri() {
     return props.getProperty(S3_STAGING_URI);
+  }
+
+  public boolean isLoggingEnabled() {
+    return Boolean.parseBoolean(props.getProperty(LOGGING_ENABLED));
   }
 
   public boolean isProvisionNewCluster() {
