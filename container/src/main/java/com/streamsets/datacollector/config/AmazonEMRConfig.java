@@ -28,7 +28,8 @@ public class AmazonEMRConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      label = "AWS user region",
+      label = "Region",
+      description = "AWS region",
       group = "EMR",
       displayPosition = 100,
       dependencies = {
@@ -95,7 +96,8 @@ public class AmazonEMRConfig {
       required = true,
       defaultValue = "false",
       type = ConfigDef.Type.BOOLEAN,
-      label = "Provision a new cluster",
+      label = "Provision a New Cluster",
+      description = "Provisions a new cluster when the pipeline starts",
       group = "EMR",
       displayPosition = 150,
       dependencies = {
@@ -107,7 +109,7 @@ public class AmazonEMRConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Cluster Id",
+      label = "Cluster ID",
       group = "EMR",
       displayPosition = 160,
       dependencies = {
@@ -134,7 +136,8 @@ public class AmazonEMRConfig {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "FALSE",
-      label = "Terminate cluster on pipeline end",
+      label = "Terminate Cluster",
+      description = "Terminates the cluster when the pipeline stops",
       group = "EMR",
       displayPosition = 210,
       dependencies = {
@@ -195,6 +198,8 @@ public class AmazonEMRConfig {
       type = ConfigDef.Type.STRING,
       defaultValue = SERVICE_ROLE_DEFAULT,
       label = "Service Role",
+      description = "EMR role used by the cluster when provisioning resources and performing other service-level " +
+          "tasks",
       group = "EMR",
       displayPosition = 260,
       dependencies = {
@@ -209,6 +214,7 @@ public class AmazonEMRConfig {
       type = ConfigDef.Type.STRING,
       defaultValue = JOB_FLOW_ROLE_DEFAULT,
       label = "Job Flow Role",
+      description = "EMR role for EC2 used by EC2 instances within the cluster",
       group = "EMR",
       displayPosition = 270,
       dependencies = {
@@ -222,7 +228,7 @@ public class AmazonEMRConfig {
       required = false,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "true",
-      label = "Visible to all users",
+      label = "Visible to All Users",
       group = "EMR",
       displayPosition = 280,
       dependencies = {
@@ -235,7 +241,8 @@ public class AmazonEMRConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "EC2 subnet id",
+      label = "EC2 subnet ID",
+      description = "EC2 subnet identifier to launch the cluster in",
       group = "EMR",
       displayPosition = 290,
       dependencies = {
@@ -250,6 +257,7 @@ public class AmazonEMRConfig {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Master Security Group",
+      description = "Security group ID for the master node",
       group = "EMR",
       displayPosition = 300,
       dependencies = {
@@ -263,6 +271,7 @@ public class AmazonEMRConfig {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Slave Security Group",
+      description = "Security group ID for the slave nodes",
       group = "EMR",
       displayPosition = 310,
       dependencies = {
@@ -289,7 +298,7 @@ public class AmazonEMRConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      label = "Master Instance type",
+      label = "Master Instance Type",
       group = "EMR",
       displayPosition = 330,
       dependencies = {
