@@ -79,6 +79,10 @@
       <artifactId>streamsets-datacollector-commonlib</artifactId>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>io.confluent</groupId>
+      <artifactId>kafka-schema-registry-client</artifactId>
+    </dependency>
 
     <!-- Test Dependencies -->
     <dependency>
