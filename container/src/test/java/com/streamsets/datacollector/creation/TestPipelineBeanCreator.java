@@ -786,6 +786,7 @@ public class TestPipelineBeanCreator {
     Assert.assertEquals(E.A, source.enumSNoDefaultAlAll);
   }
 
+  /*
   @Test
   public void testDefaultInterceptorCreation() {
     StageLibraryDefinition libraryDef = Mockito.mock(StageLibraryDefinition.class);
@@ -857,5 +858,5 @@ public class TestPipelineBeanCreator {
     Assert.assertEquals("TARGET PRE_STAGE", ((MyInterceptor)(processor.getPreInterceptors().get(0).getInterceptor())).str);
     Assert.assertEquals("TARGET POST_STAGE", ((MyInterceptor)(processor.getPostInterceptors().get(0).getInterceptor())).str);
   }
-
+*/
 }
