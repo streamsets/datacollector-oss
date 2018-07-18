@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Configuring a Field Remover","id":"task_c1j_btr_wq","href":"datacollector\/UserGuide\/Processors\/FieldRemover.html#task_c1j_btr_wq","menu": {"hasChildren":false,},"tocID":"task_c1j_btr_wq-d46e64260","topics":[]}]});

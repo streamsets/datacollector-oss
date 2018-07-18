@@ -216,7 +216,15 @@ define(["options", "jquery"], function (options, $) {
             topicRefSpan.addClass(topic.outputclass);
         }
 
-        topicRefSpan.attr(ATTRS.id, topic.id);
+        // WH-1820 Copy the Ditaval "pass through" attributes.
+        var dataAttributes = topic.attributes;
+        if (typeof dataAttributes !== 'undefined') {
+            var attrsNames = Object.keys(dataAttributes);
+            attrsNames.forEach(function(attr) {
+                topicRefSpan.attr(attr, dataAttributes[attr]);
+            });
+        }
+
         topicRefSpan.attr(ATTRS.tocID, topic.tocID);
 
         // If the "topics" property is not specified then it means that children should be loaded from the

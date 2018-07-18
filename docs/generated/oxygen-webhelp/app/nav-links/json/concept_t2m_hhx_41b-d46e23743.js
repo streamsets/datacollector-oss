@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Record Structure Requirement","id":"concept_cmn_hml_r1b","href":"datacollector\/UserGuide\/Data_Formats\/WritingXML.html#concept_cmn_hml_r1b","menu": {"hasChildren":false,},"tocID":"concept_cmn_hml_r1b-d46e23775","topics":[]}]});

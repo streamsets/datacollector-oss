@@ -4,7 +4,6 @@ define(['util', 'jquery', 'jquery.highlight'], function(util, $) {
 
     $(document).ready(function () {
         var scrollPosition = $(window).scrollTop();
-        setContentWidth();
         handleSideTocPosition(scrollPosition);
         handlePageTocPosition(scrollPosition);
 
@@ -104,8 +103,6 @@ define(['util', 'jquery', 'jquery.highlight'], function(util, $) {
         });
 
         highlightSearchTerm();
-
-        $("div.wh_content_area").css("visibility", "visible");
 
         /*
          * Codeblock copy to clipboard action
@@ -268,24 +265,6 @@ function pageTocHighlightNode(scrollPosition) {
 }
 
 /**
- * @description  Check if Page TOC & Side TOC columns exists in order to set the size of the content column 
- */
-function setContentWidth(){
-    var $pageTOC = $(".wh_topic_toc");
-    var $sideTOC = $(".wh_publication_toc");
-    var $contentSection = $('#wh_topic_body');
-
-    if(!$pageTOC.find('li').length > 0 && !$sideTOC.find('li').length > 0 ){
-        $($contentSection).removeAttr('class').attr('class','col-lg-12 col-md-12 col-sm-12 col-xs-12');
-    }  else if($pageTOC.find('li').length > 0 && !$sideTOC.find('li').length > 0) {
-        $($contentSection).removeAttr('class').attr('class','col-lg-10 col-md-10 col-sm-10 col-xs-12');
-    }  else if(! $pageTOC.find('li').length > 0 && $sideTOC.find('li').length > 0) {
-        $($contentSection).removeAttr('class').attr('class','col-lg-9 col-md-9 col-sm-9 col-xs-12');
-    } 
-}
-
-
-/**
  * @description Handle the vertical position of the page toc
  */
 function handlePageTocPosition(scrollPosition) {
@@ -401,42 +380,77 @@ return $(window).scrollTop();
         $('.wh_hide_highlight').show();
     }
 
+    var isTouchEnabled = false;
+    try {
+        if (document.createEvent("TouchEvent")) {
+            isTouchEnabled = true;
+        }
+    } catch (e) {
+        util.debug(e);
+    }
+
     /**
      * Open the link from top_menu when the current group is expanded.
      *
      * Apply the events also on the dynamically generated elements.
      */
-    $(document).on('click', ".wh_top_menu li", function (event) {
+    $(document).on('touchstart', ".wh_top_menu li", function (event) {
         $(".wh_top_menu li").removeClass('active');
         $(this).addClass('active');
         $(this).parents('li').addClass('active');
+
         event.stopImmediatePropagation();
+        return false;
     });
-
-
-    $(document).on('click', '.wh_top_menu a', function (event) {
-        var isTouchEnabled = false;
-        try {
-            if (document.createEvent("TouchEvent")) {
-                isTouchEnabled = true;
-            }
-        } catch (e) {
-            util.debug(e);
-        }
-        if ($(window).width() < 767 || isTouchEnabled) {
-            var areaExpanded = $(this).closest('li');
-            var isActive = areaExpanded.hasClass('active');
-            var hasChildren = areaExpanded.hasClass('has-children');
-            if (isActive || !hasChildren) {
-                window.location = $(this).attr("href");
-                event.preventDefault();
-                event.stopImmediatePropagation();
-                return false;
-            } else {
-                event.preventDefault();
-            }
+    $(document).on('touchstart', '.wh_top_menu a', function (event) {
+        var areaExpanded = $(this).closest('li');
+        var isActive = areaExpanded.hasClass('active');
+        var hasChildren = areaExpanded.hasClass('has-children');
+        if (isActive || !hasChildren) {
+            window.location = $(this).attr("href");
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            return false;
         } else {
-            return true;
+            event.preventDefault();
         }
     });
+
+    if (isTouchEnabled) {
+        $(document).on('click', ".wh_top_menu li", function (event) {
+            event.stopImmediatePropagation();
+            event.preventDefault();
+            return false;
+        });
+        $(document).on('mouseover', ".wh_top_menu li", function (event) {
+            event.stopImmediatePropagation();
+            event.preventDefault();
+            return false;
+        });
+    } else {
+        $(document).on('click', ".wh_top_menu li", function (event) {
+            $(".wh_top_menu li").removeClass('active');
+            $(this).addClass('active');
+            $(this).parents('li').addClass('active');
+
+            event.stopImmediatePropagation();
+        });
+        $(document).on('click', '.wh_top_menu a', function (event) {
+            if ($(window).width() < 767 || isTouchEnabled) {
+                var areaExpanded = $(this).closest('li');
+                var isActive = areaExpanded.hasClass('active');
+                var hasChildren = areaExpanded.hasClass('has-children');
+                if (isActive || !hasChildren) {
+                    window.location = $(this).attr("href");
+                    event.preventDefault();
+                    event.stopImmediatePropagation();
+                    return false;
+                } else {
+                    event.preventDefault();
+                }
+            } else {
+                return true;
+            }
+        });
+    }
 });

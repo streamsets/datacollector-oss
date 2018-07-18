@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Event Records","id":"concept_hwr_yn2_px","href":"datacollector\/UserGuide\/Origins\/FileTail.html#concept_hwr_yn2_px","menu": {"hasChildren":false,},"tocID":"concept_hwr_yn2_px-d46e28889","topics":[]}]});

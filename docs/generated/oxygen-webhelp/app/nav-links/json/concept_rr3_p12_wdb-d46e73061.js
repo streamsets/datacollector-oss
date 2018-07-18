@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Example","id":"concept_bnv_cm2_wdb","href":"datacollector\/UserGuide\/Processors\/SQLParser.html#concept_bnv_cm2_wdb","menu": {"hasChildren":false,},"tocID":"concept_bnv_cm2_wdb-d46e73093","topics":[]}]});

@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Event Records","id":"concept_drx_zy4_jbb","href":"datacollector\/UserGuide\/Origins\/AmazonS3.html#concept_drx_zy4_jbb","menu": {"hasChildren":false,},"tocID":"concept_drx_zy4_jbb-d46e25004","topics":[]}]});

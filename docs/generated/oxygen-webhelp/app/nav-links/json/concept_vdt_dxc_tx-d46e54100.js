@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Example","id":"concept_n5z_hgh_tx","href":"datacollector\/UserGuide\/Origins\/Salesforce.html#concept_n5z_hgh_tx","menu": {"hasChildren":false,},"tocID":"concept_n5z_hgh_tx-d46e54142","topics":[]}]});

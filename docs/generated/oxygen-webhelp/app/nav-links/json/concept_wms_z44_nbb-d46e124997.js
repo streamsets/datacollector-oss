@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Hive Query","shortdesc":"\n               <p class=\"shortdesc\"></p>\n            ","id":"concept_njt_1p4_nbb","href":"datacollector\/UserGuide\/Troubleshooting\/Troubleshooting_title.html#concept_njt_1p4_nbb","menu": {"hasChildren":false,},"tocID":"concept_njt_1p4_nbb-d46e125203","topics":[]}]});

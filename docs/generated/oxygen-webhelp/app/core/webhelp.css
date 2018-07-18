@@ -1,14 +1,10 @@
-@import "fonts.css?buildId=2018032809";
-@import "../indexterms/indexterms.css?buildId=2018032809";
+@import "fonts.css?buildId=2018042310";
+@import "../indexterms/indexterms.css?buildId=2018042310";
 
 .container-fluid {
   margin-right: auto;
   margin-left: auto;
   max-width: 1600px;
-}
-
-div.wh_content_area {
-    visibility: hidden;
 }
 
 .embed-responsive {

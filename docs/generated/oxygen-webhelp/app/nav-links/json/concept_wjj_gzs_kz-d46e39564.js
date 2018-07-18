@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Event Record","id":"concept_h4j_4zs_kz","href":"datacollector\/UserGuide\/Origins\/MultiTableJDBCConsumer.html#concept_h4j_4zs_kz","menu": {"hasChildren":false,},"tocID":"concept_h4j_4zs_kz-d46e39818","topics":[]}]});

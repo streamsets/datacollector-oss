@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Event Records","id":"concept_iwg_r2p_my","href":"datacollector\/UserGuide\/Executors\/HiveQuery.html#concept_iwg_r2p_my","menu": {"hasChildren":false,},"tocID":"concept_iwg_r2p_my-d46e91387","topics":[]}]});
