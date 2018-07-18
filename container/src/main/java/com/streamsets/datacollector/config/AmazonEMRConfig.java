@@ -148,28 +148,47 @@ public class AmazonEMRConfig {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "TRUE",
-      label = "Enable EMR debugging",
+      label = "Logging Enabled",
       group = "EMR",
+      description = "Copy cluster log files to S3",
       displayPosition = 220,
       dependencies = {
           @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH"),
           @Dependency(configName = "provisionNewCluster", triggeredByValues = "true")
       }
   )
-  public boolean enableEMRDebugging;
+  public boolean loggingEnabled;
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
       label = "S3 Log URI",
       group = "EMR",
-      displayPosition = 250,
+      displayPosition = 230,
       dependencies = {
           @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH"),
-          @Dependency(configName = "provisionNewCluster", triggeredByValues = "true")
+          @Dependency(configName = "provisionNewCluster", triggeredByValues = "true"),
+          @Dependency(configName = "loggingEnabled", triggeredByValues = "true"),
       }
   )
   public String s3LogUri;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "TRUE",
+      label = "Enable Debugging",
+      description = "Enable console debugging in EMR",
+      group = "EMR",
+      displayPosition = 240,
+      dependencies = {
+          @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH"),
+          @Dependency(configName = "provisionNewCluster", triggeredByValues = "true"),
+          @Dependency(configName = "loggingEnabled", triggeredByValues = "true"),
+
+      }
+  )
+  public boolean enableEMRDebugging;
 
   @ConfigDef(
       required = true,
@@ -371,6 +390,7 @@ public class AmazonEMRConfig {
   public static final String SERVICE_ROLE_DEFAULT = "EMR_DefaultRole";
   public static final String JOB_FLOW_ROLE_DEFAULT = "EMR_EC2_DefaultRole";
   public static final String VISIBLE_TO_ALL_USERS = "visibleToAllUsers";
+  public static final String LOGGING_ENABLED = "loggingEnabled";
 
 
   public Properties convertToProperties() throws StageException {
@@ -394,6 +414,7 @@ public class AmazonEMRConfig {
     props.setProperty(ENABLE_EMR_DEBUGGING, Boolean.toString(enableEMRDebugging));
     props.setProperty(VISIBLE_TO_ALL_USERS, Boolean.toString(visibleToAllUsers));
     props.setProperty(S3_LOG_URI, s3LogUri);
+    props.setProperty(LOGGING_ENABLED, Boolean.toString(loggingEnabled));
     return props;
   }
 
