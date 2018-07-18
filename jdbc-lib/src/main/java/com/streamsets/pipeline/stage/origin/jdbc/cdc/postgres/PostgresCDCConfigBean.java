@@ -188,13 +188,13 @@ public class PostgresCDCConfigBean {
 
   //TODO - removal of this causes validation issues, needs cleanup
   @ConfigDef(
-        required = true,
+        required = false,
         type = ConfigDef.Type.BOOLEAN,
         label = "Parse SQL Query",
-        description = "Parse the WAL record into an SDC record. If unselected, the unparsed record "
-            + "statement is inserted into the /wal field",
+        description = "",
         displayPosition = 150,
         group = "CDC",
-        defaultValue = "true")
+        defaultValue = "false"
+  )
   public boolean parseQuery;
 }
