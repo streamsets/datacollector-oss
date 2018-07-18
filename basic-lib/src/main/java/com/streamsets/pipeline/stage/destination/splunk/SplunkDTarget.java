@@ -36,9 +36,7 @@ import com.streamsets.pipeline.stage.destination.http.HttpClientTargetConfig;
         ExecutionMode.CLUSTER_BATCH,
         ExecutionMode.CLUSTER_YARN_STREAMING,
         ExecutionMode.CLUSTER_MESOS_STREAMING,
-        ExecutionMode.EDGE,
         ExecutionMode.EMR_BATCH
-
     }
 )
 @ConfigGroups(Groups.class)
