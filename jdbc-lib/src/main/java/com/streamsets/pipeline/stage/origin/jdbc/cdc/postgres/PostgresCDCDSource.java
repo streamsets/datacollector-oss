@@ -39,7 +39,9 @@ import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.Groups;
 @GenerateResourceBundle
 @ConfigGroups(Groups.class)
 @HideConfigs({
-  "hikariConf.autoCommit"
+  "hikariConf.autoCommit",
+    "postgresCDCConfigBean.baseConfigBean.caseSensitive",
+    "postgresCDCConfigBean.parseQuery"
 })
 public class PostgresCDCDSource extends DSource {
 
