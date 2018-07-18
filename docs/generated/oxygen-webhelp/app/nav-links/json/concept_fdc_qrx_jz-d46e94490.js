@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Databricks Prerequisites","id":"concept_esz_x3d_kz","href":"datacollector\/UserGuide\/Executors\/Spark.html#concept_esz_x3d_kz","menu": {"hasChildren":false,},"tocID":"concept_esz_x3d_kz-d46e94593","topics":[]}]});

@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Retry Lookups for Missing Values","id":"concept_xdx_xqq_vcb","href":"datacollector\/UserGuide\/Processors\/JDBCLookup.html#concept_xdx_xqq_vcb","menu": {"hasChildren":false,},"tocID":"concept_xdx_xqq_vcb-d46e69783","topics":[]}]});

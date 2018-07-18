@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Expression Examples","shortdesc":"\n               <p class=\"shortdesc\"></p>\n            ","id":"concept_r1w_tkp_tt","href":"datacollector\/UserGuide\/Expression_Language\/ExpressionLanguage_overview.html#concept_r1w_tkp_tt","menu": {"hasChildren":false,},"tocID":"concept_r1w_tkp_tt-d46e127115","topics":[]}]});

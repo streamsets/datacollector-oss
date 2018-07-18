@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Event Records","id":"concept_nvj_cmn_sbb","href":"datacollector\/UserGuide\/Origins\/GCS.html#concept_nvj_cmn_sbb","menu": {"hasChildren":false,},"tocID":"concept_nvj_cmn_sbb-d46e30072","topics":[]}]});

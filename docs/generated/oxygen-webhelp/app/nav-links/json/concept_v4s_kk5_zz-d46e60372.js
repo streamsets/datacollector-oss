@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Using Expressions in Messages","id":"concept_xgd_zr5_zz","href":"datacollector\/UserGuide\/Origins\/TCPServer.html#concept_xgd_zr5_zz","menu": {"hasChildren":false,},"tocID":"concept_xgd_zr5_zz-d46e60424","topics":[]}]});

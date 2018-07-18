@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Object Metadata in Record Header Attributes","id":"concept_inh_qjx_yw","href":"datacollector\/UserGuide\/Origins\/AmazonS3.html#concept_inh_qjx_yw","menu": {"hasChildren":false,},"tocID":"concept_inh_qjx_yw-d46e24638","topics":[]}]});

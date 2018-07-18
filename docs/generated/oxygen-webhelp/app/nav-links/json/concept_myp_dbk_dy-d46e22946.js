@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Using XML Elements with Namespaces","id":"concept_ilc_r3g_2y","href":"datacollector\/UserGuide\/Data_Formats\/XMLDFormat.html#concept_ilc_r3g_2y","menu": {"hasChildren":false,},"tocID":"concept_ilc_r3g_2y-d46e22978","topics":[]}]});

@@ -13,7 +13,7 @@ body {
 	font-family: Verdana, Geneva, sans-serif;
 	font-size: 14px;
 	line-height: 1.5em; /* was 1.65 when font size was 13px, we think this looks better 5/30*/
-	color: #555;
+	/* color: #555; */
 }
 h1 {
 	font-family: 'Lato', Helvetica, Arial, Lucida, sans-serif;
@@ -90,7 +90,7 @@ p, .p {
 	font-family: Verdana, Geneva, sans-serif;
 	font-size: 14px;
 	line-height: 1.5em;
-	color: #555;
+	/* color: #555;  */
 	margin: 13px 0 0 0;
 }
 

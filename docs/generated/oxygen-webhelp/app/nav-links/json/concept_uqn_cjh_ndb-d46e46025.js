@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Event Records","id":"concept_cbk_gjh_ndb","href":"datacollector\/UserGuide\/Origins\/MapRFSStandalone.html#concept_cbk_gjh_ndb","menu": {"hasChildren":false,},"tocID":"concept_cbk_gjh_ndb-d46e46128","topics":[]}]});

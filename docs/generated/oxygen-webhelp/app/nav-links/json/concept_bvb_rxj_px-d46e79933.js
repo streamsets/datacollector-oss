@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Event Records","id":"concept_dmx_1ln_qx","href":"datacollector\/UserGuide\/Destinations\/HadoopFS-destination.html#concept_dmx_1ln_qx","menu": {"hasChildren":false,},"tocID":"concept_dmx_1ln_qx-d46e80036","topics":[]}]});

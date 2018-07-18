@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Viewing Record Header Attributes","id":"concept_gdp_c3h_cy","href":"datacollector\/UserGuide\/Processors\/Jython.html#concept_gdp_c3h_cy","menu": {"hasChildren":false,},"tocID":"concept_gdp_c3h_cy-d46e70677","topics":[]}]});
