@@ -35,7 +35,8 @@ public class FieldTypeConverterConfig extends BaseConverterConfig {
       description = "You can convert multiple fields to the same type",
       displayPosition = 10,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      elDefs = {RecordEL.class, FieldEL.class}
+      elDefs = {RecordEL.class, FieldEL.class},
+      group = "TYPE_CONVERSION"
   )
   @FieldSelectorModel
   public List<String> fields;

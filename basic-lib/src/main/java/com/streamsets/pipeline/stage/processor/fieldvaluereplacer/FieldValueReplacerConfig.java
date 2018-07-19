@@ -32,7 +32,8 @@ public class FieldValueReplacerConfig {
       description = "You can enter multiple fields to replace with the same value",
       displayPosition = 10,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      elDefs = {RecordEL.class, FieldEL.class}
+      elDefs = {RecordEL.class, FieldEL.class},
+      group = "REPLACE"
   )
   @FieldSelectorModel
   public List<String> fields;
@@ -43,7 +44,8 @@ public class FieldValueReplacerConfig {
       defaultValue="",
       label = "Replacement Value",
       description="Value to replace nulls",
-      displayPosition = 20
+      displayPosition = 20,
+      group = "REPLACE"
   )
   public String newValue;
 

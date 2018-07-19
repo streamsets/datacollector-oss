@@ -32,7 +32,8 @@ public class FieldHasherConfig {
       description = "One or more fields to hash",
       displayPosition = 10,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      elDefs = {RecordEL.class, FieldEL.class}
+      elDefs = {RecordEL.class, FieldEL.class},
+      group = "FIELD_HASHING"
   )
   @FieldSelectorModel
   public List<String> sourceFieldsToHash;
@@ -43,7 +44,8 @@ public class FieldHasherConfig {
       defaultValue="MD5",
       label = "Hash Type",
       description = "",
-      displayPosition = 20
+      displayPosition = 20,
+      group = "FIELD_HASHING"
   )
   @ValueChooserModel(HashTypeChooserValues.class)
   public HashType hashType;

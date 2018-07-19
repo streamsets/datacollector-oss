@@ -56,6 +56,7 @@ public class BaseConverterConfig {
       description = "Select to convert input Long to DateTime before converting to a String",
       displayPosition = 20,
       dependsOn = "targetType",
+      group = "TYPE_CONVERSION",
       triggeredByValue = "STRING"
   )
   public boolean treatInputFieldAsDate;
@@ -69,6 +70,7 @@ public class BaseConverterConfig {
                     "separator",
       displayPosition = 30,
       dependsOn = "targetType",
+      group = "TYPE_CONVERSION",
       triggeredByValue = {"BYTE", "INTEGER", "LONG", "DOUBLE", "DECIMAL", "FLOAT", "SHORT", "ZONED_DATETIME"}
   )
   @ValueChooserModel(LocaleChooserValues.class)
@@ -82,6 +84,7 @@ public class BaseConverterConfig {
       description = "Decimal Value Scale",
       displayPosition = 40,
       dependsOn = "targetType",
+      group = "TYPE_CONVERSION",
       triggeredByValue = {"DECIMAL"}
   )
   public int scale;
@@ -94,6 +97,7 @@ public class BaseConverterConfig {
       description = "Rounding strategy during scale conversion",
       displayPosition = 50,
       dependsOn = "targetType",
+      group = "TYPE_CONVERSION",
       triggeredByValue = {"DECIMAL"}
   )
   @ValueChooserModel(DecimalScaleRoundingStrategyChooserValues.class)
@@ -116,6 +120,7 @@ public class BaseConverterConfig {
       description="Select or enter any valid date or datetime format",
       displayPosition = 40,
       dependsOn = "targetType",
+      group = "TYPE_CONVERSION",
       triggeredByValue = {"DATE", "DATETIME", "TIME", "STRING"}
   )
   @ValueChooserModel(DateFormatChooserValues.class)
@@ -128,6 +133,7 @@ public class BaseConverterConfig {
       label = "Other Date Format",
       displayPosition = 50,
       dependsOn = "dateFormat",
+      group = "TYPE_CONVERSION",
       triggeredByValue = "OTHER"
   )
   public String otherDateFormat;
@@ -140,6 +146,7 @@ public class BaseConverterConfig {
       description="Select or enter any valid date or datetime format",
       displayPosition = 60,
       dependsOn = "targetType",
+      group = "TYPE_CONVERSION",
       triggeredByValue = {"ZONED_DATETIME", "STRING"}
   )
   @ValueChooserModel(ZonedDateTimeFormatChooserValues.class)
@@ -152,6 +159,7 @@ public class BaseConverterConfig {
       label = "Other Zoned DateTime Format",
       displayPosition = 70,
       dependsOn = "zonedDateTimeFormat",
+      group = "TYPE_CONVERSION",
       triggeredByValue = "OTHER"
   )
   public String otherZonedDateTimeFormat;
@@ -163,6 +171,7 @@ public class BaseConverterConfig {
       label = "CharSet",
       displayPosition = 80,
       dependsOn = "targetType",
+      group = "TYPE_CONVERSION",
       triggeredByValue = "STRING"
   )
   @ValueChooserModel(CharsetChooserValues.class)

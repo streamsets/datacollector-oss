@@ -27,6 +27,7 @@ public class NullReplacerConditionalConfig {
       type = ConfigDef.Type.MODEL,
       defaultValue = "",
       label = "Fields",
+      group = "REPLACE",
       description = "Specify fields to null",
       displayPosition = 10)
   @FieldSelectorModel
@@ -38,6 +39,7 @@ public class NullReplacerConditionalConfig {
       type = ConfigDef.Type.STRING,
       defaultValue = "",
       label = "Condition",
+      group = "REPLACE",
       description = "Condition for replacing the fields with null. Leave empty to replace all the configured fields with null",
       displayPosition = 20,
       elDefs = {RecordEL.class},

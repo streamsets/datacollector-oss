@@ -31,7 +31,8 @@ public class FieldMergerConfig {
       defaultValue="",
       label = "From Field",
       description = "The field in the incoming record to merge.",
-      displayPosition = 10
+      displayPosition = 10,
+      group = "MERGE"
   )
   @FieldSelectorModel(singleValued = true)
   public String fromField;
@@ -42,7 +43,8 @@ public class FieldMergerConfig {
       defaultValue="",
       label = "To Field",
       description="The field to merge into.",
-      displayPosition = 20
+      displayPosition = 20,
+      group = "MERGE"
   )
   public String toField;
 }

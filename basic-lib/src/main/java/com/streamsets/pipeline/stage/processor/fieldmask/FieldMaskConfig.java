@@ -33,7 +33,8 @@ public class FieldMaskConfig {
       description="Mask string fields. You can enter multiple fields for the same mask type.",
       displayPosition = 10,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      elDefs = {RecordEL.class, FieldEL.class}
+      elDefs = {RecordEL.class, FieldEL.class},
+      group = "MASKING"
   )
   @FieldSelectorModel
   public List<String> fields;
@@ -44,7 +45,8 @@ public class FieldMaskConfig {
       defaultValue="VARIABLE_LENGTH",
       label = "Mask Type",
       description="",
-      displayPosition = 20
+      displayPosition = 20,
+      group = "MASKING"
   )
   @ValueChooserModel(MaskTypeChooseValues.class)
   public MaskType maskType;
@@ -56,7 +58,8 @@ public class FieldMaskConfig {
       description = "Use # to reveal field values. Other characters replace field values.",
       displayPosition = 30,
       dependsOn = "maskType",
-      triggeredByValue = "CUSTOM"
+      triggeredByValue = "CUSTOM",
+      group = "MASKING"
   )
   public String mask;
 
@@ -68,8 +71,8 @@ public class FieldMaskConfig {
     displayPosition = 40,
     dependsOn = "maskType",
     triggeredByValue = "REGEX",
-    defaultValue = "(.*)"
-
+    defaultValue = "(.*)",
+    group = "MASKING"
   )
   public String regex;
 
@@ -81,7 +84,8 @@ public class FieldMaskConfig {
     displayPosition = 50,
     dependsOn = "maskType",
     triggeredByValue = "REGEX",
-    defaultValue = "1"
+    defaultValue = "1",
+    group = "MASKING"
   )
   public String groupsToShow;
 
