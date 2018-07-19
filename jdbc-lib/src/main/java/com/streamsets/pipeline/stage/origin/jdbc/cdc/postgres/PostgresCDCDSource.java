@@ -33,7 +33,7 @@ import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.Groups;
     recordsByRef = true,
     producesEvents = true,
     resetOffset = true,
-    onlineHelpRefUrl ="index.html#datacollector/UserGuide/Origins/PostgresCDC.html",
+    onlineHelpRefUrl ="index.html?contextID=task_v21_nm4_n2b",
     upgrader = PostgresCDCSourceUpgrader.class
 )
 @GenerateResourceBundle
