@@ -25,6 +25,18 @@ then
 fi
 mvn versions:set -Drelease -Parchetype,stage-lib-parent -DnewVersion=$version
 
+ROOTDIR=`echo $PWD | tr -d "\r"`
+
+for d in ${ROOTDIR} dist release root-proto
+do
+	pushd $d
+	mvn versions:set-property -Dproperty=datacollector-edge.version -DnewVersion=$version -DgenerateBackupPoms=false -DallowSnapshots=true
+	mvn versions:set-property -Dproperty=datacollector-api.version -DnewVersion=$version -DgenerateBackupPoms=false -DallowSnapshots=true
+	mvn versions:set-property -Dproperty=datacollector-spark-api.version -DnewVersion=$version -DgenerateBackupPoms=false -DallowSnapshots=true
+	mvn versions:set-property -Dproperty=streamsets-datacollector-rbgen-maven-plugin.version -DnewVersion=$version -DgenerateBackupPoms=false -DallowSnapshots=true
+	popd
+done
+
 # mvn version:set doesn't work with the following sub-modules. Update them via perl regex.
 for d in rbgen-maven-plugin stage-lib-archetype e2e-tests
 do
