@@ -25,17 +25,29 @@ then
 fi
 mvn versions:set -Drelease -Parchetype,stage-lib-parent,hdp-stagelib-base -DnewVersion=$version
 
+ROOTDIR=`echo $PWD | tr -d "\r"`
+
+for d in ${ROOTDIR} dist release root-proto
+do
+	pushd $d
+	mvn versions:set-property -Dproperty=datacollector-edge.version -DnewVersion=$version -DgenerateBackupPoms=false -DallowSnapshots=true
+	mvn versions:set-property -Dproperty=datacollector-api.version -DnewVersion=$version -DgenerateBackupPoms=false -DallowSnapshots=true
+	mvn versions:set-property -Dproperty=datacollector-spark-api.version -DnewVersion=$version -DgenerateBackupPoms=false -DallowSnapshots=true
+	mvn versions:set-property -Dproperty=streamsets-datacollector-rbgen-maven-plugin.version -DnewVersion=$version -DgenerateBackupPoms=false -DallowSnapshots=true
+	popd
+done
+
 # mvn version:set doesn't work with the following sub-modules. Update them via perl regex.
 for d in rbgen-maven-plugin stage-lib-archetype e2e-tests
 do
   pushd $d
-  perl -i -pe 's@(<version>)(\d+.\d+.\d+.\d+(-SNAPSHOT)?)(<\/version>)@${1}'"$version"'${4}@g' pom.xml
+  perl -i -pe 's@(<version>)(\d+.\d+.\d+(-SNAPSHOT)?)(<\/version>)@${1}'"$version"'${4}@g' pom.xml
   popd
 done
 
 for f in BUILD.md dist/src/main/etc/sdc.properties
 do
-  perl -i -pe 's@(datacollector.(all.)?)\d+.\d+.\d+.\d+(-SNAPSHOT)?@${1}'"$version"'@g' $f
+  perl -i -pe 's@(datacollector.(all.)?)\d+.\d+.\d+(-SNAPSHOT)?@${1}'"$version"'@g' $f
 done
 
 ui_version=$(echo $version | perl -pe 's@(\d+.\d+.\d+).(\d+)(-SNAPSHOT)?@${1}${2}${3}@g')
