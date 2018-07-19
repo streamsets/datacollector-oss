@@ -150,7 +150,7 @@ public class TestWholeFileSpoolDirSource {
 
   private void initMetrics(Stage.Context context) {
     context.createMeter(FileRefUtil.TRANSFER_THROUGHPUT_METER);
-    final Map<String, Object> gaugeStatistics = context.createGauge(FileRefUtil.GAUGE_NAME).getValue();
+    final Map<String, Object> gaugeStatistics = context.createGauge(FileRefUtil.fileStatisticGaugeName(context)).getValue();
     gaugeStatistics.put(FileRefUtil.TRANSFER_THROUGHPUT, 0L);
     gaugeStatistics.put(FileRefUtil.SENT_BYTES, 0L);
     gaugeStatistics.put(FileRefUtil.REMAINING_BYTES, 0L);

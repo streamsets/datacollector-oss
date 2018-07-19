@@ -19,6 +19,7 @@ import com.codahale.metrics.Counter;
 import com.codahale.metrics.Gauge;
 import com.codahale.metrics.Meter;
 import com.streamsets.pipeline.api.FileRef;
+import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Stage;
 import org.junit.After;
 import org.junit.Assert;
@@ -36,6 +37,8 @@ import java.nio.file.Paths;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static org.mockito.Mockito.when;
 
 public class TestMetricsEnabledWrapperStream {
   private File testDir;
@@ -64,9 +67,10 @@ public class TestMetricsEnabledWrapperStream {
     FileRefTestUtil.writePredefinedTextToFile(testDir);
     gauge = new MapGauge();
     context = Mockito.mock(Stage.Context.class);
-    Mockito.when(context.createGauge(Mockito.any(), Mockito.any())).thenReturn(gauge);
-    Mockito.when(context.getGauge(Mockito.any())).thenReturn(gauge);
-    Mockito.when(context.getMeter(Mockito.any())).thenReturn(new Meter());
+    when(context.createGauge(Mockito.any(), Mockito.any())).thenReturn(gauge);
+    when(context.getGauge(Mockito.any())).thenReturn(gauge);
+    when(context.getMeter(Mockito.any())).thenReturn(new Meter());
+    when(context.getRunnerId()).thenReturn(0);
   }
 
   @After
@@ -188,7 +192,7 @@ public class TestMetricsEnabledWrapperStream {
       is.close();
       is.close();
     }
-    Map<String, Object> gaugeMap = (Map<String, Object>)(context.getGauge(FileRefUtil.GAUGE_NAME).getValue());
+    Map<String, Object> gaugeMap = (Map<String, Object>)(context.getGauge(FileRefUtil.fileStatisticGaugeName(context)).getValue());
     long completedCount = (long)gaugeMap.get(FileRefUtil.COMPLETED_FILE_COUNT);
     Assert.assertEquals(1, completedCount);
   }

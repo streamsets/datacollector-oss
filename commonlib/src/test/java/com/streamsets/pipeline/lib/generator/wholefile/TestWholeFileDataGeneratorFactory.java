@@ -44,9 +44,9 @@ public class TestWholeFileDataGeneratorFactory {
   public void testGaugeInit() throws Exception {
     DataGeneratorFactory factory =
         new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.WHOLE_FILE).build();
-    Assert.assertNull(context.getGauge(FileRefUtil.GAUGE_NAME));
+    Assert.assertNull(context.getGauge(FileRefUtil.fileStatisticGaugeName(context)));
     factory.getGenerator(new ByteArrayOutputStream());
-    Assert.assertNotNull(context.getGauge(FileRefUtil.GAUGE_NAME));
+    Assert.assertNotNull(context.getGauge(FileRefUtil.fileStatisticGaugeName(context)));
   }
 
   @Test
@@ -54,7 +54,7 @@ public class TestWholeFileDataGeneratorFactory {
     DataGeneratorFactory factory =
         new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.WHOLE_FILE).build();
     factory.getGenerator(new ByteArrayOutputStream());
-    Gauge<Map<String, Object>> gauge = context.getGauge(FileRefUtil.GAUGE_NAME);
+    Gauge<Map<String, Object>> gauge = context.getGauge(FileRefUtil.fileStatisticGaugeName(context));
     Map<String, Object> map = gauge.getValue();
 
     LinkedHashSet<String> hashSet = new LinkedHashSet<>();

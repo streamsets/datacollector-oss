@@ -52,7 +52,7 @@ final class MetricEnabledWrapperStream<T extends AutoCloseable> extends Abstract
     remainingBytesCounter.inc(fileSize);
     FileRefUtil.initMetricsIfNeeded(context);
     dataTransferMeter = context.getMeter(FileRefUtil.TRANSFER_THROUGHPUT_METER);
-    gaugeStatisticsMap =  context.getGauge(FileRefUtil.GAUGE_NAME).getValue();
+    gaugeStatisticsMap =  context.getGauge(FileRefUtil.fileStatisticGaugeName(context)).getValue();
     completedFileCount = (long)gaugeStatisticsMap.get(FileRefUtil.COMPLETED_FILE_COUNT);
     //Shows the size of the file in the brack after the file name.
     gaugeStatisticsMap.put(FileRefUtil.FILE, String.format(FileRefUtil.BRACKETED_TEMPLATE, id, convertBytesToDisplayFormat(fileSize)));

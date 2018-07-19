@@ -53,7 +53,7 @@ public final class FileRefUtil {
   private FileRefUtil() {}
 
   //Metric Constants
-  public static final String GAUGE_NAME = "File Transfer Statistics";
+  private static final String GAUGE_NAME = "File Transfer Statistics";
   public static final String FILE = "File";
   public static final String TRANSFER_THROUGHPUT = "Transfer Rate";
   public static final String SENT_BYTES = "Sent Bytes";
@@ -115,10 +115,10 @@ public final class FileRefUtil {
    * @param context the {@link com.streamsets.pipeline.api.Stage.Context} of this stage
    */
   @SuppressWarnings("unchecked")
-  public static void initMetricsIfNeeded(ProtoConfigurableEntity.Context context) {
-    Gauge<Map<String, Object>> gauge = context.getGauge(FileRefUtil.GAUGE_NAME);
+  public static synchronized void initMetricsIfNeeded(ProtoConfigurableEntity.Context context) {
+    Gauge<Map<String, Object>> gauge = context.getGauge(fileStatisticGaugeName(context));
     if(gauge == null) {
-      gauge = context.createGauge(FileRefUtil.GAUGE_NAME, Comparator.comparing(GAUGE_MAP_ORDERING::get));
+      gauge = context.createGauge(fileStatisticGaugeName(context), Comparator.comparing(GAUGE_MAP_ORDERING::get));
       Map<String, Object> gaugeStatistics = gauge.getValue();
       //File name is populated at the MetricEnabledWrapperStream.
       gaugeStatistics.put(FileRefUtil.FILE, "");
@@ -132,6 +132,10 @@ public final class FileRefUtil {
     if (dataTransferMeter == null) {
       context.createMeter(FileRefUtil.TRANSFER_THROUGHPUT_METER);
     }
+  }
+
+  public static String fileStatisticGaugeName(ProtoConfigurableEntity.Context context) {
+    return FileRefUtil.GAUGE_NAME + " Runner " + context.getRunnerId();
   }
 
   public static Field getWholeFileRecordRootField(FileRef fileRef, Map<String, Object> metadata) {
