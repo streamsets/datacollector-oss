@@ -76,6 +76,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <hive-storage-api.version>2.2.1</hive-storage-api.version>
+    <streamsets-datacollector-rbgen-maven-plugin.version>3.5.0-SNAPSHOT</streamsets-datacollector-rbgen-maven-plugin.version>
   </properties>
 
   <!-- API dependencies ONLY -->
@@ -502,7 +503,7 @@
         <plugin>
           <groupId>com.streamsets</groupId>
           <artifactId>streamsets-datacollector-rbgen-maven-plugin</artifactId>
-          <version>3.3.2-SNAPSHOT</version>
+          <version>${streamsets-datacollector-rbgen-maven-plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>net.alchim31.maven</groupId>

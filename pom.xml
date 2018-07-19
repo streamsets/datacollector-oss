@@ -83,6 +83,8 @@
     <vault-credentialstore-lib>vault-credentialstore-lib</vault-credentialstore-lib>
     <windows-lib>windows-lib</windows-lib>
     <rootProject>true</rootProject>
+    <datacollector-api.version>3.5.0-SNAPSHOT</datacollector-api.version>
+    <datacollector-spark-api.version>3.5.0-SNAPSHOT</datacollector-spark-api.version>
   </properties>
 
   <!-- StreamSets Data Collector API being used -->
@@ -91,12 +93,12 @@
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-api</artifactId>
-        <version>3.3.2-SNAPSHOT</version>
+        <version>${datacollector-api.version}</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-spark-api</artifactId>
-        <version>3.3.2-SNAPSHOT</version>
+        <version>${datacollector-spark-api.version}</version>
       </dependency>
       <dependency>
         <groupId>javax.servlet</groupId>
