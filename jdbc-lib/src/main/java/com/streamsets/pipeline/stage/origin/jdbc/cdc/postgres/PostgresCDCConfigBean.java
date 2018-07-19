@@ -72,8 +72,8 @@ public class PostgresCDCConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Start SCN",
-      description = "System change number to use for the initial change",
+      label = "Start LSN",
+      description = "Logical Sequence Number to use for the initial change",
       displayPosition = 45,
       group = "CDC",
       dependsOn = "startValue",
@@ -84,7 +84,7 @@ public class PostgresCDCConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Remove replication slot on close",
+      label = "Remove Replication Slot on Close",
       description = "Removing on close means no WAL updates for that slot will be generated, but "
           + "system performance will not be impacted.",
       displayPosition = 50,
@@ -95,7 +95,7 @@ public class PostgresCDCConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Replication slot",
+      label = "Replication Slot",
       description = "Name of slot to create.",
       defaultValue="SDC",
       displayPosition = 50,
@@ -106,8 +106,8 @@ public class PostgresCDCConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      label = "Minimum Postgres version",
-      description = "Minimum Postgres version to assume.",
+      label = "Minimum PostgreSQL Version",
+      description = "Minimum PostgreSQL version to assume.",
       defaultValue ="NINEFOUR",
       displayPosition = 50,
       group = "CDC"
@@ -118,7 +118,7 @@ public class PostgresCDCConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Replication type",
+      label = "Replication Type",
       description = "Database support",
       defaultValue ="database",
       displayPosition = 50,
@@ -154,7 +154,7 @@ public class PostgresCDCConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Add unsupported fields to records",
+      label = "Add Unsupported Fields",
       description = "Add values of unsupported fields as unparsed strings to records",
       displayPosition = 115,
       group = "CDC",
@@ -177,7 +177,7 @@ public class PostgresCDCConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      label = "Poll interval",
+      label = "Poll Interval",
       description = "Interval between checking for CDC updates.",
       displayPosition = 140,
       group = "CDC",
