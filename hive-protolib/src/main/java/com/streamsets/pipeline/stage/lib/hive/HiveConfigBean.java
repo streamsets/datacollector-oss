@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hive.conf.HiveConf;
@@ -64,6 +65,38 @@ public class HiveConfigBean {
       group = "HIVE"
   )
   public String hiveJDBCDriver;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Use Credentials",
+      displayPosition = 21,
+      group = "HIVE"
+  )
+  public boolean useCredentials;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.CREDENTIAL,
+      dependsOn = "useCredentials",
+      triggeredByValue = "true",
+      label = "Username",
+      displayPosition = 22,
+      group = "HIVE"
+  )
+  public CredentialValue username;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.CREDENTIAL,
+      dependsOn = "useCredentials",
+      triggeredByValue = "true",
+      label = "Password",
+      displayPosition = 23,
+      group = "HIVE"
+  )
+  public CredentialValue password;
 
   @ConfigDef(
       required = false,
@@ -263,6 +296,20 @@ public class HiveConfigBean {
           jdbcUrlSafeForUser(),
           e.getMessage()
       ));
+    }
+
+    // If user wants to enter credentials we will propagate them to the properties - which is "official" way of JDBC
+    // spec. The method call Driver.getDriver(url, username, password) does exactly the same for example.
+    if(useCredentials) {
+      ConnectionPropertyBean userBean = new ConnectionPropertyBean();
+      userBean.property = "user";
+      userBean.value = this.username;
+      driverProperties.add(userBean);
+
+      ConnectionPropertyBean passwordBean = new ConnectionPropertyBean();
+      userBean.property = "password";
+      userBean.value = this.password;
+      driverProperties.add(passwordBean);
     }
   }
 
