@@ -34,6 +34,7 @@ import com.streamsets.datacollector.config.MemoryLimitExceeded;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.el.PipelineEL;
+import com.streamsets.datacollector.execution.SnapshotInfo;
 import com.streamsets.datacollector.execution.SnapshotStore;
 import com.streamsets.datacollector.execution.metrics.MetricsEventRunnable;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
@@ -1137,6 +1138,14 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     }
 
     try {
+      for(SnapshotInfo info : snapshotStore.getSummaryForPipeline(pipelineName, revision)) {
+        // Allow only one failure snapshot to be present on a pipeline
+        if(info.isFailureSnapshot()) {
+          LOG.trace("Skipping creation of failure snapshot as {} already exists.", info.getId());
+          return;
+        }
+      }
+
       String snapshotName = "Failure_" + UUID.randomUUID().toString();
       String snapshotLabel = "Failure at " + LocalDateTime.now().toString();
       snapshotStore.create("", pipelineName, revision, snapshotName, snapshotLabel, true);

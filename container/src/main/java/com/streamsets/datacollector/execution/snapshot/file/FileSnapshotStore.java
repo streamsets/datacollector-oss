@@ -95,7 +95,7 @@ public class FileSnapshotStore implements SnapshotStore {
             System.currentTimeMillis(),
             false,
             batchNumber,
-          false
+            existingInfo.isFailureSnapshot()
         );
       persistSnapshotInfo(updatedSnapshotInfo);
       return updatedSnapshotInfo;
