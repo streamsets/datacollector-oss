@@ -120,7 +120,7 @@ public class TestProdPipelineRunnable {
 
     Mockito.when(snapshotStore.getInfo(TestUtil.MY_PIPELINE, "0", SNAPSHOT_NAME)).
       thenReturn(new SnapshotInfoImpl("user", SNAPSHOT_NAME, "SNAPSHOT LABEL", TestUtil.MY_PIPELINE, "0",
-          System.currentTimeMillis(), false, 0));
+          System.currentTimeMillis(), false, 0, false));
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /*FIFO*/);
     Configuration conf = new Configuration();
     ProductionPipelineRunner runner =

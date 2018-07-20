@@ -27,6 +27,7 @@ public class SnapshotInfoImpl implements SnapshotInfo {
   private final String user;
   private final boolean inProgress;
   private final long batchNumber;
+  private final boolean failureSnapshot;
 
   public SnapshotInfoImpl(
       String user,
@@ -36,7 +37,8 @@ public class SnapshotInfoImpl implements SnapshotInfo {
       String rev,
       long timestamp,
       boolean inProgress,
-      long batchNumber
+      long batchNumber,
+      boolean failureSnapshot
   ) {
     this.id = id;
     this.label = label;
@@ -46,6 +48,7 @@ public class SnapshotInfoImpl implements SnapshotInfo {
     this.user = user;
     this.inProgress = inProgress;
     this.batchNumber = batchNumber;
+    this.failureSnapshot = failureSnapshot;
   }
 
   @Override
@@ -86,5 +89,10 @@ public class SnapshotInfoImpl implements SnapshotInfo {
   @Override
   public long getBatchNumber() {
     return batchNumber;
+  }
+
+  @Override
+  public boolean isFailureSnapshot() {
+    return failureSnapshot;
   }
 }

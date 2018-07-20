@@ -33,4 +33,6 @@ public interface SnapshotInfo {
 
   public long getBatchNumber();
 
+  public boolean isFailureSnapshot();
+
 }

@@ -33,6 +33,7 @@ public class SnapshotInfoJson   {
   private String rev = null;
   private Long timeStamp = null;
   private Boolean inProgress = null;
+  private Boolean failureSnapshot = null;
 
 
   /**
@@ -116,6 +117,17 @@ public class SnapshotInfoJson   {
     this.inProgress = inProgress;
   }
 
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("failureSnapshot")
+  public Boolean getFailureSnapshot() {
+    return failureSnapshot;
+  }
+  public void setFailureSnapshot(Boolean failureSnapshot) {
+    this.failureSnapshot = failureSnapshot;
+  }
 
 
   @Override

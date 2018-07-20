@@ -405,7 +405,7 @@ public class TestProductionPipeline {
 
     Mockito.when(snapshotStore.getInfo(PIPELINE_NAME, REVISION, SNAPSHOT_NAME)).thenReturn(
         new SnapshotInfoImpl("user", "SNAPSHOT_NAME", "SNAPSHOT LABEL", PIPELINE_NAME, REVISION,
-            System.currentTimeMillis(), false, 0));
+            System.currentTimeMillis(), false, 0, false));
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /* FIFO */);
     Configuration config = new Configuration();
     config.set("monitor.memory", true);
