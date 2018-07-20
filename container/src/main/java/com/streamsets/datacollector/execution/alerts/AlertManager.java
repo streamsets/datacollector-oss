@@ -33,6 +33,7 @@ import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.util.PipelineException;
+import com.streamsets.pipeline.api.StageException;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.slf4j.Logger;
@@ -242,22 +243,22 @@ public class AlertManager {
     }
   }
 
-  private void configurePasswordAuth(WebhookCommonConfig webhookConfig, WebTarget webTarget) {
+  private void configurePasswordAuth(WebhookCommonConfig webhookConfig, WebTarget webTarget) throws StageException {
     if (webhookConfig.authType == AuthenticationType.BASIC) {
       webTarget.register(
-          HttpAuthenticationFeature.basic(webhookConfig.username, webhookConfig.password)
+          HttpAuthenticationFeature.basic(webhookConfig.username.get(), webhookConfig.password.get())
       );
     }
 
     if (webhookConfig.authType == AuthenticationType.DIGEST) {
       webTarget.register(
-          HttpAuthenticationFeature.digest(webhookConfig.username, webhookConfig.password)
+          HttpAuthenticationFeature.digest(webhookConfig.username.get(), webhookConfig.password.get())
       );
     }
 
     if (webhookConfig.authType == AuthenticationType.UNIVERSAL) {
       webTarget.register(
-          HttpAuthenticationFeature.universal(webhookConfig.username, webhookConfig.password)
+          HttpAuthenticationFeature.universal(webhookConfig.username.get(), webhookConfig.password.get())
       );
     }
   }

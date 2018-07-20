@@ -17,6 +17,7 @@ package com.streamsets.datacollector.config;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.el.RecordEL;
 
 import java.util.HashMap;
@@ -85,24 +86,24 @@ public abstract class WebhookCommonConfig {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Username",
       displayPosition = 270,
       group = "NOTIFICATIONS",
       dependsOn = "authType",
       triggeredByValue = { "BASIC", "DIGEST", "UNIVERSAL" }
   )
-  public String username;
+  public CredentialValue username;
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Password",
       displayPosition = 280,
       group = "NOTIFICATIONS",
       dependsOn = "authType",
       triggeredByValue = { "BASIC", "DIGEST", "UNIVERSAL" }
   )
-  public String password;
+  public CredentialValue password;
 
 }
