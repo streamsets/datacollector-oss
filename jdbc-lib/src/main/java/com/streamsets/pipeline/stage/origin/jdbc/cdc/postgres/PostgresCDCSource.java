@@ -142,7 +142,7 @@ public class PostgresCDCSource extends BaseSource {
       } catch (ClassNotFoundException e) {
         LOG.error("Hikari Driver class not found.", e);
         issues.add(getContext().createConfigIssue(
-            "Postgres CDC", DRIVER_CLASSNAME, JdbcErrors.JDBC_28, e.toString()));
+            "PostgreSQL CDC", DRIVER_CLASSNAME, JdbcErrors.JDBC_28, e.toString()));
       }
     }
 
