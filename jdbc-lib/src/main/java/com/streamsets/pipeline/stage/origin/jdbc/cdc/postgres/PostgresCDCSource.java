@@ -38,6 +38,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -276,9 +277,11 @@ public class PostgresCDCSource extends BaseSource {
         dateTimeColumnHandler = new DateTimeColumnHandler(zoneId);
         try {
           startDate = LocalDateTime.parse(
-              configBean.startDate,
-              dateTimeColumnHandler.dateFormatter
+              configBean.startDate, DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss")
           );
+          /* Valid offset that should be as early as possible to get the most number of WAL
+          records available for the date filter to process. */
+          this.setOffset(LogSequenceNumber.valueOf(1L).asString());
         } catch (DateTimeParseException e) {
           issues.add(
               getContext().createConfigIssue(
