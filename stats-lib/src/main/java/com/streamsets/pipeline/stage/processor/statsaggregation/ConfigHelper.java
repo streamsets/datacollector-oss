@@ -15,7 +15,9 @@
  */
 package com.streamsets.pipeline.stage.processor.statsaggregation;
 
+import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
+import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.RuleDefinitionsJson;
 import com.streamsets.pipeline.api.Stage;
@@ -52,16 +54,18 @@ public class ConfigHelper {
     return  ruleDefJson;
   }
 
-  public static PipelineConfigurationJson readPipelineConfig(
+  public static PipelineConfiguration readPipelineConfig(
       String pipelineConfigJson,
       Stage.Context context,
-      List<Stage.ConfigIssue> issues) {
-    PipelineConfigurationJson pipelineConfigurationJson = null;
+      List<Stage.ConfigIssue> issues
+  ) {
+    PipelineConfiguration pipelineConfiguration = null;
     try {
-      pipelineConfigurationJson = ObjectMapperFactory.get().readValue(
+      PipelineConfigurationJson pipelineConfigurationJson = ObjectMapperFactory.get().readValue(
         new String(Base64.decodeBase64(pipelineConfigJson)),
         PipelineConfigurationJson.class
       );
+      pipelineConfiguration = BeanHelper.unwrapPipelineConfiguration(pipelineConfigurationJson);
     } catch (IOException ex) {
       issues.add(
           context.createConfigIssue(
@@ -73,7 +77,7 @@ public class ConfigHelper {
         )
       );
     }
-    return pipelineConfigurationJson;
+    return pipelineConfiguration;
   }
 
 }

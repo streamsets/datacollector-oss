@@ -22,13 +22,13 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.streamsets.datacollector.alerts.AlertsUtil;
 import com.streamsets.datacollector.config.MetricsRuleDefinition;
+import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinition;
+import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.execution.alerts.AlertManagerHelper;
 import com.streamsets.datacollector.execution.alerts.MetricRuleEvaluatorHelper;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
-import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
-import com.streamsets.datacollector.restapi.bean.StageConfigurationJson;
 import com.streamsets.datacollector.util.AggregatorUtil;
 import com.streamsets.datacollector.util.ObserverException;
 import com.streamsets.pipeline.api.Field;
@@ -95,7 +95,7 @@ public class MetricRuleHandler {
     String pipelineUrl,
     MetricRegistry metrics,
     MetricRegistryJson metricRegistryJson,
-    PipelineConfigurationJson pipelineConfigurationJson,
+    PipelineConfiguration pipelineConfiguration,
     Map<String, RuleDefinition> ruleDefinitionMap
   ) {
     this.pipelineName = pipelineName;
@@ -103,7 +103,7 @@ public class MetricRuleHandler {
     this.metrics = metrics;
     this.ruleDefinitionMap = ruleDefinitionMap;
     this.evaluator = new RulesEvaluator(pipelineName, revision, pipelineUrl, context);
-    initializeMetricRegistry(metrics, metricRegistryJson, pipelineConfigurationJson);
+    initializeMetricRegistry(metrics, metricRegistryJson, pipelineConfiguration);
   }
 
   void handleMetricRuleRecord(Record record) {
@@ -269,7 +269,7 @@ public class MetricRuleHandler {
   private void initializeMetricRegistry(
     MetricRegistry metrics,
     MetricRegistryJson metricRegistryJson,
-    PipelineConfigurationJson pipelineConfigurationJson
+    PipelineConfiguration pipelineConfiguration
   ) {
 
     batchProcessingTimer = MetricsHelper.createAndInitTimer(
@@ -395,7 +395,7 @@ public class MetricRuleHandler {
     outputRecordsPerLaneCounter = new HashMap<>();
     outputRecordsPerLaneMeter = new HashMap<>();
 
-    for (StageConfigurationJson s : pipelineConfigurationJson.getStages()) {
+    for (StageConfiguration s : pipelineConfiguration.getStages()) {
       String stageInstanceName = s.getInstanceName();
       String metricsKey = MetricAggregationConstants.STAGE_PREFIX + stageInstanceName;
       stageProcessingTimer.put(
