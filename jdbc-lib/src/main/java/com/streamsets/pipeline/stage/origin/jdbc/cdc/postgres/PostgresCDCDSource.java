@@ -27,8 +27,8 @@ import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.Groups;
 
 @StageDef(
     version = 1,
-    label = "Postgres CDC Client",
-    description = "Origin that an read change events from a Postgres Database",
+    label = "PostgreSQL CDC Client",
+    description = "Origin that an read change events from a PostgreSQL Database",
     icon = "rdbms.png",
     recordsByRef = true,
     producesEvents = true,

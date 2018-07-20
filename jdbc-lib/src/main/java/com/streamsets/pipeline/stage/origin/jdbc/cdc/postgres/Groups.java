@@ -20,7 +20,7 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum Groups implements Label {
-  CDC("Postgres CDC"),
+  CDC("PostgreSQL CDC"),
   JDBC("JDBC"),
   CREDENTIALS("Credentials"),
   LEGACY("Legacy"),

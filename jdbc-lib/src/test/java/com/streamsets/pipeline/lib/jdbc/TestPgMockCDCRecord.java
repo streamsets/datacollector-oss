@@ -175,7 +175,7 @@ public class TestPgMockCDCRecord {
 }
 
 /*
-    This is a Postgres WAL CDC record in JSON pretty print format for reference.
+    This is a PostgreSQL WAL CDC record in JSON pretty print format for reference.
     This represents a multi-table, multi-row update.
     What is not shown is the actual LSN which is a separate field kept in PostgresWalRecord.class
     {

@@ -74,7 +74,7 @@ public class PostgresWalRunner implements Runnable {
         stream.forceUpdateStatus();
       }
     } catch (SQLException e) {
-      LOG.error("Error reading Postgres replication stream: {}", e.getMessage());
+      LOG.error("Error reading PostgreSQL replication stream: {}", e.getMessage());
     }
 
   }
