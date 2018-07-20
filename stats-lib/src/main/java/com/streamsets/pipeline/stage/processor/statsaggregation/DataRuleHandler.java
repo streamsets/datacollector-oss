@@ -20,12 +20,12 @@ import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.alerts.AlertsUtil;
 import com.streamsets.datacollector.config.DataRuleDefinition;
 import com.streamsets.datacollector.config.DriftRuleDefinition;
+import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinition;
+import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.execution.alerts.AlertManagerHelper;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
-import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
-import com.streamsets.datacollector.restapi.bean.StageConfigurationJson;
 import com.streamsets.datacollector.util.AggregatorUtil;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -62,7 +62,7 @@ public class DataRuleHandler {
       String pipelineName,
       String revision,
       String pipelineUrl,
-      PipelineConfigurationJson pipelineConfigurationJson,
+      PipelineConfiguration pipelineConfiguration,
       MetricRegistry metrics,
       MetricRegistryJson metricRegistryJson,
       Map<String, RuleDefinition> ruleDefinitionMap,
@@ -77,7 +77,7 @@ public class DataRuleHandler {
     this.metrics = metrics;
     this.evaluatedRecordCounterMap = new HashMap<>();
     this.stageToOutputLanesMap = new HashMap<>();
-    for (StageConfigurationJson s : pipelineConfigurationJson.getStages()) {
+    for (StageConfiguration s : pipelineConfiguration.getStages()) {
       stageToOutputLanesMap.put(s.getInstanceName(), s.getOutputAndEventLanes());
     }
     this.rulesEvaluator = new RulesEvaluator(pipelineName, revision, pipelineUrl, context);

@@ -16,6 +16,8 @@
 package com.streamsets.pipeline.stage.processor.statsaggregation;
 
 import com.streamsets.datacollector.alerts.AlertsUtil;
+import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.restapi.bean.CounterJson;
 import com.streamsets.datacollector.restapi.bean.DataRuleDefinitionJson;
@@ -24,9 +26,7 @@ import com.streamsets.datacollector.restapi.bean.HistogramJson;
 import com.streamsets.datacollector.restapi.bean.MeterJson;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
 import com.streamsets.datacollector.restapi.bean.MetricsRuleDefinitionJson;
-import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.RuleDefinitionsJson;
-import com.streamsets.datacollector.restapi.bean.StageConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.TimerJson;
 import com.streamsets.datacollector.runner.LaneResolver;
 import com.streamsets.pipeline.api.Stage;
@@ -85,12 +85,12 @@ public class AggregatedMetricsFetcher {
   }
 
   public MetricRegistryJson fetchLatestAggregatedMetrics(
-      PipelineConfigurationJson pipelineConfigurationJson,
+      PipelineConfiguration pipelineConfiguration,
       RuleDefinitionsJson ruleDefJson,
       List<Stage.ConfigIssue> issues
   ) {
     // fetch last persisted metrics for the following counters, timers, meters and histograms
-    MetricRegistryJson metricRegistryJson = buildMetricRegistryJson(pipelineConfigurationJson, ruleDefJson);
+    MetricRegistryJson metricRegistryJson = buildMetricRegistryJson(pipelineConfiguration, ruleDefJson);
 
     client = ClientBuilder.newBuilder().build();
     client.register(new CsrfProtectionFilter("CSRF"));
@@ -175,7 +175,7 @@ public class AggregatedMetricsFetcher {
   }
 
   private MetricRegistryJson buildMetricRegistryJson(
-    PipelineConfigurationJson pipelineConfigurationJson,
+    PipelineConfiguration pipelineConfiguration,
     RuleDefinitionsJson ruleDefJson
   ) {
 
@@ -205,7 +205,7 @@ public class AggregatedMetricsFetcher {
     histogramJsonMap.put(MetricAggregationConstants.PIPELINE_ERROR_RECORDS_PER_BATCH + MetricsConfigurator.HISTOGRAM_M5_SUFFIX, null);
     histogramJsonMap.put(MetricAggregationConstants.PIPELINE_ERRORS_PER_BATCH + MetricsConfigurator.HISTOGRAM_M5_SUFFIX, null);
 
-    for (StageConfigurationJson s : pipelineConfigurationJson.getStages()) {
+    for (StageConfiguration s : pipelineConfiguration.getStages()) {
       String stageInstanceName = s.getInstanceName();
       String metricsKey = MetricAggregationConstants.STAGE_PREFIX + stageInstanceName;
 

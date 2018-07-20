@@ -20,6 +20,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.config.DataRuleDefinition;
 import com.streamsets.datacollector.config.MetricsRuleDefinition;
+import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinition;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
@@ -88,7 +89,7 @@ public class MetricAggregationProcessor extends SingleLaneProcessor {
     List<ConfigIssue> issues =  super.init();
     metrics = new MetricRegistry();
 
-    PipelineConfigurationJson pipelineConfigurationJson = ConfigHelper.readPipelineConfig(
+    PipelineConfiguration pipelineConfiguration = ConfigHelper.readPipelineConfig(
         pipelineConfigJson,
         getContext(),
         issues
@@ -100,8 +101,8 @@ public class MetricAggregationProcessor extends SingleLaneProcessor {
     );
 
     if (issues.isEmpty()) {
-      metadata = pipelineConfigurationJson.getMetadata();
-      metricRegistryJson = getLatestAggregatedMetrics(pipelineConfigurationJson, ruleDefJson, issues);
+      metadata = pipelineConfiguration.getMetadata();
+      metricRegistryJson = getLatestAggregatedMetrics(pipelineConfiguration, ruleDefJson, issues);
     }
 
     if (issues.isEmpty()) {
@@ -110,7 +111,7 @@ public class MetricAggregationProcessor extends SingleLaneProcessor {
           (String)metadata.get(MetricAggregationConstants.METADATA_DPM_PIPELINE_ID),
           (String)metadata.get(MetricAggregationConstants.METADATA_DPM_PIPELINE_VERSION),
           pipelineUrl,
-          pipelineConfigurationJson,
+          pipelineConfiguration,
           metrics,
           metricRegistryJson,
           ruleDefinitionMap,
@@ -123,7 +124,7 @@ public class MetricAggregationProcessor extends SingleLaneProcessor {
           pipelineUrl,
           metrics,
           metricRegistryJson,
-          pipelineConfigurationJson,
+          pipelineConfiguration,
           ruleDefinitionMap
       );
     }
@@ -235,7 +236,7 @@ public class MetricAggregationProcessor extends SingleLaneProcessor {
   }
 
   private MetricRegistryJson getLatestAggregatedMetrics(
-    PipelineConfigurationJson pipelineConfigurationJson,
+    PipelineConfiguration pipelineConfiguration,
     RuleDefinitionsJson ruleDefJson,
     List<ConfigIssue> issues
   ) {
@@ -253,7 +254,7 @@ public class MetricAggregationProcessor extends SingleLaneProcessor {
           retryAttempts
       );
       metricRegistryJson = aggregatedMetricsFetcher.fetchLatestAggregatedMetrics(
-        pipelineConfigurationJson,
+        pipelineConfiguration,
         ruleDefJson,
         issues
       );

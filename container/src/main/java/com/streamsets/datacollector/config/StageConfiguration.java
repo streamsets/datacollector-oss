@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -134,6 +135,9 @@ public class StageConfiguration implements Serializable, UserConfigurable {
   }
 
   public List<String> getEventLanes() {
+    if (eventLanes == null) {
+      return Collections.emptyList();
+    }
     return eventLanes;
   }
 
