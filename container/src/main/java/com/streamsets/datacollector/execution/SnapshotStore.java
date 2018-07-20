@@ -27,7 +27,7 @@ public interface SnapshotStore {
   // pipeline the store may need/have
 
   // creates a snapshot info, in progress
-  public SnapshotInfo create(String user, String name, String rev, String id, String label) throws PipelineException;;
+  public SnapshotInfo create(String user, String name, String rev, String id, String label, boolean failureSnapshot) throws PipelineException;
 
   // saves the data of the snapshot and updates the corresponding snapshot info.
   public SnapshotInfo save(

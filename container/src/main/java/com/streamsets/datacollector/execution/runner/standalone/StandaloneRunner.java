@@ -499,7 +499,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     if (checkState) {
       checkState(getState().getStatus().equals(PipelineStatus.RUNNING), ContainerError.CONTAINER_0105);
     }
-    SnapshotInfo snapshotInfo = snapshotStore.create(user, getName(), getRev(), snapshotName, snapshotLabel);
+    SnapshotInfo snapshotInfo = snapshotStore.create(user, getName(), getRev(), snapshotName, snapshotLabel, false);
     prodPipeline.captureSnapshot(snapshotName, batchSize, batches);
     return snapshotInfo.getId();
   }

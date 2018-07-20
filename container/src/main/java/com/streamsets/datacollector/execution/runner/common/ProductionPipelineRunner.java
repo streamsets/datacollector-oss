@@ -1139,7 +1139,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     try {
       String snapshotName = "Failure_" + UUID.randomUUID().toString();
       String snapshotLabel = "Failure at " + LocalDateTime.now().toString();
-      snapshotStore.create("", pipelineName, revision, snapshotName, snapshotLabel);
+      snapshotStore.create("", pipelineName, revision, snapshotName, snapshotLabel, true);
       snapshotStore.save(pipelineName, revision, snapshotName, -1, ImmutableList.of(pipeBatch.createFailureSnapshot()));
     } catch (PipelineException ex) {
       LOG.error("Can't serialize failure snapshot", ex);
