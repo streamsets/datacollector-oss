@@ -76,6 +76,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -225,8 +226,8 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
 
     executor.submit(() -> generateNewBundleInternal(generators, bundleType, zipOutputStream));
 
-    String bundleName = generateBundleName();
-    String bundleKey = generateBundleDate() + "/" + bundleName;
+    String bundleName = generateBundleName(bundleType);
+    String bundleKey = generateBundleDate(bundleType) + "/" + bundleName;
 
     return new SupportBundle(
       bundleKey,
@@ -377,17 +378,21 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
     }
   }
 
-  private String generateBundleDate() {
+  private String generateBundleDate(BundleType bundleType) {
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    return dateFormat.format(new Date());
+    return bundleType.getPathPrefix() + dateFormat.format(new Date());
   }
 
-  private String generateBundleName() {
+  private String generateBundleName(BundleType bundle) {
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
-    StringBuilder builder = new StringBuilder("bundle_");
-    builder.append(getCustomerId());
-    builder.append("_");
-    builder.append(runtimeInfo.getId());
+    StringBuilder builder = new StringBuilder(bundle.getNamePrefix());
+    if(bundle.isAnonymizeMetadata()) {
+      builder.append(UUID.randomUUID().toString());
+    } else {
+      builder.append(getCustomerId());
+      builder.append("_");
+      builder.append(runtimeInfo.getId());
+    }
     builder.append("_");
     builder.append(dateFormat.format(new Date()));
     builder.append(".zip");
@@ -452,7 +457,7 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
       failedGenerators.store(zipStream, "");
       zipStream.closeEntry();
 
-      if(bundleType.isCreateMetadataProperties()) {
+      if(!bundleType.isAnonymizeMetadata()) {
         // metadata.properties
         zipStream.putNextEntry(new ZipEntry("metadata.properties"));
         getMetadata(bundleType).store(zipStream, "");
