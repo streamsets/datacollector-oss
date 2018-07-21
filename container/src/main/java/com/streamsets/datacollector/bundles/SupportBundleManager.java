@@ -206,22 +206,24 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
   /**
    * Return InputStream from which a new generated resource bundle can be retrieved.
    */
-  public SupportBundle generateNewBundle(List<String> generators) throws IOException {
+  public SupportBundle generateNewBundle(List<String> generators, BundleType bundleType) throws IOException {
     List<BundleContentGeneratorDefinition> defs = getRequestedDefinitions(generators);
-    return generateNewBundle(defs.stream().map(def -> def.createInstance()).collect(Collectors.toList()), true);
+    return generateNewBundleFromInstances(defs.stream().map(BundleContentGeneratorDefinition::createInstance).collect(Collectors.toList()), bundleType);
   }
 
   /**
    * Return InputStream from which a new generated resource bundle can be retrieved.
    */
-  public SupportBundle generateNewBundle(List<BundleContentGenerator> generators, boolean includeMetadata)
-      throws IOException {
+  public SupportBundle generateNewBundleFromInstances(
+    List<BundleContentGenerator> generators,
+    BundleType bundleType
+  ) throws IOException {
     PipedInputStream inputStream = new PipedInputStream();
     PipedOutputStream outputStream = new PipedOutputStream();
     inputStream.connect(outputStream);
     ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
 
-    executor.submit(() -> generateNewBundleInternal(generators, includeMetadata, zipOutputStream));
+    executor.submit(() -> generateNewBundleInternal(generators, bundleType, zipOutputStream));
 
     String bundleName = generateBundleName();
     String bundleKey = generateBundleDate() + "/" + bundleName;
@@ -233,19 +235,27 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
     );
   }
 
-
   /**
    * Instead of providing support bundle directly to user, upload it to StreamSets backend services.
    */
-  public void uploadNewBundle(List<String> generators) throws IOException {
-    // Generate bundle
-    uploadNewBundle(generateNewBundle(generators), getMetadata());
+  public void uploadNewBundle(List<String> generators, BundleType bundleType) throws IOException {
+    List<BundleContentGeneratorDefinition> defs = getRequestedDefinitions(generators);
+    uploadNewBundleFromInstances(
+      defs.stream()
+        .map(BundleContentGeneratorDefinition::createInstance)
+        .collect(Collectors.toList()
+        ),
+      bundleType
+    );
   }
 
   /**
    * Instead of providing support bundle directly to user, upload it to StreamSets backend services.
    */
-  public void uploadNewBundle(SupportBundle bundle, Properties metadata) throws IOException {
+  public void uploadNewBundleFromInstances(List<BundleContentGenerator> generators, BundleType bundleType) throws IOException {
+    // Generate bundle
+    SupportBundle bundle = generateNewBundleFromInstances(generators, bundleType);
+
     boolean enabled = configuration.get(Constants.UPLOAD_ENABLED, Constants.DEFAULT_UPLOAD_ENABLED);
     String accessKey = configuration.get(Constants.UPLOAD_ACCESS, Constants.DEFAULT_UPLOAD_ACCESS);
     String secretKey = configuration.get(Constants.UPLOAD_SECRET, Constants.DEFAULT_UPLOAD_SECRET);
@@ -263,7 +273,7 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
 
     // Object Metadata
     ObjectMetadata s3Metadata = new ObjectMetadata();
-    for(Map.Entry<Object, Object> entry: metadata.entrySet()) {
+    for(Map.Entry<Object, Object> entry: getMetadata(bundleType).entrySet()) {
       s3Metadata.addUserMetadata((String)entry.getKey(), (String)entry.getValue());
     }
 
@@ -328,7 +338,7 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
     }
 
     try {
-      uploadNewBundle(Collections.emptyList());
+      uploadNewBundle(Collections.emptyList(), BundleType.SUPPORT);
     } catch (IOException e) {
       LOG.error("Failed to upload error bundle", e);
     }
@@ -404,7 +414,9 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
   }
 
   private void generateNewBundleInternal(
-      List<BundleContentGenerator> generators, boolean includeMetadata, ZipOutputStream zipStream
+      List<BundleContentGenerator> generators,
+      BundleType bundleType,
+      ZipOutputStream zipStream
   ) {
     try {
       Properties runGenerators = new Properties();
@@ -430,20 +442,20 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
         }
       }
 
-      if (includeMetadata) {
-        // generators.properties
-        zipStream.putNextEntry(new ZipEntry("generators.properties"));
-        runGenerators.store(zipStream, "");
-        zipStream.closeEntry();
+      // generators.properties
+      zipStream.putNextEntry(new ZipEntry("generators.properties"));
+      runGenerators.store(zipStream, "");
+      zipStream.closeEntry();
 
-        // failed_generators.properties
-        zipStream.putNextEntry(new ZipEntry("failed_generators.properties"));
-        failedGenerators.store(zipStream, "");
-        zipStream.closeEntry();
+      // failed_generators.properties
+      zipStream.putNextEntry(new ZipEntry("failed_generators.properties"));
+      failedGenerators.store(zipStream, "");
+      zipStream.closeEntry();
 
+      if(bundleType.isCreateMetadataProperties()) {
         // metadata.properties
         zipStream.putNextEntry(new ZipEntry("metadata.properties"));
-        getMetadata().store(zipStream, "");
+        getMetadata(bundleType).store(zipStream, "");
         zipStream.closeEntry();
       }
 
@@ -459,14 +471,14 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
     }
   }
 
-  private Properties getMetadata() {
+  private Properties getMetadata(BundleType bundleType) {
     Properties metadata = new Properties();
-    metadata.put("bundle.type","sdc.support");
     metadata.put("version", "1");
     metadata.put("sdc.version", buildInfo.getVersion());
     metadata.put("sdc.id", runtimeInfo.getId());
     metadata.put("sdc.acl.enabled", String.valueOf(runtimeInfo.isAclEnabled()));
     metadata.put("customer.id", getCustomerId());
+    metadata.put("bundle.type", bundleType.getTag());
 
     return metadata;
   }

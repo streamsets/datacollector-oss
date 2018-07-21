@@ -18,6 +18,7 @@ package com.streamsets.datacollector.usagestats;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.datacollector.bundles.BundleType;
 import com.streamsets.datacollector.bundles.SupportBundle;
 import com.streamsets.datacollector.bundles.SupportBundleManager;
 import com.streamsets.datacollector.config.PipelineConfiguration;
@@ -233,13 +234,10 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
 
   protected boolean reportStats(List<StatsBean> stats) {
     try {
-      SupportBundle bundle = getBundleManager().generateNewBundle(
-          Collections.singletonList(new StatsGenerator(stats)),
-          false
+      getBundleManager().uploadNewBundleFromInstances(
+        Collections.singletonList(new StatsGenerator(stats)),
+        BundleType.STATS
       );
-      Properties metadata = new Properties();
-      metadata.setProperty("bundle.type","sdc.usageStats");
-      getBundleManager().uploadNewBundle(bundle, metadata);
       return true;
     } catch (IOException ex) {
       LOG.warn("Reporting failed. Error: {}", ex);

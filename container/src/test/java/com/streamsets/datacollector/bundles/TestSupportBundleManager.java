@@ -26,14 +26,11 @@ import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.apache.commons.io.IOUtils;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -41,9 +38,9 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -100,8 +97,8 @@ public class TestSupportBundleManager {
   }
 
   @Test
-  public void testSimpleBundleCreation() throws Exception {
-    ZipFile bundle = zipFile(ImmutableList.of(SimpleGenerator.class.getSimpleName()));
+  public void testSimpleSupportBundleCreation() throws Exception {
+    ZipFile bundle = zipFile(ImmutableList.of(SimpleGenerator.class.getSimpleName()), BundleType.SUPPORT);
     ZipEntry entry;
 
     // Check we have expected files
@@ -111,12 +108,35 @@ public class TestSupportBundleManager {
     entry = bundle.getEntry("generators.properties");
     assertNotNull(entry);
 
+    entry = bundle.getEntry("failed_generators.properties");
+    assertNotNull(entry);
+
     entry = bundle.getEntry("com.streamsets.datacollector.bundles.content.SimpleGenerator/file.txt");
     assertNotNull(entry);
   }
 
-  private ZipFile zipFile(List<String> bundles) throws Exception {
-    InputStream bundleStream = manager.generateNewBundle(bundles).getInputStream();
+  @Test
+  public void testSimpleStatsBundleCreation() throws Exception {
+    ZipFile bundle = zipFile(ImmutableList.of(SimpleGenerator.class.getSimpleName()), BundleType.STATS);
+    ZipEntry entry;
+
+    // Make sure that some files are actually missing
+    entry = bundle.getEntry("metadata.properties");
+    assertNull(entry);
+
+    // Check we have expected files
+    entry = bundle.getEntry("generators.properties");
+    assertNotNull(entry);
+
+    entry = bundle.getEntry("failed_generators.properties");
+    assertNotNull(entry);
+
+    entry = bundle.getEntry("com.streamsets.datacollector.bundles.content.SimpleGenerator/file.txt");
+    assertNotNull(entry);
+  }
+
+  private ZipFile zipFile(List<String> bundles, BundleType bundleType) throws Exception {
+    InputStream bundleStream = manager.generateNewBundle(bundles, bundleType).getInputStream();
     File outputFile = File.createTempFile("test-support-bundle", ".zip");
     outputFile.deleteOnExit();
 
@@ -134,20 +154,4 @@ public class TestSupportBundleManager {
 
     return zipFile;
   }
-
-  @Test
-  public void testBundleCreationWithoutMetadata() throws Exception {
-
-    SupportBundle bundle = manager.generateNewBundle(ImmutableList.of(new SimpleGenerator()), false);
-
-    ByteArrayOutputStream os = new ByteArrayOutputStream();
-    IOUtils.copy(bundle.getInputStream(), os);
-    os.close();
-    ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(os.toByteArray()));
-    ZipEntry entry = zis.getNextEntry();
-    Assert.assertEquals(SimpleGenerator.class.getName() + "/file.txt", entry.getName());
-    Assert.assertNull(zis.getNextEntry());
-    zis.close();
-  }
-
 }
