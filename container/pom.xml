@@ -36,6 +36,7 @@
   <properties>
     <aws.version>1.10.59</aws.version>
     <sdc.log4j.level>DEBUG</sdc.log4j.level>
+    <airlift.version>0.7</airlift.version>
   </properties>
 
   <dependencies>
@@ -79,6 +80,11 @@
           <artifactId>commons-csv</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>io.airlift</groupId>
+      <artifactId>airline</artifactId>
+      <version>${airlift.version}</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

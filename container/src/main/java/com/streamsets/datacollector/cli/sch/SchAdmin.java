@@ -177,6 +177,39 @@ public class SchAdmin {
     }
   }
 
+  public static void disableDPM(String username, String password, String organizationId, RuntimeInfo runtimeInfo, Configuration configuration) throws IOException {
+    String dpmBaseURL = configuration.get(RemoteSSOService.DPM_BASE_URL_CONFIG, "");
+    if (dpmBaseURL.endsWith("/")) {
+      dpmBaseURL = dpmBaseURL.substring(0, dpmBaseURL.length() - 1);
+    }
+
+    // 1. Login to DPM to get user auth token
+    Response response = null;
+    try {
+      Map<String, String> loginJson = new HashMap<>();
+      loginJson.put("userName", username);
+      loginJson.put("password", password);
+      response = ClientBuilder.newClient()
+          .target(dpmBaseURL + "/security/public-rest/v1/authentication/login")
+          .register(new CsrfProtectionFilter("CSRF"))
+          .request()
+          .post(Entity.json(loginJson));
+      if (response.getStatus() != Response.Status.OK.getStatusCode()) {
+        throw new RuntimeException(Utils.format("DPM Login failed, status code '{}': {}",
+            response.getStatus(),
+            response.readEntity(String.class)
+        ));
+      }
+    } finally {
+      if (response != null) {
+        response.close();
+      }
+    }
+
+    String userAuthToken = response.getHeaderString(SSOConstants.X_USER_AUTH_TOKEN);
+    disableDPM(userAuthToken, organizationId, runtimeInfo, configuration);
+  }
+
   public static void disableDPM(String userAuthToken, String organizationId, RuntimeInfo runtimeInfo, Configuration configuration) throws IOException {
     // check if DPM enabled
     if (!runtimeInfo.isDPMEnabled()) {
@@ -190,7 +223,7 @@ public class SchAdmin {
 
     String componentId = runtimeInfo.getId();
 
-    // 1. is already in parameters
+    // 1. User authentication token has been retrieved already
 
     // 2. Deactivate Data Collector System Component
     Response response = null;

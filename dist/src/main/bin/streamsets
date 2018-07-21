@@ -47,6 +47,10 @@ while test $# -gt 0; do
       shift
       exec ${BASEDIR}/libexec/_jks_cs "$@"
       ;;
+    sch)
+      shift
+      exec ${BASEDIR}/libexec/_sch "$@"
+      ;;
     stagelibs)
       shift
       exec ${BASEDIR}/libexec/_stagelibs "$@"
@@ -80,6 +84,8 @@ while test $# -gt 0; do
       echo "    cli: Data Collector CLI"
       echo ""
       echo "    jks-cs: Java Keystore Credential Store"
+      echo ""
+      echo "    sch: Enable or Disable Control Hub integration"
       echo ""
       echo "    stagelibs: Data Collector Stage library installer"
       echo ""
