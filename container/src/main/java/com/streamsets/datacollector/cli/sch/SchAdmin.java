@@ -54,18 +54,36 @@ public class SchAdmin {
   private static final String APP_TOKEN_FILE = "application-token.txt";
   private static final String APP_TOKEN_FILE_PROP_VAL = "@application-token.txt@";
 
+  public static class Context {
+    private RuntimeInfo runtimeInfo;
+    private Configuration configuration;
+    private boolean skipUpdatingDpmProperties;
+    private String tokenFilePath;
+
+    public Context(RuntimeInfo runtimeInfo, Configuration configuration) {
+      this(runtimeInfo, configuration, false, null);
+    }
+
+    public Context(RuntimeInfo runtimeInfo, Configuration configuration, boolean skipUpdatingDpmProperties, String tokenFilePath) {
+      this.runtimeInfo = runtimeInfo;
+      this.configuration = configuration;
+      this.skipUpdatingDpmProperties = skipUpdatingDpmProperties;
+      this.tokenFilePath = tokenFilePath;
+    }
+  }
+
   /**
    * Enable Control Hub on this Data Collector.
    */
-  public static void enableDPM(DPMInfoJson dpmInfo, RuntimeInfo runtimeInfo, Configuration configuration) throws IOException {
+  public static void enableDPM(DPMInfoJson dpmInfo, Context context) throws IOException {
     Utils.checkNotNull(dpmInfo, "DPMInfo");
 
     String dpmBaseURL = normalizeDpmBaseURL(dpmInfo.getBaseURL());
 
     // Since we support enabling/Disabling DPM, first check if token already exists for the given DPM URL.
     // If token exists skip first 3 steps
-    String currentDPMBaseURL = configuration.get(RemoteSSOService.DPM_BASE_URL_CONFIG, "");
-    String currentAppAuthToken = configuration.get(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "").trim();
+    String currentDPMBaseURL = context.configuration.get(RemoteSSOService.DPM_BASE_URL_CONFIG, "");
+    String currentAppAuthToken = context.configuration.get(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "").trim();
     if (!currentDPMBaseURL.equals(dpmBaseURL) ||  currentAppAuthToken.length() == 0) {
       // 1. Login to DPM to get user auth token
       String userAuthToken = retrieveUserToken(dpmBaseURL, dpmInfo.getUserID(), dpmInfo.getUserPassword());
@@ -108,21 +126,21 @@ public class SchAdmin {
       }
 
       // 3. Update App Token file
-      updateTokenFile(runtimeInfo, appAuthToken);
+      updateTokenFile(context, appAuthToken);
     }
 
     // 4. Update dpm.properties file
-    updateDpmProperties(runtimeInfo, dpmBaseURL, dpmInfo.getLabels(), true);
+    updateDpmProperties(context, dpmBaseURL, dpmInfo.getLabels(), true);
   }
 
   /**
    * Disable Control Hub on this Data Collector - with explicit login.
    */
-  public static void disableDPM(String username, String password, String organizationId, RuntimeInfo runtimeInfo, Configuration configuration) throws IOException {
-    String dpmBaseURL = normalizeDpmBaseURL(configuration.get(RemoteSSOService.DPM_BASE_URL_CONFIG, ""));
+  public static void disableDPM(String username, String password, String organizationId, Context context) throws IOException {
+    String dpmBaseURL = normalizeDpmBaseURL(context.configuration.get(RemoteSSOService.DPM_BASE_URL_CONFIG, ""));
     String userToken = retrieveUserToken(dpmBaseURL, username, password);
     try {
-      disableDPM(userToken, organizationId, runtimeInfo, configuration);
+      disableDPM(userToken, organizationId, context);
     } finally {
       logout(dpmBaseURL, userToken);
     }
@@ -131,14 +149,14 @@ public class SchAdmin {
   /**
    * Disable Control Hub on this Data Collector - using existing auth token.
    */
-  public static void disableDPM(String userAuthToken, String organizationId, RuntimeInfo runtimeInfo, Configuration configuration) throws IOException {
+  public static void disableDPM(String userAuthToken, String organizationId, Context context) throws IOException {
     // check if DPM enabled
-    if (!runtimeInfo.isDPMEnabled()) {
+    if (!context.runtimeInfo.isDPMEnabled()) {
       throw new RuntimeException("disableDPM is supported only when DPM is enabled");
     }
 
-    String dpmBaseURL = normalizeDpmBaseURL(configuration.get(RemoteSSOService.DPM_BASE_URL_CONFIG, ""));
-    String componentId = runtimeInfo.getId();
+    String dpmBaseURL = normalizeDpmBaseURL(context.configuration.get(RemoteSSOService.DPM_BASE_URL_CONFIG, ""));
+    String componentId = context.runtimeInfo.getId();
 
     // 2. Deactivate Data Collector System Component
     Response response = null;
@@ -208,10 +226,10 @@ public class SchAdmin {
     }
 
     // 5. Update App Token file
-    updateTokenFile(runtimeInfo, "");
+    updateTokenFile(context, "");
 
     // 4. Update dpm.properties file
-    updateDpmProperties(runtimeInfo, dpmBaseURL, null, false);
+    updateDpmProperties(context, dpmBaseURL, null, false);
   }
 
   /**
@@ -277,8 +295,9 @@ public class SchAdmin {
   /**
    * Update token file with the SDC access token.
    */
-  private static void updateTokenFile(RuntimeInfo runtimeInfo, String appAuthToken) throws IOException {
-    DataStore dataStore = new DataStore(new File(runtimeInfo.getConfigDir(), APP_TOKEN_FILE));
+  private static void updateTokenFile(Context context, String appAuthToken) throws IOException {
+    File tokenFile = context.tokenFilePath == null ? new File(context.runtimeInfo.getConfigDir(), APP_TOKEN_FILE) : new File(context.tokenFilePath);
+    DataStore dataStore = new DataStore(tokenFile);
     try (OutputStream os = dataStore.getOutputStream()) {
       IOUtils.write(appAuthToken, os);
       dataStore.commit(os);
@@ -290,12 +309,16 @@ public class SchAdmin {
   /**
    * Update dpm.properties file with new configuration.
    */
-  private static void updateDpmProperties(RuntimeInfo runtimeInfo, String dpmBaseURL, List<String> labels, boolean enableSch) {
+  private static void updateDpmProperties(Context context, String dpmBaseURL, List<String> labels, boolean enableSch) {
+    if(context.skipUpdatingDpmProperties) {
+      return;
+    }
+
     try {
       FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
           new FileBasedConfigurationBuilder<>(PropertiesConfiguration.class)
               .configure(new Parameters().properties()
-                  .setFileName(runtimeInfo.getConfigDir() + "/dpm.properties")
+                  .setFileName(context.runtimeInfo.getConfigDir() + "/dpm.properties")
                   .setThrowExceptionOnMissing(true)
                   .setListDelimiterHandler(new DefaultListDelimiterHandler(';'))
                   .setIncludesAllowed(false));

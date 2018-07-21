@@ -157,7 +157,7 @@ public class AdminResource {
   @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
   public Response enableDPM(DPMInfoJson dpmInfo) throws IOException {
     Utils.checkNotNull(dpmInfo, "DPMInfo");
-    SchAdmin.enableDPM(dpmInfo, runtimeInfo, config);
+    SchAdmin.enableDPM(dpmInfo, new SchAdmin.Context(runtimeInfo, config));
     return Response.ok().build();
   }
 
@@ -180,7 +180,7 @@ public class AdminResource {
     String userAuthToken = ssoPrincipal.getTokenStr();
     String organizationId = ssoPrincipal.getOrganizationId();
 
-    SchAdmin.disableDPM(userAuthToken, organizationId, runtimeInfo, config);
+    SchAdmin.disableDPM(userAuthToken, organizationId, new SchAdmin.Context(runtimeInfo, config));
 
     return Response.ok().build();
   }

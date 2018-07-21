@@ -51,6 +51,9 @@ public class RegisterCommand extends AbstractCommand {
       infoJson.setLabels(Arrays.asList(labels.split(",")));
     }
 
-    SchAdmin.enableDPM(infoJson, getRuntimeInfo(), getConfiguration());
+    SchAdmin.enableDPM(
+      infoJson,
+      new SchAdmin.Context(getRuntimeInfo(), getConfiguration(), isSkipConfigUpdate(), getTokenFilePath())
+    );
   }
 }

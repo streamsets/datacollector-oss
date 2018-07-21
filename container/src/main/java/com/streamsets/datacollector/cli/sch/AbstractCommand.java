@@ -43,6 +43,26 @@ abstract public class AbstractCommand implements Runnable {
     return userPassword;
   }
 
+  @Option(
+    name = {"--token-file-path"},
+    description = "Path to file where SCH app token should be stored",
+    required = false
+  )
+  private String tokenFilePath;
+  protected String getTokenFilePath() {
+    return tokenFilePath;
+  }
+
+  @Option(
+    name = {"--skip-config-update"},
+    description = "Do not update dpm.properties configuration file.",
+    required = false
+  )
+  private boolean skipConfigUpdate;
+  protected boolean isSkipConfigUpdate() {
+    return skipConfigUpdate;
+  }
+
   protected String getOrganization() {
     String []parts = userID.split("@");
     if(parts.length != 2) {

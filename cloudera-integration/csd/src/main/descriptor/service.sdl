@@ -30,13 +30,22 @@
   ],
   "commands" : [
     {
-      "name" : "DPMTokenRegen",
-      "label" : "(Re)generate Control Hub tokens",
-      "description" : "(Re)generate Control Hub tokens for all SDC instances.",
-      "roleCommand" : "DPMTokenRegen",
+      "name" : "RegisterSCH",
+      "label" : "Register Control Hub tokens",
+      "description" : "Register all SDC instances in Control Hub",
+      "roleCommand" : "RegisterSCH",
+      "roleName" : "DATACOLLECTOR",
+      "runMode" : "all"
+    },
+    {
+      "name" : "UnregisterSCH",
+      "label" : "Unregister Control Hub tokens",
+      "description" : "Unregister all SDC instances from Control Hub",
+      "roleCommand" : "UnregisterSCH",
       "roleName" : "DATACOLLECTOR",
       "runMode" : "all"
     }
+
   ],
   "rolesWithExternalLinks" : ["DATACOLLECTOR"],
   "roles": [
@@ -61,7 +70,6 @@
           "DPM_USER": "${dpm.user}",
           "DPM_PASSWORD": "${dpm.password}",
           "SDC_JAVA_OPTS": "${java.opts}",
-          "SDC_CURL_OPTS": "${curl.opts}",
           "DEBUG": "${debug.control.script}",
           "CUSTOMER_ID": "${customer.id}"
         }
@@ -107,26 +115,50 @@
           }
         },
         {
-          "name": "DPMTokenRegen",
-          "label" : "(Re)generate Control Hub token",
-          "description" : "(Re)generate Control Hub token for this SDC instances.",
+          "name": "RegisterSCH",
+          "label" : "Register Control Hub token",
+          "description" : "Register this SDC instances in Control Hub",
           "expectedExitCodes": [0],
           "requiredRoleState": "stopped",
           "commandRunner": {
             "program": "scripts/control.sh",
-            "args": ["dpm"],
+            "args": ["sch_enable"],
             "environmentVariables": {
+              "SDC_LOG": "${log_dir}",
               "SDC_DATA": "${data.directory}",
+              "SDC_RESOURCES": "${resources.directory}",
               "DPM_TOKEN_PATH": "${dpm.authToken.path}",
               "DPM_BASE_URL": "${dpm.base.url}",
               "DPM_USER": "${dpm.user}",
               "DPM_PASSWORD": "${dpm.password}",
               "SDC_JAVA_OPTS": "${java.opts}",
-              "SDC_CURL_OPTS": "${curl.opts}",
+              "DEBUG": "${debug.control.script}"
+            }
+          }
+        },
+        {
+          "name": "UnregisterSCH",
+          "label" : "Unregister Control Hub token",
+          "description" : "Unregister this SDC instances in Control Hub",
+          "expectedExitCodes": [0],
+          "requiredRoleState": "stopped",
+          "commandRunner": {
+            "program": "scripts/control.sh",
+            "args": ["sch_disable"],
+            "environmentVariables": {
+              "SDC_LOG": "${log_dir}",
+              "SDC_DATA": "${data.directory}",
+              "SDC_RESOURCES": "${resources.directory}",
+              "DPM_TOKEN_PATH": "${dpm.authToken.path}",
+              "DPM_BASE_URL": "${dpm.base.url}",
+              "DPM_USER": "${dpm.user}",
+              "DPM_PASSWORD": "${dpm.password}",
+              "SDC_JAVA_OPTS": "${java.opts}",
               "DEBUG": "${debug.control.script}"
             }
           }
         }
+
       ],
       "externalLink": {
         "name": "datacollector_web_ui",
@@ -1040,14 +1072,6 @@
           "default": "",
           "label": "Java options",
           "description": "Additional configuration for variable SDC_JAVA_OPTS that will be passed down to the JVM running data collector.",
-          "required": "false"
-        },
-        {
-          "name": "curl.opts",
-          "type": "string",
-          "default": "--tlsv1.2",
-          "label": "Curl options",
-          "description": "Additional arguments that should be passed to curl when registering data collectors with Control Hub.",
           "required": "false"
         },
         {

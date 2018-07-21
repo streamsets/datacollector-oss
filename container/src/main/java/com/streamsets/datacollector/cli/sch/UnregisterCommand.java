@@ -21,6 +21,11 @@ import io.airlift.airline.Command;
 public class UnregisterCommand extends AbstractCommand {
   @Override
   protected void executeAction() throws Exception {
-    SchAdmin.disableDPM(getUserID(), getUserPassword(), getOrganization(), getRuntimeInfo(), getConfiguration());
+    SchAdmin.disableDPM(
+      getUserID(),
+      getUserPassword(),
+      getOrganization(),
+      new SchAdmin.Context(getRuntimeInfo(), getConfiguration(), isSkipConfigUpdate(), getTokenFilePath())
+    );
   }
 }
