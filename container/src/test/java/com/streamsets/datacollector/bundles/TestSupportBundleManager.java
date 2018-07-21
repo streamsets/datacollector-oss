@@ -34,11 +34,13 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -47,14 +49,16 @@ import static org.mockito.Mockito.when;
 
 public class TestSupportBundleManager {
   private static final Logger LOG = LoggerFactory.getLogger(TestSupportBundleManager.class);
+  private final static String SDC_ID = "super-secret-id";
 
   private static SupportBundleManager manager;
+
 
   @BeforeClass
   public static void createManager() {
     Configuration configuration = mock(Configuration.class);
     RuntimeInfo runtimeInfo = mock(RuntimeInfo.class);
-    when(runtimeInfo.getId()).thenReturn("super-secret-id");
+    when(runtimeInfo.getId()).thenReturn(SDC_ID);
     when(runtimeInfo.isAclEnabled()).thenReturn(false);
     BuildInfo buildInfo = mock(BuildInfo.class);
     when(buildInfo.getVersion()).thenReturn("666");
@@ -94,6 +98,40 @@ public class TestSupportBundleManager {
     }
 
     assertTrue(found);
+  }
+
+  @Test
+  public void testSupportBundlePaths() throws Exception {
+    SupportBundle bundle = manager.generateNewBundle(Collections.singletonList(SimpleGenerator.class.getSimpleName()), BundleType.SUPPORT);
+
+    // Prefixes
+    assertTrue(bundle.getBundleName().startsWith("bundle_"));
+    assertFalse(bundle.getBundleKey().startsWith("stats_"));
+
+    // Ids are present in the names
+    assertTrue(bundle.getBundleName().contains(SDC_ID));
+    assertTrue(bundle.getBundleKey().contains(SDC_ID));
+
+    // Bundle ends with .zip
+    assertTrue(bundle.getBundleKey().endsWith(".zip"));
+    assertTrue(bundle.getBundleName().endsWith(".zip"));
+  }
+
+  @Test
+  public void testStatsBundlePaths() throws Exception {
+    SupportBundle bundle = manager.generateNewBundle(Collections.singletonList(SimpleGenerator.class.getSimpleName()), BundleType.STATS);
+
+    // Prefixes
+    assertTrue(bundle.getBundleName().startsWith("stats_"));
+    assertTrue(bundle.getBundleKey().startsWith("stats/"));
+
+    // Ids are not present in the names
+    assertFalse(bundle.getBundleName().contains(SDC_ID));
+    assertFalse(bundle.getBundleKey().contains(SDC_ID));
+
+    // Bundle ends with .zip
+    assertTrue(bundle.getBundleKey().endsWith(".zip"));
+    assertTrue(bundle.getBundleName().endsWith(".zip"));
   }
 
   @Test

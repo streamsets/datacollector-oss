@@ -17,24 +17,41 @@ package com.streamsets.datacollector.bundles;
 
 public enum BundleType {
   // Bundle primarily meant for support with relevant information to troubleshoot user issue
-  SUPPORT("sdc.supportBundle", true),
+  SUPPORT("sdc.supportBundle", false, "", "bundle_"),
 
   // Anonymously submitted statistic bundle
-  STATS("sdc.usageStats", false),
+  STATS("sdc.usageStats", true, "stats/", "stats_"),
   ;
 
   private final String tag;
-  private final boolean createMetadataProperties;
-  BundleType(String tag, boolean createMetadataProperties) {
+  private final boolean anonymizeMetadata;
+  private final String pathPrefix;
+  private final String namePrefix;
+  BundleType(
+    String tag,
+    boolean anonymizeMetadata,
+    String pathPrefix,
+    String namePrefix
+  ) {
     this.tag = tag;
-    this.createMetadataProperties = createMetadataProperties;
+    this.anonymizeMetadata = anonymizeMetadata;
+    this.pathPrefix = pathPrefix;
+    this.namePrefix = namePrefix;
   }
 
   public String getTag() {
     return tag;
   }
 
-  public boolean isCreateMetadataProperties() {
-    return createMetadataProperties;
+  public boolean isAnonymizeMetadata() {
+    return anonymizeMetadata;
+  }
+
+  public String getPathPrefix() {
+    return pathPrefix;
+  }
+
+  public String getNamePrefix() {
+    return namePrefix;
   }
 }
