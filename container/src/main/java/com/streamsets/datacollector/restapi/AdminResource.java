@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.restapi;
 
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.bundles.BundleType;
 import com.streamsets.datacollector.bundles.SupportBundleManager;
 import com.streamsets.datacollector.bundles.SupportBundle;
 import com.streamsets.datacollector.event.handler.remote.RemoteEventHandlerTask;
@@ -622,7 +623,7 @@ public class AdminResource {
   public Response createSupportBundlesContentGenerators(
     @QueryParam("generators") @DefaultValue("") String generators
   ) throws IOException {
-    SupportBundle bundle = supportBundleManager.generateNewBundle(getGeneratorList(generators));
+    SupportBundle bundle = supportBundleManager.generateNewBundle(getGeneratorList(generators), BundleType.SUPPORT);
 
     return Response
       .ok()
@@ -648,7 +649,7 @@ public class AdminResource {
     @QueryParam("generators") @DefaultValue("") String generators
   ) throws IOException {
     // The call with throw IOException on any error that will be propagated to the client
-    supportBundleManager.uploadNewBundle(getGeneratorList(generators));
+    supportBundleManager.uploadNewBundle(getGeneratorList(generators), BundleType.SUPPORT);
 
     return Response
       .ok()

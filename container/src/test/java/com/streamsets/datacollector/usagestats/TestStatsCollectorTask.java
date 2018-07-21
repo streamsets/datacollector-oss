@@ -17,6 +17,7 @@ package com.streamsets.datacollector.usagestats;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.datacollector.bundles.BundleType;
 import com.streamsets.datacollector.bundles.SupportBundle;
 import com.streamsets.datacollector.bundles.SupportBundleManager;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
@@ -497,9 +498,9 @@ public class TestStatsCollectorTask {
     //verifying we rolled the read stats
     Assert.assertEquals("v1", task.getStatsInfo().getActiveStats().getDataCollectorVersion());
 
-    Mockito.verify(supportBundleManager, Mockito.times(1)).uploadNewBundle(
-        Mockito.any(SupportBundle.class),
-        Mockito.any(Properties.class)
+    Mockito.verify(supportBundleManager, Mockito.times(1)).uploadNewBundleFromInstances(
+        Mockito.any(List.class),
+        Mockito.eq(BundleType.STATS)
     );
     task.stop();
   }
@@ -669,17 +670,13 @@ public class TestStatsCollectorTask {
     List<StatsBean> stats = new ArrayList<>();
 
     SupportBundle bundle = Mockito.mock(SupportBundle.class);
-    Mockito.when(supportBundleManager.generateNewBundle(Mockito.anyList(), Mockito.eq(false))).thenReturn(bundle);
+    Mockito.when(supportBundleManager.generateNewBundleFromInstances(Mockito.anyList(), Mockito.eq(BundleType.STATS))).thenReturn(bundle);
 
     Assert.assertTrue(task.reportStats(stats));
     ArgumentCaptor<List> generatorCaptor = ArgumentCaptor.forClass(List.class);
-    Mockito.verify(supportBundleManager, Mockito.times(1)).generateNewBundle(generatorCaptor.capture(), Mockito.eq(false));
+    Mockito.verify(supportBundleManager, Mockito.times(1)).uploadNewBundleFromInstances(generatorCaptor.capture(), Mockito.eq(BundleType.STATS));
     Assert.assertEquals(1, generatorCaptor.getValue().size());
     Assert.assertEquals(StatsGenerator.class, generatorCaptor.getValue().get(0).getClass());
-    ArgumentCaptor<Properties> metadataCaptor = ArgumentCaptor.forClass(Properties.class);
-    Mockito.verify(supportBundleManager, Mockito.times(1)).uploadNewBundle(Mockito.eq(bundle), metadataCaptor.capture());
-    Assert.assertEquals("sdc.usageStats", metadataCaptor.getValue().getProperty("bundle.type"));
-
   }
 
 }
