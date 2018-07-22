@@ -27,6 +27,7 @@ import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PgVersionValues;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PostgresCDCConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PostgresCDCSource;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PostgresCDCWalReceiver;
+import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PostgresChangeTypeValues;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PostgresWalRecord;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PostgresWalRunner;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.StartValues;
@@ -74,6 +75,13 @@ public class TestJdbcPostgresCDCWalRunner {
     configBean.queryTimeout = 20;
     configBean.replicationType = "database";
     configBean.pollInterval = 1000;
+
+    configBean.postgresChangeTypes = new ArrayList<PostgresChangeTypeValues>() {{
+      add(PostgresChangeTypeValues.DELETE);
+      add(PostgresChangeTypeValues.UPDATE);
+      add(PostgresChangeTypeValues.INSERT);
+    }};
+    
   }
 
   private void setupBaseCDCRecordField() {
@@ -110,6 +118,7 @@ public class TestJdbcPostgresCDCWalRunner {
     configBean.baseConfigBean.schemaTableConfigs = new ArrayList<SchemaTableConfigBean>() {{
       add(filterRule1);
     }};
+
   }
 
   @Test
@@ -233,5 +242,105 @@ public class TestJdbcPostgresCDCWalRunner {
     Assert.assertFalse(pgRunner.passesFilter(walRecordMock));
 
   }
+
+  @Test
+  public void testPassesOperationFilter() {
+
+    /* Test when filter is DELETE, INSERT, UPDATE: (default)
+    Change containing DELETE, INSERT AND UPDATE should PASS filter */
+
+    configBean.postgresChangeTypes = new ArrayList<PostgresChangeTypeValues>() {{
+      add(PostgresChangeTypeValues.DELETE);
+      add(PostgresChangeTypeValues.UPDATE);
+      add(PostgresChangeTypeValues.INSERT);
+    }};
+
+
+    /* Setup change in WAL record that will be tested against table filter */
+    final Map<String, Field> changeUpdate = new HashMap<String, Field> () {{
+      put("kind", Field.create("update"));
+      put("schema", Field.create("public"));
+      put("table", Field.create("table1"));
+    }};
+
+    final Map<String, Field> changeInsert = new HashMap<String, Field> () {{
+      put("kind", Field.create("insert"));
+      put("schema", Field.create("public"));
+      put("table", Field.create("table_no_match"));
+    }};
+
+    final Map<String, Field> changeDelete = new HashMap<String, Field> () {{
+      put("kind", Field.create("delete"));
+      put("schema", Field.create("public"));
+      put("table", Field.create("table_no_match"));
+    }};
+
+    List<Field> changes = new ArrayList<Field>() {{
+      add(Field.create(changeUpdate));
+      add(Field.create(changeInsert));
+      add(Field.create(changeDelete));
+    }};
+
+    TestPgMockCDCRecord testPgMockCDCRecord = new TestPgMockCDCRecord("511", "0/0",
+        "2018-07-09 10:16:23.815-07", changes);
+
+    PostgresWalRunner pgRunner = new PostgresWalRunner(pgSourceMock);
+    //Setting startValue to latest means filter only checks tables, not dates
+    configBean.startValue = StartValues.LATEST;
+    when(pgSourceMock.getWalReceiver()).thenReturn(walReceiverMock);
+    when(pgSourceMock.getConfigBean()).thenReturn(configBean);
+
+    when(walReceiverMock.getSchemasAndTables()).thenReturn(schemasAndTables);
+    when(walRecordMock.getChanges()).thenReturn(testPgMockCDCRecord.getCDCRecordChanges());
+
+    Assert.assertTrue(pgRunner.passesFilter(walRecordMock));
+
+
+    /* Test when filter is DELETE, INSERT:
+    Change containing DELETE, INSERT AND UPDATE should FAIL filter */
+
+    configBean.postgresChangeTypes = new ArrayList<PostgresChangeTypeValues>() {{
+      add(PostgresChangeTypeValues.DELETE);
+      add(PostgresChangeTypeValues.INSERT);
+    }};
+
+    testPgMockCDCRecord = new TestPgMockCDCRecord("511", "0/0",
+        "2018-07-09 10:16:23.815-07", changes);
+
+    pgRunner = new PostgresWalRunner(pgSourceMock);
+    //Setting startValue to latest means filter only checks tables, not dates
+    configBean.startValue = StartValues.LATEST;
+    when(pgSourceMock.getWalReceiver()).thenReturn(walReceiverMock);
+    when(pgSourceMock.getConfigBean()).thenReturn(configBean);
+
+    when(walReceiverMock.getSchemasAndTables()).thenReturn(schemasAndTables);
+    when(walRecordMock.getChanges()).thenReturn(testPgMockCDCRecord.getCDCRecordChanges());
+
+    Assert.assertFalse(pgRunner.passesFilter(walRecordMock));
+
+
+    /* Test when filter is DELETE, INSERT:
+    Change containing DELETE, INSERT should PASS filter */
+
+    changes = new ArrayList<Field>() {{
+      add(Field.create(changeInsert));
+      add(Field.create(changeDelete));
+    }};
+
+    testPgMockCDCRecord = new TestPgMockCDCRecord("511", "0/0",
+        "2018-07-09 10:16:23.815-07", changes);
+
+    pgRunner = new PostgresWalRunner(pgSourceMock);
+    //Setting startValue to latest means filter only checks tables, not dates
+    configBean.startValue = StartValues.LATEST;
+    when(pgSourceMock.getWalReceiver()).thenReturn(walReceiverMock);
+    when(pgSourceMock.getConfigBean()).thenReturn(configBean);
+
+    when(walReceiverMock.getSchemasAndTables()).thenReturn(schemasAndTables);
+    when(walRecordMock.getChanges()).thenReturn(testPgMockCDCRecord.getCDCRecordChanges());
+
+    Assert.assertTrue(pgRunner.passesFilter(walRecordMock));
+  }
+
 
 }

@@ -41,7 +41,11 @@ import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.Groups;
 @HideConfigs({
   "hikariConf.autoCommit",
     "postgresCDCConfigBean.baseConfigBean.caseSensitive",
-    "postgresCDCConfigBean.parseQuery"
+    "postgresCDCConfigBean.baseConfigBean.changeTypes",
+    "postgresCDCConfigBean.parseQuery",
+    "postgresCDCConfigBean.decoderValue",
+    "postgresCDCConfigBean.minVersion",
+    "postgresCDCConfigBean.replicationType"
 })
 public class PostgresCDCDSource extends DSource {
 

@@ -23,6 +23,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.postgresql.replication.LogSequenceNumber;
@@ -36,11 +37,13 @@ public class PostgresWalRunner implements Runnable {
   private PostgresCDCSource postgresCDCSource;
   private boolean hasTableFilter;
   private boolean hasStartFilter;
+  private boolean hasOperationFilter;
 
   public PostgresWalRunner(PostgresCDCSource pgSource) {
     this.postgresCDCSource = pgSource;
     this.hasTableFilter = true;
     this.hasStartFilter = true;
+    this.hasOperationFilter = true;
   }
 
   @Override
@@ -130,6 +133,41 @@ public class PostgresWalRunner implements Runnable {
     return true;
   }
 
+  private boolean passesOperationFilter(PostgresWalRecord postgresWalRecord) {
+    List<PostgresChangeTypeValues> configuredChangeTypes = postgresCDCSource
+        .getConfigBean()
+        .postgresChangeTypes;
+
+    List<String> changeTypes = new ArrayList<String>();
+    for (PostgresChangeTypeValues configuredChangeType : configuredChangeTypes) {
+      changeTypes.add(configuredChangeType.getLabel());
+    }
+
+    // This means that all legal operations are requested.
+    if (changeTypes.size() == PostgresChangeTypeValues.values().length) {
+      hasOperationFilter = false;
+      return true;
+    }
+
+    List<Field> changes = postgresWalRecord.getChanges();
+
+
+    /*
+      Please note carefully. Due to the nature of Postgres CDC, many types are contained
+      in the one record. INSERT, UPDATE, DELETE all can be present in the one CDC record.
+      If the user configures a filter such that only INSERT, UPDATE are wanted (and by
+      inference DELETE is NOT then if ANY change part contains DELETE, then we filter out
+      the whole CDC. To just rip out the DELETE part, it is recommended to use FieldPivot
+     */
+    for (Field change: changes) {
+      String changeType = PostgresWalRecord.getTypeFromChangeMap(change.getValueAsMap());
+      if (! changeTypes.contains(changeType)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   private boolean passesTableFilter(PostgresWalRecord postgresWalRecord) {
     //The list if valid schemas and tables
     List<SchemaAndTable> schemasAndTables =
@@ -158,7 +196,9 @@ public class PostgresWalRunner implements Runnable {
 
   public boolean passesFilter(PostgresWalRecord postgresWalRecord) {
 
-    if (( ! hasTableFilter) && ( ! hasStartFilter)) {
+    if (( ! hasTableFilter) &&
+        ( ! hasStartFilter) &&
+        ( ! hasOperationFilter)) {
       return true;
     }
 
@@ -167,6 +207,10 @@ public class PostgresWalRunner implements Runnable {
     }
 
     if (hasStartFilter && ( ! passesStartValueFilter(postgresWalRecord))) {
+      return false;
+    }
+
+    if (hasOperationFilter && ( ! passesOperationFilter(postgresWalRecord))) {
       return false;
     }
 
