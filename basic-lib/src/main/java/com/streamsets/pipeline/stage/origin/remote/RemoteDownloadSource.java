@@ -258,8 +258,21 @@ public class RemoteDownloadSource extends BaseSource {
       }
 
       if (issues.isEmpty()) {
-        // To ensure we can connect, else we fail validation.
-        remoteDir = fsManager.resolveFile(remoteURI.toString(), options);
+        try {
+          // To ensure we can connect, else we fail validation.
+          remoteDir = fsManager.resolveFile(remoteURI.toString(), options);
+          // Ensure we can assess the remote directory...
+          remoteDir.refresh();
+          // throw away the results.
+          remoteDir.getChildren();
+        } catch (FileSystemException ex) {
+          issues.add(getContext().createConfigIssue(
+              Groups.REMOTE.getLabel(),
+              CONF_PREFIX + "remoteAddress",
+              Errors.REMOTE_18,
+              ex.getMessage()
+          ));
+        }
       }
 
     } catch (FileSystemException | URISyntaxException ex) {
@@ -534,7 +547,12 @@ public class RemoteDownloadSource extends BaseSource {
   }
 
   private void handleFatalException(Exception ex, RemoteFile next) throws StageException {
-    LOG.error("Error while attempting to parse file: " + next.filename, ex);
+    if (ex instanceof FileSystemException) {
+      LOG.info("FileSystemException '{}'", ex.getMessage());
+    }
+    if (next != null) {
+      LOG.error("Error while attempting to parse file: " + next.filename, ex);
+    }
     if (ex instanceof FileNotFoundException) {
       LOG.warn("File: {} was found in listing, but is not downloadable", next != null ? next.filename : "(null)", ex);
     }
@@ -601,12 +619,12 @@ public class RemoteDownloadSource extends BaseSource {
   private void queueFiles() throws FileSystemException {
     FileSelector selector = new FileSelector() {
       @Override
-      public boolean includeFile(FileSelectInfo fileInfo) throws Exception {
+      public boolean includeFile(FileSelectInfo fileInfo) {
         return true;
       }
 
       @Override
-      public boolean traverseDescendents(FileSelectInfo fileInfo) throws Exception {
+      public boolean traverseDescendents(FileSelectInfo fileInfo) {
         return conf.processSubDirectories;
       }
     };

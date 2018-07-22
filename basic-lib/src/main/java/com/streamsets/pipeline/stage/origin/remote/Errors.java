@@ -41,6 +41,7 @@ public enum Errors implements ErrorCode {
   REMOTE_15("URI: '{}' is invalid. Must begin with 'ftp://' or 'sftp://'"),
   REMOTE_16("Initial file '{}' is invalid: {}"),
   REMOTE_17("Can't resolve credential: {}"),
+  REMOTE_18("Error accessing remote directory: {}"),
   ;
 
   private final String msg;
