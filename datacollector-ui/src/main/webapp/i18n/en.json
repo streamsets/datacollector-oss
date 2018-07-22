@@ -781,7 +781,7 @@
   },
   "about": {
     "builtBy": "built by",
-    "copyrightText": "Copyright &copy; 2016 StreamSets, Inc. All rights reserved.",
+    "copyrightText": "Copyright &copy; 2018 StreamSets, Inc. All rights reserved.",
     "on": "on",
     "productName": "StreamSets Data Collector",
     "title": "About",
