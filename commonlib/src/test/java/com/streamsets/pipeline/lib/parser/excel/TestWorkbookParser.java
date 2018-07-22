@@ -186,6 +186,22 @@ public class TestWorkbookParser {
   }
 
   @Test
+  public void testCellFormats() throws IOException, InvalidFormatException, DataParserException, ParseException {
+    Workbook workbook = createWorkbook("/excel/FormatTest.xlsx");
+
+    WorkbookParser parser = new WorkbookParser(settingsWithHeader, getContext(), workbook, "DataTypes::0");
+    int numRows=0;
+    while (parser.getOffset() != "-1") {
+      Record rec = parser.parse();
+      ++numRows;
+    }
+    --numRows; // remove last increment because that round would have generated EOF
+    assertEquals("Total record count mismatch", 2, numRows);
+
+  }
+
+
+  @Test
   public void testARealSpreadsheetWithMultipleSheets() throws IOException, InvalidFormatException, DataParserException, ParseException {
     Workbook workbook = createWorkbook("/excel/TestRealSheet.xlsx");
 
@@ -345,5 +361,27 @@ public class TestWorkbookParser {
     exception.expect(RecoverableDataParserException.class);
     exception.expectMessage("EXCEL_PARSER_05 - Unsupported cell type ERROR");
     Record recordFirstRow = parser.parse();
+  }
+
+  //@Test
+  public void debugWorksheet() {
+    // Stub out to use as a test interactively for debugging changes quickly.
+    try {
+      runWorksheetThroughForDebugging("/excel/TestRealSheet2.xlsx", settingsNoHeader, "Table::0");
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void runWorksheetThroughForDebugging(String filename, WorkbookParserSettings settings, String offset) throws IOException, InvalidFormatException, DataParserException {
+    // Takes any workbook and runs it through parsing all rows to assist in debugging exceptions.
+    Workbook workbook = createWorkbook(filename);
+    WorkbookParser parser = new WorkbookParser(settings, getContext(), workbook, offset);
+    int counter = 0;
+    while (parser.getOffset() != "-1") {
+      System.out.println(++counter);
+      Record rec = parser.parse();
+    }
   }
 }

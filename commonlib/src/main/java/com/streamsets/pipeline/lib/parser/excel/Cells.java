@@ -30,24 +30,33 @@ class Cells {
 
   static Field parseCell(Cell cell, FormulaEvaluator evaluator) throws ExcelUnsupportedCellTypeException {
     CellType cellType = cell.getCellTypeEnum();
-//    set the cellType of a formula cell to its cached formula result type in order to process it as its result type
-    if (cell.getCellTypeEnum().equals(CellType.FORMULA)) {
+    // set the cellType of a formula cell to its cached formula result type in order to process it as its result type
+    boolean isFormula = cell.getCellTypeEnum().equals(CellType.FORMULA);
+    if (isFormula) {
       cellType = cell.getCachedFormulaResultTypeEnum();
     }
+
     switch (cellType) {
       case STRING:
         return Field.create(cell.getStringCellValue());
       case NUMERIC:
+        Double rawValue = cell.getNumericCellValue();  // resolves formulas automatically and gets value without cell formatting
+        String displayValue = isFormula ? evaluator.evaluate(cell).formatAsString() : dataFormatter.formatCellValue(cell);
+        boolean numericallyEquivalent = false;
+        try {
+          numericallyEquivalent = Double.parseDouble(displayValue) == rawValue;
+        } catch (NumberFormatException e) { }
+
         if (DateUtil.isCellDateFormatted(cell)) {
           // It's a date, not a number
           java.util.Date dt = cell.getDateCellValue();
-          return Field.createDate(dt);
+          // if raw number is < 1 then it's a time component only, otherwise date.
+          return rawValue < 1 ? Field.createTime(dt) : Field.createDate(dt);
         }
-        if (cell.getCellTypeEnum().equals(CellType.FORMULA)) {
-          return Field.create(new BigDecimal(evaluator.evaluate(cell).formatAsString()));
-        } else {
-          return Field.create(new BigDecimal(dataFormatter.formatCellValue(cell)));
-        }
+
+        // some machinations to handle integer values going in without decimal vs. with .0 for rawValue
+        return Field.create(numericallyEquivalent ? new BigDecimal(displayValue) : BigDecimal.valueOf(rawValue));
+
       case BOOLEAN:
         return Field.create(cell.getBooleanCellValue());
       case BLANK:

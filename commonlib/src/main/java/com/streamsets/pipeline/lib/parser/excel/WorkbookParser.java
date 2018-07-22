@@ -23,11 +23,7 @@ import com.streamsets.pipeline.lib.parser.AbstractDataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.RecoverableDataParserException;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.FormulaEvaluator;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -144,14 +140,27 @@ public class WorkbookParser extends AbstractDataParser {
 
     Row currentRow = rowIterator.next();
 
+    // skip over rows that have cells but all cells are of BLANK celltype.
+    while (rowIsBlank(currentRow)) {
+      if (rowIterator.hasNext()) {
+        currentRow = rowIterator.next();
+      }
+      else {
+        // end of file and this last row is blank.  Bail out.
+        eof = true;
+        return null;
+      }
+    }
+
+    // see if a new worksheet has been entered.
     if (this.currentSheet == null || ! this.currentSheet.equals(currentRow.getSheet().getSheetName())) {
-      // in a new sheet with this row.  Gather header values if necessary.  (Allows each sheet to have different columns)
       this.currentSheet = currentRow.getSheet().getSheetName();
-      // Generate header for this sheet
+      // if header is expected, then jump over this row
       if (settings.getHeader() == ExcelHeader.WITH_HEADER || settings.getHeader() == ExcelHeader.IGNORE_HEADER) {
         currentRow = rowIterator.next();  // move to the next row to parse as data
       }
     }
+
 
     offset = Offsets.offsetOf(currentRow);
     Record record = context.createRecord(offset);
@@ -167,6 +176,17 @@ public class WorkbookParser extends AbstractDataParser {
   @Override
   public void close() throws IOException {
     workbook.close();
+  }
+
+  private boolean rowIsBlank(Row row) {
+    // returns true if a row has cells but all cells are 'BLANK' type.
+    boolean isBlank = true;
+    for (int columnNum = row.getFirstCellNum(); columnNum < row.getLastCellNum(); columnNum++) {
+      Cell c = row.getCell(columnNum);
+      isBlank = isBlank && (c == null || c.getCellTypeEnum() == CellType.BLANK);
+      if (! isBlank) break;
+    }
+    return isBlank;
   }
 
   private void updateRecordWithCellValues(Row row, Record record) throws DataParserException {
