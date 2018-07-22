@@ -185,6 +185,15 @@ public class EventCreator {
       return this;
     }
 
+    public EventBuilder withDoubleList(String key, List<Double> value) {
+      List<Field> wrappedList = new ArrayList<>();
+      for (Object object : value) {
+        wrappedList.add(Field.create(Field.Type.DOUBLE, object));
+      }
+      rootMap.put(key, Field.create(Field.Type.LIST, wrappedList));
+      return this;
+    }
+
     public EventBuilder withStringMap(String key, Map<String, Object> value) {
       LinkedHashMap<String, Field> wrappedMap = new LinkedHashMap<>();
       for(Map.Entry<String, Object> entry : value.entrySet()) {

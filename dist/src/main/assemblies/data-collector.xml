@@ -534,6 +534,10 @@
     <!-- cyberark-credentialstore-lib -->
     <fileSet>
       <directory>${basedir}/../cyberark-credentialstore-lib/target/streamsets-libs/</directory>
+    </fileSet>
+
+    <fileSet>
+      <directory>${basedir}/../${tensorflow-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
