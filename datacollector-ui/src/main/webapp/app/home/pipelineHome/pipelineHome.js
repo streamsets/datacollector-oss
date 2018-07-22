@@ -1153,6 +1153,8 @@ angular
         $scope.isDPMPipelineDirty = true;
       }
 
+      $scope.isMicroservicePipeline = pipelineConfig.metadata && pipelineConfig.metadata['MICROSERVICE'];
+
       // Force Validity Check - showErrors directive
       $scope.$broadcast('show-errors-check-validity');
 
@@ -1177,25 +1179,29 @@ angular
       $scope.sources = pipelineService.getFilteredStageDefinitions(
         $scope.stageLibraries,
         pipelineConstant.SOURCE_STAGE_TYPE,
-        $scope.executionMode
+        $scope.executionMode,
+        $scope.isMicroservicePipeline
       );
 
       $scope.processors = pipelineService.getFilteredStageDefinitions(
         $scope.stageLibraries,
         pipelineConstant.PROCESSOR_STAGE_TYPE,
-        $scope.executionMode
+        $scope.executionMode,
+        $scope.isMicroservicePipeline
       );
 
       $scope.executors = pipelineService.getFilteredStageDefinitions(
         $scope.stageLibraries,
         pipelineConstant.EXECUTOR_STAGE_TYPE,
-        $scope.executionMode
+        $scope.executionMode,
+        $scope.isMicroservicePipeline
       );
 
       $scope.targets = pipelineService.getFilteredStageDefinitions(
         $scope.stageLibraries,
         pipelineConstant.TARGET_STAGE_TYPE,
-        $scope.executionMode
+        $scope.executionMode,
+        $scope.isMicroservicePipeline
       );
 
       // Initialize the pipeline config
@@ -2179,6 +2185,7 @@ angular
         $scope.isRemotePipeline = true;
         $scope.isPipelineReadOnly = true;
       }
+
     });
 
     pipelineStatusWatchListener = $rootScope.$watch('common.pipelineStatusMap["' + routeParamPipelineName + '"]',

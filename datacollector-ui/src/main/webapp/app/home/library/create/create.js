@@ -30,45 +30,27 @@ angular
       newConfig : {
         name: '',
         description: '',
-        executionMode: 'STANDALONE'
+        pipelineType: 'DATA_COLLECTOR'
       },
 
       save : function () {
         if($scope.newConfig.name) {
-          api.pipelineAgent.createNewPipelineConfig($scope.newConfig.name, $scope.newConfig.description).
-            then(
-              function(res) {
-                if ($scope.newConfig.executionMode === 'STANDALONE') {
-                  $modalInstance.close(res.data);
-                } else {
-                  var newPipelineObject = res.data;
-
-                  // Update execution mode
-                  var executionModeConfig = _.find(newPipelineObject.configuration, function(c) {
-                    return c.name === 'executionMode';
-                  });
-
-                  executionModeConfig.value = $scope.newConfig.executionMode;
-                  api.pipelineAgent.savePipelineConfig(newPipelineObject.pipelineId, newPipelineObject)
-                    .then(
-                      function(res) {
-                        $modalInstance.close(res.data);
-                      },
-                      function(res) {
-                        $scope.common.errors = [res.data];
-                      }
-                    );
-                }
-              },
-              function(res) {
-                $scope.common.errors = [res.data];
-              }
-            );
+          api.pipelineAgent.createNewPipelineConfig(
+            $scope.newConfig.name,
+            $scope.newConfig.description,
+            $scope.newConfig.pipelineType
+          ).then(
+            function(res) {
+              $modalInstance.close(res.data);
+            },
+            function(res) {
+              $scope.common.errors = [res.data];
+            }
+          );
         } else {
           $translate('home.library.nameRequiredValidation').then(function(translation) {
             $scope.common.errors = [translation];
           });
-
         }
       },
       cancel : function () {

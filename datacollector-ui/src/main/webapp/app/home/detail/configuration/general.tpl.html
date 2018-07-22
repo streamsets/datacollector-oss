@@ -24,10 +24,15 @@
   <div class="form-group" ng-if="selectedType === pipelineConstant.PIPELINE">
     <label class="col-lg-3 col-md-4 control-label" translate="global.form.description">Description</label>
     <div class="controls col-lg-7 col-md-8">
-      <textarea class="form-control" name="description"
-                rows="1"
-                ng-readonly="isPipelineReadOnly || isPipelineRunning"
-                ng-model="pipelineConfig.description"></textarea>
+      <div ui-codemirror
+           ng-class="{'codemirror-read-only': isPipelineReadOnly || isPipelineRunning}"
+           ng-model="pipelineConfig.description"
+           ui-refresh="refreshCodemirror"
+           ui-codemirror-opts="{
+                readOnly: (isPipelineReadOnly || isPipelineRunning)
+              }"
+           data-type="'STRING'">
+      </div>
     </div>
   </div>
 
@@ -62,10 +67,15 @@
   <div class="form-group" ng-if="selectedType === pipelineConstant.STAGE_INSTANCE">
     <label class="col-lg-3 col-md-4 control-label" translate="global.form.description">Description</label>
     <div class="controls col-lg-7 col-md-8">
-      <textarea class="form-control" name="description"
-                rows="1"
-                ng-readonly="isPipelineReadOnly || isPipelineRunning"
-                ng-model="detailPaneConfig.uiInfo.description"></textarea>
+      <div ui-codemirror
+           ng-class="{'codemirror-read-only': isPipelineReadOnly || isPipelineRunning}"
+           ng-model="detailPaneConfig.uiInfo.description"
+           ui-refresh="refreshCodemirror"
+           ui-codemirror-opts="{
+                readOnly: (isPipelineReadOnly || isPipelineRunning)
+              }"
+           data-type="'STRING'">
+      </div>
     </div>
   </div>
 

@@ -658,6 +658,7 @@
       "system:publishedPipelines": "Published Pipelines",
       "system:dpmControlledPipelines": "Control Hub Controlled Pipelines",
       "system:localPipelines": "Local Pipelines",
+      "system:microServicePipelines": "Microservice Pipelines",
       "system:runningPipelines": "Running Pipelines",
       "system:nonRunningPipelines": "Non Running Pipelines",
       "system:invalidPipelines": "Invalid Pipelines",
