@@ -32,14 +32,17 @@
     </div>
 
     <div class="form-group">
-      <label class="control-label" translate="home.library.whereToRun">Where would you like it to run?</label>
       <div class="radio">
-        <label><input type="radio" name="executionMode" ng-model="newConfig.executionMode" value="STANDALONE">Data Collector</label>
+        <label><input type="radio" name="pipelineType" ng-model="newConfig.pipelineType" value="DATA_COLLECTOR">Data Collector Pipeline</label>
       </div>
       <div class="radio">
-        <label><input type="radio" name="executionMode" ng-model="newConfig.executionMode" value="EDGE">Data Collector Edge</label>
+        <label><input type="radio" name="pipelineType" ng-model="newConfig.pipelineType" value="DATA_COLLECTOR_EDGE">Data Collector Edge Pipeline</label>
+      </div>
+      <div class="radio">
+        <label><input type="radio" name="pipelineType" ng-model="newConfig.pipelineType" value="MICROSERVICE">Microservice Pipeline</label>
       </div>
     </div>
+
   </div>
   <div class="modal-footer">
     <button type="reset" class="btn btn-default" ng-click="cancel()"

@@ -35,6 +35,8 @@ import java.util.List;
 import java.util.Map;
 
 public class StoreApi {
+
+  private static final String DATA_COLLECTOR = "DATA_COLLECTOR";
   private ApiClient apiClient;
 
   public StoreApi() {
@@ -107,18 +109,33 @@ public class StoreApi {
         contentType, authNames, returnType);
   }
 
+  public PipelineConfigurationJson createPipeline (
+      String pipelineId,
+      String description,
+      boolean autoGeneratePipelineId
+  ) throws ApiException {
+    return createPipeline(
+        pipelineId,
+        description,
+        autoGeneratePipelineId,
+        DATA_COLLECTOR
+    );
+  }
+
   /**
    * Add a new Pipeline Configuration to the store
    *
    * @param pipelineId
    * @param description
    * @param autoGeneratePipelineId
+   * @param pipelineType
    * @return PipelineConfigurationJson
    */
   public PipelineConfigurationJson createPipeline (
       String pipelineId,
       String description,
-      boolean autoGeneratePipelineId
+      boolean autoGeneratePipelineId,
+      String pipelineType
   ) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
@@ -139,6 +156,7 @@ public class StoreApi {
 
     queryParams.addAll(apiClient.parameterToPairs("", "description", description));
     queryParams.addAll(apiClient.parameterToPairs("", "autoGeneratePipelineId", autoGeneratePipelineId));
+    queryParams.addAll(apiClient.parameterToPairs("", "pipelineType", pipelineType));
 
     final String[] accepts = {
         "application/json"
@@ -207,18 +225,33 @@ public class StoreApi {
         accept, contentType, authNames, returnType);
   }
 
+  public PipelineEnvelopeJson createDraftPipeline (
+      String pipelineId,
+      String description,
+      boolean autoGeneratePipelineId
+  ) throws ApiException {
+    return createDraftPipeline(
+        pipelineId,
+        description,
+        autoGeneratePipelineId,
+        DATA_COLLECTOR
+    );
+  }
+
   /**
    * Add a new Pipeline Configuration to the store
    *
    * @param pipelineId
    * @param description
    * @param autoGeneratePipelineId
+   * @param pipelineType
    * @return PipelineEnvelopeJson
    */
   public PipelineEnvelopeJson createDraftPipeline (
       String pipelineId,
       String description,
-      boolean autoGeneratePipelineId
+      boolean autoGeneratePipelineId,
+      String pipelineType
   ) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
@@ -240,6 +273,7 @@ public class StoreApi {
     queryParams.addAll(apiClient.parameterToPairs("", "description", description));
     queryParams.addAll(apiClient.parameterToPairs("", "autoGeneratePipelineId", autoGeneratePipelineId));
     queryParams.addAll(apiClient.parameterToPairs("", "draft", true));
+    queryParams.addAll(apiClient.parameterToPairs("", "pipelineType", pipelineType));
 
     final String[] accepts = {
         "application/json"

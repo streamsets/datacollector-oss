@@ -73,6 +73,7 @@ import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
 import com.streamsets.datacollector.validation.PipelineFragmentConfigurationValidator;
 import com.streamsets.datacollector.validation.RuleDefinitionValidator;
 import com.streamsets.lib.security.http.SSOPrincipal;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.Utils;
 import io.swagger.annotations.Api;
@@ -159,8 +160,12 @@ public class PipelineStoreResource {
 
   private static final String DPM_PIPELINE_ID = "dpm.pipeline.id";
 
+  private static final String DATA_COLLECTOR_EDGE = "DATA_COLLECTOR_EDGE";
+  private static final String MICROSERVICE = "MICROSERVICE";
+
   private static final String SYSTEM_ALL_PIPELINES = "system:allPipelines";
   private static final String SYSTEM_EDGE_PIPELINES = "system:edgePipelines";
+  private static final String SYSTEM_MICROSERVICE_PIPELINES = "system:microServicePipelines";
   private static final String SYSTEM_PUBLISHED_PIPELINES = "system:publishedPipelines";
   private static final String SYSTEM_DPM_CONTROLLED_PIPELINES = "system:dpmControlledPipelines";
   private static final String SYSTEM_LOCAL_PIPELINES = "system:localPipelines";
@@ -170,11 +175,14 @@ public class PipelineStoreResource {
   private static final String SYSTEM_ERROR_PIPELINES = "system:errorPipelines";
   private static final String SHARED_WITH_ME_PIPELINES = "system:sharedWithMePipelines";
 
+  public static final String SAMPLE_MICROSERVICE_PIPELINE = "sampleMicroservicePipeline.json";
+
   private static final String PIPELINE_IDS = "pipelineIds";
 
   private static final List<String> SYSTEM_PIPELINE_LABELS = ImmutableList.of(
       SYSTEM_ALL_PIPELINES,
       SYSTEM_EDGE_PIPELINES,
+      SYSTEM_MICROSERVICE_PIPELINES,
       SYSTEM_RUNNING_PIPELINES,
       SYSTEM_NON_RUNNING_PIPELINES,
       SYSTEM_INVALID_PIPELINES,
@@ -188,6 +196,7 @@ public class PipelineStoreResource {
       SYSTEM_DPM_CONTROLLED_PIPELINES,
       SYSTEM_LOCAL_PIPELINES,
       SYSTEM_EDGE_PIPELINES,
+      SYSTEM_MICROSERVICE_PIPELINES,
       SYSTEM_RUNNING_PIPELINES,
       SYSTEM_NON_RUNNING_PIPELINES,
       SYSTEM_INVALID_PIPELINES,
@@ -318,6 +327,8 @@ public class PipelineStoreResource {
               PipelineState state = manager.getPipelineState(pipelineInfo.getPipelineId(), pipelineInfo.getLastRev());
               pipelineStateCache.put(pipelineInfo.getPipelineId(), state);
               return state.getExecutionMode().equals(ExecutionMode.EDGE);
+            case SYSTEM_MICROSERVICE_PIPELINES:
+              return metadata != null && metadata.containsKey(MICROSERVICE);
             case SYSTEM_RUNNING_PIPELINES:
               state = manager.getPipelineState(pipelineInfo.getPipelineId(), pipelineInfo.getLastRev());
               pipelineStateCache.put(pipelineInfo.getPipelineId(), state);
@@ -696,14 +707,53 @@ public class PipelineStoreResource {
       @PathParam("pipelineTitle") String pipelineTitle,
       @QueryParam("description") @DefaultValue("") String description,
       @QueryParam("autoGeneratePipelineId") @DefaultValue("false") boolean autoGeneratePipelineId,
-      @QueryParam("draft") @DefaultValue("false") boolean draft
-  ) throws PipelineException {
+      @QueryParam("draft") @DefaultValue("false") boolean draft,
+      @QueryParam("pipelineType") @DefaultValue("DATA_COLLECTOR") String pipelineType
+  ) throws PipelineException, IOException {
     String pipelineId = pipelineTitle;
     if (autoGeneratePipelineId) {
       pipelineId = pipelineTitle.replaceAll("[\\W]|_", "") + UUID.randomUUID().toString();
     }
     RestAPIUtils.injectPipelineInMDC(pipelineTitle + "/" + pipelineId);
     PipelineConfiguration pipelineConfig = store.create(user, pipelineId, pipelineTitle, description, false, draft);
+
+    if (pipelineType.equals(DATA_COLLECTOR_EDGE)) {
+      List<Config> newConfigs = createWithNewConfig(
+          pipelineConfig.getConfiguration(),
+          new Config("executionMode", ExecutionMode.EDGE.name())
+      );
+      pipelineConfig.setConfiguration(newConfigs);
+      pipelineConfig = store.save(
+          user,
+          pipelineConfig.getPipelineId(),
+          pipelineConfig.getInfo().getLastRev(),
+          pipelineConfig.getDescription(),
+          pipelineConfig
+       );
+    } else if (pipelineType.equals(MICROSERVICE)) {
+      ClassLoader classLoader = PipelineStoreResource.class.getClassLoader();
+      try (InputStream inputStream = classLoader.getResourceAsStream(SAMPLE_MICROSERVICE_PIPELINE)) {
+        PipelineEnvelopeJson microServiceTemplateJson = ObjectMapperFactory.get()
+            .readValue(inputStream, PipelineEnvelopeJson.class);
+        PipelineConfiguration microServiceTemplate = BeanHelper.unwrapPipelineConfiguration(
+            microServiceTemplateJson.getPipelineConfig()
+        );
+        microServiceTemplate.setUuid(pipelineConfig.getUuid());
+        microServiceTemplate.setTitle(pipelineConfig.getTitle());
+        microServiceTemplate.setPipelineId(pipelineConfig.getPipelineId());
+        if (microServiceTemplate.getMetadata() == null) {
+          microServiceTemplate.setMetadata(new HashMap<>());
+        }
+        microServiceTemplate.getMetadata().put(MICROSERVICE, true);
+        pipelineConfig = store.save(
+            user,
+            pipelineConfig.getPipelineId(),
+            pipelineConfig.getInfo().getLastRev(),
+            microServiceTemplate.getDescription(),
+            microServiceTemplate
+        );
+      }
+    }
 
     //Add predefined Metric Rules to the pipeline
     List<MetricsRuleDefinition> metricsRuleDefinitions = new ArrayList<>();
@@ -1543,4 +1593,15 @@ public class PipelineStoreResource {
 
   }
 
+  public List<Config> createWithNewConfig(List<Config> configs, Config replacement) {
+    List<Config> newConfigurations = new ArrayList<>();
+    for (Config candidate : configs) {
+      if (replacement.getName().equals(candidate.getName())) {
+        newConfigurations.add(replacement);
+      } else {
+        newConfigurations.add(candidate);
+      }
+    }
+    return newConfigurations;
+  }
 }

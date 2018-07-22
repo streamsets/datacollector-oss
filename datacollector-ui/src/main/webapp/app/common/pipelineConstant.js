@@ -66,5 +66,7 @@ angular.module('dataCollectorApp.common')
       'EMR_BATCH',
       'CLUSTER_YARN_STREAMING',
       'CLUSTER_MESOS_STREAMING'
-    ]
+    ],
+
+    REST_SERVICE_STAGE_NAME: 'com_streamsets_pipeline_stage_origin_restservice_RestServiceDPushSource'
   });

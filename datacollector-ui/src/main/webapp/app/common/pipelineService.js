@@ -1992,7 +1992,7 @@ angular.module('dataCollectorApp.common')
       return stageInstances;
     };
 
-    this.getFilteredStageDefinitions = function(stageDefinitions, type, executionMode) {
+    this.getFilteredStageDefinitions = function(stageDefinitions, type, executionMode, isMicroservicePipeline) {
       var alreadyAdded = {};
       return _.chain(stageDefinitions)
         .filter(function (s) {
@@ -2003,7 +2003,10 @@ angular.module('dataCollectorApp.common')
             s.hideStage.length === 0 &&
             s.name.indexOf('_fragment_') === -1 &&
             s.library !== 'streamsets-datacollector-stats-lib' &&
-            (!executionMode || s.executionModes.indexOf(executionMode) !== -1)) {
+            (!executionMode || s.executionModes.indexOf(executionMode) !== -1) &&
+            (!isMicroservicePipeline || s.type !== pipelineConstant.SOURCE_STAGE_TYPE ||
+              s.name === pipelineConstant.REST_SERVICE_STAGE_NAME)
+          ) {
             alreadyAdded[s.name + s.version] = true;
             return true;
           } else {

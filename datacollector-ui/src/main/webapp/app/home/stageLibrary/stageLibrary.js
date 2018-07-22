@@ -46,6 +46,7 @@ angular
       onStageFilterGroupChange: function() {
         var stageNameList = [];
         var regex = new RegExp($scope.searchInput, 'i');
+        var isMicroservicePipeline = $scope.isMicroservicePipeline;
         $scope.filteredStageLibraries = [];
         angular.forEach($scope.stageLibraries, function(stageLibrary) {
           if (libraryFilter(stageLibrary) && !_.contains(stageNameList, stageLibrary.name) &&
@@ -53,7 +54,9 @@ angular
             stageLibrary.hideStage.length === 0 &&
             stageLibrary.library !== 'streamsets-datacollector-stats-lib' &&
             stageLibrary.name.indexOf('_fragment_') === -1 &&
-            ($scope.executionMode !== 'EDGE' || stageLibrary.executionModes.indexOf($scope.executionMode) !== -1)
+            ($scope.executionMode !== 'EDGE' || stageLibrary.executionModes.indexOf($scope.executionMode) !== -1) &&
+            (!isMicroservicePipeline || stageLibrary.type !== pipelineConstant.SOURCE_STAGE_TYPE ||
+              stageLibrary.name === pipelineConstant.REST_SERVICE_STAGE_NAME)
           ) {
             stageNameList.push(stageLibrary.name);
             $scope.filteredStageLibraries.push(stageLibrary);
