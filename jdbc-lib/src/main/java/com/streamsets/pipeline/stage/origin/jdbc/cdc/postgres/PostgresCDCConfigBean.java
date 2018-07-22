@@ -18,16 +18,16 @@ package com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Dependency;
+import com.streamsets.pipeline.api.MultiValueChooserModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.TimeZoneChooserValues;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.UnsupportedFieldTypeChooserValues;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.UnsupportedFieldTypeValues;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.CDCSourceConfigBean;
+import java.util.List;
 
 public class PostgresCDCConfigBean {
-
-  //TODO Move "case Sensitive" out of generic JDBC Bean
 
   @ConfigDefBean
   public CDCSourceConfigBean baseConfigBean = new CDCSourceConfigBean();
@@ -117,6 +117,19 @@ public class PostgresCDCConfigBean {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "[\"INSERT\", \"UPDATE\", \"DELETE\"]",
+      label = "Operations",
+      description = "Operations to capture as records. All other operations are ignored.",
+      displayPosition = 70,
+      group = "CDC"
+  )
+  @MultiValueChooserModel(PostgresChangeTypesChooserValues.class)
+  public List<PostgresChangeTypeValues> postgresChangeTypes;
+
+  //HIDDEN - only choice supported today
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.STRING,
       label = "Replication Type",
       description = "Database support",
@@ -126,6 +139,7 @@ public class PostgresCDCConfigBean {
   )
   public String replicationType;
 
+  //HIDDEN - only choice supported today
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
@@ -142,8 +156,7 @@ public class PostgresCDCConfigBean {
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Unsupported Field Type",
-      description = "Action to take if an unsupported field type is encountered. When buffering locally," +
-          " the action is triggered immediately when the record is read without waiting for the commit",
+      description = "Action to take if an unsupported field type is encountered.",
       displayPosition = 110,
       group = "CDC",
       defaultValue = "TO_ERROR"
@@ -186,7 +199,7 @@ public class PostgresCDCConfigBean {
   )
   public int pollInterval;
 
-  //TODO - removal of this causes validation issues, needs cleanup
+  //HIDDEN
   @ConfigDef(
         required = false,
         type = ConfigDef.Type.BOOLEAN,
