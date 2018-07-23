@@ -41,13 +41,13 @@ done
 for d in rbgen-maven-plugin stage-lib-archetype e2e-tests
 do
   pushd $d
-  perl -i -pe 's@(<version>)(\d+.\d+.\d+(-SNAPSHOT)?)(<\/version>)@${1}'"$version"'${4}@g' pom.xml
+  perl -i -pe 's@(<version>)(\d+.\d+.\d+.\d+(-SNAPSHOT)?)(<\/version>)@${1}'"$version"'${4}@g' pom.xml
   popd
 done
 
 for f in BUILD.md dist/src/main/etc/sdc.properties
 do
-  perl -i -pe 's@(datacollector.(all.)?)\d+.\d+.\d+(-SNAPSHOT)?@${1}'"$version"'@g' $f
+  perl -i -pe 's@(datacollector.(all.)?)\d+.\d+.\d+.\d+(-SNAPSHOT)?@${1}'"$version"'@g' $f
 done
 
 ui_version=$(echo $version | perl -pe 's@(\d+.\d+.\d+).(\d+)(-SNAPSHOT)?@${1}${2}${3}@g')
