@@ -30,6 +30,10 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.lineage.EndPointType;
+import com.streamsets.pipeline.api.lineage.LineageEvent;
+import com.streamsets.pipeline.api.lineage.LineageEventType;
+import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
@@ -658,6 +662,32 @@ public class TestAmazonS3Source extends AmazonS3TestSuite {
       }
     } finally {
       runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testLineage() throws Exception {
+    try {
+      AmazonS3Source source = createSource();
+      SourceRunner runner = new SourceRunner.Builder(AmazonS3DSource.class, source)
+          .addService(DataFormatParserService.class, new SdkJsonDataFormatParserService())
+          .addOutputLane("lane")
+          .build();
+      runner.runInit();
+      try {
+        BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
+        source.produce(null, 60000, batchMaker);
+        List<LineageEvent> events = runner.getLineageEvents();
+        Assert.assertEquals(1, events.size());
+        Assert.assertEquals(LineageEventType.ENTITY_READ, events.get(0).getEventType());
+        Assert.assertEquals(EndPointType.S3.name(), events.get(0).getSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE));
+      } finally {
+        runner.runDestroy();
+      }
+    } catch (Exception e) {
+      System.out.println("Hoops");
+      e.printStackTrace();
+      throw  e;
     }
   }
 

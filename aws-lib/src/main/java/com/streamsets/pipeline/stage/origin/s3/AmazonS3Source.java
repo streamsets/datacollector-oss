@@ -34,6 +34,10 @@ import com.streamsets.pipeline.api.ext.io.OverrunException;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
+import com.streamsets.pipeline.api.lineage.EndPointType;
+import com.streamsets.pipeline.api.lineage.LineageEvent;
+import com.streamsets.pipeline.api.lineage.LineageEventType;
+import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,6 +87,7 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
   @Override
   protected String produce(S3ObjectSummary s3Object, String offset, int maxBatchSize, BatchMaker batchMaker)
       throws StageException, BadSpoolObjectException {
+
     try {
       if (parser == null) {
         String recordId = s3ConfigBean.s3Config.bucket + s3ConfigBean.s3Config.delimiter + s3Object.getKey();
@@ -125,6 +130,8 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
             );
           }
           parser = getContext().getService(DataFormatParserService.class).getParser(recordId, object.getObjectContent(), offset);
+
+          sendLineageEvent(s3Object);
         }
         //we don't use S3 GetObject range capabilities to skip the already process offset because the parsers cannot
         // pick up from a non root doc depth in the case of a single object with records.
@@ -293,5 +300,14 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
     //Object is assigned so that setHeaders() function can use this to get metadata
     //information about the object
     object = partialS3ObjectForMetadata;
+  }
+
+  private void sendLineageEvent(S3ObjectSummary s3Object) {
+    LineageEvent event = getContext().createLineageEvent(LineageEventType.ENTITY_READ);
+    event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.S3.name());
+    event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, s3Object.getKey());
+    event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, s3ConfigBean.s3Config.bucket);
+
+    getContext().publishLineageEvent(event);
   }
 }
