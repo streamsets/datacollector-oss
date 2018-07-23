@@ -26,10 +26,13 @@ import com.google.api.gax.grpc.InstantiatingGrpcChannelProvider;
 import com.google.api.gax.rpc.TransportChannel;
 import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.cloud.pubsub.v1.Subscriber;
+import com.google.cloud.pubsub.v1.SubscriptionAdminClient;
+import com.google.cloud.pubsub.v1.SubscriptionAdminClient.ListSubscriptionsPagedResponse;
 import com.google.cloud.pubsub.v1.SubscriptionAdminSettings;
 import com.google.cloud.pubsub.v1.TopicAdminClient;
 import com.google.cloud.pubsub.v1.TopicAdminSettings;
 
+import com.google.pubsub.v1.ListSubscriptionsRequest;
 import com.google.pubsub.v1.ProjectSubscriptionName;
 
 import com.google.common.base.Strings;
@@ -38,6 +41,7 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.google.iam.v1.TestIamPermissionsResponse;
 import com.google.pubsub.v1.ProjectName;
 import com.google.pubsub.v1.ProjectTopicName;
+import com.google.pubsub.v1.Subscription;
 import com.google.pubsub.v1.Topic;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BasePushSource;
@@ -165,28 +169,41 @@ public class PubSubSource extends BasePushSource {
     }
 
     try (TopicAdminClient topicAdminClient = TopicAdminClient.create(settings)) {
-      TopicAdminClient.ListTopicsPagedResponse listTopicsResponse = topicAdminClient
-          .listTopics(
-              ProjectName
-              .newBuilder()
-              .setProject(conf.credentials.projectId)
-              .build()
-          );
-
-      for (Topic topic : listTopicsResponse.iterateAll()) {
-        TopicAdminClient.ListTopicSubscriptionsPagedResponse listSubscriptionsResponse =
-            topicAdminClient
-                .listTopicSubscriptions(
-                    ProjectTopicName
-                        .of(
-                            conf.credentials.projectId,
-                            topic.getName()
-                        )
-                );
-        for (String s : listSubscriptionsResponse.iterateAll()) {
-          LOG.info("Subscription '{}' exists for topic '{}'", s, topic.getName());
-        }
+      SubscriptionAdminSettings subAdminSettings;
+      try {
+        subAdminSettings =
+            SubscriptionAdminSettings
+                .newBuilder()
+                .setCredentialsProvider(credentialsProvider)
+                .build();
+      } catch (IOException e) {
+        LOG.error(Errors.PUBSUB_04.getMessage(), e.toString(), e);
+        issues.add(getContext().createConfigIssue(Groups.CREDENTIALS.name(),
+            CONF_CREDENTIALS_CREDENTIALS_PROVIDER, Errors.PUBSUB_04, e.toString()));
+        return issues;
       }
+
+      try (SubscriptionAdminClient subscriptionAdminClient = SubscriptionAdminClient
+          .create(subAdminSettings)) {
+        ListSubscriptionsRequest listSubscriptionsRequest =
+            ListSubscriptionsRequest
+                .newBuilder()
+                .setProject("projects/"+conf.credentials.projectId)
+                .build();
+        ListSubscriptionsPagedResponse response =
+            subscriptionAdminClient.listSubscriptions(listSubscriptionsRequest);
+        Iterable<Subscription> subscriptions = response.iterateAll();
+        for (Subscription subscription : subscriptions) {
+          LOG.info("Subscription '{}' exists for topic '{}'", subscription.getName(),
+              subscription.getTopic());
+        }
+      } catch (IOException e) {
+        LOG.error(Errors.PUBSUB_04.getMessage(), e.toString(), e);
+        issues.add(getContext().createConfigIssue(Groups.CREDENTIALS.name(),
+            CONF_CREDENTIALS_CREDENTIALS_PROVIDER, Errors.PUBSUB_04, e.toString()));
+        return issues;
+      }
+
 
       List<String> permissions = new LinkedList<>();
       permissions.add(PUBSUB_SUBSCRIPTIONS_GET_PERMISSION);
