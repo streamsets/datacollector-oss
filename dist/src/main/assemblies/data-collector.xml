@@ -407,6 +407,11 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+    <fileSet>
+      <directory>${basedir}/../azure-keyvault-credentialstore-lib/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
     <!-- InfluxDB -->
     <fileSet>
       <directory>${basedir}/../influxdb_0_9-lib/target/streamsets-libs/</directory>
@@ -558,6 +563,11 @@
 
     <fileSet>
       <directory>${basedir}/../${apache-pulsar_2-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
+    <fileSet>
+      <directory>${basedir}/../${azure-keyvault_1_0-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
