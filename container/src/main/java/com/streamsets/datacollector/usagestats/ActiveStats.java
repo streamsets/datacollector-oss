@@ -35,7 +35,6 @@ public class ActiveStats {
 
   private long startTime;
   private long endTime;
-  private String idHash;
   private String dataCollectorVersion;
   private boolean dpmEnabled;
   private UsageTimer upTime;
@@ -49,7 +48,6 @@ public class ActiveStats {
     pipelines = new ConcurrentHashMap<>();
     stages = new ConcurrentHashMap<>();
     recordCount = new AtomicLong();
-    idHash = "";
     dataCollectorVersion = "";
   }
 
@@ -76,15 +74,6 @@ public class ActiveStats {
 
   public ActiveStats setEndTime(long endTime) {
     this.endTime = endTime;
-    return this;
-  }
-
-  public String getIdHash() {
-    return idHash;
-  }
-
-  public ActiveStats setIdHash(String idHash) {
-    this.idHash = idHash;
     return this;
   }
 
@@ -215,7 +204,6 @@ public class ActiveStats {
     long now = System.currentTimeMillis();
     setEndTime(now);
     ActiveStats statsBean = new ActiveStats().setStartTime(now)
-                                             .setIdHash(getIdHash())
                                              .setDataCollectorVersion(getDataCollectorVersion())
                                              .setDpmEnabled(isDpmEnabled())
                                              .setUpTime(getUpTime().roll());
@@ -230,7 +218,6 @@ public class ActiveStats {
   // returns a snapshot for persistency
   public ActiveStats snapshot() {
     ActiveStats snapshot = new ActiveStats().setStartTime(getStartTime())
-                                            .setIdHash(getIdHash())
                                             .setDataCollectorVersion(getDataCollectorVersion())
                                             .setDpmEnabled(isDpmEnabled())
                                             .setUpTime(getUpTime().snapshot())

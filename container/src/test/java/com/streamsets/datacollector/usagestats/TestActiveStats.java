@@ -28,7 +28,6 @@ public class TestActiveStats {
   public void testNew() {
     ActiveStats as = new ActiveStats();
     Assert.assertEquals("", as.getDataCollectorVersion());
-    Assert.assertEquals("", as.getIdHash());
     Assert.assertTrue(as.getStartTime() <= System.currentTimeMillis());
     Assert.assertEquals(0, as.getEndTime());
     Assert.assertNotNull(as.getUpTime());

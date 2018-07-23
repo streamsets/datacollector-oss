@@ -21,7 +21,6 @@ import java.util.Map;
 // stats bean that is send back to StreamSets.
 public class StatsBean {
   private String version;
-  private String idHash;
   private String dataCollectorVersion;
   private boolean dpmEnabled;
   private long startTime;
@@ -39,7 +38,6 @@ public class StatsBean {
   public StatsBean(ActiveStats activeStats) {
     this();
     setVersion(activeStats.getVersion());
-    setIdHash(activeStats.getIdHash());
     setDataCollectorVersion(activeStats.getDataCollectorVersion());
     setDpmEnabled(activeStats.isDpmEnabled());
     setStartTime(activeStats.getStartTime());
@@ -67,14 +65,6 @@ public class StatsBean {
 
   public void setVersion(String version) {
     this.version = version;
-  }
-
-  public String getIdHash() {
-    return idHash;
-  }
-
-  public void setIdHash(String idHash) {
-    this.idHash = idHash;
   }
 
   public String getDataCollectorVersion() {
