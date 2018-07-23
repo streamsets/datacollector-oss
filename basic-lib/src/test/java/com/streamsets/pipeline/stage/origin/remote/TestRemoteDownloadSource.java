@@ -24,6 +24,10 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.lineage.EndPointType;
+import com.streamsets.pipeline.api.lineage.LineageEvent;
+import com.streamsets.pipeline.api.lineage.LineageEventType;
+import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
@@ -1850,6 +1854,46 @@ public class TestRemoteDownloadSource {
     op = runner.runProduce(offset, 1000);
     actual = op.getRecords().get("lane");
     Assert.assertNotEquals(expected.size(), actual.size());
+  }
+
+  @Test
+  public void testLineage() throws Exception {
+    path = "remote-download-source/parseNoError";
+    setupSSHD(path, false);
+    final String filePattern = "*";
+    RemoteDownloadSource origin =
+        new RemoteDownloadSource(getBean(
+            "sftp://localhost:" + String.valueOf(port) + "/",
+            true,
+            "testuser",
+            "pass",
+            null,
+            null,
+            null,
+            true,
+            DataFormat.JSON,
+            null,
+            false,
+            filePattern
+        ));
+    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+    StageRunner.Output op = runner.runProduce(RemoteDownloadSource.NOTHING_READ, 1000);
+
+    List<LineageEvent> events = runner.getLineageEvents();
+    Assert.assertEquals(1, events.size());
+    Assert.assertEquals(LineageEventType.ENTITY_READ, events.get(0).getEventType());
+    Assert.assertEquals(filePattern, events.get(0).getSpecificAttribute(LineageSpecificAttribute.DESCRIPTION));
+    Assert.assertEquals(EndPointType.FTP.name(), events.get(0).getSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE));
+
+    // run the second batch should not fire the lineage event since no file has been read from the origin
+    runner.runProduce(op.getNewOffset(), 1000);
+    events = runner.getLineageEvents();
+    Assert.assertEquals(1, events.size());
+
+    destroyAndValidate(runner);
   }
 
   private byte [] someSampleData() {

@@ -29,6 +29,10 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.ext.io.ObjectLengthException;
 import com.streamsets.pipeline.api.ext.io.OverrunException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.lineage.EndPointType;
+import com.streamsets.pipeline.api.lineage.LineageEvent;
+import com.streamsets.pipeline.api.lineage.LineageEventType;
+import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.parser.DataParser;
@@ -386,6 +390,8 @@ public class RemoteDownloadSource extends BaseSource {
             LOG.debug("Sending New File Event. File: {}", next.filename);
             RemoteDownloadSourceEvents.NEW_FILE.create(getContext()).with("filepath", next.filename).createAndSend();
 
+            sendLineageEvent(next);
+
             currentOffset = new Offset(next.remoteObject.getName().getPath(),
                 next.remoteObject.getContent().getLastModifiedTime(), ZERO);
           }
@@ -728,6 +734,17 @@ public class RemoteDownloadSource extends BaseSource {
       currentOffset = null;
       next = null;
     }
+  }
+
+  private void sendLineageEvent(RemoteFile next) {
+    LineageEvent event = getContext().createLineageEvent(LineageEventType.ENTITY_READ);
+    event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, next.filename);
+    event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.FTP.name());
+    event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, conf.filePattern);
+    Map<String, String> props = new HashMap<>();
+    props.put("Resource URL", conf.remoteAddress);
+    event.setProperties(props);
+    getContext().publishLineageEvent(event);
   }
 
   // Offset format: Filename::timestamp::offset. I miss case classes here.
