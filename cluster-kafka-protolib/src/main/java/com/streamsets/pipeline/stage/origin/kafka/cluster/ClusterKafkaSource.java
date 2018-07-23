@@ -148,12 +148,17 @@ public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitt
           v
       ));
 
-      configBeanPrefixedMap.put(
-          KAFKA_CONFIG_BEAN_PREFIX + BROKER_LIST,
-          conf.metadataBrokerList);
-      configBeanPrefixedMap.put(
-          KAFKA_CONFIG_BEAN_PREFIX + ZOOKEEPER_CONNECT,
-          conf.zookeeperConnect);
+      // MapR Streams Origin doesn't have broker list and zookeeper connect
+      if (conf.metadataBrokerList != null) {
+        configBeanPrefixedMap.put(
+            KAFKA_CONFIG_BEAN_PREFIX + BROKER_LIST,
+            conf.metadataBrokerList);
+      }
+      if (conf.zookeeperConnect != null) {
+        configBeanPrefixedMap.put(
+            KAFKA_CONFIG_BEAN_PREFIX + ZOOKEEPER_CONNECT,
+            conf.zookeeperConnect);
+      }
       configBeanPrefixedMap.put(
           KAFKA_CONFIG_BEAN_PREFIX + TOPIC,
           conf.topic);
