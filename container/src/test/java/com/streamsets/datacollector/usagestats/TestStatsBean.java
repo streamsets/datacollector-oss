@@ -25,7 +25,6 @@ public class TestStatsBean {
   public void testCreationFromActiveStats() {
     ActiveStats as = new ActiveStats();
     as.setDpmEnabled(true);
-    as.setIdHash("hash");
     as.setDataCollectorVersion("version");
     as.setUpTime(new UsageTimer().setName("upTime").setAccumulatedTime(1));
     as.setStartTime(1);
@@ -42,7 +41,6 @@ public class TestStatsBean {
 
     StatsBean sb = new StatsBean(as);
 
-    Assert.assertEquals("hash", sb.getIdHash());
     Assert.assertEquals("version", sb.getDataCollectorVersion());
     Assert.assertEquals(true, sb.isDpmEnabled());
     Assert.assertEquals(1, sb.getUpTime());

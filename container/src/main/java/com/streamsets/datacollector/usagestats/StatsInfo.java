@@ -92,11 +92,10 @@ public class StatsInfo {
 
   public boolean rollIfNeeded(BuildInfo buildInfo, RuntimeInfo runtimeInfo, long rollFrequencyMillis) {
     String currentVersion = buildInfo.getVersion();
-    String currentIdHash = computeHash(runtimeInfo.getId());
     boolean currentDpmEnabled = runtimeInfo.isDPMEnabled();
     boolean existingStats = getActiveStats().getDataCollectorVersion() != null && !getActiveStats().getDataCollectorVersion().isEmpty();
     boolean sysChange = existingStats &&
-        (!currentVersion.equals(getActiveStats().getDataCollectorVersion()) || !currentIdHash.equals(getActiveStats().getIdHash())
+        (!currentVersion.equals(getActiveStats().getDataCollectorVersion())
             || currentDpmEnabled != getActiveStats().isDpmEnabled());
     boolean overFrequency = existingStats &&
         (System.currentTimeMillis() - getActiveStats().getStartTime() > rollFrequencyMillis);
@@ -106,7 +105,6 @@ public class StatsInfo {
         if (!existingStats) {
           ActiveStats activeStats = getActiveStats().roll();
           activeStats.setDataCollectorVersion(currentVersion);
-          activeStats.setIdHash(currentIdHash);
           activeStats.setDpmEnabled(currentDpmEnabled);
           setActiveStats(activeStats);
         } else {
@@ -120,7 +118,6 @@ public class StatsInfo {
           }
           if (sysChange) {
             getActiveStats().setDataCollectorVersion(currentVersion);
-            getActiveStats().setIdHash(currentIdHash);
             getActiveStats().setDpmEnabled(currentDpmEnabled);
           }
         }

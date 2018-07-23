@@ -116,7 +116,7 @@ public class TestStatsInfo {
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn("id");
+    
     Mockito.when(runtimeInfo.isDPMEnabled()).thenReturn(true);
 
     StatsInfo si = new StatsInfo();
@@ -129,7 +129,6 @@ public class TestStatsInfo {
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
 
     Assert.assertEquals("v1", si.getActiveStats().getDataCollectorVersion());
-    Assert.assertEquals(StatsInfo.computeHash("id"), si.getActiveStats().getIdHash());
     Assert.assertTrue(si.getActiveStats().isDpmEnabled());
     Assert.assertTrue(si.getCollectedStats().isEmpty());
 
@@ -141,42 +140,18 @@ public class TestStatsInfo {
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn("id");
+    
     Mockito.when(runtimeInfo.isDPMEnabled()).thenReturn(false);
 
     StatsInfo si = new StatsInfo();
     si = Mockito.spy(si);
     si.getActiveStats().setDataCollectorVersion("v0");
-    si.getActiveStats().setIdHash(StatsInfo.computeHash("id"));
     si.getActiveStats().setStartTime(System.currentTimeMillis());
 
     Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, 10000));
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
 
     Assert.assertEquals("v1", si.getActiveStats().getDataCollectorVersion());
-    Assert.assertEquals(StatsInfo.computeHash("id"), si.getActiveStats().getIdHash());
-    Assert.assertEquals(1, si.getCollectedStats().size());
-  }
-
-  @Test
-  public void testRollIfNeededIdChange() {
-    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
-    Mockito.when(buildInfo.getVersion()).thenReturn("v1");
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn("ID");
-    Mockito.when(runtimeInfo.isDPMEnabled()).thenReturn(false);
-
-    StatsInfo si = new StatsInfo();
-    si = Mockito.spy(si);
-    si.getActiveStats().setDataCollectorVersion("v1");
-    si.getActiveStats().setIdHash(StatsInfo.computeHash("id"));
-    si.getActiveStats().setStartTime(System.currentTimeMillis());
-
-    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, 10000));
-    Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
-
-    Assert.assertEquals("v1", si.getActiveStats().getDataCollectorVersion());
-    Assert.assertEquals(StatsInfo.computeHash("ID"), si.getActiveStats().getIdHash());
     Assert.assertEquals(1, si.getCollectedStats().size());
   }
 
@@ -185,13 +160,12 @@ public class TestStatsInfo {
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn("id");
+    
     Mockito.when(runtimeInfo.isDPMEnabled()).thenReturn(true);
 
     StatsInfo si = new StatsInfo();
     si = Mockito.spy(si);
     si.getActiveStats().setDataCollectorVersion("v1");
-    si.getActiveStats().setIdHash(StatsInfo.computeHash("id"));
     si.getActiveStats().setStartTime(System.currentTimeMillis());
     si.getActiveStats().setDpmEnabled(false);
 
@@ -199,7 +173,6 @@ public class TestStatsInfo {
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
 
     Assert.assertEquals("v1", si.getActiveStats().getDataCollectorVersion());
-    Assert.assertEquals(StatsInfo.computeHash("id"), si.getActiveStats().getIdHash());
     Assert.assertTrue(si.getActiveStats().isDpmEnabled());
     Assert.assertEquals(1, si.getCollectedStats().size());
   }
@@ -209,13 +182,12 @@ public class TestStatsInfo {
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn("id");
+    
     Mockito.when(runtimeInfo.isDPMEnabled()).thenReturn(false);
 
     StatsInfo si = new StatsInfo();
     si = Mockito.spy(si);
     si.getActiveStats().setDataCollectorVersion("v1");
-    si.getActiveStats().setIdHash(StatsInfo.computeHash("id"));
     si.getActiveStats().setStartTime(System.currentTimeMillis() - 2);
     si.getActiveStats().setDpmEnabled(false);
 
@@ -223,7 +195,6 @@ public class TestStatsInfo {
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
 
     Assert.assertEquals("v1", si.getActiveStats().getDataCollectorVersion());
-    Assert.assertEquals(StatsInfo.computeHash("id"), si.getActiveStats().getIdHash());
     Assert.assertEquals(1, si.getCollectedStats().size());
   }
 
@@ -232,13 +203,12 @@ public class TestStatsInfo {
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn("id");
+    
     Mockito.when(runtimeInfo.isDPMEnabled()).thenReturn(false);
 
     StatsInfo si = new StatsInfo();
     si = Mockito.spy(si);
     si.getActiveStats().setDataCollectorVersion("v1");
-    si.getActiveStats().setIdHash(StatsInfo.computeHash("id"));
     si.getActiveStats().setStartTime(System.currentTimeMillis());
     si.getActiveStats().setDpmEnabled(false);
     ActiveStats as = si.getActiveStats();
@@ -253,13 +223,12 @@ public class TestStatsInfo {
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn("id");
+    
     Mockito.when(runtimeInfo.isDPMEnabled()).thenReturn(false);
 
     StatsInfo si = new StatsInfo();
     si = Mockito.spy(si);
     si.getActiveStats().setDataCollectorVersion("v1");
-    si.getActiveStats().setIdHash(StatsInfo.computeHash("id"));
     si.getActiveStats().setStartTime(System.currentTimeMillis() - 2);
     si.getActiveStats().setDpmEnabled(false);
     ActiveStats as = si.getActiveStats();
