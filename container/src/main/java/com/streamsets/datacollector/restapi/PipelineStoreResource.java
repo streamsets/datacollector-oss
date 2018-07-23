@@ -723,13 +723,15 @@ public class PipelineStoreResource {
           new Config("executionMode", ExecutionMode.EDGE.name())
       );
       pipelineConfig.setConfiguration(newConfigs);
-      pipelineConfig = store.save(
-          user,
-          pipelineConfig.getPipelineId(),
-          pipelineConfig.getInfo().getLastRev(),
-          pipelineConfig.getDescription(),
-          pipelineConfig
-       );
+      if (!draft) {
+        pipelineConfig = store.save(
+            user,
+            pipelineConfig.getPipelineId(),
+            pipelineConfig.getInfo().getLastRev(),
+            pipelineConfig.getDescription(),
+            pipelineConfig
+        );
+      }
     } else if (pipelineType.equals(MICROSERVICE)) {
       ClassLoader classLoader = PipelineStoreResource.class.getClassLoader();
       try (InputStream inputStream = classLoader.getResourceAsStream(SAMPLE_MICROSERVICE_PIPELINE)) {
@@ -745,13 +747,18 @@ public class PipelineStoreResource {
           microServiceTemplate.setMetadata(new HashMap<>());
         }
         microServiceTemplate.getMetadata().put(MICROSERVICE, true);
-        pipelineConfig = store.save(
-            user,
-            pipelineConfig.getPipelineId(),
-            pipelineConfig.getInfo().getLastRev(),
-            microServiceTemplate.getDescription(),
-            microServiceTemplate
-        );
+        if (!draft) {
+          pipelineConfig = store.save(
+              user,
+              pipelineConfig.getPipelineId(),
+              pipelineConfig.getInfo().getLastRev(),
+              microServiceTemplate.getDescription(),
+              microServiceTemplate
+          );
+        } else {
+          microServiceTemplate.setInfo(pipelineConfig.getInfo());
+          pipelineConfig = microServiceTemplate;
+        }
       }
     }
 

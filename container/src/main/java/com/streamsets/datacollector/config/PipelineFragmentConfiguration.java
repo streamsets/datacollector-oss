@@ -99,8 +99,7 @@ public class PipelineFragmentConfiguration implements Serializable {
   }
 
   public void setInfo(PipelineInfo info) {
-    //NOP, just for jackson
-    // TODO - why is this a NOP? We really need this to be set correctly for embedded mode
+    this.info = info;
   }
 
   @JsonIgnore
