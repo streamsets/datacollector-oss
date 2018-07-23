@@ -18,6 +18,9 @@ package com.streamsets.pipeline.stage.origin.multikafka;
 import com.google.common.base.Throwables;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.lineage.LineageEvent;
+import com.streamsets.pipeline.api.lineage.LineageEventType;
+import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
@@ -331,5 +334,65 @@ public class TestMultiKafkaSource {
         }
       }
     }
+  }
+
+  @Test
+  public void testLineageEvent() throws StageException, InterruptedException, ExecutionException {
+    MultiKafkaBeanConfig conf = getConfig();
+    conf.numberOfThreads = 5;
+    int numTopics = 3;
+    long totalMessages = 0;
+    Random rand = new Random();
+
+    List<String> topicNames = new ArrayList<>(numTopics);
+    List<KafkaConsumer> consumerList = new ArrayList<>(numTopics);
+
+    for(int i=0; i<numTopics; i++) {
+      String topic = "topic-" + i;
+      topicNames.add(topic);
+    }
+    for(int i=0, topicIndex= 0; i<conf.numberOfThreads; i++, topicIndex++) {
+      if (topicIndex == numTopics) {
+        topicIndex = 0;
+      }
+      int numMessages = rand.nextInt(5)+1;
+      totalMessages += numMessages;
+      ConsumerRecords<String, byte[]> consumerRecords = generateConsumerRecords(numMessages, topicNames.get(topicIndex), 0);
+      ConsumerRecords<String, byte[]> emptyRecords = generateConsumerRecords(0, topicNames.get(rand.nextInt(numTopics)), 0);
+
+      KafkaConsumer mockConsumer = Mockito.mock(KafkaConsumer.class);
+      consumerList.add(mockConsumer);
+
+      Mockito.when(mockConsumer.poll(conf.batchWaitTime)).thenReturn(consumerRecords).thenReturn(emptyRecords);
+    }
+
+    conf.topicList = topicNames;
+
+    MockKafkaConsumerLoader.consumers = consumerList.iterator();
+    MultiKafkaSource source = new MultiKafkaSource(conf);
+    PushSourceRunner sourceRunner = new PushSourceRunner.Builder(MultiKafkaDSource.class, source)
+        .addOutputLane("lane")
+        .build();
+    sourceRunner.runInit();
+
+    MultiKafkaPushSourceTestCallback callback = new MultiKafkaPushSourceTestCallback(sourceRunner, conf.numberOfThreads);
+
+    try {
+      sourceRunner.runProduce(new HashMap<>(), 5, callback);
+      int records = callback.waitForAllBatches();
+
+      source.await();
+      Assert.assertEquals(totalMessages, records);
+    } catch (StageException e){
+      Assert.fail();
+    }
+    List<LineageEvent> events = sourceRunner.getLineageEvents();
+    Assert.assertEquals(numTopics, events.size());
+    for(int i = 0; i < numTopics; i++) {
+      Assert.assertEquals(LineageEventType.ENTITY_READ, events.get(i).getEventType());
+      Assert.assertTrue(topicNames.contains(events.get(i).getSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME)));
+    }
+    sourceRunner.runDestroy();
+
   }
 }

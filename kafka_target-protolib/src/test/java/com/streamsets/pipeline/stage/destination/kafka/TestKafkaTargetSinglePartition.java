@@ -18,10 +18,14 @@ package com.streamsets.pipeline.stage.destination.kafka;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Resources;
 import com.streamsets.pipeline.api.OnRecordError;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.RecordReader;
+import com.streamsets.pipeline.api.lineage.LineageEvent;
+import com.streamsets.pipeline.api.lineage.LineageEventType;
+import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
@@ -31,6 +35,7 @@ import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtilFactory;
 import com.streamsets.pipeline.lib.util.SdcAvroTestUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
+import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.stage.destination.kafka.util.KafkaTargetUtil;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import com.streamsets.testing.SingleForkNoReuseTest;
@@ -59,6 +64,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -1363,5 +1369,92 @@ public class TestKafkaTargetSinglePartition {
     for(int i = 0; i < binaryRecords.size(); i++) {
       Assert.assertTrue(Arrays.equals(binaryRecords.get(i).get("/data").getValueAsByteArray(), messages.get(i)));
     }
+  }
+
+  @Test
+  public void testLineageEventNoEL() throws Exception{
+    Map<String, String> kafkaProducerConfig = new HashMap<>();
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.textFieldPath = "/text";
+
+    KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
+        TOPIC21,
+        "0",
+        kafkaProducerConfig,
+        false,
+        PartitionStrategy.ROUND_ROBIN,
+        false,
+        null,
+        null,
+        new KafkaTargetConfig(),
+        DataFormat.TEXT,
+        dataGeneratorFormatConfig
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class, kafkaTarget).build();
+
+    Record record =  RecordCreator.create();
+    LinkedHashMap<String, Field> field = new LinkedHashMap<>();
+    field.put("text", Field.create("this is a message!"));
+    record.set(Field.createListMap(field));
+    targetRunner.runInit();
+
+    try {
+      targetRunner.runWrite(ImmutableList.of(record));
+    } catch (StageException e){
+      Assert.fail();
+    }
+    List<LineageEvent> events = targetRunner.getLineageEvents();
+    Assert.assertEquals(1, events.size());
+    Assert.assertEquals(LineageEventType.ENTITY_WRITTEN, events.get(0).getEventType());
+    Assert.assertEquals(
+        TOPIC21,
+        events.get(0).getSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME)
+    );
+    targetRunner.runDestroy();
+  }
+
+  @Test
+  public void testLineageEventTopicEL() throws Exception{
+    Map<String, String> kafkaProducerConfig = new HashMap<>();
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.textFieldPath = "/text";
+
+    KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
+        null,
+        "0",
+        kafkaProducerConfig,
+        false,
+        PartitionStrategy.ROUND_ROBIN,
+        true,
+        "${record:attribute('topic')}",
+        "*",
+        new KafkaTargetConfig(),
+        DataFormat.TEXT,
+        dataGeneratorFormatConfig
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class, kafkaTarget).build();
+
+    Record record =  RecordCreator.create();
+    LinkedHashMap<String, Field> field = new LinkedHashMap<>();
+    field.put("text", Field.create("this is a message!"));
+    record.set(Field.createListMap(field));
+    record.getHeader().setAttribute("topic", TOPIC21);
+    targetRunner.runInit();
+
+    try {
+      targetRunner.runWrite(ImmutableList.of(record));
+    } catch (StageException e){
+      Assert.fail();
+    }
+    List<LineageEvent> events = targetRunner.getLineageEvents();
+    Assert.assertEquals(1, events.size());
+    Assert.assertEquals(LineageEventType.ENTITY_WRITTEN, events.get(0).getEventType());
+    Assert.assertEquals(
+        TOPIC21,
+        events.get(0).getSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME)
+    );
+    targetRunner.runDestroy();
   }
 }

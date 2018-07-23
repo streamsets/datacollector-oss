@@ -24,6 +24,10 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BasePushSource;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.lineage.EndPointType;
+import com.streamsets.pipeline.api.lineage.LineageEvent;
+import com.streamsets.pipeline.api.lineage.LineageEventType;
+import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
@@ -221,7 +225,13 @@ public class MultiKafkaSource extends BasePushSource {
     }
 
     executor = Executors.newFixedThreadPool(getNumberOfThreads());
-
+    for (String topic: conf.topicList) {
+      LineageEvent event = getContext().createLineageEvent(LineageEventType.ENTITY_READ);
+      event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.KAFKA.name());
+      event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, topic);
+      event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, conf.brokerURI);
+      getContext().publishLineageEvent(event);
+    }
     return issues;
   }
 
