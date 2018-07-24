@@ -673,6 +673,45 @@ public class TestJdbcLookup {
   }
 
   @Test
+  public void testMultipleValuesAddAsList() throws Exception {
+    List<JdbcFieldColumnMapping> columnMappings = ImmutableList.of(new JdbcFieldColumnMapping("P_ID", "[2]"));
+
+    JdbcLookupDProcessor processor = createProcessor();
+
+    ProcessorRunner processorRunner = new ProcessorRunner.Builder(JdbcLookupDProcessor.class, processor)
+        .addConfiguration("query", listQuery)
+        .addConfiguration("columnMappings", columnMappings)
+        .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.ALL_AS_LIST)
+        .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
+        .addConfiguration("maxClobSize", 1000)
+        .addConfiguration("maxBlobSize", 1000)
+        .addOutputLane("lane")
+        .build();
+
+    Record record = RecordCreator.create();
+    List<Field> fields = new ArrayList<>();
+    fields.add(Field.create("Girish"));
+    fields.add(Field.create("Pancha"));
+    record.set(Field.create(fields));
+
+    List<Record> singleRecord = ImmutableList.of(record);
+    processorRunner.runInit();
+    try {
+      StageRunner.Output output = processorRunner.runProcess(singleRecord);
+      List<Record> recordList = output.getRecords().get("lane");
+      Assert.assertEquals(1, recordList.size());
+      record = recordList.get(0);
+      List<Field> valueAsList = record.get().getValueAsList();
+      Assert.assertEquals(3, valueAsList.size());
+      Assert.assertEquals("Girish", valueAsList.get(0).getValueAsString());
+      Assert.assertEquals("Pancha", valueAsList.get(1).getValueAsString());
+      Assert.assertEquals(2, valueAsList.get(2).getValueAsList().size());
+    } finally {
+      processorRunner.runDestroy();
+    }
+  }
+
+  @Test
   public void testRetryOnCacheMiss() throws Exception {
     List<JdbcFieldColumnMapping> columnMappings = ImmutableList.of(
         new JdbcFieldColumnMapping("P_ID", "[2]", "666", DataType.INTEGER)

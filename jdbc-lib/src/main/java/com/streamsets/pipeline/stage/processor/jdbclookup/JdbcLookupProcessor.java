@@ -333,6 +333,22 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
               batchMaker.addRecord(newRecord);
             }
             break;
+          case ALL_AS_LIST:
+            Map<String, List<Field>> valuesMap = new HashMap<>();
+            for (Map<String, Field> lookupItem : values) {
+              lookupItem.forEach((k, v) -> {
+                if (valuesMap.get(k) == null) {
+                  List<Field> lookupValue = new ArrayList<>();
+                  valuesMap.put(k, lookupValue);
+                }
+                valuesMap.get(k).add(v);
+              });
+            }
+            Map<String, Field> valueMap = new HashMap<>();
+            valuesMap.forEach( (k,v) -> valueMap.put(k, Field.create(v)));
+            setFieldsInRecord(record, valueMap);
+            batchMaker.addRecord(record);
+            break;
           default:
             throw new IllegalStateException("Unknown multiple value behavior: " + multipleValuesBehavior);
         }
