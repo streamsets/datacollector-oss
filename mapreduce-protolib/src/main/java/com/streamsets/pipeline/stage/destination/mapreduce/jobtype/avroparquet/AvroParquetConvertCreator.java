@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroparquet;
 
+import com.streamsets.pipeline.lib.util.AvroToParquetConverterUtil;
 import com.streamsets.pipeline.stage.destination.mapreduce.MapreduceUtils;
 import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroconvert.AvroConversionBaseCreator;
 import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroconvert.AvroConversionInputFormat;
@@ -40,7 +41,8 @@ public class AvroParquetConvertCreator extends AvroConversionBaseCreator {
         FsInput.class,
         CompressionCodec.class,
         ParquetProperties.class,
-        BytesInput.class
+        BytesInput.class,
+        AvroToParquetConverterUtil.class
     );
   }
 
