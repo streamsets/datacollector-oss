@@ -79,7 +79,6 @@ public class PostgresCDCSource extends BaseSource {
   private final HikariPoolConfigBean hikariConfigBean;
   private volatile boolean generationStarted = false;
   private volatile boolean runnerCreated = false;
-  private String logMinerProcedure;
   private ErrorRecordHandler errorRecordHandler;
   private boolean containerized = false;
   private HikariDataSource dataSource = null;
@@ -249,6 +248,18 @@ public class PostgresCDCSource extends BaseSource {
 
   private Optional<List<ConfigIssue>> validatePostgresCDCConfigBean(PostgresCDCConfigBean configBean) {
     List<ConfigIssue> issues = new ArrayList<>();
+
+    if (configBean.minVersion == null) {
+      this.getConfigBean().minVersion = PgVersionValues.NINEFOUR;
+    }
+
+    if (configBean.decoderValue == null) {
+      this.getConfigBean().decoderValue = DecoderValues.WAL2JSON;
+    }
+
+    if (configBean.replicationType == null ) {
+      this.getConfigBean().replicationType = "database";
+    }
 
     switch(configBean.startValue) {
 
