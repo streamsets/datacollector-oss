@@ -363,7 +363,7 @@ public abstract class PipelineBeanCreator {
 
       // Create StageDefinition map for this stage
       Map<Class, ServiceDefinition> services = original.getServices().stream()
-        .collect(Collectors.toMap(c -> c.getDefinition().getKlass(), ServiceBean::getDefinition));
+        .collect(Collectors.toMap(c -> c.getDefinition().getProvides(), ServiceBean::getDefinition));
 
       StageBean stageBean = createStage(
           stageLib,
@@ -652,7 +652,7 @@ public abstract class PipelineBeanCreator {
       Map<String, Object> pipelineConstants,
       List<Issue> errors
   ) {
-    Utils.checkNotNull(serviceDef, "ServiceDefinition can't be null.");
+    Utils.checkNotNull(serviceDef, "ServiceDefinition for " + serviceConf.getService().getName());
     Service service;
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     try {

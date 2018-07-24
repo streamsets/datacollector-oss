@@ -327,7 +327,12 @@ public class TestPipelineBeanCreator {
     }
   }
 
-  @StageDef(version = 1, label = "L", onlineHelpRefUrl = "")
+  @StageDef(
+    version = 1,
+    label = "L",
+    onlineHelpRefUrl = "",
+    services = @ServiceDependency(service = CoolService.class)
+  )
   public static class MyTarget extends BaseTarget {
     @ConfigDef(
         label = "L",
@@ -498,7 +503,7 @@ public class TestPipelineBeanCreator {
   }
 
   @Test
-  public void testCreatePipelineBean() {
+  public void testCreatePipelineBeanAndDuplicate() {
     StageLibraryDefinition libraryDef = Mockito.mock(StageLibraryDefinition.class);
     Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
     StageDefinition sourceDef = StageDefinitionExtractor.get().extract(libraryDef, MySource.class, "");
@@ -506,6 +511,7 @@ public class TestPipelineBeanCreator {
     StageDefinition lifecycleTargetDef = StageDefinitionExtractor.get().extract(libraryDef, LifecycleEventMyTarget.class, "");
     StageDefinition errorStageDef = StageDefinitionExtractor.get().extract(libraryDef, ErrorMyTarget.class, "");
     StageDefinition aggStageDef = StageDefinitionExtractor.get().extract(libraryDef, AggregatingMyTarget.class, "");
+    ServiceDefinition serviceDef = ServiceDefinitionExtractor.get().extract(libraryDef, CoolService.class);
     StageLibraryTask library = Mockito.mock(StageLibraryTask.class);
     Mockito.when(library.getStage(Mockito.eq("default"), Mockito.eq("s"), Mockito.eq(false)))
          .thenReturn(sourceDef);
@@ -518,6 +524,7 @@ public class TestPipelineBeanCreator {
     Mockito.when(library.getStage(Mockito.eq("default"), Mockito.eq("lifecycle"), Mockito.eq(false)))
       .thenReturn(lifecycleTargetDef);
     Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
+    Mockito.when(library.getServiceDefinition(Mockito.eq(Runnable.class), Mockito.anyBoolean())).thenReturn(serviceDef);
 
     List<Map<String, Object>> constants = new ArrayList<>();
     Map<String, Object> constantValue = new LinkedHashMap<>();
@@ -535,6 +542,9 @@ public class TestPipelineBeanCreator {
       .build();
     StageConfiguration targetConf = new StageConfigurationBuilder("si", "t")
       .withConfig(new Config("list", ImmutableList.of("T")))
+      .withServices(new ServiceConfigurationBuilder()
+        .withService(Runnable.class)
+        .build())
       .build();
     StageConfiguration errorStageConf = new StageConfigurationBuilder("ei", "e")
       .withConfig(new Config("list", ImmutableList.of("E")))
@@ -583,8 +593,10 @@ public class TestPipelineBeanCreator {
     Assert.assertEquals(1, bean.getPipelineStageBeans().size());
     PipelineStageBeans stages = bean.getPipelineStageBeans();
     Assert.assertEquals(1, stages.getStages().size());
-    MyTarget target = (MyTarget)stages.getStages().get(0).getStage();
+    StageBean targetBean = stages.getStages().get(0);
+    MyTarget target = (MyTarget)targetBean.getStage();
     Assert.assertEquals(ImmutableList.of("T"), target.list);
+    Assert.assertEquals(1, targetBean.getServices().size());
 
     // Aggregating stage
     AggregatingMyTarget aggregatingStage = (AggregatingMyTarget) bean.getStatsAggregatorStage().getStage();
@@ -610,6 +622,22 @@ public class TestPipelineBeanCreator {
     // pipeline configs
     Assert.assertEquals(ExecutionMode.CLUSTER_BATCH, bean.getConfig().executionMode);
     Assert.assertEquals(2000, bean.getConfig().memoryLimit);
+
+    // Verify duplicate stage bean
+    issues = new ArrayList<>();
+    PipelineStageBeans duplicate = PipelineBeanCreator.get().duplicatePipelineStageBeans(
+      library,
+      bean.getPipelineStageBeans(),
+      null,
+      Collections.emptyMap(),
+      issues
+    );
+    Assert.assertNotNull(duplicate);
+    Assert.assertEquals(1, duplicate.size());
+    targetBean = stages.getStages().get(0);
+    target = (MyTarget)targetBean.getStage();
+    Assert.assertEquals(ImmutableList.of("T"), target.list);
+    Assert.assertEquals(1, targetBean.getServices().size());
   }
 
   @Test
