@@ -154,7 +154,6 @@ public class ShellClusterProvider extends BaseClusterProvider {
     try {
       process.start(environment);
       if (!process.waitFor(30, TimeUnit.SECONDS)) {
-        logOutput(appId, process);
         throw new TimeoutException(errorString("Kill command for {} timed out.", appId));
       }
     } finally {
@@ -186,16 +185,13 @@ public class ShellClusterProvider extends BaseClusterProvider {
     try {
       process.start(environment);
       if (!process.waitFor(30, TimeUnit.SECONDS)) {
-        logOutput(appId, process);
         throw new TimeoutException(errorString("YARN status command for {} timed out.", applicationState.getAppId()));
       }
       if (process.exitValue() != 0) {
-        logOutput(appId, process);
         throw new IllegalStateException(errorString("Status command for {} failed with exit code {}.",
             applicationState.getAppId(),
             process.exitValue()));
       }
-      logOutput(appId, process);
       String status;
       if (executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
         status = mesosStatusParser.parseStatus(process.getAllOutput());
@@ -318,11 +314,9 @@ public class ShellClusterProvider extends BaseClusterProvider {
         long elapsedSeconds = TimeUnit.SECONDS.convert(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
         getLog().debug("Waiting for application id, elapsed seconds: " + elapsedSeconds);
         if (applicationIds.size() > 1) {
-          logOutput("unknown", process);
           throw new IllegalStateException(errorString("Found more than one application id: {}", applicationIds));
         } else if (!applicationIds.isEmpty()) {
           String appId = applicationIds.iterator().next();
-          logOutput(appId, process);
           ApplicationState applicationState = new ApplicationState();
           applicationState.setAppId(appId);
           applicationState.setSdcToken(clusterToken);
@@ -359,7 +353,6 @@ public class ShellClusterProvider extends BaseClusterProvider {
           }
         }
         if (elapsedSeconds > timeToWaitForFailure) {
-          logOutput("unknown", process);
           String msg = Utils.format("Timed out after waiting {} seconds for for cluster application to start. " +
               "Submit command {} alive.", elapsedSeconds, (process.isAlive() ? "is" : "is not"));
           if (hostingDir != null) {
@@ -373,7 +366,6 @@ public class ShellClusterProvider extends BaseClusterProvider {
                 com.google.common.io.Files.createTempDir(),
                 Arrays.asList("logs", "-applicationId", appId)
             );
-            logOutput(appId, logsProcess);
           }
           throw new IllegalStateException(msg);
         }
