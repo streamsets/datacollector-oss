@@ -21,6 +21,8 @@ import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.stage.common.MissingValuesBehavior;
+import com.streamsets.pipeline.stage.common.MissingValuesBehaviorChooserValues;
 import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
 import com.streamsets.pipeline.stage.processor.kv.CacheConfig;
 import com.streamsets.pipeline.stage.processor.lookup.ForceLookupMultipleValuesBehaviorChooserValues;
@@ -136,6 +138,18 @@ public class ForceLookupConfigBean extends ForceInputConfigBean {
   )
   @ValueChooserModel(ForceLookupMultipleValuesBehaviorChooserValues.class)
   public MultipleValuesBehavior multipleValuesBehavior = MultipleValuesBehavior.DEFAULT;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Missing Values Behavior",
+      description = "How to handle missing values",
+      defaultValue = "PASS_RECORD_ON",
+      displayPosition = 97,
+      group = "LOOKUP"
+  )
+  @ValueChooserModel(MissingValuesBehaviorChooserValues.class)
+  public MissingValuesBehavior missingValuesBehavior = MissingValuesBehavior.DEFAULT;
 
   @ConfigDefBean(groups = "LOOKUP")
   public CacheConfig cacheConfig = new CacheConfig();

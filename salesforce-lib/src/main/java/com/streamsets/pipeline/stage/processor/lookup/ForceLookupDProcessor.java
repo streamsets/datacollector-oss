@@ -25,10 +25,11 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
 import com.streamsets.pipeline.lib.salesforce.ForceLookupConfigBean;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Salesforce Lookup",
     description = "Lookup records in Salesforce to enrich records",
     icon = "salesforce.png",
+    upgrader = ForceLookupProcessorUpgrader.class,
     onlineHelpRefUrl ="index.html?contextID=task_fhn_yrk_yx"
 )
 @ConfigGroups(value = Groups.class)

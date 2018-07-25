@@ -208,7 +208,17 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
       Field idField = record.get(conf.idField);
       String id = (idField != null) ? idField.getValueAsString() : null;
       if (Strings.isNullOrEmpty(id)) {
-        setFieldsInRecord(record, getDefaultFields());
+        switch (conf.missingValuesBehavior) {
+          case SEND_TO_ERROR:
+            LOG.error(Errors.FORCE_35.getMessage());
+            errorRecordHandler.onError(new OnRecordErrorException(record, Errors.FORCE_35));
+            break;
+          case PASS_RECORD_ON:
+            setFieldsInRecord(record, getDefaultFields());
+            break;
+          default:
+            throw new IllegalStateException("Unknown missing value behavior: " + conf.missingValuesBehavior);
+        }
       } else {
         Optional<List<Map<String, Field>>> entry = cache.getIfPresent(id);
 
@@ -397,8 +407,17 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
 
       if (!entry.isPresent()) {
         // No results
-        LOG.error(Errors.FORCE_15.getMessage(), preparedQuery);
-        errorRecordHandler.onError(new OnRecordErrorException(record, Errors.FORCE_15, preparedQuery));
+        switch (conf.missingValuesBehavior) {
+          case SEND_TO_ERROR:
+            LOG.error(Errors.FORCE_15.getMessage(), preparedQuery);
+            errorRecordHandler.onError(new OnRecordErrorException(record, Errors.FORCE_15, preparedQuery));
+            break;
+          case PASS_RECORD_ON:
+            batchMaker.addRecord(record);
+            break;
+          default:
+            throw new IllegalStateException("Unknown missing value behavior: " + conf.missingValuesBehavior);
+        }
       } else {
         List<Map<String, Field>> values = entry.get();
         switch (conf.multipleValuesBehavior) {

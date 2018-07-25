@@ -56,6 +56,7 @@ public enum Errors implements ErrorCode {
   FORCE_32("SOQL query can't use Id field in a WHERE clause when PK Chunking is enabled."),
   FORCE_33("Can't repeat an incremental query when PK Chunking is enabled."),
   FORCE_34("Can't create HTTP client"),
+  FORCE_35("Record ID missing"),
   ;
   private final String msg;
 
