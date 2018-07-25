@@ -78,7 +78,7 @@ public class DetachedStageValidator {
       false,
       stageConf.getStageConfiguration(),
       true,
-      IssueCreator.getPipeline(),
+      IssueCreator.getStage(stageConf.getStageConfiguration().getInstanceName()),
       false,
       Collections.emptyMap(),
       errors

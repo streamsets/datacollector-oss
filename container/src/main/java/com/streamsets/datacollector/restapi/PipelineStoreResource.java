@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.BaseEncoding;
 import com.streamsets.datacollector.config.DataRuleDefinition;
+import com.streamsets.datacollector.config.DetachedStageConfiguration;
 import com.streamsets.datacollector.config.DriftRuleDefinition;
 import com.streamsets.datacollector.config.MetricElement;
 import com.streamsets.datacollector.config.MetricType;
@@ -45,6 +46,7 @@ import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.AddLabelsRequestJson;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.DefinitionsJson;
+import com.streamsets.datacollector.restapi.bean.DetachedStageConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.MultiStatusResponseJson;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.PipelineDefinitionJson;
@@ -69,6 +71,7 @@ import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.EdgeUtil;
 import com.streamsets.datacollector.util.PipelineException;
+import com.streamsets.datacollector.validation.DetachedStageValidator;
 import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
 import com.streamsets.datacollector.validation.PipelineFragmentConfigurationValidator;
 import com.streamsets.datacollector.validation.RuleDefinitionValidator;
@@ -1610,5 +1613,41 @@ public class PipelineStoreResource {
       }
     }
     return newConfigurations;
+  }
+
+  // Detached stage APIs
+
+  @Path("/detachedstage")
+  @GET
+  @ApiOperation(value = "Returns empty envelope for detached stage.",
+    response = DetachedStageConfigurationJson.class,
+    authorizations = @Authorization(value = "basic")
+  )
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({
+      AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
+  })
+  public Response createDetachedStageEnvelope() throws PipelineException {
+    DetachedStageConfigurationJson detachedStage = new DetachedStageConfigurationJson(new DetachedStageConfiguration());
+    return Response.ok().entity(detachedStage).build();
+  }
+
+  @Path("/detachedstage")
+  @POST
+  @ApiOperation(value = "Validates given detached stage and performs any necessary upgrade.",
+    response = DetachedStageConfigurationJson.class,
+    authorizations = @Authorization(value = "basic")
+  )
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({
+      AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
+  })
+  public Response validateDetachedStage(
+      @ApiParam(name="stage", required = true) DetachedStageConfigurationJson detachedStage
+  ) throws PipelineException {
+    DetachedStageConfiguration stageConf = detachedStage.getDetachedStageConfiguration();
+    DetachedStageValidator validator = new DetachedStageValidator(stageLibrary, stageConf);
+    return Response.ok().entity(new DetachedStageConfigurationJson(validator.validate())).build();
   }
 }

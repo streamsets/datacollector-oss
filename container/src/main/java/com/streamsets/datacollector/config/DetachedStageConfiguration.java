@@ -33,6 +33,10 @@ public class DetachedStageConfiguration {
   // Issues associated with this
   Issues issues;
 
+  public DetachedStageConfiguration() {
+    this(CURRENT_VERSION, null);
+  }
+
   public DetachedStageConfiguration(StageConfiguration stageConfiguration) {
     this(CURRENT_VERSION, stageConfiguration);
   }
