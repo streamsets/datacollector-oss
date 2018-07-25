@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.runner;
 
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.datacollector.config.DetachedStageConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
@@ -41,10 +42,11 @@ public class DetachedStageTest {
   public void createProcessor() {
     StageLibraryTask lib = MockStages.createStageLibrary();
     StageConfiguration stageConf = MockStages.createProcessor("p", Collections.emptyList(), Collections.emptyList());
+    DetachedStageConfiguration detachedStageConf = new DetachedStageConfiguration(stageConf);
     List<Issue> issues = new ArrayList<>();
 
     DetachedStageRuntime stageRuntime = DetachedStage.get().createDetachedStage(
-      stageConf,
+      detachedStageConf,
       lib,
       "pipelineId",
       "pipelineTitle",

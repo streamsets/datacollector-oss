@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.validation;
 
+import com.streamsets.datacollector.config.DetachedStageConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -32,9 +33,9 @@ public class DetachedStageValidatorTest {
     StageLibraryTask stageLibrary = MockStages.createStageLibrary();
     StageConfiguration stageConf = MockStages.createProcessor("p", Collections.emptyList(), Collections.emptyList());
 
-    DetachedStageValidator validator = new DetachedStageValidator(stageLibrary, stageConf);
+    DetachedStageValidator validator = new DetachedStageValidator(stageLibrary, new DetachedStageConfiguration(stageConf));
 
-    StageConfiguration validatedStageConf = validator.validate();
+    StageConfiguration validatedStageConf = validator.validate().getStageConfiguration();
 
     assertNotNull(validatedStageConf);
     assertEquals(0, validator.issues.getIssueCount());

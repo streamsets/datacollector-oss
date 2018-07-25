@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.validation;
 
+import com.streamsets.datacollector.config.DetachedStageConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.configupgrade.PipelineConfigurationUpgrader;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -27,19 +28,19 @@ public class DetachedStageValidator {
 
   protected final Issues issues;
   private StageLibraryTask stageLibraryTask;
-  private StageConfiguration stageConf;
+  private DetachedStageConfiguration stageConf;
 
   public DetachedStageValidator(
     StageLibraryTask stageLibrary,
-    StageConfiguration stageConf
+    DetachedStageConfiguration detachedStageConfiguration
   ) {
     this.stageLibraryTask = stageLibrary;
-    this.stageConf = stageConf;
+    this.stageConf = detachedStageConfiguration;
     this.issues = new Issues();
   }
 
-  public StageConfiguration validate() {
-    ValidationUtil.resolveLibraryAliases(stageLibraryTask, Collections.singletonList(stageConf));
+  public DetachedStageConfiguration validate() {
+    ValidationUtil.resolveLibraryAliases(stageLibraryTask, Collections.singletonList(stageConf.getStageConfiguration()));
     upgrade();
 
     // If there are any issues until this point, it does not make sense to continue
@@ -47,7 +48,7 @@ public class DetachedStageValidator {
       return stageConf;
     }
 
-    ValidationUtil.addMissingConfigsToStage(stageLibraryTask, stageConf);
+    ValidationUtil.addMissingConfigsToStage(stageLibraryTask, stageConf.getStageConfiguration());
     validateStageConfiguration();
 
     return stageConf;
@@ -56,12 +57,18 @@ public class DetachedStageValidator {
   private void upgrade() {
     List<Issue> issues = new ArrayList<>();
 
-    StageConfiguration upgradeConf = PipelineConfigurationUpgrader.get().upgradeIfNecessary(stageLibraryTask, stageConf, issues);
+    StageConfiguration upgradeConf = PipelineConfigurationUpgrader.get().upgradeIfNecessary(
+      stageLibraryTask,
+      stageConf.getStageConfiguration(),
+      issues
+    );
     this.issues.addAll(issues);
 
     if(upgradeConf != null) {
-      this.stageConf = upgradeConf;
+      this.stageConf = new DetachedStageConfiguration(upgradeConf);
     }
+
+    stageConf.setValidation(this);
   }
 
   private void validateStageConfiguration() {
@@ -69,7 +76,7 @@ public class DetachedStageValidator {
     ValidationUtil.validateStageConfiguration(
       stageLibraryTask,
       false,
-      stageConf,
+      stageConf.getStageConfiguration(),
       true,
       IssueCreator.getPipeline(),
       false,
@@ -77,5 +84,9 @@ public class DetachedStageValidator {
       errors
     );
     this.issues.addAll(errors);
+  }
+
+  public Issues getIssues() {
+    return issues;
   }
 }

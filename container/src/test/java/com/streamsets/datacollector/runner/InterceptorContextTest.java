@@ -16,11 +16,13 @@
 package com.streamsets.datacollector.runner;
 
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.datacollector.config.DetachedStageConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.restapi.bean.DetachedStageConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.StageConfigurationJson;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.BlobStore;
@@ -85,7 +87,9 @@ public class InterceptorContextTest {
   public void testCreateStage() throws Exception {
     // Create mocked JSON stage
     StageConfiguration stageConf = MockStages.createProcessor("p", Collections.emptyList(), Collections.emptyList());
-    StageConfigurationJson stageConfigurationJson = new StageConfigurationJson(stageConf);
+    DetachedStageConfiguration detachedStage = new DetachedStageConfiguration(stageConf);
+    DetachedStageConfigurationJson stageConfigurationJson = new DetachedStageConfigurationJson(detachedStage);
+
     String json = ObjectMapperFactory.get().writeValueAsString(stageConfigurationJson);
 
     context.setAllowCreateStage(true);
