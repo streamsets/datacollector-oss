@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Configuring a Windows Event Log Origin","href":"datacollector\/UserGuide\/Origins\/WindowsLog.html#task_lmc_yjv_sbb","attributes": {"data-id":"task_lmc_yjv_sbb",},"menu": {"hasChildren":false,},"tocID":"task_lmc_yjv_sbb-d46e64146","topics":[]}]});

@@ -2,7 +2,7 @@
 <!DOCTYPE html
   PUBLIC "" "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
-    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="The Drift Synchronization Solution for Postgres detects drift in incoming data and automatically creates or alters corresponding PostgreSQL tables as needed before the data is written. For example, ..." /><meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Drift Synchronization Solution for Postgres" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_kgt_pnr_4cb" /><title>Drift Synchronization Solution for Postgres</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_kgt_pnr_4cb-d46e107476" />         
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="The Drift Synchronization Solution for PostgreSQL detects drift in incoming data and automatically creates or alters corresponding PostgreSQL tables as needed before the data is written. For example, ..." /><meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Drift Synchronization Solution for PostgreSQL" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_kgt_pnr_4cb" /><title>Drift Synchronization Solution for PostgreSQL</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_kgt_pnr_4cb-d46e108916" />         
         
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <!-- Latest compiled and minified Bootstrap CSS -->
@@ -77,7 +77,7 @@
 
                 <nav class="wh_tools hidden-print">
                     <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
-   <li class="active"><span class="topicref" data-id="concept_kgt_pnr_4cb"><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for Postgres</a></span></span></li>
+   <li class="active"><span class="topicref" data-id="concept_kgt_pnr_4cb"><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
 </ol></div>
 
                     <div class="wh_right_tools hidden-sm hidden-xs">
@@ -110,61 +110,61 @@
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e24463" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e63697" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
-   <li><span data-tocid="concept_agj_cfj_br-d46e76087" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
-   <li><span data-tocid="concept_umc_1lk_fx-d46e91510" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
-   <li><span data-tocid="concept_ugp_kwf_xw-d46e97411" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
-   <li><span data-tocid="concept_xxd_f5r_kx-d46e100735" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e24466" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e64169" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e77527" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e92950" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e98851" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e102175" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_fjj_zcf_2w-d46e104650" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
-   <li class="active"><span data-tocid="concept_kgt_pnr_4cb-d46e107476" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for Postgres</a></span></span><ul class="nav nav-list">
-         <li><span data-tocid="concept_ljq_knr_4cb-d46e107599" class="topicref" data-id="concept_ljq_knr_4cb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_ljq_knr_4cb"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Drift Synchronization Solution for Postgres</span></a></span></span></li>
-         <li><span data-tocid="concept_ztm_pqr_4cb-d46e107622" class="topicref" data-id="concept_ztm_pqr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_ztm_pqr_4cb">Basic Implementation and Processing</a></span></span></li>
-         <li><span data-tocid="concept_z2v_fp1_scb-d46e107696" class="topicref" data-id="concept_z2v_fp1_scb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_z2v_fp1_scb">Requirements</a></span></span></li>
-         <li><span data-tocid="concept_s2c_qht_pcb-d46e107748" class="topicref" data-id="concept_s2c_qht_pcb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_s2c_qht_pcb">Implementation Steps</a></span></span></li>
-         <li><span data-tocid="concept_lzy_wb3_qcb-d46e107810" class="topicref" data-id="concept_lzy_wb3_qcb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_lzy_wb3_qcb">Case Study</a></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e106090" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li class="active"><span data-tocid="concept_kgt_pnr_4cb-d46e108916" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_ljq_knr_4cb-d46e109039" class="topicref" data-id="concept_ljq_knr_4cb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_ljq_knr_4cb"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Drift Synchronization Solution for PostgreSQL</span></a></span></span></li>
+         <li><span data-tocid="concept_ztm_pqr_4cb-d46e109062" class="topicref" data-id="concept_ztm_pqr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_ztm_pqr_4cb">Basic Implementation and Processing</a></span></span></li>
+         <li><span data-tocid="concept_z2v_fp1_scb-d46e109136" class="topicref" data-id="concept_z2v_fp1_scb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_z2v_fp1_scb">Requirements</a></span></span></li>
+         <li><span data-tocid="concept_s2c_qht_pcb-d46e109188" class="topicref" data-id="concept_s2c_qht_pcb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_s2c_qht_pcb">Implementation Steps</a></span></span></li>
+         <li><span data-tocid="concept_lzy_wb3_qcb-d46e109250" class="topicref" data-id="concept_lzy_wb3_qcb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_lzy_wb3_qcb">Case Study</a></span></span></li>
       </ul>
    </li>
-   <li><span data-tocid="concept_wwq_gxc_py-d46e108275" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_wwq_gxc_py-d46e109715" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_fyf_gkq_4bb-d46e108857" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_wr1_ktz_bt-d46e110457" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_fpz_5r4_vs-d46e110938" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_jjk_23z_sq-d46e112280" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
-   <li><span data-tocid="concept_pgk_brx_rr-d46e113249" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e110297" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e111897" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e112378" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e113720" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e114689" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_asx_fdz_sq-d46e115877" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_asx_fdz_sq-d46e117317" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_o3l_dtr_5q-d46e117134" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
-   <li><span data-tocid="concept_yms_ftm_sq-d46e118925" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e118574" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e120365" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_nls_w1r_ks-d46e123421" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
-   <li><span data-tocid="concept_sh3_frm_tq-d46e124635" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_nls_w1r_ks-d46e124861" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e126075" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_xbx_rs1_tq-d46e128543" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
-   <li><span data-tocid="concept_jn1_nzb_kv-d46e128598" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e129983" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e130038" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_pvm_yt3_wq-d46e128758" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
-   <li><span data-tocid="concept_vcj_1ws_js-d46e130239" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e130198" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e131679" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_chv_vmj_wr-d46e130461" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_chv_vmj_wr-d46e131901" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
@@ -174,13 +174,13 @@
                     
                     <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
                         <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_kgt_pnr_4cb">
-    <h1 class="title topictitle1" id="ariaid-title1">Drift Synchronization Solution for Postgres</h1>
+    <h1 class="title topictitle1" id="ariaid-title1">Drift Synchronization Solution for PostgreSQL</h1>
 
 <article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_ljq_knr_4cb">
-    <h2 class="title topictitle2" id="ariaid-title2"><span class="ph">Drift Synchronization Solution for Postgres</span></h2>
+    <h2 class="title topictitle2" id="ariaid-title2"><span class="ph">Drift Synchronization Solution for PostgreSQL</span></h2>
 
     <div class="body conbody">
-        <p class="p">The <span class="ph">Drift Synchronization Solution for Postgres</span> detects drift in incoming data and automatically creates or alters corresponding
+        <p class="p">The <span class="ph">Drift Synchronization Solution for PostgreSQL</span> detects drift in incoming data and automatically creates or alters corresponding
             PostgreSQL tables as needed before the data is written.</p>
 
         <p class="p">For example, say you want to write nationwide inventory data to PostgreSQL tables. As you
@@ -188,29 +188,29 @@
             data changes. To mandate that every store uses the same data structure is possible, but
             not practical. You prefer a solution that adapts to this changing environment.</p>
 
-        <p class="p">With the <span class="ph">Drift Synchronization Solution for Postgres</span>, the <span class="ph">Postgres Metadata processor</span> determines when new tables or fields are required and submits create and alter table
+        <p class="p">With the <span class="ph">Drift Synchronization Solution for PostgreSQL</span>, the <span class="ph">PostgreSQL Metadata processor</span> determines when new tables or fields are required and submits create and alter table
             commands to the database to make those changes. </p>
 
         <p class="p">The JDBC Producer destination performs the writes. By the time the data reaches the JDBC
             Producer, the newly created or altered database tables are ready to be used. </p>
 
         <p class="p"><span class="ph">All columns in the tables created or altered by the
-                              <span class="ph">Postgres Metadata processor</span> allow
+                              <span class="ph">PostgreSQL Metadata processor</span> allow
                         nulls. When writing records with missing fields, the database inserts null
                         values in the corresponding columns.</span>
         </p>
 
-        <p class="p">By creating and altering tables based on record requirements, the <span class="ph">Drift Synchronization Solution for Postgres</span> enables writing data with changing data structures to PostgreSQL with no additional
+        <p class="p">By creating and altering tables based on record requirements, the <span class="ph">Drift Synchronization Solution for PostgreSQL</span> enables writing data with changing data structures to PostgreSQL with no additional
             intervention.</p>
 
-        <p class="p"><span class="ph">Before deploying the <span class="ph">Drift Synchronization Solution for Postgres</span>, consider the create and
+        <p class="p"><span class="ph">Before deploying the <span class="ph">Drift Synchronization Solution for PostgreSQL</span>, consider the create and
                         alter table speed of your database, and the create and alter table
                         requirements of the incoming data. If the required changes cannot be
-                        performed quickly by the database, the <span class="ph">Drift Synchronization Solution for Postgres</span> might not be an appropriate
+                        performed quickly by the database, the <span class="ph">Drift Synchronization Solution for PostgreSQL</span> might not be an appropriate
                         solution.</span></p>
 
         <div class="p">
-            <div class="note important"><span class="importanttitle">Important:</span> Use this beta release of <span class="ph">Drift Synchronization Solution for Postgres</span> for development or testing only. Do not use the solution in a production
+            <div class="note important"><span class="importanttitle">Important:</span> Use this beta release of <span class="ph">Drift Synchronization Solution for PostgreSQL</span> for development or testing only. Do not use the solution in a production
                 environment. </div>
 
         </div>
@@ -225,18 +225,18 @@
     <h2 class="title topictitle2" id="ariaid-title3">Basic Implementation and Processing</h2>
 
     <div class="body conbody">
-        <p class="p">A basic implementation of the <span class="ph">Drift Synchronization Solution for Postgres</span> includes the origin of your choice, the <span class="ph">Postgres Metadata processor</span>, and the JDBC Producer destination:</p>
+        <p class="p">A basic implementation of the <span class="ph">Drift Synchronization Solution for PostgreSQL</span> includes the origin of your choice, the <span class="ph">PostgreSQL Metadata processor</span>, and the JDBC Producer destination:</p>
 
         <p class="p"><img class="image" id="concept_ztm_pqr_4cb__image_lqh_tfj_qcb" src="../Graphics/JDBCDrift_basic.png" height="83" width="388" /></p>
 
-        <p class="p">The <span class="ph">Drift Synchronization Solution for Postgres</span> uses the <span class="ph">Postgres Metadata processor</span> and JDBC Producer destination as follows:</p>
+        <p class="p">The <span class="ph">Drift Synchronization Solution for PostgreSQL</span> uses the <span class="ph">PostgreSQL Metadata processor</span> and JDBC Producer destination as follows:</p>
 
         <div class="p">
             <dl class="dl">
                 
-                    <dt class="dt dlterm"><span class="ph">Postgres Metadata processor</span> for drift detection and table changes</dt>
+                    <dt class="dt dlterm"><span class="ph">PostgreSQL Metadata processor</span> for drift detection and table changes</dt>
 
-                    <dd class="dd">When processing records, the <a class="xref" href="../Processors/JDBCMetadata.html#concept_lcp_ssh_qcb"><span class="ph">Postgres Metadata processor</span></a> detects the need for new tables and columns. Upon detecting
+                    <dd class="dd">When processing records, the <a class="xref" href="../Processors/JDBCMetadata.html#concept_lcp_ssh_qcb"><span class="ph">PostgreSQL Metadata processor</span></a> detects the need for new tables and columns. Upon detecting
                         the need for changes, it executes data definition language (DDL) to create
                         new database tables or alter existing tables, as needed. This allows the
                         database to create or alter tables before records reach the JDBC Producer
@@ -246,10 +246,10 @@
                         existing columns from tables. </dd>
 
                     <dd class="dd ddexpand">
-                        <div class="note note"><span class="notetitle">Note:</span> <span class="ph">Before deploying the <span class="ph">Drift Synchronization Solution for Postgres</span>, consider the create and
+                        <div class="note note"><span class="notetitle">Note:</span> <span class="ph">Before deploying the <span class="ph">Drift Synchronization Solution for PostgreSQL</span>, consider the create and
                         alter table speed of your database, and the create and alter table
                         requirements of the incoming data. If the required changes cannot be
-                        performed quickly by the database, the <span class="ph">Drift Synchronization Solution for Postgres</span> might not be an appropriate
+                        performed quickly by the database, the <span class="ph">Drift Synchronization Solution for PostgreSQL</span> might not be an appropriate
                         solution.</span></div>
 
                     </dd>
@@ -263,7 +263,7 @@
                         configuration properties in the stage. </dd>
 
                     <dd class="dd ddexpand"><span class="ph">All columns in the tables created or altered by the
-                              <span class="ph">Postgres Metadata processor</span> allow
+                              <span class="ph">PostgreSQL Metadata processor</span> allow
                         nulls. When writing records with missing fields, the database inserts null
                         values in the corresponding columns.</span></dd>
 
@@ -278,11 +278,11 @@
     <h3 class="title topictitle3" id="ariaid-title4">Flattening Records</h3>
 
     <div class="body conbody">
-        <p class="p">At this time, the <span class="ph">Drift Synchronization Solution for Postgres</span> does not process records with nested fields. If necessary, you can use the <a class="xref" href="../Processors/FieldFlattener.html#concept_njn_3kk_fx">Field Flattener
+        <p class="p">At this time, the <span class="ph">Drift Synchronization Solution for PostgreSQL</span> does not process records with nested fields. If necessary, you can use the <a class="xref" href="../Processors/FieldFlattener.html#concept_njn_3kk_fx">Field Flattener
                 processor</a> to flatten records with nested fields before passing them to the
-                <span class="ph">Postgres Metadata processor</span>. </p>
+                <span class="ph">PostgreSQL Metadata processor</span>. </p>
 
-        <p class="p">A basic implementation of the <span class="ph">Drift Synchronization Solution for Postgres</span> with a Field Flattener looks like this:</p>
+        <p class="p">A basic implementation of the <span class="ph">Drift Synchronization Solution for PostgreSQL</span> with a Field Flattener looks like this:</p>
 
         <p class="p"><img class="image" id="concept_yjj_vht_pcb__image_z4c_1kj_qcb" src="../Graphics/JDBCDrift-basic_FieldFlattener.png" height="78" width="528" /></p>
 
@@ -294,11 +294,11 @@
     <h2 class="title topictitle2" id="ariaid-title5">Requirements</h2>
 
     <div class="body conbody">
-        <div class="p">To use the <span class="ph">Drift Synchronization Solution for Postgres</span>, you need the following:<dl class="dl">
+        <div class="p">To use the <span class="ph">Drift Synchronization Solution for PostgreSQL</span>, you need the following:<dl class="dl">
                 
                     <dt class="dt dlterm">Target table information</dt>
 
-                    <dd class="dd">To write a record to the appropriate table in the database, the <span class="ph">Postgres Metadata processor</span> and JDBC Producer destination must be able to determine the table to use
+                    <dd class="dd">To write a record to the appropriate table in the database, the <span class="ph">PostgreSQL Metadata processor</span> and JDBC Producer destination must be able to determine the table to use
                         for each record. </dd>
 
                     <dd class="dd ddexpand">If you write all records to one table, you can specify the table name in
@@ -325,7 +325,7 @@
                 
                     <dt class="dt dlterm">Decimal precision and scale information</dt>
 
-                    <dd class="dd">To enable the <span class="ph">Postgres Metadata processor</span> to create Decimal fields with the correct precision and scale, the
+                    <dd class="dd">To enable the <span class="ph">PostgreSQL Metadata processor</span> to create Decimal fields with the correct precision and scale, the
                         processor must be able to determine the precision and scale to use. By
                         default, the processor looks for the information in "precision" and "scale"
                         field attributes for every Decimal field. </dd>
@@ -334,7 +334,7 @@
                         <span class="ph">origins
                                           store the precision and scale of Decimal columns in
                                           "precision" and "scale" field attributes for each Decimal
-                                          field.</span> So when processing data from these origins, you can use the <span class="ph">Postgres Metadata processor</span> defaults. </dd>
+                                          field.</span> So when processing data from these origins, you can use the <span class="ph">PostgreSQL Metadata processor</span> defaults. </dd>
 
                     <dd class="dd ddexpand"><span class="ph">When processing data from other origins, you can use the
                                           Expression Evaluator processor earlier in the pipeline to
@@ -345,7 +345,7 @@
                 
                     <dt class="dt dlterm">Database permissions</dt>
 
-                    <dd class="dd">The user account used for connection credentials in the <span class="ph">Postgres Metadata processor</span>
+                    <dd class="dd">The user account used for connection credentials in the <span class="ph">PostgreSQL Metadata processor</span>
                         <span class="ph">must have both the Create Table and
                               Alter Table permissions on the database.</span>
                     </dd>
@@ -358,7 +358,7 @@
                     <dt class="dt dlterm">Primary use of the target tables </dt>
 
                     <dd class="dd"><span class="ph">Do not alter any table that might be used by the
-                        pipeline while the pipeline runs. Since the <span class="ph">Postgres Metadata processor</span> caches
+                        pipeline while the pipeline runs. Since the <span class="ph">PostgreSQL Metadata processor</span> caches
                         information about table structures and creates and alters tables, the
                         processor must have accurate information about the tables.</span></dd>
 
@@ -373,10 +373,10 @@
     <h2 class="title topictitle2" id="ariaid-title6">Implementation Steps</h2>
 
     <div class="body conbody">
-        <div class="p">To implement the <span class="ph">Drift Synchronization Solution for Postgres</span>, perform the following steps:<ol class="ol" id="concept_s2c_qht_pcb__ol_zr1_3j3_fw">
+        <div class="p">To implement the <span class="ph">Drift Synchronization Solution for PostgreSQL</span>, perform the following steps:<ol class="ol" id="concept_s2c_qht_pcb__ol_zr1_3j3_fw">
                 <li class="li"> Configure the origin and any additional processors that you want to use. <p class="p">If
                         data includes records with nested fields, add a Field Flattener to flatten
-                        records before passing them to the <span class="ph">Postgres Metadata processor</span>.</p>
+                        records before passing them to the <span class="ph">PostgreSQL Metadata processor</span>.</p>
 <p class="p">If each record does not include the table where the record should
                         be written or the precision and scale information required for Decimal
                         fields, use an Expression Evaluator to generate that information. You can
@@ -384,20 +384,19 @@
                         attributes, as best suits your needs. For more information, see <a class="xref" href="JDBC_DriftSyncSolution_title.html#concept_z2v_fp1_scb">Requirements</a>.</p>
 </li>
 
-                <li class="li">To capture drift and alter database tables, configure the <a class="xref" href="../Processors/JDBCMetadata.html#concept_lcp_ssh_qcb"><span class="ph">Postgres Metadata processor</span></a>:<ol class="ol" type="a" id="concept_s2c_qht_pcb__ol_qsk_5x3_fw">
+                <li class="li">To capture drift and alter database tables, configure the <a class="xref" href="../Processors/JDBCMetadata.html#concept_lcp_ssh_qcb"><span class="ph">PostgreSQL Metadata processor</span></a>:<ol class="ol" type="a" id="concept_s2c_qht_pcb__ol_qsk_5x3_fw">
                         <li class="li">If you haven't yet, <span class="ph">install the JDBC driver for the database. You cannot access
                         the database until you install the required driver. </span>
                             <span class="ph">For information about installing additional drivers, see
                               <a class="xref" href="../Configuration/ExternalLibs.html#concept_pdv_qlw_ft">Install External Libraries</a>.</span></li>
 
                         <li class="li">Configure the connection information.<p class="p"><span class="ph">The user account used for the connection
-                        credentials <span class="ph" id="concept_s2c_qht_pcb__d122e5729">must have both the Create Table and
+                        credentials <span class="ph" id="concept_s2c_qht_pcb__d122e5777">must have both the Create Table and
                               Alter Table permissions on the database.</span></span>
                             </p>
 <div class="p">
                                 <div class="note tip"><span class="tiptitle">Tip:</span> You might set up <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_rjh_ntz_qr" title="Runtime parameters are parameters that you define in a pipeline and then call from within that same pipeline. When you start the pipeline, you specify the parameter values to use. Use runtime parameters to specify values for pipeline properties when you start the pipeline.">runtime parameters</a> for the JDBC URL to make
-                                    configuring the Postgres Metadata processor and the JDBC
-                                    Producer easier. <span class="ph">To
+                                    configuring the <span class="ph">PostgreSQL Metadata processor</span> and the JDBC Producer easier. <span class="ph">To
                         secure sensitive information such as usernames and passwords, you can use
                               <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
 
@@ -429,14 +428,14 @@
 </li>
 
                         <li class="li">Configure the decimal field precision
-                              and scale attribute names.<p class="p" id="concept_s2c_qht_pcb__d122e5794">When
+                              and scale attribute names.<p class="p" id="concept_s2c_qht_pcb__d122e5842">When
                                     processing data from the JDBC Query Consumer or JDBC Multitable
                                     Consumer origins, use the default attribute names, "precision"
-                                    and "scale". Both <span class="ph" id="concept_s2c_qht_pcb__d122e5796">origins
+                                    and "scale". Both <span class="ph" id="concept_s2c_qht_pcb__d122e5844">origins
                                           store the precision and scale of Decimal columns in
                                           "precision" and "scale" field attributes for each Decimal
                                           field.</span></p>
-<p class="p"><span class="ph" id="concept_s2c_qht_pcb__d122e5799">When processing data from other origins, you can use the
+<p class="p"><span class="ph" id="concept_s2c_qht_pcb__d122e5847">When processing data from other origins, you can use the
                                           Expression Evaluator processor earlier in the pipeline to
                                           create precision and scale field attributes for Decimal
                                           fields. </span></p>
@@ -445,19 +444,19 @@
                         <li class="li">Configure the rest of the processor properties as needed.</li>
 
                     </ol>
-<p class="p">For more information about the <span class="ph">Postgres Metadata processor</span>, see <a class="xref" href="../Processors/JDBCMetadata.html#concept_lcp_ssh_qcb">Postgres Metadata</a>.</p>
+<p class="p">For more information about the <span class="ph">PostgreSQL Metadata processor</span>, see <a class="xref" href="../Processors/JDBCMetadata.html#concept_lcp_ssh_qcb">PostgreSQL Metadata</a>.</p>
 </li>
 
                 <li class="li">Configure the JDBC Producer destination to write to PostgreSQL tables:<ol class="ol" type="a" id="concept_s2c_qht_pcb__ol_k12_ty3_fw">
                         <li class="li">Configure the connection information. The user account used for the
                             connection credentials must have Write permission on the database.<div class="note tip"><span class="tiptitle">Tip:</span> You might set up <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_rjh_ntz_qr" title="Runtime parameters are parameters that you define in a pipeline and then call from within that same pipeline. When you start the pipeline, you specify the parameter values to use. Use runtime parameters to specify values for pipeline properties when you start the pipeline.">runtime parameters</a> for the JDBC URL to make configuring
-                                the <span class="ph">Postgres Metadata processor</span> and the JDBC Producer easier. <span class="ph">To
+                                the <span class="ph">PostgreSQL Metadata processor</span> and the JDBC Producer easier. <span class="ph">To
                         secure sensitive information such as usernames and passwords, you can use
                               <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
 </li>
 
                         <li class="li">Configure the Table Name property. Use the same expression used for the
-                            table name in the <span class="ph">Postgres Metadata processor</span>.</li>
+                            table name in the <span class="ph">PostgreSQL Metadata processor</span>.</li>
 
                         <li class="li">Use the default INSERT operation. </li>
 
@@ -481,7 +480,7 @@
             to PostgreSQL, and you need any changes to the Oracle tables to be mirrored in the
             PostgreSQL tables. </p>
 
-        <p class="p">To do this, you start with the JDBC Multitable Consumer origin and connect it to the <span class="ph">Postgres Metadata processor</span>. Then, use a JDBC Producer destination to write to PostgreSQL. The resulting pipeline
+        <p class="p">To do this, you start with the JDBC Multitable Consumer origin and connect it to the <span class="ph">PostgreSQL Metadata processor</span>. Then, use a JDBC Producer destination to write to PostgreSQL. The resulting pipeline
             looks like this:</p>
 
         <p class="p"><img class="image" id="concept_lzy_wb3_qcb__image_oyv_2sp_qcb" src="../Graphics/JDBC-CaseStudyPipe.png" /></p>
@@ -504,23 +503,23 @@
                         attribute.</span> The origin also stores the original precision and scale for Decimal columns in field
             attributes for each Decimal field in the record.</p>
 
-        <p class="p">The <span class="ph">Postgres Metadata processor</span> uses this information to write records to database tables and to create Decimal
+        <p class="p">The <span class="ph">PostgreSQL Metadata processor</span> uses this information to write records to database tables and to create Decimal
             fields with the correct precision and scale.</p>
 
-        <p class="p">To use the <span class="ph">Drift Synchronization Solution for Postgres</span> with the JDBC Multitable Consumer origin, you don't need to configure anything
+        <p class="p">To use the <span class="ph">Drift Synchronization Solution for PostgreSQL</span> with the JDBC Multitable Consumer origin, you don't need to configure anything
             special in the origin, simply configure the origin to read from the Oracle tables that
-            you want to process and connect it to the <span class="ph">Postgres Metadata processor</span>.</p>
+            you want to process and connect it to the <span class="ph">PostgreSQL Metadata processor</span>.</p>
 
     </div>
 
 </article>
 <article class="topic concept nested2" aria-labelledby="ariaid-title9" id="concept_vdv_j4p_qcb">
-    <h3 class="title topictitle3" id="ariaid-title9">The Postgres Metadata Processor</h3>
+    <h3 class="title topictitle3" id="ariaid-title9">The PostgreSQL Metadata Processor</h3>
 
     <div class="body conbody">
-        <p class="p">The <a class="xref" href="../Processors/JDBCMetadata.html#concept_lcp_ssh_qcb"><span class="ph">Postgres Metadata processor</span></a> performs the heavy lifting for the <span class="ph">Drift Synchronization Solution for Postgres</span>. </p>
+        <p class="p">The <a class="xref" href="../Processors/JDBCMetadata.html#concept_lcp_ssh_qcb"><span class="ph">PostgreSQL Metadata processor</span></a> performs the heavy lifting for the <span class="ph">Drift Synchronization Solution for PostgreSQL</span>. </p>
 
-        <p class="p">When processing data, the <span class="ph">Postgres Metadata processor</span> uses a table name
+        <p class="p">When processing data, the <span class="ph">PostgreSQL Metadata processor</span> uses a table name
                   expression to determine the name of the target table to use for each record. If
                   the target table is not in the processor's cache, the processor queries the
                   database for table information and caches the results. When the target table is in
@@ -528,14 +527,14 @@
                   structure. </p>
 
         <p class="p">When a record includes fields that do not exist in the
-                  table, the <span class="ph">Postgres Metadata processor</span> alters
+                  table, the <span class="ph">PostgreSQL Metadata processor</span> alters
                   the table as needed, then updates the table information in the cache. When a
                   record should be written to a table that does not exist, the processor creates the
                   table based on the fields in the record.</p>
 
-        <p class="p">When you configure the <span class="ph">Postgres Metadata processor</span>, you configure the connection information for the PostgreSQL database and other
+        <p class="p">When you configure the <span class="ph">PostgreSQL Metadata processor</span>, you configure the connection information for the PostgreSQL database and other
             standard properties. <span class="ph">The user account used for the connection
-                        credentials <span class="ph" id="concept_vdv_j4p_qcb__d122e5729">must have both the Create Table and
+                        credentials <span class="ph" id="concept_vdv_j4p_qcb__d122e5777">must have both the Create Table and
                               Alter Table permissions on the database.</span></span></p>
 
         <p class="p">Then, since the JDBC Multitable Consumer writes the table name to the jdbc.tables record
@@ -546,7 +545,7 @@
             to "precision" and "scale" attributes for each Decimal field. So you can use the
             defaults for the Decimal Scale Attribute and Decimal Precision attribute properties. </p>
 
-        <p class="p">The resulting <span class="ph">Postgres Metadata processor</span> looks like this:</p>
+        <p class="p">The resulting <span class="ph">PostgreSQL Metadata processor</span> looks like this:</p>
 
         <p class="p"><img class="image" id="concept_vdv_j4p_qcb__image_eq5_5gz_rcb" src="../Graphics/JDBC-CaseStudy-Processor.png" height="443" width="584" /></p>
 
@@ -566,11 +565,11 @@
             column mappings. Configure other properties as needed.</p>
 
         <p class="p">For the connection properties, use the same connection string and schema name that you
-            used for the <span class="ph">Postgres Metadata processor</span>. The user account associated with the credentials must have Write permission on the
+            used for the <span class="ph">PostgreSQL Metadata processor</span>. The user account associated with the credentials must have Write permission on the
             database.</p>
 
-        <p class="p">For the Table Name property, use the same expression that you used in the <span class="ph">Postgres Metadata processor</span>: <code class="ph codeph">${record:attribute('jdbc.tables')}</code>. This enables the destination to write each record to the table defined in the
-            jdbc.tables record header attribute. When needed, the <span class="ph">Postgres Metadata processor</span> creates or alters the table to allow the record to be written without errors.</p>
+        <p class="p">For the Table Name property, use the same expression that you used in the <span class="ph">PostgreSQL Metadata processor</span>: <code class="ph codeph">${record:attribute('jdbc.tables')}</code>. This enables the destination to write each record to the table defined in the
+            jdbc.tables record header attribute. When needed, the <span class="ph">PostgreSQL Metadata processor</span> creates or alters the table to allow the record to be written without errors.</p>
 
         <p class="p">Then, set the default operation to INSERT.</p>
 
@@ -586,27 +585,27 @@
 
     <div class="body conbody">
         <div class="p">When the pipeline runs, the following actions occur:<ul class="ul" id="concept_y14_dy1_scb__ul_qzc_gy1_scb">
-                <li class="li">The <span class="ph">Postgres Metadata processor</span> assesses each record, checking the jdbc.tables header attribute for the table
+                <li class="li">The <span class="ph">PostgreSQL Metadata processor</span> assesses each record, checking the jdbc.tables header attribute for the table
                     each record requires, and comparing the record structure against the cached
-                    table structure. If the table is not cached, the <span class="ph">Postgres Metadata processor</span> pings the database for table information, then performs the comparison.</li>
+                    table structure. If the table is not cached, the <span class="ph">PostgreSQL Metadata processor</span> pings the database for table information, then performs the comparison.</li>
 
-                <li class="li">When a record includes a new or changed field, the <span class="ph">Postgres Metadata processor</span> sends an alter table command to the database, then updates the table
+                <li class="li">When a record includes a new or changed field, the <span class="ph">PostgreSQL Metadata processor</span> sends an alter table command to the database, then updates the table
                     information in its cache. When a record requires a table that does not exist,
-                    the <span class="ph">Postgres Metadata processor</span> creates the table based on the record structure. </li>
+                    the <span class="ph">PostgreSQL Metadata processor</span> creates the table based on the record structure. </li>
 
-                <li class="li">When creating Decimal columns, the <span class="ph">Postgres Metadata processor</span> uses information in the precision and scale field attributes for the
+                <li class="li">When creating Decimal columns, the <span class="ph">PostgreSQL Metadata processor</span> uses information in the precision and scale field attributes for the
                     corresponding Decimal field.</li>
 
                 <li class="li">The JDBC Producer writes the records to tables based on the table name in the
                     jdbc.tables header attribute. <p class="p"><span class="ph">All columns in the tables created or altered by the
-                              <span class="ph">Postgres Metadata processor</span> allow
+                              <span class="ph">PostgreSQL Metadata processor</span> allow
                         nulls. When writing records with missing fields, the database inserts null
                         values in the corresponding columns.</span></p>
-<p class="p">Since the <span class="ph">Postgres Metadata processor</span> created and altered tables as needed, no write errors should occur from
+<p class="p">Since the <span class="ph">PostgreSQL Metadata processor</span> created and altered tables as needed, no write errors should occur from
                         structural changes in the data.</p>
 </li>
 
-                <li class="li">When the pipeline stops, the <span class="ph">Postgres Metadata processor</span> cache is cleared. </li>
+                <li class="li">When the pipeline stops, the <span class="ph">PostgreSQL Metadata processor</span> cache is cleared. </li>
 
             </ul>
 </div>
