@@ -450,6 +450,7 @@
         <apache-kafka_0_10-lib>apache-kafka_0_10-lib</apache-kafka_0_10-lib>
         <apache-kafka_0_11-lib>apache-kafka_0_11-lib</apache-kafka_0_11-lib>
         <apache-kafka_1_0-lib>apache-kafka_1_0-lib</apache-kafka_1_0-lib>
+        <apache-kafka_1_1-lib>apache-kafka_1_1-lib</apache-kafka_1_1-lib>
         <apache-kudu_1_0-lib>apache-kudu_1_0-lib</apache-kudu_1_0-lib>
         <apache-kudu_1_1-lib>apache-kudu_1_1-lib</apache-kudu_1_1-lib>
         <apache-kudu_1_2-lib>apache-kudu_1_2-lib</apache-kudu_1_2-lib>
@@ -523,6 +524,7 @@
         <module>apache-kafka_0_10-lib</module>
         <module>apache-kafka_0_11-lib</module>
         <module>apache-kafka_1_0-lib</module>
+        <module>apache-kafka_1_1-lib</module>
         <module>apache-kudu_1_0-lib</module>
         <module>apache-kudu_1_1-lib</module>
         <module>apache-kudu_1_2-lib</module>
@@ -602,7 +604,7 @@
              IMPORTANT: define a property matching the module directory name
              for all the sample dev stage libraries here with the directory name as value
         -->
-        <apache-kafka_1_0-lib>apache-kafka_1_0-lib</apache-kafka_1_0-lib>
+        <apache-kafka_1_1-lib>apache-kafka_1_1-lib</apache-kafka_1_1-lib>
         <apache-kudu_1_7-lib>apache-kudu_1_7-lib</apache-kudu_1_7-lib>
         <apache-pulsar_2-lib>apache-pulsar_2-lib</apache-pulsar_2-lib>
         <apache-solr_6_1_0-lib>apache-solr_6_1_0-lib</apache-solr_6_1_0-lib>
@@ -636,7 +638,7 @@
 
              IMPORTANT: the modules for the sample dev stage libraries
         -->
-        <module>apache-kafka_1_0-lib</module>
+        <module>apache-kafka_1_1-lib</module>
         <module>apache-kudu_1_7-lib</module>
         <module>apache-pulsar_2-lib</module>
         <module>apache-solr_6_1_0-lib</module>
