@@ -26,9 +26,12 @@ import com.streamsets.pipeline.lib.salesforce.Errors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-class ForceLookupLoader extends CacheLoader<String, Map<String, Field>> {
+class ForceLookupLoader extends CacheLoader<String, Optional<List<Map<String, Field>>>> {
   private static final Logger LOG = LoggerFactory.getLogger(ForceLookupLoader.class);
 
   private final ForceLookupProcessor processor;
@@ -38,11 +41,13 @@ class ForceLookupLoader extends CacheLoader<String, Map<String, Field>> {
   }
 
   @Override
-  public Map<String, Field> load(String key) throws Exception {
+  public Optional<List<Map<String, Field>>> load(String key) throws Exception {
     return lookupValuesForRecord(key);
   }
 
-  private Map<String, Field> lookupValuesForRecord(String preparedQuery) throws StageException {
+  private Optional<List<Map<String, Field>>> lookupValuesForRecord(String preparedQuery) throws StageException {
+    List<Map<String, Field>> lookupItems = new ArrayList<>();
+
     try {
       if (!processor.recordCreator.metadataCacheExists()) {
         processor.recordCreator.buildMetadataCacheFromQuery(processor.partnerConnection, preparedQuery);
@@ -56,19 +61,21 @@ class ForceLookupLoader extends CacheLoader<String, Map<String, Field>> {
 
       LOG.info("Retrieved {} records", records.length);
 
-      if (records.length > 0) {
-        // TODO - handle multiple records (SDC-4739)
+      for (int i = 0; i < records.length; i++) {
+        lookupItems.add(processor.recordCreator.addFields(
+            records[i],
+            processor.columnsToTypes));
+      }
 
-        return processor.recordCreator.addFields(
-            records[0],
-            processor.columnsToTypes);
-      } else {
-        // Salesforce returns no row. Use default values.
-        return processor.getDefaultFields();
+      // If no lookup items were found, use defaults
+      if(lookupItems.isEmpty()) {
+        return Optional.empty();
       }
     } catch (ConnectionException e) {
       LOG.error(Errors.FORCE_17.getMessage(), preparedQuery, e);
       throw new OnRecordErrorException(Errors.FORCE_17, preparedQuery, e.getMessage());
     }
+
+    return Optional.of(lookupItems);
   }
 }
