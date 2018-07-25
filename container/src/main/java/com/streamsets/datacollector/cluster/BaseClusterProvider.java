@@ -212,16 +212,6 @@ public abstract class BaseClusterProvider implements ClusterProvider {
     return Utils.format("ERROR: " + template, args);
   }
 
-  protected void logOutput(String appId, SystemProcess process) {
-    try {
-      getLog().info("Status command standard error: {} ", Joiner.on("\n").join(process.getAllError()));
-      getLog().info("Status command standard output: {} ", Joiner.on("\n").join(process.getAllOutput()));
-    } catch (Exception e) {
-      String msg = errorString("Could not read output of command '{}' for app {}: {}", process.getCommand(), appId, e);
-      getLog().error(msg, e);
-    }
-  }
-
   @VisibleForTesting
   void rewriteProperties(
       File sdcPropertiesFile,
@@ -571,11 +561,9 @@ public abstract class BaseClusterProvider implements ClusterProvider {
                 }
               }
             } else if (canCastToString(conf.getValue())) {
-              getLog().debug("Adding to source configs " + conf.getName() + "=" + value);
               sourceConfigs.put(conf.getName(), String.valueOf(value));
             } else if (value instanceof Enum) {
               value = ((Enum) value).name();
-              getLog().debug("Adding to source configs " + conf.getName() + "=" + value);
               sourceConfigs.put(conf.getName(), String.valueOf(value));
             } else {
               getLog().warn("Conf value is of unknown type " + conf.getValue());
@@ -1014,7 +1002,6 @@ public abstract class BaseClusterProvider implements ClusterProvider {
             break;
         }
         if (confKey != null && confValue != null) {
-          getLog().debug("Adding to source configs " + confKey + "=" + confValue);
           sourceConfigs.put(confKey, confValue);
         }
       }
