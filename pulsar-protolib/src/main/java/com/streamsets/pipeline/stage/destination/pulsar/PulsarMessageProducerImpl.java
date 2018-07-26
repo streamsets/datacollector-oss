@@ -42,6 +42,7 @@ import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.apache.pulsar.client.api.Producer;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
+import org.apache.pulsar.client.impl.FlusherProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -124,7 +125,8 @@ public class PulsarMessageProducerImpl implements PulsarMessageProducer {
                                    .build(new CacheLoader<String, Producer>() {
                                      @Override
                                      public Producer load(String key) throws Exception {
-                                       return pulsarClient.newProducer().topic(key).create();
+                                       // TODO remove FlusherProducer wrapper, SDC-9554
+                                       return new FlusherProducer<>(pulsarClient.newProducer().topic(key).create());
                                      }
                                    });
 
@@ -174,11 +176,10 @@ public class PulsarMessageProducerImpl implements PulsarMessageProducer {
         }
       }
 
-      // TODO uncomment below for when version supporting it is released (theoretically 2.2.0-incubating-SNAPSHOT)
-      /*for (Producer producer : usedProducers) {
-
-        producer.flush();
-      }*/
+      for (Producer producer : usedProducers) {
+        // TODO remove cast, SDC-9554
+        ((FlusherProducer)producer).flush();
+      }
     }
   }
 

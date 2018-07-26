@@ -31,6 +31,8 @@ import com.streamsets.pipeline.stage.Utils.TestUtilsPulsar;
 import org.apache.pulsar.client.api.Producer;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
+import org.apache.pulsar.client.impl.FlusherProducer;
+import org.apache.pulsar.client.impl.ProducerBase;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -160,7 +162,7 @@ public class TestPulsarMessageProducerImpl {
 
       //modify message producers
       LoadingCache<String, Producer> messageProducersMock = Mockito.mock(LoadingCache.class);
-      Mockito.when(messageProducersMock.get(Mockito.any())).thenReturn(Mockito.mock(Producer.class));
+      Mockito.when(messageProducersMock.get(Mockito.any())).thenReturn(new FlusherProducer(Mockito.mock(ProducerBase.class)));
       pulsarMessageProducer.setMessageProducers(messageProducersMock);
 
       Batch batch = TestUtilsPulsar.getBatch();
