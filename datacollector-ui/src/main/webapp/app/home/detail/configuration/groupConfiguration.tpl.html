@@ -220,7 +220,7 @@
                 readOnly: (isPipelineReadOnly || isPipelineRunning),
                 autofocus: autoFocusConfigName === configDefinition.name,
                 lineNumbers: true
-              }, configDefinition, bulkEdit)"
+              }, configDefinition)"
              codemirror-el
              field-paths="fieldPaths"
              d-field-paths="dFieldPaths"
@@ -235,13 +235,9 @@
         </button>
 
         <div class="pull-right field-selector-btn" ng-hide="isPipelineReadOnly || isPipelineRunning">
-          <i class="fa fa-exclamation-triangle icon-danger"
-             ng-show="codeMirrorErrors[configDefinition.name].length > 0" ></i>
           <button type="button" class="btn btn-link"
-                  ng-disabled="codeMirrorErrors[configDefinition.name].length > 0"
                   ng-click="bulkEdit = !bulkEdit">
-            {{bulkEdit ?
-            ('home.detailPane.configurationTab.switchToSimpleMode' | translate) : ('home.detailPane.configurationTab.switchToBulkMode' | translate)}}
+            {{bulkEdit ? ('home.detailPane.configurationTab.switchToSimpleMode' | translate) : ('home.detailPane.configurationTab.switchToBulkMode' | translate)}}
           </button>
         </div>
 

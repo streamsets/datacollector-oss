@@ -20,7 +20,7 @@
 angular
   .module('dataCollectorApp.home')
   .controller('ConfigurationController', function (
-    $scope, $rootScope, $q, $modal, _, $timeout, api, previewService, pipelineConstant, pipelineService, lintService
+    $scope, $rootScope, $q, $modal, _, $timeout, api, previewService, pipelineConstant, pipelineService
   ) {
 
     var getIssues = function(config, issues, instanceName, serviceName, configDefinition) {
@@ -91,7 +91,7 @@ angular
        * @param configDefinition
        * @returns {*}
        */
-      getCodeMirrorOptions: function(options, configDefinition, bulkEdit) {
+      getCodeMirrorOptions: function(options, configDefinition) {
         var codeMirrorOptions = {};
 
         if (configDefinition.type !== 'TEXT') {
@@ -105,29 +105,7 @@ angular
             lineWrapping: $rootScope.$storage.lineWrapping
           };
         }
-        if (!$scope.codeMirrorErrors[configDefinition.name]) {
-          $scope.codeMirrorErrors[configDefinition.name] = [];
-        }
 
-        var linter = lintService.determineLinter(configDefinition, bulkEdit);
-        if (linter) {
-          codeMirrorOptions.gutters = ['CodeMirror-lint-markers'];
-          codeMirrorOptions.lint = {
-            "getAnnotations": function(cm, updateLinting, options) {
-              options = { indent: options.indent};
-              var errors = lintService.performLint(linter, cm, options),
-                errorSeverityFilter = 'error';
-              $scope.codeMirrorErrors[configDefinition.name] = !!errorSeverityFilter ? errors.filter(function(err) {
-                return err.severity === errorSeverityFilter;
-              }) : errors;
-              // use $timeout to trigger safely a digest loop in the next event loop, so changes can
-              // be applied, we need to do this as this code is not called by angular
-              $timeout(0, {});
-              updateLinting(errors);
-            },
-            "async": true
-          }
-        }
         return angular.extend(codeMirrorOptions, pipelineService.getDefaultELEditorOptions(), options);
       },
 
