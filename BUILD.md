@@ -106,3 +106,32 @@ Extract the tarball to your preferred location :
 To start the DataCollector, execute:
 
 `streamsets-datacollector-all-3.4.0-SNAPSHOT/bin/streamsets dc`
+
+## Troubleshooting
+
+Recent changes in Node might cause the build to fail with an error similar to:
+
+    [INFO] --------------------------------------
+    [INFO]          BOWER INSTALL
+    [INFO] --------------------------------------
+    [INFO] grunt version :
+    grunt-cli v1.2.0
+    grunt v0.4.5
+    [INFO] --------------------------------------
+    [INFO]          GRUNT TEST --NO-COLOR
+    [INFO] --------------------------------------
+    grunt[12558]: ../src/node_contextify.cc:629:static void node::contextify::ContextifyScript::New(const FunctionCallbackInfo<v8::Value> &): Assertion `args[1]->IsString()' failed.
+     1: node::Abort() [/usr/local/bin/node]
+     2: node::MakeCallback(v8::Isolate*, v8::Local<v8::Object>, char const*, int, v8::Local<v8::Value>*, node::async_context) [/usr/local/bin/node]
+     3: node::contextify::ContextifyScript::New(v8::FunctionCallbackInfo<v8::Value> const&) [/usr/local/bin/node]
+     4: v8::internal::FunctionCallbackArguments::Call(v8::internal::CallHandlerInfo*) [/usr/local/bin/node]
+     5: v8::internal::MaybeHandle<v8::internal::Object> v8::internal::(anonymous namespace)::HandleApiCallHelper<true>(v8::internal::Isolate*, v8::internal::Handle<v8::internal::HeapObject>, v8::internal::Handle<v8::internal::HeapObject>, v8::internal::Handle<v8::internal::FunctionTemplateInfo>, v8::internal::Handle<v8::internal::Object>, v8::internal::BuiltinArguments) [/usr/local/bin/node]
+     6: v8::internal::Builtin_Impl_HandleApiCall(v8::internal::BuiltinArguments, v8::internal::Isolate*) [/usr/local/bin/node]
+
+Upgrade Node to the current version (at the time of writing, this was 10.7.0) and execute the following commands from the datacollector directory:
+
+    cd datacollector-ui
+    rm -rf node_modules
+    rm -rf package-lock.json
+    npm --force cache clean
+    npm install
