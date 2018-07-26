@@ -31,6 +31,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -439,6 +440,25 @@ public class StringEL {
 
     return splitter.split(string).entrySet().stream()
         .collect(Collectors.toMap(Map.Entry::getKey, e -> Field.create(e.getValue())));
+  }
+
+  @ElFunction(
+      prefix = "str",
+      name = "split",
+      description = "Splits a string into a list by a separator"
+  )
+  public static List<Field> split(
+      @ElParam("string") String string,
+      @ElParam("separator") String separator
+  ) {
+    if (Strings.isNullOrEmpty(string)) {
+      return Collections.emptyList();
+    }
+
+    Splitter splitter = Splitter.on(separator).trimResults().omitEmptyStrings();
+    List<Field> fields = new ArrayList<>();
+    splitter.split(string).iterator().forEachRemaining(e -> fields.add(Field.create(e)));
+    return fields;
   }
 
 }

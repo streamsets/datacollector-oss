@@ -27,6 +27,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableMap;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -456,6 +457,18 @@ public class TestStringEL {
       Assert.assertTrue(result.containsKey("key" + i));
       Assert.assertEquals("val" + i, result.get("key" + i).getValueAsString());
     }
+  }
+
+  @Test
+  public void testSplitter() throws Exception {
+    ELEvaluator eval = new ELEvaluator("splitter", elDefinitionExtractor, StringEL.class);
+    ELVariables vars = new ELVariables();
+
+    List<Field> result = eval.eval(vars, "${str:split('a, b, c', ',')}", List.class);
+    Assert.assertEquals(3, result.size());
+    Assert.assertEquals("a", result.get(0).getValueAsString());
+    Assert.assertEquals("b", result.get(1).getValueAsString());
+    Assert.assertEquals("c", result.get(2).getValueAsString());
   }
 
 }
