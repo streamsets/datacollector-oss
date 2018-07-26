@@ -261,6 +261,7 @@ public class InterceptorContext implements Interceptor.Context {
           configuration,
           startTime,
           lineagePublisherDelegator,
+          klass,
           issues
         );
         if (stageRuntime == null) {

@@ -58,7 +58,7 @@ public abstract class DetachedStage {
   /**
    * Create a new instance of a stage that does not directly live in the pipeline canvas.
    */
-  public DetachedStageRuntime createDetachedStage(
+  public<S> DetachedStageRuntime<? extends S> createDetachedStage(
     String jsonDefinition,
     StageLibraryTask stageLibrary,
     String pipelineId,
@@ -74,6 +74,7 @@ public abstract class DetachedStage {
     Configuration configuration,
     long startTime,
     LineagePublisherDelegator lineagePublisherDelegator,
+    Class<S> klass,
     List<Issue> errors
   ) {
     DetachedStageConfiguration stageConf;
@@ -106,6 +107,7 @@ public abstract class DetachedStage {
       configuration,
       startTime,
       lineagePublisherDelegator,
+      klass,
       errors
     );
   }
@@ -113,7 +115,7 @@ public abstract class DetachedStage {
   /**
    * Create a new instance of a stage that does not directly live in the pipeline canvas.
    */
-  public DetachedStageRuntime createDetachedStage(
+  public<S> DetachedStageRuntime<? extends S> createDetachedStage(
     DetachedStageConfiguration stageConf,
     StageLibraryTask stageLibrary,
     String pipelineId,
@@ -129,6 +131,7 @@ public abstract class DetachedStage {
     Configuration configuration,
     long startTime,
     LineagePublisherDelegator lineagePublisherDelegator,
+    Class<S> klass,
     List<Issue> errors
   ) {
     // Firstly validate that the configuration is correct and up to date
@@ -206,7 +209,7 @@ public abstract class DetachedStage {
       false
     );
 
-    return new DetachedStageRuntime(stageBean, stageInfo, context);
+    return DetachedStageRuntime.create(stageBean, stageInfo, context, klass);
   }
 
 }

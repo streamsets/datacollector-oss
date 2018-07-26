@@ -26,6 +26,8 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.Target;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -35,6 +37,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class DetachedStageTest {
 
@@ -61,10 +64,46 @@ public class DetachedStageTest {
       Mockito.mock(Configuration.class),
       0,
       new LineagePublisherDelegator.NoopDelegator(),
+      Processor.class,
       issues
     );
 
     assertNotNull(stageRuntime);
     assertEquals(0, issues.size());
+
+    assertTrue(stageRuntime instanceof Processor);
+  }
+
+  @Test
+  public void createTarget() {
+    StageLibraryTask lib = MockStages.createStageLibrary();
+    StageConfiguration stageConf = MockStages.createTarget("t", Collections.emptyList(), Collections.emptyList());
+    DetachedStageConfiguration detachedStageConf = new DetachedStageConfiguration(stageConf);
+    List<Issue> issues = new ArrayList<>();
+
+    DetachedStageRuntime stageRuntime = DetachedStage.get().createDetachedStage(
+      detachedStageConf,
+      lib,
+      "pipelineId",
+      "pipelineTitle",
+      "rev",
+      Mockito.mock(UserContext.class),
+      Mockito.mock(MetricRegistry.class),
+      0,
+      ExecutionMode.STANDALONE,
+      DeliveryGuarantee.AT_LEAST_ONCE,
+      Mockito.mock(RuntimeInfo.class),
+      Mockito.mock(EmailSender.class),
+      Mockito.mock(Configuration.class),
+      0,
+      new LineagePublisherDelegator.NoopDelegator(),
+      Target.class,
+      issues
+    );
+
+    assertNotNull(stageRuntime);
+    assertEquals(0, issues.size());
+
+    assertTrue(stageRuntime instanceof Target);
   }
 }
