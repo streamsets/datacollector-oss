@@ -20,6 +20,7 @@ import com.streamsets.datacollector.client.ApiException;
 import com.streamsets.datacollector.client.Configuration;
 import com.streamsets.datacollector.client.Pair;
 import com.streamsets.datacollector.client.TypeRef;
+import com.streamsets.datacollector.client.model.DetachedStageConfigurationJson;
 import com.streamsets.datacollector.client.model.Order;
 import com.streamsets.datacollector.client.model.PipelineConfigurationJson;
 import com.streamsets.datacollector.client.model.PipelineEnvelopeJson;
@@ -751,6 +752,39 @@ public class StoreApi {
 
     String[] authNames = new String[] { "basic" };
     TypeRef returnType = new TypeRef<List<String>>() {};
+    return apiClient.invokeAPI(path, "POST", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, returnType);
+  }
+
+  /**
+   * Validates given detached stage and performs any necessary upgrade.
+   */
+  public DetachedStageConfigurationJson validateDetachedStage(
+    DetachedStageConfigurationJson detachedStageConfigurationJson
+  ) throws ApiException {
+    Object postBody = detachedStageConfigurationJson;
+    byte[] postBinaryBody = null;
+
+    // create path and map variables
+    String path = "/v1/detachedstage";
+
+    // query params
+    List<Pair> queryParams = new ArrayList<Pair>();
+    Map<String, String> headerParams = new HashMap<String, String>();
+    Map<String, Object> formParams = new HashMap<String, Object>();
+
+    final String[] accepts = {
+        "application/json"
+    };
+    final String accept = apiClient.selectHeaderAccept(accepts);
+
+    final String[] contentTypes = {
+    };
+    final String contentType = apiClient.selectHeaderContentType(contentTypes);
+
+    String[] authNames = new String[] { "basic" };
+
+    TypeRef returnType = new TypeRef<DetachedStageConfigurationJson>() {};
     return apiClient.invokeAPI(path, "POST", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
         contentType, authNames, returnType);
   }
