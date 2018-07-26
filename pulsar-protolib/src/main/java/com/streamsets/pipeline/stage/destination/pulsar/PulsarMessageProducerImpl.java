@@ -147,8 +147,14 @@ public class PulsarMessageProducerImpl implements PulsarMessageProducer {
         byteArrayOutputStream.reset();
         Record record = recordIterator.next();
 
-        try (DataGenerator generator = dataFormatGeneratorService.getGenerator(byteArrayOutputStream)) {
-          generator.write(record);
+        try {
+          try (DataGenerator generator = dataFormatGeneratorService.getGenerator(byteArrayOutputStream)) {
+            generator.write(record);
+          } catch (DataGeneratorException e) {
+            handleError(record, e);
+          } catch (IOException e) {
+            throw new StageException(PulsarErrors.PULSAR_01, e.getMessage(), e);
+          }
 
           // Resolve destination
           ELVars elVars = context.createELVars();
@@ -161,10 +167,6 @@ public class PulsarMessageProducerImpl implements PulsarMessageProducer {
           usedProducers.add(producer);
         } catch (PulsarClientException e) {
           handleError(record, new StageException(PulsarErrors.PULSAR_04, destinationName, e.getMessage(), e));
-        } catch (DataGeneratorException e) {
-          handleError(record, e);
-        } catch (IOException e) {
-          throw new StageException(PulsarErrors.PULSAR_01, e.getMessage(), e);
         } catch (ExecutionException e) {
           handleError(record, new StageException(PulsarErrors.PULSAR_03, destinationName, e.getMessage(), e));
         } catch (ELEvalException e) {
