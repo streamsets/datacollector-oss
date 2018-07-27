@@ -21,8 +21,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.google.common.io.Resources;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.http.AuthenticationType;
@@ -49,8 +51,8 @@ import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.HEAD;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -65,7 +67,9 @@ import java.net.URLDecoder;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.Signature;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,6 +87,8 @@ public class HttpProcessorIT extends JerseyTest {
   private static final String CLIENT_SECRET = "awesomeness";
   private static final String USERNAME = "streamsets";
   private static final String PASSWORD = "live long and prosper";
+  private static final String OUTPUT_FIELD = "/output";
+  private static final String OUTPUT_LANE = "lane";
 
   public static final String JWT_BEARER_TOKEN = "urn:ietf:params:oauth:grant-type:jwt-bearer";
   private static final String ALGORITHM = "{\"alg\":\"RS256\",\"typ\":\"JWT\"}";
@@ -116,6 +122,15 @@ public class HttpProcessorIT extends JerseyTest {
           .header("x-test-header", "StreamSets")
           .header("x-list-header", ImmutableList.of("a", "b"))
           .build();
+    }
+  }
+
+  @Path("/test/null")
+  @Produces(MediaType.APPLICATION_JSON)
+  public static class TestNull {
+    @GET
+    public Response get(@Context HttpHeaders headers) {
+      return Response.ok(null).build();
     }
   }
 
@@ -360,6 +375,7 @@ public class HttpProcessorIT extends JerseyTest {
     return new ResourceConfig(
         Sets.newHashSet(
             TestGet.class,
+            TestNull.class,
             TestGetZip.class,
             TestPut.class,
             HttpStageTestUtil.TestPostCustomType.class,
@@ -379,28 +395,18 @@ public class HttpProcessorIT extends JerseyTest {
   public void testHttpHead() throws Exception {
     HttpProcessorConfig conf = new HttpProcessorConfig();
     conf.httpMethod = HttpMethod.HEAD;
-    conf.outputField = "/output";
     conf.dataFormat = DataFormat.TEXT;
     conf.resourceUrl = getBaseUri() + "test/head";
     conf.headerOutputLocation = HeaderOutputLocation.HEADER;
 
-    Record record = RecordCreator.create();
-    record.set("/", Field.create(new HashMap<String, Field>()));
-
-    List<Record> records = ImmutableList.of(record);
-    Processor processor = new HttpProcessor(conf);
-    ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
-            .addOutputLane("lane")
-            .build();
-    runner.runInit();
+    List<Record> records = createRecords("test/head");
+    ProcessorRunner runner = createProcessorRunner(conf);
     try {
       StageRunner.Output output = runner.runProcess(records);
-      List<Record> outputRecords = output.getRecords().get("lane");
-      assertTrue(runner.getErrorRecords().isEmpty());
-      assertEquals(1, outputRecords.size());
-      assertTrue(outputRecords.get(0).has("/output"));
-      assertEquals("StreamSets", outputRecords.get(0).getHeader().getAttribute("x-test-header"));
-      assertEquals("[a, b]", outputRecords.get(0).getHeader().getAttribute("x-list-header"));
+      getOutputField(output);
+      Record.Header header = getOutputRecord(output).getHeader();
+      assertEquals("StreamSets", header.getAttribute("x-test-header"));
+      assertEquals("[a, b]", header.getAttribute("x-list-header"));
     } finally {
       runner.runDestroy();
     }
@@ -410,29 +416,18 @@ public class HttpProcessorIT extends JerseyTest {
   public void testHttpGetDefaultHeaderOutput() throws Exception {
     HttpProcessorConfig conf = new HttpProcessorConfig();
     conf.httpMethod = HttpMethod.GET;
-    conf.outputField = "/output";
     conf.dataFormat = DataFormat.TEXT;
     conf.resourceUrl = getBaseUri() + "test/get";
     conf.headerOutputLocation = HeaderOutputLocation.HEADER;
 
-    Record record = RecordCreator.create();
-    record.set("/", Field.create(new HashMap<String, Field>()));
-
-    List<Record> records = ImmutableList.of(record);
-    Processor processor = new HttpProcessor(conf);
-    ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
-        .addOutputLane("lane")
-        .build();
-    runner.runInit();
+    List<Record> records = createRecords("test/get");
+    ProcessorRunner runner = createProcessorRunner(conf);
     try {
       StageRunner.Output output = runner.runProcess(records);
-      List<Record> outputRecords = output.getRecords().get("lane");
-      assertTrue(runner.getErrorRecords().isEmpty());
-      assertEquals(1, outputRecords.size());
-      assertTrue(outputRecords.get(0).has("/output"));
-      assertEquals("{\"hello\":\"world!\"}", outputRecords.get(0).get("/output").getValueAsString());
-      assertEquals("StreamSets", outputRecords.get(0).getHeader().getAttribute("x-test-header"));
-      assertEquals("[a, b]", outputRecords.get(0).getHeader().getAttribute("x-list-header"));
+      assertEquals("{\"hello\":\"world!\"}", getOutputField(output).getValueAsString());
+      Record.Header header = getOutputRecord(output).getHeader();
+      assertEquals("StreamSets", header.getAttribute("x-test-header"));
+      assertEquals("[a, b]", header.getAttribute("x-list-header"));
     } finally {
       runner.runDestroy();
     }
@@ -442,35 +437,24 @@ public class HttpProcessorIT extends JerseyTest {
   public void testHttpGetPrefixedHeaderOutput() throws Exception {
     HttpProcessorConfig conf = new HttpProcessorConfig();
     conf.httpMethod = HttpMethod.GET;
-    conf.outputField = "/output";
     conf.dataFormat = DataFormat.TEXT;
     conf.resourceUrl = getBaseUri() + "test/get";
     conf.headerOutputLocation = HeaderOutputLocation.HEADER;
     conf.headerAttributePrefix = "test-prefix-";
 
-    Record record = RecordCreator.create();
-    record.set("/", Field.create(new HashMap<String, Field>()));
-
-    List<Record> records = ImmutableList.of(record);
-    Processor processor = new HttpProcessor(conf);
-    ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
-        .addOutputLane("lane")
-        .build();
-    runner.runInit();
+    List<Record> records = createRecords("test/get");
+    ProcessorRunner runner = createProcessorRunner(conf);
     try {
       StageRunner.Output output = runner.runProcess(records);
-      List<Record> outputRecords = output.getRecords().get("lane");
-      assertTrue(runner.getErrorRecords().isEmpty());
-      assertEquals(1, outputRecords.size());
-      assertTrue(outputRecords.get(0).has("/output"));
-      assertEquals("{\"hello\":\"world!\"}", outputRecords.get(0).get("/output").getValueAsString());
+      assertEquals("{\"hello\":\"world!\"}", getOutputField(output).getValueAsString());
+      Record.Header header = getOutputRecord(output).getHeader();
       assertEquals(
           "StreamSets",
-          outputRecords.get(0).getHeader().getAttribute(conf.headerAttributePrefix + "x-test-header")
+          header.getAttribute(conf.headerAttributePrefix + "x-test-header")
       );
       assertEquals(
           "[a, b]",
-          outputRecords.get(0).getHeader().getAttribute(conf.headerAttributePrefix + "x-list-header")
+          header.getAttribute(conf.headerAttributePrefix + "x-list-header")
       );
     } finally {
       runner.runDestroy();
@@ -481,35 +465,23 @@ public class HttpProcessorIT extends JerseyTest {
   public void testHttpGetHeaderFieldOutput() throws Exception {
     HttpProcessorConfig conf = new HttpProcessorConfig();
     conf.httpMethod = HttpMethod.GET;
-    conf.outputField = "/output";
     conf.dataFormat = DataFormat.TEXT;
     conf.resourceUrl = getBaseUri() + "test/get";
     conf.headerOutputLocation = HeaderOutputLocation.FIELD;
     conf.headerOutputField = "/headers";
 
-    Record record = RecordCreator.create();
-    record.set("/", Field.create(new HashMap<String, Field>()));
-
-    List<Record> records = ImmutableList.of(record);
-    Processor processor = new HttpProcessor(conf);
-    ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
-        .addOutputLane("lane")
-        .build();
-    runner.runInit();
+    List<Record> records = createRecords("test/get");
+    ProcessorRunner runner = createProcessorRunner(conf);
     try {
       StageRunner.Output output = runner.runProcess(records);
-      List<Record> outputRecords = output.getRecords().get("lane");
-      assertTrue(runner.getErrorRecords().isEmpty());
-      assertEquals(1, outputRecords.size());
-      assertTrue(outputRecords.get(0).has("/output"));
-      assertEquals("{\"hello\":\"world!\"}", outputRecords.get(0).get("/output").getValueAsString());
+      assertEquals("{\"hello\":\"world!\"}", getOutputField(output).getValueAsString());
       assertEquals(
           "StreamSets",
-          outputRecords.get(0).get(conf.headerOutputField).getValueAsMap().get("x-test-header").getValueAsString()
+          getOutputRecord(output).get(conf.headerOutputField).getValueAsMap().get("x-test-header").getValueAsString()
       );
       assertEquals(
           "[a, b]",
-          outputRecords.get(0).get(conf.headerOutputField).getValueAsMap().get("x-list-header").getValueAsString()
+          getOutputRecord(output).get(conf.headerOutputField).getValueAsMap().get("x-list-header").getValueAsString()
       );
     } finally {
       runner.runDestroy();
@@ -529,35 +501,18 @@ public class HttpProcessorIT extends JerseyTest {
   private void doTestGetJson(boolean compressed) throws com.streamsets.pipeline.api.StageException {
     HttpProcessorConfig conf = new HttpProcessorConfig();
     conf.httpMethod = HttpMethod.GET;
-    conf.outputField = "/output";
     conf.dataFormat = DataFormat.JSON;
     conf.resourceUrl = getBaseUri() + "test/get";
     if (compressed) {
       conf.resourceUrl = conf.resourceUrl + "zip";
       conf.dataFormatConfig.compression = Compression.COMPRESSED_FILE;
     }
-    System.out.println(conf.resourceUrl);
 
-    Record record = RecordCreator.create();
-    record.set("/", Field.create(new HashMap<>()));
-
-    List<Record> records = ImmutableList.of(record);
-    Processor processor = new HttpProcessor(conf);
-    ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
-        .addOutputLane("lane")
-        .build();
-    runner.runInit();
+    List<Record> records = createRecords("test/get");
+    ProcessorRunner runner = createProcessorRunner(conf);
     try {
       StageRunner.Output output = runner.runProcess(records);
-      List<Record> outputRecords = output.getRecords().get("lane");
-      assertTrue(runner.getErrorRecords().isEmpty());
-      assertEquals(1, outputRecords.size());
-      assertTrue(outputRecords.get(0).has("/output"));
-      Map<String, Field> outputMap = outputRecords.get(0).get("/output").getValueAsMap();
-      assertTrue(!outputMap.isEmpty());
-      assertTrue(outputMap.containsKey("hello"));
-      assertEquals("world!", outputMap.get("hello").getValueAsString());
-
+      assertOutputMap(output, "hello", "world!");
     } finally {
       runner.runDestroy();
     }
@@ -567,32 +522,16 @@ public class HttpProcessorIT extends JerseyTest {
   public void testHttpPutJson() throws Exception {
     HttpProcessorConfig conf = new HttpProcessorConfig();
     conf.httpMethod = HttpMethod.POST;
-    conf.outputField = "/output";
     conf.dataFormat = DataFormat.JSON;
     conf.resourceUrl = getBaseUri() + "test/put";
     conf.headers.put(HttpStageUtil.CONTENT_TYPE_HEADER, "application/json");
     conf.requestBody = "{\"hello\":\"world!\"}";
 
-    Record record = RecordCreator.create();
-    record.set("/", Field.create(new HashMap<String, Field>()));
-
-    List<Record> records = ImmutableList.of(record);
-    Processor processor = new HttpProcessor(conf);
-    ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
-        .addOutputLane("lane")
-        .build();
-    runner.runInit();
+    List<Record> records = createRecords("test/put");
+    ProcessorRunner runner = createProcessorRunner(conf);
     try {
       StageRunner.Output output = runner.runProcess(records);
-      List<Record> outputRecords = output.getRecords().get("lane");
-      assertTrue(runner.getErrorRecords().isEmpty());
-      assertEquals(1, outputRecords.size());
-      assertTrue(outputRecords.get(0).has("/output"));
-      Map<String, Field> outputMap = outputRecords.get(0).get("/output").getValueAsMap();
-      assertTrue(!outputMap.isEmpty());
-      assertTrue(outputMap.containsKey("hello"));
-      assertEquals("world!", outputMap.get("hello").getValueAsString());
-
+      assertOutputMap(output, "hello", "world!");
     } finally {
       runner.runDestroy();
     }
@@ -610,7 +549,6 @@ public class HttpProcessorIT extends JerseyTest {
 
       HttpProcessorConfig conf = new HttpProcessorConfig();
       conf.httpMethod = HttpMethod.POST;
-      conf.outputField = "/output";
       conf.dataFormat = DataFormat.JSON;
       conf.resourceUrl = getBaseUri() + "test/postCustomType";
       conf.defaultRequestContentType = fallbackContentType;
@@ -625,32 +563,18 @@ public class HttpProcessorIT extends JerseyTest {
 
       conf.requestBody = requestEntry.getValue();
 
-      Record record = RecordCreator.create();
-      record.set("/", Field.create(new HashMap<String, Field>()));
-
-      List<Record> records = ImmutableList.of(record);
-      Processor processor = new HttpProcessor(conf);
-      ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
-          .addOutputLane("lane")
-          .build();
-      runner.runInit();
+      List<Record> records = createRecords("test/postCustomType");
+      ProcessorRunner runner = createProcessorRunner(conf);
       try {
         StageRunner.Output output = runner.runProcess(records);
-        List<Record> outputRecords = output.getRecords().get("lane");
-        assertTrue(runner.getErrorRecords().isEmpty());
-        assertEquals(1, outputRecords.size());
-        assertTrue(outputRecords.get(0).has("/output"));
-        Map<String, Field> outputMap = outputRecords.get(0).get("/output").getValueAsMap();
-        assertTrue(!outputMap.isEmpty());
+        Map<String, Field> outputMap = getOutputField(output).getValueAsMap();
         assertTrue(outputMap.containsKey(HttpStageUtil.CONTENT_TYPE_HEADER));
         assertEquals(expectedContentType, outputMap.get(HttpStageUtil.CONTENT_TYPE_HEADER).getValueAsString());
         assertTrue(outputMap.containsKey("Content"));
         assertEquals(requestEntry.getValue(), outputMap.get("Content").getValueAsString());
-
       } finally {
         runner.runDestroy();
       }
-
     }
   }
 
@@ -658,26 +582,14 @@ public class HttpProcessorIT extends JerseyTest {
   public void testHttpGetXml() throws Exception {
     HttpProcessorConfig conf = new HttpProcessorConfig();
     conf.httpMethod = HttpMethod.GET;
-    conf.outputField = "/output";
     conf.dataFormat = DataFormat.XML;
     conf.resourceUrl = getBaseUri() + "test/xml/get";
 
-    Record record = RecordCreator.create();
-    record.set("/", Field.create(new HashMap<String, Field>()));
-
-    List<Record> records = ImmutableList.of(record);
-    Processor processor = new HttpProcessor(conf);
-    ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
-        .addOutputLane("lane")
-        .build();
-    runner.runInit();
+    List<Record> records = createRecords("test/xml/get");
+    ProcessorRunner runner = createProcessorRunner(conf);
     try {
       StageRunner.Output output = runner.runProcess(records);
-      List<Record> outputRecords = output.getRecords().get("lane");
-      assertTrue(runner.getErrorRecords().isEmpty());
-      assertEquals(1, outputRecords.size());
-      assertTrue(outputRecords.get(0).has("/output"));
-      Map<String, Field> outputField = outputRecords.get(0).get("/output").getValueAsMap();
+      Map<String, Field> outputField = getOutputField(output).getValueAsMap();
       List<Field> xmlFields = outputField.get("e").getValueAsList();
       assertEquals("Hello", xmlFields.get(0).getValueAsMap().get("value").getValueAsString());
       assertEquals("Bye", xmlFields.get(1).getValueAsMap().get("value").getValueAsString());
@@ -691,7 +603,6 @@ public class HttpProcessorIT extends JerseyTest {
     try {
       HttpProcessorConfig conf = new HttpProcessorConfig();
       conf.httpMethod = HttpMethod.GET;
-      conf.outputField = "/output";
       conf.dataFormat = DataFormat.JSON;
       conf.resourceUrl = getBaseUri() + "test/get";
       conf.client.authType = AuthenticationType.NONE;
@@ -701,26 +612,11 @@ public class HttpProcessorIT extends JerseyTest {
       conf.client.oauth2.tokenUrl = getBaseUri() + "credentialsToken";
       conf.client.oauth2.credentialsGrantType = OAuth2GrantTypes.CLIENT_CREDENTIALS;
 
-      Record record = RecordCreator.create();
-      record.set("/", Field.create(new HashMap<String, Field>()));
-
-      List<Record> records = ImmutableList.of(record);
-      Processor processor = new HttpProcessor(conf);
-      ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
-          .addOutputLane("lane")
-          .build();
-      runner.runInit();
+      List<Record> records = createRecords("credentialsToken");
+      ProcessorRunner runner = createProcessorRunner(conf);
       try {
         StageRunner.Output output = runner.runProcess(records);
-        List<Record> outputRecords = output.getRecords().get("lane");
-        assertTrue(runner.getErrorRecords().isEmpty());
-        assertEquals(1, outputRecords.size());
-        assertTrue(outputRecords.get(0).has("/output"));
-        Map<String, Field> outputMap = outputRecords.get(0).get("/output").getValueAsMap();
-        assertTrue(!outputMap.isEmpty());
-        assertTrue(outputMap.containsKey("hello"));
-        assertEquals("world!", outputMap.get("hello").getValueAsString());
-
+        assertOutputMap(output, "hello", "world!");
       } finally {
         runner.runDestroy();
       }
@@ -736,7 +632,6 @@ public class HttpProcessorIT extends JerseyTest {
     try {
       HttpProcessorConfig conf = new HttpProcessorConfig();
       conf.httpMethod = HttpMethod.GET;
-      conf.outputField = "/output";
       conf.dataFormat = DataFormat.JSON;
       conf.resourceUrl = getBaseUri() + "test/get";
       conf.client.authType = AuthenticationType.BASIC;
@@ -747,26 +642,11 @@ public class HttpProcessorIT extends JerseyTest {
       conf.client.oauth2.tokenUrl = getBaseUri() + "basicToken";
       conf.client.oauth2.credentialsGrantType = OAuth2GrantTypes.CLIENT_CREDENTIALS;
 
-      Record record = RecordCreator.create();
-      record.set("/", Field.create(new HashMap<String, Field>()));
-
-      List<Record> records = ImmutableList.of(record);
-      Processor processor = new HttpProcessor(conf);
-      ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
-          .addOutputLane("lane")
-          .build();
-      runner.runInit();
+      List<Record> records = createRecords("test/get");
+      ProcessorRunner runner = createProcessorRunner(conf);
       try {
         StageRunner.Output output = runner.runProcess(records);
-        List<Record> outputRecords = output.getRecords().get("lane");
-        assertTrue(runner.getErrorRecords().isEmpty());
-        assertEquals(1, outputRecords.size());
-        assertTrue(outputRecords.get(0).has("/output"));
-        Map<String, Field> outputMap = outputRecords.get(0).get("/output").getValueAsMap();
-        assertTrue(!outputMap.isEmpty());
-        assertTrue(outputMap.containsKey("hello"));
-        assertEquals("world!", outputMap.get("hello").getValueAsString());
-
+        assertOutputMap(output, "hello", "world!");
       } finally {
         runner.runDestroy();
       }
@@ -782,7 +662,6 @@ public class HttpProcessorIT extends JerseyTest {
     try {
       HttpProcessorConfig conf = new HttpProcessorConfig();
       conf.httpMethod = HttpMethod.GET;
-      conf.outputField = "/output";
       conf.dataFormat = DataFormat.JSON;
       conf.resourceUrl = getBaseUri() + "tokenresetstream";
       conf.client.authType = AuthenticationType.NONE;
@@ -791,26 +670,12 @@ public class HttpProcessorIT extends JerseyTest {
       conf.client.oauth2.clientId = () -> CLIENT_ID;
       conf.client.oauth2.tokenUrl = getBaseUri() + "credentialsToken";
       conf.client.oauth2.credentialsGrantType = OAuth2GrantTypes.CLIENT_CREDENTIALS;
-      Processor processor = new HttpProcessor(conf);
-      ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
-          .addOutputLane("lane")
-          .build();
-      runner.runInit();
+      ProcessorRunner runner = createProcessorRunner(conf);
       try {
         for (int i = 0; i < 3; i++) {
-          Record record = RecordCreator.create();
-          record.set("/", Field.create(new HashMap<String, Field>()));
-
-          List<Record> records = ImmutableList.of(record);
+          List<Record> records = createRecords("credentialsToken");
           StageRunner.Output output = runner.runProcess(records);
-          List<Record> outputRecords = output.getRecords().get("lane");
-          assertTrue(runner.getErrorRecords().isEmpty());
-          assertEquals(1, outputRecords.size());
-          assertTrue(outputRecords.get(0).has("/output"));
-          Map<String, Field> outputMap = outputRecords.get(0).get("/output").getValueAsMap();
-          assertTrue(!outputMap.isEmpty());
-          assertTrue(outputMap.containsKey("hello"));
-          assertEquals("world!", outputMap.get("hello").getValueAsString());
+          assertOutputMap(output, "hello", "world!");
         }
         assertEquals(2, tokenGetCount);
       } finally {
@@ -827,7 +692,6 @@ public class HttpProcessorIT extends JerseyTest {
     try {
       HttpProcessorConfig conf = new HttpProcessorConfig();
       conf.httpMethod = HttpMethod.GET;
-      conf.outputField = "/output";
       conf.dataFormat = DataFormat.JSON;
       conf.resourceUrl = getBaseUri() + "test/get";
       conf.client.authType = AuthenticationType.NONE;
@@ -837,26 +701,11 @@ public class HttpProcessorIT extends JerseyTest {
       conf.client.oauth2.tokenUrl = getBaseUri() + "credentialsToken";
       conf.client.oauth2.credentialsGrantType = OAuth2GrantTypes.RESOURCE_OWNER;
 
-      Record record = RecordCreator.create();
-      record.set("/", Field.create(new HashMap<String, Field>()));
-
-      List<Record> records = ImmutableList.of(record);
-      Processor processor = new HttpProcessor(conf);
-      ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
-          .addOutputLane("lane")
-          .build();
-      runner.runInit();
+      List<Record> records = createRecords("test/get");
+      ProcessorRunner runner = createProcessorRunner(conf);
       try {
         StageRunner.Output output = runner.runProcess(records);
-        List<Record> outputRecords = output.getRecords().get("lane");
-        assertTrue(runner.getErrorRecords().isEmpty());
-        assertEquals(1, outputRecords.size());
-        assertTrue(outputRecords.get(0).has("/output"));
-        Map<String, Field> outputMap = outputRecords.get(0).get("/output").getValueAsMap();
-        assertTrue(!outputMap.isEmpty());
-        assertTrue(outputMap.containsKey("hello"));
-        assertEquals("world!", outputMap.get("hello").getValueAsString());
-
+        assertOutputMap(output, "hello", "world!");
       } finally {
         runner.runDestroy();
       }
@@ -872,7 +721,6 @@ public class HttpProcessorIT extends JerseyTest {
     try {
       HttpProcessorConfig conf = new HttpProcessorConfig();
       conf.httpMethod = HttpMethod.GET;
-      conf.outputField = "/output";
       conf.dataFormat = DataFormat.JSON;
       conf.resourceUrl = getBaseUri() + "tokenresetstream";
       conf.client.authType = AuthenticationType.NONE;
@@ -882,26 +730,12 @@ public class HttpProcessorIT extends JerseyTest {
       conf.client.oauth2.tokenUrl = getBaseUri() + "credentialsToken";
       conf.client.oauth2.credentialsGrantType = OAuth2GrantTypes.RESOURCE_OWNER;
 
-      Processor processor = new HttpProcessor(conf);
-      ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
-          .addOutputLane("lane")
-          .build();
-      runner.runInit();
+      ProcessorRunner runner = createProcessorRunner(conf);
       try {
         for (int i = 0; i < 3; i++) {
-          Record record = RecordCreator.create();
-          record.set("/", Field.create(new HashMap<String, Field>()));
-
-          List<Record> records = ImmutableList.of(record);
+          List<Record> records = createRecords("credentialToken");
           StageRunner.Output output = runner.runProcess(records);
-          List<Record> outputRecords = output.getRecords().get("lane");
-          assertTrue(runner.getErrorRecords().isEmpty());
-          assertEquals(1, outputRecords.size());
-          assertTrue(outputRecords.get(0).has("/output"));
-          Map<String, Field> outputMap = outputRecords.get(0).get("/output").getValueAsMap();
-          assertTrue(!outputMap.isEmpty());
-          assertTrue(outputMap.containsKey("hello"));
-          assertEquals("world!", outputMap.get("hello").getValueAsString());
+          assertOutputMap(output, "hello", "world!");
         }
         assertEquals(2, tokenGetCount);
       } finally {
@@ -918,7 +752,6 @@ public class HttpProcessorIT extends JerseyTest {
     try {
       HttpProcessorConfig conf = new HttpProcessorConfig();
       conf.httpMethod = HttpMethod.GET;
-      conf.outputField = "/output";
       conf.dataFormat = DataFormat.JSON;
       conf.resourceUrl = getBaseUri() + "test/get";
       conf.client.authType = AuthenticationType.NONE;
@@ -930,26 +763,11 @@ public class HttpProcessorIT extends JerseyTest {
       conf.client.oauth2.tokenUrl = getBaseUri() + "resourceToken";
       conf.client.oauth2.credentialsGrantType = OAuth2GrantTypes.RESOURCE_OWNER;
 
-      Record record = RecordCreator.create();
-      record.set("/", Field.create(new HashMap<String, Field>()));
-
-      List<Record> records = ImmutableList.of(record);
-      Processor processor = new HttpProcessor(conf);
-      ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
-          .addOutputLane("lane")
-          .build();
-      runner.runInit();
+      List<Record> records = createRecords("test/get");
+      ProcessorRunner runner = createProcessorRunner(conf);
       try {
         StageRunner.Output output = runner.runProcess(records);
-        List<Record> outputRecords = output.getRecords().get("lane");
-        assertTrue(runner.getErrorRecords().isEmpty());
-        assertEquals(1, outputRecords.size());
-        assertTrue(outputRecords.get(0).has("/output"));
-        Map<String, Field> outputMap = outputRecords.get(0).get("/output").getValueAsMap();
-        assertTrue(!outputMap.isEmpty());
-        assertTrue(outputMap.containsKey("hello"));
-        assertEquals("world!", outputMap.get("hello").getValueAsString());
-
+        assertOutputMap(output, "hello", "world!");
       } finally {
         runner.runDestroy();
       }
@@ -965,7 +783,6 @@ public class HttpProcessorIT extends JerseyTest {
     try {
       HttpProcessorConfig conf = new HttpProcessorConfig();
       conf.httpMethod = HttpMethod.GET;
-      conf.outputField = "/output";
       conf.dataFormat = DataFormat.JSON;
       conf.resourceUrl = getBaseUri() + "tokenresetstream";
       conf.client.authType = AuthenticationType.NONE;
@@ -977,26 +794,12 @@ public class HttpProcessorIT extends JerseyTest {
       conf.client.oauth2.tokenUrl = getBaseUri() + "resourceToken";
       conf.client.oauth2.credentialsGrantType = OAuth2GrantTypes.RESOURCE_OWNER;
 
-      Processor processor = new HttpProcessor(conf);
-      ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
-          .addOutputLane("lane")
-          .build();
-      runner.runInit();
+      ProcessorRunner runner = createProcessorRunner(conf);
       try {
         for (int i = 0; i < 3; i++) {
-          Record record = RecordCreator.create();
-          record.set("/", Field.create(new HashMap<String, Field>()));
-
-          List<Record> records = ImmutableList.of(record);
+          List<Record> records = createRecords("tokenresetstream");
           StageRunner.Output output = runner.runProcess(records);
-          List<Record> outputRecords = output.getRecords().get("lane");
-          assertTrue(runner.getErrorRecords().isEmpty());
-          assertEquals(1, outputRecords.size());
-          assertTrue(outputRecords.get(0).has("/output"));
-          Map<String, Field> outputMap = outputRecords.get(0).get("/output").getValueAsMap();
-          assertTrue(!outputMap.isEmpty());
-          assertTrue(outputMap.containsKey("hello"));
-          assertEquals("world!", outputMap.get("hello").getValueAsString());
+          assertOutputMap(output, "hello", "world!");
         }
         assertEquals(2, tokenGetCount);
       } finally {
@@ -1015,7 +818,6 @@ public class HttpProcessorIT extends JerseyTest {
     try {
       HttpProcessorConfig conf = new HttpProcessorConfig();
       conf.httpMethod = HttpMethod.GET;
-      conf.outputField = "/output";
       conf.dataFormat = DataFormat.JSON;
       conf.resourceUrl = getBaseUri() + "test/get";
       conf.client.useOAuth2 = true;
@@ -1025,26 +827,11 @@ public class HttpProcessorIT extends JerseyTest {
       conf.client.oauth2.key = () -> Base64.encodeBase64String(keyPair.getPrivate().getEncoded());
       conf.client.oauth2.tokenUrl = getBaseUri() + "jwtToken";
 
-      Record record = RecordCreator.create();
-      record.set("/", Field.create(new HashMap<String, Field>()));
-
-      List<Record> records = ImmutableList.of(record);
-      Processor processor = new HttpProcessor(conf);
-      ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
-          .addOutputLane("lane")
-          .build();
-      runner.runInit();
+      List<Record> records = createRecords("test/get");
+      ProcessorRunner runner = createProcessorRunner(conf);
       try {
         StageRunner.Output output = runner.runProcess(records);
-        List<Record> outputRecords = output.getRecords().get("lane");
-        assertTrue(runner.getErrorRecords().isEmpty());
-        assertEquals(1, outputRecords.size());
-        assertTrue(outputRecords.get(0).has("/output"));
-        Map<String, Field> outputMap = outputRecords.get(0).get("/output").getValueAsMap();
-        assertTrue(!outputMap.isEmpty());
-        assertTrue(outputMap.containsKey("hello"));
-        assertEquals("world!", outputMap.get("hello").getValueAsString());
-
+        assertOutputMap(output, "hello", "world!");
       } finally {
         runner.runDestroy();
       }
@@ -1059,32 +846,110 @@ public class HttpProcessorIT extends JerseyTest {
   public void testHttpGetTimeEl() throws Exception {
     HttpProcessorConfig conf = new HttpProcessorConfig();
     conf.httpMethod = HttpMethod.GET;
-    conf.outputField = "/output";
     conf.dataFormat = DataFormat.TEXT;
     conf.resourceUrl = getBaseUri() + "test/time_el?bihourly=${time:extractStringFromDateTZ(time:createDateFromStringTZ" +
         "('2018-01-02', 'Asia/Calcutta', 'yyyy-MM-dd'), 'Asia/Calcutta' ,'yyyyMMdd')}";
     conf.headerOutputLocation = HeaderOutputLocation.HEADER;
 
-    Record record = RecordCreator.create();
-    record.set("/", Field.create(new HashMap<String, Field>()));
-
-    List<Record> records = ImmutableList.of(record);
-    Processor processor = new HttpProcessor(conf);
-    ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
-        .addOutputLane("lane")
-        .build();
-    runner.runInit();
-
+    List<Record> records = createRecords("test/time_el");
+    ProcessorRunner runner = createProcessorRunner(conf);
     try {
       StageRunner.Output output = runner.runProcess(records);
-      List<Record> outputRecords = output.getRecords().get("lane");
-      assertTrue(runner.getErrorRecords().isEmpty());
-      assertEquals(1, outputRecords.size());
-      assertTrue(outputRecords.get(0).has("/output"));
-      assertEquals("20180102", outputRecords.get(0).get("/output").getValueAsString());
+      assertEquals("20180102", getOutputField(output).getValueAsString());
     } finally {
       runner.runDestroy();
     }
   }
-}
 
+  @Test
+  public void testHttpNoEntry() throws Exception {
+    HttpProcessorConfig conf = new HttpProcessorConfig();
+    conf.httpMethod = HttpMethod.GET;
+    conf.dataFormat = DataFormat.JSON;
+    conf.resourceUrl = getBaseUri() + "${record:value('/path')}";
+
+    ProcessorRunner runner = createProcessorRunner(conf);
+    List<Record> records =createRecords("test/null", "test/get");
+    try {
+      StageRunner.Output output = runner.runProcess(records);
+      List<Record> errorRecords = runner.getErrorRecords();
+      assertEquals(1, errorRecords.size());
+      assertEquals("test/null", errorRecords.get(0).get("/path").getValue());
+      assertOutputMap(output, "hello", "world!");
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  /**
+   * Helper method to create HttpProcessor with the config and initialize
+   * ProcessorRunner with 'lane' output lane. The output field is set to '/output'.
+   *
+   * @param conf the config to use
+   * @return a new ProcessRunner
+   * @throws StageException
+   */
+  private static ProcessorRunner createProcessorRunner(
+      HttpProcessorConfig conf) throws StageException {
+    conf.outputField = OUTPUT_FIELD;
+    System.out.println("HttpProcessor Resource URL: " + conf.resourceUrl);
+    Processor processor = new HttpProcessor(conf);
+    ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
+        .addOutputLane(OUTPUT_LANE)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+    runner.runInit();
+    return runner;
+  }
+
+  /**
+   * Helper method to create records for each path at '/path'.
+   *
+   * @param paths the list of HTTP paths
+   * @return the unmodifiable list of Records
+   */
+  private static List<Record> createRecords(String... paths) {
+    List<Record> records = new ArrayList<>(paths.length);
+    for (String path : paths) {
+      HashMap<String, Field> field = new HashMap<>();
+      field.put("path", Field.create(path));
+      Record record = RecordCreator.create();
+      record.set(Field.create(field));
+      records.add(record);
+    }
+    return Collections.unmodifiableList(records);
+  }
+
+  /**
+   * @param output the runner output
+   * @return the 'lane' output Record
+   */
+  private static Record getOutputRecord(StageRunner.Output output) {
+    List<Record> outputRecords = output.getRecords().get(OUTPUT_LANE);
+    assertEquals(1, outputRecords.size());
+    return outputRecords.get(0);
+  }
+
+  /**
+   * @param output the runner output
+   * @return the '/output' output Field
+   */
+  private static Field getOutputField(StageRunner.Output output) {
+    Record outputRecord = getOutputRecord(output);
+    assertTrue(outputRecord.has(OUTPUT_FIELD));
+    return outputRecord.get(OUTPUT_FIELD);
+  }
+
+  /**
+   * Checks the key-value pair in the output field.
+   *
+   * @param output the runner output
+   * @param key the key to find
+   * @param value the value of the key
+   */
+  private static void assertOutputMap(StageRunner.Output output, String key, String value) {
+    Map<String, Field> outputMap = getOutputField(output).getValueAsMap();
+    assertTrue(outputMap.containsKey(key));
+    assertEquals(value, outputMap.get(key).getValueAsString());
+  }
+}

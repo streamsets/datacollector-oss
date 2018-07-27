@@ -54,6 +54,7 @@ public enum Errors implements ErrorCode {
   HTTP_31("Can't resolve OAuth1 credentials: {}"),
   HTTP_32("Error executing request: {}"),
   HTTP_33("Null authorization token - checked for '{}', '{}' and '{}'"),
+  HTTP_34("Received no entity in the HTTP message body."),
 
   // HTTP Target
   HTTP_40("Error sending resource. Status: {} Reason: {}"),
