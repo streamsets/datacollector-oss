@@ -28,7 +28,6 @@ import org.apache.pulsar.client.api.Consumer;
 import org.apache.pulsar.client.api.Message;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
-import org.apache.pulsar.client.impl.conf.ClientConfigurationData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,14 +39,13 @@ import java.util.concurrent.TimeUnit;
 public class PulsarMessageConsumerImpl implements PulsarMessageConsumer {
 
   private static final Logger LOG = LoggerFactory.getLogger(PulsarMessageConsumerImpl.class);
-  private static final String PULSAR_SOURCE_CONFIG_SERVICE_URL = "pulsarSourceConfig.serviceURL";
-  private static final String PULSAR_SOURCE_CONFIG_TOPICS_PATTERN = "pulsarSourceConfig.topicsPattern";
-  private static final String PULSAR_SOURCE_CONFIG_TOPICS_LIST = "pulsarSourceConfig.topicsList";
-  private static final String PULSAR_SOURCE_CONFIG_DESTINATION_TOPIC = "pulsarSourceConfig.originTopic";
+  private static final String PULSAR_SOURCE_CONFIG_TOPICS_PATTERN = "pulsarConfig.topicsPattern";
+  private static final String PULSAR_SOURCE_CONFIG_TOPICS_LIST = "pulsarConfig.topicsList";
+  private static final String PULSAR_SOURCE_CONFIG_DESTINATION_TOPIC = "pulsarConfig.originTopic";
   private static final int POLL_INTERVAL = 100; // ms
 
   private final BasicConfig basicConfig;
-  private final PulsarSourceConfig pulsarSourceConfig;
+  private final PulsarSourceConfig pulsarConfig;
   private final PulsarMessageConverter pulsarMessageConverter;
   private PulsarClient pulsarClient;
   private Consumer messageConsumer;
@@ -61,7 +59,7 @@ public class PulsarMessageConsumerImpl implements PulsarMessageConsumer {
       PulsarMessageConverter pulsarMessageConverter
   ) {
     this.basicConfig = basicConfig;
-    this.pulsarSourceConfig = pulsarSourceConfig;
+    this.pulsarConfig = pulsarSourceConfig;
     this.pulsarMessageConverter = pulsarMessageConverter;
   }
 
@@ -77,81 +75,70 @@ public class PulsarMessageConsumerImpl implements PulsarMessageConsumer {
   public List<Stage.ConfigIssue> init(Source.Context context) {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
 
-    // pulsar client
-    try {
-      pulsarClient = PulsarClient.builder().serviceUrl(pulsarSourceConfig.serviceURL).keepAliveInterval(
-          pulsarSourceConfig.keepAliveInterval,
-          TimeUnit.MILLISECONDS
-      ).operationTimeout(pulsarSourceConfig.operationTimeout, TimeUnit.MILLISECONDS).build();
-    } catch (PulsarClientException e) {
-      LOG.info(Utils.format(PulsarErrors.PULSAR_00.getMessage(), pulsarSourceConfig.serviceURL), e);
-      issues.add(context.createConfigIssue(PulsarGroups.PULSAR.name(),
-          PULSAR_SOURCE_CONFIG_SERVICE_URL,
-          PulsarErrors.PULSAR_00,
-          pulsarSourceConfig.serviceURL,
-          e.toString()
-      ));
-    }
+    issues.addAll(pulsarConfig.init(context));
 
     if (issues.isEmpty()) {
+      // pulsar client
+      pulsarClient = pulsarConfig.getClient();
+
       // pulsar message consumer
-      if (pulsarSourceConfig.multiTopic) {
+      if (pulsarConfig.multiTopic) {
       /* Commented until Pulsar corrects the issue that now makes it impossible to use topics pattern (Problem related
       with comments in PulsarSourceConfig for usePatternForTopic variable. Currently only topics list option will be
       available until issue with topics pattern is fixed.
-      if(pulsarSourceConfig.usePatternForTopic) {
+      if(pulsarConfig.usePatternForTopic) {
         try {
           messageConsumer = pulsarClient
               .newConsumer()
-              .topicsPattern(pulsarSourceConfig.topicsPattern)
-              .subscriptionName(pulsarSourceConfig.subscriptionName)
+              .topicsPattern(pulsarConfig.topicsPattern)
+              .subscriptionName(pulsarConfig.subscriptionName)
               .subscribe();
         } catch (PulsarClientException e) {
           issues.add(context.createConfigIssue(
               PulsarGroups.PULSAR.name(),
               PULSAR_SOURCE_CONFIG_TOPICS_PATTERN,
               PulsarErrors.PULSAR_05,
-              pulsarSourceConfig.topicsPattern,
-              pulsarSourceConfig.subscriptionName,
+              pulsarConfig.topicsPattern,
+              pulsarConfig.subscriptionName,
               String.valueOf(e)
           ));
-          LOG.info(Utils.format(PulsarErrors.PULSAR_05.getMessage(), pulsarSourceConfig.topicsPattern,
-              pulsarSourceConfig.subscriptionName, String.valueOf(e)), e);
+          LOG.info(Utils.format(PulsarErrors.PULSAR_05.getMessage(), pulsarConfig.topicsPattern,
+              pulsarConfig.subscriptionName, String.valueOf(e)), e);
         }
       }
       else {
       */
         try {
-          messageConsumer = pulsarClient.newConsumer().topics(pulsarSourceConfig.topicsList).subscriptionName(
-              pulsarSourceConfig.subscriptionName).subscribe();
+          messageConsumer = pulsarClient.newConsumer().topics(pulsarConfig.topicsList).subscriptionName(
+              pulsarConfig.subscriptionName).subscribe();
         } catch (PulsarClientException e) {
           issues.add(context.createConfigIssue(PulsarGroups.PULSAR.name(),
               PULSAR_SOURCE_CONFIG_TOPICS_LIST,
               PulsarErrors.PULSAR_06,
-              pulsarSourceConfig.subscriptionName,
+              pulsarConfig.subscriptionName,
               String.valueOf(e)
           ));
           LOG.info(Utils.format(PulsarErrors.PULSAR_06.getMessage(),
-              pulsarSourceConfig.subscriptionName,
+              pulsarConfig.subscriptionName,
               String.valueOf(e)
           ), e);
         }
 //      }
       } else {
         try {
-          messageConsumer = pulsarClient.newConsumer().topic(pulsarSourceConfig.originTopic).subscriptionName(
-              pulsarSourceConfig.subscriptionName).subscribe();
+          messageConsumer = pulsarClient.newConsumer().topic(pulsarConfig.originTopic).subscriptionName(
+              pulsarConfig.subscriptionName).subscribe();
         } catch (PulsarClientException e) {
           issues.add(context.createConfigIssue(PulsarGroups.PULSAR.name(),
               PULSAR_SOURCE_CONFIG_DESTINATION_TOPIC,
               PulsarErrors.PULSAR_10,
-              pulsarSourceConfig.originTopic,
-              pulsarSourceConfig.subscriptionName,
+              pulsarConfig.originTopic,
+              pulsarConfig.subscriptionName,
               String.valueOf(e)
           ));
           LOG.info(Utils.format(PulsarErrors.PULSAR_10.getMessage(),
-              pulsarSourceConfig.originTopic,
-              pulsarSourceConfig.subscriptionName,
+              pulsarConfig.originTopic,
+              pulsarConfig.subscriptionName,
               String.valueOf(e)
           ), e);
         }
@@ -192,7 +179,7 @@ public class PulsarMessageConsumerImpl implements PulsarMessageConsumer {
           }
           String messageId = Base64.getEncoder().encodeToString(message.getMessageId().toByteArray());
           numMessagesConsumed += pulsarMessageConverter.convert(batchMaker, context, messageId, message);
-          if (pulsarSourceConfig.multiTopic) {
+          if (pulsarConfig.multiTopic) {
             sentButNotACKMessages.add(message);
           } else {
             lastSentButNotACKMessage = message;
@@ -208,7 +195,7 @@ public class PulsarMessageConsumerImpl implements PulsarMessageConsumer {
 
   @Override
   public void ack() throws StageException {
-    if (pulsarSourceConfig.multiTopic) {
+    if (pulsarConfig.multiTopic) {
       for (Message msg : sentButNotACKMessages) {
         try {
           messageConsumer.acknowledge(msg.getMessageId());
@@ -251,13 +238,7 @@ public class PulsarMessageConsumerImpl implements PulsarMessageConsumer {
       );
     }
 
-    try {
-      if (pulsarClient != null) {
-        pulsarClient.close();
-      }
-    } catch (PulsarClientException e) {
-      LOG.warn("Cloud not close Pulsar client: {}", e);
-    }
+    pulsarConfig.destroy();
   }
 
 }

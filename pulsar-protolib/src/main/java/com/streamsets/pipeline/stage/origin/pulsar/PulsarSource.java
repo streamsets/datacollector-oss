@@ -32,7 +32,7 @@ public class PulsarSource extends BaseSource implements OffsetCommitter {
   private static final Logger LOG = LoggerFactory.getLogger(PulsarSource.class);
 
   private final BasicConfig basicConfig;
-  private final PulsarSourceConfig pulsarSourceConfig;
+  private final PulsarSourceConfig pulsarConfig;
   private final PulsarMessageConsumerFactory pulsarMessageConsumerFactory;
   private final PulsarMessageConverter pulsarMessageConverter;
   private PulsarMessageConsumer pulsarMessageConsumer;
@@ -44,7 +44,7 @@ public class PulsarSource extends BaseSource implements OffsetCommitter {
       PulsarMessageConverter pulsarMessageConverter
   ) {
     this.basicConfig = Preconditions.checkNotNull(basicConfig, "Basicconfig cannot be null");
-    this.pulsarSourceConfig = Preconditions.checkNotNull(pulsarSourceConfig, "PulsarSourceConfig cannot be null");
+    this.pulsarConfig = Preconditions.checkNotNull(pulsarSourceConfig, "pulsarSourceConfig cannot be null");
     this.pulsarMessageConsumerFactory = Preconditions.checkNotNull(pulsarMessageConsumerFactory,
         "PulsarMessageConsumerFactory cannot be null"
     );
@@ -67,7 +67,7 @@ public class PulsarSource extends BaseSource implements OffsetCommitter {
     //init pulsar message producer
     pulsarMessageConsumer = pulsarMessageConsumerFactory.create(
         basicConfig,
-        pulsarSourceConfig,
+        pulsarConfig,
         pulsarMessageConverter
     );
     issues.addAll(pulsarMessageConsumer.init(getContext()));

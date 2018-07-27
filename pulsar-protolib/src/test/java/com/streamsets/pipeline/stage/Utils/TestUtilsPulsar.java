@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.ConfigIssue;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.lib.pulsar.config.PulsarSecurityConfig;
 import com.streamsets.pipeline.stage.destination.pulsar.PulsarTargetConfig;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.MessageConfig;
@@ -41,6 +42,9 @@ public class TestUtilsPulsar {
     PulsarTargetConfig pulsarTargetConfig = new PulsarTargetConfig();
     pulsarTargetConfig.serviceURL = "http://localhost:8080";
     pulsarTargetConfig.destinationTopic = "sdc-topic";
+    pulsarTargetConfig.securityConfig = new PulsarSecurityConfig();
+    pulsarTargetConfig.securityConfig.tlsEnabled = false;
+    pulsarTargetConfig.securityConfig.tlsAuthEnabled = false;
     return pulsarTargetConfig;
   }
 
@@ -51,6 +55,9 @@ public class TestUtilsPulsar {
     pulsarSourceConfig.originTopic = "sdc-topic";
     pulsarSourceConfig.topicsList = Collections.emptyList();
     pulsarSourceConfig.subscriptionName = "sdc-test-subscription";
+    pulsarSourceConfig.securityConfig = new PulsarSecurityConfig();
+    pulsarSourceConfig.securityConfig.tlsEnabled = false;
+    pulsarSourceConfig.securityConfig.tlsAuthEnabled = false;
     return pulsarSourceConfig;
   }
 

@@ -28,8 +28,7 @@ import java.util.List;
 
 public class PulsarTarget extends BaseTarget {
 
-  private static final Logger LOG = LoggerFactory.getLogger(PulsarTarget.class);
-  private final PulsarTargetConfig pulsarTargetConfig;
+  private final PulsarTargetConfig pulsarConfig;
   private final PulsarMessageProducerFactory pulsarMessageProducerFactory;
   private PulsarMessageProducer pulsarMessageProducer;
 
@@ -44,7 +43,7 @@ public class PulsarTarget extends BaseTarget {
       PulsarMessageProducerFactory pulsarMessageProducerFactory
   ) {
 
-    this.pulsarTargetConfig = Preconditions.checkNotNull(pulsarTargetConfig, "PulsarTargetConfig cannot be null");
+    this.pulsarConfig = Preconditions.checkNotNull(pulsarTargetConfig, "PulsarTargetConfig cannot be null");
     this.pulsarMessageProducerFactory = Preconditions.checkNotNull(pulsarMessageProducerFactory,
         "PulsarMessageProducerFactory cannot be null"
     );
@@ -55,7 +54,7 @@ public class PulsarTarget extends BaseTarget {
     List<ConfigIssue> issues = super.init();
 
     //init pulsar message producer
-    pulsarMessageProducer = pulsarMessageProducerFactory.create(pulsarTargetConfig, getContext());
+    pulsarMessageProducer = pulsarMessageProducerFactory.create(pulsarConfig, getContext());
     issues.addAll(pulsarMessageProducer.init(getContext()));
 
     return issues;

@@ -32,8 +32,14 @@ public enum PulsarErrors implements ErrorCode {
   PULSAR_08("Error when consuming messages: {}"),
   PULSAR_09("Cannot parse record from message '{}': {}"),
   PULSAR_10("Could not create Pulsar consumer with destination topic '{}' and subscription '{}': {}"),
-  PULSAR_11("After error '{}' parsing message, another error '{}' was encountered while trying to serialize message " +
-      "'{}' of container '{}'");
+  PULSAR_11("Certification Authority certificate file path cannot be null nor empty"),
+  PULSAR_12("Certification Authority certificate file not found at specified location. Relative path is '{}' and full" +
+      " path is '{}'"),
+  PULSAR_13("Client certificate file path cannot be null nor empty"),
+  PULSAR_14("Client certificate file not found at specified location. Relative path is '{}' and full path is '{}'"),
+  PULSAR_15("Client key file path cannot be null nor empty"),
+  PULSAR_16("Client key file not found at specified location. Relative path is '{}' and full path is '{}'"),
+  PULSAR_17("Specified authentication is not supported: {}");
 
 
   private final String msg;

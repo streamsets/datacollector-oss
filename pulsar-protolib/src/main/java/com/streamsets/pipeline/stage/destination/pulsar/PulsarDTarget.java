@@ -47,12 +47,12 @@ import com.streamsets.pipeline.lib.pulsar.config.PulsarGroups;
 public class PulsarDTarget extends DTarget {
 
   @ConfigDefBean
-  public PulsarTargetConfig pulsarTargetConfig;
+  public PulsarTargetConfig pulsarConfig;
 
   @Override
   protected Target createTarget() {
     return new PulsarTarget(
-        pulsarTargetConfig,
+        pulsarConfig,
         new PulsarMessageProducerFactoryImpl());
   }
 

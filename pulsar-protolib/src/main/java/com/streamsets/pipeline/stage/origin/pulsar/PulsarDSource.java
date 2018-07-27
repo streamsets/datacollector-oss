@@ -55,12 +55,12 @@ public class PulsarDSource extends DSourceOffsetCommitter {
   public MessageConfig messageConfig;
 
   @ConfigDefBean
-  public PulsarSourceConfig pulsarSourceConfig;
+  public PulsarSourceConfig pulsarConfig;
 
 
   @Override
   protected Source createSource() {
-    return new PulsarSource(basicConfig, pulsarSourceConfig, new PulsarMessageConsumerFactoryImpl(),
+    return new PulsarSource(basicConfig, pulsarConfig, new PulsarMessageConsumerFactoryImpl(),
         new PulsarMessageConverterImpl(messageConfig));
   }
 }

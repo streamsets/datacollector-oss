@@ -17,8 +17,22 @@
 package com.streamsets.pipeline.lib.pulsar.config;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ConfigIssue;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.impl.Utils;
+import org.apache.pulsar.client.api.ClientBuilder;
+import org.apache.pulsar.client.api.PulsarClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class BasePulsarConfig {
+  private static final Logger LOG = LoggerFactory.getLogger(BasePulsarConfig.class);
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.STRING,
@@ -50,6 +64,91 @@ public class BasePulsarConfig {
       min = 0,
       max = 60000,
       group = "PULSAR")
-  public int operationTimeout = 30;
+  public int operationTimeout = 30000;
+
+  @ConfigDefBean
+  public PulsarSecurityConfig securityConfig;
+
+  private PulsarClient client;
+
+  public List<ConfigIssue> init(Stage.Context context) {
+    List<ConfigIssue> issues = new ArrayList<>();
+
+    //Validate BasePulsarConfig configs (currently no validation needed as constraints defined in annotations).
+
+    issues.addAll(extraInit(context));
+
+    issues.addAll(securityConfig.init(context));
+
+    //configure client builder if issues is empty
+    if (issues.isEmpty()) {
+      ClientBuilder clientBuilder;
+      clientBuilder = PulsarClient.builder();
+      clientBuilder.serviceUrl(serviceURL)
+                   .keepAliveInterval(keepAliveInterval, TimeUnit.MILLISECONDS)
+                   .operationTimeout(operationTimeout, TimeUnit.MILLISECONDS);
+
+      // chance to subclass to further configure
+      issues = extraBuilderConfiguration(clientBuilder);
+
+      if (issues.isEmpty()) {
+        try {
+          securityConfig.configurePulsarBuilder(clientBuilder);
+        } catch (StageException e) {
+          LOG.error(e.toString());
+          issues.add(context.createConfigIssue(PulsarGroups.PULSAR.name(), null, e.getErrorCode(), e.getParams()));
+        }
+        try {
+          client = clientBuilder.build();
+        } catch (Exception ex) {
+          LOG.info(Utils.format(PulsarErrors.PULSAR_00.getMessage(), serviceURL), ex);
+          issues.add(context.createConfigIssue(PulsarGroups.PULSAR.name(),
+              "pulsarConfig.serviceURL",
+              PulsarErrors.PULSAR_00,
+              serviceURL,
+              ex.toString()
+          ));
+        }
+      }
+    }
+
+    return issues;
+  }
+
+  public void destroy() {
+    if (client != null) {
+      try {
+        client.close();
+      } catch (Exception ex) {
+        LOG.warn("Cloud not close Pulsar client: {}", ex);
+      }
+    }
+  }
+
+  /**
+   * Extra init tasks performed in this method so a subclass can override this method to add these additional tasks that
+   * may be required by the subclass.
+   *
+   * @param context The context of the stage
+   * @return A list of configuration issues found when performing extra init tasks
+   */
+  protected List<ConfigIssue> extraInit(Stage.Context context) {
+    return new ArrayList<>();
+  }
+
+  /**
+   * extra builder tasks performed in this method so a subclass can override this method to add these additional
+   * builder configuration tasks that may be required by the subclass.
+   *
+   * @param builder The PulsarClient builder
+   * @return A list of configuration issues found when performing extra builder configuration tasks
+   */
+  protected List<ConfigIssue> extraBuilderConfiguration(ClientBuilder builder) {
+    return new ArrayList<>();
+  }
+
+  public PulsarClient getClient() {
+    return client;
+  }
 
 }

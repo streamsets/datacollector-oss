@@ -30,13 +30,11 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
 import com.streamsets.pipeline.api.service.dataformats.DataGenerator;
 import com.streamsets.pipeline.api.service.dataformats.DataGeneratorException;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.pulsar.config.PulsarErrors;
-import com.streamsets.pipeline.lib.pulsar.config.PulsarGroups;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.apache.pulsar.client.api.Producer;
@@ -59,9 +57,8 @@ import java.util.concurrent.TimeUnit;
 public class PulsarMessageProducerImpl implements PulsarMessageProducer {
 
   private static final Logger LOG = LoggerFactory.getLogger(PulsarMessageProducerImpl.class);
-  private static final String PULSAR_TARGET_CONFIG_SERVICE_URL = "pulsarTargetConfig.serviceURL";
 
-  private final PulsarTargetConfig pulsarTargetConfig;
+  private final PulsarTargetConfig pulsarConfig;
   private final Stage.Context context;
   private final DataFormatGeneratorService dataFormatGeneratorService;
   private ELEval destinationEval;
@@ -71,7 +68,7 @@ public class PulsarMessageProducerImpl implements PulsarMessageProducer {
 
 
   public PulsarMessageProducerImpl(PulsarTargetConfig pulsarTargetConfig, Stage.Context context) {
-    this.pulsarTargetConfig = Preconditions.checkNotNull(pulsarTargetConfig);
+    this.pulsarConfig = Preconditions.checkNotNull(pulsarTargetConfig);
     this.context = Preconditions.checkNotNull(context);
     this.dataFormatGeneratorService = Preconditions.checkNotNull(context.getService(DataFormatGeneratorService.class));
   }
@@ -95,40 +92,32 @@ public class PulsarMessageProducerImpl implements PulsarMessageProducer {
   @Override
   public List<Stage.ConfigIssue> init(Target.Context context) {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
-    // pulsar client
-    try {
-      pulsarClient = PulsarClient.builder().serviceUrl(pulsarTargetConfig.serviceURL).keepAliveInterval(
-          pulsarTargetConfig.keepAliveInterval,
-          TimeUnit.MILLISECONDS
-      ).operationTimeout(pulsarTargetConfig.operationTimeout, TimeUnit.MILLISECONDS).build();
-    } catch (PulsarClientException | IllegalArgumentException e) {
-      LOG.debug(Utils.format(PulsarErrors.PULSAR_00.getMessage(), pulsarTargetConfig.serviceURL, e.toString()), e);
-      issues.add(context.createConfigIssue(PulsarGroups.PULSAR.name(),
-          PULSAR_TARGET_CONFIG_SERVICE_URL,
-          PulsarErrors.PULSAR_00,
-          pulsarTargetConfig.serviceURL,
-          e.toString()
-      ));
-    }
 
-    // pulsar message producers
-    messageProducers = CacheBuilder.newBuilder()
-                                   .expireAfterAccess(15, TimeUnit.MINUTES)
-                                   .removalListener((RemovalListener<String, Producer>) removalNotification -> {
-                                     try {
-                                       removalNotification.getValue().close();
-                                     } catch (PulsarClientException e) {
-                                       LOG.warn("Exception when trying to remove pulsar message producer {}. " +
-                                           "Exception: {}", removalNotification.getValue().getProducerName(), e);
-                                     }
-                                   })
-                                   .build(new CacheLoader<String, Producer>() {
-                                     @Override
-                                     public Producer load(String key) throws Exception {
-                                       // TODO remove FlusherProducer wrapper, SDC-9554
-                                       return new FlusherProducer<>(pulsarClient.newProducer().topic(key).create());
-                                     }
-                                   });
+    issues.addAll(pulsarConfig.init(context));
+
+    if (issues.isEmpty()) {
+      // pulsar client
+      pulsarClient = pulsarConfig.getClient();
+
+      // pulsar message producers
+      messageProducers = CacheBuilder.newBuilder()
+                                     .expireAfterAccess(15, TimeUnit.MINUTES)
+                                     .removalListener((RemovalListener<String, Producer>) removalNotification -> {
+                                       try {
+                                         removalNotification.getValue().close();
+                                       } catch (PulsarClientException e) {
+                                         LOG.warn("Exception when trying to remove pulsar message producer {}. " +
+                                             "Exception: {}", removalNotification.getValue().getProducerName(), e);
+                                       }
+                                     })
+                                     .build(new CacheLoader<String, Producer>() {
+                                       @Override
+                                       public Producer load(String key) throws Exception {
+                                         // TODO remove FlusherProducer wrapper, SDC-9554
+                                         return new FlusherProducer<>(pulsarClient.newProducer().topic(key).create());
+                                       }
+                                     });
+    }
 
     destinationEval = context.createELEval("destinationTopic");
     errorHandler = new DefaultErrorRecordHandler(context);
@@ -161,7 +150,7 @@ public class PulsarMessageProducerImpl implements PulsarMessageProducer {
           // Resolve destination
           ELVars elVars = context.createELVars();
           RecordEL.setRecordInContext(elVars, record);
-          destinationName = destinationEval.eval(elVars, pulsarTargetConfig.destinationTopic, String.class);
+          destinationName = destinationEval.eval(elVars, pulsarConfig.destinationTopic, String.class);
 
           // Send message
           Producer producer = messageProducers.get(destinationName);
@@ -189,13 +178,7 @@ public class PulsarMessageProducerImpl implements PulsarMessageProducer {
 
   @Override
   public void close() {
-    try {
-      if (pulsarClient != null) {
-        pulsarClient.close(); // also closes producers and consumers used by it
-      }
-    } catch (PulsarClientException e) {
-      LOG.warn("Cloud not close Pulsar client: {}", e);
-    }
+    pulsarConfig.destroy();
   }
 
 }
