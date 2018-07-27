@@ -54,6 +54,7 @@ import com.streamsets.datacollector.json.JsonMapperImpl;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.main.SdcConfiguration;
 import com.streamsets.datacollector.runner.ServiceRuntime;
 import com.streamsets.datacollector.runner.StageLibraryDelegateRuntime;
 import com.streamsets.datacollector.task.AbstractTask;
@@ -80,8 +81,6 @@ import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -114,7 +113,6 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private static final String CONFIG_CP_VALIDATION_RESULT = "stagelibs.classpath.validation.terminate";
   private static final boolean DEFAULT_CP_VALIDATION_RESULT = false;
 
-  @VisibleForTesting static final String CONFIG_REQUIRED_STAGELIBS= "stagelibs.required";
   private static final String DEFAULT_REQUIRED_STAGELIBS = "";
 
   private static final Logger LOG = LoggerFactory.getLogger(ClassLoaderStageLibraryTask.class);
@@ -317,7 +315,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
     // Required libraries
     Set<String> requiredLibraries = new HashSet<>();
-    String config = configuration.get(CONFIG_REQUIRED_STAGELIBS, DEFAULT_REQUIRED_STAGELIBS);
+    String config = configuration.get(SdcConfiguration.REQUIRED_STAGELIBS, DEFAULT_REQUIRED_STAGELIBS);
     for(String stageLib : config.split(",")) {
       if(!stageLib.isEmpty()) {
         requiredLibraries.add(stageLib);

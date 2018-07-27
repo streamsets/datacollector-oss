@@ -28,6 +28,7 @@ import com.streamsets.datacollector.el.ElFunctionDefinition;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.DataCollectorBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.main.SdcConfiguration;
 import com.streamsets.datacollector.util.Configuration;
 
 import com.streamsets.pipeline.ApplicationPackage;
@@ -36,9 +37,7 @@ import com.streamsets.pipeline.SystemPackage;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.powermock.core.transformers.MockTransformer;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -205,7 +204,7 @@ public class TestClassLoaderStageLibraryTask {
   @Test(expected = RuntimeException.class)
   public void testMissingRequiredLibraries() {
     Configuration configuration = new Configuration();
-    configuration.set(ClassLoaderStageLibraryTask.CONFIG_REQUIRED_STAGELIBS, "random-non-existing-stagelib");
+    configuration.set(SdcConfiguration.REQUIRED_STAGELIBS, "random-non-existing-stagelib");
     ClassLoaderStageLibraryTask library = new ClassLoaderStageLibraryTask(null, null, new Configuration());
 
     library.validateRequiredStageLibraries();
