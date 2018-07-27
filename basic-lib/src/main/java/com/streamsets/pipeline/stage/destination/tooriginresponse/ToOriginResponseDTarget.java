@@ -26,8 +26,8 @@ import javax.servlet.http.HttpServletResponse;
 
 @StageDef(
     version = 1,
-    label = "Send to Origin Response",
-    description = "Sends records to the pipeline configured origin response handling",
+    label = "Send Response to Origin",
+    description = "Sends records and the specified status code to a response-enabled origin",
     icon="response.png",
     onlineHelpRefUrl ="" // TODO
 )
@@ -40,7 +40,7 @@ public class ToOriginResponseDTarget extends DTarget {
       type = ConfigDef.Type.NUMBER,
       label = "Status Code",
       defaultValue = "200",
-      description = "Response Status Code",
+      description = "Status code to include with the record sent to the response-enabled origin",
       displayPosition = 10
   )
   public int statusCode = HttpServletResponse.SC_OK;

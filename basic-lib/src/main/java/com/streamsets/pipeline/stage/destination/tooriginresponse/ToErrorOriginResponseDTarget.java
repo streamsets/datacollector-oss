@@ -26,8 +26,8 @@ import javax.servlet.http.HttpServletResponse;
 
 @StageDef(
     version = 1,
-    label = "Send to Origin Response",
-    description = "Sends records to the pipeline configured origin response handling",
+    label = "Send Response to Origin",
+    description = "Sends error records and the specified status code to a response-enabled origin",
     icon="response.png",
     onlineHelpRefUrl ="" // TODO
 )
