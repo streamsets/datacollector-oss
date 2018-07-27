@@ -278,6 +278,8 @@ public class HttpProcessor extends SingleLaneProcessor {
       if (parsedResponse != null) {
         record.set(conf.outputField, parsedResponse.get());
         addResponseHeaders(record, response);
+      } else if (responseBody == null) {
+        throw new OnRecordErrorException(record, Errors.HTTP_34);
       }
       return record;
     } catch (InterruptedException | ExecutionException e) {
@@ -308,7 +310,7 @@ public class HttpProcessor extends SingleLaneProcessor {
       record = getContext().createRecord("");
       record.set(Field.create(new HashMap()));
 
-    } else {
+    } else if (response != null) {
       try (DataParser parser = parserFactory.getParser("", response, "0")) {
         // A response may only contain a single record, so we only parse it once.
         record = parser.parse();
