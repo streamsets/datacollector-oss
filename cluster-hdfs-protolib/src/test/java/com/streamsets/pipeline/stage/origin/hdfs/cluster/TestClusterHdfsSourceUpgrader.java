@@ -90,9 +90,9 @@ public class TestClusterHdfsSourceUpgrader {
     clusterHdfsSourceUpgrader.upgrade("a", "b", "c", 5, 6, configs);
 
     Assert.assertEquals(2, configs.size());
-    Assert.assertEquals("awsAccessKey", configs.get(0).getName());
+    Assert.assertEquals("clusterHDFSConfigBean.awsAccessKey", configs.get(0).getName());
     Assert.assertEquals("", configs.get(0).getValue());
-    Assert.assertEquals("awsSecretKey", configs.get(1).getName());
+    Assert.assertEquals("clusterHDFSConfigBean.awsSecretKey", configs.get(1).getName());
     Assert.assertEquals("", configs.get(1).getValue());
   }
 

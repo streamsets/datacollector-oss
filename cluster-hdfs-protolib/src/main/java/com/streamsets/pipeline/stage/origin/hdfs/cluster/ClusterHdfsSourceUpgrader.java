@@ -70,8 +70,8 @@ public class ClusterHdfsSourceUpgrader implements StageUpgrader {
   }
 
   private void upgradeV5ToV6(List<Config> configs) {
-    configs.add(new Config("awsAccessKey", ""));
-    configs.add(new Config("awsSecretKey", ""));
+    configs.add(new Config(joiner.join(CONF,"awsAccessKey"), ""));
+    configs.add(new Config(joiner.join(CONF,"awsSecretKey"), ""));
   }
 
   private static void upgradeV4ToV5(List<Config> configs) {
