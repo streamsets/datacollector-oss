@@ -1,0 +1,21 @@
+description = 'StreamSets Data Collector Apache Pulsar 2.0.1-incubating Lib'
+
+def pulsarVersion = '2.1.0-incubating'
+dependencies {
+  compile project(':lib:proto:pulsar-protolib')
+  compile group: 'org.apache.pulsar', name: 'pulsar-client', version: pulsarVersion
+  testCompile group: 'org.powermock', name: 'powermock-api-mockito'
+  testCompile group: 'org.powermock', name: 'powermock-module-junit4'
+}
+
+sourceSets {
+  test {
+    java {
+      srcDir project(':lib:proto:pulsar-protolib').sourceSets.test.java.srcDirs
+
+    }
+    resources {
+      srcDir project(':lib:proto:pulsar-protolib').sourceSets.test.resources.srcDirs
+    }
+  }
+}

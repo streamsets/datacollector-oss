@@ -1,0 +1,37 @@
+description = 'StreamSets Data Collector Amazon AWS Library'
+
+def awsSdkVersion = '1.11.151'
+def commonsLang3Version = '3.4'
+def commonsMath3Version = '3.5'
+def sqsVersion = '1.0.4'
+
+def jacksonVersion = '2.8.9'
+
+dependencies {
+  compile "com.amazonaws:aws-java-sdk-bom:$awsSdkVersion"
+
+  compile project(':lib:stagesupport')
+  compile project(':lib:guavasupport')
+
+  compile "com.amazonaws:amazon-sqs-java-messaging-lib:$sqsVersion"
+  compile "org.apache.commons:commons-lang3:$commonsLang3Version"
+  compile "org.apache.commons:commons-math3:$commonsMath3Version"
+  compile "com.amazonaws:aws-java-sdk-core"
+  compile "com.amazonaws:aws-java-sdk-s3"
+  compile "com.amazonaws:aws-java-sdk-iam"
+  compile "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:$jacksonVersion"
+  compile "io.confluent:kafka-schema-registry-client:3.0.1"
+  compile "org.awaitility:awaitility:2.0.0"
+
+  compileOnly group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
+  compileOnly group: 'log4j', name: 'log4j', version: '1.2.17'
+  compileOnly group: 'org.slf4j', name: 'slf4j-api', version: '1.7.7'
+  compileOnly group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.7'
+  compileOnly group: 'io.dropwizard.metrics', name: 'metrics-core', version: '3.1.2'
+
+
+  testCompile group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
+  testCompile 'org.powermock:powermock-module-junit4:1.7.3'
+  testCompile 'org.powermock:powermock-api-mockito:1.7.3'
+  testCompile 'org.testcontainers:testcontainers:1.4.3'
+}

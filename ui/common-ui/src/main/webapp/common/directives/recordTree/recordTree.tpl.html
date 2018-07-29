@@ -1,0 +1,246 @@
+<ul class="record-list" ng-init="isOpen=false;headerExpand=false">
+  <li class="record-list-item"
+      ng-class="{
+        'field-addition' : (diffType === 'output' && (updatedField || updatedValue)),
+        'field-deletion': (diffType === 'input' && (updatedField || updatedValue)),
+        'is-root': isRoot
+      }">
+
+    <div>
+
+      <label class="pull-left"
+             ng-class="{
+              'label label-danger': isError && isRoot,
+              'root-label': isRoot
+             }">
+
+        <span class="pointer toggler {{(isOpen || (isRoot && record.expand)) ? 'open' : ''}}"
+            ng-click="onClick($event)"
+            ng-if="recordValue.type === 'MAP' || recordValue.type === 'LIST' || recordValue.type === 'LIST_MAP'"></span>
+
+        <input ng-if="selectable === true && !isRoot" type="checkbox" ng-model="selectedPath[recordValue.sqpath]">
+
+        <span class="field-index" ng-if="fieldIndex !== undefined" ng-bind-html="fieldIndex"></span>
+        <span class="field-name" ng-class="{'dirty ': recordValue.dirty || (record.dirty && isRoot)}" ng-bind-html="fieldName"></span> :
+
+
+        <a class="view-stack-trace"
+           ng-if="isRoot && record.header.errorStackTrace"
+           ng-click="showStackTrace(record.header)">
+          ( <span translate="home.graphPane.viewStackTrace">View Stack Trace</span>... )
+        </a>
+
+        <span class="glyphicon glyphicon-asterisk dirty-icon" ng-if="record.dirty && isRoot"></span>
+      </label>
+
+      <div ng-switch="recordValue.type">
+
+        <div ng-switch-when="MAP">
+          <span class="field-type" ng-show="showFieldType">{{recordValue.type}}</span>
+          <record-tree
+            ng-if="(isOpen || (isRoot && record.expand)) && recordValue.value"
+            ng-repeat="_fieldName in mapKeys | limitTo: limit"
+            record="record"
+            record-value="recordValue.value[_fieldName]"
+            diff-type="diffType"
+            diff-record-value="diffRecordValue.value[_fieldName]"
+            field-name="_fieldName"
+            is-root="false"
+            editable="editable"
+            selectable="selectable"
+            selected-path="selectedPath"
+            show-field-type="showFieldType"
+            show-header="showHeader">
+          </record-tree>
+
+          <span ng-if="recordValue.value == null" class="field-value">null</span>
+        </div>
+
+        <div ng-switch-when="LIST_MAP">
+          <span class="field-type" ng-show="showFieldType">{{recordValue.type}}</span>
+          <record-tree
+            ng-if="(isOpen || (isRoot && record.expand)) && recordValue.value"
+            ng-repeat="_fieldName in mapKeys | limitTo: limit"
+            record="record"
+            record-value="recordValue.value[_fieldName]"
+            diff-type="diffType"
+            diff-record-value="diffRecordValue.value[_fieldName]"
+            field-name="getListMapKey(recordValue.value[_fieldName])"
+            field-index="$index"
+            is-root="false"
+            editable="editable"
+            selectable="selectable"
+            selected-path="selectedPath"
+            show-field-type="showFieldType"
+            show-header="showHeader">
+          </record-tree>
+
+          <span ng-if="recordValue.value == null" class="field-value">null</span>
+        </div>
+
+        <div ng-switch-when="LIST">
+          <span class="field-type" ng-show="showFieldType">{{recordValue.type}} [ {{recordValue.value.length}} ]</span>
+          <record-tree
+            ng-if="(isOpen || (isRoot && record.expand)) && recordValue.value"
+            ng-repeat="(_fieldName, _recordValue) in recordValue.value | limitTo: limit"
+            record="record"
+            record-value="_recordValue"
+            diff-type="diffType"
+            diff-record-value="diffRecordValue.value[_fieldName]"
+            field-name="_fieldName"
+            is-root="false"
+            editable="editable"
+            selectable="selectable"
+            selected-path="selectedPath"
+            show-field-type="showFieldType"
+            show-header="showHeader">
+          </record-tree>
+
+          <span ng-if="recordValue.value == null" class="field-value">null</span>
+        </div>
+
+
+        <div class="show-more" ng-if="(isOpen || (isRoot && record.expand)) && limit < valueLength">
+          <a class="btn btn-link"
+             ng-click="onShowMoreClick($event);">Show More...</a>
+
+          <span class="separator">|</span>
+
+          <a class="btn btn-link"
+             ng-click="onShowAllClick($event);">Show All ({{valueLength}}) ...</a>
+        </div>
+
+        <div ng-switch-when="DATETIME" class="clearfix">
+
+          <span class="field-type pull-left" ng-show="showFieldType">{{recordValue.type}}</span>
+
+          <span class="field-value pull-left {{recordValue.type}}"
+                ng-class="{'value-addition' : (diffType === 'output' && updatedValue), 'value-deletion' : (diffType === 'input' && updatedValue)}"
+            >{{recordValue.value + '' | date:'medium'}} </span>
+
+          <div class="dropdown pull-left"
+               ng-if="editable === true"
+               ng-init="dateRecordValue = recordValue.value">
+            <a class="record-date-toggle dropdown-toggle" role="button" data-toggle="dropdown" data-target="#" href="">
+              <i class="fa fa-calendar"></i>
+            </a>
+            <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
+              <datetimepicker data-ng-model="dateRecordValue"
+                              data-on-set-time="recordDateValueUpdated(record, recordValue, dateRecordValue)"
+                              data-datetimepicker-config="{ dropdownSelector: '.record-date-toggle' }"></datetimepicker>
+            </ul>
+          </div>
+        </div>
+
+        <div ng-switch-when="DATE" class="clearfix">
+          <span class="field-type pull-left" ng-show="showFieldType">{{recordValue.type}}</span>
+
+          <span class="field-value pull-left {{recordValue.type}}"
+                ng-class="{'value-addition' : (diffType === 'output' && updatedValue), 'value-deletion' : (diffType === 'input' && updatedValue)}"
+          >{{recordValue.value + '' | date:'mediumDate'}} </span>
+
+          <div class="dropdown pull-left"
+               ng-if="editable === true"
+               ng-init="dateRecordValue = recordValue.value">
+            <a class="record-date-toggle dropdown-toggle" role="button" data-toggle="dropdown" data-target="#" href="">
+              <i class="fa fa-calendar"></i>
+            </a>
+            <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
+              <datetimepicker data-ng-model="dateRecordValue"
+                              data-on-set-time="recordDateValueUpdated(record, recordValue, dateRecordValue)"
+                              data-datetimepicker-config="{ dropdownSelector: '.record-date-toggle', minView: 'day' }"></datetimepicker>
+            </ul>
+          </div>
+        </div>
+
+        <div ng-switch-when="TIME" class="clearfix">
+          <span class="field-type pull-left" ng-show="showFieldType">{{recordValue.type}}</span>
+
+          <span class="field-value pull-left {{recordValue.type}}"
+                ng-class="{'value-addition' : (diffType === 'output' && updatedValue), 'value-deletion' : (diffType === 'input' && updatedValue)}"
+            >{{recordValue.value + '' | date:'mediumTime'}} </span>
+
+          <div class="dropdown pull-left"
+               ng-if="editable === true"
+               ng-init="dateRecordValue = recordValue.value">
+            <a class="record-date-toggle dropdown-toggle" role="button" data-toggle="dropdown" data-target="#" href="">
+              <i class="fa fa-calendar"></i>
+            </a>
+            <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
+              <datetimepicker data-ng-model="dateRecordValue"
+                              data-on-set-time="recordDateValueUpdated(record, recordValue, dateRecordValue)"
+                              data-datetimepicker-config="{ dropdownSelector: '.record-date-toggle', startView: 'hour' }"></datetimepicker>
+            </ul>
+          </div>
+        </div>
+
+
+        <div ng-switch-default>
+
+          <span class="field-type" ng-show="showFieldType">{{recordValue.type}}</span>
+
+          <span ng-if="editable !== true"
+                class="field-value {{((recordValue.value != null) ? recordValue.type : '')}}"
+                ng-class="{'value-addition' : (diffType === 'output' && updatedValue), 'value-deletion' : (diffType === 'input' && updatedValue)}"
+            >{{recordValue.value + ''}}</span>
+
+          <span class="field-value {{recordValue.dirty ? 'dirty ' + ((recordValue.value != null) ? recordValue.type : '') : ((recordValue.value != null) ? recordValue.type : '')}}"
+                ng-if="editable === true"
+                ng-class="{'value-addition' : (diffType === 'output' && updatedValue), 'value-deletion' : (diffType === 'input' && updatedValue)}"
+                contenteditable="true"
+                value-type="recordValue.type"
+                ng-change="recordValueUpdated(record, recordValue)"
+                ng-model="recordValue.value">
+          </span>
+        </div>
+
+      </div>
+    </div>
+  </li>
+
+  <li class="record-list-item" ng-if="showHeader && recordValue.attributes && (isOpen || record.expand)" ng-init="fieldHeaderExpand=false">
+    <label>
+      <span class="pointer toggler {{fieldHeaderExpand ? 'open' : ''}}"
+            ng-click="fieldHeaderExpand = !fieldHeaderExpand"></span>
+      <span class="field-name" translate="global.form.fieldHeader">Field Header</span>
+    </label>
+    <ul class="record-list" ng-if="fieldHeaderExpand">
+      <li class="record-list-item"
+          ng-repeat="(headerName, headerValue) in recordValue.attributes">
+        <label class="pull-left"><span class="field-name">{{headerName}}:</span></label>
+        <span class="field-value STRING">{{headerValue + ''}}</span>
+      </li>
+    </ul>
+  </li>
+
+  <li class="record-list-item" ng-if="showHeader && record.header && isRoot && (isOpen || (isRoot && record.expand))">
+      <label>
+        <span class="pointer toggler {{headerExpand ? 'open' : ''}}"
+              ng-click="headerExpand = !headerExpand"></span>
+        <span class="field-name" translate="global.form.recordHeader">Record Header</span>
+      </label>
+      <ul class="record-list" ng-if="headerExpand">
+        <li class="record-list-item"
+            ng-repeat="(headerName, headerValue) in record.header"
+            ng-if="headerValue && headerName !== 'values'">
+          <label class="pull-left"><span class="field-name">{{headerName}}:</span></label>
+          <span class="field-value STRING" ng-if="headerName !== 'errorTimestamp'">{{headerValue + ''}}</span>
+          <span class="field-value DATE" ng-if="headerName === 'errorTimestamp'">{{headerValue + '' | date:'medium'}}</span>
+        </li>
+
+        <li class="record-list-item">
+          <span class="field-name">values:</span>
+
+          <ul class="record-list">
+            <li class="record-list-item"
+                ng-repeat="(headerName, headerValue) in record.header.values">
+              <label class="pull-left"><span class="field-name">{{headerName}}:</span></label>
+              <span class="field-value STRING">{{headerValue + ''}}</span>
+            </li>
+          </ul>
+        </li>
+
+      </ul>
+  </li>
+
+</ul>

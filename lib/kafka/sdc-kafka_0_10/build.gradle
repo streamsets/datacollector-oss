@@ -1,0 +1,45 @@
+description = 'StreamSets Data Collector SDC kafka 10'
+dependencies {
+  compile project(':lib:kafka:sdc-kafka-api')
+  compile project(':lib:commonlib')
+  compile project(':lib:kafka:kafka-common')
+  compile project(':lib:kafka:sdc-kafka_0_9')
+  compile project(':lib:kafka:sdc-kafka_0_9-common')
+  compile group: 'com.101tec', name: 'zkclient', version: '0.7'
+  compile group: 'org.scala-lang', name: 'scala-library', version: '2.11.8'
+  compile group: 'com.google.guava', name: 'guava', version: '18.0'
+  testCompile project(':lib:kafka:kafka-common')
+  testCompile group: 'junit', name: 'junit', version: '4.12'
+  testCompile group: 'org.mockito', name: 'mockito-core', version: '1.10.19'
+  testCompile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
+
+  testCompile group: 'org.apache.kafka', name: 'kafka_2.11', version: '0.10.0.0', classifier: 'test'
+  testCompile group: 'org.apache.kafka', name: 'kafka-clients', version: '0.10.0.0', classifier: 'test'
+  testCompile group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.57'
+  testCompile(group: 'org.apache.hadoop', name: 'hadoop-minikdc', version: '2.6.0') {
+    exclude(module: 'apacheds-jdbm1')
+    exclude(module: 'api-ldap-schema-data')
+  }
+  testCompile group: 'org.apache.directory.jdbm', name: 'apacheds-jdbm1', version: '2.0.0-M3'
+  testCompileOnly project(path: ':lib:kafka:sdc-kafka_0_9', configuration: 'testArtifacts')
+  compileOnly group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
+  compileOnly group: 'log4j', name: 'log4j', version: '1.2.17'
+  compileOnly group: 'org.slf4j', name: 'slf4j-api', version: '1.7.7'
+  compileOnly group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.7'
+  testCompile group: 'org.apache.kafka', name: 'kafka_2.11', version: '0.10.0.0'
+  compileOnly group: 'org.apache.kafka', name: 'kafka-clients', version: '0.10.0.0'
+  compileOnly group: 'org.apache.zookeeper', name: 'zookeeper', version: '3.4.5'
+}
+
+configurations {
+  testArtifacts.extendsFrom testRuntime
+}
+
+task packageTests(type: Jar) {
+  from sourceSets.test.output
+  classifier = 'tests'
+}
+
+artifacts {
+  testArtifacts packageTests
+}

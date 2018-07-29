@@ -1,0 +1,7 @@
+
+description = 'StreamSets Data Collector Whole File Converter ProtoLib'
+dependencies {
+    compile group: 'org.apache.parquet', name: 'parquet-avro', version: '1.8.1'
+    compileOnly group: 'org.apache.avro', name: 'avro-mapred', version: '1.7.7'
+    compileOnly(group: 'org.apache.hadoop', name: 'hadoop-client', version: '2.6.0')
+}

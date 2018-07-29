@@ -1,0 +1,24 @@
+
+description = 'StreamSets Data Collector MapR Common'
+dependencies {
+  compile project(':core:hadoop-common')
+    compileOnly group: 'log4j', name: 'log4j', version:'1.2.17'
+    compileOnly group: 'org.slf4j', name: 'slf4j-api', version:'1.7.7'
+    compileOnly group: 'org.slf4j', name: 'slf4j-log4j12', version:'1.7.7'
+    compileOnly(group: 'org.apache.hadoop', name: 'hadoop-common', version:'2.6.0') {
+exclude(module: 'servlet-api')
+    }
+}
+
+configurations {
+  testArtifacts.extendsFrom testRuntime
+}
+
+task packageTests(type: Jar) {
+  from sourceSets.test.output
+  classifier = 'tests'
+}
+
+artifacts {
+  testArtifacts packageTests
+}

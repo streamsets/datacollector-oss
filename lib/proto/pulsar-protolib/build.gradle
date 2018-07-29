@@ -1,0 +1,10 @@
+description = 'StreamSets Data Collector Pulsar ProtoLib'
+
+dependencies {
+  compile project(':lib:stagesupport')
+  compile group: 'com.google.guava', name: 'guava', version: '24.1-jre'
+  compile group: 'org.apache.pulsar', name: 'pulsar-client', version: '2.1.0-incubating'
+
+  testImplementation group: 'org.powermock', name: 'powermock-api-mockito'
+  testImplementation group: 'org.powermock', name: 'powermock-module-junit4'
+}

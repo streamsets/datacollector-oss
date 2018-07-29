@@ -1,0 +1,17 @@
+description = 'StreamSets Data Collector Bootstrap'
+dependencies {
+  testCompile group: 'junit', name: 'junit', version: '4.12'
+  testCompile group: 'com.google.guava', name: 'guava', version: '18.0'
+  testCompile project(':core:testing')
+}
+
+jar {
+  manifest {
+    attributes("Premain-Class": "com.streamsets.pipeline.BootstrapMain")
+  }
+}
+
+// Do not try to load our dummy classes used in testing classloader.
+test {
+  excludes = ["**/Dummy.class"]
+}

@@ -1,0 +1,5 @@
+
+description = 'StreamSets Data Collector JSON DTO'
+dependencies {
+  compile project(':core:sso')
+}

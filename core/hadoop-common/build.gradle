@@ -1,0 +1,26 @@
+description = 'StreamSets Data Collector Hadoop Common'
+dependencies {
+  testCompile group: 'junit', name: 'junit', version: '4.12'
+  testCompile project(':core:testing')
+  testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '1.7.3'
+  testCompile group: 'org.powermock', name: 'powermock-api-mockito', version: '1.7.3'
+  compileOnly(group: 'org.apache.hadoop', name: 'hadoop-common', version: '2.6.0') {
+    exclude(module: 'servlet-api')
+  }
+  testCompile(group: 'org.apache.hadoop', name: 'hadoop-common', version: '2.6.0') {
+    exclude(module: 'servlet-api')
+  }
+}
+
+configurations {
+  testArtifacts.extendsFrom testRuntime
+}
+
+task packageTests(type: Jar) {
+  from sourceSets.test.output
+  classifier = 'tests'
+}
+
+artifacts {
+  testArtifacts packageTests
+}

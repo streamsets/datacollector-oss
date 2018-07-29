@@ -1,0 +1,29 @@
+description = 'StreamSets Data Collector Cassandra Driver 3.2.0 Lib'
+
+def cassandraDriverVersion = '3.2.0'
+def cassandraUnitVersion = '3.1.3.2'
+
+dependencies {
+  compile project(':lib:proto:cassandra-protolib')
+  compile group: 'com.datastax.cassandra', name: 'cassandra-driver-core', version: cassandraDriverVersion
+  compile group: 'com.datastax.cassandra', name: 'cassandra-driver-extras', version: cassandraDriverVersion
+  compile group: 'com.datastax.cassandra', name: 'cassandra-driver-mapping', version: cassandraDriverVersion
+  testCompile(group: 'org.cassandraunit', name: 'cassandra-unit', version: cassandraUnitVersion) {
+    exclude(module: 'cassandra-driver-core')
+    exclude(module: 'cassandra-driver-mapping')
+    exclude(module: 'cassandra-driver-extras')
+    exclude(module: 'netty-handler')
+  }
+}
+
+sourceSets {
+  test {
+    java {
+      srcDir project(':lib:proto:cassandra-protolib').sourceSets.test.java.srcDirs
+
+    }
+    resources {
+      srcDir project(':lib:proto:cassandra-protolib').sourceSets.test.resources.srcDirs
+    }
+  }
+}

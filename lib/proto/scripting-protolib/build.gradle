@@ -1,0 +1,21 @@
+description = 'StreamSets Data Collector Scripting Protoli'
+dependencies {
+  compile project(':lib:stagesupport')
+  compile project(':lib:guavasupport')
+  testCompile project(path: ':lib:guavasupport', configuration: 'testArtifacts')
+  testCompile group: 'junit', name: 'junit', version: '4.12'
+  compileOnly group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
+}
+
+configurations {
+  testArtifacts.extendsFrom testRuntime
+}
+
+task packageTests(type: Jar) {
+  from sourceSets.test.output
+  classifier = 'tests'
+}
+
+artifacts {
+  testArtifacts packageTests
+}

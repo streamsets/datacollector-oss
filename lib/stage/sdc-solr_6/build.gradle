@@ -1,0 +1,27 @@
+
+description = 'StreamSets Data Collector SDC Solr 6'
+dependencies {
+  compile project(':core:sdc-solr-api')
+  compileOnly group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
+  compileOnly group: 'log4j', name: 'log4j', version: '1.2.17'
+  compileOnly group: 'org.apache.solr', name: 'solr-solrj', version: '6.1.0'
+  testCompile project(':core:sdc-solr-api')
+  testCompile project(path: ':core:sdc-solr-api', configuration: 'testArtifacts')
+
+  testCompile group: 'junit', name: 'junit', version: '4.12'
+  testCompile group: 'org.apache.solr', name: 'solr-test-framework', version: '6.1.0'
+  testCompile group: 'org.mockito', name: 'mockito-core', version: '1.10.19'
+}
+
+configurations {
+  testArtifacts.extendsFrom testRuntime
+}
+
+task packageTests(type: Jar) {
+  from sourceSets.test.output
+  classifier = 'tests'
+}
+
+artifacts {
+  testArtifacts packageTests
+}

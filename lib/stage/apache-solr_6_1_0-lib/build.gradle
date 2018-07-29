@@ -1,0 +1,6 @@
+description = 'StreamSets Data Collector Apache Solr 6.1.0 Lib'
+
+def solrVersion = '6.1.0'
+dependencies {
+  compile project(':lib:stage:sdc-solr_6')
+}

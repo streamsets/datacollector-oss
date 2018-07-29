@@ -1,0 +1,125 @@
+description = 'StreamSets Data Collector Container'
+dependencies {
+  annotationProcessor project(':core:container-common')
+  annotationProcessor group: 'com.squareup.dagger', name: 'dagger-compiler', version: '1.2.2'
+  compile project(':core:bootstrap')
+  compile project(':core:container-common')
+  compile project(':core:container-common')
+  compile group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.10.59'
+  compile group: 'com.carrotsearch', name: 'hppc', version: '0.7.2'
+  compile group: 'com.esotericsoftware', name: 'kryo', version: '3.0.1'
+  compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.8.9'
+  compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.8.9'
+  compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.9'
+  compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
+  compile group: 'com.google.guava', name: 'guava', version: '18.0'
+  compile group: 'com.squareup.dagger', name: 'dagger', version: '1.2.2'
+  compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
+  compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
+  compile group: 'commons-io', name: 'commons-io', version: '2.4'
+  compile group: 'io.airlift', name: 'airline', version: '0.7'
+  compile(group: 'io.dropwizard.metrics', name: 'metrics-json', version: '3.1.2') {
+    exclude(module: 'metrics-core')
+  }
+  compile(group: 'io.dropwizard.metrics', name: 'metrics-jvm', version: '3.1.2') {
+    exclude(module: 'metrics-core')
+  }
+  compile(group: 'io.swagger', name: 'swagger-jersey2-jaxrs', version: '1.5.13') {
+    exclude(module: 'annotations')
+    exclude(module: 'jersey-container-servlet-core')
+    exclude(module: 'jersey-media-multipart')
+  }
+  compile group: 'javax.inject', name: 'javax.inject', version: '1'
+  compile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0'
+  compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0.1'
+  compile group: 'org.apache.commons', name: 'commons-compress', version: '1.16.1'
+  compile group: 'org.apache.commons', name: 'commons-configuration2', version: '2.0'
+  compile group: 'org.apache.commons', name: 'commons-pool2', version: '2.4.1'
+  compile group: 'org.eclipse.jetty', name: 'jetty-rewrite', version: '9.4.2.v20170220'
+  compile group: 'org.eclipse.jetty', name: 'jetty-security', version: '9.4.2.v20170220'
+  compile group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.4.2.v20170220'
+  compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.4.2.v20170220'
+  compile group: 'org.eclipse.jetty', name: 'jetty-servlets', version: '9.4.2.v20170220'
+  compile group: 'org.eclipse.jetty', name: 'jetty-util', version: '9.4.2.v20170220'
+  compile group: 'org.eclipse.jetty', name: 'jetty-webapp', version: '9.4.2.v20170220'
+  compile group: 'org.eclipse.jetty.websocket', name: 'websocket-api', version: '9.4.2.v20170220'
+  compile group: 'org.eclipse.jetty.websocket', name: 'websocket-server', version: '9.4.2.v20170220'
+  compile group: 'org.eclipse.jetty.websocket', name: 'websocket-servlet', version: '9.4.2.v20170220'
+  compile(group: 'org.glassfish.hk2', name: 'hk2-api', version: '2.5.0-b32') {
+    exclude(module: 'javax.inject')
+  }
+  compile group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet', version: '2.25.1'
+  compile(group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet-core', version: '2.25.1') {
+    exclude(module: 'javax.inject')
+  }
+  compile(group: 'org.glassfish.jersey.core', name: 'jersey-server', version: '2.25.1') {
+    exclude(module: 'javax.inject')
+  }
+  compile group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: '2.25.1'
+  compile group: 'org.glassfish.jersey.media', name: 'jersey-media-multipart', version: '2.25.1'
+  compile group: 'org.kamranzafar', name: 'jtar', version: '2.2'
+  compile(project(':core:common')) {
+    exclude(module: 'commons-csv')
+  }
+  compile(project(':core:messaging-client')) {
+    exclude(group: 'com.fasterxml.jackson.core')
+  }
+  compileOnly group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
+  compileOnly group: 'io.dropwizard.metrics', name: 'metrics-core', version: '3.1.2'
+  compileOnly group: 'log4j', name: 'log4j', version: '1.2.17'
+  compileOnly group: 'org.slf4j', name: 'jul-to-slf4j', version: '1.7.7'
+  compileOnly group: 'org.slf4j', name: 'slf4j-api', version: '1.7.7'
+  compileOnly group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.7'
+  testAnnotationProcessor project(':core:container-common')
+  testAnnotationProcessor group: 'com.squareup.dagger', name: 'dagger-compiler', version: '1.2.2'
+  testAnnotationProcessor group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
+  testCompile project(':core:container-common')
+  testCompile project(':core:testing')
+  testCompile group: 'com.icegreen', name: 'greenmail', version: '1.4.0'
+  testCompile group: 'com.squareup.dagger', name: 'dagger', version: '1.2.2'
+  testCompile group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
+  testCompile group: 'junit', name: 'junit', version: '4.12'
+  testCompile group: 'org.apache.directory.jdbm', name: 'apacheds-jdbm1', version: '2.0.0-M3'
+  testCompile(group: 'org.apache.directory.server', name: 'apacheds-server-integ', version: '2.0.0-M15') {
+    exclude(module: 'shared-ldap-schema')
+    exclude(module: 'api-ldap-schema-data')
+  }
+  testCompile(group: 'org.apache.hadoop', name: 'hadoop-minikdc', version: '2.6.0') {
+    exclude(module: 'apacheds-jdbm1')
+    exclude(module: 'api-ldap-schema-data')
+  }
+  testCompile group: 'org.awaitility', name: 'awaitility', version: '2.0.0'
+  testCompile group: 'org.eclipse.jetty.websocket', name: 'websocket-client', version: '9.4.2.v20170220'
+  testCompile group: 'org.glassfish.jersey.test-framework', name: 'jersey-test-framework-core', version: '2.25.1'
+  testCompile group: 'org.glassfish.jersey.test-framework.providers', name: 'jersey-test-framework-provider-inmemory', version: '2.25.1'
+  testCompile group: 'org.javassist', name: 'javassist', version: '3.21.0-GA'
+  testCompile group: 'org.powermock', name: 'powermock-api-mockito', version: '1.7.3'
+  testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '1.7.3'
+  testCompile group: 'org.slf4j', name: 'jul-to-slf4j', version: '1.7.7'
+  testCompile group: 'org.testcontainers', name: 'testcontainers', version: '1.4.3'
+}
+
+
+def annotationArgs = [
+    "-Astreamsets.datacollector.annotationsprocessor.skip"
+]
+
+compileJava {
+  options.compilerArgs += annotationArgs
+}
+
+compileTestJava {
+  options.compilerArgs += annotationArgs
+}
+
+test {
+  jvmArgs "-javaagent:${buildDir}/agents/streamsets-datacollector-bootstrap-${version}.jar", "-Dsun.net.http.allowRestrictedHeaders=true"
+  systemProperty 'streamsets.test.mode', 'true'
+}
+
+task copyBootstrapJar(type: Copy) {
+  from project(':core:bootstrap').jar
+  into("$buildDir/agents")
+}
+
+test.dependsOn += copyBootstrapJar

@@ -1,0 +1,7 @@
+description = 'StreamSets Data Collector Aerospike 3.15.0.1 Lib'
+dependencies {
+  implementation group: 'com.aerospike', name: 'aerospike-client', version: '4.1.0'
+  implementation group: 'com.google.guava', name: 'guava', version: '18.0'
+  implementation project(':lib:stagesupport')
+  testImplementation group: 'org.testcontainers', name: 'testcontainers'
+}

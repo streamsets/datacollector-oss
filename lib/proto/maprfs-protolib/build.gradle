@@ -1,0 +1,25 @@
+
+description = 'StreamSets Data Collector MapR FS Protolib'
+dependencies {
+  compile project(':lib:proto:cluster-hdfs-protolib')
+  compile project(':lib:proto:hdfs-protolib')
+  compile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0'
+  compile group: 'org.apache.avro', name: 'avro', version: '1.7.7'
+  compile(group: 'org.apache.avro', name: 'avro-mapred', version: '1.7.7', classifier: 'hadoop2') {
+    exclude(module: 'servlet-api')
+  }
+  compileOnly project(':core:cluster:cluster-bootstrap-api')
+  compileOnly group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
+  compileOnly group: 'io.dropwizard.metrics', name: 'metrics-core', version: '3.1.2'
+  compileOnly group: 'log4j', name: 'log4j', version: '1.2.17'
+  compileOnly(group: 'org.apache.hadoop', name: 'hadoop-client', version: '2.7.0-mapr-1506') {
+    exclude(module: 'slf4j-api')
+    exclude(module: 'slf4j-log4j12')
+    exclude(module: 'log4j')
+    exclude(module: 'metrics-core')
+    exclude(module: 'servlet-api')
+  }
+
+  testCompile project(':lib:commonlib')
+  testCompile(group: 'org.apache.hadoop', name: 'hadoop-client', version: '2.7.0-mapr-1506')
+}

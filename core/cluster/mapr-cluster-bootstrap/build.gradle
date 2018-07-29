@@ -1,0 +1,9 @@
+
+description = 'StreamSets Data Collector Mapr Cluster Bootstrap'
+dependencies {
+  compile project(':core:cluster:cluster-bootstrap-api')
+    testCompile group: 'junit', name: 'junit', version:'4.12'
+  testCompile project(':core:testing')
+    compileOnly group: 'org.apache.spark', name: 'spark-streaming_2.11', version:'2.1.0-mapr-1703'
+    compileOnly group: 'org.apache.spark', name: 'spark-streaming-kafka-0-9_2.11', version:'2.1.0-mapr-1703'
+}

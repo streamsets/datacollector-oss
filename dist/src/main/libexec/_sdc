@@ -98,7 +98,7 @@ SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.conf.dir=${SDC_CONF}"
 SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.data.dir=${SDC_DATA}"
 SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.log.dir=${SDC_LOG}"
 
-BOOTSTRAP_JAR="${SDC_DIST}/libexec/bootstrap-libs/main/streamsets-datacollector-bootstrap-${project.version}.jar"
+BOOTSTRAP_JAR="${SDC_DIST}/libexec/bootstrap-libs/main/streamsets-datacollector-bootstrap-@project.version@.jar"
 
 SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -javaagent:${BOOTSTRAP_JAR}"
 

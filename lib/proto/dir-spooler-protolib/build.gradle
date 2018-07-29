@@ -1,0 +1,22 @@
+
+description = 'StreamSets Data Collector Directory Spooler ProtoLib'
+dependencies {
+  compile project(':core:common')
+  compile project(':lib:commonlib')
+  testCompile project(':lib:commonlib')
+  testCompile group: 'org.powermock', name: 'powermock-api-mockito'
+  testCompile group: 'org.powermock', name: 'powermock-module-junit4'
+}
+
+configurations {
+  testArtifacts.extendsFrom testRuntime
+}
+
+task packageTests(type: Jar) {
+  from sourceSets.test.output
+  classifier = 'tests'
+}
+
+artifacts {
+  testArtifacts packageTests
+}

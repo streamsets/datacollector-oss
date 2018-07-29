@@ -1,0 +1,23 @@
+description = 'StreamSets Data Collector Cluster Bootstrap API'
+apply plugin: 'scala'
+
+dependencies {
+  compile project(':core:bootstrap')
+  compile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0'
+  compile group: 'io.confluent', name: 'kafka-avro-serializer', version: '2.0.1'
+  compile group: 'com.streamsets', name: 'streamsets-datacollector-spark-api', version: '3.5.0-SNAPSHOT'
+  compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.8.9'
+  testCompile group: 'com.google.guava', name: 'guava', version: '18.0'
+  testCompile project(':core:container-common')
+  testCompile project(':core:container')
+  testCompile group: 'junit', name: 'junit', version: '4.12'
+  testCompile project(':core:testing')
+  compileOnly(group: 'org.apache.avro', name: 'avro-mapred', version: '1.7.7', classifier: 'hadoop2') {
+    exclude(module: 'servlet-api')
+  }
+  compileOnly group: 'org.apache.avro', name: 'avro', version: '1.7.7'
+  compileOnly group: 'org.apache.spark', name: 'spark-streaming_2.11', version: '2.1.0'
+  compileOnly group: 'org.apache.kafka', name: 'kafka-clients', version: '0.8.2.0'
+  testCompile group: 'org.apache.hadoop', name: 'hadoop-common', version: '2.6.0'
+  testCompile group: 'org.apache.hadoop', name: 'hadoop-hdfs', version: '2.6.0'
+}

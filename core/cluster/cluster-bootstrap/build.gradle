@@ -1,0 +1,10 @@
+description = 'StreamSets Data Collector Cluster Bootstrap'
+dependencies {
+  compile project(':core:cluster:cluster-bootstrap-api')
+  compile group: 'com.streamsets', name: 'streamsets-datacollector-spark-api', version: '3.5.0-SNAPSHOT'
+  testCompile group: 'junit', name: 'junit', version: '4.12'
+  testCompile project(':core:testing')
+  compileOnly group: 'com.google.guava', name: 'guava', version: '18.0'
+  compileOnly group: 'org.apache.spark', name: 'spark-streaming-kafka-0-10_2.11', version: '2.1.0'
+  compileOnly group: 'org.apache.spark', name: 'spark-streaming_2.11', version: '2.1.0'
+}

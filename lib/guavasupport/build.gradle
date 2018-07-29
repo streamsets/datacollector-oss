@@ -1,0 +1,19 @@
+description = 'StreamSets Data Collector Guava Support Libraries'
+dependencies {
+  compile group: 'com.google.guava', name: 'guava', version: '18.0'
+  compileOnly project(':lib:stagesupport')
+  testCompile project(':lib:stagesupport')
+}
+
+configurations {
+  testArtifacts.extendsFrom testRuntime
+}
+
+task packageTests(type: Jar) {
+  from sourceSets.test.output
+  classifier = 'tests'
+}
+
+artifacts {
+  testArtifacts packageTests
+}

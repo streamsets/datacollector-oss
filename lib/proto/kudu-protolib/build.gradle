@@ -1,0 +1,13 @@
+description = 'StreamSets Data Collector Apache Kudu ProtoLib'
+
+def kuduVersion = '1.0.1'
+dependencies {
+  compile project(':lib:guavasupport')
+  compile project(':lib:proto:lookup-protolib')
+  compile group: 'joda-time', name: 'joda-time', version: '2.8'
+  compileOnly group: 'com.google.guava', name: 'guava', version: '18.0'
+  compileOnly group: 'org.apache.kudu', name: 'kudu-client', version: kuduVersion
+  testCompile group: 'org.apache.kudu', name: 'kudu-client', version: kuduVersion
+  testCompile group: 'org.powermock', name: 'powermock-api-mockito', version: '1.7.3'
+  testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '1.7.3'
+}

@@ -1,0 +1,6 @@
+subprojects {
+  dependencies {
+    // Provide SDK to all library project at test compile and runtime
+    testCompile project(':core:sdk')
+  }
+}

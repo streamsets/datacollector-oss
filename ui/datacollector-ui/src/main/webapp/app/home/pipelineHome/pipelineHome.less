@@ -1,0 +1,349 @@
+/*
+ * Copyright 2017 StreamSets Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.home-bg-splitter {
+
+  >.split-panes {
+    min-width: 1000px;
+    left: 0;
+    right: 0;
+    top: 96px;
+    bottom: 0;
+    position: absolute;
+
+    .split-handler {
+      background: transparent;
+      position: absolute;
+      z-index: 999;
+    }
+  }
+
+  /* Library/Graph Splitter */
+  .split-panes.library-splitter {
+    >.split-handler {
+      width: 4px;
+      top: 0;
+      left: 250px;
+      bottom: 0;
+      cursor: ew-resize;
+    }
+
+    >.split-pane1 {
+      width: 250px;
+      position: absolute;
+    }
+
+    >.split-pane2 {
+      left: 250px;
+      right: 0;
+      border-left: 1px solid #aaa;
+      position: absolute;
+    }
+
+
+    &.hide-library-panel {
+      >.split-handler {
+        display: none;
+        left:0 !important;
+      }
+
+      >.split-pane1,>.split-pane2 {
+        position: absolute;
+        height: 100%;
+      }
+
+      >.split-pane1 {
+        width: 0;
+        display: none;
+      }
+
+      >.split-pane2 {
+        left: 0 !important;
+        right: 0;
+        border-left: 0;
+      }
+    }
+
+  }
+
+  .split-panes.stage-library-splitter {
+    >.split-handler {
+      display: none;
+      left:0;
+    }
+
+    >.split-pane1 {
+      left: 0;
+      right: 180px;
+      width: calc(~"100% - 180px");
+      position: absolute;
+    }
+
+    >.split-pane2 {
+      right: 0;
+      left: auto;
+      width: 180px;
+      border-left: 1px solid #aaa;
+      position: absolute;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    &.hide-stage-library-panel {
+      >.split-handler {
+        display: none;
+        left:0 !important;
+      }
+
+      >.split-pane1,>.split-pane2 {
+        position: absolute;
+        height: 100%;
+      }
+
+      >.split-pane1 {
+        right: 0;
+        width: 100%;
+      }
+
+      >.split-pane2 {
+        width: 0;
+        display: none;
+      }
+    }
+  }
+
+  /* Vertical */
+  .split-panes.vertical {
+    >.split-handler {
+      height: 4px;
+      top: 50%;
+      left: 0;
+      right: 0;
+      cursor: row-resize;
+    }
+
+    >.split-pane1, >.split-pane2 {
+      position: absolute;
+      width: 100%;
+    }
+
+    >.split-pane1 {
+      height: 50%;
+    }
+
+    >.split-pane2 {
+      top: 50%;
+      bottom: 0;
+      border-top: 1px solid #aaa;
+    }
+
+
+    &.maximize-pane2 {
+      >.split-handler {
+        display: none;
+      }
+
+      >.split-pane1, >.split-pane2 {
+        position: absolute;
+        width: 100%;
+      }
+
+      >.split-pane1 {
+        height: 0 !important;
+      }
+
+      >.split-pane2 {
+        top: 0 !important;
+        bottom: 0;
+        border-top: 1px solid #aaa;
+      }
+    }
+
+
+    &.minimize-pane2 {
+      >.split-handler {
+        display: none;
+      }
+
+      >.split-pane1, >.split-pane2 {
+        position: absolute;
+        width: 100%;
+      }
+
+      >.split-pane1 {
+        height: calc(~"100% - 37px") !important;
+      }
+
+      >.split-pane2 {
+        top: calc(~"100% - 37px") !important;
+        bottom: 0;
+        border-top: 1px solid #aaa;
+      }
+    }
+  }
+
+  &.comfortable-density {
+    .form-group {
+      margin-bottom: @smallPadding * 3;
+    }
+  }
+
+  &.cozy-density {
+    .form-group {
+      margin-bottom: @smallPadding * 2;
+
+      .form-control {
+        padding: @smallPadding *.5 @defaultPadding;
+      }
+    }
+
+    .nav {
+      li {
+        a {
+          padding: @defaultPadding * .7 @smallPadding * 3;
+        }
+      }
+    }
+
+    .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+      padding: 5px 8px;
+    }
+
+    .btn {
+      padding: @smallPadding * .8 @smallPadding * 2;
+    }
+
+    .CodeMirror {
+      min-height: 30px;
+      padding: 0 @defaultPadding;
+
+      .CodeMirror-lines {
+        padding: 2px 0;
+      }
+    }
+  }
+
+  &.compact-density {
+    .form-group {
+      margin-bottom: @smallPadding * .7;
+
+      .form-control {
+        min-height: 27px;
+        padding: 0 @smallPadding;
+      }
+
+      input.form-control, select.form-control, textarea.form-control {
+        height: 27px;
+      }
+    }
+
+    .form-horizontal {
+      .control-label {
+        padding-top: 2px;
+      }
+    }
+
+    .form-control-static {
+      padding-top: 0px;
+    }
+
+    .nav {
+      li {
+        a {
+          padding: @defaultPadding * .4 @smallPadding * 3;
+        }
+      }
+    }
+
+    .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+      padding: 3px 8px;
+    }
+
+
+    .btn {
+      padding: @smallPadding * 0.45 @smallPadding * 2;
+    }
+
+    .CodeMirror {
+      min-height: 27px;
+      padding: 0 @smallPadding;
+
+      .CodeMirror-lines {
+        padding: 0;
+      }
+
+    }
+  }
+
+}
+
+.alert-validation-errors{
+  height: 15px;
+  top: -5px;
+  position: relative;
+}
+
+.size-toolbar {
+  .detail-settings-dropdown {
+    .btn {
+      padding: 4px @defaultPadding * 0.7 0 0;
+
+      span {
+        padding-top: 0;
+      }
+    }
+  }
+
+  span {
+    padding-top: @smallPadding ;
+    padding-left: @defaultPadding * 0.7;
+    padding-bottom: 0;
+    color: @streamsets-icon-btn-color;
+
+    &:hover {
+      color: @streamsets-icon-btn-hover-color;
+    }
+  }
+}
+
+/**
+ * To fix bug in json-formatter
+ */
+.json-formatter-row .date {
+  background-color: inherit;
+}
+
+.pipeline-home-loading {
+  z-index: 100;
+  left: 43%;
+}
+
+@import '../header/header.less';
+@import '../header/start/start.less';
+@import '../header/downloadExecutable/downloadExecutable.less';
+@import '../graph/graph.less';
+@import '../detail/detail.less';
+@import '../preview/preview.less';
+@import '../snapshot/snapshot.less';
+@import '../snapshot/modal/snapshotModal.less';
+@import '../library/library.less';
+@import '../library/import/import.less';
+@import '../library/download_remote/downloadRemote.less';
+@import '../library/share/share.less';
+@import '../alerts/error/errorAlert.less';
+@import '../alerts/error/errorModal.less';
+@import '../resetOffset/resetOffset.less';
+@import '../stageLibrary/stageLibrary.less';

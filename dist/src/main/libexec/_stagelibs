@@ -431,7 +431,7 @@ printInstallScript() {
 PRG="${0}"
 
 DEBUG=""
-SDC_VERSION="${project.version}"
+SDC_VERSION="@project.version@"
 REPO_URL="https://archives.streamsets.com/datacollector"
 
 LIST=""

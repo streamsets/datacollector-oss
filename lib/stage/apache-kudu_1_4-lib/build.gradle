@@ -1,0 +1,23 @@
+description = 'StreamSets Data Collector Apache Kudu 1.4 Lib'
+
+def kuduVersion = '1.4.0'
+
+dependencies {
+  compile project(':lib:proto:kudu-protolib')
+  compile group: 'com.google.guava', name: 'guava', version: '18.0'
+  compile group: 'org.apache.kudu', name: 'kudu-client', version: kuduVersion
+  testCompile group: 'org.powermock', name: 'powermock-api-mockito'
+  testCompile group: 'org.powermock', name: 'powermock-module-junit4'
+}
+
+sourceSets {
+  test {
+    java {
+      srcDir project(':lib:proto:kudu-protolib').sourceSets.test.java.srcDirs
+
+    }
+    resources {
+      srcDir project(':lib:proto:kudu-protolib').sourceSets.test.resources.srcDirs
+    }
+  }
+}

@@ -1,0 +1,5 @@
+
+description = 'StreamSets Data Collector Google Cloud Common'
+dependencies {
+    compileOnly group: 'com.streamsets', name: 'streamsets-datacollector-api', version:'3.5.0-SNAPSHOT'
+}

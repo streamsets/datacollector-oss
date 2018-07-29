@@ -1,0 +1,45 @@
+plugins {
+  id "com.moowork.node" version "1.2.0"
+  id "com.moowork.grunt" version "1.2.0"
+}
+
+node {
+  version = '10.7.0'
+  download = true
+}
+
+def srcDir = new File(projectDir, "src/main/webapp")
+def targetDir = new File(projectDir, "target/dist")
+
+task gruntBuildForce(type: GruntTask) {
+  args = ["build", "--force"]
+  inputs.dir(srcDir)
+  outputs.dir(targetDir)
+}
+
+task yarnInstall(type: YarnTask) {
+  yarnCommand = ['']
+  inputs.file("package.json")
+  // This is to work around a bug in Gradle when bad symlinks exist
+  // dependencies will only be updated via yarn if the package.json file
+  // has changed. If you'd like to force yarn install to run, you can
+  // delete the node_modules dir or run it manually from the command line.
+  outputs.upToDateWhen { file('node_modules/@bower_components').exists() }
+}
+
+task cleanNodeModules(type: Delete) {
+  delete file('node_modules')
+  delete file('target')
+}
+
+// makes sure on each build that grunt is installed
+gruntBuildForce.dependsOn 'installGrunt'
+
+// processes your package.json before running grunt build
+gruntBuildForce.dependsOn 'yarnInstall'
+
+// runs "grunt build" as part of your Gradle build
+build.dependsOn gruntBuildForce
+
+// delete node modules on clean task
+clean.dependsOn cleanNodeModules

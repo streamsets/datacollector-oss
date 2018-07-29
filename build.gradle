@@ -1,0 +1,246 @@
+buildscript {
+  repositories {
+    jcenter()
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "net.ltgt.gradle:gradle-apt-plugin:0.18"
+    classpath 'com.adarshr:gradle-test-logger-plugin:1.4.0'
+    classpath "com.commercehub.gradle.plugin:gradle-avro-plugin:0.14.2"
+    classpath "gradle.plugin.com.dorongold.plugins:task-tree:1.3"
+  }
+}
+
+apply plugin: "net.ltgt.apt"
+apply plugin: "com.dorongold.task-tree"
+
+allprojects {
+  apply plugin: 'maven'
+  apply plugin: 'com.adarshr.test-logger'
+
+  testlogger {
+    theme = System.env['JENKINS_HOME'] != null ? "plain" : "standard"
+  }
+
+  group = 'com.streamsets'
+  version = '3.5.0-SNAPSHOT'
+
+  // Add JUnit to test scope for ll projects using the Java plugin
+  plugins.withType(JavaPlugin) {
+    dependencies {
+      compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
+      testCompile project(':core:testing')
+      testCompile 'junit:junit'
+      // powermock-api-mockito-common includes both mockito 1.x and 2.x and until we migrate
+      // to Mockito 2.x across the board we need to force the correct version.
+      testCompile('org.mockito:mockito-core:1.10.19') {
+        force = true
+      }
+      constraints {
+        testCompile 'junit:junit:4.12'
+        testCompile('org.testcontainers:testcontainers:1.4.3')
+      }
+    }
+  }
+
+  repositories {
+    mavenLocal()
+
+    maven { url "https://repo.streamsets.net/artifactory/libs-release" }
+    maven { url "https://repo.streamsets.net/artifactory/libs-snapshot" }
+//    maven { url "https://repository.cloudera.com/content/groups/cloudera-repos" }
+//    maven { url "http://packages.confluent.io/maven/" }
+//    maven { url "https://artifacts.elastic.co/maven" }
+//    maven { url "http://repository.mapr.com/maven/" }
+//    maven { url "http://repo.hortonworks.com/content/repositories/releases/" }
+//    maven { url "http://repo.hortonworks.com/content/repositories/re-hosted/" }
+//    maven { url "http://repo.hortonworks.com/content/repositories/jetty-hadoop/" }
+//    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+//    maven { url "http://files.kinetica.com/nexus/content/repositories/releases/" }
+//    maven { url "http://repository.mapr.com/nexus/content/repositories/releases" }
+//    maven { url "http://bits.cloudera.com/f93c6c9d/cdh6/6.0.0-beta1/maven-repository/" }
+  }
+}
+
+// Configuration common to all subprojects
+subprojects {
+  apply plugin: 'java'
+
+  sourceCompatibility = 1.8
+  targetCompatibility = 1.8
+
+  // Ensure resources are copied first otherwise our annotations processor fails.
+  compileJava.dependsOn += processResources
+  compileTestJava.dependsOn += processTestResources
+
+  // Dependencies provided to all projects
+  dependencies {
+    // Standard 'provided' dependencies -- container provides these.
+    compileOnly group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
+    compileOnly group: 'log4j', name: 'log4j', version: '1.2.17'
+    compileOnly group: 'org.slf4j', name: 'slf4j-api', version: '1.7.7'
+    compileOnly group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.7'
+    compileOnly group: 'io.dropwizard.metrics', name: 'metrics-core', version: '3.1.2'
+
+    testCompile group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
+
+    def powermockVersion = '1.7.3'
+    constraints {
+      testImplementation group: 'org.powermock', name: 'powermock-api-mockito', version: powermockVersion
+      testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
+    }
+  }
+
+  jar {
+    // preserve backward compatibility with jar naming, even though we shortened the
+    // source code directory names for readability.
+    baseName = "streamsets-datacollector-${baseName}"
+  }
+}
+
+def coreStageLibraryNames = [
+    "basic-lib",
+    "dataformats-lib"
+]
+
+def coreStageLibraries = subprojects.findAll { coreStageLibraryNames.contains(it.name) }
+def allStageLibraries = subprojects.findAll { it.path.contains(":stage:") }
+def protolibs = subprojects.findAll { it.name.contains("protolib") }
+
+configure(allStageLibraries + protolibs) {
+  dependencies {
+    // Common dependencies required for test compilation
+    testCompile 'org.awaitility:awaitility:2.0.0'
+  }
+
+  // Our API annotation processor expects to load resources from the compilation output, even though its
+  // tasked with processing resources (stage icons). In order to give them access, the resources for stage
+  // libraries are copied to the classes output path.
+  sourceSets {
+    main {
+      output.resourcesDir = "$buildDir/classes/java/$name"
+    }
+    test {
+      output.resourcesDir = "$buildDir/classes/java/$name"
+    }
+  }
+  // When changing the resource output dir above, resources will get added as duplicate entries in the jar files
+  // so we enable the EXCLUDE strategy to avoid adding them twice.
+  jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+  }
+}
+
+configurations {
+  api
+  container
+  rootClasspath
+  coreStageLibs
+}
+
+dependencies {
+  api(
+      "com.streamsets:streamsets-datacollector-api:$version",
+      "org.slf4j:jul-to-slf4j:1.7.7"
+  )
+  container(
+      project(':core:container'),
+      project(':core:container-common'),
+  )
+  coreStageLibs(
+      project(':lib:stage:basic-lib'),
+      project(':core:dataformats-lib'),
+  )
+  rootClasspath "org.xerial.snappy:snappy-java:1.0.5"
+}
+
+apply plugin: 'distribution'
+
+import org.apache.tools.ant.filters.ReplaceTokens
+
+// Disable creation of zips, we currently only ship tarballs
+tasks.withType(Zip) {
+  enabled = false
+}
+
+distributions {
+  core {
+    baseName = 'streamsets-datacollector-core'
+    contents {
+      // Can be refactored later
+      into('') {
+        from('dist/src/main') {
+          include "etc/**"
+          eachFile { file ->
+            if (file.name.contains("password") || file.name.contains("realm")) {
+              file.setMode(0600)
+            }
+          }
+        }
+      }
+      into('') {
+        from('dist/src/main') {
+          include "bin/**"
+          include "libexec/**"
+          filter(ReplaceTokens, tokens: ['project.version': project.property("version")])
+        }
+        fileMode = 0755
+      }
+      // Default logging configuration
+      into('etc') {
+        from new File(project(':core:container').buildDir, 'resources/main/sdc-log4j.properties-default')
+        rename 'sdc-log4j.properties-default', 'sdc-log4j.properties'
+        filter(ReplaceTokens, tokens: ['sdc.log4j.level': 'DEBUG']) // TODO add release setup with INFO
+      }
+      // Empty directories
+      into('') {
+        File.createTempDir().with {
+          ['data', 'libs-common-lib', 'log', 'resources', 'streamsets-libs-extras', 'user-libs'].forEach { dir ->
+            def file = new File(absolutePath, dir)
+            file.mkdirs()
+          }
+          from(absolutePath) {
+            includeEmptyDirs = true
+          }
+        }
+      }
+      into('api-lib') {
+        from configurations.api
+      }
+      into('libexec/bootstrap-libs/main') {
+        from project(':core:bootstrap').jar
+      }
+      into('libexec/bootstrap-libs/cluster') {
+        from project(':core:cluster:cluster-bootstrap').jar
+        from project(':core:cluster:cluster-bootstrap-api').jar
+        from project(':core:cluster:mapr-cluster-bootstrap').jar
+        from project(':core:cluster:mesos-bootstrap').jar
+      }
+      into('cli-lib') {
+        from project(':core:cli').jar
+      }
+      into('container-lib') {
+        from configurations.container
+      }
+      into('root-lib') {
+        from configurations.rootClasspath
+      }
+      // The UI
+      into('sdc-static-web') {
+        from new File(project(':ui:datacollector-ui').projectDir, 'target/dist')
+      }
+      // TODO: include docs
+      coreStageLibraries.forEach { library ->
+        into("streamsets-libs/streamsets-datacollector-${library.name}/lib") {
+          from library.tasks.withType(Jar)// the stage library jar
+          from(library.configurations.runtime) // the runtime dependencies
+        }
+      }
+    }
+  }
+}
+
+// ensure building the UI before we start packaging
+coreDistTar.dependsOn ':ui:datacollector-ui:build'

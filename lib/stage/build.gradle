@@ -1,0 +1,96 @@
+subprojects {
+  // Used for packaging stage libraries. the distribution plugin puts only runtime deps in the lib dir
+  apply plugin: 'distribution'
+
+  // Used for packaging stage libraries. the java-library-distribution plugin puts only runtime deps in the lib dir
+  // It extends the distribution plugin so we simply reconfigure the distribution plugin ourselves
+  // ref: https://discuss.gradle.org/t/usage-of-distribution-plugin/12874/6
+  distributions {
+    distZip.enabled = false
+    main {
+      contents {
+        into('lib') {
+          from jar // the stage library jar
+          from(project.configurations.runtime) // the runtime dependencies
+        }
+      }
+    }
+  }
+
+  distTar {
+//    compression = Compression.GZIP
+//    extension = 'tgz'
+    archiveName = "streamsets-datacollector-${baseName}-${version}.${extension}"
+  }
+
+  task printRuntime {
+    doLast {
+      project.configurations.runtime.each { println it }
+    }
+  }
+}
+
+def clouderaStageLibs = subprojects.findAll { it.name =~ /cdh_[0-9]_[0-9]+-lib/ }
+
+configure(clouderaStageLibs) {
+  configurations {
+    avroToOrcCompile
+    avroToOrcRuntimeOnly
+    avroToOrcTestCompile
+  }
+
+  dependencies {
+    avroToOrcTestCompile project(':lib:proto:mapreduce-protolib')
+    avroToOrcTestCompile group: 'junit', name: 'junit', version: '4.12'
+    avroToOrcTestCompile group: 'com.streamsets', name: 'streamsets-datacollector-api', version: project.version
+    avroToOrcTestCompile project(':core:sdk')
+    avroToOrcTestCompile project(':core:testing')
+
+    sourceSets {
+      test {
+        java {
+          srcDir project(':lib:proto:mapreduce-protolib').sourceSets.test.java.srcDirs
+          srcDir project(':lib:proto:hive-protolib').sourceSets.test.java.srcDirs
+          srcDir project(':lib:proto:hbase-protolib').sourceSets.test.java.srcDirs
+          srcDir project(':lib:proto:flume-protolib').sourceSets.test.java.srcDirs
+          srcDir project(':lib:proto:cluster-hdfs-protolib').sourceSets.test.java.srcDirs
+          srcDir project(':lib:proto:spark-processor-protolib').sourceSets.test.java.srcDirs
+          srcDir project(':lib:proto:spark-executor-protolib').sourceSets.test.java.srcDirs
+          exclude '**/avroorc/**'
+        }
+        resources {
+          srcDir project(':lib:proto:mapreduce-protolib').sourceSets.test.resources.srcDirs
+          srcDir project(':lib:proto:hive-protolib').sourceSets.test.resources.srcDirs
+          srcDir project(':lib:proto:hbase-protolib').sourceSets.test.resources.srcDirs
+          srcDir project(':lib:proto:flume-protolib').sourceSets.test.resources.srcDirs
+          srcDir project(':lib:proto:cluster-hdfs-protolib').sourceSets.test.resources.srcDirs
+          srcDir project(':lib:proto:spark-processor-protolib').sourceSets.test.resources.srcDirs
+          srcDir project(':lib:proto:spark-executor-protolib').sourceSets.test.resources.srcDirs
+          exclude '**/avroorc/**'
+        }
+      }
+      avroToOrcTest {
+        java {
+          srcDir project(':lib:proto:mapreduce-protolib').sourceSets.test.java.srcDirs
+          include '**/avroorc/**'
+        }
+        resources {
+          srcDir project(':lib:proto:mapreduce-protolib').sourceSets.test.resources.srcDirs
+          include '**/avroorc/**'
+        }
+        compileClasspath = configurations.avroToOrcTestCompile
+      }
+    }
+  }
+
+  // Custom test task to run a separate configuration for avro to orc
+  task avroToOrcTest(type: Test) {
+    description = 'Runs the Avro to Orc Conversion Tests'
+    group = 'verification'
+    testClassesDirs = sourceSets.avroToOrcTest.output.classesDirs
+    classpath = sourceSets.avroToOrcTest.runtimeClasspath
+    shouldRunAfter test
+  }
+
+  test.dependsOn avroToOrcTest
+}

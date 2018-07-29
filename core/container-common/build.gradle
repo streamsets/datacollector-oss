@@ -1,0 +1,53 @@
+description = 'StreamSets Data Collector Container Common'
+dependencies {
+  annotationProcessor group: 'com.squareup.dagger', name: 'dagger-compiler', version: '1.2.2'
+  compile project(':core:sso')
+  compile project(':core:utils')
+  compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.8.9'
+  compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.8.9'
+  compile group: 'com.fasterxml.uuid', name: 'java-uuid-generator', version: '3.1.3'
+  compile group: 'com.google.guava', name: 'guava', version: '18.0'
+  compile group: 'com.squareup.dagger', name: 'dagger', version: '1.2.2'
+  compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
+  compile group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
+  compile group: 'commons-el', name: 'commons-el', version: '1.0'
+  compile(group: 'io.dropwizard.metrics', name: 'metrics-json', version: '3.1.2') {
+    exclude(module: 'metrics-core')
+  }
+  compile(group: 'io.dropwizard.metrics', name: 'metrics-jvm', version: '3.1.2') {
+    exclude(module: 'metrics-core')
+  }
+  compile(group: 'io.swagger', name: 'swagger-jersey2-jaxrs', version: '1.5.13') {
+    exclude(module: 'jersey-container-servlet-core')
+    exclude(module: 'jersey-media-multipart')
+  }
+  compile group: 'javax.mail', name: 'mail', version: '1.4.7'
+  compile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0'
+  compile group: 'javax.servlet.jsp', name: 'jsp-api', version: '2.0'
+  compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
+  compile group: 'org.eclipse.jetty', name: 'jetty-jaas', version: '9.4.2.v20170220'
+  compile group: 'org.eclipse.jetty', name: 'jetty-rewrite', version: '9.4.2.v20170220'
+  compile group: 'org.eclipse.jetty', name: 'jetty-security', version: '9.4.2.v20170220'
+  compile group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.4.2.v20170220'
+  compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.4.2.v20170220'
+  compile group: 'org.eclipse.jetty', name: 'jetty-util', version: '9.4.2.v20170220'
+  compile group: 'org.eclipse.jetty', name: 'jetty-webapp', version: '9.4.2.v20170220'
+  compile group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet-core', version: '2.25.1'
+  compile group: 'org.glassfish.jersey.media', name: 'jersey-media-multipart', version: '2.25.1'
+  compile group: 'org.iq80.snappy', name: 'snappy', version: '0.4'
+  compile group: 'org.ldaptive', name: 'ldaptive', version: '1.0.9'
+  compileOnly project(':core:common')
+  compileOnly group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
+  compileOnly group: 'io.dropwizard.metrics', name: 'metrics-core', version: '3.1.2'
+  compileOnly group: 'log4j', name: 'log4j', version: '1.2.17'
+  compileOnly group: 'org.slf4j', name: 'jul-to-slf4j', version: '1.7.7'
+  compileOnly group: 'org.slf4j', name: 'slf4j-api', version: '1.7.7'
+  testAnnotationProcessor group: 'com.squareup.dagger', name: 'dagger-compiler', version: '1.2.2'
+  testCompile project(':core:testing')
+  testCompile group: 'com.icegreen', name: 'greenmail', version: '1.4.0'
+  testCompile group: 'com.squareup.dagger', name: 'dagger', version: '1.2.2'
+  testCompile group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
+  testCompile group: 'junit', name: 'junit', version: '4.12'
+  testCompile group: 'org.mockito', name: 'mockito-core', version: '1.10.19'
+  testRuntimeOnly group: 'io.dropwizard.metrics', name: 'metrics-core', version: '3.1.2'
+}

@@ -1,8 +1,0 @@
-/* Topic content styles. */
-@import "topic/topic.css?buildId=2018042310";
-
-/* Default styles. */
-@import "core/webhelp.css?buildId=2018042310";
-
-/* Top Menu and Side TOC components styles. */
-@import "nav-links/nav-links.css?buildId=2018042310";

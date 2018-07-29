@@ -1,0 +1,26 @@
+====
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+====
+
+2015-11-05 22:54:28,254 [user:] [pipeline:] [thread:main]  INFO  RestSubmissionClient - Submitting a request for the status of submission driver-20151105210052-0012 in mesos://172.17.0.1:7077.
+2015-11-05 22:54:28,703 [user:] [pipeline:] [thread:main]  INFO  RestSubmissionClient - Server responded with SubmissionStatusResponse:
+{
+  "action" : "SubmissionStatusResponse",
+  "driverState" : "FINISHED",
+  "message" : "task_id {\n  value: \"driver-20151105210052-0012\"\n}\nstate: TASK_KILLED\nmessage: \"Command terminated with signal Terminated\"\nslave_id {\n  value: \"20151024-174948-16781740-5050-106086-S5\"\n}\ntimestamp: 1.446763650675891E9\nexecutor_id {\n  value: \"driver-20151105210052-0012\"\n}\nsource: SOURCE_EXECUTOR\n11: \"\\t\\234\\367Rq\\334N\\253\\266\\'\\2258|\\fl\\203\"\n",
+  "serverSparkVersion" : "1.5.0",
+  "submissionId" : "driver-20151105210052-0012",
+  "success" : true
+}

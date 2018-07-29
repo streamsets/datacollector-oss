@@ -1,0 +1,126 @@
+<div ng-switch="customFieldConfigDefinition.type">
+  <div ng-switch-when="NUMBER"
+       ng-click="onFieldSelectorFocus(detailPaneConfig)"
+       class="expression-language">
+    <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
+  </div>
+
+  <div ng-switch-when="STRING"
+       ng-click="onFieldSelectorFocus(detailPaneConfig)"
+       class="expression-language">
+    <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
+  </div>
+
+  <div ng-switch-when="CREDENTIAL"
+       ng-click="onFieldSelectorFocus(detailPaneConfig)"
+       class="expression-language">
+    <ng-include src="'elCredentialComplexConfigurationTemplate'"></ng-include>
+  </div>
+
+  <div ng-switch-when="BOOLEAN">
+    <ng-include src="'booleanComplexConfigurationTemplate'"></ng-include>
+  </div>
+
+  <div ng-switch-when="EL_STRING" class="expression-language"
+       ng-click="onFieldSelectorFocus(detailPaneConfig)">
+    <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
+  </div>
+
+  <div ng-switch-when="EL_CREDENTIAL" class="expression-language"
+       ng-click="onFieldSelectorFocus(detailPaneConfig)">
+    <ng-include src="'elCredentialComplexConfigurationTemplate'"></ng-include>
+  </div>
+
+  <div ng-switch-when="EL_NUMBER" class="expression-language"
+       ng-click="onFieldSelectorFocus(detailPaneConfig)">
+    <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
+  </div>
+
+  <div ng-switch-when="EL_DATE" class="expression-language"
+       ng-click="onFieldSelectorFocus(detailPaneConfig)">
+    <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
+  </div>
+
+  <div ng-switch-when="EL_BOOLEAN" class="expression-language"
+       ng-click="onFieldSelectorFocus(detailPaneConfig)">
+    <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
+  </div>
+
+  <div ng-switch-when="EL_OBJECT" class="expression-language"
+       ng-click="onFieldSelectorFocus(detailPaneConfig)">
+    <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
+  </div>
+
+  <div ng-switch-when="LIST"
+       ng-click="onFieldSelectorFocus(detailPaneConfig)">
+    <ng-include src="'listComplexConfigurationTemplate'"></ng-include>
+  </div>
+
+  <div ng-switch-when="MAP"
+       ng-click="onFieldSelectorFocus(detailPaneConfig)">
+    <ng-include src="'mapComplexConfigurationTemplate'"></ng-include>
+  </div>
+
+  <div ng-switch-when="TEXT"
+       ng-click="onFieldSelectorFocus(detailPaneConfig)">
+    <ng-include src="'textComplexConfigurationTemplate'"></ng-include>
+  </div>
+
+  <div ng-switch-when="MODEL"
+       ng-switch="customFieldConfigDefinition.model.modelType">
+
+    <div ng-switch-when="VALUE_CHOOSER">
+      <select class="form-control"
+              name="{{customFieldConfigDefinition.name + $index}}"
+              ng-disabled="isPipelineReadOnly || isPipelineRunning"
+              ng-model="customFieldValue[customFieldConfigDefinition.name]">
+        <option ng-repeat="listValue in customFieldConfigDefinition.model.values"
+                value="{{listValue}}"
+                ng-selected="listValue === customFieldValue[customFieldConfigDefinition.name]">
+          {{customFieldConfigDefinition.model.labels[$index]}}
+        </option>
+      </select>
+    </div>
+
+    <div ng-switch-when="FIELD_SELECTOR_MULTI_VALUE"
+         ng-click="onFieldSelectorFocus(detailPaneConfig)"
+         class="clearfix">
+      <ui-select multiple
+                 tagging="tagTransform"
+                 tagging-label=""
+                 reset-search-input="true"
+                 tagging-tokens=",|ENTER"
+                 ng-disabled="isPipelineReadOnly || isPipelineRunning"
+                 ng-model="customFieldValue[customFieldConfigDefinition.name]">
+        <ui-select-match class="ui-select-match"
+          placeholder="{{'home.detailPane.configurationTab.selectFields' | translate}}">
+          {{$item}}
+        </ui-select-match>
+        <ui-select-choices class="ui-select-choices" repeat="fieldPath in fieldPaths | filter:$select.search">
+          {{fieldPath}}
+        </ui-select-choices>
+      </ui-select>
+    </div>
+
+    <div ng-switch-when="FIELD_SELECTOR"
+         ng-click="onFieldSelectorFocus(detailPaneConfig)"
+         class="clearfix input-group">
+      <input type="text" class="form-control" ng-model="customFieldValue[customFieldConfigDefinition.name]">
+      <div class="input-group-btn">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+          <li ng-repeat="fieldPath in fieldPaths track by $index">
+            <a href="#" ng-click="customFieldValue[customFieldConfigDefinition.name] = fieldPath">{{fieldPath}}</a>
+          </li>
+          <li role="presentation" class="dropdown-header"
+              ng-if="fieldPathsFetchInProgress"
+              translate="home.detailPane.configurationTab.loading">Loading...</li>
+          <li role="presentation" class="dropdown-header"
+              ng-if="!fieldPathsFetchInProgress && fieldPaths.length === 0"
+              translate="home.detailPane.configurationTab.noFieldFound">No Field found.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,47 @@
+description = 'StreamSets Data Collector HDFS ProtoLib'
+dependencies {
+  compile project(':core:common')
+  compile project(':core:hadoop-common')
+  compile project(':lib:commonlib')
+  compile project(':lib:proto:dir-spooler-protolib')
+  compile group: 'io.confluent', name: 'kafka-schema-registry-client', version: '3.0.1'
+  compile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0'
+  compile group: 'net.jpountz.lz4', name: 'lz4', version: '1.3.0'
+  compileOnly(group: 'org.apache.hadoop', name: 'hadoop-client', version: '2.6.0') {
+    exclude(module: 'slf4j-api')
+    exclude(module: 'slf4j-log4j12')
+    exclude(module: 'log4j')
+    exclude(module: 'metrics-core')
+    exclude(module: 'hadoop-yarn-api')
+    exclude(module: 'hadoop-mapreduce-client-core')
+    exclude(module: 'hadoop-mapreduce-client-jobclient')
+    exclude(module: 'hadoop-mapreduce-client-app')
+  }
+  compile group: 'org.iq80.snappy', name: 'snappy', version: '0.4'
+  testCompile project(':lib:proto:dir-spooler-protolib')
+  testCompile project(path: ':lib:commonlib', configuration: 'testArtifacts')
+  testCompile project(path: ':lib:proto:dir-spooler-protolib', configuration: 'testArtifacts')
+  testCompile group: 'org.apache.directory.jdbm', name: 'apacheds-jdbm1', version: '2.0.0-M3'
+  testCompile(group: 'org.apache.hadoop', name: 'hadoop-minicluster', version: '2.6.0') {
+    exclude(module: 'servlet-api')
+  }
+  testCompile(group: 'org.apache.hadoop', name: 'hadoop-minikdc', version: '2.6.0') {
+    exclude(module: 'apacheds-jdbm1')
+    exclude(module: 'api-ldap-schema-data')
+  }
+  testCompile group: 'org.powermock', name: 'powermock-api-mockito', version: '1.7.3'
+  testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '1.7.3'
+}
+
+configurations {
+  testArtifacts.extendsFrom testRuntime
+}
+
+task packageTests(type: Jar) {
+  from sourceSets.test.output
+  classifier = 'tests'
+}
+
+artifacts {
+  testArtifacts packageTests
+}

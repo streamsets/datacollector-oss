@@ -1,0 +1,7 @@
+
+description = 'StreamSets Data Collector MapR DB Json Protolib (5.2)'
+dependencies {
+  compile project(':lib:proto:mapr_json-protolib')
+    compile group: 'org.ojai', name: 'ojai', version:'1.1'
+    compileOnly group: 'com.mapr.db', name: 'maprdb', version:'5.2.0-mapr'
+}

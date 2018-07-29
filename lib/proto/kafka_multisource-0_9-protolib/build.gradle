@@ -1,0 +1,5 @@
+description = 'StreamSets Data Collector Kafka Multi Topic Source ProtoLib (0.9)'
+dependencies {
+  compile project(':lib:proto:kafka_multisource-protolib')
+  compileOnly group: 'org.apache.kafka', name: 'kafka-clients', version: '0.9.0.0'
+}

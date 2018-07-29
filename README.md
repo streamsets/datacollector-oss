@@ -13,6 +13,21 @@
 --->
 <img style="width:100%;" src="datacollector_splash.png">
 
+This is a fork aimed at moving the build process from Maven to Gradle
+
+### TODO List
+- [X] Core modules
+- [X] UI
+- [ ] UI incremental/cache support
+- [X] Shared Libs
+- [X] Protolibs
+- [ ] Stage libs (only two so far)
+- [ ] Stage lib caching support (need to fix overlapping output from processResources, mostly icons)
+- [ ] RPM packaging
+- [ ] Cloudera CSD
+- [ ] Clean up common dependencies into project group configurations, version constraints
+- [ ] Maven Stage Lib Archetype? What do we do with this?
+
 What is StreamSets Data Collector?
 -----------
 

@@ -1,0 +1,10 @@
+description = 'StreamSets Data Collector Google Cloud Bigtable Lib'
+
+def googleSdkVersion = '1.5.0'
+
+dependencies {
+  compile project(':core:common')
+  compile project(':lib:commonlib')
+  compile(group: 'com.google.cloud.bigtable', name: 'bigtable-hbase-1.x-shaded', version: googleSdkVersion)
+  testCompile group: 'org.testcontainers', name: 'testcontainers'
+}

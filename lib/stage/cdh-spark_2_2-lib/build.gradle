@@ -1,0 +1,33 @@
+description = 'StreamSets Data Collector CDH Cluster Cloudera Spark 2.1 Lib'
+
+def scalaVersion = '2.11.8'
+def sparkVersion = '2.2.0.cloudera1'
+def kafkaVersion = '0.10.0-kafka-2.1.0'
+
+dependencies {
+  compile project(':lib:kafka:sdc-kafka_0_10')
+  compile project(':lib:proto:cluster-kafka-protolib')
+  compile group: 'com.streamsets', name: 'streamsets-datacollector-spark-api', version: project.version
+  compile group: 'org.apache.kafka', name: 'kafka-clients', version: kafkaVersion
+  compile group: 'org.apache.spark', name: 'spark-streaming-kafka-0-10_2.11', version: sparkVersion
+  compile group: 'org.scala-lang', name: 'scala-library', version: scalaVersion
+  testCompile project(':core:cluster:cluster-bootstrap-api')
+  testCompile project(path: ':lib:kafka:kafka-common', configuration: 'testArtifacts')
+  testCompile project(path: ':lib:kafka:sdc-kafka_0_10', configuration: 'testArtifacts')
+  testCompile group: 'org.apache.kafka', name: 'kafka-clients', version: kafkaVersion, classifier: 'test'
+  testCompile group: 'org.apache.kafka', name: 'kafka_2.11', version: kafkaVersion
+  testCompile group: 'org.apache.kafka', name: 'kafka_2.11', version: kafkaVersion, classifier: 'test'
+  testCompile group: 'org.apache.spark', name: 'spark-streaming_2.11', version: sparkVersion
+}
+
+sourceSets {
+  test {
+    java {
+      srcDir project(':lib:proto:cluster-kafka-protolib').sourceSets.test.java.srcDirs
+
+    }
+    resources {
+      srcDir project(':lib:proto:cluster-kafka-protolib').sourceSets.test.resources.srcDirs
+    }
+  }
+}

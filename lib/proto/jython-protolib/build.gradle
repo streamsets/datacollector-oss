@@ -1,0 +1,16 @@
+description = 'StreamSets Data Collector Jython ProtoLib'
+dependencies {
+  compile project(':lib:proto:scripting-protolib')
+  compile group: 'com.google.guava', name: 'guava', version: '20.0'
+  compile group: 'org.python', name: 'jython-standalone', version: '2.7.1'
+  compileOnly group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
+  compileOnly group: 'io.dropwizard.metrics', name: 'metrics-core', version: '3.1.2'
+  compileOnly group: 'log4j', name: 'log4j', version: '1.2.17'
+  compileOnly group: 'org.slf4j', name: 'slf4j-api', version: '1.7.7'
+  compileOnly group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.7'
+
+  testCompile project(':lib:guavasupport')
+  testCompile project(':lib:proto:scripting-protolib')
+  testCompile project(path: ':lib:proto:scripting-protolib', configuration: 'testArtifacts')
+  testCompile group: 'junit', name: 'junit', version: '4.12'
+}

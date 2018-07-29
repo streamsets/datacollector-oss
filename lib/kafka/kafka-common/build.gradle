@@ -1,0 +1,30 @@
+description = 'StreamSets Data Collector Kafka Common'
+dependencies {
+  compile project(':lib:kafka:sdc-kafka-api')
+  compile group: 'com.101tec', name: 'zkclient', version: '0.3'
+  compile group: 'org.scala-lang', name: 'scala-library', version: '2.10.4'
+  testCompile group: 'junit', name: 'junit', version: '4.12'
+
+  testCompile group: 'org.mockito', name: 'mockito-core', version: '1.10.19'
+  compileOnly group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
+  compileOnly group: 'log4j', name: 'log4j', version: '1.2.17'
+  compileOnly group: 'org.slf4j', name: 'slf4j-api', version: '1.7.7'
+  compileOnly group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.7'
+  compileOnly group: 'org.apache.kafka', name: 'kafka_2.10', version: '0.8.1.1'
+  testCompile group: 'org.apache.kafka', name: 'kafka_2.10', version: '0.8.1.1'
+  testCompile group: 'org.apache.kafka', name: 'kafka_2.10', version: '0.8.1.1', classifier: 'test'
+  testCompile project(':core:testing')
+}
+
+configurations {
+  testArtifacts.extendsFrom testRuntime
+}
+
+task packageTests(type: Jar) {
+  from sourceSets.test.output
+  classifier = 'tests'
+}
+
+artifacts {
+  testArtifacts packageTests
+}

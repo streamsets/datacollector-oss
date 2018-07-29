@@ -1,0 +1,29 @@
+
+description = 'StreamSets Data Collector SDC kafka 09 MapR52'
+dependencies {
+  compile project(':lib:kafka:sdc-kafka_0_9-mapr51')
+  compile project(':lib:kafka:sdc-kafka-api')
+  compile project(':lib:commonlib')
+  compile project(':lib:kafka:kafka-common')
+  compile project(':lib:maprstreams-common')
+  compile project(':lib:kafka:sdc-kafka_0_9-common')
+    compileOnly group: 'com.mapr.streams', name: 'mapr-streams', version:'5.2.0-mapr'
+    compileOnly group: 'com.streamsets', name: 'streamsets-datacollector-api', version:'3.5.0-SNAPSHOT'
+    compileOnly group: 'log4j', name: 'log4j', version:'1.2.17'
+    compileOnly group: 'org.slf4j', name: 'slf4j-api', version:'1.7.7'
+    compileOnly group: 'org.slf4j', name: 'slf4j-log4j12', version:'1.7.7'
+    compileOnly group: 'org.apache.kafka', name: 'kafka-clients', version:'0.9.0.0-mapr-1801-streams-5.2.0'
+}
+
+configurations {
+  testArtifacts.extendsFrom testRuntime
+}
+
+task packageTests(type: Jar) {
+  from sourceSets.test.output
+  classifier = 'tests'
+}
+
+artifacts {
+  testArtifacts packageTests
+}

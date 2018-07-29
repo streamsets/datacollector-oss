@@ -1,0 +1,15 @@
+
+description = 'StreamSets Data Collector MapR Streams Multi Source ProtoLib'
+dependencies {
+  compile project(':core:common')
+  compile project(':lib:commonlib')
+    compile group: 'io.confluent', name: 'kafka-schema-registry-client', version:'3.0.1'
+  compile project(':lib:proto:kafka_multisource-0_9-protolib')
+    testCompile group: 'junit', name: 'junit', version:'4.12'
+    testCompile group: 'org.mockito', name: 'mockito-core', version:'1.10.19'
+    compileOnly group: 'com.streamsets', name: 'streamsets-datacollector-api', version:'3.5.0-SNAPSHOT'
+    compileOnly group: 'log4j', name: 'log4j', version:'1.2.17'
+    compileOnly group: 'org.slf4j', name: 'slf4j-api', version:'1.7.7'
+    compileOnly group: 'org.slf4j', name: 'slf4j-log4j12', version:'1.7.7'
+
+}

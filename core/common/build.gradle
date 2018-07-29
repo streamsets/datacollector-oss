@@ -1,0 +1,11 @@
+description = 'StreamSets Data Collector Common'
+dependencies {
+  compile project(':lib:stagesupport')
+  compile group: 'com.google.guava', name: 'guava', version: '18.0'
+  compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
+  compile group: 'commons-io', name: 'commons-io', version: '2.4'
+  compile group: 'org.apache.commons', name: 'commons-csv', version: '1.5'
+  compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
+  testCompile project(':core:testing')
+  testCompile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.8.9'
+}

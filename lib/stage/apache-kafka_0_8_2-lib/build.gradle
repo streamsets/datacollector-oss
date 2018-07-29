@@ -1,0 +1,33 @@
+description = 'StreamSets Data Collector Apache Kafka 0.10 Lib'
+
+def kafkaVersion = '0.10.0.0'
+
+dependencies {
+  compile project(':lib:kafka:sdc-kafka_0_10')
+  compile project(':lib:proto:cluster-kafka-protolib')
+  compile project(':lib:proto:kafka_multisource-0_10-protolib')
+  compile project(':lib:proto:kafka_target-protolib')
+  compile group: 'org.apache.kafka', name: 'kafka-clients', version: kafkaVersion
+  testCompile project(path: ':lib:commonlib', configuration: 'testArtifacts')
+  testCompile project(path: ':lib:kafka:kafka-common', configuration: 'testArtifacts')
+  testCompile project(path: ':lib:kafka:sdc-kafka_0_10', configuration: 'testArtifacts')
+  testCompile group: 'org.apache.kafka', name: 'kafka-clients', version: kafkaVersion
+  testCompile group: 'org.apache.kafka', name: 'kafka_2.11', version: kafkaVersion
+  testCompile group: 'org.apache.kafka', name: 'kafka_2.11', version: kafkaVersion, classifier: 'test'
+
+}
+
+sourceSets {
+  test {
+    java {
+      srcDir project(':lib:proto:kafka_multisource-protolib').sourceSets.test.java.srcDirs
+      srcDir project(':lib:proto:kafka_source-protolib').sourceSets.test.java.srcDirs
+      srcDir project(':lib:proto:kafka_target-protolib').sourceSets.test.java.srcDirs
+    }
+    resources {
+      srcDir project(':lib:proto:kafka_multisource-protolib').sourceSets.test.resources.srcDirs
+      srcDir project(':lib:proto:kafka_source-protolib').sourceSets.test.resources.srcDirs
+      srcDir project(':lib:proto:kafka_target-protolib').sourceSets.test.resources.srcDirs
+    }
+  }
+}
