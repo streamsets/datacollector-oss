@@ -135,8 +135,9 @@ public class AmazonS3Util {
     });
 
     S3Objects s3ObjectSummaries = S3Objects
-      .withPrefix(s3Client, s3ConfigBean.s3Config.bucket, s3ConfigBean.s3Config.commonPrefix)
-      .withBatchSize(BATCH_SIZE);
+      .withPrefix(s3Client, s3ConfigBean.s3Config.bucket, s3ConfigBean.s3Config.commonPrefix);
+
+    // SDC-9413: since the s3ObjectSummaries is in lexical order, we should get all list of files in one api call
     for (S3ObjectSummary s : s3ObjectSummaries) {
       String fullPrefix = s.getKey();
       String remainingPrefix = fullPrefix.substring(s3ConfigBean.s3Config.commonPrefix.length(), fullPrefix.length());
