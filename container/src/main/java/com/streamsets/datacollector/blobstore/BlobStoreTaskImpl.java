@@ -56,15 +56,41 @@ public class BlobStoreTaskImpl extends AbstractTask implements BlobStoreTask {
 
   // JSON ObjectMapper for storing and reading metadata database to/from disk
   private static final ObjectMapper jsonMapper = new ObjectMapper();
+
   static {
     jsonMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+  }
+
+  /**
+   * Implementation of VersionedContent when we need to return both version and it's content at the same time.
+   */
+  private static class VersionedContentImpl implements VersionedContent {
+    long version;
+    String content;
+
+    VersionedContentImpl(long version, String content) {
+      this.version = version;
+      this.content = content;
+    }
+
+    @Override
+    public long version() {
+      return version;
+    }
+
+    @Override
+    public String content() {
+      return content;
+    }
   }
 
   private final RuntimeInfo runtimeInfo;
 
   private Path baseDir;
-  @VisibleForTesting Path metadataFile;
-  @VisibleForTesting Path newMetadataFile;
+  @VisibleForTesting
+  Path metadataFile;
+  @VisibleForTesting
+  Path newMetadataFile;
   private BlobStoreMetadata metadata;
 
   @Inject
@@ -106,15 +132,15 @@ public class BlobStoreTaskImpl extends AbstractTask implements BlobStoreTask {
 
   private void initializeFromDisk() {
     try {
-      if(Files.exists(metadataFile)) {
+      if (Files.exists(metadataFile)) {
         // Most happy path - the metadata file exists
         this.metadata = loadMetadata();
 
-        if(Files.exists(newMetadataFile)) {
+        if (Files.exists(newMetadataFile)) {
           LOG.error("Old temporary file already exists, using older state and dropping new state");
           Files.delete(newMetadataFile);
         }
-      } else if(Files.exists(newMetadataFile)) {
+      } else if (Files.exists(newMetadataFile)) {
         LOG.error("Missing primary metadata file, recovering new state");
         Files.move(newMetadataFile, metadataFile);
 
@@ -128,7 +154,7 @@ public class BlobStoreTaskImpl extends AbstractTask implements BlobStoreTask {
         metadata.getVersion(),
         metadata.getNamespaces().size()
       );
-    } catch (StageException|IOException e) {
+    } catch (StageException | IOException e) {
       throw new RuntimeException(Utils.format("Can't initialize blob store: {}", e.toString()), e);
     }
   }
@@ -141,7 +167,7 @@ public class BlobStoreTaskImpl extends AbstractTask implements BlobStoreTask {
 
     ObjectMetadata objectMetadata = metadata.getOrCreateNamespace(namespace).getOrCreateObject(id);
 
-    if(objectMetadata.containsVersion(version)) {
+    if (objectMetadata.containsVersion(version)) {
       throw new StageException(BlobStoreError.BLOB_STORE_0003, namespace, id, version);
     }
 
@@ -164,9 +190,19 @@ public class BlobStoreTaskImpl extends AbstractTask implements BlobStoreTask {
   }
 
   @Override
-  public boolean exists(String namespace, String id) {
+  public synchronized boolean exists(String namespace, String id) {
     ObjectMetadata objectMetadata = getObject(namespace, id);
     return objectMetadata != null;
+  }
+
+  @Override
+  public synchronized boolean exists(String namespace, String id, long version) {
+    ObjectMetadata objectMetadata = getObject(namespace, id);
+    if (objectMetadata == null) {
+      return false;
+    }
+
+    return objectMetadata.containsVersion(version);
   }
 
   @Override
@@ -180,13 +216,31 @@ public class BlobStoreTaskImpl extends AbstractTask implements BlobStoreTask {
     LOG.debug("Retrieve on namespace={}, id={}, version={}", namespace, id, version);
     ObjectMetadata objectMetadata = getObjectDieIfNotExists(namespace, id);
 
-    if(!objectMetadata.containsVersion(version)) {
+    if (!objectMetadata.containsVersion(version)) {
       throw new StageException(BlobStoreError.BLOB_STORE_0007, namespace, id, version);
     }
 
+    return loadContentFromDrive(objectMetadata.uuidForVersion(version));
+  }
+
+  @Override
+  public synchronized VersionedContent retrieveLatest(String namespace, String id) throws StageException {
+    ObjectMetadata objectMetadata = getObject(namespace, id);
+    if (objectMetadata == null) {
+      return null;
+    }
+
+    long version = objectMetadata.latestVersion();
+    return new VersionedContentImpl(
+      version,
+      loadContentFromDrive(objectMetadata.uuidForVersion(version))
+    );
+  }
+
+  private String loadContentFromDrive(String objectUuid) throws StageException {
     try {
-      return new String(Files.readAllBytes(baseDir.resolve(objectMetadata.uuidForVersion(version))));
-    } catch (IOException e) {
+      return new String(Files.readAllBytes(baseDir.resolve(objectUuid)));
+    } catch(IOException e) {
       throw new StageException(BlobStoreError.BLOB_STORE_0008, e.toString(), e);
     }
   }
@@ -221,6 +275,13 @@ public class BlobStoreTaskImpl extends AbstractTask implements BlobStoreTask {
     }
 
     saveMetadata();
+  }
+
+  @Override
+  public void deleteAllVersions(String namespace, String id) throws StageException {
+    for(long version: allVersions(namespace, id)) {
+      delete(namespace, id, version);
+    }
   }
 
   /**

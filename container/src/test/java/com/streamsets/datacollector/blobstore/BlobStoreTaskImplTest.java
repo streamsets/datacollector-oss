@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.blobstore;
 
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.pipeline.api.BlobStore;
 import org.junit.Test;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableSet;
 
@@ -125,7 +126,9 @@ public class BlobStoreTaskImplTest {
     store.store("policy", "1234", 15, "15");
     store.store("policy", "1234", 4, "4");
 
-    assertEquals("15", store.retrieveLatest("policy", "1234"));
+    BlobStore.VersionedContent content = store.retrieveLatest("policy", "1234");
+    assertEquals(15, content.version());
+    assertEquals("15", content.content());
   }
 
   @Test
