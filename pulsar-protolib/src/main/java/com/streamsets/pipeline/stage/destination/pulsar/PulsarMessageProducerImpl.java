@@ -99,8 +99,8 @@ public class PulsarMessageProducerImpl implements PulsarMessageProducer {
     try {
       pulsarClient = PulsarClient.builder().serviceUrl(pulsarTargetConfig.serviceURL).keepAliveInterval(
           pulsarTargetConfig.keepAliveInterval,
-          TimeUnit.SECONDS
-      ).operationTimeout(pulsarTargetConfig.operationTimeout, TimeUnit.SECONDS).build();
+          TimeUnit.MILLISECONDS
+      ).operationTimeout(pulsarTargetConfig.operationTimeout, TimeUnit.MILLISECONDS).build();
     } catch (PulsarClientException | IllegalArgumentException e) {
       LOG.debug(Utils.format(PulsarErrors.PULSAR_00.getMessage(), pulsarTargetConfig.serviceURL, e.toString()), e);
       issues.add(context.createConfigIssue(PulsarGroups.PULSAR.name(),
@@ -130,7 +130,7 @@ public class PulsarMessageProducerImpl implements PulsarMessageProducer {
                                      }
                                    });
 
-    destinationEval = context.createELEval("destinationName");
+    destinationEval = context.createELEval("destinationTopic");
     errorHandler = new DefaultErrorRecordHandler(context);
 
     return issues;
@@ -161,7 +161,7 @@ public class PulsarMessageProducerImpl implements PulsarMessageProducer {
           // Resolve destination
           ELVars elVars = context.createELVars();
           RecordEL.setRecordInContext(elVars, record);
-          destinationName = destinationEval.eval(elVars, pulsarTargetConfig.destinationName, String.class);
+          destinationName = destinationEval.eval(elVars, pulsarTargetConfig.destinationTopic, String.class);
 
           // Send message
           Producer producer = messageProducers.get(destinationName);

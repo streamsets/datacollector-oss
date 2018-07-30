@@ -18,47 +18,38 @@ package com.streamsets.pipeline.lib.pulsar.config;
 
 import com.streamsets.pipeline.api.ConfigDef;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class BasePulsarConfig {
 
-  @ConfigDef(
-      required = true,
+  @ConfigDef(required = true,
       type = ConfigDef.Type.STRING,
       label = "Pulsar URL",
       description = "Pulsar service URL. Example: http://localhost:8080 or pulsar://localhost:6650",
       displayPosition = 10,
       defaultValue = "http://localhost:8080",
-      group = "PULSAR"
-  )
+      group = "PULSAR")
   public String serviceURL;
 
-  @ConfigDef(
-      required = false,
+  @ConfigDef(required = false,
       type = ConfigDef.Type.NUMBER,
-      label = "Pulsar keep alive interval",
-      description = "How often to check whether the connections are still alive. Put time in seconds",
+      label = "Pulsar Keep Alive Interval",
+      description = "How often to check whether the connections are still alive. Put time in milliseconds",
       displayPosition = 30,
-      defaultValue = "30",
+      defaultValue = "30000",
       min = 0,
-      max = 60,
-      group = "PULSAR"
-  )
-  public int keepAliveInterval = 30;
+      max = 60000,
+      group = "PULSAR")
+  public int keepAliveInterval = 30000;
 
-  @ConfigDef(
-      required = false,
+  @ConfigDef(required = false,
       type = ConfigDef.Type.NUMBER,
-      label = "Pulsar operation timeout",
+      label = "Pulsar Operation Timeout",
       description = "Pulsar Producer-create, Consumer-subscribe and Consumer-unsubscribe operations will be retried " +
           "until this interval, after which the operation will be marked as failed.",
       displayPosition = 40,
-      defaultValue = "30",
+      defaultValue = "30000",
       min = 0,
-      max = 60,
-      group = "PULSAR"
-  )
+      max = 60000,
+      group = "PULSAR")
   public int operationTimeout = 30;
 
 }

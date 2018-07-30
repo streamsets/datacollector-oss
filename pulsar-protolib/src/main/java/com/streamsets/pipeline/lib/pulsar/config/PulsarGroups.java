@@ -21,7 +21,7 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum PulsarGroups implements Label {
-  PULSAR("PULSAR");
+  PULSAR("Pulsar");
 
   private final String label;
 

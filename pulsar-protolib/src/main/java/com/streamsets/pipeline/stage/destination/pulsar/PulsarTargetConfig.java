@@ -25,14 +25,14 @@ public class PulsarTargetConfig extends BasePulsarConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Pulsar Destination Name",
-      description = "Pulsar destination. It can be just a topic name or a full destination path like" +
+      label = "Topic",
+      description = "Pulsar destination topic. It can be just a topic name or a full destination path like" +
           "non-persistent://tenant/namespace/topic",
       displayPosition = 20,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       elDefs = RecordEL.class,
       group = "PULSAR"
   )
-  public String destinationName;
+  public String destinationTopic;
 
 }

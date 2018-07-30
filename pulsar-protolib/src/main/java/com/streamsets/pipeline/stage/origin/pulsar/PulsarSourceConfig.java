@@ -39,7 +39,7 @@ public class PulsarSourceConfig extends BasePulsarConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Consume from multiple topics",
+      label = "Consume From Multiple Topics",
       description = "Select this option to consume messages from multiple Pulsar topics",
       displayPosition = 50,
       defaultValue = "false",
@@ -112,7 +112,7 @@ public class PulsarSourceConfig extends BasePulsarConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Pulsar Destination Topic",
+      label = "Topic",
       description = "Pulsar topic from which messages have to be retrieved",
       displayPosition = 70,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
@@ -124,6 +124,6 @@ public class PulsarSourceConfig extends BasePulsarConfig {
       },
       group = "PULSAR"
   )
-  public String destinationTopic;
+  public String originTopic;
 
 }

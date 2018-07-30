@@ -43,7 +43,7 @@ public class PulsarMessageConsumerImpl implements PulsarMessageConsumer {
   private static final String PULSAR_SOURCE_CONFIG_SERVICE_URL = "pulsarSourceConfig.serviceURL";
   private static final String PULSAR_SOURCE_CONFIG_TOPICS_PATTERN = "pulsarSourceConfig.topicsPattern";
   private static final String PULSAR_SOURCE_CONFIG_TOPICS_LIST = "pulsarSourceConfig.topicsList";
-  private static final String PULSAR_SOURCE_CONFIG_DESTINATION_TOPIC = "pulsarSourceConfig.destinationTopic";
+  private static final String PULSAR_SOURCE_CONFIG_DESTINATION_TOPIC = "pulsarSourceConfig.originTopic";
   private static final int POLL_INTERVAL = 100; // ms
 
   private final BasicConfig basicConfig;
@@ -81,8 +81,8 @@ public class PulsarMessageConsumerImpl implements PulsarMessageConsumer {
     try {
       pulsarClient = PulsarClient.builder().serviceUrl(pulsarSourceConfig.serviceURL).keepAliveInterval(
           pulsarSourceConfig.keepAliveInterval,
-          TimeUnit.SECONDS
-      ).operationTimeout(pulsarSourceConfig.operationTimeout, TimeUnit.SECONDS).build();
+          TimeUnit.MILLISECONDS
+      ).operationTimeout(pulsarSourceConfig.operationTimeout, TimeUnit.MILLISECONDS).build();
     } catch (PulsarClientException e) {
       LOG.info(Utils.format(PulsarErrors.PULSAR_00.getMessage(), pulsarSourceConfig.serviceURL), e);
       issues.add(context.createConfigIssue(PulsarGroups.PULSAR.name(),
@@ -139,18 +139,18 @@ public class PulsarMessageConsumerImpl implements PulsarMessageConsumer {
 //      }
       } else {
         try {
-          messageConsumer = pulsarClient.newConsumer().topic(pulsarSourceConfig.destinationTopic).subscriptionName(
+          messageConsumer = pulsarClient.newConsumer().topic(pulsarSourceConfig.originTopic).subscriptionName(
               pulsarSourceConfig.subscriptionName).subscribe();
         } catch (PulsarClientException e) {
           issues.add(context.createConfigIssue(PulsarGroups.PULSAR.name(),
               PULSAR_SOURCE_CONFIG_DESTINATION_TOPIC,
               PulsarErrors.PULSAR_10,
-              pulsarSourceConfig.destinationTopic,
+              pulsarSourceConfig.originTopic,
               pulsarSourceConfig.subscriptionName,
               String.valueOf(e)
           ));
           LOG.info(Utils.format(PulsarErrors.PULSAR_10.getMessage(),
-              pulsarSourceConfig.destinationTopic,
+              pulsarSourceConfig.originTopic,
               pulsarSourceConfig.subscriptionName,
               String.valueOf(e)
           ), e);

@@ -40,7 +40,7 @@ public class TestUtilsPulsar {
   public static PulsarTargetConfig getTargetConfig() {
     PulsarTargetConfig pulsarTargetConfig = new PulsarTargetConfig();
     pulsarTargetConfig.serviceURL = "http://localhost:8080";
-    pulsarTargetConfig.destinationName = "sdc-topic";
+    pulsarTargetConfig.destinationTopic = "sdc-topic";
     return pulsarTargetConfig;
   }
 
@@ -48,7 +48,7 @@ public class TestUtilsPulsar {
     PulsarSourceConfig pulsarSourceConfig = new PulsarSourceConfig();
     pulsarSourceConfig.serviceURL = "http://localhost:8080";
     pulsarSourceConfig.multiTopic = false;
-    pulsarSourceConfig.destinationTopic = "sdc-topic";
+    pulsarSourceConfig.originTopic = "sdc-topic";
     pulsarSourceConfig.topicsList = Collections.emptyList();
     pulsarSourceConfig.subscriptionName = "sdc-test-subscription";
     return pulsarSourceConfig;
