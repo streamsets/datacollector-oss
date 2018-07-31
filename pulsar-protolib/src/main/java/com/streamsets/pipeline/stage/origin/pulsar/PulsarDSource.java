@@ -31,8 +31,8 @@ import com.streamsets.pipeline.stage.origin.lib.MessageConfig;
 
 @StageDef(
     version = 1,
-    label = "Pulsar",
-    description = "Read data from a Pulsar topic",
+    label = "Pulsar Consumer",
+    description = "Read data from Pulsar topics",
     icon = "pulsar.png",
     recordsByRef = true,
     onlineHelpRefUrl = "TODO",

@@ -29,8 +29,8 @@ import com.streamsets.pipeline.lib.pulsar.config.PulsarGroups;
 
 @StageDef(
     version = 1,
-    label = "Pulsar",
-    description = "Write data to a Pulsar topic",
+    label = "Pulsar Producer",
+    description = "Write data to Pulsar topics",
     icon = "pulsar.png",
     recordsByRef = true,
     onlineHelpRefUrl ="TODO",
