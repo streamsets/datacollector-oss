@@ -182,6 +182,8 @@ public class PipelineStoreResource {
 
   private static final String PIPELINE_IDS = "pipelineIds";
 
+  private static final String PIPELINE_ID_REGEX = "[\\W]|_";
+
   private static final List<String> SYSTEM_PIPELINE_LABELS = ImmutableList.of(
       SYSTEM_ALL_PIPELINES,
       SYSTEM_EDGE_PIPELINES,
@@ -715,7 +717,7 @@ public class PipelineStoreResource {
   ) throws PipelineException, IOException {
     String pipelineId = pipelineTitle;
     if (autoGeneratePipelineId) {
-      pipelineId = pipelineTitle.replaceAll("[\\W]|_", "") + UUID.randomUUID().toString();
+      pipelineId = pipelineTitle.replaceAll(PIPELINE_ID_REGEX, "") + UUID.randomUUID().toString();
     }
     RestAPIUtils.injectPipelineInMDC(pipelineTitle + "/" + pipelineId);
     PipelineConfiguration pipelineConfig = store.create(user, pipelineId, pipelineTitle, description, false, draft);
@@ -830,7 +832,7 @@ public class PipelineStoreResource {
       @QueryParam("draft") @DefaultValue("true") boolean draft,
       List<StageConfigurationJson> stageConfigurations
   ) throws PipelineException {
-    String pipelineId = pipelineFragmentTitle.replaceAll("[\\W]|_", "") + UUID.randomUUID().toString();
+    String pipelineId = pipelineFragmentTitle.replaceAll(PIPELINE_ID_REGEX, "") + UUID.randomUUID().toString();
     RestAPIUtils.injectPipelineInMDC(pipelineFragmentTitle + "/" + pipelineId);
     PipelineFragmentConfiguration pipelineFragmentConfig = store.createPipelineFragment(
         user,
@@ -1326,13 +1328,13 @@ public class PipelineStoreResource {
         newPipelineConfig = store.load(name, rev);
       } else {
         if (autoGeneratePipelineId) {
-          name = UUID.randomUUID().toString();
+          name = label.replaceAll(PIPELINE_ID_REGEX, "") + UUID.randomUUID().toString();
         }
         newPipelineConfig = store.create(user, name, label, pipelineConfig.getDescription(), false, draft);
       }
     } else {
       if (autoGeneratePipelineId) {
-        name = UUID.randomUUID().toString();
+        name = label.replaceAll(PIPELINE_ID_REGEX, "") + UUID.randomUUID().toString();
       }
       newPipelineConfig = store.create(user, name, label, pipelineConfig.getDescription(), false, draft);
     }
