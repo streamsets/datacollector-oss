@@ -44,4 +44,21 @@ public class TestQueryUtil {
 
     Assert.assertTrue(StringUtils.contains(query, expected));
   }
+
+  @Test
+  public void testMSQLCTQuery() throws Exception {
+    Map<String, String> offsetMap = new HashMap<>();
+    offsetMap.put(MSQueryUtil.SYS_CHANGE_VERSION, "0");
+    offsetMap.put("pk1", "1");
+    offsetMap.put("pk2", "2");
+    final boolean includeJoin = true;
+
+    String query = MSQueryUtil.buildQuery(offsetMap, maxBatchSize, tableName, offsetColumns, offsetMap, includeJoin);
+
+    String expected = "SELECT TOP 1 * FROM CHANGETABLE(CHANGES dbo.test, 0) AS CT " +
+        "WHERE (CT.pk1 > '1'  AND CT.pk2 > '2'  AND CT.SYS_CHANGE_VERSION = 0 ) OR (CT.SYS_CHANGE_VERSION > '0' )    " +
+        "ORDER BY SYS_CHANGE_VERSION, CT.pk1, CT.pk2 ";
+
+    Assert.assertTrue(StringUtils.contains(query, expected));
+  }
 }
