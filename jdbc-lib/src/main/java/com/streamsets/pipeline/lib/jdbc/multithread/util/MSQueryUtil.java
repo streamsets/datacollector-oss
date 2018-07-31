@@ -79,7 +79,7 @@ public final class MSQueryUtil {
   private static final Joiner COMMA_SPACE_JOINER = Joiner.on(", ");
   private static final Joiner AND_JOINER = Joiner.on(" AND ");
 
-  private static final String COLUMN_GREATER_THAN_VALUE = "%s > %s ";
+  private static final String COLUMN_GREATER_THAN_VALUE = "%s > '%s' ";
   private static final String BINARY_COLUMN_GREATER_THAN_CLAUSE = "%s > CAST(0x%s AS BINARY(10)) ";
   private static final String COLUMN_EQUALS_VALUE = "%s = %s ";
   private static final String BINARY_COLUMN_EQUALS_CLAUSE = "%s = CAST(0x%s AS BINARY(10)) ";
