@@ -25,6 +25,10 @@
       <p ng-repeat="pipeline in successEntities">{{pipeline.title}} ({{pipeline.pipelineId}})</p>
     </div>
 
+    <div class="input-group" ng-if="operationDone && successEntities && successEntities.length == 0">
+      <p translate="home.header.errorImportConfirmationMessage"></p>
+    </div>
+
   </div>
   <div class="modal-footer">
     <button type="reset" class="btn btn-default" ng-click="cancel()" ng-hide="operationDone || operationInProgress"

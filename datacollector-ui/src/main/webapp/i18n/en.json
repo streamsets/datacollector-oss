@@ -324,6 +324,7 @@
       "displayDensity": "Display density:",
       "downloadExecutable": "Download Edge Executable",
       "emptyAlerts": "It’s all good! You don’t have any new alerts.",
+      "errorImportConfirmationMessage": "No Pipeline configurations imported.",
       "expandAllFragments": "Expand All Fragments",
       "finishingPipeline": "Finishing Pipeline...",
       "forceStop": "Force Stop",
