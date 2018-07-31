@@ -34,6 +34,9 @@ public class XmlDataParserFactory extends DataParserFactory {
   static final String KEY_PREFIX = "xml.";
   public static final String RECORD_ELEMENT_KEY = KEY_PREFIX + "record.element";
   static final String RECORD_ELEMENT_DEFAULT = "";
+  // Byte order mark (SDC-9668)
+  // Note - Java Reader translates the 3 byte UTF-8 0xef 0xbb 0xbf prefix to a single character, \ufeff
+  static final char BOM = '\ufeff';
 
   public static final String INCLUDE_FIELD_XPATH_ATTRIBUTES_KEY = KEY_PREFIX + "include.fieldxpaths";
   public static final boolean INCLUDE_FIELD_XPATH_ATTRIBUTES_DEFAULT = false;
@@ -69,6 +72,14 @@ public class XmlDataParserFactory extends DataParserFactory {
     Utils.checkState(reader.getPos() == 0, Utils.formatL("reader must be in position '0', it is at '{}'",
       reader.getPos()));
     try {
+      if (getSettings().getCharset().name().equals("UTF-8")) {
+        // Consume BOM if it's there
+        reader.mark(1);
+        if (BOM != (char) reader.read()) {
+          reader.reset();
+        }
+      }
+
       return new XmlCharDataParser(getSettings().getContext(), id, reader, offset,
           getSettings().<String>getConfig(RECORD_ELEMENT_KEY),
           getSettings().<Boolean>getConfig(INCLUDE_FIELD_XPATH_ATTRIBUTES_KEY),

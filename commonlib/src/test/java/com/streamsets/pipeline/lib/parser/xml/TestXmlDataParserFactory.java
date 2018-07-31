@@ -61,6 +61,33 @@ public class TestXmlDataParserFactory {
   }
 
   @Test
+  public void testGetParserBOM() throws Exception {
+    DataParserFactoryBuilder dataParserFactoryBuilder =
+        new DataParserFactoryBuilder(getContext(), DataParserFormat.XML);
+
+    // Charset defaults to UTF-8, so no need to set it here
+    DataParserFactory factory = dataParserFactoryBuilder
+        .setMaxDataLen(20)
+        .setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, "e")
+        .build();
+
+    byte[] bom = {(byte)0xef, (byte)0xbb, (byte)0xbf};
+    byte[] stringBytes = "<r><e>Hello</e><e>Bye</e></r>".getBytes();
+    byte[] bomPlusString = new byte[bom.length + stringBytes.length];
+
+    System.arraycopy(bom, 0, bomPlusString, 0, bom.length);
+    System.arraycopy(stringBytes, 0, bomPlusString, bom.length, stringBytes.length);
+
+    DataParser parser = factory.getParser("id", bomPlusString);
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
+    Record record = parser.parse();
+    Assert.assertNotNull(record);
+    Assert.assertEquals("Hello", record.get("/value").getValueAsString());
+    Assert.assertEquals(18, Long.parseLong(parser.getOffset()));
+    parser.close();
+  }
+
+  @Test
   public void testGetParserNoRecordElement() throws Exception {
     DataParserFactoryBuilder dataParserFactoryBuilder =
         new DataParserFactoryBuilder(getContext(), DataParserFormat.XML);
