@@ -99,6 +99,7 @@ public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitt
   @Override
   public void destroy() {
     shutdown();
+    kafkaConsumer.destroy();
     super.destroy();
   }
 
