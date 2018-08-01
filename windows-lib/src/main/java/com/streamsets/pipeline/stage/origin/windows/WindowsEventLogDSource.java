@@ -31,9 +31,9 @@ import com.streamsets.pipeline.api.base.configurablestage.DSource;
     description = "Reads data from a Windows event log",
     execution = {ExecutionMode.EDGE},
     icon = "winlogo.png",
-    onlineHelpRefUrl ="index.html?contextID=task_lmc_yjv_sbb"
+    onlineHelpRefUrl ="index.html?contextID=task_lmc_yjv_sbb",
+    resetOffset = true
 )
-
 @ConfigGroups(Groups.class)
 public class WindowsEventLogDSource extends DSource {
 
