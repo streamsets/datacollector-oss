@@ -140,6 +140,7 @@ public abstract class DetachedStage {
 
     // If the stage is not valid, we can't create instance of it
     if(detachedStageConfiguration.getIssues().hasIssues()) {
+      errors.addAll(detachedStageConfiguration.getIssues().getIssues());
       return null;
     }
 
