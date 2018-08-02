@@ -210,6 +210,9 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
             // small sleep before trying to acquire a table again, to potentially allow a new partition to be
             // returned to shared queue or created
             final boolean uninterrupted = ThreadUtil.sleep(ACQUIRE_TABLE_SLEEP_INTERVAL);
+            if (!uninterrupted) {
+              LOG.trace("Interrupted which trying to acquire table");
+            }
             if (!uninterrupted || tableRuntimeContext == null) {
               return;
             }
@@ -266,17 +269,20 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
           handlePostBatchAsNeeded(resultSetEndReached, recordCount, eventCount, batchContext);
         }
       } catch (SQLException | ExecutionException | StageException | InterruptedException e) {
+        LOG.error("Error happened", e);
+
         //invalidate if the connection is closed
         tableReadContextCache.invalidateAll();
         connectionManager.closeConnection();
-        final TableContext table = tableRuntimeContext.getSourceTableContext();
-
-        //if the currently acquired tableContext is no longer a valid candidate, try re-fetch the table from table provider
-        if (commonSourceConfigBean.allowLateTable && !tableProvider.getActiveRuntimeContexts().containsKey(table)) {
-          tableRuntimeContext = null;
+        //If we have executed post batch that had errored out
+        if (tableRuntimeContext != null) {
+          final TableContext table = tableRuntimeContext.getSourceTableContext();
+          //if the currently acquired tableContext is no longer a valid candidate, try re-fetch the table from table provider
+          if (commonSourceConfigBean.allowLateTable && !tableProvider.getActiveRuntimeContexts().containsKey(table)) {
+            tableRuntimeContext = null;
+          }
         }
 
-        LOG.error("Error happened", e);
         Throwable th = (e instanceof ExecutionException)? e.getCause() : e;
         if (th instanceof SQLException) {
           handleSqlException((SQLException)th);
