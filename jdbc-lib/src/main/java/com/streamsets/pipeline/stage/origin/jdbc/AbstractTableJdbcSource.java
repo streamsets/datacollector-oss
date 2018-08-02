@@ -428,7 +428,7 @@ public abstract class AbstractTableJdbcSource extends BasePushSource {
         if (cause != null && cause instanceof StageException) {
           throw (StageException) cause;
         } else {
-          LOG.error("Internal Error. {}", e);
+          LOG.error("Internal Error", e);
           throw new StageException(JdbcErrors.JDBC_75, e.toString());
         }
       }
