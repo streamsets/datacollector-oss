@@ -26,13 +26,14 @@ import com.streamsets.pipeline.api.base.configurablestage.DSource;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Windows Event Log",
     description = "Reads data from a Windows event log",
     execution = {ExecutionMode.EDGE},
     icon = "winlogo.png",
     onlineHelpRefUrl ="index.html?contextID=task_lmc_yjv_sbb",
-    resetOffset = true
+    resetOffset = true,
+    upgrader = WindowsEventLogUpgrader.class
 )
 @ConfigGroups(Groups.class)
 public class WindowsEventLogDSource extends DSource {
@@ -49,11 +50,22 @@ public class WindowsEventLogDSource extends DSource {
   public LogName logName = LogName.Application;
 
   @ConfigDef(required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "",
+      label = "Custom Log Name",
+      displayPosition = 20,
+      group = "WINDOWS",
+      dependsOn = "logName",
+      triggeredByValue = {"Custom"}
+  )
+  public String customLogName;
+
+  @ConfigDef(required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "ALL",
       label = "Read Mode",
       description = "Read all events in the log or only new events that occur after the pipeline starts",
-      displayPosition = 20,
+      displayPosition = 30,
       group = "WINDOWS"
   )
   @ValueChooserModel(ReadModeChooserValues.class)

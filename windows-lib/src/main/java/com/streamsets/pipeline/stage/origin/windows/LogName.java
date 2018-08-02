@@ -23,6 +23,7 @@ public enum LogName implements Label {
   Application("Application"),
   System("System"),
   Security("Security"),
+  Custom("Custom")
   ;
 
   private final String label;
