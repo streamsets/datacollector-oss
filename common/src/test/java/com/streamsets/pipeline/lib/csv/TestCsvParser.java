@@ -115,6 +115,24 @@ public class TestCsvParser {
   }
 
   @Test
+  public void testHeadersWithNullColumns() throws Exception {
+    CsvParser parser = new CsvParser(new StringReader("a,,,d\naa,bb,cc,dd\n"),
+            CSVFormat.DEFAULT.withHeader((String[])null).withSkipHeaderRecord(true), 15);
+    try {
+      Assert.assertEquals(6, parser.getReaderPosition());
+
+      String[] record = parser.read();
+      Assert.assertEquals(18, parser.getReaderPosition());
+      Assert.assertNotNull(record);
+      Assert.assertArrayEquals(new String[]{"a","empty-1","empty-2","d"}, parser.getHeaders());
+      Assert.assertArrayEquals(new String[]{"aa", "bb", "cc","dd"}, record);
+
+    } finally {
+      parser.close();
+    }
+  }
+
+  @Test
   public void testMaxObjectLen() throws Exception {
     CsvParser parser = new CsvParser(new StringReader("a,b,c\naa,bb,cc\ne,f,g\n"),
                                      CSVFormat.DEFAULT.withHeader((String[])null).withSkipHeaderRecord(false), 6);

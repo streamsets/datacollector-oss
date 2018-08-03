@@ -23,6 +23,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -91,8 +92,18 @@ public class CsvParser implements Closeable, AutoCloseable {
         headers = null;
       }
     }
+    fixNullHeaderNames();
   }
 
+  private void fixNullHeaderNames() {
+    // makes sure any blank column names in the header get replaced with an incremental string value
+    if (headers == null) return;
+    for (int x=0; x < headers.length; x++) {
+      if (StringUtils.isEmpty(headers[x])) {
+        headers[x] = "empty-" + x;
+      }
+    }
+  }
   private long skipLines(Reader reader, int lines) throws IOException {
     int count = 0;
     int skipped = 0;
