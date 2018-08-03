@@ -82,6 +82,7 @@ import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
         "configs.tlsConfigBean.trustStoreAlgorithm"
     }
 )
+@Deprecated
 public class HttpToKafkaDSource extends DSourceOffsetCommitter {
 
   @ConfigDefBean
