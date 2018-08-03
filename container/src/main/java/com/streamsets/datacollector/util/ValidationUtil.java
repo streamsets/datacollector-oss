@@ -19,6 +19,7 @@ import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.pipeline.api.Record;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -55,6 +56,11 @@ public class ValidationUtil {
     // be origin that generated some data and hence the loop will terminate fast. In the worst case scenario we will
     // iterate over all stages in attempt to find at least one record in the snapshot.
     for(StageOutput output : stagesOutput) {
+      if (CollectionUtils.isNotEmpty(output.getErrorRecords()) ||
+          CollectionUtils.isNotEmpty(output.getEventRecords()) ||
+          CollectionUtils.isNotEmpty(output.getStageErrors())) {
+        return true;
+      }
       for(Map.Entry<String, List<Record>> entry : output.getOutput().entrySet()) {
         if(!entry.getValue().isEmpty()) {
           return true;
