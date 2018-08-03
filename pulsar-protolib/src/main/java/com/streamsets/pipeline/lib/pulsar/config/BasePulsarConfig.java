@@ -58,7 +58,7 @@ public class BasePulsarConfig {
       type = ConfigDef.Type.NUMBER,
       label = "Pulsar Operation Timeout",
       description = "Pulsar Producer-create, Consumer-subscribe and Consumer-unsubscribe operations will be retried " +
-          "until this interval, after which the operation will be marked as failed.",
+          "until this interval, after which the operation will be marked as failed",
       displayPosition = 40,
       defaultValue = "30000",
       min = 0,

@@ -475,6 +475,7 @@ public class TestPulsarMessageConsumerImpl {
     Mockito.when(consumerBuilderMock.topic(Mockito.any())).thenReturn(consumerBuilderMock);
     Mockito.when(consumerBuilderMock.topics(Mockito.any())).thenReturn(consumerBuilderMock);
     Mockito.when(consumerBuilderMock.subscriptionName(Mockito.any())).thenReturn(consumerBuilderMock);
+    Mockito.when(consumerBuilderMock.consumerName(Mockito.any())).thenReturn(consumerBuilderMock);
     try {
       Mockito.when(consumerBuilderMock.subscribe()).thenReturn(messageConsumerMock);
     } catch (PulsarClientException e) {

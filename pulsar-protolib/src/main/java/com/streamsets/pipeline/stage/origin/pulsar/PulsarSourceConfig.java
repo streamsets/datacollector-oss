@@ -29,7 +29,8 @@ public class PulsarSourceConfig extends BasePulsarConfig {
       type = ConfigDef.Type.STRING,
       label = "Pulsar Subscription Name",
       description = "The name of the Pulsar subscription that will forward messages from the corresponding Pulsar " +
-          "topic to subscribed consumers",
+          "topic to subscribed consumers. Pulsar maintains an offset for each subscription to remember from where it " +
+          "shall start reading messages",
       displayPosition = 20,
       defaultValue = "sdc-subscription",
       group = "PULSAR"
@@ -38,10 +39,20 @@ public class PulsarSourceConfig extends BasePulsarConfig {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Pulsar Consumer Name",
+      description = "The name to be assigned to the Pulsar Consumer",
+      displayPosition = 50,
+      group = "PULSAR"
+  )
+  public String consumerName;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Consume From Multiple Topics",
       description = "Select this option to consume messages from multiple Pulsar topics",
-      displayPosition = 50,
+      displayPosition = 60,
       defaultValue = "false",
       group = "PULSAR"
   )
@@ -58,7 +69,7 @@ public class PulsarSourceConfig extends BasePulsarConfig {
       label = "Use Pulsar Topic Pattern",
       description = "Select this option to use a pattern to select the list of topics from which message will be " +
           "retrieved",
-      displayPosition = 60,
+      displayPosition = 70,
       group = "PULSAR"
   )
   public boolean usePatternForTopic;
@@ -70,7 +81,7 @@ public class PulsarSourceConfig extends BasePulsarConfig {
       label = "Pulsar Topics Pattern",
       description = "Pattern used to select the list of Pulsar topics from which messages have to be retrieved. " +
           "Example: persistent://public/default/sdc-.* would match topics like 'sdc-topic' or 'sdc-data'",
-      displayPosition = 70,
+      displayPosition = 80,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       defaultValue = "sdc-.*",
       dependencies = {
@@ -93,7 +104,7 @@ public class PulsarSourceConfig extends BasePulsarConfig {
       type = ConfigDef.Type.LIST,
       label = "Pulsar Topics List",
       description = "List of Pulsar topics from which messages have to be retrieved",
-      displayPosition = 70,
+      displayPosition = 80,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       dependencies = {
           @Dependency(
@@ -114,7 +125,7 @@ public class PulsarSourceConfig extends BasePulsarConfig {
       type = ConfigDef.Type.STRING,
       label = "Topic",
       description = "Pulsar topic from which messages have to be retrieved",
-      displayPosition = 70,
+      displayPosition = 80,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       dependencies = {
           @Dependency(

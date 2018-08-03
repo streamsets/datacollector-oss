@@ -92,6 +92,7 @@ public class PulsarMessageConsumerImpl implements PulsarMessageConsumer {
               .newConsumer()
               .topicsPattern(pulsarConfig.topicsPattern)
               .subscriptionName(pulsarConfig.subscriptionName)
+              .consumerName(pulsarConfig.consumerName)
               .subscribe();
         } catch (PulsarClientException e) {
           issues.add(context.createConfigIssue(
@@ -109,8 +110,11 @@ public class PulsarMessageConsumerImpl implements PulsarMessageConsumer {
       else {
       */
         try {
-          messageConsumer = pulsarClient.newConsumer().topics(pulsarConfig.topicsList).subscriptionName(
-              pulsarConfig.subscriptionName).subscribe();
+          messageConsumer = pulsarClient.newConsumer()
+                                        .topics(pulsarConfig.topicsList)
+                                        .subscriptionName(pulsarConfig.subscriptionName)
+                                        .consumerName(pulsarConfig.consumerName)
+                                        .subscribe();
         } catch (PulsarClientException e) {
           issues.add(context.createConfigIssue(PulsarGroups.PULSAR.name(),
               PULSAR_SOURCE_CONFIG_TOPICS_LIST,
@@ -126,8 +130,11 @@ public class PulsarMessageConsumerImpl implements PulsarMessageConsumer {
 //      }
       } else {
         try {
-          messageConsumer = pulsarClient.newConsumer().topic(pulsarConfig.originTopic).subscriptionName(
-              pulsarConfig.subscriptionName).subscribe();
+          messageConsumer = pulsarClient.newConsumer()
+                                        .topic(pulsarConfig.originTopic)
+                                        .subscriptionName(pulsarConfig.subscriptionName)
+                                        .consumerName(pulsarConfig.consumerName)
+                                        .subscribe();
         } catch (PulsarClientException e) {
           issues.add(context.createConfigIssue(PulsarGroups.PULSAR.name(),
               PULSAR_SOURCE_CONFIG_DESTINATION_TOPIC,
