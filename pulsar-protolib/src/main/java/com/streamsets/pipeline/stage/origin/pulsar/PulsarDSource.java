@@ -35,7 +35,7 @@ import com.streamsets.pipeline.stage.origin.lib.MessageConfig;
     description = "Read data from Pulsar topics",
     icon = "pulsar.png",
     recordsByRef = true,
-    onlineHelpRefUrl = "TODO",
+    onlineHelpRefUrl = "index.html?contextID=task_kzh_cpc_r2b",
     services = @ServiceDependency(
         service = DataFormatParserService.class,
         configuration = {

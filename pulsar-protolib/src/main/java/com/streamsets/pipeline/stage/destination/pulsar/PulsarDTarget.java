@@ -33,7 +33,7 @@ import com.streamsets.pipeline.lib.pulsar.config.PulsarGroups;
     description = "Write data to Pulsar topics",
     icon = "pulsar.png",
     recordsByRef = true,
-    onlineHelpRefUrl ="TODO",
+    onlineHelpRefUrl ="index.html?contextID=task_j5s_lpc_r2b",
     services = @ServiceDependency(
         service = DataFormatGeneratorService.class,
         configuration = {
