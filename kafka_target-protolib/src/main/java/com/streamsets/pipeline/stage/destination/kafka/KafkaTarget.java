@@ -284,7 +284,9 @@ public class KafkaTarget extends BaseTarget {
       LineageEvent event = getContext().createLineageEvent(LineageEventType.ENTITY_WRITTEN);
       event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.KAFKA.name());
       event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, topic);
-      event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, conf.metadataBrokerList);
+      if (conf.metadataBrokerList != null) {
+        event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, conf.metadataBrokerList);
+      }
       getContext().publishLineageEvent(event);
       accessedTopic.add(topic);
     }
