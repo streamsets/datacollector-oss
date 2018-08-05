@@ -62,7 +62,7 @@ import java.util.concurrent.Future;
   version = 5,
   label="Dev Data Generator",
   description = "Generates records with the specified field names based on the selected data type. For development only.",
-  execution = ExecutionMode.STANDALONE,
+  execution = {ExecutionMode.STANDALONE, ExecutionMode.EDGE},
   icon= "dev.png",
   producesEvents = true,
   upgrader = RandomDataGeneratorSourceUpgrader.class,
