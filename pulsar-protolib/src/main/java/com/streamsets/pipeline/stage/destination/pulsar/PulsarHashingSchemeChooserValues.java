@@ -14,26 +14,13 @@
  * limitations under the License.
  */
 
-package com.streamsets.pipeline.lib.pulsar.config;
+package com.streamsets.pipeline.stage.destination.pulsar;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-@GenerateResourceBundle
-public enum PulsarGroups implements Label {
-  PULSAR("Pulsar"),
-  SECURITY("Security"),
-  ADVANCED("Advanced");
+public class PulsarHashingSchemeChooserValues extends BaseEnumChooserValues<PulsarHashingScheme> {
 
-  private final String label;
-
-  PulsarGroups(String label) {
-    this.label = label;
+  public PulsarHashingSchemeChooserValues() {
+    super(PulsarHashingScheme.values());
   }
-
-  @Override
-  public String getLabel() {
-    return this.label;
-  }
-
 }

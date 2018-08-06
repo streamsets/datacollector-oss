@@ -22,13 +22,16 @@ import com.streamsets.pipeline.api.ConfigIssue;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.stage.origin.pulsar.PulsarSourceConfig;
 import org.apache.pulsar.client.api.ClientBuilder;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class BasePulsarConfig {
@@ -65,6 +68,15 @@ public class BasePulsarConfig {
       max = 60000,
       group = "PULSAR")
   public int operationTimeout = 30000;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MAP,
+      label = "Pulsar Configuration Properties",
+      displayPosition = 999,
+      group = "ADVANCED"
+  )
+  public Map<String, String> properties = new HashMap<>();
 
   @ConfigDefBean
   public PulsarSecurityConfig securityConfig;

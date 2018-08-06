@@ -31,7 +31,7 @@ import com.streamsets.pipeline.stage.Utils.TestUtilsPulsar;
 import org.apache.pulsar.client.api.Producer;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
-import org.apache.pulsar.client.impl.ProducerBase;
+import org.apache.pulsar.client.api.TypedMessageBuilder;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -157,9 +157,18 @@ public class TestPulsarMessageProducerImpl {
       List<Stage.ConfigIssue> issues = pulsarMessageProducer.init(context);
       Assert.assertTrue(issues.isEmpty());
 
-      //modify message producers
+      // Create TypedMessageBuilder mock
+      TypedMessageBuilder typedMessageBuilderMock = Mockito.mock(TypedMessageBuilder.class);
+      Mockito.when(typedMessageBuilderMock.key(Mockito.anyString())).thenReturn(typedMessageBuilderMock);
+      Mockito.when(typedMessageBuilderMock.value(Mockito.any())).thenReturn(typedMessageBuilderMock);
+
+      // Create Producer mock
+      Producer producerMock = Mockito.mock(Producer.class);
+      Mockito.when(producerMock.newMessage()).thenReturn(typedMessageBuilderMock);
+
+      //modify message producers mock
       LoadingCache<String, Producer> messageProducersMock = Mockito.mock(LoadingCache.class);
-      Mockito.when(messageProducersMock.get(Mockito.any())).thenReturn(Mockito.mock(ProducerBase.class));
+      Mockito.when(messageProducersMock.get(Mockito.any())).thenReturn(producerMock);
       pulsarMessageProducer.setMessageProducers(messageProducersMock);
 
       Batch batch = TestUtilsPulsar.getBatch();

@@ -14,26 +14,23 @@
  * limitations under the License.
  */
 
-package com.streamsets.pipeline.lib.pulsar.config;
+package com.streamsets.pipeline.stage.destination.pulsar;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
-@GenerateResourceBundle
-public enum PulsarGroups implements Label {
-  PULSAR("Pulsar"),
-  SECURITY("Security"),
-  ADVANCED("Advanced");
+public enum PulsarCompressionType implements Label {
+  NONE("None"),
+  LZ4("LZ4"),
+  ZLIB("ZLIB");
 
   private final String label;
 
-  PulsarGroups(String label) {
+  PulsarCompressionType(String label) {
     this.label = label;
   }
 
   @Override
   public String getLabel() {
-    return this.label;
+    return label;
   }
-
 }

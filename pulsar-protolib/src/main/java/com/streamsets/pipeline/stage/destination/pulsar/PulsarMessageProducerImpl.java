@@ -37,9 +37,13 @@ import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.pulsar.config.PulsarErrors;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import org.apache.pulsar.client.api.CompressionType;
+import org.apache.pulsar.client.api.HashingScheme;
+import org.apache.pulsar.client.api.MessageRoutingMode;
 import org.apache.pulsar.client.api.Producer;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
+import org.apache.pulsar.client.api.TypedMessageBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,6 +65,7 @@ public class PulsarMessageProducerImpl implements PulsarMessageProducer {
   private final Stage.Context context;
   private final DataFormatGeneratorService dataFormatGeneratorService;
   private ELEval destinationEval;
+  private ELEval messageKeyEval;
   private ErrorRecordHandler errorHandler;
   private PulsarClient pulsarClient;
   private LoadingCache<String, Producer> messageProducers;
@@ -112,12 +117,62 @@ public class PulsarMessageProducerImpl implements PulsarMessageProducer {
                                      .build(new CacheLoader<String, Producer>() {
                                        @Override
                                        public Producer load(String key) throws Exception {
-                                         return pulsarClient.newProducer().topic(key).create();
+                                         MessageRoutingMode messageRoutingMode;
+                                         switch (pulsarConfig.partitionType) {
+                                           case SINGLE:
+                                             messageRoutingMode = MessageRoutingMode.SinglePartition;
+                                             break;
+                                           case ROUND_ROBIN:
+                                             messageRoutingMode = MessageRoutingMode.RoundRobinPartition;
+                                             break;
+                                           default:
+                                             throw new StageException(PulsarErrors.PULSAR_18,
+                                                 pulsarConfig.partitionType
+                                             );
+                                         }
+
+                                         HashingScheme hashingScheme;
+                                         switch (pulsarConfig.hashingScheme) {
+                                           case JAVA_STRING_HASH:
+                                             hashingScheme = HashingScheme.JavaStringHash;
+                                             break;
+                                           case MUMUR3_32HASH:
+                                             hashingScheme = HashingScheme.Murmur3_32Hash;
+                                             break;
+                                           default:
+                                             throw new StageException(PulsarErrors.PULSAR_19,
+                                                 pulsarConfig.hashingScheme);
+                                         }
+
+                                         CompressionType compressionType;
+                                         switch (pulsarConfig.compressionType) {
+                                           case LZ4:
+                                             compressionType = CompressionType.LZ4;
+                                             break;
+                                           case ZLIB:
+                                             compressionType = CompressionType.ZLIB;
+                                             break;
+                                           case NONE:
+                                             compressionType = CompressionType.NONE;
+                                             break;
+                                           default:
+                                             throw new StageException(PulsarErrors.PULSAR_20,
+                                                 pulsarConfig.compressionType);
+                                         }
+
+                                         return pulsarClient.newProducer()
+                                                            .properties(pulsarConfig.properties)
+                                                            .topic(key)
+                                                            .messageRoutingMode(messageRoutingMode)
+                                                            .hashingScheme(hashingScheme)
+                                                            .compressionType(compressionType)
+                                                            .create();
                                        }
                                      });
     }
 
     destinationEval = context.createELEval("destinationTopic");
+    messageKeyEval = context.createELEval("messageKey");
     errorHandler = new DefaultErrorRecordHandler(context);
 
     return issues;
@@ -152,7 +207,14 @@ public class PulsarMessageProducerImpl implements PulsarMessageProducer {
 
           // Send message
           Producer producer = messageProducers.get(destinationName);
-          producer.send(byteArrayOutputStream.toByteArray());
+          TypedMessageBuilder typedMessageBuilder = producer.newMessage();
+          if (pulsarConfig.messageKey != null && !pulsarConfig.messageKey.isEmpty()) {
+            // Resolve message key
+            String messageKey = messageKeyEval.eval(elVars, pulsarConfig.messageKey, String.class);
+            typedMessageBuilder.key(messageKey);
+          }
+          typedMessageBuilder.value(byteArrayOutputStream.toByteArray()).send();
+
           usedProducers.add(producer);
         } catch (PulsarClientException e) {
           handleError(record, new StageException(PulsarErrors.PULSAR_04, destinationName, e.getMessage(), e));

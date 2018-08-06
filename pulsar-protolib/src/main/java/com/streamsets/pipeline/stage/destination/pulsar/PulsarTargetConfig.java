@@ -17,8 +17,12 @@
 package com.streamsets.pipeline.stage.destination.pulsar;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.pulsar.config.BasePulsarConfig;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class PulsarTargetConfig extends BasePulsarConfig {
 
@@ -34,5 +38,55 @@ public class PulsarTargetConfig extends BasePulsarConfig {
       group = "PULSAR"
   )
   public String destinationTopic;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "SINGLE",
+      label = "Pulsar Partition Type",
+      description = "Specify the Pulsar partition type to be used when writing messages to selected topic",
+      displayPosition = 50,
+      group = "ADVANCED"
+  )
+  @ValueChooserModel(PulsarPartitionTypeChooserValues.class)
+  public PulsarPartitionType partitionType = PulsarPartitionType.SINGLE;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "JAVA_STRING_HASH",
+      label = "Pulsar Hashing Scheme",
+      description = "Specify the Pulsar hashing scheme to be used when selecting the partition where to write messages",
+      displayPosition = 60,
+      group = "ADVANCED"
+  )
+  @ValueChooserModel(PulsarHashingSchemeChooserValues.class)
+  public PulsarHashingScheme hashingScheme;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Pulsar Message Key",
+      description = "Pulsar Message Key that will be used when computing the hash to select the partition where to " +
+          "write the corresponding message. Expressions like ${record:value(\"/<field name>\")} are accepted in this " +
+          "field",
+      displayPosition = 70,
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      elDefs = RecordEL.class,
+      group = "ADVANCED"
+  )
+  public String messageKey;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "NONE",
+      label = "Pulsar Compression type",
+      description = "Type of compression to be applied to Pulsar messages",
+      displayPosition = 80,
+      group = "ADVANCED"
+  )
+  @ValueChooserModel(PulsarCompressionTypeChooserValues.class)
+  public PulsarCompressionType compressionType;
 
 }
