@@ -20,7 +20,7 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum CouchbaseVersionTypes implements Label {
-  VERSION4("Version 4"),
+  VERSION4("Version 4 or earlier"),
   VERSION5("Version 5")
   ;
 

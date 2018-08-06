@@ -29,7 +29,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 @StageDef(
     version = 1,
     label = "Couchbase",
-    description = "Couchbase Destination",
+    description = "Writes data to Couchbase",
     icon = "couchbase.png",
     recordsByRef = true,
     onlineHelpRefUrl = "index.html?contextID=task_cnl_dwq_h2b"

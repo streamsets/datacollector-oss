@@ -102,7 +102,7 @@ public class CouchbaseTargetConfiguration {
     required = false,
     type = ConfigDef.Type.BOOLEAN,
     defaultValue = "false",
-    label = "Generate Unique Document Key",
+    label = "Generate Document Key",
     displayPosition = 10,
     description = "Generate a unique document key if document key field cannot be set",
     group = "DOCUMENT"
@@ -113,7 +113,7 @@ public class CouchbaseTargetConfiguration {
     required = true,
     type = ConfigDef.Type.STRING,
     defaultValue = "",
-    label = "Unique Document Key Field",
+    label = "Document Key Field",
     displayPosition = 20,
     description = "A field in the document/data which will be used as the unique document key in Couchbase",
     group = "DOCUMENT",
