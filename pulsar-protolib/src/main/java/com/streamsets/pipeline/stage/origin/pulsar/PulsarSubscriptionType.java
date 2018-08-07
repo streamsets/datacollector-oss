@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-package com.streamsets.pipeline.stage.destination.pulsar;
+package com.streamsets.pipeline.stage.origin.pulsar;
 
 import com.streamsets.pipeline.api.Label;
-import org.apache.pulsar.client.api.HashingScheme;
+import org.apache.pulsar.client.api.SubscriptionType;
 
-public enum PulsarHashingScheme implements Label {
-  JAVA_STRING_HASH("Java String", HashingScheme.JavaStringHash),
-  MUMUR3_32HASH("Murmur 3 32bits", HashingScheme.Murmur3_32Hash);
+public enum PulsarSubscriptionType implements Label {
+  EXCLUSIVE("Exclusive", SubscriptionType.Exclusive),
+  FAILOVER("Failover", SubscriptionType.Failover),
+  SHARED("Shared", SubscriptionType.Shared);
 
   private final String label;
-  private final HashingScheme hashingScheme;
+  private final SubscriptionType subscriptionType;
 
-  PulsarHashingScheme(String label, HashingScheme hashingScheme) {
+  PulsarSubscriptionType(String label, SubscriptionType subscriptionType) {
     this.label = label;
-    this.hashingScheme = hashingScheme;
+    this.subscriptionType = subscriptionType;
   }
 
   @Override
@@ -36,7 +37,7 @@ public enum PulsarHashingScheme implements Label {
     return label;
   }
 
-  public HashingScheme getHashingScheme() {
-    return hashingScheme;
+  public SubscriptionType getSubscriptionType() {
+    return subscriptionType;
   }
 }

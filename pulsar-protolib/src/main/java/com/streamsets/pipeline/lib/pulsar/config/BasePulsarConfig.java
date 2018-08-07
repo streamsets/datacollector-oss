@@ -55,7 +55,7 @@ public class BasePulsarConfig {
       min = 0,
       max = 60000,
       group = "PULSAR")
-  public int keepAliveInterval = 30000;
+  public int keepAliveInterval;
 
   @ConfigDef(required = false,
       type = ConfigDef.Type.NUMBER,
@@ -67,7 +67,7 @@ public class BasePulsarConfig {
       min = 0,
       max = 60000,
       group = "PULSAR")
-  public int operationTimeout = 30000;
+  public int operationTimeout;
 
   @ConfigDef(
       required = false,

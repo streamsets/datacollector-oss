@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.pulsar.config.BasePulsarConfig;
+import org.apache.pulsar.client.api.HashingScheme;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,21 +44,21 @@ public class PulsarTargetConfig extends BasePulsarConfig {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "SINGLE",
-      label = "Pulsar Partition Type",
+      label = "Partition Type",
       description = "Specify the Pulsar partition type to be used when writing messages to selected topic",
-      displayPosition = 50,
+      displayPosition = 10,
       group = "ADVANCED"
   )
   @ValueChooserModel(PulsarPartitionTypeChooserValues.class)
-  public PulsarPartitionType partitionType = PulsarPartitionType.SINGLE;
+  public PulsarPartitionType partitionType;
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "JAVA_STRING_HASH",
-      label = "Pulsar Hashing Scheme",
+      label = "Hashing Scheme",
       description = "Specify the Pulsar hashing scheme to be used when selecting the partition where to write messages",
-      displayPosition = 60,
+      displayPosition = 20,
       group = "ADVANCED"
   )
   @ValueChooserModel(PulsarHashingSchemeChooserValues.class)
@@ -66,11 +67,11 @@ public class PulsarTargetConfig extends BasePulsarConfig {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
-      label = "Pulsar Message Key",
+      label = "Message Key",
       description = "Pulsar Message Key that will be used when computing the hash to select the partition where to " +
           "write the corresponding message. Expressions like ${record:value(\"/<field name>\")} are accepted in this " +
           "field",
-      displayPosition = 70,
+      displayPosition = 30,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       elDefs = RecordEL.class,
       group = "ADVANCED"
@@ -81,9 +82,9 @@ public class PulsarTargetConfig extends BasePulsarConfig {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "NONE",
-      label = "Pulsar Compression type",
+      label = "Compression type",
       description = "Type of compression to be applied to Pulsar messages",
-      displayPosition = 80,
+      displayPosition = 40,
       group = "ADVANCED"
   )
   @ValueChooserModel(PulsarCompressionTypeChooserValues.class)

@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.origin.pulsar;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Dependency;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.pulsar.config.BasePulsarConfig;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class PulsarSourceConfig extends BasePulsarConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Pulsar Subscription Name",
+      label = "Subscription Name",
       description = "The name of the Pulsar subscription that will forward messages from the corresponding Pulsar " +
           "topic to subscribed consumers. Pulsar maintains an offset for each subscription to remember from where it " +
           "shall start reading messages",
@@ -40,7 +41,7 @@ public class PulsarSourceConfig extends BasePulsarConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Pulsar Consumer Name",
+      label = "Consumer Name",
       description = "The name to be assigned to the Pulsar Consumer",
       displayPosition = 50,
       group = "PULSAR"
@@ -102,7 +103,7 @@ public class PulsarSourceConfig extends BasePulsarConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.LIST,
-      label = "Pulsar Topics List",
+      label = "Topics List",
       description = "List of Pulsar topics from which messages have to be retrieved",
       displayPosition = 80,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
@@ -136,5 +137,27 @@ public class PulsarSourceConfig extends BasePulsarConfig {
       group = "PULSAR"
   )
   public String originTopic;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "EXCLUSIVE",
+      label = "Subscription Type",
+      description = "Type of subscription used when subscribing the Pulsar Consumer to the corresponding topic",
+      displayPosition = 10,
+      group = "ADVANCED"
+  )
+  @ValueChooserModel(PulsarSubscriptionTypeChooserValues.class)
+  public PulsarSubscriptionType subscriptionType;
+
+  @ConfigDef(required = false,
+      type = ConfigDef.Type.NUMBER,
+      label = "Consumer Queue Size",
+      description = "Size assigned to the queue where messages are pre-fetched until application asks Pulsar for them",
+      displayPosition = 20,
+      defaultValue = "1000",
+      min = 1, // 0 not allowed as 0 does not allow to use Consumer.receive(int, TimeUnit) nor partitioned topics
+      group = "ADVANCED")
+  public int receiverQueueSize;
 
 }

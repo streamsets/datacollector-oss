@@ -28,6 +28,7 @@ import org.apache.pulsar.client.api.Consumer;
 import org.apache.pulsar.client.api.Message;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
+import org.apache.pulsar.client.api.SubscriptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,10 +90,13 @@ public class PulsarMessageConsumerImpl implements PulsarMessageConsumer {
       if(pulsarConfig.usePatternForTopic) {
         try {
           messageConsumer = pulsarClient
+              .properties(pulsarConfig.properties)
               .newConsumer()
               .topicsPattern(pulsarConfig.topicsPattern)
               .subscriptionName(pulsarConfig.subscriptionName)
               .consumerName(pulsarConfig.consumerName)
+              .receiverQueueSize(pulsarConfig.receiverQueueSize)
+              .subscriptionType(pulsarConfig.subscriptionType.getSubscriptionType())
               .subscribe();
         } catch (PulsarClientException e) {
           issues.add(context.createConfigIssue(
@@ -111,9 +115,12 @@ public class PulsarMessageConsumerImpl implements PulsarMessageConsumer {
       */
         try {
           messageConsumer = pulsarClient.newConsumer()
+                                        .properties(pulsarConfig.properties)
                                         .topics(pulsarConfig.topicsList)
                                         .subscriptionName(pulsarConfig.subscriptionName)
                                         .consumerName(pulsarConfig.consumerName)
+                                        .receiverQueueSize(pulsarConfig.receiverQueueSize)
+                                        .subscriptionType(pulsarConfig.subscriptionType.getSubscriptionType())
                                         .subscribe();
         } catch (PulsarClientException e) {
           issues.add(context.createConfigIssue(PulsarGroups.PULSAR.name(),
@@ -131,9 +138,12 @@ public class PulsarMessageConsumerImpl implements PulsarMessageConsumer {
       } else {
         try {
           messageConsumer = pulsarClient.newConsumer()
+                                        .properties(pulsarConfig.properties)
                                         .topic(pulsarConfig.originTopic)
                                         .subscriptionName(pulsarConfig.subscriptionName)
                                         .consumerName(pulsarConfig.consumerName)
+                                        .receiverQueueSize(pulsarConfig.receiverQueueSize)
+                                        .subscriptionType(pulsarConfig.subscriptionType.getSubscriptionType())
                                         .subscribe();
         } catch (PulsarClientException e) {
           issues.add(context.createConfigIssue(PulsarGroups.PULSAR.name(),

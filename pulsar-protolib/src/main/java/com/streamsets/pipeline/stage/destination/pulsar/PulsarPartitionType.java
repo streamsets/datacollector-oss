@@ -17,19 +17,26 @@
 package com.streamsets.pipeline.stage.destination.pulsar;
 
 import com.streamsets.pipeline.api.Label;
+import org.apache.pulsar.client.api.MessageRoutingMode;
 
 public enum PulsarPartitionType implements Label {
-  SINGLE("Single"),
-  ROUND_ROBIN("Round Robin");
+  SINGLE("Single", MessageRoutingMode.SinglePartition),
+  ROUND_ROBIN("Round Robin", MessageRoutingMode.RoundRobinPartition);
 
   private final String label;
+  private final MessageRoutingMode messageRoutingMode;
 
-  PulsarPartitionType(String label) {
+  PulsarPartitionType(String label, MessageRoutingMode messageRoutingMode) {
     this.label = label;
+    this.messageRoutingMode = messageRoutingMode;
   }
 
   @Override
   public String getLabel() {
     return label;
+  }
+
+  public MessageRoutingMode getMessageRoutingMode() {
+    return messageRoutingMode;
   }
 }

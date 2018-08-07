@@ -472,10 +472,14 @@ public class TestPulsarMessageConsumerImpl {
     Mockito.when(contextMock.createConfigIssue(Mockito.anyString(), Mockito.anyString(), Mockito.any(), Mockito.any()))
            .thenReturn(Mockito.mock(ConfigIssue.class));
 
+    Mockito.when(consumerBuilderMock.properties(Mockito.any())).thenReturn(consumerBuilderMock);
     Mockito.when(consumerBuilderMock.topic(Mockito.any())).thenReturn(consumerBuilderMock);
     Mockito.when(consumerBuilderMock.topics(Mockito.any())).thenReturn(consumerBuilderMock);
     Mockito.when(consumerBuilderMock.subscriptionName(Mockito.any())).thenReturn(consumerBuilderMock);
     Mockito.when(consumerBuilderMock.consumerName(Mockito.any())).thenReturn(consumerBuilderMock);
+    Mockito.when(consumerBuilderMock.receiverQueueSize(Mockito.anyInt())).thenReturn(consumerBuilderMock);
+    Mockito.when(consumerBuilderMock.subscriptionType(Mockito.any())).thenReturn(consumerBuilderMock);
+
     try {
       Mockito.when(consumerBuilderMock.subscribe()).thenReturn(messageConsumerMock);
     } catch (PulsarClientException e) {

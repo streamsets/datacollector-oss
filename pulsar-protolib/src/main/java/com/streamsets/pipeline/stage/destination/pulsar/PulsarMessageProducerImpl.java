@@ -37,9 +37,6 @@ import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.pulsar.config.PulsarErrors;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
-import org.apache.pulsar.client.api.CompressionType;
-import org.apache.pulsar.client.api.HashingScheme;
-import org.apache.pulsar.client.api.MessageRoutingMode;
 import org.apache.pulsar.client.api.Producer;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
@@ -69,7 +66,6 @@ public class PulsarMessageProducerImpl implements PulsarMessageProducer {
   private ErrorRecordHandler errorHandler;
   private PulsarClient pulsarClient;
   private LoadingCache<String, Producer> messageProducers;
-
 
   public PulsarMessageProducerImpl(PulsarTargetConfig pulsarTargetConfig, Stage.Context context) {
     this.pulsarConfig = Preconditions.checkNotNull(pulsarTargetConfig);
@@ -117,55 +113,15 @@ public class PulsarMessageProducerImpl implements PulsarMessageProducer {
                                      .build(new CacheLoader<String, Producer>() {
                                        @Override
                                        public Producer load(String key) throws Exception {
-                                         MessageRoutingMode messageRoutingMode;
-                                         switch (pulsarConfig.partitionType) {
-                                           case SINGLE:
-                                             messageRoutingMode = MessageRoutingMode.SinglePartition;
-                                             break;
-                                           case ROUND_ROBIN:
-                                             messageRoutingMode = MessageRoutingMode.RoundRobinPartition;
-                                             break;
-                                           default:
-                                             throw new StageException(PulsarErrors.PULSAR_18,
-                                                 pulsarConfig.partitionType
-                                             );
-                                         }
-
-                                         HashingScheme hashingScheme;
-                                         switch (pulsarConfig.hashingScheme) {
-                                           case JAVA_STRING_HASH:
-                                             hashingScheme = HashingScheme.JavaStringHash;
-                                             break;
-                                           case MUMUR3_32HASH:
-                                             hashingScheme = HashingScheme.Murmur3_32Hash;
-                                             break;
-                                           default:
-                                             throw new StageException(PulsarErrors.PULSAR_19,
-                                                 pulsarConfig.hashingScheme);
-                                         }
-
-                                         CompressionType compressionType;
-                                         switch (pulsarConfig.compressionType) {
-                                           case LZ4:
-                                             compressionType = CompressionType.LZ4;
-                                             break;
-                                           case ZLIB:
-                                             compressionType = CompressionType.ZLIB;
-                                             break;
-                                           case NONE:
-                                             compressionType = CompressionType.NONE;
-                                             break;
-                                           default:
-                                             throw new StageException(PulsarErrors.PULSAR_20,
-                                                 pulsarConfig.compressionType);
-                                         }
-
                                          return pulsarClient.newProducer()
                                                             .properties(pulsarConfig.properties)
                                                             .topic(key)
-                                                            .messageRoutingMode(messageRoutingMode)
-                                                            .hashingScheme(hashingScheme)
-                                                            .compressionType(compressionType)
+                                                            .messageRoutingMode(pulsarConfig.partitionType
+                                                                .getMessageRoutingMode())
+                                                            .hashingScheme(pulsarConfig.hashingScheme
+                                                                .getHashingScheme())
+                                                            .compressionType(pulsarConfig.compressionType
+                                                                .getCompressionType())
                                                             .create();
                                        }
                                      });
@@ -229,8 +185,12 @@ public class PulsarMessageProducerImpl implements PulsarMessageProducer {
         try {
           producer.flush();
         } catch (PulsarClientException e) {
-          LOG.warn("Exception flushing producer '{}' for topic '{}': {}", producer.getProducerName(),
-              producer.getTopic(), e);
+          LOG.warn(
+              "Exception flushing producer '{}' for topic '{}': {}",
+              producer.getProducerName(),
+              producer.getTopic(),
+              e
+          );
         }
       }
     }

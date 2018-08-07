@@ -17,20 +17,27 @@
 package com.streamsets.pipeline.stage.destination.pulsar;
 
 import com.streamsets.pipeline.api.Label;
+import org.apache.pulsar.client.api.CompressionType;
 
 public enum PulsarCompressionType implements Label {
-  NONE("None"),
-  LZ4("LZ4"),
-  ZLIB("ZLIB");
+  NONE("None", CompressionType.NONE),
+  LZ4("LZ4", CompressionType.LZ4),
+  ZLIB("ZLIB", CompressionType.ZLIB);
 
   private final String label;
+  private final CompressionType compressionType;
 
-  PulsarCompressionType(String label) {
+  PulsarCompressionType(String label, CompressionType compressionType) {
     this.label = label;
+    this.compressionType = compressionType;
   }
 
   @Override
   public String getLabel() {
     return label;
+  }
+
+  public CompressionType getCompressionType() {
+    return  compressionType;
   }
 }
