@@ -46,6 +46,7 @@
         <solr.version>7.0.0-cdh6.0.0-beta1</solr.version>
         <solr.test.jetty.version>9.3.20.v20170531</solr.test.jetty.version>
         <spark.version>2.2.0-cdh6.0.0-beta1</spark.version>
+        <kafka.version>1.0.1-cdh6.0.0-beta1</kafka.version>
 
         <thrift.version>0.9.3</thrift.version>
         <netty.version>4.0.29.Final</netty.version>
@@ -221,6 +222,108 @@
                     <artifactId>hbase-client</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <!-- Inherited from cdh-spark_2_3_lib -->
+        <dependency>
+            <groupId>com.streamsets</groupId>
+            <artifactId>streamsets-datacollector-cluster-kafka-protolib</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- Inherited from cdh_kafka_3_0_lib -->
+        <dependency>
+            <groupId>com.streamsets</groupId>
+            <artifactId>streamsets-datacollector-kafka_source-protolib</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.scala-lang</groupId>
+                    <artifactId>scala-library</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.101tec</groupId>
+                    <artifactId>zkclient</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.streamsets</groupId>
+            <artifactId>streamsets-datacollector-kafka_multisource-0_10-protolib</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.scala-lang</groupId>
+                    <artifactId>scala-library</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.101tec</groupId>
+                    <artifactId>zkclient</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!--
+        <dependency>
+            <groupId>com.streamsets</groupId>
+            <artifactId>streamsets-datacollector-kafka_target-protolib</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.scala-lang</groupId>
+                    <artifactId>scala-library</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.101tec</groupId>
+                    <artifactId>zkclient</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        -->
+
+        <!-- Kafka -->
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka_2.11</artifactId>
+            <version>${kafka.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.streamsets</groupId>
+            <artifactId>streamsets-datacollector-kafka-common</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.streamsets</groupId>
+            <artifactId>streamsets-datacollector-sdc-kafka-api</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.streamsets</groupId>
+            <artifactId>streamsets-datacollector-sdc-kafka-11</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka_2.11</artifactId>
+            <version>${kafka.version}</version>
+            <classifier>test</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.streamsets</groupId>
+            <artifactId>streamsets-datacollector-kafka-common</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
         </dependency>
 
         <!-- Hive related -->
@@ -677,6 +780,11 @@
                                 <source>${basedir}/../mapreduce-protolib/src/test/java</source>
                                 <source>${basedir}/../solr-protolib/src/test/java</source>
 
+                                <!--<source>${basedir}/../kafka_target-protolib/src/test/java</source>-->
+                                <source>${basedir}/../cluster-kafka-protolib/src/test/java</source>
+                                <source>${basedir}/../kafka_source-protolib/src/test/java</source>
+                                <source>${basedir}/../kafka_multisource-0_10-protolib/src/test/java</source>
+
                                 <source>${basedir}/../spark-executor-protolib/src/test/java</source>
                                 <source>${basedir}/../spark-processor-protolib/src/test/java</source>
                             </sources>
@@ -724,6 +832,18 @@
                                 <resource>
                                   <directory>${basedir}/../spark-executor-protolib/src/test/resources</directory>
                                 </resource>
+                                <resource>
+                                    <directory>${basedir}/../cluster-kafka-protolib/src/test/resources</directory>
+                                </resource>
+                                <resource>
+                                    <directory>${basedir}/../kafka_source-protolib/src/test/resources</directory>
+                                </resource>
+                                <resource>
+                                    <directory>${basedir}/../kafka_multisource-0_10-protolib/src/test/resources</directory>
+                                </resource>
+                                <!--<resource>
+                                    <directory>${basedir}/../kafka_target-protolib/src/test/resources</directory>
+                                </resource>-->
                             </resources>
                         </configuration>
                     </execution>
