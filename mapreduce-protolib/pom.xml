@@ -35,8 +35,6 @@
 
   <properties>
     <hadoop.version>2.6.0</hadoop.version>
-    <minikdc-hadoop.version>2.6.0</minikdc-hadoop.version>
-    <minikdc-jdbm1.version>2.0.0-M3</minikdc-jdbm1.version>
     <snappy.version>0.4</snappy.version>
     <lz4.version>1.3.0</lz4.version>
     <parquet.version>1.8.1</parquet.version>
@@ -193,7 +191,6 @@
       <version>${lz4.version}</version>
       <scope>compile</scope>
     </dependency>
-
     <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-client</artifactId>
@@ -216,51 +213,12 @@
           <groupId>io.dropwizard.metrics</groupId>
           <artifactId>metrics-core</artifactId>
         </exclusion>
-          <exclusion>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-          </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-minicluster</artifactId>
-      <version>${hadoop.version}</version>
-      <scope>test</scope>
-      <exclusions>
         <exclusion>
           <groupId>javax.servlet</groupId>
           <artifactId>servlet-api</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
-
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-minikdc</artifactId>
-      <version>${minikdc-hadoop.version}</version>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.directory.jdbm</groupId>
-          <artifactId>apacheds-jdbm1</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.directory.jdbm</groupId>
-      <artifactId>apacheds-jdbm1</artifactId>
-      <version>${minikdc-jdbm1.version}</version>
-      <scope>test</scope>
-    </dependency>
-
   </dependencies>
 
   <build>
