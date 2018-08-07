@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.destination.kafka;
 
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.StatsAggregatorStage;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
@@ -30,12 +31,13 @@ import com.streamsets.pipeline.config.DataFormat;
     description = "Writes Pipeline Statistic records to Kafka",
     onlineHelpRefUrl = "",
     upgrader = KafkaTargetUpgrader.class)
-@StatsAggregatorStage
 @HideConfigs(
     preconditions = true,
     onErrorRecord = true,
     value = {"conf.dataFormat", "conf.singleMessagePerBatch"}
 )
+@StatsAggregatorStage
+@HideStage(HideStage.Type.STATS_AGGREGATOR_STAGE)
 @GenerateResourceBundle
 public class StatsKafkaDTarget extends KafkaDTarget {
 

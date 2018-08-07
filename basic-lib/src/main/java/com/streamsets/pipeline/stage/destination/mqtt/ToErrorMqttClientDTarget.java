@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
+import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.DataFormat;
@@ -51,6 +52,7 @@ import com.streamsets.pipeline.config.DataFormat;
         "publisherConf.dataFormat"
     })
 @ErrorStage
+@HideStage(HideStage.Type.ERROR_STAGE)
 @GenerateResourceBundle
 public class ToErrorMqttClientDTarget extends MqttClientDTarget {
   @Override

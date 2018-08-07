@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
+import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.PipelineLifecycleStage;
 import com.streamsets.pipeline.api.StageDef;
 
@@ -40,6 +41,7 @@ import com.streamsets.pipeline.api.StageDef;
 @HideConfigs(preconditions = true, onErrorRecord = true)
 @ErrorStage
 @PipelineLifecycleStage
+@HideStage({HideStage.Type.ERROR_STAGE, HideStage.Type.LIFECYCLE_STAGE})
 @GenerateResourceBundle
 public class ToErrorNullDTarget extends NullDTarget {
 }

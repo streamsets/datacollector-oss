@@ -19,6 +19,7 @@ package com.streamsets.pipeline.stage.cloudstorage.destination;
 import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
+import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.DataFormat;
@@ -29,10 +30,11 @@ import com.streamsets.pipeline.config.DataFormat;
     description = "Writes error records to Google Cloud Storage",
     onlineHelpRefUrl ="index.html?contextID=concept_kgc_l4y_5r"
 )
-@ErrorStage
 @HideConfigs(preconditions = true, onErrorRecord = true, value = {
     "gcsTargetConfig.dataFormat",
 })
+@ErrorStage
+@HideStage(HideStage.Type.ERROR_STAGE)
 @GenerateResourceBundle
 public class ToErrorGoogleCloudStorageDTarget extends GoogleCloudStorageDTarget {
     @Override

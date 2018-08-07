@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.destination.devnull;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
+import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StatsAggregatorStage;
 
@@ -38,6 +39,7 @@ import com.streamsets.pipeline.api.StatsAggregatorStage;
 )
 @HideConfigs(preconditions = true, onErrorRecord = true)
 @StatsAggregatorStage
+@HideStage(HideStage.Type.STATS_AGGREGATOR_STAGE)
 @GenerateResourceBundle
 public class StatsDpmDirectlyDTarget extends NullDTarget {
 }

@@ -19,6 +19,7 @@ package com.streamsets.pipeline.stage.destination.kinesis;
 import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
+import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.DataFormat;
@@ -32,7 +33,6 @@ import com.streamsets.pipeline.config.DataFormat;
     onlineHelpRefUrl ="index.html?contextID=concept_kgc_l4y_5r",
     upgrader = KinesisTargetUpgrader.class
 )
-@ErrorStage
 @HideConfigs(
     preconditions = true,
     onErrorRecord = true,
@@ -40,6 +40,8 @@ import com.streamsets.pipeline.config.DataFormat;
         "kinesisConfig.dataFormat"
     }
 )
+@ErrorStage
+@HideStage(HideStage.Type.ERROR_STAGE)
 @GenerateResourceBundle
 public class ToErrorKinesisDTarget extends KinesisDTarget {
 

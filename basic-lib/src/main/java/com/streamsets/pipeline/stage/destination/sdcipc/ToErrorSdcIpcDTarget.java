@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.destination.sdcipc;
 import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
+import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.PipelineLifecycleStage;
 import com.streamsets.pipeline.api.StageDef;
 
@@ -31,7 +32,6 @@ import com.streamsets.pipeline.api.StageDef;
     onlineHelpRefUrl ="index.html?contextID=concept_kgc_l4y_5r",
     upgrader = SdcIpcTargetUpgrader.class
 )
-@ErrorStage
 @HideConfigs(
     preconditions = true,
     onErrorRecord = true,
@@ -42,8 +42,10 @@ import com.streamsets.pipeline.api.StageDef;
         "config.tlsConfigBean.keyStoreAlgorithm"
     }
 )
-@GenerateResourceBundle
+@ErrorStage
 @PipelineLifecycleStage
+@HideStage({HideStage.Type.ERROR_STAGE, HideStage.Type.LIFECYCLE_STAGE})
+@GenerateResourceBundle
 public class ToErrorSdcIpcDTarget extends SdcIpcDTarget {
 
 }

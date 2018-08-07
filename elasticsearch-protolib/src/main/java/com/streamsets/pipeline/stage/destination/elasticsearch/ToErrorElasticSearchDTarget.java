@@ -19,6 +19,7 @@ package com.streamsets.pipeline.stage.destination.elasticsearch;
 import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
+import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.StageDef;
 
 @StageDef(
@@ -31,12 +32,13 @@ import com.streamsets.pipeline.api.StageDef;
     onlineHelpRefUrl ="index.html?contextID=task_uns_gtv_4r",
     upgrader = ElasticsearchDTargetUpgrader.class
 )
-@ErrorStage
 @HideConfigs(
     preconditions = true,
     onErrorRecord = true,
     value = {"elasticSearchConfig.defaultOperation", "elasticSearchConfig.unsupportedAction"}
 )
+@ErrorStage
+@HideStage(HideStage.Type.ERROR_STAGE)
 @GenerateResourceBundle
 public class ToErrorElasticSearchDTarget extends ElasticSearchDTarget {
 

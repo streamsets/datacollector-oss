@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.destination.eventhubs;
 import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
+import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.DataFormat;
@@ -32,10 +33,11 @@ import com.streamsets.pipeline.config.DataFormat;
     recordsByRef = true,
     onlineHelpRefUrl ="index.html?contextID=task_in4_f5q_1bb"
 )
-@ErrorStage
 @HideConfigs(preconditions = true, onErrorRecord = true, value = {
     "producerConf.dataFormat",
 })
+@ErrorStage
+@HideStage(HideStage.Type.ERROR_STAGE)
 @GenerateResourceBundle
 public class ToErrorEventHubProducerDTarget extends EventHubProducerDTarget {
   @Override

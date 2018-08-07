@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.destination.maprstreams;
 
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
+import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StatsAggregatorStage;
 import com.streamsets.pipeline.api.Target;
@@ -33,6 +34,7 @@ import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
     onlineHelpRefUrl = ""
 )
 @StatsAggregatorStage
+@HideStage(HideStage.Type.STATS_AGGREGATOR_STAGE)
 @HideConfigs(
     preconditions = true,
     onErrorRecord = true,
