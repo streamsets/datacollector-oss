@@ -120,6 +120,7 @@ public class ProductionPipelineBuilder {
       sourceOffsetTracker = new ProductionSourceOffsetTracker(name, rev, runtimeInfo);
     }
     runner.setOffsetTracker(sourceOffsetTracker);
+    runner.setPipelineStartTime(startTime);
     return new ProductionPipeline(
         name,
         rev,
