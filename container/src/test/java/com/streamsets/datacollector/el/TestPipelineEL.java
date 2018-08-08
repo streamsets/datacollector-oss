@@ -46,11 +46,7 @@ public class TestPipelineEL {
         Collections.emptyList(),
         Collections.emptyList()
     );
-    PipelineEL.setConstantsInContext(
-        pipelineConfiguration,
-        new UserContext(null, false, false),
-        System.currentTimeMillis()
-    );
+    PipelineEL.setConstantsInContext(pipelineConfiguration, new UserContext(null, false, false));
     Assert.assertEquals("UNDEFINED", PipelineEL.name());
     Assert.assertEquals("UNDEFINED", PipelineEL.version());
     Assert.assertEquals("UNDEFINED", PipelineEL.id());
@@ -79,17 +75,11 @@ public class TestPipelineEL {
     );
     pipelineConfiguration.setMetadata(metadata);
     pipelineConfiguration.setPipelineInfo(new PipelineInfo("hello" , "label", "", new Date(), new Date(), "", "", "", uuid, false, metadata, null, null));
-    Date startTime = new Date();
-    PipelineEL.setConstantsInContext(
-        pipelineConfiguration,
-        new UserContext("test-user", false, false),
-        startTime.getTime()
-    );
+    PipelineEL.setConstantsInContext(pipelineConfiguration, new UserContext("test-user", false, false));
     Assert.assertEquals("hello", PipelineEL.name());
     Assert.assertEquals("3", PipelineEL.version());
     Assert.assertEquals("hello", PipelineEL.id());
     Assert.assertEquals("label", PipelineEL.title());
     Assert.assertEquals("test-user", PipelineEL.user());
-    Assert.assertEquals(startTime, PipelineEL.startTime());
   }
 }

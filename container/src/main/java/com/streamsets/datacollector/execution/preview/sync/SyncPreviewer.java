@@ -336,11 +336,7 @@ public class SyncPreviewer implements Previewer {
     batchSize = Math.min(maxBatchSize, batchSize);
     int maxBatches = configuration.get(MAX_BATCHES_KEY, MAX_BATCHES_DEFAULT);
     PipelineConfiguration pipelineConf = pipelineStore.load(name, rev);
-    PipelineEL.setConstantsInContext(
-        pipelineConf,
-        userContext,
-        System.currentTimeMillis()
-    );
+    PipelineEL.setConstantsInContext(pipelineConf, userContext);
     batches = Math.min(maxBatches, batches);
     SourceOffsetTracker tracker = new PreviewSourceOffsetTracker(Collections.emptyMap());
     PreviewPipelineRunner runner = new PreviewPipelineRunner(

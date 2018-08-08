@@ -246,11 +246,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
     originPipe.prepareBatchContext(batchContext);
 
     // Since the origin owns the threads in PushSource, need to re-populate the PipelineEL on every batch
-    PipelineEL.setConstantsInContext(
-        pipelineConfiguration,
-        originPipe.getStage().getContext().getUserContext(),
-        System.currentTimeMillis()
-    );
+    PipelineEL.setConstantsInContext(pipelineConfiguration, originPipe.getStage().getContext().getUserContext());
 
     return batchContext;
   }

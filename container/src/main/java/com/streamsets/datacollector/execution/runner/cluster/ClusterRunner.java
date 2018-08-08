@@ -486,11 +486,7 @@ public class ClusterRunner extends AbstractRunner {
               RemoteSSOService.DPM_USER_ALIAS_NAME_ENABLED_DEFAULT
           )
       );
-      PipelineEL.setConstantsInContext(
-          pipelineConf,
-          runningUser,
-          getState().getTimeStamp()
-      );
+      PipelineEL.setConstantsInContext(pipelineConf, runningUser);
       doStart(context.getUser(), pipelineConf, getClusterSourceInfo(context, getName(), getRev(), pipelineConf), getAcl(getName()), context.getRuntimeParameters());
     } catch (Exception e) {
       validateAndSetStateTransition(context.getUser(), PipelineStatus.START_ERROR, e.toString(), getAttributes());

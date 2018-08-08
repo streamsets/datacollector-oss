@@ -20,7 +20,6 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.pipeline.api.ElFunction;
 import com.streamsets.pipeline.api.Stage;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -34,7 +33,6 @@ public class PipelineEL {
   public static final String SDC_PIPELINE_USER_VAR = "SDC_PIPELINE_USER";
   public static final String SDC_PIPELINE_NAME_VAR = "SDC_PIPELINE_NAME";
   public static final String SDC_PIPELINE_VERSION_VAR = "SDC_PIPELINE_VERSION";
-  public static final String SDC_PIPELINE_START_TIME_VAR = "SDC_PIPELINE_START_TIME";
 
   @VisibleForTesting
   static final String PIPELINE_VERSION_VAR = "dpm.pipeline.version";
@@ -47,7 +45,7 @@ public class PipelineEL {
     description = "Returns the name of the pipeline")
   @Deprecated
   public static String name() {
-    return (String)getVariableFromScope(SDC_PIPELINE_NAME_VAR);
+    return getVariableFromScope(SDC_PIPELINE_NAME_VAR);
   }
 
   @ElFunction(
@@ -55,7 +53,7 @@ public class PipelineEL {
     name = "version",
     description = "Returns the version of the pipeline if applicable. Returns \"UNDEFINED\" otherwise")
   public static String version() {
-    return (String)getVariableFromScope(SDC_PIPELINE_VERSION_VAR);
+    return getVariableFromScope(SDC_PIPELINE_VERSION_VAR);
   }
 
   @ElFunction(
@@ -63,7 +61,7 @@ public class PipelineEL {
     name = "title",
     description = "Returns the title of the pipeline if applicable. Returns \"UNDEFINED\" otherwise")
   public static String title() {
-    return (String)getVariableFromScope(SDC_PIPELINE_TITLE_VAR);
+    return getVariableFromScope(SDC_PIPELINE_TITLE_VAR);
   }
 
   @ElFunction(
@@ -71,7 +69,7 @@ public class PipelineEL {
     name = "id",
     description = "Returns the id of the pipeline if applicable. Returns \"UNDEFINED\" otherwise")
   public static String id() {
-    return (String)getVariableFromScope(SDC_PIPELINE_NAME_VAR);
+    return getVariableFromScope(SDC_PIPELINE_NAME_VAR);
   }
 
   @ElFunction(
@@ -79,32 +77,19 @@ public class PipelineEL {
     name = "user",
     description = "Returns user who started this pipeline.")
   public static String user() {
-    return (String)getVariableFromScope(SDC_PIPELINE_USER_VAR);
+    return getVariableFromScope(SDC_PIPELINE_USER_VAR);
   }
 
-  @ElFunction(
-      prefix = PIPELINE_EL_PREFIX,
-      name = "startTime",
-      description = "Returns the start time stamp in milliseconds."
-  )
-  public static Date startTime() {
-    return (Date)getVariableFromScope(SDC_PIPELINE_START_TIME_VAR);
-  }
-
-  private static Object getVariableFromScope(String varName) {
+  private static String getVariableFromScope(String varName) {
     Map<String, Object> variablesInScope = CONSTANTS_IN_SCOPE_TL.get();
-    Object name = DEFAULT_VALUE;
+    String name = DEFAULT_VALUE;
     if (variablesInScope.containsKey(varName)) {
-      name = variablesInScope.get(varName);
+      name = (String) variablesInScope.get(varName);
     }
     return name;
   }
 
-  public static void setConstantsInContext(
-      PipelineConfiguration pipelineConfiguration,
-      Stage.UserContext userContext,
-      long startTime
-  ) {
+  public static void setConstantsInContext(PipelineConfiguration pipelineConfiguration, Stage.UserContext userContext) {
     String version = DEFAULT_VALUE;
     String title = DEFAULT_VALUE;
     String id = DEFAULT_VALUE;
@@ -125,7 +110,6 @@ public class PipelineEL {
     variablesInScope.put(PipelineEL.SDC_PIPELINE_NAME_VAR, id);
     variablesInScope.put(PipelineEL.SDC_PIPELINE_TITLE_VAR, title);
     variablesInScope.put(PipelineEL.SDC_PIPELINE_USER_VAR, user);
-    variablesInScope.put(PipelineEL.SDC_PIPELINE_START_TIME_VAR, new Date(startTime));
     CONSTANTS_IN_SCOPE_TL.set(variablesInScope);
   }
 
@@ -135,7 +119,6 @@ public class PipelineEL {
     variablesInScope.remove(PipelineEL.SDC_PIPELINE_NAME_VAR);
     variablesInScope.remove(PipelineEL.SDC_PIPELINE_TITLE_VAR);
     variablesInScope.remove(PipelineEL.SDC_PIPELINE_USER_VAR);
-    variablesInScope.remove(PipelineEL.SDC_PIPELINE_START_TIME_VAR);
     CONSTANTS_IN_SCOPE_TL.set(variablesInScope);
   }
 }

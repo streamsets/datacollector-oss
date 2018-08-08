@@ -184,8 +184,6 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   private PipelineConfiguration pipelineConfiguration = null;
   private Lock destroyLock = new ReentrantLock();
 
-  private long pipelineStartTime;
-
   @Inject
   public ProductionPipelineRunner(
       @Named("name") String pipelineName,
@@ -303,10 +301,6 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
 
   public void setOffsetTracker(SourceOffsetTracker offsetTracker) {
     this.offsetTracker = offsetTracker;
-  }
-
-  public void setPipelineStartTime(long pipelineStartTime) {
-    this.pipelineStartTime = pipelineStartTime;
   }
 
   public void setThreadHealthReporter(ThreadHealthReporter threadHealthReporter) {
@@ -452,11 +446,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     originPipe.prepareBatchContext(batchContext);
 
     // Since the origin owns the threads in PushSource, need to re-populate the PipelineEL on every batch
-    PipelineEL.setConstantsInContext(
-        pipelineConfiguration,
-        originPipe.getStage().getContext().getUserContext(),
-        pipelineStartTime
-    );
+    PipelineEL.setConstantsInContext(pipelineConfiguration, originPipe.getStage().getContext().getUserContext());
 
     // Run batch listeners
     for (BatchListener batchListener : batchListenerList) {
