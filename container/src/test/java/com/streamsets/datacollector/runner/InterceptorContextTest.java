@@ -59,6 +59,8 @@ public class InterceptorContextTest {
       "pipelineId",
       "pipelineTitle",
       "rev",
+      "sdcId",
+      false,
       Mockito.mock(UserContext.class),
       Mockito.mock(MetricRegistry.class),
       0,

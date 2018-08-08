@@ -53,7 +53,9 @@ public class InterceptorContext implements Interceptor.Context {
   private final String pipelineId;
   private final String pipelineTitle;
   private final String rev;
+  private final String sdcId;
   private final Stage.UserContext userContext;
+  private final boolean isPreview;
   private final MetricRegistry metrics;
   private final long pipelineMaxMemory;
   private final ExecutionMode executionMode;
@@ -105,6 +107,8 @@ public class InterceptorContext implements Interceptor.Context {
     String pipelineId,
     String pipelineTitle,
     String rev,
+    String sdcId,
+    boolean isPreview,
     Stage.UserContext userContext,
     MetricRegistry metrics,
     long pipelineMaxMemory,
@@ -122,6 +126,8 @@ public class InterceptorContext implements Interceptor.Context {
     this.stageLibrary = stageLibrary;
     this.pipelineId = pipelineId;
     this.pipelineTitle = pipelineTitle;
+    this.sdcId = sdcId;
+    this.isPreview = isPreview;
     this.rev = rev;
     this.userContext = userContext;
     this.metrics = metrics;
@@ -135,6 +141,7 @@ public class InterceptorContext implements Interceptor.Context {
     this.containerClassLoader = Thread.currentThread().getContextClassLoader();
   }
 
+  @Override
   public String getPipelineId() {
     return pipelineId;
   }
@@ -281,5 +288,15 @@ public class InterceptorContext implements Interceptor.Context {
         Thread.currentThread().setContextClassLoader(interceptorClassLoader);
       }
     });
+  }
+
+  @Override
+  public boolean isPreview() {
+    return isPreview;
+  }
+
+  @Override
+  public String getSdcId() {
+    return sdcId;
   }
 }
