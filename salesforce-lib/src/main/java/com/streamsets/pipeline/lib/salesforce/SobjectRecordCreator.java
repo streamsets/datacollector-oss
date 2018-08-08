@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import soql.SOQLParser;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -83,6 +84,9 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
   private static final List<String> DATETIME_TYPES = Collections.singletonList("datetime");
   private static final List<String> DATE_TYPES = Collections.singletonList("date");
   private static final String ANYTYPE = "anyType";
+
+  private static final BigDecimal MAX_OFFSET_INT = new BigDecimal(Integer.MAX_VALUE);
+  protected static final String RECORD_ID_OFFSET_PREFIX = "recordId:";
 
   private static final TimeZone TZ = TimeZone.getTimeZone("GMT");
 
@@ -445,4 +449,23 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
   public com.sforce.soap.partner.Field getFieldMetadata(String objectType, String fieldName) {
     return metadataCache.get(objectType).getFieldFromName(fieldName);
   }
+
+  // SDC-9731 will remove the duplicate method from ForceSource
+  // SDC-9078 - coerce scientific notation away when decimal field scale is zero
+  // since Salesforce doesn't like scientific notation in queries
+  protected String fixOffset(String offsetColumn, String offset) {
+    com.sforce.soap.partner.Field sfdcField = getFieldMetadata(sobjectType, offsetColumn);
+    if (SobjectRecordCreator.DECIMAL_TYPES.contains(sfdcField.getType().toString())
+        && offset.contains("E")) {
+      BigDecimal val = new BigDecimal(offset);
+      offset = val.toPlainString();
+      if (val.compareTo(MAX_OFFSET_INT) > 0 && !offset.contains(".")) {
+        // We need the ".0" suffix since Salesforce doesn't like integer
+        // bigger than 2147483647
+        offset += ".0";
+      }
+    }
+    return offset;
+  }
+
 }

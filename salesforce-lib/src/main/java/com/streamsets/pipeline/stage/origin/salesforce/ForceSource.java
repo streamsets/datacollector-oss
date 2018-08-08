@@ -21,7 +21,6 @@ import com.sforce.async.BatchInfo;
 import com.sforce.async.BatchInfoList;
 import com.sforce.async.BatchStateEnum;
 import com.sforce.async.BulkConnection;
-import com.sforce.async.CSVReader;
 import com.sforce.async.ContentType;
 import com.sforce.async.JobInfo;
 import com.sforce.async.OperationEnum;
@@ -61,6 +60,10 @@ import org.slf4j.LoggerFactory;
 import soql.SOQLParser;
 
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.events.XMLEvent;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -94,8 +97,9 @@ public class ForceSource extends BaseSource {
   private static final String CHUNK_SIZE = "chunkSize";
   private static final String ID = "Id";
   private static final String START_ROW = "startRow";
-  private static final String RECORDS_NOT_FOUND = "Records not found for this query";
   private static final String CONF_PREFIX = "conf";
+
+  private static final String RECORDS = "records";
 
   static final String READ_EVENTS_FROM_START = EVENT_ID_OFFSET_PREFIX + EVENT_ID_FROM_START;
   private static final BigDecimal MAX_OFFSET_INT = new BigDecimal(Integer.MAX_VALUE);
@@ -111,8 +115,7 @@ public class ForceSource extends BaseSource {
   private JobInfo job;
   private QueryResultList queryResultList;
   private int resultIndex;
-  private CSVReader rdr;
-  private List<String> resultHeader;
+  private XMLEventReader rdr;
   private Set<String> processedBatches;
   private BatchInfoList batchList;
 
@@ -128,11 +131,16 @@ public class ForceSource extends BaseSource {
 
   private boolean shouldSendNoMoreDataEvent = false;
   private AtomicBoolean destroyed = new AtomicBoolean(false);
+  private XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();
 
   public ForceSource(
       ForceSourceConfigBean conf
   ) {
     this.conf = conf;
+
+    xmlInputFactory.setProperty(XMLInputFactory.IS_COALESCING, true);
+    xmlInputFactory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+    xmlInputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
   }
 
   // Renew the Salesforce session on timeout
@@ -546,83 +554,64 @@ public class ForceSource extends BaseSource {
       resultIndex++;
 
       try {
-        rdr = new CSVReader(bulkConnection.getQueryResultStream(job.getId(), batch.getId(), resultId));
-        rdr.setMaxRowsInFile(Integer.MAX_VALUE);
-        rdr.setMaxCharsInFile(Integer.MAX_VALUE);
+        rdr = xmlInputFactory.createXMLEventReader(bulkConnection.getQueryResultStream(job.getId(), batch.getId(), resultId));
       } catch (AsyncApiException e) {
         throw new StageException(Errors.FORCE_05, e);
-      }
-
-      try {
-        resultHeader = rdr.nextRecord();
-        LOG.info("Result {} header: {}", resultId, resultHeader);
-      } catch (IOException e) {
-        throw new StageException(Errors.FORCE_04, e);
+      } catch (XMLStreamException e) {
+        throw new StageException(Errors.FORCE_36, e);
       }
     }
 
     if (rdr != null){
-      int offsetIndex = -1;
-      if (resultHeader != null &&
-              (resultHeader.size() > 1 || !(RECORDS_NOT_FOUND.equals(resultHeader.get(0))))) {
-        for (int i = 0; i < resultHeader.size(); i++) {
-          if (resultHeader.get(i).equalsIgnoreCase(conf.offsetColumn)) {
-            offsetIndex = i;
-            break;
+      int numRecords = 0;
+      while (rdr.hasNext() && numRecords < maxBatchSize) {
+        try {
+          XMLEvent event = rdr.nextEvent();
+          if (event.isStartElement() && event.asStartElement().getName().getLocalPart().equals(RECORDS)) {
+            // SDC-9731 will refactor record creators so we don't need this downcast
+            String offset = ((BulkRecordCreator)recordCreator).createRecord(rdr, batchMaker);
+            nextSourceOffset = RECORD_ID_OFFSET_PREFIX + offset;
+            final String sourceId = conf.soqlQuery + "::" + offset;
+            ++numRecords;
           }
-        }
-        if (offsetIndex == -1) {
-          throw new StageException(Errors.FORCE_06, conf.offsetColumn, resultHeader);
+        } catch (XMLStreamException e) {
+          throw new StageException(Errors.FORCE_37, e);
         }
       }
 
-      int numRecords = 0;
-      List<String> row;
-      while (numRecords < maxBatchSize) {
-        try {
-          if ((row = rdr.nextRecord()) == null) {
-            // Exhausted this result - come back in on the next batch
-            rdr = null;
-            if (resultIndex == queryResultList.getResult().length) {
-              // We're out of results, too!
-              processedBatches.add(batch.getId());
-              queryResultList = null;
-              batch = null;
-              if (processedBatches.size() == batchList.getBatchInfo().length) {
-                // And we're done with the job
-                try {
-                  bulkConnection.closeJob(job.getId());
-                  lastQueryCompletedTime = System.currentTimeMillis();
-                  LOG.info("Query completed at: {}", lastQueryCompletedTime);
-                } catch (AsyncApiException e) {
-                  LOG.error("Error closing job: {}", e);
-                }
-                LOG.info("Partial batch of {} records", numRecords);
-                job = null;
-                shouldSendNoMoreDataEvent = true;
-                if (conf.subscribeToStreaming) {
-                  // Switch to processing events
-                  nextSourceOffset = READ_EVENTS_FROM_NOW;
-                } else if (conf.repeatQuery == ForceRepeatQuery.FULL) {
-                  nextSourceOffset = RECORD_ID_OFFSET_PREFIX + conf.initialOffset;
-                } else if (conf.repeatQuery == ForceRepeatQuery.NO_REPEAT) {
-                  nextSourceOffset = null;
-                }
-              }
+      if (!rdr.hasNext()) {
+        // Exhausted this result - come back in on the next batch
+        rdr = null;
+        if (resultIndex == queryResultList.getResult().length) {
+          // We're out of results, too!
+          processedBatches.add(batch.getId());
+          queryResultList = null;
+          batch = null;
+          if (processedBatches.size() == batchList.getBatchInfo().length) {
+            // And we're done with the job
+            try {
+              bulkConnection.closeJob(job.getId());
+              lastQueryCompletedTime = System.currentTimeMillis();
+              LOG.info("Query completed at: {}", lastQueryCompletedTime);
+            } catch (AsyncApiException e) {
+              LOG.error("Error closing job: {}", e);
             }
-            return nextSourceOffset;
-          } else {
-            String offset = row.get(offsetIndex);
-            nextSourceOffset = RECORD_ID_OFFSET_PREFIX + offset;
-            final String sourceId = conf.soqlQuery + "::" + offset;
-            Record record = recordCreator.createRecord(sourceId, Pair.of(resultHeader, row));
-            batchMaker.addRecord(record);
-            ++numRecords;
+            LOG.info("Partial batch of {} records", numRecords);
+            job = null;
+            shouldSendNoMoreDataEvent = true;
+            if (conf.subscribeToStreaming) {
+              // Switch to processing events
+              nextSourceOffset = READ_EVENTS_FROM_NOW;
+            } else if (conf.repeatQuery == ForceRepeatQuery.FULL) {
+              nextSourceOffset = RECORD_ID_OFFSET_PREFIX + conf.initialOffset;
+            } else if (conf.repeatQuery == ForceRepeatQuery.NO_REPEAT) {
+              nextSourceOffset = null;
+            }
           }
-        } catch (IOException e) {
-          throw new StageException(Errors.FORCE_04, e);
         }
+        return nextSourceOffset;
       }
+
       LOG.info("Full batch of {} records", numRecords);
 
       return nextSourceOffset;
@@ -917,7 +906,7 @@ public class ForceSource extends BaseSource {
     JobInfo job = new JobInfo();
     job.setObject(sobjectType);
     job.setOperation((conf.queryAll && !conf.usePKChunking) ? OperationEnum.queryAll : OperationEnum.query);
-    job.setContentType(ContentType.CSV);
+    job.setContentType(ContentType.XML);
     if (conf.usePKChunking) {
       String headerValue = CHUNK_SIZE + "=" + conf.chunkSize;
       if (!StringUtils.isEmpty(conf.startId)) {

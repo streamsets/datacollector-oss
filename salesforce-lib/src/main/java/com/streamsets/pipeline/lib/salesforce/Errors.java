@@ -57,6 +57,10 @@ public enum Errors implements ErrorCode {
   FORCE_33("Can't repeat an incremental query when PK Chunking is enabled."),
   FORCE_34("Can't create HTTP client"),
   FORCE_35("Record ID missing"),
+  FORCE_36("Exception creating XMLEventReader"),
+  FORCE_37("Exception reading XML Stream"),
+  FORCE_38("No type on XML Record"),
+  FORCE_39("Unexpected end of XML Stream"),
   ;
   private final String msg;
 
