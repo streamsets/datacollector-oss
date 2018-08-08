@@ -183,14 +183,21 @@ public class JdbcUtil {
    */
   public static String formatSqlException(SQLException ex) {
     StringBuilder sb = new StringBuilder();
+    Set<String> messages = new HashSet<>();
     for (Throwable e : ex) {
       if (e instanceof SQLException) {
+        String message = e.getMessage();
+        if (!messages.add(message)) {
+          continue;
+        }
         sb.append("SQLState: " + ((SQLException) e).getSQLState() + "\n")
             .append("Error Code: " + ((SQLException) e).getErrorCode() + "\n")
-            .append("Message: " + e.getMessage() + "\n");
+            .append("Message: " + message + "\n");
         Throwable t = ex.getCause();
         while (t != null) {
-          sb.append("Cause: " + t + "\n");
+          if (messages.add(t.getMessage())) {
+            sb.append("Cause: " + t + "\n");
+          }
           t = t.getCause();
         }
       }
@@ -267,7 +274,7 @@ public class JdbcUtil {
     String table = tableName;
     DatabaseMetaData metadata = connection.getMetaData();
     List<String> keys = new ArrayList<>();
-    ResultSet result = metadata.getPrimaryKeys(null, schema, table);
+    ResultSet result = metadata.getPrimaryKeys(connection.getCatalog(), schema, table);
     while (result.next()) {
       keys.add(result.getString(COLUMN_NAME));
     }
@@ -829,11 +836,16 @@ public class JdbcUtil {
       } catch (UncheckedExecutionException ex) {
         Throwable throwable = ex.getCause();
         if (throwable instanceof StageException) {
-          if (((StageException) ex.getCause()).getErrorCode() == JdbcErrors.JDBC_16) {
+          StageException stageEx = (StageException) ex.getCause();
+          if (stageEx.getErrorCode() == JdbcErrors.JDBC_16) {
             for (Record record : partitions.get(tableName)) {
-              errorRecordHandler.onError(new OnRecordErrorException(record, ((StageException) throwable).getErrorCode(), tableName, ex.getCause()));
+              errorRecordHandler.onError(new OnRecordErrorException(record, JdbcErrors.JDBC_16, tableName, ex.getCause()));
             }
+          } else {
+            errorRecordHandler.onError(stageEx.getErrorCode(), stageEx.getParams());
           }
+        } else {
+          errorRecordHandler.onError(JdbcErrors.JDBC_301, ex.getMessage(), ex.getCause());
         }
       }
     }
