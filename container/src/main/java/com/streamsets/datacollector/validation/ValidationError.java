@@ -69,8 +69,8 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0032("Stage must have at least one output stream"),
   VALIDATION_0033("Invalid Configuration, {}"),
 
-  VALIDATION_0034("Value for configuration '{}' cannot be greater then '{}'"),
-  VALIDATION_0035("Value for configuration '{}' cannot be less then '{}'"),
+  VALIDATION_0034("Value for configuration '{}' cannot be greater than '{}'"),
+  VALIDATION_0035("Value for configuration '{}' cannot be less than '{}'"),
   VALIDATION_0036("{} cannot have event streams '{}'"),
   VALIDATION_0037("Stage can't be on the main pipeline canvas"),
 
@@ -89,13 +89,13 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0060("Define the error record handling for the pipeline"),
   VALIDATION_0061("Define the directory for error record files"),
   VALIDATION_0062("Configured memory limit '{}' is not an integer"),
-  VALIDATION_0063("Configured memory limit '{}' is above the maximum allowed '{}'"),
+  VALIDATION_0063("Configured memory limit '{}' is above the maximum allowed: '{}'"),
   VALIDATION_0064("Error resolving memory limit: {}"),
 
   VALIDATION_0070("Pipeline does not define its execution mode"),
   VALIDATION_0071("Stage '{}' from '{}' library does not support '{}' execution mode"),
-  VALIDATION_0072("Data collector is in standalone mode, cannot run pipeline cluster mode"),
-  VALIDATION_0073("Data collector is in cluster mode, cannot run pipeline standalone mode"),
+  VALIDATION_0072("Data Collector is in standalone mode, cannot run pipeline cluster mode"),
+  VALIDATION_0073("Data Collector is in cluster mode, cannot run pipeline standalone mode"),
   VALIDATION_0080("Precondition '{}' must begin with '${' and end with '}'"),
   VALIDATION_0081("Invalid precondition '{}': {}"),
   VALIDATION_0082("Cannot create runner with execution mode '{}', another runner with execution mode '{}'"
@@ -106,10 +106,10 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0093("The pipeline title is empty"),
 
   // Event related validations
-  VALIDATION_0100("Invalid event stream name '{}'. Streams can include the following characters '{}'"),
-  VALIDATION_0101("Stage have more then one event lane."),
-  VALIDATION_0102("Stage have configured event lane even though that it doesn't produce events."),
-  VALIDATION_0103("Stage '{}' have merged input from both data and event part of the pipeline."),
+  VALIDATION_0100("Invalid event stream name '{}'. Streams can include the following characters: '{}'"),
+  VALIDATION_0101("Stage has more than one event lane"),
+  VALIDATION_0102("Stage has configured event lane even though it doesn't produce events"),
+  VALIDATION_0103("Stage '{}' has input from both data and event branches of the pipeline. This is not allowed."),
   VALIDATION_0104("Stage has open event streams"),
   VALIDATION_0105("Invalid pipeline lifecycle specification: {}"),
   VALIDATION_0106("Pipeline lifecycle events are not supported in mode: {}"),
