@@ -151,10 +151,8 @@ public class ProxyAuthenticator extends LoginAuthenticator {
 
                 UserIdentity userIdentity = login(username, password, request);
                 if (userIdentity != null) {
-                  if (session.getAttribute(SessionAuthentication.__J_AUTHENTICATED) == null) {
-                    Authentication cached = new SessionAuthentication(getAuthMethod(), userIdentity, null);
-                    session.setAttribute(SessionAuthentication.__J_AUTHENTICATED, cached);
-                  }
+                  Authentication cached = new SessionAuthentication(getAuthMethod(), userIdentity, null);
+                  session.setAttribute(SessionAuthentication.__J_AUTHENTICATED, cached);
                 } else {
                   try {
                     response.setHeader(HttpHeader.WWW_AUTHENTICATE.asString(),
