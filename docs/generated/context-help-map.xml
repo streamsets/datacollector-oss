@@ -44,10 +44,10 @@
                path="datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_rrq_v3k_kbb"/>
    <appContext helpID="concept_rr2_mbz_w1b"
                path="datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_rr2_mbz_w1b"/>
-   <appContext helpID="unique_811362640"
-               path="datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#unique_811362640"/>
-   <appContext helpID="unique_1567501535"
-               path="datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#unique_1567501535"/>
+   <appContext helpID="unique_887908705"
+               path="datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#unique_887908705"/>
+   <appContext helpID="unique_468165943"
+               path="datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#unique_468165943"/>
    <appContext helpID="concept_avm_x1y_h1b"
                path="datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_avm_x1y_h1b"/>
    <appContext helpID="concept_bsw_cky_11b"
@@ -114,8 +114,8 @@
                path="datacollector/UserGuide/Installation/CMInstall-Overview.html#task_hzt_dgn_25"/>
    <appContext helpID="task_opg_yrm_25"
                path="datacollector/UserGuide/Installation/CMInstall-Overview.html#task_opg_yrm_25"/>
-   <appContext helpID="unique_777350405"
-               path="datacollector/UserGuide/Installation/CMInstall-Overview.html#unique_777350405"/>
+   <appContext helpID="unique_1912164253"
+               path="datacollector/UserGuide/Installation/CMInstall-Overview.html#unique_1912164253"/>
    <appContext helpID="task_u1v_nkt_25"
                path="datacollector/UserGuide/Installation/CMInstall-Overview.html#task_u1v_nkt_25"/>
    <appContext helpID="task_zn4_qrn_25"
@@ -2124,8 +2124,6 @@
                path="datacollector/UserGuide/Processors/WholeFileTransformer.html#concept_jsb_z1q_l2b"/>
    <appContext helpID="concept_pf3_hbq_l2b"
                path="datacollector/UserGuide/Processors/WholeFileTransformer.html#concept_pf3_hbq_l2b"/>
-   <appContext helpID="concept_ht2_q5p_l2b"
-               path="datacollector/UserGuide/Processors/WholeFileTransformer.html#concept_ht2_q5p_l2b"/>
    <appContext helpID="concept_bgy_5bs_m2b"
                path="datacollector/UserGuide/Processors/WholeFileTransformer.html#concept_bgy_5bs_m2b"/>
    <appContext helpID="concept_hly_1zw_l2b"
@@ -2236,6 +2234,10 @@
                path="datacollector/UserGuide/Destinations/CoAPClient.html#concept_fcy_cj4_sz"/>
    <appContext helpID="task_d2p_w3n_sz"
                path="datacollector/UserGuide/Destinations/CoAPClient.html#task_d2p_w3n_sz"/>
+   <appContext helpID="concept_ahq_1wq_h2b"
+               path="datacollector/UserGuide/Destinations/Couchbase.html#concept_ahq_1wq_h2b"/>
+   <appContext helpID="task_cnl_dwq_h2b"
+               path="datacollector/UserGuide/Destinations/Couchbase.html#task_cnl_dwq_h2b"/>
    <appContext helpID="concept_u5t_vpv_4r"
                path="datacollector/UserGuide/Destinations/Elasticsearch.html#concept_u5t_vpv_4r"/>
    <appContext helpID="concept_dd3_vhk_r5"
@@ -3481,8 +3483,8 @@
                path="datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_m4g_qyk_2s"/>
    <appContext helpID="concept_a3w_z3m_js"
                path="datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_a3w_z3m_js"/>
-   <appContext helpID="unique_2142885700"
-               path="datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#unique_2142885700"/>
+   <appContext helpID="unique_1087715632"
+               path="datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#unique_1087715632"/>
    <appContext helpID="concept_rp1_ghd_zs"
                path="datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_rp1_ghd_zs"/>
    <appContext helpID="concept_mth_cjm_js"
