@@ -196,7 +196,8 @@ public class PulsarMessageConsumerImpl implements PulsarMessageConsumer {
           }
           String messageId = Base64.getEncoder().encodeToString(message.getMessageId().toByteArray());
           numMessagesConsumed += pulsarMessageConverter.convert(batchMaker, context, messageId, message);
-          if (pulsarConfig.multiTopic) {
+          if (pulsarConfig.multiTopic ||
+              !SubscriptionType.Exclusive.equals(pulsarConfig.subscriptionType.getSubscriptionType())) {
             sentButNotACKMessages.add(message);
           } else {
             lastSentButNotACKMessage = message;
@@ -212,7 +213,8 @@ public class PulsarMessageConsumerImpl implements PulsarMessageConsumer {
 
   @Override
   public void ack() throws StageException {
-    if (pulsarConfig.multiTopic) {
+    if (pulsarConfig.multiTopic ||
+        !SubscriptionType.Exclusive.equals(pulsarConfig.subscriptionType.getSubscriptionType())) {
       for (Message msg : sentButNotACKMessages) {
         try {
           messageConsumer.acknowledge(msg.getMessageId());

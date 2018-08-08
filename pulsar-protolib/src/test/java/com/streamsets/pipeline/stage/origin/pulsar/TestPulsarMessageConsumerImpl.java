@@ -221,6 +221,42 @@ public class TestPulsarMessageConsumerImpl {
   }
 
   @Test
+  public void testTakeSuccessOneTopicFailoverSubscription() throws StageException {
+    PulsarSourceConfig customPulsarSourceConfig = TestUtilsPulsar.getSourceConfig();
+    customPulsarSourceConfig.subscriptionType = PulsarSubscriptionType.FAILOVER;
+
+    createPulsarMessageConsumerImplNoIssues(customPulsarSourceConfig);
+
+    List<Stage.ConfigIssue> issues = pulsarMessageConsumerImplMock.init(contextMock);
+    Assert.assertEquals(0, issues.size());
+
+    try {
+      Mockito.when(messageConsumerMock.receive(Mockito.anyInt(), Mockito.any()))
+             .thenReturn(TestUtilsPulsar.getPulsarMessage());
+    } catch (PulsarClientException e) {
+      Assert.fail("Error mocking Consumer.receive method in testTakeSuccessOneTopicFailoverSubscription");
+    }
+    Mockito.when(pulsarMessageConverterMock.convert(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
+           .thenReturn(1);
+
+    Assert.assertEquals(1, pulsarMessageConsumerImplMock.take(Mockito.mock(BatchMaker.class), contextMock, 1));
+    Assert.assertNull(pulsarMessageConsumerImplMock.getLastSentButNotACKMessage());
+    Assert.assertEquals(1, pulsarMessageConsumerImplMock.getSentButNotACKMessages().size());
+
+    try {
+      Mockito.verify(messageConsumerMock, Mockito.atLeast(1)).receive(Mockito.anyInt(), Mockito.any());
+      Mockito.verify(pulsarMessageConverterMock, Mockito.times(1)).convert(Mockito.any(),
+          Mockito.any(),
+          Mockito.any(),
+          Mockito.any()
+      );
+    } catch (PulsarClientException e) {
+      Assert.fail("Error verifying number of calls to Consumer.receive method in " +
+          "testTakeSuccessOneTopicFailoverSubscription");
+    }
+  }
+
+  @Test
   public void testTakeSuccessTopicsList() throws StageException {
     PulsarSourceConfig customPulsarSourceConfig = TestUtilsPulsar.getSourceConfig();
     customPulsarSourceConfig.multiTopic = true;
@@ -320,7 +356,7 @@ public class TestPulsarMessageConsumerImpl {
   }
 
   @Test
-  public void ackSuccessOneTopic() {
+  public void ackSuccessOneTopic() throws PulsarClientException {
     createPulsarMessageConsumerImplNoIssues();
 
     List<Stage.ConfigIssue> issues = pulsarMessageConsumerImplMock.init(contextMock);
@@ -344,11 +380,46 @@ public class TestPulsarMessageConsumerImpl {
       Assert.fail("Ack threw an unexpected StageException");
     }
 
+    Mockito.verify(messageConsumerMock, Mockito.times(1)).acknowledgeCumulative(Mockito.any(MessageId.class));
     Assert.assertNull(pulsarMessageConsumerImplMock.getLastSentButNotACKMessage());
   }
 
   @Test
-  public void ackSuccessTopicsList() {
+  public void ackSuccessOneTopicFailoverSubscription() throws PulsarClientException {
+    PulsarSourceConfig customPulsarSourceConfig = TestUtilsPulsar.getSourceConfig();
+    customPulsarSourceConfig.subscriptionType = PulsarSubscriptionType.FAILOVER;
+
+    createPulsarMessageConsumerImplNoIssues(customPulsarSourceConfig);
+
+    List<Stage.ConfigIssue> issues = pulsarMessageConsumerImplMock.init(contextMock);
+    Assert.assertEquals(0, issues.size());
+
+    try {
+      Mockito.when(messageConsumerMock.receive(Mockito.anyInt(), Mockito.any()))
+             .thenReturn(TestUtilsPulsar.getPulsarMessage());
+      Mockito.when(pulsarMessageConverterMock.convert(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
+             .thenReturn(1);
+      pulsarMessageConsumerImplMock.take(Mockito.mock(BatchMaker.class), contextMock, 1);
+    } catch (PulsarClientException | StageException e) {
+      Assert.fail("Error mocking Consumer.receive method in ackSuccessOneTopic");
+    }
+
+    Assert.assertNull(pulsarMessageConsumerImplMock.getLastSentButNotACKMessage());
+    Assert.assertEquals(1, pulsarMessageConsumerImplMock.getSentButNotACKMessages().size());
+
+    try {
+      pulsarMessageConsumerImplMock.ack();
+    } catch (StageException e) {
+      Assert.fail("Ack threw an unexpected StageException");
+    }
+
+    Mockito.verify(messageConsumerMock, Mockito.times(1)).acknowledge(Mockito.any(MessageId.class));
+    Assert.assertNull(pulsarMessageConsumerImplMock.getLastSentButNotACKMessage());
+    Assert.assertEquals(0, pulsarMessageConsumerImplMock.getSentButNotACKMessages().size());
+  }
+
+  @Test
+  public void ackSuccessTopicsList() throws PulsarClientException {
     PulsarSourceConfig customPulsarSourceConfig = TestUtilsPulsar.getSourceConfig();
     customPulsarSourceConfig.multiTopic = true;
     customPulsarSourceConfig.topicsList = TestUtilsPulsar.getTopicsList();
@@ -376,6 +447,7 @@ public class TestPulsarMessageConsumerImpl {
       Assert.fail("Ack threw an unexpected StageException");
     }
 
+    Mockito.verify(messageConsumerMock, Mockito.times(1)).acknowledge(Mockito.any(MessageId.class));
     Assert.assertTrue(pulsarMessageConsumerImplMock.getSentButNotACKMessages().isEmpty());
   }
 
