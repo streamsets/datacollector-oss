@@ -30,7 +30,7 @@ import org.mockito.Mockito;
 import java.util.Collections;
 import java.util.List;
 
-import static com.streamsets.pipeline.stage.Utils.TestUtilsPulsar.getIssues;
+import static com.streamsets.pipeline.stage.Utils.TestUtilsPulsar.getStageConfigIssues;
 import static com.streamsets.pipeline.stage.Utils.TestUtilsPulsar.getTargetConfig;
 
 public class TestPulsarTarget {
@@ -70,7 +70,7 @@ public class TestPulsarTarget {
   @Test
   public void testInitWithIssues() {
     PulsarMessageProducer pulsarMessageProducer = Mockito.mock(PulsarMessageProducer.class);
-    Mockito.when(pulsarMessageProducer.init(Mockito.any())).thenReturn(getIssues());
+    Mockito.when(pulsarMessageProducer.init(Mockito.any())).thenReturn(getStageConfigIssues());
 
     PulsarMessageProducerFactory pulsarMessageProducerFactory = Mockito.mock(PulsarMessageProducerFactory.class);
     Mockito.when(pulsarMessageProducerFactory.create(Mockito.any(), Mockito.any()))

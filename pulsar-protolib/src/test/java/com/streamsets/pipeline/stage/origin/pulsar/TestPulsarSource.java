@@ -29,7 +29,7 @@ import org.mockito.Mockito;
 import java.util.Collections;
 
 import static com.streamsets.pipeline.stage.Utils.TestUtilsPulsar.getBasicConfig;
-import static com.streamsets.pipeline.stage.Utils.TestUtilsPulsar.getIssues;
+import static com.streamsets.pipeline.stage.Utils.TestUtilsPulsar.getStageConfigIssues;
 import static com.streamsets.pipeline.stage.Utils.TestUtilsPulsar.getMessageConfig;
 import static com.streamsets.pipeline.stage.Utils.TestUtilsPulsar.getSourceConfig;
 
@@ -84,14 +84,14 @@ public class TestPulsarSource {
   @Test
   public void testInitWithPulsarMessageConverterIssues() {
     createPulsarSourceNoIssues();
-    Mockito.when(pulsarMessageConverterMock.init(Mockito.any())).thenReturn(getIssues());
+    Mockito.when(pulsarMessageConverterMock.init(Mockito.any())).thenReturn(getStageConfigIssues());
     Assert.assertTrue(!pulsarSource.init().isEmpty());
   }
 
   @Test
   public void testInitWithPulsarMessageConsumerIssues() {
     createPulsarSourceNoIssues();
-    Mockito.when(pulsarMessageConsumerMock.init(Mockito.any())).thenReturn(getIssues());
+    Mockito.when(pulsarMessageConsumerMock.init(Mockito.any())).thenReturn(getStageConfigIssues());
     Assert.assertTrue(!pulsarSource.init().isEmpty());
   }
 

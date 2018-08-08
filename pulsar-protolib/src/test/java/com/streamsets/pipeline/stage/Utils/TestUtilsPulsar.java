@@ -78,8 +78,17 @@ public class TestUtilsPulsar {
     return messageConfig;
   }
 
-  public static List<Stage.ConfigIssue> getIssues() {
+  public static List<Stage.ConfigIssue> getStageConfigIssues() {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
+
+    ConfigIssue issue = new ConfigIssue() {};
+    issues.add(issue);
+
+    return issues;
+  }
+
+  public static List<ConfigIssue> getConfigIssues() {
+    List<ConfigIssue> issues = new ArrayList<>();
 
     ConfigIssue issue = new ConfigIssue() {};
     issues.add(issue);

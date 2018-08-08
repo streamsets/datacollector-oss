@@ -117,14 +117,13 @@ public class PulsarSecurityConfig {
       List<ConfigIssue> issues,
       Stage.Context context
   ) {
-    if (resourcePath == null | resourcePath.isEmpty()) {
+    if (resourcePath == null || resourcePath.isEmpty()) {
       LOG.info(emptyPathPulsarError.getMessage());
       issues.add(context.createConfigIssue(PulsarGroups.SECURITY.name(), configName, emptyPathPulsarError));
     } else {
       String resourcesPath = context.getResourcesDirectory();
-      String fullPath = resourcesPath + (
-          resourcePath.charAt(0) == '/'? resourcePath : "/" + resourcePath
-      );
+      resourcesPath = resourcesPath.charAt(resourcesPath.length() - 1) == '/'? resourcesPath : resourcesPath + "/";
+      String fullPath = resourcesPath + (resourcePath.charAt(0) == '/'? resourcePath.substring(1) : resourcePath);
       File file = new File(fullPath);
       if (!file.exists()) {
         LOG.info(Utils.format(fileNotExistsPulsarError.getMessage(), resourcePath, fullPath));
@@ -146,18 +145,19 @@ public class PulsarSecurityConfig {
     List<ConfigIssue> issues = new ArrayList<>();
 
     if (tlsEnabled) {
-      caCertFileFullPath = checkFilePath(caCertPem, "securityConfig.caCertPem", PulsarErrors.PULSAR_11, PulsarErrors
+      caCertFileFullPath = checkFilePath(caCertPem, "pulsarConfig.securityConfig.caCertPem", PulsarErrors.PULSAR_11, PulsarErrors
           .PULSAR_12, issues, context);
+
+      if (tlsAuthEnabled) {
+        clientCertFileFullPath = checkFilePath(clientCertPem, "pulsarConfig.securityConfig.clientCertPem", PulsarErrors.PULSAR_13,
+            PulsarErrors.PULSAR_14, issues, context);
+
+        clientKeyFileFullPath = checkFilePath(clientKeyPem, "pulsarConfig.securityConfig.clientKeyPem", PulsarErrors.PULSAR_15,
+            PulsarErrors.PULSAR_16, issues, context);
+
+      }
     }
 
-    if (tlsAuthEnabled) {
-      clientCertFileFullPath = checkFilePath(clientCertPem, "securityConfig.clientCertPem", PulsarErrors.PULSAR_13,
-          PulsarErrors.PULSAR_14, issues, context);
-
-      clientKeyFileFullPath = checkFilePath(clientKeyPem, "securityConfig.clientKeyPem", PulsarErrors.PULSAR_15,
-          PulsarErrors.PULSAR_16, issues, context);
-
-    }
     return issues;
   }
 
