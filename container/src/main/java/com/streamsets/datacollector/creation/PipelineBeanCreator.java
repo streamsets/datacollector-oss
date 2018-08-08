@@ -190,6 +190,7 @@ public abstract class PipelineBeanCreator {
             forExecution,
             library,
             pipelineConf.getStages().get(0),
+            true,
             false,
             false,
             resolvedConstants,
@@ -214,6 +215,7 @@ public abstract class PipelineBeanCreator {
             forExecution,
             library,
             statsStageConf,
+            true,
             false,
             false,
             resolvedConstants,
@@ -229,6 +231,7 @@ public abstract class PipelineBeanCreator {
             forExecution,
             library,
             errorStageConf,
+            true,
             true,
             false,
             resolvedConstants,
@@ -250,6 +253,7 @@ public abstract class PipelineBeanCreator {
             forExecution,
             library,
             pipelineConf.getStartEventStages().get(0),
+            true,
             false,
             true,
             resolvedConstants,
@@ -264,6 +268,7 @@ public abstract class PipelineBeanCreator {
             forExecution,
             library,
             pipelineConf.getStopEventStages().get(0),
+            true,
             false,
             true,
             resolvedConstants,
@@ -323,6 +328,7 @@ public abstract class PipelineBeanCreator {
           forExecution,
           library,
           stageConf,
+          true,
           false,
           false,
           constants,
@@ -438,6 +444,7 @@ public abstract class PipelineBeanCreator {
       boolean forExecution,
       StageLibraryTask library,
       StageConfiguration stageConf,
+      boolean validateAnnotations,
       boolean errorStage,
       boolean pipelineLifecycleStage,
       Map<String, Object> constants,
@@ -450,23 +457,25 @@ public abstract class PipelineBeanCreator {
                                                 forExecution);
     if (stageDef != null) {
       // Pipeline lifecycle events validation must match, whether it's also marked as error stage does not matter
-      if(pipelineLifecycleStage) {
-        if(!stageDef.isPipelineLifecycleStage()) {
-          errors.add(issueCreator.create(
+      if(validateAnnotations) {
+        if (pipelineLifecycleStage) {
+          if (!stageDef.isPipelineLifecycleStage()) {
+            errors.add(issueCreator.create(
               CreationError.CREATION_018,
               stageDef.getLibraryLabel(),
               stageDef.getLabel(),
               stageConf.getStageVersion())
-          );
-        }
-      // For non pipeline lifecycle stages, the error stage annotation must match
-      } else if (stageDef.isErrorStage() != errorStage) {
-        if (stageDef.isErrorStage()) {
-          errors.add(issueCreator.create(CreationError.CREATION_007, stageDef.getLibraryLabel(), stageDef.getLabel(),
-                                         stageConf.getStageVersion()));
-        } else {
-          errors.add(issueCreator.create(CreationError.CREATION_008, stageDef.getLibraryLabel(), stageDef.getLabel(),
-                                         stageConf.getStageVersion()));
+            );
+          }
+          // For non pipeline lifecycle stages, the error stage annotation must match
+        } else if (stageDef.isErrorStage() != errorStage) {
+          if (stageDef.isErrorStage()) {
+            errors.add(issueCreator.create(CreationError.CREATION_007, stageDef.getLibraryLabel(), stageDef.getLabel(),
+              stageConf.getStageVersion()));
+          } else {
+            errors.add(issueCreator.create(CreationError.CREATION_008, stageDef.getLibraryLabel(), stageDef.getLabel(),
+              stageConf.getStageVersion()));
+          }
         }
       }
 
