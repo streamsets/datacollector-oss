@@ -1,0 +1,8 @@
+description = 'StreamSets Data Collector Azure Key Vault 1.0.0 Lib'
+
+dependencies {
+  compile 'com.microsoft.azure:azure:1.12.0'
+  compile 'com.microsoft.azure:azure-keyvault:1.0.0'
+  testCompile 'org.powermock:powermock-api-mockito'
+  testCompile 'org.powermock:powermock-module-junit4'
+}

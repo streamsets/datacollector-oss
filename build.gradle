@@ -21,7 +21,7 @@ allprojects {
   apply plugin: 'com.adarshr.test-logger'
 
   testlogger {
-    theme = System.env['JENKINS_HOME'] != null ? "plain" : "standard"
+    theme = "standard"
   }
 
   group = 'com.streamsets'
