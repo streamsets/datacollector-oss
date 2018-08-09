@@ -38,7 +38,10 @@ allprojects {
       testCompile('org.mockito:mockito-core:1.10.19') {
         force = true
       }
+
+      def jacksonVersion = '2.8.9'
       constraints {
+        compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion
         testCompile 'junit:junit:4.12'
         testCompile('org.testcontainers:testcontainers:1.4.3')
       }

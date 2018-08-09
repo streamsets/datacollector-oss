@@ -1,0 +1,7 @@
+description = 'StreamSets Data Collector Dev Lib'
+
+dependencies {
+  compile project(':lib:stagesupport')
+  compile 'com.fasterxml.jackson.core:jackson-databind'
+  compile 'com.github.javafaker:javafaker:0.13'
+}

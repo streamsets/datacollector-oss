@@ -1,0 +1,26 @@
+description = 'StreamSets Data Collector Couchbase 5.0 Lib'
+
+def elasticsearchVersion = '5.2.0'
+def log4j2Version = '2.7'
+dependencies {
+  compile project(':lib:proto:elasticsearch-protolib')
+  testCompile "org.elasticsearch:elasticsearch:${elasticsearchVersion}"
+  // Do not move this below commonlib dependency or wrong netty will be loaded for tests
+  testCompile "org.elasticsearch.plugin:transport-netty4-client:${elasticsearchVersion}"
+  testCompile project(path: ':lib:commonlib', configuration: 'testArtifacts')
+  testCompile project(path: ':lib:stagesupport', configuration: 'testArtifacts')
+  testCompile group: 'com.google.code.gson', name: 'gson', version: '2.2.4'
+  testRuntimeOnly "org.apache.logging.log4j:log4j-api:${log4j2Version}"
+  testRuntimeOnly "org.apache.logging.log4j:log4j-core:${log4j2Version}"
+}
+
+sourceSets {
+  test {
+    java {
+      srcDir project(':lib:proto:elasticsearch-protolib').sourceSets.test.java.srcDirs
+    }
+    resources {
+      srcDir project(':lib:proto:elasticsearch-protolib').sourceSets.test.resources.srcDirs
+    }
+  }
+}

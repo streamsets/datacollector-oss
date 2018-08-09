@@ -1,0 +1,17 @@
+description = 'StreamSets Data Collector Couchbase 5.0 Lib'
+
+dependencies {
+  compile project(':lib:proto:couchbase-protolib')
+  compile "com.couchbase.client:java-client:2.5.9"
+}
+
+sourceSets {
+  test {
+    java {
+      srcDir project(':lib:proto:couchbase-protolib').sourceSets.test.java.srcDirs
+    }
+    resources {
+      srcDir project(':lib:proto:couchbase-protolib').sourceSets.test.resources.srcDirs
+    }
+  }
+}
