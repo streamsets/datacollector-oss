@@ -818,6 +818,24 @@ public class TestMultithreadedTableProvider {
     assertThat(reasons.get(0), containsString("did not have a minimum value available"));
   }
 
+  @Test
+  public void tableWithSingleOffsetValue() {
+    long offset = 1000;
+    TableContext table = createTableContext(
+        "schema",
+        "tableName",
+        "off",
+        "1000",
+        null,
+        -1,
+        true,
+        false,
+        offset
+    );
+
+    assertEquals(offset, table.getOffset());
+  }
+
   private void assertLoadedPartitions(
       Map<TableRuntimeContext, Map<String, String>> partitionsAndOffsets,
       MultithreadedTableProvider provider
@@ -1069,7 +1087,8 @@ public class TestMultithreadedTableProvider {
         minOffsetColValue,
         maxActivePartitions,
         enablePartitioning,
-        TableConfigBean.ENABLE_NON_INCREMENTAL_DEFAULT_VALUE
+        TableConfigBean.ENABLE_NON_INCREMENTAL_DEFAULT_VALUE,
+        new Long(0)
     );
   }
 
@@ -1109,6 +1128,47 @@ public class TestMultithreadedTableProvider {
         enablePartitioning ? PartitioningMode.BEST_EFFORT : PartitioningMode.DISABLED,
         maxActivePartitions,
         extraOffsetColumnConditions
+    );
+  }
+
+  @NotNull
+  private static TableContext createTableContext(
+      String schema,
+      String tableName,
+      String offsetColumn,
+      String partitionSize,
+      String minOffsetColValue,
+      int maxActivePartitions,
+      boolean enablePartitioning,
+      boolean enableNonIncremental,
+      long offset
+  ) {
+    LinkedHashMap<String, Integer> offsetColumnToType = new LinkedHashMap<>();
+    Map<String, String> offsetColumnToStartOffset = new HashMap<>();
+    Map<String, String> offsetColumnToPartitionSizes = new HashMap<>();
+    Map<String, String> offsetColumnToMinValues = new HashMap<>();
+
+    if (offsetColumn != null) {
+      offsetColumnToType.put(offsetColumn, Types.INTEGER);
+      if (minOffsetColValue != null) {
+        offsetColumnToMinValues.put(offsetColumn, minOffsetColValue);
+      }
+      offsetColumnToPartitionSizes.put(offsetColumn, partitionSize);
+    }
+    String extraOffsetColumnConditions = null;
+
+    return new TableContext(
+        schema,
+        tableName,
+        offsetColumnToType,
+        offsetColumnToStartOffset,
+        offsetColumnToPartitionSizes,
+        offsetColumnToMinValues,
+        enableNonIncremental,
+        enablePartitioning ? PartitioningMode.BEST_EFFORT : PartitioningMode.DISABLED,
+        maxActivePartitions,
+        extraOffsetColumnConditions,
+        offset
     );
   }
 

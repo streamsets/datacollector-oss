@@ -712,7 +712,6 @@ public final class TableContextUtil {
     if (tableConfigBean.initialOffset < 0) {
       initalSyncVersion = currentSyncVersion;
     }
-    offsetColumnToStartOffset.put(MSQueryUtil.SYS_CHANGE_VERSION, Long.toString(initalSyncVersion));
 
     final Map<String, String> offsetAdjustments = new HashMap<>();
     final Map<String, String> offsetColumnMinValues = new HashMap<>();
@@ -730,7 +729,8 @@ public final class TableContextUtil {
         TableConfigBean.ENABLE_NON_INCREMENTAL_DEFAULT_VALUE,
         partitioningMode,
         maxNumActivePartitions,
-        extraOffsetColumnConditions
+        extraOffsetColumnConditions,
+        initalSyncVersion
     );
   }
 

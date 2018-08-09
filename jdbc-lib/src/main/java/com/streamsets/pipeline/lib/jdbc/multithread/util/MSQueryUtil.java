@@ -104,7 +104,8 @@ public final class MSQueryUtil {
       int maxBatchSize, String tableName,
       Collection<String> offsetColumns,
       Map<String, String> startOffset,
-      boolean includeJoin
+      boolean includeJoin,
+      long offset
   ) {
     boolean isInitial = true;
 
@@ -130,6 +131,8 @@ public final class MSQueryUtil {
     String equal = String.format(ON_CLAUSE, AND_JOINER.join(equalCondition));
     String orderby = String.format(ORDER_BY_CLAUSE, COMMA_SPACE_JOINER.join(orderCondition));
 
+    long lastSysChangeVersion = offsetMap.get(SYS_CHANGE_VERSION) == null ? 0 : Long.parseLong(offsetMap.get(SYS_CHANGE_VERSION));
+
     if (!isInitial) {
       greaterCondition.add(String.format(COLUMN_EQUALS_VALUE, CT_TABLE_NAME + "." + SYS_CHANGE_VERSION, offsetMap.get(SYS_CHANGE_VERSION)));
       String condition1 = AND_JOINER.join(greaterCondition);
@@ -137,10 +140,11 @@ public final class MSQueryUtil {
       greater = String.format(WHERE_CLAUSE, String.format(OR_CLAUSE, condition1, condition2));
 
       if (includeJoin) {
-        return String.format(SELECT_CT_CLAUSE,
+        return String.format(
+            SELECT_CT_CLAUSE,
             maxBatchSize,
             tableName,
-            startOffset.get(SYS_CHANGE_VERSION),
+            offset,
             greater,
             orderby
         );
@@ -150,7 +154,7 @@ public final class MSQueryUtil {
     if (includeJoin) {
       return String.format(
           INIT_CHANGE_TRACKING_QUERY,
-          startOffset.get(SYS_CHANGE_VERSION),
+          offset,
           maxBatchSize,
           tableName,
           equal,
@@ -161,7 +165,7 @@ public final class MSQueryUtil {
           SELECT_CT_CLAUSE,
           maxBatchSize,
           tableName,
-          startOffset.get(SYS_CHANGE_VERSION),
+          offset,
           greater,
           orderby
       );
