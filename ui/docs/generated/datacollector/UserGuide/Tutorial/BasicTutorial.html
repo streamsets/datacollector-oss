@@ -1,0 +1,1467 @@
+
+<!DOCTYPE html
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link>
+      <meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Basic Tutorial" /><meta name="abstract" content="The basic tutorial creates a pipeline that reads a file from a directory, processes the data in two branches, and writes all data to a file system. You'll use data preview to help configure the pipeline, and you'll create a data alert and run the pipeline." /><meta name="description" content="The basic tutorial creates a pipeline that reads a file from a directory, processes the data in two branches, and writes all data to a file system. You'll use data preview to help configure the pipeline, and you'll create a data alert and run the pipeline." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Tutorial/BeforeYouBegin.html#concept_hg5_j2p_ms" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Tutorial/ExtendedTutorial.html#concept_w4n_gjt_ls" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_phf_cjt_ls" /><title>Basic Tutorial</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_phf_cjt_ls-d46e124852" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018042310" />
+
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018042310" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+
+
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+
+
+
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+
+                </div>
+
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+
+
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref" data-id="concept_nls_w1r_ks"><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li class="active"><span class="topicref" data-id="concept_phf_cjt_ls"><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#concept_phf_cjt_ls">Basic Tutorial</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The basic tutorial creates a pipeline that reads a file from a directory, processes the   data in two branches, and writes
+                  all data to a file system. You'll use data preview to help   configure the pipeline, and you'll create a data alert and run
+                  the pipeline.
+
+               </p>
+               </span></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Tutorial/BeforeYouBegin.html#concept_hg5_j2p_ms" title="Before You Begin"></a></span>
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Tutorial/ExtendedTutorial.html#concept_w4n_gjt_ls" title="Extended Tutorial"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e4414" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e6481" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13895" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e18499" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e20154" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22651" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e24466" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e64169" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e77391" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e92871" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e98772" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e102096" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e106011" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e108837" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e109636" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e110218" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e111818" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e112299" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e113641" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e114610" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e117238" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e118495" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e120286" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e124782" class="topicref" data-id="concept_nls_w1r_ks" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_is5_lrq_ks-d46e124804" class="topicref" data-id="concept_is5_lrq_ks" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Overview.html">Tutorial Overview</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_hg5_j2p_ms-d46e124828" class="topicref" data-id="concept_hg5_j2p_ms" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BeforeYouBegin.html#concept_hg5_j2p_ms">Before You Begin</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li class="active"><span data-tocid="concept_phf_cjt_ls-d46e124852" class="topicref" data-id="concept_phf_cjt_ls" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#concept_phf_cjt_ls">Basic Tutorial</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The basic tutorial creates a pipeline that reads a file from a directory, processes the   data in two branches, and writes
+                        all data to a file system. You'll use data preview to help   configure the pipeline, and you'll create a data alert and run
+                        the pipeline.
+
+                     </p>
+                     </span></span></span><ul class="nav nav-list">
+               <li><span data-tocid="task_jmz_3dn_ls-d46e124978" class="topicref" data-id="task_jmz_3dn_ls" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_jmz_3dn_ls">Create a Pipeline and Define Pipeline Properties</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">When you configure a pipeline, you need to decide what to do with error records. You         can discard them or - more productively
+                              - write them to file, another pipeline, or to Kafka.
+
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="task_ftt_2vq_ks-d46e125003" class="topicref" data-id="task_ftt_2vq_ks" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_ftt_2vq_ks">Configure the Origin</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The origin represents the incoming data for the pipeline. When you configure the         origin, you define how to connect
+                              to the origin system, the type of data to be processed,         and other properties specific to the origin.
+
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="task_xb5_2sf_4s-d46e125038" class="topicref" data-id="task_xb5_2sf_4s" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_xb5_2sf_4s">Preview Data </a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">To become more familiar with the data set and gather some important details for         pipeline configuration, let's preview
+                              the source data.
+
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="task_br5_rzq_ks-d46e125083" class="topicref" data-id="task_br5_rzq_ks" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_br5_rzq_ks">Route Data with the Stream Selector</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">To route data to different streams for processing, we use the Stream Selector         processor.</p>
+                           </span></span></span></li>
+               <li><span data-tocid="task_cdx_kfm_ls-d46e125138" class="topicref" data-id="task_cdx_kfm_ls" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_cdx_kfm_ls">Use Jython for Card Typing</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"> Next, we'll evaluate credit card numbers to determine the credit card type. You can         use an Expression Evaluator to
+                              do the same calculations, but with a short script, the Jython         Evaluator is easier.
+
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="task_qbw_d3m_ls-d46e125204" class="topicref" data-id="task_qbw_d3m_ls" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_qbw_d3m_ls">Mask Credit Card Numbers</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"> Now let's prevent sensitive information from reaching internal databases by using a         Field Masker to mask the credit
+                              card numbers.
+
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="task_wsj_5tm_ls-d46e125280" class="topicref" data-id="task_wsj_5tm_ls" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_wsj_5tm_ls">Write to the Destination</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The <span class="ph">Data Collector</span> can         write data to many destinations. The Local FS destination writes to files in a local file         system.
+
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="task_wgb_t4p_ms-d46e125369" class="topicref" data-id="task_wgb_t4p_ms" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_wgb_t4p_ms">Add a Corresponding Field with the Expression Evaluator</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Jython Evaluator script added a new field to the credit payments branch. To         ensure all records have the same structure,
+                              we'll use the Expression Evaluator to add the         same field to the non-credit branch.
+
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="task_ets_dkj_ps-d46e125465" class="topicref" data-id="task_ets_dkj_ps" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_ets_dkj_ps">Create a Data Rule and Alert</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Now before we run the basic pipeline, let's add a data rule and alert. Data rules are         user-defined rules used to inspect
+                              data moving between two stages. They are a powerful way         to look for outliers and anomalous data.
+
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="task_m21_dyj_ps-d46e125571" class="topicref" data-id="task_m21_dyj_ps" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_m21_dyj_ps">Run the Basic Pipeline</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Now that the basic pipeline is complete, you can start it by clicking the             <span class="ph uicontrol">Start</span> icon: <img class="image" src="datacollector/UserGuide/Tutorial/datacollector/UserGuide/Graphics/icon_ConfigStartPipeline.png" height="NaN" width="NaN" />.
+
+                           </p>
+                           </span></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_w4n_gjt_ls-d46e125692" class="topicref" data-id="concept_w4n_gjt_ls" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/ExtendedTutorial.html#concept_w4n_gjt_ls">Extended Tutorial</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The extended tutorial builds on the basic tutorial, using an additional set of stages to         perform some data transformations
+                        and write to the Trash development destination. We'll also         use data preview to test stage configuration.
+
+                     </p>
+                     </span></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e125996" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e129904" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e129959" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e130119" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e131600" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e131822" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+
+
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_phf_cjt_ls">
+ <h1 class="title topictitle1" id="ariaid-title1">Basic Tutorial</h1>
+
+
+ <div class="body conbody"><p class="shortdesc">The basic tutorial creates a pipeline that reads a file from a directory, processes the
+  data in two branches, and writes all data to a file system. You'll use data preview to help
+  configure the pipeline, and you'll create a data alert and run the pipeline. </p>
+
+  <div class="p">Here are high level steps for
+   building and running the basic pipeline:<ol class="ol" id="concept_phf_cjt_ls__ol_emy_rhp_ms">
+    <li class="li">Configure pipeline properties, primarily error handling.</li>
+
+    <li class="li">Add a Directory origin to represent the data to be processed. </li>
+
+    <li class="li">Preview source data to determine the field-level details needed for the pipeline.</li>
+
+    <li class="li">Use a Stream Selector to route credit card transactions to the primary branch and cash
+     transactions to the secondary branch. We'll define a required field to discard records without
+     a payment type.</li>
+
+    <li class="li">Configure a Jython Evaluator to perform custom processing that determines the credit card
+     type based on the credit card number. </li>
+
+    <li class="li">Add a Field Masker to mask credit card numbers. Use a required field to discard records
+     without credit card numbers.</li>
+
+    <li class="li">Connect both branches to a Local FS destination.</li>
+
+    <li class="li">In the secondary branch, use an Expression Evaluator to add fields to the cash records to
+     match the credit card records. Use data preview to verify the fields to add. </li>
+
+    <li class="li">Add a data rule to raise an alert if too many credit card payments are missing credit card
+     numbers.</li>
+
+    <li class="li">Start the pipeline and monitor the results.</li>
+
+   </ol>
+</div>
+
+
+ </div>
+
+<article class="topic task nested1" aria-labelledby="ariaid-title2" id="task_jmz_3dn_ls">
+    <h2 class="title topictitle2" id="ariaid-title2">Create a Pipeline and Define Pipeline Properties</h2>
+
+
+    <div class="body taskbody"><p class="shortdesc">When you configure a pipeline, you need to decide what to do with error records. You
+        can discard them or - more productively - write them to file, another pipeline, or to Kafka. </p>
+
+        <section class="section context">
+            <p class="p">Write error records to one of these locations as a convenient way to deal with error
+                records without having to stop the pipeline. </p>
+
+            <p class="p">This tutorial writes the records to a local file, but if you prefer to write error
+                records to Kafka, feel free. </p>
+
+        </section>
+
+        <ol class="ol steps" id="task_jmz_3dn_ls__steps_hsz_b2n_ls"><li class="li step stepexpand">
+                <span class="ph cmd">If you aren't already, log in to the <span class="ph">Data Collector</span>. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">From the <span class="keyword wintitle">Home</span> page or <span class="keyword wintitle">Getting Started</span>
+                    page, click <span class="ph uicontrol">Create New Pipeline</span>. </span>
+                <div class="itemgroup info">
+                    <div class="note tip"><span class="tiptitle">Tip:</span> To get to the <span class="keyword wintitle">Home</span> page, click the Home
+                        icon.</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the <span class="keyword wintitle">New Pipeline</span> window, enter a pipeline title and
+                    optional description, and choose to run the pipeline on <span class="ph">Data Collector</span>. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph uicontrol">Save</span>.</span>
+                <div class="itemgroup info">An empty canvas displays:<p class="p"><img class="image" id="task_jmz_3dn_ls__image_jnr_wtk_5s" src="../Graphics/Tutorial-Canvas.png" height="331" width="538" /></p>
+</div>
+                <div class="itemgroup info">Note a few helpful areas:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jmz_3dn_ls__table_ezq_5ys_lt" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:9.090909090909092%" /><col style="width:18.181818181818183%" /><col style="width:72.72727272727273%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d470272e302">Number</th>
+
+                                    <th class="entry cellrowborder" id="d470272e305">Name</th>
+
+                                    <th class="entry cellrowborder" id="d470272e308">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d470272e302 ">1</td>
+
+                                    <td class="entry cellrowborder" headers="d470272e305 ">Pipeline Creation Help Bar </td>
+
+                                    <td class="entry cellrowborder" headers="d470272e308 ">Indicates that the origin is missing and offers a list of
+                                        origins to choose from. <p class="p">If the Pipeline Creation Help Bar
+                                            does not display, you might have disabled it. To enable
+                                            it, in the top right corner of the <span class="ph">Data Collector</span> window, click the <span class="ph menucascade"><span class="ph uicontrol">Help</span><abbr title="and then"> &gt; </abbr><span class="ph uicontrol">Settings</span></span>. Clear the <span class="ph uicontrol">Hide Pipeline
+                                                Creation Help Bar</span> option.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d470272e302 ">2</td>
+
+                                    <td class="entry cellrowborder" headers="d470272e305 ">Issues icon</td>
+
+                                    <td class="entry cellrowborder" headers="d470272e308 ">Click to display the list of pipeline issues found by
+                                        implicit validation.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d470272e302 ">3</td>
+
+                                    <td class="entry cellrowborder" headers="d470272e305 ">Stage library panel</td>
+
+                                    <td class="entry cellrowborder" headers="d470272e308 ">Displays a list of available origins by default.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d470272e302 ">4</td>
+
+                                    <td class="entry cellrowborder" headers="d470272e305 ">Stage menu</td>
+
+                                    <td class="entry cellrowborder" headers="d470272e308 ">Changes the stages that display in the stage library.
+                                        Displays all stages by default.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d470272e302 ">5</td>
+
+                                    <td class="entry cellrowborder" headers="d470272e305 ">Properties panel / Preview panel / Monitor panel </td>
+
+                                    <td class="entry cellrowborder" headers="d470272e308 ">When you configure a pipeline, the Properties panel
+                                        displays the properties of the pipeline or selected stage.
+                                        You can resize, minimize and maximize the panel. <p class="p">When you
+                                            preview data, the Preview panel displays the input and
+                                            output data for the selected stage or group of stages.
+                                            </p>
+<p class="p">When you monitor a running pipeline, the Monitor
+                                            panel displays real-time metrics and statistics.
+                                            </p>
+<div class="note note"><span class="notetitle">Note:</span> Some icons and options might not display in
+                                            the UI. The items that display are based on the task
+                                            that you are performing and roles assigned to your user
+                                            account. </div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d470272e302 "><img class="image" id="task_jmz_3dn_ls__image_ryw_gzs_lt" src="../Graphics/icon_ConfigStageLibrary.png" height="19" width="22" /></td>
+
+                                    <td class="entry cellrowborder" headers="d470272e305 ">Stage Library icon</td>
+
+                                    <td class="entry cellrowborder" headers="d470272e308 ">Toggles the display of the Stage Library panel.</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, click the <span class="keyword wintitle">Error Records</span> tab. And
+                    for the <span class="ph uicontrol">Error Records</span> property, select <span class="ph uicontrol">Write
+                        to File</span>.</span>
+                <div class="itemgroup info">This writes error records to a file so you can deal with error records without
+                    having to stop the pipeline.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the <span class="keyword wintitle">Error Records - Write to File</span> tab and configure
+                    the following properties.</span>
+                <div class="itemgroup info">
+                    <p class="p">Use the defaults for properties that aren't listed:</p>
+
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jmz_3dn_ls__table_zvy_kfn_ls" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:27.47252747252747%" /><col style="width:72.52747252747253%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d470272e459">Write to File Property</th>
+
+                                    <th class="entry cellrowborder" id="d470272e462">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d470272e459 ">Directory</td>
+
+                                    <td class="entry cellrowborder" headers="d470272e462 ">Directory for error record files. Enter the directory
+                                        that you set up for the tutorial. We recommended:
+                                            <pre class="pre codeblock"><code>/&lt;base directory&gt;/tutorial/error</code></pre><div class="note note"><span class="notetitle">Note:</span> To
+                                            prevent validation errors, the directory must already
+                                            exist.</div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d470272e459 ">Files Prefix</td>
+
+                                    <td class="entry cellrowborder" headers="d470272e462 ">This defines a prefix for error record files. <p class="p">By default, the files are prefixed with "SDC" and an expression that
+                  returns the <span class="ph">Data Collector</span> ID, but
+                  that's more than we need here. </p>
+<p class="p">Delete the default and enter the following prefix:
+                                                <span class="ph uicontrol">err_</span></p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d470272e459 ">Max File Size</td>
+
+                                    <td class="entry cellrowborder" headers="d470272e462 ">For the tutorial, reduce the files size to something more
+                                        manageable, such as 5 or 1 MB.</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+        <section class="section result">
+            <p class="p">Now we'll start building the pipeline...</p>
+
+        </section>
+
+    </div>
+
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title3" id="task_ftt_2vq_ks">
+    <h2 class="title topictitle2" id="ariaid-title3">Configure the Origin</h2>
+
+
+    <div class="body taskbody"><p class="shortdesc">The origin represents the incoming data for the pipeline. When you configure the
+        origin, you define how to connect to the origin system, the type of data to be processed,
+        and other properties specific to the origin.</p>
+
+        <section class="section context">The <span class="ph">Data Collector</span>
+            provides a wide range of origins. We'll use the Directory origin to process the  sample
+            CSV file that you downloaded. </section>
+
+        <ol class="ol steps" id="task_ftt_2vq_ks__steps_ckz_gvq_ks"><li class="li step stepexpand">
+                <span class="ph cmd">To add the stage to the canvas, from the Pipeline Creation Help Bar, click <span class="ph menucascade"><span class="ph uicontrol">Select Origin</span><abbr title="and then"> &gt; </abbr><span class="ph uicontrol">Directory</span></span>. Or, in the Stage Library panel, click the
+                        <span class="ph uicontrol">Directory</span> origin: <img class="image" id="task_ftt_2vq_ks__image_cwb_2vt_lt" src="../Graphics/Tutorial_DirectoryIcon.png" height="13" width="17" />.</span>
+                <div class="itemgroup info">The origin displays in the canvas and the Properties panel displays the
+                    properties for the stage.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, click the <span class="keyword wintitle">Files</span> tab and configure
+                    the following properties. </span>
+                <div class="itemgroup info">
+                    <p class="p">Use the defaults for properties that aren't listed:</p>
+
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ftt_2vq_ks__table_w5c_jyq_ks" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d470272e593">Directory Property</th>
+
+                                    <th class="entry cellrowborder" id="d470272e596">Value</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d470272e593 ">Files Directory</td>
+
+                                    <td class="entry cellrowborder" headers="d470272e596 ">Directory where you saved the sample file. Enter an
+                                        absolute path.<p class="p">We recommended: <code class="ph codeph">/&lt;base
+                                                directory&gt;/tutorial/origin</code>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d470272e593 ">File Name Pattern</td>
+
+                                    <td class="entry cellrowborder" headers="d470272e596 ">The Directory origin processes only the files in the
+                                        directory that match the file name pattern. <p class="p">The tutorial
+                                            sample file name is <code class="ph codeph">nyc_taxi_data.csv</code>.
+                                            Since the file is the only file in the directory, you
+                                            can use something generic, like the asterisk wild card
+                                            (*) or *.csv.</p>
+<p class="p">If you had other .csv files in the
+                                            directory that you didn't want to process, you might be
+                                            more specific, like this:
+                                            <code class="ph codeph">nyc_taxi*.csv</code>. </p>
+<p class="p">Or if you want to
+                                            process files with prefixes for other cities, you might
+                                            use <code class="ph codeph">*taxi*.csv</code>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d470272e593 ">Read Order</td>
+
+                                    <td class="entry cellrowborder" headers="d470272e596 ">This determines the read order when the directory
+                                        includes multiple files. You can read based on the
+                                        last-modified timestamp or file name. Because it's simpler,
+                                        let's use <span class="ph uicontrol">Last Modified Timestamp</span>.
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the <span class="keyword wintitle">Data Formats</span> tab, and configure the following
+                    properties.</span>
+                <div class="itemgroup info">
+                    <p class="p">Use the defaults for properties that aren't listed:</p>
+
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ftt_2vq_ks__table_hnn_d15_lt" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d470272e683">Delimited Property</th>
+
+                                    <th class="entry cellrowborder" id="d470272e686">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d470272e683 ">Data Format</td>
+
+                                    <td class="entry cellrowborder" headers="d470272e686 ">The data in the sample file is delimited, so select
+                                            <span class="ph uicontrol">Delimited</span>.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d470272e683 ">Delimiter Format Type</td>
+
+                                    <td class="entry cellrowborder" headers="d470272e686 ">Since the sample file is a standard CSV file, use the
+                                        default: <span class="ph uicontrol">Default CSV (ignores empty
+                                            lines)</span>.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d470272e683 ">Header Line</td>
+
+                                    <td class="entry cellrowborder" headers="d470272e686 ">The sample file includes a header, so select
+                                            <span class="ph uicontrol">With Header Line</span>.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d470272e683 ">Root Field Type</td>
+
+                                    <td class="entry cellrowborder" headers="d470272e686 ">This property determines how the <span class="ph">Data Collector</span> processes delimited data. Use the default
+                                            <span class="ph uicontrol">List-Map</span>. <p class="p">This allows you to
+                                            use standard functions to process delimited data. With
+                                            the List root field type, you need to use delimited data
+                                            functions.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+        <section class="section result">This is how the stage and pipeline should look at this point:<p class="p"><img class="image" id="task_ftt_2vq_ks__image_kj1_c5f_4s" src="../Graphics/Tutorial-Directory.png" height="466" width="735" /></p>
+<p class="p">Notice the error icons on the page. When you hover over the Directory error
+                icon or click the Issues icon, a validation message states that the origin has open
+                streams - that means that it's not connected to anything yet. We'll take care of
+                that next.</p>
+</section>
+
+    </div>
+
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title4" id="task_xb5_2sf_4s">
+    <h2 class="title topictitle2" id="ariaid-title4">Preview Data </h2>
+
+
+    <div class="body taskbody"><p class="shortdesc">To become more familiar with the data set and gather some important details for
+        pipeline configuration, let's preview the source data.</p>
+
+        <section class="section context">
+            <div class="p">Here are some key details that we need to configure the pipeline: <ul class="ul" id="task_xb5_2sf_4s__ul_a41_hvh_4s">
+                    <li class="li">The field that contains payment information - We'll use this to route data
+                        in the Stream Selector. </li>
+
+                    <li class="li">The field that contains credit card numbers - We'll use this to mask the
+                        data in the Field Masker.</li>
+
+                </ul>
+</div>
+
+            <p class="p">When you access data in a field, you specify the field path for the field. The field
+                path depends on the complexity of the record: <code class="ph codeph">/&lt;fieldname&gt;</code> for
+                simple records and <code class="ph codeph">&lt;path to field&gt;/&lt;fieldname&gt;</code> for more
+                complex records.  </p>
+
+            <p class="p">Because we're using the List-Map root field type, we can use
+                    <code class="ph codeph">/&lt;fieldname&gt;</code>. </p>
+
+            <p class="p">To start data preview, all stages must be connected and all required properties
+                defined - though not necessarily correctly. Since the origin is configured and the
+                only stage, the pipeline should be ready to preview as is. </p>
+
+        </section>
+
+        <ol class="ol steps" id="task_xb5_2sf_4s__steps_jxv_fpf_4s"><li class="li step stepexpand">
+                <span class="ph cmd">Above the pipeline canvas, click the <span class="ph uicontrol">Preview</span> icon:
+                        <img class="image" id="task_xb5_2sf_4s__image_x4k_njp_rs" src="../Graphics/icon_Preview.png" height="13" width="17" />.</span>
+                <div class="itemgroup info">If the icon is not enabled, make sure you completed all the previous steps for
+                    the tutorial. If more than one issue displays in the list, correct any issue
+                    except Validation_0011. <p class="p">Validation_0011 just indicates that Directory origin
+                        isn't connected to anything yet and does not prevent data
+                    preview.</p>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the <span class="keyword wintitle">Preview Configuration</span> dialog box, configure the
+                    following properties. </span>
+                <div class="itemgroup info">
+                    <p class="p">Use the defaults for properties that aren't listed:</p>
+
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xb5_2sf_4s__table_z2x_325_lt" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d470272e851">Data Preview Property</th>
+
+                                    <th class="entry cellrowborder" id="d470272e854">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d470272e851 ">Preview Source</td>
+
+                                    <td class="entry cellrowborder" headers="d470272e854 ">Use the default <span class="ph uicontrol">Configured Source</span>
+                                        to use the sample source data.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d470272e851 ">Write to Destinations and Executors</td>
+
+                                    <td class="entry cellrowborder" headers="d470272e854 ">By default, this property is not selected. In general,
+                                        you should keep this property clear to avoid writing data to
+                                        destination systems or triggering tasks in destination
+                                        systems.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d470272e851 ">Show Field Type</td>
+
+                                    <td class="entry cellrowborder" headers="d470272e854 ">By default, this property is selected. Keep it selected
+                                        to see the data type of fields in the record. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d470272e851 ">Remember the Configuration</td>
+
+                                    <td class="entry cellrowborder" headers="d470272e854 ">Select to use these properties each time you run data
+                                        preview. <p class="p">When you select this option, the UI enters data
+                                            preview without showing this dialog box again.
+                                        </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph uicontrol">Run Preview</span>.</span>
+                <div class="itemgroup stepresult">The Preview Panel displays a list of 10 output records for Directory in
+                    list view. If you drill down a bit, you see that the each record displays an
+                    ordered list of field names and values with the data type of each field.
+                        <p class="p">Because the data is read from a file, all fields are
+                            strings:</p>
+<p class="p"><img class="image" id="task_xb5_2sf_4s__image_fyd_454_15" src="../Graphics/Tutorial-PreviewFirst.png" height="202" width="488" /></p>
+<p class="p">Note that in the Preview panel,
+                        the preview records display on the <span class="keyword wintitle">Records</span> tab: <img class="image" id="task_xb5_2sf_4s__image_czm_lsl_zt" src="../Graphics/icon_PrevRecords.png" height="16" width="19" />. To review or change properties, use the <span class="keyword wintitle">Stage
+                            Configuration</span> tab: <img class="image" id="task_xb5_2sf_4s__image_gf2_kx1_tt" src="../Graphics/icon_PrevStageConfig.png" height="12" width="15" />. To change preview properties, use the <span class="keyword wintitle">Preview
+                            Configuration</span> tab: <img class="image" id="task_xb5_2sf_4s__image_a3l_mx1_tt" src="../Graphics/icon_PrevPreviewConfig.png" height="16" width="19" />.</p>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For a full view of the data, click the <span class="ph uicontrol">Table View</span> icon:
+                        <img class="image" id="task_xb5_2sf_4s__image_zxq_1zf_4s" src="../Graphics/icon_PrevTableView.png" height="12" width="16" />.</span>
+                <div class="itemgroup info">The Preview panel displays the first several columns of data. <p class="p"><img class="image" id="task_xb5_2sf_4s__image_d1m_yzf_4s" src="../Graphics/Tutorial-PreviewDirectory.png" height="381" width="782" /></p>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To view all columns, click <span class="ph uicontrol">Show All</span>.</span>
+                <div class="itemgroup info">If you scroll to the right, you can verify that the
+                        <span class="ph uicontrol">credit_card</span> field contains credit card numbers for
+                    the first three records. When you scroll back to the
+                        <span class="ph uicontrol">payment_type</span> field, notice this corresponds to
+                    records where the payment type is "CRD".</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Now that we have the information that we need, click the <span class="ph uicontrol">Close
+                        Preview</span> icon: <img class="image" id="task_xb5_2sf_4s__image_zs2_2bg_4s" src="../Graphics/icon_PrevClose.png" height="13" width="16" />.</span>
+            </li>
+</ol>
+
+        <section class="section result">Now we know the following: <ul class="ul" id="task_xb5_2sf_4s__ul_glg_yj1_mt">
+                <li class="li">Payment type information is in the <span class="ph uicontrol">payment_type </span>field and
+                    credit card information is in the <span class="ph uicontrol">credit_card</span> field.</li>
+
+                <li class="li">To use these fields in expressions, we'll use their field paths:
+                        <span class="ph uicontrol">/payment_type</span> and
+                    <span class="ph uicontrol">/credit_card</span>. </li>
+
+                <li class="li">To route records paid by credit card, we'll look for records where the payment
+                    type is "CRD". </li>
+
+            </ul>
+</section>
+
+    </div>
+
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title5" id="task_br5_rzq_ks">
+    <h2 class="title topictitle2" id="ariaid-title5">Route Data with the Stream Selector</h2>
+
+
+    <div class="body taskbody"><p class="shortdesc">To route data to different streams for processing, we use the Stream Selector
+        processor.</p>
+
+        <section class="section context"><p class="p">The Stream Selector routes data to different streams based on user-defined
+                conditions. Any data not captured by a user-defined condition routes to the default
+                stream.</p>
+<p class="p">We'll route credit card transactions to a credit card stream for
+                processing. All other transactions will go to the default stream.</p>
+<p class="p">We'll also
+                define a required field to drop records with no payment type. When you define a
+                required field, a record must include data for the specified field to enter the
+                stage. Records that don't include data in required fields are sent to the pipeline
+                for error handling. If you configured the pipeline to write to file, that's where
+                error records go. </p>
+To represent data in a field, we use the
+                <code class="ph codeph">record:value</code> function. This returns field values associated with
+            the field.<div class="p">To capture records with credit card payments, use the following condition:
+                <pre class="pre codeblock"><code>${record:value('/payment_type') == 'CRD'}</code></pre></div>
+<p class="p">Note that we
+                enclose expressions in a dollar sign and curly brackets. You can use single or
+                double quotation marks around strings. For more information about the expression
+                language, see <a class="xref" href="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq">Expression Language</a>.</p>
+</section>
+
+        <ol class="ol steps" id="task_br5_rzq_ks__steps_xhx_3rk_ls"><li class="li step stepexpand">
+                <span class="ph cmd">From the Pipeline Creation Help Bar, click <span class="ph menucascade"><span class="ph uicontrol">Select Processor to Connect</span><abbr title="and then"> &gt; </abbr><span class="ph uicontrol">Stream Selector</span></span>. Or, in the Stage Library panel, select the <span class="ph uicontrol">Stream
+                        Selector</span> processor (<img class="image" id="task_br5_rzq_ks__image_rt1_3m1_mt" src="../Graphics/Tutorial_SSelector_icon.png" height="20" width="20" />) and connect the Directory origin to it. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">General</span> tab, click in the <span class="ph uicontrol">Required
+                        Fields</span> text box. </span>
+                <div class="itemgroup info">A list of available fields displays because you already performed data
+                    preview. It also displays when the pipeline is valid for data preview. </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To discard records with no payment type information, select the following
+                    field: <span class="ph uicontrol">/payment_type</span>.</span>
+                <div class="itemgroup info">If a list does not appear, you can manually enter the field path:
+                    /payment_type.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To configure the Stream Selector condition, click the
+                        <span class="ph uicontrol">Conditions</span> tab.</span>
+                <div class="itemgroup info">A condition for the default stream displays. The default stream represents any
+                    records not captured by other conditions.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the <span class="ph uicontrol">Add</span> icon: <img class="image" id="task_br5_rzq_ks__image_snw_l5p_15" src="../Graphics/icon_ConfigAddIcon.png" height="15" width="15" />.</span>
+                <div class="itemgroup info">A condition text box displays in the Property panel, and the corresponding
+                    output location appears on the stage in the canvas.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">The following condition captures records where a credit card is used for
+                    payment. You can copy and paste the expression, but try typing it in to see how
+                    the expression completion feature helps you select the function and ensure valid
+                    syntax.</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock"><code>${record:value('/payment_type') == 'CRD'}</code></pre>
+                </div>
+                <div class="itemgroup info">All records that match this condition pass to the first output stream. All
+                    other records are captured by the default condition and passed through the
+                    second output stream.</div>
+            </li>
+</ol>
+
+        <section class="section result">The Stream Selector should look like this:<p class="p"><img class="image" id="task_br5_rzq_ks__image_t1s_png_4s" src="../Graphics/Tutorial-StreamSelector.png" height="286" width="684" /></p>
+</section>
+
+    </div>
+
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title6" id="task_cdx_kfm_ls">
+    <h2 class="title topictitle2" id="ariaid-title6">Use Jython for Card Typing</h2>
+
+
+    <div class="body taskbody"><p class="shortdesc"> Next, we'll evaluate credit card numbers to determine the credit card type. You can
+        use an Expression Evaluator to do the same calculations, but with a short script, the Jython
+        Evaluator is easier.</p>
+
+        <section class="section context">
+            <p class="p">You can use custom scripts with the JavaScript Evaluator and the Jython Evaluator to
+                perform processing that is not easily performed using other <span class="ph">Data Collector</span> processors. When using scripts to handle list-map data, the script must treat the
+                data as maps.</p>
+
+            <p class="p">The Jython script that we provide creates an additional field, credit_card_type, and
+                generates the credit card type by evaluating the first few digits of the credit card
+                number. The script returns an error message if the record has a credit card payment
+                type without a corresponding credit card number. </p>
+
+        </section>
+
+        <ol class="ol steps" id="task_cdx_kfm_ls__steps_lnv_lfm_ls"><li class="li step stepexpand">
+                <span class="ph cmd">Add a <span class="ph uicontrol">Jython Evaluator</span> processor to the canvas.</span>
+                <div class="itemgroup info">
+                    <p class="p">If the Jython Evaluator processor isn’t listed in the stage library, you’ll
+                        need to install the Jython stage library first. By default, a full <span class="ph">Data Collector</span> installation includes the Jython stage library. The core installation
+                        does not include the Jython stage library.</p>
+
+                </div>
+                <ol type="a" class="ol substeps" id="task_cdx_kfm_ls__substeps_yhd_f2z_1bb">
+                    <li class="li substep substepexpand">
+                        <span class="ph cmd">In the <span class="ph">Data Collector</span> top right toolbar, click the <span class="ph uicontrol">Package Manager</span>
+                            icon:</span>
+                        <div class="itemgroup info"><img class="image" id="task_cdx_kfm_ls__image_nw1_2gz_d1b" src="../Graphics/PackageManager-iconrow.png" height="26" width="200" /></div>
+                    </li>
+
+                    <li class="li substep substepexpand">
+                        <span class="ph cmd">In the Package Manager search field, type “jy” so that the Package
+                            Manager displays the Jython stage library:</span>
+                        <div class="itemgroup info"><img class="image" id="task_cdx_kfm_ls__image_l2r_hfz_1bb" src="../Graphics/Tutorial_JythonStageLib.png" height="265" width="667" /></div>
+                    </li>
+
+                    <li class="li substep substepexpand">
+                        <span class="ph cmd">Select the library, click the <span class="ph uicontrol">Install</span> icon
+                                (<img class="image" id="task_cdx_kfm_ls__image_zmh_lfz_1bb" src="../Graphics/icon_InstallLib.png" height="16" width="16" />), and then click
+                                <span class="ph uicontrol">Install</span> to confirm your choice.</span>
+                        <div class="itemgroup info"><span class="ph">Data Collector</span> installs the external library and displays a message offering to
+                                restart <span class="ph">Data Collector</span>. </div>
+                    </li>
+
+                    <li class="li substep substepexpand">
+                        <span class="ph cmd">Click <span class="ph uicontrol">Restart Data Collector</span>.</span>
+                    </li>
+
+                    <li class="li substep substepexpand">
+                        <span class="ph cmd">After <span class="ph">Data Collector</span> restarts, open the tutorial pipeline in the canvas and then add a
+                            Jython Evaluator processor to the canvas.</span>
+                    </li>
+
+                </ol>
+
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Connect the first output location of the Stream Selector to the Jython
+                    Evaluator.</span>
+                <div class="itemgroup info">This routes records paid by credit card to the Jython Evaluator. </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">With the Jython Evaluator selected, in the Properties panel, click the
+                        <span class="keyword wintitle">Jython</span> tab. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the default <span class="ph uicontrol">Batch by Batch</span> record processing mode to
+                    process data in batches, instead of record by record. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the <span class="ph uicontrol">Script</span> text box, review the information in the
+                    comments, then delete it. Paste in the following script: </span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock"><code>try:
+  for record in records:
+    cc = record.value['credit_card']
+    if cc == '':
+      error.write(record, "Payment type was CRD, but credit card was null")
+      continue
+
+    cc_type = ''
+    if cc.startswith('4'):
+      cc_type = 'Visa'
+    elif cc.startswith(('51','52','53','54','55')):
+      cc_type = 'MasterCard'
+    elif cc.startswith(('34','37')):
+      cc_type = 'AMEX'
+    elif cc.startswith(('300','301','302','303','304','305','36','38')):
+      cc_type = 'Diners Club'
+    elif cc.startswith(('6011','65')):
+      cc_type = 'Discover'
+    elif cc.startswith(('2131','1800','35')):
+      cc_type = 'JCB'
+    else:
+      cc_type = 'Other'
+
+    record.value['credit_card_type'] = cc_type
+
+    output.write(record)
+except Exception as e:
+  error.write(record, e.message)</code></pre>
+                    <div class="p">
+                        <div class="note note"><span class="notetitle">Note:</span> Incorrect indentation can cause Jython validation errors. For best
+                            results, copy the script from the online help. Copying the script from
+                            the PDF can result in incorrect indentation.<p class="p">To launch
+                                context-sensitive help, click the <span class="ph uicontrol">Help</span> icon
+                                in the Properties panel. Then in the table of contents, scroll down
+                                to find the Data Collector Tutorial chapter &gt; Basic Tutorial &gt; Use
+                                Jython for Card Typing. </p>
+</div>
+
+                    </div>
+
+                </div>
+            </li>
+</ol>
+
+        <section class="section result">In the Jython Evaluator, the script should look like this:<p class="p"><img class="image" id="task_cdx_kfm_ls__image_jt1_4ch_4s" src="../Graphics/Tutorial-Jython.png" height="406" width="490" /></p>
+</section>
+
+    </div>
+
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title7" id="task_qbw_d3m_ls">
+    <h2 class="title topictitle2" id="ariaid-title7">Mask Credit Card Numbers</h2>
+
+
+    <div class="body taskbody"><p class="shortdesc"> Now let's prevent sensitive information from reaching internal databases by using a
+        Field Masker to mask the credit card numbers. </p>
+
+        <section class="section context">
+            <p class="p">The Field Masker provides fixed and variable-length masks to mask all data in a
+                field. To reveal specified positions in the data, you can use custom mask. To reveal
+                a group of positions within the data, you can use a regular expression mask to
+                define the structure of the data and then reveal one or more groups.</p>
+
+            <div class="p">For the credit card numbers, we'll use the following regular expression to mask all
+                but the last four digits:<pre class="pre codeblock"><code>(.*)([0-9]{4})</code></pre></div>
+
+            <p class="p">The regular expression defines two groups so we can reveal the second group.</p>
+
+        </section>
+
+        <ol class="ol steps" id="task_qbw_d3m_ls__steps_wwy_fjm_ls"><li class="li step stepexpand">
+                <span class="ph cmd">Add a <span class="ph uicontrol">Field Masker</span> processor to the canvas and connect
+                    the Jython Evaluator to it. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, click the <span class="keyword wintitle">Mask</span> tab.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click in the <span class="ph uicontrol">Fields to Mask</span> field. Scroll through the
+                    list of fields and select the field that represents credit card data:
+                        <span class="ph uicontrol">/credit_card</span>. </span>
+                <div class="itemgroup info">A list of fields displays when the pipeline is valid for data preview. If the
+                    list does not display, you can enter the field path manually.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To use a regular expression as a mask and display the last 4 digits of the
+                    credit card number, configure the rest of the properties as follows:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_qbw_d3m_ls__table_ejl_msm_ls" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:28.49002849002849%" /><col style="width:71.5099715099715%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d470272e1408">Field Masker Property</th>
+
+                                    <th class="entry cellrowborder" id="d470272e1411">Configuration</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d470272e1408 ">Mask Type</td>
+
+                                    <td class="entry cellrowborder" headers="d470272e1411 ">Regular Expression</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d470272e1408 ">Regular Expression</td>
+
+                                    <td class="entry cellrowborder" headers="d470272e1411 ">
+                                        <code class="ph codeph">(.*)([0-9]{4})</code></td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d470272e1408 ">Groups to Show</td>
+
+                                    <td class="entry cellrowborder" headers="d470272e1411 ">2</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+        <section class="section result">Here's how the Field Masker should look in the pipeline:<p class="p"><img class="image" id="task_qbw_d3m_ls__image_v1y_35q_ps" src="../Graphics/Tutorial-FieldMasker.png" height="397" width="616" /></p>
+</section>
+
+    </div>
+
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title8" id="task_wsj_5tm_ls">
+    <h2 class="title topictitle2" id="ariaid-title8">Write to the Destination</h2>
+
+
+    <div class="body taskbody"><p class="shortdesc">The <span class="ph">Data Collector</span> can
+        write data to many destinations. The Local FS destination writes to files in a local file
+        system. </p>
+
+        <section class="section context">
+            <p class="p">When you configure the Local FS destination, you define the directory template. This
+                determines the naming convention for the output directories that are created. </p>
+
+        </section>
+
+        <ol class="ol steps" id="task_wsj_5tm_ls__steps_xdd_wwm_ls"><li class="li step stepexpand">
+                <span class="ph cmd">Add a <span class="ph uicontrol">Local FS</span> destination to the canvas and connect the
+                    Field Masker to it.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the <span class="keyword wintitle">Output Files</span> tab and configure the following
+                    properties. </span>
+                <div class="itemgroup info">
+                    <p class="p">Use the defaults for properties that aren't listed:</p>
+
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wsj_5tm_ls__table_kcy_5bn_ls" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:29.49852507374631%" /><col style="width:70.50147492625369%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d470272e1520">Local FS Property</th>
+
+                                    <th class="entry cellrowborder" id="d470272e1523">Configuration</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d470272e1520 ">Files Prefix</td>
+
+                                    <td class="entry cellrowborder" headers="d470272e1523 ">Defines a prefix for output file names.<p class="p">By default, the files are prefixed with "SDC" and an expression that
+                  returns the <span class="ph">Data Collector</span> ID, but
+                  that's more than we need here. </p>
+Let's simplify and use "out_" instead.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d470272e1520 ">Directory Template</td>
+
+                                    <td class="entry cellrowborder" headers="d470272e1523 ">By default, the directory template includes datetime
+                                        variables to create a directory structure for output files.
+                                        This is intended for writing large volumes of data. <p class="p">Since
+                                            we only have the sample file to process, we don't need
+                                            the datetime variables. Go ahead and delete the default
+                                            and enter the directory where you want the files to be
+                                            written. </p>
+<p class="p">We suggested: <code class="ph codeph">/&lt;base
+                                                directory&gt;/tutorial/destination</code>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d470272e1520 ">Max File Size (MB)</td>
+
+                                    <td class="entry cellrowborder" headers="d470272e1523 ">For the tutorial, let's lower the file size to something
+                                        manageable, like 5 or 1.</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the <span class="keyword wintitle">Data Format</span> tab, and configure the following
+                    properties. </span>
+                <div class="itemgroup info">
+                    <p class="p">Use the defaults for properties that aren't listed:</p>
+
+                    <div class="simpletable-container"><table cellpadding="4" cellspacing="0" summary="" id="task_wsj_5tm_ls__simpletable_jyj_2vq_ps" border="1" class="simpletable"><col style="width:50%" /><col style="width:50%" /><thead><tr class="sthead">
+                            <th style="vertical-align:bottom;text-align:left;" id="d470272e1592" class="stentry">Delimited Property</th>
+
+                            <th style="vertical-align:bottom;text-align:left;" id="d470272e1595" class="stentry">Configuration</th>
+
+                        </tr>
+</thead><tbody><tr class="strow">
+                            <td style="vertical-align:top;" headers="d470272e1592" class="stentry">Data Format</td>
+
+                            <td style="vertical-align:top;" headers="d470272e1595" class="stentry">Delimited</td>
+
+                        </tr>
+<tr class="strow">
+                            <td style="vertical-align:top;" headers="d470272e1592" class="stentry">Header Line</td>
+
+                            <td style="vertical-align:top;" headers="d470272e1595" class="stentry">With Header Line</td>
+
+                        </tr>
+</tbody></table>
+</div>
+                </div>
+            </li>
+</ol>
+
+        <section class="section result">This completes the primary branch:<p class="p"><img class="image" id="task_wsj_5tm_ls__image_vkl_sgm_bbb" src="../Graphics/Tutorial-LocalFS.png" height="70" width="554" /></p>
+<p class="p"> Now, we'll go back to the Stream
+                Selector and complete the secondary branch.</p>
+</section>
+
+    </div>
+
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title9" id="task_wgb_t4p_ms">
+    <h2 class="title topictitle2" id="ariaid-title9">Add a Corresponding Field with the Expression Evaluator</h2>
+
+
+    <div class="body taskbody"><p class="shortdesc">The Jython Evaluator script added a new field to the credit payments branch. To
+        ensure all records have the same structure, we'll use the Expression Evaluator to add the
+        same field to the non-credit branch. </p>
+
+        <section class="section context">
+            <p class="p">This ensures that all records have the same format when written to the
+                destination.</p>
+
+            <p class="p">To do this, let's use data preview to verify how the Jython Evaluator adds the credit
+                card type to records.</p>
+
+        </section>
+
+        <ol class="ol steps" id="task_wgb_t4p_ms__steps_mr4_2pp_ms"><li class="li step stepexpand">
+                <span class="ph cmd">Click the <span class="ph uicontrol">Preview</span> icon. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the pipeline, click the <span class="ph uicontrol">Jython Evaluator</span> to view the
+                    output of that processor.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Expand the first output record, scroll down, and notice the new field
+                    highlighted in green: <span class="ph uicontrol">/credit_card_type</span>.</span>
+                <div class="itemgroup info"><img class="image" id="task_wgb_t4p_ms__image_h4c_d4h_4s" src="../Graphics/Tutorial-Exp-JythonPreview.png" height="243" width="551" /></div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph uicontrol">Close Preview</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Add an <span class="ph uicontrol">Expression Evaluator</span> processor to the canvas and
+                    connect the second, default stream of the <span class="ph uicontrol">Stream Selector</span>
+                    to it.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the <span class="keyword wintitle">Expressions</span> tab.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Configure the following <span class="ph uicontrol">Field Expression</span>
+                    properties:</span>
+                <div class="itemgroup info">
+                    <div class="simpletable-container"><table cellpadding="4" cellspacing="0" summary="" id="task_wgb_t4p_ms__simpletable_xdm_rcr_ps" border="1" class="simpletable"><col style="width:50%" /><col style="width:50%" /><thead><tr class="sthead">
+                            <th style="vertical-align:bottom;text-align:left;" id="d470272e1730" class="stentry">Output Field</th>
+
+                            <th style="vertical-align:bottom;text-align:left;" id="d470272e1733" class="stentry">Expression</th>
+
+                        </tr>
+</thead><tbody><tr class="strow">
+                            <td style="vertical-align:top;" headers="d470272e1730" class="stentry">/credit_card_type</td>
+
+                            <td style="vertical-align:top;" headers="d470272e1733" class="stentry">n/a</td>
+
+                        </tr>
+</tbody></table>
+</div>
+                </div>
+                <div class="itemgroup info">This creates a credit_card_type field that indicates the information is not
+                    applicable.</div>
+                <div class="itemgroup info">Since we're using "n/a" as a constant for the expression, we don't need to use
+                    the dollar sign and brackets for the expression. But if we wanted to use them,
+                    we could define them as ${'credit_card_type'} and ${'N/A'}. </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Link the Expression Evaluator to the Local FS destination. </span>
+                <div class="itemgroup info">This streams the data from this branch to the destination, merging data from
+                    both branches: <p class="p"><img class="image" id="task_wgb_t4p_ms__image_adv_r2r_ps" src="../Graphics/Tutorial-Expression.png" height="238" width="493" /></p>
+</div>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title10" id="task_ets_dkj_ps">
+    <h2 class="title topictitle2" id="ariaid-title10">Create a Data Rule and Alert</h2>
+
+
+    <div class="body taskbody"><p class="shortdesc">Now before we run the basic pipeline, let's add a data rule and alert. Data rules are
+        user-defined rules used to inspect data moving between two stages. They are a powerful way
+        to look for outliers and anomalous data. </p>
+
+        <section class="section context">
+            <p class="p">Data rules and alerts require a detailed understanding of the data passing through
+                the pipeline. For more general pipeline monitoring information, you can use metric
+                rules and alerts.</p>
+
+            <p class="p">The script in the Jython Evaluator creates error records for credit card transactions
+                without credit card numbers. We can create a data rule and alert to let us know when
+                the record count reaches a specified threshold. </p>
+
+            <p class="p">We'll use an expression with the record:value() function to identify when the credit
+                card number field, <code class="ph codeph">/credit_card</code>, is null. The function returns the
+                data in the specified field. </p>
+
+        </section>
+
+        <ol class="ol steps" id="task_ets_dkj_ps__steps_cw5_qqj_ps"><li class="li step stepexpand">
+                <span class="ph cmd">Between the <span class="ph uicontrol">Stream Selector</span> and the <span class="ph uicontrol">Jython
+                        Evaluator</span>, select the link or Data Inspection icon: <img class="image" id="task_ets_dkj_ps__image_qfg_txj_5s" src="../Graphics/icon_ConfigLink.png" height="15" width="29" />.</span>
+                <div class="itemgroup info">The <span class="keyword wintitle">Data Rules</span> tab displays in the Preview panel. </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph uicontrol">Add</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the <span class="keyword wintitle">Data Rule</span> dialog box, configure the following
+                    properties. </span>
+                <div class="itemgroup info">
+                    <p class="p">Use the defaults for properties that aren't listed:</p>
+
+                    <div class="simpletable-container"><table cellpadding="4" cellspacing="0" summary="" id="task_ets_dkj_ps__simpletable_z34_ctj_ps" border="1" class="simpletable"><col style="width:30.3951367781155%" /><col style="width:69.6048632218845%" /><thead><tr class="sthead">
+                            <th style="vertical-align:bottom;text-align:left;" id="d470272e1847" class="stentry">Data Rule Property</th>
+
+                            <th style="vertical-align:bottom;text-align:left;" id="d470272e1850" class="stentry">Description</th>
+
+                        </tr>
+</thead><tbody><tr class="strow">
+                            <td style="vertical-align:top;" headers="d470272e1847" class="stentry">Label</td>
+
+                            <td style="vertical-align:top;" headers="d470272e1850" class="stentry">Missing Card Numbers</td>
+
+                        </tr>
+<tr class="strow">
+                            <td style="vertical-align:top;" headers="d470272e1847" class="stentry">Condition</td>
+
+                            <td style="vertical-align:top;" headers="d470272e1850" class="stentry">${record:value("/credit_card") == ""}</td>
+
+                        </tr>
+<tr class="strow">
+                            <td style="vertical-align:top;" headers="d470272e1847" class="stentry">Sampling Percentage</td>
+
+                            <td style="vertical-align:top;" headers="d470272e1850" class="stentry">35</td>
+
+                        </tr>
+<tr class="strow">
+                            <td style="vertical-align:top;" headers="d470272e1847" class="stentry">Alert Text</td>
+
+                            <td style="vertical-align:top;" headers="d470272e1850" class="stentry">At least 10 missing credit card numbers!</td>
+
+                        </tr>
+<tr class="strow">
+                            <td style="vertical-align:top;" headers="d470272e1847" class="stentry">Threshold Value</td>
+
+                            <td style="vertical-align:top;" headers="d470272e1850" class="stentry">10</td>
+
+                        </tr>
+</tbody></table>
+</div>
+                    <p class="p">This creates an alert that goes off after finding ten records that don't
+                        include credit card numbers in the credit card payment stream.</p>
+
+                    <div class="note note"><span class="notetitle">Note:</span> With a larger data set, a smaller sampling percentage and higher threshold
+                        value might be appropriate, but we'll use these numbers for the purposes of
+                        the tutorial.</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph uicontrol">Save</span>.</span>
+                <div class="itemgroup info">The rule displays in the data rule list. And the Data Inspection icon darkens
+                    to show that a data rule is configured for the stream.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To enable the data rule and alert, click <span class="ph uicontrol">Active</span>. </span>
+                <div class="itemgroup info">Notice the Data Inspection icon becomes a darker grey to show that a data rule
+                    is active on the stream.</div>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title11" id="task_m21_dyj_ps">
+    <h2 class="title topictitle2" id="ariaid-title11">Run the Basic Pipeline</h2>
+
+
+    <div class="body taskbody"><p class="shortdesc">Now that the basic pipeline is complete, you can start it by clicking the
+            <span class="ph uicontrol">Start</span> icon: <img class="image" id="image_lgp_rxp_ts" src="../Graphics/icon_ConfigStartPipeline.png" height="18" width="16" />.</p>
+
+        <section class="section context">The UI enters Monitor mode and shows summary statistics in the Monitor panel. At
+            some point as the pipeline runs, the data alert triggers and the location of the
+            triggered data alert turns red:<p class="p"><img class="image" id="task_m21_dyj_ps__image_gc3_vyr_ps" src="../Graphics/Tutorial-RunPipeline.png" height="426" width="708" /></p>
+Click the data alert icon to view the data
+            alert notification. Then, close the notification and explore the information available
+            in the Monitor panel.<p class="p">Note that when you select an unused part of the canvas, the
+                Monitor panel displays monitoring information for the entire pipeline. When you
+                select a stage, it displays information for the stage. </p>
+<p class="p">The Jython Evaluator
+                shows 40 error records. Click the error records number to see the list of cached
+                error records and related error messages. </p>
+<p class="p">You can also select the red Data
+                Inspection icon to view information about the data alert and view the error records
+                associated with the data alert.</p>
+<p class="p">To continue with the extended tutorial, stop
+                the pipeline. </p>
+<p class="p">If you like, you can use data preview to step through the
+                pipeline to review how each stage processes the data. But if you hang in there, you
+                can do it with us in the extended tutorial. </p>
+</section>
+
+    </div>
+
+</article>
+</article>
+</article></main></div>
+
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script>
+  </div>
+</nav>
+
+
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
+</html>

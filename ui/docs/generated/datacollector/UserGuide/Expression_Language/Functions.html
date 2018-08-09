@@ -1,0 +1,3047 @@
+
+<!DOCTYPE html
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="The following table lists all available functions. For details about each function, see the related function type: Function Type Functions Record functions record:attribute(&lt;attribute name&gt;) ..." /><meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Functions" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Expression_Language/Constants.html" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_lhz_pyp_1r" /><title>Functions</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_lhz_pyp_1r-d46e130197" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018042310" />
+
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018042310" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+
+
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+
+
+
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+
+                </div>
+
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+
+
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref" data-id="concept_pvm_yt3_wq"><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li class="active"><span class="topicref" data-id="concept_lhz_pyp_1r"><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/Functions.html#concept_lhz_pyp_1r">Functions</a></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq" title="Expression Language"></a></span>
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Expression_Language/Constants.html" title="Constants"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e4414" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e6481" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13895" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e18499" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e20154" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22651" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e24466" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e64169" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e77391" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e92871" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e98772" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e102096" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e106011" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e108837" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e109636" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e110218" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e111818" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e112299" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e113641" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e114610" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e117238" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e118495" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e120286" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e124782" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e125996" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e129904" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e129959" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e130119" class="topicref" data-id="concept_pvm_yt3_wq" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_p54_4kl_vq-d46e130141" class="topicref" data-id="concept_p54_4kl_vq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq">Expression Language</a></span></span></li>
+         <li class="active"><span data-tocid="concept_lhz_pyp_1r-d46e130197" class="topicref" data-id="concept_lhz_pyp_1r" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/Functions.html#concept_lhz_pyp_1r">Functions</a></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_p1z_ggv_1r-d46e130350" class="topicref" data-id="concept_p1z_ggv_1r" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/Functions.html#concept_p1z_ggv_1r">Record Functions</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Use record functions to determine information about a record, such as the stage that   created it or whether a field exists
+                              in the record.
+
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_s2c_q14_fs-d46e130375" class="topicref" data-id="concept_s2c_q14_fs" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/Functions.html#concept_s2c_q14_fs">Delimited Data Record Functions</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Use delimited data record functions to process delimited data with the list root field   type. If you configured an origin
+                              to process the delimited data with the list-map root field type,   you can use standard record functions.
+
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_ndj_43v_1r-d46e130410" class="topicref" data-id="concept_ndj_43v_1r" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/Functions.html#concept_ndj_43v_1r">Error Record Functions</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Error record functions provide information about error records. Use error functions to   process error records.</p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_ylk_v44_jw-d46e130455" class="topicref" data-id="concept_ylk_v44_jw" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/Functions.html#concept_ylk_v44_jw">Base64 Functions</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Use Base64 functions to encode or decode data using Base64.</p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_yvc_3qs_r1b-d46e130510" class="topicref" data-id="concept_yvc_3qs_r1b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/Functions.html#concept_yvc_3qs_r1b">Credential Functions</a></span></span></li>
+               <li><span data-tocid="concept_hpn_xfk_p5-d46e130572" class="topicref" data-id="concept_hpn_xfk_p5" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/Functions.html#concept_hpn_xfk_p5">Data Drift Functions</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Use data drift functions to create alerts when data drift occurs. You can use these         functions in data drift rules.</p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_gfs_w55_3cb-d46e130648" class="topicref" data-id="concept_gfs_w55_3cb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/Functions.html#concept_gfs_w55_3cb">Field Functions</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can use field functions in field path expressions that determine the set of         fields that a processor uses. Each
+                              function is evaluated against a set of matching fields         individually.
+
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_kxj_nyl_5x-d46e130734" class="topicref" data-id="concept_kxj_nyl_5x" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/Functions.html#concept_kxj_nyl_5x">File Functions</a></span></span></li>
+               <li><span data-tocid="concept_m2m_s1f_lw-d46e130827" class="topicref" data-id="concept_m2m_s1f_lw" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/Functions.html#concept_m2m_s1f_lw">Math Functions</a></span></span></li>
+               <li><span data-tocid="concept_dvg_nqn_wx-d46e130930" class="topicref" data-id="concept_dvg_nqn_wx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/Functions.html#concept_dvg_nqn_wx">Pipeline Functions</a></span></span></li>
+               <li><span data-tocid="concept_ahp_f4v_1r-d46e131044" class="topicref" data-id="concept_ahp_f4v_1r" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/Functions.html#concept_ahp_f4v_1r">String Functions </a></span></span></li>
+               <li><span data-tocid="concept_qkr_trf_sw-d46e131167" class="topicref" data-id="concept_qkr_trf_sw" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/Functions.html#concept_qkr_trf_sw">Time Functions</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Use time functions to return the current time or to transform datetime data.</p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_ddw_ld1_1s-d46e131303" class="topicref" data-id="concept_ddw_ld1_1s" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/Functions.html#concept_ddw_ld1_1s">Miscellaneous Functions</a></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_ybc_ly4_yt-d46e131446" class="topicref" data-id="concept_ybc_ly4_yt" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/Constants.html">Constants</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_gh4_qd2_sv-d46e131470" class="topicref" data-id="concept_gh4_qd2_sv" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/DateTimeVariables.html">Datetime Variables</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_h54_w4m_xq-d46e131494" class="topicref" data-id="concept_h54_w4m_xq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/Literals.html">Literals</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ltp_5mj_wq-d46e131518" class="topicref" data-id="concept_ltp_5mj_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/Operators.html#concept_ltp_5mj_wq">Operators</a></span></span></li>
+         <li><span data-tocid="concept_wwv_5xp_1r-d46e131575" class="topicref" data-id="concept_wwv_5xp_1r" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ReservedWords.html">Reserved Words</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e131600" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e131822" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+
+
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_lhz_pyp_1r">
+ <h1 class="title topictitle1" id="ariaid-title1">Functions</h1>
+
+ <div class="body conbody">
+  <p class="p">The following table lists all available functions.
+   For details about each function, see the related function type:</p>
+
+  <div class="p">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_lhz_pyp_1r__table_ocf_112_gs" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:31.25%" /><col style="width:68.75%" /></colgroup><thead class="thead" style="text-align:left;">
+      <tr>
+       <th class="entry cellrowborder" id="d186234e191">Function Type</th>
+
+       <th class="entry cellrowborder" id="d186234e194">Functions</th>
+
+      </tr>
+
+     </thead>
+<tbody class="tbody">
+      <tr>
+       <td class="entry cellrowborder" headers="d186234e191 "><a class="xref" href="Functions.html#concept_p1z_ggv_1r" title="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record.">Record functions</a></td>
+
+       <td class="entry cellrowborder" headers="d186234e194 ">
+        <div class="p">
+         <ul class="ul" id="concept_lhz_pyp_1r__ul_gdz_wb2_gs">
+          <li class="li">record:attribute(&lt;attribute name&gt;) </li>
+
+          <li class="li">record:attributeOrDefault(&lt;attribute name&gt;, &lt;default value&gt;)</li>
+
+          <li class="li">record:creator()</li>
+
+          <li class="li">record:eventCreation()</li>
+
+          <li class="li">record:eventType()</li>
+
+          <li class="li">record:eventVersion()</li>
+
+          <li class="li">record:exists(&lt;field path&gt;)</li>
+
+          <li class="li">record:fieldAttribute(&lt;field path&gt;, &lt;field attribute name&gt;)</li>
+
+          <li class="li">record:fieldAttributeOrDefault(&lt;field path&gt;, &lt;field attribute name&gt;, &lt;default
+           value&gt;)</li>
+
+          <li class="li">record:id()</li>
+
+          <li class="li">record:path()</li>
+
+          <li class="li">record:type(&lt;field path&gt;)</li>
+
+          <li class="li">record:value(&lt;field path&gt;)</li>
+
+          <li class="li">record:valueOrDefault(&lt;field path&gt;, &lt;default value&gt;)</li>
+
+         </ul>
+
+        </div>
+
+       </td>
+
+      </tr>
+
+      <tr>
+       <td class="entry cellrowborder" headers="d186234e191 "><a class="xref" href="Functions.html#concept_s2c_q14_fs" title="Use delimited data record functions to process delimited data with the list root field type. If you configured an origin to process the delimited data with the list-map root field type, you can use standard record functions.">Delimited data record
+         functions</a></td>
+
+       <td class="entry cellrowborder" headers="d186234e194 ">
+        <ul class="ul" id="concept_lhz_pyp_1r__ul_z2x_jc2_gs">
+         <li class="li">record:dExists(&lt;header&gt;) </li>
+
+         <li class="li">record:dHasDupHeader() </li>
+
+         <li class="li">record:dIndex(&lt;header&gt;)</li>
+
+         <li class="li">record:dIsDupHeader(&lt;header&gt;)</li>
+
+         <li class="li">record:dToMap()</li>
+
+         <li class="li">record:dValue(&lt;header&gt;)</li>
+
+         <li class="li">record:dValueAt(&lt;header index&gt;)</li>
+
+        </ul>
+
+       </td>
+
+      </tr>
+
+      <tr>
+       <td class="entry cellrowborder" headers="d186234e191 "><a class="xref" href="Functions.html#concept_ndj_43v_1r" title="Error record functions provide information about error records. Use error functions to process error records.">Error record
+        functions</a></td>
+
+       <td class="entry cellrowborder" headers="d186234e194 ">
+        <ul class="ul" id="concept_lhz_pyp_1r__ul_n1v_z12_gs">
+         <li class="li">record:errorCode()</li>
+
+         <li class="li">record:errorCollectorId()</li>
+
+         <li class="li">record:errorMessage()</li>
+
+         <li class="li">record:errorPipeline()</li>
+
+         <li class="li">record:errorStackTrace()</li>
+
+         <li class="li">record:errorStage()</li>
+
+         <li class="li">record:errorStageLabel()</li>
+
+         <li class="li">record:errorTime()</li>
+
+        </ul>
+
+       </td>
+
+      </tr>
+
+      <tr>
+       <td class="entry cellrowborder" headers="d186234e191 "><a class="xref" href="Functions.html#concept_ylk_v44_jw" title="Use Base64 functions to encode or decode data using Base64.">Base64 functions</a></td>
+
+       <td class="entry cellrowborder" headers="d186234e194 ">
+        <ul class="ul" id="concept_lhz_pyp_1r__ul_ecm_y1d_kw">
+         <li class="li">base64:decodeBytes(&lt;string&gt;)</li>
+
+         <li class="li">base64:decodeString(&lt;string&gt;, &lt;charset&gt;)</li>
+
+         <li class="li">base64:encodeBytes(&lt;byte array&gt;, &lt;urlSafe: true | false&gt;)</li>
+
+         <li class="li">base64:encodeString(&lt;string&gt;, &lt;urlSafe: true | false&gt;, &lt;charset&gt;)</li>
+
+        </ul>
+
+       </td>
+
+      </tr>
+
+      <tr>
+       <td class="entry cellrowborder" headers="d186234e191 "><a class="xref" href="Functions.html#concept_yvc_3qs_r1b">Credential
+        functions</a></td>
+
+       <td class="entry cellrowborder" headers="d186234e194 ">
+        <ul class="ul" id="concept_lhz_pyp_1r__ul_gyz_xps_r1b">
+         <li class="li">credential:get(&lt;storeID&gt;, &lt;group&gt;, &lt;credential name&gt;)</li>
+
+         <li class="li">credential:getWithOptions(&lt;storeID&gt;, &lt;group&gt;, &lt;credential name&gt;,
+          &lt;options&gt;)</li>
+
+        </ul>
+
+       </td>
+
+      </tr>
+
+      <tr>
+       <td class="entry cellrowborder" headers="d186234e191 "><a class="xref" href="Functions.html#concept_hpn_xfk_p5" title="Use data drift functions to create alerts when data drift occurs. You can use these functions in data drift rules.">Data drift functions</a></td>
+
+       <td class="entry cellrowborder" headers="d186234e194 ">
+        <ul class="ul" id="concept_lhz_pyp_1r__ul_wsq_kfk_p5">
+         <li class="li">drift:names(&lt;field path&gt;, &lt;ignoreWhenMissing: true | false&gt;)</li>
+
+         <li class="li">drift:order(&lt;field path&gt;, &lt;ignoreWhenMissing: true | false&gt;)</li>
+
+         <li class="li">drift:size(&lt;field path&gt;, &lt;ignoreWhenMissing: true | false&gt;)</li>
+
+         <li class="li">drift:type(&lt;field path&gt;, &lt;ignoreWhenMissing: true | false&gt;)</li>
+
+        </ul>
+
+       </td>
+
+      </tr>
+
+      <tr>
+       <td class="entry cellrowborder" headers="d186234e191 "><a class="xref" href="Functions.html#concept_gfs_w55_3cb" title="You can use field functions in field path expressions that determine the set of fields that a processor uses. Each function is evaluated against a set of matching fields individually.">Field functions</a></td>
+
+       <td class="entry cellrowborder" headers="d186234e194 ">
+        <ul class="ul" id="concept_lhz_pyp_1r__ul_d53_1ts_kcb">
+         <li class="li">f:attribute(&lt;attribute name&gt;)</li>
+
+         <li class="li">f:path()</li>
+
+         <li class="li">f:type()</li>
+
+         <li class="li">f:value()</li>
+
+        </ul>
+
+       </td>
+
+      </tr>
+
+      <tr>
+       <td class="entry cellrowborder" headers="d186234e191 "><a class="xref" href="Functions.html#concept_kxj_nyl_5x">File functions</a></td>
+
+       <td class="entry cellrowborder" headers="d186234e194 ">
+        <ul class="ul" id="concept_lhz_pyp_1r__ul_mmh_mqr_5x">
+         <li class="li">file:fileExtension(&lt;filepath&gt;)</li>
+
+         <li class="li">file:fileName(&lt;filepath&gt;)</li>
+
+         <li class="li">file:parentPath(&lt;filepath&gt;)</li>
+
+         <li class="li">
+          <p class="p">file:pathElement(&lt;filepath&gt;, &lt;integer&gt;) </p>
+
+         </li>
+
+         <li class="li">file:removeExtension(&lt;filepath&gt;)</li>
+
+        </ul>
+
+       </td>
+
+      </tr>
+
+      <tr>
+       <td class="entry cellrowborder" headers="d186234e191 "><a class="xref" href="Functions.html#concept_m2m_s1f_lw">Math functions</a></td>
+
+       <td class="entry cellrowborder" headers="d186234e194 ">
+        <ul class="ul" id="concept_lhz_pyp_1r__ul_ntg_zhf_lw">
+         <li class="li">math:abs(&lt;number&gt;)</li>
+
+         <li class="li">math:ceil(&lt;number&gt;)</li>
+
+         <li class="li">math:floor (&lt;number&gt;)</li>
+
+         <li class="li">math:max(&lt;number1&gt;, &lt;number2&gt;)</li>
+
+         <li class="li">math:min(&lt;number1&gt;, &lt;number2&gt;)</li>
+
+         <li class="li">math:round(&lt;number&gt;)</li>
+
+        </ul>
+
+       </td>
+
+      </tr>
+
+      <tr>
+       <td class="entry cellrowborder" headers="d186234e191 "><a class="xref" href="Functions.html#concept_dvg_nqn_wx">Pipeline functions</a>
+       </td>
+
+       <td class="entry cellrowborder" headers="d186234e194 ">
+        <ul class="ul" id="concept_lhz_pyp_1r__ul_nmc_qpn_wx">
+         <li class="li">pipeline:id()</li>
+
+         <li class="li">pipeline:name()</li>
+
+         <li class="li">pipeline:title()</li>
+
+         <li class="li">pipeline:user()</li>
+
+         <li class="li">pipeline:version()</li>
+
+        </ul>
+
+       </td>
+
+      </tr>
+
+      <tr>
+       <td class="entry cellrowborder" headers="d186234e191 "><a class="xref" href="Functions.html#concept_ahp_f4v_1r">String functions</a></td>
+
+       <td class="entry cellrowborder" headers="d186234e194 ">
+        <div class="p">
+         <ul class="ul" id="concept_lhz_pyp_1r__ul_f15_xf2_gs">
+          <li class="li">str:concat(&lt;string1&gt;, &lt;string2&gt;)</li>
+
+          <li class="li">str:contains(&lt;string&gt;, &lt;subset&gt;) </li>
+
+          <li class="li">str:endsWith(&lt;string&gt;, &lt;subset&gt;)</li>
+
+          <li class="li">str:escapeXML10(&lt;string&gt;)</li>
+
+          <li class="li">str:escapeXML11(&lt;string&gt;)</li>
+
+          <li class="li">str:indexOf(&lt;string&gt;, &lt;subset&gt;)</li>
+
+          <li class="li">str:isNullOrEmpty(&lt;string&gt;)</li>
+
+          <li class="li">str:length(&lt;string&gt;)</li>
+
+          <li class="li">str:matches(&lt;string&gt;, &lt;regEx&gt;)</li>
+
+          <li class="li">str:regexCapture(&lt;string&gt;, &lt;regEx&gt;, &lt;group&gt;)</li>
+
+          <li class="li">str:replace(&lt;string&gt;, &lt;oldChar&gt;, &lt;newChar&gt;)</li>
+
+          <li class="li">str:replaceAll(&lt;string&gt;, &lt;regEx&gt;, &lt;newString&gt;)</li>
+
+          <li class="li">str:splitKV(&lt;string&gt;, &lt;pairSeparator&gt;, &lt;keyValueSeparator&gt;)</li>
+
+          <li class="li">str:startsWith(&lt;string&gt;, &lt;subset&gt;)</li>
+
+          <li class="li">str:substring(&lt;string&gt;, &lt;beginIndex&gt;, &lt;endIndex&gt;)</li>
+
+          <li class="li">str:toLower(&lt;string&gt;)</li>
+
+          <li class="li">str:toUpper(&lt;string&gt;)</li>
+
+          <li class="li">str:trim(&lt;string&gt;)</li>
+
+          <li class="li">str:truncate(&lt;string&gt;, &lt;length&gt;)</li>
+
+          <li class="li">str:unescapeJava(&lt;string&gt;)</li>
+
+          <li class="li">str:unescapeXML(&lt;string&gt;)</li>
+
+          <li class="li">str:urlDecode(&lt;URL&gt;, &lt;charset&gt;)</li>
+
+          <li class="li">str:urlEncode(&lt;infoforURL&gt;, &lt;charset&gt;)</li>
+
+         </ul>
+
+        </div>
+
+       </td>
+
+      </tr>
+
+      <tr>
+       <td class="entry cellrowborder" headers="d186234e191 "><a class="xref" href="Functions.html#concept_qkr_trf_sw" title="Use time functions to return the current time or to transform datetime data.">Time functions</a></td>
+
+       <td class="entry cellrowborder" headers="d186234e194 ">
+        <ul class="ul" id="concept_lhz_pyp_1r__ul_vrl_4rf_sw">
+         <li class="li">time:createDateFromStringTZ(&lt;string&gt;, &lt;time zone&gt;, &lt;date format&gt;)</li>
+
+         <li class="li">time:dateTimeToMilliseconds(&lt;Date object&gt;)</li>
+
+         <li class="li">time:dateTimeZoneOffset(&lt;Date object&gt;, &lt;time zone&gt;)</li>
+
+         <li class="li">time:extractDateFromString(&lt;string&gt;, &lt;format string&gt;)</li>
+
+         <li class="li">time:extractLongFromDate(&lt;Date object&gt;, &lt;format string&gt;)</li>
+
+         <li class="li">time:extractStringFromDate(&lt;Date object&gt;, &lt;format string&gt;)</li>
+
+         <li class="li">time:extractStringFromDateTZ(&lt;Date object&gt;, &lt;time zone&gt;, &lt;format string&gt;)</li>
+
+         <li class="li">time:millisecondsToDateTime(&lt;long&gt;)</li>
+
+         <li class="li">time:now()</li>
+
+         <li class="li">time:timeZoneOffset(&lt;time zone&gt;)</li>
+
+         <li class="li">time:trimDate(&lt;datetime&gt;)</li>
+
+         <li class="li">time:trimTime(&lt;datetime&gt;)</li>
+
+        </ul>
+
+       </td>
+
+      </tr>
+
+      <tr>
+       <td class="entry cellrowborder" headers="d186234e191 "><a class="xref" href="Functions.html#concept_ddw_ld1_1s">Miscellaneous
+        functions</a></td>
+
+       <td class="entry cellrowborder" headers="d186234e194 ">
+        <ul class="ul" id="concept_lhz_pyp_1r__ul_xks_xg2_gs">
+         <li class="li">alert:info()</li>
+
+         <li class="li">emptyList()</li>
+
+         <li class="li">emptyMap()</li>
+
+         <li class="li">every(&lt;interval&gt;, &lt;mm() | ss()&gt;)</li>
+
+         <li class="li">field:field()</li>
+
+         <li class="li">isEmtpyList()</li>
+
+         <li class="li">isEmptyMap()</li>
+
+         <li class="li">jvm:maxMemoryMB()</li>
+
+         <li class="li">length()</li>
+
+         <li class="li">list:join(&lt;list field&gt;, &lt;separator&gt;)</li>
+
+         <li class="li">list:joinSkipNulls(&lt;list field&gt;, &lt;separator&gt;)</li>
+
+         <li class="li">offset:column(&lt;position&gt;)</li>
+
+         <li class="li">runtime:availableProcessors()</li>
+
+         <li class="li">runtime:conf(&lt;runtime property&gt;)</li>
+
+         <li class="li">runtime:loadResource(&lt;file name&gt;, &lt;restricted: true | false&gt;)</li>
+
+         <li class="li">runtime:loadResourceRaw(&lt;file name&gt;, &lt;restricted: true | false&gt;)</li>
+
+         <li class="li">sdc:hostname()</li>
+
+         <li class="li">sdc:id()</li>
+
+         <li class="li">size()</li>
+
+         <li class="li">uuid:uuid()</li>
+
+         <li class="li">vault:read(&lt;path&gt;, &lt;key&gt;) <em class="ph i">- Deprecated</em></li>
+
+         <li class="li">vault:readWithDelay(&lt;path&gt;, &lt;key&gt;, &lt;delay&gt;) <em class="ph i">- Deprecated</em></li>
+
+        </ul>
+
+       </td>
+
+      </tr>
+
+     </tbody>
+</table>
+</div>
+
+  </div>
+
+ </div>
+
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_p1z_ggv_1r">
+ <h2 class="title topictitle2" id="ariaid-title2">Record Functions</h2>
+
+
+ <div class="body conbody"><p class="shortdesc">Use record functions to determine information about a record, such as the stage that
+  created it or whether a field exists in the record. </p>
+
+  <p class="p">You can replace any argument with a literal or an expression
+                  that evaluates to the argument. String literals must be enclosed in single or
+                  double quotation marks.</p>
+
+  <p class="p">The expression language provides the following general record functions: </p>
+
+  <dl class="dl">
+
+    <dt class="dt dlterm">record:attribute(&lt;attribute name&gt;)</dt>
+
+    <dd class="dd">Returns the value of the specified record attribute. Use to return data, for example, for
+     the "tag" attribute that you set using the File Tail origin. </dd>
+
+    <dd class="dd ddexpand">Uses the following argument:<ul class="ul" id="concept_p1z_ggv_1r__ul_sdn_vwv_1z">
+      <li class="li">attribute name - Name of the record header attribute.</li>
+
+     </ul>
+</dd>
+
+    <dd class="dd ddexpand">Return type: String.</dd>
+
+    <dd class="dd ddexpand">For example, the following expression returns the value of a tag attribute added by a File
+     Tail origin:<pre class="pre codeblock"><code>${record:attribute('tag')}</code></pre></dd>
+
+
+
+    <dt class="dt dlterm">record:attributeOrDefault(&lt;attribute name&gt; , &lt;default value&gt;)</dt>
+
+    <dd class="dd">Returns the value of the specified record header attribute. When the attribute does not
+     exist or has no value, returns the specified default value.</dd>
+
+    <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_p1z_ggv_1r__ul_nn4_kwv_1z">
+      <li class="li">attribute name - Name of the record header attribute.</li>
+
+      <li class="li">default value - Value to use when the record header attribute does not exist or has no
+       value.</li>
+
+     </ul>
+</dd>
+
+    <dd class="dd ddexpand">Return type: Returns a string value when returning the field attribute value. Otherwise,
+     returns the type of the specified default value.</dd>
+
+    <dd class="dd ddexpand">For example, the following expression returns the value of the tag attribute, and returns NA
+     when no value exists:<pre class="pre codeblock"><code>${record:attributeOrDefault('tag', 'NA')}</code></pre></dd>
+
+
+
+    <dt class="dt dlterm">record:creator()</dt>
+
+    <dd class="dd">Returns the instance name of the stage that created the record, typically an origin stage.
+     Data is stored in the stageCreator field of a record. </dd>
+
+    <dd class="dd ddexpand">Return type: String.</dd>
+
+    <dd class="dd ddexpand">For example, the following expression returns the instance name of the stage that creates
+     each record:<pre class="pre codeblock"><code>${record:creator()}</code></pre></dd>
+
+
+
+    <dt class="dt dlterm">record:eventCreation()</dt>
+
+    <dd class="dd">Returns the epoch timestamp when an event occurred. Use to return the creation timestamp
+     from an event record. Returns null values when applied to other records.</dd>
+
+    <dd class="dd ddexpand">Return type: String.</dd>
+
+    <dd class="dd ddexpand">For example, the following expression returns the time that the event-generating stage
+     generated an event:<pre class="pre codeblock"><code>${record:eventCreation()}</code></pre></dd>
+
+
+
+    <dt class="dt dlterm">record:eventType()</dt>
+
+    <dd class="dd">Returns the event type from an event record. Returns null values when applied to other
+     records. </dd>
+
+    <dd class="dd ddexpand">Event generating stages create different event types. For information about the possible
+     event types, see "Event Records" in the stage documentation. </dd>
+
+    <dd class="dd ddexpand">Return type: String.</dd>
+
+    <dd class="dd ddexpand">For example, the following expression returns the event type from an event
+     record:<pre class="pre codeblock"><code>${record:eventType()}</code></pre></dd>
+
+
+
+    <dt class="dt dlterm">record:eventVersion()</dt>
+
+    <dd class="dd">Returns the event version from an event record. Returns null values when applied to other
+     records. </dd>
+
+    <dd class="dd ddexpand">Return type: String.</dd>
+
+    <dd class="dd ddexpand">For example, the following expression returns the event version from an event
+     record:<pre class="pre codeblock"><code>${record:eventVersion()}</code></pre></dd>
+
+
+
+    <dt class="dt dlterm">record:exists(&lt;field path&gt;)</dt>
+
+    <dd class="dd">Determines if the specified field is in a record. When the field is not in the record,
+     returns 0. When the field is in the record, returns 1. </dd>
+
+    <dd class="dd ddexpand">Return type: Boolean.</dd>
+
+    <dd class="dd ddexpand">For example, the following expression returns 1 when the Name field exists in a
+     record:<pre class="pre codeblock"><code>${record:exists('/Name')}</code></pre></dd>
+
+    <dd class="dd ddexpand">It returns 0 when the Name field is not part of the record.</dd>
+
+
+
+    <dt class="dt dlterm">record:fieldAttribute(&lt;field path&gt;, &lt;field attribute name&gt;)</dt>
+
+    <dd class="dd">Returns the value for the specified field attribute.</dd>
+
+    <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_p1z_ggv_1r__ul_plr_kxv_1z">
+      <li class="li">field path - Path to the field with the attribute.</li>
+
+      <li class="li">field attribute name - Name of the field attribute.</li>
+
+     </ul>
+</dd>
+
+    <dd class="dd ddexpand">Return type: String</dd>
+
+    <dd class="dd ddexpand">For example, the following expression returns the value for the pk attribute on the ID
+     field:<pre class="pre codeblock"><code>record:fieldAttribute('/ID', 'pk')</code></pre></dd>
+
+
+
+    <dt class="dt dlterm">record:fieldAttributeOrDefault(&lt;field path&gt;, &lt;field attribute name&gt;, &lt;default
+     value&gt;)</dt>
+
+    <dd class="dd">Returns the value for the field attribute when it exists. If the attribute does not exist,
+     returns the specified default value. </dd>
+
+    <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_p1z_ggv_1r__ul_wmk_sxv_1z">
+      <li class="li">field path - Path to the field with the attribute.</li>
+
+      <li class="li">field attribute name - Name of the field attribute.</li>
+
+      <li class="li">default value - Value to use when the field attribute does not exist or has no value.</li>
+
+     </ul>
+</dd>
+
+    <dd class="dd ddexpand">Return type: Returns a string value when returning the field attribute value. Otherwise,
+     returns the type of the specified default value.</dd>
+
+    <dd class="dd ddexpand">For example, the following expression returns the value for the pk attribute on the ID field
+     when available, otherwise, it returns
+     "n".<pre class="pre codeblock"><code>record:fieldAttributeOrDefault('/ID', 'pk', 'n')</code></pre></dd>
+
+
+
+    <dt class="dt dlterm">record:id()</dt>
+
+    <dd class="dd">Returns the record ID. The record ID is also stored in the sourceId record header attribute. </dd>
+
+    <dd class="dd ddexpand">Return type: String.</dd>
+
+
+
+    <dt class="dt dlterm">record:path()</dt>
+
+    <dd class="dd">Returns the stages in the pipeline that processed a record. Data is stored in the stagesPath
+     field of a record. The field path uses the following
+     format:<pre class="pre codeblock"><code>&lt;origin instance name&gt;:&lt;next stage instance name&gt;:&lt;next stage instance name&gt;:... </code></pre></dd>
+
+    <dd class="dd ddexpand">Return type: String.</dd>
+
+
+
+    <dt class="dt dlterm">record:type(&lt;field path&gt;)</dt>
+
+    <dd class="dd">Checks the data type of a field. Possible return values are: <ul class="ul" id="concept_p1z_ggv_1r__ul_lmr_2hv_1r">
+      <li class="li">Boolean</li>
+
+      <li class="li">Char</li>
+
+      <li class="li">Byte</li>
+
+      <li class="li">Short</li>
+
+      <li class="li">Integer</li>
+
+      <li class="li">Long</li>
+
+      <li class="li">Float</li>
+
+      <li class="li">Double</li>
+
+      <li class="li">Date</li>
+
+      <li class="li">Datetime</li>
+
+      <li class="li">Decimal</li>
+
+      <li class="li">String</li>
+
+      <li class="li">Time</li>
+
+      <li class="li">Byte-Array</li>
+
+      <li class="li">Map</li>
+
+      <li class="li">List</li>
+
+     </ul>
+</dd>
+
+    <dd class="dd ddexpand">Return type: String. </dd>
+
+
+
+    <dt class="dt dlterm">record:value(&lt;field path&gt;)</dt>
+
+    <dd class="dd">Returns the value of the field in the appropriate data type.</dd>
+
+    <dd class="dd ddexpand">Return type: When the field includes a value, returns the type based on the field value.
+     When the field is null, the function returns no value. </dd>
+
+    <dd class="dd ddexpand">
+     <p class="p">Nulls are coerced based on the expected return type of the function. For example, if an EL
+      is expected to return a string, null is coerced to an empty string. However, a null integer is
+      coerced to 0.</p>
+
+    </dd>
+
+
+
+    <dt class="dt dlterm">record:valueOrDefault(&lt;field path&gt; , &lt;default value&gt;)</dt>
+
+    <dd class="dd">Returns the value of the field in the appropriate data type. If the field does not exist or
+     if the field is null, returns the default value.</dd>
+
+    <dd class="dd ddexpand">Use to provide a default value when a field does not exist or when a field is null. </dd>
+
+    <dd class="dd ddexpand">Return type: Variable, based on whether the function returns the field value or default
+     value.</dd>
+
+
+  </dl>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title3" id="concept_s2c_q14_fs">
+ <h2 class="title topictitle2" id="ariaid-title3">Delimited Data Record Functions</h2>
+
+
+ <div class="body conbody"><p class="shortdesc">Use delimited data record functions to process delimited data with the list root field
+  type. If you configured an origin to process the delimited data with the list-map root field type,
+  you can use standard record functions.</p>
+
+  <p class="p">For more information about the delimited
+   data root field types, see <a class="xref" href="../Data_Formats/DelimitedDataRootFieldTypes.html#concept_zcg_bm4_fs">Delimited Data Root Field Type</a>.</p>
+
+    <p class="p">You can replace any argument with a literal or an expression
+                  that evaluates to the argument. String literals must be enclosed in single or
+                  double quotation marks.</p>
+
+  <div class="p">The expression language provides the following delimited data record functions:<dl class="dl">
+
+     <dt class="dt dlterm">record:dExists(&lt;header name&gt;)</dt>
+
+     <dd class="dd">Determines if the specified header name exists in the record.</dd>
+
+     <dd class="dd ddexpand">Return type: Boolean.</dd>
+
+
+
+     <dt class="dt dlterm">record:dHasDupHeader()</dt>
+
+     <dd class="dd">Determines if the record has duplicate header names. </dd>
+
+     <dd class="dd ddexpand">Return type: Boolean.</dd>
+
+
+
+     <dt class="dt dlterm">record:dIndex(&lt;header name&gt;)</dt>
+
+     <dd class="dd">Returns the index associated with the specified header name. Use to find the position of a
+      header in the record. </dd>
+
+     <dd class="dd ddexpand">Return type: Integer, starting with 0 for the first position.</dd>
+
+
+
+     <dt class="dt dlterm">record:dIsDupHeader(&lt;header name&gt;)</dt>
+
+     <dd class="dd">Determines if the specified header name is used more than once in a record. </dd>
+
+     <dd class="dd ddexpand">Return type: Boolean.</dd>
+
+
+
+     <dt class="dt dlterm">record:dToMap()</dt>
+
+     <dd class="dd">Converts a record with a List root field to a List-Map root field. Use to convert delimited
+      List records to List-Map to allow easier use with standard record functions. For more
+      information about root field types, see <a class="xref" href="../Data_Formats/DelimitedDataRootFieldTypes.html#concept_zcg_bm4_fs">Delimited Data Root Field Type</a>.</dd>
+
+     <dd class="dd ddexpand">Return type: Records with a List-Map root field.</dd>
+
+     <dd class="dd ddexpand">To use record:dToMap(), use a slash as the root output field as follows:</dd>
+
+     <dd class="dd ddexpand"><img class="image" id="concept_s2c_q14_fs__image_bg2_jhk_35" src="../Graphics/Delim-ConvertType.png" height="99" width="679" /></dd>
+
+
+
+     <dt class="dt dlterm">record:dValue(&lt;header name&gt;)</dt>
+
+     <dd class="dd">Returns the value associated with the specified header name. </dd>
+
+     <dd class="dd ddexpand">Return type: String.</dd>
+
+
+
+     <dt class="dt dlterm">record:dValueAt(&lt;header index&gt;)</dt>
+
+     <dd class="dd">Returns the value at the specified header index position.</dd>
+
+     <dd class="dd ddexpand">Return type: String.</dd>
+
+
+   </dl>
+</div>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title4" id="concept_ndj_43v_1r">
+ <h2 class="title topictitle2" id="ariaid-title4">Error Record Functions</h2>
+
+
+ <div class="body conbody"><p class="shortdesc">Error record functions provide information about error records. Use error functions to
+  process error records.</p>
+
+  <p class="p">For example, you might use error functions
+   in a Stream Selector to pass data to different error handling pipelines based on the type of
+   error that occurred. </p>
+
+  <p class="p">The expression language provides the following error functions:</p>
+
+  <div class="p">
+   <dl class="dl">
+
+     <dt class="dt dlterm">record:errorCode()</dt>
+
+     <dd class="dd">Returns the error code for the error record.</dd>
+
+     <dd class="dd ddexpand">Return type: String.</dd>
+
+
+
+     <dt class="dt dlterm">record:errorCollectorId()</dt>
+
+     <dd class="dd">Returns the ID of the <span class="ph">Data Collector</span> that sent
+      the record to error. </dd>
+
+     <dd class="dd ddexpand">By default, the Data Collector ID uses the format &lt;hostname&gt;:&lt;port&gt;. You can verify
+      the <span class="ph">Data Collector</span> ID
+      in the <span class="ph">Data Collector</span>
+      Configuration page.</dd>
+
+     <dd class="dd ddexpand">Return type: String.</dd>
+
+
+
+     <dt class="dt dlterm">record:errorMessage()</dt>
+
+     <dd class="dd">Returns the error message for the error record.</dd>
+
+     <dd class="dd ddexpand">Return type: String.</dd>
+
+
+
+     <dt class="dt dlterm">record:errorPipeline()</dt>
+
+     <dd class="dd">The name of pipeline that sent the record to error.</dd>
+
+     <dd class="dd ddexpand">Return type: String.</dd>
+
+
+
+     <dt class="dt dlterm">record:errorStackTrace()</dt>
+
+     <dd class="dd">Returns the error stack trace for the error record. </dd>
+
+     <dd class="dd ddexpand">Return type: String.</dd>
+
+
+
+     <dt class="dt dlterm">record:errorStage()</dt>
+
+     <dd class="dd">Returns the instance name of the stage that sent the record to error. </dd>
+
+     <dd class="dd ddexpand">You can verify the instance name on the General tab of the stage. </dd>
+
+     <dd class="dd ddexpand">Return type: String.</dd>
+
+
+
+     <dt class="dt dlterm">record:errorStageLabel()</dt>
+
+     <dd class="dd">Returns the user-defined label for the stage that sent the record to error.</dd>
+
+     <dd class="dd ddexpand">Return type: String.</dd>
+
+
+
+     <dt class="dt dlterm">record:errorTime()</dt>
+
+     <dd class="dd">The time the record was sent to error.</dd>
+
+     <dd class="dd ddexpand">Return type: Long.</dd>
+
+
+   </dl>
+
+  </div>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title5" id="concept_ylk_v44_jw">
+ <h2 class="title topictitle2" id="ariaid-title5">Base64 Functions</h2>
+
+
+ <div class="body conbody"><p class="shortdesc">Use Base64 functions to encode or decode data using Base64.</p>
+
+        <p class="p">You can replace any argument with a literal or an expression
+                  that evaluates to the argument. String literals must be enclosed in single or
+                  double quotation marks.</p>
+
+        <p class="p">The expression language
+            provides the following Base64 functions:</p>
+
+        <dl class="dl">
+
+                <dt class="dt dlterm">base64:decodeBytes(&lt;string&gt;)</dt>
+
+                <dd class="dd">Returns a decoded byte array from a Base64 encoded string.</dd>
+
+                <dd class="dd ddexpand">Return type: Byte Array.</dd>
+
+                <dd class="dd ddexpand">Uses the following argument:<ul class="ul" id="concept_ylk_v44_jw__ul_jvq_sx4_jw">
+                        <li class="li">string - The Base64 encoded string to decode.</li>
+
+                    </ul>
+</dd>
+
+                <dd class="dd ddexpand">For example, ${base64:decodeBytes(record:value("/ID"))} decodes the Base64
+                    encoded string in the ID field as a byte array value.</dd>
+
+
+
+                <dt class="dt dlterm">base64:decodeString(&lt;string&gt;, &lt;charset&gt;)</dt>
+
+                <dd class="dd">Returns a decoded string from a Base64 encoded string using the specified
+                    character set.</dd>
+
+                <dd class="dd ddexpand">Return type: String.</dd>
+
+                <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_ylk_v44_jw__ul_ogd_ty4_jw">
+                        <li class="li">string - The Base64 encoded string to decode.</li>
+
+                        <li class="li">charset - The character set to use to decode the data.</li>
+
+                    </ul>
+</dd>
+
+                <dd class="dd ddexpand">For example, ${base64:decodeString(record:value("/ID"), "UTF-8")} decodes the
+                    Base64 encoded string in the ID field using the UTF-8 character set as a string
+                    value.</dd>
+
+
+
+                <dt class="dt dlterm">base64:encodeBytes(&lt;byte array&gt;, &lt;urlSafe: true | false&gt;)</dt>
+
+                <dd class="dd">Returns a Base64 encoded string value of the specified byte array.</dd>
+
+                <dd class="dd ddexpand">Return type: String.</dd>
+
+                <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_ylk_v44_jw__ul_hsr_kz4_jw">
+                        <li class="li">byte array - The byte array to encode using Base64.</li>
+
+                        <li class="li">urlSafe - When set to true, encodes the data so that it can be safely
+                            sent in a URL. </li>
+
+                    </ul>
+</dd>
+
+                <dd class="dd ddexpand">For example, ${base64:encodeBytes(record:value("/ID"), true)} uses Base64 to
+                    encode the byte array in the ID field such that the encoded data is URL
+                    safe.</dd>
+
+
+
+                <dt class="dt dlterm">base64:encodeString(&lt;string&gt;, &lt;urlSafe: true | false&gt;, &lt;charset&gt;)</dt>
+
+                <dd class="dd">
+                    <p class="p">Returns a Base64 encoded string value of the specified string. </p>
+
+                </dd>
+
+                <dd class="dd ddexpand">Return type: String.</dd>
+
+                <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_ylk_v44_jw__ul_okr_dbp_jw">
+                        <li class="li">string - The string to encode using Base64.</li>
+
+                        <li class="li">urlSafe - When set to true, encodes the data so that it can be safely
+                            sent in a URL. </li>
+
+                        <li class="li">charset - The character set to use to encode the data.</li>
+
+                    </ul>
+</dd>
+
+                <dd class="dd ddexpand">For example, ${base64:encodeString(record:value("/ID"), false, "UTF-8")} uses
+                    Base64 to encode the string in the ID field using the UTF-8 character set such
+                    that the encoded data is not URL safe.</dd>
+
+
+        </dl>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title6" id="concept_yvc_3qs_r1b">
+    <h2 class="title topictitle2" id="ariaid-title6">Credential Functions</h2>
+
+    <div class="body conbody">
+        <div class="p">Use a credential function
+            to retrieve a credential value from the following credential store systems: <ul class="ul" id="concept_yvc_3qs_r1b__ul_zgx_cxt_51b">
+                <li class="li">CyberArk</li>
+
+                <li class="li">Java keystore</li>
+
+                <li class="li">Vault</li>
+
+            </ul>
+</div>
+
+        <p class="p">Before you use a credential function, you must configure the CyberArk, Java keystore, or
+            Vault <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential
+                    stores</a></span>.</p>
+
+        <p class="p">You can use credential functions in stages that require credentials - such as user names
+            or passwords - to securely access data in external systems. Credential functions allow
+            pipelines to access external systems without exposing the credential values.</p>
+
+        <p class="p">You cannot use credential functions in all stages. For example, we intentionally do not
+            allow the use of credential functions in the Expression Evaluator processor. If
+            credential functions were allowed in stages such as the Expression Evaluator, any user
+            with access to the pipeline could access or print the credential value, compromising the
+            security of the external system.</p>
+
+        <div class="note important"><span class="importanttitle">Important:</span> When you use a credential function in a stage
+                property, the function must be the only value defined in the property. For example,
+                you cannot include another function or a literal value along with the credential
+                function.</div>
+
+        <p class="p">String literals must be enclosed in single or double quotation marks.</p>
+
+        <p class="p">The expression language provides the following credential functions:</p>
+
+        <dl class="dl">
+
+                <dt class="dt dlterm">credential:get(&lt;storeID&gt;, &lt;group&gt;, &lt;credential name&gt;)</dt>
+
+                <dd class="dd">Returns the credential value from the credential store. Uses the following
+                        arguments:<ul class="ul" id="concept_yvc_3qs_r1b__ul_eqz_nxt_51b">
+                        <li class="li">storeId - Unique ID of the credential store to use. Enter "cyberark" to
+                            access the CyberArk credential store, "jks" to access the Java keystore
+                            credential store, or "vault" to access the Vault credential store.</li>
+
+                        <li class="li">group - Group to which a user must belong before that user
+                can access the credential. Only users that have execute permission on the pipeline
+                and that belong to this group can validate, preview, or run the pipeline that
+                retrieves the credential values. <p class="p">If working with <span class="ph">Control Hub</span>, specify the
+                    group using the required naming convention: <code class="ph codeph">&lt;group
+                        ID&gt;@&lt;organization ID&gt;</code>. To grant access to all users, specify the
+                    default "all" group when working only with <span class="ph">Data Collector</span> or the default
+                    "all@&lt;organization ID&gt;" group when working with <span class="ph">Control Hub</span>.</p>
+</li>
+
+                        <li class="li">credential name - Name of the credential value to retrieve from the
+                            credential store. Use the required format for the credential store:<ul class="ul" id="concept_yvc_3qs_r1b__ul_jw3_gyt_51b">
+                                <li class="li">CyberArk - Enter the credential name using the following format:
+                                        <code class="ph codeph">"&lt;safe&gt;&lt;separator&gt;&lt;folder&gt;&lt;separator&gt;&lt;object
+                                        name&gt;&lt;separator&gt;&lt;element name&gt;"</code>. <p class="p">Where
+                                            <code class="ph codeph">&lt;safe&gt;</code> is the CyberArk safe to read,
+                                            <code class="ph codeph">&lt;separator&gt;</code> is the separator defined
+                                        in the
+                                            <code class="ph codeph">$SDC_CONF/credential-stores.properties</code>
+                                        file, <code class="ph codeph">&lt;folder&gt;</code> is the CyberArk folder to
+                                        read, <code class="ph codeph">&lt;object name&gt;</code> is the CyberArk
+                                        object to read, and <code class="ph codeph">&lt;element name&gt;</code> is
+                                        the name for the value that you want returned.</p>
+</li>
+
+                                <li class="li">Java keystore - Enter the credential name added to the Java
+                                    keystore file using the <code class="ph codeph">jks-cs add</code>
+                                    command.</li>
+
+                                <li class="li">Vault - Enter the credential name using the following format:
+                                        <code class="ph codeph">"&lt;path&gt;&lt;separator&gt;&lt;key&gt;"</code>. <p class="p">Where
+                                            <code class="ph codeph">&lt;path&gt;</code> is the path in Vault to read,
+                                            <code class="ph codeph">&lt;separator&gt;</code> is the separator defined
+                                        in the
+                                            <code class="ph codeph">$SDC_CONF/credential-stores.properties</code>
+                                        file, and <code class="ph codeph">&lt;key&gt;</code> is the key for the value
+                                        that you want returned.</p>
+</li>
+
+                            </ul>
+</li>
+
+                    </ul>
+</dd>
+
+                <dd class="dd ddexpand">Return type: String.</dd>
+
+                <dd class="dd ddexpand">For example, the following expression returns the value of the OracleDBPassword
+                    credential defined in the Java keystore credential store and allows any user
+                    belonging to the devops group access to the credential when validating,
+                    previewing, or running the
+                    pipeline:<pre class="pre codeblock"><code>${credential:get("jks", "devops", "OracleDBPassword")}</code></pre></dd>
+
+
+
+                <dt class="dt dlterm">credential:getWithOptions(&lt;storeID&gt;, &lt;group&gt;, &lt;credential name&gt;,
+                    &lt;options&gt;)</dt>
+
+                <dd class="dd">Returns the credential value from the credential store using additional options
+                    to communicate with the credential store. Not applicable for the Java keystore
+                    credential store.</dd>
+
+                <dd class="dd ddexpand">For example, use this function with the CyberArk credential store to define the
+                    separator for the credential name within the function. Or use this function with
+                    the Vault credential store when you might need a delay of 10 seconds or more
+                    before the credentials can be used successfully. </dd>
+
+                <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_yvc_3qs_r1b__ul_dwm_vyt_51b">
+                        <li class="li">storeId - Unique ID of the credential store to use. Enter "cyberark" to
+                            access the CyberArk credential store or "vault" to access the Vault
+                            credential store.</li>
+
+                        <li class="li">group - Group to which a user must belong before that user
+                can access the credential. Only users that have execute permission on the pipeline
+                and that belong to this group can validate, preview, or run the pipeline that
+                retrieves the credential values. <p class="p">If working with <span class="ph">Control Hub</span>, specify the
+                    group using the required naming convention: <code class="ph codeph">&lt;group
+                        ID&gt;@&lt;organization ID&gt;</code>. To grant access to all users, specify the
+                    default "all" group when working only with <span class="ph">Data Collector</span> or the default
+                    "all@&lt;organization ID&gt;" group when working with <span class="ph">Control Hub</span>.</p>
+</li>
+
+                        <li class="li">credential name - Name of the credential value to retrieve from the
+                            credential store. Use the required format for the credential store:<ul class="ul" id="concept_yvc_3qs_r1b__ul_v3d_5qj_fbb">
+                                <li class="li">CyberArk - Enter the credential name using the following format:
+                                        <code class="ph codeph">"&lt;safe&gt;&lt;separator&gt;&lt;folder&gt;&lt;separator&gt;&lt;object
+                                        name&gt;&lt;separator&gt;&lt;element name&gt;"</code>. <p class="p">Where
+                                            <code class="ph codeph">&lt;safe&gt;</code> is the CyberArk safe to read,
+                                            <code class="ph codeph">&lt;separator&gt;</code> is the separator defined
+                                        in the
+                                            <code class="ph codeph">$SDC_CONF/credential-stores.properties</code>
+                                        file, <code class="ph codeph">&lt;folder&gt;</code> is the CyberArk folder to
+                                        read, <code class="ph codeph">&lt;object name&gt;</code> is the CyberArk
+                                        object to read, and <code class="ph codeph">&lt;element name&gt;</code> is
+                                        the name for the value that you want returned.</p>
+</li>
+
+                                <li class="li">Vault - Enter the credential name using the following format:
+                                        <code class="ph codeph">"&lt;path&gt;&lt;separator&gt;&lt;key&gt;"</code>. <p class="p">Where
+                                            <code class="ph codeph">&lt;path&gt;</code> is the path in Vault to read,
+                                            <code class="ph codeph">&lt;separator&gt;</code> is the separator defined
+                                        in the
+                                            <code class="ph codeph">$SDC_CONF/credential-stores.properties</code>
+                                        file, and <code class="ph codeph">&lt;key&gt;</code> is the key for the value
+                                        that you want returned.</p>
+</li>
+
+                            </ul>
+</li>
+
+                        <li class="li">options - Additional options to communicate with the credential store.
+                            For Vault, you can use the <code class="ph codeph">delay</code> option to enter a
+                            delay in milliseconds to allow time for external processing. Use the
+                            delay option when using the Vault AWS secret backend to generate AWS
+                            access credentials based on IAM policies. According to Vault
+                            documentation, you might need a delay of 10 seconds or more before the
+                            credentials can be used successfully. <p class="p">For CyberArk, you can use the
+                                following options:</p>
+<ul class="ul" id="concept_yvc_3qs_r1b__ul_kb1_c4c_hbb">
+                                <li class="li"><code class="ph codeph">separator</code> - Separator to use for the credential
+                                    name.</li>
+
+                                <li class="li"><code class="ph codeph">ConnectionTimeout</code> - Connection timeout
+                                    value.</li>
+
+                                <li class="li"><code class="ph codeph">FailRequestOnPasswordChange</code> - Whether to fail
+                                    the request on a password change, set to true or false.</li>
+
+                            </ul>
+<div class="p">Use the following format to specify
+                                options:<pre class="pre codeblock"><code>"&lt;option1&gt;=&lt;value&gt;,&lt;option2&gt;=&lt;value&gt;"</code></pre>For
+                                example, to use the pipe symbol (|) as the CyberArk separator, enter
+                                the following for the options argument:
+                                <pre class="pre codeblock"><code>"separator=|"</code></pre></div>
+<div class="p">Or to set the Vault delay
+                                to 1,000 milliseconds, enter the following for the options
+                                argument:<pre class="pre codeblock"><code>"delay=1000"</code></pre></div>
+</li>
+
+                    </ul>
+</dd>
+
+                <dd class="dd ddexpand">Return type: String.</dd>
+
+                <dd class="dd ddexpand">
+                    <div class="p">For example, the following expression returns the value of
+            the key password stored in the Vault path /secret/databases/oracle after waiting for a
+            delay of 1,000 milliseconds. The credential name argument uses the default ampersand
+            (&amp;) as the separator. The expression allows any user belonging to the devops group
+            access to the credential when validating, previewing, or running the
+            pipeline:<pre class="pre codeblock"><code>${credential:getWithOptions("vault", "devops", "/secret/databases/oracle&amp;password", "delay=1000")}</code></pre></div>
+
+                </dd>
+
+
+        </dl>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title7" id="concept_hpn_xfk_p5">
+ <h2 class="title topictitle2" id="ariaid-title7">Data Drift Functions</h2>
+
+
+ <div class="body conbody"><p class="shortdesc">Use data drift functions to create alerts when data drift occurs. You can use these
+        functions in data drift rules.</p>
+
+        <p class="p">You can replace any argument with a literal or an expression
+                  that evaluates to the argument. String literals must be enclosed in single or
+                  double quotation marks.</p>
+
+  <div class="p">The expression language
+            provides the following data drift functions: <dl class="dl">
+
+                    <dt class="dt dlterm">drift:names(&lt;field path&gt;, &lt;ignoreWhenMissing: true | false&gt;)</dt>
+
+                    <dd class="dd">Triggers an alert when key values change in a map or list-map field. When
+                        key values are field names, triggers an alert when field names change. Use
+                        with list-map or map fields. </dd>
+
+                    <dd class="dd ddexpand">
+                        <p class="p">Use the ignoreWhenMissing flag to determine the behavior
+                  when the field is missing. When set to "true", a missing field causes no errors.
+                  When set to "false", a missing field generates an alert for the record missing the
+                  field, and for the next record that includes the field.</p>
+
+                    </dd>
+
+                    <dd class="dd ddexpand">For example, to trigger an alert when any field name in the record changes
+                        and ignore empty records, you can use the root field in the expression as
+                        follows:<pre class="pre codeblock"><code>${drift:names('/', true)}</code></pre></dd>
+
+
+
+                    <dt class="dt dlterm">drift:order(&lt;field path&gt;, &lt;ignoreWhenMissing: true | false&gt;)</dt>
+
+                    <dd class="dd">Triggers an alert when the field order changes for fields within a list-map
+                        field. Use only with list-map fields. </dd>
+
+                    <dd class="dd ddexpand">Note that this function triggers alerts when field names change as
+                        well.</dd>
+
+                    <dd class="dd ddexpand">
+                        <p class="p">Use the ignoreWhenMissing flag to determine the behavior
+                  when the field is missing. When set to "true", a missing field causes no errors.
+                  When set to "false", a missing field generates an alert for the record missing the
+                  field, and for the next record that includes the field.</p>
+
+                    </dd>
+
+                    <dd class="dd ddexpand">To alert on field order or name changes within a delimited record and ignore
+                        empty records, use the root field as
+                        follows:<pre class="pre codeblock"><code>${drift:order('/', true)}</code></pre></dd>
+
+
+
+                    <dt class="dt dlterm">drift:size(&lt;field path&gt;, &lt;ignoreWhenMissing: true | false&gt;)</dt>
+
+                    <dd class="dd">Triggers an alert when the number of fields changes within a list, list-map,
+                        or map field. Use with list, list-map, or map fields.</dd>
+
+                    <dd class="dd ddexpand">
+                        <p class="p">Use the ignoreWhenMissing flag to determine the behavior
+                  when the field is missing. When set to "true", a missing field causes no errors.
+                  When set to "false", a missing field generates an alert for the record missing the
+                  field, and for the next record that includes the field.</p>
+
+                    </dd>
+
+                    <dd class="dd ddexpand">To alert when the number of columns change within the Depts map field and
+                        when a record is missing the Depts field, use the following
+                        expression:<pre class="pre codeblock"><code>${drift:size('/Depts', false)}</code></pre></dd>
+
+
+
+                    <dt class="dt dlterm">drift:type(&lt;field path&gt;, &lt;ignoreWhenMissing: true | false&gt;)</dt>
+
+                    <dd class="dd">Triggers an alert when the data type of the specified field changes.
+                        Evaluates only the specified field.</dd>
+
+                    <dd class="dd ddexpand">
+                        <p class="p">Use the ignoreWhenMissing flag to determine the behavior
+                  when the field is missing. When set to "true", a missing field causes no errors.
+                  When set to "false", a missing field generates an alert for the record missing the
+                  field, and for the next record that includes the field.</p>
+
+                    </dd>
+
+                    <dd class="dd ddexpand">For example, to receive alerts when the data type of the ID field changes
+                        and when the ID field does not exist in the record, use the following
+                        expression:<pre class="pre codeblock"><code>${drift:type('/ID', false)}</code></pre></dd>
+
+
+            </dl>
+</div>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title8" id="concept_gfs_w55_3cb">
+    <h2 class="title topictitle2" id="ariaid-title8">Field Functions</h2>
+
+
+    <div class="body conbody"><p class="shortdesc">You can use field functions in field path expressions that determine the set of
+        fields that a processor uses. Each function is evaluated against a set of matching fields
+        individually.</p>
+
+        <p class="p">For more information about field path expressions, see <a class="xref" href="../Pipeline_Configuration/Expressions.html#concept_ir4_rxt_3cb" title="You can use field path expressions in certain processors to determine the set of fields that you want the processor to use.">Field Path Expressions</a>. For a list of stages where
+            you can use field functions, see <a class="xref" href="../Pipeline_Configuration/Expressions.html#concept_bs3_dm5_3cb">Supported Stages</a>.</p>
+
+        <div class="p">
+            <dl class="dl">
+
+                    <dt class="dt dlterm">f:attribute(&lt;attribute name&gt;)</dt>
+
+                    <dd class="dd">Returns the value of the specified field attribute. </dd>
+
+                    <dd class="dd ddexpand">Uses the following argument:<ul class="ul" id="concept_gfs_w55_3cb__ul_w4q_nkv_3cb">
+                            <li class="li">attribute name - A string value that specifies a field attribute
+                                name.</li>
+
+                        </ul>
+</dd>
+
+                    <dd class="dd ddexpand">Return type: String. </dd>
+
+                    <dd class="dd ddexpand">The following field path expression returns only the fields where the region
+                        attribute is set to
+                        "west":<pre class="pre codeblock"><code>/*[${f:attribute('region') == 'west'}]</code></pre></dd>
+
+
+
+                    <dt class="dt dlterm">f:path()</dt>
+
+                    <dd class="dd">Returns the path of a field. Use to return the fields with a specified path
+                        or where the path is as defined in the expression.</dd>
+
+                    <dd class="dd ddexpand">Return type: String.</dd>
+
+                    <dd class="dd ddexpand">For example, the following field path expression returns all datetime fields
+                        except for the audit_date
+                        field:<pre class="pre codeblock"><code>/*[${f:type() == 'DATETIME' &amp;&amp; f:path() != '/audit_date'}]</code></pre></dd>
+
+
+
+                    <dt class="dt dlterm">f:type()</dt>
+
+                    <dd class="dd">Returns the data type of a field. Use to return the fields with a specified
+                        field type or where the field type is as defined in the expression. </dd>
+
+                    <dd class="dd ddexpand">
+                        <div class="note important"><span class="importanttitle">Important:</span> Use all caps when specifying a data type in an
+                            expression and enclose the string in quotation marks. For a list of
+                            valid datatypes, see <a class="xref" href="../Pipeline_Design/DatainMotion.html#concept_hjl_vyd_kcb">Data Collector Data Types</a>.</div>
+
+                    </dd>
+
+                    <dd class="dd ddexpand">Return type: String.</dd>
+
+                    <dd class="dd ddexpand">For example, the following field path expression returns all boolean
+                        fields:<pre class="pre codeblock"><code>/*[${f:type() == 'BOOLEAN'}]</code></pre></dd>
+
+
+
+                    <dt class="dt dlterm">f:value()</dt>
+
+                    <dd class="dd">Returns the value of the field. Use to return the fields with a specified
+                        value or where the value is as defined in the expression.</dd>
+
+                    <dd class="dd ddexpand">Return type: Dependent on the field type.</dd>
+
+                    <dd class="dd ddexpand">For example, the following field path expression returns only the fields
+                        where the value is greater than 0.
+                        <pre class="pre codeblock"><code>/*[${f:value() &gt; 0}]</code></pre></dd>
+
+
+            </dl>
+
+        </div>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title9" id="concept_kxj_nyl_5x">
+ <h2 class="title topictitle2" id="ariaid-title9">File Functions</h2>
+
+ <div class="body conbody">
+  <p class="p">Use file functions to
+            return information about a filename or path. For example, you might use a file function
+            to remove a file extension from a filepath or to return part of the path.</p>
+
+        <p class="p">You can replace any argument with a literal or an expression
+                  that evaluates to the argument. String literals must be enclosed in single or
+                  double quotation marks.</p>
+
+        <div class="p">The expression language provides the following file functions:<dl class="dl">
+
+                    <dt class="dt dlterm">file:fileExtension(&lt;filepath&gt;)</dt>
+
+                    <dd class="dd">Returns the file extension from a file path. Uses the following argument:<ul class="ul" id="concept_kxj_nyl_5x__ul_slr_yqr_5x">
+                            <li class="li">filepath - An absolute path to a file.</li>
+
+                        </ul>
+</dd>
+
+                    <dd class="dd ddexpand">Return type: String.</dd>
+
+                    <dd class="dd ddexpand">For example, the following expression returns <code class="ph codeph">.txt</code>:
+                        <pre class="pre codeblock"><code>${file:fileExtension('/logs/weblog.txt'}</code></pre></dd>
+
+
+
+                    <dt class="dt dlterm">file:fileName(&lt;filepath&gt;)</dt>
+
+                    <dd class="dd">Returns the file name from a file path. Uses the following argument:<ul class="ul" id="concept_kxj_nyl_5x__ul_ofq_dsr_5x">
+                            <li class="li">filepath - An absolute path to a file.</li>
+
+                        </ul>
+</dd>
+
+                    <dd class="dd ddexpand">Return type: String.</dd>
+
+                    <dd class="dd ddexpand">For example, the following expression returns the filename,
+                            <code class="ph codeph">weblog.txt</code>:<pre class="pre codeblock"><code>${file:fileName('/logs/weblog.txt')}</code></pre></dd>
+
+
+
+                    <dt class="dt dlterm">file:parentPath(&lt;filepath&gt;)</dt>
+
+                    <dd class="dd">When used with a path to a file, returns the path to the file without the
+                        final separator, such as <code class="ph codeph">/files</code> for
+                            <code class="ph codeph">/files/file.log</code>. </dd>
+
+                    <dd class="dd ddexpand">When used with a path to a directory, returns the path to the directory
+                        without the final separator, such as <code class="ph codeph">/serverA/logs</code> for
+                            <code class="ph codeph">/serverA/logs/2016</code>.</dd>
+
+                    <dd class="dd ddexpand">Uses the following argument:<ul class="ul" id="concept_kxj_nyl_5x__ul_cxd_hrf_gy">
+                            <li class="li">filepath - An absolute path to a file.</li>
+
+                        </ul>
+</dd>
+
+                    <dd class="dd ddexpand">Return type: String.</dd>
+
+                    <dd class="dd ddexpand">For example, the following expression that includes a path to a file returns
+                            <code class="ph codeph">/serverB/logs</code>:<pre class="pre codeblock"><code>${file:parentPath('/serverB/logs/weblog.txt')}</code></pre></dd>
+
+                    <dd class="dd ddexpand">Similarly, the following expression that includes a path to a directory
+                        returns the parent directory,
+                        <code class="ph codeph">/serverB/logs</code>:<pre class="pre codeblock"><code>${file:parentPath('/serverB/logs/weblogs')}</code></pre></dd>
+
+
+
+                    <dt class="dt dlterm">file:pathElement(&lt;filepath&gt;, &lt;integer&gt;)</dt>
+
+                    <dd class="dd">Returns the part of a path based on the specified integer. Uses the
+                        following arguments: <ul class="ul" id="concept_kxj_nyl_5x__ul_afc_cwm_5x">
+                            <li class="li">filepath - An absolute path to a file.</li>
+
+                            <li class="li">integer - The section of a path to return. Can return parts starting
+                                from the left or right side of the path:<ul class="ul" id="concept_kxj_nyl_5x__ul_rz3_gwm_5x">
+                                    <li class="li">To return a section of a path, counting from the left side
+                                        of the path, use 0 and positive integers and start with 0. </li>
+
+                                    <li class="li">To return a section of a path, counting from the right side
+                                        of the path, use negative integers and start with -1.</li>
+
+                                </ul>
+</li>
+
+                        </ul>
+</dd>
+
+                    <dd class="dd ddexpand">Return type: String.</dd>
+
+                    <dd class="dd ddexpand">For example, to return the logs portion of the path, you can use either of
+                        the following
+                        expressions:<pre class="pre codeblock"><code>${file:pathElement('/logs/weblog.txt',0}
+${file:pathElement('/logs/weblog.txt',-2}</code></pre></dd>
+
+
+
+                    <dt class="dt dlterm">file:removeExtension(&lt;filepath&gt;)</dt>
+
+                    <dd class="dd">Returns the file path without the file extension. Uses the following
+                            argument:<ul class="ul" id="concept_kxj_nyl_5x__ul_mnq_gsr_5x">
+                            <li class="li">filepath - An absolute path to a file.</li>
+
+                        </ul>
+</dd>
+
+                    <dd class="dd ddexpand">Return type: String.</dd>
+
+                    <dd class="dd ddexpand">For example, the following expression returns
+                        <code class="ph codeph">/logs/weblog</code>:<pre class="pre codeblock"><code>${file:removeExtension('/logs/weblog.txt'}</code></pre></dd>
+
+
+            </dl>
+</div>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title10" id="concept_m2m_s1f_lw">
+ <h2 class="title topictitle2" id="ariaid-title10">Math Functions</h2>
+
+ <div class="body conbody">
+  <p class="p">Use math functions to
+            perform math on numeric values. </p>
+
+        <p class="p">You can replace any argument with a literal or an expression
+                  that evaluates to the argument. String literals must be enclosed in single or
+                  double quotation marks.</p>
+
+        <div class="p">You can use the following data types with math functions:<ul class="ul" id="concept_m2m_s1f_lw__ul_qz1_3bf_lw">
+                <li class="li">Double</li>
+
+                <li class="li">Float  </li>
+
+                <li class="li">Integer </li>
+
+                <li class="li">Long </li>
+
+                <li class="li">String<div class="note note"><span class="notetitle">Note:</span> <span class="ph">Data Collector</span> parses a string as a Double value if the numeric value in a String field
+                        contains a dot ( . ). Otherwise, <span class="ph">Data Collector</span> parses the string as a Long value.</div>
+</li>
+
+            </ul>
+</div>
+
+        <div class="p">The expression language provides the following math functions:<dl class="dl">
+
+                    <dt class="dt dlterm">math:abs(&lt;number&gt;)</dt>
+
+                    <dd class="dd">Returns the absolute value, or positive version, of the argument. If the
+                        argument is already positive, returns the original number.</dd>
+
+                    <dd class="dd ddexpand">Return type: Double, Float, Int, or Long, based on the data type of the
+                        argument.</dd>
+
+
+
+                    <dt class="dt dlterm">math:ceil(&lt;number&gt;)</dt>
+
+                    <dd class="dd">Returns the smallest integer greater than or equal to the argument.</dd>
+
+                    <dd class="dd ddexpand">For example, ${math:ceil(8.0+3.6)} returns 12.0.</dd>
+
+                    <dd class="dd ddexpand">Return type: Double.</dd>
+
+
+
+                    <dt class="dt dlterm">math:floor (&lt;number&gt;)</dt>
+
+                    <dd class="dd">Returns the largest integer greater than or equal to the argument.</dd>
+
+                    <dd class="dd ddexpand">Return type: Double.</dd>
+
+
+
+                    <dt class="dt dlterm">math:max(&lt;number1&gt;, &lt;number2&gt;)</dt>
+
+                    <dd class="dd">Returns the greater of two arguments.</dd>
+
+                    <dd class="dd ddexpand">For example, if the value of the tip_amount field is 2.5 and the value of
+                        the fare_amount field is 12.5, then ${math:max(record:value("/tip_amount"),
+                        record:value("/fare_amount"))} returns 12.5.</dd>
+
+                    <dd class="dd ddexpand">Return type: Double, Float, Int, or Long, based on the data type of the
+                        argument.</dd>
+
+
+
+                    <dt class="dt dlterm">math:min(&lt;number1&gt;, &lt;number2&gt;)</dt>
+
+                    <dd class="dd">Returns the lesser of two arguments.</dd>
+
+                    <dd class="dd ddexpand">Return type: Double, Float, Int, or Long, based on the data type of the
+                        argument.</dd>
+
+
+
+                    <dt class="dt dlterm">math:round(&lt;number&gt;)</dt>
+
+                    <dd class="dd">Returns the closest number to the argument, rounding up for ties.</dd>
+
+                    <dd class="dd ddexpand">Return type: Double or Long.</dd>
+
+
+            </dl>
+</div>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title11" id="concept_dvg_nqn_wx">
+    <h2 class="title topictitle2" id="ariaid-title11">Pipeline Functions</h2>
+
+    <div class="body conbody">
+        <p class="p">Use pipeline functions to
+            determine information about a pipeline, such as the pipeline title or ID. The expression
+            language provides the following pipeline functions: </p>
+
+        <dl class="dl">
+
+                <dt class="dt dlterm">pipeline:id()</dt>
+
+                <dd class="dd">Returns the ID of the pipeline. The ID is a UUID automatically generated when
+                    the pipeline is created and is used by <span class="ph">Data Collector</span> to identify the pipeline. The pipeline ID cannot be changed.</dd>
+
+                <dd class="dd ddexpand">Return type: String.</dd>
+
+                <dd class="dd ddexpand">For example, you can include the function in the directory template for the
+                    Hadoop FS destination to include the pipeline ID in the output directory name.
+                    The following expression creates output directories based on the pipeline ID and
+                    timestamp of a
+                    record:<pre class="pre codeblock"><code>/outputfiles/${pipeline:id()}/${YYYY()}-${MM()}-${DD()}-${hh()}</code></pre></dd>
+
+
+
+                <dt class="dt dlterm">pipeline:name()</dt>
+
+                <dd class="dd">Like <code class="ph codeph">pipeline:id</code>, this function returns the ID of the pipeline.
+                    The ID is a UUID automatically generated when the pipeline is created and is
+                    used by <span class="ph">Data Collector</span> to identify the pipeline. The pipeline ID cannot be changed.</dd>
+
+                <dd class="dd ddexpand">In <span class="ph">Data Collector</span> versions earlier than 2.3.0.0, this function returned the pipeline name. This
+                    function is retained for backward compatibility. Use
+                        <code class="ph codeph">pipeline:id</code> for new development.</dd>
+
+                <dd class="dd ddexpand">Return type: String.</dd>
+
+                <dd class="dd ddexpand">For example, you can include the function in the directory template for the
+                    Hadoop FS destination to include the pipeline ID in the output directory name.
+                    The following expression creates output directories based on the pipeline ID and
+                    timestamp of a
+                    record:<pre class="pre codeblock"><code>/outputfiles/${pipeline:name()}/${YYYY()}-${MM()}-${DD()}-${hh()}</code></pre></dd>
+
+
+
+                <dt class="dt dlterm">pipeline:title()</dt>
+
+                <dd class="dd">Returns the title or name of the pipeline.</dd>
+
+                <dd class="dd ddexpand">Return type: String.</dd>
+
+
+
+                <dt class="dt dlterm">pipeline:user()</dt>
+
+                <dd class="dd">Returns the user who started the pipeline. </dd>
+
+                <dd class="dd ddexpand">Return type: String.</dd>
+
+
+
+                <dt class="dt dlterm">pipeline:version()</dt>
+
+                <dd class="dd">Returns the pipeline version when the pipeline has been published to <span class="ph">StreamSets Control Hub</span>. Returns "UNDEFINED" if the pipeline has not been published to <span class="ph">Control Hub</span>. Use this function when you have registered <span class="ph">Data Collector</span> to work with <span class="ph">Control Hub</span>.</dd>
+
+                <dd class="dd ddexpand">Return type: String.</dd>
+
+
+        </dl>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title12" id="concept_ahp_f4v_1r">
+ <h2 class="title topictitle2" id="ariaid-title12">String Functions </h2>
+
+ <div class="body conbody">
+  <p class="p">Use string functions to transform
+      string data.</p>
+
+    <p class="p">You can replace any argument with a literal or an expression
+                  that evaluates to the argument. String literals must be enclosed in single or
+                  double quotation marks.</p>
+
+  <p class="p">The expression language provides the following string functions:</p>
+
+  <div class="p">
+   <dl class="dl">
+
+          <dt class="dt dlterm">str:concat(&lt;string1&gt;, &lt;string2&gt;)</dt>
+
+          <dd class="dd">Concatenates two strings together. </dd>
+
+          <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_ahp_f4v_1r__ul_w3w_w2t_2v">
+              <li class="li">string1 - The first string to concatenate.</li>
+
+              <li class="li">string2 - The second string to concatenate.</li>
+
+            </ul>
+</dd>
+
+          <dd class="dd ddexpand">Use the str:concat function to concatenate strings within an expression. For example,
+            to concatenate the FirstName field with the LastName field and then check if that result
+            matches a pattern, use the following expression:</dd>
+
+          <dd class="dd ddexpand">${str:matches(str:concat(record:value("/FirstName") , record:value("/LastName")) ,
+            "[A-Z][a-z]+[A-Z][a-z]+")}</dd>
+
+
+
+          <dt class="dt dlterm">str:contains(&lt;string&gt;, &lt;subset&gt;)</dt>
+
+          <dd class="dd">Returns true or false based on whether the string contains the configured subset of
+            characters.</dd>
+
+          <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_ahp_f4v_1r__ul_fwp_p4k_br">
+              <li class="li">string - The string to evaluate.</li>
+
+              <li class="li">subset - The subset of characters to look for. </li>
+
+            </ul>
+</dd>
+
+          <dd class="dd ddexpand">For example, ${str:contains("Jane", "boo")} returns: false.</dd>
+
+
+
+          <dt class="dt dlterm">str:endsWith(&lt;string&gt;, &lt;subset&gt;)</dt>
+
+          <dd class="dd">Returns true or false based on whether the string ends with the configured subset of
+            characters.</dd>
+
+          <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_ahp_f4v_1r__ul_tf5_y4k_br">
+              <li class="li">string - The string to evaluate.</li>
+
+              <li class="li">subset - The subset of characters to look for.</li>
+
+            </ul>
+</dd>
+
+          <dd class="dd ddexpand">For example, ${str:endsWith("32403-1001", "1001")} returns: true.</dd>
+
+
+
+          <dt class="dt dlterm">str:escapeXML10(&lt;string&gt;)</dt>
+
+          <dd class="dd">Returns a string that you can embed in an XML 1.0 or 1.1 document. </dd>
+
+          <dd class="dd ddexpand">Uses the following argument: <ul class="ul" id="concept_ahp_f4v_1r__ul_e4m_kbb_qz">
+              <li class="li">string - The string to escape.</li>
+
+            </ul>
+</dd>
+
+          <dd class="dd ddexpand">Return type: String.</dd>
+
+          <dd class="dd ddexpand">For example, you can use the following expression to generate XML-safe string data
+            based on the XML in the XMLdata field: <code class="ph codeph">
+              ${str:escapeXML10(record:value('/XMLdata'))}</code></dd>
+
+
+
+          <dt class="dt dlterm">str:escapeXML11(&lt;string&gt;)</dt>
+
+          <dd class="dd">Returns a string that you can embed in an XML 1.1 document.</dd>
+
+          <dd class="dd ddexpand">Uses the following argument: <ul class="ul" id="concept_ahp_f4v_1r__ul_ewf_5bb_qz">
+              <li class="li">string - The string to escape.</li>
+
+            </ul>
+</dd>
+
+          <dd class="dd ddexpand">Return type: String.</dd>
+
+          <dd class="dd ddexpand">For example, you can use the following expression to generate XML-safe string data
+            based on the XML in the XMLdata field: <code class="ph codeph">
+              ${str:escapeXML11(record:value('/XMLdata'))}</code></dd>
+
+
+
+          <dt class="dt dlterm">str:indexOf(&lt;string&gt;, &lt;subset&gt;)</dt>
+
+          <dd class="dd">Returns the index within a string of the first occurrence of the specified subset of
+            characters.</dd>
+
+          <dd class="dd ddexpand">Return type: Integer.</dd>
+
+          <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_ahp_f4v_1r__ul_jlp_y44_x1b">
+              <li class="li">string - The string to return the index of.</li>
+
+              <li class="li">subset - The subset of characters to look for.</li>
+
+            </ul>
+</dd>
+
+          <dd class="dd ddexpand">For example, ${str:indexOf("tomorrow", "row")} returns: 5.</dd>
+
+
+
+          <dt class="dt dlterm">str:isNullOrEmpty(&lt;string&gt;)</dt>
+
+          <dd class="dd">Returns true or false based on whether a string is null or is the empty string.</dd>
+
+          <dd class="dd ddexpand">Uses the following argument: <ul class="ul" id="concept_ahp_f4v_1r__ul_y42_sgn_gbb">
+              <li class="li">string - The string to evaluate.</li>
+
+            </ul>
+</dd>
+
+          <dd class="dd ddexpand">For example, ${str:isNullOrEmpty(record:value("/work_phone"))} returns true if the
+            work_phone field is the empty string.</dd>
+
+
+
+          <dt class="dt dlterm">str:length(&lt;string&gt;)</dt>
+
+          <dd class="dd">Returns the length of a string.</dd>
+
+          <dd class="dd ddexpand">Return type: Integer.</dd>
+
+          <dd class="dd ddexpand">Uses the following argument:<ul class="ul" id="concept_ahp_f4v_1r__ul_mdj_5hm_gv">
+              <li class="li">string - The string to return the length for.</li>
+
+            </ul>
+</dd>
+
+          <dd class="dd ddexpand">For example, ${str:length("tomorrow")} returns: 8.</dd>
+
+
+
+          <dt class="dt dlterm">str:matches(&lt;string&gt;, &lt;regEx&gt;)</dt>
+
+          <dd class="dd">Returns true or false based on whether a string matches a Java regex pattern.</dd>
+
+          <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_ahp_f4v_1r__ul_yjb_wjq_fv">
+              <li class="li">string - The string to evaluate.</li>
+
+              <li class="li">regEx - Regular expression that describes the pattern of the string.</li>
+
+            </ul>
+</dd>
+
+          <dd class="dd ddexpand">For example, ${str:matches(record:value("/HostName"), ".*\.com$")} checks if the
+            string in the HostName field ends with the characters ".com".</dd>
+
+
+
+          <dt class="dt dlterm">str:regExCapture(&lt;string&gt;, &lt;regEx&gt;, &lt;group&gt;)</dt>
+
+          <dd class="dd">Parses a complex string into groups based on a Java regex pattern and returns the
+            specified group.</dd>
+
+          <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_ahp_f4v_1r__ul_fy1_qbx_1r">
+              <li class="li">string - The string that contains a pattern of characters.</li>
+
+              <li class="li">regEx - Regular expression that describes the pattern of the string, separating it
+                into groups. Use the backslash as an escape character for special characters in the
+                expression. For example, to represent a digit in the expression with the characters
+                  <code class="ph codeph">\d</code>, use <code class="ph codeph">\\d</code>.</li>
+
+              <li class="li">group - The number of the group to return, where 1 represents the first group, 2
+                represents the second group, etc. 0 returns the entire string.</li>
+
+            </ul>
+<p class="p">For example, to extract the month and day from the Date field that uses the
+              format 'mm-dd-yyyy', use the following function:
+              ${str:regExCapture(record:value('/Date'), '(\\w{2}\\-\\w{2})-\\w*', 1)}</p>
+<p class="p">
+              (\\w{2}\\-\\w{2})-\\w*', 1)</p>
+</dd>
+
+
+
+          <dt class="dt dlterm">str:replace(&lt;string&gt;, &lt;oldChar&gt;, &lt;newChar&gt;)</dt>
+
+          <dd class="dd">Replaces all instances of a specified character in a string with a new character. </dd>
+
+          <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_ahp_f4v_1r__ul_ryc_pnk_br">
+              <li class="li">string - The string for character replacement. </li>
+
+              <li class="li">oldChar - Character to replace.</li>
+
+              <li class="li">newChar - Character to use for replacement.</li>
+
+            </ul>
+</dd>
+
+          <dd class="dd ddexpand">For example, ${str:replace("lecucereche", "e", "a")} returns: lacucaracha.</dd>
+
+
+
+          <dt class="dt dlterm">str:replaceAll(&lt;string&gt;, &lt;regEx&gt;, &lt;newString&gt;)</dt>
+
+          <dd class="dd">Replaces a set of characters in a string with a new set of characters.</dd>
+
+          <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_ahp_f4v_1r__ul_eqg_tnk_br">
+              <li class="li">string - The string for the replacement of a group of characters.</li>
+
+              <li class="li">regEx - A regular expression that describes the string to replace.</li>
+
+              <li class="li">newString - The set of characters to use for replacement.</li>
+
+            </ul>
+<p class="p">For example, ${str:replaceAll("shoes(*)","footwear")} replaces all strings that
+              start with "shoes" with "footwear".</p>
+</dd>
+
+
+
+          <dt class="dt dlterm">str:splitKV(&lt;string&gt;, &lt;pairSeparator&gt;, &lt;keyValueSeparator&gt;)</dt>
+
+          <dd class="dd">Splits key-value pairs in a string into a map of string values.</dd>
+
+          <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_ahp_f4v_1r__ul_a5f_g53_jbb">
+              <li class="li">string - The string containing the key-value pairs. </li>
+
+              <li class="li">pairSeparator - The set of characters that separate the key-value pairs.</li>
+
+              <li class="li">keyValueSeparator - The set of characters that separate each key and value.</li>
+
+            </ul>
+<div class="p">For example, let's say that a record contains a "dimensions" string field that
+              records the height, width, and length as follows: "height=32 width=24 length=36". The
+              function ${str:splitKV(record:value("/dimensions"), " ", "=")} returns the following
+              map of string
+              values:<pre class="pre codeblock"><code>"dimensions": {
+      "height": "32",
+      "width": "24",
+      "length": "36"
+    }</code></pre></div>
+</dd>
+
+
+
+          <dt class="dt dlterm">str:startsWith(&lt;string&gt;, &lt;subset&gt;)</dt>
+
+          <dd class="dd">Returns true or false based on whether the string starts with the configured subset of
+            characters.</dd>
+
+          <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_ahp_f4v_1r__ul_bgv_54k_br">
+              <li class="li">string - The string to evaluate.</li>
+
+              <li class="li">subset - The subset of characters to look for.</li>
+
+            </ul>
+</dd>
+
+          <dd class="dd ddexpand">For example, ${str:startsWith("Data Collector", "Data")} returns: true.</dd>
+
+
+
+     <dt class="dt dlterm">str:substring(&lt;string&gt;, &lt;beginIndex&gt;, &lt;endIndex&gt;)</dt>
+
+     <dd class="dd">Returns a subset of the string value that starts with the beginIndex character and ends one
+            character before the endIndex. </dd>
+
+     <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_ahp_f4v_1r__ul_pcx_4yw_1r">
+       <li class="li">string - The string that contains the return substring that you want.</li>
+
+       <li class="li">beginIndex - An integer that represents the beginning position of the returned substring.
+                Start the count from the left with 0. </li>
+
+       <li class="li">endIndex - An integer that represents one position past the end of the substring. </li>
+
+      </ul>
+</dd>
+
+     <dd class="dd ddexpand">For example, ${str:substring("Chewing Gum", 0, 5)} returns: Chew.</dd>
+
+
+
+          <dt class="dt dlterm">str:toLower(&lt;string&gt;)</dt>
+
+          <dd class="dd">Converts string data to all lowercase letters.</dd>
+
+          <dd class="dd ddexpand">Uses the following argument:<ul class="ul" id="concept_ahp_f4v_1r__ul_il3_nnk_br">
+              <li class="li">string - The string to lower case.</li>
+
+            </ul>
+</dd>
+
+          <dd class="dd ddexpand">For example, ${str:toLower("FALSE")} returns: false.</dd>
+
+
+
+          <dt class="dt dlterm">str:toUpper(&lt;string&gt;)</dt>
+
+          <dd class="dd">Converts string data to all capital letters. </dd>
+
+          <dd class="dd ddexpand">Uses the following argument:<ul class="ul" id="concept_ahp_f4v_1r__ul_std_jnk_br">
+              <li class="li">string - The string to capitalize.</li>
+
+            </ul>
+</dd>
+
+          <dd class="dd ddexpand">For example, ${str:toUpper("true")} returns: TRUE.</dd>
+
+
+
+     <dt class="dt dlterm">str:trim(&lt;string&gt;)</dt>
+
+     <dd class="dd">Trims leading and trailing white space characters from a string, including spaces and
+      return characters. </dd>
+
+     <dd class="dd ddexpand">Uses the following argument:<ul class="ul" id="concept_ahp_f4v_1r__ul_cpm_fnk_br">
+       <li class="li">string - The string to return without additional white space characters.</li>
+
+      </ul>
+</dd>
+
+     <dd class="dd ddexpand">For example, ${str:trim(record:value("/Address"))} trims leading and trailing white space
+            characters from the Address field.</dd>
+
+
+
+     <dt class="dt dlterm">str:truncate(&lt;string&gt;, &lt;length&gt;)</dt>
+
+     <dd class="dd">Returns a string truncated to the specified length. Use an integer to specify the length. </dd>
+
+     <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_ahp_f4v_1r__ul_yqx_c4k_br">
+       <li class="li">string - The string to truncate. </li>
+
+       <li class="li">length - An integer that represents the number of characters to keep. </li>
+
+      </ul>
+</dd>
+
+     <dd class="dd ddexpand">For example, when a phone number field includes string numbers such as 415-555-5555,
+            ${str:truncate(record:value('/phone'),3)} returns the area code of the phone
+            number.</dd>
+
+
+
+          <dt class="dt dlterm">str:unescapeJava(&lt;string&gt;)</dt>
+
+          <dd class="dd">Returns an unescaped string from a string with special Java characters. Use to include
+            binary or non-printable characters in any location where you can enter an expression. </dd>
+
+          <dd class="dd ddexpand">Uses the following argument:<ul class="ul" id="concept_ahp_f4v_1r__ul_vm1_g25_b1b">
+              <li class="li">string - The string to process.</li>
+
+            </ul>
+</dd>
+
+
+
+          <dt class="dt dlterm">str:unescapeXML(&lt;string&gt;)</dt>
+
+          <dd class="dd">Returns an unescaped string from a string that had XML data escaped.</dd>
+
+          <dd class="dd ddexpand">Uses the following argument:<ul class="ul" id="concept_ahp_f4v_1r__ul_stl_xcb_qz">
+              <li class="li">string - The string that includes escaped XML data.</li>
+
+            </ul>
+</dd>
+
+          <dd class="dd ddexpand">For example, say you have escaped XML data  embedded within an XML document in an
+            additionalXML field. The following expression unescapes the XML:
+              <code class="ph codeph">${str:unescapeXML(record:value('/additionalXML'))}</code></dd>
+
+
+
+          <dt class="dt dlterm">str:urlDecode(&lt;URL&gt;, &lt;charset&gt;)</dt>
+
+          <dd class="dd">Converts characters from a URL to the specified character set, such as UTF-8. </dd>
+
+          <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_ahp_f4v_1r__ul_m2g_hdc_vy">
+              <li class="li">URL - The URL or field of URLs to decode.</li>
+
+              <li class="li">charset - The character set to apply to the URL. For information about valid
+                encodings, see <a class="xref" href="https://docs.oracle.com/javase/8/docs/api/java/nio/charset/Charset.html" target="_blank">https://docs.oracle.com/javase/8/docs/api/java/nio/charset/Charset.html</a>.</li>
+
+            </ul>
+</dd>
+
+          <dd class="dd ddexpand">Return value: String.</dd>
+
+          <dd class="dd ddexpand">For example, to convert a URL to UTF-8, use the following
+            expression:<pre class="pre codeblock"><code>${str:urlDecode(record:value('/URL'), 'UTF-8')}</code></pre></dd>
+
+
+
+          <dt class="dt dlterm">str:urlEncode(&lt;infoforURL&gt;, &lt;charset&gt;)</dt>
+
+          <dd class="dd">Converts invalid characters to help create a valid URL based on the specified
+            character set, such as UTF-8. You might use this function when using record data to add
+            additional information, like a fragment, to a URL.</dd>
+
+          <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_ahp_f4v_1r__ul_s2v_rtv_vy">
+              <li class="li">infoforURL - The information to encode for a URL.</li>
+
+              <li class="li">charset - The character set to convert to, such as UTF-8. For information about
+                valid encodings, see <a class="xref" href="https://docs.oracle.com/javase/8/docs/api/java/nio/charset/Charset.html" target="_blank">https://docs.oracle.com/javase/8/docs/api/java/nio/charset/Charset.html</a>.</li>
+
+            </ul>
+</dd>
+
+          <dd class="dd ddexpand">Return value: String.</dd>
+
+          <dd class="dd ddexpand">For example, to encode a search result for use in a URL, converting spaces to valid
+            characters, you might use the following expression:
+            <pre class="pre codeblock"><code>${str:urlEncode(record:value('/result'), 'UTF-8')}</code></pre></dd>
+
+
+   </dl>
+
+  </div>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title13" id="concept_qkr_trf_sw">
+ <h2 class="title topictitle2" id="ariaid-title13">Time Functions</h2>
+
+
+ <div class="body conbody"><p class="shortdesc">Use time functions to return the current time or to transform datetime data.</p>
+
+        <p class="p">You can replace any
+            datetime argument with an expression that evaluates to a datetime value. You cannot
+            replace a datetime argument with a datetime literal.</p>
+
+        <p class="p">You can replace any long or string argument with a literal or an expression that
+            evaluates to the argument. String literals must be enclosed in single or double
+            quotation marks.</p>
+
+        <p class="p">The expression language provides the following time functions:</p>
+
+        <dl class="dl">
+
+                <dt class="dt dlterm">time:createDateFromStringTZ(&lt;string&gt;, &lt;time zone&gt;, &lt;date format&gt;)</dt>
+
+                <dd class="dd">Creates a Date object based on a datetime in a String field and using the
+                    specified time zone. The datetime string should not include the time zone.</dd>
+
+                <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_qkr_trf_sw__ul_mjs_wxy_dz">
+                        <li class="li">string - String with datetime values, not including the time zone.</li>
+
+                        <li class="li">time zone - Time zone associated with the datetime values. The time zone
+                            is used when creating the Date object.<div class="p">You can use the following time zone formats: <ul class="ul" id="concept_qkr_trf_sw__d144e5688">
+                        <li class="li">&lt;area&gt;/&lt;location&gt; - For a list of valid time zones in this format,
+                              see <a class="xref" href="https://www.vmware.com/support/developer/vc-sdk/visdk400pubs/ReferenceGuide/timezone.html" target="_blank">https://www.vmware.com/support/developer/vc-sdk/visdk400pubs/ReferenceGuide/timezone.html</a>.</li>
+
+                        <li class="li">Numeric time zones with the GMT prefix, such as GMT-0500 or GMT-8:00.
+                              Note that numeric-only time zones such as -500 are not supported. </li>
+
+                        <li class="li">Short time zone IDs such as EST and CST - These time zones should
+                              generally be avoided because they can stand for multiple time zones,
+                              e.g. CST stands for both Central Standard Time and China Standard
+                              Time.</li>
+
+                  </ul>
+</div>
+</li>
+
+                        <li class="li">date format - The date format used by the string data. For information
+                            about date formats, see <a class="xref" href="https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html" target="_blank">https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html</a>.</li>
+
+                    </ul>
+</dd>
+
+                <dd class="dd ddexpand">For example, the following expression converts string values in the Datetime
+                    field to a Date object using the time zone specified in the TZ field. It assumes
+                    the date is in the format, "03/30/2016 12:15:33
+                    AM":<pre class="pre codeblock"><code>${time:createDateFromStringTZ(record:value('/Datetime'), 'record:value('/TZ')', 'MM/dd/yyyy hh:mm:ss a'}</code></pre></dd>
+
+
+
+                <dt class="dt dlterm">time:dateTimeToMilliseconds(&lt;Date object&gt;)</dt>
+
+                <dd class="dd">
+                    <p class="p">Converts a Date object to an epoch or UNIX time in milliseconds.</p>
+
+                    <div class="p">For example, the following expression converts the current time to epoch or
+                        UNIX time in seconds, and then multiplies the value by 1000 to convert the
+                        value to
+                        milliseconds:<pre class="pre codeblock"><code>${time:dateTimeToMilliseconds(time:now())}</code></pre></div>
+
+                    <p class="p">Return type: Long.</p>
+
+                </dd>
+
+
+                <dt class="dt dlterm">time:dateTimeZoneOffset(&lt;Date object&gt;, &lt;time zone&gt;)</dt>
+
+                <dd class="dd">
+                    <p class="p">Returns the time zone offset in milliseconds for the specified date and time
+                        zone. The time zone offset is the difference in hours and minutes from
+                        Coordinated Universal Time (UTC).</p>
+
+                    <div class="p">Uses the following arguments:<ul class="ul" id="concept_qkr_trf_sw__ul_m5p_4c3_scb">
+                            <li class="li">Date object - Date object to use.</li>
+
+                            <li class="li">time zone - Time zone associated with the Date object.<div class="p">You can use the following time zone formats: <ul class="ul" id="concept_qkr_trf_sw__d144e5688">
+                        <li class="li">&lt;area&gt;/&lt;location&gt; - For a list of valid time zones in this format,
+                              see <a class="xref" href="https://www.vmware.com/support/developer/vc-sdk/visdk400pubs/ReferenceGuide/timezone.html" target="_blank">https://www.vmware.com/support/developer/vc-sdk/visdk400pubs/ReferenceGuide/timezone.html</a>.</li>
+
+                        <li class="li">Numeric time zones with the GMT prefix, such as GMT-0500 or GMT-8:00.
+                              Note that numeric-only time zones such as -500 are not supported. </li>
+
+                        <li class="li">Short time zone IDs such as EST and CST - These time zones should
+                              generally be avoided because they can stand for multiple time zones,
+                              e.g. CST stands for both Central Standard Time and China Standard
+                              Time.</li>
+
+                  </ul>
+</div>
+</li>
+
+                        </ul>
+</div>
+
+                    <div class="p">For example, the following expression returns the time zone offset of the
+                        Date object stored in the Date field using the time zone specified in the TZ
+                        field:<pre class="pre codeblock"><code>${time:dateTimeZoneOffset(record:value('/Date'), 'record:value('/TZ')'}</code></pre></div>
+
+                    <p class="p">Return type: Long.</p>
+
+                </dd>
+
+
+        </dl>
+
+        <dl class="dl">
+
+                <dt class="dt dlterm">time:extractDateFromString(&lt;string&gt;, &lt;format string&gt;)</dt>
+
+                <dd class="dd">
+                    <p class="p">Extracts a Date object from a String, based on the specified date format.</p>
+
+                    <div class="p">Uses the following arguments:<ul class="ul" id="concept_qkr_trf_sw__ul_nzc_ybq_vy">
+                            <li class="li">string - String to extract the Date object from.</li>
+
+                            <li class="li">format string - String that specifies the date format of the data in
+                                the &lt;string&gt; argument. For information about creating a date
+                                format, see <a class="xref" href="https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html" target="_blank">https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html</a>.</li>
+
+                        </ul>
+</div>
+
+                </dd>
+
+                <dd class="dd ddexpand">For example, the following expression converts the string '2017-05-01
+                    20:15:30.915' to a Date
+                    object:<pre class="pre codeblock"><code>${time:extractDateFromString('2017-05-01 20:15:30.915','yyyy-MM-dd HH:mm:ss.SSS')}</code></pre></dd>
+
+                <dd class="dd ddexpand">Return type: Date object.</dd>
+
+
+
+                <dt class="dt dlterm">time:extractLongFromDate(&lt;Date object&gt;, &lt;format string&gt;)</dt>
+
+                <dd class="dd">Extracts a long value from a Date object, based on the specified date
+                    format.</dd>
+
+                <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_qkr_trf_sw__ul_wcq_nhr_wx">
+                        <li class="li">Date object - Date object to extract the long value from.</li>
+
+                        <li class="li">format string - String that specifies the format of the Date data to be
+                            extracted. For information about creating a date format, see <a class="xref" href="https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html" target="_blank">https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html</a>.</li>
+
+                    </ul>
+</dd>
+
+                <dd class="dd ddexpand"> For example, the following expression returns the month as a long value from
+                    the Date object stored in the Timestamp
+                    field:<pre class="pre codeblock"><code>${time:extractLongFromDate(record:value('/Timestamp')), "MM")}</code></pre></dd>
+
+                <dd class="dd ddexpand">Return type: Long.</dd>
+
+                <dd class="dd ddexpand">
+                    <div class="note note"><span class="notetitle">Note:</span> Because the function returns a long value, you cannot specify non-numeric
+                        data in the data format string. For example, the date format "MMM" returns
+                        the three character abbreviation for the month (such as "Jul"), which causes
+                        the function to return incorrect results.</div>
+
+                </dd>
+
+
+
+                <dt class="dt dlterm">time:extractStringFromDate(&lt;Date object&gt;, &lt;format string&gt;)</dt>
+
+                <dd class="dd">Extracts a string value from a Date object based on the specified date
+                    format.</dd>
+
+                <dd class="dd ddexpand">Uses the following arguments:</dd>
+
+                <dd class="dd ddexpand">
+                    <ul class="ul" id="concept_qkr_trf_sw__ul_uvc_cvx_vy">
+                        <li class="li">Date object - Date object to extract the string value from.</li>
+
+                        <li class="li">format string - String that specifies the format of the Date data to be
+                            extracted. For information about creating a date format, see <a class="xref" href="https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html" target="_blank">https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html</a>.</li>
+
+                    </ul>
+
+                </dd>
+
+                <dd class="dd ddexpand">For example, the following expression returns the month as a string value from
+                    the Date object stored in the Timestamp
+                    field:<pre class="pre codeblock"><code>${time:extractStringFromDate(record:value('/Timestamp'), "MMM")}</code></pre></dd>
+
+                <dd class="dd ddexpand">Return type: String.</dd>
+
+
+
+                <dt class="dt dlterm">time:extractStringFromDateTZ(&lt;Date object&gt;, &lt;time zone&gt;, &lt;format
+                    string&gt;)</dt>
+
+                <dd class="dd">Extracts a string value from a Date object, converting the GMT time in the Date
+                    object to the specified date format and time zone. The function adjusts for
+                    daylight savings when given the time zone in the appropriate format. </dd>
+
+                <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_qkr_trf_sw__ul_rzw_x5c_wy">
+                        <li class="li">Date object - Date object to use.</li>
+
+                        <li class="li">time zone - Time zone to use in the conversion. <p class="p">To convert the time
+                                zone and adjust for daylight savings, use the
+                                &lt;Area&gt;/&lt;Location&gt; format, such as America/Mexico_City. See the
+                                following link for a list of valid time zones in this format: <a class="xref" href="https://www.vmware.com/support/developer/vc-sdk/visdk400pubs/ReferenceGuide/timezone.html" target="_blank">https://www.vmware.com/support/developer/vc-sdk/visdk400pubs/ReferenceGuide/timezone.html</a>.</p>
+<p class="p">Short time zone IDs such
+                                as EST and CST return data, but note that these time zones do not
+                                adjust for daylight savings, and should be avoided because they can
+                                stand for multiple time zones, e.g. CST stands for both Central
+                                Standard Time and China Standard Time.</p>
+<p class="p">You can use numeric
+                                time zones with the GMT prefix, such as GMT-0500 or GMT-8:00, but
+                                these time zones also do not account for daylight savings. Note that
+                                numeric-only time zones such as -500 are not supported. </p>
+</li>
+
+                        <li class="li">format string - String that specifies the format to use to express the
+                            date. For information about creating a date format, see <a class="xref" href="https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html" target="_blank">https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html</a>.</li>
+
+                    </ul>
+</dd>
+
+                <dd class="dd ddexpand">Return type: String.</dd>
+
+                <dd class="dd ddexpand">Returns an empty string when the time zone is not specified or invalid. </dd>
+
+                <dd class="dd ddexpand">For example, the following expression converts a Date object to a string date
+                    while adjusting to the America/New_York time zone and daylight savings. It
+                    expresses the date in the format, "03/30/2016 12:15:33
+                    AM":<pre class="pre codeblock"><code>${time:extractStringFromDateTZ(record:value('/datetime'), 'America/New_York', 'MM-dd-yyyy hh:mm:ss a')}</code></pre></dd>
+
+
+
+                <dt class="dt dlterm">time:millisecondsToDateTime(&lt;long&gt;)</dt>
+
+                <dd class="dd">Converts an epoch or UNIX time in milliseconds to a Date object. </dd>
+
+                <dd class="dd ddexpand">If the epoch or UNIX time is in seconds, multiply the value by 1000 to produce a
+                    value in the milliseconds range. For example, the following expression
+                    multiplies the epoch time in seconds stored in the epochTime field and then
+                    converts the value to a Date
+                    object:<pre class="pre codeblock"><code>${millisecondsToDateTime(record:value("/epochTime")* 1000)}</code></pre></dd>
+
+                <dd class="dd ddexpand">Return type: Date object.</dd>
+
+
+
+                <dt class="dt dlterm">time:now()</dt>
+
+                <dd class="dd">Returns the current time of the <span class="ph">Data Collector</span> machine as a java.util.Date object. </dd>
+
+                <dd class="dd ddexpand">For example, you might use the function in the Expression Evaluator to create a
+                    field with the time of processing.</dd>
+
+                <dd class="dd ddexpand">Return type: Datetime.</dd>
+
+
+
+                <dt class="dt dlterm">time:timeZoneOffset(&lt;time zone&gt;)</dt>
+
+                <dd class="dd">
+                    <p class="p">Returns the time zone offset in milliseconds for the specified time zone. The
+                        time zone offset is the difference in hours and minutes from Coordinated
+                        Universal Time (UTC).</p>
+
+                    <div class="p">Uses the following argument:<ul class="ul" id="concept_qkr_trf_sw__ul_wfy_s23_scb">
+                            <li class="li">time zone - Time zone to use.<div class="p">You can use the following time zone formats: <ul class="ul" id="concept_qkr_trf_sw__d144e5688">
+                        <li class="li">&lt;area&gt;/&lt;location&gt; - For a list of valid time zones in this format,
+                              see <a class="xref" href="https://www.vmware.com/support/developer/vc-sdk/visdk400pubs/ReferenceGuide/timezone.html" target="_blank">https://www.vmware.com/support/developer/vc-sdk/visdk400pubs/ReferenceGuide/timezone.html</a>.</li>
+
+                        <li class="li">Numeric time zones with the GMT prefix, such as GMT-0500 or GMT-8:00.
+                              Note that numeric-only time zones such as -500 are not supported. </li>
+
+                        <li class="li">Short time zone IDs such as EST and CST - These time zones should
+                              generally be avoided because they can stand for multiple time zones,
+                              e.g. CST stands for both Central Standard Time and China Standard
+                              Time.</li>
+
+                  </ul>
+</div>
+</li>
+
+                        </ul>
+</div>
+
+                    <div class="p">For example, the following expression returns the time zone offset using the
+                        time zone specified in the TZ
+                        field:<pre class="pre codeblock"><code>${time:timeZoneOffset('record:value('/TZ')'}</code></pre></div>
+
+                    <p class="p">Return type: Long.</p>
+
+                </dd>
+
+
+
+                <dt class="dt dlterm">time:trimDate(&lt;datetime&gt;)</dt>
+
+                <dd class="dd">Trims the date portion of a datetime value by setting the date portion to
+                    January 1, 1970.</dd>
+
+                <dd class="dd ddexpand">For example, if the current time of the <span class="ph">Data Collector</span> machine is Jul 25, 2016 5:18:05 PM, then ${time.trimDate(time:now())}
+                    returns: Jan 1, 1970 5:18:05 PM.</dd>
+
+                <dd class="dd ddexpand">Return type: Datetime. </dd>
+
+
+
+                <dt class="dt dlterm">time:trimTime(&lt;datetime&gt;)</dt>
+
+                <dd class="dd">Trims the time portion of a datetime value by setting the time portion to
+                    00:00:00.</dd>
+
+                <dd class="dd ddexpand">For example, if the value of the pickup_datetime field is Jul 22, 2016 11:16:10
+                    AM, then ${time:trimTime(record:value("/pickup_datetime"))} returns: Jul 22,
+                    2016 12:00:00 AM.</dd>
+
+                <dd class="dd ddexpand">Return type: Datetime.</dd>
+
+
+        </dl>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title14" id="concept_ddw_ld1_1s">
+ <h2 class="title topictitle2" id="ariaid-title14">Miscellaneous Functions</h2>
+
+ <div class="body conbody">
+  <p class="p">In miscellaneous functions, you can
+      replace any argument with a literal or an expression that evaluates to the argument. String
+      literals must be enclosed in single or double quotation marks.</p>
+
+    <p class="p">The expression language provides the following miscellaneous functions:</p>
+
+  <dl class="dl">
+
+        <dt class="dt dlterm">alert:info()</dt>
+
+        <dd class="dd">Returns information about the trigger for a data drift alert. Use only in alert text for
+          data drift alerts. </dd>
+
+
+
+    <dt class="dt dlterm">emptyList()</dt>
+
+    <dd class="dd">Creates an empty list.</dd>
+
+
+
+    <dt class="dt dlterm">emptyMap()</dt>
+
+    <dd class="dd">Creates an empty map. </dd>
+
+
+
+        <dt class="dt dlterm">every(&lt;interval&gt;, &lt; hh() | mm() | ss() &gt;)</dt>
+
+        <dd class="dd">Represents the interval of hours, minutes, or seconds for generating output directories
+          for the Hadoop FS, Local FS, or MapR FS destination. </dd>
+
+        <dd class="dd ddexpand">When used, a destination generates output directories for the specified interval
+          beginning on the hour. For example, when generating directories every 30 minutes, it
+          generates a directory on the hour and on the half-hour.</dd>
+
+        <dd class="dd ddexpand">You can use the function once in the Directory Template property to replace the hour,
+          minute, or second datetime variables. </dd>
+
+        <dd class="dd ddexpand">Use the function to replace the smallest time interval in the directory template. </dd>
+
+        <dd class="dd ddexpand">
+          <div class="note note"><span class="notetitle">Note:</span> Destinations generate a directory for the smallest unit of measure by default, so do
+            not use the <code class="ph codeph">every</code> function to generate a directory every hour, minute,
+            or second. For more information, see <a class="xref" href="../Destinations/HadoopFS-destination.html#concept_cvc_skd_br">Directory Templates</a>.</div>
+
+        </dd>
+
+        <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_ddw_ld1_1s__ul_p1j_vdr_ns">
+            <li class="li">interval - An integer factor or submultiple of 60 that represents the interval of
+              minutes or seconds to wait between directory generation. Use one of the following
+              values: 1, 2, 3, 4, 5, 6, 10, 12, 15, 20, or 30.</li>
+
+            <li class="li">&lt; hh() | mm() | ss() &gt; - Use <code class="ph codeph">hh()</code> for hours,
+                <code class="ph codeph">mm()</code> for minutes, and <code class="ph codeph">ss()</code> for seconds. </li>
+
+          </ul>
+</dd>
+
+        <dd class="dd ddexpand">For example, the following Directory Template generates a new directory every twelve
+          hours, beginning on the
+          hour:<pre class="pre codeblock"><code>/outputfiles/${YY()}-${MM()}-${DD()}-${every(12,hh())}</code></pre></dd>
+
+        <dd class="dd ddexpand">The following Directory Template generates a new directory every fifteen minutes,
+          beginning on the
+          hour:<pre class="pre codeblock"><code>/outputfiles/${YY()}-${MM()}-${DD()}-${hh()}-${every(15,mm())}</code></pre></dd>
+
+        <dd class="dd ddexpand">The following Directory Template generates a new directory every 30 seconds, beginning
+          on the
+          hour:<pre class="pre codeblock"><code>/outputfiles/${YY()}-${MM()}-${DD()}-${hh()}-${mm()}-${every(30,ss())}</code></pre></dd>
+
+
+
+        <dt class="dt dlterm">field:field()</dt>
+
+        <dd class="dd">Returns the field name. Available only in the Decimal field expression properties of the
+          Hive Metadata processor. </dd>
+
+        <dd class="dd ddexpand">Return type: String.</dd>
+
+
+
+        <dt class="dt dlterm">isEmptyList()</dt>
+
+        <dd class="dd">
+          Returns true or false based on whether a list is empty.
+        </dd>
+
+        <dd class="dd ddexpand">Return type: Boolean.</dd>
+
+
+
+        <dt class="dt dlterm">isEmptyMap()</dt>
+
+        <dd class="dd">Returns true or false based on whether a map is empty.</dd>
+
+        <dd class="dd ddexpand">Return type: Boolean.</dd>
+
+
+
+        <dt class="dt dlterm">jvm:maxMemoryMB()</dt>
+
+        <dd class="dd">Returns the Java heap size allocated to the <span class="ph">Data Collector</span> in MB.
+          You can use this function in an expression to specify the maximum amount of memory a
+          pipeline can use. </dd>
+
+        <dd class="dd ddexpand">For example, since 65% of the Java heap size is the recommended maximum, the following
+          expression is the default memory limit for a pipeline:
+          <pre class="pre codeblock"><code>${jvm:maxMemoryMB() * 0.65}</code></pre></dd>
+
+
+
+        <dt class="dt dlterm">length()</dt>
+
+        <dd class="dd">Returns the length of a list.</dd>
+
+        <dd class="dd ddexpand">Return type: Integer.</dd>
+
+
+
+        <dt class="dt dlterm">list:join(&lt;list field&gt;, &lt;separator&gt;)</dt>
+
+        <dd class="dd">Merges elements in a List field into a String field, using the specified separator
+          between elements. </dd>
+
+        <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_ddw_ld1_1s__ul_srh_pzn_z1b">
+            <li class="li">list field - The List field that you want to merge. </li>
+
+            <li class="li">separator - The string to use to separate the elements in the merged field.</li>
+
+          </ul>
+</dd>
+
+        <dd class="dd ddexpand">For example, to merge the list in a colors field using a semicolon as a separator
+          character, you can use the following
+          expression:<pre class="pre codeblock"><code>${list:join(record:value('/colors'), ";")}</code></pre></dd>
+
+        <dd class="dd ddexpand">And if the list field includes "red", "blue", and "yellow" as elements, the expression
+          produces the following string data: <pre class="pre codeblock"><code>red;blue;yellow</code></pre></dd>
+
+        <dd class="dd ddexpand">Return type: String.</dd>
+
+
+
+        <dt class="dt dlterm">list:joinSkipNulls(&lt;list field&gt;, &lt;separator&gt;)</dt>
+
+        <dd class="dd">Merges elements in a List field into a String field, using the specified separator
+          between elements and skipping null values.</dd>
+
+        <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_ddw_ld1_1s__ul_or1_wzn_z1b">
+            <li class="li">list field - The List field that you want to merge. </li>
+
+            <li class="li">separator - The string to use to separate the elements in the merged field.</li>
+
+          </ul>
+</dd>
+
+        <dd class="dd ddexpand">For example, say you use the following expression to merge the list in the colors
+          field:<pre class="pre codeblock"><code>${list:join(record:value('/colors'), ";")}</code></pre></dd>
+
+        <dd class="dd ddexpand">And if the list field includes "red", "blue, null, "yellow", the expression ignores the
+          null value and produces the following string
+          data:<pre class="pre codeblock"><code>red;blue;yellow</code></pre></dd>
+
+        <dd class="dd ddexpand">Return type: String.</dd>
+
+
+
+        <dt class="dt dlterm">offset:column(&lt;position&gt;)</dt>
+
+        <dd class="dd">Returns the value of the positioned offset column for the current table. Available only
+          in the additional offset column conditions of the JDBC Multitable Consumer origin. </dd>
+
+        <dd class="dd ddexpand">Uses the following argument:<ul class="ul" id="concept_ddw_ld1_1s__ul_zfx_jjr_qy">
+            <li class="li">position - Position of the offset column. For example, enter 0 for the first offset
+              column defined in the table configuration. Enter 1 for the second defined offset
+              column.</li>
+
+          </ul>
+</dd>
+
+        <dd class="dd ddexpand">Return type: String.</dd>
+
+
+
+        <dt class="dt dlterm">runtime:availableProcessors()</dt>
+
+        <dd class="dd">
+          <p class="p">Returns the number of processors available to the Java virtual machine. You can use
+            this function when you want to configure multithreaded processing based on the number of
+            processors available to <span class="ph">Data Collector</span>.</p>
+
+          <p class="p">Return type: Integer.</p>
+
+        </dd>
+
+
+
+    <dt class="dt dlterm">runtime:conf(&lt;runtime property&gt;)</dt>
+
+    <dd class="dd">Returns the value for the specified runtime configuration. Use to call a runtime property. </dd>
+
+    <dd class="dd ddexpand">Uses the following argument:<ul class="ul" id="concept_ddw_ld1_1s__ul_vqc_2h1_1s">
+      <li class="li">runtime configuration name - Name of the configuration property to use. The property must
+       defined in the sdc.properties file or in a runtime configuration file specified in the
+       sdc.properties file. </li>
+
+     </ul>
+</dd>
+
+        <dd class="dd ddexpand">For more information, see <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_fjx_g31_1s" title="Runtime properties are properties that you define in a file local to the Data Collector and call from within a pipeline. With runtime properties, you can define different sets of values for different Data Collectors.">Using Runtime Properties</a>.</dd>
+
+
+
+        <dt class="dt dlterm">runtime:loadResource(&lt;file name&gt;, &lt;restricted: true | false&gt;)</dt>
+
+        <dd class="dd">Returns the value in the specified file, trimming any leading or trailing whitespace
+          characters from the file. Use to call a runtime resource.</dd>
+
+        <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_ddw_ld1_1s__ul_ytn_xmm_2s">
+            <li class="li">file name - Name of the file that contains the information to be loaded. The file
+              must reside in the <code class="ph codeph">$SDC_RESOURCES</code> directory: </li>
+
+            <li class="li">restricted - Whether the file has restricted permissions. If set to true, the file
+              must be owned by the system user who runs the <span class="ph">Data Collector</span>
+              and read and writable only by the owner.</li>
+
+          </ul>
+</dd>
+
+        <dd class="dd ddexpand">For example, the following expression returns the contents of the restricted
+          JDBCpassword.txt file, trimming any leading or trailing whitespace
+          characters:<pre class="pre codeblock"><code>${runtime:loadResource("JDBCpassword.txt", true)}</code></pre></dd>
+
+        <dd class="dd ddexpand">For more information about runtime resources, see <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a>.</dd>
+
+
+
+        <dt class="dt dlterm">runtime:loadResourceRaw(&lt;file name&gt;, &lt;restricted: true | false&gt;)</dt>
+
+        <dd class="dd">Returns the entire contents in the specified file, including any leading or trailing
+          whitespace characters in the file. Use to call a runtime resource.</dd>
+
+        <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_ddw_ld1_1s__ul_iwm_rzj_scb">
+            <li class="li">file name - Name of the file that contains the information to be loaded. The file
+              must reside in the <code class="ph codeph">$SDC_RESOURCES</code> directory.</li>
+
+            <li class="li">restricted - Whether the file has restricted permissions. If set to true, the file
+              must be owned by the system user who runs the <span class="ph">Data Collector</span> and
+              read and writable only by the owner.</li>
+
+          </ul>
+</dd>
+
+        <dd class="dd ddexpand">For example, the following expression returns the entire contents of the restricted
+          JDBCpassword.txt file, including any leading or trailing whitespace
+          characters:<pre class="pre codeblock"><code>${runtime:loadResourceRaw("JDBCpassword.txt", true)}</code></pre></dd>
+
+        <dd class="dd ddexpand">For more information about runtime resources, see <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a>.</dd>
+
+
+
+    <dt class="dt dlterm">sdc:hostname()</dt>
+
+        <dd class="dd">Returns the host name of the <span class="ph">Data Collector</span>
+          machine. </dd>
+
+        <dd class="dd ddexpand">For example, you might use the function in the directory template for the Hadoop FS
+          destination to write to a directory that includes the <span class="ph">Data Collector</span> host
+          name.</dd>
+
+        <dd class="dd ddexpand">Return type: String.</dd>
+
+
+
+        <dt class="dt dlterm">sdc:id()</dt>
+
+        <dd class="dd">Returns the <span class="ph">Data Collector</span> ID.
+            <p class="p">For a pipeline that runs in standalone execution mode, the ID is a unique identifier
+            associated with the <span class="ph">Data Collector</span>,
+            such as 58efbb7c-faf4-4d8e-a056-f38667e325d0. The ID is stored in the following file:
+              <span class="ph filepath">$SDC_DATA/sdc.id</span>.</p>
+<p class="p">For a pipeline that runs in cluster mode,
+            the ID is the <span class="ph">Data Collector</span>
+            worker partition ID generated by a cluster application, such as Spark or
+          MapReduce.</p>
+</dd>
+
+
+
+        <dt class="dt dlterm">size()</dt>
+
+        <dd class="dd">Returns the size of a map.</dd>
+
+        <dd class="dd ddexpand">Return type: Integer.</dd>
+
+
+
+        <dt class="dt dlterm">uuid:uuid()</dt>
+
+        <dd class="dd">Returns a randomly generated UUID. For example, you might use the function in an
+          Expression Evaluator processor to generate a UUID for an ID field added to each
+          record.</dd>
+
+        <dd class="dd ddexpand">The uuid:uuid() function uses a lot of entropy on Linux systems and can cause your
+          entropy pools to run dry. When this happens, your pipelines slow to a halt but continue to
+          run. Throughput effectively goes to zero while the system waits for entropy to again
+          become available. As a best practice, we recommend running the haveged daemon on any <span class="ph">Data Collector</span> node
+          where the uuid:uuid() function is used. The haveged daemon regenerates your entropy pools. </dd>
+
+        <dd class="dd ddexpand">Return type: String.</dd>
+
+
+
+        <dt class="dt dlterm">vault:read(&lt;path&gt;, &lt;key&gt;)</dt>
+
+        <dd class="dd">Returns the value for the key on the specified path. You can use the function in <span class="ph">username, password, and similar properties such as
+                        AWS access key IDs and secret access keys. You can also use the function in
+                        HTTP headers and bodies when using HTTPS.</span><div class="note important"><span class="importanttitle">Important:</span> This function is now deprecated and will be removed in a future
+            release. We recommend using the <a class="xref" href="Functions.html#concept_yvc_3qs_r1b">credential functions</a>
+            available with the Vault <a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential
+              store</a> integration in pipelines that include JDBC stages.</div>
+</dd>
+
+        <dd class="dd ddexpand">Return type: String.</dd>
+
+        <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_ddw_ld1_1s__ul_yd1_4gc_mw">
+            <li class="li">path - The path in Vault to read.</li>
+
+            <li class="li">key - The key for the value that you want returned.</li>
+
+          </ul>
+</dd>
+
+
+
+        <dt class="dt dlterm">vault:readWithDelay(&lt;path&gt;, &lt;key&gt;, &lt;delay&gt;)</dt>
+
+        <dd class="dd">Returns the value for the key on the specified path after waiting the specified amount
+          of time. Use when you want a delayed response to allow time for external processing. <div class="note important"><span class="importanttitle">Important:</span> This function is now deprecated and will be removed in a future
+            release. We recommend using the <a class="xref" href="Functions.html#concept_yvc_3qs_r1b">credential functions</a>
+            available with the Vault <a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential
+              store</a> integration in pipelines that include JDBC stages.</div>
+<p class="p">You can use
+            the function in <span class="ph">username, password, and similar properties such as
+                        AWS access key IDs and secret access keys. You can also use the function in
+                        HTTP headers and bodies when using HTTPS.</span></p>
+</dd>
+
+        <dd class="dd ddexpand">Return type: String.</dd>
+
+        <dd class="dd ddexpand">Uses the following arguments:<ul class="ul" id="concept_ddw_ld1_1s__ul_cc4_rgc_mw">
+            <li class="li">path - The path in Vault to read.</li>
+
+            <li class="li">key - The key for the value that you want returned.</li>
+
+            <li class="li">delay - Milliseconds to wait before returning the value.</li>
+
+          </ul>
+</dd>
+
+
+  </dl>
+
+ </div>
+
+</article>
+</article>
+</article></main></div>
+
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script>
+  </div>
+</nav>
+
+
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
+</html>

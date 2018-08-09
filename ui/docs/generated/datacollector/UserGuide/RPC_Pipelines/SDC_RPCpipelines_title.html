@@ -1,0 +1,496 @@
+
+<!DOCTYPE html
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="Data Collector Remote Protocol Call pipelines, a.k.a. SDC RPC pipelines , are a set of StreamSets pipelines that pass data from one pipeline to another without writing to an intermediary system. SDC ..." /><meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="SDC RPC Pipelines" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Edge_Mode/SDCeUninstall.html#task_hnx_h1k_rbb" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_wr1_ktz_bt" /><title>SDC RPC Pipelines</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_wr1_ktz_bt-d46e111818" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018042310" />
+
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018042310" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+
+
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+
+
+
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+
+                </div>
+
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+
+
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li class="active"><span class="topicref" data-id="concept_wr1_ktz_bt"><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Edge_Mode/SDCeUninstall.html#task_hnx_h1k_rbb" title="Uninstalling SDC Edge"></a></span>
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html" title="Cluster Pipelines"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e4414" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e6481" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13895" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e18499" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e20154" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22651" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e24466" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e64169" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e77391" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e92871" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e98772" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e102096" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e106011" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e108837" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e109636" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e110218" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li class="active"><span data-tocid="concept_wr1_ktz_bt-d46e111818" class="topicref" data-id="concept_wr1_ktz_bt" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_lnh_z3z_bt-d46e111911" class="topicref" data-id="concept_lnh_z3z_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_lnh_z3z_bt">SDC RPC Pipeline Overview</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"><span class="ph">Data Collector</span>     Remote Protocol Call pipelines, a.k.a. <dfn class="term">SDC RPC pipelines</dfn>, are a set of StreamSets     pipelines that pass data from one pipeline to another without writing to an intermediary system.
+
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_a4w_5tf_ct-d46e111973" class="topicref" data-id="concept_a4w_5tf_ct" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_a4w_5tf_ct">Deployment Architecture</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">When using SDC RPC pipelines, consider your needs and environment carefully as you     design the deployment architecture.
+
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_drd_wqb_dt-d46e112018" class="topicref" data-id="concept_drd_wqb_dt" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_drd_wqb_dt">Configuring the Delivery Guarantee</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The delivery guarantee determines when a pipeline commits the offset. When configuring   the delivery guarantee for SDC RPC
+                        pipelines, use the same option in origin and destination   pipelines.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_dgf_kkc_dt-d46e112073" class="topicref" data-id="concept_dgf_kkc_dt" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_dgf_kkc_dt">Defining the RPC ID</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The RPC ID is a user-defined identifier that allows an SDC RPC origin and SDC RPC         destination to recognize each other.
+
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_mrm_qhf_2t-d46e112139" class="topicref" data-id="concept_mrm_qhf_2t" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_mrm_qhf_2t">Enabling Encryption</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can enable SDC RPC pipelines to transfer data securely using SSL/TLS. To use     SSL/TLS, enable TLS in both the SDC RPC
+                        destination and the SDC RPC origin.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_mhl_1jc_dt-d46e112215" class="topicref" data-id="concept_mhl_1jc_dt" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_mhl_1jc_dt">Configuration Guidelines for SDC RPC Pipelines</a></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e112299" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e113641" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e114610" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e117238" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e118495" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e120286" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e124782" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e125996" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e129904" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e129959" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e130119" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e131600" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e131822" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+
+
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_wr1_ktz_bt">
+ <h1 class="title topictitle1" id="ariaid-title1">SDC RPC Pipelines</h1>
+
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_lnh_z3z_bt">
+ <h2 class="title topictitle2" id="ariaid-title2">SDC RPC Pipeline Overview</h2>
+
+
+ <div class="body conbody"><p class="shortdesc"><span class="ph">Data Collector</span>
+    Remote Protocol Call pipelines, a.k.a. <dfn class="term">SDC RPC pipelines</dfn>, are a set of StreamSets
+    pipelines that pass data from one pipeline to another without writing to an intermediary system. </p>
+
+    <p class="p">SDC RPC pipelines can write to each other on the same
+      machine or over a local network or the public internet. You might use SDC RPC pipelines to
+      send data securely between two data centers.</p>
+
+    <p class="p">Typically, a pipeline uses a standard origin such as Directory and writes to a standard
+      destination such as HBase. An SDC RPC pipeline includes an SDC RPC destination or an SDC RPC
+      origin to communicate with another SDC RPC pipeline.</p>
+
+    <p class="p">To use SDC RPC pipelines, you create an origin pipeline and a destination pipeline. The
+      origin pipeline uses an SDC RPC destination to write directly to an SDC RPC origin in the
+      destination pipeline, as follows: </p>
+
+    <img class="image" id="concept_lnh_z3z_bt__image_gw4_mlb_dt" src="../Graphics/SDC_RPCpipelines.png" height="194" width="770" />
+    <p class="p">The SDC RPC destination and SDC RPC origin enable you to pass data securely from one pipeline
+      to another, effectively like creating a single pipeline that spans a network. </p>
+
+  </div>
+
+<article class="topic concept nested2" aria-labelledby="ariaid-title3" id="concept_vmj_3ff_ct">
+ <h3 class="title topictitle3" id="ariaid-title3">Pipeline Types</h3>
+
+ <div class="body conbody">
+  <div class="p">You can create two kinds of
+      SDC RPC pipelines: <dl class="dl">
+
+          <dt class="dt dlterm">origin pipeline</dt>
+
+          <dd class="dd">Processes data from the origin system and passes it to the destination pipeline. </dd>
+
+          <dd class="dd ddexpand">Uses an SDC RPC destination to pass data to a destination pipeline. To provide
+            redundancy and load-balancing, you can define connections to multiple destination
+            pipelines. </dd>
+
+
+
+          <dt class="dt dlterm">destination pipeline</dt>
+
+          <dd class="dd">Processes data from the origin pipeline and passes it to the destination system.</dd>
+
+          <dd class="dd ddexpand">Uses an SDC RPC origin to process data from the origin pipeline.</dd>
+
+
+      </dl>
+</div>
+
+ </div>
+
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title4" id="concept_a4w_5tf_ct">
+ <h2 class="title topictitle2" id="ariaid-title4">Deployment Architecture</h2>
+
+
+ <div class="body conbody"><p class="shortdesc">When using SDC RPC pipelines, consider your needs and environment carefully as you
+    design the deployment architecture. </p>
+
+  <div class="p">One key
+      point to consider:<dl class="dl">
+
+          <dt class="dt dlterm">Use multiple destination pipelines to improve downstream availability</dt>
+
+          <dd class="dd">To ensure downstream availability, you generally want to deploy multiple destination
+            pipelines. </dd>
+
+          <dd class="dd ddexpand">Note that the origin pipeline writes data to a single destination pipeline, but can
+            round-robin through multiple pipelines. By using multiple destination pipelines, you can
+            provide redundancy and avoid bottlenecks with a high-volume origin pipeline:</dd>
+
+          <dd class="dd ddexpand"><img class="image" id="concept_a4w_5tf_ct__image_e1l_qmg_ct" src="../Graphics/SDC_RPCarch-oneSet.png" /></dd>
+
+          <dd class="dd ddexpand">If you have multiple pipelines with similar data, you might deploy several sets of
+            this model to provide load-balancing and redundancy:</dd>
+
+          <dd class="dd ddexpand"><img class="image" id="concept_a4w_5tf_ct__image_pbj_msg_ct" src="../Graphics/SDC_RPCarch-manySets.png" height="449" width="501" /></dd>
+
+
+      </dl>
+</div>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title5" id="concept_drd_wqb_dt">
+ <h2 class="title topictitle2" id="ariaid-title5">Configuring the Delivery Guarantee</h2>
+
+
+ <div class="body conbody"><p class="shortdesc">The delivery guarantee determines when a pipeline commits the offset. When configuring
+  the delivery guarantee for SDC RPC pipelines, use the same option in origin and destination
+  pipelines.</p>
+
+  <div class="p">A set of SDC RPC pipelines process data like a single
+   pipeline: The origin pipeline creates a batch, passes it through the pipeline, then passes it to
+   the destination pipeline. Only when the destination pipeline writes the batch to its destination
+   systems does the <span class="ph">Data Collector</span> commit the
+   offset. As with standard pipelines, you can use the delivery guarantee property to define how the
+    <span class="ph">Data Collector</span> commits
+   the offset: <ul class="ul" id="concept_drd_wqb_dt__ul_rfc_23b_ft">
+    <li class="li">Use <span class="ph uicontrol">At Least Once </span>in both pipelines to ensure the pipelines process
+     all data.</li>
+
+    <li class="li">Use <span class="ph uicontrol">At Most Once</span> in both pipelines to avoid the possible duplication
+     of data. </li>
+
+   </ul>
+</div>
+
+  <div class="p">
+   <div class="note note"><span class="notetitle">Note:</span> If the SDC RPC pipelines are configured to use different delivery guarantees, the resulting
+    behavior is At Most Once.</div>
+
+  </div>
+
+ </div>
+
+ <nav role="navigation" class="related-links">
+<div class="linklist linklist relinfo relconcepts"><strong>Related concepts</strong><br />
+
+<div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Design/DatainMotion.html#concept_ffz_hhw_kq" title="When you configure a pipeline, you define how you want data to be treated: Do you want to prevent the loss of data or the duplication of data?">Delivery Guarantee</a></div></div>
+</nav>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title6" id="concept_dgf_kkc_dt">
+ <h2 class="title topictitle2" id="ariaid-title6">Defining the RPC ID</h2>
+
+
+ <div class="body conbody"><p class="shortdesc">The RPC ID is a user-defined identifier that allows an SDC RPC origin and SDC RPC
+        destination to recognize each other. </p>
+
+  <p class="p">To
+            enable the SDC RPC destination to write directly to an SDC RPC origin, use the same RPC
+            ID in both stages. </p>
+
+      <p class="p">To write to multiple pipelines, use the RPC ID in the SDC RPC destination and all related
+            SDC RPC origins.</p>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title7" id="concept_mrm_qhf_2t">
+ <h2 class="title topictitle2" id="ariaid-title7">Enabling Encryption</h2>
+
+
+ <div class="body conbody"><p class="shortdesc">You can enable SDC RPC pipelines to transfer data securely using SSL/TLS. To use
+    SSL/TLS, enable TLS in both the SDC RPC destination and the SDC RPC origin.</p>
+
+  <div class="p">You need the following information to enable TLS in both
+        stages:<ul class="ul" id="concept_mrm_qhf_2t__ul_drg_b3f_2t">
+        <li class="li">A keystore file with the private keys of the TLS certificate, and the password for the
+          file.</li>
+
+        <li class="li">For self-signed certificates, a truststore file with the public key of the TLS
+          certificate of the SDC RPC origin, and the password for the file.</li>
+
+      </ul>
+</div>
+
+  <div class="p">To enable TLS:<ol class="ol" id="concept_mrm_qhf_2t__ol_bfn_k3f_2t">
+        <li class="li">Save the keystore and the truststore files in the <span class="ph">Data Collector</span>
+          resources directory, <span class="ph filepath">$SDC_RESOURCES</span>. <p class="p"><span class="ph">For more information about environment variables, see
+                              <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr">Data Collector Environment Configuration</a>.</span></p>
+</li>
+
+        <li class="li">In the SDC RPC destination, enter the truststore file name and password when using a
+          self-signed certificate.</li>
+
+        <li class="li">In the SDC RPC origin, enter the keystore file name and password. </li>
+
+      </ol>
+</div>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title8" id="concept_mhl_1jc_dt">
+ <h2 class="title topictitle2" id="ariaid-title8">Configuration Guidelines for SDC RPC Pipelines</h2>
+
+ <div class="body conbody">
+  <p class="p">To create a
+      valid set of SDC RPC pipelines, some configuration options must be aligned. Use the following
+      guidelines to configure SDC RPC pipelines:</p>
+
+  <div class="p">
+   <dl class="dl">
+
+     <dt class="dt dlterm">origin pipeline</dt>
+
+     <dd class="dd">In the origin pipeline, configure the following elements:<ol class="ol" id="concept_mhl_1jc_dt__ol_wkt_rrc_dt">
+       <li class="li">In the pipeline properties, set the Delivery Guarantee to the option you want to
+        use.</li>
+
+       <li class="li">In the pipeline, use the SDC RPC destination.</li>
+
+       <li class="li">When you configure the SDC RPC destination, enter the RPC ID and RPC connection
+                information. <p class="p">To use multiple destination pipelines, enter the RPC connection
+                  information for each SDC RPC origin that you want to use. </p>
+</li>
+
+              <li class="li">To use encryption to transfer data between the pipelines, enable TLS and configure
+                related properties.</li>
+
+      </ol>
+</dd>
+
+
+
+     <dt class="dt dlterm">destination pipeline</dt>
+
+     <dd class="dd">For each destination pipeline, configure the following elements:<ol class="ol" id="concept_mhl_1jc_dt__ol_e41_xrc_dt">
+              <li class="li">In the pipeline properties, set the Delivery Guarantee to the same option as the
+                origin pipeline. Using a different option causes the <span class="ph">Data Collector</span>
+                to default to At Most Once behavior.</li>
+
+              <li class="li">In the pipeline, use the SDC RPC origin.</li>
+
+              <li class="li">When you configure the SDC RPC origin, define the properties as follows:<ul class="ul" id="concept_mhl_1jc_dt__ul_ihl_zvw_dt">
+                  <li class="li">Use the same RPC ID used in the SDC RPC destination.</li>
+
+                  <li class="li">For the RPC Listening Port, enter the appropriate port number. <p class="p">It should be
+                      a port number specified in one of the RPC connections in the SDC RPC
+                      destination.</p>
+</li>
+
+                  <li class="li">To use encryption to transfer data between the pipelines, enable TLS and
+                    configure related properties.</li>
+
+                </ul>
+</li>
+
+            </ol>
+</dd>
+
+
+   </dl>
+
+  </div>
+
+ </div>
+
+</article>
+</article>
+</article></main></div>
+
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script>
+  </div>
+</nav>
+
+
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
+</html>

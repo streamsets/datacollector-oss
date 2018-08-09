@@ -1,0 +1,576 @@
+
+<!DOCTYPE html
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link>
+      <meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Whole File Data Format" /><meta name="abstract" content="You can use the whole file data format to transfer entire files from an origin system to a destination system. With the whole file data format, you can transfer any type of file." /><meta name="description" content="You can use the whole file data format to transfer entire files from an origin system to a destination system. With the whole file data format, you can transfer any type of file." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Data_Formats/TextCDelim.html#concept_lg2_gcg_jx" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Data_Formats/XMLDFormat.html#concept_lty_42b_dy" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_nfc_qkh_xw" /><title>Whole File Data Format</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_nfc_qkh_xw-d46e23018" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018042310" />
+
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018042310" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+
+
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+
+
+
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+
+                </div>
+
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+
+
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref" data-id="concept_hdr_gyw_41b"><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li class="active"><span class="topicref" data-id="concept_nfc_qkh_xw"><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/WholeFile.html#concept_nfc_qkh_xw">Whole File Data Format</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can use the whole file data format to transfer entire files from an origin system         to a destination system. With
+                  the whole file data format, you can transfer any type of file.
+
+               </p>
+               </span></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Data_Formats/TextCDelim.html#concept_lg2_gcg_jx" title="Text Data Format with Custom Delimiters"></a></span>
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Data_Formats/XMLDFormat.html#concept_lty_42b_dy" title="Reading and Processing XML Data"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e4414" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e6481" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13895" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e18499" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e20154" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22651" class="topicref" data-id="concept_hdr_gyw_41b" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_jyj_3yw_41b-d46e22675" class="topicref" data-id="concept_jyj_3yw_41b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Overview.html">Data Formats Overview</a></span></span></li>
+         <li><span data-tocid="concept_zcg_bm4_fs-d46e22697" class="topicref" data-id="concept_zcg_bm4_fs" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DelimitedDataRootFieldTypes.html">Delimited Data Root Field Type</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_w1z_zc1_22b-d46e22721" class="topicref" data-id="concept_w1z_zc1_22b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/Excel.html">Excel Data Format</a></span></span></li>
+         <li><span data-tocid="concept_tr1_spd_sr-d46e22743" class="topicref" data-id="concept_tr1_spd_sr" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/LogFormats.html">Log Data Format</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">When you use an origin to read log data, you define the format of the log files to be   read. </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_thl_nnr_hbb-d46e22768" class="topicref" data-id="concept_thl_nnr_hbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/NetFlow_Overview.html#concept_thl_nnr_hbb">NetFlow Data Processing</a></span></span></li>
+         <li><span data-tocid="concept_uxh_nc4_45-d46e22916" class="topicref" data-id="concept_uxh_nc4_45" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/Protobuf-Prerequisites.html">Protobuf Data Format Prerequisites</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_qkk_mwk_br-d46e22940" class="topicref" data-id="concept_qkk_mwk_br" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/SDCRecordFormat.html">SDC Record Data Format</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_lg2_gcg_jx-d46e22964" class="topicref" data-id="concept_lg2_gcg_jx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/TextCDelim.html#concept_lg2_gcg_jx">Text Data Format with Custom Delimiters</a></span></span></li>
+         <li class="active"><span data-tocid="concept_nfc_qkh_xw-d46e23018" class="topicref" data-id="concept_nfc_qkh_xw" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/WholeFile.html#concept_nfc_qkh_xw">Whole File Data Format</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can use the whole file data format to transfer entire files from an origin system         to a destination system. With
+                        the whole file data format, you can transfer any type of file.
+
+                     </p>
+                     </span></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_acf_1bm_zw-d46e23114" class="topicref" data-id="concept_acf_1bm_zw" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/WholeFile.html#concept_acf_1bm_zw">Basic Pipeline</a></span></span></li>
+               <li><span data-tocid="concept_kxr_kqh_xw-d46e23136" class="topicref" data-id="concept_kxr_kqh_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/WholeFile.html#concept_kxr_kqh_xw">Whole File Records</a></span></span></li>
+               <li><span data-tocid="concept_prp_jzd_py-d46e23210" class="topicref" data-id="concept_prp_jzd_py" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/WholeFile.html#concept_prp_jzd_py">Defining the Transfer Rate</a></span></span></li>
+               <li><span data-tocid="concept_a2s_4jw_1x-d46e23262" class="topicref" data-id="concept_a2s_4jw_1x" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/WholeFile.html#concept_a2s_4jw_1x">Writing Whole Files</a></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_lty_42b_dy-d46e23479" class="topicref" data-id="concept_lty_42b_dy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/XMLDFormat.html#concept_lty_42b_dy">Reading and Processing XML Data</a></span></span></li>
+         <li><span data-tocid="concept_t2m_hhx_41b-d46e24410" class="topicref" data-id="concept_t2m_hhx_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/WritingXML.html#concept_t2m_hhx_41b">Writing XML Data</a></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e24466" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e64169" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e77391" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e92871" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e98772" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e102096" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e106011" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e108837" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e109636" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e110218" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e111818" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e112299" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e113641" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e114610" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e117238" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e118495" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e120286" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e124782" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e125996" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e129904" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e129959" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e130119" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e131600" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e131822" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+
+
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_nfc_qkh_xw">
+    <h1 class="title topictitle1" id="ariaid-title1">Whole File Data Format</h1>
+
+
+    <div class="body conbody"><p class="shortdesc">You can use the whole file data format to transfer entire files from an origin system
+        to a destination system. With the whole file data format, you can transfer any type of file. </p>
+
+        <p class="p">When
+            transferring whole files, <span class="ph">Data Collector</span>
+            streams file data from the origin system and writes the data to the destination system
+            based on the directory and file name defined in the destination. </p>
+
+        <p class="p">Whole file records contain reference information for the file transfer. They do not
+            contain data from within the files. While you can use several processors to read or
+            modify the reference information, you cannot use typical processors, such as the Field
+            Masker or the Field Replacer, to perform processing on file data. The only processor
+            that substantially alters whole file data is the Whole File Transformer processor, which
+            converts Avro files to Parquet. For more information, see <a class="xref" href="../Processors/WholeFileTransformer.html#concept_nwg_rx4_l2b" title="The Whole File Transformer processor transforms fully written Avro files to highly efficient, columnar Parquet files. Use the Whole File Transformer in a pipeline that reads Avro files as whole files and writes the transformed Parquet files as whole files.">Whole File Transformer</a>.</p>
+
+        <p class="p">By default, whole file transfers use available resources as needed. You can limit the
+            resources used to transfer whole file data by specifying a transfer rate. </p>
+
+        <p class="p">When the origin system provides checksum metadata, you can configure the origin to verify
+            the checksum. Destinations that generate events can include checksum information in
+            event records.</p>
+
+        <p class="p">Most destinations allow you to define access permissions for written files. By default,
+            written files use the default permissions of the destination system. </p>
+
+        <div class="p">
+            <div class="note note"><span class="notetitle">Note:</span> During data preview, a whole file pipeline displays a single record instead of the
+                number of records configured for the preview batch size.</div>
+
+        </div>
+
+        <p class="p">For a list of origins and destinations that
+                        process this data format, see <a class="xref" href="../Apx-DataFormats/DataFormat_Title.html#concept_bcw_qzb_kv" title="This appendix lists the data formats supported by origin and destination stages.">Data Format Support</a>.</p>
+
+    </div>
+
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_acf_1bm_zw">
+    <h2 class="title topictitle2" id="ariaid-title2">Basic Pipeline</h2>
+
+    <div class="body conbody">
+        <p class="p">A
+            pipeline that processes whole files include an origin and one or more destinations that
+            support the whole file data format. </p>
+
+        <p class="p">You can include certain processors to read or modify the file reference information
+            included in the record, such as the file name or owner. You can also include a <a class="xref" href="../Processors/WholeFileTransformer.html#concept_nwg_rx4_l2b" title="The Whole File Transformer processor transforms fully written Avro files to highly efficient, columnar Parquet files. Use the Whole File Transformer in a pipeline that reads Avro files as whole files and writes the transformed Parquet files as whole files.">Whole File Transformer
+                processor</a> to convert Avro files to Parquet. However, a basic whole file
+            pipeline looks like this: </p>
+
+        <p class="p"><img class="image" id="concept_acf_1bm_zw__image_zrz_3bm_zw" src="../Graphics/WholeFile-BasicPipeline.png" height="93" width="264" /></p>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title3" id="concept_kxr_kqh_xw">
+    <h2 class="title topictitle2" id="ariaid-title3">Whole File Records</h2>
+
+    <div class="body conbody">
+        <div class="p">When reading whole files, the origin produces a
+            record with two fields:<ul class="ul" id="concept_kxr_kqh_xw__ul_o1r_pj4_n2b">
+                <li class="li">fileref - Contains a reference that enables streaming the file from the origin
+                    system to the destination system. You can use scripting processors to read the
+                    fileref field. You cannot modify information in the fileref field.</li>
+
+                <li class="li">fileInfo - A map of file properties, such as file path, file name, and file
+                    owner. The details differ based on the origin system. You can use processors to
+                    modify information in the fileInfo field as needed.</li>
+
+            </ul>
+</div>
+
+        <div class="p">
+            <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="concept_kxr_kqh_xw__d103e3504">You can use
+                              data preview to determine the information and field names that are
+                              included in the fileInfo field.</span> The information and field names
+                        can differ based on the origin system.</div>
+
+        </div>
+
+    </div>
+
+<article class="topic concept nested2" aria-labelledby="ariaid-title4" id="concept_kgs_msy_yw">
+    <h3 class="title topictitle3" id="ariaid-title4">Processors for File Reference Information</h3>
+
+    <div class="body conbody">
+        <p class="p">You can use several processors to read or modify file
+            reference information in a whole file record. You can also use the Whole File
+            Transformer processor to convert Avro files to Parquet. For more information, see <a class="xref" href="../Processors/WholeFileTransformer.html#concept_nwg_rx4_l2b" title="The Whole File Transformer processor transforms fully written Avro files to highly efficient, columnar Parquet files. Use the Whole File Transformer in a pipeline that reads Avro files as whole files and writes the transformed Parquet files as whole files.">Whole File Transformer</a>.</p>
+
+        <div class="p">You can use the following processors to read or modify field-level information in a whole
+            file record:<dl class="dl">
+
+                    <dt class="dt dlterm">Expression Evaluator</dt>
+
+                    <dd class="dd">Use to update fileInfo fields. </dd>
+
+                    <dd class="dd ddexpand">For example, you might use the Expression Evaluator to update the owner of
+                        the file.</dd>
+
+
+
+                    <dt class="dt dlterm">Groovy Evaluator, JavaScript Evaluator, and Jython Evaluator</dt>
+
+                    <dd class="dd">Use to access the fileref field by creating an input stream in the code
+                        using the getInputStream() API. </dd>
+
+                    <dd class="dd ddexpand">For example, you might use the Groovy Evaluator to use Groovy code that
+                        reads the file data in the fileref field and then creates new records with
+                        the data.<div class="note note"><span class="notetitle">Note:</span> Be sure to close the input stream in the code when the
+                            processor has finished reading the stream.</div>
+</dd>
+
+                    <dd class="dd ddexpand">For information about processing whole files with the Groovy Evaluator, see
+                            <a class="xref" href="../Processors/Groovy.html#concept_t35_rsy_mx">Accessing Whole File Format Records</a>.</dd>
+
+                    <dd class="dd ddexpand">For information about processing whole files with the JavaScript Evaluator,
+                        see <a class="xref" href="../Processors/JavaScript.html#concept_bfr_h5y_mx">Accessing Whole File Format Records</a>.</dd>
+
+                    <dd class="dd ddexpand">For information about processing whole files with the Jython Evaluator, see
+                            <a class="xref" href="../Processors/Jython.html#concept_jrt_s5y_mx">Accessing Whole File Format Records</a>.</dd>
+
+
+            </dl>
+<dl class="dl">
+
+                    <dt class="dt dlterm">Stream Selector</dt>
+
+                    <dd class="dd">Use to route files based on information in the fileInfo fields. </dd>
+
+                    <dd class="dd ddexpand">For example, you might use the Stream Selector to route records to different
+                        destinations based on the size of the file. The following pipeline routes
+                        files under 2 MB to a local file system and uses the default stream to route
+                        all larger files to HDFS:</dd>
+
+                    <dd class="dd ddexpand"><img class="image" id="concept_kgs_msy_yw__image_ydw_lsf_zw" src="../Graphics/WholeFile_Pipeline_SS.png" height="283" width="480" /></dd>
+
+
+            </dl>
+</div>
+
+    </div>
+
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title5" id="concept_prp_jzd_py">
+ <h2 class="title topictitle2" id="ariaid-title5">Defining the Transfer Rate</h2>
+
+ <div class="body conbody">
+  <p class="p">By
+            default, the pipeline uses all available resources to transfer whole file data. Define a
+            transfer rate to limit the resources that a whole file pipeline uses. For example, you
+            might specify a transfer rate to enable running multiple whole file pipelines
+            simultaneously or to reserve resources for other processing.</p>
+
+        <p class="p">Specify a transfer rate by configuring the <span class="ph uicontrol">Rate per Second</span>
+            property in the origin, in the whole file data format properties.</p>
+
+        <p class="p">The Rate per Second property is not used by default, allowing the pipeline to use all
+            available resources. If you specify a transfer rate, the unit of measure is bytes per
+            second by default. You can use a different unit of measure per second by using the unit
+            of measure in an expression. </p>
+
+        <p class="p">For example, if you enter 1000, then the pipeline uses a transfer rate of 1000
+            bytes/second. To specify a rate of 10 MB/second, you can use the following expression:
+                <code class="ph codeph">${10 * MB}</code>.</p>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title6" id="concept_a2s_4jw_1x">
+ <h2 class="title topictitle2" id="ariaid-title6">Writing Whole Files</h2>
+
+ <div class="body conbody">
+  <p class="p">When writing whole files, you configure a
+                <span class="ph uicontrol">File Name Expression</span> property in the destination. The
+            expression defines the name for the output file. </p>
+
+        <p class="p">Each whole file origin includes file information in the fileInfo fields. So you can
+            easily base the output file names on the original file names from the source system. </p>
+
+        <p class="p">The following table lists the field names that hold the input file name for each origin,
+            and a basic expression that names the output file based on the input file name:</p>
+
+        <div class="p">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_a2s_4jw_1x__table_qp4_lk5_bz" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:33.33333333333333%" /><col style="width:33.33333333333333%" /></colgroup><thead class="thead" style="text-align:left;">
+                        <tr>
+                            <th class="entry cellrowborder" id="d59897e429">Origin</th>
+
+                            <th class="entry cellrowborder" id="d59897e432">File Name Field Path</th>
+
+                            <th class="entry cellrowborder" id="d59897e435">Base Expression</th>
+
+                        </tr>
+
+                    </thead>
+<tbody class="tbody">
+                        <tr>
+                            <td class="entry cellrowborder" headers="d59897e429 ">Directory</td>
+
+                            <td class="entry cellrowborder" headers="d59897e432 ">/fileInfo/filename</td>
+
+                            <td class="entry cellrowborder" headers="d59897e435 ">${record:value('/fileInfo/filename')}</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry cellrowborder" headers="d59897e429 ">SFTP/FTP</td>
+
+                            <td class="entry cellrowborder" headers="d59897e432 ">/fileInfo/filename</td>
+
+                            <td class="entry cellrowborder" headers="d59897e435 ">${record:value('/fileInfo/filename')}</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry cellrowborder" headers="d59897e429 ">Amazon S3</td>
+
+                            <td class="entry cellrowborder" headers="d59897e432 ">/fileInfo/objectKey</td>
+
+                            <td class="entry cellrowborder" headers="d59897e435 ">${record:value('/fileInfo/objectKey')}* </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry cellrowborder" colspan="3" headers="d59897e429 d59897e432 d59897e435 ">* Note that the objectKey field can
+                                include a field path as well as a file name. Use this expression
+                                when the objectKey is just a file name.</td>
+
+                        </tr>
+
+                    </tbody>
+</table>
+</div>
+
+        </div>
+
+        <section class="section"><h3 class="title sectiontitle">Example</h3>
+
+            <p class="p">You want a pipeline to pass whole files from a local directory to Amazon S3. For the
+                output file name, you want to append the .json file extension to the original file
+                name. </p>
+
+            <div class="p">The Directory origin stores the original file name in the /fileInfo/filename field,
+                so you can use the following expression for the Amazon S3 <span class="ph uicontrol">File Name
+                    Expression</span> property:
+                <pre class="pre codeblock"><code>${str:concat(record:value('/fileInfo/filename'), ".json")}</code></pre></div>
+
+            <div class="p">Or, more
+                simply...<pre class="pre codeblock"><code>${record:value('/fileInfo/filename’)}.json</code></pre></div>
+
+        </section>
+
+ </div>
+
+<article class="topic concept nested2" aria-labelledby="ariaid-title7" id="concept_ttm_ywv_1x">
+ <h3 class="title topictitle3" id="ariaid-title7">Access Permissions</h3>
+
+ <div class="body conbody">
+  <p class="p">By
+            default, when using the whole file data format, output files use the default access
+            permissions defined in the destination system. Most destinations allow you to specify
+            access permissions for output files. Amazon S3 does not allow it.</p>
+
+        <p class="p">You can enter an expression to define access permissions. Expressions should evaluate to
+            a symbolic or numeric/octal representation of the permissions you want to use. For
+            example, to make files read-only for all users, the symbolic representation is
+                <code class="ph codeph">-r--r--r--</code>. The numeric or octal representation is
+                <code class="ph codeph">0444</code>.</p>
+
+        <div class="p">To use the original source file permissions for each output file, you can use the
+            following expression:<pre class="pre codeblock"><code>${record:value('/fileInfo/permissions')}</code></pre></div>
+
+        <p class="p">This ensures, for example, that a source file with execute permission for only the file
+            owner is written to the destination system with the exact same set of permissions. </p>
+
+ </div>
+
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title8" id="concept_ojv_sr4_vx">
+ <h3 class="title topictitle3" id="ariaid-title8">Including Checksums in Events</h3>
+
+ <div class="body conbody">
+        <p class="p">Destinations that generate events can include a checksum
+            for each file.</p>
+
+        <p class="p">When you enable checksum use, the destination includes the checksum and the checksum
+            algorithm in the whole file event record. Whole file event records are generated each
+            time the destination completes writing a whole file. </p>
+
+        <div class="p">You can use the following algorithms to generate checksums:<ul class="ul" id="concept_ojv_sr4_vx__ul_lqh_35p_vx">
+                <li class="li">MD5</li>
+
+                <li class="li">SHA1</li>
+
+                <li class="li">SHA256</li>
+
+                <li class="li">SHA512</li>
+
+                <li class="li">MURMUR3_32</li>
+
+                <li class="li">MURMUR3_128</li>
+
+            </ul>
+</div>
+
+        <p class="p">For details about event generation and event records for a specific destination, see the
+            destination documentation. For generation information about the event framework, see
+                <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>.</p>
+
+ </div>
+
+</article>
+</article>
+</article>
+</article></main></div>
+
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script>
+  </div>
+</nav>
+
+
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
+</html>

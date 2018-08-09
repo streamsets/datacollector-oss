@@ -1,0 +1,2022 @@
+
+<!DOCTYPE html
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link>
+      <meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Data Formats by Stage" /><meta name="abstract" content="" /><meta name="description" content="The following table lists the data formats supported by each origin. Origin Avro Binary Datagram Delimited Excel JSON Log Protobuf SDC Record Text Whole File XML Amazon S3     Amazon SQS Consumer     ..." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_jn1_nzb_kv" /><title>Data Formats by Stage</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_jn1_nzb_kv-d46e129959" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018042310" />
+
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018042310" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+
+
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+
+
+
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+
+                </div>
+
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+
+
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li class="active"><span class="topicref" data-id="concept_jn1_nzb_kv"><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq" title="Glossary"></a></span>
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html" title="Expression Language"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e4414" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e6481" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13895" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e18499" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e20154" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22651" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e24466" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e64169" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e77391" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e92871" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e98772" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e102096" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e106011" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e108837" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e109636" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e110218" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e111818" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e112299" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e113641" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e114610" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e117238" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e118495" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e120286" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e124782" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e125996" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e129904" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li class="active"><span data-tocid="concept_jn1_nzb_kv-d46e129959" class="topicref" data-id="concept_jn1_nzb_kv" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_bcw_qzb_kv-d46e130013" class="topicref" data-id="concept_bcw_qzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_bcw_qzb_kv">Data Format Support</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">This appendix lists the data formats supported by origin and destination         stages.</p>
+                     </span></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e130119" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e131600" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e131822" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+
+
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_jn1_nzb_kv">
+ <h1 class="title topictitle1" id="ariaid-title1">Data Formats by Stage</h1>
+
+
+ <div class="body conbody"><p class="shortdesc"></p>
+
+  <p class="p"></p>
+
+ </div>
+
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_bcw_qzb_kv">
+    <h2 class="title topictitle2" id="ariaid-title2">Data Format Support</h2>
+
+    <p class="shortdesc">This appendix lists the data formats supported by origin and destination
+        stages.</p>
+
+<article class="topic concept nested2" aria-labelledby="ariaid-title3" id="concept_kgd_11c_kv">
+  <h3 class="title topictitle3" id="ariaid-title3">Origins</h3>
+
+
+  <div class="body conbody"><p class="shortdesc">The following table lists the data formats supported by each origin.</p>
+
+    <div class="p">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_kgd_11c_kv__table_crn_f1c_kv" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:7.6923076923076925%" /><col style="width:7.6923076923076925%" /><col style="width:7.6923076923076925%" /><col style="width:7.6923076923076925%" /><col style="width:7.6923076923076925%" /><col style="width:7.6923076923076925%" /><col style="width:7.6923076923076925%" /><col style="width:7.6923076923076925%" /><col style="width:7.6923076923076925%" /><col style="width:7.6923076923076925%" /><col style="width:7.6923076923076925%" /><col style="width:7.6923076923076925%" /><col style="width:7.6923076923076925%" /></colgroup><thead class="thead" style="text-align:left;">
+            <tr>
+              <th class="entry cellrowborder" id="d8432e149">Origin</th>
+
+              <th class="entry cellrowborder" id="d8432e152">Avro</th>
+
+              <th class="entry cellrowborder" id="d8432e155">Binary</th>
+
+              <th class="entry cellrowborder" id="d8432e158">Datagram</th>
+
+              <th class="entry cellrowborder" id="d8432e161">Delimited</th>
+
+              <th class="entry cellrowborder" id="d8432e165">Excel</th>
+
+              <th class="entry cellrowborder" id="d8432e168">JSON</th>
+
+              <th class="entry cellrowborder" id="d8432e171">Log</th>
+
+              <th class="entry cellrowborder" id="d8432e174">Protobuf</th>
+
+              <th class="entry cellrowborder" id="d8432e177">SDC Record</th>
+
+              <th class="entry cellrowborder" id="d8432e180">Text</th>
+
+              <th class="entry cellrowborder" id="d8432e184">Whole File</th>
+
+              <th class="entry cellrowborder" id="d8432e187">XML</th>
+
+            </tr>
+
+          </thead>
+<tbody class="tbody">
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">Amazon S3</td>
+
+              <td class="entry cellrowborder" headers="d8432e152 "><img class="image" id="concept_kgd_11c_kv__image_c1h_ddc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e155 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e158 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e161 "><img class="image" id="concept_kgd_11c_kv__image_gfm_fdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e165 "><img class="image" id="concept_kgd_11c_kv__image_rxy_431_22b" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e168 "><img class="image" id="concept_kgd_11c_kv__image_nwn_fdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e171 "><img class="image" id="concept_kgd_11c_kv__image_jgp_fdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e174 "><img class="image" id="concept_kgd_11c_kv__image_r11_gdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e177 "><img class="image" id="concept_kgd_11c_kv__image_acr_fdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e180 "><img class="image" id="concept_kgd_11c_kv__image_kt2_gdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e184 "><img class="image" id="concept_kgd_11c_kv__image_cmj_gvh_xw" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e187 "><img class="image" id="concept_kgd_11c_kv__image_svf_gdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">Amazon SQS Consumer</td>
+
+              <td class="entry cellrowborder" headers="d8432e152 "><img class="image" id="concept_kgd_11c_kv__image_vt2_q5m_wbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e155 "><img class="image" id="concept_kgd_11c_kv__image_ap4_r5m_wbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e158 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e161 "><img class="image" id="concept_kgd_11c_kv__image_wt2_q5m_wbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e165 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e168 "><img class="image" id="concept_kgd_11c_kv__image_xt2_q5m_wbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e171 "><img class="image" id="concept_kgd_11c_kv__image_yt2_q5m_wbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e174 "><img class="image" id="concept_kgd_11c_kv__image_zt2_q5m_wbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e177 "><img class="image" id="concept_kgd_11c_kv__image_a52_q5m_wbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e180 "><img class="image" id="concept_kgd_11c_kv__image_b52_q5m_wbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e184 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e187 "><img class="image" id="concept_kgd_11c_kv__image_d52_q5m_wbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">Azure IoT/Event Hub Consumer</td>
+
+              <td class="entry cellrowborder" headers="d8432e152 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e155 "><img class="image" id="concept_kgd_11c_kv__image_qwy_qlf_bbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e158 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e161 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e165 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e168 "><img class="image" id="concept_kgd_11c_kv__image_b3b_rlf_bbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e171 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e174 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e177 "><img class="image" id="concept_kgd_11c_kv__image_swc_rlf_bbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e180 "><img class="image" id="concept_kgd_11c_kv__image_wzd_rlf_bbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e184 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e187 "> </td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">CoAP Server</td>
+
+              <td class="entry cellrowborder" headers="d8432e152 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e155 "><img class="image" id="concept_kgd_11c_kv__image_a2q_1zn_sz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e158 "><img class="image" id="concept_kgd_11c_kv__image_b2q_1zn_sz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e161 "><img class="image" id="concept_kgd_11c_kv__image_c2q_1zn_sz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e165 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e168 "><img class="image" id="concept_kgd_11c_kv__image_d2q_1zn_sz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e171 "><img class="image" id="concept_kgd_11c_kv__image_e2q_1zn_sz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e174 "><img class="image" id="concept_kgd_11c_kv__image_f2q_1zn_sz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e177 "><img class="image" id="concept_kgd_11c_kv__image_g2q_1zn_sz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e180 "><img class="image" id="concept_kgd_11c_kv__image_h2q_1zn_sz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e184 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e187 "><img class="image" id="concept_kgd_11c_kv__image_i2q_1zn_sz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">Directory</td>
+
+              <td class="entry cellrowborder" headers="d8432e152 "><img class="image" id="concept_kgd_11c_kv__image_gtg_qdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e155 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e158 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e161 "><img class="image" id="concept_kgd_11c_kv__image_wv3_qdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e165 "><img class="image" id="concept_kgd_11c_kv__image_rh1_p31_22b" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e168 "><img class="image" id="concept_kgd_11c_kv__image_xxj_qdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e171 "><img class="image" id="concept_kgd_11c_kv__image_kkp_qdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e174 "><img class="image" id="concept_kgd_11c_kv__image_khq_qdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e177 "><img class="image" id="concept_kgd_11c_kv__image_ll5_qdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e180 "><img class="image" id="concept_kgd_11c_kv__image_erv_qdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e184 "><img class="image" id="concept_kgd_11c_kv__image_nrk_gvh_xw" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e187 "><img class="image" id="concept_kgd_11c_kv__image_r31_rdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">Elasticsearch</td>
+
+              <td class="entry cellrowborder" colspan="12" headers="d8432e152 d8432e155 d8432e158 d8432e161 d8432e165 d8432e168 d8432e171 d8432e174 d8432e177 d8432e180 d8432e184 d8432e187 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">File Tail</td>
+
+              <td class="entry cellrowborder" headers="d8432e152 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e155 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e158 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e161 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e165 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e168 "><img class="image" id="concept_kgd_11c_kv__image_lsy_m2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e171 "><img class="image" id="concept_kgd_11c_kv__image_utz_m2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e174 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e177 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e180 "><img class="image" id="concept_kgd_11c_kv__image_mbc_n2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e184 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e187 "> </td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">Google BigQuery</td>
+
+              <td class="entry cellrowborder" colspan="12" headers="d8432e152 d8432e155 d8432e158 d8432e161 d8432e165 d8432e168 d8432e171 d8432e174 d8432e177 d8432e180 d8432e184 d8432e187 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">Google Cloud Storage</td>
+
+              <td class="entry cellrowborder" headers="d8432e152 "><img class="image" id="concept_kgd_11c_kv__image_gdk_nwp_v1b" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e155 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e158 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e161 "><img class="image" id="concept_kgd_11c_kv__image_idk_nwp_v1b" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e165 "><img class="image" id="concept_kgd_11c_kv__image_pf3_p31_22b" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e168 "><img class="image" id="concept_kgd_11c_kv__image_jdk_nwp_v1b" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e171 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e174 "><img class="image" id="concept_kgd_11c_kv__image_ldk_nwp_v1b" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e177 "><img class="image" id="concept_kgd_11c_kv__image_mdk_nwp_v1b" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e180 "><img class="image" id="concept_kgd_11c_kv__image_ndk_nwp_v1b" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e184 "><img class="image" id="concept_kgd_11c_kv__image_ctk_qj3_qcb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e187 "> </td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">Google Pub/Sub Subscriber</td>
+
+              <td class="entry cellrowborder" headers="d8432e152 "><img class="image" id="concept_kgd_11c_kv__image_ls2_z4n_sbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e155 "><img class="image" id="concept_kgd_11c_kv__image_xs2_z4n_sbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e158 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e161 "><img class="image" id="concept_kgd_11c_kv__image_nt2_z4n_sbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e165 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e168 "><img class="image" id="concept_kgd_11c_kv__image_xt2_z4n_sbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e171 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e174 "><img class="image" id="concept_kgd_11c_kv__image_q52_z4n_sbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e177 "><img class="image" id="concept_kgd_11c_kv__image_bv2_z4n_sbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e180 "><img class="image" id="concept_kgd_11c_kv__image_mv2_z4n_sbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e184 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e187 "><img class="image" id="concept_kgd_11c_kv__image_ew2_z4n_sbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">Hadoop FS</td>
+
+              <td class="entry cellrowborder" headers="d8432e152 "><img class="image" id="concept_kgd_11c_kv__image_j5s_p2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e155 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e158 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e161 "><img class="image" id="concept_kgd_11c_kv__image_mg5_p2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e165 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e168 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e171 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e174 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e177 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e180 "><img class="image" id="concept_kgd_11c_kv__image_gjw_p2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e184 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e187 "> </td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">Hadoop FS Standalone</td>
+
+              <td class="entry cellrowborder" headers="d8432e152 "><img class="image" id="concept_kgd_11c_kv__image_lt3_fjv_ldb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e155 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e158 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e161 "><img class="image" id="concept_kgd_11c_kv__image_m53_fjv_ldb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e165 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e168 "><img class="image" id="concept_kgd_11c_kv__image_bv3_fjv_ldb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e171 "><img class="image" id="concept_kgd_11c_kv__image_uv3_fjv_ldb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e174 "><img class="image" id="concept_kgd_11c_kv__image_gw3_fjv_ldb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e177 "><img class="image" id="concept_kgd_11c_kv__image_vw3_fjv_ldb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e180 "><img class="image" id="concept_kgd_11c_kv__image_kx3_fjv_ldb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e184 "><img class="image" id="concept_kgd_11c_kv__image_by3_fjv_ldb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e187 "><img class="image" id="concept_kgd_11c_kv__image_sy3_fjv_ldb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">HTTP Client</td>
+
+              <td class="entry cellrowborder" headers="d8432e152 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e155 "><img class="image" id="concept_kgd_11c_kv__image_eqm_nkj_4z" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e158 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e161 "><img class="image" id="concept_kgd_11c_kv__image_ph4_nkj_4z" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e165 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e168 "><img class="image" id="concept_kgd_11c_kv__image_vwy_q2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e171 "><img class="image" id="concept_kgd_11c_kv__image_tcq_nkj_4z" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e174 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e177 "><img class="image" id="concept_kgd_11c_kv__image_svr_nkj_4z" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e180 "><img class="image" id="concept_kgd_11c_kv__image_fw1_r2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e184 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e187 "><img class="image" id="concept_kgd_11c_kv__image_xxb_r2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">HTTP Server</td>
+
+              <td class="entry cellrowborder" headers="d8432e152 "><img class="image" id="concept_kgd_11c_kv__image_tmf_m5p_x1b" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e155 "><img class="image" id="concept_kgd_11c_kv__image_d5n_nqg_sy" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e158 "><img class="image" id="concept_kgd_11c_kv__image_cjs_nqg_sy" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e161 "><img class="image" id="concept_kgd_11c_kv__image_lqt_nqg_sy" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e165 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e168 "><img class="image" id="concept_kgd_11c_kv__image_ocx_nqg_sy" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e171 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e174 "><img class="image" id="concept_kgd_11c_kv__image_hsb_4qg_sy" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e177 "><img class="image" id="concept_kgd_11c_kv__image_ds2_4qg_sy" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e180 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e184 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e187 "><img class="image" id="concept_kgd_11c_kv__image_kwk_4qg_sy" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">HTTP to Kafka</td>
+
+              <td class="entry cellrowborder" colspan="12" headers="d8432e152 d8432e155 d8432e158 d8432e161 d8432e165 d8432e168 d8432e171 d8432e174 d8432e177 d8432e180 d8432e184 d8432e187 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">JDBC Multitable Consumer</td>
+
+              <td class="entry cellrowborder" colspan="12" headers="d8432e152 d8432e155 d8432e158 d8432e161 d8432e165 d8432e168 d8432e171 d8432e174 d8432e177 d8432e180 d8432e184 d8432e187 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">JDBC Query Consumer</td>
+
+              <td class="entry cellrowborder" colspan="12" headers="d8432e152 d8432e155 d8432e158 d8432e161 d8432e165 d8432e168 d8432e171 d8432e174 d8432e177 d8432e180 d8432e184 d8432e187 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">JMS Consumer</td>
+
+              <td class="entry cellrowborder" headers="d8432e152 "><img class="image" id="concept_kgd_11c_kv__image_xx2_52c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e155 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e158 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e161 "><img class="image" id="concept_kgd_11c_kv__image_dv3_52c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e165 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e168 "><img class="image" id="concept_kgd_11c_kv__image_gwn_52c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e171 "><img class="image" id="concept_kgd_11c_kv__image_qdw_52c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e174 "><img class="image" id="concept_kgd_11c_kv__image_pbx_52c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e177 "><img class="image" id="concept_kgd_11c_kv__image_bqb_v2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e180 "><img class="image" id="concept_kgd_11c_kv__image_dvc_v2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e184 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e187 "><img class="image" id="concept_kgd_11c_kv__image_pdg_v2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">Kafka Consumer</td>
+
+              <td class="entry cellrowborder" headers="d8432e152 "><img class="image" id="concept_kgd_11c_kv__image_gth_w2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e155 "><img class="image" id="concept_kgd_11c_kv__image_k43_w2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e158 "><img class="image" id="concept_kgd_11c_kv__image_cg5_mcg_qw" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e161 "><img class="image" id="concept_kgd_11c_kv__image_gkj_w2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e165 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e168 "><img class="image" id="concept_kgd_11c_kv__image_ljk_w2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e171 "><img class="image" id="concept_kgd_11c_kv__image_ajl_w2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e174 "><img class="image" id="concept_kgd_11c_kv__image_blm_w2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e177 "><img class="image" id="concept_kgd_11c_kv__image_okn_w2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e180 "><img class="image" id="concept_kgd_11c_kv__image_kk4_w2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e184 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e187 "><img class="image" id="concept_kgd_11c_kv__image_smp_w2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">Kafka Multitopic Consumer</td>
+
+              <td class="entry cellrowborder" headers="d8432e152 "><img class="image" id="concept_kgd_11c_kv__image_qgt_nx3_fbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e155 "><img class="image" id="concept_kgd_11c_kv__image_mht_nx3_fbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e158 "><img class="image" id="concept_kgd_11c_kv__image_e3t_nx3_fbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e161 "><img class="image" id="concept_kgd_11c_kv__image_x3t_nx3_fbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e165 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e168 "><img class="image" id="concept_kgd_11c_kv__image_sjt_nx3_fbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e171 "><img class="image" id="concept_kgd_11c_kv__image_lkt_nx3_fbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e174 "><img class="image" id="concept_kgd_11c_kv__image_clt_nx3_fbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e177 "><img class="image" id="concept_kgd_11c_kv__image_ylt_nx3_fbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e180 "><img class="image" id="concept_kgd_11c_kv__image_omt_nx3_fbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e184 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e187 "><img class="image" id="concept_kgd_11c_kv__image_mnt_nx3_fbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">Kinesis Consumer</td>
+
+              <td class="entry cellrowborder" headers="d8432e152 "><img class="image" id="concept_kgd_11c_kv__image_mhp_x2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e155 "><img class="image" id="concept_kgd_11c_kv__image_g2q_x2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e158 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e161 "><img class="image" id="concept_kgd_11c_kv__image_qzv_x2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e165 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e168 "><img class="image" id="concept_kgd_11c_kv__image_m4x_x2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e171 "><img class="image" id="concept_kgd_11c_kv__image_cty_x2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e174 "><img class="image" id="concept_kgd_11c_kv__image_eb1_y2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e177 "><img class="image" id="concept_kgd_11c_kv__image_xfb_y2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e180 "><img class="image" id="concept_kgd_11c_kv__image_ckc_y2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e184 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e187 "><img class="image" id="concept_kgd_11c_kv__image_ntd_y2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">MapR DB CDC</td>
+
+              <td class="entry cellrowborder" colspan="12" headers="d8432e152 d8432e155 d8432e158 d8432e161 d8432e165 d8432e168 d8432e171 d8432e174 d8432e177 d8432e180 d8432e184 d8432e187 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">MapR DB JSON</td>
+
+              <td class="entry cellrowborder" colspan="12" headers="d8432e152 d8432e155 d8432e158 d8432e161 d8432e165 d8432e168 d8432e171 d8432e174 d8432e177 d8432e180 d8432e184 d8432e187 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">MapR FS</td>
+
+              <td class="entry cellrowborder" headers="d8432e152 "><img class="image" id="concept_kgd_11c_kv__image_ihy_lvt_lx" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e155 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e158 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e161 "><img class="image" id="concept_kgd_11c_kv__image_dj5_mvt_lx" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e165 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e168 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e171 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e174 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e177 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e180 "><img class="image" id="concept_kgd_11c_kv__image_acf_nvt_lx" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e184 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e187 "> </td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">MapR FS Standalone</td>
+
+              <td class="entry cellrowborder" headers="d8432e152 "><img class="image" id="concept_kgd_11c_kv__image_cnr_mhh_ndb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e155 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e158 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e161 "><img class="image" id="concept_kgd_11c_kv__image_t4r_mhh_ndb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e165 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e168 "><img class="image" id="concept_kgd_11c_kv__image_qpr_mhh_ndb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e171 "><img class="image" id="concept_kgd_11c_kv__image_kqr_mhh_ndb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e174 "><img class="image" id="concept_kgd_11c_kv__image_jrr_mhh_ndb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e177 "><img class="image" id="concept_kgd_11c_kv__image_gsr_mhh_ndb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e180 "><img class="image" id="concept_kgd_11c_kv__image_btr_mhh_ndb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e184 "><img class="image" id="concept_kgd_11c_kv__image_a5r_mhh_ndb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e187 "><img class="image" id="concept_kgd_11c_kv__image_z5r_mhh_ndb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">MapR Multitopic Streams Consumer</td>
+
+              <td class="entry cellrowborder" headers="d8432e152 "><img class="image" id="concept_kgd_11c_kv__image_mbn_szj_mbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e155 "><img class="image" id="concept_kgd_11c_kv__image_gcn_szj_mbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e158 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e161 "><img class="image" id="concept_kgd_11c_kv__image_fdn_szj_mbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e165 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e168 "><img class="image" id="concept_kgd_11c_kv__image_wdn_szj_mbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e171 "><img class="image" id="concept_kgd_11c_kv__image_o2n_szj_mbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e174 "><img class="image" id="concept_kgd_11c_kv__image_gfn_szj_mbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e177 "><img class="image" id="concept_kgd_11c_kv__image_vfn_szj_mbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e180 "><img class="image" id="concept_kgd_11c_kv__image_mgn_szj_mbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e184 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e187 "><img class="image" id="concept_kgd_11c_kv__image_lhn_szj_mbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">MapR Streams Consumer</td>
+
+              <td class="entry cellrowborder" headers="d8432e152 "><img class="image" id="concept_kgd_11c_kv__image_rp1_2gc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e155 "><img class="image" id="concept_kgd_11c_kv__image_rpc_2gc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e158 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e161 "><img class="image" id="concept_kgd_11c_kv__image_tqd_2gc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e165 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e168 "><img class="image" id="concept_kgd_11c_kv__image_bx2_2gc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e171 "><img class="image" id="concept_kgd_11c_kv__image_tgg_2gc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e174 "><img class="image" id="concept_kgd_11c_kv__image_gkh_2gc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e177 "><img class="image" id="concept_kgd_11c_kv__image_jl3_2gc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e180 "><img class="image" id="concept_kgd_11c_kv__image_knj_2gc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e184 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e187 "> </td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">MongoDB</td>
+
+              <td class="entry cellrowborder" colspan="12" headers="d8432e152 d8432e155 d8432e158 d8432e161 d8432e165 d8432e168 d8432e171 d8432e174 d8432e177 d8432e180 d8432e184 d8432e187 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">MongoDB Oplog</td>
+
+              <td class="entry cellrowborder" colspan="12" headers="d8432e152 d8432e155 d8432e158 d8432e161 d8432e165 d8432e168 d8432e171 d8432e174 d8432e177 d8432e180 d8432e184 d8432e187 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">MQTT Subscriber</td>
+
+              <td class="entry cellrowborder" headers="d8432e152 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e155 "><img class="image" id="concept_kgd_11c_kv__image_qqt_bxq_mz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e158 "><img class="image" id="concept_kgd_11c_kv__image_rqt_bxq_mz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e161 "><img class="image" id="concept_kgd_11c_kv__image_sqt_bxq_mz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e165 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e168 "><img class="image" id="concept_kgd_11c_kv__image_tqt_bxq_mz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e171 "><img class="image" id="concept_kgd_11c_kv__image_lh5_cxq_mz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e174 "><img class="image" id="concept_kgd_11c_kv__image_uqt_bxq_mz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e177 "><img class="image" id="concept_kgd_11c_kv__image_vqt_bxq_mz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e180 "><img class="image" id="concept_kgd_11c_kv__image_jdf_dxq_mz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e184 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e187 "><img class="image" id="concept_kgd_11c_kv__image_wqt_bxq_mz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">MySQL Binary Log</td>
+
+              <td class="entry cellrowborder" colspan="12" headers="d8432e152 d8432e155 d8432e158 d8432e161 d8432e165 d8432e168 d8432e171 d8432e174 d8432e177 d8432e180 d8432e184 d8432e187 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">Omniture</td>
+
+              <td class="entry cellrowborder" colspan="12" headers="d8432e152 d8432e155 d8432e158 d8432e161 d8432e165 d8432e168 d8432e171 d8432e174 d8432e177 d8432e180 d8432e184 d8432e187 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">OPC UA Client</td>
+
+              <td class="entry cellrowborder" colspan="12" headers="d8432e152 d8432e155 d8432e158 d8432e161 d8432e165 d8432e168 d8432e171 d8432e174 d8432e177 d8432e180 d8432e184 d8432e187 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">Oracle CDC Client</td>
+
+              <td class="entry cellrowborder" colspan="12" headers="d8432e152 d8432e155 d8432e158 d8432e161 d8432e165 d8432e168 d8432e171 d8432e174 d8432e177 d8432e180 d8432e184 d8432e187 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">PostgreSQL CDC Client</td>
+
+              <td class="entry cellrowborder" colspan="12" headers="d8432e152 d8432e155 d8432e158 d8432e161 d8432e165 d8432e168 d8432e171 d8432e174 d8432e177 d8432e180 d8432e184 d8432e187 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">RabbitMQ Consumer</td>
+
+              <td class="entry cellrowborder" headers="d8432e152 "><img class="image" id="concept_kgd_11c_kv__image_lvv_4qc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e155 "><img class="image" id="concept_kgd_11c_kv__image_dyw_4qc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e158 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e161 "><img class="image" id="concept_kgd_11c_kv__image_rxx_4qc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e165 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e168 "><img class="image" id="concept_kgd_11c_kv__image_ztd_pqc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e171 "><img class="image" id="concept_kgd_11c_kv__image_xt2_pqc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e174 "><img class="image" id="concept_kgd_11c_kv__image_t4j_pqc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e177 "><img class="image" id="concept_kgd_11c_kv__image_lmk_pqc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e180 "><img class="image" id="concept_kgd_11c_kv__image_dkl_pqc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e184 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e187 "><img class="image" id="concept_kgd_11c_kv__image_jlp_pqc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">Redis Consumer</td>
+
+              <td class="entry cellrowborder" headers="d8432e152 "><img class="image" id="concept_kgd_11c_kv__image_nb3_k2w_jw" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e155 "><img class="image" id="concept_kgd_11c_kv__image_fdj_k2w_jw" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e158 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e161 "><img class="image" id="concept_kgd_11c_kv__image_vjk_k2w_jw" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e165 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e168 "><img class="image" id="concept_kgd_11c_kv__image_snl_k2w_jw" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e171 "><img class="image" id="concept_kgd_11c_kv__image_gmm_k2w_jw" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e174 "><img class="image" id="concept_kgd_11c_kv__image_jrp_k2w_jw" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e177 "><img class="image" id="concept_kgd_11c_kv__image_sqr_k2w_jw" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e180 "><img class="image" id="concept_kgd_11c_kv__image_h5s_k2w_jw" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e184 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e187 "><img class="image" id="concept_kgd_11c_kv__image_h25_k2w_jw" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">Salesforce</td>
+
+              <td class="entry cellrowborder" colspan="12" headers="d8432e152 d8432e155 d8432e158 d8432e161 d8432e165 d8432e168 d8432e171 d8432e174 d8432e177 d8432e180 d8432e184 d8432e187 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">SDC RPC</td>
+
+              <td class="entry cellrowborder" headers="d8432e152 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e155 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e158 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e161 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e165 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e168 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e171 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e174 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e177 "><img class="image" id="concept_kgd_11c_kv__image_i1x_fsg_qw" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e180 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e184 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e187 "> </td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">SDC RPC to Kafka</td>
+
+              <td class="entry cellrowborder" headers="d8432e152 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e155 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e158 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e161 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e165 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e168 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e171 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e174 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e177 "><img class="image" id="concept_kgd_11c_kv__image_nng_fcg_qw" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e180 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e184 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e187 "> </td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">SFTP/FTP Client</td>
+
+              <td class="entry cellrowborder" headers="d8432e152 "><img class="image" id="concept_kgd_11c_kv__image_djx_r3r_yv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e155 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e158 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e161 "><img class="image" id="concept_kgd_11c_kv__image_azy_r3r_yv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e165 "><img class="image" id="concept_kgd_11c_kv__image_qjt_p31_22b" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e168 "><img class="image" id="concept_kgd_11c_kv__image_zxz_r3r_yv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e171 "><img class="image" id="concept_kgd_11c_kv__image_y1b_s3r_yv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e174 "><img class="image" id="concept_kgd_11c_kv__image_t3c_s3r_yv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e177 "><img class="image" id="concept_kgd_11c_kv__image_qld_s3r_yv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e180 "><img class="image" id="concept_kgd_11c_kv__image_sn2_s3r_yv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e184 "><img class="image" id="concept_kgd_11c_kv__image_s2l_ttb_hx" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e187 "><img class="image" id="concept_kgd_11c_kv__image_yqf_s3r_yv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">SQL Server CDC Client</td>
+
+              <td class="entry cellrowborder" colspan="12" headers="d8432e152 d8432e155 d8432e158 d8432e161 d8432e165 d8432e168 d8432e171 d8432e174 d8432e177 d8432e180 d8432e184 d8432e187 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">SQL Server Change Tracking</td>
+
+              <td class="entry cellrowborder" colspan="12" headers="d8432e152 d8432e155 d8432e158 d8432e161 d8432e165 d8432e168 d8432e171 d8432e174 d8432e177 d8432e180 d8432e184 d8432e187 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">System Metrics</td>
+
+              <td class="entry cellrowborder" colspan="12" headers="d8432e152 d8432e155 d8432e158 d8432e161 d8432e165 d8432e168 d8432e171 d8432e174 d8432e177 d8432e180 d8432e184 d8432e187 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">TCP Server</td>
+
+              <td class="entry cellrowborder" headers="d8432e152 "><img class="image" id="concept_kgd_11c_kv__image_qll_dlk_tz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e155 "><img class="image" id="concept_kgd_11c_kv__image_g5v_hlk_tz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e158 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e161 "><img class="image" id="concept_kgd_11c_kv__image_zcs_3lk_tz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e165 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e168 "><img class="image" id="concept_kgd_11c_kv__image_xht_3lk_tz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e171 "><img class="image" id="concept_kgd_11c_kv__image_v45_3lk_tz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e174 "><img class="image" id="concept_kgd_11c_kv__image_gds_jlk_tz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e177 "><img class="image" id="concept_kgd_11c_kv__image_zht_jlk_tz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e180 "><img class="image" id="concept_kgd_11c_kv__image_j45_llk_tz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e184 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e187 "><img class="image" id="concept_kgd_11c_kv__image_dzw_llk_tz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">UDP Multithreaded Source</td>
+
+              <td class="entry cellrowborder" colspan="12" headers="d8432e152 d8432e155 d8432e158 d8432e161 d8432e165 d8432e168 d8432e171 d8432e174 d8432e177 d8432e180 d8432e184 d8432e187 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">UDP Source</td>
+
+              <td class="entry cellrowborder" colspan="12" headers="d8432e152 d8432e155 d8432e158 d8432e161 d8432e165 d8432e168 d8432e171 d8432e174 d8432e177 d8432e180 d8432e184 d8432e187 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">UDP to Kafka</td>
+
+              <td class="entry cellrowborder" colspan="12" headers="d8432e152 d8432e155 d8432e158 d8432e161 d8432e165 d8432e168 d8432e171 d8432e174 d8432e177 d8432e180 d8432e184 d8432e187 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">WebSocket Client</td>
+
+              <td class="entry cellrowborder" headers="d8432e152 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e155 "><img class="image" id="concept_kgd_11c_kv__image_pwl_sjr_fbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e158 "><img class="image" id="concept_kgd_11c_kv__image_qwl_sjr_fbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e161 "><img class="image" id="concept_kgd_11c_kv__image_rwl_sjr_fbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e165 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e168 "><img class="image" id="concept_kgd_11c_kv__image_swl_sjr_fbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e171 "><img class="image" id="concept_kgd_11c_kv__image_twl_sjr_fbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e174 "><img class="image" id="concept_kgd_11c_kv__image_uwl_sjr_fbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e177 "><img class="image" id="concept_kgd_11c_kv__image_vwl_sjr_fbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e180 "><img class="image" id="concept_kgd_11c_kv__image_wwl_sjr_fbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e184 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e187 "><img class="image" id="concept_kgd_11c_kv__image_xwl_sjr_fbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">WebSocket Server</td>
+
+              <td class="entry cellrowborder" headers="d8432e152 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e155 "><img class="image" id="concept_kgd_11c_kv__image_lzk_jvf_3z" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e158 "><img class="image" id="concept_kgd_11c_kv__image_mzk_jvf_3z" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e161 "><img class="image" id="concept_kgd_11c_kv__image_nzk_jvf_3z" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e165 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e168 "><img class="image" id="concept_kgd_11c_kv__image_ozk_jvf_3z" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e171 "><img class="image" id="concept_kgd_11c_kv__image_lmn_lvf_3z" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e174 "><img class="image" id="concept_kgd_11c_kv__image_pzk_jvf_3z" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e177 "><img class="image" id="concept_kgd_11c_kv__image_qzk_jvf_3z" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e180 "><img class="image" id="concept_kgd_11c_kv__image_zwl_lvf_3z" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e184 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e187 "><img class="image" id="concept_kgd_11c_kv__image_rzk_jvf_3z" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e149 ">Windows Event Log</td>
+
+              <td class="entry cellrowborder" colspan="12" headers="d8432e152 d8432e155 d8432e158 d8432e161 d8432e165 d8432e168 d8432e171 d8432e174 d8432e177 d8432e180 d8432e184 d8432e187 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+          </tbody>
+</table>
+</div>
+
+    </div>
+
+  </div>
+
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title4" id="concept_odv_w5c_kv">
+  <h3 class="title topictitle3" id="ariaid-title4">Destinations</h3>
+
+
+  <div class="body conbody"><p class="shortdesc">The following table lists the data formats supported by each destination.</p>
+
+    <div class="p">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_odv_w5c_kv__table_bhk_kwc_kv" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:10%" /><col style="width:10%" /><col style="width:10%" /><col style="width:10%" /><col style="width:10%" /><col style="width:10%" /><col style="width:10%" /><col style="width:10%" /><col style="width:10%" /><col style="width:10%" /></colgroup><thead class="thead" style="text-align:left;">
+            <tr>
+              <th class="entry cellrowborder" id="d8432e1600">Destination</th>
+
+              <th class="entry cellrowborder" id="d8432e1603">Avro</th>
+
+              <th class="entry cellrowborder" id="d8432e1606">Binary</th>
+
+              <th class="entry cellrowborder" id="d8432e1609">Delimited</th>
+
+              <th class="entry cellrowborder" id="d8432e1612">JSON</th>
+
+              <th class="entry cellrowborder" id="d8432e1616">Protobuf</th>
+
+              <th class="entry cellrowborder" id="d8432e1619">SDC Record</th>
+
+              <th class="entry cellrowborder" id="d8432e1622">Text</th>
+
+              <th class="entry cellrowborder" id="d8432e1625">Whole File</th>
+
+              <th class="entry cellrowborder" id="d8432e1628">XML</th>
+
+            </tr>
+
+          </thead>
+<tbody class="tbody">
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">Aerospike</td>
+
+              <td class="entry cellrowborder" colspan="9" headers="d8432e1603 d8432e1606 d8432e1609 d8432e1612 d8432e1616 d8432e1619 d8432e1622 d8432e1625 d8432e1628 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">Amazon S3</td>
+
+              <td class="entry cellrowborder" headers="d8432e1603 "><img class="image" id="concept_odv_w5c_kv__image_c1h_ddc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1606 "><img class="image" id="concept_odv_w5c_kv__image_s3w_4wc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1609 "><img class="image" id="concept_odv_w5c_kv__image_wjx_4wc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1612 "><img class="image" id="concept_odv_w5c_kv__image_hky_4wc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1616 "><img class="image" id="concept_odv_w5c_kv__image_wp1_pwc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1619 "><img class="image" id="concept_odv_w5c_kv__image_ix2_pwc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1622 "><img class="image" id="concept_odv_w5c_kv__image_cwf_pwc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1625 "><img class="image" id="concept_odv_w5c_kv__image_jgp_hvh_xw" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1628 "> </td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">Azure Data Lake Store</td>
+
+              <td class="entry cellrowborder" headers="d8432e1603 "><img class="image" id="concept_odv_w5c_kv__image_esg_j4k_1y" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1606 "><img class="image" id="concept_odv_w5c_kv__image_slh_k1p_sy" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1609 "><img class="image" id="concept_odv_w5c_kv__image_dvz_j4k_1y" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1612 "><img class="image" id="concept_odv_w5c_kv__image_sbb_k4k_1y" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1616 "><img class="image" id="concept_odv_w5c_kv__image_xql_k1p_sy" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1619 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1622 "><img class="image" id="concept_odv_w5c_kv__image_ltc_k4k_1y" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1625 "><img class="image" id="concept_odv_w5c_kv__image_tts_2wl_3y" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1628 "> </td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">Azure Event Hub Producer</td>
+
+              <td class="entry cellrowborder" headers="d8432e1603 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1606 "><img class="image" id="concept_odv_w5c_kv__image_f55_plf_bbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1609 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1612 "><img class="image" id="concept_odv_w5c_kv__image_byv_plf_bbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1616 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1619 "><img class="image" id="concept_odv_w5c_kv__image_pgx_plf_bbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1622 "><img class="image" id="concept_odv_w5c_kv__image_m3y_plf_bbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1625 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1628 "> </td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">Azure IoT Hub Producer</td>
+
+              <td class="entry cellrowborder" headers="d8432e1603 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1606 "><img class="image" id="concept_odv_w5c_kv__image_whq_1rr_1bb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1609 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1612 "><img class="image" id="concept_odv_w5c_kv__image_xhq_1rr_1bb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1616 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1619 "><img class="image" id="concept_odv_w5c_kv__image_yhq_1rr_1bb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1622 "><img class="image" id="concept_odv_w5c_kv__image_zhq_1rr_1bb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1625 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1628 "> </td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">Cassandra</td>
+
+              <td class="entry cellrowborder" colspan="9" headers="d8432e1603 d8432e1606 d8432e1609 d8432e1612 d8432e1616 d8432e1619 d8432e1622 d8432e1625 d8432e1628 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">CoAP Client</td>
+
+              <td class="entry cellrowborder" headers="d8432e1603 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1606 "><img class="image" id="concept_odv_w5c_kv__image_op4_1j4_sz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1609 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1612 "><img class="image" id="concept_odv_w5c_kv__image_pp4_1j4_sz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1616 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1619 "><img class="image" id="concept_odv_w5c_kv__image_qp4_1j4_sz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1622 "><img class="image" id="concept_odv_w5c_kv__image_rp4_1j4_sz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1625 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1628 "> </td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">Couchbase</td>
+
+              <td class="entry cellrowborder" colspan="9" headers="d8432e1603 d8432e1606 d8432e1609 d8432e1612 d8432e1616 d8432e1619 d8432e1622 d8432e1625 d8432e1628 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">Elasticsearch</td>
+
+              <td class="entry cellrowborder" colspan="9" headers="d8432e1603 d8432e1606 d8432e1609 d8432e1612 d8432e1616 d8432e1619 d8432e1622 d8432e1625 d8432e1628 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">Einstein Analytics</td>
+
+              <td class="entry cellrowborder" colspan="9" headers="d8432e1603 d8432e1606 d8432e1609 d8432e1612 d8432e1616 d8432e1619 d8432e1622 d8432e1625 d8432e1628 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">Flume</td>
+
+              <td class="entry cellrowborder" headers="d8432e1603 "><img class="image" id="concept_odv_w5c_kv__image_ph3_1xc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1606 "><img class="image" id="concept_odv_w5c_kv__image_amj_1xc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1609 "><img class="image" id="concept_odv_w5c_kv__image_zvn_1xc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1612 "><img class="image" id="concept_odv_w5c_kv__image_y54_1xc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1616 "><img class="image" id="concept_odv_w5c_kv__image_xzs_1xc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1619 "><img class="image" id="concept_odv_w5c_kv__image_ff5_1xc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1622 "><img class="image" id="concept_odv_w5c_kv__image_cfv_1xc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1625 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1628 "> </td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">Google BigQuery</td>
+
+              <td class="entry cellrowborder" colspan="9" headers="d8432e1603 d8432e1606 d8432e1609 d8432e1612 d8432e1616 d8432e1619 d8432e1622 d8432e1625 d8432e1628 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">Google Bigtable</td>
+
+              <td class="entry cellrowborder" colspan="9" headers="d8432e1603 d8432e1606 d8432e1609 d8432e1612 d8432e1616 d8432e1619 d8432e1622 d8432e1625 d8432e1628 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">Google Cloud Storage</td>
+
+              <td class="entry cellrowborder" headers="d8432e1603 "><img class="image" id="concept_odv_w5c_kv__image_wz1_5cq_v1b" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1606 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1609 "><img class="image" id="concept_odv_w5c_kv__image_yz1_5cq_v1b" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1612 "><img class="image" id="concept_odv_w5c_kv__image_zz1_5cq_v1b" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1616 "><img class="image" id="concept_odv_w5c_kv__image_a1b_5cq_v1b" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1619 "><img class="image" id="concept_odv_w5c_kv__image_b1b_5cq_v1b" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1622 "><img class="image" id="concept_odv_w5c_kv__image_c1b_5cq_v1b" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1625 "><img class="image" id="concept_odv_w5c_kv__image_lhn_fk3_qcb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1628 "> </td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">Google Pub/Sub Publisher</td>
+
+              <td class="entry cellrowborder" headers="d8432e1603 "><img class="image" id="concept_odv_w5c_kv__image_hxq_cpn_sbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1606 "><img class="image" id="concept_odv_w5c_kv__image_ixq_cpn_sbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1609 "><img class="image" id="concept_odv_w5c_kv__image_jxq_cpn_sbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1612 "><img class="image" id="concept_odv_w5c_kv__image_kxq_cpn_sbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1616 "><img class="image" id="concept_odv_w5c_kv__image_lxq_cpn_sbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1619 "><img class="image" id="concept_odv_w5c_kv__image_mxq_cpn_sbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1622 "><img class="image" id="concept_odv_w5c_kv__image_nxq_cpn_sbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1625 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1628 "><img class="image" id="concept_odv_w5c_kv__image_oxq_cpn_sbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">Hadoop FS</td>
+
+              <td class="entry cellrowborder" headers="d8432e1603 "><img class="image" id="concept_odv_w5c_kv__image_wgl_bxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1606 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1609 "><img class="image" id="concept_odv_w5c_kv__image_hsp_bxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1612 "><img class="image" id="concept_odv_w5c_kv__image_zpq_bxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1616 "><img class="image" id="concept_odv_w5c_kv__image_pg5_bxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1619 "><img class="image" id="concept_odv_w5c_kv__image_f4k_gtj_vdb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1622 "><img class="image" id="concept_odv_w5c_kv__image_llv_bxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1625 "><img class="image" id="concept_odv_w5c_kv__image_tzv_hvh_xw" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1628 "> </td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">HBase</td>
+
+              <td class="entry cellrowborder" colspan="9" headers="d8432e1603 d8432e1606 d8432e1609 d8432e1612 d8432e1616 d8432e1619 d8432e1622 d8432e1625 d8432e1628 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">Hive Metastore </td>
+
+              <td class="entry cellrowborder" headers="d8432e1603 "><img class="image" id="concept_odv_w5c_kv__image_ptc_flm_hw" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1606 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1609 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1612 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1616 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1619 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1622 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1625 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1628 "> </td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">Hive Streaming</td>
+
+              <td class="entry cellrowborder" colspan="9" headers="d8432e1603 d8432e1606 d8432e1609 d8432e1612 d8432e1616 d8432e1619 d8432e1622 d8432e1625 d8432e1628 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">HTTP Client</td>
+
+              <td class="entry cellrowborder" headers="d8432e1603 "><img class="image" id="concept_odv_w5c_kv__image_zvl_yqt_kbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1606 "><img class="image" id="concept_odv_w5c_kv__image_mlf_smv_lz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1609 "><img class="image" id="concept_odv_w5c_kv__image_bdr_yqt_kbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1612 "><img class="image" id="concept_odv_w5c_kv__image_olf_smv_lz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1616 "><img class="image" id="concept_odv_w5c_kv__image_cxf_zqt_kbb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1619 "><img class="image" id="concept_odv_w5c_kv__image_rlf_smv_lz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1622 "><img class="image" id="concept_odv_w5c_kv__image_qlf_smv_lz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1625 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1628 "> </td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">InfluxDB</td>
+
+              <td class="entry cellrowborder" colspan="9" headers="d8432e1603 d8432e1606 d8432e1609 d8432e1612 d8432e1616 d8432e1619 d8432e1622 d8432e1625 d8432e1628 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">JDBC Producer</td>
+
+              <td class="entry cellrowborder" colspan="9" headers="d8432e1603 d8432e1606 d8432e1609 d8432e1612 d8432e1616 d8432e1619 d8432e1622 d8432e1625 d8432e1628 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">JMS Producer</td>
+
+              <td class="entry cellrowborder" headers="d8432e1603 "><img class="image" id="concept_odv_w5c_kv__image_dwc_sxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1606 "><img class="image" id="concept_odv_w5c_kv__image_qvd_sxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1609 "><img class="image" id="concept_odv_w5c_kv__image_qt2_sxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1612 "><img class="image" id="concept_odv_w5c_kv__image_kjk_sxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1616 "><img class="image" id="concept_odv_w5c_kv__image_znm_sxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1619 "><img class="image" id="concept_odv_w5c_kv__image_jd4_sxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1622 "><img class="image" id="concept_odv_w5c_kv__image_mlp_sxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1625 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1628 "><img class="image" id="concept_odv_w5c_kv__image_hn3_4xl_r1b" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">Kafka Producer</td>
+
+              <td class="entry cellrowborder" headers="d8432e1603 "><img class="image" id="concept_odv_w5c_kv__image_szc_h55_n1b" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1606 "><img class="image" id="concept_odv_w5c_kv__image_h1d_h55_n1b" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1609 "><img class="image" id="concept_odv_w5c_kv__image_abd_h55_n1b" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1612 "><img class="image" id="concept_odv_w5c_kv__image_qbd_h55_n1b" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1616 "><img class="image" id="concept_odv_w5c_kv__image_jcd_h55_n1b" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1619 "><img class="image" id="concept_odv_w5c_kv__image_bdd_h55_n1b" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1622 "><img class="image" id="concept_odv_w5c_kv__image_udd_h55_n1b" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1625 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1628 "><img class="image" id="concept_odv_w5c_kv__image_v4k_4xl_r1b" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">Kinesis Firehose</td>
+
+              <td class="entry cellrowborder" headers="d8432e1603 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1606 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1609 "><img class="image" id="concept_odv_w5c_kv__image_gxs_zgd_lv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1612 "><img class="image" id="concept_odv_w5c_kv__image_efh_1hd_lv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1616 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1619 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1622 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1625 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1628 "> </td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">Kinesis Producer</td>
+
+              <td class="entry cellrowborder" headers="d8432e1603 "><img class="image" id="concept_odv_w5c_kv__image_zhv_txc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1606 "><img class="image" id="concept_odv_w5c_kv__image_o3x_txc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1609 "><img class="image" id="concept_odv_w5c_kv__image_kdy_txc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1612 "><img class="image" id="concept_odv_w5c_kv__image_bbz_txc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1616 "><img class="image" id="concept_odv_w5c_kv__image_of2_5xc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1619 "><img class="image" id="concept_odv_w5c_kv__image_wkf_5xc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1622 "><img class="image" id="concept_odv_w5c_kv__image_jxg_5xc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1625 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1628 "> </td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">KineticaDB</td>
+
+              <td class="entry cellrowborder" colspan="9" headers="d8432e1603 d8432e1606 d8432e1609 d8432e1612 d8432e1616 d8432e1619 d8432e1622 d8432e1625 d8432e1628 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">Kudu</td>
+
+              <td class="entry cellrowborder" colspan="9" headers="d8432e1603 d8432e1606 d8432e1609 d8432e1612 d8432e1616 d8432e1619 d8432e1622 d8432e1625 d8432e1628 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">Local FS</td>
+
+              <td class="entry cellrowborder" headers="d8432e1603 "><img class="image" id="concept_odv_w5c_kv__image_jk1_vxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1606 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1609 "><img class="image" id="concept_odv_w5c_kv__image_nrc_vxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1612 "><img class="image" id="concept_odv_w5c_kv__image_uwg_vxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1616 "><img class="image" id="concept_odv_w5c_kv__image_oxh_vxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1619 "><img class="image" id="concept_odv_w5c_kv__image_jmn_brk_vdb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1622 "><img class="image" id="concept_odv_w5c_kv__image_b53_wxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1625 "><img class="image" id="concept_odv_w5c_kv__image_wlf_3vh_xw" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1628 "> </td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">MapR DB</td>
+
+              <td class="entry cellrowborder" colspan="9" headers="d8432e1603 d8432e1606 d8432e1609 d8432e1612 d8432e1616 d8432e1619 d8432e1622 d8432e1625 d8432e1628 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">MapR DB JSON</td>
+
+              <td class="entry cellrowborder" colspan="9" headers="d8432e1603 d8432e1606 d8432e1609 d8432e1612 d8432e1616 d8432e1619 d8432e1622 d8432e1625 d8432e1628 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">MapR FS</td>
+
+              <td class="entry cellrowborder" headers="d8432e1603 "><img class="image" id="concept_odv_w5c_kv__image_vkm_xxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1606 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1609 "><img class="image" id="concept_odv_w5c_kv__image_rcy_xxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1612 "><img class="image" id="concept_odv_w5c_kv__image_mdz_xxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1616 "><img class="image" id="concept_odv_w5c_kv__image_nf1_yxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1619 "><img class="image" id="concept_odv_w5c_kv__image_is2_crk_vdb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1622 "><img class="image" id="concept_odv_w5c_kv__image_dyd_yxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1625 "><img class="image" id="concept_odv_w5c_kv__image_iwh_3vh_xw" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1628 "> </td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">MapR Streams Producer</td>
+
+              <td class="entry cellrowborder" headers="d8432e1603 "><img class="image" id="concept_odv_w5c_kv__image_gl4_5yc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1606 "><img class="image" id="concept_odv_w5c_kv__image_w3c_vyc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1609 "><img class="image" id="concept_odv_w5c_kv__image_hmd_vyc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1612 "><img class="image" id="concept_odv_w5c_kv__image_n1z_zyc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1616 "><img class="image" id="concept_odv_w5c_kv__image_tg1_1zc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1619 "><img class="image" id="concept_odv_w5c_kv__image_trk_1zc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1622 "><img class="image" id="concept_odv_w5c_kv__image_irl_1zc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1625 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1628 "> </td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">MongoDB</td>
+
+              <td class="entry cellrowborder" colspan="9" headers="d8432e1603 d8432e1606 d8432e1609 d8432e1612 d8432e1616 d8432e1619 d8432e1622 d8432e1625 d8432e1628 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">MQTT Publisher</td>
+
+              <td class="entry cellrowborder" headers="d8432e1603 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1606 "><img class="image" id="concept_odv_w5c_kv__image_qww_vxq_mz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1609 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1612 "><img class="image" id="concept_odv_w5c_kv__image_rww_vxq_mz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1616 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1619 "><img class="image" id="concept_odv_w5c_kv__image_sww_vxq_mz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1622 "><img class="image" id="concept_odv_w5c_kv__image_tww_vxq_mz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1625 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1628 "> </td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">Named Pipe</td>
+
+              <td class="entry cellrowborder" headers="d8432e1603 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1606 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1609 "><img class="image" id="concept_odv_w5c_kv__image_erf_dpm_mcb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1612 "><img class="image" id="concept_odv_w5c_kv__image_frf_dpm_mcb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1616 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1619 "><img class="image" id="concept_odv_w5c_kv__image_grf_dpm_mcb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1622 "><img class="image" id="concept_odv_w5c_kv__image_hrf_dpm_mcb" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1625 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1628 "> </td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">RabbitMQ Producer</td>
+
+              <td class="entry cellrowborder" headers="d8432e1603 "><img class="image" id="concept_odv_w5c_kv__image_zp4_bzc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1606 "><img class="image" id="concept_odv_w5c_kv__image_vmf_czc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1609 "><img class="image" id="concept_odv_w5c_kv__image_gyg_czc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1612 "><img class="image" id="concept_odv_w5c_kv__image_bwq_czc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1616 "><img class="image" id="concept_odv_w5c_kv__image_lcs_czc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1619 "><img class="image" id="concept_odv_w5c_kv__image_ikt_czc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1622 "><img class="image" id="concept_odv_w5c_kv__image_r35_czc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1625 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1628 "> </td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">Redis</td>
+
+              <td class="entry cellrowborder" headers="d8432e1603 "><img class="image" id="concept_odv_w5c_kv__image_kxv_bsl_3w" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1606 "><img class="image" id="concept_odv_w5c_kv__image_nly_bsl_3w" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1609 "><img class="image" id="concept_odv_w5c_kv__image_jpz_bsl_3w" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1612 "><img class="image" id="concept_odv_w5c_kv__image_mv1_csl_3w" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1616 "><img class="image" id="concept_odv_w5c_kv__image_gvb_csl_3w" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1619 "><img class="image" id="concept_odv_w5c_kv__image_qyc_csl_3w" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1622 "><img class="image" id="concept_odv_w5c_kv__image_hf2_csl_3w" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1625 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1628 "> </td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">Salesforce</td>
+
+              <td class="entry cellrowborder" colspan="9" headers="d8432e1603 d8432e1606 d8432e1609 d8432e1612 d8432e1616 d8432e1619 d8432e1622 d8432e1625 d8432e1628 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">SDC RPC</td>
+
+              <td class="entry cellrowborder" headers="d8432e1603 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1606 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1609 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1612 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1616 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1619 "><img class="image" id="concept_odv_w5c_kv__image_zmk_dzc_kv" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1622 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1625 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1628 "> </td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">Solr</td>
+
+              <td class="entry cellrowborder" colspan="9" headers="d8432e1603 d8432e1606 d8432e1609 d8432e1612 d8432e1616 d8432e1619 d8432e1622 d8432e1625 d8432e1628 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">Splunk</td>
+
+              <td class="entry cellrowborder" colspan="9" headers="d8432e1603 d8432e1606 d8432e1609 d8432e1612 d8432e1616 d8432e1619 d8432e1622 d8432e1625 d8432e1628 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">To Error</td>
+
+              <td class="entry cellrowborder" colspan="9" headers="d8432e1603 d8432e1606 d8432e1609 d8432e1612 d8432e1616 d8432e1619 d8432e1622 d8432e1625 d8432e1628 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">Trash</td>
+
+              <td class="entry cellrowborder" colspan="9" headers="d8432e1603 d8432e1606 d8432e1609 d8432e1612 d8432e1616 d8432e1619 d8432e1622 d8432e1625 d8432e1628 ">* * * Not Applicable * * *</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d8432e1600 ">WebSocket Client</td>
+
+              <td class="entry cellrowborder" headers="d8432e1603 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1606 "><img class="image" id="concept_odv_w5c_kv__image_nrm_zvb_mz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1609 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1612 "><img class="image" id="concept_odv_w5c_kv__image_orm_zvb_mz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1616 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1619 "><img class="image" id="concept_odv_w5c_kv__image_prm_zvb_mz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1622 "><img class="image" id="concept_odv_w5c_kv__image_qrm_zvb_mz" src="../Graphics/CheckIcon.png" height="20" width="23" /></td>
+
+              <td class="entry cellrowborder" headers="d8432e1625 "> </td>
+
+              <td class="entry cellrowborder" headers="d8432e1628 "> </td>
+
+            </tr>
+
+          </tbody>
+</table>
+</div>
+
+    </div>
+
+  </div>
+
+</article>
+</article>
+</article>
+</article></main></div>
+
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script>
+  </div>
+</nav>
+
+
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
+</html>

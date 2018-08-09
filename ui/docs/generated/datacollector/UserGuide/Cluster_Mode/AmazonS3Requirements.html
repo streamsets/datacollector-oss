@@ -1,0 +1,907 @@
+
+<!DOCTYPE html
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link>
+      <meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Amazon S3 Requirements" /><meta name="abstract" content="Cluster EMR batch and cluster batch mode pipelines can process data from Amazon S3." /><meta name="description" content="Cluster EMR batch and cluster batch mode pipelines can process data from Amazon S3." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Cluster_Mode/HDFSRequirements.html#task_akz_w5b_ws" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Cluster_Mode/StageLimitations.html#concept_pdf_r5y_fz" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_opj_jmf_f2b" /><title>Amazon S3 Requirements</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_opj_jmf_f2b-d46e113510" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018042310" />
+
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018042310" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+
+
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+
+
+
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+
+                </div>
+
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+
+
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref" data-id="concept_fpz_5r4_vs"><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li class="active"><span class="topicref" data-id="concept_opj_jmf_f2b"><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/AmazonS3Requirements.html#concept_opj_jmf_f2b">Amazon S3 Requirements</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Cluster EMR batch and cluster batch mode pipelines can process data from Amazon         S3.</p>
+               </span></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Cluster_Mode/HDFSRequirements.html#task_akz_w5b_ws" title="HDFS Requirements"></a></span>
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Cluster_Mode/StageLimitations.html#concept_pdf_r5y_fz" title="Cluster Pipeline Limitations"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e4414" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e6481" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13895" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e18499" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e20154" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22651" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e24466" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e64169" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e77391" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e92871" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e98772" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e102096" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e106011" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e108837" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e109636" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e110218" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e111818" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e112299" class="topicref" data-id="concept_fpz_5r4_vs" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_hmh_kfn_1s-d46e112321" class="topicref" data-id="concept_hmh_kfn_1s" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines.html#concept_hmh_kfn_1s">Cluster Pipeline Overview</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">A <dfn class="term">cluster pipeline</dfn> is a pipeline that runs in cluster execution mode. You   can run a pipeline in standalone execution mode or cluster execution
+                        mode.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="task_gmd_msw_yr-d46e112919" class="topicref" data-id="task_gmd_msw_yr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/KafkaRequirements.html#task_gmd_msw_yr">Kafka Cluster Requirements</a></span></span></li>
+         <li><span data-tocid="concept_kry_gn5_lx-d46e113387" class="topicref" data-id="concept_kry_gn5_lx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/MapRRequirements.html#concept_kry_gn5_lx">MapR Requirements</a></span></span></li>
+         <li><span data-tocid="task_akz_w5b_ws-d46e113486" class="topicref" data-id="task_akz_w5b_ws" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/HDFSRequirements.html#task_akz_w5b_ws">HDFS Requirements</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li class="active"><span data-tocid="concept_opj_jmf_f2b-d46e113510" class="topicref" data-id="concept_opj_jmf_f2b" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/AmazonS3Requirements.html#concept_opj_jmf_f2b">Amazon S3 Requirements</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Cluster EMR batch and cluster batch mode pipelines can process data from Amazon         S3.</p>
+                     </span></span></span><ul class="nav nav-list">
+               <li><span data-tocid="task_o3s_kb5_g2b-d46e113555" class="topicref" data-id="task_o3s_kb5_g2b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/AmazonS3Requirements.html#task_o3s_kb5_g2b">Configuring Cluster EMR Batch Mode for Amazon S3</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Cluster EMR batch mode pipelines run on an Amazon EMR cluster to process data from         Amazon S3.</p>
+                           </span></span></span></li>
+               <li><span data-tocid="task_ejh_1d5_g2b-d46e113580" class="topicref" data-id="task_ejh_1d5_g2b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/AmazonS3Requirements.html#task_ejh_1d5_g2b">Configuring Cluster Batch Mode for Amazon S3</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Cluster batch mode pipelines run on a Cloudera distribution of Hadoop (CDH) or         Hortonworks Data Platform (HDP) cluster
+                              to process data from Amazon S3.
+
+                           </p>
+                           </span></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_pdf_r5y_fz-d46e113615" class="topicref" data-id="concept_pdf_r5y_fz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/StageLimitations.html#concept_pdf_r5y_fz">Cluster Pipeline Limitations</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e113641" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e114610" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e117238" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e118495" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e120286" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e124782" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e125996" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e129904" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e129959" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e130119" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e131600" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e131822" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+
+
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_opj_jmf_f2b">
+    <h1 class="title topictitle1" id="ariaid-title1">Amazon S3 Requirements</h1>
+
+
+    <div class="body conbody"><p class="shortdesc">Cluster EMR batch and cluster batch mode pipelines can process data from Amazon
+        S3.</p>
+
+        <p class="p">The requirements for cluster pipelines that read from Amazon S3 depend on the following
+            batch modes:</p>
+
+        <dl class="dl">
+
+                <dt class="dt dlterm">Cluster EMR batch mode</dt>
+
+                <dd class="dd">
+                    Cluster EMR batch mode pipelines use a Hadoop FS origin and run on an Amazon
+                        EMR cluster to process data from Amazon S3. Cluster EMR batch mode pipelines
+                        require a supported version of an Amazon EMR cluster with Hadoop. For a list
+                        of the supported Amazon EMR and Hadoop versions, see <a class="xref" href="../Installation/AddtionalStageLibs.html#concept_evs_xkm_s5">Available Stage Libraries</a>.
+                </dd>
+
+
+
+                <dt class="dt dlterm">Cluster batch mode</dt>
+
+                <dd class="dd">Cluster batch mode pipelines use a Hadoop FS origin and run on a Cloudera
+                    distribution of Hadoop (CDH) or Hortonworks Data Platform (HDP) cluster to
+                    process data from Amazon S3. Cluster mode pipelines that read from HDFS require
+                    a supported version of CDH or HDP. For a list of the supported CDH or HDP
+                    versions, see <a class="xref" href="../Installation/AddtionalStageLibs.html#concept_evs_xkm_s5">Available Stage Libraries</a>.</dd>
+
+
+        </dl>
+
+    </div>
+
+<article class="topic task nested1" aria-labelledby="ariaid-title2" id="task_o3s_kb5_g2b">
+    <h2 class="title topictitle2" id="ariaid-title2">Configuring Cluster EMR Batch Mode for Amazon S3</h2>
+
+
+    <div class="body taskbody"><p class="shortdesc">Cluster EMR batch mode pipelines run on an Amazon EMR cluster to process data from
+        Amazon S3.</p>
+
+        <section class="section context">
+                    <p class="p">Cluster EMR batch mode pipelines can run on an existing Amazon EMR cluster or
+                on a new EMR cluster that is provisioned when the pipeline starts. When you
+                provision a new EMR cluster, you can configure whether the cluster remains active or
+                terminates when the pipeline stops.</p>
+
+                    <p class="p">
+                <span class="ph">Data Collector</span>
+                can be installed on a gateway node in an existing Amazon EMR cluster. Or, it can be
+                installed outside of the EMR cluster - on an on-premises machine or on another
+                Amazon EC2 instance. Regardless of where <span class="ph">Data Collector</span>
+                is installed, you'll likely need to modify the Amazon EMR security group to allow
+                    <span class="ph">Data Collector</span>
+                to access the master node in the EMR cluster. Security groups control inbound and
+                outbound access to EMR cluster instances. For information on configuring security
+                groups for Amazon EMR clusters, see the <a class="xref" href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-security-groups.html" target="_blank">Amazon EMR documentation</a>. </p>
+
+                    <p class="p"> All processors and destinations supported in cluster pipelines are
+                        supported in a cluster EMR batch pipeline as long as network connectivity is
+                        correctly configured from the Amazon EMR cluster to any external system that
+                        the processors or destinations use. For example, if you include a JDBC
+                        Lookup processor in a cluster EMR batch pipeline, you must ensure that the
+                        Amazon EMR cluster can connect to the database. </p>
+
+
+            <div class="note note"><span class="notetitle">Note:</span> Cluster EMR batch mode pipelines do not support Kerberos authentication at this
+                time.</div>
+
+            <p class="p">Complete the following steps to configure a cluster EMR batch mode pipeline to read
+                from Amazon S3: </p>
+
+        </section>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In Amazon EMR, modify the master security group used by the EMR cluster to
+                    allow <span class="ph">Data Collector</span> to access the master node in the cluster. </span>
+                <div class="itemgroup info">For information on configuring security groups for EMR clusters, see the <a class="xref" href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-security-groups.html" target="_blank">Amazon EMR documentation</a>. </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the pipeline properties, on the <span class="keyword wintitle">General</span> tab, set the
+                        <span class="ph uicontrol">Execution Mode</span> property to <span class="ph uicontrol">Cluster EMR
+                        Batch</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Cluster</span> tab of the pipeline, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_o3s_kb5_g2b__table_mkj_kdr_wr" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:22.22222222222222%" /><col style="width:77.77777777777779%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d22528e214">Cluster Property</th>
+
+                                    <th class="entry cellrowborder" id="d22528e217">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                            <td class="entry cellrowborder" headers="d22528e214 ">Worker Java Options</td>
+
+                            <td class="entry cellrowborder" headers="d22528e217 ">Additional Java properties for the pipeline. Separate properties
+                                with a space.<p class="p">The following properties are set by default. </p>
+<div class="p">
+                                    <ul class="ul" id="task_o3s_kb5_g2b__d43e56">
+                                        <li class="li">XX:+UseConcMarkSweepGC and XX:+UseParNewGC are set to
+                                            the Concurrent Mark Sweep (CMS) garbage collector.</li>
+
+                                        <li class="li">Dlog4j.debug enables debug logging for log4j.</li>
+
+                                    </ul>
+
+                                </div>
+<p class="p">Changing the default properties is not recommended.</p>
+<p class="p">You
+                                    can add any valid Java property. </p>
+</td>
+
+                        </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d22528e214 ">Log Level</td>
+
+                                    <td class="entry cellrowborder" headers="d22528e217 ">Log level to use when the pipeline runs on the Amazon EMR
+                                        cluster. Default is the INFO severity level.</td>
+
+                                </tr>
+
+                                <tr>
+                            <td class="entry cellrowborder" headers="d22528e214 ">Worker Memory (MB)</td>
+
+                            <td class="entry cellrowborder" headers="d22528e217 ">Maximum amount of memory allocated to each <span class="ph">Data Collector</span> worker in the cluster.<p class="p">Default is 1024 MB.</p>
+</td>
+
+                        </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">EMR</span> tab of the pipeline, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_o3s_kb5_g2b__table_zhq_lzv_g2b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:22.22222222222222%" /><col style="width:77.77777777777779%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d22528e300">EMR Property</th>
+
+                                    <th class="entry cellrowborder" id="d22528e303">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d22528e300 ">Region</td>
+
+                                    <td class="entry cellrowborder" headers="d22528e303 ">AWS region that contains the EMR cluster.<p class="p">If the region
+                                            does not display in the list, select
+                                                <span class="ph uicontrol">Custom</span> and then enter the
+                                            name of the AWS region.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d22528e300 ">AWS Access Key</td>
+
+                                    <td class="entry cellrowborder" headers="d22528e303 ">AWS access key ID.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d22528e300 ">AWS Secret Key</td>
+
+                                    <td class="entry cellrowborder" headers="d22528e303 ">AWS secret access key.<p class="p">The pipeline uses the access key
+                                            pair to pass credentials to Amazon Web Services to
+                                            connect to the EMR cluster.</p>
+<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
+                  access key pairs, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d22528e300 ">S3 Staging URI</td>
+
+                                    <td class="entry cellrowborder" headers="d22528e303 ">Temporary staging location in Amazon S3 to store the
+                                        resources and configuration files required to run the
+                                        pipeline. <span class="ph">Data Collector</span> removes the contents from the folder when the pipeline
+                                            stops.<p class="p">Location must be unique for each pipeline. Use
+                                            the following format:
+                                            </p>
+<pre class="pre codeblock"><code>s3://&lt;bucket&gt;/&lt;path&gt;</code></pre><p class="p">The
+                                            bucket must exist. If the folder in the specified path
+                                            does not exist, it is created.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d22528e300 ">Provision a New Cluster</td>
+
+                                    <td class="entry cellrowborder" headers="d22528e303 ">Provisions a new EMR cluster when the pipeline
+                                        starts.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d22528e300 ">Cluster ID</td>
+
+                                    <td class="entry cellrowborder" headers="d22528e303 ">ID of the existing EMR cluster.</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If you chose to provision a new EMR cluster, configure the following properties
+                    on the <span class="ph uicontrol">EMR</span> tab of the pipeline.</span>
+                <div class="itemgroup info">
+                    <p class="p">For more information about the properties required to provision an EMR
+                        cluster, see the <a class="xref" href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-gs.html" target="_blank">Amazon EMR documentation</a>.</p>
+
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_o3s_kb5_g2b__table_ycg_f1w_g2b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:22.22222222222222%" /><col style="width:77.77777777777779%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d22528e436">EMR Property to Provision New Cluster</th>
+
+                                    <th class="entry cellrowborder" id="d22528e439">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d22528e436 ">Cluster Name Prefix</td>
+
+                                    <td class="entry cellrowborder" headers="d22528e439 ">Prefix for the name of the provisioned EMR cluster.
+                                            <div class="p">The Data Collector ID and pipeline ID are appended to
+                                            the prefix as
+                                            follows:<pre class="pre codeblock"><code>&lt;prefix&gt;::&lt;sdc ID&gt;::&lt;pipeline ID&gt;</code></pre></div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d22528e436 ">Terminate Cluster</td>
+
+                                    <td class="entry cellrowborder" headers="d22528e439 ">Terminates the cluster when the pipeline stops.<p class="p">When
+                                            cleared, the cluster remains active when the pipeline
+                                            stops.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d22528e436 ">Logging Enabled</td>
+
+                                    <td class="entry cellrowborder" headers="d22528e439 ">Enables logging on the cluster.<p class="p">When logging is
+                                            enabled, Amazon EMR writes the cluster log files to the
+                                            Amazon S3 location that you specify.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d22528e436 ">S3 Log URI</td>
+
+                                    <td class="entry cellrowborder" headers="d22528e439 ">Location in Amazon S3 where the cluster writes log data.
+                                            <p class="p">Location must be unique for each pipeline. Use the
+                                            following format:
+                                            </p>
+<pre class="pre codeblock"><code>s3://&lt;bucket&gt;/&lt;path&gt;</code></pre><p class="p">The
+                                            bucket must exist. If the folder in the specified path
+                                            does not exist, it is created.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d22528e436 ">Enable Debugging</td>
+
+                                    <td class="entry cellrowborder" headers="d22528e439 ">Enables debugging on the cluster. <p class="p">When debugging is
+                                            enabled, you can use the Amazon EMR console to view the
+                                            cluster log files.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d22528e436 ">Service Role</td>
+
+                                    <td class="entry cellrowborder" headers="d22528e439 ">EMR role used by the cluster when provisioning resources
+                                        and performing other service-level tasks.<p class="p">Default is
+                                            EMR_DefaultRole. For more information about configuring
+                                            roles for Amazon EMR, see the <a class="xref" href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-iam-roles.html" target="_blank">Amazon EMR
+                                                documentation</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d22528e436 ">Job Flow Role</td>
+
+                                    <td class="entry cellrowborder" headers="d22528e439 ">EMR role for EC2 used by EC2 instances within the
+                                            cluster.<p class="p">Default is EMR_EC2_DefaultRole. For more
+                                            information about configuring roles for Amazon EMR, see
+                                            the <a class="xref" href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-iam-roles.html" target="_blank">Amazon EMR
+                                                documentation</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d22528e436 ">Visible to All Users</td>
+
+                                    <td class="entry cellrowborder" headers="d22528e439 ">Determines whether all AWS Identity and Access Management
+                                        (IAM) users under your account can access the
+                                        cluster.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d22528e436 ">EC2 Subnet ID</td>
+
+                                    <td class="entry cellrowborder" headers="d22528e439 ">EC2 subnet identifier to launch the cluster in.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d22528e436 ">Master Security Group</td>
+
+                                    <td class="entry cellrowborder" headers="d22528e439 ">Security group ID for the master node in the
+                                            cluster.<div class="note important"><span class="importanttitle">Important:</span> Verify that the master
+                                            security group allows <span class="ph">Data Collector</span> to access the master node in the EMR cluster. For
+                                            information on configuring security groups for EMR
+                                            clusters, see the <a class="xref" href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-security-groups.html" target="_blank">Amazon EMR
+                                                documentation</a>.</div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d22528e436 ">Slave Security Group</td>
+
+                                    <td class="entry cellrowborder" headers="d22528e439 ">Security group ID for the slave nodes in the
+                                        cluster.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d22528e436 ">Instance Count</td>
+
+                                    <td class="entry cellrowborder" headers="d22528e439 ">Number of Amazon EC2 instances to initialize. Each
+                                        instance corresponds to a slave node in the EMR
+                                        cluster.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d22528e436 ">Master Instance Type</td>
+
+                                    <td class="entry cellrowborder" headers="d22528e439 ">Amazon EC2 instance type initialized for the master node
+                                        in the EMR cluster.<p class="p">If an instance type does not display
+                                            in the list, select <span class="ph uicontrol">Custom</span> and
+                                            then enter the instance type.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d22528e436 ">Slave Instance Type</td>
+
+                                    <td class="entry cellrowborder" headers="d22528e439 ">Amazon EC2 instance type initialized for the slave nodes
+                                        in the EMR cluster.<p class="p">If an instance type does not display
+                                            in the list, select <span class="ph uicontrol">Custom</span> and
+                                            then enter the instance type.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the pipeline, use the Hadoop FS origin for cluster EMR batch mode.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">General</span> tab of the origin, select the appropriate
+                    EMR stage library for cluster EMR batch mode.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Hadoop FS</span> tab of the origin, configure the Hadoop
+                    FS URI property to point to the Amazon S3 bucket to read from. </span>
+                <div class="itemgroup info">
+                    <p class="p">Use the following format: <code class="ph codeph">s3a://&lt;bucket&gt;</code></p>
+<p class="p">For example:<code class="ph codeph">s3a://WebServer</code></p>
+<div class="p">Then in the Input Paths property, enter the full path to the data to be read within that
+            Amazon S3 bucket. You can enter multiple paths for the Input Paths property, for
+                example:<ul class="ul" id="task_o3s_kb5_g2b__d43e190">
+                <li class="li">Input Path 1 - <code class="ph codeph">/2016/February</code></li>
+
+                <li class="li">Input Path 2 - <code class="ph codeph">/2016/March</code></li>
+
+            </ul>
+</div>
+
+                    <p class="p">For more information, see <a class="xref" href="../Origins/HadoopFS-origin.html#concept_ud1_wd2_h2b" title="The Hadoop FS origin included in a cluster batch or cluster EMR batch pipeline allows you to read from Amazon S3.">Reading from Amazon S3</a>.</p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">S3</span> tab of the origin, enter the same access key
+                    pair that you entered on the EMR tab of the pipeline.</span>
+                <div class="itemgroup info">
+                    <p class="p">The origin uses the access key pair to pass credentials to Amazon Web
+                        Services to read from Amazon S3.</p>
+
+                    <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
+                  access key pairs, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+    <nav role="navigation" class="related-links">
+<div class="linklist linklist relinfo"><strong>Related information</strong><br />
+
+<div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq" title="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline.">Configuring a Pipeline</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Origins/HadoopFS-origin.html#concept_lw2_tnm_vs" title="The Hadoop FS origin reads data from the Hadoop Distributed File System (HDFS), Amazon S3, or other file systems using the Hadoop FileSystem interface.">Hadoop FS</a></div></div>
+</nav>
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title3" id="task_ejh_1d5_g2b">
+    <h2 class="title topictitle2" id="ariaid-title3">Configuring Cluster Batch Mode for Amazon S3</h2>
+
+
+    <div class="body taskbody"><p class="shortdesc">Cluster batch mode pipelines run on a Cloudera distribution of Hadoop (CDH) or
+        Hortonworks Data Platform (HDP) cluster to process data from Amazon S3.</p>
+
+        <section class="section context">
+            <p class="p">Complete the following steps to configure a cluster batch mode pipeline to read from
+                Amazon S3: </p>
+
+        </section>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">Verify the installation of HDFS and YARN.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Install <span class="ph">Data Collector</span> on a YARN gateway node.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Grant the user defined in the user environment variable write permission on
+                        <span class="ph filepath">/user/$SDC_USER</span>.</span>
+                <div class="itemgroup info">The user environment variable defines the system
+                    user used to run Data Collector as a service. The file that defines the user
+                    environment variable depends on your operating system. For more information, see
+                        <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_htz_t1s_3v" title="When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.">User and Group for Service Start</a>. </div>
+                <div class="itemgroup info">For example, say the user environment
+                    variable is defined as <span class="ph filepath">sdc</span> and the cluster does not use
+                    Kerberos. Then you might use the following commands to create the directory and
+                    configure the necessary write
+                    permissions:<pre class="pre codeblock" id="task_ejh_1d5_g2b__d41e9683"><code>$sudo -u hdfs hadoop fs -mkdir /user/sdc
+$sudo -u hdfs hadoop fs -chown sdc /user/sdc</code></pre></div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To enable <span class="ph">Data Collector</span> to submit YARN jobs, perform one of the following tasks:</span>
+                <div class="itemgroup info">
+                    <ul class="ul" id="task_ejh_1d5_g2b__ul_ult_d5p_qz">
+                        <li class="li">On YARN, set the min.user.id to a value equal to or lower than the user
+                            ID associated with the <span class="ph">Data Collector</span> user ID,
+                            typically named "sdc".</li>
+
+                        <li class="li">On YARN, add the <span class="ph">Data Collector</span> user name,
+                            typically "sdc", to the allowed.system.users property.</li>
+
+                    </ul>
+
+                    <ul class="ul" id="task_ejh_1d5_g2b__ul_qf3_r1j_cy">
+                        <li class="li">After you create the pipeline, specify a Hadoop FS user in the Hadoop FS
+                            origin. <p class="p">For the Hadoop FS User property, enter a user with an ID that
+                                is higher than the min.user.id property, or with a user name that is
+                                listed in the allowed.system.users property. </p>
+</li>
+
+                    </ul>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On YARN, verify that the Hadoop logging level is set to a severity of INFO or
+                    lower. </span>
+                <div class="itemgroup info">YARN sets the Hadoop logging level to INFO by default. To change the logging
+                        level:<ol class="ol" type="a" id="task_ejh_1d5_g2b__ol_f33_ghv_gy">
+                        <li class="li">Edit the log4j.properties file. <div class="p">By default, the file is located in
+                                the following directory:
+                            <pre class="pre codeblock"><code>/etc/hadoop/conf</code></pre></div>
+</li>
+
+                        <li class="li">Set the <span class="ph uicontrol">log4j.rootLogger</span> property to a severity
+                            of INFO or lower, such as DEBUG or TRACE.</li>
+
+                    </ol>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If YARN is configured to use Kerberos authentication, configure <span class="ph">Data Collector</span> to use Kerberos
+                    authentication. </span>
+                <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data Collector</span>, you enable <span class="ph">Data Collector</span> to use Kerberos
+                    and define the principal and keytab. <div class="note important" id="task_ejh_1d5_g2b__d41e9806"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                        keytab when configuring <span class="ph">Data Collector</span>. Standalone
+                        pipelines do not require an absolute path.</div>
+</div>
+                <div class="itemgroup info">Once enabled, <span class="ph">Data Collector</span>
+                    automatically uses the Kerberos principal and keytab to connect to any YARN
+                    cluster that uses Kerberos. <span class="ph">For more information about enabling Kerberos authentication
+                        for <span class="ph">Data Collector</span>, see <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Kerberos Authentication</a>.</span></div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the pipeline properties, on the <span class="keyword wintitle">General</span> tab, set the
+                        <span class="ph uicontrol">Execution Mode</span> property to <span class="ph uicontrol">Cluster
+                        Batch</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Cluster</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ejh_1d5_g2b__table_mkj_kdr_wr" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:22.22222222222222%" /><col style="width:77.77777777777779%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d22528e954">Cluster Property</th>
+
+                                    <th class="entry cellrowborder" id="d22528e957">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                            <td class="entry cellrowborder" headers="d22528e954 ">Worker Java Options</td>
+
+                            <td class="entry cellrowborder" headers="d22528e957 ">Additional Java properties for the pipeline. Separate properties
+                                with a space.<p class="p">The following properties are set by default. </p>
+<div class="p">
+                                    <ul class="ul" id="task_ejh_1d5_g2b__d43e56">
+                                        <li class="li">XX:+UseConcMarkSweepGC and XX:+UseParNewGC are set to
+                                            the Concurrent Mark Sweep (CMS) garbage collector.</li>
+
+                                        <li class="li">Dlog4j.debug enables debug logging for log4j.</li>
+
+                                    </ul>
+
+                                </div>
+<p class="p">Changing the default properties is not recommended.</p>
+<p class="p">You
+                                    can add any valid Java property. </p>
+</td>
+
+                        </tr>
+
+                                <tr>
+                            <td class="entry cellrowborder" headers="d22528e954 ">Launcher Env Configuration</td>
+
+                            <td class="entry cellrowborder" headers="d22528e957 ">
+                                <p class="p">Additional configuration properties for the cluster launcher.
+                                    Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
+                                        <span class="ph uicontrol">Add</span> icon and define the property name
+                                    and value. </p>
+
+                            </td>
+
+                        </tr>
+
+                                <tr>
+                            <td class="entry cellrowborder" headers="d22528e954 ">Worker Memory (MB)</td>
+
+                            <td class="entry cellrowborder" headers="d22528e957 ">Maximum amount of memory allocated to each <span class="ph">Data Collector</span> worker in the cluster.<p class="p">Default is 1024 MB.</p>
+</td>
+
+                        </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the pipeline, use the Hadoop FS origin for cluster batch mode.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">General</span> tab of the origin, select the appropriate
+                    CDH or HDP stage library for cluster mode.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Hadoop FS</span> tab of the origin, configure the Hadoop
+                    FS URI property to point to the Amazon S3 bucket to read from. </span>
+                <div class="itemgroup info">
+                    <p class="p">Use the following format: <code class="ph codeph">s3a://&lt;bucket&gt;</code></p>
+<p class="p">For example:<code class="ph codeph">s3a://WebServer</code></p>
+<div class="p">Then in the Input Paths property, enter the full path to the data to be read within that
+            Amazon S3 bucket. You can enter multiple paths for the Input Paths property, for
+                example:<ul class="ul" id="task_ejh_1d5_g2b__d43e190">
+                <li class="li">Input Path 1 - <code class="ph codeph">/2016/February</code></li>
+
+                <li class="li">Input Path 2 - <code class="ph codeph">/2016/March</code></li>
+
+            </ul>
+</div>
+
+                    <p class="p">For more information, see <a class="xref" href="../Origins/HadoopFS-origin.html#concept_ud1_wd2_h2b" title="The Hadoop FS origin included in a cluster batch or cluster EMR batch pipeline allows you to read from Amazon S3.">Reading from Amazon S3</a>.</p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Hadoop FS</span> tab of the origin, enable the
+                        <span class="ph uicontrol">Kerberos Authentication</span> property if YARN is
+                    configured to use Kerberos authentication. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">S3</span> tab of the origin, enter the AWS access key
+                    pair used to pass credentials to Amazon Web Services to read from Amazon
+                    S3.</span>
+                <div class="itemgroup info">
+                    <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
+                  access key pairs, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+    <nav role="navigation" class="related-links">
+<div class="linklist linklist relinfo"><strong>Related information</strong><br />
+
+<div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq" title="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline.">Configuring a Pipeline</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Origins/HadoopFS-origin.html#concept_lw2_tnm_vs" title="The Hadoop FS origin reads data from the Hadoop Distributed File System (HDFS), Amazon S3, or other file systems using the Hadoop FileSystem interface.">Hadoop FS</a></div></div>
+</nav>
+</article>
+</article>
+</article></main></div>
+
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script>
+  </div>
+</nav>
+
+
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
+</html>

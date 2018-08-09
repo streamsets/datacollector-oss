@@ -1,0 +1,853 @@
+
+<!DOCTYPE html
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="The Hive Query executor connects to Hive or Impala and performs one or more user-defined Hive or Impala queries each time it receives an event record. Use the Hive Query executor as part of an event ..." /><meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Hive Query Executor" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/Executors-title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#concept_wgj_slk_fx" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/JDBCQuery.html#concept_j3r_gcv_sx" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_kjw_llk_fx" /><title>Hive Query Executor</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_kjw_llk_fx-d46e94647" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018042310" />
+
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018042310" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+
+
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+
+
+
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+
+                </div>
+
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+
+
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref" data-id="concept_umc_1lk_fx"><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li class="active"><span class="topicref" data-id="concept_kjw_llk_fx"><span class="title"><a href="../../../datacollector/UserGuide/Executors/HiveQuery.html#concept_kjw_llk_fx">Hive Query Executor</a></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#concept_wgj_slk_fx" title="HDFS File Metadata Executor"></a></span>
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Executors/JDBCQuery.html#concept_j3r_gcv_sx" title="JDBC Query Executor"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e4414" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e6481" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13895" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e18499" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e20154" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22651" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e24466" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e64169" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e77391" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e92871" class="topicref" data-id="concept_umc_1lk_fx" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_stt_2lk_fx-d46e92893" class="topicref" data-id="concept_stt_2lk_fx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-overview.html#concept_stt_2lk_fx">Executors</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_mvh_bnm_f1b-d46e92917" class="topicref" data-id="concept_mvh_bnm_f1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/AmazonS3.html#concept_mvh_bnm_f1b">Amazon S3 Executor</a></span></span></li>
+         <li><span data-tocid="concept_sjs_sfp_qz-d46e93211" class="topicref" data-id="concept_sjs_sfp_qz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Email.html#concept_sjs_sfp_qz">Email Executor</a></span></span></li>
+         <li><span data-tocid="concept_wgj_slk_fx-d46e93421" class="topicref" data-id="concept_wgj_slk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#concept_wgj_slk_fx">HDFS File Metadata Executor</a></span></span></li>
+         <li class="active"><span data-tocid="concept_kjw_llk_fx-d46e94647" class="topicref" data-id="concept_kjw_llk_fx" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HiveQuery.html#concept_kjw_llk_fx">Hive Query Executor</a></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_zld_35h_vx-d46e94740" class="topicref" data-id="concept_zld_35h_vx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HiveQuery.html#concept_zld_35h_vx">Related Event Generating Stages</a></span></span></li>
+               <li><span data-tocid="concept_rfq_xk4_nbb-d46e94762" class="topicref" data-id="concept_rfq_xk4_nbb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HiveQuery.html#concept_rfq_xk4_nbb">Installing the Impala Driver</a></span></span></li>
+               <li><span data-tocid="concept_jzl_yrr_mx-d46e94794" class="topicref" data-id="concept_jzl_yrr_mx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HiveQuery.html#concept_jzl_yrr_mx">Hive and Impala Queries</a></span></span></li>
+               <li><span data-tocid="concept_hqg_nzh_vx-d46e94836" class="topicref" data-id="concept_hqg_nzh_vx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HiveQuery.html#concept_hqg_nzh_vx">Impala Queries for the Drift Synchronization Solution for Hive</a></span></span></li>
+               <li><span data-tocid="concept_arl_xx3_my-d46e94888" class="topicref" data-id="concept_arl_xx3_my" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HiveQuery.html#concept_arl_xx3_my">Event Generation</a></span></span></li>
+               <li><span data-tocid="task_mgm_4lk_fx-d46e95022" class="topicref" data-id="task_mgm_4lk_fx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HiveQuery.html#task_mgm_4lk_fx">Configuring a Hive Query Executor</a></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_j3r_gcv_sx-d46e95105" class="topicref" data-id="concept_j3r_gcv_sx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/JDBCQuery.html#concept_j3r_gcv_sx">JDBC Query Executor</a></span></span></li>
+         <li><span data-tocid="concept_ohx_r5h_z1b-d46e95201" class="topicref" data-id="concept_ohx_r5h_z1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapRFSFileMeta.html#concept_ohx_r5h_z1b">MapR FS File Metadata Executor</a></span></span></li>
+         <li><span data-tocid="concept_bj2_zlk_fx-d46e96427" class="topicref" data-id="concept_bj2_zlk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapReduce.html#concept_bj2_zlk_fx">MapReduce Executor</a></span></span></li>
+         <li><span data-tocid="concept_qzm_l4r_kz-d46e97104" class="topicref" data-id="concept_qzm_l4r_kz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/PipelineFinisher.html#concept_qzm_l4r_kz">Pipeline Finisher Executor</a></span></span></li>
+         <li><span data-tocid="concept_jsr_zpw_tz-d46e97314" class="topicref" data-id="concept_jsr_zpw_tz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Shell.html#concept_jsr_zpw_tz">Shell Executor</a></span></span></li>
+         <li><span data-tocid="concept_cvy_vxb_1z-d46e97545" class="topicref" data-id="concept_cvy_vxb_1z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Spark.html#concept_cvy_vxb_1z">Spark Executor</a></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e98772" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e102096" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e106011" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e108837" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e109636" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e110218" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e111818" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e112299" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e113641" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e114610" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e117238" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e118495" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e120286" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e124782" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e125996" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e129904" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e129959" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e130119" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e131600" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e131822" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+
+
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_kjw_llk_fx">
+ <h1 class="title topictitle1" id="ariaid-title1">Hive Query Executor</h1>
+
+ <div class="body conbody">
+  <p class="p">The Hive Query executor connects to Hive or Impala
+            and performs one or more user-defined Hive or Impala queries each time it receives an
+            event record. </p>
+
+        <p class="p">Use the Hive Query executor as part of an event stream to perform event-driven queries in
+            Hive or Impala. <span class="ph">You can use the executor in any logical way, such as
+                        running Hive or Impala queries after the Hive Metadata destination updates
+                        the Hive metastore, or after the Hadoop FS or MapR FS destination closes
+                        files.</span></p>
+
+        <p class="p">For example, you can use the Hive Query executor to perform the Invalidate Metadata query
+            for Impala as part of the <a class="xref" href="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_phk_bdf_2w">Drift
+                Synchronization Solution for Hive</a> or to configure table properties for
+            newly-created tables.</p>
+
+        <p class="p">When using the Hive Query executor with Impala, you can use the default driver included
+            with <span class="ph">Data Collector</span>, or you can install an Impala JDBC driver. </p>
+
+        <div class="p">
+            <div class="note note"><span class="notetitle">Note:</span> <span class="ph" id="concept_kjw_llk_fx__d9e4961">The Hive Query executor waits for
+                              each query to complete before continuing with the next query for the
+                              same event record. It also waits for all queries to complete before
+                              starting the queries for the next event record. Depending on the speed
+                              of the pipeline and the complexity of the queries, the wait for query
+                              completion can slow pipeline performance.</span></div>
+
+        </div>
+
+        <p class="p">When you configure the Hive Query executor, you configure JDBC connection information to
+            Hive, and optionally add additional HDFS configuration properties to use. You specify
+            the queries that you want to run and indicate whether to run the remaining queries after
+            a query fails.</p>
+
+        <p class="p">You can also configure the executor to generate events for
+                  another event stream. <span class="ph" id="concept_kjw_llk_fx__d9e2046">For more information about dataflow
+                        triggers and the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>.</span></p>
+
+        <p class="p">For a case study about using the Hive Query executor, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_szz_xwm_lx">Case Study: Impala Metadata Updates for DDS for Hive</a>.</p>
+
+ </div>
+
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_zld_35h_vx">
+ <h2 class="title topictitle2" id="ariaid-title2">Related Event Generating Stages</h2>
+
+ <div class="body conbody">
+        <p class="p">Use the Hive Query executor in an event stream. The
+            Hive Query executor is designed to run a set of Hive or Impala queries after receiving
+            an event record. You can use the Hive Query executor with any event-generating stage
+            where the logic suits your needs. </p>
+
+        <p class="p">When implementing the Drift Synchronization Solution for Hive with Impala, use the
+            executor to run the Invalidate Metadata query after the Hive Metastore destination
+            changes table structures and after the Hadoop FS destination writes files to Hive. </p>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title3" id="concept_rfq_xk4_nbb">
+ <h2 class="title topictitle2" id="ariaid-title3">Installing the Impala Driver</h2>
+
+ <div class="body conbody">
+  <p class="p">You can use the Apache Hive JDBC
+            driver included with <span class="ph">Data Collector</span> to
+            perform Impala queries. However, some distributions recommend using a native Impala JDBC
+            driver. </p>
+
+        <p class="p">To use the included Apache Hive JDBC driver included with <span class="ph">Data Collector</span>,
+            you do not need to perform any additional steps. </p>
+
+        <div class="p">To use an Impala JDBC driver, perform the following steps:<ol class="ol" id="concept_rfq_xk4_nbb__ol_ilv_fm4_nbb">
+                <li class="li">Download the native Impala JDBC driver for the Hive distribution that you use. </li>
+
+                <li class="li">Install the driver as an external library for the stage library used by the Hive
+                    Query executor. <p class="p">For example, say the executor is configured to use the CDH
+                        5.12.0 stage library. If you use the Package Manager to install the driver,
+                        then in the Install External Libraries dialog box, you select the CDH 5.12.0
+                        stage library, then browse to select the Impala driver libraries to install.
+                    </p>
+</li>
+
+            </ol>
+</div>
+
+        <p class="p"><span class="ph">For information about installing additional drivers, see
+                              <a class="xref" href="../Configuration/ExternalLibs.html#concept_pdv_qlw_ft">Install External Libraries</a>.</span></p>
+
+        <p class="p">If you have trouble determining the URL format to use when configuring the executor,
+            check out our <a class="xref" href="https://ask.streamsets.com/question/7/how-do-you-configure-a-hive-impala-jdbc-driver-for-data-collector/?answer=8#post-id-8" target="_blank">Ask StreamSets post</a>.</p>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title4" id="concept_jzl_yrr_mx">
+ <h2 class="title topictitle2" id="ariaid-title4">Hive and Impala Queries</h2>
+
+ <div class="body conbody">
+        <p class="p">You can use the Hive Query executor to execute a set of
+            Hive or Impala queries each time the executor receives an event record. </p>
+
+        <p class="p"><span class="ph">The Hive Query executor waits for
+                              each query to complete before continuing with the next query for the
+                              same event record. It also waits for all queries to complete before
+                              starting the queries for the next event record. Depending on the speed
+                              of the pipeline and the complexity of the queries, the wait for query
+                              completion can slow pipeline performance.</span></p>
+
+        <p class="p">When possible, avoid using Hive Query executor to run long-running queries. Also, when
+            running multiple queries for an event record, you can configure the executor to skip the
+            remaining queries if a query fails. By default, the executor continues to run the rest
+            of the queries. </p>
+
+        <p class="p">You can use the fields and attributes in an event record in queries. For example, for
+            event records generated when Hive Metastore creates or updates a table, you can use the
+            table name in the event record to perform additional tasks.</p>
+
+        <p class="p">For a list of field names and descriptions in an event record, see the "Event Records"
+            documentation for the event generating stage.</p>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title5" id="concept_hqg_nzh_vx">
+ <h2 class="title topictitle2" id="ariaid-title5">Impala Queries for the Drift Synchronization Solution for Hive</h2>
+
+ <div class="body conbody">
+        <p class="p">The Drift Synchronization Solution for Hive
+            enables a pipeline to automatically create and update Hive tables and to write files to
+            the tables. </p>
+
+        <p class="p">When implementing the Drift Synchronization Solution for Hive with Impala, you can use
+            the Hive Query executor to submit an invalidate metadata query each time you need to
+            update the Impala metadata cache. For a detailed example, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_szz_xwm_lx">Case Study: Impala Metadata Updates for DDS for Hive</a>.</p>
+
+        <div class="p">Connect a Hive Query executor to the event stream from the Hive Metastore destination and
+            the Hadoop FS destination. You can use the same executor for both, or use a separate
+            executor for each.<dl class="dl">
+
+                    <dt class="dt dlterm">Processing event records from the Hive Metastore destination</dt>
+
+                    <dd class="dd">The Hive Metastore destination generates an event record each time it
+                        changes a table and places the table name in the "table" record header
+                        attribute. Use the following query to update the Impala metadata cache:
+                        <pre class="pre codeblock"><code>invalidate metadata ${record:attribute('/table')}</code></pre></dd>
+
+                    <dd class="dd ddexpand">When the Hive Query executor receives the event record, it runs the
+                        Invalidate Metadata query on the table specified in the event record. </dd>
+
+
+
+                    <dt class="dt dlterm">Processing event records from the Hadoop FS destination</dt>
+
+                    <dd class="dd">The Hadoop FS destination generates an event record each time it closes a
+                        file. It places the file path in a "filepath" field in the event record. If
+                        you use a separate Hive Query executor for each destination, use the
+                        following query to update the Impala
+                        cache:<pre class="pre codeblock"><code>invalidate metadata `${file:pathElement(record:value('/filepath'), -3)}`.
+`${file:pathElement(record:value('/filepath'), -2)}`      </code></pre></dd>
+
+                    <dd class="dd ddexpand">This expression uses the third-to-last section of the path as the database
+                        name, and the second-to-last section of the path as the table name. </dd>
+
+                    <dd class="dd ddexpand">If you want to use the same Hive Query executor to process records from Hive
+                        Query and Hadoop FS, add an Expression Evaluator in the Hadoop FS event
+                        stream to perform this processing. For an example, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_szz_xwm_lx">Case Study: Impala Metadata Updates for DDS for Hive</a>.</dd>
+
+
+            </dl>
+</div>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title6" id="concept_arl_xx3_my">
+ <h2 class="title topictitle2" id="ariaid-title6">Event Generation</h2>
+
+ <div class="body conbody">
+  <p class="p">The Hive Query executor can generate events that
+            you can use in an event stream. </p>
+
+        <p class="p">The executor submits queries to Hive each time it receives an event record. When you
+            enable event generation, the executor generates events each time it determines if the
+            submitted query has completed. </p>
+
+        <div class="p">Hive Query events can be used in any logical way. For example: <ul class="ul" id="concept_arl_xx3_my__ul_dzf_tpg_zx">
+                <li class="li">With the Email executor to send a custom email
+                              after receiving an event.<p class="p">For an example, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_t2t_lp5_xz">Case Study: Sending Email</a>.</p>
+</li>
+
+                <li class="li">With a destination to store event information.
+                                    <p class="p">For an example, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_ocb_nnl_px">Case Study: Event Storage</a>.</p>
+</li>
+
+            </ul>
+</div>
+
+        <p class="p"><span class="ph">For more information about dataflow
+                        triggers and the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>.</span></p>
+
+ </div>
+
+<article class="topic concept nested2" aria-labelledby="ariaid-title7" id="concept_iwg_r2p_my">
+ <h3 class="title topictitle3" id="ariaid-title7">Event Records</h3>
+
+ <div class="body conbody">
+        <div class="p">Event records generated by the Hive Query
+            executor have the following event-related record header attributes. Record header
+            attributes are stored as String values:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_iwg_r2p_my__table_brz_3gp_qx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                        <tr>
+                            <th class="entry cellrowborder" id="d173548e462">Record Header Attribute</th>
+
+                            <th class="entry cellrowborder" id="d173548e465">Description</th>
+
+                        </tr>
+
+                    </thead>
+<tbody class="tbody">
+                        <tr>
+                            <td class="entry cellrowborder" headers="d173548e462 ">sdc.event.type</td>
+
+                            <td class="entry cellrowborder" headers="d173548e465 ">Event type. Uses one of the following event types:<ul class="ul" id="concept_iwg_r2p_my__ul_m12_mgp_qx">
+                                    <li class="li">successful-query - Generated when the executor determines
+                                        that Hive successfully ran the submitted query. </li>
+
+                                    <li class="li">failed-query - Generated when the executor determines that
+                                        Hive failed to run the query.</li>
+
+                                </ul>
+</td>
+
+                        </tr>
+
+                        <tr>
+       <td class="entry cellrowborder" headers="d173548e462 ">sdc.event.version</td>
+
+       <td class="entry cellrowborder" headers="d173548e465 ">An integer that indicates the version of the event record type.</td>
+
+      </tr>
+
+                        <tr>
+       <td class="entry cellrowborder" headers="d173548e462 ">sdc.event.creation_timestamp</td>
+
+       <td class="entry cellrowborder" id="concept_iwg_r2p_my__d196e2243" headers="d173548e465 ">Epoch timestamp when the stage created the event.
+       </td>
+
+      </tr>
+
+                    </tbody>
+</table>
+</div>
+</div>
+
+        <div class="p">The Hive Query executor can generate the following types of event records: <dl class="dl">
+
+                    <dt class="dt dlterm">Successful query</dt>
+
+                    <dd class="dd">
+                        <p class="p">The executor generates a successful query event record when Hive
+                            successfully completes the query. </p>
+
+                        <div class="p">A successful query event record has the sdc.event.type record header
+                            attribute set to <span class="ph uicontrol">successful-query</span> and includes
+                            the following field:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_iwg_r2p_my__table_rfk_mnp_my" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                        <tr>
+                                            <th class="entry cellrowborder" id="d173548e541">Event Field Name</th>
+
+                                            <th class="entry cellrowborder" id="d173548e544">Description</th>
+
+                                        </tr>
+
+                                    </thead>
+<tbody class="tbody">
+                                        <tr>
+                                            <td class="entry cellrowborder" headers="d173548e541 ">query</td>
+
+                                            <td class="entry cellrowborder" headers="d173548e544 ">The query that Hive ran successfully.</td>
+
+                                        </tr>
+
+                                    </tbody>
+</table>
+</div>
+</div>
+
+                    </dd>
+
+
+
+                    <dt class="dt dlterm">Failed query</dt>
+
+                    <dd class="dd">
+                        <p class="p">The executor generates a failed query event record when Hive fails to run
+                            the query.</p>
+
+                        <div class="p">A failed query event record has the sdc.event.type record header
+                            attribute set to <span class="ph uicontrol">failed-query</span> and can include the
+                            following fields:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_iwg_r2p_my__table_vlk_pnp_my" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                        <tr>
+                                            <th class="entry cellrowborder" id="d173548e592">Event Field Name</th>
+
+                                            <th class="entry cellrowborder" id="d173548e595">Description</th>
+
+                                        </tr>
+
+                                    </thead>
+<tbody class="tbody">
+                                        <tr>
+                                            <td class="entry cellrowborder" headers="d173548e592 ">query</td>
+
+                                            <td class="entry cellrowborder" headers="d173548e595 ">The query that Hive failed to run. </td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td class="entry cellrowborder" headers="d173548e592 ">unexecuted-queries</td>
+
+                                            <td class="entry cellrowborder" headers="d173548e595 ">Any additional queries that did not execute.
+                                                  <p class="p">The event record includes this field only when
+                                                  you configure the executor to skip running
+                                                  subsequent queries when a query fails.
+                                                </p>
+</td>
+
+                                        </tr>
+
+                                    </tbody>
+</table>
+</div>
+</div>
+
+                    </dd>
+
+
+            </dl>
+</div>
+
+ </div>
+
+</article>
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title8" id="task_mgm_4lk_fx">
+    <h2 class="title topictitle2" id="ariaid-title8">Configuring a Hive Query Executor</h2>
+
+    <div class="body taskbody">
+        <section class="section context">
+            <p class="p">Configure
+                a Hive Query executor to execute a query on Hive or Impala when the executor
+                receives an event record.</p>
+
+        </section>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mgm_4lk_fx__d308e6034" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d173548e675">General Property</th>
+
+                                    <th class="entry cellrowborder" id="d173548e678">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d173548e675 ">Name</td>
+
+                                    <td class="entry cellrowborder" headers="d173548e678 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d173548e675 ">Description</td>
+
+                                    <td class="entry cellrowborder" headers="d173548e678 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d173548e675 ">Stage Library</td>
+
+                                    <td class="entry cellrowborder" headers="d173548e678 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d173548e675 ">Produce Events <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_zrl_mhn_lx">
+                                            <img class="image" id="task_mgm_4lk_fx__d308e6089" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d173548e678 ">Generates event records when events occur. Use for event
+                                        handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
+                                            <img class="image" id="task_mgm_4lk_fx__d308e6095" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d173548e675 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_mgm_4lk_fx__d308e6104" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d173548e678 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d173548e675 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_mgm_4lk_fx__d308e6121" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d173548e678 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d173548e675 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_mgm_4lk_fx__d308e6138" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d173548e678 ">Error record handling for the stage: <ul class="ul" id="task_mgm_4lk_fx__d308e6142">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand" id="task_mgm_4lk_fx__step-Hivetab">
+                <span class="ph cmd">On the <span class="ph uicontrol">Hive</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mgm_4lk_fx__table_olb_4sx_mx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d173548e816">Hive Property</th>
+
+                                    <th class="entry cellrowborder" id="d173548e819">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+       <td class="entry cellrowborder" headers="d173548e816 ">JDBC URL</td>
+
+       <td class="entry cellrowborder" headers="d173548e819 ">JDBC URL for Hive. You can use the default, or replace the expression for the database
+        name with a specific database name when appropriate.<div class="p">If your URL contains a password with
+         special characters, you must URL-encode (also called percent-encoding) the special
+         characters. Otherwise errors will occur when validating or running your pipeline. For
+         example, if your JDBC URL looks like
+         this:<pre class="pre codeblock"><code>jdbc:hive2://sunnyvale:12345/default;user=admin;password=a#b!c$e</code></pre></div>
+<div class="p">URL-encode
+         your password so that your JDBC URL looks like this:
+         <pre class="pre codeblock"><code>jdbc:hive2://sunnyvale:12345/default;user=admin;password=a%23b%21c%24e</code></pre></div>
+<p class="p">For
+         more information about specifying the URL, see our <a class="xref" href="https://ask.streamsets.com/question/7/how-do-you-configure-a-hive-impala-jdbc-driver-for-data-collector/?answer=8#post-id-8" target="_blank">Ask StreamSets post</a>.</p>
+</td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d173548e816 ">JDBC Driver Name</td>
+
+                                    <td class="entry cellrowborder" headers="d173548e819 ">
+                                        <p class="p">The fully-qualified JDBC driver name. </p>
+
+                                        <p class="p">Before using an Impala JDBC driver, install the driver as
+                                            an external library for the stage library used by the
+                                            Hive Query executor. For more information, see <a class="xref" href="HiveQuery.html#concept_rfq_xk4_nbb">Installing the Impala Driver</a>.</p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d173548e816 ">Additional JDBC Configuration Properties</td>
+
+       <td class="entry cellrowborder" headers="d173548e819 ">Additional JDBC configuration properties to pass to the JDBC driver.<p class="p">Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click Add to add additional properties and define the
+         property name and value. Use the property names and values as expected by the JDBC
+         driver.</p>
+</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d173548e816 ">Hadoop Configuration Directory</td>
+
+       <td class="entry cellrowborder" headers="d173548e819 ">
+        <p class="p">Absolute path to the directory containing the Hive and Hadoop configuration files. For a
+         Cloudera Manager installation, enter hive-conf. </p>
+
+        <div class="p">The stage uses the following configuration files: <ul class="ul" id="task_mgm_4lk_fx__ul_tqf_lms_dw">
+                  <li class="li">core-site.xml</li>
+
+                  <li class="li">hdfs-site.xml</li>
+
+                  <li class="li">hive-site.xml</li>
+
+            </ul>
+</div>
+
+        <div class="note note"><span class="notetitle">Note:</span> Properties in the configuration files are overridden by individual properties defined
+         in this stage. </div>
+
+       </td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d173548e816 ">Additional Hadoop Configuration</td>
+
+       <td class="entry cellrowborder" headers="d173548e819 ">
+        <p class="p">Additional properties to use. </p>
+
+        <p class="p">Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click Add to add additional properties and define the
+         property name and value. Use the property names and values as expected by HDFS and
+         Hive.</p>
+
+       </td>
+
+      </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Query</span> tab, configure the following
+                    property:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mgm_4lk_fx__table_ywf_ztx_mx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d173548e958">Query Property</th>
+
+                                    <th class="entry cellrowborder" id="d173548e961">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d173548e958 ">SQL Queries <a class="xref" href="HiveQuery.html#concept_jzl_yrr_mx">
+                                            <img class="image" id="task_mgm_4lk_fx__image_rfz_thp_fs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d173548e961 ">One or more SQL queries to execute on Hive or Impala upon
+                                        receiving an event record.<p class="p">Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
+                                                <span class="ph uicontrol">Add</span> icon to add additional
+                                            queries.</p>
+<p class="p">The executor processes multiple queries
+                                            in order, and waits for each query to complete before
+                                            continuing to the next query.</p>
+<div class="p">To process events
+                                            from the Hive Metastore or Hadoop FS destinations when
+                                            using the Drift Synchronization Solution for Hive with
+                                            Impala, you might use the following query:
+                                            <pre class="pre codeblock"><code>invalidate metadata ${record:attribute('/table')}</code></pre></div>
+<p class="p">For
+                                            more information, see <a class="xref" href="HiveQuery.html#concept_hqg_nzh_vx">Impala Queries for the Drift Synchronization Solution for Hive</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d173548e958 ">Stop on Query Failure</td>
+
+                                    <td class="entry cellrowborder" headers="d173548e961 ">Skips the remaining queries for an event record when a
+                                        query fails. <p class="p">By default, upon a failed query, the
+                                            executor continues to run all configured queries for the
+                                            event record. </p>
+<p class="p">When selected, the executor skips
+                                            the remaining queries and starts running queries for the
+                                            next event record.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+</article>
+</article></main></div>
+
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script>
+  </div>
+</nav>
+
+
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
+</html>

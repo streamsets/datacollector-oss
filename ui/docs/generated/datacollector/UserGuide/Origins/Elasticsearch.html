@@ -1,0 +1,968 @@
+
+<!DOCTYPE html
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link>
+      <meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Elasticsearch" /><meta name="abstract" content="The Elasticsearch origin is a multithreaded origin that reads data from an Elasticsearch cluster, including Elastic Cloud clusters (formerly Found clusters). The origin generates a record for each Elasticsearch document." /><meta name="description" content="The Elasticsearch origin is a multithreaded origin that reads data from an Elasticsearch cluster, including Elastic Cloud clusters (formerly Found clusters). The origin generates a record for each Elasticsearch document." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/Origins_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/Directory.html#concept_qcq_54n_jq" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/FileTail.html#concept_n1y_qyp_5q" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_f1q_vpm_2z" /><title>Elasticsearch</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_f1q_vpm_2z-d46e28311" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018042310" />
+
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018042310" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+
+
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+
+
+
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+
+                </div>
+
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+
+
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref" data-id="concept_yjl_nc5_jq"><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li class="active"><span class="topicref" data-id="concept_f1q_vpm_2z"><span class="title"><a href="../../../datacollector/UserGuide/Origins/Elasticsearch.html#concept_f1q_vpm_2z">Elasticsearch </a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Elasticsearch origin is a multithreaded origin that reads data from an Elasticsearch         cluster, including Elastic
+                  Cloud clusters (formerly Found clusters). The origin generates a         record for each Elasticsearch document.
+
+               </p>
+               </span></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Origins/Directory.html#concept_qcq_54n_jq" title="Directory"></a></span>
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Origins/FileTail.html#concept_n1y_qyp_5q" title="File Tail"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e4414" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e6481" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13895" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e18499" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e20154" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22651" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e24466" class="topicref" data-id="concept_yjl_nc5_jq" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_hpr_twm_jq-d46e24488" class="topicref" data-id="concept_hpr_twm_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_overview.html#concept_hpr_twm_jq">Origins</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">An origin stage represents the source for the pipeline. You can use a single origin     stage in a pipeline.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_kvs_3hh_ht-d46e25058" class="topicref" data-id="concept_kvs_3hh_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/AmazonS3.html#concept_kvs_3hh_ht">Amazon S3</a></span></span></li>
+         <li><span data-tocid="concept_xsh_knm_5bb-d46e25998" class="topicref" data-id="concept_xsh_knm_5bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/AmazonSQS.html#concept_xsh_knm_5bb">Amazon SQS Consumer</a></span></span></li>
+         <li><span data-tocid="concept_c1z_15q_1bb-d46e26462" class="topicref" data-id="concept_c1z_15q_1bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/AzureEventHub.html#concept_c1z_15q_1bb">Azure IoT/Event Hub Consumer</a></span></span></li>
+         <li><span data-tocid="concept_wfy_ghn_sz-d46e26744" class="topicref" data-id="concept_wfy_ghn_sz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/CoAPServer.html#concept_wfy_ghn_sz">CoAP Server</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Constrained Application Protocol (CoAP) is a web transfer protocol designed for         machine-to-machine devices. The CoAP
+                        Server origin is a multithreaded origin that listens on         a CoAP endpoint and processes the contents of all authorized
+                        CoAP requests.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_qcq_54n_jq-d46e27039" class="topicref" data-id="concept_qcq_54n_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Directory.html#concept_qcq_54n_jq">Directory</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Directory origin reads data from files in a directory. The origin can use         multiple threads to enable the parallel
+                        processing of files.
+
+                     </p>
+                     </span></span></span></li>
+         <li class="active"><span data-tocid="concept_f1q_vpm_2z-d46e28311" class="topicref" data-id="concept_f1q_vpm_2z" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Elasticsearch.html#concept_f1q_vpm_2z">Elasticsearch </a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Elasticsearch origin is a multithreaded origin that reads data from an Elasticsearch         cluster, including Elastic
+                        Cloud clusters (formerly Found clusters). The origin generates a         record for each Elasticsearch document.
+
+                     </p>
+                     </span></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_tbz_ywl_3z-d46e28397" class="topicref" data-id="concept_tbz_ywl_3z" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Elasticsearch.html#concept_tbz_ywl_3z">Batch and Incremental Mode</a></span></span></li>
+               <li><span data-tocid="concept_zzw_3pm_3z-d46e28419" class="topicref" data-id="concept_zzw_3pm_3z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Elasticsearch.html#concept_zzw_3pm_3z">Query</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Define the query that the origin uses to return data from Elasticsearch. You can define         any valid Elasticsearch query.</p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_jhw_ttm_3z-d46e28502" class="topicref" data-id="concept_jhw_ttm_3z" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Elasticsearch.html#concept_jhw_ttm_3z">Scroll Timeout</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">An Elasticsearch query can retrieve large numbers of documents from a single search         request. This allows the Elasticsearch
+                              origin to run a single query, and then read multiple         batches of data from the scroll until no results are left. An
+                              Elasticsearch scroll functions         like a cursor in a traditional database.
+
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_ifs_wtm_3z-d46e28557" class="topicref" data-id="concept_ifs_wtm_3z" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Elasticsearch.html#concept_ifs_wtm_3z">Multithreaded Processing</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Elasticsearch origin performs parallel processing and enables the creation of a         multithreaded pipeline. </p>
+                           </span></span></span></li>
+               <li><span data-tocid="task_pmh_xpm_2z-d46e28623" class="topicref" data-id="task_pmh_xpm_2z" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Elasticsearch.html#task_pmh_xpm_2z">Configuring an Elasticsearch Origin</a></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_n1y_qyp_5q-d46e28695" class="topicref" data-id="concept_n1y_qyp_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/FileTail.html#concept_n1y_qyp_5q">File Tail</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The File Tail origin reads lines of data as they are written to an active file after         reading related archived files
+                        in the same directory. File Tail generates a record for each         line of data.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_cg3_y3v_q1b-d46e29944" class="topicref" data-id="concept_cg3_y3v_q1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/BigQuery.html#concept_cg3_y3v_q1b">Google BigQuery</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Google BigQuery origin executes a query job and reads the result from Google         BigQuery. </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_iyd_wql_nbb-d46e30414" class="topicref" data-id="concept_iyd_wql_nbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/GCS.html#concept_iyd_wql_nbb">Google Cloud Storage</a></span></span></li>
+         <li><span data-tocid="concept_pjw_qtl_r1b-d46e30976" class="topicref" data-id="concept_pjw_qtl_r1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/PubSub.html#concept_pjw_qtl_r1b">Google Pub/Sub Subscriber</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Google Pub/Sub Subscriber origin consumes messages from a Google Pub/Sub         subscription. </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_lw2_tnm_vs-d46e31446" class="topicref" data-id="concept_lw2_tnm_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HadoopFS-origin.html#concept_lw2_tnm_vs">Hadoop FS</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Hadoop FS origin reads data from the Hadoop Distributed File System (HDFS), Amazon     S3, or other file systems using
+                        the Hadoop FileSystem interface.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_djz_pdm_hdb-d46e32025" class="topicref" data-id="concept_djz_pdm_hdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HDFSStandalone.html#concept_djz_pdm_hdb">Hadoop FS Standalone</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Hadoop FS Standalone origin reads files in HDFS. The origin can use multiple         threads to enable the parallel processing
+                        of files. The files to be processed must all share         a file name pattern and be fully written. You can also configure
+                        the origin to read from         Azure HDInsight.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_wk4_bjz_5r-d46e33814" class="topicref" data-id="concept_wk4_bjz_5r" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HTTPClient.html#concept_wk4_bjz_5r">HTTP Client</a></span></span></li>
+         <li><span data-tocid="concept_s2p_5hb_4y-d46e36212" class="topicref" data-id="concept_s2p_5hb_4y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HTTPServer.html#concept_s2p_5hb_4y">HTTP Server</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and         processes the contents of all
+                        authorized HTTP POST and PUT requests. Use the HTTP Server         origin to read high volumes of HTTP POST and PUT requests
+                        using multiple threads.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_izh_mqd_dy-d46e36679" class="topicref" data-id="concept_izh_mqd_dy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HTTPtoKafka.html#concept_izh_mqd_dy">HTTP to Kafka (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_zp3_wnw_4y-d46e37240" class="topicref" data-id="concept_zp3_wnw_4y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y">JDBC Multitable Consumer</a></span></span></li>
+         <li><span data-tocid="concept_qhf_hjr_bs-d46e41106" class="topicref" data-id="concept_qhf_hjr_bs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JDBCConsumer.html#concept_qhf_hjr_bs">JDBC Query Consumer</a></span></span></li>
+         <li><span data-tocid="concept_rhh_4nj_dt-d46e42868" class="topicref" data-id="concept_rhh_4nj_dt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JMS.html#concept_rhh_4nj_dt">JMS Consumer</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The JMS Consumer origin reads data from a Java Messaging Service (JMS). </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_msz_wnr_5q-d46e43243" class="topicref" data-id="concept_msz_wnr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KConsumer.html#concept_msz_wnr_5q">Kafka Consumer</a></span></span></li>
+         <li><span data-tocid="concept_ccs_fn4_x1b-d46e44052" class="topicref" data-id="concept_ccs_fn4_x1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KafkaMultiConsumer.html#concept_ccs_fn4_x1b">Kafka Multitopic Consumer</a></span></span></li>
+         <li><span data-tocid="concept_anh_4y3_yr-d46e44992" class="topicref" data-id="concept_anh_4y3_yr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KinConsumer.html#concept_anh_4y3_yr">Kinesis Consumer</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Kinesis Consumer origin reads data from Amazon Kinesis Streams. </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_qwj_5vm_pbb-d46e45465" class="topicref" data-id="concept_qwj_5vm_pbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRdbCDC.html#concept_qwj_5vm_pbb">MapR DB CDC</a></span></span></li>
+         <li><span data-tocid="concept_ywh_k15_3y-d46e45747" class="topicref" data-id="concept_ywh_k15_3y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRDBJSON.html#concept_ywh_k15_3y">MapR DB JSON</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MapR DB JSON origin reads JSON documents from MapR DB JSON tables. The origin         converts each document into a record.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_psz_db4_lx-d46e45849" class="topicref" data-id="concept_psz_db4_lx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRFS.html#concept_psz_db4_lx">MapR FS</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MapR FS origin reads files from MapR FS. Use this origin only in pipelines         configured for cluster batch pipeline
+                        execution mode.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_b43_3qc_mdb-d46e46235" class="topicref" data-id="concept_b43_3qc_mdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRFSStandalone.html#concept_b43_3qc_mdb">MapR FS Standalone</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MapR FS Standalone origin reads files in MapR. The origin can use multiple         threads to enable the parallel processing
+                        of files. The files to be processed must all share         a file name pattern and be fully written.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_hvd_hww_lbb-d46e47848" class="topicref" data-id="concept_hvd_hww_lbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRStreamsMultiConsumer.html#concept_hvd_hww_lbb">MapR Multitopic Streams Consumer</a></span></span></li>
+         <li><span data-tocid="concept_cvy_xsf_2v-d46e48309" class="topicref" data-id="concept_cvy_xsf_2v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRStreamsCons.html#concept_cvy_xsf_2v">MapR Streams Consumer</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MapR Streams Consumer origin reads messages from MapR Streams.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_bk4_2rs_ns-d46e48601" class="topicref" data-id="concept_bk4_2rs_ns" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDB.html#concept_bk4_2rs_ns">MongoDB</a></span></span></li>
+         <li><span data-tocid="concept_mjn_yqw_4y-d46e49162" class="topicref" data-id="concept_mjn_yqw_4y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDBOplog.html#concept_mjn_yqw_4y">MongoDB Oplog</a></span></span></li>
+         <li><span data-tocid="concept_ukz_3vt_lz-d46e49620" class="topicref" data-id="concept_ukz_3vt_lz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MQTTSubscriber.html#concept_ukz_3vt_lz">MQTT Subscriber</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MQTT Subscriber origin subscribes to topics on an MQTT broker to read messages         from the broker. The origin functions
+                        as an MQTT client that receives messages, generating a         record for each message.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_kqg_1yh_xx-d46e49839" class="topicref" data-id="concept_kqg_1yh_xx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MySQLBinaryLog.html#concept_kqg_1yh_xx">MySQL Binary Log</a></span></span></li>
+         <li><span data-tocid="concept_dsr_xmw_1s-d46e50410" class="topicref" data-id="concept_dsr_xmw_1s" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Omniture.html#concept_dsr_xmw_1s">Omniture</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Omniture origin processes JSON website usage reports generated by the Omniture   reporting APIs. Omniture is also known
+                        as the Adobe Marketing Cloud.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_nmf_1ly_f1b-d46e50467" class="topicref" data-id="concept_nmf_1ly_f1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/OPCUAClient.html#concept_nmf_1ly_f1b">OPC UA Client </a></span></span></li>
+         <li><span data-tocid="concept_rs5_hjj_tw-d46e50679" class="topicref" data-id="concept_rs5_hjj_tw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/OracleCDC.html#concept_rs5_hjj_tw">Oracle CDC Client</a></span></span></li>
+         <li><span data-tocid="concept_cfs_4m4_n2b-d46e54821" class="topicref" data-id="concept_cfs_4m4_n2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/PostgreSQL.html#concept_cfs_4m4_n2b">PostgreSQL CDC Client</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The PostgreSQL CDC Client origin processes Write-Ahead Logging (WAL) data to generate         change data capture records
+                        for a PostgreSQL database. Use the PostgreSQL CDC Client origin         to process WAL data from PostgreSQL 9.4 or later.
+                        Earlier versions do not support         WAL.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_dyg_lq1_h5-d46e55290" class="topicref" data-id="concept_dyg_lq1_h5" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/RabbitMQ.html#concept_dyg_lq1_h5">RabbitMQ Consumer</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">RabbitMQ Consumer reads AMQP messages from a single RabbitMQ queue.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_plr_t3v_jw-d46e55510" class="topicref" data-id="concept_plr_t3v_jw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Redis.html#concept_plr_t3v_jw">Redis Consumer</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Redis Consumer origin reads messages from Redis. </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_odf_vr3_rx-d46e55664" class="topicref" data-id="concept_odf_vr3_rx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Salesforce.html#concept_odf_vr3_rx">Salesforce</a></span></span></li>
+         <li><span data-tocid="concept_agb_5c1_ct-d46e58262" class="topicref" data-id="concept_agb_5c1_ct" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SDC_RPCorigin.html#concept_agb_5c1_ct">SDC RPC </a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"> The SDC RPC origin enables connectivity between two SDC RPC pipelines. The SDC RPC     origin reads data passed from an SDC
+                        RPC destination. Use the SDC RPC origin as part of an SDC     RPC destination pipeline.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_tdk_slk_pw-d46e58319" class="topicref" data-id="concept_tdk_slk_pw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SDCRPCtoKafka.html#concept_tdk_slk_pw">SDC RPC to Kafka (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_ic5_bzd_5v-d46e58999" class="topicref" data-id="concept_ic5_bzd_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SFTP.html#concept_ic5_bzd_5v">SFTP/FTP Client</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The SFTP/FTP Client origin reads files from a server using the Secure File Transfer         Protocol (SFTP) or the File Transfer
+                        Protocol (FTP).
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ut3_ywc_v1b-d46e59566" class="topicref" data-id="concept_ut3_ywc_v1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SQLServerCDC.html#concept_ut3_ywc_v1b">SQL Server CDC Client</a></span></span></li>
+         <li><span data-tocid="concept_ewq_b2s_r1b-d46e60961" class="topicref" data-id="concept_ewq_b2s_r1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SQLServerChange.html#concept_ewq_b2s_r1b">SQL Server Change Tracking</a></span></span></li>
+         <li><span data-tocid="concept_gzy_gmv_32b-d46e62038" class="topicref" data-id="concept_gzy_gmv_32b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SystemMetrics.html#concept_gzy_gmv_32b">System Metrics</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The System Metrics origin reads system metrics from the edge device where <span class="ph">StreamSets</span>         <span class="ph">Data Collector Edge</span>             (<span class="ph">SDC Edge</span>)         is installed. Use the System Metrics origin only in pipelines configured for edge execution         mode.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ppm_xb1_4z-d46e62149" class="topicref" data-id="concept_ppm_xb1_4z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/TCPServer.html#concept_ppm_xb1_4z">TCP Server</a></span></span></li>
+         <li><span data-tocid="concept_wng_g5f_5bb-d46e62607" class="topicref" data-id="concept_wng_g5f_5bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/UDPMulti.html#concept_wng_g5f_5bb">UDP Multithreaded Source</a></span></span></li>
+         <li><span data-tocid="concept_rst_2y5_1s-d46e62972" class="topicref" data-id="concept_rst_2y5_1s" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/UDP.html#concept_rst_2y5_1s">UDP Source</a></span></span></li>
+         <li><span data-tocid="concept_jzq_jcz_pw-d46e63120" class="topicref" data-id="concept_jzq_jcz_pw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/UDPtoKafka.html#concept_jzq_jcz_pw">UDP to Kafka (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_unk_nzk_fbb-d46e63581" class="topicref" data-id="concept_unk_nzk_fbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/WebSocketClient.html#concept_unk_nzk_fbb">WebSocket Client</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The WebSocket Client origin reads data from a WebSocket server endpoint. Use the origin         to read data from a WebSocket
+                        resource URL.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_u2r_gpc_3z-d46e63734" class="topicref" data-id="concept_u2r_gpc_3z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/WebSocketServer.html#concept_u2r_gpc_3z">WebSocket Server</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The WebSocket Server origin is a multithreaded origin that listens on a WebSocket         endpoint and processes the contents
+                        of all authorized WebSocket client requests. Use the         WebSocket Server origin to read high volumes of WebSocket client
+                        requests using multiple         threads.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_agf_5jv_sbb-d46e64111" class="topicref" data-id="concept_agf_5jv_sbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/WindowsLog.html#concept_agf_5jv_sbb">Windows Event Log</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Windows Event Log origin reads data from a Microsoft Windows event log located on a         Windows machine. The origin
+                        generates a record for each event in the log.
+
+                     </p>
+                     </span></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e64169" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e77391" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e92871" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e98772" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e102096" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e106011" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e108837" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e109636" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e110218" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e111818" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e112299" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e113641" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e114610" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e117238" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e118495" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e120286" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e124782" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e125996" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e129904" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e129959" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e130119" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e131600" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e131822" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+
+
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_f1q_vpm_2z">
+ <h1 class="title topictitle1" id="ariaid-title1">Elasticsearch </h1>
+
+
+ <div class="body conbody"><p class="shortdesc">The Elasticsearch origin is a multithreaded origin that reads data from an Elasticsearch
+        cluster, including Elastic Cloud clusters (formerly Found clusters). The origin generates a
+        record for each Elasticsearch document.</p>
+
+        <p class="p">When
+            you configure the Elasticsearch origin, you configure the HTTP URI used to connect to
+            the Elasticsearch cluster and specify whether security is enabled on the cluster. You
+            configure the origin to run in batch or incremental mode. </p>
+
+        <p class="p">The origin uses the Elasticsearch scroll API to run a query that you define. A query can
+            retrieve large numbers of documents from Elasticsearch. This allows the origin to run a
+            single query and then read multiple batches of data from the scroll until no results are
+            left. You configure a scroll timeout that defines the amount of time that the search
+            context remains valid.</p>
+
+        <p class="p">When the pipeline stops, the Elasticsearch origin notes where it stops reading. When the
+            pipeline starts again, the origin continues processing from where it stopped - as long
+            as the scroll timeout has not been exceeded or the origin is not configured to delete
+            the scroll when the pipeline stops. You can reset the origin to process all requested
+            documents.</p>
+
+        <p class="p">When you configure the Elasticsearch origin, you specify the maximum number of slices to
+            split the scroll into. The number of slices determines how many threads the origin uses
+            to read the data.</p>
+
+    </div>
+
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_tbz_ywl_3z">
+ <h2 class="title topictitle2" id="ariaid-title2">Batch and Incremental Mode</h2>
+
+ <div class="body conbody">
+        <p class="p">The Elasticsearch
+            origin can read data in the following modes:</p>
+
+        <dl class="dl">
+
+                <dt class="dt dlterm">Batch mode</dt>
+
+                <dd class="dd">In batch mode, the origin reads all data returned from the Elasticsearch query,
+                    and then the pipeline stops. By default, the origin reads in batch mode. </dd>
+
+
+        </dl>
+
+        <dl class="dl">
+
+                <dt class="dt dlterm">Incremental mode</dt>
+
+                <dd class="dd">In incremental mode, the origin performs an initial read of all the data
+                    returned from the Elasticsearch query, then the origin periodically runs the
+                    query again to check for new data. In incremental mode, the pipeline runs
+                    continuously so it can repeat the query at regular intervals. </dd>
+
+                <dd class="dd ddexpand">To use incremental mode, you define the amount of time that the origin waits
+                    between queries, and you configure the offset field and initial offset value. </dd>
+
+                <dd class="dd ddexpand">The origin uses an offset field and initial offset value to determine where to
+                    start reading data. By default, the offset field is defined as a field named
+                        <samp class="ph systemoutput">timestamp</samp>. You can define any Elasticsearch
+                    field as the offset field, though you'll most likely want to use a date field.
+                    The initial offset value is a value within the offset field where you want the
+                    Elasticsearch origin to start reading.</dd>
+
+                <dd class="dd ddexpand">Include both the offset field and the offset value in the Elasticsearch query. </dd>
+
+                <dd class="dd ddexpand">After the initial read, the origin saves the last read offset value. When the
+                    origin runs the next incremental query, the origin uses the last read offset
+                    value to continue processing from where it stopped. </dd>
+
+
+        </dl>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title3" id="concept_zzw_3pm_3z">
+ <h2 class="title topictitle2" id="ariaid-title3">Query</h2>
+
+
+ <div class="body conbody"><p class="shortdesc">Define the query that the origin uses to return data from Elasticsearch. You can define
+        any valid Elasticsearch query.</p>
+
+  <div class="p">The default query is valid for batch mode and
+            returns all documents from the Elasticsearch
+            cluster:<pre class="pre codeblock"><code>{
+  "query": {
+    "match_all": {}
+  }
+}</code></pre></div>
+
+        <p class="p">You can optionally specify an Elasticsearch index or mapping type to define the scope of
+            the query in either batch or incremental mode. </p>
+
+        <p class="p">For example, let's say that you specify the <code class="ph codeph">customer</code> index, do not
+            specify a mapping type, configure the origin to use batch mode, and use the default
+            query. The query properties are configured like so:</p>
+
+        <p class="p"><img class="image" id="concept_zzw_3pm_3z__image_d43_srm_3z" src="../Graphics/Elasticsearch_DefaultQueryBatchWithIndex.png" height="211" width="526" /></p>
+
+        <p class="p">When you run the pipeline, the query returns all documents within the
+                <code class="ph codeph">customer</code> index.</p>
+
+ </div>
+
+<article class="topic concept nested2" aria-labelledby="ariaid-title4" id="concept_l5w_yhd_kz">
+ <h3 class="title topictitle3" id="ariaid-title4">Incremental Mode Query</h3>
+
+
+ <div class="body conbody"><p class="shortdesc">If you configure the origin to use incremental mode, you must include both the offset
+        field and the offset value in the Elasticsearch query. Use <code class="ph codeph">${OFFSET}</code> to
+        represent the offset value. </p>
+
+        <p class="p">For example, let's say that you do not define an index or mapping type, configure the
+            origin to use incremental mode, and configure the <code class="ph codeph">timestamp</code> field as
+            the offset field. You use the Elasticsearch date math expression
+                <code class="ph codeph">now-1d/d</code> to set the initial offset value to one day before the
+            current time. You include the offset field and offset value in the query to determine
+            where to start reading data. The query properties are configured like so:</p>
+
+        <p class="p"><img class="image" id="concept_l5w_yhd_kz__image_cbs_btm_3z" src="../Graphics/Elasticsearch_IncrementalQuery.png" height="560" width="588" /></p>
+
+        <p class="p">When you run the pipeline, the query returns all documents that have a timestamp field
+            with a value greater than one day before the current time. The query sorts the results
+            by timestamp.</p>
+
+ </div>
+
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title5" id="concept_jhw_ttm_3z">
+ <h2 class="title topictitle2" id="ariaid-title5">Scroll Timeout</h2>
+
+
+ <div class="body conbody"><p class="shortdesc">An Elasticsearch query can retrieve large numbers of documents from a single search
+        request. This allows the Elasticsearch origin to run a single query, and then read multiple
+        batches of data from the scroll until no results are left. An Elasticsearch scroll functions
+        like a cursor in a traditional database.</p>
+
+  <p class="p">To run an Elasticsearch query using the scroll
+            API, you must set a scroll timeout. The scroll timeout tells Elasticsearch how long it
+            should keep the search context alive. The scroll timeout must be long enough for a
+            single batch to be fully read. When the origin reads another batch from the results, the
+            scroll timeout is reset. </p>
+
+        <p class="p">If the scroll timeout value is exceeded, Elasticsearch clears the scroll and the last
+            saved offset, and the origin must run the query again. In batch mode, the origin reads
+            all data returned from the query. In incremental mode, the origin begins reading from
+            the initial offset configured for the origin.</p>
+
+        <p class="p">Enter the scroll timeout using <a class="xref" href="https://www.elastic.co/guide/en/elasticsearch/reference/5.2/common-options.html#time-units" target="_blank">Elasticsearch duration time units</a>. For
+            example, enter <code class="ph codeph">1m</code> to set a one minute timeout, or enter
+                <code class="ph codeph">1h</code> to set a one hour timeout.</p>
+
+        <p class="p">Optionally, you can configure the origin to delete the scroll when the pipeline stops.
+            When configured, <span class="ph">Data Collector</span>
+            clears the scroll as soon as the pipeline stops, rather than waiting for the scroll
+            timeout value to be exceeded. Keeping a scroll window open consumes Elasticsearch
+            resources. To free up those resources, configure the origin to clear the scroll when it
+            is no longer being used.</p>
+
+        <p class="p">Clearing the scroll also clears the last saved offset, and so is essentially like
+            resetting the origin. When the pipeline continues, the origin processes all available
+            data instead of processing data from the last saved offset.</p>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title6" id="concept_ifs_wtm_3z">
+ <h2 class="title topictitle2" id="ariaid-title6">Multithreaded Processing</h2>
+
+
+ <div class="body conbody"><p class="shortdesc">The Elasticsearch origin performs parallel processing and enables the creation of a
+        multithreaded pipeline. </p>
+
+  <p class="p">The Elasticsearch
+            origin uses multiple concurrent threads based on the Number of Slices property. <span class="ph">Each thread
+                              connects to the origin system and creates a batch of data, and passes
+                              the batch to an available pipeline runner.</span></p>
+
+        <p class="p"><span class="ph">A pipeline runner is a <dfn class="term">sourceless
+                              pipeline instance</dfn> - an instance of the pipeline that includes
+                        all of the processors and destinations in the pipeline and represents all
+                        pipeline processing after the origin.</span>
+            <span class="ph"> Each pipeline runner processes one batch at a time,
+                        just like a pipeline that runs on a single thread. When the flow of data
+                        slows, the pipeline runners wait idly until they are needed, generating an
+                        empty batch at regular intervals. You can configure the Runner Idle Time
+                        pipeline property specify the interval or to opt out of empty batch
+                        generation.</span></p>
+
+        <p class="p"><span class="ph">Multithreaded pipelines preserve the order of
+                        records within each batch, just like a single-threaded pipeline. But since
+                        batches are processed by different pipeline instances, the order that
+                        batches are written to destinations is not ensured.</span></p>
+
+        <p class="p">For example, the origin runs an Elasticsearch query that returns a large number of
+            documents. To decrease processing time, you want to split the scroll into multiple
+            slices and process each slice in parallel. You set the Number of Slices property to 5.
+            When you start the pipeline, the origin splits the scroll into five slices, then <span class="ph"><span class="ph" id="concept_ifs_wtm_3z__d11e2392">the origin creates five
+                              threads, and <span class="ph">Data Collector</span>
+                              creates a matching number of pipeline runners.</span>
+                        <span class="ph" id="concept_ifs_wtm_3z__d11e2397">Upon receiving data, the origin passes a batch to
+                              each of the pipeline runners for processing.</span>
+                  </span></p>
+
+        <p class="p">At any given moment, the five pipeline runners can each
+                  process a batch, so this multithreaded pipeline processes up to five batches at a
+                  time. When incoming data slows, the pipeline runners sit idle, available for use
+                  as soon as the data flow increases.</p>
+
+        <p class="p">For more information about multithreaded pipelines, see <a class="xref" href="../Multithreaded_Pipelines/MultithreadedPipelines.html#concept_zpp_2xc_py">Multithreaded Pipeline Overview</a>.</p>
+
+ </div>
+
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title7" id="task_pmh_xpm_2z">
+    <h2 class="title topictitle2" id="ariaid-title7">Configuring an Elasticsearch Origin</h2>
+
+    <div class="body taskbody">
+        <section class="section context">
+            <p class="p">Configure an Elasticsearch
+                origin to read data from an Elasticsearch cluster.</p>
+
+        </section>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pmh_xpm_2z__d62e442" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:22.22222222222222%" /><col style="width:77.77777777777779%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d238783e472">General Property</th>
+
+                                    <th class="entry cellrowborder" id="d238783e475">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d238783e472 ">Name</td>
+
+                                    <td class="entry cellrowborder" headers="d238783e475 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d238783e472 ">Description</td>
+
+                                    <td class="entry cellrowborder" headers="d238783e475 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d238783e472 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_pmh_xpm_2z__d62e488" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d238783e475 ">Error record handling for the stage: <ul class="ul" id="task_pmh_xpm_2z__d62e492">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Elasticsearch</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pmh_xpm_2z__table_imj_dlt_3z" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d238783e551">Elasticsearch Property</th>
+
+                                    <th class="entry cellrowborder" id="d238783e554">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d238783e551 ">Cluster HTTP URI</td>
+
+                                    <td class="entry cellrowborder" headers="d238783e554 ">HTTP URI used to connect to the cluster. Use the
+                                        following format:
+                                        <pre class="pre codeblock"><code>&lt;host&gt;:&lt;port&gt;</code></pre></td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d238783e551 ">Additional HTTP Params</td>
+
+                                    <td class="entry cellrowborder" headers="d238783e554 ">Additional HTTP parameters that you want to send as query
+                                        string parameters to Elasticsearch. Enter the exact
+                                        parameter name and value expected by Elasticsearch.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d238783e551 ">Detect Additional Nodes in Cluster</td>
+
+                                    <td class="entry cellrowborder" headers="d238783e554 ">
+                                        <p class="p">Detects additional nodes in the cluster based on the
+                                            configured Cluster URI. </p>
+
+                                        <p class="p">Selecting this property is the equivalent to setting the
+                                            client.transport.sniff Elasticsearch property to true. </p>
+
+                                        <p class="p">Use only when the Data Collector shares the same network
+                                            as the Elasticsearch cluster. Do not use for Elastic
+                                            Cloud or Docker clusters. </p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d238783e551 ">Use Security</td>
+
+                                    <td class="entry cellrowborder" headers="d238783e554 ">Specifies whether security is enabled on the
+                                        Elasticsearch cluster. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d238783e551 ">Index</td>
+
+                                    <td class="entry cellrowborder" headers="d238783e554 ">Optional index to define the scope of the query. Enter an
+                                        index name or an expression that evaluates to the index
+                                            name.<p class="p">For example, if you enter
+                                                <code class="ph codeph">customer</code> as the index, the query
+                                            returns documents within the <code class="ph codeph">customer</code>
+                                            index. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d238783e551 ">Mapping</td>
+
+                                    <td class="entry cellrowborder" headers="d238783e554 ">Optional mapping type to define the scope of the query.
+                                        Enter the mapping type or an expression that evaluates to
+                                        the mapping type.<p class="p">For example, if you enter
+                                                <code class="ph codeph">user</code> as the mapping type, the query
+                                            returns documents within the <code class="ph codeph">user</code>
+                                            mapping type.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d238783e551 ">Incremental Mode
+                                        <a class="xref" href="Elasticsearch.html#concept_tbz_ywl_3z">
+                                            <img class="image" id="task_pmh_xpm_2z__image_prq_1zx_mv" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d238783e554 ">Defines how the origin queries Elasticsearch. Select to
+                                        perform incremental queries. Clear to perform a batch
+                                            query.<p class="p">Default is batch mode.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d238783e551 ">Query Interval</td>
+
+                                    <td class="entry cellrowborder" headers="d238783e554 ">Amount of time that the origin waits between incremental
+                                        queries. Enter an expression based on a unit of time. You
+                                        can use SECONDS, MINUTES, or HOURS. <p class="p">Required in
+                                            incremental mode.</p>
+<p class="p">Default is 1 hour: ${1 * HOURS}.
+                                        </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d238783e551 ">Offset Field</td>
+
+                                    <td class="entry cellrowborder" headers="d238783e554 ">Field to use for the initial offset value. <p class="p">Required in
+                                            incremental mode.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d238783e551 ">Initial Offset</td>
+
+                                    <td class="entry cellrowborder" headers="d238783e554 ">Offset value to use when the pipeline starts. Enter a
+                                        constant, an Elasticsearch date math expression, or a <span class="ph">Data Collector</span> expression. <p class="p">Required in incremental mode.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d238783e551 ">Query
+                                        <a class="xref" href="Elasticsearch.html#concept_zzw_3pm_3z" title="Define the query that the origin uses to return data from Elasticsearch. You can define any valid Elasticsearch query.">
+                                            <img class="image" id="task_pmh_xpm_2z__image_peq_5hl_mg" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d238783e554 ">Query to read from Elasticsearch. You can define any
+                                        valid Elasticsearch query.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d238783e551 ">Scroll Timeout <a class="xref" href="Elasticsearch.html#concept_jhw_ttm_3z" title="An Elasticsearch query can retrieve large numbers of documents from a single search request. This allows the Elasticsearch origin to run a single query, and then read multiple batches of data from the scroll until no results are left. An Elasticsearch scroll functions like a cursor in a traditional database.">
+                                            <img class="image" id="task_pmh_xpm_2z__image_pes_3gl_g" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d238783e554 ">Maximum amount of time to keep the search context
+                                            alive.<p class="p">Enter the timeout using Elasticsearch duration
+                                            time units. For example, enter <code class="ph codeph">1m</code> to
+                                            set a one minute timeout.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d238783e551 ">Delete Scroll on Pipeline Stop <a class="xref" href="Elasticsearch.html#concept_jhw_ttm_3z" title="An Elasticsearch query can retrieve large numbers of documents from a single search request. This allows the Elasticsearch origin to run a single query, and then read multiple batches of data from the scroll until no results are left. An Elasticsearch scroll functions like a cursor in a traditional database.">
+                                            <img class="image" id="task_pmh_xpm_2z__image_kes_8kl_m" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d238783e554 ">Delete the scroll when the pipeline stops. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d238783e551 ">Max Batch Size</td>
+
+                                    <td class="entry cellrowborder" headers="d238783e554 ">Maximum number of records to include in a batch. Honors
+                                        values up to the <span class="ph">Data Collector</span> maximum batch size. <p class="p">Default is 1000. The <span class="ph">Data Collector</span> default is 1000. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d238783e551 ">Number of Slices <a class="xref" href="Elasticsearch.html#concept_ifs_wtm_3z" title="The Elasticsearch origin performs parallel processing and enables the creation of a multithreaded pipeline.">
+                                            <img class="image" id="task_pmh_xpm_2z__image_ges_6kg_s" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d238783e554 ">Number of slices to split the Elasticsearch scroll
+                                            into.<p class="p">This property determines how many threads the
+                                            origin generates and uses for multithreaded processing.
+                                        </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If you enabled security, on the <span class="keyword wintitle">Security</span> tab, configure
+                    the following properties:</span>
+                <div class="itemgroup info" id="task_pmh_xpm_2z__d62e8322">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pmh_xpm_2z__d62e8324" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d238783e812">Security Property</th>
+
+                                    <th class="entry cellrowborder" id="d238783e815">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d238783e812 ">Security Username/Password</td>
+
+                                    <td class="entry cellrowborder" headers="d238783e815 ">Elasticsearch username and password. <div class="p">Enter the
+                                            username and password using the following
+                                            syntax:<pre class="pre codeblock"><code>&lt;username&gt;:&lt;password&gt;</code></pre></div>
+<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_pmh_xpm_2z__d11e4830">To
+                        secure sensitive information such as usernames and passwords, you can use
+                              <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d238783e812 ">SSL Truststore Path</td>
+
+                                    <td class="entry cellrowborder" headers="d238783e815 ">
+                                        <p class="p">Location of the truststore file. </p>
+
+                                        <p class="p">Configuring this property is the equivalent to
+                                            configuring the shield.ssl.truststore.path Elasticsearch
+                                            property. </p>
+
+                                        <p class="p">Not necessary for Elastic Cloud clusters. </p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d238783e812 ">SSL Truststore Password</td>
+
+                                    <td class="entry cellrowborder" headers="d238783e815 ">
+                                        <p class="p">Password for the truststore file. </p>
+
+                                        <p class="p">Configuring this property is the equivalent to
+                                            configuring the shield.ssl.truststore.password
+                                            Elasticsearch property. </p>
+
+                                        <p class="p">Not necessary for Elastic Cloud clusters. </p>
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+</article>
+</article></main></div>
+
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script>
+  </div>
+</nav>
+
+
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
+</html>

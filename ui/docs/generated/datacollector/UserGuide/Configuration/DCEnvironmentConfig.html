@@ -1,0 +1,934 @@
+
+<!DOCTYPE html
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="Data Collector includes several environment variables that you can modify to customize the following areas: Data Collector directories User and group used to start Data Collector as a service Java ..." /><meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Data Collector Environment Configuration" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Configuration/Config_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Configuration/DCConfig.html#concept_pq5_xjq_kr" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Configuration/ExternalLibs.html#concept_pdv_qlw_ft" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_rng_qym_qr" /><title>Data Collector Environment Configuration</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_rng_qym_qr-d46e9611" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018042310" />
+
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018042310" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+
+
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+
+
+
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+
+                </div>
+
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+
+
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref" data-id="concept_ylh_yyz_ky"><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li class="active"><span class="topicref" data-id="concept_rng_qym_qr"><span class="title"><a href="../../../datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr">Data Collector Environment Configuration</a></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Configuration/DCConfig.html#concept_pq5_xjq_kr" title="Data Collector Configuration"></a></span>
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Configuration/ExternalLibs.html#concept_pdv_qlw_ft" title="Install External Libraries"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e4414" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e6481" class="topicref" data-id="concept_ylh_yyz_ky" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_dns_dvg_h5-d46e6503" class="topicref" data-id="concept_dns_dvg_h5" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Authentication.html#concept_dns_dvg_h5">User Authentication</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"><span class="ph">Data Collector</span>         can authenticate user accounts based on LDAP or files. Best practice is to use LDAP if your         organization
+                        has it. By default, <span class="ph">Data Collector</span> uses         file-based authentication.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_k1r_prc_yy-d46e7493" class="topicref" data-id="concept_k1r_prc_yy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/RolesandPermissions.html#concept_k1r_prc_yy">Roles and Permissions</a></span></span></li>
+         <li><span data-tocid="concept_pq5_xjq_kr-d46e7775" class="topicref" data-id="concept_pq5_xjq_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/DCConfig.html#concept_pq5_xjq_kr">Data Collector Configuration</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can edit the <span class="ph">Data Collector</span>    configuration file, <code class="ph codeph">$SDC_CONF/sdc.properties</code>, to configure properties such as the host name and port     number and account information for email alerts.
+
+                     </p>
+                     </span></span></span></li>
+         <li class="active"><span data-tocid="concept_rng_qym_qr-d46e9611" class="topicref" data-id="concept_rng_qym_qr" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr">Data Collector Environment Configuration</a></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_zhl_rb3_qcb-d46e9734" class="topicref" data-id="concept_zhl_rb3_qcb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modifying Environment Variables</a></span></span></li>
+               <li><span data-tocid="concept_mnx_j3r_3v-d46e9756" class="topicref" data-id="concept_mnx_j3r_3v" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_mnx_j3r_3v">Data Collector Directories</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"><span class="ph">Data Collector</span>         includes environment variables that define the directories used to store configuration,         data, log, and resource
+                              files.
+
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_htz_t1s_3v-d46e9793" class="topicref" data-id="concept_htz_t1s_3v" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_htz_t1s_3v">User and Group for Service Start</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">When you run <span class="ph">Data Collector</span> as a         service, <span class="ph">Data Collector</span> runs as the system user account and group defined in environment variables. The default         system user and group are
+                              named sdc.
+
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_vrx_4fg_qr-d46e9844" class="topicref" data-id="concept_vrx_4fg_qr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_vrx_4fg_qr">Java Configuration Options</a></span></span></li>
+               <li><span data-tocid="concept_tm4_pbg_ht-d46e10136" class="topicref" data-id="concept_tm4_pbg_ht" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_tm4_pbg_ht">Java Security Manager</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"><span class="ph">Data Collector</span>     includes a Java Security Manager that is enabled by default.
+
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_hcb_4ks_3v-d46e10234" class="topicref" data-id="concept_hcb_4ks_3v" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_hcb_4ks_3v">Root Classloader</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can edit the SDC_ROOT_CLASSPATH environment variable to define the path to JAR         files to be added to the <span class="ph">Data Collector</span> root         classloader.
+
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_cy3_r44_z1b-d46e10343" class="topicref" data-id="concept_cy3_r44_z1b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_cy3_r44_z1b">Heap Dump Creation</a></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_pdv_qlw_ft-d46e10456" class="topicref" data-id="concept_pdv_qlw_ft" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/ExternalLibs.html#concept_pdv_qlw_ft">Install External Libraries </a></span></span></li>
+         <li><span data-tocid="concept_pmc_jk1_1x-d46e10831" class="topicref" data-id="concept_pmc_jk1_1x" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/CustomStageLibraries.html#concept_pmc_jk1_1x">Custom Stage Libraries</a></span></span></li>
+         <li><span data-tocid="concept_bt1_bpj_r1b-d46e10927" class="topicref" data-id="concept_bt1_bpj_r1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/CredentialStores.html#concept_bt1_bpj_r1b">Credential Stores</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"><span class="ph">Data Collector</span>         pipeline stages communicate with external systems to read and write data. Many of these         external systems
+                        require credentials - user names or passwords - to access the data. When         you configure pipeline stages for these external
+                        systems, you define the credentials that         the stage uses to connect to the system.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_bmq_gl1_mw-d46e12556" class="topicref" data-id="concept_bmq_gl1_mw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Vault-Overview.html#concept_bmq_gl1_mw">Accessing Vault Secrets with Vault Functions (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_rg3_nxy_4cb-d46e12652" class="topicref" data-id="concept_rg3_nxy_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/PublishMetadata.html#concept_rg3_nxy_4cb">Working with Data Governance Tools</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can configure <span class="ph">Data Collector</span> to         integrate with data governance tools, giving you visibility into data movement - where the         data came from,
+                        where it’s going to, and who is interacting with it.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_jdj_4rg_1t-d46e13784" class="topicref" data-id="concept_jdj_4rg_1t" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/JMXMetrics-EnableExternalTools.html#concept_jdj_4rg_1t">Enabling External JMX Tools</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"><span class="ph">Data Collector</span>     uses JMX metrics to generate the graphical display of the status of a running pipeline. You can     provide the same
+                        JMX metrics to external tools if desired.
+
+                     </p>
+                     </span></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13895" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e18499" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e20154" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22651" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e24466" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e64169" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e77391" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e92871" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e98772" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e102096" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e106011" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e108837" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e109636" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e110218" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e111818" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e112299" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e113641" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e114610" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e117238" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e118495" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e120286" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e124782" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e125996" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e129904" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e129959" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e130119" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e131600" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e131822" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+
+
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_rng_qym_qr">
+ <h1 class="title topictitle1" id="ariaid-title1">Data Collector Environment Configuration</h1>
+
+ <div class="body conbody">
+    <div class="p"><span class="ph">Data Collector</span> includes
+      several environment variables that you can modify to customize the following areas:<ul class="ul" id="concept_rng_qym_qr__ul_ulw_sjr_3v">
+        <li class="li"><span class="ph">Data Collector</span>
+          directories</li>
+
+        <li class="li">User and group used to start <span class="ph">Data Collector</span> as a
+          service</li>
+
+        <li class="li">Java configuration options</li>
+
+        <li class="li">Java Security Manager that restricts the runtime permissions of user libraries</li>
+
+        <li class="li">Path to JAR files to be added to the root classloader</li>
+
+        <li class="li">Heap dump creation and file location</li>
+
+      </ul>
+</div>
+
+    <div class="note note"><span class="notetitle">Note:</span> <span class="ph">Data Collector</span> also
+      includes a SPARK_KAFKA_VERSION environment variable that should not be modified. This variable
+      is used only when you run cluster streaming mode pipelines on a Cloudera CDH cluster. For more
+      information, see <a class="xref" href="../Cluster_Mode/KafkaRequirements.html#task_gmd_msw_yr">Kafka Cluster Requirements</a>.</div>
+
+    <p class="p"> </p>
+
+  </div>
+
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_zhl_rb3_qcb">
+    <h2 class="title topictitle2" id="ariaid-title2">Modifying Environment Variables</h2>
+
+    <div class="body conbody">
+        <div class="p">The method that
+            you use to modify environment variables depends on the <span class="ph">Data Collector</span>
+            installation type:<dl class="dl">
+
+                    <dt class="dt dlterm">Tarball installation started manually from the command line</dt>
+
+                    <dd class="dd">When you start <span class="ph">Data Collector</span> manually from the command line on any operating system, edit the
+                            <code class="ph codeph">$SDC_DIST/libexec/sdc-env.sh</code> file to modify environment
+                        variables.</dd>
+
+                    <dd class="dd ddexpand">
+                        <p class="p">Use a text editor to edit the <code class="ph codeph">sdc-env.sh</code> file. Some of
+                            the environment variables in the file are commented out and do not
+                            reflect the default values. Be sure to uncomment the line when you
+                            change a variable value.</p>
+
+                        <p class="p">After you edit the file, restart <span class="ph">Data Collector</span> to enable the changes. </p>
+
+                    </dd>
+
+
+
+                    <dt class="dt dlterm">Tarball or RPM installation started as a service on operating systems that
+                        use the SysV init system </dt>
+
+                    <dd class="dd">When you start <span class="ph">Data Collector</span> as a service on <span class="ph">CentOS 6, Red Hat Enterprise Linux 6, or Ubuntu 14.04
+                  LTS</span>, edit the <code class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</code> file to modify
+                        environment variables.</dd>
+
+                    <dd class="dd ddexpand">
+                        <p class="p">Use a text editor to edit the <code class="ph codeph">sdcd-env.sh</code> file.</p>
+
+                        <p class="p">After you edit the file, restart <span class="ph">Data Collector</span> to enable the changes. </p>
+
+                    </dd>
+
+
+
+                    <dt class="dt dlterm">Tarball or RPM installation started as a service on operating systems that
+                        use the systemd init system</dt>
+
+                    <dd class="dd">When you start <span class="ph">Data Collector</span> as a service on <span class="ph">CentOS 7, Red Hat Enterprise Linux 7, or Ubuntu 16.04
+                  LTS</span>, edit the <code class="ph codeph">sdc.service</code> file to modify environment
+                        variables. </dd>
+
+                    <dd class="dd ddexpand">The location of the <code class="ph codeph">sdc.service</code> file depends on how you
+                        installed <span class="ph">Data Collector</span>:<ul class="ul" id="concept_zhl_rb3_qcb__ul_amw_txz_3cb">
+                            <li class="li">From the RPM package -
+                                    <code class="ph codeph">/usr/lib/systemd/system/sdc.service</code></li>
+
+                            <li class="li">From the tarball -
+                                <code class="ph codeph">/etc/systemd/system/sdc.service</code></li>
+
+                        </ul>
+</dd>
+
+                    <dd class="dd ddexpand">
+                        <p class="p">Override the default values in the
+                        <code class="ph codeph">sdc.service</code> file using the same procedure that you use to
+                  override unit configuration files on a systemd init system. For an example, see
+                  "Example 2. Overriding vendor settings" in this <a class="xref" href="https://www.freedesktop.org/software/systemd/man/systemd.unit.html" target="_blank">systemd.unit manpage</a>.</p>
+
+                    </dd>
+
+                    <dd class="dd ddexpand">After overriding the default values, use the following command to reload the
+                        systemd manager
+                        configuration:<pre class="pre codeblock"><code>systemctl daemon-reload</code></pre></dd>
+
+                    <dd class="dd ddexpand">
+                        <p class="p">Then restart <span class="ph">Data Collector</span> to enable the changes. </p>
+
+                    </dd>
+
+
+
+                    <dt class="dt dlterm">Cloudera Manager installation</dt>
+
+                    <dd class="dd">When you install <span class="ph">Data Collector</span> through Cloudera Manager, modify environment variables by configuring the
+                        StreamSets service through Cloudera Manager. </dd>
+
+
+            </dl>
+</div>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title3" id="concept_mnx_j3r_3v">
+ <h2 class="title topictitle2" id="ariaid-title3">Data Collector Directories</h2>
+
+
+ <div class="body conbody"><p class="shortdesc"><span class="ph">Data Collector</span>
+        includes environment variables that define the directories used to store configuration,
+        data, log, and resource files.</p>
+
+  <p class="p">The
+                <code class="ph codeph">$SDC_DIST</code> environment variable defines the <span class="ph">Data Collector</span>
+            runtime directory. The runtime directory is the base <span class="ph">Data Collector</span>
+            directory that stores the executables and related files. This environment variable is
+            set during installation.</p>
+
+        <p class="p">When you start <span class="ph">Data Collector</span>
+            manually, the default values of the remaining directory variables are relative to the
+                <code class="ph codeph">$SDC_DIST</code> runtime directory. When you start <span class="ph">Data Collector</span> as
+            a service, the default values of the remaining directory variables are absolute paths
+            that are outside of the <code class="ph codeph">$SDC_DIST</code> runtime directory. </p>
+
+     <p class="p"><a class="xref" href="DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your installation
+                  type.</p>
+
+        <p class="p">You can configure the following environment variables that define directories:</p>
+
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_mnx_j3r_3v__table_dzl_hyr_3v" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:35%" /><col style="width:65%" /></colgroup><thead class="thead" style="text-align:left;">
+                    <tr>
+                        <th class="entry cellrowborder" id="d41167e479">Environment Variable</th>
+
+                        <th class="entry cellrowborder" id="d41167e482">Description</th>
+
+                    </tr>
+
+                </thead>
+<tbody class="tbody">
+                    <tr>
+                        <td class="entry cellrowborder" headers="d41167e479 ">SDC_CONF <a class="xref" href="DCConfig.html#concept_pq5_xjq_kr" title="You can edit the Data Collector configuration file, $SDC_CONF/sdc.properties, to configure properties such as the host name and port number and account information for email alerts.">
+                                <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
+                        </td>
+
+                        <td class="entry cellrowborder" headers="d41167e482 ">
+                            <p class="p">Defines the configuration directory for the Data Collector
+                                configuration file, <code class="ph codeph">sdc.properties</code>, and related
+                                realm properties files and keystore files. Also includes the logj4
+                                properties file. </p>
+
+                            <p class="p">Default values:</p>
+
+                            <ul class="ul">
+                                <li class="li">Manual start: <code class="ph codeph">$SDC_DIST/etc</code></li>
+
+                                <li class="li">Service start: <code class="ph codeph">/etc/sdc</code></li>
+
+                            </ul>
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="entry cellrowborder" headers="d41167e479 ">SDC_DATA</td>
+
+                        <td class="entry cellrowborder" headers="d41167e482 ">
+                            <p class="p">Defines the data directory for pipeline configuration and run
+                                details. </p>
+
+                            <p class="p">Default values:</p>
+
+                            <ul class="ul">
+                                <li class="li">Manual start: <code class="ph codeph">$SDC_DIST/data</code></li>
+
+                                <li class="li">Service start: <code class="ph codeph">/var/lib/sdc</code></li>
+
+                            </ul>
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="entry cellrowborder" headers="d41167e479 ">SDC_LOG</td>
+
+                        <td class="entry cellrowborder" headers="d41167e482 ">
+                            <p class="p">Defines the log directory. </p>
+
+                            <p class="p">Default values:</p>
+
+                            <ul class="ul">
+                                <li class="li">Manual start: <code class="ph codeph">$SDC_DIST/log</code></li>
+
+                                <li class="li">Service start: <code class="ph codeph">/var/log/sdc</code></li>
+
+                            </ul>
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="entry cellrowborder" headers="d41167e479 ">SDC_RESOURCES <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">
+                                <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
+                        </td>
+
+                        <td class="entry cellrowborder" headers="d41167e482 ">Defines the directory for runtime resource files. <p class="p">Default
+                                values:</p>
+<ul class="ul">
+                                <li class="li">Manual start: <code class="ph codeph">$SDC_DIST/resources</code></li>
+
+                                <li class="li">Service start: <code class="ph codeph">/var/lib/sdc-resources</code></li>
+
+                            </ul>
+</td>
+
+                    </tr>
+
+                </tbody>
+</table>
+</div>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title4" id="concept_htz_t1s_3v">
+    <h2 class="title topictitle2" id="ariaid-title4">User and Group for Service Start</h2>
+
+
+    <div class="body conbody"><p class="shortdesc">When you run <span class="ph">Data Collector</span> as a
+        service, <span class="ph">Data Collector</span> runs as the system user account and group defined in environment variables. The default
+        system user and group are named sdc.</p>
+
+        <p class="p">You can modify the
+            values of the environment variables to point to another system user or group. </p>
+
+        <p class="p"><a class="xref" href="DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your installation
+                  type.</p>
+
+        <div class="p">If you change the system user, you must make the new system user the owner of all <a class="xref" href="DCEnvironmentConfig.html#concept_mnx_j3r_3v" title="Data Collector includes environment variables that define the directories used to store configuration, data, log, and resource files."><span class="ph">Data Collector</span>
+                directories</a>:<ul class="ul" id="concept_htz_t1s_3v__ul_l53_lsk_qcb">
+                <li class="li"><code class="ph codeph">$SDC_DIST</code></li>
+
+                <li class="li"><code class="ph codeph">$SDC_CONF</code></li>
+
+                <li class="li"><code class="ph codeph">$SDC_DATA</code></li>
+
+                <li class="li"><code class="ph codeph">$SDC_LOG</code></li>
+
+                <li class="li"><code class="ph codeph">$SDC_RESOURCES</code></li>
+
+            </ul>
+</div>
+
+        <div class="p">For example, if you change the system user and group to <code class="ph codeph">myuser</code>, use the
+            following command to change the owner of the configuration directory,
+                <code class="ph codeph">$SDC_CONF</code>, and all files in the directory to
+                <code class="ph codeph">myuser:myuser</code>:<pre class="pre codeblock"><code>chown -R myuser:myuser /etc/sdc</code></pre></div>
+
+        <div class="note note"><span class="notetitle">Note:</span> When you run <span class="ph">Data Collector</span>
+            manually, <span class="ph">Data Collector</span>
+            runs as the system user account logged into the command prompt when the launch command
+            is run. To run as another user account, see <a class="xref" href="../Installation/Installing_the_DC.html#task_bt1_zcp_kq" title="You can install the full Data Collector tarball and start it manually on all supported operating systems.">Full Installation and Launch (Manual Start)</a>.</div>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title5" id="concept_vrx_4fg_qr">
+ <h2 class="title topictitle2" id="ariaid-title5">Java Configuration Options</h2>
+
+ <div class="body conbody">
+  <p class="p">You define Java configuration options used by <span class="ph">Data Collector</span> in
+      environment variables.</p>
+
+    <p class="p">For a tarball or RPM installation, define Java configuration options in the following
+      environment variables:</p>
+
+    <ul class="ul" id="concept_vrx_4fg_qr__ul_xfx_q33_vx">
+      <li class="li">SDC_JAVA_OPTS - Includes configuration options for Java.</li>
+
+      <li class="li">SDC_JAVA8_OPTS - Includes configuration options specific to Java 8.</li>
+
+    </ul>
+
+    <p class="p"><span class="ph">Data Collector</span> loads
+      the value of the version-specific environment variable and adds it to the SDC_JAVA_OPTS
+      environment variable.</p>
+
+    <p class="p">For a Cloudera Manager installation, define Java configuration options by configuring the
+      StreamSets service through Cloudera Manager.</p>
+
+    <div class="note note"><span class="notetitle">Note:</span> To modify Java configuration options for the <span class="ph">Data Collector</span> command
+      line interface, use the SDC_CLI_JAVA_OPTS environment variable. For more information, see
+        <a class="xref" href="../Administration/Administration_title.html#concept_zrc_qch_xw" title="Use the SDC_CLI_JAVA_OPTS environment variable to modify Java configuration options for the cli command.">Java Configuration Options for the Cli Command</a>.</div>
+
+ </div>
+
+<article class="topic concept nested2" aria-labelledby="ariaid-title6" id="concept_mdc_shg_qr">
+ <h3 class="title topictitle3" id="ariaid-title6">Java Heap Size</h3>
+
+
+ <div class="body conbody"><p class="shortdesc">Increase or decrease the <span class="ph">Data Collector</span> Java heap
+    size as necessary, based on the resources available on the host machine. By default, the Java
+    heap size is 1024 MB. </p>
+
+  <p class="p">The Java heap size determines the heap
+      size allocated to <span class="ph">Data Collector</span> and
+      affects the amount of memory <span class="ph">Data Collector</span> can use
+      when it runs a pipeline. Running a pipeline can use up to 65% of the allocated heap size. </p>
+
+    <div class="p">Use the following Java options to define the Java heap size:<ul class="ul" id="concept_mdc_shg_qr__ul_vyw_rzl_qr">
+        <li class="li">Xmx - Defines the maximum heap size.</li>
+
+        <li class="li">Xms - Defines the minimum heap size.</li>
+
+      </ul>
+</div>
+
+    <div class="p">
+      <div class="note tip"><span class="tiptitle">Tip:</span> To avoid constant recalculation of the allocated heap size, set both
+        properties to the same value. To define the unit of measure, use m for MB and g for GB. </div>
+
+    </div>
+
+    <p class="p">Define the heap size based on your installation:</p>
+
+    <dl class="dl">
+
+        <dt class="dt dlterm">Tarball or RPM installation</dt>
+
+        <dd class="dd">
+          <p class="p">Define the heap size in the SDC_JAVA_OPTS environment variable.</p>
+
+          <div class="p">For example, to double the heap size, change the following default settings in the
+            environment
+            variable:<pre class="pre codeblock"><code>export SDC_JAVA_OPTS="<span class="ph uicontrol">-Xmx1024m -Xms1024m</span> -server ${SDC_JAVA_OPTS}"</code></pre></div>
+
+          <p class="p">to increase the Xmx and Xms settings as follows:</p>
+
+          <div class="p">
+            <pre class="pre codeblock"><code>export SDC_JAVA_OPTS="<span class="ph uicontrol">-Xmx2048m -Xms2048m</span> -server ${SDC_JAVA_OPTS}"</code></pre></div>
+
+            <p class="p"><a class="xref" href="DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your installation
+                  type.</p>
+
+        </dd>
+
+
+
+        <dt class="dt dlterm">Cloudera Manager installation</dt>
+
+        <dd class="dd">Define the heap size in the <span class="ph uicontrol">Data Collector Advanced Configuration Snippet
+            (Safety Valve) for sdc-env.sh</span> field for the StreamSets service in Cloudera
+          Manager.</dd>
+
+        <dd class="dd ddexpand">For example, to double the heap size, add the following to the
+            <code class="ph codeph">sdc-env.sh</code> safety
+          valve:<pre class="pre codeblock"><code>export SDC_JAVA_OPTS="-Xmx2048m -Xms2048m"</code></pre></dd>
+
+
+    </dl>
+
+    <div class="p">With a heap size of 2048 MB, you can configure a pipeline to use up to 65% - that's 1331 MB
+      of memory.<div class="note note"><span class="notetitle">Note:</span> In the pipeline properties, you can use the jvm:maxMemoryMB() function to help
+        define the percentage of the heap size the pipeline uses.</div>
+</div>
+
+ </div>
+
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title7" id="concept_wk1_pyw_4x">
+ <h3 class="title topictitle3" id="ariaid-title7">Remote Debugging</h3>
+
+
+ <div class="body conbody"><p class="shortdesc">You can enable remote debugging to debug a <span class="ph">Data Collector</span>
+        instance running on a remote machine. </p>
+
+        <div class="p">Enable remote debugging based on your installation:<dl class="dl">
+
+                    <dt class="dt dlterm">Tarball or RPM installation</dt>
+
+                    <dd class="dd">
+                        <p class="p">Define debugging options in the SDC_JAVA_OPTS environment variable.</p>
+
+                    </dd>
+
+                    <dd class="dd ddexpand">
+                        <div class="p">Add the following debugging options to the environment variable, where
+                                <code class="ph codeph">port_number</code> is an open port number on the remote
+                            machine running <span class="ph">Data Collector</span>:<pre class="pre codeblock"><code>-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=&lt;port_number&gt;,suspend=n</code></pre></div>
+
+                        <div class="p">For example, to debug <span class="ph">Data Collector</span> on a remote machine using port number 2005, define SDC_JAVA_OPTS as
+                            follows:
+                            <pre class="pre codeblock"><code>export SDC_JAVA_OPTS="-Xmx1024m  -Xms1024m <span class="ph uicontrol">-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=2005,suspend=n</span> -server ${SDC_JAVA_OPTS}"</code></pre></div>
+
+                        <p class="p"><a class="xref" href="DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your installation
+                  type.</p>
+
+                    </dd>
+
+
+
+                    <dt class="dt dlterm">Cloudera Manager installation</dt>
+
+                    <dd class="dd">Define the debugging options in the Java Options property for the StreamSets
+                        service in Cloudera Manager.</dd>
+
+                    <dd class="dd ddexpand">For example, to debug <span class="ph">Data Collector</span> on a remote machine using port number 2005, add the debugging options to
+                        the property as
+                        follows:<pre class="pre codeblock"><code>-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=2005,suspend=n</code></pre></dd>
+
+
+            </dl>
+</div>
+
+    </div>
+
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title8" id="concept_kqh_lj3_vx">
+ <h3 class="title topictitle3" id="ariaid-title8">Garbage Collector</h3>
+
+
+ <div class="body conbody"><p class="shortdesc">You can define the Java garbage collector that <span class="ph">Data Collector</span> uses.
+        By default, <span class="ph">Data Collector</span> uses
+        the Concurrent Mark Sweep (CMS) garbage collector.</p>
+
+        <p class="p">For example, if you configure <span class="ph">Data Collector</span> to
+            use a large heap size, you might want to use the G1 garbage collector. If you define
+            another garbage collector, test and evaluate <span class="ph">Data Collector</span>
+            performance before making the same change in a production environment. Garbage collector
+            performance depends on each particular use case.</p>
+
+        <p class="p">Define the garbage collector based on your installation:</p>
+
+        <dl class="dl">
+
+                <dt class="dt dlterm">Tarball or RPM installation</dt>
+
+                <dd class="dd">Define the garbage collector in the SDC_JAVA8_OPTS environment variable. </dd>
+
+                <dd class="dd ddexpand">
+                    <p class="p">For example, the default garbage collector is defined as follows:</p>
+
+                    <pre class="pre codeblock"><code>export SDC_JAVA8_OPTS=${SDC_JAVA8_OPTS:-"<span class="ph uicontrol">-XX:+UseConcMarkSweepGC -XX:+UseParNewGC</span>"}</code></pre>
+                    <p class="p">To use the G1 garbage collector, set the option as follows: </p>
+
+                    <pre class="pre codeblock"><code>export SDC_JAVA8_OPTS=${SDC_JAVA8_OPTS:-"<span class="ph uicontrol">-XX:+UseG1GC</span>"}</code></pre>
+                    <p class="p"><a class="xref" href="DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your installation
+                  type.</p>
+
+                </dd>
+
+
+
+                <dt class="dt dlterm">Cloudera Manager installation</dt>
+
+                <dd class="dd">Define the garbage collector in the <span class="ph uicontrol">Data Collector Advanced
+                        Configuration Snippet (Safety Valve) for sdc-env.sh</span> field for
+                    the StreamSets service in Cloudera Manager.</dd>
+
+                <dd class="dd ddexpand">For example, to use the G1 garbage collector, add the following to the
+                        <code class="ph codeph">sdc-env.sh</code> safety
+                    valve:<pre class="pre codeblock"><code> export SDC_JAVA8_OPTS="-XX:+UseG1GC"</code></pre></dd>
+
+
+        </dl>
+
+        <section class="section" id="concept_kqh_lj3_vx__section_gqv_q21_vy"><h4 class="title sectiontitle">Logging</h4>
+
+            <p class="p"><span class="ph">Data Collector</span>
+                enables garbage collector logging by default to facilitate troubleshooting. Log
+                files are written to <code class="ph codeph">$SDC_LOG/gc.log</code>. You can disable logging.</p>
+
+            <p class="p">Disable garbage collector logging based on your installation:</p>
+
+            <dl class="dl">
+
+                    <dt class="dt dlterm">Tarball or RPM installation</dt>
+
+                    <dd class="dd">Set the SDC_GC_LOGGING environment variable to false. For example:</dd>
+
+                    <dd class="dd ddexpand">
+                        <pre class="pre codeblock"><code>export SDC_GC_LOGGING=false</code></pre>
+                        <p class="p"><a class="xref" href="DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your installation
+                  type.</p>
+
+                    </dd>
+
+
+
+                    <dt class="dt dlterm">Cloudera Manager installation</dt>
+
+                    <dd class="dd">Set the SDC_GC_LOGGING environment variable to false in the <span class="ph uicontrol">Data
+                            Collector Advanced Configuration Snippet (Safety Valve) for
+                            sdc-env.sh</span> field for the StreamSets service in Cloudera
+                        Manager.</dd>
+
+                    <dd class="dd ddexpand">For example, add the following to the <code class="ph codeph">sdc-env.sh</code> safety
+                        valve:<pre class="pre codeblock"><code>export SDC_GC_LOGGING=false</code></pre></dd>
+
+
+            </dl>
+
+        </section>
+
+    </div>
+
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title9" id="concept_tm4_pbg_ht">
+ <h2 class="title topictitle2" id="ariaid-title9">Java Security Manager</h2>
+
+
+ <div class="body conbody"><p class="shortdesc"><span class="ph">Data Collector</span>
+    includes a Java Security Manager that is enabled by default. </p>
+
+  <p class="p">The Java Security Manager restricts the runtime
+            permissions of user libraries. This allows administrators to control what user libraries
+            do on production systems. For example, by default, user libraries cannot call out to
+            network resources and potentially cause denial of service attacked.</p>
+
+  <p class="p">The security policy is defined in the <code class="ph codeph">$SDC_CONF/sdc-security.policy</code> file. The
+      file syntax is <a class="xref" href="http://docs.oracle.com/javase/7/docs/technotes/guides/security/PolicyFiles.html" target="_blank">java standard</a>. </p>
+
+   <p class="p">To disable the Java Security Manager, modify the SDC_SECURITY_MANAGER_ENABLED environment
+            variable. </p>
+
+     <p class="p"><a class="xref" href="DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your installation
+                  type.</p>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title10" id="concept_hcb_4ks_3v">
+ <h2 class="title topictitle2" id="ariaid-title10">Root Classloader</h2>
+
+
+ <div class="body conbody"><p class="shortdesc">You can edit the SDC_ROOT_CLASSPATH environment variable to define the path to JAR
+        files to be added to the <span class="ph">Data Collector</span> root
+        classloader.</p>
+
+     <p class="p">Use the variable for components that must be in the root classloader, such as Snappy.
+            Default is <code class="ph codeph">$SDC_DIST/root-lib/'*'</code>.</p>
+
+     <p class="p"><a class="xref" href="DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your installation
+                  type.</p>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title11" id="concept_cy3_r44_z1b">
+ <h2 class="title topictitle2" id="ariaid-title11">Heap Dump Creation</h2>
+
+ <div class="body conbody">
+        <p class="p">By default, when <span class="ph">Data Collector</span>
+            encounters an out of memory error (OOME), it creates a heap dump. </p>
+
+        <p class="p">By default, heap dump files are written to the file defined in the SDC_LOG environment
+            variable and use a naming convention that allows generating multiple heap dump files, as
+            follows: <code class="ph codeph">$SDC_LOG/sdc_heapdump_${timestamp}.hprof</code>.</p>
+
+        <p class="p">You can change the name of the heap dump files, but we recommend using the
+                <code class="ph codeph">${timestamp}</code> or similar variable to ensure that the heap dump name
+            is unique. </p>
+
+        <p class="p">Note that Java Virtual Machine, and therefore <span class="ph">Data Collector</span>,
+            does not overwrite existing heap dump files. For example, if you use
+                <code class="ph codeph">$SDC_LOG/sdc_heapdump.hprof</code> as the file name, after <span class="ph">Data Collector</span>
+            creates the first heap dump file, it will not create another until you remove the
+            existing file. </p>
+
+        <div class="p">
+            <div class="note note"><span class="notetitle">Note:</span> Depending on the number and size of the generated heap dump files, you might want
+                to increase the <span class="ph">Data Collector</span>
+                <a class="xref" href="DCEnvironmentConfig.html#concept_mdc_shg_qr" title="Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB.">Java heap size</a>. </div>
+
+        </div>
+
+        <div class="p">You can configure the following heap dump environment variables:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_cy3_r44_z1b__table_rn4_tq4_z1b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                        <tr>
+                            <th class="entry cellrowborder" id="d41167e1355">Heap Dump Environment Variable</th>
+
+                            <th class="entry cellrowborder" id="d41167e1358">Description</th>
+
+                        </tr>
+
+                    </thead>
+<tbody class="tbody">
+                        <tr>
+                            <td class="entry cellrowborder" headers="d41167e1355 ">SDC_HEAPDUMP_ON_OOM </td>
+
+                            <td class="entry cellrowborder" headers="d41167e1358 ">Specifies whether <span class="ph">Data Collector</span> generates a heap dump upon encountering an out of memory error.
+                                    <p class="p">Default is true.</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry cellrowborder" headers="d41167e1355 ">SDC_HEAPDUMP_PATH</td>
+
+                            <td class="entry cellrowborder" headers="d41167e1358 ">Specifies the file name and location to use for heap dump files.
+                                    <p class="p">By default, heap dumps are written to
+                                        <code class="ph codeph">$SDC_LOG/sdc_heapdump_${timestamp}.hprof</code>.
+                                    </p>
+<p class="p">To specify a different file name or location, uncomment
+                                    the property and enter the location and file name to use. </p>
+<div class="p">
+                                    <div class="note tip"><span class="tiptitle">Tip:</span> To write multiple heap dump files to a
+                                        directory, use a function or variable to ensure that the
+                                        file name is unique. If a file of the same name exists in
+                                        the directory, <span class="ph">Data Collector</span> does not create a new heap dump file.</div>
+
+                                </div>
+</td>
+
+                        </tr>
+
+                    </tbody>
+</table>
+</div>
+</div>
+
+     <p class="p"><a class="xref" href="DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your installation
+                  type.</p>
+
+    </div>
+
+</article>
+</article>
+</article></main></div>
+
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script>
+  </div>
+</nav>
+
+
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
+</html>

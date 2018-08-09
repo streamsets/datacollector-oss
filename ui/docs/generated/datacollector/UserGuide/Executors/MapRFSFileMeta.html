@@ -1,0 +1,1345 @@
+
+<!DOCTYPE html
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="The MapR FS File Metadata executor changes file metadata, creates an empty file, or removes a file or directory in MapR FS each time it receives an event. You cannot perform multiple tasks in the same ..." /><meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="MapR FS File Metadata Executor" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/Executors-title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/JDBCQuery.html#concept_j3r_gcv_sx" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/MapReduce.html#concept_bj2_zlk_fx" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_ohx_r5h_z1b" /><title>MapR FS File Metadata Executor</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_ohx_r5h_z1b-d46e95201" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018042310" />
+
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018042310" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+
+
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+
+
+
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+
+                </div>
+
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+
+
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref" data-id="concept_umc_1lk_fx"><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li class="active"><span class="topicref" data-id="concept_ohx_r5h_z1b"><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapRFSFileMeta.html#concept_ohx_r5h_z1b">MapR FS File Metadata Executor</a></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Executors/JDBCQuery.html#concept_j3r_gcv_sx" title="JDBC Query Executor"></a></span>
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Executors/MapReduce.html#concept_bj2_zlk_fx" title="MapReduce Executor"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e4414" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e6481" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13895" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e18499" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e20154" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22651" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e24466" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e64169" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e77391" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e92871" class="topicref" data-id="concept_umc_1lk_fx" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_stt_2lk_fx-d46e92893" class="topicref" data-id="concept_stt_2lk_fx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-overview.html#concept_stt_2lk_fx">Executors</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_mvh_bnm_f1b-d46e92917" class="topicref" data-id="concept_mvh_bnm_f1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/AmazonS3.html#concept_mvh_bnm_f1b">Amazon S3 Executor</a></span></span></li>
+         <li><span data-tocid="concept_sjs_sfp_qz-d46e93211" class="topicref" data-id="concept_sjs_sfp_qz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Email.html#concept_sjs_sfp_qz">Email Executor</a></span></span></li>
+         <li><span data-tocid="concept_wgj_slk_fx-d46e93421" class="topicref" data-id="concept_wgj_slk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#concept_wgj_slk_fx">HDFS File Metadata Executor</a></span></span></li>
+         <li><span data-tocid="concept_kjw_llk_fx-d46e94647" class="topicref" data-id="concept_kjw_llk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HiveQuery.html#concept_kjw_llk_fx">Hive Query Executor</a></span></span></li>
+         <li><span data-tocid="concept_j3r_gcv_sx-d46e95105" class="topicref" data-id="concept_j3r_gcv_sx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/JDBCQuery.html#concept_j3r_gcv_sx">JDBC Query Executor</a></span></span></li>
+         <li class="active"><span data-tocid="concept_ohx_r5h_z1b-d46e95201" class="topicref" data-id="concept_ohx_r5h_z1b" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapRFSFileMeta.html#concept_ohx_r5h_z1b">MapR FS File Metadata Executor</a></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_ggb_d1l_rx-d46e95354" class="topicref" data-id="concept_ggb_d1l_rx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapRFSFileMeta.html#concept_ggb_d1l_rx">Related Event Generating Stage</a></span></span></li>
+               <li><span data-tocid="concept_f1n_k24_x1b-d46e95376" class="topicref" data-id="concept_f1n_k24_x1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapRFSFileMeta.html#concept_f1n_k24_x1b">Changing Metadata</a></span></span></li>
+               <li><span data-tocid="concept_c2m_td4_x1b-d46e95564" class="topicref" data-id="concept_c2m_td4_x1b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapRFSFileMeta.html#concept_c2m_td4_x1b">Creating an Empty File</a></span></span></li>
+               <li><span data-tocid="concept_yf2_hc4_x1b-d46e95636" class="topicref" data-id="concept_yf2_hc4_x1b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapRFSFileMeta.html#concept_yf2_hc4_x1b">Removing a File or Directory</a></span></span></li>
+               <li><span data-tocid="concept_vhl_mfj_rx-d46e95719" class="topicref" data-id="concept_vhl_mfj_rx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapRFSFileMeta.html#concept_vhl_mfj_rx">Event Generation</a></span></span></li>
+               <li><span data-tocid="concept_wjp_3hs_rx-d46e95915" class="topicref" data-id="concept_wjp_3hs_rx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapRFSFileMeta.html#concept_wjp_3hs_rx">Kerberos Authentication</a></span></span></li>
+               <li><span data-tocid="concept_krb_g2f_pz-d46e96028" class="topicref" data-id="concept_krb_g2f_pz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapRFSFileMeta.html#concept_krb_g2f_pz">HDFS User</a></span></span></li>
+               <li><span data-tocid="concept_egg_c3s_rx-d46e96151" class="topicref" data-id="concept_egg_c3s_rx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapRFSFileMeta.html#concept_egg_c3s_rx">HDFS Properties and Configuration Files</a></span></span></li>
+               <li><span data-tocid="task_v3c_bvh_z1b-d46e96284" class="topicref" data-id="task_v3c_bvh_z1b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapRFSFileMeta.html#task_v3c_bvh_z1b">Configuring a MapR FS File Metadata Executor</a></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_bj2_zlk_fx-d46e96427" class="topicref" data-id="concept_bj2_zlk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapReduce.html#concept_bj2_zlk_fx">MapReduce Executor</a></span></span></li>
+         <li><span data-tocid="concept_qzm_l4r_kz-d46e97104" class="topicref" data-id="concept_qzm_l4r_kz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/PipelineFinisher.html#concept_qzm_l4r_kz">Pipeline Finisher Executor</a></span></span></li>
+         <li><span data-tocid="concept_jsr_zpw_tz-d46e97314" class="topicref" data-id="concept_jsr_zpw_tz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Shell.html#concept_jsr_zpw_tz">Shell Executor</a></span></span></li>
+         <li><span data-tocid="concept_cvy_vxb_1z-d46e97545" class="topicref" data-id="concept_cvy_vxb_1z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Spark.html#concept_cvy_vxb_1z">Spark Executor</a></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e98772" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e102096" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e106011" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e108837" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e109636" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e110218" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e111818" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e112299" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e113641" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e114610" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e117238" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e118495" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e120286" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e124782" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e125996" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e129904" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e129959" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e130119" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e131600" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e131822" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+
+
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_ohx_r5h_z1b">
+ <h1 class="title topictitle1" id="ariaid-title1">MapR FS File Metadata Executor</h1>
+
+    <div class="body conbody">
+        <p class="p">The MapR FS File Metadata
+            executor changes file metadata, creates an empty file, or removes a file or directory in
+            MapR FS each time it receives an event. You cannot perform multiple tasks in the same
+            executor. To perform more than one task, use additional executors. </p>
+
+        <p class="p">Use the MapR FS File Metadata executor as part of an event stream. For example, you might
+            use the executor to move a file or change file permissions after it receives a file
+            closure event from the MapR FS destination.</p>
+
+        <p class="p">When changing metadata, you configure an expression that represents the location and name
+            of the file to process, and then specify the changes you want to perform. When creating
+            an empty file, you specify the output location for the file, and can optionally specify
+            the owner, permissions, and ACLs for the file. When removing a file or directory, you
+            specify the location of the file or directory.</p>
+
+        <p class="p">When necessary, you can enable Kerberos authentication and specify an HDFS user. You can
+            also use HDFS configuration files and add other HDFS configuration properties as needed. </p>
+
+        <p class="p">You can also configure the executor to generate events for
+                  another event stream. <span class="ph" id="concept_ohx_r5h_z1b__d9e2046">For more information about dataflow
+                        triggers and the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>.</span></p>
+
+        <p class="p">For a case study on how to use a similar executor, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_d1q_xl4_lx">Case Study: Output File Management</a>.</p>
+
+    </div>
+
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_ggb_d1l_rx">
+ <h2 class="title topictitle2" id="ariaid-title2">Related Event Generating Stage</h2>
+
+ <div class="body conbody">
+  <p class="p">Use the MapR FS File Metadata executor in the event
+            stream in a pipeline. Though you can use the executor in any logical way, the MapR FS
+            File Metadata executor is optimized to update file metadata for output files or whole
+            files written by the MapR FS destination. </p>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title3" id="concept_f1n_k24_x1b">
+ <h2 class="title topictitle2" id="ariaid-title3">Changing Metadata</h2>
+
+ <div class="body conbody">
+        <p class="p">You can configure the MapR FS File Metadata executor
+            to change the metadata for a file in MapR FS after receiving an event. You might use the
+            executor to change metadata after a destination closes a file.</p>
+
+        <div class="p">When changing file metadata, the MapR FS File Metadata executor can change the following
+            file metadata at the same time:<ul class="ul" id="concept_f1n_k24_x1b__ul_gym_xw3_rx">
+                <li class="li">File name</li>
+
+                <li class="li">File location</li>
+
+                <li class="li">File owner and group</li>
+
+                <li class="li">File permissions</li>
+
+                <li class="li">Access control lists (ACLs)</li>
+
+            </ul>
+</div>
+
+        <p class="p">When changing metadata, the user who impersonates the HDFS user must have the necessary
+            permissions to perform the task. For more information about the HDFS user, see <a class="xref" href="MapRFSFileMeta.html#concept_krb_g2f_pz">HDFS User</a>.</p>
+
+    </div>
+
+<article class="topic concept nested2" aria-labelledby="ariaid-title4" id="concept_fmb_rbj_rx">
+ <h3 class="title topictitle3" id="ariaid-title4">Specifying the File Path</h3>
+
+ <div class="body conbody">
+        <p class="p">When
+            using the MapR FS File Metadata executor to change file metadata, specify an expression
+            for the File Path property that provides an absolute path to the files you want to use. </p>
+
+        <p class="p">Use the default file path expression, <code class="ph codeph">${record:value('/filepath')}</code>, to
+            update output files closed by the MapR FS destination. The file closure event records
+            generated by this destination includes a filepath field that contains the location and
+            name of the closed output files.</p>
+
+        <div class="p">To update whole files that the MapR FS destination has completed streaming, use the
+            following expression:<pre class="pre codeblock"><code>${record:value('/targetFileInfo/path')}</code></pre></div>
+
+        <p class="p">The whole file processed event records from these destinations include a
+            /targetFileInfo/path field that contains the location and name of the processed whole
+            files. </p>
+
+        <p class="p">For more information about the event records generated by destinations, see "Event
+            Record" in the destination documentation. </p>
+
+    </div>
+
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title5" id="concept_uwh_vck_rx">
+    <h3 class="title topictitle3" id="ariaid-title5">Changing the File Name or Location</h3>
+
+    <div class="body conbody">
+        <p class="p">When using the MapR FS File Metadata executor
+            to change file metadata, you can change the name or location of files after they close.
+            When you specify new file names and locations, you can enter constants or expressions.
+            Use any expression that evaluates to the values that you want to use. </p>
+
+        <div class="p">When needed, you can use the file functions in expressions to use part of the existing
+            filepath. File functions can return any part of a path, file name, or extension. <dl class="dl">
+
+                    <dt class="dt dlterm">Example for moving files</dt>
+
+                    <dd class="dd">Say you have the MapR FS destination writing JSON files to the following
+                        directory
+                        structure:<pre class="pre codeblock"><code>/server1/weblogs/&lt;subdir&gt;/&lt;filename&gt;</code></pre></dd>
+
+                    <dd class="dd ddexpand">After the files are written, you want MapR FS File Metadata executor to move
+                        the files to a different root directory. When moving files you need to
+                        specify the new location for the files. So you configure the executor to
+                        move files to a different directory while still using the rest of the path
+                        to the file as
+                        follows:<pre class="pre codeblock"><code>/newDir/${file:pathElement(record:value('/filepath'),1)}/${file:pathElement(record:value('/filepath'),2)}/</code></pre></dd>
+
+                    <dd class="dd ddexpand">
+                        <p class="p">This expression uses newDir as the new root directory, then uses two
+                            levels of subdirectories. Do not include file names when moving files.
+                        </p>
+
+                    </dd>
+
+
+
+                    <dt class="dt dlterm">Example for renaming files</dt>
+
+                    <dd class="dd">Say you want to add the .json suffix to the original filename. When you
+                        rename files, you need to specify the new name for the files, so you use the
+                        following
+                        expression:<pre class="pre codeblock"><code>${file:fileName(record:value('/filepath'))}.json</code></pre></dd>
+
+                    <dd class="dd ddexpand">This expression returns the file name from the filepath field in the event
+                        record and adds .json to the file name, e.g.<code class="ph codeph">
+                            &lt;filename&gt;.json</code>.</dd>
+
+                    <dd class="dd ddexpand">If you wanted to strip the extension from written files, you could use the
+                        following expression in the New Name field:
+                        <pre class="pre codeblock"><code>${file:removeExtension(file:fileName(record:value('/filepath')))}</code></pre></dd>
+
+                    <dd class="dd ddexpand">This expression returns the file name from the filepath event record field,
+                        then strips the extension from the name, and uses the result as the new file
+                        name.</dd>
+
+
+            </dl>
+</div>
+
+        <p class="p">For more information about file functions, see <a class="xref" href="../Expression_Language/Functions.html#concept_kxj_nyl_5x">File Functions</a>.</p>
+
+    </div>
+
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title6" id="concept_zr1_5ck_rx">
+ <h3 class="title topictitle3" id="ariaid-title6">Defining the Owner, Group, Permissions, and ACLs</h3>
+
+ <div class="body conbody">
+  <div class="p">When using the MapR FS File Metadata executor to
+            change file metadata or create an empty file, you can define the file owner, group, file
+            permissions, and the access control list (ACL).<div class="note important"><span class="importanttitle">Important:</span> When the executor
+                changes permissions, it removes existing permissions and implements the requested
+                permissions. The executor does not add permissions to the existing permissions, so
+                be sure to configure permissions exactly how you want them.</div>
+</div>
+
+        <div class="p">You can set permissions using any combination of the following methods: <dl class="dl">
+
+                    <dt class="dt dlterm">Define a new owner and group</dt>
+
+                    <dd class="dd">You can define the owner and group for files. When you use this option, you
+                        must enter both an owner and a group name. </dd>
+
+
+
+                    <dt class="dt dlterm">Set file permissions using the octal or symbolic formats</dt>
+
+                    <dd class="dd">You can set file permissions by entering the permissions you want to use in
+                        octal or symbolic format. </dd>
+
+                    <dd class="dd ddexpand">For example, you can use the following octal format to make files
+                        read-only:<pre class="pre codeblock"><code>0444</code></pre>You can alternatively use the following
+                        symbolic format to make files
+                        read-only:<pre class="pre codeblock"><code>-r--r--r-- </code></pre></dd>
+
+                    <dd class="dd ddexpand">To make them read-only for the user and the group, forbidding all access to
+                        other users, you could use either of the following
+                        formats:<pre class="pre codeblock"><code>0440
+
+-r--r-----</code></pre></dd>
+
+
+            </dl>
+<dl class="dl">
+
+                    <dt class="dt dlterm">Define ACLs </dt>
+
+                    <dd class="dd">You can define the ACLs for files. When you define ACLs, note that MapR FS
+                        expects permissions defined for the user, group, and other. You can
+                        alternatively add permissions for additional users or groups. </dd>
+
+                    <dd class="dd ddexpand">Use the following format to define
+                        ACLs:<pre class="pre codeblock"><code>user::&lt;permissions&gt;,group::&lt;permissions&gt;,other::&lt;permissions&gt;\
+[,&lt;user | group&gt;:&lt;user or group name:&lt;permissions&gt;]</code></pre></dd>
+
+                    <dd class="dd ddexpand">Define permissions using the symbolic format, with r, w, x or - representing
+                        the permission type. </dd>
+
+                    <dd class="dd ddexpand">For example, the following ACLs allow read access for the user and group
+                        only:<pre class="pre codeblock"><code>user::r--,group::r--,other::–-</code></pre></dd>
+
+                    <dd class="dd ddexpand">If you wanted to allow read access to the operations group in addition to
+                        the group associated with the file, you would enter the following
+                        permissions:<pre class="pre codeblock"><code>user::r--,group::r--,other::–-,group:operations:r--</code></pre></dd>
+
+
+            </dl>
+</div>
+
+ </div>
+
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title7" id="concept_c2m_td4_x1b">
+ <h2 class="title topictitle2" id="ariaid-title7">Creating an Empty File</h2>
+
+ <div class="body conbody">
+  <p class="p">You can configure the MapR FS File Metadata executor to
+            create empty files in MapR FS upon receiving an event. You might create empty files to
+            trigger downstream actions in other applications, such as Oozie. </p>
+
+        <div class="p">To create an empty file, specify an expression for the File Path property that provides
+            an absolute path to the location where you want the file created. <div class="note note"><span class="notetitle">Note:</span> In most cases, you will not want to use the
+                        default expression. The default expression is more appropriate for changing
+                        file metadata.</div>
+</div>
+
+        <div class="p">When creating an empty file, you can also specify the following file details:<ul class="ul" id="concept_c2m_td4_x1b__ul_mh3_r44_x1b">
+                <li class="li">File owner and group</li>
+
+                <li class="li">File permissions</li>
+
+                <li class="li">Access control lists (ACLs)</li>
+
+            </ul>
+</div>
+
+        <p class="p">For more information, see <a class="xref" href="HDFSMetadata.html#concept_zr1_5ck_rx">Defining the Owner, Group, Permissions, and ACLs</a>.</p>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title8" id="concept_yf2_hc4_x1b">
+ <h2 class="title topictitle2" id="ariaid-title8">Removing a File or Directory</h2>
+
+ <div class="body conbody">
+  <p class="p">You can configure the MapR FS File Metadata executor to
+            remove a file or directory from MapR FS after receiving an event. </p>
+
+        <p class="p">For example, say you run a daily pipeline that writes data to MapR FS. You can use the
+            MapR FS File Metadata executor to remove the target directory and all of its contents
+            before a pipeline starts processing data. Simply configure the pipeline to pass the
+            pipeline start event to an MapR FS File Metadata executor, then specify the target
+            directory when you configure the executor. For more information about using pipeline
+            events, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_amg_2qr_t1b">Pipeline Event Generation</a>.</p>
+
+        <p class="p">Remove directories with caution. The executor removes directories recursively, deleting
+            any subdirectories and their contents in addition to the specified directory. </p>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title9" id="concept_vhl_mfj_rx">
+ <h2 class="title topictitle2" id="ariaid-title9">Event Generation</h2>
+
+ <div class="body conbody">
+  <p class="p">The MapR FS File Metadata executor can
+            generate events that you can use in an event stream. When you enable event generation,
+            the executor generates events each time it changes file metadata, creates an empty file,
+            or removes a file or directory.</p>
+
+        <div class="p">MapR FS File Metadata events can be used in any logical way. For example: <ul class="ul">
+                <li class="li">With the Email executor to send a custom email
+                              after receiving an event.<p class="p">For an example, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_t2t_lp5_xz">Case Study: Sending Email</a>.</p>
+</li>
+
+                <li class="li">With a destination to store event information.
+                                    <p class="p">For an example, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_ocb_nnl_px">Case Study: Event Storage</a>.</p>
+</li>
+
+            </ul>
+</div>
+
+        <p class="p"><span class="ph">For more information about dataflow
+                        triggers and the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>.</span></p>
+
+ </div>
+
+<article class="topic concept nested2" aria-labelledby="ariaid-title10" id="concept_omr_3tk_rx">
+ <h3 class="title topictitle3" id="ariaid-title10">Event Records</h3>
+
+ <div class="body conbody">
+  <div class="p">Event records generated by the MapR FS
+            File Metadata executor have the following event-related record header attributes. Record
+            header attributes are stored as String values:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_omr_3tk_rx__table_brz_3gp_qx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                        <tr>
+                            <th class="entry cellrowborder" id="d176145e661">Record Header Attribute</th>
+
+                            <th class="entry cellrowborder" id="d176145e664">Description</th>
+
+                        </tr>
+
+                    </thead>
+<tbody class="tbody">
+                        <tr>
+                            <td class="entry cellrowborder" headers="d176145e661 ">sdc.event.type</td>
+
+                            <td class="entry cellrowborder" headers="d176145e664 ">Event type. Uses the following event type:<ul class="ul" id="concept_omr_3tk_rx__ul_m12_mgp_qx">
+                                    <li class="li">file-changed - Generated when the executor changes file
+                                        metadata, including file name, location, permissions or
+                                        ACLs.</li>
+
+                                    <li class="li">file-created - Generated when the executor creates an empty
+                                        file.</li>
+
+                                    <li class="li">file-removed - Generated when the executor removes a file or
+                                        directory.</li>
+
+                                </ul>
+</td>
+
+                        </tr>
+
+                        <tr>
+       <td class="entry cellrowborder" headers="d176145e661 ">sdc.event.version</td>
+
+       <td class="entry cellrowborder" headers="d176145e664 ">An integer that indicates the version of the event record type.</td>
+
+      </tr>
+
+                        <tr>
+       <td class="entry cellrowborder" headers="d176145e661 ">sdc.event.creation_timestamp</td>
+
+       <td class="entry cellrowborder" id="concept_omr_3tk_rx__d196e2243" headers="d176145e664 ">Epoch timestamp when the stage created the event.
+       </td>
+
+      </tr>
+
+                    </tbody>
+</table>
+</div>
+</div>
+
+        <div class="p">The MapR FS File Metadata executor can generate the following types of event records:<dl class="dl">
+
+                    <dt class="dt dlterm">File changed</dt>
+
+                    <dd class="dd">
+                        <p class="p">The executor generates a file changed event record when it changes file
+                            metadata, including file name, location, permissions or ACLs. </p>
+
+                        <div class="p">File changed event records have the sdc.event.type record header
+                            attribute set to file-changed and include the following fields:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_omr_3tk_rx__table_rzy_xd2_pz" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                        <tr>
+                                            <th class="entry cellrowborder" id="d176145e740">Event Field Name</th>
+
+                                            <th class="entry cellrowborder" id="d176145e743">Description</th>
+
+                                        </tr>
+
+                                    </thead>
+<tbody class="tbody">
+                                        <tr>
+                                            <td class="entry cellrowborder" headers="d176145e740 ">filepath</td>
+
+                                            <td class="entry cellrowborder" headers="d176145e743 ">Most recent path and name of the changed file.
+                                            </td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td class="entry cellrowborder" headers="d176145e740 ">filename</td>
+
+                                            <td class="entry cellrowborder" headers="d176145e743 ">Most recent name of the changed file.</td>
+
+                                        </tr>
+
+                                    </tbody>
+</table>
+</div>
+</div>
+
+                    </dd>
+
+
+
+                    <dt class="dt dlterm">File created</dt>
+
+                    <dd class="dd">
+                        <p class="p">The executor generates a file created event record when it creates an
+                            empty file.</p>
+
+                        <div class="p">File created event records have the sdc.event.type record header
+                            attribute set to file-created and include the following fields:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_omr_3tk_rx__table_jtk_zd2_pz" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                        <tr>
+                                            <th class="entry cellrowborder" id="d176145e797">Event Field Name</th>
+
+                                            <th class="entry cellrowborder" id="d176145e800">Description</th>
+
+                                        </tr>
+
+                                    </thead>
+<tbody class="tbody">
+                                        <tr>
+                                            <td class="entry cellrowborder" headers="d176145e797 ">filepath</td>
+
+                                            <td class="entry cellrowborder" headers="d176145e800 ">Location where the file was created.</td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td class="entry cellrowborder" headers="d176145e797 ">filename</td>
+
+                                            <td class="entry cellrowborder" headers="d176145e800 ">Name of the file.</td>
+
+                                        </tr>
+
+                                    </tbody>
+</table>
+</div>
+</div>
+
+                    </dd>
+
+
+            </dl>
+<dl class="dl">
+
+                    <dt class="dt dlterm">File removed</dt>
+
+                    <dd class="dd">
+                        <p class="p">The executor generates a file removed event record when it removes a file
+                            or directory.</p>
+
+                        <div class="p">File removed event records have the sdc.event.type record header
+                            attribute set to file-removed and include the following fields:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_omr_3tk_rx__table_fgd_y2w_x1b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                        <tr>
+                                            <th class="entry cellrowborder" id="d176145e856">Event Field Name</th>
+
+                                            <th class="entry cellrowborder" id="d176145e859">Description</th>
+
+                                        </tr>
+
+                                    </thead>
+<tbody class="tbody">
+                                        <tr>
+                                            <td class="entry cellrowborder" headers="d176145e856 ">filepath</td>
+
+                                            <td class="entry cellrowborder" headers="d176145e859 ">Location of the directory that was removed, or
+                                                the directory where the removed file was
+                                                located.</td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td class="entry cellrowborder" headers="d176145e856 ">filename</td>
+
+                                            <td class="entry cellrowborder" headers="d176145e859 ">Name of the file that was removed, when
+                                                applicable.</td>
+
+                                        </tr>
+
+                                    </tbody>
+</table>
+</div>
+</div>
+
+                    </dd>
+
+
+            </dl>
+</div>
+
+ </div>
+
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title11" id="concept_wjp_3hs_rx">
+ <h2 class="title topictitle2" id="ariaid-title11">Kerberos Authentication</h2>
+
+ <div class="body conbody">
+        <p class="p">You can use Kerberos authentication to connect to
+            the external system. When you use Kerberos authentication, the Data Collector uses the
+            Kerberos principal and keytab to connect. By default, <span class="ph">Data Collector</span>
+            uses the user account who started it to connect.</p>
+
+        <p class="p">The Kerberos principal and keytab are defined in the <span class="ph">Data Collector</span>
+            configuration file, <code class="ph codeph">$SDC_CONF/sdc.properties</code>. To use Kerberos
+            authentication, configure all Kerberos properties in the <span class="ph">Data Collector</span>
+            configuration file, and then enable Kerberos in the MapR FS File Metadata executor.</p>
+
+        <p class="p"><span class="ph">For more information about enabling Kerberos authentication
+                        for <span class="ph">Data Collector</span>, see <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Kerberos Authentication</a>.</span></p>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title12" id="concept_krb_g2f_pz">
+ <h2 class="title topictitle2" id="ariaid-title12">HDFS User</h2>
+
+    <div class="body conbody">
+        <p class="p"><span class="ph"><span class="ph">Data Collector</span>
+                        can either use the currently logged in <span class="ph">Data Collector</span> user or a
+                        user configured in the</span>
+            executor to change file metadata, create files, or remove files or directories in MapR
+            FS.</p>
+
+        <p class="p">A <span class="ph">Data Collector</span> configuration property can be set that requires using the currently logged in
+                        <span class="ph">Data Collector</span> user. When
+                  this property is not set, you can specify a user in the origin. For more
+                  information about Hadoop impersonation and the Data Collector property, see <a class="xref" href="../Configuration/DCConfig.html#concept_pmr_sy5_nz">Hadoop Impersonation Mode</a>. </p>
+
+        <p class="p">Note that the executor uses a different user account to connect. <span class="ph">By default, <span class="ph">Data Collector</span> uses
+                              the user account who started it to connect to external systems. When
+                              using Kerberos, <span class="ph">Data Collector</span> uses
+                              the Kerberos principal.</span></p>
+
+        <div class="p">To configure a user in the executor, perform the following tasks: <ol class="ol" id="concept_krb_g2f_pz__ul_mb1_xpt_ls">
+                <li class="li">On the external system, configure the user as a proxy user and authorize the
+                    user to impersonate a HDFS user. <p class="p">For more information, see the HDFS
+                        documentation. </p>
+</li>
+
+                <li class="li">In the MapR FS File Metadata executor, enter the HDFS user name.</li>
+
+            </ol>
+</div>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title13" id="concept_egg_c3s_rx">
+ <h2 class="title topictitle2" id="ariaid-title13">HDFS Properties and Configuration Files</h2>
+
+ <div class="body conbody">
+  <div class="p">You can configure the MapR FS File
+            Metadata executor to use HDFS configuration files and individual HDFS properties:<dl class="dl">
+
+                    <dt class="dt dlterm">HDFS configuration files</dt>
+
+                    <dd class="dd">You can use the following HDFS configuration files with the MapR FS File
+                        Metadata executor:<ul class="ul" id="concept_egg_c3s_rx__ul_qhn_ytr_bt">
+                        <li class="li">core-site.xml</li>
+
+                        <li class="li">hdfs-site.xml </li>
+
+                  </ul>
+</dd>
+
+                    <dd class="dd ddexpand">To use HDFS configuration files: <ol class="ol" id="concept_egg_c3s_rx__ol_rb2_2nr_bt">
+                            <li class="li">Store the files or a symlink to the files in the <span class="ph">Data Collector</span> resources directory. </li>
+
+                            <li class="li">In the MapR FS File Metadata executor, specify the location of the
+                                files. </li>
+
+                        </ol>
+<div class="note note"><span class="notetitle">Note:</span>  For a Cloudera Manager installation, Data Collector
+                            automatically creates a symlink to the files named
+                                <code class="ph codeph">hadoop-conf</code>. Enter <code class="ph codeph">hadoop-conf</code> for
+                            the location of the files in the MapR FS File Metadata
+                        executor.</div>
+</dd>
+
+
+
+                    <dt class="dt dlterm">Individual properties</dt>
+
+                    <dd class="dd">You can configure individual HDFS properties in the executor. To add an HDFS
+                        property, you specify the exact property name and the value. The MapR FS
+                        File Metadata executor does not validate the property names or
+                            values.<div class="note note"><span class="notetitle">Note:</span> Individual properties override properties defined in the
+                            HDFS configuration file. </div>
+</dd>
+
+
+            </dl>
+</div>
+
+ </div>
+
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title14" id="task_v3c_bvh_z1b">
+    <h2 class="title topictitle2" id="ariaid-title14">Configuring a MapR FS File Metadata Executor</h2>
+
+    <div class="body taskbody">
+        <section class="section context" id="task_v3c_bvh_z1b__context_wjt_f44_2bb">
+            <p class="p">Configure a MapR FS File
+                Metadata executor to create an empty file or to change file metadata upon receiving
+                an event.</p>
+
+        </section>
+
+        <ol class="ol steps" id="task_v3c_bvh_z1b__steps_xjt_f44_2bb"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_v3c_bvh_z1b__table_yxz_pvs_5x" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d176145e1132">General Property</th>
+
+                                    <th class="entry cellrowborder" id="d176145e1135">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+       <td class="entry cellrowborder" headers="d176145e1132 ">Name</td>
+
+       <td class="entry cellrowborder" headers="d176145e1135 ">Stage name.</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d176145e1132 ">Description</td>
+
+       <td class="entry cellrowborder" headers="d176145e1135 ">Optional description.</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d176145e1132 ">Stage Library</td>
+
+       <td class="entry cellrowborder" headers="d176145e1135 ">Library version that you want to use. </td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d176145e1132 ">Produce Events <a class="xref" href="MapRFSFileMeta.html#concept_vhl_mfj_rx">
+                                            <img class="image" id="task_v3c_bvh_z1b__image_yjt_f44_2bb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d176145e1135 ">Generates event records when events occur. Use for event
+        handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
+         <img class="image" id="task_v3c_bvh_z1b__d196e2111" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d176145e1132 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+         <img class="image" id="task_v3c_bvh_z1b__d196e2120" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+       <td class="entry cellrowborder" headers="d176145e1135 ">Fields that must include data for the record to be passed into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields that the stage uses.</div>
+<p class="p">Records
+         that do not include all required fields are processed based on the error handling
+         configured for the pipeline.</p>
+</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d176145e1132 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+         <img class="image" id="task_v3c_bvh_z1b__d196e2137" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+       <td class="entry cellrowborder" headers="d176145e1135 ">Conditions that must evaluate to TRUE to allow a record to enter the stage for
+        processing. Click <span class="ph uicontrol">Add</span> to create additional preconditions. <p class="p">Records
+         that do not meet all preconditions are processed based on the error handling configured for
+         the stage.</p>
+</td>
+
+      </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand" id="task_v3c_bvh_z1b__step-HDFSFiletab">
+                <span class="ph cmd">On the <span class="ph uicontrol">HDFS</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_v3c_bvh_z1b__table_sp4_dwk_rx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d176145e1249">HDFS Property</th>
+
+                                    <th class="entry cellrowborder" id="d176145e1252">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d176145e1249 ">
+                                        <p class="p">Hadoop FS URI </p>
+
+                                    </td>
+
+                                    <td class="entry cellrowborder" headers="d176145e1252 ">
+                                        <div class="p">URI to use to access files:<ul class="ul" id="task_v3c_bvh_z1b__ul_pxj_pgs_rx">
+                                                <li class="li">To connect to a specific MapR cluster, enter
+                                                  <pre class="pre codeblock"><code>maprfs:///mapr/&lt;cluster name&gt;</code></pre>For
+                                                  example:
+                                                  <code class="ph codeph">maprfs:///mapr/my.cluster.com/</code></li>
+
+                                                <li class="li">To use the first entry defined in the
+                                                  $MAPR_HOME/conf/mapr-clusters.conf file,
+                                                  enter:<pre class="pre codeblock"><code> maprfs:///</code></pre></li>
+
+                                            </ul>
+</div>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d176145e1249 ">
+                                        <p class="p">HDFS User <a class="xref" href="MapRFSFileMeta.html#concept_krb_g2f_pz">
+                                                <img class="image" id="task_v3c_bvh_z1b__image_ugp_4xk_pz" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></p>
+
+                                    </td>
+
+                                    <td class="entry cellrowborder" headers="d176145e1252 ">
+                                        <p class="p">The HDFS user to use to create empty files or change file
+                                            metadata in MapR FS. When you use this property, make
+                                            sure the external system is configured appropriately. </p>
+
+                                        <p class="p">When not configured, the pipeline uses the currently
+                                            logged in <span class="ph">Data Collector</span> user. </p>
+
+                                        <p class="p">Not configurable when Data Collector is configured to use
+                                            the currently logged in Data Collector user. <span class="ph">For more information, see <a class="xref" href="../Configuration/DCConfig.html#concept_pmr_sy5_nz">Hadoop Impersonation Mode</a>.</span></p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d176145e1249 ">
+                                        <p class="p">Kerberos Authentication <a class="xref" href="MapRFSFileMeta.html#concept_wjp_3hs_rx">
+                                                <img class="image" id="task_v3c_bvh_z1b__image_kqm_3fj_fv" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></p>
+
+                                    </td>
+
+                                    <td class="entry cellrowborder" headers="d176145e1252 ">
+                                        <p class="p">Uses Kerberos credentials to connect to the external
+                                            system. </p>
+
+                                        <p class="p">When selected, uses the Kerberos principal and keytab
+                                            defined in the <span class="ph">Data Collector</span> configuration file, $SDC_CONF/sdc.properties. </p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d176145e1249 ">
+                                        <p class="p">Hadoop FS Configuration Directory <a class="xref" href="MapRFSFileMeta.html#concept_egg_c3s_rx">
+                                                <img class="image" id="task_v3c_bvh_z1b__image_gtq_n3s_rx" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></p>
+
+                                    </td>
+
+                                    <td class="entry cellrowborder" headers="d176145e1252 ">
+                                        <p class="p">Location of the HDFS configuration files. </p>
+
+                                        <p class="p">For a Cloudera Manager installation, enter hadoop-conf.
+                                            For all other installations, use a directory or symlink
+                                            within the Data Collector resources directory. </p>
+
+                                        <div class="p">You can use the following files with the MapR FS File
+                                            Metadata executor:<ul class="ul" id="task_v3c_bvh_z1b__ul_akq_whs_rx">
+                                                <li class="li">core-site.xml</li>
+
+                                                <li class="li">hdfs-site.xml </li>
+
+                                            </ul>
+</div>
+
+                                        <div class="p">
+                                            <div class="note note"><span class="notetitle">Note:</span> Properties in the configuration files are
+                                                overridden by individual properties defined in the
+                                                stage.</div>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d176145e1249 ">Hadoop FS Configuration</td>
+
+                                    <td class="entry cellrowborder" headers="d176145e1252 ">
+                                        <p class="p">Additional HDFS properties to use. </p>
+
+                                        <p class="p">To add properties, click <span class="ph uicontrol">Add</span> and
+                                            define the property name and value. Use the property
+                                            names and values as expected by the external system.
+                                        </p>
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Tasks</span> tab, configure the following property:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_v3c_bvh_z1b__table_tcf_bhj_rx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d176145e1432">Task Property</th>
+
+                                    <th class="entry cellrowborder" id="d176145e1435">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d176145e1432 ">Task</td>
+
+                                    <td class="entry cellrowborder" headers="d176145e1435 ">Determines the type of task that the executor performs.
+                                        You can create an empty file, change file metadata, or
+                                        remove a file or directory.<p class="p">To do more than one type of
+                                            task, add additional executors to the
+                                        pipeline.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To create an empty file, configure the following properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_v3c_bvh_z1b__table_bdr_hp5_4z" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d176145e1477">Task Property</th>
+
+                                    <th class="entry cellrowborder" id="d176145e1480">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d176145e1477 ">File Path</td>
+
+                                    <td class="entry cellrowborder" headers="d176145e1480 ">Expression that represents the full path to the file that
+                                        you want to create.<div class="p">By default, the property uses
+                                                <code class="ph codeph">${record:value('/filepath')}</code>. <div class="note note"><span class="notetitle">Note:</span> In most cases, you will not want to use the
+                        default expression. The default expression is more appropriate for changing
+                        file metadata.</div>
+</div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d176145e1477 ">Set Ownership <a class="xref" href="MapRFSFileMeta.html#concept_zr1_5ck_rx">
+                                            <img class="image" id="task_v3c_bvh_z1b__image_ddr_hp5_4z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d176145e1480 ">Select to specify a file owner or group. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d176145e1477 ">New Owner</td>
+
+                                    <td class="entry cellrowborder" headers="d176145e1480 ">The user name to become the new owner of the file.
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d176145e1477 ">New Group</td>
+
+                                    <td class="entry cellrowborder" headers="d176145e1480 ">The group to become the new group owner of the file.
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d176145e1477 ">Set Permissions <a class="xref" href="MapRFSFileMeta.html#concept_zr1_5ck_rx">
+                                            <img class="image" id="task_v3c_bvh_z1b__image_edr_hp5_4z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d176145e1480 ">Select to set file permissions in an octal or symbolic
+                                        format.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d176145e1477 ">New Permissions</td>
+
+                                    <td class="entry cellrowborder" headers="d176145e1480 ">File permissions in octal or symbolic format.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d176145e1477 ">Set ACLs <a class="xref" href="MapRFSFileMeta.html#concept_zr1_5ck_rx">
+                                            <img class="image" id="task_v3c_bvh_z1b__image_fdr_hp5_4z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d176145e1480 ">Select to define access control list (ACL) permissions.
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d176145e1477 ">New ACLs</td>
+
+                                    <td class="entry cellrowborder" headers="d176145e1480 ">Define ACLs for the owner, group, and other. You can
+                                        optionally define other user and group permissions. For
+                                        details, see <a class="xref" href="MapRFSFileMeta.html#concept_zr1_5ck_rx">Defining the Owner, Group, Permissions, and ACLs</a>.</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To change file metadata, configure the following properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_v3c_bvh_z1b__table_dr2_ns5_4z" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d176145e1607">Task Property</th>
+
+                                    <th class="entry cellrowborder" id="d176145e1610">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d176145e1607 ">File Path <a class="xref" href="MapRFSFileMeta.html#concept_fmb_rbj_rx">
+                                            <img class="image" id="task_v3c_bvh_z1b__image_er2_ns5_4z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d176145e1610 ">Expression that represents the full path to the file.
+                                            <p class="p">By default, the property uses
+                                                <code class="ph codeph">${record:value('/filepath')}</code>, which
+                                            processes data in the filepath field. The MapR FS
+                                            destination generates file closure event records that
+                                            include the path to closed files in a filepath
+                                            field.</p>
+<div class="p">To update whole files that the MapR FS
+                                            destination has completed streaming, use the following
+                                            expression:<pre class="pre codeblock"><code>${record:value('/targetFileInfo/path')}</code></pre></div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d176145e1607 ">Move File</td>
+
+                                    <td class="entry cellrowborder" headers="d176145e1610 ">Select to move the file.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d176145e1607 ">New Location</td>
+
+                                    <td class="entry cellrowborder" headers="d176145e1610 ">New location for the file. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d176145e1607 ">Rename</td>
+
+                                    <td class="entry cellrowborder" headers="d176145e1610 ">Select to rename the file.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d176145e1607 ">New Name</td>
+
+                                    <td class="entry cellrowborder" headers="d176145e1610 ">New name for the file. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d176145e1607 ">Change Ownership <a class="xref" href="MapRFSFileMeta.html#concept_zr1_5ck_rx">
+                                            <img class="image" id="task_v3c_bvh_z1b__image_fr2_ns5_4z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d176145e1610 ">Select to change the file owner or group. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d176145e1607 ">New Owner</td>
+
+                                    <td class="entry cellrowborder" headers="d176145e1610 ">The user name to become the new owner of the file.
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d176145e1607 ">New Group</td>
+
+                                    <td class="entry cellrowborder" headers="d176145e1610 ">The group to become the new group owner of the file.
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d176145e1607 ">Set Permissions <a class="xref" href="MapRFSFileMeta.html#concept_zr1_5ck_rx">
+                                            <img class="image" id="task_v3c_bvh_z1b__image_gr2_ns5_4z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d176145e1610 ">Select to set file permissions in an octal or symbolic
+                                        format.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d176145e1607 ">New Permissions</td>
+
+                                    <td class="entry cellrowborder" headers="d176145e1610 ">File permissions in octal or symbolic format.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d176145e1607 ">Set ACLs <a class="xref" href="MapRFSFileMeta.html#concept_zr1_5ck_rx">
+                                            <img class="image" id="task_v3c_bvh_z1b__image_hr2_ns5_4z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d176145e1610 ">Select to define access control list (ACL) permissions.
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d176145e1607 ">New ACLs</td>
+
+                                    <td class="entry cellrowborder" headers="d176145e1610 ">Define ACLs for the owner, group, and other. You can
+                                        optionally define other user and group permissions. For
+                                        details, see <a class="xref" href="MapRFSFileMeta.html#concept_zr1_5ck_rx">Defining the Owner, Group, Permissions, and ACLs</a>.</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To remove a file or directory, configure the following property:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_v3c_bvh_z1b__table_cnj_kp4_x1b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d176145e1781">Task Property</th>
+
+                                    <th class="entry cellrowborder" id="d176145e1784">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d176145e1781 ">File Path</td>
+
+                                    <td class="entry cellrowborder" headers="d176145e1784 ">Expression that represents the full path to the file or
+                                        directory that you want to remove. <p class="p">The executor removes
+                                            directories recursively, removing all subdirectories as
+                                            well. Use with caution. For more information, see <a class="xref" href="MapRFSFileMeta.html#concept_yf2_hc4_x1b">Removing a File or Directory</a>.</p>
+<div class="p">By default, the property uses <code class="ph codeph">${record:value('/filepath')}</code>. <div class="note note"><span class="notetitle">Note:</span> In most cases, you will not want to use the
+                        default expression. The default expression is more appropriate for changing
+                        file metadata.</div>
+</div>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+</article>
+</article></main></div>
+
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script>
+  </div>
+</nav>
+
+
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
+</html>

@@ -1,0 +1,2123 @@
+
+<!DOCTYPE html
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link>
+      <meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="HTTP Client" /><meta name="abstract" content="" /><meta name="description" content="The HTTP Client processor sends requests to an HTTP resource URL and writes the results to a field in the record. You can use the HTTP Client processor to perform a range of standard requests or you ..." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Processors/Processors_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Processors/HiveMetadata.html#concept_rz5_nft_zv" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Processors/JavaScript.html#concept_n2p_jgf_lr" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_ghx_ypr_fw" /><title>HTTP Client</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_ghx_ypr_fw-d46e69866" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018042310" />
+
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018042310" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+
+
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+
+
+
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+
+                </div>
+
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+
+
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref" data-id="concept_yjl_nc5_jq"><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li class="active"><span class="topicref" data-id="concept_ghx_ypr_fw"><span class="title"><a href="../../../datacollector/UserGuide/Processors/HTTPClient.html#concept_ghx_ypr_fw">HTTP Client</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Processors/HiveMetadata.html#concept_rz5_nft_zv" title="Hive Metadata"></a></span>
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Processors/JavaScript.html#concept_n2p_jgf_lr" title="JavaScript Evaluator"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e4414" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e6481" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13895" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e18499" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e20154" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22651" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e24466" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e64169" class="topicref" data-id="concept_yjl_nc5_jq" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_hpr_twm_jq-d46e64191" class="topicref" data-id="concept_hpr_twm_jq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_overview.html#concept_hpr_twm_jq">Processors</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ofb_svm_5bb-d46e64215" class="topicref" data-id="concept_ofb_svm_5bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Aggregator.html#concept_ofb_svm_5bb">Aggregator</a></span></span></li>
+         <li><span data-tocid="concept_ujj_spy_kv-d46e65012" class="topicref" data-id="concept_ujj_spy_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Base64Decoder.html#concept_ujj_spy_kv">Base64 Field Decoder</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Base64 Field Decoder decodes Base64 encoded data to binary data. Use the processor         to decode Base64 encoded data
+                        before evaluating data in the field.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_wtr_mpy_kv-d46e65069" class="topicref" data-id="concept_wtr_mpy_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Base64Encoder.html#concept_wtr_mpy_kv">Base64 Field Encoder</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Base64 Field Encoder encodes binary data using Base64. Use the processor to encode         binary data that must be sent
+                        over channels that expect ASCII data.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_xw3_4xk_r1b-d46e65126" class="topicref" data-id="concept_xw3_4xk_r1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/DataParser.html#concept_xw3_4xk_r1b">Data Parser</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Data Parser processor allows you to parse supported data formats embedded in a         field. You can parse NetFlow embedded
+                        in a byte array field or syslog messages embedded in a         string field.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ez5_pvf_wbb-d46e65225" class="topicref" data-id="concept_ez5_pvf_wbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Delay.html#concept_ez5_pvf_wbb">Delay</a></span></span></li>
+         <li><span data-tocid="concept_zm2_pp3_wq-d46e65279" class="topicref" data-id="concept_zm2_pp3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Expression.html#concept_zm2_pp3_wq">Expression Evaluator</a></span></span></li>
+         <li><span data-tocid="concept_njn_3kk_fx-d46e65489" class="topicref" data-id="concept_njn_3kk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldFlattener.html#concept_njn_3kk_fx">Field Flattener</a></span></span></li>
+         <li><span data-tocid="concept_ivv_c3k_wq-d46e65637" class="topicref" data-id="concept_ivv_c3k_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldHasher.html#concept_ivv_c3k_wq">Field Hasher</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Field Hasher uses an algorithm to encode data. Use Field Hasher to encode         highly-sensitive data. For example,
+                        you might use Field Hasher to encode social security or         credit card numbers.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_hjc_t4k_wq-d46e65857" class="topicref" data-id="concept_hjc_t4k_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldMasker.html#concept_hjc_t4k_wq">Field Masker</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Field Masker masks string values based on the selected mask type. You can use     variable-length, fixed-length, custom,
+                        or regular expression masks. Custom masks can reveal part     of the string value.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_pgm_tsl_gt-d46e65960" class="topicref" data-id="concept_pgm_tsl_gt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldMerger.html#concept_pgm_tsl_gt">Field Merger</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Field Merger merges one or more fields in a record to a different location in the   record. Use only for records with
+                        a list or map structure.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_krp_5fv_vy-d46e66017" class="topicref" data-id="concept_krp_5fv_vy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldOrder.html#concept_krp_5fv_vy">Field Order</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Field Order processor orders fields in a map or list-map field and outputs the         fields into a list-map or list
+                        root field.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ekg_313_qw-d46e66119" class="topicref" data-id="concept_ekg_313_qw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/ListPivoter.html#concept_ekg_313_qw">Field Pivoter</a></span></span></li>
+         <li><span data-tocid="concept_jdd_blr_wq-d46e66218" class="topicref" data-id="concept_jdd_blr_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldRemover.html#concept_jdd_blr_wq">Field Remover</a></span></span></li>
+         <li><span data-tocid="concept_vyv_zsg_ht-d46e66272" class="topicref" data-id="concept_vyv_zsg_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldRenamer.html#concept_vyv_zsg_ht">Field Renamer</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Use the Field Renamer to rename fields in a record. You can specify individual fields to         rename or use regular expressions
+                        to rename sets of fields.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_rw4_2d3_4cb-d46e66377" class="topicref" data-id="concept_rw4_2d3_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldReplacer.html#concept_rw4_2d3_4cb">Field Replacer</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Field Replacer replaces values in fields with nulls or with new values. Use the         Field Replacer to update values
+                        or to replace invalid values.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_vlj_vph_yq-d46e66597" class="topicref" data-id="concept_vlj_vph_yq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldSplitter.html#concept_vlj_vph_yq">Field Splitter</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Field Splitter splits string data based on a regular expression and passes the   separated data to new fields. Use the
+                        Field Splitter to split complex string values into logical   components.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_is3_zkp_wq-d46e66811" class="topicref" data-id="concept_is3_zkp_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldTypeConverter.html#concept_is3_zkp_wq">Field Type Converter</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Field Type Converter converts the data types of fields to compatible data types. You     might use the Field Type Converter
+                        to convert the data types of fields before performing     calculations. You can also use the Field Type Converter to change
+                        the scale of decimal     data.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_o3b_t1k_yx-d46e66968" class="topicref" data-id="concept_o3b_t1k_yx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldZip.html#concept_o3b_t1k_yx">Field Zip</a></span></span></li>
+         <li><span data-tocid="concept_fch_fc3_ms-d46e67178" class="topicref" data-id="concept_fch_fc3_ms" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/GeoIP.html#concept_fch_fc3_ms">Geo IP</a></span></span></li>
+         <li><span data-tocid="concept_ldh_sct_gv-d46e67460" class="topicref" data-id="concept_ldh_sct_gv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Groovy.html#concept_ldh_sct_gv">Groovy Evaluator</a></span></span></li>
+         <li><span data-tocid="concept_mnj_zhq_bw-d46e68400" class="topicref" data-id="concept_mnj_zhq_bw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HBaseLookup.html#concept_mnj_zhq_bw">HBase Lookup</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The HBase Lookup processor performs key-value lookups in HBase and passes the lookup         values to fields. Use the HBase
+                        Lookup to enrich records with additional data.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_rz5_nft_zv-d46e68784" class="topicref" data-id="concept_rz5_nft_zv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HiveMetadata.html#concept_rz5_nft_zv">Hive Metadata</a></span></span></li>
+         <li class="active"><span data-tocid="concept_ghx_ypr_fw-d46e69866" class="topicref" data-id="concept_ghx_ypr_fw" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HTTPClient.html#concept_ghx_ypr_fw">HTTP Client</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_t4k_2hh_jw-d46e70021" class="topicref" data-id="concept_t4k_2hh_jw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HTTPClient.html#concept_t4k_2hh_jw">HTTP Method</a></span></span></li>
+               <li><span data-tocid="concept_d3m_yrn_jw-d46e70075" class="topicref" data-id="concept_d3m_yrn_jw" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HTTPClient.html#concept_d3m_yrn_jw">Parallel Requests</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The HTTP Client processor sends multiple requests at a time. To preserve record order,         the processor waits until all
+                              requests for the entire batch are completed before processing         the next batch.
+
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_s4p_15f_5y-d46e70120" class="topicref" data-id="concept_s4p_15f_5y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HTTPClient.html#concept_s4p_15f_5y">OAuth 2 Authorization</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can configure the HTTP Client processor to use the OAuth 2 protocol to connect to an         HTTP service that uses basic,
+                              digest, or universal authentication, OAuth 2 client         credentials, OAuth 2 username and password, or OAuth 2 JSON Web
+                              Tokens (JWT).
+
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_ry4_nx3_l2b-d46e70403" class="topicref" data-id="concept_ry4_nx3_l2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HTTPClient.html#concept_ry4_nx3_l2b">Generated Records</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The HTTP Client processor <span class="ph">generates records based on the responses it                         receives.</span></p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_dhg_gmk_hdb-d46e70604" class="topicref" data-id="concept_dhg_gmk_hdb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HTTPClient.html#concept_dhg_gmk_hdb">Logging Request and Response Data</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The HTTP Client processor can log request and response data to the <span class="ph">Data Collector</span>         log.
+
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_kjb_gfz_m2b-d46e70723" class="topicref" data-id="concept_kjb_gfz_m2b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HTTPClient.html#concept_kjb_gfz_m2b">Logging the Resolved Resource URL</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can write the resolved resource URL to the <span class="ph">Data Collector</span> log.
+
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_jrj_hmh_jw-d46e70852" class="topicref" data-id="concept_jrj_hmh_jw" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HTTPClient.html#concept_jrj_hmh_jw">Data Formats</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The HTTP Client processor writes the server response to the specified field in the         record. </p>
+                           </span></span></span></li>
+               <li><span data-tocid="task_z54_1qr_fw-d46e70988" class="topicref" data-id="task_z54_1qr_fw" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HTTPClient.html#task_z54_1qr_fw">Configuring HTTP Client Processor</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Configure an HTTP Client processor to perform requests against a resource         URL.</p>
+                           </span></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_n2p_jgf_lr-d46e71134" class="topicref" data-id="concept_n2p_jgf_lr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JavaScript.html#concept_n2p_jgf_lr">JavaScript Evaluator</a></span></span></li>
+         <li><span data-tocid="concept_ysc_ccy_hw-d46e71940" class="topicref" data-id="concept_ysc_ccy_hw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JDBCLookup.html#concept_ysc_ccy_hw">JDBC Lookup</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The JDBC Lookup processor uses a JDBC connection to perform lookups in a database         table and pass the lookup values
+                        to fields. Use the JDBC Lookup to enrich records with         additional data.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_qbx_lcy_hw-d46e72315" class="topicref" data-id="concept_qbx_lcy_hw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JDBCTee.html#concept_qbx_lcy_hw">JDBC Tee</a></span></span></li>
+         <li><span data-tocid="concept_jmg_hw1_h1b-d46e72525" class="topicref" data-id="concept_jmg_hw1_h1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JSONGenerator.html#concept_jmg_hw1_h1b">JSON Generator</a></span></span></li>
+         <li><span data-tocid="concept_bs1_4t3_yq-d46e72581" class="topicref" data-id="concept_bs1_4t3_yq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JSONParser.html#concept_bs1_4t3_yq">JSON Parser</a></span></span></li>
+         <li><span data-tocid="concept_a1h_lkf_lr-d46e72638" class="topicref" data-id="concept_a1h_lkf_lr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Jython.html#concept_a1h_lkf_lr">Jython Evaluator</a></span></span></li>
+         <li><span data-tocid="concept_a1x_3wl_p1b-d46e73444" class="topicref" data-id="concept_a1x_3wl_p1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/KuduLookup.html#concept_a1x_3wl_p1b">Kudu Lookup</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Kudu Lookup processor performs lookups in a Kudu table and passes the lookup         values to fields. Use the Kudu Lookup
+                        to enrich records with additional data.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ulm_qdq_fs-d46e73812" class="topicref" data-id="concept_ulm_qdq_fs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/LogParser.html#concept_ulm_qdq_fs">Log Parser</a></span></span></li>
+         <li><span data-tocid="concept_lcp_ssh_qcb-d46e73912" class="topicref" data-id="concept_lcp_ssh_qcb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JDBCMetadata.html#concept_lcp_ssh_qcb">PostgreSQL Metadata</a></span></span></li>
+         <li><span data-tocid="concept_z3m_v52_zq-d46e74197" class="topicref" data-id="concept_z3m_v52_zq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/RDeduplicator.html#concept_z3m_v52_zq">Record Deduplicator</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Record Deduplicator evaluates records for duplicate data and routes data to two         streams -  one for unique records
+                        and one for duplicate records. Use the Record Deduplicator         to discard duplicate data or route duplicate data through
+                        different processing logic.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ng3_lpr_pv-d46e74299" class="topicref" data-id="concept_ng3_lpr_pv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/RedisLookup.html#concept_ng3_lpr_pv">Redis Lookup</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Redis Lookup processor performs key-value lookups in Redis and passes the lookup         values to fields. Use the Redis
+                        Lookup to enrich records with additional data.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_k23_3rk_yx-d46e74459" class="topicref" data-id="concept_k23_3rk_yx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/SalesforceLookup.html#concept_k23_3rk_yx">Salesforce Lookup</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Salesforce Lookup processor performs lookups in a Salesforce object and passes         the lookup values to fields. Use
+                        the Salesforce Lookup to enrich records with additional         data.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_rfz_ks3_x1b-d46e74748" class="topicref" data-id="concept_rfz_ks3_x1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/SchemaGenerator.html#concept_rfz_ks3_x1b">Schema Generator</a></span></span></li>
+         <li><span data-tocid="concept_cpx_1lm_zx-d46e74958" class="topicref" data-id="concept_cpx_1lm_zx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Spark.html#concept_cpx_1lm_zx">Spark Evaluator</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Spark Evaluator performs custom processing within a pipeline based on a Spark         application that you develop.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_zh2_kfj_tdb-d46e75339" class="topicref" data-id="concept_zh2_kfj_tdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/SQLParser.html#concept_zh2_kfj_tdb">SQL Parser</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_aqz_t4r_pv-d46e75902" class="topicref" data-id="concept_aqz_t4r_pv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/StaticLookup.html#concept_aqz_t4r_pv">Static Lookup</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Static Lookup processor performs lookups of key-value pairs that are stored in local         memory and passes the lookup
+                        values to fields. Use the Static Lookup to store String values         in memory that the pipeline can look up at runtime
+                        to enrich records with additional         data.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_tqv_t5r_wq-d46e75962" class="topicref" data-id="concept_tqv_t5r_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/StreamSelector.html#concept_tqv_t5r_wq">Stream Selector</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Stream Selector passes data to streams based on conditions. Define a condition for     each stream of data that you want
+                        to create. The Stream Selector uses a default stream to pass     records that do not match user-defined conditions.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_o5k_dmf_zq-d46e76119" class="topicref" data-id="concept_o5k_dmf_zq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/ValueReplacer.html#concept_o5k_dmf_zq">Value Replacer (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_nwg_rx4_l2b-d46e76401" class="topicref" data-id="concept_nwg_rx4_l2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/WholeFileTransformer.html#concept_nwg_rx4_l2b">Whole File Transformer</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Whole File Transformer processor transforms fully written Avro files to highly         efficient, columnar Parquet files.
+                        Use the Whole File Transformer in a pipeline that reads         Avro files as whole files and writes the transformed Parquet
+                        files as whole         files.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ck4_255_sv-d46e77234" class="topicref" data-id="concept_ck4_255_sv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/XMLFlattener.html#concept_ck4_255_sv">XML Flattener</a></span></span></li>
+         <li><span data-tocid="concept_dtt_q5q_k5-d46e77333" class="topicref" data-id="concept_dtt_q5q_k5" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/XMLParser.html#concept_dtt_q5q_k5">XML Parser</a></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e77391" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e92871" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e98772" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e102096" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e106011" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e108837" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e109636" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e110218" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e111818" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e112299" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e113641" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e114610" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e117238" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e118495" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e120286" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e124782" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e125996" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e129904" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e129959" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e130119" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e131600" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e131822" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+
+
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_ghx_ypr_fw">
+    <h1 class="title topictitle1" id="ariaid-title1">HTTP Client</h1>
+
+
+    <div class="body conbody"><p class="shortdesc"></p>
+
+        <p class="p">The HTTP Client processor sends requests to an
+            HTTP resource URL and writes the results to a field in the record. You can use the HTTP
+            Client processor to perform a range of standard requests or you can use an expression to
+            determine the request for each record.</p>
+
+        <p class="p">When you configure the HTTP Client, you define the resource URL, header attributes, and
+            method to use. For some methods, you can specify the request body and default content
+            type. </p>
+
+        <p class="p">You can configure the processor to include response header fields in the record as a set
+            of record header attributes or as a map in a record field. You can configure the
+            processor to log request and response information. And you can write the resolved
+            request URL to the <span class="ph">Data Collector</span>
+            log.</p>
+
+        <p class="p">You can also configure the timeout, request transfer encoding, maximum number of parallel
+            requests, and authentication type. You can optionally use an HTTP proxy and configure
+            SSL/TLS properties. </p>
+
+        <p class="p">You can also configure the processor to use the OAuth 2 protocol to connect to an HTTP
+            service.</p>
+
+    </div>
+
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_t4k_2hh_jw">
+ <h2 class="title topictitle2" id="ariaid-title2">HTTP Method</h2>
+
+ <div class="body conbody">
+  <div class="p">You can use the
+            following methods with the HTTP Client processor: <ul class="ul" id="concept_t4k_2hh_jw__ul_m1f_s3h_jw">
+                <li class="li">GET</li>
+
+                <li class="li">PUT</li>
+
+                <li class="li">POST</li>
+
+                <li class="li">DELETE</li>
+
+                <li class="li">HEAD</li>
+
+                <li class="li">PATCH</li>
+
+                <li class="li">Expression - An expression that evaluates to one of the other methods. </li>
+
+            </ul>
+</div>
+
+ </div>
+
+<article class="topic concept nested2" aria-labelledby="ariaid-title3" id="concept_dc2_qwn_jw">
+ <h3 class="title topictitle3" id="ariaid-title3">Expression Method</h3>
+
+ <div class="body conbody">
+        <p class="p">The Expression method allows you to write an
+            expression that evaluates to a standard HTTP method. Use the Expression method to
+            generate a workflow. For example, you can use an expression that performs a lookup (GET)
+            or passes data to the server (PUT) based on the data in a field. </p>
+
+    </div>
+
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title4" id="concept_d3m_yrn_jw">
+ <h2 class="title topictitle2" id="ariaid-title4">Parallel Requests</h2>
+
+
+ <div class="body conbody"><p class="shortdesc">The HTTP Client processor sends multiple requests at a time. To preserve record order,
+        the processor waits until all requests for the entire batch are completed before processing
+        the next batch.</p>
+
+  <p class="p">You can specify the maximum number of parallel requests. Default is 1. Increasing the number of
+            parallel requests can improve performance but increases the load on the server. Network
+            latency can also significantly impact the performance of this processor.</p>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title5" id="concept_s4p_15f_5y">
+ <h2 class="title topictitle2" id="ariaid-title5">OAuth 2 Authorization</h2>
+
+
+ <div class="body conbody"><p class="shortdesc">You can configure the HTTP Client processor to use the OAuth 2 protocol to connect to an
+        HTTP service that uses basic, digest, or universal authentication, OAuth 2 client
+        credentials, OAuth 2 username and password, or OAuth 2 JSON Web Tokens (JWT).</p>
+
+  <p class="p">The OAuth 2 protocol
+            authorizes third-party access to HTTP service resources without sharing credentials. The
+            HTTP Client processor uses credentials to request an access token from the service. The
+            service returns the token to the processor, and then the processor includes the token in
+            a header in each request to the resource URL.</p>
+
+     <div class="p">The credentials that you enter to request an access token
+                  depend on the credentials grant type required by the HTTP service. You can define
+                  the following OAuth 2 credentials grant types for HTTP Client: <dl class="dl">
+
+                              <dt class="dt dlterm">Client credentials grant</dt>
+
+                              <dd class="dd">
+                                    <p class="p">HTTP Client sends its own credentials - the client ID and
+                                          client secret or the basic, digest, or universal
+                                          authentication credentials - to the HTTP service. For
+                                          example, use the client credentials grant to process data
+                                          from the Twitter API or from the Microsoft Azure Active
+                                          Directory (Azure AD) API.</p>
+
+                                    <p class="p">For more information about the client credentials grant, see
+                                                <a class="xref" href="https://tools.ietf.org/html/rfc6749#section-4.4" target="_blank">https://tools.ietf.org/html/rfc6749#section-4.4</a>.</p>
+
+                              </dd>
+
+
+
+                              <dt class="dt dlterm">Resource owner password credentials grant</dt>
+
+                              <dd class="dd">
+                                    <p class="p">HTTP Client sends the credentials for the resource owner -
+                                          the resource owner username and password - to the HTTP
+                                          service. Or, you can use this grant type to migrate
+                                          existing clients using basic, digest, or universal
+                                          authentication to OAuth 2 by converting the stored
+                                          credentials to an access token.</p>
+
+                                    <p class="p">For example, use this grant to process data from the Getty
+                                          Images API. For more information about using OAuth 2 to
+                                          connect to the Getty Images API, see <a class="xref" href="http://developers.gettyimages.com/api/docs/v3/oauth2.html" target="_blank">http://developers.gettyimages.com/api/docs/v3/oauth2.html</a>.</p>
+
+                                    <p class="p">For more information about the resource owner password
+                                          credentials grant, see <a class="xref" href="https://tools.ietf.org/html/rfc6749#section-4.3" target="_blank">https://tools.ietf.org/html/rfc6749#section-4.3</a>.</p>
+
+                              </dd>
+
+
+
+                              <dt class="dt dlterm">JSON Web Tokens (JWT)</dt>
+
+                              <dd class="dd">
+                                    <p class="p">HTTP Client sends a JSON-based security token encoding to the
+                                          HTTP service. For example, use JSON Web Tokens to process
+                                          data from the Google API.</p>
+
+                              </dd>
+
+
+                  </dl>
+</div>
+<p class="p">Let’s look at some examples of how to configure authentication
+                  and OAuth 2 authorization to process data from Twitter, Microsoft Azure AD, and
+                  Google APIs.</p>
+
+ </div>
+
+<article class="topic task nested2" aria-labelledby="ariaid-title6" id="task_ekx_svf_5y">
+    <h3 class="title topictitle3" id="ariaid-title6">Example for Twitter</h3>
+
+
+    <div class="body taskbody"><p class="shortdesc">To use OAuth 2 authorization to read from Twitter, configure HTTP Client to use basic
+        authentication and the client credentials grant.</p>
+
+        <section class="section context">
+            <p class="p">For more information about configuring OAuth 2 authorization for Twitter, see <a class="xref" href="https://dev.twitter.com/oauth/application-only" target="_blank">https://dev.twitter.com/oauth/application-only</a>.</p>
+
+        </section>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">HTTP</span> tab, set <span class="ph uicontrol">Authentication
+                    Type</span> to <span class="ph uicontrol">Basic</span>, and then select
+                    <span class="ph uicontrol">Use OAuth 2</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Credentials</span> tab, enter the Twitter consumer key
+                    and consumer secret for the <span class="ph uicontrol">Username</span> and
+                    <span class="ph uicontrol">Password</span> properties.</span>
+                <div class="itemgroup info">
+                    <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as the
+                  consumer key and secret, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">OAuth 2</span> tab, select <span class="ph uicontrol">Client Credentials
+                    Grant</span> for the grant type.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the <span class="ph uicontrol">Token URL</span> property, enter the following URL used
+                    to request the access token:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock"><code>https://api.twitter.com/oauth2/token</code></pre>
+                </div>
+            </li>
+</ol>
+
+        <section class="section result" id="task_ekx_svf_5y__result_y1d_1yf_5y">The following image shows the <span class="ph uicontrol">OAuth 2</span>
+            tab configured for Twitter:<p class="p"><img class="image" id="task_ekx_svf_5y__image_dxb_4yf_5y" src="../Graphics/HTTPClientProcessor_OAuth2Twitter.png" height="259" width="734" /></p>
+</section>
+
+    </div>
+
+</article>
+<article class="topic task nested2" aria-labelledby="ariaid-title7" id="task_pkq_dcg_5y">
+    <h3 class="title topictitle3" id="ariaid-title7">Example for Microsoft Azure AD</h3>
+
+
+    <div class="body taskbody"><p class="shortdesc">To use OAuth 2 authorization to read from Microsoft Azure AD, configure HTTP Client
+        to use no authentication and the client credentials grant.</p>
+
+        <section class="section context">
+            <div class="note note"><span class="notetitle">Note:</span> This example uses Microsoft Azure AD version 1.0.</div>
+
+            <p class="p">For more information about configuring OAuth 2 authorization for Microsoft Azure AD,
+                see <a class="xref" href="https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-protocols-oauth-code" target="_blank">https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-protocols-oauth-code</a>.</p>
+
+        </section>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">HTTP</span> tab, set <span class="ph uicontrol">Authentication
+                    Type</span> to <span class="ph uicontrol">None</span>, and then select
+                    <span class="ph uicontrol">Use OAuth 2</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">OAuth 2</span> tab, select <span class="ph uicontrol">Client Credentials
+                    Grant</span> for the grant type.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the <span class="ph uicontrol">Token URL</span> property, enter the following URL used
+                    to request the access token:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock"><code>https://login.microsoftonline.com/&lt;tenant identifier&gt;/oauth2/token</code></pre>
+                    <p class="p">Where <code class="ph codeph">&lt;tenant identifier&gt;</code> is the Azure AD tenant
+                        identifier.</p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Enter the OAuth 2 client ID and secret.</span>
+                <div class="itemgroup info">
+                    <p class="p">The client ID is the Application Id assigned to your app when you registered
+                        it with Azure AD, found in the Azure Classic Portal.</p>
+
+                    <p class="p">The client secret is the application secret that you created in the app
+                        registration portal for your app. </p>
+
+                    <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as the
+                  client ID and secret, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Add any key-value pairs that the HTTP service requires in the token
+                    request.</span>
+                <div class="itemgroup info">In our example, we are accessing the <code class="ph codeph">graph.microsoft.com</code> API
+                    in our resource URL, so we need to add the following key-value
+                    pair:<pre class="pre codeblock"><code>resource : https://graph.microsoft.com/</code></pre></div>
+            </li>
+</ol>
+
+        <section class="section result" id="task_pkq_dcg_5y__result_frp_hcg_5y">The following image shows the <span class="ph uicontrol">OAuth 2</span>
+            tab configured for Microsoft Azure AD version 1.0: <p class="p"><img class="image" id="task_pkq_dcg_5y__image_ik4_2kg_5y" src="../Graphics/HTTPClientProcessor_OAuth2AzureAD.png" height="311" width="867" /></p>
+</section>
+
+    </div>
+
+</article>
+<article class="topic task nested2" aria-labelledby="ariaid-title8" id="task_ig3_tkg_5y">
+    <h3 class="title topictitle3" id="ariaid-title8">Example for Google</h3>
+
+
+    <div class="body taskbody"><p class="shortdesc">To use OAuth 2 authorization to read from Google service accounts, configure HTTP
+        Client to use no authentication and the JSON Web Tokens grant.</p>
+
+        <section class="section context">
+            <p class="p">For more information about configuring OAuth 2 authorization for Google, see <a class="xref" href="https://developers.google.com/identity/protocols/OAuth2" target="_blank">https://developers.google.com/identity/protocols/OAuth2</a>.</p>
+
+        </section>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">HTTP</span> tab, set <span class="ph uicontrol">Authentication
+                    Type</span> to <span class="ph uicontrol">None</span>, and then select
+                    <span class="ph uicontrol">Use OAuth 2</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">OAuth 2</span> tab, select <span class="ph uicontrol">JSON Web
+                    Tokens</span> for the grant type.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the <span class="ph uicontrol">Token URL</span> property, enter the following URL used
+                    to request the access token:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock"><code>https://www.googleapis.com/oauth2/v4/token</code></pre>
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Select the following algorithm to sign the JWT: <span class="ph uicontrol">RSASSA-PKCS-v1_5
+                        using SHA-256</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Enter the Base64 encoded key used to sign the JWT.</span>
+                <div class="itemgroup info">
+                    <p class="p">To access the key, download the JSON key file when you generate the Google
+                        credentials. Locate the "private_key" field in the file, which contains a
+                        string version of the key. Copy the string into the <span class="ph uicontrol">JWT Signing
+                            Key</span> property, and then replace all "\n" literals with new
+                        lines.</p>
+<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as the JWT
+                  signing key, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the <span class="ph uicontrol">JWT Claims</span> property, enter the required claims to
+                    use with the JWT token request, in JSON format.</span>
+                <div class="itemgroup info"><p class="p">For a list of the required claims for Google service accounts, see <a class="xref" href="https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatingjwt" target="_blank">https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatingjwt</a>.</p>
+For example, enter the claims in
+                    the following JSON
+                        format:<pre class="pre codeblock"><code>{
+   "iss":"my_name@my_account.iam.gserviceaccount.com",
+   "scope":"https://www.googleapis.com/auth/drive",
+   "aud":"https://www.googleapis.com/oauth2/v4/token",
+   "exp":${(time:dateTimeToMilliseconds(time:now())/1000) + 50 * MINUTES},
+   "iat":${time:dateTimeToMilliseconds(time:now())/1000}
+}</code></pre><p class="p">You
+                        can include the expression language in the JWT claims. For example, in the
+                        sample claim above, both the "exp" (expiration time) claim and the "iat"
+                        (issued at) claim include <span class="ph">Data Collector</span> time
+                        functions to set the expiration time and the issue time. </p>
+<div class="note tip"><span class="tiptitle">Tip:</span> Google access tokens expire after 60 minutes. As a result, set
+                        the expiration time claim to be slightly less than 60 minutes so that HTTP
+                        Client can request a new token within the time limit. </div>
+</div>
+            </li>
+</ol>
+
+        <section class="section result" id="task_ig3_tkg_5y__result_bqx_wkg_5y">The following image shows the <span class="ph uicontrol">OAuth 2</span>
+            tab configured for Google service accounts:<p class="p"><img class="image" id="task_ig3_tkg_5y__image_act_slg_5y" src="../Graphics/HTTPClientProcessor_OAuth2Google.png" height="416" width="870" /></p>
+</section>
+
+    </div>
+
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title9" id="concept_ry4_nx3_l2b">
+    <h2 class="title topictitle2" id="ariaid-title9">Generated Records</h2>
+
+
+    <div class="body conbody"><p class="shortdesc">The HTTP Client processor <span class="ph">generates records based on the responses it
+                        receives.</span></p>
+
+        <p class="p"><span class="ph">Data in the response body is parsed based on the
+                        selected data format. For HEAD responses, when the response body contains no
+                        data,</span> the processor <span class="ph">creates an empty record. Information returned from the
+                        HEAD appear in record header attributes. For all other methods, when the
+                        response body contains no data, no records are created.</span></p>
+
+    </div>
+
+<article class="topic concept nested2" aria-labelledby="ariaid-title10" id="concept_ekz_wrz_zw">
+    <h3 class="title topictitle3" id="ariaid-title10">Including Response Headers</h3>
+
+    <div class="body conbody">
+        <div class="p">The HTTP Client processor can include response headers in records. You can write the data
+            to a record as follows: <dl class="dl">
+
+                    <dt class="dt dlterm">Record header attributes</dt>
+
+                    <dd class="dd">The processor writes data in response headers to corresponding record header
+                        attributes. </dd>
+
+                    <dd class="dd ddexpand">When writing to record header attributes, you define a prefix for the
+                        attributes to avoid name conflicts. The processor then appends the response
+                        header name to the prefix. </dd>
+
+                    <dd class="dd ddexpand">For example, if you define "info-" as the prefix, then data in the
+                        content-encoding response header is written to the "info-content-encoding"
+                        record header attribute.</dd>
+
+                    <dd class="dd ddexpand">For general information about record header attributes, see <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_wn2_jcz_dz">Record Header Attributes</a>.</dd>
+
+
+
+                    <dt class="dt dlterm">Record field</dt>
+
+                    <dd class="dd">The processor can also write the response headers to a field in the record.
+                        The processor writes the response headers to the record field as a map of
+                        key-value pairs where the key is the response header name. </dd>
+
+                    <dd class="dd ddexpand">When writing to a field, you specify the field to use. If the field includes
+                        data, the processor overwrites the data. If the field does not exist, the
+                        processor creates the field. </dd>
+
+
+            </dl>
+</div>
+
+    </div>
+
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title11" id="concept_dhg_gmk_hdb">
+    <h2 class="title topictitle2" id="ariaid-title11">Logging Request and Response Data</h2>
+
+
+    <div class="body conbody"><p class="shortdesc">The HTTP Client processor can log request and response data to the <span class="ph">Data Collector</span>
+        log.</p>
+
+        <p class="p">When enabling
+            logging, you configure the following properties: </p>
+
+        <div class="p">
+            <dl class="dl">
+
+                    <dt class="dt dlterm">Verbosity</dt>
+
+                    <dd class="dd">
+                        <div class="p" id="concept_dhg_gmk_hdb__d387e45">The type of data to include in logged
+                                messages:<ul class="ul" id="concept_dhg_gmk_hdb__d387e47">
+                                <li class="li">Headers_Only - Includes request and response headers.</li>
+
+                                <li class="li">Payload_Text - Includes request and response headers as well as
+                                    any text payloads. </li>
+
+                                <li class="li">Payload_Any - Includes request and response headers and the
+                                    payload, regardless of type.</li>
+
+                            </ul>
+</div>
+
+                    </dd>
+
+
+
+                    <dt class="dt dlterm">Log Level</dt>
+
+                    <dd class="dd">The level of messages to include in the <span class="ph">Data Collector</span> log. When you select a level, higher level messages are also logged. That
+                        is, if you select the Warning log level, then Severe and Warning messages
+                        are written to the <span class="ph">Data Collector</span> log.</dd>
+
+                    <dd class="dd ddexpand">
+                        <div class="note note"><span class="notetitle">Note:</span> The configured log level for <span class="ph">Data Collector</span> can limit the level of detail that is logged. For example, if you set
+                            the log level to Finest to log detailed trace information, but <span class="ph">Data Collector</span> is configured for ERROR, then only Severe level messages are written
+                            by the origin.</div>
+
+                    </dd>
+
+                    <dd class="dd ddexpand">The following table describes the stage log levels and the corresponding <span class="ph">Data Collector</span> log levels needed to enable the logging:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_dhg_gmk_hdb__d387e92" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:25%" /><col style="width:25%" /><col style="width:50%" /></colgroup><thead class="thead" style="text-align:left;">
+                                    <tr>
+                                        <th class="entry cellrowborder" style="text-align:left;" id="d432636e985">Stage Log Level</th>
+
+                                        <th class="entry cellrowborder" style="text-align:left;" id="d432636e988"><span class="ph">Data Collector</span></th>
+
+                                        <th class="entry cellrowborder" style="text-align:left;" id="d432636e992">Description</th>
+
+                                    </tr>
+
+                                </thead>
+<tbody class="tbody">
+                                    <tr>
+                                        <td class="entry cellrowborder" style="text-align:left;" headers="d432636e985 ">Severe</td>
+
+                                        <td class="entry cellrowborder" style="text-align:left;" headers="d432636e988 ">ERROR</td>
+
+                                        <td class="entry cellrowborder" style="text-align:left;" headers="d432636e992 ">Only messages indicating serious failures.</td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td class="entry cellrowborder" style="text-align:left;" headers="d432636e985 ">Warning</td>
+
+                                        <td class="entry cellrowborder" style="text-align:left;" headers="d432636e988 ">WARN</td>
+
+                                        <td class="entry cellrowborder" style="text-align:left;" headers="d432636e992 ">Messages warning of potential problems.</td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td class="entry cellrowborder" style="text-align:left;" headers="d432636e985 ">Info</td>
+
+                                        <td class="entry cellrowborder" style="text-align:left;" headers="d432636e988 ">INFO</td>
+
+                                        <td class="entry cellrowborder" style="text-align:left;" headers="d432636e992 ">Informational messages.</td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td class="entry cellrowborder" style="text-align:left;" headers="d432636e985 ">Fine</td>
+
+                                        <td class="entry cellrowborder" style="text-align:left;" headers="d432636e988 ">DEBUG</td>
+
+                                        <td class="entry cellrowborder" style="text-align:left;" headers="d432636e992 ">Basic tracing information.</td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td class="entry cellrowborder" style="text-align:left;" headers="d432636e985 ">Finer</td>
+
+                                        <td class="entry cellrowborder" style="text-align:left;" headers="d432636e988 ">DEBUG</td>
+
+                                        <td class="entry cellrowborder" style="text-align:left;" headers="d432636e992 ">Detailed tracing information.</td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td class="entry cellrowborder" style="text-align:left;" headers="d432636e985 ">Finest</td>
+
+                                        <td class="entry cellrowborder" style="text-align:left;" headers="d432636e988 ">TRACE</td>
+
+                                        <td class="entry cellrowborder" style="text-align:left;" headers="d432636e992 ">Highly detailed tracing information.</td>
+
+                                    </tr>
+
+                                </tbody>
+</table>
+</div>
+</dd>
+
+                    <dd class="dd ddexpand">
+                        <p class="p">The name of this stage logger is
+                                <code class="ph codeph">com.streamsets.http.RequestLogger</code>.</p>
+
+                    </dd>
+
+
+
+                    <dt class="dt dlterm">Maximum entity size</dt>
+
+                    <dd class="dd">
+                        <p class="p" id="concept_dhg_gmk_hdb__d387e213">The maximum size of message data to write to the
+                            log. Use to limit the volume of data written to the <span class="ph">Data Collector</span> log for any single message.</p>
+
+                    </dd>
+
+
+            </dl>
+
+        </div>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title12" id="concept_kjb_gfz_m2b">
+    <h2 class="title topictitle2" id="ariaid-title12">Logging the Resolved Resource URL</h2>
+
+
+    <div class="body conbody"><p class="shortdesc">You can write the resolved resource URL to the <span class="ph">Data Collector</span> log. </p>
+
+        <p class="p">The <dfn class="term">resolved resource URL</dfn> is the URL that is
+            defined in the Resource URL property after resolving any expressions included in the
+            URL.</p>
+
+        <div class="p">For example, say you configure the Resource URL property with the following URL:
+            <pre class="pre codeblock"><code><code class="ph codeph">https://api.twitter.com/1.1/search/tweets.json?q=${record:value('/text')}</code></code></pre>This
+            allows building the URL based on information in the /text field of each record. So, when
+            a record contains <code class="ph codeph">%23DataOps</code> in the /text field, then the resolved URL
+            is:<pre class="pre codeblock"><code>https://api.twitter.com/1.1/search/tweets.json?q=%23DataOps</code></pre></div>
+
+        <p class="p">To write the resolved resource URL to the <span class="ph">Data Collector</span>
+            log, set the <span class="ph">Data Collector</span> log
+            level to DEBUG or higher. You do not need to use the Enable Request Logging property in
+            the processor to log the resolved resource URL.</p>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title13" id="concept_jrj_hmh_jw">
+ <h2 class="title topictitle2" id="ariaid-title13">Data Formats</h2>
+
+
+ <div class="body conbody"><p class="shortdesc">The HTTP Client processor writes the server response to the specified field in the
+        record. </p>
+
+        <p class="p">The processor treats the response as the
+            specified data format and processes data differently based on the data format:</p>
+
+  <div class="p">
+            <dl class="dl">
+
+                    <dt class="dt dlterm">JSON</dt>
+
+                    <dd class="dd">Writes a parsed JSON response to the specified field. </dd>
+
+                    <dd class="dd ddexpand">When an object exceeds the specified maximum object length, the processor
+                        processes the object based on the error handling configured for the stage. </dd>
+
+
+
+                    <dt class="dt dlterm">Text</dt>
+
+                    <dd class="dd">Writes the response as a string to the specified field. </dd>
+
+                    <dd class="dd ddexpand">When a line exceeds the specified maximum line length, the processor
+                        truncates the line. The processor adds a boolean field named Truncated to
+                        indicate if the line was truncated. </dd>
+
+
+
+                    <dt class="dt dlterm">XML</dt>
+
+                    <dd class="dd">Writes the XML response to the specified field. </dd>
+
+                    <dd class="dd ddexpand">When specified, the processor uses the delimiter element to nest additional
+                        elements in the field. </dd>
+
+                    <dd class="dd ddexpand">When a record exceeds the specified maximum record length, the processor
+                        skips the record and continues processing with the next record. It sends the
+                        skipped record to the pipeline for error handling. </dd>
+
+
+            </dl>
+
+        </div>
+
+ </div>
+
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title14" id="task_z54_1qr_fw">
+    <h2 class="title topictitle2" id="ariaid-title14">Configuring HTTP Client Processor</h2>
+
+
+    <div class="body taskbody"><p class="shortdesc">Configure an HTTP Client processor to perform requests against a resource
+        URL.</p>
+
+        <section class="section context"></section>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z54_1qr_fw__d130e5286" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d432636e1267">General Property</th>
+
+                                    <th class="entry cellrowborder" id="d432636e1270">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e1267 ">Name</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e1270 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e1267 ">Description</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e1270 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e1267 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_z54_1qr_fw__d130e5332" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d432636e1270 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e1267 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_z54_1qr_fw__d130e5348" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d432636e1270 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e1267 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_z54_1qr_fw__d130e5365" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d432636e1270 ">Error record handling for the stage: <ul class="ul" id="task_z54_1qr_fw__d130e5369">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">HTTP</span> tab, configure the following properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z54_1qr_fw__table_ncy_zlh_jw" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d432636e1381">HTTP Property</th>
+
+                                    <th class="entry cellrowborder" id="d432636e1384">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e1381 ">Output Field</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e1384 ">Field to use for the response. You can use a new or
+                                        existing field.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e1381 ">Header Output Location <a class="xref" href="HTTPClient.html#concept_ekz_wrz_zw">
+                                            <img class="image" id="task_z54_1qr_fw__image_bf1_nwz_zw" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d432636e1384 ">Location to write response header field information.
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e1381 ">Header Attribute Prefix</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e1384 ">Prefix to use when writing response header field
+                                        information to record header attributes.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e1381 ">Header Output Field</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e1384 ">Field to use when writing response header field
+                                        information to a field in the record. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e1381 ">Resource URL</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e1384 ">HTTP resource URL.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e1381 ">Headers</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e1384 ">The headers to include in the request. Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
+                                            <span class="ph uicontrol">Add</span> icon to add additional
+                                        headers.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e1381 ">HTTP Method</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e1384 ">HTTP request method. Use one of the standard methods or
+                                        use Expression to enter an expression. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e1381 ">HTTP Method Expression <a class="xref" href="HTTPClient.html#concept_dc2_qwn_jw">
+                                            <img class="image" id="task_z54_1qr_fw__image_mgp_2q3_br" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d432636e1384 ">Expression that evaluates to a standard HTTP method.
+                                            <p class="p">Used for the Expression method only.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e1381 ">Request Data </td>
+
+                                    <td class="entry cellrowborder" headers="d432636e1384 ">Request data to use with the specified method. Available
+                                        for the PUT, POST, DELETE, and Expression methods.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e1381 ">Default Request Content Type</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e1384 ">Content-Type header to include in the request. Used only
+                                        when the Content-Type header is not present. <p class="p">Available
+                                            for the PUT, POST, DELETE, and Expression methods.
+                                            </p>
+<p class="p">Default is application/json.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d432636e1381 ">Request Transfer Encoding</td>
+
+       <td class="entry cellrowborder" headers="d432636e1384 ">Use one of the following encoding types:<ul class="ul" id="task_z54_1qr_fw__d131e1519">
+         <li class="li">Buffered - The standard transfer encoding type. </li>
+
+         <li class="li">Chunked - Transfers data in chunks. Not supported by all servers.</li>
+
+        </ul>
+<p class="p">Default is Buffered.</p>
+</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d432636e1381 ">Connect Timeout</td>
+
+       <td class="entry cellrowborder" headers="d432636e1384 ">Maximum number of milliseconds to wait for a connection. <p class="p">Use 0 to wait
+         indefinitely.</p>
+</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d432636e1381 ">Read Timeout</td>
+
+       <td class="entry cellrowborder" headers="d432636e1384 ">Maximum number of milliseconds to wait for data. <p class="p">Use 0 to wait
+        indefinitely.</p>
+</td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e1381 ">Maximum Parallel Requests <a class="xref" href="HTTPClient.html#concept_d3m_yrn_jw" title="The HTTP Client processor sends multiple requests at a time. To preserve record order, the processor waits until all requests for the entire batch are completed before processing the next batch.">
+                                            <img class="image" id="task_z54_1qr_fw__image_afb_xb4_jw" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d432636e1384 ">Maximum number of requests to send to the server at one
+                                        time. </td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d432636e1381 ">Authentication Type</td>
+
+       <td class="entry cellrowborder" headers="d432636e1384 ">Determines the authentication type used to connect to the server:<ul class="ul" id="task_z54_1qr_fw__d131e1560">
+         <li class="li">None - Performs no authentication.</li>
+
+         <li class="li">Basic - Uses basic authentication. Requires a username and password. <p class="p">Use with HTTPS
+           to avoid passing unencrypted credentials.</p>
+</li>
+
+         <li class="li">Digest - Uses digest authentication. Requires a username and password.</li>
+
+         <li class="li">Universal - Makes an anonymous connection, then provides authentication credentials
+          upon receiving a 401 status and a WWW-Authenticate header request. <p class="p">Requires a username
+           and password associated with basic or digest authentication.</p>
+<p class="p">Use only with servers
+           that respond to this workflow.</p>
+</li>
+
+         <li class="li">OAuth - Uses OAuth 1.0 authentication. Requires OAuth credentials.</li>
+
+        </ul>
+</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d432636e1381 ">Use OAuth 2</td>
+
+       <td class="entry cellrowborder" headers="d432636e1384 ">Enables using OAuth 2 authorization to request access tokens. <p class="p">You can use OAuth 2
+         authorization with none, basic, digest, or universal authentication.</p>
+</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d432636e1381 ">Use Proxy</td>
+
+       <td class="entry cellrowborder" headers="d432636e1384 ">
+        <p class="p">Enables using an HTTP proxy to connect to the system. </p>
+
+       </td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d432636e1381 ">Maximum Request Time</td>
+
+       <td class="entry cellrowborder" headers="d432636e1384 ">Maximum number of seconds to wait for a request to complete.</td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e1381 ">Rate Limit</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e1384 ">Minimum amount of time between requests in milliseconds.
+                                        Set a rate limit when sending requests to a rate-limited
+                                            API.<p class="p">Default is 0, which means there is no delay
+                                            between requests.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">When using authentication, on the <span class="keyword wintitle">Credentials</span> tab,
+                    configure the following properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z54_1qr_fw__d130e3017" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d432636e1664">Credentials Property</th>
+
+                                    <th class="entry cellrowborder" id="d432636e1667">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e1664 ">Username</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e1667 ">User name for basic, digest, or universal authentication.
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e1664 ">Password</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e1667 ">Password for basic, digest, or universal authentication.
+                                            <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_z54_1qr_fw__d49e4830">To
+                        secure sensitive information such as usernames and passwords, you can use
+                              <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e1664 ">Consumer Key</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e1667 ">Consumer key for OAuth 1.0 authentication.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e1664 ">Consumer Secret</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e1667 ">Consumer secret for OAuth 1.0 authentication.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e1664 ">Token</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e1667 ">Consumer token for OAuth 1.0 authentication.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e1664 ">Token Secret</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e1667 ">Token secret for OAuth 1.0 authentication.</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">When using OAuth 2 authorization, on the <span class="keyword wintitle">OAuth 2</span> tab,
+                    configure the following properties.</span>
+                <div class="itemgroup info">For more information about OAuth 2 and for example OAuth 2 configurations to
+                    read from Twitter, Microsoft Azure AD, or Google APIs, see <a class="xref" href="HTTPClient.html#concept_s4p_15f_5y" title="You can configure the HTTP Client processor to use the OAuth 2 protocol to connect to an HTTP service that uses basic, digest, or universal authentication, OAuth 2 client credentials, OAuth 2 username and password, or OAuth 2 JSON Web Tokens (JWT).">OAuth 2 Authorization</a>.
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z54_1qr_fw__table_xwp_3w2_5y" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+     <tr>
+      <th class="entry cellrowborder" id="d432636e1785">OAuth 2 Property</th>
+
+      <th class="entry cellrowborder" id="d432636e1788">Description</th>
+
+     </tr>
+
+    </thead>
+<tbody class="tbody">
+     <tr>
+      <td class="entry cellrowborder" headers="d432636e1785 ">Credentials Grant Type</td>
+
+      <td class="entry cellrowborder" headers="d432636e1788 ">Type of client credentials grant type required by the HTTP service:<ul class="ul" id="task_z54_1qr_fw__d131e1666">
+        <li class="li">Client credentials grant</li>
+
+        <li class="li">Resource owner password credentials grant</li>
+
+        <li class="li">JSON Web Tokens (JWT)</li>
+
+       </ul>
+</td>
+
+     </tr>
+
+     <tr>
+      <td class="entry cellrowborder" headers="d432636e1785 ">Token URL</td>
+
+      <td class="entry cellrowborder" headers="d432636e1788 ">URL to request the access token.</td>
+
+     </tr>
+
+     <tr>
+      <td class="entry cellrowborder" headers="d432636e1785 ">Client ID</td>
+
+      <td class="entry cellrowborder" headers="d432636e1788 ">Client ID that the HTTP service uses to identify the HTTP client.<p class="p">Enter for the
+        client credentials grant that uses a client ID and secret for authentication. Or, for the
+        resource owner password credentials grant that requires a client ID and secret.</p>
+</td>
+
+     </tr>
+
+     <tr>
+      <td class="entry cellrowborder" headers="d432636e1785 ">Client Secret</td>
+
+      <td class="entry cellrowborder" headers="d432636e1788 ">Client secret that the HTTP service uses to authenticate the HTTP client.<p class="p">Enter for
+        the client credentials grant that uses a client ID and secret for authentication. Or, for
+        the resource owner password credentials grant that requires a client ID and secret.</p>
+<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as the
+                  client ID and secret, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
+</td>
+
+     </tr>
+
+     <tr>
+      <td class="entry cellrowborder" headers="d432636e1785 ">User Name</td>
+
+      <td class="entry cellrowborder" headers="d432636e1788 ">Resource owner user name.<p class="p">Enter for the resource owner password credentials
+        grant.</p>
+</td>
+
+     </tr>
+
+     <tr>
+      <td class="entry cellrowborder" headers="d432636e1785 ">Password</td>
+
+      <td class="entry cellrowborder" headers="d432636e1788 ">Resource owner password.<p class="p">Enter for the resource owner password credentials
+        grant.</p>
+<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_z54_1qr_fw__d49e4830">To
+                        secure sensitive information such as usernames and passwords, you can use
+                              <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
+</td>
+
+     </tr>
+
+     <tr>
+      <td class="entry cellrowborder" headers="d432636e1785 ">JWT Signing Algorithm</td>
+
+      <td class="entry cellrowborder" headers="d432636e1788 ">Algorithm used to sign the JSON Web Token (JWT).<p class="p">Default is none. Enter for the JSON
+        Web Tokens grant.</p>
+</td>
+
+     </tr>
+
+     <tr>
+      <td class="entry cellrowborder" headers="d432636e1785 ">JWT Signing Key</td>
+
+      <td class="entry cellrowborder" headers="d432636e1788 ">Base64 encoded key used to sign the JSON Web Token, if you selected a signing
+        algorithm.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as the JWT
+                  signing key, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
+<p class="p">Enter
+        for the JSON Web Tokens grant.</p>
+</td>
+
+     </tr>
+
+     <tr>
+      <td class="entry cellrowborder" headers="d432636e1785 ">JWT Claims</td>
+
+      <td class="entry cellrowborder" headers="d432636e1788 ">Claims to use in the JSON Web Token request, entered in JSON format. Enter each claim
+       required by the HTTP service. You can include the expression language in the JWT
+        claims.<p class="p">For example, to read from Google service accounts, enter the following claims with
+        the appropriate
+        values:</p>
+<pre class="pre codeblock"><code>{
+  "iss":"my_name@my_account.iam.gserviceaccount.com",
+  "scope":"https://www.googleapis.com/auth/drive",
+  "aud":"https://www.googleapis.com/oauth2/v4/token",
+  "exp":${(time:dateTimeToMilliseconds(time:now())/1000) + 50 * 60},
+  "iat":${time:dateTimeToMilliseconds(time:now())/1000}
+}</code></pre><p class="p">Enter
+        for the JSON Web Tokens grant.</p>
+</td>
+
+     </tr>
+
+     <tr>
+      <td class="entry cellrowborder" headers="d432636e1785 ">Request Transfer Encoding</td>
+
+      <td class="entry cellrowborder" headers="d432636e1788 ">Form of encoding to use when the stage requests an access token: buffered or
+        chunked.<p class="p">Default is chunked.</p>
+</td>
+
+     </tr>
+
+     <tr>
+      <td class="entry cellrowborder" headers="d432636e1785 ">Additional Key-Value Pairs</td>
+
+      <td class="entry cellrowborder" headers="d432636e1788 ">Optional key-value pairs to send to the token URL when requesting an access token. For
+       example, you can define the OAuth 2 <code class="ph codeph">scope</code> request parameter.<p class="p">Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the <span class="ph uicontrol">Add</span> icon to add
+        additional key-value pairs.</p>
+</td>
+
+     </tr>
+
+    </tbody>
+</table>
+</div>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To use an HTTP proxy, on the <span class="keyword wintitle">Proxy</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z54_1qr_fw__d130e3121" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d432636e2028">HTTP Proxy Property</th>
+
+                                    <th class="entry cellrowborder" id="d432636e2031">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e2028 ">Proxy URI</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e2031 ">Proxy URI.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e2028 ">Username</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e2031 ">Proxy user name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e2028 ">Password</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e2031 ">Proxy password.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_z54_1qr_fw__d49e4830">To
+                        secure sensitive information such as usernames and passwords, you can use
+                              <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To use SSL/TLS, on the <span class="keyword wintitle">TLS</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z54_1qr_fw__table_isk_mgv_zz" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d432636e2115">TLS Property</th>
+
+                                    <th class="entry cellrowborder" id="d432636e2118">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e2115 ">Use TLS</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e2118 ">
+                                        <p class="p">Enables the use of TLS. </p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e2115 ">Keystore File <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_kqb_rqf_5z">
+                                            <img class="image" id="task_z54_1qr_fw__d130e3438" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d432636e2118 ">The path to the keystore file. Enter an absolute path to
+                                        the file or a path relative to the <span class="ph">Data Collector</span> resources directory: <span class="ph filepath">$SDC_RESOURCES</span>.
+                                                <p class="p"><span class="ph">For more information about environment variables, see
+                              <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr">Data Collector Environment Configuration</a>.</span></p>
+<p class="p">By default, no keystore is used. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e2115 ">Keystore Type</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e2118 ">Type of keystore to use. Use one of the following
+                                            types:<ul class="ul" id="task_z54_1qr_fw__d130e3460">
+                                            <li class="li">Java Keystore File (JKS)</li>
+
+                                            <li class="li">PKCS-12 (p12 file)</li>
+
+                                        </ul>
+<p class="p">Default is Java Keystore File (JKS). </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e2115 ">Keystore Password</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e2118 ">Password to the keystore file. A password is optional,
+                                        but recommended.<div class="p">
+                                            <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
+                  passwords, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
+
+                                        </div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e2115 ">Keystore Key Algorithm</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e2118 ">The algorithm used to manage the keystore. <p class="p">Default is
+                                                <span class="ph">SunX509</span>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e2115 ">Truststore File <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_kqb_rqf_5z">
+                                            <img class="image" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d432636e2118 ">The path to the truststore file. Enter an absolute path
+                                        to the file or a path relative to the <span class="ph">Data Collector</span> resources directory: <span class="ph filepath">$SDC_RESOURCES</span>.
+                                                <p class="p"><span class="ph">For more information about environment variables, see
+                              <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr">Data Collector Environment Configuration</a>.</span></p>
+<p class="p">By default, no truststore is used. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e2115 ">Truststore Type</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e2118 ">Type of truststore to use. Use one of the following types:<ul class="ul">
+                                            <li class="li">Java Keystore File (JKS)</li>
+
+                                            <li class="li">PKCS-12 (p12 file)</li>
+
+                                        </ul>
+<p class="p">Default is Java Keystore File (JKS). </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e2115 ">Truststore Password</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e2118 ">Password to the truststore file. A password is optional,
+                                        but recommended.<div class="p">
+                                            <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
+                  passwords, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
+
+                                        </div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e2115 ">Truststore Trust Algorithm</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e2118 ">The algorithm used to manage the truststore. <p class="p">Default
+                                            is <span class="ph" id="task_z54_1qr_fw__d130e3562">SunX509</span>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e2115 ">Use Default Protocols</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e2118 ">Determines the transport layer security (TLS) protocol to
+                                        use. The default protocol is <span class="ph">TLSv1.2</span>. To use a different protocol, clear this option.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e2115 ">Transport Protocols <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_mvs_cxf_5z">
+                                            <img class="image" id="task_z54_1qr_fw__d130e3584" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d432636e2118 ">The TLS protocols to use. To use a protocol other than
+                                        the default <span class="ph">TLSv1.2</span>, click the <span class="ph uicontrol">Add</span> icon and enter the
+                                        protocol name. You can use <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add
+                                            protocols.<div class="note note"><span class="notetitle">Note:</span> Older protocols are not as secure as <span class="ph">TLSv1.2</span>.</div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e2115 ">Use Default Cipher Suites</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e2118 ">Determines the cipher suite to use when performing the
+                                        SSL/TLS handshake. <p class="p"><span class="ph">Data Collector</span> provides a set of cipher suites that it can use by
+                                            default. For a full list, see <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_cwx_dyf_5z">Cipher Suites</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e2115 ">Cipher Suites</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e2118 ">Cipher suites to use. To use a cipher suite that is not a
+                                        part of the default set, click the
+                                            <span class="ph uicontrol">Add</span> icon and enter the name of
+                                        the cipher suite. You can use <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add cipher
+                                            suites.<p class="p">Enter the Java Secure Socket Extension (JSSE)
+                                            name for the additional cipher suites that you want to
+                                            use. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Data Format</span> tab, configure the following
+                    property:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z54_1qr_fw__table_hvy_pt3_vx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d432636e2429">Data Format Property</th>
+
+                                    <th class="entry cellrowborder" id="d432636e2432">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e2429 ">Data Format <a class="xref" href="HTTPClient.html#concept_jrj_hmh_jw" title="The HTTP Client processor writes the server response to the specified field in the record.">
+                                            <img class="image" id="task_z54_1qr_fw__image_usk_thj_vx" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d432636e2432 ">
+                                        <div class="p">Data format of the response: <ul class="ul" id="task_z54_1qr_fw__ul_xs3_3fv_2v">
+                                                <li class="li">JSON</li>
+
+                                                <li class="li">Text</li>
+
+                                                <li class="li">XML</li>
+
+                                            </ul>
+</div>
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For JSON data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z54_1qr_fw__table_ymj_44z_5r" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:22.22222222222222%" /><col style="width:77.77777777777779%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d432636e2496">JSON Property</th>
+
+                                    <th class="entry cellrowborder" id="d432636e2499">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e2496 ">Maximum Object Length (chars)</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e2499 ">Maximum number of characters in a JSON object. <p class="p">Longer
+                                            objects are diverted to the pipeline for error handling.
+                                                </p>
+<p class="p"><span class="ph">This property can be limited by the <span class="ph">Data Collector</span> parser
+                        buffer size. For more information, see <a class="xref" href="../Origins/Origins_overview.html#concept_svg_2zl_d1b">Maximum Record Size</a>.</span></p>
+</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d432636e2496 ">Charset</td>
+
+       <td class="entry cellrowborder" headers="d432636e2499 ">Character encoding of the data to be processed.</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d432636e2496 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_z54_1qr_fw__d131e733" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+       <td class="entry cellrowborder" headers="d432636e2499 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+        return characters.</td>
+
+      </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand" id="task_z54_1qr_fw__Text">
+                <span class="ph cmd">For text data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z54_1qr_fw__table_ngy_vcc_fv" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d432636e2579">Text Property</th>
+
+                                    <th class="entry cellrowborder" id="d432636e2582">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e2579 ">Max Line Length</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e2582 ">Maximum number of characters allowed for a line. Longer
+                                        lines are truncated.<p class="p">Adds a boolean field to the record to
+                                            indicate if it was truncated. The field name is
+                                            Truncated. </p>
+<p class="p"><span class="ph">This property can be limited by the <span class="ph">Data Collector</span> parser
+                        buffer size. For more information, see <a class="xref" href="../Origins/Origins_overview.html#concept_svg_2zl_d1b">Maximum Record Size</a>.</span></p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e2579 ">Use Custom Delimiter <a class="xref" href="../Data_Formats/TextCDelim.html#concept_lg2_gcg_jx">
+                                            <img class="image" id="task_z54_1qr_fw__d130e2434" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d432636e2582 ">Uses custom delimiters to define records instead of line
+                                        breaks. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e2579 ">Custom Delimiter</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e2582 ">One or more characters to use to define records. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e2579 ">Include Custom Delimiter</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e2582 ">Includes delimiter characters in the record.</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d432636e2579 ">Charset</td>
+
+       <td class="entry cellrowborder" headers="d432636e2582 ">Character encoding of the files to be processed.</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d432636e2579 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_z54_1qr_fw__d131e733" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+       <td class="entry cellrowborder" headers="d432636e2582 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+        return characters.</td>
+
+      </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For XML data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z54_1qr_fw__table_pmz_mcj_45" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d432636e2697">XML Property</th>
+
+                                    <th class="entry cellrowborder" id="d432636e2700">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e2697 ">Delimiter Element</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e2700 ">
+                                        <p class="p">XML element that acts as a delimiter. Omit a delimiter to
+                                            treat the entire XML document as one field.</p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d432636e2697 ">Max Record Length (chars)</td>
+
+                                    <td class="entry cellrowborder" headers="d432636e2700 ">
+                                        <p class="p">The maximum number of characters in a field. Longer
+                                            fields are diverted to the pipeline for error handling. </p>
+
+                                        <p class="p"><span class="ph">This property can be limited by the <span class="ph">Data Collector</span> parser
+                        buffer size. For more information, see <a class="xref" href="../Origins/Origins_overview.html#concept_svg_2zl_d1b">Maximum Record Size</a>.</span></p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d432636e2697 ">Charset</td>
+
+       <td class="entry cellrowborder" headers="d432636e2700 ">Character encoding of the files to be processed.</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d432636e2697 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_z54_1qr_fw__d131e733" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+       <td class="entry cellrowborder" headers="d432636e2700 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+        return characters.</td>
+
+      </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Logging</span> tab, configure the following properties to
+                    log request and response data:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z54_1qr_fw__table_hjs_3qt_fdb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" style="text-align:left;" id="d432636e2794">Logging Property</th>
+
+                                    <th class="entry cellrowborder" style="text-align:left;" id="d432636e2797">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d432636e2794 ">Enable Request Logging</td>
+
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d432636e2797 ">Enables logging request and response data. <p class="p">For
+                                            information about logging the resolved resource URL, see
+                                                <a class="xref" href="HTTPClient.html#concept_kjb_gfz_m2b" title="You can write the resolved resource URL to the Data Collector log.">Logging the Resolved Resource URL</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d432636e2794 ">Log Level <a class="xref" href="HTTPClient.html#concept_dhg_gmk_hdb" title="The HTTP Client processor can log request and response data to the Data Collector log.">
+                                            <img class="image" id="task_z54_1qr_fw__image_exx_41q_ft" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d432636e2797 ">The level of detail to be
+                                        logged. Choose one of the available options. <div class="p">The
+                                            following list is in order of lowest to highest level of
+                                            logging. When you select a level, messages generated by
+                                            the levels above the selected level are also written to
+                                            the log:<ul class="ul" id="task_z54_1qr_fw__d130e3226">
+                                                <li class="li">Severe - Only messages indicating serious
+                                                  failures.</li>
+
+                                                <li class="li">Warning - Messages warning of potential
+                                                  problems.</li>
+
+                                                <li class="li">Info - Informational messages.</li>
+
+                                                <li class="li">Fine - Basic tracing information.</li>
+
+                                                <li class="li">Finer - Detailed tracing information.</li>
+
+                                                <li class="li">Finest - Highly detailed tracing
+                                                  information.</li>
+
+                                            </ul>
+</div>
+<div class="p">
+                                            <div class="note note"><span class="notetitle">Note:</span> The log level configured for <span class="ph">Data Collector</span> can limit the level of messages that the stage
+                                                writes. Verify that the <span class="ph">Data Collector</span> log level supports the level that you want to
+                                                use. </div>
+
+                                        </div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d432636e2794 ">Verbosity</td>
+
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d432636e2797 ">
+                                        <div class="p">The type of data to include in logged
+                                messages:<ul class="ul" id="task_z54_1qr_fw__d387e47">
+                                <li class="li">Headers_Only - Includes request and response headers.</li>
+
+                                <li class="li">Payload_Text - Includes request and response headers as well as
+                                    any text payloads. </li>
+
+                                <li class="li">Payload_Any - Includes request and response headers and the
+                                    payload, regardless of type.</li>
+
+                            </ul>
+</div>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d432636e2794 ">Max Entity Size</td>
+
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d432636e2797 ">
+                                        <p class="p">The maximum size of message data to write to the
+                            log. Use to limit the volume of data written to the <span class="ph">Data Collector</span> log for any single message.</p>
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+</article>
+</article></main></div>
+
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script>
+  </div>
+</nav>
+
+
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
+</html>

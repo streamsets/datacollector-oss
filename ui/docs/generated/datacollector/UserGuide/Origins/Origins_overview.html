@@ -1,0 +1,1294 @@
+
+<!DOCTYPE html
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link>
+      <meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Origins" /><meta name="abstract" content="An origin stage represents the source for the pipeline. You can use a single origin stage in a pipeline." /><meta name="description" content="An origin stage represents the source for the pipeline. You can use a single origin stage in a pipeline." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/Origins_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/Origins_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/AmazonS3.html#concept_kvs_3hh_ht" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_hpr_twm_jq" /><title>Origins</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_hpr_twm_jq-d46e24488" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018042310" />
+
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018042310" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+
+
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+
+
+
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+
+                </div>
+
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+
+
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref" data-id="concept_yjl_nc5_jq"><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li class="active"><span class="topicref" data-id="concept_hpr_twm_jq"><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_overview.html#concept_hpr_twm_jq">Origins</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">An origin stage represents the source for the pipeline. You can use a single origin     stage in a pipeline.</p>
+               </span></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Origins/Origins_title.html" title="Origins"></a></span>
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Origins/AmazonS3.html#concept_kvs_3hh_ht" title="Amazon S3"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e4414" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e6481" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13895" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e18499" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e20154" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22651" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e24466" class="topicref" data-id="concept_yjl_nc5_jq" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span><ul class="nav nav-list">
+         <li class="active"><span data-tocid="concept_hpr_twm_jq-d46e24488" class="topicref" data-id="concept_hpr_twm_jq" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_overview.html#concept_hpr_twm_jq">Origins</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">An origin stage represents the source for the pipeline. You can use a single origin     stage in a pipeline.</p>
+                     </span></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_rsz_cnw_qy-d46e24594" class="topicref" data-id="concept_rsz_cnw_qy" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_overview.html#concept_rsz_cnw_qy">Comparing HTTP Origins</a></span></span></li>
+               <li><span data-tocid="concept_ip2_szg_qbb-d46e24616" class="topicref" data-id="concept_ip2_szg_qbb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_overview.html#concept_ip2_szg_qbb">Comparing MapR Origins</a></span></span></li>
+               <li><span data-tocid="concept_ffh_5vf_5bb-d46e24648" class="topicref" data-id="concept_ffh_5vf_5bb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_overview.html#concept_ffh_5vf_5bb">Comparing UDP Source Origins</a></span></span></li>
+               <li><span data-tocid="concept_wz5_jqm_gbb-d46e24690" class="topicref" data-id="concept_wz5_jqm_gbb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_overview.html#concept_wz5_jqm_gbb">Comparing WebSocket Origins</a></span></span></li>
+               <li><span data-tocid="concept_ypd_vgr_5q-d46e24742" class="topicref" data-id="concept_ypd_vgr_5q" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_overview.html#concept_ypd_vgr_5q">Batch Size and Wait Time</a></span></span></li>
+               <li><span data-tocid="concept_svg_2zl_d1b-d46e24804" class="topicref" data-id="concept_svg_2zl_d1b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_overview.html#concept_svg_2zl_d1b">Maximum Record Size</a></span></span></li>
+               <li><span data-tocid="concept_uxr_g52_qs-d46e24876" class="topicref" data-id="concept_uxr_g52_qs" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_overview.html#concept_uxr_g52_qs">File Compression Formats</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Origins that read files can read uncompressed, compressed files, archives, and     compressed archives. </p>
+                           </span></span></span></li>
+               <li><span data-tocid="task_jp5_ql1_tq-d46e24962" class="topicref" data-id="task_jp5_ql1_tq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_overview.html#task_jp5_ql1_tq">Previewing Raw Source Data</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Some origins allow you to preview raw source data. Preview raw source data when         reviewing the data might help with
+                              origin configuration.
+
+                           </p>
+                           </span></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_kvs_3hh_ht-d46e25058" class="topicref" data-id="concept_kvs_3hh_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/AmazonS3.html#concept_kvs_3hh_ht">Amazon S3</a></span></span></li>
+         <li><span data-tocid="concept_xsh_knm_5bb-d46e25998" class="topicref" data-id="concept_xsh_knm_5bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/AmazonSQS.html#concept_xsh_knm_5bb">Amazon SQS Consumer</a></span></span></li>
+         <li><span data-tocid="concept_c1z_15q_1bb-d46e26462" class="topicref" data-id="concept_c1z_15q_1bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/AzureEventHub.html#concept_c1z_15q_1bb">Azure IoT/Event Hub Consumer</a></span></span></li>
+         <li><span data-tocid="concept_wfy_ghn_sz-d46e26744" class="topicref" data-id="concept_wfy_ghn_sz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/CoAPServer.html#concept_wfy_ghn_sz">CoAP Server</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Constrained Application Protocol (CoAP) is a web transfer protocol designed for         machine-to-machine devices. The CoAP
+                        Server origin is a multithreaded origin that listens on         a CoAP endpoint and processes the contents of all authorized
+                        CoAP requests.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_qcq_54n_jq-d46e27039" class="topicref" data-id="concept_qcq_54n_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Directory.html#concept_qcq_54n_jq">Directory</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Directory origin reads data from files in a directory. The origin can use         multiple threads to enable the parallel
+                        processing of files.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_f1q_vpm_2z-d46e28311" class="topicref" data-id="concept_f1q_vpm_2z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Elasticsearch.html#concept_f1q_vpm_2z">Elasticsearch </a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Elasticsearch origin is a multithreaded origin that reads data from an Elasticsearch         cluster, including Elastic
+                        Cloud clusters (formerly Found clusters). The origin generates a         record for each Elasticsearch document.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_n1y_qyp_5q-d46e28695" class="topicref" data-id="concept_n1y_qyp_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/FileTail.html#concept_n1y_qyp_5q">File Tail</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The File Tail origin reads lines of data as they are written to an active file after         reading related archived files
+                        in the same directory. File Tail generates a record for each         line of data.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_cg3_y3v_q1b-d46e29944" class="topicref" data-id="concept_cg3_y3v_q1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/BigQuery.html#concept_cg3_y3v_q1b">Google BigQuery</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Google BigQuery origin executes a query job and reads the result from Google         BigQuery. </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_iyd_wql_nbb-d46e30414" class="topicref" data-id="concept_iyd_wql_nbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/GCS.html#concept_iyd_wql_nbb">Google Cloud Storage</a></span></span></li>
+         <li><span data-tocid="concept_pjw_qtl_r1b-d46e30976" class="topicref" data-id="concept_pjw_qtl_r1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/PubSub.html#concept_pjw_qtl_r1b">Google Pub/Sub Subscriber</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Google Pub/Sub Subscriber origin consumes messages from a Google Pub/Sub         subscription. </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_lw2_tnm_vs-d46e31446" class="topicref" data-id="concept_lw2_tnm_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HadoopFS-origin.html#concept_lw2_tnm_vs">Hadoop FS</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Hadoop FS origin reads data from the Hadoop Distributed File System (HDFS), Amazon     S3, or other file systems using
+                        the Hadoop FileSystem interface.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_djz_pdm_hdb-d46e32025" class="topicref" data-id="concept_djz_pdm_hdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HDFSStandalone.html#concept_djz_pdm_hdb">Hadoop FS Standalone</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Hadoop FS Standalone origin reads files in HDFS. The origin can use multiple         threads to enable the parallel processing
+                        of files. The files to be processed must all share         a file name pattern and be fully written. You can also configure
+                        the origin to read from         Azure HDInsight.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_wk4_bjz_5r-d46e33814" class="topicref" data-id="concept_wk4_bjz_5r" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HTTPClient.html#concept_wk4_bjz_5r">HTTP Client</a></span></span></li>
+         <li><span data-tocid="concept_s2p_5hb_4y-d46e36212" class="topicref" data-id="concept_s2p_5hb_4y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HTTPServer.html#concept_s2p_5hb_4y">HTTP Server</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and         processes the contents of all
+                        authorized HTTP POST and PUT requests. Use the HTTP Server         origin to read high volumes of HTTP POST and PUT requests
+                        using multiple threads.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_izh_mqd_dy-d46e36679" class="topicref" data-id="concept_izh_mqd_dy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HTTPtoKafka.html#concept_izh_mqd_dy">HTTP to Kafka (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_zp3_wnw_4y-d46e37240" class="topicref" data-id="concept_zp3_wnw_4y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y">JDBC Multitable Consumer</a></span></span></li>
+         <li><span data-tocid="concept_qhf_hjr_bs-d46e41106" class="topicref" data-id="concept_qhf_hjr_bs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JDBCConsumer.html#concept_qhf_hjr_bs">JDBC Query Consumer</a></span></span></li>
+         <li><span data-tocid="concept_rhh_4nj_dt-d46e42868" class="topicref" data-id="concept_rhh_4nj_dt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JMS.html#concept_rhh_4nj_dt">JMS Consumer</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The JMS Consumer origin reads data from a Java Messaging Service (JMS). </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_msz_wnr_5q-d46e43243" class="topicref" data-id="concept_msz_wnr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KConsumer.html#concept_msz_wnr_5q">Kafka Consumer</a></span></span></li>
+         <li><span data-tocid="concept_ccs_fn4_x1b-d46e44052" class="topicref" data-id="concept_ccs_fn4_x1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KafkaMultiConsumer.html#concept_ccs_fn4_x1b">Kafka Multitopic Consumer</a></span></span></li>
+         <li><span data-tocid="concept_anh_4y3_yr-d46e44992" class="topicref" data-id="concept_anh_4y3_yr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KinConsumer.html#concept_anh_4y3_yr">Kinesis Consumer</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Kinesis Consumer origin reads data from Amazon Kinesis Streams. </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_qwj_5vm_pbb-d46e45465" class="topicref" data-id="concept_qwj_5vm_pbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRdbCDC.html#concept_qwj_5vm_pbb">MapR DB CDC</a></span></span></li>
+         <li><span data-tocid="concept_ywh_k15_3y-d46e45747" class="topicref" data-id="concept_ywh_k15_3y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRDBJSON.html#concept_ywh_k15_3y">MapR DB JSON</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MapR DB JSON origin reads JSON documents from MapR DB JSON tables. The origin         converts each document into a record.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_psz_db4_lx-d46e45849" class="topicref" data-id="concept_psz_db4_lx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRFS.html#concept_psz_db4_lx">MapR FS</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MapR FS origin reads files from MapR FS. Use this origin only in pipelines         configured for cluster batch pipeline
+                        execution mode.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_b43_3qc_mdb-d46e46235" class="topicref" data-id="concept_b43_3qc_mdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRFSStandalone.html#concept_b43_3qc_mdb">MapR FS Standalone</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MapR FS Standalone origin reads files in MapR. The origin can use multiple         threads to enable the parallel processing
+                        of files. The files to be processed must all share         a file name pattern and be fully written.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_hvd_hww_lbb-d46e47848" class="topicref" data-id="concept_hvd_hww_lbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRStreamsMultiConsumer.html#concept_hvd_hww_lbb">MapR Multitopic Streams Consumer</a></span></span></li>
+         <li><span data-tocid="concept_cvy_xsf_2v-d46e48309" class="topicref" data-id="concept_cvy_xsf_2v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRStreamsCons.html#concept_cvy_xsf_2v">MapR Streams Consumer</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MapR Streams Consumer origin reads messages from MapR Streams.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_bk4_2rs_ns-d46e48601" class="topicref" data-id="concept_bk4_2rs_ns" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDB.html#concept_bk4_2rs_ns">MongoDB</a></span></span></li>
+         <li><span data-tocid="concept_mjn_yqw_4y-d46e49162" class="topicref" data-id="concept_mjn_yqw_4y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDBOplog.html#concept_mjn_yqw_4y">MongoDB Oplog</a></span></span></li>
+         <li><span data-tocid="concept_ukz_3vt_lz-d46e49620" class="topicref" data-id="concept_ukz_3vt_lz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MQTTSubscriber.html#concept_ukz_3vt_lz">MQTT Subscriber</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MQTT Subscriber origin subscribes to topics on an MQTT broker to read messages         from the broker. The origin functions
+                        as an MQTT client that receives messages, generating a         record for each message.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_kqg_1yh_xx-d46e49839" class="topicref" data-id="concept_kqg_1yh_xx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MySQLBinaryLog.html#concept_kqg_1yh_xx">MySQL Binary Log</a></span></span></li>
+         <li><span data-tocid="concept_dsr_xmw_1s-d46e50410" class="topicref" data-id="concept_dsr_xmw_1s" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Omniture.html#concept_dsr_xmw_1s">Omniture</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Omniture origin processes JSON website usage reports generated by the Omniture   reporting APIs. Omniture is also known
+                        as the Adobe Marketing Cloud.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_nmf_1ly_f1b-d46e50467" class="topicref" data-id="concept_nmf_1ly_f1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/OPCUAClient.html#concept_nmf_1ly_f1b">OPC UA Client </a></span></span></li>
+         <li><span data-tocid="concept_rs5_hjj_tw-d46e50679" class="topicref" data-id="concept_rs5_hjj_tw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/OracleCDC.html#concept_rs5_hjj_tw">Oracle CDC Client</a></span></span></li>
+         <li><span data-tocid="concept_cfs_4m4_n2b-d46e54821" class="topicref" data-id="concept_cfs_4m4_n2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/PostgreSQL.html#concept_cfs_4m4_n2b">PostgreSQL CDC Client</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The PostgreSQL CDC Client origin processes Write-Ahead Logging (WAL) data to generate         change data capture records
+                        for a PostgreSQL database. Use the PostgreSQL CDC Client origin         to process WAL data from PostgreSQL 9.4 or later.
+                        Earlier versions do not support         WAL.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_dyg_lq1_h5-d46e55290" class="topicref" data-id="concept_dyg_lq1_h5" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/RabbitMQ.html#concept_dyg_lq1_h5">RabbitMQ Consumer</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">RabbitMQ Consumer reads AMQP messages from a single RabbitMQ queue.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_plr_t3v_jw-d46e55510" class="topicref" data-id="concept_plr_t3v_jw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Redis.html#concept_plr_t3v_jw">Redis Consumer</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Redis Consumer origin reads messages from Redis. </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_odf_vr3_rx-d46e55664" class="topicref" data-id="concept_odf_vr3_rx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Salesforce.html#concept_odf_vr3_rx">Salesforce</a></span></span></li>
+         <li><span data-tocid="concept_agb_5c1_ct-d46e58262" class="topicref" data-id="concept_agb_5c1_ct" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SDC_RPCorigin.html#concept_agb_5c1_ct">SDC RPC </a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"> The SDC RPC origin enables connectivity between two SDC RPC pipelines. The SDC RPC     origin reads data passed from an SDC
+                        RPC destination. Use the SDC RPC origin as part of an SDC     RPC destination pipeline.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_tdk_slk_pw-d46e58319" class="topicref" data-id="concept_tdk_slk_pw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SDCRPCtoKafka.html#concept_tdk_slk_pw">SDC RPC to Kafka (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_ic5_bzd_5v-d46e58999" class="topicref" data-id="concept_ic5_bzd_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SFTP.html#concept_ic5_bzd_5v">SFTP/FTP Client</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The SFTP/FTP Client origin reads files from a server using the Secure File Transfer         Protocol (SFTP) or the File Transfer
+                        Protocol (FTP).
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ut3_ywc_v1b-d46e59566" class="topicref" data-id="concept_ut3_ywc_v1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SQLServerCDC.html#concept_ut3_ywc_v1b">SQL Server CDC Client</a></span></span></li>
+         <li><span data-tocid="concept_ewq_b2s_r1b-d46e60961" class="topicref" data-id="concept_ewq_b2s_r1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SQLServerChange.html#concept_ewq_b2s_r1b">SQL Server Change Tracking</a></span></span></li>
+         <li><span data-tocid="concept_gzy_gmv_32b-d46e62038" class="topicref" data-id="concept_gzy_gmv_32b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SystemMetrics.html#concept_gzy_gmv_32b">System Metrics</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The System Metrics origin reads system metrics from the edge device where <span class="ph">StreamSets</span>         <span class="ph">Data Collector Edge</span>             (<span class="ph">SDC Edge</span>)         is installed. Use the System Metrics origin only in pipelines configured for edge execution         mode.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ppm_xb1_4z-d46e62149" class="topicref" data-id="concept_ppm_xb1_4z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/TCPServer.html#concept_ppm_xb1_4z">TCP Server</a></span></span></li>
+         <li><span data-tocid="concept_wng_g5f_5bb-d46e62607" class="topicref" data-id="concept_wng_g5f_5bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/UDPMulti.html#concept_wng_g5f_5bb">UDP Multithreaded Source</a></span></span></li>
+         <li><span data-tocid="concept_rst_2y5_1s-d46e62972" class="topicref" data-id="concept_rst_2y5_1s" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/UDP.html#concept_rst_2y5_1s">UDP Source</a></span></span></li>
+         <li><span data-tocid="concept_jzq_jcz_pw-d46e63120" class="topicref" data-id="concept_jzq_jcz_pw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/UDPtoKafka.html#concept_jzq_jcz_pw">UDP to Kafka (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_unk_nzk_fbb-d46e63581" class="topicref" data-id="concept_unk_nzk_fbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/WebSocketClient.html#concept_unk_nzk_fbb">WebSocket Client</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The WebSocket Client origin reads data from a WebSocket server endpoint. Use the origin         to read data from a WebSocket
+                        resource URL.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_u2r_gpc_3z-d46e63734" class="topicref" data-id="concept_u2r_gpc_3z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/WebSocketServer.html#concept_u2r_gpc_3z">WebSocket Server</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The WebSocket Server origin is a multithreaded origin that listens on a WebSocket         endpoint and processes the contents
+                        of all authorized WebSocket client requests. Use the         WebSocket Server origin to read high volumes of WebSocket client
+                        requests using multiple         threads.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_agf_5jv_sbb-d46e64111" class="topicref" data-id="concept_agf_5jv_sbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/WindowsLog.html#concept_agf_5jv_sbb">Windows Event Log</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Windows Event Log origin reads data from a Microsoft Windows event log located on a         Windows machine. The origin
+                        generates a record for each event in the log.
+
+                     </p>
+                     </span></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e64169" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e77391" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e92871" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e98772" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e102096" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e106011" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e108837" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e109636" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e110218" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e111818" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e112299" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e113641" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e114610" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e117238" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e118495" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e120286" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e124782" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e125996" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e129904" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e129959" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e130119" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e131600" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e131822" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+
+
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_hpr_twm_jq">
+  <h1 class="title topictitle1" id="ariaid-title1">Origins</h1>
+
+
+  <div class="body conbody"><p class="shortdesc">An origin stage represents the source for the pipeline. You can use a single origin
+    stage in a pipeline.</p>
+
+    <p class="p">You can use different origins
+      based on the execution mode of the pipeline: <a class="xref" href="Origins_overview.html#concept_hpr_twm_jq__section_tvn_4bc_f2b">standalone</a>, <a class="xref" href="Origins_overview.html#concept_hpr_twm_jq__section_ffb_qbc_f2b">cluster</a>, or <a class="xref" href="Origins_overview.html#concept_hpr_twm_jq__section_rbz_qbc_f2b">edge</a>. To help create or
+      test pipelines, you can use <a class="xref" href="Origins_overview.html#concept_hpr_twm_jq__section_ewr_sbc_f2b">development origins</a>.</p>
+
+    <section class="section" id="concept_hpr_twm_jq__section_tvn_4bc_f2b"><h2 class="title sectiontitle">Standalone Pipelines</h2>
+
+      <div class="p">In standalone pipelines, you can use the following origins: <ul class="ul" id="concept_hpr_twm_jq__ul_rc5_pbc_f2b">
+          <li class="li"><a class="xref" href="AmazonS3.html#concept_kvs_3hh_ht">Amazon S3</a> - Reads objects from
+            Amazon S3.</li>
+
+          <li class="li"><a class="xref" href="AmazonSQS.html#concept_xsh_knm_5bb">Amazon SQS Consumer</a> - Reads
+            data from queues in Amazon Simple Queue Services (SQS). </li>
+
+          <li class="li"><a class="xref" href="AzureEventHub.html#concept_c1z_15q_1bb">Azure IoT/Event Hub
+              Consumer</a> - Reads data from Microsoft Azure Event Hub. Creates multiple threads
+            to enable parallel processing in a multithreaded pipeline.</li>
+
+          <li class="li"><a class="xref" href="CoAPServer.html#concept_wfy_ghn_sz" title="Constrained Application Protocol (CoAP) is a web transfer protocol designed for machine-to-machine devices. The CoAP Server origin is a multithreaded origin that listens on a CoAP endpoint and processes the contents of all authorized CoAP requests.">CoAP Server</a> - Listens on a CoAP
+            endpoint and processes the contents of all authorized CoAP requests. Creates multiple
+            threads to enable parallel processing in a multithreaded pipeline.</li>
+
+          <li class="li"><a class="xref" href="Directory.html#concept_qcq_54n_jq" title="The Directory origin reads data from files in a directory. The origin can use multiple threads to enable the parallel processing of files.">Directory</a> - Reads fully-written
+            files from a directory. Creates multiple threads to enable parallel processing in a
+            multithreaded pipeline.</li>
+
+          <li class="li"><a class="xref" href="Elasticsearch.html#concept_f1q_vpm_2z" title="The Elasticsearch origin is a multithreaded origin that reads data from an Elasticsearch cluster, including Elastic Cloud clusters (formerly Found clusters). The origin generates a record for each Elasticsearch document.">Elasticsearch</a> - Reads data
+            from an Elasticsearch cluster. Creates multiple threads to enable parallel processing in
+            a multithreaded pipeline.</li>
+
+          <li class="li"><a class="xref" href="FileTail.html#concept_n1y_qyp_5q" title="The File Tail origin reads lines of data as they are written to an active file after reading related archived files in the same directory. File Tail generates a record for each line of data.">File Tail</a> - Reads lines of data
+            from an active file after reading related archived files in the directory. </li>
+
+          <li class="li"><a class="xref" href="BigQuery.html#concept_cg3_y3v_q1b" title="The Google BigQuery origin executes a query job and reads the result from Google BigQuery.">Google BigQuery</a> - Executes a
+            query job and reads the result from Google BigQuery. </li>
+
+          <li class="li"><a class="xref" href="GCS.html#concept_iyd_wql_nbb">Google Cloud Storage</a> - Reads fully
+            written objects from Google Cloud Storage.</li>
+
+          <li class="li"><a class="xref" href="PubSub.html#concept_pjw_qtl_r1b" title="The Google Pub/Sub Subscriber origin consumes messages from a Google Pub/Sub subscription.">Google Pub/Sub Subscriber</a> -
+            Consumes messages from a Google Pub/Sub subscription. Creates multiple threads to enable
+            parallel processing in a multithreaded pipeline.</li>
+
+          <li class="li"><a class="xref" href="HDFSStandalone.html#concept_djz_pdm_hdb" title="The Hadoop FS Standalone origin reads files in HDFS. The origin can use multiple threads to enable the parallel processing of files. The files to be processed must all share a file name pattern and be fully written. You can also configure the origin to read from Azure HDInsight.">Hadoop FS Standalone</a> -
+            Reads fully-written files from HDFS. Creates multiple threads to enable parallel
+            processing in a multithreaded pipeline.</li>
+
+          <li class="li"><a class="xref" href="HTTPClient.html#concept_wk4_bjz_5r">HTTP Client</a> - Reads data from a
+            streaming HTTP resource URL.</li>
+
+          <li class="li"><a class="xref" href="HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST and PUT requests. Use the HTTP Server origin to read high volumes of HTTP POST and PUT requests using multiple threads.">HTTP Server</a> - Listens on an
+            HTTP endpoint and processes the contents of all authorized HTTP POST and PUT requests.
+            Creates multiple threads to enable parallel processing in a multithreaded pipeline.</li>
+
+          <li class="li"><a class="xref" href="HTTPtoKafka.html#concept_izh_mqd_dy">HTTP to Kafka (Deprecated)</a> -
+            Listens on a HTTP endpoint and writes the contents of all authorized HTTP POST requests
+            directly to Kafka.</li>
+
+          <li class="li"><a class="xref" href="MultiTableJDBCConsumer.html#concept_zp3_wnw_4y">JDBC Multitable
+              Consumer</a> - Reads database data from multiple tables through a JDBC connection.
+            Creates multiple threads to enable parallel processing in a multithreaded pipeline.</li>
+
+          <li class="li"><a class="xref" href="JDBCConsumer.html#concept_qhf_hjr_bs">JDBC Query Consumer</a> - Reads
+            database data using a user-defined SQL query through a JDBC connection. </li>
+
+          <li class="li"><a class="xref" href="JMS.html#concept_rhh_4nj_dt" title="The JMS Consumer origin reads data from a Java Messaging Service (JMS).">JMS Consumer</a> - Reads messages from
+            JMS. </li>
+
+          <li class="li"><a class="xref" href="KConsumer.html#concept_msz_wnr_5q">Kafka Consumer</a> - Reads messages
+            from a single Kafka topic.</li>
+
+          <li class="li"><a class="xref" href="KafkaMultiConsumer.html#concept_ccs_fn4_x1b">Kafka Multitopic
+              Consumer</a> - Reads messages from multiple Kafka topics. Creates multiple threads
+            to enable parallel processing in a multithreaded pipeline.</li>
+
+          <li class="li"><a class="xref" href="KinConsumer.html#concept_anh_4y3_yr" title="The Kinesis Consumer origin reads data from Amazon Kinesis Streams.">Kinesis Consumer</a> - Reads data
+            from Kinesis Streams. Creates multiple threads to enable parallel processing in a
+            multithreaded pipeline.</li>
+
+          <li class="li"><a class="xref" href="MapRdbCDC.html#concept_qwj_5vm_pbb">MapR DB CDC</a> - Reads changed
+            MapR DB data that has been written to MapR Streams. Creates multiple threads to enable
+            parallel processing in a multithreaded pipeline.</li>
+
+          <li class="li"><a class="xref" href="MapRDBJSON.html#concept_ywh_k15_3y" title="The MapR DB JSON origin reads JSON documents from MapR DB JSON tables. The origin converts each document into a record.">MapR DB JSON</a> - Reads JSON
+            documents from MapR DB JSON tables.</li>
+
+          <li class="li"><a class="xref" href="MapRFS.html#concept_psz_db4_lx" title="The MapR FS origin reads files from MapR FS. Use this origin only in pipelines configured for cluster batch pipeline execution mode.">MapR FS</a> - Reads files from MapR
+            FS.</li>
+
+          <li class="li"><a class="xref" href="MapRFSStandalone.html#concept_b43_3qc_mdb" title="The MapR FS Standalone origin reads files in MapR. The origin can use multiple threads to enable the parallel processing of files. The files to be processed must all share a file name pattern and be fully written.">MapR FS Standalone</a> - Reads fully-written
+            files from MapR FS. Creates multiple threads to enable parallel processing in a
+            multithreaded pipeline.</li>
+
+          <li class="li"><a class="xref" href="MapRStreamsMultiConsumer.html#concept_hvd_hww_lbb">MapR Multitopic Streams
+              Consumer</a> - Reads messages from multiple MapR Streams topics. Creates multiple
+            threads to enable parallel processing in a multithreaded pipeline.</li>
+
+          <li class="li"><a class="xref" href="MapRStreamsCons.html#concept_cvy_xsf_2v" title="The MapR Streams Consumer origin reads messages from MapR Streams.">MapR Streams Consumer</a> -
+            Reads messages from MapR Streams.</li>
+
+          <li class="li"><a class="xref" href="MongoDB.html#concept_bk4_2rs_ns">MongoDB</a> - Reads documents from
+            MongoDB.</li>
+
+          <li class="li"><a class="xref" href="MongoDBOplog.html#concept_mjn_yqw_4y">MongoDB Oplog</a> - Reads entries
+            from a MongoDB Oplog.</li>
+
+          <li class="li"><a class="xref" href="MQTTSubscriber.html#concept_ukz_3vt_lz" title="The MQTT Subscriber origin subscribes to topics on an MQTT broker to read messages from the broker. The origin functions as an MQTT client that receives messages, generating a record for each message.">MQTT Subscriber</a> -
+            Subscribes to a topic on an MQTT broker to read messages from the broker.</li>
+
+          <li class="li"><a class="xref" href="MySQLBinaryLog.html#concept_kqg_1yh_xx">MySQL Binary Log</a> - Reads
+            MySQL binary logs to generate change data capture records. </li>
+
+          <li class="li"><a class="xref" href="Omniture.html#concept_dsr_xmw_1s" title="The Omniture origin processes JSON website usage reports generated by the Omniture reporting APIs. Omniture is also known as the Adobe Marketing Cloud.">Omniture</a> - Reads web usage
+            reports from the Omniture reporting API.</li>
+
+          <li class="li"><a class="xref" href="OPCUAClient.html#concept_nmf_1ly_f1b">OPC UA Client</a> - Reads data
+            from a OPC UA server.</li>
+
+          <li class="li"><a class="xref" href="OracleCDC.html#concept_rs5_hjj_tw">Oracle CDC Client</a> - Reads
+            LogMiner redo logs to generate change data capture records.</li>
+
+          <li class="li"><a class="xref" href="PostgreSQL.html#concept_cfs_4m4_n2b" title="The PostgreSQL CDC Client origin processes Write-Ahead Logging (WAL) data to generate change data capture records for a PostgreSQL database. Use the PostgreSQL CDC Client origin to process WAL data from PostgreSQL 9.4 or later. Earlier versions do not support WAL.">PostgreSQL CDC Client</a> - Reads
+            PostgreSQL WAL data to generate change data capture records.</li>
+
+          <li class="li"><a class="xref" href="RabbitMQ.html#concept_dyg_lq1_h5" title="RabbitMQ Consumer reads AMQP messages from a single RabbitMQ queue.">RabbitMQ Consumer</a> - Reads
+            messages from RabbitMQ.</li>
+
+          <li class="li"><a class="xref" href="Redis.html#concept_plr_t3v_jw" title="The Redis Consumer origin reads messages from Redis.">Redis Consumer</a> - Reads messages from
+            Redis.</li>
+
+          <li class="li"><a class="xref" href="Salesforce.html#concept_odf_vr3_rx">Salesforce</a> - Reads data from
+            Salesforce.</li>
+
+          <li class="li"><a class="xref" href="SDC_RPCorigin.html#concept_agb_5c1_ct" title="The SDC RPC origin enables connectivity between two SDC RPC pipelines. The SDC RPC origin reads data passed from an SDC RPC destination. Use the SDC RPC origin as part of an SDC RPC destination pipeline.">SDC RPC</a> - Reads data from an
+            SDC RPC destination in an SDC RPC pipeline.</li>
+
+          <li class="li"><a class="xref" href="SDCRPCtoKafka.html#concept_tdk_slk_pw">SDC RPC to Kafka
+              (Deprecated)</a> - Reads data from an SDC RPC destination in an SDC RPC pipeline
+            and writes it to Kafka.</li>
+
+          <li class="li"><a class="xref" href="SDCRPCtoKafka.html#concept_tdk_slk_pw">SFTP/FTP Client</a> - Reads
+            files from an SFTP or FTP server.</li>
+
+          <li class="li"><a class="xref" href="SQLServerCDC.html#concept_ut3_ywc_v1b">SQL Server CDC Client</a> -
+            Reads data from Microsoft SQL Server CDC tables. Creates multiple threads to enable
+            parallel processing in a multithreaded pipeline.</li>
+
+          <li class="li"><a class="xref" href="SQLServerChange.html#concept_ewq_b2s_r1b">SQL Server Change
+              Tracking</a> - Reads data from Microsoft SQL Server change tracking tables and
+            generates the latest version of each record. Creates multiple threads to enable parallel
+            processing in a multithreaded pipeline.</li>
+
+          <li class="li"><a class="xref" href="TCPServer.html#concept_ppm_xb1_4z">TCP Server</a> - Listens at the
+            specified ports and processes incoming data over TCP/IP connections. Creates multiple
+            threads to enable parallel processing in a multithreaded pipeline.</li>
+
+          <li class="li"><a class="xref" href="UDPMulti.html#concept_wng_g5f_5bb">UDP Multithreaded Source</a> - Reads
+            messages from one or more UDP ports. Creates multiple threads to enable parallel
+            processing in a multithreaded pipeline. </li>
+
+          <li class="li"><a class="xref" href="UDP.html#concept_rst_2y5_1s">UDP Source</a> - Reads messages from one
+            or more UDP ports. </li>
+
+          <li class="li"><a class="xref" href="UDPtoKafka.html#concept_jzq_jcz_pw">UDP to Kafka (Deprecated)</a> -
+            Reads messages from one or more UDP ports and writes the data to Kafka.</li>
+
+          <li class="li"><a class="xref" href="WebSocketClient.html#concept_unk_nzk_fbb" title="The WebSocket Client origin reads data from a WebSocket server endpoint. Use the origin to read data from a WebSocket resource URL.">WebSocket Client</a> - Reads
+            data from a WebSocket server endpoint.</li>
+
+          <li class="li"><a class="xref" href="WebSocketServer.html#concept_u2r_gpc_3z" title="The WebSocket Server origin is a multithreaded origin that listens on a WebSocket endpoint and processes the contents of all authorized WebSocket client requests. Use the WebSocket Server origin to read high volumes of WebSocket client requests using multiple threads.">WebSocket Server</a> - Listens
+            on a WebSocket endpoint and processes the contents of all authorized WebSocket client
+            requests. Creates multiple threads to enable parallel processing in a multithreaded
+            pipeline.</li>
+
+        </ul>
+</div>
+
+    </section>
+
+    <section class="section" id="concept_hpr_twm_jq__section_ffb_qbc_f2b"><h2 class="title sectiontitle">Cluster Pipelines</h2>
+
+      <div class="p">In cluster pipelines, you can use the following origins:<ul class="ul" id="concept_hpr_twm_jq__ul_em5_qbc_f2b">
+          <li class="li"><a class="xref" href="HadoopFS-origin.html#concept_lw2_tnm_vs" title="The Hadoop FS origin reads data from the Hadoop Distributed File System (HDFS), Amazon S3, or other file systems using the Hadoop FileSystem interface.">Hadoop FS</a> - Reads data
+            from HDFS, Amazon S3, or other file systems using the Hadoop FileSystem interface.</li>
+
+          <li class="li"><a class="xref" href="KConsumer.html#concept_msz_wnr_5q">Kafka Consumer</a> - Reads messages
+            from Kafka. Use the cluster version of the origin.</li>
+
+          <li class="li"><a class="xref" href="MapRFS.html#concept_psz_db4_lx" title="The MapR FS origin reads files from MapR FS. Use this origin only in pipelines configured for cluster batch pipeline execution mode.">MapR FS</a> - Reads data from MapR
+            FS.</li>
+
+          <li class="li"><a class="xref" href="MapRStreamsCons.html#concept_cvy_xsf_2v" title="The MapR Streams Consumer origin reads messages from MapR Streams.">MapR Streams Consumer</a> -
+            Reads messages from MapR Streams.</li>
+
+        </ul>
+</div>
+
+    </section>
+
+    <section class="section" id="concept_hpr_twm_jq__section_rbz_qbc_f2b"><h2 class="title sectiontitle">Edge Pipelines</h2>
+
+      <div class="p">In edge pipelines, you can use the following origins:<ul class="ul" id="concept_hpr_twm_jq__ul_u2w_rbc_f2b">
+          <li class="li"><a class="xref" href="Directory.html#concept_qcq_54n_jq" title="The Directory origin reads data from files in a directory. The origin can use multiple threads to enable the parallel processing of files.">Directory</a> - Reads fully-written
+            files from a directory.</li>
+
+          <li class="li"><a class="xref" href="FileTail.html#concept_n1y_qyp_5q" title="The File Tail origin reads lines of data as they are written to an active file after reading related archived files in the same directory. File Tail generates a record for each line of data.">File Tail</a> - Reads lines of data
+            from an active file after reading related archived files in the directory. </li>
+
+          <li class="li"><a class="xref" href="HTTPClient.html#concept_wk4_bjz_5r">HTTP Client</a> - Reads data from a
+            streaming HTTP resource URL.</li>
+
+          <li class="li"><a class="xref" href="HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST and PUT requests. Use the HTTP Server origin to read high volumes of HTTP POST and PUT requests using multiple threads.">HTTP Server</a> - Listens on an
+            HTTP endpoint and processes the contents of all authorized HTTP POST and PUT
+            requests.</li>
+
+          <li class="li"><a class="xref" href="MQTTSubscriber.html#concept_ukz_3vt_lz" title="The MQTT Subscriber origin subscribes to topics on an MQTT broker to read messages from the broker. The origin functions as an MQTT client that receives messages, generating a record for each message.">MQTT Subscriber</a> -
+            Subscribes to a topic on an MQTT broker to read messages from the broker.</li>
+
+          <li class="li"><a class="xref" href="SystemMetrics.html#concept_gzy_gmv_32b" title="The System Metrics origin reads system metrics from the edge device where StreamSets Data Collector Edge (SDC Edge) is installed. Use the System Metrics origin only in pipelines configured for edge execution mode.">System Metrics</a> - Reads
+            system metrics from the edge device where <span class="ph">SDC Edge</span> is
+            installed.</li>
+
+          <li class="li"><a class="xref" href="WebSocketClient.html#concept_unk_nzk_fbb" title="The WebSocket Client origin reads data from a WebSocket server endpoint. Use the origin to read data from a WebSocket resource URL.">WebSocket Client</a> - Reads
+            data from a WebSocket server endpoint.</li>
+
+          <li class="li"><a class="xref" href="WindowsLog.html#concept_agf_5jv_sbb" title="The Windows Event Log origin reads data from a Microsoft Windows event log located on a Windows machine. The origin generates a record for each event in the log.">Windows Event Log</a> - Reads data
+            from a Microsoft Windows event log located on a Windows machine. </li>
+
+        </ul>
+</div>
+
+    </section>
+
+    <section class="section" id="concept_hpr_twm_jq__section_ewr_sbc_f2b"><h2 class="title sectiontitle">Development Origins</h2>
+
+      <div class="p">To help create or test pipelines, you can use the following development origins:<ul class="ul" id="concept_hpr_twm_jq__ul_w31_tbc_f2b">
+          <li class="li">Dev Data Generator </li>
+
+          <li class="li">Dev Random Source</li>
+
+          <li class="li">Dev Raw Data Source </li>
+
+          <li class="li">Dev SDC RPC with Buffering</li>
+
+          <li class="li">Dev Snapshot Replaying</li>
+
+          <li class="li">Sensor Reader</li>
+
+        </ul>
+</div>
+
+      <p class="p">For more information, see <a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Development Stages</a>.</p>
+
+    </section>
+
+  </div>
+
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_rsz_cnw_qy">
+ <h2 class="title topictitle2" id="ariaid-title2">Comparing HTTP Origins</h2>
+
+ <div class="body conbody">
+  <div class="p">We have several HTTP
+            origins, make sure to use the best one for your needs. Here's a quick breakdown of some
+            key differences:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_rsz_cnw_qy__table_pw5_npv_qy" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:28.57142857142857%" /><col style="width:71.42857142857143%" /></colgroup><thead class="thead" style="text-align:left;">
+                        <tr>
+                            <th class="entry cellrowborder" id="d331859e737">Origin</th>
+
+                            <th class="entry cellrowborder" id="d331859e740">Description</th>
+
+                        </tr>
+
+                    </thead>
+<tbody class="tbody">
+                        <tr>
+                            <td class="entry cellrowborder" headers="d331859e737 "><a class="xref" href="HTTPClient.html#concept_wk4_bjz_5r">HTTP
+                                    Client</a></td>
+
+                            <td class="entry cellrowborder" headers="d331859e740 ">
+                                <ul class="ul" id="concept_rsz_cnw_qy__ul_ixb_t5v_qy">
+                                    <li class="li">Initiates HTTP requests for an external system.</li>
+
+                                    <li class="li">Processes data synchronously.</li>
+
+                                    <li class="li">Processes JSON, text, and XML data. </li>
+
+                                    <li class="li">Can process a range of HTTP requests.</li>
+
+                                    <li class="li">
+                                        <p class="p">Can be used in a pipeline with processors. </p>
+
+                                    </li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry cellrowborder" headers="d331859e737 "><a class="xref" href="HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST and PUT requests. Use the HTTP Server origin to read high volumes of HTTP POST and PUT requests using multiple threads.">HTTP
+                                    Server</a></td>
+
+                            <td class="entry cellrowborder" headers="d331859e740 ">
+                                <ul class="ul" id="concept_rsz_cnw_qy__ul_vsb_x5v_qy">
+                                    <li class="li">Listens for incoming HTTP requests and processes them while
+                                        the sender waits for confirmation.</li>
+
+                                    <li class="li">Processes data synchronously. </li>
+
+                                    <li class="li">Creates multithreaded pipelines, thus suitable for high
+                                        throughput of incoming data.</li>
+
+                                    <li class="li">Processes virtually all data formats. Processes HTTP POST
+                                        and PUT requests.</li>
+
+                                    <li class="li">Can be used in a pipeline with processors.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+</table>
+</div>
+</div>
+
+        <p class="p"><span class="ph">Data Collector</span> also
+            provides an <a class="xref" href="HTTPtoKafka.html#concept_izh_mqd_dy">HTTP to Kafka origin</a>
+            for reading large volumes of data from multiple HTTP clients and writing the data
+            immediately to Kafka, without additional processing. However, the HTTP to Kafka origin
+            is now deprecated and will be removed in a future release. We recommend using the HTTP
+            Server origin.</p>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title3" id="concept_ip2_szg_qbb">
+    <h2 class="title topictitle2" id="ariaid-title3">Comparing MapR Origins</h2>
+
+    <div class="body conbody">
+        <div class="p">We have several MapR
+            origins, make sure to use the best one for your needs. Here's a quick breakdown of some
+            key differences:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_ip2_szg_qbb__table_pw5_npv_qy" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:28.57142857142857%" /><col style="width:71.42857142857143%" /></colgroup><thead class="thead" style="text-align:left;">
+                        <tr>
+                            <th class="entry cellrowborder" id="d331859e854">Origin</th>
+
+                            <th class="entry cellrowborder" id="d331859e857">Description</th>
+
+                        </tr>
+
+                    </thead>
+<tbody class="tbody">
+                        <tr>
+                            <td class="entry cellrowborder" headers="d331859e854 "><a class="xref" href="MapRdbCDC.html#concept_qwj_5vm_pbb">MapR DB
+                                    CDC</a></td>
+
+                            <td class="entry cellrowborder" headers="d331859e857 ">
+                                <ul class="ul" id="concept_ip2_szg_qbb__ul_ixb_t5v_qy">
+                                    <li class="li">Reads change data capture MapR DB data using MapR
+                                        Streams.</li>
+
+                                    <li class="li">
+                                        <p class="p">Includes CDC information in record header attributes.</p>
+
+                                    </li>
+
+                                    <li class="li">Use in standalone execution mode pipelines.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry cellrowborder" headers="d331859e854 "><a class="xref" href="MapRDBJSON.html#concept_ywh_k15_3y" title="The MapR DB JSON origin reads JSON documents from MapR DB JSON tables. The origin converts each document into a record.">MapR DB
+                                    JSON</a></td>
+
+                            <td class="entry cellrowborder" headers="d331859e857 ">
+                                <ul class="ul" id="concept_ip2_szg_qbb__ul_vsb_x5v_qy">
+                                    <li class="li">Reads JSON documents from MapR DB.</li>
+
+                                    <li class="li">Converts each JSON document to a record.</li>
+
+                                    <li class="li">Use in standalone execution mode pipelines.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry cellrowborder" headers="d331859e854 "><a class="xref" href="MapRFS.html#concept_psz_db4_lx" title="The MapR FS origin reads files from MapR FS. Use this origin only in pipelines configured for cluster batch pipeline execution mode.">MapR
+                                FS</a></td>
+
+                            <td class="entry cellrowborder" headers="d331859e857 ">
+                                <ul class="ul" id="concept_ip2_szg_qbb__ul_uj1_v5v_qy">
+                                    <li class="li">Reads files from MapR FS.</li>
+
+                                    <li class="li">
+                                        <p class="p">Can be used with Kerberos Authentication.</p>
+
+                                    </li>
+
+                                    <li class="li">Use in cluster execution mode pipelines.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry cellrowborder" headers="d331859e854 "><a class="xref" href="MapRFSStandalone.html#concept_b43_3qc_mdb" title="The MapR FS Standalone origin reads files in MapR. The origin can use multiple threads to enable the parallel processing of files. The files to be processed must all share a file name pattern and be fully written.">MapR FS
+                                    Standalone</a></td>
+
+                            <td class="entry cellrowborder" headers="d331859e857 ">
+                                <ul class="ul" id="concept_ip2_szg_qbb__ul_ygv_fkh_ndb">
+                                    <li class="li">Reads files from MapR FS.</li>
+
+                                    <li class="li">Can use multiple threads to enable the parallel processing
+                                        of files.</li>
+
+                                    <li class="li">Can be used with Kerberos Authentication.</li>
+
+                                    <li class="li">Use in standalone execution mode pipelines.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry cellrowborder" headers="d331859e854 "><a class="xref" href="MapRStreamsMultiConsumer.html#concept_hvd_hww_lbb">MapR Multitopic Streams</a>
+                            </td>
+
+                            <td class="entry cellrowborder" headers="d331859e857 ">
+                                <ul class="ul" id="concept_ip2_szg_qbb__ul_b1z_31h_qbb">
+                                    <li class="li">Streams data from MapR Streams.</li>
+
+                                    <li class="li">Can use multiple threads to read from multiple topics.</li>
+
+                                    <li class="li">Use in standalone execution mode pipelines.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry cellrowborder" headers="d331859e854 "><a class="xref" href="MapRStreamsCons.html#concept_cvy_xsf_2v" title="The MapR Streams Consumer origin reads messages from MapR Streams.">MapR
+                                    Streams</a></td>
+
+                            <td class="entry cellrowborder" headers="d331859e857 ">
+                                <ul class="ul" id="concept_ip2_szg_qbb__ul_syt_31h_qbb">
+                                    <li class="li">Streams data from MapR Streams.</li>
+
+                                    <li class="li">Reads from a single topic using a single thread.</li>
+
+                                    <li class="li">Use in standalone execution mode pipelines.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+</table>
+</div>
+</div>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title4" id="concept_ffh_5vf_5bb">
+    <h2 class="title topictitle2" id="ariaid-title4">Comparing UDP Source Origins</h2>
+
+    <div class="body conbody">
+        <p class="p">The UDP Source
+            and UDP Multithreaded Source origins are very similar. The main differentiator is that
+            the UDP Multithreaded Source can use multiple threads to process data within the
+            pipeline. </p>
+
+        <p class="p">The UDP Multithreaded Source has a processing queue that aids multithreaded processing.
+            But use of this queue can slow processing under certain circumstances.</p>
+
+        <div class="p">The following table describes some cases when you might want to use each origin:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_ffh_5vf_5bb__table_u5t_zwf_5bb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                        <tr>
+                            <th class="entry cellrowborder" id="d331859e1066">Origin</th>
+
+                            <th class="entry cellrowborder" id="d331859e1069">Ideally Used When</th>
+
+                        </tr>
+
+                    </thead>
+<tbody class="tbody">
+                        <tr>
+                            <td class="entry cellrowborder" headers="d331859e1066 "><a class="xref" href="UDPMulti.html#concept_wng_g5f_5bb">UDP Multithreaded
+                                    Source</a></td>
+
+                            <td class="entry cellrowborder" headers="d331859e1069 ">
+                                <ul class="ul" id="concept_ffh_5vf_5bb__ul_cgc_jxf_5bb">
+                                    <li class="li">Epoll support enables the use of multiple receiver threads
+                                        to pass data to the pipeline.</li>
+
+                                    <li class="li">Complex pipeline requires longer processing time.</li>
+
+                                </ul>
+
+                                <p class="p">or</p>
+
+                                <div class="p">
+                                    <ul class="ul" id="concept_ffh_5vf_5bb__ul_fcv_mxf_5bb">
+                                        <li class="li">Lack of epoll support allows only a single receiver
+                                            thread to pass data to the pipeline.</li>
+
+                                        <li class="li">High volumes of data.</li>
+
+                                    </ul>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry cellrowborder" headers="d331859e1066 "><a class="xref" href="UDP.html#concept_rst_2y5_1s">UDP Source</a>
+                            </td>
+
+                            <td class="entry cellrowborder" headers="d331859e1069 ">
+                                <ul class="ul" id="concept_ffh_5vf_5bb__ul_f2w_2xf_5bb">
+                                    <li class="li">Epoll support enables the use of multiple receiver threads
+                                        to pass data to the pipeline.</li>
+
+                                    <li class="li">Relatively simple pipeline enables speedy <span class="ph">Data Collector</span> processing. </li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+</table>
+</div>
+</div>
+
+        <p class="p"><span class="ph">Data Collector</span> also
+            provides a <a class="xref" href="UDPtoKafka.html#concept_jzq_jcz_pw">UDP to Kafka origin</a>
+            for reading large volumes of data from multiple UDP ports and writing the data
+            immediately to Kafka, without additional processing. However, the UDP to Kafka origin is
+            now deprecated and will be removed in a future release. We recommend using the UDP
+            Multithreaded Source origin. </p>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title5" id="concept_wz5_jqm_gbb">
+ <h2 class="title topictitle2" id="ariaid-title5">Comparing WebSocket Origins</h2>
+
+ <div class="body conbody">
+  <p class="p">We have two WebSocket origins, make sure to use the best one for your needs. Here's a quick
+            breakdown of some key differences: </p>
+
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_wz5_jqm_gbb__table_pw5_npv_qy" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:28.57142857142857%" /><col style="width:71.42857142857143%" /></colgroup><thead class="thead" style="text-align:left;">
+                            <tr>
+                                <th class="entry cellrowborder" id="d331859e1175">Origin</th>
+
+                                <th class="entry cellrowborder" id="d331859e1178">Description</th>
+
+                            </tr>
+
+                        </thead>
+<tbody class="tbody">
+                            <tr>
+                                <td class="entry cellrowborder" headers="d331859e1175 "><a class="xref" href="WebSocketClient.html#concept_unk_nzk_fbb" title="The WebSocket Client origin reads data from a WebSocket server endpoint. Use the origin to read data from a WebSocket resource URL.">WebSocket Client</a></td>
+
+                                <td class="entry cellrowborder" headers="d331859e1178 ">
+                                    <ul class="ul" id="concept_wz5_jqm_gbb__ul_ixb_t5v_qy">
+                                        <li class="li">Initiates a connection to a WebSocket server endpoint
+                                    and then waits for the WebSocket server to push data.</li>
+
+                                    </ul>
+
+                                </td>
+
+                            </tr>
+
+                            <tr>
+                                <td class="entry cellrowborder" headers="d331859e1175 "><a class="xref" href="WebSocketServer.html#concept_u2r_gpc_3z" title="The WebSocket Server origin is a multithreaded origin that listens on a WebSocket endpoint and processes the contents of all authorized WebSocket client requests. Use the WebSocket Server origin to read high volumes of WebSocket client requests using multiple threads.">WebSocket Server</a></td>
+
+                                <td class="entry cellrowborder" headers="d331859e1178 ">
+                                    <ul class="ul" id="concept_wz5_jqm_gbb__ul_vsb_x5v_qy">
+                                        <li class="li">Listens for incoming WebSocket requests and processes
+                                    them while the sender waits for confirmation.</li>
+
+                                        <li class="li">Creates multithreaded pipelines, thus suitable for high
+                                            throughput of incoming data.</li>
+
+                                    </ul>
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+</table>
+</div>
+
+
+        </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title6" id="concept_ypd_vgr_5q">
+ <h2 class="title topictitle2" id="ariaid-title6">Batch Size and Wait Time</h2>
+
+ <div class="body conbody">
+  <p class="p">For origin stages, the batch size determines
+            the maximum number of records sent through the pipeline at one time. The batch wait time
+            determines the time that the origin waits for data before sending a batch. At the end of
+            the wait time, it sends the batch regardless of how many records the batch contains. </p>
+
+        <p class="p">For example, a File Tail origin is configured for a batch size of 20 records and a batch
+            wait time of 240 seconds. When data arrives quickly, File Tail fills a batch with 20
+            records and sends it through the pipeline immediately, creating a new batch and sending
+            it again as soon as it is full. As incoming data slows, a remaining batch contains a few
+            records, gaining an extra record periodically. 240 seconds after creating the batch,
+            File Tail sends the partially-full batch through the pipeline. It immediately creates a
+            new batch and starts a new countdown.</p>
+
+  <p class="p">Configure the batch wait time based on your processing needs. You might reduce the batch wait
+   time to ensure all data is processed within a specified time frame or to make regular contact
+   with pipeline destinations. Use the default or increase the wait time if you prefer not to
+   process partial or empty batches.</p>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title7" id="concept_svg_2zl_d1b">
+ <h2 class="title topictitle2" id="ariaid-title7">Maximum Record Size</h2>
+
+ <div class="body conbody">
+  <p class="p">Most data formats
+            have a property that limits the maximum size of the record that an origin can parse. For
+            example, the delimited data format has a Max Record Length property, the JSON data
+            format has Max Object Length, and the text data format has Max Line Length.</p>
+
+        <p class="p">When the origin processes data that is larger than the specified length, the behavior
+            differs based on the origin and the data format. For example, with some data formats,
+            oversized records are handled based on the record error handling configured for the
+            origin. While in other data formats, the origin might truncate the data. For details on
+            how an origin handles size overruns for each data format, see the "Data Formats" section
+            of the origin documentation.</p>
+
+        <p class="p">When available, the maximum record size properties are limited by the <span class="ph">Data Collector</span>
+            parser buffer size, which is <span class="ph">1048576 bytes</span> by default. So, when raising the maximum record size property in the origin does not
+            change the origin's behavior, you might need to increase the <span class="ph">Data Collector</span> parser buffer size by configuring the parser.limit property in the <a class="xref" href="../Configuration/DCConfig.html#task_lxk_kjw_1r" title="You can customize Data Collector by editing the Data Collector configuration file, sdc.properties."><span class="ph">Data Collector</span> configuration file.</a></p>
+
+        <p class="p">Note that most of the maximum record size properties are specified in characters, while
+            the <span class="ph">Data Collector</span> limit is defined in bytes. </p>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title8" id="concept_uxr_g52_qs">
+ <h2 class="title topictitle2" id="ariaid-title8">File Compression Formats</h2>
+
+
+ <div class="body conbody"><p class="shortdesc">Origins that read files can read uncompressed, compressed files, archives, and
+    compressed archives. </p>
+
+  <p class="p">Hadoop
+      FS reads compressed files automatically. For all other file-based origins, you indicate the
+      compression format in the origin. </p>
+
+    <div class="p">The following table lists the supported file types by extension:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_uxr_g52_qs__table_fwr_k3s_b5" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+            <tr>
+              <th class="entry cellrowborder" id="d331859e1374">Compression Format</th>
+
+              <th class="entry cellrowborder" id="d331859e1377">Description</th>
+
+            </tr>
+
+          </thead>
+<tbody class="tbody">
+            <tr>
+              <td class="entry cellrowborder" headers="d331859e1374 ">Uncompressed</td>
+
+              <td class="entry cellrowborder" headers="d331859e1377 ">Processes uncompressed files of the configured data format.</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d331859e1374 ">Compressed</td>
+
+              <td class="entry cellrowborder" headers="d331859e1377 ">Processes files compressed by the following compression formats: <ul class="ul" id="concept_uxr_g52_qs__ul_ctx_3ss_b5">
+                  <li class="li">gzip</li>
+
+                  <li class="li">bgzip2</li>
+
+                  <li class="li">xz</li>
+
+                  <li class="li">lzma</li>
+
+                  <li class="li">Pack200</li>
+
+                  <li class="li">DEFLATE</li>
+
+                  <li class="li">Z</li>
+
+                </ul>
+</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d331859e1374 ">Archive</td>
+
+              <td class="entry cellrowborder" headers="d331859e1377 ">Processes files archived by the following archive formats: <ul class="ul" id="concept_uxr_g52_qs__ul_l1q_gsm_c5">
+                  <li class="li">7z</li>
+
+                  <li class="li">ar</li>
+
+                  <li class="li">arj</li>
+
+                  <li class="li">cpio</li>
+
+                  <li class="li">dump</li>
+
+                  <li class="li">tar</li>
+
+                  <li class="li">zip</li>
+
+                </ul>
+</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d331859e1374 ">Compressed Archive</td>
+
+              <td class="entry cellrowborder" headers="d331859e1377 ">Processes files in compressed archives created by supported compression and
+                archive formats.</td>
+
+            </tr>
+
+          </tbody>
+</table>
+</div>
+</div>
+
+ </div>
+
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title9" id="task_jp5_ql1_tq">
+    <h2 class="title topictitle2" id="ariaid-title9">Previewing Raw Source Data</h2>
+
+
+    <div class="body taskbody"><p class="shortdesc">Some origins allow you to preview raw source data. Preview raw source data when
+        reviewing the data might help with origin configuration.</p>
+
+        <section class="section context">
+            <p class="p">When you preview
+                file data, you can use the real directory and actual source file. Or when
+                appropriate, you might use a different file that is similar to the source. </p>
+
+            <p class="p">When you preview Kafka data, you enter the connection information for the Kafka
+                cluster.</p>
+
+            <p class="p">The data used for the raw source preview in an origin stage is not used when
+                previewing data for the pipeline.</p>
+
+        </section>
+
+        <ol class="ol steps" id="task_jp5_ql1_tq__steps_k14_k41_tq"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel for the origin stage, click the <span class="keyword wintitle">Raw
+                        Preview</span> tab.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For a Directory or File Tail origin, enter a directory and file name.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For a Kafka Consumer or Kafka Multitopic Consumer, enter the following
+                    information:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jp5_ql1_tq__table_eh1_q2f_xq" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:22.22222222222222%" /><col style="width:77.77777777777779%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d331859e1559">Kafka Raw Preview Property</th>
+
+                                    <th class="entry cellrowborder" id="d331859e1562">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d331859e1559 ">Topic</td>
+
+                                    <td class="entry cellrowborder" headers="d331859e1562 ">Kafka topic to read.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d331859e1559 ">Partition</td>
+
+                                    <td class="entry cellrowborder" headers="d331859e1562 ">Partition to read.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d331859e1559 ">Broker Host</td>
+
+                                    <td class="entry cellrowborder" headers="d331859e1562 ">Broker host name. Use any broker associated with the
+                                        partition.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d331859e1559 ">Broker Port</td>
+
+                                    <td class="entry cellrowborder" headers="d331859e1562 ">Broker port number.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d331859e1559 ">Max Wait Time (secs)</td>
+
+                                    <td class="entry cellrowborder" headers="d331859e1562 ">Maximum amount of time the preview waits to receive data
+                                        from Kafka.</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph uicontrol">Preview</span>.</span>
+            </li>
+</ol>
+
+        <section class="section result">The Raw Source Preview area displays the preview.</section>
+
+    </div>
+
+</article>
+</article>
+</article></main></div>
+
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script>
+  </div>
+</nav>
+
+
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
+</html>

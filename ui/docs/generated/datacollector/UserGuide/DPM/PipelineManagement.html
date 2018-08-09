@@ -1,0 +1,620 @@
+
+<!DOCTYPE html
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link>
+      <meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Pipeline Management with Control Hub" /><meta name="abstract" content="After you register a Data Collector with StreamSets Control Hub, you can manage how the pipelines work with Control Hub." /><meta name="description" content="After you register a Data Collector with StreamSets Control Hub, you can manage how the pipelines work with Control Hub." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/DPM/DPM_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/DPM/AggregatedStatistics.html#concept_h2q_mb5_xw" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/DPM/DPMConfiguration.html#concept_hrn_zz3_fx" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_eq5_qjd_fx" /><title>Pipeline Management with Control Hub</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_eq5_qjd_fx-d46e101427" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018042310" />
+
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018042310" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+
+
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+
+
+
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+
+                </div>
+
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+
+
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref" data-id="concept_ugp_kwf_xw"><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li class="active"><span class="topicref" data-id="concept_eq5_qjd_fx"><span class="title"><a href="../../../datacollector/UserGuide/DPM/PipelineManagement.html#concept_eq5_qjd_fx">Pipeline Management with <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span></a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">After you register a <span class="ph">Data Collector</span> with             <span class="ph">StreamSets Control Hub</span>,         you can manage how the pipelines work with <span class="ph">Control Hub</span>.
+
+               </p>
+               </span></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/DPM/AggregatedStatistics.html#concept_h2q_mb5_xw" title="Pipeline Statistics"></a></span>
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/DPM/DPMConfiguration.html#concept_hrn_zz3_fx" title="Control Hub Configuration File"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e4414" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e6481" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13895" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e18499" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e20154" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22651" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e24466" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e64169" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e77391" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e92871" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e98772" class="topicref" data-id="concept_ugp_kwf_xw" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_l45_qwf_xw-d46e98794" class="topicref" data-id="concept_l45_qwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM.html#concept_l45_qwf_xw">Meet <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Control Hub</span></a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"><span class="ph">StreamSets Control Hub</span><sup class="ph sup">TM</sup> is a central point of control for all of your dataflow pipelines. <span class="ph">Control Hub</span> allows         teams to build and execute large numbers of complex dataflows at scale.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_evb_3bs_bx-d46e99215" class="topicref" data-id="concept_evb_3bs_bx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/WorkingWithDPM.html#concept_evb_3bs_bx">Working with <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span></a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_lry_34g_xw-d46e99241" class="topicref" data-id="concept_lry_34g_xw" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/OrgUserAccount.html#concept_lry_34g_xw">Request a <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span> Organization and User Account
+                     </a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_kc4_xyf_xw-d46e99268" class="topicref" data-id="concept_kc4_xyf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/RegisterSDCwithDPM.html#concept_kc4_xyf_xw">Register Data Collector with <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span></a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You must register a <span class="ph">Data Collector</span> to         work with <span class="ph">StreamSets Control Hub</span>.         When you register a <span class="ph">Data Collector</span>, <span class="ph">Data Collector</span>         generates an authentication token that it uses to issue authenticated requests to <span class="ph">Control Hub</span>.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_h2q_mb5_xw-d46e99939" class="topicref" data-id="concept_h2q_mb5_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/AggregatedStatistics.html#concept_h2q_mb5_xw">Pipeline Statistics</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">A <span class="ph">Control Hub</span>         job defines the pipeline to run and the <span class="ph">Data Collector</span>s that         run the pipeline. When you start a job, <span class="ph">Control Hub</span>         remotely runs the pipeline on the group of <span class="ph">Data Collector</span>s. To         monitor the job statistics and metrics within <span class="ph">Control Hub</span>, you         must configure the pipeline to write statistics to <span class="ph">Control Hub</span> or to         another system.
+
+                     </p>
+                     </span></span></span></li>
+         <li class="active"><span data-tocid="concept_eq5_qjd_fx-d46e101427" class="topicref" data-id="concept_eq5_qjd_fx" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/PipelineManagement.html#concept_eq5_qjd_fx">Pipeline Management with <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span></a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">After you register a <span class="ph">Data Collector</span> with             <span class="ph">StreamSets Control Hub</span>,         you can manage how the pipelines work with <span class="ph">Control Hub</span>.
+
+                     </p>
+                     </span></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_cqr_v3d_fx-d46e101534" class="topicref" data-id="concept_cqr_v3d_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/PipelineManagement.html#concept_cqr_v3d_fx">Pipeline Types</a></span></span></li>
+               <li><span data-tocid="task_rxy_xqc_fx-d46e101588" class="topicref" data-id="task_rxy_xqc_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/PipelineManagement.html#task_rxy_xqc_fx">Publishing Pipelines to <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span></a></span></span></li>
+               <li><span data-tocid="task_hjv_fbd_fx-d46e101684" class="topicref" data-id="task_hjv_fbd_fx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/PipelineManagement.html#task_hjv_fbd_fx">Viewing Pipeline Commit History</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can view the commit history of any pipeline that has been published to <span class="ph">Control Hub</span>. If the         pipeline has been committed multiple times, you can get an older version of the pipeline and         then
+                              continue editing the older version.
+
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="task_ydw_r42_fx-d46e101753" class="topicref" data-id="task_ydw_r42_fx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/PipelineManagement.html#task_ydw_r42_fx">Downloading Published Pipelines</a></span></span></li>
+               <li><span data-tocid="task_emc_p42_fx-d46e101825" class="topicref" data-id="task_emc_p42_fx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/PipelineManagement.html#task_emc_p42_fx">Exporting Pipelines for <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span></a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">If you develop pipelines in a <span class="ph">Data Collector</span> that         is not registered with <span class="ph">Control Hub</span>, you         can export the pipelines and then import the pipelines into <span class="ph">Control Hub</span>. When a             <span class="ph">Data Collector</span> is         registered with <span class="ph">Control Hub</span>, it's         simplest to publish the pipelines directly to <span class="ph">Control Hub</span>.
+
+                           </p>
+                           </span></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_hrn_zz3_fx-d46e101932" class="topicref" data-id="concept_hrn_zz3_fx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPMConfiguration.html#concept_hrn_zz3_fx"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span> Configuration File
+                     </a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ldb_sr5_cx-d46e101958" class="topicref" data-id="concept_ldb_sr5_cx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/UnregisterSDCwithDPM.html#concept_ldb_sr5_cx">Unregister Data Collector from <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span></a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can unregister a <span class="ph">Data Collector</span> from             <span class="ph">StreamSets Control Hub</span>         when you no longer want to use that <span class="ph">Data Collector</span>         installation with <span class="ph">Control Hub</span>.
+
+                     </p>
+                     </span></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e102096" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e106011" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e108837" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e109636" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e110218" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e111818" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e112299" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e113641" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e114610" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e117238" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e118495" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e120286" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e124782" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e125996" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e129904" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e129959" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e130119" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e131600" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e131822" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+
+
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_eq5_qjd_fx">
+    <h1 class="title topictitle1" id="ariaid-title1">Pipeline Management with <span class="ph">Control Hub</span></h1>
+
+
+    <div class="body conbody"><p class="shortdesc">After you register a <span class="ph">Data Collector</span> with
+            <span class="ph">StreamSets Control Hub</span>,
+        you can manage how the pipelines work with <span class="ph">Control Hub</span>.</p>
+
+        <p class="p">You develop pipelines in <span class="ph">Data Collector</span>,
+            and then publish or import them to <span class="ph">Control Hub</span>.
+            Within <span class="ph">Control Hub</span>,
+            you create jobs to determine the <span class="ph">Data Collector</span>s
+            that run the pipelines. When you start a job on a group of <span class="ph">Data Collector</span>s,
+                <span class="ph">Control Hub</span>
+            remotely runs a pipeline instance on each <span class="ph">Data Collector</span>.</p>
+
+        <p class="p">Managing pipelines with <span class="ph">Control Hub</span>
+            involves completing the following tasks:</p>
+
+        <ul class="ul">
+            <li class="li">Understanding the different types of pipelines that can run on a registered <span class="ph">Data Collector</span>.</li>
+
+            <li class="li">Publishing pipelines to <span class="ph">Control Hub</span>.</li>
+
+            <li class="li">Viewing pipeline commit history, and optionally getting a previous pipeline
+                version.</li>
+
+            <li class="li">Downloading published pipelines from <span class="ph">Control Hub</span>.</li>
+
+        </ul>
+
+        <p class="p">If you have not registered a <span class="ph">Data Collector</span>,
+            you can still develop pipelines in the <span class="ph">Data Collector</span>
+            and then export the pipelines for use in <span class="ph">Control Hub</span>.</p>
+
+    </div>
+
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_cqr_v3d_fx">
+ <h2 class="title topictitle2" id="ariaid-title2">Pipeline Types</h2>
+
+ <div class="body conbody">
+        <div class="p">After a <span class="ph">Data Collector</span>
+            has been registered with <span class="ph">Control Hub</span>,
+            you can view the following types of pipelines in the <span class="ph">Data Collector</span>:<dl class="dl">
+
+                    <dt class="dt dlterm">Local pipelines</dt>
+
+                    <dd class="dd">Local pipelines are pipelines that are managed by a <span class="ph">Data Collector</span> and run locally on that <span class="ph">Data Collector</span>. <span class="ph">Data Collector</span> displays local pipelines when they are running and not running. </dd>
+
+                    <dd class="dd ddexpand">Use a <span class="ph">Data Collector</span> to design, start, stop, and monitor local pipelines. </dd>
+
+
+
+                    <dt class="dt dlterm">Published pipelines</dt>
+
+                    <dd class="dd">Published pipelines are local pipelines that have been published to <span class="ph">Control Hub</span>. You can still use <span class="ph">Data Collector</span> to manage and locally run published pipelines on that <span class="ph">Data Collector</span>. <span class="ph">Data Collector</span> displays published pipelines with the current version number, and when
+                        they are running and not running.</dd>
+
+
+
+                    <dt class="dt dlterm"><span class="ph">Control Hub</span> controlled pipelines</dt>
+
+                    <dd class="dd"><span class="ph">Control Hub</span> controlled pipelines are pipelines that are managed by <span class="ph">Control Hub</span> and run remotely on registered <span class="ph">Data Collector</span>s. <span class="ph">Data Collector</span> displays <span class="ph">Control Hub</span> controlled pipelines when they are running. </dd>
+
+                    <dd class="dd ddexpand"><span class="ph">Control Hub</span> controlled pipelines include the following:<ul class="ul" id="concept_cqr_v3d_fx__ul_llz_yth_hx">
+                            <li class="li">Published pipelines run from <span class="ph">Control Hub</span> jobs. <p class="p">After you publish or import pipelines to <span class="ph">Control Hub</span>, you add them to a job, and then start the job. When you
+                                    start a job on a group of <span class="ph">Data Collector</span>s, <span class="ph">Control Hub</span> remotely runs an instance of the published pipeline on each
+                                        <span class="ph">Data Collector</span>. When the <span class="ph">Control Hub</span> job stops, the running published pipeline also stops, and can
+                                    no longer be viewed in the <span class="ph">Data Collector</span>. Use <span class="ph">Control Hub</span> to start, stop, and monitor published pipelines that are run
+                                    from jobs.</p>
+</li>
+
+                            <li class="li">System pipelines run from <span class="ph">Control Hub</span> jobs.<p class="p"><span class="ph">Control Hub</span> automatically generates and runs system pipelines to
+                                    aggregate statistics for jobs. System pipelines collect,
+                                    aggregate, and push metrics for all of the remote pipeline
+                                    instances run from a job. When you start a job on a group of <span class="ph">Data Collector</span>s, <span class="ph">Control Hub</span> picks one <span class="ph">Data Collector</span> to run the system pipeline. When the <span class="ph">Control Hub</span> job stops, the running system pipeline also stops, and can no
+                                    longer be viewed in the <span class="ph">Data Collector</span>.</p>
+<p class="p"><span class="ph">Control Hub</span> generates system pipelines as needed. Published pipelines
+                                    that are not configured to <a class="xref" href="AggregatedStatistics.html#concept_h2q_mb5_xw" title="A Control Hub job defines the pipeline to run and the Data Collectors that run the pipeline. When you start a job, Control Hub remotely runs the pipeline on the group of Data Collectors. To monitor the job statistics and metrics within Control Hub, you must configure the pipeline to write statistics to Control Hub or to another system.">aggregate statistics</a> do not require system
+                                    pipelines.</p>
+</li>
+
+                        </ul>
+</dd>
+
+
+            </dl>
+</div>
+
+        <div class="note note"><span class="notetitle">Note:</span> A <span class="ph">Data Collector</span> administrator can use <span class="ph">Data Collector</span> to
+            stop <span class="ph">Control Hub</span> controlled pipelines. Otherwise, you cannot modify or manage <span class="ph">Control Hub</span>
+            controlled pipelines in <span class="ph">Data Collector</span>.</div>
+
+ </div>
+
+<article class="topic concept nested2" aria-labelledby="ariaid-title3" id="concept_ssy_ns3_hx">
+ <h3 class="title topictitle3" id="ariaid-title3">Viewing Pipeline Types in Data Collector</h3>
+
+ <div class="body conbody">
+        <p class="p">Let's look at a sample <span class="ph">Data Collector</span>
+            Home page to see how <span class="ph">Data Collector</span>
+            displays local pipelines, published pipelines, and <span class="ph">Control Hub</span>
+            controlled pipelines:</p>
+
+        <p class="p"><img class="image" id="concept_ssy_ns3_hx__image_rtj_fvs_gx" src="../Graphics/DPM_LocalDPMControlledPipelines.png" height="307" width="723" /></p>
+
+        <p class="p">The <span class="ph">Data Collector</span>
+            displays the following pipelines:</p>
+
+        <ul class="ul" id="concept_ssy_ns3_hx__ul_oh2_shm_2w">
+            <li class="li">Local pipeline that was developed in this <span class="ph">Data Collector</span> and can be run locally on this <span class="ph">Data Collector</span>. Local pipelines are listed by title. In the image above, Remove Extra Fields is
+                a local pipeline that is not running. The Remove Extra Fields pipeline has not been
+                published to <span class="ph">Control Hub</span>, as indicated by no version number after its title.</li>
+
+            <li class="li">Published pipeline that was published to <span class="ph">Control Hub</span>
+                and can still be run locally on this <span class="ph">Data Collector</span>. Published pipelines are listed by title and version number. In the image above,
+                Kafka to HDFS is a published pipeline that is not running.</li>
+
+            <li class="li">Running published pipeline that was published to <span class="ph">Control Hub</span>, then run from a job. Published pipelines that are remotely run from jobs are
+                listed with a "<span class="ph">Control Hub</span>" label. </li>
+
+            <li class="li">Running system pipeline that collects, aggregates, and pushes metrics for all of the
+                remote pipeline instances run from the job. Running system pipelines are listed with
+                a "<span class="ph">Control Hub</span>
+                system" label. </li>
+
+        </ul>
+
+        <div class="note tip"><span class="tiptitle">Tip:</span> In the image above, the job was started on a <span class="ph">Data Collector</span>
+            used to design pipelines. As a best practice, use labels within <span class="ph">Control Hub</span> to
+            separate development <span class="ph">Data Collector</span>s
+            from production <span class="ph">Data Collector</span>s.
+            That way, you can ensure that published pipelines are only run on production <span class="ph">Data Collector</span>s
+            and not on a <span class="ph">Data Collector</span>
+            that a developer is currently using to design pipelines. For more information about
+            using labels, see the <span class="ph">Control Hub</span>
+            online help.</div>
+
+ </div>
+
+</article>
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title4" id="task_rxy_xqc_fx">
+    <h2 class="title topictitle2" id="ariaid-title4">Publishing Pipelines to <span class="ph">Control Hub</span></h2>
+
+    <div class="body taskbody">
+        <section class="section context">
+            <p class="p">After you finish developing pipelines in
+                    <span class="ph">Data Collector</span>, you publish the pipelines to the <span class="ph">Control Hub</span>
+                pipeline repository. You can publish pipelines that are valid. </p>
+
+            <div class="note tip"><span class="tiptitle">Tip:</span> When you update a published pipeline, <span class="ph">Data Collector</span> displays an asterisk next to the pipeline name to indicate that the pipeline has
+                been updated since it was last published, as follows:<p class="p"><img class="image" id="task_rxy_xqc_fx__image_yxn_mlk_d1b" src="../Graphics/DPM_UpdatedPublishedPipeline.png" height="32" width="268" /></p>
+</div>
+
+        </section>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">From the <span class="ph uicontrol">Home</span> page, select pipelines in the list and
+                    then click the <span class="ph uicontrol">Publish Pipeline</span> icon <img class="image" id="task_rxy_xqc_fx__image_svp_msc_fx" src="../Graphics/icon_PublishPipeline.png" height="18" width="24" />. Or to publish a pipeline from the pipeline canvas, click the
+                        <span class="ph uicontrol">Control Hub Options</span> icon <img class="image" id="task_rxy_xqc_fx__image_lc3_kbf_2w" src="../Graphics/icon_SCHOptions.png" height="15" width="21" />, and then click <span class="ph uicontrol">Publish
+                        Pipeline</span>. </span>
+                <div class="itemgroup info">The <span class="ph uicontrol">Publish Pipeline</span> dialog box appears.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Enter a commit message.</span>
+                <div class="itemgroup info">As a best practice, state what changed in this pipeline version so that you
+                    can track the commit history of the pipeline.<div class="note note"><span class="notetitle">Note:</span> If you are publishing multiple
+                        pipelines from the <span class="ph uicontrol">Home</span> page, the same commit message
+                        is used for all of the pipelines.</div>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph uicontrol">Publish Pipeline</span>.</span>
+            </li>
+</ol>
+
+    </div>
+
+<article class="topic task nested2" aria-labelledby="ariaid-title5" id="task_c4x_vff_p1b">
+    <h3 class="title topictitle3" id="ariaid-title5">Reverting Changes to Published Pipelines</h3>
+
+    <div class="body taskbody">
+        <section class="section context">
+            <p class="p">If you update
+                a published pipeline but decide not to publish the updates as a new version, you can
+                revert the changes made to the pipeline configuration.</p>
+
+        </section>
+
+        <ol class="ol steps"><li class="li step">
+                <span class="ph cmd">In the pipeline canvas, click the <span class="ph uicontrol">Control Hub Options</span>
+                    icon <img class="image" id="task_c4x_vff_p1b__image_lc3_kbf_2w" src="../Graphics/icon_SCHOptions.png" height="15" width="21" />, and then click <span class="ph uicontrol">Revert
+                        Changes</span>.</span>
+            </li>
+<li class="li step">
+                <span class="ph cmd">In the confirmation dialog box, click <span class="ph uicontrol">Yes</span>.</span>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title6" id="task_hjv_fbd_fx">
+    <h2 class="title topictitle2" id="ariaid-title6">Viewing Pipeline Commit History</h2>
+
+
+    <div class="body taskbody"><p class="shortdesc">You can view the commit history of any pipeline that has been published to <span class="ph">Control Hub</span>. If the
+        pipeline has been committed multiple times, you can get an older version of the pipeline and
+        then continue editing the older version.</p>
+
+        <section class="section context">
+            <p class="p">If you edit and
+                then publish an older version, <span class="ph">Control Hub</span>
+                updates the minor version number rather than the major version number. For example,
+                you have a pipeline with three versions. You get version 2 of the pipeline, edit the
+                pipeline, and then publish the pipeline. <span class="ph">Control Hub</span>
+                versions the current pipeline as 2.1. So you now have four versions of the pipeline,
+                with version 2.1 of the pipeline marked as the current version:</p>
+
+            <ul class="ul" id="task_hjv_fbd_fx__ul_fcc_1v3_fx">
+                <li class="li">2.1</li>
+
+                <li class="li">3</li>
+
+                <li class="li">2</li>
+
+                <li class="li">1</li>
+
+            </ul>
+
+            <p class="p">To view pipeline commit history:</p>
+
+        </section>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the pipeline canvas, click the <span class="ph uicontrol">Control Hub Options</span>
+                    icon <img class="image" id="task_hjv_fbd_fx__image_lc3_kbf_2w" src="../Graphics/icon_SCHOptions.png" height="17" width="24" />, and then click <span class="ph uicontrol">Commit
+                        History</span>. </span>
+                <div class="itemgroup info">The <span class="ph uicontrol">Pipeline Commit History</span> dialog box opens. For
+                    example, a pipeline with three versions displays the commit history as
+                            follows:<p class="p"><img class="image" id="task_hjv_fbd_fx__image_a4r_f2d_fx" src="../Graphics/DPM_PipelineCommitHistory.png" height="259" width="607" /></p>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To get an older version of a pipeline, click <span class="ph uicontrol">Get</span> in the
+                        <span class="ph uicontrol">Actions</span> column for that version.</span>
+                <div class="itemgroup info"><span class="ph">Data Collector</span> opens the selected pipeline version in the canvas. You can make edits to the
+                    pipeline version, and then publish the pipeline as another version.</div>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title7" id="task_ydw_r42_fx">
+    <h2 class="title topictitle2" id="ariaid-title7">Downloading Published Pipelines</h2>
+
+    <div class="body taskbody">
+        <section class="section context">You can download a
+            published pipeline from the <span class="ph">Control Hub</span>
+            pipeline repository into a registered <span class="ph">Data Collector</span>.
+            Download a published pipeline when you need to edit a published pipeline version, and
+            that pipeline version was originally developed on a different <span class="ph">Data Collector</span>.<p class="p">When you download a pipeline from <span class="ph">Control Hub</span>, you become the owner of a local instance of the published pipeline. The
+                downloaded pipeline has no connection to the published pipeline.</p>
+</section>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">From the <span class="ph uicontrol">Home</span> page, click <span class="ph menucascade"><span class="ph uicontrol">Create New Pipeline</span><abbr title="and then"> &gt; </abbr><span class="ph uicontrol"> Download Published Pipeline</span></span>.</span>
+                <div class="itemgroup info">The <span class="ph uicontrol">Download Published Pipeline</span> dialog box displays all
+                    pipelines in the <span class="ph">Control Hub</span> pipeline repository.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph uicontrol">Download</span> for each published pipeline that you want
+                    to download to this <span class="ph">Data Collector</span>.</span>
+                <div class="itemgroup info"><span class="ph">Data Collector</span> downloads all versions of the selected pipeline. You can view the pipeline
+                    commit history in <span class="ph">Data Collector</span>, and get an older version of the pipeline if needed.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph uicontrol">Close</span> when you have finished downloading published
+                    pipelines.</span>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title8" id="task_emc_p42_fx">
+    <h2 class="title topictitle2" id="ariaid-title8">Exporting Pipelines for <span class="ph">Control Hub</span></h2>
+
+
+    <div class="body taskbody"><p class="shortdesc">If you develop pipelines in a <span class="ph">Data Collector</span> that
+        is not registered with <span class="ph">Control Hub</span>, you
+        can export the pipelines and then import the pipelines into <span class="ph">Control Hub</span>. When a
+            <span class="ph">Data Collector</span> is
+        registered with <span class="ph">Control Hub</span>, it's
+        simplest to publish the pipelines directly to <span class="ph">Control Hub</span>.</p>
+
+        <section class="section context">
+            <p class="p">You
+                can export a pipeline for use in <span class="ph">Control Hub</span>
+                when the pipeline is valid. You can export a single pipeline or a set of pipelines
+                at one time.</p>
+
+            <p class="p">When you export a single pipeline, <span class="ph">Data Collector</span> generates a JSON file named after the pipeline, as follows:
+                    <samp class="ph systemoutput">&lt;pipeline name&gt;.json</samp>. The generated JSON file
+                includes the definition of each stage library used in the pipeline.</p>
+
+            <p class="p">When you export a set of pipelines, <span class="ph">Data Collector</span> creates a ZIP file named <code class="ph codeph">pipelines.zip</code>.</p>
+
+            <p class="p"><span class="ph">Data Collector</span>
+                saves the files to your default downloads directory.</p>
+
+            <div class="note note"><span class="notetitle">Note:</span> To export pipelines for use in another <span class="ph">Data Collector</span>, see <a class="xref" href="../Pipeline_Maintenance/PipelineMaintenance_title.html#task_dtz_4tr_5q">Exporting Pipelines</a>.</div>
+
+        </section>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">To export a single pipeline, from the <span class="ph uicontrol">Home</span> page, select
+                    the pipeline from the list, click the <span class="ph uicontrol">More</span> icon, and then
+                    click <span class="ph uicontrol">Export for Control Hub</span>.</span>
+                <div class="itemgroup info">
+                    <p class="p">To export a set of pipelines, select multiple pipelines, click the
+                            <span class="ph uicontrol">More</span> icon, and then click <span class="ph uicontrol">Export for
+                            Control Hub</span>.</p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Or, to export a pipeline in the pipeline canvas, click the
+                        <span class="ph uicontrol">More</span> icon for the pipeline and then click
+                        <span class="ph uicontrol">Export for Control Hub</span>.</span>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+</article>
+</article></main></div>
+
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script>
+  </div>
+</nav>
+
+
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
+</html>

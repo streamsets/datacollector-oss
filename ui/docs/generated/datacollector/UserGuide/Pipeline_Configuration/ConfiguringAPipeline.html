@@ -1,0 +1,2359 @@
+
+<!DOCTYPE html
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link>
+      <meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="task" /><meta name="DC.Title" content="Configuring a Pipeline" /><meta name="abstract" content="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline." /><meta name="description" content="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Pipeline_Configuration/Expressions.html#concept_ofb_1cm_xq" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="task_xlv_jdw_kq" /><title>Configuring a Pipeline</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="task_xlv_jdw_kq-d46e22626" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018042310" />
+
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018042310" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+
+
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody" id="task_xlv_jdw_kq">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+
+
+
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+
+                </div>
+
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+
+
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref" data-id="concept_qn1_wn4_kq"><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li class="active"><span class="topicref" data-id="task_xlv_jdw_kq"><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/ConfiguringAPipeline.html">Configuring a Pipeline</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Pipeline_Configuration/Expressions.html#concept_ofb_1cm_xq" title="Expression Configuration"></a></span>
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html" title="Data Formats"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e4414" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e6481" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13895" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e18499" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e20154" class="topicref" data-id="concept_qn1_wn4_kq" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_izr_f2p_rq-d46e20176" class="topicref" data-id="concept_izr_f2p_rq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/DataCollectorUI-Config.html#concept_izr_f2p_rq">Data Collector UI - Edit Mode</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_cgm_ktz_2t-d46e20200" class="topicref" data-id="concept_cgm_ktz_2t" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Retry.html#concept_cgm_ktz_2t">Retrying the Pipeline</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_twq_nhx_rr-d46e20224" class="topicref" data-id="concept_twq_nhx_rr" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineMemory.html#concept_twq_nhx_rr">Pipeline Memory</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_erj_qg4_qv-d46e20248" class="topicref" data-id="concept_erj_qg4_qv" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineRateLimit.html#concept_erj_qg4_qv">Rate Limit</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_alb_b3y_cbb-d46e20272" class="topicref" data-id="concept_alb_b3y_cbb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">Simple and Bulk Edit Mode</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_h5b_kcr_kz-d46e20296" class="topicref" data-id="concept_h5b_kcr_kz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/RuntimeValues.html#concept_h5b_kcr_kz">Runtime Values</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Runtime values are values that you define outside of the pipeline and use for stage         and pipeline properties. You can
+                        change the values for each pipeline run without having to         edit the pipeline.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_jcw_n4t_51b-d46e21269" class="topicref" data-id="concept_jcw_n4t_51b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/EventGeneration.html#concept_jcw_n4t_51b">Event Generation</a></span></span></li>
+         <li><span data-tocid="concept_mp1_t3l_rz-d46e21323" class="topicref" data-id="concept_mp1_t3l_rz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Webhooks.html#concept_mp1_t3l_rz">Webhooks</a></span></span></li>
+         <li><span data-tocid="concept_mtn_k4j_rz-d46e21471" class="topicref" data-id="concept_mtn_k4j_rz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Notifications.html#concept_mtn_k4j_rz">Notifications</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_dd1_n3f_5z-d46e21495" class="topicref" data-id="concept_dd1_n3f_5z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/SSL-TLS.html#concept_dd1_n3f_5z">SSL/TLS Configuration</a></span></span></li>
+         <li><span data-tocid="concept_azs_swf_jr-d46e21644" class="topicref" data-id="concept_azs_swf_jr" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Validation.html#concept_azs_swf_jr">Implicit and Explicit Validation</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ofb_1cm_xq-d46e21668" class="topicref" data-id="concept_ofb_1cm_xq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Expressions.html#concept_ofb_1cm_xq">Expression Configuration</a></span></span></li>
+         <li class="active"><span data-tocid="task_xlv_jdw_kq-d46e22626" class="topicref" data-id="task_xlv_jdw_kq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/ConfiguringAPipeline.html">Configuring a Pipeline</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22651" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e24466" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e64169" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e77391" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e92871" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e98772" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e102096" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e106011" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e108837" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e109636" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e110218" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e111818" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e112299" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e113641" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e114610" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e117238" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e118495" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e120286" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e124782" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e125996" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e129904" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e129959" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e130119" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e131600" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e131822" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+
+
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1">
+    <h1 class="title topictitle1" id="ariaid-title1">Configuring a Pipeline</h1>
+
+
+    <div class="body taskbody"><p class="shortdesc">Configure a pipeline to define the stream of data. After you configure the pipeline,
+        you can start the pipeline. </p>
+
+        <section class="section context">
+            <div class="p">A
+                pipeline can include the following stages:<ul class="ul" id="task_xlv_jdw_kq__ul_eyy_b2w_kq">
+                    <li class="li">A single origin stage</li>
+
+                    <li class="li">Multiple processor stages</li>
+
+                    <li class="li">Multiple destination stages</li>
+
+                    <li class="li">Multiple executor stages</li>
+
+
+                </ul>
+</div>
+
+        </section>
+
+        <ol class="ol steps" id="task_xlv_jdw_kq__steps_tsx_d2w_kq"><li class="li step stepexpand">
+                <span class="ph cmd"><span class="ph">From the <span class="keyword wintitle">Home</span> page or <span class="keyword wintitle">Getting
+                            Started</span> page, click <span class="ph uicontrol">Create New
+                            Pipeline</span>.</span></span>
+                <div class="itemgroup info">
+                    <div class="note tip"><span class="tiptitle">Tip:</span> To get to the <span class="keyword wintitle">Home</span> page, click the Home
+                        icon.</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the <span class="keyword wintitle">New Pipeline</span> window, enter a pipeline title and
+                    optional description, and select where you want the pipeline to run:</span>
+                <ul class="ul choices" id="task_xlv_jdw_kq__d346e142">
+                    <li class="li choice"><span class="ph">Data Collector</span> - Select
+                        to design a standalone or cluster execution mode pipeline that runs on <span class="ph">Data Collector</span>.</li>
+
+                    <li class="li choice"><span class="ph">Data Collector Edge</span> -
+                        Select to design an edge execution mode pipeline that runs on <span class="ph">Data Collector Edge</span>.</li>
+
+                </ul>
+
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph uicontrol">Save</span>.</span>
+                <div class="itemgroup stepresult">The pipeline canvas displays the pipeline title, the generated pipeline
+                    ID, and an error icon. The error icon indicates that you need to configure error
+                    handling for the pipeline. The Properties panel displays the pipeline
+                    properties. </div>
+            </li>
+<li class="li step stepexpand" id="task_xlv_jdw_kq__pipeProperties">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__table_ryh_vfm_zs" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:66.66666666666666%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d387002e153">Pipeline Property</th>
+
+                                    <th class="entry cellrowborder" id="d387002e156">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e153 ">Title</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e156 ">Title of the pipeline. <p class="p"><span class="ph">Data Collector</span> uses the alphanumeric characters
+                                            entered for the pipeline title as a prefix for the
+                                            generated pipeline ID. For example, if you enter “My
+                                            Pipeline *&amp;%&amp;^^ 123” as the pipeline title, then
+                                            the pipeline ID has the following value:
+                                            MyPipeline123tad9f592-5f02-4695-bb10-127b2e41561c.</p>
+<p class="p">You
+                                            can edit the pipeline title. However, because the
+                                            pipeline ID is used to identify the pipeline, any
+                                            changes to the pipeline title are not reflected in the
+                                            pipeline ID.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e153 ">Description</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e156 ">Optional description of the pipeline.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e153 ">Labels</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e156 ">Optional labels to assign to the pipeline. <p class="p">Use labels
+                                            to group similar pipelines. For example, you might want
+                                            to group pipelines by database schema or by the test or
+                                            production environment. </p>
+<div class="p">You can use nested labels to create a hierarchy of pipeline
+                  groupings. Enter nested labels using the following
+                  format:<pre class="pre codeblock"><code>&lt;label1&gt;/&lt;label2&gt;/&lt;label3&gt;</code></pre>For example, you
+                  might want to group pipelines in the test environment by the origin system. You
+                  add the labels Test/HDFS and Test/Elasticsearch to the appropriate pipelines.</div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e153 ">Execution Mode <a class="xref" href="../Cluster_Mode/ClusterPipelines.html#concept_hmh_kfn_1s" title="A cluster pipeline is a pipeline that runs in cluster execution mode. You can run a pipeline in standalone execution mode or cluster execution mode."><img class="image" id="task_xlv_jdw_kq__image_zfp_n5g_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        </a></td>
+
+                                    <td class="entry cellrowborder" headers="d387002e156 ">Execution mode of the pipeline:<ul class="ul" id="task_xlv_jdw_kq__ul_bn5_jsz_zr">
+                                            <li class="li">Standalone - A single <span class="ph">Data Collector</span> process runs the pipeline.</li>
+
+                                            <li class="li">Cluster Batch - <span class="ph">Data Collector</span> spawns additional workers as needed to process
+                                                data in HDFS or MapR. Processes all available data
+                                                and then stops the pipeline.</li>
+
+                                            <li class="li">Cluster Yarn Streaming - <span class="ph">Data Collector</span> spawns additional workers as needed to process
+                                                data, by default. You can limit the number of
+                                                workers with the Worker Count cluster property. And
+                                                you can use the Extra Spark Configuration property
+                                                to pass Spark configurations to the spark-submit
+                                                  script.<p class="p">Use to stream data from a Kafka or MapR
+                                                  cluster that uses Spark Streaming on
+                                                YARN.</p>
+</li>
+
+                                            <li class="li">Cluster Mesos Streaming - <span class="ph">Data Collector</span> spawns additional workers as needed to process
+                                                data. Use to stream data from a Kafka cluster that
+                                                uses Spark Streaming on Mesos.</li>
+
+                                            <li class="li">Edge - A single <span class="ph">Data Collector Edge</span> (<span class="ph">SDC Edge</span>) process runs the pipeline on an edge
+                                                device.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e153 "><span class="ph">Data Collector Edge</span> URL</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e156 ">
+                                        <p class="p">For edge pipelines, the URL to the <span class="ph">SDC Edge</span> installation. Used when you directly publish and
+                                            manage the pipeline on an <span class="ph">SDC Edge</span> that is not registered with <span class="ph">Control Hub</span>. You can leave the default value when you publish the
+                                            pipeline to <span class="ph">Control Hub</span>, add the pipeline to a job, and start the job on a
+                                            registered <span class="ph">SDC Edge</span>. For more information, see <a class="xref" href="../Edge_Mode/EdgePipelines_Deploy.html#task_isp_m2f_3db">Publishing a Single Pipeline</a> and <a class="xref" href="../Edge_Mode/EdgePipelines_Manage.html#concept_tqk_dbb_4db" title="After designing edge pipelines in Data Collector and then deploying the edge pipelines to SDC Edge, you can manage the pipelines on SDC Edge. Managing edge pipelines includes previewing, validating, starting, stopping, resetting the origin, and monitoring the pipelines.">Manage Pipelines on SDC Edge</a>.</p>
+
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e153 ">Delivery Guarantee <a class="xref" href="../Pipeline_Design/DatainMotion.html#concept_ffz_hhw_kq" title="When you configure a pipeline, you define how you want data to be treated: Do you want to prevent the loss of data or the duplication of data?">
+                                            <img class="image" id="task_xlv_jdw_kq__image_rtg_yfm_zs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d387002e156 ">Determines how <span class="ph">Data Collector</span> handles data after an unexpected event causes the
+                                        pipeline to stop running:<ul class="ul" id="task_xlv_jdw_kq__ul_b4v_51m_sq">
+                                            <li class="li">At Least Once - Ensures all data is processed and
+                                                written to the destination. Might result in
+                                                duplicate rows.</li>
+
+                                            <li class="li">At Most Once - Ensures that data is not reprocessed
+                                                to prevent writing duplicate data to the
+                                                destination. Might result in missing rows.</li>
+
+                                        </ul>
+<p class="p">Default is At Least Once.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e153 ">Test Origin <a class="xref" href="../Pipeline_Design/TestOrigin.html#concept_sgt_s5v_g2b" title="A test origin can provide test data for data preview to aid in pipeline development. In Control Hub, you can also use test origins when developing pipeline fragments. Test origins are not used when running a pipeline.">
+                                            <img class="image" id="task_xlv_jdw_kq__image_s3r_hxd_h2b" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d387002e156 ">A virtual origin to provide test data for data preview.
+                                        Only used when the Test Origin option is selected in the
+                                        Preview Configuration dialog box. <p class="p">To enable the use of a
+                                            test origin, select the origin to access the test data,
+                                            then configure the origin properties on the Test Origin
+                                            tab. You can use any available origin. </p>
+<p class="p">Default is
+                                            the Dev Raw Data Source origin. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e153 ">Start Event</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e156 ">Determines how the start event is handled. Select one of
+                                        the following options:<ul class="ul" id="task_xlv_jdw_kq__ul_jmt_hht_51b">
+                                            <li class="li">Discard - Use when you don't want to use the
+                                                event.</li>
+
+                                            <li class="li">An executor - To use the event to trigger a task,
+                                                select the executor that you want to use. For more
+                                                information about the executors, see <a class="xref" href="../Executors/Executors-overview.html#concept_stt_2lk_fx">Executors</a>.</li>
+
+                                            <li class="li">Write to Another Pipeline - Use to pass the event to
+                                                another pipeline for more complex processing. </li>
+
+                                        </ul>
+<p class="p">Use in standalone pipelines only. For more
+                                            information about pipeline events, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_amg_2qr_t1b">Pipeline Event Generation</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e153 ">Stop Event</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e156 ">Determines how the stop event is handled. Select one of
+                                        the following options:<ul class="ul" id="task_xlv_jdw_kq__ul_gcx_5ht_51b">
+                                            <li class="li">Discard - Use when you don't want to use the
+                                                event.</li>
+
+                                            <li class="li">An executor - To use the event to trigger a task,
+                                                select the executor that you want to use. For more
+                                                information about the executors, see <a class="xref" href="../Executors/Executors-overview.html#concept_stt_2lk_fx">Executors</a>.</li>
+
+                                            <li class="li">Write to Another Pipeline - Use to pass the event to
+                                                another pipeline for more complex processing. </li>
+
+                                        </ul>
+<p class="p">Use in standalone pipelines only. For more
+                                            information about pipeline events, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_amg_2qr_t1b">Pipeline Event Generation</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e153 ">Retry Pipeline on Error <a class="xref" href="Retry.html#concept_cgm_ktz_2t" title="By default, when Data Collector encounters a stage-level error that might cause a standalone pipeline to fail, it retries the pipeline. That is, it waits a period of time, and then tries again to run the pipeline."><img class="image" id="task_xlv_jdw_kq__image_wms_qvz_2t" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        </a></td>
+
+                                    <td class="entry cellrowborder" headers="d387002e156 ">Retries the pipeline upon error. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e153 ">Retry Attempts</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e156 ">Number of retries attempted. Use -1 to retry
+                                        indefinitely. <p class="p">The wait time between retries starts at 15
+                                            seconds and doubles until reaching five
+                                        minutes.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e153 ">Max Pipeline Memory <a class="xref" href="PipelineMemory.html#concept_twq_nhx_rr"><img class="image" id="task_xlv_jdw_kq__image_ldk_s5g_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        </a></td>
+
+                                    <td class="entry cellrowborder" headers="d387002e156 ">Maximum amount of memory for the pipeline to use. Used
+                                        only when the <span class="ph">Data Collector</span> monitor.memory configuration property is set to
+                                            true.<p class="p">You can enter a numeric value or edit the
+                                            default expression to use a percentage of the <span class="ph">Data Collector</span> Java heap size. </p>
+<div class="p">Default is 65% of the <span class="ph">Data Collector</span> Java heap
+                                            size:<pre class="pre codeblock"><code> ${jvm:maxMemoryMB() * 0.65}</code></pre></div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e153 ">On Memory Exceeded</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e156 ">Action to take when the pipeline memory reaches the
+                                        configured Max Pipeline Memory:<ul class="ul" id="task_xlv_jdw_kq__ul_vsf_3k4_1s">
+                                            <li class="li">Log - Logs a message in the pipeline history.</li>
+
+                                            <li class="li">Log and Alert - Logs a message <span class="ph">and
+                                                  triggers an alert that displays in Monitor mode
+                                                </span>and sends an alert email to any provided email
+                                                addresses.</li>
+
+                                        </ul>
+<ul class="ul" id="task_xlv_jdw_kq__ul_mtf_3k4_1s">
+                                            <li class="li">Log, Alert and Stop Pipeline - Logs a message<span class="ph">, triggers an alert that displays in
+                                                  Monitor mode</span> and sends an alert email to any
+                                                provided email addresses. Stops the pipeline. This
+                                                option is not supported for cluster mode pipelines
+                                                at this time. </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e153 ">Rate Limit (records / sec) <a class="xref" href="PipelineRateLimit.html#concept_erj_qg4_qv" title="You can limit the rate at which a pipeline processes records by defining the maximum number of records that the pipeline can read in a second."><img class="image" id="task_xlv_jdw_kq__image_lgk_s6g_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        </a></td>
+
+                                    <td class="entry cellrowborder" headers="d387002e156 ">Maximum number of records that the pipeline can read in a
+                                        second. Use 0 or no value to set no rate limit.<p class="p">Default is
+                                            0.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e153 ">Max Runners </td>
+
+                                    <td class="entry cellrowborder" headers="d387002e156 ">The maximum number of pipeline runners to use in a
+                                        multithreaded pipeline. <p class="p">Use 0 for no limit. When set to
+                                            0, <span class="ph">Data Collector</span> generates up to the maximum number of threads or
+                                            concurrency configured in the origin. </p>
+<p class="p">You can use
+                                            this property to help tune pipeline performance. For
+                                            more information, see <a class="xref" href="../Multithreaded_Pipelines/MultithreadedPipelines.html#concept_fmg_pjd_mz">Tuning Threads and Runners</a>.</p>
+<p class="p">Default is 0. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e153 ">Runner Idle Time (sec)</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e156 ">
+                                        <p class="p">Minimum number of seconds a pipeline runner waits when
+                                            idle before generating an empty batch. The number of
+                                            empty batches that are generated by pipeline runners
+                                            displays as the Idle Batch Count in the monitor mode
+                                            runtime statistics. </p>
+
+                                        <p class="p">Use to ensure that batches are generated periodically,
+                                            even when no data needs to be processed.</p>
+
+                                        <p class="p">Use -1 to allow pipeline runners to wait indefinitely
+                                            when idle without generating empty batches.</p>
+
+                                        <p class="p">For standalone pipelines only.</p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e153 ">Create Failure Snapshot</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e156 ">Automatically creates a snapshot if the pipeline fails
+                                        because of data-related errors. Can be used to troubleshoot
+                                        the pipeline. </td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To define runtime parameters, on the <span class="keyword wintitle">Parameters</span> tab, click
+                    the <span class="ph uicontrol">Add</span> icon and define the name and the default value
+                    for each parameter. You can use <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add the parameters.</span>
+                <div class="itemgroup info">For more information, see <a class="xref" href="RuntimeValues.html#concept_rjh_ntz_qr" title="Runtime parameters are parameters that you define in a pipeline and then call from within that same pipeline. When you start the pipeline, you specify the parameter values to use. Use runtime parameters to specify values for pipeline properties when you start the pipeline.">Using Runtime Parameters</a>.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To configure notifications based on changes in pipeline state, on the
+                        <span class="keyword wintitle">Notifications</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__table_zwz_34j_rz" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d387002e632">Notifications Property</th>
+
+                                    <th class="entry cellrowborder" id="d387002e635">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e632 ">Notify on Pipeline State Changes <a class="xref" href="Notifications.html#concept_mtn_k4j_rz">
+                                            <img class="image" id="task_xlv_jdw_kq__image_rgb_stj_rz" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d387002e635 ">Sends notifications when the pipeline encounters the
+                                        listed pipeline states. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e632 ">Email IDs</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e635 ">Email addresses to receive notification when the pipeline
+                                        state changes to one of the specified states. Using <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
+                                            <span class="ph uicontrol">Add</span> icon to add additional
+                                        addresses. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e632 ">Webhooks <a class="xref" href="Webhooks.html#concept_mp1_t3l_rz">
+         <img class="image" id="task_xlv_jdw_kq__d155e548" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d387002e635 ">Webhook to send when the pipeline state changes to one of
+                                        the specified states. Using <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
+                                            <span class="ph uicontrol">Add</span> icon to add additional
+                                        webhooks.</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d387002e632 ">Webhook URL</td>
+
+       <td class="entry cellrowborder" headers="d387002e635 ">URL to send the HTTP request.</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d387002e632 ">Headers</td>
+
+       <td class="entry cellrowborder" headers="d387002e635 ">Optional HTTP request headers. </td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d387002e632 ">HTTP Method</td>
+
+       <td class="entry cellrowborder" headers="d387002e635 ">HTTP method. Use one of the following methods: <ul class="ul" id="task_xlv_jdw_kq__d155e585">
+         <li class="li">GET</li>
+
+         <li class="li">PUT</li>
+
+         <li class="li">POST</li>
+
+         <li class="li">DELETE</li>
+
+         <li class="li">HEAD</li>
+
+        </ul>
+</td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e632 ">Payload <a class="xref" href="Webhooks.html#concept_rby_1rl_rz">
+         <img class="image" id="task_xlv_jdw_kq__d155e610" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d387002e635 ">Optional payload to use. Available for PUT, POST, and
+                                        DELETE methods. <p class="p">Use any valid content type.</p>
+<p class="p">You can
+                                            use webhook parameters in the payload to include
+                                            information about the triggering event, such as the
+                                            pipeline name or state. Enclose webhook parameters in
+                                            double curly brackets as follows:
+                                                <code class="ph codeph">{{PIPELINE_STATE}}</code>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d387002e632 ">Content Type</td>
+
+       <td class="entry cellrowborder" headers="d387002e635 ">Optional content type of the payload. Configure this property when the content type is
+        not declared in the request headers.</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d387002e632 ">Authentication Type</td>
+
+       <td class="entry cellrowborder" headers="d387002e635 ">Optional authentication type to include in the request. Use None, Basic, Digest, or
+         Universal.<p class="p">Use Basic for Form authentication.</p>
+</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d387002e632 ">User Name </td>
+
+       <td class="entry cellrowborder" headers="d387002e635 ">User name to include when using authentication. </td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d387002e632 ">Password</td>
+
+       <td class="entry cellrowborder" headers="d387002e635 ">Password to include when using authentication.</td>
+
+      </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the <span class="keyword wintitle">Error Records</span> tab and configure the following
+                    error handling options:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__table_ghf_x22_br" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:27.77777777777778%" /><col style="width:72.22222222222221%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d387002e822">Error Records Property</th>
+
+                                    <th class="entry cellrowborder" id="d387002e825">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e822 ">Error Records <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_pm4_txm_vq">
+                                            <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d387002e825 ">Determines how to handle records that cannot be processed
+                                        as expected. Use one of the following options:<ul class="ul" id="task_xlv_jdw_kq__ul_ayr_y22_br">
+                                            <li class="li">Discard - Discards error records.</li>
+
+                                            <li class="li">Write to Another Pipeline - Writes error records to
+                                                another pipeline. To use this option, you need an
+                                                SDC RPC destination pipeline to process the error
+                                                records. </li>
+
+                                            <li class="li">Write to Azure Event Hub - Writes error records to
+                                                the specified Microsoft Azure Event Hub.</li>
+
+                                            <li class="li">Write to Elasticsearch - Writes error records to the
+                                                specified Elasticsearch cluster.</li>
+
+                                            <li class="li">Write to File - Writes error records to a file in
+                                                the specified directory. <p class="p">Write to File is not
+                                                  supported for cluster mode at this time. </p>
+</li>
+
+                                            <li class="li">Write to Google Cloud Storage - Writes error records
+                                                to Google Cloud Storage.</li>
+
+                                            <li class="li">Write to Google Pub/Sub - Writes error records to
+                                                Google Pub/Sub.</li>
+
+                                            <li class="li">Write to Kafka - Writes error records to the
+                                                specified Kafka cluster.</li>
+
+                                            <li class="li">Write to Kinesis - Writes error records to the
+                                                specified Kinesis stream.</li>
+
+                                            <li class="li">Write to MapR Streams - Writes error records to the
+                                                specified MapR Streams cluster.</li>
+
+                                            <li class="li">Write to MQTT - Writes error records to the
+                                                specified MQTT broker.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e822 ">Error Record Policy</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e825 ">Determines the version of the record to use as a basis
+                                        for an error record. For more information, see <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_itr_mzw_j1b">Error Records and Version</a>.</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">When writing error records to an SDC RPC pipeline, click the <span class="keyword wintitle">Error
+                        Records - Write to Another Pipeline</span> tab and configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__table_abt_n11_ft" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d387002e923">Write to Pipeline Property</th>
+
+                                    <th class="entry cellrowborder" id="d387002e926">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e923 ">SDC RPC Connection <a class="xref" href="../Destinations/SDC_RPCdest.html#concept_icz_wzw_dt" title="In an SDC RPC destination, the RPC connections define where the destination passes data.">
+                                            <img class="image" id="task_xlv_jdw_kq__d346e10069" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d387002e926 ">Connection information for the destination pipeline to
+                                        continue processing data. Use the following format:
+                                            <code class="ph codeph">&lt;host&gt;:&lt;port&gt;</code>. <p class="p">Use a single
+                                            RPC connection for each destination pipeline. Using
+                                                <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, add additional
+                                            connections as needed.</p>
+<p class="p">Use the port number when
+                                            you configure the SDC RPC origin that receives the
+                                            data.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e923 ">SDC RPC ID</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e926 ">User-defined ID to allow the destination to pass data to
+                                        an SDC RPC origin. Use this ID in all SDC RPC origins to
+                                        process data from the destination.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e923 ">Retries Per Batch</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e926 ">Number of times the destination tries to write a batch to
+                                        the SDC RPC origin. <p class="p" id="task_xlv_jdw_kq__d346e10159">When the
+                                            destination cannot write the batch within the configured
+                                            number of retries, it fails the batch.</p>
+<p class="p" id="task_xlv_jdw_kq__d346e10161">Default is 3.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e923 ">Back Off Period</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e926 ">Milliseconds to wait before retrying writing a batch to
+                                        the SDC RPC origin.<p class="p" id="task_xlv_jdw_kq__d346e10172">The value that
+                                            you enter increases exponentially after each retry,
+                                            until it reaches the maximum wait time of 5 minutes. For
+                                            example, if you set the back off period to 10, the
+                                            destination attempts the first retry after waiting 10
+                                            milliseconds, attempts the second retry after waiting
+                                            100 milliseconds, and attempts the third retry after
+                                            waiting 1,000 milliseconds. </p>
+<p class="p">Set to 0 to retry
+                                            immediately.</p>
+<p class="p" id="task_xlv_jdw_kq__d346e10176">Default is
+                                            0.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e923 ">Connection Timeout (ms)</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e926 ">Milliseconds to establish a connection to the SDC RPC
+                                        origin. <p class="p">The destination retries the connection based on
+                                            the Retries Per Batch property.</p>
+<p class="p">Default is 5000
+                                            milliseconds.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e923 ">Read Timeout (ms)</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e926 ">Milliseconds to wait for the SDC RPC origin to read data
+                                        from a batch. <p class="p" id="task_xlv_jdw_kq__d346e10200">The destination retries
+                                            the write based on the Retries Per Batch property.</p>
+<p class="p" id="task_xlv_jdw_kq__d346e10202">Default is 2000
+                                            milliseconds.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e923 ">Use Compression <a class="xref" href="../Destinations/SDC_RPCdest.html#concept_zdq_rdj_r5" title="The SDC RPC destination compresses data by default when passing data to an SDC RPC origin. When necessary, you can disable compression in the destination.">
+                                            <img class="image" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d387002e926 ">Enables the destination to use compression to pass data
+                                        to the SDC RPC origin. Enabled by default. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e923 ">Use TLS</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e926 ">
+                                        <p class="p">Enables the use of TLS. </p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e923 ">Truststore File <a class="xref" href="SSL-TLS.html#concept_kqb_rqf_5z">
+                                            <img class="image" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d387002e926 ">The path to the truststore file. Enter an absolute path
+                                        to the file or a path relative to the <span class="ph">Data Collector</span> resources directory: <span class="ph filepath">$SDC_RESOURCES</span>.
+                                                <p class="p"><span class="ph">For more information about environment variables, see
+                              <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr">Data Collector Environment Configuration</a>.</span></p>
+<p class="p">By default, no truststore is used. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e923 ">Truststore Type</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e926 ">Type of truststore to use. Use one of the following types:<ul class="ul">
+                                            <li class="li">Java Keystore File (JKS)</li>
+
+                                            <li class="li">PKCS-12 (p12 file)</li>
+
+                                        </ul>
+<p class="p">Default is Java Keystore File (JKS). </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e923 ">Truststore Password</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e926 ">Password to the truststore file. A password is optional,
+                                        but recommended.<div class="p">
+                                            <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
+                  passwords, you can use <a class="xref" href="RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
+
+                                        </div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e923 ">Truststore Trust Algorithm</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e926 ">The algorithm used to manage the truststore. <p class="p">Default
+                                            is <span class="ph" id="task_xlv_jdw_kq__d346e4124">SunX509</span>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e923 ">Use Default Protocols</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e926 ">Determines the transport layer security (TLS) protocol to
+                                        use. The default protocol is <span class="ph">TLSv1.2</span>. To use a different protocol, clear this option.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e923 ">Transport Protocols <a class="xref" href="SSL-TLS.html#concept_mvs_cxf_5z">
+                                            <img class="image" id="task_xlv_jdw_kq__d346e4147" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d387002e926 ">The TLS protocols to use. To use a protocol other than
+                                        the default <span class="ph">TLSv1.2</span>, click the <span class="ph uicontrol">Add</span> icon and enter the
+                                        protocol name. You can use <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add
+                                            protocols.<div class="note note"><span class="notetitle">Note:</span> Older protocols are not as secure as <span class="ph">TLSv1.2</span>.</div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e923 ">Use Default Cipher Suites</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e926 ">Determines the cipher suite to use when performing the
+                                        SSL/TLS handshake. <p class="p"><span class="ph">Data Collector</span> provides a set of cipher suites that it can use by
+                                            default. For a full list, see <a class="xref" href="SSL-TLS.html#concept_cwx_dyf_5z">Cipher Suites</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e923 ">Cipher Suites</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e926 ">Cipher suites to use. To use a cipher suite that is not a
+                                        part of the default set, click the
+                                            <span class="ph uicontrol">Add</span> icon and enter the name of
+                                        the cipher suite. You can use <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add cipher
+                                            suites.<p class="p">Enter the Java Secure Socket Extension (JSSE)
+                                            name for the additional cipher suites that you want to
+                                            use. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">When writing error records to Microsoft Azure Event Hub, click the
+                        <span class="ph uicontrol">Error Records - Write to Event Hub</span> tab and configure
+                    the following properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__table_m3z_dyl_3db" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d387002e1249">Event Hub Property</th>
+
+                                    <th class="entry cellrowborder" id="d387002e1252">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr id="task_xlv_jdw_kq__d346e8705">
+                                    <td class="entry cellrowborder" headers="d387002e1249 ">Namespace Name</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1252 ">The name of the namespace that contains the event hub
+                                        that you want to use.</td>
+
+                                </tr>
+
+                                <tr id="task_xlv_jdw_kq__d346e8714">
+                                    <td class="entry cellrowborder" headers="d387002e1249 ">Event Hub Name</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1252 ">The event hub name.</td>
+
+                                </tr>
+
+                                <tr id="task_xlv_jdw_kq__d346e8723">
+                                    <td class="entry cellrowborder" headers="d387002e1249 ">Shared Access Policy Name</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1252 ">The policy name associated with the namespace. <p class="p">To
+                                            retrieve the policy name, when logged into the Azure
+                                            portal, navigate to your namespace and event hub, and
+                                            then click Shared Access Policies for a list of
+                                            policies. </p>
+<p class="p">When appropriate, you can use the
+                                            default shared access key policy,
+                                            RootManageSharedAccessKey.</p>
+</td>
+
+                                </tr>
+
+                                <tr id="task_xlv_jdw_kq__d346e8736">
+                                    <td class="entry cellrowborder" headers="d387002e1249 ">Connection String Key </td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1252 ">One of the connection string keys associated with the
+                                        specified shared access policy. <p class="p">To retrieve a connection
+                                            string key, after accessing the list of shared access
+                                            policies, click the policy name, and then copy the
+                                            Connection String - Primary Key value. </p>
+<p class="p">The value
+                                            typically begins with "Endpoint".</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">When writing error records to Elasticsearch, click the <span class="ph uicontrol">Error Records
+                        - Write to Elasticsearch</span> tab and configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__table_aln_mxx_ty" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d387002e1330">Elasticsearch Property</th>
+
+                                    <th class="entry cellrowborder" id="d387002e1333">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e1330 ">Cluster HTTP URI</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1333 ">HTTP URI used to connect to the cluster. Use the
+                                        following format:
+                                        <pre class="pre codeblock"><code>&lt;host&gt;:&lt;port&gt;</code></pre></td>
+
+                                </tr>
+<tr>
+                                    <td class="entry cellrowborder" headers="d387002e1330 ">Additional HTTP Params</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1333 ">Additional HTTP parameters that you want to send as query
+                                        string parameters to Elasticsearch. Enter the exact
+                                        parameter name and value expected by Elasticsearch.</td>
+
+                                </tr>
+<tr>
+                                    <td class="entry cellrowborder" headers="d387002e1330 ">Detect Additional Nodes in Cluster</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1333 ">
+                                        <p class="p">Detects additional nodes in the cluster based on the
+                                            configured Cluster URI. </p>
+
+                                        <p class="p">Selecting this property is the equivalent to setting the
+                                            client.transport.sniff Elasticsearch property to true. </p>
+
+                                        <p class="p">Use only when the Data Collector shares the same network
+                                            as the Elasticsearch cluster. Do not use for Elastic
+                                            Cloud or Docker clusters. </p>
+
+                                    </td>
+
+                                </tr>
+<tr>
+                                    <td class="entry cellrowborder" headers="d387002e1330 ">Use Security</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1333 ">Specifies whether security is enabled on the
+                                        Elasticsearch cluster. </td>
+
+                                </tr>
+<tr>
+                                    <td class="entry cellrowborder" headers="d387002e1330 ">Time Basis <a class="xref" href="../Destinations/Elasticsearch.html#concept_dd3_vhk_r5" title="The time basis is the time used by the Elasticsearch destination to write records to time-based indexes. When indexes have no time component, you can ignore the time basis property.">
+                                            <img class="image" id="task_xlv_jdw_kq__d346e8854" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        </a></td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1333 ">
+                                        <div class="p">Time basis to use for writing to time-based indexes. Use
+                                            one of the following expressions:<ul class="ul" id="task_xlv_jdw_kq__d346e8861">
+                                                <li class="li"><code class="ph codeph">${time:now()}</code> - Uses the
+                                                  processing time as the time basis. The processing
+                                                  time is the time associated with the <span class="ph">Data Collector</span> running the pipeline. </li>
+
+                                                <li class="li">An expression that calls a field and resolves to
+                                                  a datetime value, such as
+                                                  <code class="ph codeph">${record:value(&lt;date field
+                                                  path&gt;)}</code>. Uses the datetime result as the
+                                                  time basis. </li>
+
+                                            </ul>
+</div>
+
+                                        <p class="p">When the Index property does not include datetime
+                                            variables, you can ignore this property. </p>
+
+                                        <p class="p">Default is <code class="ph codeph">${time:now()}</code>.</p>
+
+                                    </td>
+
+                                </tr>
+<tr>
+                                    <td class="entry cellrowborder" headers="d387002e1330 ">Data Time Zone</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1333 ">Time zone for the destination system. Used to resolve
+                                        datetimes in time-based indexes. </td>
+
+                                </tr>
+<tr>
+                                    <td class="entry cellrowborder" headers="d387002e1330 ">Index</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1333 ">Index for the generated documents. Enter an index name or
+                                        an expression that evaluates to the index name. <p class="p">For
+                                            example, if you enter <code class="ph codeph">customer</code> as the
+                                            index, the destination writes the document within the
+                                                <code class="ph codeph">customer</code> index. </p>
+<p class="p">If you use
+                                            datetime variables in the expression, make sure to
+                                            configure the time basis appropriately. For details
+                                            about datetime variables, see <a class="xref" href="../Expression_Language/DateTimeVariables.html#concept_gh4_qd2_sv" title="The expression language provides datetime variables for use in expressions.">Datetime Variables</a>.</p>
+</td>
+
+                                </tr>
+<tr>
+                                    <td class="entry cellrowborder" headers="d387002e1330 ">Mapping</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1333 ">Mapping type for the generated documents. Enter the
+                                        mapping type, an expression that evaluates to the mapping
+                                        type, or a field that includes the mapping type. <p class="p">For
+                                            example, if you enter <code class="ph codeph">user</code> as the
+                                            mapping type, the destination writes the document with a
+                                                <code class="ph codeph">user</code> mapping type.</p>
+</td>
+
+                                </tr>
+<tr>
+                                    <td class="entry cellrowborder" headers="d387002e1330 ">Document ID <a class="xref" href="../Destinations/Elasticsearch.html#concept_yr2_1tf_z5" title="When appropriate, you can specify an expression that defines the document ID. When you do not specify an expression, Elasticsearch generates IDs for each document.">
+                                            <img class="image" id="task_xlv_jdw_kq__d346e8943" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        </a></td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1333 ">Expression that evaluates to the ID for the generated
+                                        documents. When you do not specify an ID, Elasticsearch
+                                        creates an ID for each document.<p class="p">By default, the
+                                            destination allows Elasticsearch to create the
+                                        ID.</p>
+</td>
+
+                                </tr>
+<tr>
+                                    <td class="entry cellrowborder" headers="d387002e1330 ">Parent ID</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1333 ">Optional parent ID for the generated documents. Enter a
+                                        parent ID or an expression that evaluates to the parent ID.
+                                            <p class="p">Use to establish a parent-child relationship between
+                                            documents in the same index.</p>
+</td>
+
+                                </tr>
+<tr>
+                                    <td class="entry cellrowborder" headers="d387002e1330 ">Routing</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1333 ">Optional custom routing value for the generated
+                                        documents. Enter a routing value or an expression that
+                                        evaluates to the routing value.<p class="p">Elasticsearch routes a
+                                            document to a particular shard in an index based on the
+                                            routing value defined for the document. You can define a
+                                            custom value for each document. If you don’t define a
+                                            custom routing value, Elasticsearch uses the parent ID
+                                            (if defined) or the document ID as the routing
+                                            value.</p>
+</td>
+
+                                </tr>
+<tr>
+                                    <td class="entry cellrowborder" headers="d387002e1330 ">Data Charset</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1333 ">
+                                        <p class="p">Character encoding of the data to be processed. </p>
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+                <div class="itemgroup info">If you enabled security, configure the following security property:</div>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__d346e9035" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d387002e1548">Security Property</th>
+
+                                    <th class="entry cellrowborder" id="d387002e1551">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e1548 ">Security Username/Password</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1551 ">Elasticsearch username and password. <div class="p">Enter the
+                                            username and password using the following
+                                            syntax:<pre class="pre codeblock"><code>&lt;username&gt;:&lt;password&gt;</code></pre></div>
+<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_xlv_jdw_kq__d346e9069">To
+                        secure sensitive information such as usernames and passwords, you can use
+                              <a class="xref" href="RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e1548 ">SSL Truststore Path</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1551 ">
+                                        <p class="p">Location of the truststore file. </p>
+
+                                        <p class="p">Configuring this property is the equivalent to
+                                            configuring the shield.ssl.truststore.path Elasticsearch
+                                            property. </p>
+
+                                        <p class="p">Not necessary for Elastic Cloud clusters. </p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e1548 ">SSL Truststore Password</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1551 ">
+                                        <p class="p">Password for the truststore file. </p>
+
+                                        <p class="p">Configuring this property is the equivalent to
+                                            configuring the shield.ssl.truststore.password
+                                            Elasticsearch property. </p>
+
+                                        <p class="p">Not necessary for Elastic Cloud clusters. </p>
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">When writing error records to file, click the <span class="keyword wintitle">Error Records - Write
+                        to File</span> tab and configure the following properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__table_gy3_1y4_1r" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:22.22222222222222%" /><col style="width:77.77777777777779%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d387002e1656">Write to File Property</th>
+
+                                    <th class="entry cellrowborder" id="d387002e1659">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e1656 ">Directory</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1659 ">Local directory for error record files. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e1656 ">File Prefix</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1659 ">Prefix used for error record files. Use to differentiate
+                                        error record files from other files in the directory.<p class="p">Uses
+                                            the prefix sdc-${sdc:id()} by default. The prefix
+                                            evaluates to sdc-&lt;<span class="ph">Data Collector</span> ID&gt;. This provides default differentiation in case
+                                            several <span class="ph">Data Collector</span>s write to the same directory. </p>
+<p class="p">The <span class="ph">Data Collector</span> ID is stored in the following file:
+                                                <span class="ph filepath">$SDC_DATA/sdc.id</span> file.
+                                                </p>
+<p class="p"><span class="ph">For more information about environment variables, see
+                              <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr">Data Collector Environment Configuration</a>.</span></p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e1656 ">File Wait Time (secs)</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1659 ">Number of seconds <span class="ph">Data Collector</span> waits for error records. After that time, it creates a
+                                        new error record file. <p class="p">You can enter a number of seconds
+                                            or use the default expression to enter the time in
+                                            minutes. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e1656 ">Max File Size (MB)</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1659 ">Maximum size for error files. Exceeding this size creates
+                                        a new error file. <p class="p">Use 0 to avoid using this
+                                        property.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">When writing error records to Google Cloud Storage, click the <span class="keyword wintitle">Error
+                        Records - Write to Google Cloud Storage</span> tab and configure the
+                    following properties: </span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__table_rkp_53v_5bb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d387002e1759">Google Cloud Storage Property</th>
+
+                                    <th class="entry cellrowborder" id="d387002e1762">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e1759 ">Project ID</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1762 ">Project ID to connect to.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e1759 ">Bucket</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1762 ">Bucket to use when writing records.<div class="note note"><span class="notetitle">Note:</span> The bucket name must be DNS compliant. For more
+                  information about bucket naming conventions, see the <a class="xref" href="https://cloud.google.com/storage/docs/naming" target="_blank">Google Cloud Storage documentation</a>.<p class="p" id="task_xlv_jdw_kq__d346e9314">For a full list of
+                        origins that support this data format, see <a class="xref" href="../Apx-DataFormats/DataFormat_Title.html#concept_kgd_11c_kv" title="The following table lists the data formats supported by each origin.">Origins</a> in the "Data Formats by Stage" appendix.</p>
+<p class="p" id="task_xlv_jdw_kq__d346e9319">For a full list of destinations that support
+                        this data format, see <a class="xref" href="../Apx-DataFormats/DataFormat_Title.html#concept_odv_w5c_kv" title="The following table lists the data formats supported by each destination.">Destinations</a> in the "Data Formats by Stage" appendix.</p>
+<p class="p" id="task_xlv_jdw_kq__d346e9324">For a list of origins and destinations that
+                        process this data format, see <a class="xref" href="../Apx-DataFormats/DataFormat_Title.html#concept_bcw_qzb_kv" title="This appendix lists the data formats supported by origin and destination stages.">Data Format Support</a>.</p>
+</div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e1759 ">Credentials Provider <a class="xref" href="../Destinations/GCS.html#concept_otx_vxn_sbb">
+                                            <img class="image" id="task_xlv_jdw_kq__d346e9505" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1762 ">Credentials provider to use to connect:<ul class="ul" id="task_xlv_jdw_kq__d346e9509">
+                                            <li class="li">Default credentials provider</li>
+
+                                            <li class="li">Service account credentials file (JSON) </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e1759 ">Credentials File Path (JSON) </td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1762 ">When using a Google Cloud service account credentials
+                                        file, path to the file that the origin uses to connect to
+                                        Google Cloud Storage. The credentials file must be a JSON
+                                            file.<p class="p">Enter a path relative to the <span class="ph">Data Collector</span> resources directory, <code class="ph codeph">$SDC_RESOURCES</code>,
+                                            or enter an absolute path. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e1759 ">Common Prefix</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1762 ">Common prefix that determines where objects are written.
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e1759 ">Partition Prefix <a class="xref" href="../Destinations/GCS.html#concept_qsx_ryn_sbb">
+                                            <img class="image" id="task_xlv_jdw_kq__d346e9345" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        </a></td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1762 ">Optional partition prefix to specify the partition to
+                                        use. <p class="p">Use a specific partition prefix or define an
+                                            expression that evaluates to a partition prefix.
+                                            </p>
+<p class="p">When using datetime variables in the expression,
+                                            be sure to configure the time basis for the
+                                        stage.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e1759 ">Data Time Zone</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1762 ">
+                                        <p class="p">Time zone for the destination system. Used to resolve
+                                            datetimes in a time-based partition prefix. </p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e1759 ">Time Basis <a class="xref" href="../Destinations/GCS.html#concept_ffn_tc4_sbb">
+                                            <img class="image" id="task_xlv_jdw_kq__d346e9374" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        </a></td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1762 ">
+                                        <div class="p">Time basis to use for writing to a time-based bucket or
+                                            partition prefix. Use one of the following
+                                                expressions:<ul class="ul" id="task_xlv_jdw_kq__d346e9381">
+                                                <li class="li"><code class="ph codeph">${time:now()}</code> - Uses the
+                                                  processing time as the time basis in conjunction
+                                                  with the specified Data Time Zone.</li>
+
+                                                <li class="li">An expression that calls a field and resolves to
+                                                  a datetime value, such as
+                                                  <code class="ph codeph">${record:value(&lt;date field
+                                                  path&gt;)}</code>. Uses the time associated with
+                                                  the record as the time basis, adjusted for the
+                                                  specified Data Time Zone.</li>
+
+                                            </ul>
+</div>
+
+                                        <p class="p">When the Partition Prefix property has no time component,
+                                            you can ignore this property. </p>
+
+                                        <p class="p">Default is <code class="ph codeph">${time:now()}</code>.</p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e1759 ">Object Name Prefix <a class="xref" href="../Destinations/GCS.html#concept_s1m_j24_sbb">
+                                            <img class="image" id="task_xlv_jdw_kq__d346e9413" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        </a></td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1762 ">Defines a prefix for object names written by the
+                                        destination. By default, object names start with "sdc" as
+                                        follows: <code class="ph codeph">sdc-&lt;UUID&gt;</code>. <p class="p">Not required for
+                                            the whole file data format. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">When writing error records to Google Pub/Sub, click the <span class="keyword wintitle">Error Records
+                        - Write to Google Pub/Sub</span> tab and configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__table_wdw_vhv_5bb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d387002e1986">Google Pub/Sub Property</th>
+
+                                    <th class="entry cellrowborder" id="d387002e1989">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e1986 ">Topic ID</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1989 ">Google Pub/Sub topic ID to write messages to.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e1986 ">Project ID</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1989 ">Google Pub/Sub project ID to connect to.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e1986 ">Credentials Provider <a class="xref" href="../Destinations/PubSubPublisher.html#concept_snf_1wq_v1b">
+                                            <img class="image" id="task_xlv_jdw_kq__d346e9223" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1989 ">Credentials provider to use to connect to Google
+                                            Pub/Sub:<ul class="ul" id="task_xlv_jdw_kq__d346e9227">
+                                            <li class="li">Default credentials provider</li>
+
+                                            <li class="li">Service account credentials file (JSON) </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e1986 ">Credentials File Path (JSON)</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e1989 ">When using a Google Cloud service account credentials
+                                        file, path to the file that the destination uses to connect
+                                        to Google Pub/Sub. The credentials file must be a JSON
+                                            file.<p class="p">Enter a path relative to the <span class="ph">Data Collector</span> resources directory, <code class="ph codeph">$SDC_RESOURCES</code>,
+                                            or enter an absolute path. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">When writing error records to Kafka, click the <span class="keyword wintitle">Error Records - Write
+                        to Kafka</span> tab and configure the following properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__table_lb5_svh_ms" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:27.77777777777778%" /><col style="width:72.22222222222221%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d387002e2079">Write to Kafka Property</th>
+
+                                    <th class="entry cellrowborder" id="d387002e2082">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                        <td class="entry cellrowborder" headers="d387002e2079 ">Broker URI</td>
+
+                                        <td class="entry cellrowborder" headers="d387002e2082 ">Connection string for the Kafka broker. Use the
+                                            following format:
+                                                <code class="ph codeph">&lt;host&gt;:&lt;port&gt;</code>.<p class="p">To ensure a
+                                                connection, enter a comma-separated list of
+                                                additional broker URI.</p>
+</td>
+
+                                    </tr>
+
+                                <tr>
+                                        <td class="entry cellrowborder" headers="d387002e2079 ">Runtime Topic Resolution <a class="xref" href="../Destinations/KProducer.html#concept_ok1_cwr_xr" title="Kafka Producer can write a record to the topic based on an expression. When Kafka Producer evaluates a record, it calculates the expression based on record values and writes the record to the resulting topic."><img class="image" id="task_xlv_jdw_kq__d346e9704" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
+                                            </a></td>
+
+                                        <td class="entry cellrowborder" id="task_xlv_jdw_kq__d346e9707" headers="d387002e2082 ">Evaluates an expression at
+                                            runtime to determine the topic to use for each
+                                            record.</td>
+
+                                    </tr>
+
+                                <tr>
+                                        <td class="entry cellrowborder" headers="d387002e2079 ">Topic Expression</td>
+
+                                        <td class="entry cellrowborder" headers="d387002e2082 ">Expression used to determine where each record is
+                                            written when using runtime topic resolution. Use an
+                                            expression that evaluates to a topic name. </td>
+
+                                    </tr>
+
+                                <tr>
+                                        <td class="entry cellrowborder" headers="d387002e2079 ">Topic White List</td>
+
+                                        <td class="entry cellrowborder" headers="d387002e2082 ">List of valid topic names to write to when using
+                                            runtime topic resolution. Use to avoid writing to
+                                            invalid topics. Records that resolve to invalid topic
+                                            names are passed to the stage for error handling. <p class="p">Use
+                                                an asterisk (*) to allow writing to any topic name.
+                                                By default, all topic names are valid.</p>
+</td>
+
+                                    </tr>
+
+                                <tr>
+                                        <td class="entry cellrowborder" headers="d387002e2079 ">Topic</td>
+
+                                        <td class="entry cellrowborder" headers="d387002e2082 ">Topic to use. <p class="p">Not available when using runtime
+                                                topic resolution.</p>
+</td>
+
+                                    </tr>
+
+                                <tr>
+                                        <td class="entry cellrowborder" headers="d387002e2079 ">Partition Strategy <a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
+                                                <img class="image" id="task_xlv_jdw_kq__d346e9749" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                        <td class="entry cellrowborder" headers="d387002e2082 ">Strategy to use to write to partitions:<ul class="ul" id="task_xlv_jdw_kq__d346e9753">
+                                                <li class="li">Round Robin - Takes turns writing to different
+                                                  partitions.</li>
+
+                                                <li class="li">Random - Writes to partitions randomly.</li>
+
+                                                <li class="li">Expression - Uses an expression to write data to
+                                                  different partitions. Writes records to the
+                                                  partitions specified by the results of the
+                                                  expression.</li>
+
+                                                <li class="li">Default - Uses an expression to extract a
+                                                  partition key from the record. Writes records to
+                                                  partitions based on a hash of the partition key.
+                                                </li>
+
+                                            </ul>
+</td>
+
+                                    </tr>
+
+                                <tr>
+                                        <td class="entry cellrowborder" headers="d387002e2079 ">Partition Expression <a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
+                                                <img class="image" id="task_xlv_jdw_kq__d346e9775" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                        <td class="entry cellrowborder" id="task_xlv_jdw_kq__d346e9777" headers="d387002e2082 ">Expression to use with the
+                                            default or expression partition strategy. <p class="p">When using
+                                                the default partition strategy, specify an
+                                                expression that returns the partition key from the
+                                                record. The expression must evaluate to a string
+                                                value. </p>
+<p class="p">When using the expression partition
+                                                strategy, specify an expression that evaluates to
+                                                the partition where you want each record written.
+                                                Partition numbers start with 0. The expression must
+                                                evaluate to a numeric value.</p>
+<p class="p">Optionally, click <span class="ph uicontrol">Ctrl + Space Bar</span> for help with
+                  creating the expression. </p>
+</td>
+
+                                    </tr>
+
+                                <tr>
+                                        <td class="entry cellrowborder" headers="d387002e2079 ">One Message per Batch</td>
+
+                                        <td class="entry cellrowborder" headers="d387002e2082 ">For each batch, writes the records to each partition
+                                            as a single message. </td>
+
+                                    </tr>
+
+                                <tr>
+                                        <td class="entry cellrowborder" headers="d387002e2079 ">Kafka Configuration</td>
+
+                                        <td class="entry cellrowborder" headers="d387002e2082 ">Additional Kafka properties to use. Using <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
+                                                <span class="ph uicontrol">Add</span> icon and define the Kafka
+                                            property name and value. <p class="p">Use the property names and
+                                                values as expected by Kafka. Do not use the
+                                                broker.list property.</p>
+<p class="p">For information about
+                                                enabling secure connections to Kafka, see <a class="xref" href="../Destinations/KProducer.html#concept_znr_b3c_rw">Enabling Security</a>.</p>
+</td>
+
+                                    </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">When writing error records to Kinesis, click the <span class="keyword wintitle">Error Records -
+                        Write to Kinesis</span> tab and configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__table_cgq_yn4_yr" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:22.22222222222222%" /><col style="width:77.77777777777779%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d387002e2266">Kinesis Property</th>
+
+                                    <th class="entry cellrowborder" id="d387002e2269">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e2266 ">Access Key ID <a class="xref" href="../Destinations/KinProducer.html#concept_bpp_54g_vw" title="When Data Collector writes data to a Kinesis Producer destination, it must pass credentials to Amazon Web Services.">
+                                            <img class="image" id="task_xlv_jdw_kq__image_v86_wcr_yv" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        </a></td>
+
+                                    <td class="entry cellrowborder" headers="d387002e2269 ">
+        <p class="p">AWS access key ID.</p>
+
+        <p class="p">Required when not using IAM roles with IAM instance profile credentials.</p>
+
+       </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e2266 ">Secret Access Key <a class="xref" href="../Destinations/KinProducer.html#concept_bpp_54g_vw" title="When Data Collector writes data to a Kinesis Producer destination, it must pass credentials to Amazon Web Services.">
+                                            <img class="image" id="task_xlv_jdw_kq__image_v74_wcr_yv" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                        </a></td>
+
+                                    <td class="entry cellrowborder" headers="d387002e2269 ">
+        <p class="p">AWS secret access key. </p>
+
+        <p class="p">Required when not using IAM roles with IAM instance profile credentials. </p>
+
+       </td>
+
+                                </tr>
+
+                                <tr>
+      <td class="entry cellrowborder" headers="d387002e2266 ">Region</td>
+
+      <td class="entry cellrowborder" headers="d387002e2269 ">Amazon Web Services region that hosts the Kinesis cluster.</td>
+
+     </tr>
+
+                                <tr>
+      <td class="entry cellrowborder" headers="d387002e2266 ">Endpoint</td>
+
+      <td class="entry cellrowborder" headers="d387002e2269 ">Endpoint to connect to when you select Other for the region. Enter the endpoint
+       name.</td>
+
+     </tr>
+
+                                <tr>
+      <td class="entry cellrowborder" headers="d387002e2266 ">Stream Name</td>
+
+      <td class="entry cellrowborder" headers="d387002e2269 ">Kinesis stream name.</td>
+
+     </tr>
+
+                                <tr>
+      <td class="entry cellrowborder" headers="d387002e2266 ">Partitioning Strategy</td>
+
+      <td class="entry cellrowborder" headers="d387002e2269 ">Strategy to write data to Kinesis shards:<ul class="ul" id="task_xlv_jdw_kq__d155e1445">
+        <li class="li">Random - Generates a random partition key.</li>
+
+        <li class="li">
+         <p class="p">Expression - Uses the result of an expression as the partition key.</p>
+
+        </li>
+
+       </ul>
+</td>
+
+     </tr>
+
+                                <tr>
+      <td class="entry cellrowborder" headers="d387002e2266 ">Partition Expression</td>
+
+      <td class="entry cellrowborder" headers="d387002e2269 ">Expression to generate the partition key used to pass data to different shards. <p class="p">Use
+        for the expression partition strategy. </p>
+</td>
+
+     </tr>
+
+                                <tr>
+      <td class="entry cellrowborder" headers="d387002e2266 ">Kinesis Producer Configuration</td>
+
+      <td class="entry cellrowborder" headers="d387002e2269 ">Additional Kinesis properties. <p class="p">When you add a configuration property, enter the
+        exact property name and the value. The Kinesis Producer does not validate the property names
+        or values. </p>
+</td>
+
+     </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e2266 ">Preserve Record Order</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e2269 ">Select to preserve the order of records. Enabling this
+                                        option can reduce pipeline performance.</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">When writing error records to a MapR Streams cluster, click the <span class="keyword wintitle">Error
+                        Records - Write to MapR Streams</span> tab and configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__d346e9870" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d387002e2434">MapR Streams Producer Property</th>
+
+                                    <th class="entry cellrowborder" id="d387002e2437">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                        <td class="entry cellrowborder" headers="d387002e2434 ">Runtime Topic Resolution <a class="xref" href="../Destinations/KProducer.html#concept_ok1_cwr_xr" title="Kafka Producer can write a record to the topic based on an expression. When Kafka Producer evaluates a record, it calculates the expression based on record values and writes the record to the resulting topic."><img class="image" id="task_xlv_jdw_kq__d346e9897" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
+                                            </a></td>
+
+                                        <td class="entry cellrowborder" id="task_xlv_jdw_kq__d346e9900" headers="d387002e2437 ">Evaluates an expression at
+                                            runtime to determine the topic to use for each
+                                            record.</td>
+
+                                    </tr>
+
+                                <tr>
+                                        <td class="entry cellrowborder" headers="d387002e2434 ">Topic</td>
+
+                                        <td class="entry cellrowborder" headers="d387002e2437 ">Topic to use. <p class="p">Not available when using runtime
+                                                topic resolution.</p>
+</td>
+
+                                    </tr>
+
+                                <tr>
+                                        <td class="entry cellrowborder" headers="d387002e2434 ">Topic Expression</td>
+
+                                        <td class="entry cellrowborder" headers="d387002e2437 ">Expression used to determine where each record is
+                                            written when using runtime topic resolution. Use an
+                                            expression that evaluates to a topic name. </td>
+
+                                    </tr>
+
+                                <tr>
+                                        <td class="entry cellrowborder" headers="d387002e2434 ">Topic White List</td>
+
+                                        <td class="entry cellrowborder" headers="d387002e2437 ">List of valid topic names to write to when using
+                                            runtime topic resolution. Use to avoid writing to
+                                            invalid topics. Records that resolve to invalid topic
+                                            names are passed to the stage for error handling. <p class="p">Use
+                                                an asterisk (*) to allow writing to any topic name.
+                                                By default, all topic names are valid.</p>
+</td>
+
+                                    </tr>
+
+                                <tr>
+                                        <td class="entry cellrowborder" headers="d387002e2434 ">Partition Strategy <a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
+                                                <img class="image" id="task_xlv_jdw_kq__d346e9941" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                        <td class="entry cellrowborder" headers="d387002e2437 ">Strategy to use to write to partitions:<ul class="ul" id="task_xlv_jdw_kq__d346e9945">
+                                                <li class="li">Round Robin - Takes turns writing to different
+                                                  partitions.</li>
+
+                                                <li class="li">Random - Writes to partitions randomly.</li>
+
+                                                <li class="li">Expression - Uses an expression to write data to
+                                                  different partitions. Writes records to the
+                                                  partitions specified by the results of the
+                                                  expression.</li>
+
+                                                <li class="li">Default - Uses an expression to extract a
+                                                  partition key from the record. Writes records to
+                                                  partitions based on a hash of the partition key.
+                                                </li>
+
+                                            </ul>
+</td>
+
+                                    </tr>
+
+                                <tr>
+                                        <td class="entry cellrowborder" headers="d387002e2434 ">Partition Expression <a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
+                                                <img class="image" id="task_xlv_jdw_kq__d346e9968" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                        <td class="entry cellrowborder" id="task_xlv_jdw_kq__d346e9970" headers="d387002e2437 ">Expression to use with the
+                                            default or expression partition strategy. <p class="p">When using
+                                                the default partition strategy, specify an
+                                                expression that returns the partition key from the
+                                                record. The expression must evaluate to a string
+                                                value. </p>
+<p class="p">When using the expression partition
+                                                strategy, specify an expression that evaluates to
+                                                the partition where you want each record written.
+                                                Partition numbers start with 0. The expression must
+                                                evaluate to a numeric value.</p>
+<p class="p">Optionally, click <span class="ph uicontrol">Ctrl + Space Bar</span> for help with
+                  creating the expression. </p>
+</td>
+
+                                    </tr>
+
+                                <tr>
+                                        <td class="entry cellrowborder" headers="d387002e2434 ">One Message per Batch</td>
+
+                                        <td class="entry cellrowborder" headers="d387002e2437 ">For each batch, writes the records to each partition
+                                            as a single message. </td>
+
+                                    </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e2434 ">MapR Streams Configuration <a class="xref" href="../Destinations/MapRStreamsProd.html#concept_lzy_xlg_2v" title="You can add custom configuration properties to MapR Streams Producer.">
+                                            <img class="image" id="task_xlv_jdw_kq__d346e9998" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a>
+                                    </td>
+
+                                    <td class="entry cellrowborder" headers="d387002e2437 ">Additional configuration properties to use. Using <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
+                                            <span class="ph uicontrol">Add</span> icon and define the MapR
+                                        Streams property name and value.<p class="p">Use the property names
+                                            and values as expected by MapR.</p>
+<p class="p">You can use MapR
+                                            Streams properties and the set of Kafka properties
+                                            supported by MapR Streams. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">When writing error records to an MQTT broker, click the <span class="keyword wintitle">Error Records
+                        - Write to MQTT</span> tab and configure the following properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__table_a2r_l4t_kcb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d387002e2611">MQTT Property</th>
+
+                                    <th class="entry cellrowborder" id="d387002e2614">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+      <td class="entry cellrowborder" headers="d387002e2611 ">Broker URL</td>
+
+      <td class="entry cellrowborder" headers="d387002e2614 ">MQTT Broker URL. Enter in the following
+        format:<pre class="pre codeblock"><code>&lt;tcp | ssl&gt;://&lt;hostname&gt;:&lt;port&gt;</code></pre><p class="p">Use ssl for secure
+        connections to the broker.</p>
+<div class="p">For
+       example:<pre class="pre codeblock"><code>tcp://localhost:1883</code></pre></div>
+</td>
+
+     </tr>
+
+                                <tr>
+      <td class="entry cellrowborder" headers="d387002e2611 ">Client ID</td>
+
+      <td class="entry cellrowborder" headers="d387002e2614 ">MQTT Client ID. The ID must be unique across all clients connecting to the same
+        broker.<div class="p">You can define an expression that evaluates to the client ID. For example, enter
+        the following expression to use the unique pipeline ID as the client
+        ID:<pre class="pre codeblock"><code>${pipeline:id()}</code></pre></div>
+<p class="p">If a pipeline includes multiple MQTT stages
+        and you want to use the unique pipeline ID as the client ID for both stages, prefix the
+        client ID with a string like
+       this:</p>
+<pre class="pre codeblock"><code>sub-${pipeline:id()} and pub-${pipeline:id()} </code></pre>Otherwise, all
+       stages will use the same client ID. This can cause problems, such as messages
+       disappearing.</td>
+
+     </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d387002e2611 ">Topic <a class="xref" href="../Destinations/MQTTPublisher.html#concept_bbq_w5q_mz" title="The MQTT Publisher destination writes messages to a single topic on the MQTT broker. Any MQTT client subscribed to that topic receives the messages. A topic is a string that the broker uses to filter messages for each connected client.">
+         <img class="image" id="task_xlv_jdw_kq__d155e4600" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="14" width="14" /></a></td>
+
+       <td class="entry cellrowborder" headers="d387002e2614 ">Topic to publish to. Using <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the <span class="ph uicontrol">Add</span> icon to read from
+        additional topics. </td>
+
+      </tr>
+
+                                <tr>
+      <td class="entry cellrowborder" headers="d387002e2611 ">Quality of Service</td>
+
+      <td class="entry cellrowborder" headers="d387002e2614 ">Determines the quality of service level used to guarantee message delivery:<ul class="ul" id="task_xlv_jdw_kq__d155e4524">
+        <li class="li">At Most Once (0)</li>
+
+        <li class="li">At Least Once (1)</li>
+
+        <li class="li">Exactly Once (2)</li>
+
+       </ul>
+<p class="p">For more information, see the <a class="xref" href="http://www.hivemq.com/blog/mqtt-essentials-part-6-mqtt-quality-of-service-levels" target="_blank">HiveMQ documentation on quality of service
+        levels</a>.</p>
+</td>
+
+     </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d387002e2611 ">Client Persistence Mechanism</td>
+
+       <td class="entry cellrowborder" headers="d387002e2614 ">Determines the persistence mechanism that the destination uses to guarantee message
+        delivery when the quality of service level is at least once or exactly once. Select one of
+        the following options:<ul class="ul" id="task_xlv_jdw_kq__d155e4624">
+         <li class="li">Memory - Store messages in memory on the <span class="ph">Data Collector</span> machine until the delivery of
+          the message is complete.</li>
+
+         <li class="li">File - Store messages in a local file on the <span class="ph">Data Collector</span> machine until the delivery of
+          the message is complete.</li>
+
+        </ul>
+<p class="p">Not used when the quality of service level is at most once.</p>
+<p class="p">For more
+         information, see the <a class="xref" href="http://www.hivemq.com/blog/mqtt-essentials-part-7-persistent-session-queuing-messages" target="_blank">HiveMQ documentation on client
+        persistence</a>.</p>
+</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d387002e2611 ">Client Persistence Data Directory</td>
+
+       <td class="entry cellrowborder" headers="d387002e2614 ">Local directory on the <span class="ph">Data Collector</span>
+        machine where the destination temporarily stores messages in a file when you configure file
+         persistence.<p class="p">The user who starts <span class="ph">Data Collector</span> must have read and write access
+         to this directory.</p>
+</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d387002e2611 ">Keep Alive Interval (secs)</td>
+
+       <td class="entry cellrowborder" headers="d387002e2614 ">Maximum time in seconds to allow the connection to the MQTT broker to remain idle.
+        After the destination publishes no messages for this amount of time, the connection is
+        closed. The destination must reconnect to the MQTT broker.<p class="p">Default is 60
+        seconds.</p>
+</td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e2611 ">Use Credentials</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e2614 ">Enables entering MQTT credentials. <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_xlv_jdw_kq__d92e4830">To
+                        secure sensitive information such as usernames and passwords, you can use
+                              <a class="xref" href="RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e2611 ">Username</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e2614 ">MQTT user name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e2611 ">Password</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e2614 ">MQTT password.</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry cellrowborder" headers="d387002e2611 ">Retain the Message</td>
+
+       <td class="entry cellrowborder" headers="d387002e2614 ">Determines whether or not the MQTT broker retains the message last published by the
+        destination when no MQTT client is subscribed to listen to the topic. <p class="p">When selected, the
+         MQTT broker retains the last message published by the destination. Any messages published
+         earlier are lost. When cleared, all messages published by the destination are
+         lost.</p>
+<p class="p">For more information about MQTT retained messages, see <a class="xref" href="http://www.hivemq.com/blog/mqtt-essentials-part-8-retained-messages" target="_blank">http://www.hivemq.com/blog/mqtt-essentials-part-8-retained-messages</a>.</p>
+</td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e2611 ">Use TLS</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e2614 ">
+                                        <p class="p">Enables the use of TLS. </p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e2611 ">Truststore File <a class="xref" href="SSL-TLS.html#concept_kqb_rqf_5z">
+                                            <img class="image" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d387002e2614 ">The path to the truststore file. Enter an absolute path
+                                        to the file or a path relative to the <span class="ph">Data Collector</span> resources directory: <span class="ph filepath">$SDC_RESOURCES</span>.
+                                                <p class="p"><span class="ph">For more information about environment variables, see
+                              <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr">Data Collector Environment Configuration</a>.</span></p>
+<p class="p">By default, no truststore is used. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e2611 ">Truststore Type</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e2614 ">Type of truststore to use. Use one of the following types:<ul class="ul">
+                                            <li class="li">Java Keystore File (JKS)</li>
+
+                                            <li class="li">PKCS-12 (p12 file)</li>
+
+                                        </ul>
+<p class="p">Default is Java Keystore File (JKS). </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e2611 ">Truststore Password</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e2614 ">Password to the truststore file. A password is optional,
+                                        but recommended.<div class="p">
+                                            <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
+                  passwords, you can use <a class="xref" href="RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></div>
+
+                                        </div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e2611 ">Truststore Trust Algorithm</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e2614 ">The algorithm used to manage the truststore. <p class="p">Default
+                                            is <span class="ph" id="task_xlv_jdw_kq__d346e4124">SunX509</span>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e2611 ">Use Default Protocols</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e2614 ">Determines the transport layer security (TLS) protocol to
+                                        use. The default protocol is <span class="ph">TLSv1.2</span>. To use a different protocol, clear this option.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e2611 ">Transport Protocols <a class="xref" href="SSL-TLS.html#concept_mvs_cxf_5z">
+                                            <img class="image" id="task_xlv_jdw_kq__d346e4147" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d387002e2614 ">The TLS protocols to use. To use a protocol other than
+                                        the default <span class="ph">TLSv1.2</span>, click the <span class="ph uicontrol">Add</span> icon and enter the
+                                        protocol name. You can use <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add
+                                            protocols.<div class="note note"><span class="notetitle">Note:</span> Older protocols are not as secure as <span class="ph">TLSv1.2</span>.</div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e2611 ">Use Default Cipher Suites</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e2614 ">Determines the cipher suite to use when performing the
+                                        SSL/TLS handshake. <p class="p"><span class="ph">Data Collector</span> provides a set of cipher suites that it can use by
+                                            default. For a full list, see <a class="xref" href="SSL-TLS.html#concept_cwx_dyf_5z">Cipher Suites</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d387002e2611 ">Cipher Suites</td>
+
+                                    <td class="entry cellrowborder" headers="d387002e2614 ">Cipher suites to use. To use a cipher suite that is not a
+                                        part of the default set, click the
+                                            <span class="ph uicontrol">Add</span> icon and enter the name of
+                                        the cipher suite. You can use <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add cipher
+                                            suites.<p class="p">Enter the Java Secure Socket Extension (JSSE)
+                                            name for the additional cipher suites that you want to
+                                            use. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">When using a cluster batch or streaming execution mode, click the
+                        <span class="ph uicontrol">Cluster</span> tab and configure the cluster
+                    properties.</span>
+                <div class="itemgroup info">For information about configuring cluster mode pipelines, see <a class="xref" href="../Cluster_Mode/ClusterPipelines.html#concept_rjc_4m5_lx" title="Data Collector can run a cluster pipeline using cluster batch or cluster streaming execution mode.">Cluster Batch and Streaming Execution Modes</a>.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">When using the cluster EMR batch execution mode, click the
+                        <span class="ph uicontrol">EMR</span> tab and configure the properties required to run
+                    pipelines on an Amazon EMR cluster.</span>
+                <div class="itemgroup info">For information about configuring cluster EMR batch mode pipelines to process
+                    data from Amazon S3, see <a class="xref" href="../Cluster_Mode/AmazonS3Requirements.html#concept_opj_jmf_f2b" title="Cluster EMR batch and cluster batch mode pipelines can process data from Amazon S3.">Amazon S3 Requirements</a>.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd"><span class="ph">If you have registered the <span class="ph">Data Collector</span> to work with <span class="ph">StreamSets Control Hub</span>, you can configure</span> the pipeline to
+                    aggregate statistics on the <span class="ph uicontrol">Statistics</span> tab. </span>
+                <div class="itemgroup info">
+                    For information about <span class="ph">Control Hub</span> aggregated statistics, see <a class="xref" href="../DPM/AggregatedStatistics.html#concept_h2q_mb5_xw" title="A Control Hub job defines the pipeline to run and the Data Collectors that run the pipeline. When you start a job, Control Hub remotely runs the pipeline on the group of Data Collectors. To monitor the job statistics and metrics within Control Hub, you must configure the pipeline to write statistics to Control Hub or to another system.">Pipeline Statistics</a>.
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To configure a test origin, on the <span class="keyword wintitle">Test Origin</span> tab,
+                    configure the origin properties.</span>
+                <div class="itemgroup info">All origin properties appear on the Test Origin tab. </div>
+                <div class="itemgroup info">For configuration details for a specific origin, see “Configuring an
+                    &lt;origin type&gt; Origin” in the <a class="xref" href="../Origins/Origins_overview.html#concept_hpr_twm_jq" title="An origin stage represents the source for the pipeline. You can use a single origin stage in a pipeline.">Origins</a>
+                    chapter.</div>
+                <div class="itemgroup info">To use a different test origin, select the origin to use in the
+                        <span class="ph uicontrol">Test Origin</span> property on the
+                        <span class="keyword wintitle">General</span> tab.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If you are using the pipeline start or stop events, configure the related event
+                    consumer properties on the <span class="ph uicontrol">&lt;event type&gt; - &lt;event
+                        consumer&gt;</span> tab.</span>
+                <div class="itemgroup info">All properties for the event consumer appear on the tab. </div>
+                <div class="itemgroup info">For configuration details for a specific executor, see "Configuring an
+                    &lt;executor type&gt; Executor" in the <a class="xref" href="../Executors/Executors-overview.html#concept_stt_2lk_fx">Executors</a> chapter. <p class="p">For details on writing to another pipeline,
+                        see <a class="xref" href="../Destinations/SDC_RPCdest.html#task_nbl_r2x_dt__step-SDCRPCdesttab">Configuring an SDC RPC Destination</a>.</p>
+<p class="p">To use a different
+                        event consumer, select the consumer to use in the <span class="ph uicontrol">Start
+                            Event</span> or <span class="ph uicontrol">Stop Event</span> properties on the
+                            <span class="keyword wintitle">General</span> tab.</p>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the Stage Library panel to add an origin stage. In the Properties panel,
+                    configure the stage properties.</span>
+
+                <div class="itemgroup info">For configuration details about origin stages, see <a class="xref" href="../Origins/Origins_overview.html#concept_hpr_twm_jq" title="An origin stage represents the source for the pipeline. You can use a single origin stage in a pipeline.">Origins</a>.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the Stage Library panel to add the next stage that you want to use, connect
+                    the origin to the new stage, and configure the new stage.</span>
+                <div class="itemgroup info">For configuration details about processors, see <a class="xref" href="../Processors/Processors_overview.html#concept_hpr_twm_jq">Processors</a>.<p class="p">For
+                        configuration details about destinations, see <a class="xref" href="../Destinations/Destinations_overview.html#concept_hpr_twm_jq" title="A destination stage represents the target for a pipeline. You can use one or more destinations in a pipeline.">Destinations</a>.</p>
+<p class="p">For configuration details about executors, see <a class="xref" href="../Executors/Executors-overview.html#concept_stt_2lk_fx">Executors</a>.</p>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Add additional stages as necessary.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">At any point, you can use the <span class="ph uicontrol">Preview</span> icon to preview
+                    data to help .configure the pipeline. For more information, see <a class="xref" href="../Data_Preview/DataPreview_Title.html#concept_jtn_s3m_lq" title="You can preview data to help build or fine-tune a pipeline. When using Control Hub, you can also use data preview when developing pipeline fragments.">Data Preview Overview</a>. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Optionally, you can create metric or data alerts to track details about a
+                    pipeline run and create threshold alerts. For more information, see <a class="xref" href="../Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">When the pipeline is validated and complete, use the
+                        <span class="ph uicontrol">Start</span> icon to run the pipeline. </span>
+            </li>
+</ol>
+
+        <section class="section result"><span class="ph">When <span class="ph">Data Collector</span>
+                starts the pipeline, Monitor mode displays real-time statistics for the pipeline.
+                For more information about monitoring, see <a class="xref" href="../Pipeline_Monitoring/PipelineMonitoring_title.html#concept_hsp_tnt_lq" title="When the Data Collector runs a pipeline, you can view real-time statistics about the pipeline, examine a sample of the data being processed, and create rules and alerts.">Pipeline Monitoring Overview</a>.</span></section>
+
+    </div>
+
+</article></main></div>
+
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script>
+  </div>
+</nav>
+
+
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
+</html>

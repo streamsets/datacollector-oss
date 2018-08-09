@@ -1,0 +1,1045 @@
+
+<!DOCTYPE html
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="Cluster mode pipelines that read from a Kafka cluster have the following requirements: Component Requirement Spark Streaming for cluster streaming modes Spark version 2.1 or later Apache Kafka Spark ..." /><meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="task" /><meta name="DC.Title" content="Kafka Cluster Requirements" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines.html#concept_hmh_kfn_1s" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Cluster_Mode/MapRRequirements.html#concept_kry_gn5_lx" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="task_gmd_msw_yr" /><title>Kafka Cluster Requirements</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="task_gmd_msw_yr-d46e112919" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018042310" />
+
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018042310" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+
+
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+
+
+
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+
+                </div>
+
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+
+
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref" data-id="concept_fpz_5r4_vs"><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li class="active"><span class="topicref" data-id="task_gmd_msw_yr"><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/KafkaRequirements.html#task_gmd_msw_yr">Kafka Cluster Requirements</a></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines.html#concept_hmh_kfn_1s" title="Cluster Pipeline Overview"></a></span>
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Cluster_Mode/MapRRequirements.html#concept_kry_gn5_lx" title="MapR Requirements"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e4414" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e6481" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13895" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e18499" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e20154" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22651" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e24466" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e64169" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e77391" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e92871" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e98772" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e102096" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e106011" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e108837" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e109636" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e110218" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e111818" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e112299" class="topicref" data-id="concept_fpz_5r4_vs" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_hmh_kfn_1s-d46e112321" class="topicref" data-id="concept_hmh_kfn_1s" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines.html#concept_hmh_kfn_1s">Cluster Pipeline Overview</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">A <dfn class="term">cluster pipeline</dfn> is a pipeline that runs in cluster execution mode. You   can run a pipeline in standalone execution mode or cluster execution
+                        mode.
+
+                     </p>
+                     </span></span></span></li>
+         <li class="active"><span data-tocid="task_gmd_msw_yr-d46e112919" class="topicref" data-id="task_gmd_msw_yr" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/KafkaRequirements.html#task_gmd_msw_yr">Kafka Cluster Requirements</a></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_al2_cxh_cdb-d46e113012" class="topicref" data-id="concept_al2_cxh_cdb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/KafkaRequirements.html#concept_al2_cxh_cdb">Kafka Consumer Maximum Batch Size</a></span></span></li>
+               <li><span data-tocid="task_hhk_bfv_cy-d46e113034" class="topicref" data-id="task_hhk_bfv_cy" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/KafkaRequirements.html#task_hhk_bfv_cy">Configuring Cluster YARN Streaming for Kafka</a></span></span></li>
+               <li><span data-tocid="concept_bb2_m5p_tdb-d46e113066" class="topicref" data-id="concept_bb2_m5p_tdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/KafkaRequirements.html#concept_bb2_m5p_tdb">Enabling Security for Cluster YARN Streaming</a></span></span></li>
+               <li><span data-tocid="task_kf1_fgv_cy-d46e113304" class="topicref" data-id="task_kf1_fgv_cy" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/KafkaRequirements.html#task_kf1_fgv_cy">Configuring Cluster Mesos Streaming for Kafka</a></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_kry_gn5_lx-d46e113387" class="topicref" data-id="concept_kry_gn5_lx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/MapRRequirements.html#concept_kry_gn5_lx">MapR Requirements</a></span></span></li>
+         <li><span data-tocid="task_akz_w5b_ws-d46e113486" class="topicref" data-id="task_akz_w5b_ws" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/HDFSRequirements.html#task_akz_w5b_ws">HDFS Requirements</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_opj_jmf_f2b-d46e113510" class="topicref" data-id="concept_opj_jmf_f2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/AmazonS3Requirements.html#concept_opj_jmf_f2b">Amazon S3 Requirements</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Cluster EMR batch and cluster batch mode pipelines can process data from Amazon         S3.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_pdf_r5y_fz-d46e113615" class="topicref" data-id="concept_pdf_r5y_fz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/StageLimitations.html#concept_pdf_r5y_fz">Cluster Pipeline Limitations</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e113641" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e114610" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e117238" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e118495" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e120286" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e124782" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e125996" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e129904" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e129959" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e130119" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e131600" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e131822" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+
+
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="task_gmd_msw_yr">
+    <h1 class="title topictitle1" id="ariaid-title1">Kafka Cluster Requirements</h1>
+
+    <div class="body taskbody">
+        <section class="section context">
+            <div class="p">Cluster mode pipelines that read from a Kafka cluster
+                have the following requirements:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gmd_msw_yr__table_agw_5pn_zw" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:66.66666666666666%" /></colgroup><thead class="thead" style="text-align:left;">
+                            <tr>
+                                <th class="entry cellrowborder" id="d26116e125">Component</th>
+
+                                <th class="entry cellrowborder" id="d26116e128">Requirement</th>
+
+                            </tr>
+
+                        </thead>
+<tbody class="tbody">
+                            <tr>
+                                <td class="entry cellrowborder" headers="d26116e125 ">Spark Streaming for cluster streaming modes</td>
+
+                                <td class="entry cellrowborder" headers="d26116e128 "><span class="ph">Spark version 2.1 or later</span></td>
+
+                            </tr>
+
+                            <tr>
+                                <td class="entry cellrowborder" headers="d26116e125 ">Apache Kafka</td>
+
+                                <td class="entry cellrowborder" headers="d26116e128 ">Spark Streaming on YARN requires a Cloudera or Hortonworks
+                                    distribution of an Apache Kafka cluster version 0.10.0.0 or
+                                    later. <p class="p">Spark Streaming on Mesos requires Apache Kafka on
+                                        Apache Mesos.</p>
+</td>
+
+                            </tr>
+
+                        </tbody>
+</table>
+</div>
+</div>
+
+            <div class="note note"><span class="notetitle">Note:</span> By default, a Cloudera CDH cluster sets the Kafka-Spark integration version as
+                0.9. However, <span class="ph">Data Collector</span>
+                cluster streaming pipelines require version 0.10 of the Kafka-Spark integration. As
+                a result, the SPARK_KAFKA_VERSION environment variable is set to 0.10 by default in
+                the <span class="ph">Data Collector</span>
+                <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr">environment configuration file</a> - <code class="ph codeph">sdc.env.sh</code> or
+                sdcd.env.sh. Do not change this environment variable value.</div>
+
+        </section>
+
+    </div>
+
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_al2_cxh_cdb">
+    <h2 class="title topictitle2" id="ariaid-title2">Kafka Consumer Maximum Batch Size</h2>
+
+    <div class="body conbody">
+        <p class="p">When using a <a class="xref" href="../Origins/KConsumer.html#concept_msz_wnr_5q">Kafka Consumer
+                origin</a> in cluster mode, the Max Batch Size property is ignored. Instead, the
+            effective batch size is &lt;Batch Wait Time&gt; x &lt;Rate Limit Per Partition&gt;. </p>
+
+        <p class="p">For example, if Batch Wait Time is 60 seconds and Rate Limit Per Partition is 1000
+            messages/second, then the effective batch size from the Spark Streaming perspective is
+            60 x 1000 = 60000 messages/second. In this example, there is only one partition so only
+            one cluster pipeline is spawned and the batch size for that pipeline is 60000.</p>
+
+        <p class="p">If there are two partitions, then the effective batch size from the Spark Streaming
+            perspective is 60 x 1000 x 2 = 120000 messages/second. By default, two cluster pipelines
+            are created. If the number of messages in each partition are equal, then each pipeline
+            receives 60000 messages in one batch. If, however, all 120000 messages are in a single
+            partition, then the cluster pipeline processing that partition receives all 120000
+            messages. </p>
+
+        <p class="p">To reduce the maximum batch size, either reduce the wait time or reduce the rate limit
+            per partition. Similarly, to increase the maximum batch size, either increase the wait
+            time or increase the rate limit per partition. </p>
+
+        <p class="p"> </p>
+
+    </div>
+
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title3" id="task_hhk_bfv_cy">
+    <h2 class="title topictitle2" id="ariaid-title3">Configuring Cluster YARN Streaming for Kafka</h2>
+
+    <div class="body taskbody">
+        <section class="section context">
+            <p class="p">Complete
+                the following steps to configure a cluster pipeline to read from a Kafka cluster on
+                YARN:</p>
+
+        </section>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">Verify the installation of Kafka, Spark Streaming, and YARN as the cluster
+                    manager.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Install the <span class="ph">Data Collector</span> on a Spark and YARN gateway node.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To enable checkpoint metadata storage, grant the user defined in the user
+                    environment variable write permission on
+                    <span class="ph filepath">/user/$SDC_USER</span>.</span>
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d41e9673">The user environment variable defines the system
+                    user used to run Data Collector as a service. The file that defines the user
+                    environment variable depends on your operating system. For more information, see
+                        <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_htz_t1s_3v" title="When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.">User and Group for Service Start</a>. </div>
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d41e9678">For example, say the user environment
+                    variable is defined as <span class="ph filepath">sdc</span> and the cluster does not use
+                    Kerberos. Then you might use the following commands to create the directory and
+                    configure the necessary write
+                    permissions:<pre class="pre codeblock" id="task_hhk_bfv_cy__d41e9683"><code>$sudo -u hdfs hadoop fs -mkdir /user/sdc
+$sudo -u hdfs hadoop fs -chown sdc /user/sdc</code></pre></div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd" id="task_hhk_bfv_cy__d41e9726">If necessary, specify the location of the
+                    spark-submit script that points to <span class="ph">Spark version 2.1 or later</span>.</span>
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d41e9731"><span class="ph">Data Collector</span> assumes that the
+                    spark-submit script used to submit job requests to Spark Streaming is located in
+                    the following directory: <pre class="pre codeblock"><code>/usr/bin/spark-submit</code></pre></div>
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d41e9737">If the script is not in this directory, use
+                    the SPARK_SUBMIT_YARN_COMMAND environment variable to define the location of the
+                    script.</div>
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d41e9740">The location of the script may differ depending
+                    on the Spark version and distribution that you use.</div>
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d41e9743"><span class="ph" id="task_hhk_bfv_cy__d41e9744">For example,
+                        when using CDH Spark 2.1, the spark-submit script is in the following
+                        directory by default: /usr/bin/spark2-submit. Then, you might use the
+                        following command to define the location of the
+                        script:</span><pre class="pre codeblock"><code>export SPARK_SUBMIT_YARN_COMMAND<span class="ph" id="task_hhk_bfv_cy__d41e9748">=/usr/bin/spark2-submit</span></code></pre><div class="p">Or,
+                        if using Hortonworks Data Platform (HDP) 2.6 which includes Spark 2.2.0, the
+                        spark-submit script is in the following directory by default:
+                        /usr/hdp/2.6/spark2/bin/spark-submit. Then, you might use the following
+                        command to define the location of the
+                        script:<pre class="pre codeblock"><code>export SPARK_SUBMIT_YARN_COMMAND=/usr/hdp/2.6/spark2/bin/spark-submit</code></pre></div>
+</div>
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d41e9756">
+                    <div class="note note" id="task_hhk_bfv_cy__d41e9758"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
+                        restart <span class="ph">Data Collector</span> to
+                        capture the change.</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To enable <span class="ph">Data Collector</span> to submit YARN jobs, perform one of the following tasks:</span>
+                <div class="itemgroup info">
+                    <ul class="ul" id="task_hhk_bfv_cy__ul_dk3_3pp_qz">
+                        <li class="li">On YARN, set the min.user.id to a value equal to or lower than the user
+                            ID associated with the <span class="ph">Data Collector</span> user ID,
+                            typically named "sdc".</li>
+
+                        <li class="li">On YARN, add the <span class="ph">Data Collector</span> user name,
+                            typically "sdc", to the allowed.system.users property.</li>
+
+                    </ul>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On YARN, verify that the Spark logging level is set to a severity of INFO or
+                    lower.</span>
+                <div class="itemgroup info">YARN sets the Spark logging level to INFO by default. To change the logging
+                        level:<ol class="ol" type="a" id="task_hhk_bfv_cy__ol_tzg_ggl_px">
+                        <li class="li">Edit the log4j.properties file, located in the following directory:
+                              <pre class="pre codeblock"><code>&lt;spark-home&gt;/conf/log4j.properties</code></pre></li>
+
+                        <li class="li">Set the <span class="ph uicontrol">log4j.rootCategory</span> property to a severity
+                              of INFO or lower, such as DEBUG or TRACE.</li>
+
+                  </ol>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If YARN is configured to use Kerberos authentication, configure <span class="ph">Data Collector</span> to use Kerberos
+                    authentication. </span>
+                <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data Collector</span>, you enable <span class="ph">Data Collector</span> to use Kerberos
+                    and define the principal and keytab. <div class="note important" id="task_hhk_bfv_cy__d41e9806"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                        keytab when configuring <span class="ph">Data Collector</span>. Standalone
+                        pipelines do not require an absolute path.</div>
+</div>
+                <div class="itemgroup info">Once enabled, <span class="ph">Data Collector</span>
+                    automatically uses the Kerberos principal and keytab to connect to any YARN
+                    cluster that uses Kerberos. <span class="ph">For more information about enabling Kerberos authentication
+                        for <span class="ph">Data Collector</span>, see <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Kerberos Authentication</a>.</span></div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the pipeline properties, on the <span class="keyword wintitle">General</span> tab, set the
+                        <span class="ph uicontrol">Execution Mode</span> property to <span class="ph uicontrol">Cluster YARN
+                        Streaming</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Cluster</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hhk_bfv_cy__table_mkj_kdr_wr" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:22.22222222222222%" /><col style="width:77.77777777777779%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d26116e481">Cluster Property</th>
+
+                                    <th class="entry cellrowborder" id="d26116e484">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                        <td class="entry cellrowborder" headers="d26116e481 ">Worker Count</td>
+
+                        <td class="entry cellrowborder" headers="d26116e484 ">Number of workers used in a Cluster Yarn Streaming pipeline. Use to
+                            limit the number of workers spawned for processing. By default, one
+                            worker is spawned for every partition in the topic. <p class="p">Default is 0 for
+                                one worker for each partition. </p>
+</td>
+
+                    </tr>
+
+                                <tr>
+                            <td class="entry cellrowborder" headers="d26116e481 ">Worker Java Options</td>
+
+                            <td class="entry cellrowborder" headers="d26116e484 ">Additional Java properties for the pipeline. Separate properties
+                                with a space.<p class="p">The following properties are set by default. </p>
+<div class="p">
+                                    <ul class="ul" id="task_hhk_bfv_cy__d43e56">
+                                        <li class="li">XX:+UseConcMarkSweepGC and XX:+UseParNewGC are set to
+                                            the Concurrent Mark Sweep (CMS) garbage collector.</li>
+
+                                        <li class="li">Dlog4j.debug enables debug logging for log4j.</li>
+
+                                    </ul>
+
+                                </div>
+<p class="p">Changing the default properties is not recommended.</p>
+<p class="p">You
+                                    can add any valid Java property. </p>
+</td>
+
+                        </tr>
+
+                                <tr>
+                            <td class="entry cellrowborder" headers="d26116e481 ">Launcher Env Configuration</td>
+
+                            <td class="entry cellrowborder" headers="d26116e484 ">
+                                <p class="p">Additional configuration properties for the cluster launcher.
+                                    Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
+                                        <span class="ph uicontrol">Add</span> icon and define the property name
+                                    and value. </p>
+
+                            </td>
+
+                        </tr>
+
+                                <tr>
+                            <td class="entry cellrowborder" headers="d26116e481 ">Worker Memory (MB)</td>
+
+                            <td class="entry cellrowborder" headers="d26116e484 ">Maximum amount of memory allocated to each <span class="ph">Data Collector</span> worker in the cluster.<p class="p">Default is 1024 MB.</p>
+</td>
+
+                        </tr>
+
+                                <tr>
+                        <td class="entry cellrowborder" headers="d26116e481 ">Extra Spark Configuration</td>
+
+                        <td class="entry cellrowborder" headers="d26116e484 ">For Cluster Yarn Streaming pipelines, you can configure additional
+                            Spark configurations to pass to the spark-submit script. Enter the Spark
+                            configuration name and the value to use. <div class="p">The specified configurations
+                                are passed to the spark-submit script as
+                                follows:<pre class="pre codeblock"><code>spark-submit --conf &lt;key&gt;=&lt;value&gt;</code></pre></div>
+<p class="p">For
+                                example, to limit the off-heap memory allocated to each executor,
+                                you can use the <code class="ph codeph">spark.yarn.executor.memoryOverhead</code>
+                                configuration and set it to the number of MB that you want to use.
+                                    </p>
+<p class="p"><span class="ph">Data Collector</span> does not validate the property names or values. </p>
+<p class="p">For
+                                details on additional Spark configurations that you can use, see the
+                                Spark documentation for the Spark version that you are using.
+                            </p>
+</td>
+
+                    </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the pipeline, use a Kafka Consumer origin.</span>
+                <div class="itemgroup info">If necessary, select a cluster mode stage library on the
+                        <span class="keyword wintitle">General</span> tab of the origin. <div class="note note"><span class="notetitle">Note:</span> Batch Wait Time is
+                        ignored for the Kafka Consumer origin in cluster mode. For more information,
+                        see <a class="xref" href="KafkaRequirements.html#concept_al2_cxh_cdb">Kafka Consumer Maximum Batch Size</a>.</div>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If the Kafka cluster is configured to use SSL/TLS, Kerberos, or both, configure
+                    the Kafka Consumer origin to securely connect to the cluster, as described in
+                        <a class="xref" href="KafkaRequirements.html#concept_bb2_m5p_tdb">Enabling Security for Cluster YARN Streaming</a>.</span>
+            </li>
+</ol>
+
+    </div>
+
+    <nav role="navigation" class="related-links">
+<div class="linklist linklist relinfo"><strong>Related information</strong><br />
+
+<div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq" title="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline.">Configuring a Pipeline</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Origins/KConsumer.html#concept_msz_wnr_5q" title="Kafka Consumer">Kafka Consumer</a></div></div>
+</nav>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title4" id="concept_bb2_m5p_tdb">
+    <h2 class="title topictitle2" id="ariaid-title4">Enabling Security for Cluster YARN Streaming</h2>
+
+    <div class="body conbody">
+        <p class="p">When using a cluster pipeline to read from a
+            Kafka cluster on YARN, you can configure the Kafka Consumer origin to connect securely
+            through SSL/TLS, Kerberos, or both.</p>
+
+    </div>
+
+<article class="topic concept nested2" aria-labelledby="ariaid-title5" id="concept_c2g_myp_tdb">
+    <h3 class="title topictitle3" id="ariaid-title5">Enabling SSL/TLS</h3>
+
+    <div class="body conbody">
+        <p class="p">Perform the following steps to enable the Kafka
+            Consumer origin in a cluster streaming pipeline on YARN to use SSL/TLS to connect to
+            Kafka. </p>
+
+        <ol class="ol" id="concept_c2g_myp_tdb__ol_s5w_1zp_tdb">
+            <li class="li">To use SSL/TLS to connect, first make sure Kafka is
+                    configured for SSL/TLS as described in the <a class="xref" href="http://kafka.apache.org/documentation.html#security_ssl" target="_blank">Kafka documentation</a>. </li>
+
+            <li class="li">On the <span class="ph uicontrol">General</span> tab of the Kafka Consumer origin in the
+                cluster pipeline, set the <span class="ph uicontrol">Stage Library</span> property to Apache
+                Kafka 0.10.0.0 or a later version.</li>
+
+            <li class="li">On the <strong class="ph b">Kafka</strong> tab, add the <strong class="ph b">security.protocol</strong> Kafka configuration
+                    property and set it to <strong class="ph b">SSL</strong>.</li>
+<li class="li">Then add and configure the following SSL Kafka
+                        properties:<ul class="ul" id="concept_c2g_myp_tdb__d270e58">
+                        <li class="li">ssl.truststore.location</li>
+
+                        <li class="li">ssl.truststore.password</li>
+
+                    </ul>
+<div class="p">When the Kafka broker requires client authentication - when the
+                        ssl.client.auth broker property is set to "required" - add and configure the
+                        following properties: <ul class="ul" id="concept_c2g_myp_tdb__d270e68">
+                            <li class="li">ssl.keystore.location</li>
+
+                            <li class="li">ssl.keystore.password</li>
+
+                            <li class="li">ssl.key.password</li>
+
+                        </ul>
+</div>
+<div class="p">Some brokers might require adding the following properties as
+                            well:<ul class="ul" id="concept_c2g_myp_tdb__d270e81">
+                            <li class="li">ssl.enabled.protocols</li>
+
+                            <li class="li">ssl.truststore.type</li>
+
+                            <li class="li">ssl.keystore.type</li>
+
+                        </ul>
+</div>
+<p class="p">For details about these properties, see the Kafka
+                        documentation.</p>
+</li>
+
+            <li class="li">Store the SSL truststore and keystore files in the same location on the <span class="ph">Data Collector</span>
+                machine and on each node in the YARN cluster.</li>
+
+        </ol>
+
+        <p class="p">For example, the following properties allow the stage to use SSL/TLS to connect to Kafka
+            with client authentication:</p>
+
+        <img class="image" id="concept_c2g_myp_tdb__image_dhf_4gq_tdb" src="../../../reusable-content/datacollector/reusable-topics/../../../datacollector/UserGuide/Graphics/Kafka-SSLoptions.png" height="179" width="549" />
+    </div>
+
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title6" id="concept_rjl_rgq_tdb">
+    <h3 class="title topictitle3" id="ariaid-title6">Enabling Kerberos (SASL)</h3>
+
+
+    <div class="body conbody"><p class="shortdesc">When you use Kerberos authentication, <span class="ph">Data Collector</span> uses
+        the Kerberos principal and keytab to connect to Kafka. </p>
+
+        <p class="p">Perform the following steps to enable the Kafka
+            Consumer origin in a cluster streaming pipeline on YARN to use Kerberos to connect to
+            Kafka:</p>
+
+        <ol class="ol" id="concept_rjl_rgq_tdb__ol_tbk_5hq_tdb">
+            <li class="li">To use Kerberos, first make sure Kafka is configured for
+                    Kerberos as described in the <a class="xref" href="http://kafka.apache.org/documentation.html#security_sasl" target="_blank">Kafka documentation</a>.</li>
+<li class="li">Make sure that Kerberos authentication is enabled for <span class="ph">Data Collector</span>, as described
+                    in <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Kerberos Authentication</a>.</li>
+<li class="li">Add the Java Authentication and Authorization
+                    Service (JAAS) configuration properties required for Kafka clients based on your
+                    installation and authentication type:<ul class="ul" id="concept_rjl_rgq_tdb__d268e56">
+                        <li class="li"><span class="ph uicontrol">RPM, tarball, or Cloudera Manager installation without LDAP
+                                authentication</span> - If <span class="ph">Data Collector</span> does
+                            not use LDAP authentication, create a separate JAAS configuration file
+                            on the <span class="ph">Data Collector</span>
+                            machine. Add the following <code class="ph codeph">KafkaClient</code> login section to
+                            the
+                                file:<pre class="pre codeblock"><code>KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="&lt;keytab path&gt;"
+    principal="&lt;principal name&gt;/&lt;host name&gt;@&lt;realm&gt;";
+};</code></pre><div class="p">For
+                                example:<pre class="pre codeblock"><code>KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="/etc/security/keytabs/sdc.keytab"
+    principal="sdc/sdc-01.streamsets.net@EXAMPLE.COM";
+};</code></pre></div>
+<div class="p">Then
+                                modify the SDC_JAVA_OPTS environment variable to include the
+                                following option that defines the path to the JAAS configuration
+                                file:<pre class="pre codeblock"><code>-Djava.security.auth.login.config=&lt;JAAS config path&gt;</code></pre></div>
+<p class="p"><a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your installation
+                  type.</p>
+</li>
+
+                        <li class="li"><span class="ph uicontrol">RPM or tarball installation with LDAP
+                                authentication</span> - If LDAP authentication is enabled in an
+                            RPM or tarball installation, add the properties to the JAAS
+                            configuration file used by <span class="ph">Data Collector</span> - the
+                                <code class="ph codeph">$SDC_CONF/ldap-login.conf</code> file. Add the following
+                                <code class="ph codeph">KafkaClient</code> login section to the end of the
+                                <code class="ph codeph">ldap-login.conf</code>
+                                file:<pre class="pre codeblock"><code>KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="&lt;keytab path&gt;"
+    principal="&lt;principal name&gt;/&lt;host name&gt;@&lt;realm&gt;";
+};</code></pre><div class="p">For
+                                example:<pre class="pre codeblock"><code>KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="/etc/security/keytabs/sdc.keytab"
+    principal="sdc/sdc-01.streamsets.net@EXAMPLE.COM";
+};</code></pre></div>
+</li>
+
+                        <li class="li"><span class="ph uicontrol">Cloudera Manager installation with LDAP
+                                authentication</span> - If LDAP authentication is enabled in a
+                            Cloudera Manager installation, enable the LDAP Config File Substitutions
+                            (ldap.login.file.allow.substitutions) property for the StreamSets
+                            service in Cloudera Manager.<p class="p">If the Use Safety Valve to Edit LDAP
+                                Information (use.ldap.login.file) property is enabled and LDAP
+                                authentication is configured in the Data Collector Advanced
+                                Configuration Snippet (Safety Valve) for ldap-login.conf field, then
+                                add the JAAS configuration properties to the same ldap-login.conf
+                                safety valve.</p>
+<p class="p">If LDAP authentication is configured through the
+                                LDAP properties rather than the ldap-login.conf safety value, add
+                                the JAAS configuration properties to the Data Collector Advanced
+                                Configuration Snippet (Safety Valve) for
+                                generated-ldap-login-append.conf field.</p>
+<p class="p">Add the following
+                                    <code class="ph codeph">KafkaClient</code> login section to the appropriate
+                                field as
+                                follows:</p>
+<pre class="pre codeblock"><code>KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="_KEYTAB_PATH"
+    principal="&lt;principal name&gt;/_HOST@&lt;realm&gt;";
+};</code></pre><div class="p">For
+                                example:<pre class="pre codeblock"><code>KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="_KEYTAB_PATH"
+    principal="sdc/_HOST@EXAMPLE.COM";
+};</code></pre></div>
+<p class="p">Cloudera
+                                Manager generates the appropriate keytab path and host name.
+                            </p>
+</li>
+
+                    </ul>
+</li>
+
+            <li class="li">Store the JAAS configuration and Kafka keytab files in the same locations on the <span class="ph">Data Collector</span>
+                machine and on each node in the YARN cluster.</li>
+
+            <li class="li">On the <span class="keyword wintitle">General</span> tab of the Kafka Consumer origin in the cluster
+                pipeline, set the <span class="ph uicontrol">Stage Library</span> property to Apache Kafka
+                0.10.0.0 or a later version.</li>
+
+            <li class="li">On the <span class="keyword wintitle">Kafka</span> tab, add the
+                        <span class="ph uicontrol">security.protocol</span> Kafka configuration property, and
+                    set it to <span class="ph uicontrol">SASL_PLAINTEXT</span>.</li>
+<li class="li">Then, add the
+                        <span class="ph uicontrol">sasl.kerberos.service.name</span> configuration property,
+                    and set it to <span class="ph uicontrol">kafka</span>. </li>
+
+        </ol>
+
+        <p class="p">For example, the following Kafka properties enable connecting to Kafka with Kerberos:</p>
+
+        <p class="p"><img class="image" id="concept_rjl_rgq_tdb__image_cl5_bmq_tdb" src="../../../reusable-content/datacollector/reusable-topics/../../../datacollector/UserGuide/Graphics/Kafka-Kerberos.png" height="95" width="639" /></p>
+
+    </div>
+
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title7" id="concept_ijh_kmq_tdb">
+    <h3 class="title topictitle3" id="ariaid-title7">Enabling SSL/TLS and Kerberos</h3>
+
+
+    <div class="body conbody"><p class="shortdesc">You can enable the Kafka Consumer origin in a cluster streaming pipeline on YARN to
+        use SSL/TLS and Kerberos to connect to Kafka.</p>
+
+        <p class="p"><span class="ph">To use SSL/TLS and Kerberos, combine the required
+                steps to enable each and set the security.protocol property as follows:</span></p>
+
+        <ol class="ol" id="concept_ijh_kmq_tdb__ol_tpp_vyq_tdb">
+            <li class="li">Make sure Kafka is configured to use SSL/TLS and
+                    Kerberos (SASL) as described in the following Kafka documentation:<ul class="ul" id="concept_ijh_kmq_tdb__d267e37">
+                        <li class="li"><a class="xref" href="http://kafka.apache.org/documentation.html#security_ssl" target="_blank">http://kafka.apache.org/documentation.html#security_ssl</a></li>
+
+                        <li class="li"><a class="xref" href="http://kafka.apache.org/documentation.html#security_sasl" target="_blank">http://kafka.apache.org/documentation.html#security_sasl</a></li>
+
+                    </ul>
+</li>
+
+            <li class="li">Make sure that Kerberos authentication is enabled for <span class="ph">Data Collector</span>, as described
+                    in <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Kerberos Authentication</a>.</li>
+
+            <li class="li">Add the Java Authentication and Authorization
+                    Service (JAAS) configuration properties required for Kafka clients based on your
+                    installation and authentication type:<ul class="ul" id="concept_ijh_kmq_tdb__d268e56">
+                        <li class="li"><span class="ph uicontrol">RPM, tarball, or Cloudera Manager installation without LDAP
+                                authentication</span> - If <span class="ph">Data Collector</span> does
+                            not use LDAP authentication, create a separate JAAS configuration file
+                            on the <span class="ph">Data Collector</span>
+                            machine. Add the following <code class="ph codeph">KafkaClient</code> login section to
+                            the
+                                file:<pre class="pre codeblock"><code>KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="&lt;keytab path&gt;"
+    principal="&lt;principal name&gt;/&lt;host name&gt;@&lt;realm&gt;";
+};</code></pre><div class="p">For
+                                example:<pre class="pre codeblock"><code>KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="/etc/security/keytabs/sdc.keytab"
+    principal="sdc/sdc-01.streamsets.net@EXAMPLE.COM";
+};</code></pre></div>
+<div class="p">Then
+                                modify the SDC_JAVA_OPTS environment variable to include the
+                                following option that defines the path to the JAAS configuration
+                                file:<pre class="pre codeblock"><code>-Djava.security.auth.login.config=&lt;JAAS config path&gt;</code></pre></div>
+<p class="p"><a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your installation
+                  type.</p>
+</li>
+
+                        <li class="li"><span class="ph uicontrol">RPM or tarball installation with LDAP
+                                authentication</span> - If LDAP authentication is enabled in an
+                            RPM or tarball installation, add the properties to the JAAS
+                            configuration file used by <span class="ph">Data Collector</span> - the
+                                <code class="ph codeph">$SDC_CONF/ldap-login.conf</code> file. Add the following
+                                <code class="ph codeph">KafkaClient</code> login section to the end of the
+                                <code class="ph codeph">ldap-login.conf</code>
+                                file:<pre class="pre codeblock"><code>KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="&lt;keytab path&gt;"
+    principal="&lt;principal name&gt;/&lt;host name&gt;@&lt;realm&gt;";
+};</code></pre><div class="p">For
+                                example:<pre class="pre codeblock"><code>KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="/etc/security/keytabs/sdc.keytab"
+    principal="sdc/sdc-01.streamsets.net@EXAMPLE.COM";
+};</code></pre></div>
+</li>
+
+                        <li class="li"><span class="ph uicontrol">Cloudera Manager installation with LDAP
+                                authentication</span> - If LDAP authentication is enabled in a
+                            Cloudera Manager installation, enable the LDAP Config File Substitutions
+                            (ldap.login.file.allow.substitutions) property for the StreamSets
+                            service in Cloudera Manager.<p class="p">If the Use Safety Valve to Edit LDAP
+                                Information (use.ldap.login.file) property is enabled and LDAP
+                                authentication is configured in the Data Collector Advanced
+                                Configuration Snippet (Safety Valve) for ldap-login.conf field, then
+                                add the JAAS configuration properties to the same ldap-login.conf
+                                safety valve.</p>
+<p class="p">If LDAP authentication is configured through the
+                                LDAP properties rather than the ldap-login.conf safety value, add
+                                the JAAS configuration properties to the Data Collector Advanced
+                                Configuration Snippet (Safety Valve) for
+                                generated-ldap-login-append.conf field.</p>
+<p class="p">Add the following
+                                    <code class="ph codeph">KafkaClient</code> login section to the appropriate
+                                field as
+                                follows:</p>
+<pre class="pre codeblock"><code>KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="_KEYTAB_PATH"
+    principal="&lt;principal name&gt;/_HOST@&lt;realm&gt;";
+};</code></pre><div class="p">For
+                                example:<pre class="pre codeblock"><code>KafkaClient {
+    com.sun.security.auth.module.Krb5LoginModule required
+    useKeyTab=true
+    keyTab="_KEYTAB_PATH"
+    principal="sdc/_HOST@EXAMPLE.COM";
+};</code></pre></div>
+<p class="p">Cloudera
+                                Manager generates the appropriate keytab path and host name.
+                            </p>
+</li>
+
+                    </ul>
+</li>
+
+            <li class="li">Store the JAAS configuration and Kafka keytab files in the same locations on the <span class="ph">Data Collector</span>
+                machine and on each node in the YARN cluster.</li>
+
+            <li class="li">On the <span class="keyword wintitle">General</span> tab of the Kafka Consumer origin in the cluster
+                pipeline, set the <span class="ph uicontrol">Stage Library</span> property to Apache Kafka
+                0.10.0.0 or a later version.</li>
+
+            <li class="li">On the <span class="keyword wintitle">Kafka</span> tab, add the
+                        <span class="ph uicontrol">security.protocol</span> property and set it to
+                        <span class="ph uicontrol">SASL_SSL</span>.</li>
+
+            <li class="li">Then, add the
+                        <span class="ph uicontrol">sasl.kerberos.service.name</span> configuration property,
+                    and set it to <span class="ph uicontrol">kafka</span>. </li>
+
+            <li class="li">Then add and configure the following SSL Kafka
+                        properties:<ul class="ul" id="concept_ijh_kmq_tdb__d270e58">
+                        <li class="li">ssl.truststore.location</li>
+
+                        <li class="li">ssl.truststore.password</li>
+
+                    </ul>
+<div class="p">When the Kafka broker requires client authentication - when the
+                        ssl.client.auth broker property is set to "required" - add and configure the
+                        following properties: <ul class="ul" id="concept_ijh_kmq_tdb__d270e68">
+                            <li class="li">ssl.keystore.location</li>
+
+                            <li class="li">ssl.keystore.password</li>
+
+                            <li class="li">ssl.key.password</li>
+
+                        </ul>
+</div>
+<div class="p">Some brokers might require adding the following properties as
+                            well:<ul class="ul" id="concept_ijh_kmq_tdb__d270e81">
+                            <li class="li">ssl.enabled.protocols</li>
+
+                            <li class="li">ssl.truststore.type</li>
+
+                            <li class="li">ssl.keystore.type</li>
+
+                        </ul>
+</div>
+<p class="p">For details about these properties, see the Kafka
+                        documentation.</p>
+</li>
+
+            <li class="li">Store the SSL truststore and keystore files in the same location on the <span class="ph">Data Collector</span>
+                machine and on each node in the YARN cluster.</li>
+
+        </ol>
+
+    </div>
+
+</article>
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title8" id="task_kf1_fgv_cy">
+    <h2 class="title topictitle2" id="ariaid-title8">Configuring Cluster Mesos Streaming for Kafka</h2>
+
+    <div class="body taskbody">
+        <section class="section context">
+            <p class="p">Complete
+                the following steps to configure a cluster pipeline to read from a Kafka cluster on
+                Mesos:</p>
+
+        </section>
+
+        <ol class="ol steps" id="task_kf1_fgv_cy__steps_jhp_wgv_cy"><li class="li step stepexpand">
+                <span class="ph cmd">Verify the installation of Kafka, Spark Streaming, and Mesos as the cluster
+                    manager.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Install the <span class="ph">Data Collector</span> on a Spark and Mesos gateway node.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To enable checkpoint metadata storage, grant the user defined in the user
+                    environment variable write permission on
+                    <span class="ph filepath">/user/$SDC_USER</span>.</span>
+                <div class="itemgroup info">The user environment variable defines the system
+                    user used to run Data Collector as a service. The file that defines the user
+                    environment variable depends on your operating system. For more information, see
+                        <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_htz_t1s_3v" title="When you run Data Collector as a service, Data Collector runs as the system user account and group defined in environment variables. The default system user and group are named sdc.">User and Group for Service Start</a>. </div>
+                <div class="itemgroup info">For example, say $SDC_USER is defined as <span class="ph filepath">sdc</span>. Then you
+                    might use the following commands to create the directory and configure the
+                    necessary write
+                    permissions:<pre class="pre codeblock"><code>$sudo -u hdfs hadoop fs -mkdir /user/sdc
+$sudo -u hdfs hadoop fs -chown sdc /user/sdc</code></pre></div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If necessary, specify the location of the
+                    spark-submit script that points to <span class="ph">Spark version 2.1 or later</span>.</span>
+                <div class="itemgroup info"><span class="ph">Data Collector</span> assumes that the
+                    spark-submit script used to submit job requests to Spark Streaming is located in
+                    the following directory: <pre class="pre codeblock"><code>/usr/bin/spark-submit</code></pre></div>
+                <div class="itemgroup info">If the script is not in this directory, use the SPARK_SUBMIT_MESOS_COMMAND
+                    environment variable to define the location of the script.</div>
+                <div class="itemgroup info">The location of the script may differ depending
+                    on the Spark version and distribution that you use.</div>
+                <div class="itemgroup info"><span class="ph">For example,
+                        when using CDH Spark 2.1, the spark-submit script is in the following
+                        directory by default: /usr/bin/spark2-submit. Then, you might use the
+                        following command to define the location of the
+                        script:</span><pre class="pre codeblock"><code>export SPARK_SUBMIT_MESOS_COMMAND<span class="ph">=/usr/bin/spark2-submit</span></code></pre></div>
+                <div class="itemgroup info">
+                    <div class="note note" id="task_kf1_fgv_cy__d41e9758"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
+                        restart <span class="ph">Data Collector</span> to
+                        capture the change.</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the pipeline properties, on the <span class="keyword wintitle">General</span> tab, set the
+                        <span class="ph uicontrol">Execution Mode</span> property to <span class="ph uicontrol">Cluster Mesos
+                        Streaming</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Cluster</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kf1_fgv_cy__table_nfw_sny_h2b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d26116e1307">Cluster Property</th>
+
+                                    <th class="entry cellrowborder" id="d26116e1310">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d26116e1307 ">Mesos Dispatcher URL</td>
+
+                                    <td class="entry cellrowborder" headers="d26116e1310 ">Master URL of the Mesos dispatcher. For
+                                        example:<pre class="pre codeblock"><code>mesos://dispatcher:7077</code></pre></td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d26116e1307 ">Checkpoint Configuration Directory <a class="xref" href="ClusterPipelines.html#concept_cs4_lcg_j5" title="When the Data Collector runs a cluster streaming pipeline, on either Mesos or YARN, the Data Collector generates and stores checkpoint metadata. The checkpoint metadata provides the offset for the origin.">
+                                            <img class="image" id="task_kf1_fgv_cy__image_kwq_wny_h2b" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d26116e1310 ">Location of the HDFS configuration files that specify
+                                        whether to write checkpoint metadata to HDFS or Amazon
+                                            S3.<p class="p">Use a directory or symlink within the <span class="ph">Data Collector</span> resources directory.</p>
+<div class="p">The directory should
+                                            include the following files:<ul class="ul" id="task_kf1_fgv_cy__ul_iyt_c4y_h2b">
+                        <li class="li">core-site.xml</li>
+
+                        <li class="li">hdfs-site.xml </li>
+
+                  </ul>
+</div>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the pipeline, use a Kafka Consumer origin for cluster mode.</span>
+                <div class="itemgroup info">If necessary, select a cluster mode stage library on the
+                        <span class="keyword wintitle">General</span> tab of the origin. <div class="note note"><span class="notetitle">Note:</span> Batch Wait Time is
+                        ignored for the Kafka Consumer origin in cluster mode. For more information,
+                        see <a class="xref" href="KafkaRequirements.html#concept_al2_cxh_cdb">Kafka Consumer Maximum Batch Size</a>.</div>
+</div>
+            </li>
+</ol>
+
+    </div>
+
+    <nav role="navigation" class="related-links">
+<div class="linklist linklist relinfo"><strong>Related information</strong><br />
+
+<div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq" title="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline.">Configuring a Pipeline</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Origins/KConsumer.html#concept_msz_wnr_5q" title="Kafka Consumer">Kafka Consumer</a></div></div>
+</nav>
+</article>
+</article>
+</article></main></div>
+
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script>
+  </div>
+</nav>
+
+
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
+</html>

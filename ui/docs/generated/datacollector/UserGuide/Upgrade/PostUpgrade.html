@@ -1,0 +1,874 @@
+
+<!DOCTYPE html
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link>
+      <meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Post Upgrade Tasks" /><meta name="abstract" content="In some situations, you must complete tasks within Data Collector or your Control Hub on-premises installation after you upgrade." /><meta name="description" content="In some situations, you must complete tasks within Data Collector or your Control Hub on-premises installation after you upgrade." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Upgrade/CMUpgrade.html#concept_c45_chv_xv" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Upgrade/Upgrade-ExternalSystems.html#task_ijh_wtw_xy" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_zll_vn5_zw" /><title>Post Upgrade Tasks</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_zll_vn5_zw-d46e16125" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018042310" />
+
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018042310" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+
+
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+
+
+
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+
+                </div>
+
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+
+
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref" data-id="concept_ejk_f1f_5v"><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li class="active"><span class="topicref" data-id="concept_zll_vn5_zw"><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/PostUpgrade.html#concept_zll_vn5_zw">Post Upgrade Tasks</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">In some situations, you must complete tasks within <span class="ph">Data Collector</span> or         your <span class="ph">Control Hub</span>         on-premises installation after you upgrade.
+
+               </p>
+               </span></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Upgrade/CMUpgrade.html#concept_c45_chv_xv" title="Upgrade an Installation with Cloudera Manager"></a></span>
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Upgrade/Upgrade-ExternalSystems.html#task_ijh_wtw_xy" title="Working with Upgraded External Systems"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e4414" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e6481" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13895" class="topicref" data-id="concept_ejk_f1f_5v" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_a2n_3fk_5v-d46e13917" class="topicref" data-id="concept_a2n_3fk_5v" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade.html#concept_a2n_3fk_5v">Upgrade</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_vyy_sfp_hz-d46e13941" class="topicref" data-id="concept_vyy_sfp_hz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/PreUpgrade.html#concept_vyy_sfp_hz">Pre Upgrade Tasks</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">In some situations, you must complete tasks before you upgrade.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ryn_4fk_5v-d46e14174" class="topicref" data-id="concept_ryn_4fk_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Tarball.html#concept_ryn_4fk_5v">Upgrade an Installation from the Tarball</a></span></span></li>
+         <li><span data-tocid="concept_ws4_vq5_xv-d46e15027" class="topicref" data-id="concept_ws4_vq5_xv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/RPM.html#concept_ws4_vq5_xv">Upgrade an Installation from the RPM Package</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">When you upgrade an installation from the RPM package, the new version uses the default         configuration, data, log,
+                        and resource directories. If the previous version used the default         directories, the new version has access to the
+                        files created in the previous         version.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_c45_chv_xv-d46e15623" class="topicref" data-id="concept_c45_chv_xv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/CMUpgrade.html#concept_c45_chv_xv">Upgrade an Installation with Cloudera Manager</a></span></span></li>
+         <li class="active"><span data-tocid="concept_zll_vn5_zw-d46e16125" class="topicref" data-id="concept_zll_vn5_zw" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/PostUpgrade.html#concept_zll_vn5_zw">Post Upgrade Tasks</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">In some situations, you must complete tasks within <span class="ph">Data Collector</span> or         your <span class="ph">Control Hub</span>         on-premises installation after you upgrade.
+
+                     </p>
+                     </span></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_dzn_cdy_1cb-d46e16338" class="topicref" data-id="concept_dzn_cdy_1cb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/PostUpgrade.html#concept_dzn_cdy_1cb">Update <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span> On-premises
+                           </a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">If you use <span class="ph">StreamSets Control Hub</span>         on-premises and you upgrade registered <span class="ph">Data Collector</span>s to a         version higher than your current version of <span class="ph">Control Hub</span>, you         must modify the <span class="ph">Data Collector</span>         version range within your <span class="ph">Control Hub</span>         installation.
+
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_jzf_b3b_xdb-d46e16381" class="topicref" data-id="concept_jzf_b3b_xdb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/PostUpgrade.html#concept_jzf_b3b_xdb">Update Pipelines to Use Spark 2.1 or Later</a></span></span></li>
+               <li><span data-tocid="concept_hxf_3yd_qcb-d46e16413" class="topicref" data-id="concept_hxf_3yd_qcb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/PostUpgrade.html#concept_hxf_3yd_qcb">Update Value Replacer Pipelines</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">With version 3.1.0.0, <span class="ph">Data Collector</span>         introduces a new Field Replacer processor and has deprecated the Value Replacer processor.
+
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_dzq_djt_vcb-d46e16461" class="topicref" data-id="concept_dzq_djt_vcb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/PostUpgrade.html#concept_dzq_djt_vcb">Update Einstein Analytics Pipelines</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">With version 3.1.0.0, the Einstein Analytics destination introduces a new append         operation that lets you combine data
+                              into a single dataset. Configuring the destination to         use dataflows to combine data into a single dataset has been
+                              deprecated.
+
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_wnl_zk4_5bb-d46e16516" class="topicref" data-id="concept_wnl_zk4_5bb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/PostUpgrade.html#concept_wnl_zk4_5bb">Update Pipelines using Legacy Stage Libraries</a></span></span></li>
+               <li><span data-tocid="concept_wnp_scs_wbb-d46e16578" class="topicref" data-id="concept_wnp_scs_wbb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/PostUpgrade.html#concept_wnp_scs_wbb">Disable Cloudera Navigator Integration</a></span></span></li>
+               <li><span data-tocid="concept_hky_ljl_wbb-d46e16650" class="topicref" data-id="concept_hky_ljl_wbb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/PostUpgrade.html#concept_hky_ljl_wbb">JDBC Multitable Consumer Query Interval Change</a></span></span></li>
+               <li><span data-tocid="concept_ys3_bjl_wbb-d46e16733" class="topicref" data-id="concept_ys3_bjl_wbb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/PostUpgrade.html#concept_ys3_bjl_wbb">Update JDBC Query Consumer Pipelines used for SQL Server CDC Data</a></span></span></li>
+               <li><span data-tocid="concept_ncs_5jl_wbb-d46e16826" class="topicref" data-id="concept_ncs_5jl_wbb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/PostUpgrade.html#concept_ncs_5jl_wbb">Update MongoDB Destination Upsert Pipelines</a></span></span></li>
+               <li><span data-tocid="concept_o1s_gkl_wbb-d46e16929" class="topicref" data-id="concept_o1s_gkl_wbb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/PostUpgrade.html#concept_o1s_gkl_wbb">Time Zones in Stages</a></span></span></li>
+               <li><span data-tocid="concept_epj_gqd_rx-d46e17043" class="topicref" data-id="concept_epj_gqd_rx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/PostUpgrade.html#concept_epj_gqd_rx">Update Kudu Pipelines</a></span></span></li>
+               <li><span data-tocid="concept_hhc_15s_dbb-d46e17166" class="topicref" data-id="concept_hhc_15s_dbb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/PostUpgrade.html#concept_hhc_15s_dbb">Update JDBC Multitable Consumer Pipelines</a></span></span></li>
+               <li><span data-tocid="concept_yyv_v45_zw-d46e17299" class="topicref" data-id="concept_yyv_v45_zw" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/PostUpgrade.html#concept_yyv_v45_zw">Update Vault Pipelines</a></span></span></li>
+               <li><span data-tocid="concept_cmh_ryd_pz-d46e17442" class="topicref" data-id="concept_cmh_ryd_pz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/PostUpgrade.html#concept_cmh_ryd_pz">Configure JDBC Producer Schema Names</a></span></span></li>
+               <li><span data-tocid="concept_gk3_s5l_nz-d46e17595" class="topicref" data-id="concept_gk3_s5l_nz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/PostUpgrade.html#concept_gk3_s5l_nz">Evaluate Precondition Error Handling</a></span></span></li>
+               <li><span data-tocid="concept_czx_bbn_gz-d46e17758" class="topicref" data-id="concept_czx_bbn_gz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/PostUpgrade.html#concept_czx_bbn_gz">Authentication for Docker Image</a></span></span></li>
+               <li><span data-tocid="concept_zbn_fpw_xy-d46e17931" class="topicref" data-id="concept_zbn_fpw_xy" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/PostUpgrade.html#concept_zbn_fpw_xy">Configure Pipeline Permissions</a></span></span></li>
+               <li><span data-tocid="task_afy_k12_ry-d46e18114" class="topicref" data-id="task_afy_k12_ry" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/PostUpgrade.html#task_afy_k12_ry">Update Elasticsearch Pipelines</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"><span class="ph">Data Collector</span>         version 2.3.0.0 includes an enhanced Elasticsearch destination that uses the Elasticsearch         HTTP API. To upgrade
+                              pipelines that use the Elasticsearch destination from <span class="ph">Data Collector</span>         versions earlier than 2.3.0.0, you must review the value of the Default Operation         property.
+
+                           </p>
+                           </span></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="task_ijh_wtw_xy-d46e18316" class="topicref" data-id="task_ijh_wtw_xy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade-ExternalSystems.html#task_ijh_wtw_xy">Working with Upgraded External Systems</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">When an external system is upgraded to a new version, you can continue to use         existing <span class="ph">Data Collector</span> pipelines that connected to the previous version of the external system. You simply         configure the pipelines to work
+                        with the upgraded system.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_dgz_p45_gy-d46e18476" class="topicref" data-id="concept_dgz_p45_gy" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/UpgradeTroubleshooting.html#concept_dgz_p45_gy">Troubleshooting an Upgrade</a></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e18499" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e20154" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22651" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e24466" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e64169" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e77391" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e92871" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e98772" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e102096" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e106011" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e108837" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e109636" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e110218" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e111818" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e112299" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e113641" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e114610" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e117238" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e118495" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e120286" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e124782" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e125996" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e129904" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e129959" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e130119" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e131600" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e131822" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+
+
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_zll_vn5_zw">
+ <h1 class="title topictitle1" id="ariaid-title1">Post Upgrade Tasks</h1>
+
+ <p class="shortdesc">In some situations, you must complete tasks within <span class="ph">Data Collector</span> or
+        your <span class="ph">Control Hub</span>
+        on-premises installation after you upgrade.</p>
+
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_dzn_cdy_1cb">
+    <h2 class="title topictitle2" id="ariaid-title2">Update <span class="ph">Control Hub</span> On-premises</h2>
+
+
+    <div class="body conbody"><p class="shortdesc">If you use <span class="ph">StreamSets Control Hub</span>
+        on-premises and you upgrade registered <span class="ph">Data Collector</span>s to a
+        version higher than your current version of <span class="ph">Control Hub</span>, you
+        must modify the <span class="ph">Data Collector</span>
+        version range within your <span class="ph">Control Hub</span>
+        installation.</p>
+
+        <p class="p">By default, <span class="ph">Control Hub</span> can
+            work with registered <span class="ph">Data Collector</span>s
+            from version 2.1.0.0 to the current version of <span class="ph">Control Hub</span>.
+            You can customize the <span class="ph">Data Collector</span>
+            version range. For example, if you use <span class="ph">Control Hub</span>
+            on-premises version 3.1.0 and you upgrade registered <span class="ph">Data Collector</span>s to
+            version <span class="ph">3.4.0</span>, you must configure the maximum <span class="ph">Data Collector</span>
+            version that can work with <span class="ph">Control Hub</span> to
+            version <span class="ph">3.4.0</span>.</p>
+
+        <p class="p">To modify the <span class="ph">Data Collector</span>
+            version range:</p>
+
+        <div class="p">
+            <ol class="ol" id="concept_dzn_cdy_1cb__ol_xbl_f2y_1cb">
+                <li class="li">Log in to <span class="ph">Control Hub</span> as the default system administrator - the admin@admin user account.</li>
+
+                <li class="li">In the Navigation panel, click <span class="ph menucascade"><span class="ph uicontrol">Administration</span><abbr title="and then"> &gt; </abbr><span class="ph uicontrol">Data Collectors</span></span>.</li>
+
+                <li class="li">Click the <span class="ph uicontrol">Component Version Range</span> icon: <img class="image" id="concept_dzn_cdy_1cb__image_hd3_dfy_1cb" src="../Graphics/icon_OrganizationConfig.png" height="16" width="14" />.</li>
+
+                <li class="li">Enter <span class="ph">3.4.0</span> as the maximum <span class="ph">Data Collector</span> version that can work with <span class="ph">Control Hub</span>.</li>
+
+            </ol>
+
+        </div>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title3" id="concept_jzf_b3b_xdb">
+    <h2 class="title topictitle2" id="ariaid-title3">Update Pipelines to Use Spark 2.1 or Later</h2>
+
+    <div class="body conbody">
+        <p class="p">With version 3.3.0, <span class="ph">Data Collector</span>
+            removes support for Spark 1.x and introduces cluster streaming mode with support for
+            Kafka security features such as SSL/TLS and Kerberos authentication using Spark 2.1 or
+            later and Kafka 0.10.0.0 or later. For more information about these changes, see <a class="xref" href="PreUpgrade.html#concept_zgm_vj2_mdb" title="Data Collector version 3.3.0 introduces cluster streaming mode with support for Kafka security features such as SSL/TLS and Kerberos authentication using Spark 2.1 or later and Kafka 0.10.0.0 or later.">Upgrade to Spark 2.1 or Later</a>.</p>
+
+        <p class="p">After upgrading the Cloudera CDH distribution, Hortonworks Hadoop distribution, or Kafka
+            system to the required version and then upgrading <span class="ph">Data Collector</span>,
+            you must update pipelines to use Spark 2.1 or later. Pipelines that use the earlier
+            systems will not run until you perform these tasks:</p>
+
+        <ol class="ol" id="concept_jzf_b3b_xdb__ol_t1f_w3b_xdb">
+            <li class="li"><a class="xref" href="../Installation/AddtionalStageLibs.html#concept_fb2_qmn_bz">Install the
+                    stage library</a> for the upgraded system.</li>
+
+            <li class="li">In the pipeline, edit the stage and select the appropriate stage library.</li>
+
+            <li class="li">If the pipeline includes a Spark Evaluator processor and the Spark application was
+                previously built with Spark 2.0 or earlier, rebuild it with Spark 2.1. <p class="p">Or if you
+                    used Scala to write the custom Spark class, and the application was compiled
+                    with Scala 2.10, recompile it with Scala 2.11.</p>
+</li>
+
+            <li class="li">If the pipeline includes a Spark executor and the Spark application was previously
+                built with Spark 2.0 or earlier, rebuild it with Spark 2.1 and Scala 2.11. </li>
+
+        </ol>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title4" id="concept_hxf_3yd_qcb">
+    <h2 class="title topictitle2" id="ariaid-title4">Update Value Replacer Pipelines</h2>
+
+
+    <div class="body conbody"><p class="shortdesc">With version 3.1.0.0, <span class="ph">Data Collector</span>
+        introduces a new Field Replacer processor and has deprecated the Value Replacer processor. </p>
+
+        <p class="p">The Field Replacer processor lets you define more complex conditions to replace values.
+            For example, unlike the Value Replacer, the Field Replacer can replace values that fall
+            within a specified range.</p>
+
+        <p class="p">You can continue to use the deprecated Value Replacer processor in pipelines. However,
+            the processor will be removed in a future release - so we recommend that you update
+            pipelines to use the Field Replacer as soon as possible.</p>
+
+        <p class="p">To update your pipelines, replace the Value Replacer processor with the <a class="xref" href="../Processors/FieldReplacer.html#concept_rw4_2d3_4cb" title="The Field Replacer replaces values in fields with nulls or with new values. Use the Field Replacer to update values or to replace invalid values.">Field Replacer
+                processor</a>. The Field Replacer replaces values in fields with nulls or with
+            new values. In the Field Replacer, use field path expressions to replace values based on
+            a condition. </p>
+
+        <p class="p">For example, let's say that your Value Replacer processor is configured to replace null
+            values in the product_id field with "NA" and to replace the "0289" store ID with "0132"
+            as follows:</p>
+
+        <p class="p"><img class="image" id="concept_hxf_3yd_qcb__image_psh_jby_tcb" src="../Graphics/UpgradeValueReplacer.png" height="171" width="729" /></p>
+
+        <p class="p">In the Field Replacer processor, you can configure the same replacements using field path
+            expressions as follows:</p>
+
+        <p class="p"><img class="image" id="concept_hxf_3yd_qcb__image_uq2_pcy_tcb" src="../Graphics/UpgradeValueReplacerWithFieldReplacer.png" height="127" width="794" /></p>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title5" id="concept_dzq_djt_vcb">
+    <h2 class="title topictitle2" id="ariaid-title5">Update Einstein Analytics Pipelines</h2>
+
+
+    <div class="body conbody"><p class="shortdesc">With version 3.1.0.0, the Einstein Analytics destination introduces a new append
+        operation that lets you combine data into a single dataset. Configuring the destination to
+        use dataflows to combine data into a single dataset has been deprecated.</p>
+
+        <p class="p">You can continue to configure the destination to use dataflows. However, dataflows will
+            be removed in a future release - so we recommend that you update pipelines to use the
+                <a class="xref" href="../Destinations/WaveAnalytics.html#concept_ryp_g4r_vcb">append
+                operation</a> as soon as possible.</p>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title6" id="concept_wnl_zk4_5bb">
+ <h2 class="title topictitle2" id="ariaid-title6">Update Pipelines using Legacy Stage Libraries</h2>
+
+ <div class="body conbody">
+  <div class="p">With version 3.0.0.0, a set of older stage libraries are no longer included with Data
+            Collector. Pipelines that use these legacy stage libraries will not run until you
+            perform one of the following tasks:<dl class="dl">
+
+                    <dt class="dt dlterm">Use a current stage library</dt>
+
+                    <dd class="dd">We strongly recommend that you upgrade your system and use a current stage
+                        library in the pipeline:<ol class="ol" id="concept_wnl_zk4_5bb__ol_fct_hl4_5bb">
+                            <li class="li">Upgrade the system to a more current version.</li>
+
+                            <li class="li"><a class="xref" href="../Installation/AddtionalStageLibs.html#concept_fb2_qmn_bz">Install the stage library</a> for the upgraded system. </li>
+
+                            <li class="li">In the pipeline, edit the stage and select the appropriate stage
+                                library. </li>
+
+                        </ol>
+</dd>
+
+
+
+                    <dt class="dt dlterm">Install the legacy library</dt>
+
+                    <dd class="dd">Though not recommended, you can still download and install the older stage
+                        libraries as custom stage libraries. For more information, see <a class="xref" href="../Installation/AddtionalStageLibs.html#concept_fw3_zt3_tbb">Legacy
+                            Stage Libraries</a>.</dd>
+
+
+            </dl>
+</div>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title7" id="concept_wnp_scs_wbb">
+    <h2 class="title topictitle2" id="ariaid-title7">Disable Cloudera Navigator Integration</h2>
+
+    <div class="body conbody">
+        <p class="p">With version 3.0.0.0, the beta version of Cloudera Navigator integration is no longer
+            available with <span class="ph">Data Collector</span>.
+            Cloudera Navigator integration now requires a paid subscription. For more information
+            about purchasing Cloudera Navigator integration, <a class="xref" href="https://streamsets.com/contact-us/" target="_blank">contact
+                us</a>.</p>
+
+        <p class="p">When upgrading from a <span class="ph">Data Collector</span>
+            version with Cloudera Navigator integration enabled to version 3.0.0.0 without a paid
+            subscription, perform the following post-upgrade task:</p>
+
+        <div class="p">Do not include the Cloudera Navigator properties when you configure the 3.0.0.0 <span class="ph">Data Collector</span>
+            configuration file, sdc.properties. The properties to omit are: <ul class="ul" id="concept_wnp_scs_wbb__ul_lrx_xcs_wbb">
+                <li class="li">lineage.publishers</li>
+
+                <li class="li">lineage.publisher.navigator.def</li>
+
+                <li class="li">All other properties with the lineage.publisher.navigator prefix</li>
+
+            </ul>
+</div>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title8" id="concept_hky_ljl_wbb">
+ <h2 class="title topictitle2" id="ariaid-title8">JDBC Multitable Consumer Query Interval Change</h2>
+
+ <div class="body conbody">
+  <p class="p">With version 3.0.0.0, the Query Interval property is replaced by the new Queries per Second
+            property.</p>
+
+        <div class="p">Upgraded pipelines with the Query Interval specified using a constant or the default
+            format and unit of time, ${10 * SECONDS}, have the new Queries per Second property
+            calculated and defined as follows:
+            <pre class="pre codeblock"><code>Queries per Second = Number of Threads / Query Interval (in seconds)</code></pre>For
+            example, say the origin uses three threads and Query Interval is configured for ${15 *
+            SECONDS}. Then, the upgraded origin sets Queries per Seconds to 3 divided by 15, which
+            is .2. This means the origin will run a maximum of two queries every 10 seconds. </div>
+
+        <p class="p">The upgrade would occur the same way if Query Interval were set to 15. </p>
+
+        <p class="p">Pipelines with a Query Interval configured to use other units of time, such as ${.1
+            *MINUTES}, or configured with a different expression format, such as ${SECONDS * 5}, are
+            upgraded to use the default for Queries per Second, which is 10. This means the pipeline
+            will run a maximum of 10 queries per second. The fact that these expressions are not
+            upgraded correctly is noted in the Data Collector log.</p>
+
+        <p class="p">If necessary, update the Queries per Second property as needed after the upgrade. </p>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title9" id="concept_ys3_bjl_wbb">
+ <h2 class="title topictitle2" id="ariaid-title9">Update JDBC Query Consumer Pipelines used for SQL Server CDC Data</h2>
+
+ <div class="body conbody">
+  <p class="p">With version 3.0.0.0, the Microsoft SQL Server CDC functionality in the JDBC Query Consumer
+            origin has been deprecated and will be removed in a future release. </p>
+
+        <div class="p">For pipelines that use the JDBC Query Consumer to process Microsoft SQL Server CDC data,
+            replace the JDBC Query Consumer origin with another origin: <ul class="ul" id="concept_ys3_bjl_wbb__ul_ylc_fjl_wbb">
+                <li class="li">To read data from Microsoft SQL Server CDC tables, use the <a class="xref" href="../Origins/SQLServerCDC.html#concept_ut3_ywc_v1b">SQL Server CDC
+                        Client origin</a>. </li>
+
+                <li class="li">To read data from Microsoft SQL Server change tracking tables, use the <a class="xref" href="../Origins/SQLServerChange.html#concept_ewq_b2s_r1b">SQL Server Change
+                        Tracking origin</a>. </li>
+
+            </ul>
+</div>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title10" id="concept_ncs_5jl_wbb">
+    <h2 class="title topictitle2" id="ariaid-title10">Update MongoDB Destination Upsert Pipelines</h2>
+
+    <div class="body conbody">
+        <p class="p">With version 3.0.0.0, the MongoDB destination supports the replace and update operation
+            codes, and no longer supports the upsert operation code. You can use a new Upsert flag
+            in conjunction with Replace and Update. </p>
+
+        <p class="p">After upgrading from a version earlier than 3.0.0.0, update the pipeline as needed to
+            ensure that records passed to the destination do not use the upsert operation code
+            (sdc.operation.type = 4). Records that use the upsert operation code will be sent to
+            error. </p>
+
+        <p class="p">In previous releases, records flagged for upsert were treated in the MongoDB system as
+            Replace operations with the Upsert flag set. </p>
+
+        <div class="p">If you want to replicate the upsert behavior from earlier releases, perform the following
+                steps:<ol class="ol" id="concept_ncs_5jl_wbb__ol_hll_bkl_wbb">
+                <li class="li">Configure the pipeline to use the Replace operation code. <p class="p">Make sure that the
+                        sdc.operation.type is set to 7 for Replace instead of 4 for Upsert.</p>
+</li>
+
+                <li class="li">In the MongoDB destination, enable the new Upsert property.</li>
+
+            </ol>
+</div>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title11" id="concept_o1s_gkl_wbb">
+ <h2 class="title topictitle2" id="ariaid-title11">Time Zones in Stages</h2>
+
+ <div class="body conbody">
+  <p class="p">With version 3.0.0.0, time zones have been organized and updated to use JDK 8 names. This
+            should make it easier to select time zones in stage properties. </p>
+
+        <p class="p">In the rare case that an upgraded pipeline uses a format not supported by JDK 8, edit the
+            pipeline to select a compatible time zone. </p>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title12" id="concept_epj_gqd_rx">
+ <h2 class="title topictitle2" id="ariaid-title12">Update Kudu Pipelines</h2>
+
+ <div class="body conbody">
+        <p class="p">Consider the following upgrade tasks for Kudu pipelines, based on the version that you
+            are upgrading from:</p>
+
+        <dl class="dl">
+
+                <dt class="dt dlterm">Upgrade from versions earlier than 3.0.0.0</dt>
+
+                <dd class="dd">With version 3.0.0.0, if the destination receives a change data capture log from
+                    the following source systems, you must specify the source system so that the
+                    destination can determine the format of the log: Microsoft SQL Server, Oracle
+                    CDC Client, MySQL Binary Log, or MongoDB Oplog. </dd>
+
+                <dd class="dd ddexpand">Previously, the Kudu destination could not directly receive changed data from
+                    these source systems. You either had to include a scripting processor in the
+                    pipeline to modify the field paths in the record to a format that the
+                    destination could read. Or, you had to add multiple Kudu destinations to the
+                    pipeline - one per operation type - and include a Stream Selector processor to
+                    send records to the destination by operation type. </dd>
+
+                <dd class="dd ddexpand">If you implemented one of these workarounds, then after upgrading, modify the
+                    pipeline to remove the scripting processor or the Stream Selector processor and
+                    the multiple destinations. In the Kudu destination, set the Change Log Format to
+                    the appropriate format of the log: Microsoft SQL Server, Oracle CDC Client,
+                    MySQL Binary Log, or MongoDB Oplog. </dd>
+
+
+
+                <dt class="dt dlterm">Upgrade from versions earlier than 2.2.0.0</dt>
+
+                <dd class="dd">With version 2.2.0.0, <span class="ph">Data Collector</span> provides support for Apache Kudu version 1.0.x and no longer supports earlier
+                    Kudu versions. To upgrade pipelines that contain a Kudu destination from <span class="ph">Data Collector</span> versions earlier than 2.2.0.0, upgrade your Kudu cluster and then add a stage
+                    alias for the earlier Kudu version to the <span class="ph">Data Collector</span> configuration file, <code class="ph codeph">$SDC_CONF/sdc.properties</code>. </dd>
+
+                <dd class="dd ddexpand">
+                    <p class="p">The configuration file includes stage aliases to enable backward
+                        compatibility for pipelines created with earlier versions of <span class="ph">Data Collector</span>.</p>
+
+                    <p class="p">To update Kudu pipelines:</p>
+
+                    <div class="p">
+                        <ol class="ol" id="concept_epj_gqd_rx__ol_gpt_ssd_rx">
+                            <li class="li">Upgrade your Kudu cluster to version 1.0.x.<p class="p">For instructions, see
+                                    the Apache Kudu documentation.</p>
+</li>
+
+                            <li class="li">Open the <code class="ph codeph">$SDC_CONF/sdc.properties</code> file and locate
+                                the following
+                                comment:<pre class="pre codeblock"><code># Stage aliases for mapping to keep backward compatibility on pipelines when stages move libraries</code></pre></li>
+
+                            <li class="li">Below the comment, add a stage alias for the earlier Kudu version as
+                                    follows:<pre class="pre codeblock"><code>stage.alias.streamsets-datacollector-apache-kudu-&lt;version&gt;-lib, com_streamsets_pipeline_stage_destination_kudu_KuduDTarget = streamsets-datacollector-apache-kudu_1_0-lib, com_streamsets_pipeline_stage_destination_kudu_KuduDTarget</code></pre><div class="p">Where
+                                    &lt;version&gt; is the earlier Kudu version: 0_7, 0_8, or 0_9. For
+                                    example, if you previously used Kudu version 0.9, add the
+                                    following stage
+                                    alias:<pre class="pre codeblock"><code>stage.alias.streamsets-datacollector-apache-kudu-0_9-lib, com_streamsets_pipeline_stage_destination_kudu_KuduDTarget = streamsets-datacollector-apache-kudu_1_0-lib, com_streamsets_pipeline_stage_destination_kudu_KuduDTarget</code></pre></div>
+</li>
+
+                            <li class="li">Restart <span class="ph">Data Collector</span> to enable the changes.</li>
+
+                        </ol>
+
+                    </div>
+
+                </dd>
+
+
+        </dl>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title13" id="concept_hhc_15s_dbb">
+ <h2 class="title topictitle2" id="ariaid-title13">Update JDBC Multitable Consumer Pipelines</h2>
+
+ <div class="body conbody">
+        <p class="p">With version 2.7.1.1, the JDBC Multitable Consumer origin can now read from views in
+            addition to tables. The origin now reads from all tables and all views that are included
+            in the defined table configurations. </p>
+
+        <p class="p">When upgrading pipelines that contain a JDBC Multitable Consumer origin from <span class="ph">Data Collector</span>
+            versions earlier than 2.7.1.1, review the table configurations to determine if any views
+            are included. If a table configuration includes views that you do not want to read,
+            simply exclude them from the configuration.</p>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title14" id="concept_yyv_v45_zw">
+ <h2 class="title topictitle2" id="ariaid-title14">Update Vault Pipelines</h2>
+
+ <div class="body conbody">
+        <p class="p">With version 2.7.0.0, <span class="ph">Data Collector</span>
+            introduces a credential store API and credential expression language functions to access
+            Hashicorp Vault secrets. </p>
+
+
+        <p class="p">In addition, the <span class="ph">Data Collector</span>
+            Vault integration now relies on Vault's App Role authentication backend. </p>
+
+        <p class="p">Previously, <span class="ph">Data Collector</span>
+            used Vault functions to access Vault secrets and relied on Vault's App ID authentication
+            backend. StreamSets has deprecated the Vault functions, and Hashicorp has deprecated the
+            App ID authentication backend. </p>
+
+        <p class="p">After upgrading, update pipelines that use Vault functions in one of the following
+            ways:</p>
+
+        <dl class="dl">
+
+                <dt class="dt dlterm">Use the new credential store expression language functions (recommended)</dt>
+
+                <dd class="dd">To use the new credential functions, install the Vault credential store stage
+                    library and define the configuration properties used to connect to Vault. Then,
+                    update each upgraded pipeline that includes stages using Vault functions to use
+                    the new credential functions to retrieve the credential values.</dd>
+
+                <dd class="dd ddexpand">For details on using the Vault credential store system, see <a class="xref" href="../Configuration/CredentialStores.html#concept_s3y_dps_51b">Vault Credential Store</a>.</dd>
+
+
+
+                <dt class="dt dlterm">Continue to use the deprecated Vault functions</dt>
+
+                <dd class="dd">You can continue to use the deprecated Vault functions in pipelines. However,
+                    the functions will be removed in a future release - so we recommend that you use
+                    the credential functions as soon as possible.</dd>
+
+                <dd class="dd ddexpand">To continue to use the Vault functions, make the following changes after
+                    upgrading:</dd>
+
+                <dd class="dd ddexpand">
+                    <ul class="ul" id="concept_yyv_v45_zw__ul_emz_ltw_51b">
+                        <li class="li">Uncomment the single Vault EL property in the
+                                <code class="ph codeph">$SDC_CONF/vault.properties</code> file.</li>
+
+                        <li class="li">The remaining Vault configuration properties have been moved to the
+                                <samp class="ph systemoutput">$SDC_CONF/credential-stores.properties</samp>
+                            file. The properties use the same name, with an added
+                            "credentialStore.vault.config" prefix. Copy any values that you
+                            customized in the previous <code class="ph codeph">vault.properties</code> file into
+                            the same property names in the
+                                <code class="ph codeph">credential-stores.properties</code> file.</li>
+
+                        <li class="li">Define the Vault Role ID and Secret ID that <span class="ph">Data Collector</span> uses to authenticate with Vault in the
+                                <code class="ph codeph">credential-stores.properties</code> file. Defining an App
+                            ID for <span class="ph">Data Collector</span> is deprecated and will be removed in a future release.</li>
+
+                    </ul>
+
+                </dd>
+
+                <dd class="dd ddexpand">For details on using the Vault functions, see <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw">Accessing Vault Secrets with Vault Functions (Deprecated)</a>.</dd>
+
+
+        </dl>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title15" id="concept_cmh_ryd_pz">
+ <h2 class="title topictitle2" id="ariaid-title15">Configure JDBC Producer Schema Names</h2>
+
+    <div class="body conbody">
+        <p class="p">With Data Collector version 2.5.0.0, you can use a Schema Name property to specify the
+            database or schema name. In previous releases, you specified the database or schema name
+            in the Table Name property. </p>
+
+        <p class="p">Upgrading from a previous release does not require changing any existing configuration at
+            this time. But we recommend using the new Schema Name property, since the ability to
+            specify a database or schema name with the table name might be deprecated in the future. </p>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title16" id="concept_gk3_s5l_nz">
+ <h2 class="title topictitle2" id="ariaid-title16">Evaluate Precondition Error Handling</h2>
+
+ <div class="body conbody">
+  <p class="p">With Data Collector version 2.5.0.0, precondition error handling has changed. </p>
+
+        <p class="p">The Precondition stage property allows you to define conditions that must be met for a
+            record to enter the stage. Previously, records that did not meet all specified
+            preconditions were passed to the pipeline for error handling. That is, the records were
+            processed based on the Error Records pipeline property. </p>
+
+        <p class="p">With version 2.5.0.0, records that do not meet the specified preconditions are handled by
+            the error handling configured for the stage. Stage error handling occurs based on the On
+            Record Error property on the General tab of the stage.</p>
+
+        <p class="p">Review pipelines that use preconditions to verify that this change does not adversely
+            affect the behavior of the pipelines.</p>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title17" id="concept_czx_bbn_gz">
+ <h2 class="title topictitle2" id="ariaid-title17">Authentication for Docker Image</h2>
+
+ <div class="body conbody">
+  <p class="p">With <span class="ph">Data Collector</span>
+            version 2.4.1.0, the Docker image now uses the form type of file-based authentication by
+            default. As a result, you must use a <span class="ph">Data Collector</span>
+            user account to log in to the <span class="ph">Data Collector</span>.
+            If you haven't set up custom user accounts, you can use the admin account shipped with
+            the <span class="ph">Data Collector</span>. The default login is: <code class="ph codeph">admin / admin</code>.</p>
+
+        <p class="p">Earlier versions of the Docker image used no authentication.</p>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title18" id="concept_zbn_fpw_xy">
+ <h2 class="title topictitle2" id="ariaid-title18">Configure Pipeline Permissions</h2>
+
+ <div class="body conbody">
+        <p class="p"><span class="ph">Data Collector</span>
+            version 2.4.0.0 is designed for multitenancy and enables you to share and grant
+            permissions on pipelines. Permissions determine the access level that users and groups
+            have on pipelines.</p>
+
+        <p class="p">In earlier versions of <span class="ph">Data Collector</span>
+            without pipeline permissions, pipeline access is determined by roles. For example, any
+            user with the Creator role could edit any pipeline. </p>
+
+        <p class="p">In version  2.4.0.0, roles are augmented with pipeline permissions. In addition to having
+            the necessary role, users must also have the appropriate permissions to perform pipeline
+            tasks. </p>
+
+        <p class="p">For example, to edit a pipeline in 2.4.0.0, a user with the Creator role must also have
+            read and write permission on the pipeline. Without write permission, the user cannot
+            edit the pipeline. Without read permission, the user cannot see the pipeline at all. It
+            does not display in the list of available pipelines. </p>
+
+        <div class="p">
+            <div class="note note"><span class="notetitle">Note:</span> With pipeline permissions enabled, all upgraded pipelines are initially visible
+                only to users with the Admin role and the pipeline owner - the user who created the
+                pipeline. To enable other users to work with pipelines, have an Admin user configure
+                the appropriate permissions for each pipeline. </div>
+
+        </div>
+
+        <p class="p">In Data Collector version 2.5.0.0, pipeline permissions are disabled by default. To
+            enable pipeline permissions, set the pipeline.access.control.enabled property to true in
+            the Data Collector configuration file.</p>
+
+        <div class="note tip"><span class="tiptitle">Tip:</span> You can configure pipeline permissions when permissions are disabled. Then,
+            you can enable the pipeline permissions property after pipeline permissions are properly
+            configured. </div>
+
+        <p class="p">For more information about roles and permissions, see <a class="xref" href="../Configuration/RolesandPermissions.html#concept_k1r_prc_yy">Roles and Permissions</a>. For details
+            about configuring pipeline permissions, see <a class="xref" href="../Pipeline_Maintenance/PipelineMaintenance_title.html#concept_jrg_1vy_wy">Sharing Pipelines</a>. </p>
+
+    </div>
+
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title19" id="task_afy_k12_ry">
+    <h2 class="title topictitle2" id="ariaid-title19">Update Elasticsearch Pipelines</h2>
+
+
+    <div class="body taskbody"><p class="shortdesc"><span class="ph">Data Collector</span>
+        version 2.3.0.0 includes an enhanced Elasticsearch destination that uses the Elasticsearch
+        HTTP API. To upgrade pipelines that use the Elasticsearch destination from <span class="ph">Data Collector</span>
+        versions earlier than 2.3.0.0, you must review the value of the Default Operation
+        property.</p>
+
+        <section class="section context">
+            <p class="p">Review all upgraded Elasticsearch destinations to ensure that the <span class="ph uicontrol">Default
+                    Operation</span> property is set to the correct operation. Upgraded
+                Elasticsearch destinations have the Default Operation property set based on the
+                configuration for the Enable Upsert property:</p>
+
+            <ul class="ul" id="task_afy_k12_ry__ul_hyw_pvt_5y">
+                <li class="li">With upsert enabled, the default operation is set to INDEX.</li>
+
+                <li class="li">With upsert not enabled, the default operation is set to CREATE which requires a
+                    DocumentId.</li>
+
+            </ul>
+
+            <div class="note note"><span class="notetitle">Note:</span> The Elasticsearch version 5 stage library is compatible with all versions of
+                Elasticsearch. Earlier stage library versions have been removed.</div>
+
+        </section>
+
+    </div>
+
+</article>
+</article>
+</article></main></div>
+
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script>
+  </div>
+</nav>
+
+
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
+</html>

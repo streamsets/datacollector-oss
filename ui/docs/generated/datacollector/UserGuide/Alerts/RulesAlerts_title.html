@@ -1,0 +1,1383 @@
+
+<!DOCTYPE html
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="Define rules to enable capturing information about a running pipeline. You can enable an alert for any rule to be notified when the specified condition occurs. You can create the following types of ..." /><meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Rules and Alerts" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_pgk_brx_rr" /><title>Rules and Alerts</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_pgk_brx_rr-d46e114610" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018042310" />
+
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018042310" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+
+
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+
+
+
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+
+                </div>
+
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+
+
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li class="active"><span class="topicref" data-id="concept_pgk_brx_rr"><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq" title="Data Preview"></a></span>
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq" title="Pipeline Monitoring"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e4414" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e6481" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13895" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e18499" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e20154" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22651" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e24466" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e64169" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e77391" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e92871" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e98772" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e102096" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e106011" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e108837" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e109636" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e110218" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e111818" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e112299" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e113641" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li class="active"><span data-tocid="concept_pgk_brx_rr-d46e114610" class="topicref" data-id="concept_pgk_brx_rr" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_ugl_nlh_q5-d46e114836" class="topicref" data-id="concept_ugl_nlh_q5" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_ugl_nlh_q5">Rules and Alerts Overview</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_abj_nsk_zq-d46e114860" class="topicref" data-id="concept_abj_nsk_zq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_abj_nsk_zq">Metric Rules and Alerts</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_tpm_rsk_zq-d46e115657" class="topicref" data-id="concept_tpm_rsk_zq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_tpm_rsk_zq">Data Rules and Alerts</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_wbz_mkk_p5-d46e116092" class="topicref" data-id="concept_wbz_mkk_p5" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_wbz_mkk_p5">Data Drift Rules and Alerts</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_rtm_sfk_rz-d46e116619" class="topicref" data-id="concept_rtm_sfk_rz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_rtm_sfk_rz">Alert Webhooks</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="task_f3v_1hw_1r-d46e117021" class="topicref" data-id="task_f3v_1hw_1r" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#task_f3v_1hw_1r">Configuring Email for Alerts</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e117238" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e118495" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e120286" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e124782" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e125996" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e129904" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e129959" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e130119" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e131600" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e131822" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+
+
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_pgk_brx_rr">
+ <h1 class="title topictitle1" id="ariaid-title1">Rules and Alerts</h1>
+
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_ugl_nlh_q5">
+    <h2 class="title topictitle2" id="ariaid-title2">Rules and Alerts Overview</h2>
+
+
+    <div class="body conbody"><p class="shortdesc">Define rules to enable capturing information about a running pipeline. You can enable
+        an alert for any rule to be notified when the specified condition occurs.</p>
+
+        <p class="p"></p>
+
+        <div class="p">You can create the following types of rules:<ul class="ul" id="concept_ugl_nlh_q5__ul_hcb_pqh_q5">
+                <li class="li">Metric rule - Gathers statistics about the pipeline such as pipeline idle time
+                    or error record counts. Provides an alert when enabled.</li>
+
+                <li class="li">Data rule - Gathers details about data as it passes between two stages. Can
+                    provide a meter and alert.</li>
+
+                <li class="li">Data drift rule - Gathers details about data drift as data passes between two
+                    stages. Can provide a meter and alert.</li>
+
+            </ul>
+</div>
+
+        <div class="p">When you enable alerts, you can be informed of the alert in the following ways:<ul class="ul" id="concept_ugl_nlh_q5__ul_hlr_dnk_rz">
+                <li class="li">Pipeline monitoring - All alerts display when you view the
+                    pipeline in Monitor mode. </li>
+
+                <li class="li">Webhooks - All alerts trigger all configured webhooks.</li>
+
+                <li class="li">Email - You can configure rules to send email alerts.</li>
+
+
+            </ul>
+</div>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title3" id="concept_abj_nsk_zq">
+ <h2 class="title topictitle2" id="ariaid-title3">Metric Rules and Alerts</h2>
+
+
+ <div class="body conbody"><p class="shortdesc">Metric rules and alerts provide notifications about real-time statistics for
+    pipelines.</p>
+
+  <p class="p"><span class="ph">When <span class="ph">Data Collector</span> runs a
+        pipeline, the UI displays the pipeline in Monitor mode and displays real-time statistics
+        about the pipeline. </span>You can define and enable metric rules so that you are sent an
+      alert when a statistic reaches a certain threshold. </p>
+
+    <p class="p">For example, the Record Count and Record Throughput statistics in Monitor mode
+      display the number of input, output, and error records that the pipeline has processed:</p>
+
+    <p class="p"><img class="image" id="concept_abj_nsk_zq__image_h55_gc1_qv" src="../Graphics/MetricStatistics.png" height="185" width="469" /></p>
+
+    <p class="p">You can view the number of error records in these statistics. However, you
+      might want to be notified when the number of error records reaches a certain threshold. You
+      can enable the default rule for the Pipeline Error Records Counter metric to send an alert
+      when the pipeline encounters more than 100 error records. When you enable the metric rule and
+      the alert triggers, the alert displays in the <span class="ph">Data Collector</span> UI as
+      follows: </p>
+
+    <p class="p"><img class="image" id="concept_abj_nsk_zq__image_ukv_rf1_qv" src="../Graphics/MetricAlert.png" height="282" width="563" /></p>
+
+    <p class="p">When you enable a metric rule, it automatically enables an alert for the rule. You can also
+      configure a metric rule to send email alerts to all email addresses associated with the
+      pipeline. </p>
+
+    <p class="p">You configure metric rules when you configure <span class="ph">or monitor </span>the pipeline.
+        <span class="ph">Data Collector</span>
+      provides a set of default metric rules that you can edit and enable for any pipeline. Metric
+      rules take effect after you enable them.</p>
+
+    <p class="p">You can also create custom metric rules. When you create a custom metric rule, you select the
+      metric type. The metric type determines which statistic triggers the alert. You configure the
+      condition that triggers the alert, and enter the text to display in the alert.</p>
+
+ </div>
+
+<article class="topic concept nested2" aria-labelledby="ariaid-title4" id="concept_aq1_5lf_qv">
+ <h3 class="title topictitle3" id="ariaid-title4">Default Metric Rules</h3>
+
+
+ <div class="body conbody"><p class="shortdesc"><span class="ph">Data Collector</span>
+        provides a set of default metric rules that you can edit and enable for any
+        pipeline.</p>
+
+        <p class="p">You might want to edit a default metric rule to modify the alert text or the condition
+            for the rule. By default, none of the rules are enabled. Select
+                <span class="ph uicontrol">Active</span> to enable a rule. </p>
+
+        <p class="p">Data
+            Collector provides the following default metric rules:</p>
+
+        <img class="image" id="concept_aq1_5lf_qv__image_gjs_zlf_qv" src="../Graphics/MetricDefaultRules.png" height="208" width="478" />
+    </div>
+
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title5" id="concept_y4d_tcw_1r">
+ <h3 class="title topictitle3" id="ariaid-title5">Metric Types</h3>
+
+
+ <div class="body conbody"><p class="shortdesc">You can use different metric types when you create a metric rule. The metric type
+        determines which statistic triggers the alert. </p>
+
+  <p class="p">After
+            selecting a metric type, you select the metric ID which specifies the metric to use. For
+            example, a metric ID can be a runtime statistics gauge or an input records meter. You
+            then select the metric element that defines what the metric is measuring. A metric
+            element can be a count, rate, median, minimum, maximum, or percentage. The possible
+            metric ID and metric element vary by metric type. </p>
+
+ </div>
+
+<article class="topic concept nested3" aria-labelledby="ariaid-title6" id="concept_ky2_g4f_qv">
+ <h4 class="title topictitle4" id="ariaid-title6">Gauge</h4>
+
+ <div class="body conbody">
+        <p class="p">The gauge metric type provides alerts
+            based on the number of input, output, or error records for the last processed batch. It
+            also provides alerts on the age of the current batch, the amount of time a stage takes
+            to process a batch, or the time that <span class="ph">Data Collector</span>
+            last received a record from the origin.</p>
+
+        <p class="p">The gauge metric type provides alerts about some of the Runtime Statistics
+            displayed in Monitor mode:</p>
+
+        <img class="image" id="concept_ky2_g4f_qv__image_r5z_hpf_qv" src="../Graphics/MetricGauge.png" height="324" width="231" />
+        <div class="p">The gauge metric type includes a single metric ID, Runtime Statistics Gauge. You can
+            configure the alert to trigger on the following metric elements:<ul class="ul" id="concept_ky2_g4f_qv__ul_d1h_kqf_qv">
+                <li class="li">Last Batch Input, Output, or Error Records Counts</li>
+
+                <li class="li">Last Batch Error Messages Count</li>
+
+                <li class="li">Current Batch Age</li>
+
+                <li class="li">Time in Current Stage</li>
+
+                <li class="li">Time of Last Received Record</li>
+
+            </ul>
+</div>
+
+        <p class="p">For example, you can configure a gauge metric rule that triggers an alert when the
+            pipeline has been processing a batch for more than 5 minutes.</p>
+
+    </div>
+
+</article>
+<article class="topic concept nested3" aria-labelledby="ariaid-title7" id="concept_ov2_vvf_qv">
+ <h4 class="title topictitle4" id="ariaid-title7">Counter</h4>
+
+
+ <div class="body conbody"><p class="shortdesc">The counter metric type provides alerts based on the number of input, output, or error
+        records for the pipeline or for a stage in the pipeline.</p>
+
+        <p class="p">If you enable the
+                <span class="ph uicontrol">monitor.memory</span> property in the <span class="ph">Data Collector</span>
+            configuration file, <code class="ph codeph">$SDC_CONF/sdc.properties</code>, the counter metric type
+            also provides alerts about <span class="ph">the Stage Heap Memory Usage and the Heap
+                Memory Usage statistics displayed in Monitor mode for the pipeline or for a
+                stage:</span></p>
+
+     <p class="p"><img class="image" id="concept_ov2_vvf_qv__image_zqq_np3_fw" src="../Graphics/MetricCounter.png" height="325" width="569" /></p>
+
+        <div class="p"><div class="note important"><span class="importanttitle">Important:</span> Memory monitoring is disabled by default. Enable memory monitoring
+                only when you are testing real-world load usage in the test or production
+                environment. When finished testing, disable memory monitoring. </div>
+The counter
+            metric type includes the following metric IDs:<ul class="ul" id="concept_ov2_vvf_qv__ul_lqs_4wf_qv">
+                <li class="li">Pipeline batch count.</li>
+
+                <li class="li">Number of input records, output records, error records, or stage errors for the
+                    pipeline or for a stage in the pipeline.</li>
+
+                <li class="li">Amount of memory being consumed by the pipeline or by a stage - only when memory
+                    monitoring is enabled.</li>
+
+            </ul>
+</div>
+
+        <p class="p">For any of the selected metric IDs, you can configure the alert to trigger on the count
+            metric element.</p>
+
+        <p class="p">For example, you can configure a counter metric rule that triggers an alert when a
+            pipeline encounters more than 1,000 error records.</p>
+
+    </div>
+
+</article>
+<article class="topic concept nested3" aria-labelledby="ariaid-title8" id="concept_e3p_pxf_qv">
+ <h4 class="title topictitle4" id="ariaid-title8">Histogram</h4>
+
+
+ <div class="body conbody"><p class="shortdesc">The histogram metric type provides alerts based on a histogram of different record types
+        and stage errors for the pipeline or for a stage in the pipeline.</p>
+
+        <p class="p">The histogram metric type provides
+            alerts about the Records Per Batch Histogram statistics<span class="ph"> displayed in
+                Monitor mode for the pipeline or for a stage</span>
+            <span class="ph">:</span></p>
+
+        <img class="image" id="concept_e3p_pxf_qv__image_emj_ddg_qv" src="../Graphics/MetricHistogram.png" height="180" width="244" />
+        <p class="p">The histogram metric type includes metric IDs for the input records, output records,
+            error records, or stage errors for the pipeline or for a stage in the pipeline. You can
+            configure the alert to trigger on the metric elements displayed in the monitoring
+            histogram: mean, standard deviation, percentage, or count.</p>
+
+        <p class="p">For example, you can configure a histogram metric rule that triggers an alert when the
+            mean of all input records processed by the pipeline reaches 10,000.</p>
+
+    </div>
+
+</article>
+<article class="topic concept nested3" aria-labelledby="ariaid-title9" id="concept_d3x_d2g_qv">
+ <h4 class="title topictitle4" id="ariaid-title9">Meter</h4>
+
+
+ <div class="body conbody"><p class="shortdesc">The meter metric type provides alerts based on rates of different record types and stage
+        errors for pipelines or for a stage in the pipeline. </p>
+
+        <p class="p">The meter metric type can provide alerts
+            about the number of batches processed by the pipeline. The meter metric type can also
+            provide alerts about the Record Count and Record Throughput statistics <span class="ph">displayed in Monitor mode for the pipeline or for a stage:</span></p>
+
+     <p class="p"><img class="image" id="concept_d3x_d2g_qv__image_h55_gc1_qv" src="../Graphics/MetricStatistics.png" height="185" width="469" /></p>
+
+        <p class="p">The meter metric type includes metric IDs for the pipeline batch count and for the input
+            records, output records, error records, or stage errors for the pipeline or for a stage
+            in the pipeline. You can configure the alert to trigger on the following metric elements
+            displayed in the Record Count and Record Throughput statistics: count, time rates, or
+            mean.</p>
+
+        <p class="p">For example, you can configure a meter metric rule that triggers an alert when the number
+            of output records that a stage processes reaches 5,000 in one minute.</p>
+
+    </div>
+
+</article>
+<article class="topic concept nested3" aria-labelledby="ariaid-title10" id="concept_j5r_xhg_qv">
+ <h4 class="title topictitle4" id="ariaid-title10">Timer</h4>
+
+
+ <div class="body conbody"><p class="shortdesc">The timer metric type provides alerts based on batch processing timers for the pipeline
+        or for a stage in the pipeline.</p>
+
+        <p class="p">The timer metric type provides alerts
+            about the Batch Throughput and Batch Processing Timer statistics <span class="ph">displayed in Monitor mode for the pipeline or for a stage:</span></p>
+
+        <img class="image" id="concept_j5r_xhg_qv__image_fsb_llg_qv" src="../Graphics/MetricTimer.png" height="182" width="452" />
+        <div class="p">The timer metric type includes the following metric IDs:<ul class="ul" id="concept_j5r_xhg_qv__ul_uxn_4lg_qv">
+                <li class="li">Pipeline Batch Processing Timer - Amount of time for the pipeline to process a
+                    batch.</li>
+
+                <li class="li">&lt;stage_name&gt; Batch Processing Timer - Amount of time for a stage to process a
+                    batch.</li>
+
+            </ul>
+</div>
+
+        <p class="p">You can configure the alert to trigger on the following metric elements displayed in the
+            Batch Processing Timer statistics: mean, standard deviation, percentage, time rates, or
+            count.</p>
+
+        <p class="p">For example, you can configure a timer metric rule that triggers an alert when the mean
+            amount of time that the pipeline takes to process a batch reaches 10 minutes.</p>
+
+    </div>
+
+</article>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title11" id="concept_qyv_1tf_qv">
+ <h3 class="title topictitle3" id="ariaid-title11">Metric Conditions</h3>
+
+
+ <div class="body conbody"><p class="shortdesc">When you configure a metric rule, you configure the condition that defines the threshold
+        at which the metric rule triggers an alert. Use the expression language to configure the
+        condition. </p>
+
+        <p class="p">The expression language provides the following functions for creating metric rule
+            conditions:</p>
+
+        <dl class="dl">
+
+                <dt class="dt dlterm">value()</dt>
+
+                <dd class="dd">Returns the value of the current metric selected in the metric rule. Use in
+                    conditions for any type of metric rule.<div class="p">For example, the default rule for the
+                        Pipeline Error Records Counter metric includes the following
+                        condition:<pre class="pre codeblock"><code>${value() &gt; 100}</code></pre></div>
+<p class="p">The alert is
+                        triggered when the pipeline encounters more than 100 error records.</p>
+</dd>
+
+
+
+                <dt class="dt dlterm">time.now()</dt>
+
+                <dd class="dd">Returns the current time of the Data Collector machine as a java.util.Date
+                    object. Use in conditions for gauge metric rules.<div class="p">For example, the default
+                        rule for the Runtime Statistics Gauge metric that checks whether the
+                        pipeline is idle includes the following
+                        condition:<pre class="pre codeblock"><code>${time:now() - value() &gt; 120000}</code></pre></div>
+<p class="p">The
+                        alert is triggered when the current time is greater than the time of the
+                        last received record by 120,000 milliseconds.</p>
+</dd>
+
+
+
+                <dt class="dt dlterm">jvm:maxMemoryMB()</dt>
+
+                <dd class="dd">Returns the Java heap size allocated to <span class="ph">Data Collector</span> in MB. Use in conditions for counter metric rules.<div class="p">For example, the default
+                        rule for the Pipeline Memory Consumption Counter metric includes the
+                        following
+                        condition:<pre class="pre codeblock"><code>${value() &gt; (jvm:maxMemoryMB() * 0.65)}</code></pre></div>
+<p class="p">The
+                        alert is triggered when the pipeline uses 65% of the Java heap size
+                        allocated to <span class="ph">Data Collector</span>.</p>
+</dd>
+
+
+        </dl>
+
+        <p class="p">For more information about using the expression language, see <a class="xref" href="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq">Expression Language</a>.</p>
+
+ </div>
+
+</article>
+<article class="topic task nested2" aria-labelledby="ariaid-title12" id="task_hcf_11k_br">
+    <h3 class="title topictitle3" id="ariaid-title12">Configuring a Metric Rule and Alert</h3>
+
+
+    <div class="body taskbody"><p class="shortdesc">Create a custom metric rule to receive alerts when a real-time statistic reaches a
+        certain threshold. You can create metric rules and alerts when you configure <span class="ph">or monitor </span>a pipeline. You can edit or delete metric rules when they
+        are not enabled. </p>
+
+        <section class="section context">Configure metric rules based on the
+            metric type, the metric, an element associated with the metric, and a condition. </section>
+
+        <ol class="ol steps" id="task_hcf_11k_br__steps_jzm_f1k_br"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel<span class="ph"> or Monitor panel</span>, click the
+                        <span class="ph uicontrol">Metric Rules</span> tab, and click the
+                        <span class="ph uicontrol">Add</span> icon.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the <span class="keyword wintitle">Metric Rule</span> dialog box, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hcf_11k_br__table_lcs_4bk_br" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d5517e815">Metric Rule Property</th>
+
+                                    <th class="entry cellrowborder" id="d5517e818">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d5517e815 ">Alert Text</td>
+
+                                    <td class="entry cellrowborder" headers="d5517e818 ">Text to display when the alert is triggered. <p class="p">Enter
+                                            text that explains the reason for the alert. For
+                                            example, "Over 1000 pipeline error records."</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d5517e815 ">Metric Type <a class="xref" href="RulesAlerts_title.html#concept_y4d_tcw_1r" title="You can use different metric types when you create a metric rule. The metric type determines which statistic triggers the alert.">
+                                            <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
+                                    </td>
+
+                                    <td class="entry cellrowborder" headers="d5517e818 ">Type of metric information the alert is based on:<ul class="ul" id="task_hcf_11k_br__ul_fwn_zbk_br">
+                                            <li class="li">Gauge</li>
+
+                                            <li class="li">Counter</li>
+
+                                            <li class="li">Histogram</li>
+
+                                            <li class="li">Meter</li>
+
+                                            <li class="li">Timer</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d5517e815 ">Metric ID</td>
+
+                                    <td class="entry cellrowborder" headers="d5517e818 ">Metric to use. Provides a list of available metrics based
+                                        on the metric type. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d5517e815 ">Metric Element</td>
+
+                                    <td class="entry cellrowborder" headers="d5517e818 ">Metric element to use. Provides a list of available
+                                        elements based on the metric ID.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d5517e815 ">Condition
+                                        <a class="xref" href="RulesAlerts_title.html#concept_qyv_1tf_qv" title="When you configure a metric rule, you configure the condition that defines the threshold at which the metric rule triggers an alert. Use the expression language to configure the condition.">
+                                            <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
+                                    </td>
+
+                                    <td class="entry cellrowborder" headers="d5517e818 ">Condition to trigger the alert. Use the expression
+                                        language to configure the condition. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d5517e815 ">Send Email</td>
+
+                                    <td class="entry cellrowborder" headers="d5517e818 ">Sends an email when the alert is triggered. <p class="p">To send an
+                                            email, add email addresses for alerts and configure the
+                                            Data Collector email properties. For more information,
+                                            see <a class="xref" href="RulesAlerts_title.html#task_f3v_1hw_1r" title="You can define the email addresses to receive metric and data alerts. When an alert triggers an email, the Data Collector sends an email to every address in the list.">Configuring Email for Alerts</a>.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph uicontrol">Save</span>.</span>
+                <div class="itemgroup info">The new metric rule displays in the list. </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To enable the rule, select <span class="ph uicontrol">Active</span>.</span>
+                <div class="itemgroup info">You can enable and disable email alerts from the list of rules. </div>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title13" id="concept_tpm_rsk_zq">
+ <h2 class="title topictitle2" id="ariaid-title13">Data Rules and Alerts</h2>
+
+
+ <div class="body conbody"><p class="shortdesc">Data rules define the information that you want to see about the data that passes
+        between stages. You can create data rules based on any link in the pipeline. You can also
+        enable metrics and create alerts for data rules.</p>
+
+  <p class="p"><span class="ph">When you click a link between two stages while monitoring a pipeline,
+                the Monitor panel displays summary statistics, data rules, and information about the
+                stream of data that the link represents. The summary statistics that display are
+                based on the data rules that you create. </span></p>
+
+  <p class="p">You can configure data rules when you configure<span class="ph"> or monitor</span> the pipeline.
+            To create a data rule, you need familiarity with the data being processed. You might
+            preview data <span class="ph">or take a snapshot of data </span>to help determine how to
+            configure data rules. </p>
+
+ </div>
+
+<article class="topic task nested2" aria-labelledby="ariaid-title14" id="task_utt_p2k_br">
+    <h3 class="title topictitle3" id="ariaid-title14">Configuring a Data Rule and Alert</h3>
+
+    <div class="body taskbody">
+        <section class="section context">Create a data rule to view metrics,
+            sample data, and alerts based on the rule. You can configure data rules and alerts when
+            you configure <span class="ph">or monitor </span>a pipeline. You can edit or delete data
+            rules when they are not enabled. </section>
+
+        <ol class="ol steps" id="task_utt_p2k_br__steps_mvl_w2k_br"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel<span class="ph"> or Monitor panel</span>, click the
+                        <span class="ph uicontrol">Data Rules</span> tab, and then click the
+                        <span class="ph uicontrol">Add</span> icon.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the <span class="keyword wintitle">Data Rule</span> dialog box, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_utt_p2k_br__table_blr_cfk_br" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:66.66666666666666%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d5517e1057">Data Rule Property</th>
+
+                                    <th class="entry cellrowborder" id="d5517e1060">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d5517e1057 ">Stream</td>
+
+                                    <td class="entry cellrowborder" headers="d5517e1060 ">Link selected for the data rule. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d5517e1057 ">Label</td>
+
+                                    <td class="entry cellrowborder" headers="d5517e1060 ">The label to display for the data rule. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d5517e1057 ">Condition</td>
+
+                                    <td class="entry cellrowborder" headers="d5517e1060 ">Condition that defines the data rule. Use the expression
+                                        language to configure the condition. <p class="p">For more information
+                                            about using the expression language, see <a class="xref" href="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq">Expression Language</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d5517e1057 ">Sampling Percentage</td>
+
+                                    <td class="entry cellrowborder" headers="d5517e1060 ">Percentage of records to sample to generate information
+                                        for the data rule. A higher percentage can provide greater
+                                        accuracy but use more resources on the <span class="ph">Data Collector</span> machine.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d5517e1057 ">Sampling Records to Retain</td>
+
+                                    <td class="entry cellrowborder" headers="d5517e1060 ">Number of sampled records to keep in memory for
+                                        display.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d5517e1057 ">Enable Meter</td>
+
+                                    <td class="entry cellrowborder" headers="d5517e1060 ">Enables gathering information for the data rule. <span class="ph">The information gathered displays when you
+                                            select the link in Monitor mode. </span></td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d5517e1057 ">Enable Alert</td>
+
+                                    <td class="entry cellrowborder" headers="d5517e1060 ">Enables an alert based on the data rule. Alerts display
+                                        when the configured conditions occur.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d5517e1057 ">Alert Text</td>
+
+                                    <td class="entry cellrowborder" headers="d5517e1060 ">Text to display when the alert is triggered. <p class="p">Enter
+                                            text that explains the reason for the alert. For
+                                            example, "Over 100 missing phone numbers." </p>
+<p class="p">You
+                                            can use the expression language to define the alert
+                                            text. For example, use the
+                                                <code class="ph codeph">record:errorMessage()</code> function to
+                                            display the error message in the alert text. For more
+                                            information about using the expression language, see
+                                                <a class="xref" href="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq">Expression Language</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d5517e1057 ">Threshold Type</td>
+
+                                    <td class="entry cellrowborder" headers="d5517e1060 ">Type of threshold that defines when the alert becomes
+                                            active:<ul class="ul" id="task_utt_p2k_br__ul_mj5_2gk_br">
+                                            <li class="li">Count - A specified number of records.</li>
+
+                                            <li class="li">Percentage - A specified percentage of records.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d5517e1057 ">Threshold Value</td>
+
+                                    <td class="entry cellrowborder" headers="d5517e1060 ">Value that defines the threshold at which the rule
+                                        triggers an alert. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d5517e1057 ">Min Volume</td>
+
+                                    <td class="entry cellrowborder" headers="d5517e1060 ">Minimum number of records to process before evaluating a
+                                        percentage threshold type. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d5517e1057 ">Send Email</td>
+
+                                    <td class="entry cellrowborder" headers="d5517e1060 ">Sends an email when the alert is triggered. <p class="p">To send an
+                                            email, add email addresses for alerts and configure the
+                                                <span class="ph">Data Collector</span> email properties. For more information, see <a class="xref" href="RulesAlerts_title.html#task_f3v_1hw_1r" title="You can define the email addresses to receive metric and data alerts. When an alert triggers an email, the Data Collector sends an email to every address in the list.">Configuring Email for Alerts</a>.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph uicontrol">Save</span>.</span>
+                <div class="itemgroup info">The new data rule displays in the list. </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To enable the new rule, click <span class="ph uicontrol">Active</span>. </span>
+                <div class="itemgroup info">You can enable and disable the meter and alert from the list of rules. You can
+                    edit and delete disabled rules. </div>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+<article class="topic task nested2" aria-labelledby="ariaid-title15" id="task_sx1_4qv_q5">
+    <h3 class="title topictitle3" id="ariaid-title15">Viewing Data Rule Metrics and Sample Data</h3>
+
+    <div class="body taskbody">
+        <section class="section context">
+            <p class="p">You can view the sample data generated by a data
+                rule in Monitor mode. For data rules with metrics enabled, you can also view a graph
+                that displays the metrics for the rule.</p>
+
+        </section>
+
+        <ol class="ol steps" id="task_sx1_4qv_q5__steps_wrl_t3n_q5"><li class="li step stepexpand">
+                <span class="ph cmd">In Monitor mode, select the link with the data metrics that you want to view.
+                </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If necessary, in the <span class="keyword wintitle">Monitor</span> panel, select the
+                        <span class="ph uicontrol">Summary</span> tab.</span>
+                <div class="itemgroup info">Sample data displays. When enabled for the rule, metrics display on the
+                        right.<p class="p">In the following example, a data alert is triggered, and the
+                        Monitor panel displays the sample records and metrics graphic for a data
+                        rule between the Directory and Stream Selector stages:</p>
+ <img class="image" id="task_sx1_4qv_q5__image_ohw_tjn_q5" src="../Graphics/DataRule-Metrics&amp;Sample.png" height="298" width="488" /></div>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title16" id="concept_wbz_mkk_p5">
+ <h2 class="title topictitle2" id="ariaid-title16">Data Drift Rules and Alerts</h2>
+
+
+ <div class="body conbody"><p class="shortdesc">You can create data drift rules to indicate when the structure of data changes. You can
+        create data drift rules on any link in the pipeline. You can also enable metrics and create
+        alerts for data drift rules.</p>
+
+  <div class="p">The expression language
+            provides data drift functions for creating data drift rules. You can use specific field
+            types with each function. The following table describes the type of data drift rules
+            that you can generate on the different field types:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_wbz_mkk_p5__table_kb1_3hh_q5" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:33.33333333333333%" /><col style="width:33.33333333333333%" /></colgroup><thead class="thead" style="text-align:left;">
+                        <tr>
+                            <th class="entry cellrowborder" id="d5517e1344">Data Drift Rule</th>
+
+                            <th class="entry cellrowborder" id="d5517e1347">Drift Function</th>
+
+                            <th class="entry cellrowborder" id="d5517e1350">Valid Field Data Types</th>
+
+                        </tr>
+
+                    </thead>
+<tbody class="tbody">
+                        <tr>
+                            <td class="entry cellrowborder" headers="d5517e1344 ">Field name changes</td>
+
+                            <td class="entry cellrowborder" headers="d5517e1347 "><code class="ph codeph">drift:name()</code></td>
+
+                            <td class="entry cellrowborder" headers="d5517e1350 ">list-map<p class="p">map</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry cellrowborder" headers="d5517e1344 ">Field order changes</td>
+
+                            <td class="entry cellrowborder" headers="d5517e1347 "><code class="ph codeph">drift:order()</code></td>
+
+                            <td class="entry cellrowborder" headers="d5517e1350 ">list-map</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry cellrowborder" headers="d5517e1344 ">Number of fields</td>
+
+                            <td class="entry cellrowborder" headers="d5517e1347 "><code class="ph codeph">drift:size()</code></td>
+
+                            <td class="entry cellrowborder" headers="d5517e1350 ">list<p class="p">list-map</p>
+<p class="p">map</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry cellrowborder" headers="d5517e1344 ">Field data type</td>
+
+                            <td class="entry cellrowborder" headers="d5517e1347 "><code class="ph codeph">drift:type()</code></td>
+
+                            <td class="entry cellrowborder" headers="d5517e1350 ">any</td>
+
+                        </tr>
+
+                    </tbody>
+</table>
+</div>
+</div>
+
+        <p class="p">You can view the metrics and sample records for data drift rules in the
+            same way that you view data rule metrics and records. For more information, see <a class="xref" href="RulesAlerts_title.html#task_sx1_4qv_q5">Viewing Data Rule Metrics and Sample Data</a>.</p>
+
+        <p class="p">For details about the data drift functions, see <a class="xref" href="../Expression_Language/Functions.html#concept_hpn_xfk_p5" title="Use data drift functions to create alerts when data drift occurs. You can use these functions in data drift rules.">Data Drift Functions</a>.</p>
+
+ </div>
+
+<article class="topic concept nested2" aria-labelledby="ariaid-title17" id="concept_rj4_y4g_q5">
+ <h3 class="title topictitle3" id="ariaid-title17">Data Drift Alert Triggers</h3>
+
+
+ <div class="body conbody"><p class="shortdesc">Data drift alerts trigger when a change of the specified type occurs from record to
+        record. </p>
+
+        <div class="p">For example, you
+            have an alert that triggers when the number of fields in the record changes. When
+            processing the records with the following number of columns, an alert triggers for both
+            the third and fourth records:<div class="simpletable-container"><table cellpadding="4" cellspacing="0" summary="" id="concept_rj4_y4g_q5__simpletable_xwv_stg_q5" border="1" class="simpletable"><col style="width:50%" /><col style="width:50%" /><thead><tr class="sthead">
+                    <th style="vertical-align:bottom;text-align:left;" id="d5517e1462" class="stentry">Record Number</th>
+
+                    <th style="vertical-align:bottom;text-align:left;" id="d5517e1465" class="stentry">Number of Columns</th>
+
+                </tr>
+</thead><tbody><tr class="strow">
+                    <td style="vertical-align:top;" headers="d5517e1462" class="stentry">1</td>
+
+                    <td style="vertical-align:top;" headers="d5517e1465" class="stentry">10</td>
+
+                </tr>
+<tr class="strow">
+                    <td style="vertical-align:top;" headers="d5517e1462" class="stentry">2</td>
+
+                    <td style="vertical-align:top;" headers="d5517e1465" class="stentry">10</td>
+
+                </tr>
+<tr class="strow">
+                    <td style="vertical-align:top;" headers="d5517e1462" class="stentry">3</td>
+
+                    <td style="vertical-align:top;" headers="d5517e1465" class="stentry">15</td>
+
+                </tr>
+<tr class="strow">
+                    <td style="vertical-align:top;" headers="d5517e1462" class="stentry">4</td>
+
+                    <td style="vertical-align:top;" headers="d5517e1465" class="stentry">10</td>
+
+                </tr>
+</tbody></table>
+</div></div>
+
+        <p class="p">Data drift functions include an ignoreWhenMissing flag to determine the behavior when the
+            specified field does not exist. When the specified field is missing and
+            ignoreWhenMissing is set to true, an alert is not triggered.</p>
+
+        <p class="p">When the specified field is missing and the ignoreWhenMissing flag is set to false, the
+            expression triggers an alert for the missing field, and again for the next record when
+            the field is present. </p>
+
+        <div class="p">For example, the following expression checks the data type of the ID column with
+            ignoreWhenMissing set to false:
+            <pre class="pre codeblock"><code>${drift:type('/UserID', false)}</code></pre></div>
+
+        <p class="p">Say all records include the UserID field, and then a single record passes without the
+            UserID field. This expression triggers an alert for the record with the missing field,
+            and again when the next record arrives that includes the UserID field. </p>
+
+ </div>
+
+</article>
+<article class="topic task nested2" aria-labelledby="ariaid-title18" id="task_dyk_ptm_q5">
+    <h3 class="title topictitle3" id="ariaid-title18">Configuring Data Drift Rules and Alerts</h3>
+
+    <div class="body taskbody">
+        <section class="section context">Create a data drift rule to view
+            metrics, sample data, and alerts based on the rule. You can configure data drift rules
+            and alerts when you configure<span class="ph"> or monitor</span> a pipeline. You can edit
+            or delete data drift rules when they are not enabled. </section>
+
+        <ol class="ol steps" id="task_dyk_ptm_q5__steps_mvl_w2k_br"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel<span class="ph"> or Monitor panel</span>, click the
+                        <span class="ph uicontrol">Data Drift Rules</span> tab, and then click the
+                        <span class="ph uicontrol">Add</span> icon.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the <span class="keyword wintitle">Data Drift Rule</span> dialog box, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_dyk_ptm_q5__table_blr_cfk_br" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:66.66666666666666%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d5517e1582">Data Rule Property</th>
+
+                                    <th class="entry cellrowborder" id="d5517e1585">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d5517e1582 ">Stream</td>
+
+                                    <td class="entry cellrowborder" headers="d5517e1585 ">Link selected for the data drift rule. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d5517e1582 ">Label</td>
+
+                                    <td class="entry cellrowborder" headers="d5517e1585 ">The label to display for the data drift rule. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d5517e1582 ">Condition
+                                        <a class="xref" href="../Expression_Language/Functions.html#concept_hpn_xfk_p5" title="Use data drift functions to create alerts when data drift occurs. You can use these functions in data drift rules.">
+                                            <img class="image" id="task_dyk_ptm_q5__image_jwh_mcn_q5" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
+                                    </td>
+
+                                    <td class="entry cellrowborder" headers="d5517e1585 ">Condition that defines the data drift rule. You can use
+                                        data drift functions and other aspects of the expression
+                                        language to configure the condition.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d5517e1582 ">Sampling Percentage</td>
+
+                                    <td class="entry cellrowborder" headers="d5517e1585 ">Percentage of records to sample to generate information
+                                        for the data drift rule. A higher percentage can provide
+                                        greater accuracy but use more resources on the <span class="ph">Data Collector</span> machine.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d5517e1582 ">Sampling Records to Retain</td>
+
+                                    <td class="entry cellrowborder" headers="d5517e1585 ">Number of sampled records to keep in memory for
+                                        display.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d5517e1582 ">Enable Meter</td>
+
+                                    <td class="entry cellrowborder" headers="d5517e1585 ">Enables gathering information for the data drift rule.
+                                            <span class="ph">The information gathered displays when
+                                            you select the link in Monitor mode. </span></td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d5517e1582 ">Enable Alert</td>
+
+                                    <td class="entry cellrowborder" headers="d5517e1585 ">Enables an alert based on the data drift rule. Alerts
+                                        display upon when the configured conditions occur.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d5517e1582 ">Alert Text</td>
+
+                                    <td class="entry cellrowborder" headers="d5517e1585 ">Text to display when the alert is triggered. You can use
+                                        the expression language to define the alert text. For more
+                                        information about using the expression language, see <a class="xref" href="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq">Expression Language</a>.<p class="p">By default, uses the following expression to
+                                            return text related to the drift alert:
+                                                <code class="ph codeph">${alert:info()}</code>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d5517e1582 ">Send Email</td>
+
+                                    <td class="entry cellrowborder" headers="d5517e1585 ">Sends an email when the alert is triggered. <p class="p">To send an
+                                            email, add email addresses for alerts and configure the
+                                                <span class="ph">Data Collector</span> email properties. For more information, see <a class="xref" href="RulesAlerts_title.html#task_f3v_1hw_1r" title="You can define the email addresses to receive metric and data alerts. When an alert triggers an email, the Data Collector sends an email to every address in the list.">Configuring Email for Alerts</a>.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph uicontrol">Save</span>.</span>
+                <div class="itemgroup info">The new data drift rule displays in the list. </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To enable the new rule, click <span class="ph uicontrol">Active</span>. </span>
+                <div class="itemgroup info">You can enable and disable the meter and alert from the list of rules. You can
+                    edit and delete disabled rules. </div>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title19" id="concept_rtm_sfk_rz">
+ <h2 class="title topictitle2" id="ariaid-title19">Alert Webhooks</h2>
+
+ <div class="body conbody">
+  <p class="p">You can configure webhooks
+            that are sent when alerts are triggered. <span class="ph">A webhook is a user-defined HTTP callback - an HTTP request
+                        that the pipeline sends automatically when certain actions occur. You can
+                        use webhooks to automatically trigger external tasks based on an HTTP
+                        request. Tasks can be as simple as sending a message through an application
+                        API or as powerful as passing commands to the <span class="ph">Data Collector</span> command line
+                        interface.</span>
+        </p>
+
+        <p class="p">The pipeline sends all alert webhooks each time an alert is triggered. So when you
+            configure an alert webhook, create a webhook payload that is applicable for all
+            triggered alerts. You can configure a payload that includes the details of each
+            alert.</p>
+
+        <div class="p">
+                  <div class="note important"><span class="importanttitle">Important:</span> You must configure webhooks as expected by the receiving
+                        system. For details on how to configure incoming webhooks check the
+                        receiving system's documentation. You might also need to enable webhook
+                        usage within that system.</div>
+
+            </div>
+
+        <p class="p">When you configure an alert webhook, <span class="ph">you specify the URL to send the request and the HTTP
+                        method to use. Some HTTP methods allow you to include a request body or
+                        payload.</span>
+            <span class="ph">In the payload, you can use parameters to include
+                        information about the cause of the trigger, such as</span> the pipeline that triggered the alert and the alert details. <span class="ph">You can also
+                        include request headers, content type, authentication type, username and
+                        password as needed.</span></p>
+
+        <p class="p">For details about webhook methods, payloads and parameters, see <a class="xref" href="../Pipeline_Configuration/Webhooks.html#concept_mp1_t3l_rz">Webhooks</a>.</p>
+
+ </div>
+
+<article class="topic task nested2" aria-labelledby="ariaid-title20" id="task_l2p_53t_rz">
+    <h3 class="title topictitle3" id="ariaid-title20">Configuring an Alert Webhook</h3>
+
+    <div class="body taskbody">
+        <section class="section context">
+            <p class="p">Configure an alert
+                webhook to automatically send an HTTP request each time the pipeline triggers an
+                alert.</p>
+
+        </section>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">To view pipeline configuration options, click an unused section of the pipeline
+                    canvas.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, click <span class="ph uicontrol">Rules</span>, and then click
+                        <span class="ph uicontrol">Webhooks</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Webhooks</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_l2p_53t_rz__table_qmt_jmt_rz" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+      <tr>
+       <th class="entry cellrowborder" id="d5517e1867">Webhook Property</th>
+
+       <th class="entry cellrowborder" id="d5517e1870">Description</th>
+
+      </tr>
+
+     </thead>
+<tbody class="tbody">
+      <tr>
+       <td class="entry cellrowborder" id="task_l2p_53t_rz__d1063e544" headers="d5517e1867 ">Webhooks <a class="xref" href="../Pipeline_Configuration/Webhooks.html#concept_mp1_t3l_rz">
+         <img class="image" id="task_l2p_53t_rz__d1063e548" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+       <td class="entry cellrowborder" headers="d5517e1870 ">Webhook to send when an alert triggers. Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the <span class="ph uicontrol">Add</span> icon to add
+        additional webhooks.</td>
+
+      </tr>
+
+      <tr id="task_l2p_53t_rz__d1063e560">
+       <td class="entry cellrowborder" headers="d5517e1867 ">Webhook URL</td>
+
+       <td class="entry cellrowborder" headers="d5517e1870 ">URL to send the HTTP request.</td>
+
+      </tr>
+
+      <tr id="task_l2p_53t_rz__d1063e569">
+       <td class="entry cellrowborder" headers="d5517e1867 ">Headers</td>
+
+       <td class="entry cellrowborder" headers="d5517e1870 ">Optional HTTP request headers. </td>
+
+      </tr>
+
+      <tr id="task_l2p_53t_rz__d1063e578">
+       <td class="entry cellrowborder" headers="d5517e1867 ">HTTP Method</td>
+
+       <td class="entry cellrowborder" headers="d5517e1870 ">HTTP method. Use one of the following methods: <ul class="ul" id="task_l2p_53t_rz__d1063e585">
+         <li class="li">GET</li>
+
+         <li class="li">PUT</li>
+
+         <li class="li">POST</li>
+
+         <li class="li">DELETE</li>
+
+         <li class="li">HEAD</li>
+
+        </ul>
+</td>
+
+      </tr>
+
+      <tr>
+       <td class="entry cellrowborder" id="task_l2p_53t_rz__d1063e606" headers="d5517e1867 ">Payload <a class="xref" href="../Pipeline_Configuration/Webhooks.html#concept_rby_1rl_rz">
+         <img class="image" id="task_l2p_53t_rz__d1063e610" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+       <td class="entry cellrowborder" headers="d5517e1870 ">Optional payload to include. Available for PUT, POST, and DELETE methods. <p class="p">Use any
+         valid content type.</p>
+<p class="p">You can use webhook parameters in the payload to include
+         information about the triggering event, such as the alert name or condition. Enclose
+         webhook parameters in double curly brackets as follows:
+         <code class="ph codeph">{{ALERT_NAME}}</code>.</p>
+</td>
+
+      </tr>
+
+      <tr id="task_l2p_53t_rz__d1063e624">
+       <td class="entry cellrowborder" headers="d5517e1867 ">Content Type</td>
+
+       <td class="entry cellrowborder" headers="d5517e1870 ">Optional content type of the payload. Configure this property when the content type is
+        not declared in the request headers.</td>
+
+      </tr>
+
+      <tr id="task_l2p_53t_rz__d1063e633">
+       <td class="entry cellrowborder" headers="d5517e1867 ">Authentication Type</td>
+
+       <td class="entry cellrowborder" headers="d5517e1870 ">Optional authentication type to include in the request. Use None, Basic, Digest, or
+         Universal.<p class="p">Use Basic for Form authentication.</p>
+</td>
+
+      </tr>
+
+      <tr id="task_l2p_53t_rz__d1063e644">
+       <td class="entry cellrowborder" headers="d5517e1867 ">User Name </td>
+
+       <td class="entry cellrowborder" headers="d5517e1870 ">User name to include when using authentication. </td>
+
+      </tr>
+
+      <tr id="task_l2p_53t_rz__d1063e653">
+       <td class="entry cellrowborder" headers="d5517e1867 ">Password</td>
+
+       <td class="entry cellrowborder" headers="d5517e1870 ">Password to include when using authentication.</td>
+
+      </tr>
+
+     </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To create an additional webhook, click the <span class="ph uicontrol">Add</span>
+                    icon.</span>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title21" id="task_f3v_1hw_1r">
+    <h2 class="title topictitle2" id="ariaid-title21">Configuring Email for Alerts</h2>
+
+
+    <div class="body taskbody"><p class="shortdesc">You can define the email addresses to receive metric and data alerts. When an alert
+        triggers an email, the <span class="ph">Data Collector</span> sends
+        an email to every address in the list. </p>
+
+        <div class="section prereq p">To send email alerts, create an email account to send the
+            alerts and define the email alert properties in the <span class="ph">Data Collector</span>
+            configuration file, <code class="ph codeph">$SDC_CONF/sdc.properties</code>. <p class="p">For information about
+                configuring these properties, see the email alert table in <a class="xref" href="../Configuration/DCConfig.html#task_lxk_kjw_1r" title="You can customize Data Collector by editing the Data Collector configuration file, sdc.properties.">Configuring Data Collector</a>.</p>
+</div>
+
+        <section class="section context"></section>
+
+        <ol class="ol steps" id="task_f3v_1hw_1r__steps_rl5_tsw_1r"><li class="li step stepexpand">
+                <span class="ph cmd">To view pipeline configuration options, click an unused section of the pipeline
+                    canvas.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, click <span class="ph uicontrol">Rules</span>, and then click
+                        <span class="ph uicontrol">Email IDs</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Enter an email address where you want to send email alerts.</span>
+                <div class="itemgroup info">The email address receives every email alert generated by the pipeline.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To add additional email addresses, click the <span class="ph uicontrol">Add</span> icon,
+                    and enter additional email addresses. </span>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+</article>
+</article></main></div>
+
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script>
+  </div>
+</nav>
+
+
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
+</html>

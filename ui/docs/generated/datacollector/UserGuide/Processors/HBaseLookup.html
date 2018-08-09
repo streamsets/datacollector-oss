@@ -1,0 +1,1050 @@
+
+<!DOCTYPE html
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link>
+      <meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="HBase Lookup" /><meta name="abstract" content="The HBase Lookup processor performs key-value lookups in HBase and passes the lookup values to fields. Use the HBase Lookup to enrich records with additional data." /><meta name="description" content="The HBase Lookup processor performs key-value lookups in HBase and passes the lookup values to fields. Use the HBase Lookup to enrich records with additional data." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Processors/Processors_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Processors/Groovy.html#concept_ldh_sct_gv" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Processors/HiveMetadata.html#concept_rz5_nft_zv" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_mnj_zhq_bw" /><title>HBase Lookup</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_mnj_zhq_bw-d46e68400" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018042310" />
+
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018042310" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+
+
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+
+
+
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+
+                </div>
+
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+
+
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref" data-id="concept_yjl_nc5_jq"><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li class="active"><span class="topicref" data-id="concept_mnj_zhq_bw"><span class="title"><a href="../../../datacollector/UserGuide/Processors/HBaseLookup.html#concept_mnj_zhq_bw">HBase Lookup</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The HBase Lookup processor performs key-value lookups in HBase and passes the lookup         values to fields. Use the HBase
+                  Lookup to enrich records with additional data.
+
+               </p>
+               </span></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Processors/Groovy.html#concept_ldh_sct_gv" title="Groovy Evaluator"></a></span>
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Processors/HiveMetadata.html#concept_rz5_nft_zv" title="Hive Metadata"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e4414" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e6481" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13895" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e18499" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e20154" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22651" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e24466" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e64169" class="topicref" data-id="concept_yjl_nc5_jq" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_hpr_twm_jq-d46e64191" class="topicref" data-id="concept_hpr_twm_jq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_overview.html#concept_hpr_twm_jq">Processors</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ofb_svm_5bb-d46e64215" class="topicref" data-id="concept_ofb_svm_5bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Aggregator.html#concept_ofb_svm_5bb">Aggregator</a></span></span></li>
+         <li><span data-tocid="concept_ujj_spy_kv-d46e65012" class="topicref" data-id="concept_ujj_spy_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Base64Decoder.html#concept_ujj_spy_kv">Base64 Field Decoder</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Base64 Field Decoder decodes Base64 encoded data to binary data. Use the processor         to decode Base64 encoded data
+                        before evaluating data in the field.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_wtr_mpy_kv-d46e65069" class="topicref" data-id="concept_wtr_mpy_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Base64Encoder.html#concept_wtr_mpy_kv">Base64 Field Encoder</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Base64 Field Encoder encodes binary data using Base64. Use the processor to encode         binary data that must be sent
+                        over channels that expect ASCII data.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_xw3_4xk_r1b-d46e65126" class="topicref" data-id="concept_xw3_4xk_r1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/DataParser.html#concept_xw3_4xk_r1b">Data Parser</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Data Parser processor allows you to parse supported data formats embedded in a         field. You can parse NetFlow embedded
+                        in a byte array field or syslog messages embedded in a         string field.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ez5_pvf_wbb-d46e65225" class="topicref" data-id="concept_ez5_pvf_wbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Delay.html#concept_ez5_pvf_wbb">Delay</a></span></span></li>
+         <li><span data-tocid="concept_zm2_pp3_wq-d46e65279" class="topicref" data-id="concept_zm2_pp3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Expression.html#concept_zm2_pp3_wq">Expression Evaluator</a></span></span></li>
+         <li><span data-tocid="concept_njn_3kk_fx-d46e65489" class="topicref" data-id="concept_njn_3kk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldFlattener.html#concept_njn_3kk_fx">Field Flattener</a></span></span></li>
+         <li><span data-tocid="concept_ivv_c3k_wq-d46e65637" class="topicref" data-id="concept_ivv_c3k_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldHasher.html#concept_ivv_c3k_wq">Field Hasher</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Field Hasher uses an algorithm to encode data. Use Field Hasher to encode         highly-sensitive data. For example,
+                        you might use Field Hasher to encode social security or         credit card numbers.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_hjc_t4k_wq-d46e65857" class="topicref" data-id="concept_hjc_t4k_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldMasker.html#concept_hjc_t4k_wq">Field Masker</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Field Masker masks string values based on the selected mask type. You can use     variable-length, fixed-length, custom,
+                        or regular expression masks. Custom masks can reveal part     of the string value.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_pgm_tsl_gt-d46e65960" class="topicref" data-id="concept_pgm_tsl_gt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldMerger.html#concept_pgm_tsl_gt">Field Merger</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Field Merger merges one or more fields in a record to a different location in the   record. Use only for records with
+                        a list or map structure.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_krp_5fv_vy-d46e66017" class="topicref" data-id="concept_krp_5fv_vy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldOrder.html#concept_krp_5fv_vy">Field Order</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Field Order processor orders fields in a map or list-map field and outputs the         fields into a list-map or list
+                        root field.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ekg_313_qw-d46e66119" class="topicref" data-id="concept_ekg_313_qw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/ListPivoter.html#concept_ekg_313_qw">Field Pivoter</a></span></span></li>
+         <li><span data-tocid="concept_jdd_blr_wq-d46e66218" class="topicref" data-id="concept_jdd_blr_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldRemover.html#concept_jdd_blr_wq">Field Remover</a></span></span></li>
+         <li><span data-tocid="concept_vyv_zsg_ht-d46e66272" class="topicref" data-id="concept_vyv_zsg_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldRenamer.html#concept_vyv_zsg_ht">Field Renamer</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Use the Field Renamer to rename fields in a record. You can specify individual fields to         rename or use regular expressions
+                        to rename sets of fields.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_rw4_2d3_4cb-d46e66377" class="topicref" data-id="concept_rw4_2d3_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldReplacer.html#concept_rw4_2d3_4cb">Field Replacer</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Field Replacer replaces values in fields with nulls or with new values. Use the         Field Replacer to update values
+                        or to replace invalid values.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_vlj_vph_yq-d46e66597" class="topicref" data-id="concept_vlj_vph_yq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldSplitter.html#concept_vlj_vph_yq">Field Splitter</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Field Splitter splits string data based on a regular expression and passes the   separated data to new fields. Use the
+                        Field Splitter to split complex string values into logical   components.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_is3_zkp_wq-d46e66811" class="topicref" data-id="concept_is3_zkp_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldTypeConverter.html#concept_is3_zkp_wq">Field Type Converter</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Field Type Converter converts the data types of fields to compatible data types. You     might use the Field Type Converter
+                        to convert the data types of fields before performing     calculations. You can also use the Field Type Converter to change
+                        the scale of decimal     data.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_o3b_t1k_yx-d46e66968" class="topicref" data-id="concept_o3b_t1k_yx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldZip.html#concept_o3b_t1k_yx">Field Zip</a></span></span></li>
+         <li><span data-tocid="concept_fch_fc3_ms-d46e67178" class="topicref" data-id="concept_fch_fc3_ms" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/GeoIP.html#concept_fch_fc3_ms">Geo IP</a></span></span></li>
+         <li><span data-tocid="concept_ldh_sct_gv-d46e67460" class="topicref" data-id="concept_ldh_sct_gv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Groovy.html#concept_ldh_sct_gv">Groovy Evaluator</a></span></span></li>
+         <li class="active"><span data-tocid="concept_mnj_zhq_bw-d46e68400" class="topicref" data-id="concept_mnj_zhq_bw" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HBaseLookup.html#concept_mnj_zhq_bw">HBase Lookup</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The HBase Lookup processor performs key-value lookups in HBase and passes the lookup         values to fields. Use the HBase
+                        Lookup to enrich records with additional data.
+
+                     </p>
+                     </span></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_txl_x4s_bw-d46e68486" class="topicref" data-id="concept_txl_x4s_bw" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HBaseLookup.html#concept_txl_x4s_bw">Lookup Key</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">When you define the lookup key, you specify the row and optionally the column and         timestamp to look up in HBase. </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_xvz_zjy_bw-d46e68511" class="topicref" data-id="concept_xvz_zjy_bw" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HBaseLookup.html#concept_xvz_zjy_bw">Lookup Cache</a></span></span></li>
+               <li><span data-tocid="concept_nqg_lcy_bw-d46e68543" class="topicref" data-id="concept_nqg_lcy_bw" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HBaseLookup.html#concept_nqg_lcy_bw">Kerberos Authentication</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can use Kerberos authentication to connect to HBase. When you use Kerberos         authentication, <span class="ph">Data Collector</span> uses         the Kerberos principal and keytab to connect to HBase. By default, <span class="ph">Data Collector</span> uses         the user account who started it to connect.
+
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_bzv_cdy_bw-d46e68594" class="topicref" data-id="concept_bzv_cdy_bw" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HBaseLookup.html#concept_bzv_cdy_bw">Using an HBase User</a></span></span></li>
+               <li><span data-tocid="concept_nks_rdy_bw-d46e68646" class="topicref" data-id="concept_nks_rdy_bw" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HBaseLookup.html#concept_nks_rdy_bw">HDFS Properties and Configuration File</a></span></span></li>
+               <li><span data-tocid="task_z25_b3q_bw-d46e68708" class="topicref" data-id="task_z25_b3q_bw" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HBaseLookup.html#task_z25_b3q_bw">Configuring an HBase Lookup</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Configure an HBase Lookup processor to perform key-value lookups in         HBase.</p>
+                           </span></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_rz5_nft_zv-d46e68784" class="topicref" data-id="concept_rz5_nft_zv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HiveMetadata.html#concept_rz5_nft_zv">Hive Metadata</a></span></span></li>
+         <li><span data-tocid="concept_ghx_ypr_fw-d46e69866" class="topicref" data-id="concept_ghx_ypr_fw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HTTPClient.html#concept_ghx_ypr_fw">HTTP Client</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_n2p_jgf_lr-d46e71134" class="topicref" data-id="concept_n2p_jgf_lr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JavaScript.html#concept_n2p_jgf_lr">JavaScript Evaluator</a></span></span></li>
+         <li><span data-tocid="concept_ysc_ccy_hw-d46e71940" class="topicref" data-id="concept_ysc_ccy_hw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JDBCLookup.html#concept_ysc_ccy_hw">JDBC Lookup</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The JDBC Lookup processor uses a JDBC connection to perform lookups in a database         table and pass the lookup values
+                        to fields. Use the JDBC Lookup to enrich records with         additional data.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_qbx_lcy_hw-d46e72315" class="topicref" data-id="concept_qbx_lcy_hw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JDBCTee.html#concept_qbx_lcy_hw">JDBC Tee</a></span></span></li>
+         <li><span data-tocid="concept_jmg_hw1_h1b-d46e72525" class="topicref" data-id="concept_jmg_hw1_h1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JSONGenerator.html#concept_jmg_hw1_h1b">JSON Generator</a></span></span></li>
+         <li><span data-tocid="concept_bs1_4t3_yq-d46e72581" class="topicref" data-id="concept_bs1_4t3_yq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JSONParser.html#concept_bs1_4t3_yq">JSON Parser</a></span></span></li>
+         <li><span data-tocid="concept_a1h_lkf_lr-d46e72638" class="topicref" data-id="concept_a1h_lkf_lr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Jython.html#concept_a1h_lkf_lr">Jython Evaluator</a></span></span></li>
+         <li><span data-tocid="concept_a1x_3wl_p1b-d46e73444" class="topicref" data-id="concept_a1x_3wl_p1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/KuduLookup.html#concept_a1x_3wl_p1b">Kudu Lookup</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Kudu Lookup processor performs lookups in a Kudu table and passes the lookup         values to fields. Use the Kudu Lookup
+                        to enrich records with additional data.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ulm_qdq_fs-d46e73812" class="topicref" data-id="concept_ulm_qdq_fs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/LogParser.html#concept_ulm_qdq_fs">Log Parser</a></span></span></li>
+         <li><span data-tocid="concept_lcp_ssh_qcb-d46e73912" class="topicref" data-id="concept_lcp_ssh_qcb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JDBCMetadata.html#concept_lcp_ssh_qcb">PostgreSQL Metadata</a></span></span></li>
+         <li><span data-tocid="concept_z3m_v52_zq-d46e74197" class="topicref" data-id="concept_z3m_v52_zq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/RDeduplicator.html#concept_z3m_v52_zq">Record Deduplicator</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Record Deduplicator evaluates records for duplicate data and routes data to two         streams -  one for unique records
+                        and one for duplicate records. Use the Record Deduplicator         to discard duplicate data or route duplicate data through
+                        different processing logic.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ng3_lpr_pv-d46e74299" class="topicref" data-id="concept_ng3_lpr_pv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/RedisLookup.html#concept_ng3_lpr_pv">Redis Lookup</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Redis Lookup processor performs key-value lookups in Redis and passes the lookup         values to fields. Use the Redis
+                        Lookup to enrich records with additional data.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_k23_3rk_yx-d46e74459" class="topicref" data-id="concept_k23_3rk_yx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/SalesforceLookup.html#concept_k23_3rk_yx">Salesforce Lookup</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Salesforce Lookup processor performs lookups in a Salesforce object and passes         the lookup values to fields. Use
+                        the Salesforce Lookup to enrich records with additional         data.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_rfz_ks3_x1b-d46e74748" class="topicref" data-id="concept_rfz_ks3_x1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/SchemaGenerator.html#concept_rfz_ks3_x1b">Schema Generator</a></span></span></li>
+         <li><span data-tocid="concept_cpx_1lm_zx-d46e74958" class="topicref" data-id="concept_cpx_1lm_zx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Spark.html#concept_cpx_1lm_zx">Spark Evaluator</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Spark Evaluator performs custom processing within a pipeline based on a Spark         application that you develop.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_zh2_kfj_tdb-d46e75339" class="topicref" data-id="concept_zh2_kfj_tdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/SQLParser.html#concept_zh2_kfj_tdb">SQL Parser</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_aqz_t4r_pv-d46e75902" class="topicref" data-id="concept_aqz_t4r_pv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/StaticLookup.html#concept_aqz_t4r_pv">Static Lookup</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Static Lookup processor performs lookups of key-value pairs that are stored in local         memory and passes the lookup
+                        values to fields. Use the Static Lookup to store String values         in memory that the pipeline can look up at runtime
+                        to enrich records with additional         data.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_tqv_t5r_wq-d46e75962" class="topicref" data-id="concept_tqv_t5r_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/StreamSelector.html#concept_tqv_t5r_wq">Stream Selector</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Stream Selector passes data to streams based on conditions. Define a condition for     each stream of data that you want
+                        to create. The Stream Selector uses a default stream to pass     records that do not match user-defined conditions.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_o5k_dmf_zq-d46e76119" class="topicref" data-id="concept_o5k_dmf_zq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/ValueReplacer.html#concept_o5k_dmf_zq">Value Replacer (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_nwg_rx4_l2b-d46e76401" class="topicref" data-id="concept_nwg_rx4_l2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/WholeFileTransformer.html#concept_nwg_rx4_l2b">Whole File Transformer</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Whole File Transformer processor transforms fully written Avro files to highly         efficient, columnar Parquet files.
+                        Use the Whole File Transformer in a pipeline that reads         Avro files as whole files and writes the transformed Parquet
+                        files as whole         files.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ck4_255_sv-d46e77234" class="topicref" data-id="concept_ck4_255_sv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/XMLFlattener.html#concept_ck4_255_sv">XML Flattener</a></span></span></li>
+         <li><span data-tocid="concept_dtt_q5q_k5-d46e77333" class="topicref" data-id="concept_dtt_q5q_k5" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/XMLParser.html#concept_dtt_q5q_k5">XML Parser</a></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e77391" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e92871" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e98772" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e102096" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e106011" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e108837" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e109636" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e110218" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e111818" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e112299" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e113641" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e114610" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e117238" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e118495" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e120286" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e124782" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e125996" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e129904" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e129959" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e130119" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e131600" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e131822" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+
+
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_mnj_zhq_bw">
+ <h1 class="title topictitle1" id="ariaid-title1">HBase Lookup</h1>
+
+
+ <div class="body conbody"><p class="shortdesc">The HBase Lookup processor performs key-value lookups in HBase and passes the lookup
+        values to fields. Use the HBase Lookup to enrich records with additional data.</p>
+
+        <p class="p">For example, you can configure the processor to
+            use a department_ID field as the key to look up department name values in HBase, and
+            pass the values to a new department_name output field.</p>
+
+        <p class="p">When you configure the HBase Lookup processor, you specify whether the processor performs
+            a bulk lookup of all keys in a batch, or performs an individual lookup of each key in a
+            record. You define the key to look up in HBase, and specify the output field to write
+            the lookup values to. </p>
+
+        <p class="p">You can configure the processor to locally cache the key-value pairs to improve
+            performance.</p>
+
+        <p class="p">You also specify the HBase configuration properties, including the ZooKeeper Quorum,
+            parent znode, and table name. When necessary, you can enable Kerberos authentication,
+            specify an HBase user, and add additional HBase configuration properties.</p>
+
+    </div>
+
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_txl_x4s_bw">
+ <h2 class="title topictitle2" id="ariaid-title2">Lookup Key</h2>
+
+
+ <div class="body conbody"><p class="shortdesc">When you define the lookup key, you specify the row and optionally the column and
+        timestamp to look up in HBase. </p>
+
+  <p class="p">The following table describes each lookup parameter that you can use to define the lookup
+            key:</p>
+
+        <div class="p">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_txl_x4s_bw__table_lh5_myy_bw" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:66.66666666666666%" /></colgroup><thead class="thead" style="text-align:left;">
+                        <tr>
+                            <th class="entry cellrowborder" id="d431025e169">Lookup Parameter</th>
+
+                            <th class="entry cellrowborder" id="d431025e172">Description</th>
+
+                        </tr>
+
+                    </thead>
+<tbody class="tbody">
+                        <tr>
+                            <td class="entry cellrowborder" headers="d431025e169 ">Row</td>
+
+                            <td class="entry cellrowborder" headers="d431025e172 ">The row to look up in HBase. </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry cellrowborder" headers="d431025e169 ">Column</td>
+
+                            <td class="entry cellrowborder" headers="d431025e172 ">The column of the row to use. The column must use the following
+                                format:<pre class="pre codeblock"><code>&lt;column-family&gt;:&lt;qualifier&gt;</code></pre></td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry cellrowborder" headers="d431025e169 ">Timestamp</td>
+
+                            <td class="entry cellrowborder" headers="d431025e172 ">The timestamp associated with the row and column. The timestamp
+                                must be a Datetime type.</td>
+
+                        </tr>
+
+                    </tbody>
+</table>
+</div>
+
+        </div>
+
+        <div class="p">You can define the lookup key using any of the following combinations of the lookup parameters:<dl class="dl">
+
+                    <dt class="dt dlterm">Row, Column, and Timestamp</dt>
+
+                    <dd class="dd">When you define all of the lookup parameters, HBase Lookup processor returns
+                        the value of the specified row, column, and timestamp. The processor passes
+                        a single String value to the output field.</dd>
+
+
+
+                    <dt class="dt dlterm">Row and Column</dt>
+
+                    <dd class="dd">When you define the row and column lookup parameters, HBase Lookup processor
+                        returns the value of the specified row and column with the most recent
+                        timestamp. The processor passes a single String value to the output
+                        field.</dd>
+
+
+
+                    <dt class="dt dlterm">Row and Timestamp</dt>
+
+                    <dd class="dd">When you define the row and timestamp lookup parameters, HBase Lookup
+                        processor looks up all values of the row in all columns with the specified
+                        timestamp. The processor passes a map of String values that contain the
+                        HBase column family, qualifier, and value for the specified row. </dd>
+
+                    <dd class="dd ddexpand">For example, if the row exists in three columns with the specified
+                        timestamp, the processor returns a map of string values in the following
+                        format:<pre class="pre codeblock"><code>/&lt;first column family:qualifier&gt;: &lt;value&gt;
+/&lt;second column family:qualifier&gt;: &lt;value&gt;
+/&lt;third column family:qualifier&gt;: &lt;value&gt;</code></pre></dd>
+
+
+
+                    <dt class="dt dlterm">Row</dt>
+
+                    <dd class="dd">When you define only the row lookup parameter, HBase Lookup processor looks
+                        up all values of the row in all columns with the most recent timestamp. The
+                        processor passes a map of String values that contain the HBase column
+                        family, qualifier, and value for the specified row. </dd>
+
+                    <dd class="dd ddexpand">For example, if the row exists in three columns, the processor returns a map
+                        of string values in the following
+                        format:<pre class="pre codeblock"><code>/&lt;first column family:qualifier&gt;: &lt;value&gt;
+/&lt;second column family:qualifier&gt;: &lt;value&gt;
+/&lt;third column family:qualifier&gt;: &lt;value&gt;</code></pre></dd>
+
+
+            </dl>
+</div>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title3" id="concept_xvz_zjy_bw">
+ <h2 class="title topictitle2" id="ariaid-title3">Lookup Cache</h2>
+
+ <div class="body conbody">
+  <p class="p">To improve pipeline performance, you can
+            configure the HBase Lookup processor to locally cache the key-value pairs returned from
+            HBase.</p>
+
+     <p class="p">The processor caches key-value pairs until the cache reaches
+                  the maximum size or the expiration time. When the first limit is reached, the
+                  processor evicts key-value pairs from the cache.</p>
+
+     <div class="p">You can configure the following ways to evict key-value pairs
+                  from the cache:<dl class="dl">
+
+                              <dt class="dt dlterm">Size-based eviction</dt>
+
+                              <dd class="dd">Configure the maximum number of key-value pairs that the processor
+                                    caches. When the maximum number is reached, the processor evicts
+                                    the oldest key-value pairs from the cache.</dd>
+
+
+
+                              <dt class="dt dlterm">Time-based eviction</dt>
+
+                              <dd class="dd">Configure the amount of time that a key-value pair can remain in
+                                    the cache without being written to or accessed. When the
+                                    expiration time is reached, the processor evicts the key from
+                                    the cache. The eviction policy determines whether the processor
+                                    measures the expiration time since the last write of the value
+                                    or since the last access of the value.</dd>
+
+                              <dd class="dd ddexpand">For example, you set the eviction policy to expire after the last
+                                    access and set the expiration time to 60 seconds. After the
+                                    processor does not access a key-value pair for 60 seconds, the
+                                    processor evicts the key-value pair from the cache.</dd>
+
+
+                  </dl>
+</div>
+
+     <p class="p">When you stop the pipeline, the processor clears the
+                  cache.</p>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title4" id="concept_nqg_lcy_bw">
+ <h2 class="title topictitle2" id="ariaid-title4">Kerberos Authentication</h2>
+
+
+    <div class="body conbody"><p class="shortdesc">You can use Kerberos authentication to connect to HBase. When you use Kerberos
+        authentication, <span class="ph">Data Collector</span> uses
+        the Kerberos principal and keytab to connect to HBase. By default, <span class="ph">Data Collector</span> uses
+        the user account who started it to connect.</p>
+
+        <p class="p">The
+            Kerberos principal and keytab are defined in the <span class="ph">Data Collector</span>
+            configuration file, <code class="ph codeph">$SDC_CONF/sdc.properties</code>. To use Kerberos
+            authentication, configure all Kerberos properties in the <span class="ph">Data Collector</span>
+            configuration file. </p>
+
+        <p class="p"><span class="ph">For more information about enabling Kerberos authentication
+                        for <span class="ph">Data Collector</span>, see <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Kerberos Authentication</a>.</span></p>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title5" id="concept_bzv_cdy_bw">
+ <h2 class="title topictitle2" id="ariaid-title5">Using an HBase User</h2>
+
+    <div class="body conbody">
+        <p class="p"><span class="ph"><span class="ph">Data Collector</span>
+                        can either use the currently logged in <span class="ph">Data Collector</span> user or a
+                        user configured in the</span>
+            processor to look up data in HBase. </p>
+
+        <p class="p">A <span class="ph">Data Collector</span> configuration property can be set that requires using the currently logged in
+                        <span class="ph">Data Collector</span> user. When
+                  this property is not set, you can specify a user in the origin. For more
+                  information about Hadoop impersonation and the Data Collector property, see <a class="xref" href="../Configuration/DCConfig.html#concept_pmr_sy5_nz">Hadoop Impersonation Mode</a>. </p>
+
+        <p class="p">Note that the processor <span class="ph">uses a different user account to
+                        connect to HDFS. <span class="ph" id="concept_bzv_cdy_bw__d49e3687">By default, <span class="ph">Data Collector</span> uses
+                              the user account who started it to connect to external systems. When
+                              using Kerberos, <span class="ph">Data Collector</span> uses
+                              the Kerberos principal.</span>
+                  </span></p>
+
+        <div class="p">To configure a user in the processor to look up data in HBase, perform the following
+                tasks:<ol class="ol" id="concept_bzv_cdy_bw__ul_mb1_xpt_ls">
+                <li class="li">On HBase, configure the user as a proxy user and authorize the user to
+                    impersonate the HBase user.<p class="p">For more information, see the HBase
+                        documentation.</p>
+</li>
+
+                <li class="li">In the HBase Lookup processor, enter the HBase user name.</li>
+
+            </ol>
+</div>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title6" id="concept_nks_rdy_bw">
+ <h2 class="title topictitle2" id="ariaid-title6">HDFS Properties and Configuration File</h2>
+
+    <div class="body conbody">
+        <p class="p">You can configure the HBase Lookup
+            processor to use individual HDFS properties or HDFS configuration files:</p>
+
+        <div class="p">
+            <dl class="dl">
+
+                    <dt class="dt dlterm">HBase configuration file</dt>
+
+                    <dd class="dd">You can use the following HDFS configuration file with the HBase
+                        configuration file: <ul class="ul" id="concept_nks_rdy_bw__ul_rwk_x5r_bt">
+                  <li class="li">hbase-site.xml</li>
+
+            </ul>
+</dd>
+
+                    <dd class="dd ddexpand">To use HDFS configuration files: <ol class="ol" id="concept_nks_rdy_bw__ol_rb2_2nr_bt">
+                        <li class="li">Store the files or a symlink to the files in the <span class="ph">Data Collector</span> resources directory. </li>
+
+                        <li class="li">In the HBase Lookup processor, specify the location of the files.
+                                    <div class="note note"><span class="notetitle">Note:</span> For a Cloudera Manager installation, <span class="ph">Data Collector</span> automatically creates a symlink to the files named
+                                        <code class="ph codeph">hbase-conf</code>. Enter
+                                        <code class="ph codeph">hbase-conf</code> for the location of the files in
+                                    the HBase Lookup processor.</div>
+</li>
+
+                    </ol>
+</dd>
+
+
+
+                    <dt class="dt dlterm">Individual properties</dt>
+
+                    <dd class="dd">You can configure individual HBase properties in the HBase Lookup processor.
+                        To add an HBase property, you specify the exact property name and the value.
+                        The HBase Lookup processor does not validate the property names or
+                            values.<div class="note note"><span class="notetitle">Note:</span> Individual properties override properties defined in the
+                            HBase configuration file. </div>
+</dd>
+
+
+            </dl>
+
+        </div>
+
+    </div>
+
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title7" id="task_z25_b3q_bw">
+    <h2 class="title topictitle2" id="ariaid-title7">Configuring an HBase Lookup</h2>
+
+
+    <div class="body taskbody"><p class="shortdesc">Configure an HBase Lookup processor to perform key-value lookups in
+        HBase.</p>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z25_b3q_bw__d130e5286" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d431025e568">General Property</th>
+
+                                    <th class="entry cellrowborder" id="d431025e571">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d431025e568 ">Name</td>
+
+                                    <td class="entry cellrowborder" headers="d431025e571 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d431025e568 ">Description</td>
+
+                                    <td class="entry cellrowborder" headers="d431025e571 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d431025e568 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_z25_b3q_bw__d130e5332" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d431025e571 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d431025e568 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_z25_b3q_bw__d130e5348" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d431025e571 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d431025e568 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_z25_b3q_bw__d130e5365" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d431025e571 ">Error record handling for the stage: <ul class="ul" id="task_z25_b3q_bw__d130e5369">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Lookup</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z25_b3q_bw__table_ns1_p1s_zv" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:66.66666666666666%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d431025e682">Lookup Property</th>
+
+                                    <th class="entry cellrowborder" id="d431025e685">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+      <td class="entry cellrowborder" headers="d431025e682 ">Mode</td>
+
+      <td class="entry cellrowborder" headers="d431025e685 ">Mode used to perform the lookups:<ul class="ul" id="task_z25_b3q_bw__d131e3077">
+        <li class="li">Per Batch - Performs a bulk lookup of all keys in a batch. The processor performs a
+         single lookup for each batch.</li>
+
+        <li class="li">Per Key in Each Record - Performs individual lookups of each key in each record. If you
+         configure multiple key expressions, the processor performs multiple lookups for each
+         record.</li>
+
+       </ul>
+<p class="p">Default is Per Batch.</p>
+</td>
+
+     </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d431025e682 ">Row Expression
+                                        <a class="xref" href="HBaseLookup.html#concept_txl_x4s_bw" title="When you define the lookup key, you specify the row and optionally the column and timestamp to look up in HBase.">
+                                            <img class="image" id="task_z25_b3q_bw__image_a4x_jun_vg" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d431025e685 ">Row to look up in HBase. Enter a row name or enter an
+                                        expression that defines the row.<div class="p">For example, enter the
+                                            following expression to use the data in the
+                                            department_id field as the
+                                            row:<pre class="pre codeblock"><code>${record:value('/department_id')}</code></pre></div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d431025e682 ">Column Expression</td>
+
+                                    <td class="entry cellrowborder" headers="d431025e685 ">Optional column family and qualifier of the row for the
+                                        lookup. Enter a column name or enter an expression that
+                                        defines the column. The column name must use the following
+                                            format:<pre class="pre codeblock"><code>&lt;column-family&gt;:&lt;qualifier&gt;</code></pre><p class="p">If
+                                            empty, the processor returns the values of the row for
+                                            each column.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d431025e682 ">Timestamp Expression</td>
+
+                                    <td class="entry cellrowborder" headers="d431025e685 ">Optional timestamp of the row and column for the lookup.
+                                        Enter value with a Datetime type or an expression that
+                                        evaluates to a Datetime type.<p class="p">If empty, the processor
+                                            returns the value with the most recent
+                                        timestamp.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d431025e682 ">Output Field</td>
+
+                                    <td class="entry cellrowborder" headers="d431025e685 ">Name of the field in the record to pass the lookup value.
+                                        You can specify an existing field or a new field. If the
+                                        field does not exist, HBase Lookup creates the field. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d431025e682 ">Enable Local Caching
+                                        <a class="xref" href="HBaseLookup.html#concept_xvz_zjy_bw">
+                                            <img class="image" id="task_z25_b3q_bw__image_a2x_jxn_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d431025e685 ">Specifies whether to locally cache the returned key-value
+       pairs.</td>
+
+                                </tr>
+
+                                <tr>
+      <td class="entry cellrowborder" headers="d431025e682 ">Maximum Entries to Cache</td>
+
+      <td class="entry cellrowborder" headers="d431025e685 ">Maximum number of key-value pairs to cache. When the maximum number is reached, the
+       processor evicts the oldest key-value pairs from the cache. <p class="p">Default is -1, which means
+        unlimited.</p>
+</td>
+
+     </tr>
+
+                                <tr>
+      <td class="entry cellrowborder" headers="d431025e682 ">Eviction Policy Type</td>
+
+      <td class="entry cellrowborder" headers="d431025e685 ">Policy used to evict key-value pairs from the local cache when the expiration time has
+        passed:<ul class="ul" id="task_z25_b3q_bw__d131e3116">
+        <li class="li">Expire After Last Access - Measures the expiration time since the key-value pair was
+         last accessed by a read or a write.</li>
+
+        <li class="li">Expire After Last Write - Measures the expiration time since the key-value pair was
+         created, or since the value was last replaced.</li>
+
+       </ul>
+</td>
+
+     </tr>
+
+                                <tr>
+      <td class="entry cellrowborder" headers="d431025e682 ">Expiration Time</td>
+
+      <td class="entry cellrowborder" headers="d431025e685 ">Amount of time that a key-value pair can remain in the local cache without being
+       accessed or written to. <p class="p">Default is 1 second.</p>
+</td>
+
+     </tr>
+
+                                <tr>
+      <td class="entry cellrowborder" headers="d431025e682 ">Time Unit</td>
+
+      <td class="entry cellrowborder" headers="d431025e685 ">Unit of time for the expiration time. <p class="p">Default is seconds.</p>
+</td>
+
+     </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">HBase</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z25_b3q_bw__table_wzb_wly_bw" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:66.66666666666666%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d431025e855">HBase Property</th>
+
+                                    <th class="entry cellrowborder" id="d431025e858">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+      <td class="entry cellrowborder" headers="d431025e855 ">ZooKeeper Quorum</td>
+
+      <td class="entry cellrowborder" headers="d431025e858 ">Comma-separated list of servers in the ZooKeeper quorum. Use the following format:
+        <pre class="pre codeblock"><code>&lt;host&gt;.&lt;domain&gt;.com</code></pre><p class="p">To ensure a connection, enter additional
+        broker URIs.</p>
+</td>
+
+     </tr>
+
+                                <tr>
+      <td class="entry cellrowborder" headers="d431025e855 ">ZooKeeper Client Port</td>
+
+      <td class="entry cellrowborder" headers="d431025e858 ">Port number clients use to connect to the ZooKeeper servers. </td>
+
+     </tr>
+
+                                <tr>
+      <td class="entry cellrowborder" headers="d431025e855 ">ZooKeeper Parent Znode</td>
+
+      <td class="entry cellrowborder" headers="d431025e858 ">Root node that contains all znodes used by the HBase cluster.</td>
+
+     </tr>
+
+                                <tr>
+      <td class="entry cellrowborder" headers="d431025e855 ">Table Name</td>
+
+      <td class="entry cellrowborder" headers="d431025e858 ">Name of the HBase table to use. Enter a table name or a namespace and table name as
+       follows: &lt;namespace&gt;.&lt;tablename&gt;. <p class="p">If you do not enter a table name, HBase uses the
+        default namespace. </p>
+</td>
+
+     </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d431025e855 ">Kerberos Authentication <a class="xref" href="HBaseLookup.html#concept_nqg_lcy_bw" title="You can use Kerberos authentication to connect to HBase. When you use Kerberos authentication, Data Collector uses the Kerberos principal and keytab to connect to HBase. By default, Data Collector uses the user account who started it to connect.">
+                                        <img class="image" id="task_z25_b3q_bw__image_a5x_jzn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d431025e858 ">Uses Kerberos credentials to connect to HBase.<p class="p">When selected,
+        uses the Kerberos principal and keytab defined in the <span class="ph">Data Collector</span> configuration file,
+         <code class="ph codeph">$SDC_CONF/sdc.properties</code>. </p>
+</td>
+
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d431025e855 ">HBase User <a class="xref" href="HBaseLookup.html#concept_bzv_cdy_bw">
+                                        <img class="image" id="task_z25_b3q_bw__image_ytm_zzx_kt" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d431025e858 ">The HBase user to use to look up data from HBase. When
+                                        using this property, make sure HBase is configured
+                                            appropriately.<p class="p">When not configured, the pipeline uses
+                                            the currently logged in <span class="ph">Data Collector</span> user. </p>
+<p class="p">Not configurable when <span class="ph">Data Collector</span> is configured to use the currently logged in <span class="ph">Data Collector</span> user. <span class="ph">For more information, see <a class="xref" href="../Configuration/DCConfig.html#concept_pmr_sy5_nz">Hadoop Impersonation Mode</a>.</span></p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d431025e855 ">HBase Configuration Directory <a class="xref" href="HBaseLookup.html#concept_nks_rdy_bw">
+                                        <img class="image" id="task_z25_b3q_bw__image_br4_fgs_5r" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d431025e858 ">Location of the HDFS configuration files. <p class="p">For a
+        Cloudera Manager installation, enter <code class="ph codeph">hbase-conf</code>. For all other
+        installations, use a directory or symlink within the <span class="ph">Data Collector</span> resources directory.</p>
+<div class="p">You
+        can use the following file with HBase:<ul class="ul" id="task_z25_b3q_bw__ul_ezj_cvr_bt">
+                  <li class="li">hbase-site.xml</li>
+
+            </ul>
+</div>
+<div class="note note"><span class="notetitle">Note:</span> Properties in the configuration files are overridden by individual properties
+        defined in the stage.</div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d431025e855 ">HBase Configuration</td>
+
+                                    <td class="entry cellrowborder" headers="d431025e858 ">
+       <p class="p">Additional HBase configuration properties to use. </p>
+
+       <p class="p">To add properties, click <span class="ph uicontrol">Add</span> and define the property name and
+        value. Use the property names and values as expected by HBase. </p>
+
+      </td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+</article>
+</article></main></div>
+
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script>
+  </div>
+</nav>
+
+
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
+</html>

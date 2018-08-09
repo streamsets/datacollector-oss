@@ -1,0 +1,587 @@
+
+<!DOCTYPE html
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link>
+      <meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Meet StreamSets Control Hub" /><meta name="abstract" content="StreamSets Control HubTM is a central point of control for all of your dataflow pipelines. Control Hub allows teams to build and execute large numbers of complex dataflows at scale." /><meta name="description" content="StreamSets Control HubTM is a central point of control for all of your dataflow pipelines. Control Hub allows teams to build and execute large numbers of complex dataflows at scale." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/DPM/DPM_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/DPM/DPM_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/DPM/WorkingWithDPM.html#concept_evb_3bs_bx" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_l45_qwf_xw" /><title>Meet StreamSets Control Hub</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_l45_qwf_xw-d46e98794" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018042310" />
+
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018042310" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+
+
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+
+
+
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+
+                </div>
+
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+
+
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref" data-id="concept_ugp_kwf_xw"><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li class="active"><span class="topicref" data-id="concept_l45_qwf_xw"><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM.html#concept_l45_qwf_xw">Meet <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Control Hub</span></a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"><span class="ph">StreamSets Control Hub</span><sup class="ph sup">TM</sup> is a central point of control for all of your dataflow pipelines. <span class="ph">Control Hub</span> allows         teams to build and execute large numbers of complex dataflows at scale.
+
+               </p>
+               </span></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/DPM/DPM_title.html" title="StreamSets Control Hub"></a></span>
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/DPM/WorkingWithDPM.html#concept_evb_3bs_bx" title="Working with Control Hub"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e4414" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e6481" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e13895" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e18499" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e20154" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e22651" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e24466" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e64169" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e77391" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e92871" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e98772" class="topicref" data-id="concept_ugp_kwf_xw" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span><ul class="nav nav-list">
+         <li class="active"><span data-tocid="concept_l45_qwf_xw-d46e98794" class="topicref" data-id="concept_l45_qwf_xw" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM.html#concept_l45_qwf_xw">Meet <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Control Hub</span></a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"><span class="ph">StreamSets Control Hub</span><sup class="ph sup">TM</sup> is a central point of control for all of your dataflow pipelines. <span class="ph">Control Hub</span> allows         teams to build and execute large numbers of complex dataflows at scale.
+
+                     </p>
+                     </span></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_knb_cjq_dx-d46e98889" class="topicref" data-id="concept_knb_cjq_dx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM.html#concept_knb_cjq_dx">Design the Complete Data Architecture</a></span></span></li>
+               <li><span data-tocid="concept_ung_wbs_bx-d46e98911" class="topicref" data-id="concept_ung_wbs_bx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM.html#concept_ung_wbs_bx">Collaboratively Build Pipelines</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">As a data engineer - the person responsible for making sure that data flows smoothly         between systems - you build the
+                              pipelines needed to implement the designed data         architecture. You use <span class="ph">Control Hub</span>         <span class="ph">Pipeline Designer</span> or a         development <span class="ph">Data Collector</span> to         build pipelines.
+
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_inh_ccs_bx-d46e98955" class="topicref" data-id="concept_inh_ccs_bx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM.html#concept_inh_ccs_bx">Execute Jobs at Scale</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Pipelines are the design of the dataflow. Jobs are the execution of the dataflow. Data         engineers build pipelines with
+                              the <span class="ph">Control Hub</span>         <span class="ph">Pipeline Designer</span> or a         development <span class="ph">Data Collector</span>.         DevOps or site reliability engineers run jobs on groups of execution <span class="ph">Data Collector</span>s or             <span class="ph">Edge Data Collectors</span>.
+
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_t34_2ds_bx-d46e99015" class="topicref" data-id="concept_t34_2ds_bx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM.html#concept_t34_2ds_bx">Map Jobs into a Topology</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">In <span class="ph">Data Collector</span>, you can monitor and view the details of a single pipeline. However, you typically run         multiple intermediary pipelines,
+                              all of which work together to create a complete         dataflow.
+
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_sx5_zds_bx-d46e99073" class="topicref" data-id="concept_sx5_zds_bx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM.html#concept_sx5_zds_bx">Measure Dataflow Quality</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">As a data architect or as a DevOps or site reliability engineer, you can measure the         health of the topology and the
+                              performance of all jobs and connecting systems included in         the topology.
+
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_xvp_x2x_fz-d46e99139" class="topicref" data-id="concept_xvp_x2x_fz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM.html#concept_xvp_x2x_fz">Monitor Dataflow Operations</a><span class="wh-tooltip">
+
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">As a DevOps or site reliability engineer, you can monitor your day-to-day operations by         defining data SLAs (service
+                              level agreements) to ensure that incoming data meets business         requirements for availability and accuracy.
+
+                           </p>
+                           </span></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_evb_3bs_bx-d46e99215" class="topicref" data-id="concept_evb_3bs_bx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/WorkingWithDPM.html#concept_evb_3bs_bx">Working with <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span></a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_lry_34g_xw-d46e99241" class="topicref" data-id="concept_lry_34g_xw" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/OrgUserAccount.html#concept_lry_34g_xw">Request a <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span> Organization and User Account
+                     </a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_kc4_xyf_xw-d46e99268" class="topicref" data-id="concept_kc4_xyf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/RegisterSDCwithDPM.html#concept_kc4_xyf_xw">Register Data Collector with <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span></a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You must register a <span class="ph">Data Collector</span> to         work with <span class="ph">StreamSets Control Hub</span>.         When you register a <span class="ph">Data Collector</span>, <span class="ph">Data Collector</span>         generates an authentication token that it uses to issue authenticated requests to <span class="ph">Control Hub</span>.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_h2q_mb5_xw-d46e99939" class="topicref" data-id="concept_h2q_mb5_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/AggregatedStatistics.html#concept_h2q_mb5_xw">Pipeline Statistics</a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">A <span class="ph">Control Hub</span>         job defines the pipeline to run and the <span class="ph">Data Collector</span>s that         run the pipeline. When you start a job, <span class="ph">Control Hub</span>         remotely runs the pipeline on the group of <span class="ph">Data Collector</span>s. To         monitor the job statistics and metrics within <span class="ph">Control Hub</span>, you         must configure the pipeline to write statistics to <span class="ph">Control Hub</span> or to         another system.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_eq5_qjd_fx-d46e101427" class="topicref" data-id="concept_eq5_qjd_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/PipelineManagement.html#concept_eq5_qjd_fx">Pipeline Management with <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span></a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">After you register a <span class="ph">Data Collector</span> with             <span class="ph">StreamSets Control Hub</span>,         you can manage how the pipelines work with <span class="ph">Control Hub</span>.
+
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_hrn_zz3_fx-d46e101932" class="topicref" data-id="concept_hrn_zz3_fx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPMConfiguration.html#concept_hrn_zz3_fx"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span> Configuration File
+                     </a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ldb_sr5_cx-d46e101958" class="topicref" data-id="concept_ldb_sr5_cx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/UnregisterSDCwithDPM.html#concept_ldb_sr5_cx">Unregister Data Collector from <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span></a><span class="wh-tooltip">
+
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can unregister a <span class="ph">Data Collector</span> from             <span class="ph">StreamSets Control Hub</span>         when you no longer want to use that <span class="ph">Data Collector</span>         installation with <span class="ph">Control Hub</span>.
+
+                     </p>
+                     </span></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e102096" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e106011" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e108837" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e109636" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e110218" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e111818" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e112299" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e113641" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e114610" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e117238" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e118495" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e120286" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e124782" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e125996" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e129904" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e129959" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e130119" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e131600" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e131822" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+
+
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_l45_qwf_xw">
+    <h1 class="title topictitle1" id="ariaid-title1">Meet <span class="ph">StreamSets Control Hub</span></h1>
+
+
+    <div class="body conbody"><p class="shortdesc"><span class="ph">StreamSets Control Hub</span><sup class="ph sup">TM</sup> is a central point of control for all of your dataflow pipelines. <span class="ph">Control Hub</span> allows
+        teams to build and execute large numbers of complex dataflows at scale. </p>
+
+        <p class="p">Teams of data
+            engineers use the shared repository provided with <span class="ph">Control Hub</span> to
+            collaboratively build pipelines. <span class="ph">Control Hub</span>
+            provides full life cycle management of the pipelines, allowing you to track the version
+            history and giving you full control of the evolving development process. <span class="ph">Control Hub</span>
+            lets you deploy and execute dataflows at scale on manually administered or automatically
+            provisioned <span class="ph">Data Collector</span>s
+            or on edge devices using <span class="ph">Data Collector Edge</span>.
+            You can map multiple dataflows in a single visual topology and can view real-time
+            statistics to measure dataflow performance across each topology, from end-to-end or
+            point-to-point. You can also monitor alerts to ensure that incoming data meets business
+            requirements for availability and accuracy. </p>
+
+        <p class="p">Multiple types of users within your organization can perform different roles in <span class="ph">Control Hub</span>.
+            For example, a data architect typically creates a high-level design of how data needs to
+            flow through multiple systems. Teams of data engineers use this high-level design to
+            build individual pipelines in <span class="ph">Control Hub</span>
+            <span class="ph">Pipeline Designer</span> or
+            a development <span class="ph">Data Collector</span>.
+            The data engineers then publish the finished pipelines to <span class="ph">Control Hub</span>. </p>
+
+        <p class="p">A DevOps or site reliability engineer adds published pipelines to jobs and then starts
+            the jobs across multiple execution <span class="ph">Data Collector</span>s
+            or <span class="ph">Edge Data Collectors</span>, running a remote pipeline instance on each execution component. Data architects map
+            the related jobs into a single visual topology, and then use the topology to monitor and
+            measure the complete dataflow. DevOps engineers create data SLAs (service level
+            agreements) for topologies to define thresholds that the dataflows cannot exceed,
+            ensuring that data is delivered in a timely manner.</p>
+
+        <p class="p">Let’s take a closer look at what data architects, data engineers, and DevOps engineers
+            can accomplish with <span class="ph">Control Hub</span>.</p>
+
+    </div>
+
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_knb_cjq_dx">
+    <h2 class="title topictitle2" id="ariaid-title2">Design the Complete Data Architecture</h2>
+
+    <div class="body conbody">
+        <p class="p">As a data architect - the person responsible for defining how data is stored, consumed,
+            and managed by different systems - you design the complete flow of data through multiple
+            systems. You might architect the high-level design in a design document or diagram.
+            Then, you work with your team to develop pipelines that meet those dataflow
+                needs.</p>
+
+        <p class="p">For example, you need to create a 360-degree view of your customers by collecting all
+            customer data captured in your organization’s social feeds, enterprise data warehouse,
+            and website logs. You need to send all of the data to the Hadoop Distributed File System
+            (HDFS) for further analysis using tools such as Hive and Impala. You determine that the
+            website logs must be written to Kafka as an intermediary system before being streamed to
+            HDFS. </p>
+
+        <p class="p">To address this need, you create the following high-level design of the complete data
+            flow:</p>
+
+        <p class="p"><img class="image" id="concept_knb_cjq_dx__image_w1d_k5r_dx" src="../Graphics/DPM_DesignArchitecture.png" height="266" width="644" /></p>
+
+        <p class="p">Then the rest of your team uses this high-level design to develop the necessary
+            pipelines, jobs, and topologies within <span class="ph">Data Collector</span> and
+                <span class="ph">Control Hub</span>.</p>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title3" id="concept_ung_wbs_bx">
+ <h2 class="title topictitle2" id="ariaid-title3">Collaboratively Build Pipelines</h2>
+
+
+ <div class="body conbody"><p class="shortdesc">As a data engineer - the person responsible for making sure that data flows smoothly
+        between systems - you build the pipelines needed to implement the designed data
+        architecture. You use <span class="ph">Control Hub</span>
+        <span class="ph">Pipeline Designer</span> or a
+        development <span class="ph">Data Collector</span> to
+        build pipelines. </p>
+
+        <p class="p">
+
+        </p>
+
+        <p class="p">During the development process, you share your pipelines with other data engineers so
+            that you can collaboratively build pipelines as a team using your organization's best
+            practices. When the pipelines are complete, you publish the pipelines to the pipeline
+            repository in <span class="ph">Control Hub</span>. </p>
+
+        <p class="p"><span class="ph">Control Hub</span>
+            provides release management of pipelines. A typical pipeline development cycle involves
+            iterative changes to the pipeline. <span class="ph">Control Hub</span>
+            maintains the version history of each published pipeline. For example, as you design the
+            Social Feeds Dataflows pipeline, you test the pipeline and then make changes to it. As a
+            result, you will likely publish the pipeline to the <span class="ph">Control Hub</span>
+            pipeline repository multiple times, as displayed in the following image of the pipeline
+            history: </p>
+
+        <p class="p"><img class="image" id="concept_ung_wbs_bx__image_llt_s4t_bx" src="../Graphics/DPM_ManagePipelineRepository.png" height="209" width="505" /></p>
+
+        <p class="p">When viewing the pipeline history in <span class="ph">Control Hub</span>,
+            you can view the configuration details for any pipeline version and can compare pipeline
+            versions side-by-side. For example, if you click the <span class="ph uicontrol">Compare with Previous
+                Version</span> icon <img class="image" id="concept_ung_wbs_bx__image_zqv_3st_bx" src="../Graphics/icon_DPM_ComparePreviousVersion.png" height="18" width="18" /> for version 3 in the image above, <span class="ph">Control Hub</span>
+            displays version 2 and version 3 in the comparison window as follows: </p>
+
+        <p class="p"><img class="image" id="concept_ung_wbs_bx__image_bzq_3d5_bx" src="../Graphics/DPM_ComparePipelineVersions.png" height="253" width="613" /></p>
+
+        <p class="p">You can see that version 3 of the pipeline added an Expression Evaluator processor. You
+            can drill into the details of each pipeline stage, and compare the configuration of each
+            stage between the versions.</p>
+
+        <p class="p">You can add tags to pipeline versions to mark release points or to separate development
+            and production environments. For example, when you finish developing the Social Feeds
+            Dataflows pipeline, you add a "Ready to Deploy" tag to the latest version. That tag
+            informs your DevOps engineer which pipeline version is ready to be added to a job and
+            run.</p>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title4" id="concept_inh_ccs_bx">
+ <h2 class="title topictitle2" id="ariaid-title4">Execute Jobs at Scale</h2>
+
+
+ <div class="body conbody"><p class="shortdesc">Pipelines are the design of the dataflow. Jobs are the execution of the dataflow. Data
+        engineers build pipelines with the <span class="ph">Control Hub</span>
+        <span class="ph">Pipeline Designer</span> or a
+        development <span class="ph">Data Collector</span>.
+        DevOps or site reliability engineers run jobs on groups of execution <span class="ph">Data Collector</span>s or
+            <span class="ph">Edge Data Collectors</span>.</p>
+
+        <p class="p">
+
+        </p>
+
+        <p class="p">As a DevOps or site reliability engineer - the person responsible for ensuring that all
+            services and systems are scalable and reliable - you register both development and
+            execution <span class="ph">Data Collector</span>s
+            with <span class="ph">Control Hub</span>. You register <span class="ph">Data Collector</span>s by
+            manually administering them or by automatically provisioning them on a container
+            orchestration framework such as Kubernetes. All registered <span class="ph">Data Collector</span>s -
+            either manually administered or automatically provisioned - function in the same
+            way.</p>
+
+        <p class="p">If your organization runs dataflows on edge devices, you also register and manually
+            administer execution <span class="ph">Edge Data Collectors</span> with <span class="ph">Control Hub</span>. </p>
+
+        <p class="p">You create <span class="ph">Control Hub</span>
+            jobs to run pipelines on groups of execution <span class="ph">Data Collector</span>s
+            or <span class="ph">Edge Data Collectors</span>. When you start a job on a group of <span class="ph">Data Collector</span>s
+            or <span class="ph">Edge Data Collectors</span>, <span class="ph">Control Hub</span>
+            remotely runs the pipeline on each execution component in the group. This enables you to
+            manage and orchestrate large scale dataflows run across multiple <span class="ph">Data Collector</span>s
+            or <span class="ph">Edge Data Collectors</span>.</p>
+
+        <p class="p">You might organize jobs by project, geographic region, or department. For example, your
+            data engineer has developed and published the WebLog Collection pipeline and the EDW
+            Replication Flows pipeline. In your data center, you designate <span class="ph">Data Collector</span>s
+            that run on several of the servers as the web server group. You designate another group
+            of <span class="ph">Data Collector</span>s running on other servers as the data warehouse group. You then create a job to run
+            the WebLog Collection pipeline on the group of web server <span class="ph">Data Collector</span>s. </p>
+
+        <p class="p">The following image displays how the WebLog Collection job runs a remote pipeline
+            instance on each <span class="ph">Data Collector</span> in
+            the web server group. The job does not run pipelines on <span class="ph">Data Collector</span>s
+            in the data warehouse group, which are <span class="ph">Data Collector</span>s
+            that are reserved for pipelines that read from the enterprise data warehouse.</p>
+
+        <p class="p"><img class="image" id="concept_inh_ccs_bx__image_fkl_vcc_fbb" src="../Graphics/DPM_ManageOrchestration.png" height="201" width="578" /></p>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title5" id="concept_t34_2ds_bx">
+ <h2 class="title topictitle2" id="ariaid-title5">Map Jobs into a Topology</h2>
+
+
+ <div class="body conbody"><p class="shortdesc">In <span class="ph">Data Collector</span>, you can monitor and view the details of a single pipeline. However, you typically run
+        multiple intermediary pipelines, all of which work together to create a complete
+        dataflow.</p>
+
+        <p class="p">As a data architect,
+            you create a topology in <span class="ph">Control Hub</span> to
+            map multiple related jobs into a single view. A topology provides interactive end-to-end
+            views of data as it traverses multiple pipelines. You can add any number of jobs to a
+            topology.</p>
+
+        <p class="p">To continue our Customer 360 example, after the WebLog Collection pipeline reads web
+            server log files and writes the data to Kafka, another pipeline consumes the Kafka data,
+            processes it, and streams the data to HDFS. Additional pipelines read from Twitter
+            social feeds and from an enterprise data warehouse and also write the data to HDFS. In
+                <span class="ph">Control Hub</span>, you can create a topology that includes jobs for all the pipelines, as follows: </p>
+
+        <p class="p"><img class="image" id="concept_t34_2ds_bx__image_q5h_1dc_fbb" src="../Graphics/DPM_MapPipelinesTopology.png" height="406" width="825" /></p>
+
+        <p class="p">From the topology, you can select each job and then drill into the configuration details
+            of each pipeline. For example, if we select the Social Feeds Dataflows job in the
+            topology canvas above, we can the three stages included in the pipeline in the detail
+            pane on the right.</p>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title6" id="concept_sx5_zds_bx">
+ <h2 class="title topictitle2" id="ariaid-title6">Measure Dataflow Quality</h2>
+
+
+ <div class="body conbody"><p class="shortdesc">As a data architect or as a DevOps or site reliability engineer, you can measure the
+        health of the topology and the performance of all jobs and connecting systems included in
+        the topology. </p>
+
+        <p class="p">
+
+        </p>
+
+        <p class="p"><span class="ph">Control Hub</span>
+            monitoring provides real-time statistics and error information about the running
+            pipelines. </p>
+
+        <p class="p">For example, the detail pane of the Customer 360 topology provides a single view into the
+            record count and throughput for all running pipelines in the topology:</p>
+
+        <p class="p"><img class="image" id="concept_sx5_zds_bx__image_t1k_s2c_fbb" src="../Graphics/DPM_MeasureQualityTopology.png" height="397" width="885" /></p>
+
+        <p class="p">You can select a job or a connecting system within the topology to discover more detailed
+            monitoring about the job or system. </p>
+
+        <p class="p">When you start a job on a group of <span class="ph">Data Collector</span>s,
+                <span class="ph">Control Hub</span>
+            provides a single view of the statistics for the complete job. From a job, you can view
+            the statistics for a single pipeline or you can view the aggregated statistics across
+            all remote pipeline instances that are run on a group of <span class="ph">Data Collector</span>s.</p>
+
+        <p class="p">For example, if we select the Social Feeds Dataflows job in the topology canvas, the
+            detail pane displays metrics for the selected job:</p>
+
+        <p class="p"><img class="image" id="concept_sx5_zds_bx__image_hrt_t2c_fbb" src="../Graphics/DPM_MeasureQualityJob.png" height="441" width="889" /></p>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title7" id="concept_xvp_x2x_fz">
+ <h2 class="title topictitle2" id="ariaid-title7">Monitor Dataflow Operations</h2>
+
+
+ <div class="body conbody"><p class="shortdesc">As a DevOps or site reliability engineer, you can monitor your day-to-day operations by
+        defining data SLAs (service level agreements) to ensure that incoming data meets business
+        requirements for availability and accuracy.</p>
+
+  <p class="p">
+
+        </p>
+
+        <p class="p">In addition to measuring the health of a topology, you define data SLAs to define the
+            expected thresholds of the data throughput rate or the error record rate. Data SLAs
+            trigger an alert when the specified threshold is reached. Data SLA alerts provide
+            immediate feedback on the data processing rates expected by your team. They enable you
+            to monitor your dataflow operations and quickly investigate and resolve issues that
+            arise.</p>
+
+        <p class="p">For example, you have service level agreements with the operational analytics team to
+            ensure that all of the data captured and processed in the Customer 360 topology is clean
+            and available for immediate analysis. If any of the Customer 360 jobs encounter
+            processing errors, you must immediately resolve those issues. You define and activate a
+            data SLA that triggers an alert when a job in the topology encounters more than 100
+            error records per second. </p>
+
+        <p class="p">If the alert triggers, <span class="ph">Control Hub</span>
+            notifies you with a red Alerts icon in the top toolbar: <img class="image" id="concept_xvp_x2x_fz__image_gk1_rfx_fz" src="../Graphics/icon_Notifications.png" height="16" width="14" />. You
+            drill into the details of the data SLA to discover which threshold was reached and to
+            investigate the issues that need to be resolved. The triggered data SLA displays a graph
+            of the error record rate. The red line in the graph represents the defined threshold, as
+            follows:</p>
+
+        <p class="p"><img class="image" id="concept_xvp_x2x_fz__image_q5c_y2c_fbb" src="../Graphics/DPM_MasterOperations.png" height="443" width="538" /></p>
+
+        <p class="p">We've seen how you can use <span class="ph">Control Hub</span> to
+            turn a high-level architecture diagram of your dataflows into pipelines and jobs that
+            you can then manage and measure from a single topology. Give it a try, and see for
+            yourself how easily you can control all of your complex dataflow pipelines with <span class="ph">Control Hub</span>.</p>
+
+ </div>
+
+</article>
+</article>
+</article></main></div>
+
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script>
+  </div>
+</nav>
+
+
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
+</html>
