@@ -235,6 +235,7 @@ subquery            : '('
                         SELECT fieldList
                         FROM objectList
                         (WHERE conditionExpressions)?
+                        (ORDER BY fieldOrderByList)?
                         (LIMIT numberOfRowsToReturn)?
                         (OFFSET numberOfRowsToSkip)?
                       ')' ;

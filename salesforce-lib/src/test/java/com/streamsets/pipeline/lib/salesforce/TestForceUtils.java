@@ -321,6 +321,9 @@ public class TestForceUtils {
       // SDC-7894 SOQL problem using DateTime as ${OFFSET} value
       {"SELECT * FROM Task WHERE LastModifiedDate > ${OFFSET}", "Task"},
       {"SELECT * FROM Task WHERE Id > '${OFFSET}'", "Task"},
+      // SDC-9742
+      {"SELECT Id, Name, (SELECT Id, LastName, AccountId FROM Contacts) FROM Account", "Account"},
+      {"SELECT Id, Name, (SELECT Id, LastName, AccountId FROM Contacts ORDER BY Id) FROM Account", "Account"},
   };
 
   @Parameterized.Parameters
