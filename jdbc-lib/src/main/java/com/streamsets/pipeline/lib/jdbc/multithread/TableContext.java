@@ -46,6 +46,35 @@ public class TableContext {
   private Map<String, String> offsetColumnToStartOffset = new HashMap<>();
   // optionally store all column labels and types
   private Map<String, Integer> columnToType = new LinkedHashMap<>();
+  private long offset;
+
+  public TableContext(
+      String schema,
+      String tableName,
+      LinkedHashMap<String, Integer> offsetColumnToType,
+      Map<String, String> offsetColumnToStartOffset,
+      Map<String, String> offsetColumnToPartitionOffsetAdjustments,
+      Map<String, String> offsetColumnToMinValues,
+      boolean enableNonIncremental,
+      PartitioningMode partitioningMode,
+      int maxNumActivePartitions,
+      String extraOffsetColumnConditions,
+      long offset
+  ) {
+    this(
+        schema,
+        tableName,
+        offsetColumnToType,
+        offsetColumnToStartOffset,
+        offsetColumnToPartitionOffsetAdjustments,
+        offsetColumnToMinValues,
+        enableNonIncremental,
+        partitioningMode,
+        maxNumActivePartitions,
+        extraOffsetColumnConditions
+    );
+    this.offset = offset;
+  }
 
   public TableContext(
       String schema,
@@ -147,6 +176,10 @@ public class TableContext {
 
   public String getExtraOffsetColumnConditions() {
     return extraOffsetColumnConditions;
+  }
+
+  public long getOffset() {
+    return offset;
   }
 
   private static boolean isPartitionable(TableContext sourceTableContext) {

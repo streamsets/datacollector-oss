@@ -59,7 +59,8 @@ public class SQLServerCTContextLoader extends CacheLoader<TableRuntimeContext, T
         tableContext.getQualifiedName(),
         tableContext.getOffsetColumns(),
         tableContext.getOffsetColumnToStartOffset(),
-        includeJoin
+        includeJoin,
+        tableContext.getOffset()
     );
 
     Pair<String, List<Pair<Integer, String>>> queryAndParamValToSet = Pair.of(query, new ArrayList<>());
