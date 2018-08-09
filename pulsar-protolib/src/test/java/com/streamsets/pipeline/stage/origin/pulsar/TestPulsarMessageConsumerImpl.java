@@ -550,6 +550,7 @@ public class TestPulsarMessageConsumerImpl {
     Mockito.when(consumerBuilderMock.consumerName(Mockito.any())).thenReturn(consumerBuilderMock);
     Mockito.when(consumerBuilderMock.receiverQueueSize(Mockito.anyInt())).thenReturn(consumerBuilderMock);
     Mockito.when(consumerBuilderMock.subscriptionType(Mockito.any())).thenReturn(consumerBuilderMock);
+    Mockito.when(consumerBuilderMock.subscriptionInitialPosition(Mockito.any())).thenReturn(consumerBuilderMock);
 
     try {
       Mockito.when(consumerBuilderMock.subscribe()).thenReturn(messageConsumerMock);

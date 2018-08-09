@@ -160,4 +160,16 @@ public class PulsarSourceConfig extends BasePulsarConfig {
       group = "ADVANCED")
   public int receiverQueueSize;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "LATEST",
+      label = "Subscription Initial Position",
+      description = "Initial position from which to start reading Pulsar messages",
+      displayPosition = 30,
+      group = "ADVANCED"
+  )
+  @ValueChooserModel(PulsarSubscriptionInitialPositionChooserValues.class)
+  public PulsarSubscriptionInitialPosition subscriptionInitialPosition;
+
 }

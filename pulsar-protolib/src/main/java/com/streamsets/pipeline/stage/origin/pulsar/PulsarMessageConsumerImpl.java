@@ -96,7 +96,12 @@ public class PulsarMessageConsumerImpl implements PulsarMessageConsumer {
               .subscriptionName(pulsarConfig.subscriptionName)
               .consumerName(pulsarConfig.consumerName)
               .receiverQueueSize(pulsarConfig.receiverQueueSize)
-              .subscriptionType(pulsarConfig.subscriptionType.getSubscriptionType())
+              .subscriptionType(pulsarConfig
+                  .subscriptionType
+                  .getSubscriptionType())
+              .subscriptionInitialPosition(pulsarConfig
+                  .subscriptionInitialPosition
+                  .getSubscriptionInitialPosition())
               .subscribe();
         } catch (PulsarClientException e) {
           issues.add(context.createConfigIssue(
@@ -120,7 +125,12 @@ public class PulsarMessageConsumerImpl implements PulsarMessageConsumer {
                                         .subscriptionName(pulsarConfig.subscriptionName)
                                         .consumerName(pulsarConfig.consumerName)
                                         .receiverQueueSize(pulsarConfig.receiverQueueSize)
-                                        .subscriptionType(pulsarConfig.subscriptionType.getSubscriptionType())
+                                        .subscriptionType(pulsarConfig
+                                            .subscriptionType
+                                            .getSubscriptionType())
+                                        .subscriptionInitialPosition(pulsarConfig
+                                            .subscriptionInitialPosition
+                                            .getSubscriptionInitialPosition())
                                         .subscribe();
         } catch (PulsarClientException e) {
           issues.add(context.createConfigIssue(PulsarGroups.PULSAR.name(),
@@ -143,7 +153,12 @@ public class PulsarMessageConsumerImpl implements PulsarMessageConsumer {
                                         .subscriptionName(pulsarConfig.subscriptionName)
                                         .consumerName(pulsarConfig.consumerName)
                                         .receiverQueueSize(pulsarConfig.receiverQueueSize)
-                                        .subscriptionType(pulsarConfig.subscriptionType.getSubscriptionType())
+                                        .subscriptionType(pulsarConfig
+                                            .subscriptionType
+                                            .getSubscriptionType())
+                                        .subscriptionInitialPosition(pulsarConfig
+                                            .subscriptionInitialPosition
+                                            .getSubscriptionInitialPosition())
                                         .subscribe();
         } catch (PulsarClientException e) {
           issues.add(context.createConfigIssue(PulsarGroups.PULSAR.name(),

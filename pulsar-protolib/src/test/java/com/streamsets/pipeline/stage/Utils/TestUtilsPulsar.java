@@ -28,6 +28,7 @@ import com.streamsets.pipeline.stage.destination.pulsar.PulsarTargetConfig;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.MessageConfig;
 import com.streamsets.pipeline.stage.origin.pulsar.PulsarSourceConfig;
+import com.streamsets.pipeline.stage.origin.pulsar.PulsarSubscriptionInitialPosition;
 import com.streamsets.pipeline.stage.origin.pulsar.PulsarSubscriptionType;
 import org.apache.pulsar.client.api.Message;
 import org.apache.pulsar.client.impl.MessageImpl;
@@ -62,6 +63,7 @@ public class TestUtilsPulsar {
     pulsarSourceConfig.securityConfig.tlsEnabled = false;
     pulsarSourceConfig.securityConfig.tlsAuthEnabled = false;
     pulsarSourceConfig.subscriptionType = PulsarSubscriptionType.EXCLUSIVE;
+    pulsarSourceConfig.subscriptionInitialPosition = PulsarSubscriptionInitialPosition.LATEST;
     return pulsarSourceConfig;
   }
 
