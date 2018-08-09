@@ -59,6 +59,7 @@ dependencies {
   testCompile project(path: ':lib:net-commonlib', configuration: 'testArtifacts')
   testCompile project(path: ':lib:proto:dir-spooler-protolib', configuration: 'testArtifacts')
   testCompile project(path: ':lib:proto:scripting-protolib', configuration: 'testArtifacts')
+  testCompile group: 'com.google.code.gson', name: 'gson', version: '2.2.4'
   testCompile group: 'com.github.fommil', name: 'openssh', version: '1.0'
   testCompile group: 'com.h2database', name: 'h2', version: '1.4.187'
   testCompile group: 'org.apache.sshd', name: 'sshd-core', version: '1.2.0'
