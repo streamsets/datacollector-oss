@@ -1,0 +1,17 @@
+description = 'StreamSets Data Collector Google Cloud Lib'
+
+dependencies {
+  compile "com.google.cloud:google-cloud-bigquery:1.33.0"
+  compile "com.google.cloud:google-cloud-pubsub:1.32.0"
+  compile "com.google.cloud:google-cloud-storage:1.3.1"
+  compile 'io.confluent:kafka-schema-registry-client'
+  compile(project(':lib:commonlib')) {
+    exclude group: 'io.netty', module: 'netty-transport'
+    exclude group: 'io.netty', module: 'netty-transport-native-epoll'
+    exclude group: 'io.netty', module: 'netty-buffer'
+    exclude group: 'io.netty', module: 'netty-codec'
+    exclude group: 'io.netty', module: 'netty-handler'
+  }
+  testCompile 'org.powermock:powermock-api-mockito'
+  testCompile 'org.powermock:powermock-module-junit4'
+}

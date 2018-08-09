@@ -1,0 +1,35 @@
+description = 'StreamSets Data Collector JDBC Lib'
+apply plugin: 'antlr'
+
+dependencies {
+  antlr "org.antlr:antlr4:4.5.3"
+  compile project(':lib:guavasupport')
+  compile project(':lib:proto:lookup-protolib')
+  compile project(':lib:stagesupport')
+  compile "com.fasterxml.jackson.core:jackson-databind"
+  compile "com.google.guava:guava:18.0"
+  compile "com.zaxxer:HikariCP:2.4.1"
+  compile "commons-codec:commons-codec:1.9"
+  compile "commons-io:commons-io:2.4"
+  compile "joda-time:joda-time:2.8"
+  compile "org.apache.commons:commons-lang3:3.4"
+  compile 'org.mapdb:mapdb:3.0.5'
+  compile 'org.parboiled:parboiled-java:1.1.8'
+  compile 'org.postgresql:postgresql:42.2.2'
+  runtimeOnly "org.antlr:antlr4-runtime:4.5.3"
+  testCompile project(path: ':lib:stagesupport', configuration: 'testArtifacts')
+  testCompile "com.h2database:h2:1.4.195"
+  testCompile "com.mockrunner:mockrunner-jdbc:1.1.2"
+  testCompile "com.vividsolutions:jts:1.13"
+  testCompile "org.hamcrest:hamcrest-core"
+  testCompile "org.powermock:powermock-api-mockito"
+  testCompile "org.powermock:powermock-module-junit4"
+}
+
+sourceSets {
+  main {
+    antlr {
+      srcDirs = ['src/main/antlr4']
+    }
+  }
+}

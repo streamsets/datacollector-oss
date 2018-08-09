@@ -23,6 +23,7 @@ import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.stage.lib.CredentialsProviderType;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -31,6 +32,7 @@ import static com.streamsets.pipeline.stage.lib.Errors.GOOGLE_01;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+@Ignore // this tries to actually connect to GCP and should be made an integration test
 public class TestPubSubSource {
   @Before
   public void setUp() throws Exception {

@@ -1,0 +1,38 @@
+description = 'StreamSets Data Collector Groovy 2.4.11 Lib'
+
+def groovyVersion = '2.4.11'
+dependencies {
+  compile "org.codehaus.groovy:groovy:${groovyVersion}:indy"
+  compile("org.codehaus.groovy:groovy-json:${groovyVersion}:indy") {
+    exclude group: 'org.codehaus.groovy', module: 'groovy'
+  }
+  compile("org.codehaus.groovy:groovy-jsr223:${groovyVersion}:indy") {
+    exclude group: 'org.codehaus.groovy', module: 'groovy'
+  }
+  compile("org.codehaus.groovy:groovy-nio:${groovyVersion}:indy") {
+    exclude group: 'org.codehaus.groovy', module: 'groovy'
+  }
+  compile("org.codehaus.groovy:groovy-sql:${groovyVersion}:indy") {
+    exclude group: 'org.codehaus.groovy', module: 'groovy'
+  }
+  compile("org.codehaus.groovy:groovy-xml:${groovyVersion}:indy") {
+    exclude group: 'org.codehaus.groovy', module: 'groovy'
+  }
+  compile(project(':lib:proto:groovy-protolib')) {
+    exclude group: 'org.codehaus.groovy', module: 'groovy'
+    exclude group: 'org.codehaus.groovy', module: 'groovy-jsr223'
+  }
+  testCompile project(path: ':lib:guavasupport', configuration: 'testArtifacts')
+  testCompile project(path: ':lib:proto:scripting-protolib', configuration: 'testArtifacts')
+}
+
+sourceSets {
+  test {
+    java {
+      srcDir project(':lib:proto:groovy-protolib').sourceSets.test.java.srcDirs
+    }
+    resources {
+      srcDir project(':lib:proto:groovy-protolib').sourceSets.test.resources.srcDirs
+    }
+  }
+}

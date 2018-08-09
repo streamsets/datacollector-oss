@@ -1,0 +1,7 @@
+description = 'StreamSets Data Collector InfluxDB 0.9+ Lib'
+
+dependencies {
+  compile 'org.influxdb:influxdb-java:2.1'
+  testCompile "org.powermock:powermock-module-junit4"
+  testCompile "org.powermock:powermock-api-mockito"
+}

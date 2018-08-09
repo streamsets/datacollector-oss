@@ -18,6 +18,10 @@
  */
 grammar plsql;
 
+@header {
+package plsql;
+}
+
 swallow_to_semi
     : ~( ';' )+
     ;
