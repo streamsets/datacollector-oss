@@ -30,6 +30,7 @@ import com.streamsets.pipeline.stage.origin.lib.MessageConfig;
 import com.streamsets.pipeline.stage.origin.pulsar.PulsarSourceConfig;
 import com.streamsets.pipeline.stage.origin.pulsar.PulsarSubscriptionInitialPosition;
 import com.streamsets.pipeline.stage.origin.pulsar.PulsarSubscriptionType;
+import com.streamsets.pipeline.stage.origin.pulsar.PulsarTopicsSelector;
 import org.apache.pulsar.client.api.Message;
 import org.apache.pulsar.client.impl.MessageImpl;
 
@@ -54,7 +55,8 @@ public class TestUtilsPulsar {
   public static PulsarSourceConfig getSourceConfig() {
     PulsarSourceConfig pulsarSourceConfig = new PulsarSourceConfig();
     pulsarSourceConfig.serviceURL = "http://localhost:8080";
-    pulsarSourceConfig.multiTopic = false;
+    pulsarSourceConfig.pulsarTopicsSelector = PulsarTopicsSelector.SINGLE_TOPIC;
+    pulsarSourceConfig.patternAutoDiscoveryPeriod = 1;
     pulsarSourceConfig.originTopic = "sdc-topic";
     pulsarSourceConfig.consumerName = "sdc-consumer";
     pulsarSourceConfig.topicsList = Collections.emptyList();
@@ -64,6 +66,7 @@ public class TestUtilsPulsar {
     pulsarSourceConfig.securityConfig.tlsAuthEnabled = false;
     pulsarSourceConfig.subscriptionType = PulsarSubscriptionType.EXCLUSIVE;
     pulsarSourceConfig.subscriptionInitialPosition = PulsarSubscriptionInitialPosition.LATEST;
+    pulsarSourceConfig.topicsPattern = "persistent://public/default/.*";
     return pulsarSourceConfig;
   }
 

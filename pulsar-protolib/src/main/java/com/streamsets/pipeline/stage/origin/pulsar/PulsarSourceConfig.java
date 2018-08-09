@@ -50,31 +50,15 @@ public class PulsarSourceConfig extends BasePulsarConfig {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      label = "Consume From Multiple Topics",
-      description = "Select this option to consume messages from multiple Pulsar topics",
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "SINGLE_TOPIC",
+      label = "Topics Selector",
+      description = "Selector to indicate how topics to consume from are specified",
       displayPosition = 60,
-      defaultValue = "false",
       group = "PULSAR"
   )
-  public boolean multiTopic;
-
-  /* Pulsar is not working correctly when using pattern to create a consumer subscribed to topics matching that pattern.
-     Thus this section will remain disabled until Pulsar fixes this issue. topicsList ConfigDef annotation has two
-     properties commented which also depend on the issue of topics pattern. When uncommenting this seciton also
-     uncomment those lines (79 and 80 currently).
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      label = "Use Pulsar Topic Pattern",
-      description = "Select this option to use a pattern to select the list of topics from which message will be " +
-          "retrieved",
-      displayPosition = 70,
-      group = "PULSAR"
-  )
-  public boolean usePatternForTopic;
-
+  @ValueChooserModel(PulsarTopicsSelectorChooserValues.class)
+  public PulsarTopicsSelector pulsarTopicsSelector;
 
   @ConfigDef(
       required = true,
@@ -82,40 +66,27 @@ public class PulsarSourceConfig extends BasePulsarConfig {
       label = "Pulsar Topics Pattern",
       description = "Pattern used to select the list of Pulsar topics from which messages have to be retrieved. " +
           "Example: persistent://public/default/sdc-.* would match topics like 'sdc-topic' or 'sdc-data'",
-      displayPosition = 80,
+      displayPosition = 70,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       defaultValue = "sdc-.*",
       dependencies = {
-          @Dependency(
-              configName = "multiTopic",
-              triggeredByValues = "true"
-          )//,
-//          @Dependency(
-//              configName = "usePatternForTopic",
-//              triggeredByValues = "true"
-//          )
+          @Dependency(configName = "pulsarTopicsSelector",
+              triggeredByValues = "TOPICS_PATTERN"),
       },
       group = "PULSAR"
   )
   public String topicsPattern;
-  */
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.LIST,
       label = "Topics List",
       description = "List of Pulsar topics from which messages have to be retrieved",
-      displayPosition = 80,
+      displayPosition = 70,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       dependencies = {
-          @Dependency(
-              configName = "multiTopic",
-              triggeredByValues = "true"
-          )//,
-//          @Dependency(
-//              configName = "usePatternForTopic",
-//              triggeredByValues = "false"
-//          )
+          @Dependency(configName = "pulsarTopicsSelector",
+              triggeredByValues = "TOPICS_LIST"),
       },
       group = "PULSAR"
   )
@@ -126,13 +97,11 @@ public class PulsarSourceConfig extends BasePulsarConfig {
       type = ConfigDef.Type.STRING,
       label = "Topic",
       description = "Pulsar topic from which messages have to be retrieved",
-      displayPosition = 80,
+      displayPosition = 70,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       dependencies = {
-          @Dependency(
-              configName = "multiTopic",
-              triggeredByValues = "false"
-          )
+          @Dependency(configName = "pulsarTopicsSelector",
+              triggeredByValues = "SINGLE_TOPIC"),
       },
       group = "PULSAR"
   )
@@ -171,5 +140,20 @@ public class PulsarSourceConfig extends BasePulsarConfig {
   )
   @ValueChooserModel(PulsarSubscriptionInitialPositionChooserValues.class)
   public PulsarSubscriptionInitialPosition subscriptionInitialPosition;
+
+  @ConfigDef(required = false,
+      type = ConfigDef.Type.NUMBER,
+      label = "Pattern Auto Discovery Period",
+      description = "Set topics auto discovery period when using a pattern to specify topics to consume from. The " +
+          "period is in minutes",
+      displayPosition = 40,
+      defaultValue = "1",
+      min = 1,
+      dependencies = {
+          @Dependency(configName = "pulsarTopicsSelector",
+              triggeredByValues = "TOPICS_PATTERN"),
+      },
+      group = "ADVANCED")
+  public int patternAutoDiscoveryPeriod;
 
 }

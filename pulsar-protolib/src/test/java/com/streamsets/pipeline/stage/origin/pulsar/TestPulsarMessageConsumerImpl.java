@@ -43,6 +43,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(PulsarClient.class)
@@ -142,7 +143,7 @@ public class TestPulsarMessageConsumerImpl {
   @Test
   public void testInitWithPulsarClientSubscribeTopicsListIssues() {
     PulsarSourceConfig customPulsarSourceConfig = TestUtilsPulsar.getSourceConfig();
-    customPulsarSourceConfig.multiTopic = true;
+    customPulsarSourceConfig.pulsarTopicsSelector = PulsarTopicsSelector.TOPICS_LIST;
     customPulsarSourceConfig.topicsList = TestUtilsPulsar.getTopicsList();
 
     createPulsarMessageConsumerImplNoIssues(customPulsarSourceConfig);
@@ -259,7 +260,7 @@ public class TestPulsarMessageConsumerImpl {
   @Test
   public void testTakeSuccessTopicsList() throws StageException {
     PulsarSourceConfig customPulsarSourceConfig = TestUtilsPulsar.getSourceConfig();
-    customPulsarSourceConfig.multiTopic = true;
+    customPulsarSourceConfig.pulsarTopicsSelector = PulsarTopicsSelector.TOPICS_LIST;
     customPulsarSourceConfig.topicsList = TestUtilsPulsar.getTopicsList();
 
     createPulsarMessageConsumerImplNoIssues(customPulsarSourceConfig);
@@ -294,6 +295,63 @@ public class TestPulsarMessageConsumerImpl {
              .thenReturn(1);
     } catch (PulsarClientException e) {
       Assert.fail("Error mocking Consumer.receive method in testTakeSuccessTopicsList");
+    }
+
+    Assert.assertEquals(1, pulsarMessageConsumerImplMock.take(Mockito.mock(BatchMaker.class), contextMock, 1));
+    Assert.assertEquals(1, pulsarMessageConsumerImplMock.getSentButNotACKMessages().size());
+    Assert.assertEquals(TestUtilsPulsar.getPulsarMessage().getMessageId(),
+        pulsarMessageConsumerImplMock.getSentButNotACKMessages().get(0).getMessageId()
+    );
+
+    try {
+      Mockito.verify(messageConsumerMock, Mockito.atLeast(1)).receive(Mockito.anyInt(), Mockito.any());
+      Mockito.verify(pulsarMessageConverterMock, Mockito.times(1)).convert(Mockito.any(),
+          Mockito.any(),
+          Mockito.any(),
+          Mockito.any()
+      );
+    } catch (PulsarClientException e) {
+      Assert.fail("Error verifying number of calls to Consumer.receive method in testTakeSuccessTopicsList");
+    }
+  }
+
+  @Test
+  public void testTakeSuccessTopicsPattern() throws StageException {
+    PulsarSourceConfig customPulsarSourceConfig = TestUtilsPulsar.getSourceConfig();
+    customPulsarSourceConfig.pulsarTopicsSelector = PulsarTopicsSelector.TOPICS_PATTERN;
+
+    createPulsarMessageConsumerImplNoIssues(customPulsarSourceConfig);
+
+    List<Stage.ConfigIssue> issues = pulsarMessageConsumerImplMock.init(contextMock);
+    Assert.assertEquals(0, issues.size());
+
+    try {
+      Mockito.when(messageConsumerMock.receive(Mockito.anyInt(), Mockito.any())).thenReturn(null);
+    } catch (PulsarClientException e) {
+      Assert.fail("Error mocking Consumer.receive method in testTakeSuccessTopicsPattern");
+    }
+
+    Assert.assertEquals(0, pulsarMessageConsumerImplMock.take(Mockito.mock(BatchMaker.class), contextMock, 1));
+    Assert.assertEquals(0, pulsarMessageConsumerImplMock.getSentButNotACKMessages().size());
+
+    try {
+      Mockito.verify(messageConsumerMock, Mockito.atLeast(1)).receive(Mockito.anyInt(), Mockito.any());
+      Mockito.verify(pulsarMessageConverterMock, Mockito.times(0)).convert(Mockito.any(),
+          Mockito.any(),
+          Mockito.any(),
+          Mockito.any()
+      );
+    } catch (PulsarClientException e) {
+      Assert.fail("Error verifying number of calls to Consumer.receive method in testTakeSuccessTopicsPattern");
+    }
+
+    try {
+      Mockito.when(messageConsumerMock.receive(Mockito.anyInt(), Mockito.any()))
+             .thenReturn(TestUtilsPulsar.getPulsarMessage());
+      Mockito.when(pulsarMessageConverterMock.convert(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
+             .thenReturn(1);
+    } catch (PulsarClientException e) {
+      Assert.fail("Error mocking Consumer.receive method in testTakeSuccessTopicsPattern");
     }
 
     Assert.assertEquals(1, pulsarMessageConsumerImplMock.take(Mockito.mock(BatchMaker.class), contextMock, 1));
@@ -401,7 +459,7 @@ public class TestPulsarMessageConsumerImpl {
              .thenReturn(1);
       pulsarMessageConsumerImplMock.take(Mockito.mock(BatchMaker.class), contextMock, 1);
     } catch (PulsarClientException | StageException e) {
-      Assert.fail("Error mocking Consumer.receive method in ackSuccessOneTopic");
+      Assert.fail("Error mocking Consumer.receive method in ackSuccessOneTopicFailoverSubscription");
     }
 
     Assert.assertNull(pulsarMessageConsumerImplMock.getLastSentButNotACKMessage());
@@ -421,7 +479,7 @@ public class TestPulsarMessageConsumerImpl {
   @Test
   public void ackSuccessTopicsList() throws PulsarClientException {
     PulsarSourceConfig customPulsarSourceConfig = TestUtilsPulsar.getSourceConfig();
-    customPulsarSourceConfig.multiTopic = true;
+    customPulsarSourceConfig.pulsarTopicsSelector = PulsarTopicsSelector.TOPICS_LIST;
     customPulsarSourceConfig.topicsList = TestUtilsPulsar.getTopicsList();
 
     createPulsarMessageConsumerImplNoIssues(customPulsarSourceConfig);
@@ -437,6 +495,38 @@ public class TestPulsarMessageConsumerImpl {
       pulsarMessageConsumerImplMock.take(Mockito.mock(BatchMaker.class), contextMock, 1);
     } catch (PulsarClientException | StageException e) {
       Assert.fail("Error mocking Consumer.receive method in ackSuccessTopicsList");
+    }
+
+    Assert.assertFalse(pulsarMessageConsumerImplMock.getSentButNotACKMessages().isEmpty());
+
+    try {
+      pulsarMessageConsumerImplMock.ack();
+    } catch (StageException e) {
+      Assert.fail("Ack threw an unexpected StageException");
+    }
+
+    Mockito.verify(messageConsumerMock, Mockito.times(1)).acknowledge(Mockito.any(MessageId.class));
+    Assert.assertTrue(pulsarMessageConsumerImplMock.getSentButNotACKMessages().isEmpty());
+  }
+
+  @Test
+  public void ackSuccessTopicsPattern() throws PulsarClientException {
+    PulsarSourceConfig customPulsarSourceConfig = TestUtilsPulsar.getSourceConfig();
+    customPulsarSourceConfig.pulsarTopicsSelector = PulsarTopicsSelector.TOPICS_PATTERN;
+
+    createPulsarMessageConsumerImplNoIssues(customPulsarSourceConfig);
+
+    List<Stage.ConfigIssue> issues = pulsarMessageConsumerImplMock.init(contextMock);
+    Assert.assertEquals(0, issues.size());
+
+    try {
+      Mockito.when(messageConsumerMock.receive(Mockito.anyInt(), Mockito.any()))
+             .thenReturn(TestUtilsPulsar.getPulsarMessage());
+      Mockito.when(pulsarMessageConverterMock.convert(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
+             .thenReturn(1);
+      pulsarMessageConsumerImplMock.take(Mockito.mock(BatchMaker.class), contextMock, 1);
+    } catch (PulsarClientException | StageException e) {
+      Assert.fail("Error mocking Consumer.receive method in ackSuccessTopicsPattern");
     }
 
     Assert.assertFalse(pulsarMessageConsumerImplMock.getSentButNotACKMessages().isEmpty());
@@ -484,7 +574,7 @@ public class TestPulsarMessageConsumerImpl {
   @Test(expected = StageException.class)
   public void ackStageExceptionTopicsList() throws StageException {
     PulsarSourceConfig customPulsarSourceConfig = TestUtilsPulsar.getSourceConfig();
-    customPulsarSourceConfig.multiTopic = true;
+    customPulsarSourceConfig.pulsarTopicsSelector = PulsarTopicsSelector.TOPICS_LIST;
     customPulsarSourceConfig.topicsList = TestUtilsPulsar.getTopicsList();
 
     createPulsarMessageConsumerImplNoIssues(customPulsarSourceConfig);
@@ -551,6 +641,8 @@ public class TestPulsarMessageConsumerImpl {
     Mockito.when(consumerBuilderMock.receiverQueueSize(Mockito.anyInt())).thenReturn(consumerBuilderMock);
     Mockito.when(consumerBuilderMock.subscriptionType(Mockito.any())).thenReturn(consumerBuilderMock);
     Mockito.when(consumerBuilderMock.subscriptionInitialPosition(Mockito.any())).thenReturn(consumerBuilderMock);
+    Mockito.when(consumerBuilderMock.topicsPattern(Mockito.any(Pattern.class))).thenReturn(consumerBuilderMock);
+    Mockito.when(consumerBuilderMock.patternAutoDiscoveryPeriod(Mockito.anyInt())).thenReturn(consumerBuilderMock);
 
     try {
       Mockito.when(consumerBuilderMock.subscribe()).thenReturn(messageConsumerMock);
