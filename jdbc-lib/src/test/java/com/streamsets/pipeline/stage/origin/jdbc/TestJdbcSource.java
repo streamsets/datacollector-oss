@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc;
 
-import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
@@ -129,6 +128,10 @@ public class TestJdbcSource {
         "CREATE TABLE IF NOT EXISTS TEST.TEST_UNKNOWN_TYPE " +
           "(p_id INT NOT NULL, geo GEOMETRY);"
       );
+      statement.addBatch(
+        "CREATE TABLE IF NOT EXISTS TEST.TIMESTAMP_9 " +
+          "(p_id INT NOT NULL, ts TIMESTAMP(9));"
+      );
       // Add some data
       statement.addBatch("INSERT INTO TEST.TEST_TABLE VALUES (1, 'Adam', 'Kunicki')");
       statement.addBatch("INSERT INTO TEST.TEST_TABLE VALUES (2, 'Jon', 'Natkins')");
@@ -146,6 +149,7 @@ public class TestJdbcSource {
       statement.addBatch("INSERT INTO TEST.TEST_UUID VALUES  (1, '80d00b8a-ffa3-45c2-93ba-d4278408552f')");
       statement.addBatch("INSERT INTO TEST.TEST_UNKNOWN_TYPE VALUES  (1, 'POINT (30 10)')");
       statement.addBatch("INSERT INTO TEST.TEST_UNKNOWN_TYPE VALUES  (2, null)");
+      statement.addBatch("INSERT INTO TEST.TIMESTAMP_9 VALUES (1, '2018-08-09 19:21:36.992415')");
       statement.executeBatch();
     }
   }
@@ -163,6 +167,7 @@ public class TestJdbcSource {
       statement.execute("DROP ALIAS IF EXISTS STOREDPROC");
       statement.execute("DROP TABLE IF EXISTS TEST.TEST_UUID");
       statement.execute("DROP TABLE IF EXISTS TEST.TEST_UNKNOWN_TYPE");
+      statement.execute("DROP TABLE IF EXISTS TEST.TIMESTAMP_9");
     }
 
     // Last open connection terminates H2
@@ -1420,4 +1425,45 @@ public class TestJdbcSource {
     String result = origin.prepareQuery(query, lastSourceOffset);
     Assert.assertEquals(result, lastSourceOffset+lastSourceOffset);
   }
+
+  @Test
+  public void testTimestampAsString() throws Exception {
+    JdbcSource origin = new JdbcSource(
+        true,
+        "SELECT * from TEST.TIMESTAMP_9 T WHERE T.P_ID > ${offset} ORDER BY T.P_ID",
+        initialOffset,
+        "P_ID",
+        false,
+        "",
+        1000,
+        JdbcRecordType.LIST_MAP,
+        new CommonSourceConfigBean(queriesPerSecond, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE, true),
+        false,
+        "",
+        createConfigBean(h2ConnectionString, username, password),
+        UnknownTypeAction.STOP_PIPELINE,
+				queryInterval
+    );
+    SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    runner.runInit();
+
+    try {
+      // Check that existing rows are loaded.
+      StageRunner.Output output = runner.runProduce(null, 1000);
+      Map<String, List<Record>> recordMap = output.getRecords();
+      List<Record> parsedRecords = recordMap.get("lane");
+
+      assertEquals(1, parsedRecords.size());
+      assertTrue(parsedRecords.get(0).has("/TS"));
+      assertEquals(Field.Type.STRING, parsedRecords.get(0).get("/TS").getType());
+      assertEquals("2018-08-09 19:21:36.992415", parsedRecords.get(0).get("/TS").getValueAsString());
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
 }

@@ -38,6 +38,7 @@ import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import com.streamsets.pipeline.stage.destination.jdbc.Groups;
+import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.table.QuoteChar;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -461,7 +462,8 @@ public class JdbcUtil {
       maxClobSize,
       maxBlobSize,
       DataType.USE_COLUMN_TYPE,
-      unknownTypeAction
+      unknownTypeAction,
+      false
     );
   }
 
@@ -472,7 +474,8 @@ public class JdbcUtil {
       int maxClobSize,
       int maxBlobSize,
       DataType userSpecifiedType,
-      UnknownTypeAction unknownTypeAction
+      UnknownTypeAction unknownTypeAction,
+      boolean timestampToString
   ) throws SQLException, IOException, StageException {
       Field field;
       if (userSpecifiedType != DataType.USE_COLUMN_TYPE) {
@@ -542,13 +545,17 @@ public class JdbcUtil {
             break;
           case Types.TIMESTAMP:
             final Timestamp timestamp = rs.getTimestamp(columnIndex);
-            field = Field.create(Field.Type.DATETIME, timestamp);
-            if (timestamp != null) {
-              final long actualNanos = timestamp.getNanos() % NANOS_TO_MILLIS_ADJUSTMENT;
-              if (actualNanos > 0) {
-                field.setAttribute(FIELD_ATTRIBUTE_NANOSECONDS, String.valueOf(actualNanos));
+            if(timestampToString) {
+             field = Field.create(Field.Type.STRING, timestamp.toString());
+            } else {
+              field = Field.create(Field.Type.DATETIME, timestamp);
+              if (timestamp != null) {
+                final long actualNanos = timestamp.getNanos() % NANOS_TO_MILLIS_ADJUSTMENT;
+                if (actualNanos > 0) {
+                  field.setAttribute(FIELD_ATTRIBUTE_NANOSECONDS, String.valueOf(actualNanos));
+                }
               }
-        }
+            }
             break;
           // Ugly hack until we can support LocalTime, LocalDate, LocalDateTime, etc.
           case Types.TIME_WITH_TIMEZONE:
@@ -608,44 +615,45 @@ public class JdbcUtil {
         columnsToTypes,
         errorRecordHandler,
         unknownTypeAction,
-        null
+        null,
+        false
     );
   }
 
   public static LinkedHashMap<String, Field> resultSetToFields(
       ResultSet rs,
-      int maxClobSize,
-      int maxBlobSize,
+      CommonSourceConfigBean commonSourceBean,
       ErrorRecordHandler errorRecordHandler,
       UnknownTypeAction unknownTypeAction
   ) throws SQLException, StageException {
     return resultSetToFields(
         rs,
-        maxClobSize,
-        maxBlobSize,
+        commonSourceBean.maxClobSize,
+        commonSourceBean.maxBlobSize,
         Collections.emptyMap(),
         errorRecordHandler,
         unknownTypeAction,
-        null
+        null,
+        commonSourceBean.convertTimestampToString
     );
   }
 
   public static LinkedHashMap<String, Field> resultSetToFields(
       ResultSet rs,
-      int maxClobSize,
-      int maxBlobSize,
+      CommonSourceConfigBean commonSourceBean,
       ErrorRecordHandler errorRecordHandler,
       UnknownTypeAction unknownTypeAction,
       Set<String> recordHeader
   ) throws SQLException, StageException {
     return resultSetToFields(
         rs,
-        maxClobSize,
-        maxBlobSize,
+        commonSourceBean.maxClobSize,
+        commonSourceBean.maxBlobSize,
         Collections.emptyMap(),
         errorRecordHandler,
         unknownTypeAction,
-        recordHeader
+        recordHeader,
+        commonSourceBean.convertTimestampToString
     );
   }
 
@@ -656,7 +664,8 @@ public class JdbcUtil {
       Map<String, DataType> columnsToTypes,
       ErrorRecordHandler errorRecordHandler,
       UnknownTypeAction unknownTypeAction,
-      Set<String> recordHeader
+      Set<String> recordHeader,
+      boolean timestampToString
   ) throws SQLException, StageException {
     ResultSetMetaData md = rs.getMetaData();
     LinkedHashMap<String, Field> fields = new LinkedHashMap<>(md.getColumnCount());
@@ -672,7 +681,8 @@ public class JdbcUtil {
               maxClobSize,
               maxBlobSize,
               dataType == null ? DataType.USE_COLUMN_TYPE : dataType,
-              unknownTypeAction
+              unknownTypeAction,
+              timestampToString
           );
           fields.put(md.getColumnLabel(i), field);
         }

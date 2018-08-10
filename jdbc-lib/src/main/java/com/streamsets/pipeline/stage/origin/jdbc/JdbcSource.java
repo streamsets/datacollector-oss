@@ -544,8 +544,7 @@ public class JdbcSource extends BaseSource {
 
     LinkedHashMap<String, Field> fields = JdbcUtil.resultSetToFields(
         resultSet,
-        commonSourceConfigBean.maxClobSize,
-        commonSourceConfigBean.maxBlobSize,
+        commonSourceConfigBean,
         errorRecordHandler,
         unknownTypeAction,
         null

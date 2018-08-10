@@ -15,12 +15,8 @@
  */
 package com.streamsets.pipeline.lib.jdbc;
 
-import static java.sql.Types.BIT;
-import static java.sql.Types.VARCHAR;
-
 import com.google.common.base.Strings;
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.Field.Type;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
@@ -30,8 +26,6 @@ import java.sql.Types;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.zip.DataFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -41,10 +41,16 @@ public final class CommonSourceConfigBean {
 
   @VisibleForTesting
   public CommonSourceConfigBean(String queriesPerSecond, int maxBatchSize, int maxClobSize, int maxBlobSize) {
+    this(queriesPerSecond, maxBatchSize, maxClobSize, maxBlobSize, false);
+  }
+
+  @VisibleForTesting
+  public CommonSourceConfigBean(String queriesPerSecond, int maxBatchSize, int maxClobSize, int maxBlobSize, boolean convertTimestampToString) {
     this.queriesPerSecond = queriesPerSecond;
     this.maxBatchSize = maxBatchSize;
     this.maxClobSize = maxClobSize;
     this.maxBlobSize = maxBlobSize;
+    this.convertTimestampToString = convertTimestampToString;
     this.numSQLErrorRetries = 0;
   }
 
@@ -150,6 +156,17 @@ public final class CommonSourceConfigBean {
       group = "JDBC"
   )
   public int noMoreDataEventDelay;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Convert Timestamp To String",
+      description = "Rather then representing timestamps as Data Collector DATETIME type, use String.",
+      displayPosition = 210,
+      group = "JDBC"
+  )
+  public boolean convertTimestampToString;
 
   private static final String MAX_BATCH_SIZE = "maxBatchSize";
   private static final String MAX_CLOB_SIZE = "maxClobSize";

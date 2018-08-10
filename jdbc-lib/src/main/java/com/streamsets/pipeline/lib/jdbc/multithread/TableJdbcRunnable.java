@@ -76,8 +76,7 @@ public final class TableJdbcRunnable extends JdbcBaseRunnable {
 
     LinkedHashMap<String, Field> fields = JdbcUtil.resultSetToFields(
         rs,
-        commonSourceConfigBean.maxClobSize,
-        commonSourceConfigBean.maxBlobSize,
+        commonSourceConfigBean,
         errorRecordHandler,
         tableJdbcConfigBean.unknownTypeAction
     );
