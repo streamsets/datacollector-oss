@@ -158,6 +158,39 @@ public class TestFieldTypeConverterProcessorFields {
   }
 
   @Test
+  public void testBooleanToInt() throws StageException {
+    FieldTypeConverterConfig fieldTypeConverterConfig = new FieldTypeConverterConfig();
+    fieldTypeConverterConfig.fields = ImmutableList.of("/t", "/f");
+    fieldTypeConverterConfig.targetType = Field.Type.INTEGER;
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("t", Field.create(true));
+      map.put("f", Field.create(false));
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+      Assert.assertTrue(result.containsKey("f"));
+      Assert.assertEquals(0, result.get("f").getValue());
+      Assert.assertTrue(result.containsKey("t"));
+      Assert.assertEquals(1, result.get("t").getValue());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
   public void testStringToByte() throws StageException {
     FieldTypeConverterConfig fieldTypeConverterConfig =
         new FieldTypeConverterConfig();

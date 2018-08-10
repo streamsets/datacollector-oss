@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.processor.fieldtypeconverter;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -51,6 +52,45 @@ public class TestFieldTypeConverterProcessorTypes {
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
       Assert.assertEquals(1, output.getRecords().get("a").size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testBooleanToInt() throws StageException {
+    WholeTypeConverterConfig converterConfig = new WholeTypeConverterConfig();
+    converterConfig.sourceType = Field.Type.BOOLEAN;
+    converterConfig.targetType = Field.Type.INTEGER;
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
+      .addConfiguration("convertBy", ConvertBy.BY_TYPE)
+      .addConfiguration("wholeTypeConverterConfigs", ImmutableList.of(converterConfig))
+      .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+     Record record = RecordCreator.create("s", "s:1");
+     record.set(Field.create(ImmutableMap.of(
+       "a", Field.create(true),
+       "b", Field.create("String"),
+       "c", Field.create(false)
+     )));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Record outputRecord = output.getRecords().get("a").get(0);
+
+      Assert.assertTrue(outputRecord.has("/a"));
+      Assert.assertTrue(outputRecord.has("/b"));
+      Assert.assertTrue(outputRecord.has("/c"));
+      Assert.assertEquals(Field.Type.INTEGER, outputRecord.get("/a").getType());
+      Assert.assertEquals(Field.Type.STRING, outputRecord.get("/b").getType());
+      Assert.assertEquals(Field.Type.INTEGER, outputRecord.get("/c").getType());
+      Assert.assertEquals(1, outputRecord.get("/a").getValueAsInteger());
+      Assert.assertEquals("String", outputRecord.get("/b").getValueAsString());
+      Assert.assertEquals(0, outputRecord.get("/c").getValueAsInteger());
+
     } finally {
       runner.runDestroy();
     }

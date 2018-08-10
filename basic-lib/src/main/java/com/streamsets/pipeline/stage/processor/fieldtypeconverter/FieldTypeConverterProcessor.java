@@ -255,6 +255,10 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
       }
     }
 
+    if(field.getType().isOneOf(Field.Type.BOOLEAN) && converterConfig.targetType.isOneOf(Field.Type.INTEGER, Field.Type.SHORT, Field.Type.LONG)) {
+      return Field.create(converterConfig.targetType, field.getValueAsBoolean() ? 1 : 0);
+    }
+
     // Use the built in type conversion provided by TypeSupport
     try {
       // Use the built in type conversion provided by TypeSupport
