@@ -105,6 +105,16 @@ subprojects {
     // source code directory names for readability.
     baseName = "streamsets-datacollector-${baseName}"
   }
+
+  tasks.withType(Test) {
+    test {
+      // Disable any ITs for now
+      filter {
+        includePatterns = ["*Test", "Test*"]
+        failOnNoMatchingTests = false
+      }
+    }
+  }
 }
 
 def coreStageLibraryNames = [
@@ -170,16 +180,6 @@ import org.apache.tools.ant.filters.ReplaceTokens
 // Disable creation of zips, we currently only ship tarballs
 tasks.withType(Zip) {
   enabled = false
-}
-
-tasks.withType(Test) {
-  test {
-    // Disable any ITs for now
-    filter {
-      includeTestsMatching "*Test"
-      includeTestsMatching "Test*"
-    }
-  }
 }
 
 distributions {

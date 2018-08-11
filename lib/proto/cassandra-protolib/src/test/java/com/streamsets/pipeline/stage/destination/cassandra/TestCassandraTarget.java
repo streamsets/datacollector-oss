@@ -54,7 +54,7 @@ public class TestCassandraTarget {
   private static final Logger LOG = LoggerFactory.getLogger(TestCassandraTarget.class);
 
   private static final Double EPSILON = 1e-15;
-  private static final long CASSANDRA_STARTUP_TIMEOUT = 20000;
+  private static final long CASSANDRA_STARTUP_TIMEOUT = 30000;
   private static final String SAMPLE_TIMEUUID = "474b1386-0379-11e7-bdfe-fa245441bcee";
   private static final String SAMPLE_UUID = "46c5379c-a083-4ccd-bfac-c4a8d17574c7";
   private static int CASSANDRA_NATIVE_PORT = 9142;

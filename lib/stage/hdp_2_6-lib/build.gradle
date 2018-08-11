@@ -1,0 +1,125 @@
+description = 'StreamSets Data Collector HDP 2.6.0 Lib'
+
+def hadoopVersion = '2.7.3.2.6.2.1-1'
+def hbaseVersion = '1.1.2.2.6.2.1-1'
+def scalaVersion = '2.11.11'
+def kafkaVersion = '0.10.1.2.6.2.1-1'
+def sparkVersion = '2.1.0.2.6.0.45-1'
+def zkClientVersion = '0.5-1'
+def zkVersion = '3.4.6.2.6.2.1-1'
+def avroVersion = '1.7.7'
+def h2Version = '1.4.187'
+def httpClientVersion = '4.5.1'
+def protobufVersion = '2.5.0'
+def awsJavaSdkVersion = '1.11.134'
+
+configurations {
+  avroToOrcCompile
+  avroToOrcRuntimeOnly
+  avroToOrcTestCompile
+}
+
+dependencies {
+  // Ensure Avro to ORC tests run with the CDH library
+  avroToOrcCompile("org.apache.hadoop:hadoop-client:${hadoopVersion}")
+  avroToOrcTestCompile("org.apache.hadoop:hadoop-common:${hadoopVersion}")
+  compile project(':lib:kafka:sdc-kafka_0_10')
+  compile project(':lib:proto:cluster-hdfs-protolib')
+  compile project(':lib:proto:cluster-kafka-protolib')
+  compile project(':lib:proto:hbase-protolib')
+  compile project(':lib:proto:hdfs-protolib')
+  compile project(':lib:proto:kafka_multisource-0_10-protolib')
+  compile project(':lib:proto:kafka_source-protolib')
+  compile project(':lib:proto:kafka_target-protolib')
+  compile project(':lib:proto:mapreduce-protolib')
+  compile "com.101tec:zkclient:${zkClientVersion}"
+  compile 'com.amazonaws:aws-java-sdk:1.7.4'
+  compile "com.amazonaws:aws-java-sdk-bundle:${awsJavaSdkVersion}"
+  compile "com.google.protobuf:protobuf-java:${protobufVersion}"
+  compile 'javax.servlet:javax.servlet-api'
+  compile "org.apache.avro:avro:${avroVersion}"
+  compile "org.apache.avro:avro-mapred:${avroVersion}:hadoop2"
+  compile("org.apache.hadoop:hadoop-aws:${hadoopVersion}") {
+    exclude group: 'com.fasterxml.jackson.core', module: '*'
+    exclude group: 'org.apache.hadoop', module: 'hadoop-common'
+    exclude group: 'com.amazonaws', module: 'aws-java-sdk-s3'
+    exclude group: 'com.amazonaws', module: 'aws-java-sdk'
+    exclude group: 'com.amazonaws', module: 'aws-java-sdk-core'
+    exclude group: 'com.amazonaws', module: 'aws-java-sdk-kms'
+  }
+  compile "org.apache.hadoop:hadoop-azure:${hadoopVersion}"
+  compile "org.apache.hadoop:hadoop-client:${hadoopVersion}"
+  compile "org.apache.hbase:hbase-client:${hbaseVersion}"
+  compile "org.apache.httpcomponents:httpclient:${httpClientVersion}"
+  compile "org.apache.kafka:kafka_2.11:${kafkaVersion}"
+  compile "org.apache.spark:spark-streaming-kafka-0-10_2.11:${sparkVersion}"
+  compile("org.apache.zookeeper:zookeeper:${zkVersion}") {
+    force = true
+  }
+  compile "org.scala-lang:scala-library:${scalaVersion}"
+  testCompile project(path: ':lib:commonlib', configuration: 'testArtifacts')
+  testCompile project(path: ':lib:kafka:kafka-common', configuration: 'testArtifacts')
+  testCompile project(path: ':lib:kafka:sdc-kafka_0_10', configuration: 'testArtifacts')
+  testCompile project(path: ':lib:proto:dir-spooler-protolib', configuration: 'testArtifacts')
+  testCompile project(path: ':lib:stagesupport', configuration: 'testArtifacts')
+  testCompile "com.h2database:h2:${h2Version}"
+  testCompile "org.apache.hadoop:hadoop-minicluster:${hadoopVersion}"
+  testCompile "org.apache.hbase:hbase-testing-util:${hbaseVersion}"
+  testCompile "org.apache.kafka:kafka-clients:${kafkaVersion}:test"
+  testCompile "org.apache.kafka:kafka_2.11:${kafkaVersion}:test"
+  testCompile "org.bouncycastle:bcprov-jdk15on:1.6.0"
+  testCompile "org.powermock:powermock-api-mockito"
+  testCompile "org.powermock:powermock-module-junit4"
+  avroToOrcTestCompile project(':lib:proto:mapreduce-protolib')
+  avroToOrcTestCompile group: 'junit', name: 'junit', version: '4.12'
+  avroToOrcTestCompile group: 'com.streamsets', name: 'streamsets-datacollector-api', version: project.version
+  avroToOrcTestCompile project(':core:sdk')
+  avroToOrcTestCompile project(':core:testing')
+}
+
+sourceSets {
+  test {
+    java {
+      srcDir project(':lib:proto:mapreduce-protolib').sourceSets.test.java.srcDirs
+      srcDir project(':lib:proto:hdfs-protolib').sourceSets.test.java.srcDirs
+      srcDir project(':lib:proto:hbase-protolib').sourceSets.test.java.srcDirs
+      srcDir project(':lib:proto:kafka_source-protolib').sourceSets.test.java.srcDirs
+      srcDir project(':lib:proto:kafka_multisource-protolib').sourceSets.test.java.srcDirs
+      srcDir project(':lib:proto:kafka_target-protolib').sourceSets.test.java.srcDirs
+      srcDir project(':lib:proto:cluster-hdfs-protolib').sourceSets.test.java.srcDirs
+      exclude '**/avroorc/**'
+    }
+    resources {
+      srcDir project(':lib:proto:mapreduce-protolib').sourceSets.test.resources.srcDirs
+      srcDir project(':lib:proto:hdfs-protolib').sourceSets.test.resources.srcDirs
+      srcDir project(':lib:proto:hbase-protolib').sourceSets.test.resources.srcDirs
+      srcDir project(':lib:proto:kafka_source-protolib').sourceSets.test.resources.srcDirs
+      srcDir project(':lib:proto:kafka_multisource-protolib').sourceSets.test.resources.srcDirs
+      srcDir project(':lib:proto:kafka_target-protolib').sourceSets.test.resources.srcDirs
+      srcDir project(':lib:proto:cluster-hdfs-protolib').sourceSets.test.resources.srcDirs
+      exclude '**/avroorc/**'
+    }
+  }
+  avroToOrcTest {
+    java {
+      srcDir project(':lib:proto:mapreduce-protolib').sourceSets.test.java.srcDirs
+      include '**/avroorc/**'
+    }
+    resources {
+      srcDir project(':lib:proto:mapreduce-protolib').sourceSets.test.resources.srcDirs
+      include '**/avroorc/**'
+    }
+    compileClasspath = configurations.avroToOrcTestCompile
+  }
+}
+
+// Custom test task to run a separate configuration for avro to orc
+task avroToOrcTest(type: Test) {
+  description = 'Runs the Avro to Orc Conversion Tests'
+  group = 'verification'
+  testClassesDirs = sourceSets.avroToOrcTest.output.classesDirs
+  classpath = sourceSets.avroToOrcTest.runtimeClasspath
+  shouldRunAfter test
+}
+
+test.dependsOn avroToOrcTest
