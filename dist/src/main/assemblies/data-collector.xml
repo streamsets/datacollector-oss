@@ -239,14 +239,6 @@
 
     <!-- CDH libs -->
     <fileSet>
-      <directory>${basedir}/../${cdh_5_8-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-    <fileSet>
-      <directory>${basedir}/../${cdh_5_9-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-    <fileSet>
       <directory>${basedir}/../${cdh_5_10-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
@@ -291,22 +283,6 @@
 
     <!-- HDP Libs -->
     <fileSet>
-      <directory>${basedir}/../${hdp_2_4-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-    <fileSet>
-      <directory>${basedir}/../${hdp_2_4-hive1-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-    <fileSet>
-      <directory>${basedir}/../${hdp_2_5-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-    <fileSet>
-      <directory>${basedir}/../${hdp_2_5-flume-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-    <fileSet>
       <directory>${basedir}/../${hdp_2_6-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
@@ -328,10 +304,6 @@
     </fileSet>
 
     <!-- MapR Libs -->
-    <fileSet>
-      <directory>${basedir}/../${mapr_5_1-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
     <fileSet>
       <directory>${basedir}/../${mapr_5_2-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
@@ -368,14 +340,6 @@
     </fileSet>
 
     <!-- Apache Kafka libs -->
-    <fileSet>
-      <directory>${basedir}/../${apache-kafka_0_9-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-    <fileSet>
-      <directory>${basedir}/../${apache-kafka_0_10-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
     <fileSet>
       <directory>${basedir}/../${apache-kafka_0_11-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
@@ -436,10 +400,6 @@
 
 
     <!-- CDH5 Kafka libs -->
-    <fileSet>
-      <directory>${basedir}/../${cdh_kafka_2_0-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
     <fileSet>
       <directory>${basedir}/../${cdh_kafka_2_1-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
