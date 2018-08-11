@@ -172,6 +172,16 @@ tasks.withType(Zip) {
   enabled = false
 }
 
+tasks.withType(Test) {
+  test {
+    // Disable any ITs for now
+    filter {
+      includeTestsMatching "*Test"
+      includeTestsMatching "Test*"
+    }
+  }
+}
+
 distributions {
   core {
     baseName = 'streamsets-datacollector-core'
