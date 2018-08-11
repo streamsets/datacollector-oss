@@ -23,6 +23,10 @@
 
 grammar SOQL;
 
+@header {
+package soql;
+}
+
 /*
  * Lexer Rules
  */

@@ -1,0 +1,14 @@
+description = 'StreamSets Data Collector Wholefile Transformer Lib'
+
+dependencies {
+  compile project(':lib:guavasupport')
+  compile project(':lib:stagesupport')
+  compile project(':lib:proto:wholefile-converter-protolib')
+  compile("org.apache.hadoop:hadoop-client:2.6.0") {
+    exclude group: 'org.slf4j', module: 'slf4j-api'
+    exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+    exclude group: 'log4j', module: 'log4j'
+    exclude group: 'io.dropwizard.metrics', module: 'metrics-core'
+    exclude group: 'javax.servlet', module: 'servlet-api'
+  }
+}

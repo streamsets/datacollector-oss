@@ -1,0 +1,8 @@
+description = 'StreamSets Data Collector TensorFlow Lib'
+
+dependencies {
+  compile project(':lib:guavasupport')
+  compile project(':lib:stagesupport')
+  compile 'org.apache.commons:commons-lang3'
+  compile "org.tensorflow:tensorflow:1.9.0"
+}

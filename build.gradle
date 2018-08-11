@@ -41,6 +41,7 @@ allprojects {
 
       def jacksonVersion = '2.8.9'
       constraints {
+        compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
         compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion
         compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-cbor', version: jacksonVersion
         compile 'org.awaitility:awaitility:2.0.0'

@@ -1,0 +1,10 @@
+description = 'StreamSets Data Collector Redis 2.9.x, 3.0.x Lib'
+dependencies {
+  compile project(':core:common')
+  compile project(':lib:commonlib')
+  compile project(':lib:proto:lookup-protolib')
+  compile 'org.apache.commons:commons-lang3:3.4'
+  compile 'redis.clients:jedis:2.8.0'
+  testCompile "com.github.kstyrc:embedded-redis:0.6"
+  testCompile "org.testcontainers:testcontainers"
+}

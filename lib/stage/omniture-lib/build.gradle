@@ -1,0 +1,14 @@
+description = 'StreamSets Data Collector Omniture Lib'
+dependencies {
+  compile(project(':lib:commonlib')) {
+    exclude group: 'org.apache.avro', module: 'avro'
+    exclude group: 'org.apache.avro', module: 'avro-mapred'
+    exclude group: 'org.apache.commons', module: 'commons-csv'
+    exclude group: 'org.apache.commons', module: 'commons-compress'
+    exclude group: 'com.google.protobuf', module: 'protobuf-java'
+  }
+  compile project(':core:common')
+  compile 'org.glassfish.jersey.core:jersey-client:2.25.1'
+  compile 'org.glassfish.jersey.connectors:jersey-apache-connector:2.25.1'
+  compile 'com.fasterxml.jackson.core:jackson-databind'
+}

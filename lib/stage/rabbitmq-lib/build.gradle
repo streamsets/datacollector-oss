@@ -1,0 +1,8 @@
+description = 'StreamSets Data Collector RabbitMQ Lib'
+dependencies {
+  compile project(':lib:commonlib')
+  compile 'com.rabbitmq:amqp-client:3.5.6'
+  compile 'io.confluent:kafka-schema-registry-client'
+  testCompile 'org.powermock:powermock-module-junit4'
+  testCompile 'org.powermock:powermock-api-mockito'
+}

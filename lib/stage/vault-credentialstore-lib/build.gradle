@@ -1,0 +1,15 @@
+description = 'StreamSets Data Collector Vault Credential Store Lib'
+
+def googleHttpClientVersion = '1.22.0'
+def jacksonVersion = '2.8.9'
+dependencies {
+  compile "com.google.guava:guava:18.0"
+  compile "com.google.http-client:google-http-client:${googleHttpClientVersion}"
+  compile "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
+  compile "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
+  compile "com.google.http-client:google-http-client-jackson2:${googleHttpClientVersion}"
+  compile "commons-io:commons-io:2.4"
+  testCompile "org.mock-server:mockserver-netty:3.10.8"
+  testCompile "org.testcontainers:testcontainers"
+//  testCompile 'com.streamsets:streamsets-testing'
+}

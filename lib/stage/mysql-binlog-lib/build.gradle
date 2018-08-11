@@ -1,0 +1,12 @@
+description = 'StreamSets Data Collector MySql BinLog Lib'
+dependencies {
+  //  testCompile "org.hamcrest:hamcrest-all:${hamcrest.version}"
+  compile project(':lib:stagesupport')
+  compile "com.fasterxml.jackson.core:jackson-databind"
+  compile "com.github.shyiko:mysql-binlog-connector-java:0.13.0"
+  compile "com.google.guava:guava:19.0"
+  compile "com.zaxxer:HikariCP:2.4.1"
+  compileOnly "mysql:mysql-connector-java:5.1.39"
+  testCompile "joda-time:joda-time:2.8"
+  testCompile "org.testcontainers:mysql:1.4.3"
+}

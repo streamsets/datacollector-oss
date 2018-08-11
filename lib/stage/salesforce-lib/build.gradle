@@ -1,0 +1,40 @@
+description = 'StreamSets Data Collector Salesforce Library'
+apply plugin: 'antlr'
+
+dependencies {
+  antlr "org.antlr:antlr4:4.5.3"
+  compile project(':core:common')
+  compile project(':lib:commonlib')
+  compile project(':lib:proto:lookup-protolib')
+  compile 'com.fasterxml.jackson.core:jackson-databind'
+  compile "com.force.api:force-partner-api:43.0.0"
+  compile "com.force.api:force-wsc:43.0.0"
+  compile 'org.apache.commons:commons-lang3:3.4'
+  compile "org.cometd.java:bayeux-api:3.0.9"
+  compile("org.cometd.java:cometd-java-client:3.0.9") {
+    exclude group: 'org.eclipse.jetty', module: 'jetty-util'
+    exclude group: 'org.eclipse.jetty', module: 'jetty-io'
+    exclude group: 'org.eclipse.jetty', module: 'jetty-http'
+    exclude group: 'org.eclipse.jetty', module: 'jetty-client'
+  }
+  compile("org.cometd.java:cometd-java-common:3.0.9") {
+    exclude group: 'org.eclipse.jetty', module: 'jetty-util'
+    exclude group: 'org.eclipse.jetty', module: 'jetty-util-ajax'
+  }
+  compile "org.eclipse.jetty:jetty-client:9.3.19.v20170502"
+  compile "org.eclipse.jetty:jetty-http:9.3.19.v20170502"
+  compile "org.eclipse.jetty:jetty-io:9.3.19.v20170502"
+  compile "org.eclipse.jetty:jetty-util:9.3.19.v20170502"
+  compile "org.eclipse.jetty:jetty-util-ajax:9.3.19.v20170502"
+  runtimeOnly "org.antlr:antlr4-runtime:4.5.3"
+  testCompile 'org.testcontainers:testcontainers'
+  testCompile "software.sham:sham-salesforce-api:0.1.0"
+}
+
+sourceSets {
+  main {
+    antlr {
+      srcDirs = ['src/main/antlr4']
+    }
+  }
+}
