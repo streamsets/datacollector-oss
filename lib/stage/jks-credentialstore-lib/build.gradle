@@ -1,0 +1,6 @@
+description = 'StreamSets Data Collector JKS Credential Store Lib'
+
+dependencies {
+  compile project(':core:utils')
+  compile "io.airlift:airline:0.7"
+}

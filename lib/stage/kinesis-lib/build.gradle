@@ -1,0 +1,18 @@
+description = 'StreamSets Data Collector Amazon Kinesis Library'
+
+
+dependencies {
+  compile "com.amazonaws:amazon-kinesis-client:1.8.8"
+  compile "com.amazonaws:amazon-kinesis-producer:0.12.8"
+  compile "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor"
+  compile project(':core:common')
+  compile project(':lib:commonlib')
+  compile 'io.confluent:kafka-schema-registry-client'
+  compile "org.apache.commons:commons-lang3:3.4"
+  compile "org.apache.commons:commons-math3:3.5"
+  compile 'org.awaitility:awaitility'
+  implementation 'com.amazonaws:aws-java-sdk-bom:1.11.151'
+  testCompile "org.powermock:powermock-api-mockito"
+  testCompile "org.powermock:powermock-module-junit4"
+  testCompile "org.testcontainers:testcontainers"
+}

@@ -42,6 +42,9 @@ allprojects {
       def jacksonVersion = '2.8.9'
       constraints {
         compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion
+        compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-cbor', version: jacksonVersion
+        compile 'org.awaitility:awaitility:2.0.0'
+        testCompile 'org.awaitility:awaitility:2.0.0'
         testCompile 'junit:junit:4.12'
         testCompile('org.testcontainers:testcontainers:1.4.3')
       }
@@ -115,7 +118,7 @@ def protolibs = subprojects.findAll { it.name.contains("protolib") }
 configure(allStageLibraries + protolibs) {
   dependencies {
     // Common dependencies required for test compilation
-    testCompile 'org.awaitility:awaitility:2.0.0'
+    testCompile 'org.awaitility:awaitility'
   }
 
   // Our API annotation processor expects to load resources from the compilation output, even though its

@@ -1,0 +1,10 @@
+description = 'StreamSets Data Collector JMS Lib'
+
+def activeMqVersion = '5.13.4'
+dependencies {
+  compile "com.google.guava:guava:18.0"
+  compile project(':lib:stagesupport')
+  compile "org.apache.activemq:activemq-client:${activeMqVersion}"
+  testCompile "org.apache.activemq:activemq-broker:${activeMqVersion}"
+  testCompile "org.apache.activemq:activemq-kahadb-store:${activeMqVersion}"
+}

@@ -1,0 +1,19 @@
+description = 'StreamSets Data Collector Jython 2.7.1 Lib'
+
+dependencies {
+  compile project(':lib:proto:jython-protolib')
+  runtimeOnly 'org.python:jython-standalone:2.7.1'
+  testCompile project(path: ':lib:guavasupport', configuration: 'testArtifacts')
+  testCompile project(path: ':lib:proto:scripting-protolib', configuration: 'testArtifacts')
+}
+
+sourceSets {
+  test {
+    java {
+      srcDir project(':lib:proto:jython-protolib').sourceSets.test.java.srcDirs
+    }
+    resources {
+      srcDir project(':lib:proto:jython-protolib').sourceSets.test.resources.srcDirs
+    }
+  }
+}

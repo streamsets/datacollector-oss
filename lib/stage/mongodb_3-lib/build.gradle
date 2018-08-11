@@ -1,0 +1,21 @@
+description = 'StreamSets Data Collector MongoDB 3.5.0 Lib'
+// https://docs.mongodb.com/ecosystem/drivers/driver-compatibility-reference/#reference-compatibility-mongodb-java
+
+dependencies {
+  compile project(':lib:proto:mongodb-protolib')
+  runtimeOnly "org.mongodb:mongodb-driver:3.5.0"
+  testCompile "org.mongodb:mongodb-driver:3.5.0"
+  testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:1.47.3'
+  testCompile "org.testcontainers:testcontainers"
+}
+
+sourceSets {
+  test {
+    java {
+      srcDir project(':lib:proto:mongodb-protolib').sourceSets.test.java.srcDirs
+    }
+    resources {
+      srcDir project(':lib:proto:mongodb-protolib').sourceSets.test.resources.srcDirs
+    }
+  }
+}

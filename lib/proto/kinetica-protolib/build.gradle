@@ -1,14 +1,9 @@
 
 description = 'StreamSets Data Collector Kinetica ProtoLib'
 dependencies {
-    compile group: 'org.json', name: 'json', version:'20170516'
-    compile group: 'com.gpudb', name: 'gpudb-api', version:'6.0.1'
-    compile group: 'org.apache.avro', name: 'avro', version:'1.8.1'
   compile project(':lib:stagesupport')
-    compileOnly group: 'com.streamsets', name: 'streamsets-datacollector-api', version:'3.5.0-SNAPSHOT'
-    compileOnly group: 'log4j', name: 'log4j', version:'1.2.17'
-    compileOnly group: 'org.slf4j', name: 'slf4j-api', version:'1.7.7'
-    compileOnly group: 'org.slf4j', name: 'slf4j-log4j12', version:'1.7.7'
-    compileOnly group: 'io.dropwizard.metrics', name: 'metrics-core', version:'3.1.2'
-
+  compile group: 'org.apache.avro', name: 'avro', version: '1.8.1'
+  compile group: 'org.json', name: 'json', version: '20170516'
+  compileOnly group: 'com.gpudb', name: 'gpudb-api', version: '6.0.1'
+  testRuntime group: 'com.gpudb', name: 'gpudb-api', version: '6.0.1'
 }
