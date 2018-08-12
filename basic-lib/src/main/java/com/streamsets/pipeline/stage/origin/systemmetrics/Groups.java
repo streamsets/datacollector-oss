@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum Groups implements Label {
   SYSTEM_METRICS("System Metrics"),
+  PROCESS("Process"),
   ;
 
   private final String label;

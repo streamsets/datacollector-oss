@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.origin.systemmetrics;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigDefBean;
 
 public class SystemMetricsConfigBean {
 
@@ -88,4 +89,18 @@ public class SystemMetricsConfigBean {
       defaultValue = "true"
   )
   public boolean fetchNetStats = true;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Fetch Process Stats",
+      description = "",
+      displayPosition = 50,
+      group = "SYSTEM_METRICS",
+      defaultValue = "false"
+  )
+  public boolean fetchProcessStats = false;
+
+  @ConfigDefBean
+  public ProcessConfigBean processConf = new ProcessConfigBean();
 }

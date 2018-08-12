@@ -25,12 +25,13 @@ import com.streamsets.pipeline.api.base.configurablestage.DSource;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 1,
+    version = 2,
     label = "System Metrics",
     description = "Reads information on system utilization (CPU, memory, disks, network)",
     execution = {ExecutionMode.EDGE},
     icon = "metrics.png",
-    onlineHelpRefUrl ="" //TODO: Update help URL
+    onlineHelpRefUrl ="", //TODO: Update help URL
+    upgrader = SystemMetricsUpgrader.class
 )
 @ConfigGroups(Groups.class)
 public class SystemMetricsDSource extends DSource {
