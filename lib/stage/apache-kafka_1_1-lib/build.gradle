@@ -1,4 +1,4 @@
-description = 'StreamSets Data Collector Apache Kafka 0.11 Lib'
+description = 'StreamSets Data Collector Apache Kafka 1.1.0 Lib'
 
 def kafkaVersion = '1.1.0'
 
@@ -16,9 +16,14 @@ dependencies {
   testCompile group: 'org.apache.kafka', name: 'kafka_2.11', version: kafkaVersion, classifier: 'test'
 }
 
+miniIT {
+  // sdc-kafka_1_1 does not exist, and sdc-kafka_1_0 is not ABI compatible with Kafka 1.1 broker classes.
+  exclude '**'
+}
+
 test {
   // sdc-kafka_1_1 does not exist, and sdc-kafka_1_0 is not ABI compatible with Kafka 1.1 broker classes.
-  ignoreFailures = true
+  exclude '**/TestUDPToKafkaSource*'
 }
 
 sourceSets {

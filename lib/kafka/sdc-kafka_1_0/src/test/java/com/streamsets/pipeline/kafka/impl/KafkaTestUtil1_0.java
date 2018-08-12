@@ -125,6 +125,7 @@ public class KafkaTestUtil1_0 extends SdcKafkaTestUtil {
 
   public static KafkaServer createKafkaServer(int brokerId, int port, String zkConnect) {
     final Option<File> noFile = scala.Option.apply(null);
+    // (Int, String, Bool, Bool, Int, Option, Option, Option, Bool, Bool, Int, Bool, Int, Bool, Int, Option, Int), Properties
     final Option<SecurityProtocol> noInterBrokerSecurityProtocol = scala.Option.apply(null);
     // new params for kafka 0.10.0
     Option<Properties> saslProperties = scala.Option.apply(null);

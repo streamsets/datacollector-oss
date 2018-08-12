@@ -27,7 +27,7 @@ allprojects {
   group = 'com.streamsets'
   version = '3.5.0-SNAPSHOT'
 
-  // Add JUnit to test scope for ll projects using the Java plugin
+  // Add JUnit to test scope for all projects using the Java plugin
   plugins.withType(JavaPlugin) {
     dependencies {
       compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
@@ -48,6 +48,7 @@ allprojects {
         testCompile 'org.awaitility:awaitility:2.0.0'
         testCompile 'junit:junit:4.12'
         testCompile('org.testcontainers:testcontainers:1.4.3')
+        testCompile('org.mockito:mockito-all:1.10.19')
       }
     }
   }
@@ -106,20 +107,35 @@ subprojects {
     baseName = "streamsets-datacollector-${baseName}"
   }
 
-  tasks.withType(Test) {
-    test {
-      // Disable any ITs for now
-      filter {
-        includePatterns = ["*Test", "Test*"]
-        failOnNoMatchingTests = false
-      }
+  test {
+    // Disable any ITs for now
+    filter {
+      includePatterns = ["*Test", "Test*"]
+      failOnNoMatchingTests = false
+    }
+    useJUnit {
+      excludeCategories 'com.streamsets.testing.SingleForkNoReuseTest'
+    }
+    forkEvery 1
+  }
+
+  task miniIT(type: Test) {
+    filter {
+      includePatterns = ["*Test", "Test*"]
+      failOnNoMatchingTests = false
+    }
+    useJUnit {
+      includeCategories 'com.streamsets.testing.SingleForkNoReuseTest'
     }
   }
+
+  check.dependsOn miniIT
 }
 
 def coreStageLibraryNames = [
     "basic-lib",
     "dataformats-lib"
+
 ]
 
 def coreStageLibraries = subprojects.findAll { coreStageLibraryNames.contains(it.name) }
