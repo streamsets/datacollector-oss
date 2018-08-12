@@ -12,19 +12,22 @@ def srcDir = new File(projectDir, "src/main/webapp")
 def targetDir = new File(projectDir, "target/dist")
 
 task gruntBuildForce(type: GruntTask) {
-  args = ["build", "--force"]
+  args = ["--force"]
   inputs.dir(srcDir)
   outputs.dir(targetDir)
 }
 
 task yarnInstall(type: YarnTask) {
-  yarnCommand = ['']
+  doFirst {
+    mkdir 'target'
+  }
+  args = ['install', '--non-interactive', '--prefer-offline']
   inputs.file("package.json")
   // This is to work around a bug in Gradle when bad symlinks exist
   // dependencies will only be updated via yarn if the package.json file
   // has changed. If you'd like to force yarn install to run, you can
   // delete the node_modules dir or run it manually from the command line.
-  outputs.upToDateWhen { file('node_modules/@bower_components').exists() }
+  outputs.upToDateWhen { file('target/bower_components').exists() }
 }
 
 task cleanNodeModules(type: Delete) {

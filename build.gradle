@@ -6,10 +6,10 @@ buildscript {
     }
   }
   dependencies {
-    classpath "net.ltgt.gradle:gradle-apt-plugin:0.18"
-    classpath 'com.adarshr:gradle-test-logger-plugin:1.4.0'
-    classpath "com.commercehub.gradle.plugin:gradle-avro-plugin:0.14.2"
-    classpath "gradle.plugin.com.dorongold.plugins:task-tree:1.3"
+    classpath "net.ltgt.gradle:gradle-apt-plugin:0.18" // annotation processors simplified
+    classpath 'com.adarshr:gradle-test-logger-plugin:1.4.0' // provides more verbose and colorful test results on the console
+    classpath "com.commercehub.gradle.plugin:gradle-avro-plugin:0.14.2" // avro idl compiler plugin
+    classpath "gradle.plugin.com.dorongold.plugins:task-tree:1.3" // provides a view of the task tree
   }
 }
 
@@ -134,8 +134,10 @@ subprojects {
 
 def coreStageLibraryNames = [
     "basic-lib",
-    "dataformats-lib"
-
+    "dataformats-lib",
+    "dev-lib",
+    "stats-lib",
+    "windows-lib"
 ]
 
 def coreStageLibraries = subprojects.findAll { coreStageLibraryNames.contains(it.name) }
@@ -198,72 +200,79 @@ tasks.withType(Zip) {
   enabled = false
 }
 
+CopySpec coreCopySpec = copySpec {
+  // Can be refactored later
+  into('') {
+    from('dist/src/main') {
+      include "etc/**"
+      eachFile { file ->
+        if (file.name.contains("password") || file.name.contains("realm")) {
+          file.setMode(0600)
+        }
+      }
+    }
+  }
+  into('') {
+    from('dist/src/main') {
+      include "bin/**"
+      include "libexec/**"
+      filter(ReplaceTokens, tokens: ['project.version': project.property("version")])
+    }
+    fileMode = 0755
+  }
+  // Default logging configuration
+  into('etc') {
+    from new File(project(':core:container').buildDir, 'resources/main/sdc-log4j.properties-default')
+    rename 'sdc-log4j.properties-default', 'sdc-log4j.properties'
+    filter(ReplaceTokens, tokens: ['sdc.log4j.level': 'DEBUG']) // TODO add release setup with INFO
+  }
+  // Empty directories
+  into('') {
+    File.createTempDir().with {
+      ['data', 'libs-common-lib', 'log', 'resources', 'streamsets-libs-extras', 'user-libs'].forEach { dir ->
+        def file = new File(absolutePath, dir)
+        file.mkdirs()
+      }
+      from(absolutePath) {
+        includeEmptyDirs = true
+      }
+    }
+  }
+  into('api-lib') {
+    from configurations.api
+  }
+  into('libexec/bootstrap-libs/main') {
+    from project(':core:bootstrap').jar
+  }
+  into('libexec/bootstrap-libs/cluster') {
+    from project(':core:cluster:cluster-bootstrap').jar
+    from project(':core:cluster:cluster-bootstrap-api').jar
+    from project(':core:cluster:mapr-cluster-bootstrap').jar
+    from project(':core:cluster:mesos-bootstrap').jar
+  }
+  into('cli-lib') {
+    from project(':core:cli').jar
+  }
+  into('container-lib') {
+    from configurations.container
+  }
+  into('root-lib') {
+    from configurations.rootClasspath
+  }
+  into('initd') {
+    from('dist/src/main/initd')
+  }
+  // The UI
+  into('sdc-static-web') {
+    from new File(project(':ui:datacollector-ui').projectDir, 'target/dist')
+  }
+}
+
 distributions {
   core {
     baseName = 'streamsets-datacollector-core'
     contents {
-      // Can be refactored later
-      into('') {
-        from('dist/src/main') {
-          include "etc/**"
-          eachFile { file ->
-            if (file.name.contains("password") || file.name.contains("realm")) {
-              file.setMode(0600)
-            }
-          }
-        }
-      }
-      into('') {
-        from('dist/src/main') {
-          include "bin/**"
-          include "libexec/**"
-          filter(ReplaceTokens, tokens: ['project.version': project.property("version")])
-        }
-        fileMode = 0755
-      }
-      // Default logging configuration
-      into('etc') {
-        from new File(project(':core:container').buildDir, 'resources/main/sdc-log4j.properties-default')
-        rename 'sdc-log4j.properties-default', 'sdc-log4j.properties'
-        filter(ReplaceTokens, tokens: ['sdc.log4j.level': 'DEBUG']) // TODO add release setup with INFO
-      }
-      // Empty directories
-      into('') {
-        File.createTempDir().with {
-          ['data', 'libs-common-lib', 'log', 'resources', 'streamsets-libs-extras', 'user-libs'].forEach { dir ->
-            def file = new File(absolutePath, dir)
-            file.mkdirs()
-          }
-          from(absolutePath) {
-            includeEmptyDirs = true
-          }
-        }
-      }
-      into('api-lib') {
-        from configurations.api
-      }
-      into('libexec/bootstrap-libs/main') {
-        from project(':core:bootstrap').jar
-      }
-      into('libexec/bootstrap-libs/cluster') {
-        from project(':core:cluster:cluster-bootstrap').jar
-        from project(':core:cluster:cluster-bootstrap-api').jar
-        from project(':core:cluster:mapr-cluster-bootstrap').jar
-        from project(':core:cluster:mesos-bootstrap').jar
-      }
-      into('cli-lib') {
-        from project(':core:cli').jar
-      }
-      into('container-lib') {
-        from configurations.container
-      }
-      into('root-lib') {
-        from configurations.rootClasspath
-      }
-      // The UI
-      into('sdc-static-web') {
-        from new File(project(':ui:datacollector-ui').projectDir, 'target/dist')
-      }
+      with coreCopySpec
       // TODO: include docs
       coreStageLibraries.forEach { library ->
         into("streamsets-libs/streamsets-datacollector-${library.name}/lib") {
