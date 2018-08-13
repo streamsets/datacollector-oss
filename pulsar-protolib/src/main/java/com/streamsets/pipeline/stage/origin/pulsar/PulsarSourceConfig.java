@@ -143,9 +143,8 @@ public class PulsarSourceConfig extends BasePulsarConfig {
 
   @ConfigDef(required = false,
       type = ConfigDef.Type.NUMBER,
-      label = "Pattern Auto Discovery Period",
-      description = "Set topics auto discovery period when using a pattern to specify topics to consume from. The " +
-          "period is in minutes",
+      label = "Pattern Auto Discovery Period (minutes)",
+      description = "Topics auto discovery period when using a pattern to specify topics to consume from",
       displayPosition = 40,
       defaultValue = "1",
       min = 1,
@@ -155,5 +154,17 @@ public class PulsarSourceConfig extends BasePulsarConfig {
       },
       group = "ADVANCED")
   public int patternAutoDiscoveryPeriod;
+
+  @ConfigDef(required = false,
+      type = ConfigDef.Type.NUMBER,
+      label = "Consumer Priority Level",
+      description = "The level of priority that will be assigned to pulsar consumer. One consumer will receive more " +
+          "messages than other with less priority where 0=max-priority",
+      displayPosition = 50,
+      defaultValue = "0",
+      min = 0,
+      max = 100,
+      group = "ADVANCED")
+  public int priorityLevel;
 
 }

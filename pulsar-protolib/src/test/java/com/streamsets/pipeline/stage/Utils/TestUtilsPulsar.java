@@ -57,6 +57,7 @@ public class TestUtilsPulsar {
     pulsarSourceConfig.serviceURL = "http://localhost:8080";
     pulsarSourceConfig.pulsarTopicsSelector = PulsarTopicsSelector.SINGLE_TOPIC;
     pulsarSourceConfig.patternAutoDiscoveryPeriod = 1;
+    pulsarSourceConfig.priorityLevel = 0;
     pulsarSourceConfig.originTopic = "sdc-topic";
     pulsarSourceConfig.consumerName = "sdc-consumer";
     pulsarSourceConfig.topicsList = Collections.emptyList();

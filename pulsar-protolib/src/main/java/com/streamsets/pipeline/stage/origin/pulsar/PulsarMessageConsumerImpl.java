@@ -92,7 +92,8 @@ public class PulsarMessageConsumerImpl implements PulsarMessageConsumer {
                                                         .getSubscriptionType())
                                                     .subscriptionInitialPosition(pulsarConfig
                                                         .subscriptionInitialPosition
-                                                        .getSubscriptionInitialPosition());
+                                                        .getSubscriptionInitialPosition())
+                                                    .priorityLevel(pulsarConfig.priorityLevel);
 
       // pulsar message consumer
       if (pulsarConfig.pulsarTopicsSelector.equals(PulsarTopicsSelector.TOPICS_PATTERN)) {
