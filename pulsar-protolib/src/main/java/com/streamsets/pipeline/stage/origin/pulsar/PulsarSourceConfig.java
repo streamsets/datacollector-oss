@@ -119,7 +119,8 @@ public class PulsarSourceConfig extends BasePulsarConfig {
   @ValueChooserModel(PulsarSubscriptionTypeChooserValues.class)
   public PulsarSubscriptionType subscriptionType;
 
-  @ConfigDef(required = false,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Consumer Queue Size",
       description = "Size assigned to the queue where messages are pre-fetched until application asks Pulsar for them",
@@ -141,7 +142,8 @@ public class PulsarSourceConfig extends BasePulsarConfig {
   @ValueChooserModel(PulsarSubscriptionInitialPositionChooserValues.class)
   public PulsarSubscriptionInitialPosition subscriptionInitialPosition;
 
-  @ConfigDef(required = false,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Pattern Auto Discovery Period (minutes)",
       description = "Topics auto discovery period when using a pattern to specify topics to consume from",
@@ -155,7 +157,8 @@ public class PulsarSourceConfig extends BasePulsarConfig {
       group = "ADVANCED")
   public int patternAutoDiscoveryPeriod;
 
-  @ConfigDef(required = false,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Consumer Priority Level",
       description = "The level of priority that will be assigned to pulsar consumer. One consumer will receive more " +
@@ -166,5 +169,22 @@ public class PulsarSourceConfig extends BasePulsarConfig {
       max = 100,
       group = "ADVANCED")
   public int priorityLevel;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Read Compacted",
+      description = "If enabled, the consumer will read messages from the compacted topic rather than reading the " +
+          "full message backlog of the topic. This means that, if the topic has been compacted, the consumer will " +
+          "only see the latest value for each key in the topic, up until the point in the topic message backlog " +
+          "that has been compacted. Note Read Compacted can only be enabled with persistent topics",
+      displayPosition = 60,
+      defaultValue = "false",
+      dependencies = {
+          @Dependency(configName = "subscriptionType",
+              triggeredByValues = {"EXCLUSIVE", "FAILOVER"}),
+      },
+      group = "ADVANCED")
+  public boolean readCompacted;
 
 }

@@ -37,7 +37,8 @@ import java.util.concurrent.TimeUnit;
 public class BasePulsarConfig {
   private static final Logger LOG = LoggerFactory.getLogger(BasePulsarConfig.class);
 
-  @ConfigDef(required = true,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.STRING,
       label = "Pulsar URL",
       description = "Pulsar service URL. Example: http://localhost:8080 or pulsar://localhost:6650",
@@ -46,7 +47,8 @@ public class BasePulsarConfig {
       group = "PULSAR")
   public String serviceURL;
 
-  @ConfigDef(required = false,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Pulsar Keep Alive Interval (ms)",
       description = "How often to check whether the connections are still alive",
@@ -57,7 +59,8 @@ public class BasePulsarConfig {
       group = "PULSAR")
   public int keepAliveInterval;
 
-  @ConfigDef(required = false,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Pulsar Operation Timeout (ms)",
       description = "Pulsar Producer-create, Consumer-subscribe and Consumer-unsubscribe operations will be retried " +

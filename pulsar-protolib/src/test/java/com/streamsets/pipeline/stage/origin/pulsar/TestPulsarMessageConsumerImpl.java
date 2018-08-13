@@ -644,6 +644,7 @@ public class TestPulsarMessageConsumerImpl {
     Mockito.when(consumerBuilderMock.topicsPattern(Mockito.any(Pattern.class))).thenReturn(consumerBuilderMock);
     Mockito.when(consumerBuilderMock.patternAutoDiscoveryPeriod(Mockito.anyInt())).thenReturn(consumerBuilderMock);
     Mockito.when(consumerBuilderMock.priorityLevel(Mockito.anyInt())).thenReturn(consumerBuilderMock);
+    Mockito.when(consumerBuilderMock.readCompacted(Mockito.anyBoolean())).thenReturn(consumerBuilderMock);
 
     try {
       Mockito.when(consumerBuilderMock.subscribe()).thenReturn(messageConsumerMock);

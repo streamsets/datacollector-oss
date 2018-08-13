@@ -95,6 +95,10 @@ public class PulsarMessageConsumerImpl implements PulsarMessageConsumer {
                                                         .getSubscriptionInitialPosition())
                                                     .priorityLevel(pulsarConfig.priorityLevel);
 
+      if (!pulsarConfig.subscriptionType.equals(PulsarSubscriptionType.SHARED)) {
+        consumerBuilder = consumerBuilder.readCompacted(pulsarConfig.readCompacted);
+      }
+
       // pulsar message consumer
       if (pulsarConfig.pulsarTopicsSelector.equals(PulsarTopicsSelector.TOPICS_PATTERN)) {
           try {

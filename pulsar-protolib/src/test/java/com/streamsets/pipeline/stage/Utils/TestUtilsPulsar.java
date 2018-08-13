@@ -58,6 +58,7 @@ public class TestUtilsPulsar {
     pulsarSourceConfig.pulsarTopicsSelector = PulsarTopicsSelector.SINGLE_TOPIC;
     pulsarSourceConfig.patternAutoDiscoveryPeriod = 1;
     pulsarSourceConfig.priorityLevel = 0;
+    pulsarSourceConfig.readCompacted = false;
     pulsarSourceConfig.originTopic = "sdc-topic";
     pulsarSourceConfig.consumerName = "sdc-consumer";
     pulsarSourceConfig.topicsList = Collections.emptyList();
