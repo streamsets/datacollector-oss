@@ -22,6 +22,7 @@ sourceSets {
       srcDir project(':lib:proto:kafka_multisource-protolib').sourceSets.test.java.srcDirs
       srcDir project(':lib:proto:kafka_source-protolib').sourceSets.test.java.srcDirs
       srcDir project(':lib:proto:kafka_target-protolib').sourceSets.test.java.srcDirs
+      exclude '**/TestMultiKafkaSource*' // broken for cdh_kafka_2_0-lib
     }
     resources {
       srcDir project(':lib:proto:kafka_multisource-protolib').sourceSets.test.resources.srcDirs

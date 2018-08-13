@@ -59,7 +59,6 @@ configure(clouderaStageLibs) {
           exclude '**/avroorc/**'
           exclude '**/TestSparkExecutor*' // broken
           exclude '**/TestHiveMetadataProcessor*' // not working
-          exclude '**/TestMultiKafkaSource*' // broken for cdh_kafka_2_0-lib
         }
         resources {
           srcDir project(':lib:proto:mapreduce-protolib').sourceSets.test.resources.srcDirs
