@@ -39,7 +39,7 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
     icon="api.png",
     execution = {ExecutionMode.STANDALONE},
     recordsByRef = true,
-    onlineHelpRefUrl ="" // TODO
+    onlineHelpRefUrl ="index.html?contextID=task_upp_lgp_q2b"
 )
 @ConfigGroups(Groups.class)
 @HideConfigs(value = {

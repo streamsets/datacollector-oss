@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
     label = "Send Response to Origin",
     description = "Sends records and the specified status code to a response-enabled origin",
     icon="response.png",
-    onlineHelpRefUrl ="" // TODO
+    onlineHelpRefUrl ="index.html?contextID=task_mzv_rgp_q2b"
 )
 @HideConfigs(preconditions = true, onErrorRecord = true)
 @GenerateResourceBundle
