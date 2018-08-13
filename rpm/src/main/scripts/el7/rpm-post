@@ -13,7 +13,7 @@
 # limitations under the License.
 
 mkdir -p /var/log/sdc
-mkdir -p /var/lib/sdc
-chown %{service_user}:%{service_group} /var/log/sdc
-chown %{service_user}:%{service_group} /var/lib/sdc
+mkdir -p /var/lib/sdc/{data,resources}
+chown sdc:sdc  /var/log/sdc
+chown sdc:sdc  /var/lib/sdc/{data,resources}
 systemctl daemon-reload

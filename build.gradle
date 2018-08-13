@@ -7,9 +7,11 @@ buildscript {
   }
   dependencies {
     classpath "net.ltgt.gradle:gradle-apt-plugin:0.18" // annotation processors simplified
-    classpath 'com.adarshr:gradle-test-logger-plugin:1.4.0' // provides more verbose and colorful test results on the console
+    classpath 'com.adarshr:gradle-test-logger-plugin:1.4.0'
+    // provides more verbose and colorful test results on the console
     classpath "com.commercehub.gradle.plugin:gradle-avro-plugin:0.14.2" // avro idl compiler plugin
     classpath "gradle.plugin.com.dorongold.plugins:task-tree:1.3" // provides a view of the task tree
+    classpath "com.netflix.nebula:gradle-ospackage-plugin:4.9.3" // provides rpm and deb packages
   }
 }
 
@@ -200,71 +202,81 @@ tasks.withType(Zip) {
   enabled = false
 }
 
-CopySpec coreCopySpec = copySpec {
-  // Can be refactored later
-  into('') {
-    from('dist/src/main') {
-      include "etc/**"
-      eachFile { file ->
-        if (file.name.contains("password") || file.name.contains("realm")) {
-          file.setMode(0600)
+def generateCoreCopySpec(Set<Project> bundledStageLibs, String distPath = '', String confPath = 'etc') {
+  copySpec {
+    // SDC_CONF
+    into(confPath) {
+      from('dist/src/main/etc') {
+        include "**"
+        eachFile { file ->
+          if (file.name.contains("password") || file.name.contains("realm")) {
+            file.setMode(0600)
+          }
         }
       }
-    }
-  }
-  into('') {
-    from('dist/src/main') {
-      include "bin/**"
-      include "libexec/**"
-      filter(ReplaceTokens, tokens: ['project.version': project.property("version")])
-    }
-    fileMode = 0755
-  }
-  // Default logging configuration
-  into('etc') {
-    from new File(project(':core:container').buildDir, 'resources/main/sdc-log4j.properties-default')
-    rename 'sdc-log4j.properties-default', 'sdc-log4j.properties'
-    filter(ReplaceTokens, tokens: ['sdc.log4j.level': 'DEBUG']) // TODO add release setup with INFO
-  }
-  // Empty directories
-  into('') {
-    File.createTempDir().with {
-      ['data', 'libs-common-lib', 'log', 'resources', 'streamsets-libs-extras', 'user-libs'].forEach { dir ->
-        def file = new File(absolutePath, dir)
-        file.mkdirs()
-      }
-      from(absolutePath) {
-        includeEmptyDirs = true
+      // Default logging configuration
+      into(confPath) {
+        from new File(project(':core:container').buildDir, 'resources/main/sdc-log4j.properties-default')
+        rename 'sdc-log4j.properties-default', 'sdc-log4j.properties'
+        filter(ReplaceTokens, tokens: ['sdc.log4j.level': 'DEBUG']) // TODO add release setup with INFO
       }
     }
-  }
-  into('api-lib') {
-    from configurations.api
-  }
-  into('libexec/bootstrap-libs/main') {
-    from project(':core:bootstrap').jar
-  }
-  into('libexec/bootstrap-libs/cluster') {
-    from project(':core:cluster:cluster-bootstrap').jar
-    from project(':core:cluster:cluster-bootstrap-api').jar
-    from project(':core:cluster:mapr-cluster-bootstrap').jar
-    from project(':core:cluster:mesos-bootstrap').jar
-  }
-  into('cli-lib') {
-    from project(':core:cli').jar
-  }
-  into('container-lib') {
-    from configurations.container
-  }
-  into('root-lib') {
-    from configurations.rootClasspath
-  }
-  into('initd') {
-    from('dist/src/main/initd')
-  }
-  // The UI
-  into('sdc-static-web') {
-    from new File(project(':ui:datacollector-ui').projectDir, 'target/dist')
+
+    // SDC_DIST
+    into(distPath) {
+      into('') {
+        from('dist/src/main') {
+          include "bin/**"
+          include "libexec/**"
+          filter(ReplaceTokens, tokens: ['project.version': project.property("version")])
+        }
+        fileMode = 0755
+      }
+      // Empty directories
+      File.createTempDir().with {
+        ['data', 'libs-common-lib', 'log', 'resources', 'streamsets-libs-extras', 'user-libs'].forEach { dir ->
+          def file = new File(absolutePath, dir)
+          file.mkdirs()
+        }
+        from(absolutePath) {
+          includeEmptyDirs = true
+        }
+      }
+      into('api-lib') {
+        from configurations.api
+      }
+      into('libexec/bootstrap-libs/main') {
+        from project(':core:bootstrap').jar
+      }
+      into('libexec/bootstrap-libs/cluster') {
+        from project(':core:cluster:cluster-bootstrap').jar
+        from project(':core:cluster:cluster-bootstrap-api').jar
+        from project(':core:cluster:mapr-cluster-bootstrap').jar
+        from project(':core:cluster:mesos-bootstrap').jar
+      }
+      into('cli-lib') {
+        from project(':core:cli').jar
+      }
+      into('container-lib') {
+        from configurations.container
+      }
+      into('root-lib') {
+        from configurations.rootClasspath
+      }
+      into('initd') {
+        from('dist/src/main/initd')
+      }
+      // The UI
+      into('sdc-static-web') {
+        from new File(project(':ui:datacollector-ui').projectDir, 'target/dist')
+      }
+    }
+    bundledStageLibs.forEach { library ->
+      into("$distPath/streamsets-libs/streamsets-datacollector-${library.name}/lib") {
+        from library.tasks.withType(Jar)// the stage library jar
+        from library.configurations.runtime // the runtime dependencies
+      }
+    }
   }
 }
 
@@ -272,16 +284,60 @@ distributions {
   core {
     baseName = 'streamsets-datacollector-core'
     contents {
-      with coreCopySpec
-      // TODO: include docs
-      coreStageLibraries.forEach { library ->
-        into("streamsets-libs/streamsets-datacollector-${library.name}/lib") {
-          from library.tasks.withType(Jar)// the stage library jar
-          from(library.configurations.runtime) // the runtime dependencies
-        }
-      }
+      with generateCoreCopySpec(coreStageLibraries)
     }
   }
+}
+
+apply plugin: 'nebula.ospackage'
+
+ospackage {
+  packageName = 'streamsets-datacollector'
+  version = project.version
+  release = '1'
+  arch = NOARCH
+  os = LINUX
+  type = BINARY
+  distribution = 'el7'
+  url = 'https://streamsets.com'
+  packageGroup = 'Applications/System'
+  license = 'Apache Software License 2.0'
+  vendor = 'StreamSets, Inc.'
+
+  requires('bash')
+  requires('which')
+
+  user = 'sdc'
+  group = 'sdc'
+}
+
+buildRpm {
+  provides('streamsets-datacollector')
+  requires('jre', '1.8', GREATER | EQUAL)
+
+  conflicts('centos-release', '7', LESS)
+  conflicts('redhat-release', '7', LESS)
+
+  preInstall file('rpm/src/main/scripts/el7/rpm-preinstall')
+  postInstall file('rpm/src/main/scripts/el7/rpm-post')
+  postUninstall file('rpm/src/main/scripts/el7/rpm-postun')
+
+
+  def distPath = '/opt/streamsets-datacollector'
+
+  from('dist/src/main/systemd') {
+    addParentDirs = false // avoid conflicts with systemd
+    into '/usr/lib/systemd/system'
+  }
+
+  link('/usr/local/bin/streamsets', "$distPath/bin/streamsets", 755)
+
+  with generateCoreCopySpec(coreStageLibraries, distPath, '/etc/sdc')
+
+  // TODO relocate the below resources outside of the distribution
+  directory("$distPath/libs-common-lib", 0755)
+  directory("$distPath/streamsets-libs-extras", 0755)
+  directory("$distPath/user-libs", 0755)
 }
 
 // ensure building the UI before we start packaging
