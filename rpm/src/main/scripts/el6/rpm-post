@@ -12,5 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-sed -i 's|\(SDC_DIST="\)\(.*\)|\1%{install_dir}"|' /etc/init.d/sdc
-sed -i 's|\(SDC_HOME="\)\(.*\)|\1%{install_dir}"|' /etc/init.d/sdc
+sed -i 's|\(SDC_DIST="\)\(.*\)|\1/opt/streamsets-datacollector"|' /etc/init.d/sdc
+sed -i 's|\(SDC_HOME="\)\(.*\)|\1/opt/streamsets-datacollector"|' /etc/init.d/sdc

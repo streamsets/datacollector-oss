@@ -155,7 +155,8 @@ configure(allStageLibraries + protolibs) {
 
   // Our API annotation processor expects to load resources from the compilation output, even though its
   // tasked with processing resources (stage icons). In order to give them access, the resources for stage
-  // libraries are copied to the classes output path.
+  // libraries are copied to the classes output path. This situation creates overlapping outputs which makes
+  // all these tasks non-cacheable! For build performance it is recommended we find a better solution.
   sourceSets {
     main {
       output.resourcesDir = "$buildDir/classes/java/$name"
@@ -298,16 +299,14 @@ distributions {
 
 uberDistTar.onlyIf { project.hasProperty('release') }
 
-apply plugin: 'nebula.ospackage'
+apply plugin: 'nebula.ospackage-base'
 
 ospackage {
   packageName = 'streamsets-datacollector'
   version = project.version
-  release = '1'
   arch = NOARCH
   os = LINUX
   type = BINARY
-  distribution = 'el7'
   url = 'https://streamsets.com'
   packageGroup = 'Applications/System'
   license = 'Apache Software License 2.0'
@@ -320,7 +319,10 @@ ospackage {
   group = 'sdc'
 }
 
-buildRpm {
+task buildEL7(type: Rpm) {
+  distribution = 'el7'
+  release = "1.$distribution"
+
   provides('streamsets-datacollector')
   requires('jre', '1.8', GREATER | EQUAL)
 
@@ -340,6 +342,44 @@ buildRpm {
   }
 
   link('/usr/local/bin/streamsets', "$distPath/bin/streamsets", 755)
+
+  with generateDistCopySpec(coreStageLibraries, distPath, '/etc/sdc')
+
+  // TODO relocate the below resources outside of the distribution
+  directory("$distPath/libs-common-lib", 0755)
+  directory("$distPath/streamsets-libs-extras", 0755)
+  directory("$distPath/user-libs", 0755)
+}
+
+task buildEL6(type: Rpm) {
+  distribution = 'el6'
+  release = "1.$distribution"
+
+  provides('streamsets-datacollector')
+  requires('jre', '1.8', GREATER | EQUAL)
+
+  preInstall file('rpm/src/main/scripts/el6/rpm-preinstall')
+  postInstall file('rpm/src/main/scripts/el6/rpm-post')
+  postUninstall file('rpm/src/main/scripts/el6/rpm-postun')
+
+
+  def distPath = '/opt/streamsets-datacollector'
+
+  from('dist/src/main/initd/_sdcinitd_prototype') {
+    addParentDirs = false // avoid conflicts
+    fileMode 0755
+    user 'root'
+    group 'root'
+    rename '_sdcinitd_prototype', 'sdc'
+    into '/etc/init.d'
+  }
+
+  from('dist/src/main/initd/sdcd') {
+    fileMode 0755
+    into "$distPath/initd"
+  }
+
+  link('/usr/local/bin/streamsets', "$distPath/bin/streamsets", 0755)
 
   with generateDistCopySpec(coreStageLibraries, distPath, '/etc/sdc')
 

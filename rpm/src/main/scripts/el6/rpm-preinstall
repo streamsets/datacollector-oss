@@ -12,5 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-/usr/bin/getent group %{service_group} || /usr/sbin/groupadd -r %{service_group}
-/usr/bin/getent passwd %{service_user} || /usr/sbin/useradd -r -d %{install_dir} -g %{service_group} -s /sbin/nologin %{service_user}
+/usr/bin/getent group sdc || /usr/sbin/groupadd -r sdc
+/usr/bin/getent passwd sdc || /usr/sbin/useradd -r -d /opt/streamsets-datacollector -g sdc -s /sbin/nologin sdc
