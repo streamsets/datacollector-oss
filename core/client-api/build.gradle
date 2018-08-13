@@ -10,7 +10,6 @@ dependencies {
   testCompile project(':core:container')
   testCompile project(':core:container-common')
   testCompile project(':core:testing')
-  testRuntimeOnly project(':core:bootstrap')
   testCompile group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
   testCompile group: 'junit', name: 'junit', version: '4.12'
 }

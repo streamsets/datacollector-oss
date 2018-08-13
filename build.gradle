@@ -94,6 +94,7 @@ subprojects {
     compileOnly group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.7'
     compileOnly group: 'io.dropwizard.metrics', name: 'metrics-core', version: '3.1.2'
 
+    testRuntimeOnly project(':core:bootstrap')
     testCompile group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
 
     def powermockVersion = '1.7.3'

@@ -64,6 +64,7 @@ dependencies {
     exclude(group: 'com.fasterxml.jackson.core')
   }
   compileOnly project(':core:bootstrap')
+  testCompile project(':core:bootstrap')
   compileOnly group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
   compileOnly group: 'io.dropwizard.metrics', name: 'metrics-core', version: '3.1.2'
   compileOnly group: 'log4j', name: 'log4j', version: '1.2.17'
