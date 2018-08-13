@@ -752,6 +752,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
 
         PipelineConfiguration pipelineConfiguration = getPipelineConf(getName(), getRev());
         List<Issue> errors = new ArrayList<>();
+        PipelineEL.setConstantsInContext(pipelineConfiguration, runningUser, getState().getTimeStamp());
         PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(
             pipelineConfiguration,
             errors,
@@ -837,7 +838,6 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         runner.setDeliveryGuarantee(pipelineConfigBean.deliveryGuarantee);
         runner.setMemoryLimitConfiguration(memoryLimitConfiguration);
 
-        PipelineEL.setConstantsInContext(pipelineConfiguration, runningUser, getState().getTimeStamp());
         prodPipeline = builder.build(
           runningUser,
           pipelineConfiguration,

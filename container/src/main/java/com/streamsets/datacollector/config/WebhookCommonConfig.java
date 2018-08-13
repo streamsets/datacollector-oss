@@ -31,7 +31,6 @@ public abstract class WebhookCommonConfig {
       type = ConfigDef.Type.STRING,
       label = "Webhook URL",
       description = "The Webhook HTTP resource URL",
-      elDefs = RecordEL.class,
       displayPosition = 200
   )
   public String webhookUrl = "";
