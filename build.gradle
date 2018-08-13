@@ -131,6 +131,7 @@ subprojects {
     }
   }
 
+  miniIT.onlyIf { project.hasProperty('miniIT') }
   check.dependsOn miniIT
 }
 
@@ -202,7 +203,7 @@ tasks.withType(Zip) {
   enabled = false
 }
 
-def generateCoreCopySpec(Set<Project> bundledStageLibs, String distPath = '', String confPath = 'etc') {
+def generateDistCopySpec(Set<Project> bundledStageLibs, String distPath = '', String confPath = 'etc') {
   copySpec {
     // SDC_CONF
     into(confPath) {
@@ -284,10 +285,18 @@ distributions {
   core {
     baseName = 'streamsets-datacollector-core'
     contents {
-      with generateCoreCopySpec(coreStageLibraries)
+      with generateDistCopySpec(coreStageLibraries)
+    }
+  }
+  uber {
+    baseName = 'streamsets-datacollector-uber'
+    contents {
+      with generateDistCopySpec(allStageLibraries)
     }
   }
 }
+
+uberDistTar.onlyIf { project.hasProperty('release') }
 
 apply plugin: 'nebula.ospackage'
 
@@ -332,7 +341,7 @@ buildRpm {
 
   link('/usr/local/bin/streamsets', "$distPath/bin/streamsets", 755)
 
-  with generateCoreCopySpec(coreStageLibraries, distPath, '/etc/sdc')
+  with generateDistCopySpec(coreStageLibraries, distPath, '/etc/sdc')
 
   // TODO relocate the below resources outside of the distribution
   directory("$distPath/libs-common-lib", 0755)
