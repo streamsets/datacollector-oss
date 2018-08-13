@@ -131,7 +131,7 @@ subprojects {
     }
   }
 
-  miniIT.onlyIf { project.hasProperty('miniIT') }
+  miniIT.onlyIf { project.hasProperty('enableMiniIT') }
   check.dependsOn miniIT
 }
 
