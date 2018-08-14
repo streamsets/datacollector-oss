@@ -142,6 +142,7 @@ This product includes components of the following software:
   Spatial4J                       Apache License 2.0
   Stax2 API                       BSD License
   Swagger                         Apache License 2.0
+  Syslog Java Client              MIT License
   UnboundID LDAP SDK              UnboundID LDAP SDK Free Use License
   Windows Azure Storage SDK       Apache License 2.0
   WSTX ASL                        Apache License 2.0
