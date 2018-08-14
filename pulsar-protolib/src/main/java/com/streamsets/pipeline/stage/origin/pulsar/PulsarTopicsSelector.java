@@ -19,9 +19,9 @@ package com.streamsets.pipeline.stage.origin.pulsar;
 import com.streamsets.pipeline.api.Label;
 
 public enum PulsarTopicsSelector implements Label {
-  SINGLE_TOPIC("Single topic"),
-  TOPICS_LIST("Topics list"),
-  TOPICS_PATTERN("Topics pattern");
+  SINGLE_TOPIC("Single Topic"),
+  TOPICS_LIST("Topics List"),
+  TOPICS_PATTERN("Topics Pattern");
 
   private final String label;
 

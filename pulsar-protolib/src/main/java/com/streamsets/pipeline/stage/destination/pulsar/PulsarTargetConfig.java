@@ -82,7 +82,7 @@ public class PulsarTargetConfig extends BasePulsarConfig {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "NONE",
-      label = "Compression type",
+      label = "Compression Type",
       description = "Type of compression to be applied to Pulsar messages",
       displayPosition = 40,
       group = "ADVANCED"
