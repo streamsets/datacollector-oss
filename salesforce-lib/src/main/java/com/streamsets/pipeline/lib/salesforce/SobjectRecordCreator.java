@@ -199,7 +199,7 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
         String fieldName = fec.getText();
         String[] pathElements = fieldName.split("\\.");
         // Handle references
-        extractReferences(references, pathElements);
+        extractReferences(objectType, references, pathElements);
       }
     }
 
@@ -222,7 +222,7 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
     for (String fieldName : fieldList.split("\\s*,\\s*")) {
       String[] pathElements = fieldName.split("\\.");
       // Handle references
-      extractReferences(references, pathElements);
+      extractReferences(sobjectType, references, pathElements);
     }
 
     try {
@@ -232,15 +232,15 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
     }
   }
 
-  private void extractReferences(List<List<Pair<String, String>>> references, String[] pathElements) {
+  private void extractReferences(String objectType, List<List<Pair<String, String>>> references, String[] pathElements) {
     if (pathElements.length > 1) {
       // LinkedList since we'll be removing elements from the path as we get their metadata
       List<Pair<String, String>> path = new LinkedList<>();
       // Last element in the list is the field itself; we don't need it
       for (int i = 0; i < pathElements.length - 1; i++) {
         // Ignore redundant reference to object being queried - SDC-9067
-        if (!(i == 0 && sobjectType.equalsIgnoreCase(pathElements[i]))) {
-          path.add(Pair.of(path.isEmpty() ? sobjectType.toLowerCase() : null, pathElements[i].toLowerCase()));
+        if (!(i == 0 && objectType.equalsIgnoreCase(pathElements[i]))) {
+          path.add(Pair.of(path.isEmpty() ? objectType.toLowerCase() : null, pathElements[i].toLowerCase()));
         }
       }
       references.add(path);
