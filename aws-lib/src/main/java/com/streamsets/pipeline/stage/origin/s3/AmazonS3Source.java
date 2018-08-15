@@ -130,9 +130,8 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
             );
           }
           parser = getContext().getService(DataFormatParserService.class).getParser(recordId, object.getObjectContent(), offset);
-
-          sendLineageEvent(s3Object);
         }
+        sendLineageEvent(s3Object);
         //we don't use S3 GetObject range capabilities to skip the already process offset because the parsers cannot
         // pick up from a non root doc depth in the case of a single object with records.
       }
