@@ -99,7 +99,7 @@
                   <artifactId>streamsets-datacollector-edge</artifactId>
                   <classifier>windows-amd64</classifier>
                   <version>${datacollector-edge.version}</version>
-                  <type>tgz</type>
+                  <type>zip</type>
                   <overWrite>true</overWrite>
                   <outputDirectory>${edge.release-dir}</outputDirectory>
                 </artifactItem>
