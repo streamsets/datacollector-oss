@@ -691,6 +691,49 @@ public class TestAmazonS3Source extends AmazonS3TestSuite {
     }
   }
 
+  @Test
+  public void testToStringExcelFile() throws Exception {
+    AbstractAmazonS3Source.S3Offset s3Offset = new AbstractAmazonS3Source.S3Offset(
+        "test.xlsx",
+        "test sheet::1234",
+        "0dd65bf073ad061",
+        "1534360"
+    );
+    Assert.assertEquals("test.xlsx::test sheet:\\:1234::0dd65bf073ad061::1534360", s3Offset.toString());
+  }
+
+  @Test
+  public void testToStringTextFile() throws Exception {
+    AbstractAmazonS3Source.S3Offset s3Offset = new AbstractAmazonS3Source.S3Offset(
+        "test.txt",
+        "1234",
+        "0dd65bf073ad061",
+        "1534360"
+    );
+    Assert.assertEquals("test.txt::1234::0dd65bf073ad061::1534360", s3Offset.toString());
+  }
+
+  @Test
+  public void testFromStringExcelFile() throws Exception {
+    String offset = "FL_insurance.xlsx::Sheet 1 - FL_insurance:\\:1000::0dd65bf073ad0616a91901c9349dd5a4::1534360";
+    AbstractAmazonS3Source.S3Offset s3Offset = AbstractAmazonS3Source.S3Offset.fromString(offset);
+    Assert.assertEquals("FL_insurance.xlsx", s3Offset.getKey());
+    Assert.assertEquals("Sheet 1 - FL_insurance::1000", s3Offset.getOffset());
+    Assert.assertEquals("0dd65bf073ad0616a91901c9349dd5a4", s3Offset.geteTag());
+    Assert.assertEquals("1534360", s3Offset.getKey());
+  }
+
+  @Test
+  public void testFromStringTextFile() throws Exception {
+    String offset = "FL_insurance.txt::1000::0dd65bf073ad0616a91901c9349dd5a4::1534360";
+    AbstractAmazonS3Source.S3Offset s3Offset = AbstractAmazonS3Source.S3Offset.fromString(offset);
+    Assert.assertEquals("FL_insurance.txt", s3Offset.getKey());
+    Assert.assertEquals("1000", s3Offset.getOffset());
+    Assert.assertEquals("0dd65bf073ad0616a91901c9349dd5a4", s3Offset.geteTag());
+    Assert.assertEquals("1534360", s3Offset.getKey());
+  }
+
+
   private AmazonS3Source createSource() {
 
     S3ConfigBean s3ConfigBean = new S3ConfigBean();
