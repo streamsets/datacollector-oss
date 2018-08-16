@@ -21,12 +21,14 @@ import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.processor.tensorflow.typesupport.TensorDataTypeSupport;
 import com.streamsets.pipeline.stage.processor.tensorflow.typesupport.TensorTypeSupporter;
 import org.apache.commons.lang3.tuple.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.tensorflow.SavedModelBundle;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
@@ -40,14 +42,12 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public final class TensorFlowProcessor extends SingleLaneProcessor {
-  private static final Logger LOG = LoggerFactory.getLogger(TensorFlowProcessor.class);
 
   private final TensorFlowConfigBean conf;
-
   private SavedModelBundle savedModel;
   private Session session;
   private Map<Pair<String, Integer>, TensorInputConfig> inputConfigMap = new LinkedHashMap<>();
-  private Map<Pair<String, Integer>, TensorConfig> outputConfigMap = new LinkedHashMap<>();
+  private ErrorRecordHandler errorRecordHandler;
 
   TensorFlowProcessor(TensorFlowConfigBean conf) {
     this.conf = conf;
@@ -87,43 +87,148 @@ public final class TensorFlowProcessor extends SingleLaneProcessor {
         }
     );
 
-    this.conf.outputConfigs.forEach(outputConfig -> {
-          Pair<String, Integer> key = Pair.of(outputConfig.operation, outputConfig.index);
-          outputConfigMap.put(key, outputConfig);
-        }
-    );
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
     return issues;
   }
 
-  private <T extends TensorDataTypeSupport> void writeRecord(Record r, List<String> fields, Buffer b, T dtSupport) {
-    for (String fieldName : fields) {
-      dtSupport.writeField(b, r.get(fieldName));
+  @Override
+  public void process(Batch batch, SingleLaneBatchMaker singleLaneBatchMaker) throws StageException {
+    if (conf.useEntireBatch) {
+      processUseEntireBatch(batch, singleLaneBatchMaker);
+    } else {
+      processUseRecordByRecord(batch, singleLaneBatchMaker);
     }
   }
 
-  private Map<Pair<String, Integer>, Tensor> convertBatch(Batch batch, List<TensorInputConfig> inputConfigs) {
-    Map<Pair<String, Integer>, Tensor> inputs = new LinkedHashMap<>();
+  private void processUseEntireBatch(Batch batch, SingleLaneBatchMaker singleLaneBatchMaker) throws StageException {
+    Session.Runner runner = this.session.runner();
+    Iterator<Record> batchRecords = batch.getRecords();
+    if (batchRecords.hasNext()) {
+      Map<Pair<String, Integer>, Tensor> inputs = convertBatch(batch, conf.inputConfigs);
+      try {
+        for (Map.Entry<Pair<String, Integer>, Tensor> inputMapEntry : inputs.entrySet()) {
+          runner.feed(inputMapEntry.getKey().getLeft(),
+              inputMapEntry.getKey().getRight(),
+              inputMapEntry.getValue()
+          );
+        }
+
+        for (TensorConfig outputConfig : conf.outputConfigs) {
+          runner.fetch(outputConfig.operation, outputConfig.index);
+        }
+
+        List<Tensor<?>> tensorOutput = runner.run();
+        LinkedHashMap<String, Field> outputTensorFieldMap = createOutputFieldValue(tensorOutput);
+        EventRecord eventRecord = TensorFlowEvents.TENSOR_FLOW_OUTPUT_CREATOR.create(getContext()).create();
+        eventRecord.set(Field.createListMap(outputTensorFieldMap));
+        getContext().toEvent(eventRecord);
+      } finally {
+        inputs.values().forEach(Tensor::close);
+      }
+
+      Iterator<Record> it = batch.getRecords();
+      while (it.hasNext()) {
+        singleLaneBatchMaker.addRecord(it.next());
+      }
+    }
+  }
+
+  public void processUseRecordByRecord(Batch batch, SingleLaneBatchMaker singleLaneBatchMaker) throws StageException {
+    Iterator<Record> it = batch.getRecords();
+    while (it.hasNext()) {
+      Record record = it.next();
+      Session.Runner runner = this.session.runner();
+
+      Map<Pair<String, Integer>, Tensor> inputs = null;
+      try {
+        inputs = convertRecord(record, conf.inputConfigs);
+      } catch (OnRecordErrorException ex) {
+        errorRecordHandler.onError(ex);
+        continue;
+      }
+
+      try {
+        for (Map.Entry<Pair<String, Integer>, Tensor> inputMapEntry : inputs.entrySet()) {
+          runner.feed(inputMapEntry.getKey().getLeft(),
+              inputMapEntry.getKey().getRight(),
+              inputMapEntry.getValue()
+          );
+        }
+
+        for (TensorConfig outputConfig : conf.outputConfigs) {
+          runner.fetch(outputConfig.operation, outputConfig.index);
+        }
+
+        List<Tensor<?>> tensorOutput = runner.run();
+        LinkedHashMap<String, Field> outputTensorFieldMap = createOutputFieldValue(tensorOutput);
+        record.set(conf.outputField, Field.create(outputTensorFieldMap));
+        singleLaneBatchMaker.addRecord(record);
+
+      } finally {
+        inputs.values().forEach(Tensor::close);
+      }
+    }
+  }
+
+  private <T extends TensorDataTypeSupport> void writeRecord(
+      Record r,
+      List<String> fields,
+      Buffer b,
+      T dtSupport
+  ) throws OnRecordErrorException {
+    for (String fieldName : fields) {
+      if (r.has(fieldName)) {
+        dtSupport.writeField(b, r.get(fieldName));
+      } else {
+        // the field does not exist.
+        throw new OnRecordErrorException(r,
+            Errors.TENSOR_FLOW_03,
+            r.getHeader().getSourceId(),
+            fieldName
+        );
+      }
+    }
+  }
+
+  private Map<Pair<String, Integer>, Tensor> convertBatch(
+      Batch batch,
+      List<TensorInputConfig> inputConfigs
+  ) throws StageException {
     Map<Pair<String, Integer>, Buffer> inputBuffer = new LinkedHashMap<>();
-
     int numberOfRecords = Iterators.size(batch.getRecords());
+    Iterator<Record> batchIterator = batch.getRecords();
 
-    batch.getRecords().forEachRemaining(r -> {
+    while (batchIterator.hasNext()) {
+      Record r = batchIterator.next();
       for (TensorInputConfig inputConfig : inputConfigs) {
         Pair<String, Integer> key = Pair.of(inputConfig.operation, inputConfig.index);
         long[] inputSize = (conf.useEntireBatch)?
             new long[]{1, numberOfRecords, inputConfig.fields.size()}
             : new long[]{numberOfRecords, inputConfig.fields.size()};
 
-        TensorDataTypeSupport dtSupport = TensorTypeSupporter.INSTANCE.getTensorDataTypeSupport(inputConfig.tensorDataType);
+        TensorDataTypeSupport dtSupport = TensorTypeSupporter.INSTANCE.
+            getTensorDataTypeSupport(inputConfig.tensorDataType);
         Buffer b = inputBuffer.computeIfAbsent(
             key,
             k -> dtSupport.allocateBuffer(inputSize)
         );
-        writeRecord(r, inputConfig.fields, b, dtSupport);
+        try {
+          writeRecord(r, inputConfig.fields, b, dtSupport);
+        } catch (OnRecordErrorException e) {
+          errorRecordHandler.onError(e);
+        }
       }
-    });
+    }
 
+    return createInputTensor(inputBuffer, numberOfRecords);
+  }
+
+  private Map<Pair<String, Integer>, Tensor> createInputTensor(
+      Map<Pair<String, Integer>, Buffer> inputBuffer,
+      int numberOfRecords
+  )  {
+    Map<Pair<String, Integer>, Tensor> inputs = new LinkedHashMap<>();
     inputBuffer.forEach(
         (k, v) -> {
           TensorInputConfig inputConfig = inputConfigMap.get(k);
@@ -140,12 +245,12 @@ public final class TensorFlowProcessor extends SingleLaneProcessor {
     return inputs;
   }
 
-  private Map<Pair<String, Integer>, Tensor> convertRecord(Record r, List<TensorInputConfig> inputConfigs) {
-    Map<Pair<String, Integer>, Tensor> inputs = new LinkedHashMap<>();
+  private Map<Pair<String, Integer>, Tensor> convertRecord(
+      Record r,
+      List<TensorInputConfig> inputConfigs
+  ) throws OnRecordErrorException {
     Map<Pair<String, Integer>, Buffer> inputBuffer = new LinkedHashMap<>();
-
     int numberOfRecords = 1;
-
     for (TensorInputConfig inputConfig : inputConfigs) {
       Pair<String, Integer> key = Pair.of(inputConfig.operation, inputConfig.index);
       long[] inputSize = (conf.useEntireBatch)?
@@ -157,120 +262,24 @@ public final class TensorFlowProcessor extends SingleLaneProcessor {
           key,
           k -> dtSupport.allocateBuffer(inputSize)
       );
+
       writeRecord(r, inputConfig.fields, b, dtSupport);
     }
-
-    inputBuffer.forEach(
-        (k, v) -> {
-          TensorInputConfig inputConfig = inputConfigMap.get(k);
-          TensorDataTypeSupport dtSupport =
-              TensorTypeSupporter.INSTANCE.getTensorDataTypeSupport(inputConfig.tensorDataType);
-          long[] inputSize = (conf.useEntireBatch)?
-              new long[]{1, numberOfRecords, inputConfig.fields.size()}
-              : new long[]{numberOfRecords, inputConfig.fields.size()};
-          //for read
-          v.flip();
-          inputs.put(k, dtSupport.createTensor(inputSize, v));
-        }
-    );
-    return inputs;
-  }
-
-  @Override
-  public void process(Batch batch, SingleLaneBatchMaker singleLaneBatchMaker) {
-    if (conf.useEntireBatch) {
-      processUseEntireBatch(batch, singleLaneBatchMaker);
-    } else {
-      processUseRecordByRecord(batch, singleLaneBatchMaker);
-    }
-  }
-
-  public void processUseRecordByRecord(Batch batch, SingleLaneBatchMaker singleLaneBatchMaker) {
-    Iterator<Record> it = batch.getRecords();
-    while (it.hasNext()) {
-      Record record = it.next();
-      Session.Runner runner = this.session.runner();
-
-      Map<Pair<String, Integer>, Tensor> inputs = convertRecord(record, conf.inputConfigs);
-      try {
-        for (Map.Entry<Pair<String, Integer>, Tensor> inputMapEntry : inputs.entrySet()) {
-          runner = runner.feed(inputMapEntry.getKey().getLeft(),
-              inputMapEntry.getKey().getRight(),
-              inputMapEntry.getValue()
-          );
-        }
-
-        for (TensorConfig outputConfig : conf.outputConfigs) {
-          runner = runner.fetch(outputConfig.operation, outputConfig.index);
-        }
-
-        List<Tensor<?>> tensorOutput = runner.run();
-        LinkedHashMap<String, Field> outputTensorFieldMap = new LinkedHashMap<>();
-        final AtomicInteger tensorIncrementor = new AtomicInteger(0);
-
-        conf.outputConfigs.forEach(outputConfig -> {
-          try (Tensor t = tensorOutput.get(tensorIncrementor.getAndIncrement())) {
-            TensorDataTypeSupport dtSupport = TensorTypeSupporter.INSTANCE.getTensorDataTypeSupport(t.dataType());
-            Field field = dtSupport.createFieldFromTensor(t);
-            outputTensorFieldMap.put(outputConfig.operation + "_" + outputConfig.index, field);
-          }
-        });
-
-        record.set(conf.outputField, Field.create(outputTensorFieldMap));
-
-        singleLaneBatchMaker.addRecord(record);
-
-      } finally {
-        inputs.values().forEach(Tensor::close);
-      }
-    }
+    return createInputTensor(inputBuffer, numberOfRecords);
   }
 
 
-  public void processUseEntireBatch(Batch batch, SingleLaneBatchMaker singleLaneBatchMaker) {
-    Session.Runner runner = this.session.runner();
-    Iterator<Record> batchRecords = batch.getRecords();
-    if (batchRecords.hasNext()) {
-      Map<Pair<String, Integer>, Tensor> inputs = convertBatch(batch, conf.inputConfigs);
-      try {
-        for (Map.Entry<Pair<String, Integer>, Tensor> inputMapEntry : inputs.entrySet()) {
-          runner = runner.feed(inputMapEntry.getKey().getLeft(),
-              inputMapEntry.getKey().getRight(),
-              inputMapEntry.getValue()
-          );
-        }
-
-        for (TensorConfig outputConfig : conf.outputConfigs) {
-          runner = runner.fetch(outputConfig.operation, outputConfig.index);
-        }
-
-        List<Tensor<?>> tensorOutput = runner.run();
-        LinkedHashMap<String, Field> outputTensorFieldMap = new LinkedHashMap<>();
-        final AtomicInteger tensorIncrementor = new AtomicInteger(0);
-
-        if (conf.useEntireBatch) {
-          conf.outputConfigs.forEach(outputConfig -> {
-            try (Tensor t = tensorOutput.get(tensorIncrementor.getAndIncrement())) {
-              TensorDataTypeSupport dtSupport = TensorTypeSupporter.INSTANCE.getTensorDataTypeSupport(t.dataType());
-              Field field = dtSupport.createFieldFromTensor(t);
-              outputTensorFieldMap.put(outputConfig.operation + "_" + outputConfig.index, field);
-            }
-          });
-          EventRecord eventRecord = TensorFlowEvents.TENSOR_FLOW_OUTPUT_CREATOR.create(getContext()).create();
-          eventRecord.set(Field.createListMap(outputTensorFieldMap));
-          getContext().toEvent(eventRecord);
-        } else {
-          throw new UnsupportedOperationException();
-        }
-      } finally {
-        inputs.values().forEach(Tensor::close);
+  private LinkedHashMap<String, Field> createOutputFieldValue(List<Tensor<?>> tensorOutput) {
+    LinkedHashMap<String, Field> outputTensorFieldMap = new LinkedHashMap<>();
+    final AtomicInteger tensorIncrementor = new AtomicInteger(0);
+    conf.outputConfigs.forEach(outputConfig -> {
+      try (Tensor t = tensorOutput.get(tensorIncrementor.getAndIncrement())) {
+        TensorDataTypeSupport dtSupport = TensorTypeSupporter.INSTANCE.getTensorDataTypeSupport(t.dataType());
+        Field field = dtSupport.createFieldFromTensor(t);
+        outputTensorFieldMap.put(outputConfig.operation + "_" + outputConfig.index, field);
       }
-
-      Iterator<Record> it = batch.getRecords();
-      while (it.hasNext()) {
-        singleLaneBatchMaker.addRecord(it.next());
-      }
-    }
+    });
+    return outputTensorFieldMap;
   }
 
   @Override

@@ -20,8 +20,7 @@ import com.streamsets.pipeline.api.ErrorCode;
 public enum Errors implements ErrorCode {
   TENSOR_FLOW_01("Model Path cannot be empty : {}"),
   TENSOR_FLOW_02("Error loading saved model : {}"),
-
-
+  TENSOR_FLOW_03("The record '{}' does not include the field '{}'."),
   ;
 
   private final String message;
