@@ -978,6 +978,7 @@ public class MockStages {
         if (stages.containsKey(name)) {
           StageDefinition oldDef = stages.get(name);
           StageDefinition newDef = new StageDefinition(
+              oldDef.getStageDef(),
               StageDefinitionBuilder.createLibraryDef(klass.getClassLoader()),
               false,
               klass,

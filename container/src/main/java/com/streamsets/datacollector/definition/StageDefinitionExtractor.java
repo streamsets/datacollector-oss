@@ -289,6 +289,7 @@ public abstract class StageDefinitionExtractor {
         boolean producesEvents = sDef.producesEvents();
 
         return new StageDefinition(
+            sDef,
             libraryDef,
             privateClassLoader,
             klass,

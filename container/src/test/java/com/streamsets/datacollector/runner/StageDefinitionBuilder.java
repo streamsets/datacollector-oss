@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.ProtoSource;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageType;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.Target;
@@ -40,6 +41,7 @@ import java.util.Properties;
 /**
  */
 public class StageDefinitionBuilder {
+  StageDef stageDef = null;
   StageLibraryDefinition libraryDefinition;
   boolean privateClassLoader = false;
   Class<? extends Stage> klass;
@@ -79,6 +81,11 @@ public class StageDefinitionBuilder {
     this.description = name + "Description";
     this.type = autoDetectStageType(klass);
     this.outputStreams = type.isOneOf(StageType.TARGET, StageType.EXECUTOR) ? 0 : 1;
+  }
+
+  public StageDefinitionBuilder withStageDef(StageDef stageDef) {
+    this.stageDef = stageDef;
+    return this;
   }
 
   public StageDefinitionBuilder withLabel(String label) {
@@ -173,6 +180,7 @@ public class StageDefinitionBuilder {
 
   public StageDefinition build() {
     return new StageDefinition(
+      stageDef,
       libraryDefinition,
       privateClassLoader,
       klass,

@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageType;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.LocalizableMessage;
@@ -72,9 +73,11 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
   private final boolean producesEvents;
   private final List<ServiceDependencyDefinition> services;
   private final List<HideStage.Type> hideStage;
+  private final StageDef stageDef;
 
   // localized version
   private StageDefinition(
+      StageDef stageDef,
       StageLibraryDefinition libraryDefinition,
       boolean privateClassLoader,
       ClassLoader classLoader,
@@ -107,6 +110,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
       List<ServiceDependencyDefinition> services,
       List<HideStage.Type> hideStage
   ) {
+    this.stageDef = stageDef;
     this.libraryDefinition = libraryDefinition;
     this.privateClassLoader = privateClassLoader;
     this.classLoader = classLoader;
@@ -156,6 +160,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
 
   @SuppressWarnings("unchecked")
   public StageDefinition(StageDefinition def, ClassLoader classLoader) {
+    stageDef = def.stageDef;
     libraryDefinition = def.libraryDefinition;
     privateClassLoader = def.privateClassLoader;
     this.classLoader = classLoader;
@@ -196,6 +201,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
   }
 
   public StageDefinition(
+      StageDef stageDef,
       StageLibraryDefinition libraryDefinition,
       boolean privateClassLoader,
       Class<? extends Stage> klass,
@@ -227,6 +233,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
       List<ServiceDependencyDefinition> services,
       List<HideStage.Type> hideStage
   ) {
+    this.stageDef = stageDef;
     this.libraryDefinition = libraryDefinition;
     this.privateClassLoader = privateClassLoader;
     this.onlineHelpRefUrl = onlineHelpRefUrl;
@@ -524,6 +531,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     }
 
     return new StageDefinition(
+        stageDef,
         libraryDefinition,
         privateClassLoader,
         getStageClassLoader(),
@@ -600,6 +608,9 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     return hideStage;
   }
 
+  public StageDef getStageDef() {
+    return stageDef;
+  }
 }
 
 
