@@ -1082,7 +1082,18 @@
           "description": "Pipeline Sharing / ACLs",
           "required": "false"
         }
-      ]
+      ],
+      "cgroup" : {
+        "cpu" : {
+          "autoConfigured" : true
+        },
+        "memory" : {
+          "autoConfigured" : true
+        },
+        "blkio" : {
+          "autoConfigured" : true
+        }
+      }
     }
   ]
 }
