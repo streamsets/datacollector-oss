@@ -733,7 +733,7 @@ public abstract class PipelineBeanCreator {
       Interceptor interceptor = creator.create(contextBuilder.buildFor(
         definition.getLibraryDefinition().getName(),
         definition.getKlass().getName(),
-        stageDefinition.getType(),
+        stageDefinition,
         interceptorType
       ));
 

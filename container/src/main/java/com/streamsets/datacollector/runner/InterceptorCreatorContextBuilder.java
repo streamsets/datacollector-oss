@@ -15,17 +15,23 @@
  */
 package com.streamsets.datacollector.runner;
 
+import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.BlobStore;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.StageBehaviorFlags;
+import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageType;
 import com.streamsets.pipeline.api.interceptor.InterceptorCreator;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Builder for creating interceptor creator context with all that it needs.
@@ -38,16 +44,17 @@ public class InterceptorCreatorContextBuilder {
   private static class ContextImpl implements InterceptorCreator.Context {
     private final BlobStore blobStore;
     private final Configuration configuration;
-    private final StageType stageType;
     private final InterceptorCreator.InterceptorType interceptorType;
     private final Map<String, String> parameters;
     private final ExecutionMode executionMode;
     private final DeliveryGuarantee deliveryGuarantee;
+    private final StageDefinition stageDefinition;
+    private final Set<StageBehaviorFlags> stageBehaviorFlags;
 
     ContextImpl(
       BlobStore blobStore,
       Configuration configuration,
-      StageType stageType,
+      StageDefinition stageDefinition,
       InterceptorCreator.InterceptorType interceptorType,
       Map<String, String> parameters,
       ExecutionMode executionMode,
@@ -55,11 +62,16 @@ public class InterceptorCreatorContextBuilder {
     ) {
       this.blobStore = blobStore;
       this.configuration = configuration;
-      this.stageType = stageType;
+      this.stageDefinition = stageDefinition;
       this.interceptorType = interceptorType;
       this.parameters = parameters;
       this.executionMode = executionMode;
       this.deliveryGuarantee = deliveryGuarantee;
+      if(stageDefinition.getStageDef() == null) {
+        this.stageBehaviorFlags = Collections.emptySet();
+      } else {
+        this.stageBehaviorFlags = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(stageDefinition.getStageDef().flags())));
+      }
     }
 
     @Override
@@ -74,7 +86,7 @@ public class InterceptorCreatorContextBuilder {
 
     @Override
     public StageType getStageType() {
-      return stageType;
+      return stageDefinition.getType();
     }
 
     @Override
@@ -95,6 +107,16 @@ public class InterceptorCreatorContextBuilder {
     @Override
     public DeliveryGuarantee getDeliveryGuarantee() {
       return deliveryGuarantee;
+    }
+
+    @Override
+    public StageDef getStageDef() {
+      return stageDefinition.getStageDef();
+    }
+
+    @Override
+    public Set<StageBehaviorFlags> getStageBehaviorFlags() {
+      return stageBehaviorFlags;
     }
   }
 
@@ -134,7 +156,7 @@ public class InterceptorCreatorContextBuilder {
   public InterceptorCreator.Context buildFor(
     String stageLibrary,
     String className,
-    StageType stageType,
+    StageDefinition stageDefinition,
     InterceptorCreator.InterceptorType interceptorType
   ) {
     Map<String, String> actualParameters = null;
@@ -150,7 +172,7 @@ public class InterceptorCreatorContextBuilder {
     return new ContextImpl(
         blobStore,
         sdcConf,
-        stageType,
+        stageDefinition,
         interceptorType,
         actualParameters,
         executionMode,
