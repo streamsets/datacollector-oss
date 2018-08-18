@@ -25,17 +25,20 @@ public class ProducerFactorySettings {
   private final PartitionStrategy partitionStrategy;
   private final String metadataBrokerList;
   private final DataFormat dataFormat;
+  private final boolean sendWriteResponse;
 
   public ProducerFactorySettings(
       Map<String, Object> kafkaProducerConfigs,
       PartitionStrategy partitionStrategy,
       String metadataBrokerList,
-      DataFormat dataFormat
+      DataFormat dataFormat,
+      boolean sendWriteResponse
   ) {
     this.kafkaProducerConfigs = kafkaProducerConfigs;
     this.partitionStrategy = partitionStrategy;
     this.metadataBrokerList = metadataBrokerList;
     this.dataFormat = dataFormat;
+    this.sendWriteResponse = sendWriteResponse;
   }
 
   public Map<String, Object> getKafkaProducerConfigs() {
@@ -52,5 +55,9 @@ public class ProducerFactorySettings {
 
   public DataFormat getDataFormat() {
     return dataFormat;
+  }
+
+  public boolean isSendWriteResponse() {
+    return sendWriteResponse;
   }
 }

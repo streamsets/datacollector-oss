@@ -246,7 +246,8 @@ public class MapRStreamsTargetConfig {
               new HashMap<String, Object>(kafkaProducerConfigs),
           partitionStrategy,
           null,
-          dataFormat
+          dataFormat,
+          false
       );
       kafkaProducer = SdcKafkaProducerFactory.create(settings).create();
       try {

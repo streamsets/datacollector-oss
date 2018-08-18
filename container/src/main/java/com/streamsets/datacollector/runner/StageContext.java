@@ -511,7 +511,9 @@ public class StageContext extends ProtoContext implements
 
   @Override
   public void toSourceResponse(Record record) {
-    sourceResponseSink.addResponse(record);
+    if (sourceResponseSink != null) {
+      sourceResponseSink.addResponse(record);
+    }
   }
 
   @Override

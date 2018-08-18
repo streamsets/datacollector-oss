@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 import com.streamsets.pipeline.stage.destination.kafka.KafkaTarget;
 import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
+import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
 
 @StageDef(
   version = 3,
@@ -41,7 +42,10 @@ public class MapRStreamsDTarget extends DTarget {
 
   @Override
   protected Target createTarget() {
-    return new KafkaTarget(convertToKafkaConfigBean(maprStreamsTargetConfigBean));
+    return new KafkaTarget(
+        convertToKafkaConfigBean(maprStreamsTargetConfigBean),
+        new ToOriginResponseConfig()
+    );
   }
 
   protected KafkaTargetConfig convertToKafkaConfigBean(MapRStreamsTargetConfigBean maprStreamsTargetConfigBean) {

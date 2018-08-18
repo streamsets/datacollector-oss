@@ -23,9 +23,10 @@ import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
 
 @StageDef(
-    version = 3,
+    version = 4,
     label = "Write to Kafka",
     description = "Writes records to Kafka as SDC Records",
     onlineHelpRefUrl ="index.html?contextID=concept_kgc_l4y_5r",
@@ -33,7 +34,8 @@ import com.streamsets.pipeline.config.DataFormat;
 @HideConfigs(preconditions = true, onErrorRecord = true, value = {
     "conf.dataFormat",
     "conf.keySerializer",
-    "conf.valueSerializer"
+    "conf.valueSerializer",
+    "responseConf.sendResponseToOrigin"
 })
 @ErrorStage
 @HideStage(HideStage.Type.ERROR_STAGE)
@@ -45,7 +47,7 @@ public class ToErrorKafkaDTarget extends KafkaDTarget {
     conf.dataFormat = DataFormat.SDC_JSON;
     conf.keySerializer = Serializer.STRING;
     conf.valueSerializer = Serializer.DEFAULT;
-    return new KafkaTarget(conf);
+    return new KafkaTarget(conf, new ToOriginResponseConfig());
   }
 
 }

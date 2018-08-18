@@ -34,7 +34,8 @@ public class TestKafka09ProducerFactory {
         new HashMap<String, Object>(),
         PartitionStrategy.DEFAULT,
         "",
-        DataFormat.JSON
+        DataFormat.JSON,
+        false
     );
     SdcKafkaProducerFactory sdcKafkaProducerFactory = SdcKafkaProducerFactory.create(settings);
 

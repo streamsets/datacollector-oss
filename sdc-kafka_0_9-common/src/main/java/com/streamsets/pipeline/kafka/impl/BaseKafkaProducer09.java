@@ -16,6 +16,9 @@
 package com.streamsets.pipeline.kafka.impl;
 
 
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducer;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
@@ -25,6 +28,7 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.errors.RecordTooLargeException;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -33,9 +37,11 @@ public abstract class BaseKafkaProducer09 implements SdcKafkaProducer {
 
   private KafkaProducer producer;
   private final List<Future<RecordMetadata>> futureList;
+  private final boolean sendWriteResponse;
 
-  public BaseKafkaProducer09() {
+  public BaseKafkaProducer09(boolean sendWriteResponse) {
     this.futureList = new ArrayList<>();
+    this.sendWriteResponse = sendWriteResponse;
   }
 
   @Override
@@ -59,16 +65,26 @@ public abstract class BaseKafkaProducer09 implements SdcKafkaProducer {
   }
 
   @Override
-  public void write() throws StageException {
+  public List<Record> write(Stage.Context context) throws StageException {
     // force all records in the buffer to be written out
     producer.flush();
     // make sure each record was written and handle exception if any
     List<Integer> failedRecordIndices = new ArrayList<Integer>();
     List<Exception> failedRecordExceptions = new ArrayList<Exception>();
+    List<Record> responseRecords = new ArrayList<>();
     for (int i = 0; i < futureList.size(); i++) {
       Future<RecordMetadata> f = futureList.get(i);
       try {
-        f.get();
+        RecordMetadata recordMetadata = f.get();
+        if (sendWriteResponse ) {
+          Record record = context.createRecord("responseRecord");
+          LinkedHashMap<String, Field> recordMetadataVal = new LinkedHashMap<>();
+          recordMetadataVal.put("offset", Field.create(recordMetadata.offset()));
+          recordMetadataVal.put("partition", Field.create(recordMetadata.partition()));
+          recordMetadataVal.put("topic", Field.create(recordMetadata.topic()));
+          record.set(Field.createListMap(recordMetadataVal));
+          responseRecords.add(record);
+        }
       } catch (InterruptedException | ExecutionException e) {
         Throwable actualCause = e.getCause();
         if (actualCause != null && actualCause instanceof RecordTooLargeException) {
@@ -83,6 +99,7 @@ public abstract class BaseKafkaProducer09 implements SdcKafkaProducer {
     if (!failedRecordIndices.isEmpty()) {
       throw new StageException(KafkaErrors.KAFKA_69, failedRecordIndices, failedRecordExceptions);
     }
+    return responseRecords;
   }
 
   @Override

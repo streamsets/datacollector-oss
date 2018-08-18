@@ -255,7 +255,7 @@ public class KafkaUDPConsumer implements UDPConsumer {
         try {
           // we are using round robing partition strategy, partition key is ignored
           producer.enqueueMessage(kafkaTargetConfig.topic, data, "");
-          producer.write();
+          producer.write(null);
         } finally {
           releaseKafkaProducer(producer);
         }

@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.stage.destination.kafka.KafkaTarget;
+import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
 
 @StageDef(
     version = 3,
@@ -40,7 +41,7 @@ public class ToErrorMapRStreamsDTarget extends MapRStreamsDTarget {
   @Override
   protected Target createTarget() {
     maprStreamsTargetConfigBean.dataFormat = DataFormat.SDC_JSON;
-    return new KafkaTarget(convertToKafkaConfigBean(maprStreamsTargetConfigBean));
+    return new KafkaTarget(convertToKafkaConfigBean(maprStreamsTargetConfigBean), new ToOriginResponseConfig());
   }
 
 }

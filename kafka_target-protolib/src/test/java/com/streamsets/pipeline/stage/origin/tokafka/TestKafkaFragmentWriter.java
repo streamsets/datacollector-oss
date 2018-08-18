@@ -69,7 +69,7 @@ public class TestKafkaFragmentWriter {
     writer.write(ImmutableList.of(msg));
     Mockito.verify(writer, Mockito.times(1)).getKafkaProducer();
     Mockito.verify(mockProducer, Mockito.times(1)).enqueueMessage(Mockito.anyString(), Mockito.eq(msg), Mockito.any());
-    Mockito.verify(mockProducer, Mockito.times(1)).write();
+    Mockito.verify(mockProducer, Mockito.times(1)).write(null);
     Mockito.verify(writer, Mockito.times(1)).releaseKafkaProducer(Mockito.eq(mockProducer));
 
     writer.destroy();

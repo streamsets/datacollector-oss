@@ -15,6 +15,8 @@
  */
 package com.streamsets.pipeline.kafka.impl;
 
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.kafka.api.PartitionStrategy;
@@ -28,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -59,8 +62,12 @@ public class KafkaProducer08 implements SdcKafkaProducer {
   private List<KeyedMessage> messageList;
   private Producer producer;
 
-  public KafkaProducer08(String metadataBrokerList, DataFormat producerPayloadType,
-                         PartitionStrategy partitionStrategy, Map<String, Object> kafkaProducerConfigs) {
+  public KafkaProducer08(
+      String metadataBrokerList,
+      DataFormat producerPayloadType,
+      PartitionStrategy partitionStrategy,
+      Map<String, Object> kafkaProducerConfigs
+  ) {
     this.metadataBrokerList = metadataBrokerList;
     this.producerPayloadType = producerPayloadType;
     this.partitionStrategy = partitionStrategy;
@@ -115,7 +122,7 @@ public class KafkaProducer08 implements SdcKafkaProducer {
   }
 
   @Override
-  public void write() throws StageException {
+  public List<Record> write(Stage.Context context) throws StageException {
     try {
       producer.send(messageList);
       messageList.clear();
@@ -126,6 +133,7 @@ public class KafkaProducer08 implements SdcKafkaProducer {
       LOG.error(KafkaErrors.KAFKA_50.getMessage(), e.toString(), e);
       throw new KafkaConnectionException(KafkaErrors.KAFKA_50, e.toString(), e);
     }
+    return Collections.emptyList();
   }
 
 

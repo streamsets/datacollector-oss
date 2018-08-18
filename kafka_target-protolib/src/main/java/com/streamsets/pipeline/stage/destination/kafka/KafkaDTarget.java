@@ -23,9 +23,10 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 import com.streamsets.pipeline.kafka.api.KafkaDestinationGroups;
+import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
 
 @StageDef(
-  version = 3,
+  version = 4,
   label = "Kafka Producer",
   description = "Writes data to Kafka",
   icon = "kafka.png",
@@ -48,8 +49,11 @@ public class KafkaDTarget extends DTarget {
   @ConfigDefBean()
   public KafkaTargetConfig conf;
 
+  @ConfigDefBean(groups = {"RESPONSE"})
+  public ToOriginResponseConfig responseConf = new ToOriginResponseConfig();
+
   @Override
   protected Target createTarget() {
-    return new KafkaTarget(conf);
+    return new KafkaTarget(conf, responseConf);
   }
 }

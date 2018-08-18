@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 public class TestKafkaTargetUpgrader {
@@ -168,5 +169,18 @@ public class TestKafkaTargetUpgrader {
     configs.add(new Config("includeSchema", true));
     configs.add(new Config("binaryFieldPath", "/binaryField"));
     return configs;
+  }
+
+
+  @Test
+  public void testUpgradeV3toV4() throws Exception {
+    Map<String, String> kafkaProducerConfig = generateV1ProducerConfigs();
+    List<Config> configs = new ArrayList<>();
+
+    KafkaTargetUpgrader kafkaTargetUpgrader = new KafkaTargetUpgrader();
+    kafkaTargetUpgrader.upgrade("a", "b", "c", 3, 4, configs);
+
+    assertEquals("responseConf.sendResponseToOrigin", configs.get(0).getName());
+    assertEquals("responseConf.responseType", configs.get(1).getName());
   }
 }

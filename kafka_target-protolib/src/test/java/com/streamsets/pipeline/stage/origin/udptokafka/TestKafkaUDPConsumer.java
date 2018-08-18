@@ -184,7 +184,7 @@ public class TestKafkaUDPConsumer {
       Mockito
           .verify(kafkaProducer, Mockito.times(1))
           .enqueueMessage(Mockito.eq("topic"), producerCaptor.capture(), Mockito.eq(""));
-      Mockito.verify(kafkaProducer, Mockito.times(1)).write();
+      Mockito.verify(kafkaProducer, Mockito.times(1)).write(null);
       Mockito.verify(consumer).releaseKafkaProducer(Mockito.eq(kafkaProducer));
 
       UDPMessage message = new UDPMessageDeserializer().deserialize(producerCaptor.getValue());

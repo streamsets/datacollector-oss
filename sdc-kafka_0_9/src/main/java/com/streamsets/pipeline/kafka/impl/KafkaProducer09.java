@@ -46,9 +46,10 @@ public class KafkaProducer09 extends BaseKafkaProducer09 {
   public KafkaProducer09(
       String metadataBrokerList,
       Map<String, Object> kafkaProducerConfigs,
-      PartitionStrategy partitionStrategy
+      PartitionStrategy partitionStrategy,
+      boolean sendWriteResponse
   ) {
-    super();
+    super(sendWriteResponse);
     this.metadataBrokerList = metadataBrokerList;
     this.kafkaProducerConfigs = kafkaProducerConfigs;
     this.partitionStrategy = partitionStrategy;

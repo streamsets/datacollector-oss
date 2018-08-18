@@ -20,6 +20,7 @@ import com.streamsets.pipeline.kafka.api.PartitionStrategy;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import com.streamsets.pipeline.stage.destination.kafka.KafkaTarget;
 import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
+import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
 
 import java.util.Map;
 
@@ -53,6 +54,6 @@ public class KafkaTargetUtil {
     kafkaConfig.dataFormat = dataFormat;
     kafkaConfig.dataGeneratorFormatConfig = dataGeneratorFormatConfig;
 
-    return new KafkaTarget(kafkaConfig);
+    return new KafkaTarget(kafkaConfig, new ToOriginResponseConfig());
   }
 }

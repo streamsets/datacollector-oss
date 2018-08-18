@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
+import com.streamsets.pipeline.stage.destination.lib.ResponseType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,12 @@ public class KafkaTargetUpgrader implements StageUpgrader {
         // fall-through to next version
       case 2:
         upgradeV2ToV3(configs);
+        if (toVersion == 3) {
+          break;
+        }
+        // fall-through to next version
+      case 3:
+        upgradeV3ToV4(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -127,5 +134,10 @@ public class KafkaTargetUpgrader implements StageUpgrader {
     configs.add(new Config(joiner.join("conf", "valueSerializer"), Serializer.DEFAULT));
 
     DataFormatUpgradeHelper.upgradeAvroGeneratorWithSchemaRegistrySupport(configs);
+  }
+
+  private void upgradeV3ToV4(List<Config> configs) {
+    configs.add(new Config("responseConf.sendResponseToOrigin", false));
+    configs.add(new Config("responseConf.responseType", ResponseType.SUCCESS_RECORDS));
   }
 }

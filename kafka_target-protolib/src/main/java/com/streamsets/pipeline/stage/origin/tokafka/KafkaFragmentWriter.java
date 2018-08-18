@@ -121,7 +121,7 @@ public class KafkaFragmentWriter implements FragmentWriter {
         kafkaTime += System.currentTimeMillis() - kStart;
       }
       kStart = System.currentTimeMillis();
-      producer.write();
+      producer.write(null);
       kafkaTime += System.currentTimeMillis() - kStart;
     } catch (StageException ex ) {
       throw new IOException(ex);

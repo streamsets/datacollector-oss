@@ -43,8 +43,10 @@ public class MapRStreamsProducer09 extends BaseKafkaProducer09 {
 
   public MapRStreamsProducer09(
     Map<String, Object> kafkaProducerConfigs,
-    PartitionStrategy partitionStrategy
+    PartitionStrategy partitionStrategy,
+    boolean sendWriteResponse
   ) {
+    super(sendWriteResponse);
     this.kafkaProducerConfigs = kafkaProducerConfigs;
     this.partitionStrategy = partitionStrategy;
   }

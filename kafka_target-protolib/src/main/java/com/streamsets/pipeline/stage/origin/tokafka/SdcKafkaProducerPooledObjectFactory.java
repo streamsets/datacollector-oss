@@ -41,7 +41,7 @@ public class SdcKafkaProducerPooledObjectFactory extends BasePooledObjectFactory
     );
     settings = new ProducerFactorySettings(kafkaTargetConfig.kafkaProducerConfigs == null
         ? Collections.<String, Object>emptyMap() : new HashMap<String, Object>(kafkaTargetConfig.kafkaProducerConfigs),
-        PartitionStrategy.ROUND_ROBIN, kafkaTargetConfig.metadataBrokerList, dataFormat
+        PartitionStrategy.ROUND_ROBIN, kafkaTargetConfig.metadataBrokerList, dataFormat, false
     );
   }
 

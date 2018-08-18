@@ -30,6 +30,8 @@ import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.lib.kafka.exception.KafkaConnectionException;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.destination.lib.ResponseType;
+import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,20 +50,24 @@ public class KafkaTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(KafkaTarget.class);
 
   private final KafkaTargetConfig conf;
+  private final ToOriginResponseConfig responseConf;
 
   private long recordCounter = 0;
   private SdcKafkaProducer kafkaProducer;
   private ErrorRecordHandler errorRecordHandler;
   private Set<String> accessedTopic;
 
-  public KafkaTarget(KafkaTargetConfig conf) {
+  public KafkaTarget(KafkaTargetConfig conf, ToOriginResponseConfig responseConf) {
     this.conf = conf;
+    this.responseConf = responseConf;
   }
 
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
-    conf.init(getContext(), issues);
+    boolean sendResponse = this.responseConf.sendResponseToOrigin &&
+        ResponseType.DESTINATION_RESPONSE.equals(this.responseConf.responseType);
+    conf.init(getContext(), sendResponse, issues);
     kafkaProducer = conf.getKafkaProducer();
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     accessedTopic = new HashSet<>();
@@ -70,14 +76,28 @@ public class KafkaTarget extends BaseTarget {
 
   @Override
   public void write(Batch batch) throws StageException {
+    List<Record> responseRecords = new ArrayList<>();
     if (conf.singleMessagePerBatch) {
-      writeOneMessagePerBatch(batch);
+      writeOneMessagePerBatch(batch, responseRecords);
     } else {
-      writeOneMessagePerRecord(batch);
+      writeOneMessagePerRecord(batch, responseRecords);
+    }
+
+    if (this.responseConf.sendResponseToOrigin) {
+      if (this.responseConf.responseType.equals(ResponseType.SUCCESS_RECORDS)) {
+        Iterator<Record> records = batch.getRecords();
+        while (records.hasNext()) {
+          getContext().toSourceResponse(records.next());
+        }
+      } else {
+        for (Record record :responseRecords) {
+          getContext().toSourceResponse(record);
+        }
+      }
     }
   }
 
-  private void writeOneMessagePerBatch(Batch batch) throws StageException {
+  private void writeOneMessagePerBatch(Batch batch, List<Record> responseRecords) throws StageException {
     int count = 0;
     //Map of topic->(partition->Records)
     Map<String, Map<Object, List<Record>>> perTopic = new HashMap<>();
@@ -170,7 +190,7 @@ public class KafkaTarget extends BaseTarget {
               );
             }
             try {
-              kafkaProducer.write();
+              responseRecords.addAll(kafkaProducer.write(getContext()));
             } catch (StageException ex) {
               if (ex.getErrorCode().getCode().equals(KafkaErrors.KAFKA_69.name())) {
                 List<Exception> failedRecordException = (List<Exception>) ex.getParams()[1];
@@ -200,7 +220,7 @@ public class KafkaTarget extends BaseTarget {
   }
 
   @SuppressWarnings("unchecked")
-  private void writeOneMessagePerRecord(Batch batch) throws StageException {
+  private void writeOneMessagePerRecord(Batch batch, List<Record> responseRecords) throws StageException {
     long count = 0;
     Iterator<Record> records = batch.getRecords();
     List<Record> recordList = new ArrayList<>();
@@ -239,7 +259,7 @@ public class KafkaTarget extends BaseTarget {
       }
     }
     try {
-      kafkaProducer.write();
+      responseRecords.addAll(kafkaProducer.write(getContext()));
     } catch (StageException ex) {
       if (ex.getErrorCode().getCode().equals(KafkaErrors.KAFKA_69.name())) {
         List<Integer> failedRecordIndices = (List<Integer>) ex.getParams()[0];

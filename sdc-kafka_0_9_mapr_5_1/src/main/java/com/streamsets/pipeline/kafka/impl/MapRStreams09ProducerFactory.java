@@ -35,7 +35,8 @@ public class MapRStreams09ProducerFactory extends SdcKafkaProducerFactory {
   public SdcKafkaProducer create() {
     return new MapRStreamsProducer09(
         settings.getKafkaProducerConfigs(),
-        settings.getPartitionStrategy()
+        settings.getPartitionStrategy(),
+        settings.isSendWriteResponse()
     );
   }
 }

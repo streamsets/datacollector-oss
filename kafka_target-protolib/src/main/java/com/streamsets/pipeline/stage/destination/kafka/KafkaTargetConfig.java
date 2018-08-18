@@ -249,10 +249,14 @@ public class KafkaTargetConfig {
   private long retryBackoffMs;
 
   public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
-    init(context, this.dataFormat, issues);
+    init(context, this.dataFormat, false, issues);
   }
 
-  public void init(Stage.Context context, DataFormat dataFormat, List<Stage.ConfigIssue> issues) {
+  public void init(Stage.Context context, boolean sendResponse, List<Stage.ConfigIssue> issues) {
+    init(context, this.dataFormat, sendResponse, issues);
+  }
+
+  public void init(Stage.Context context, DataFormat dataFormat, boolean sendResponse, List<Stage.ConfigIssue> issues) {
     dataGeneratorFormatConfig.init(
         context,
         dataFormat,
@@ -357,7 +361,8 @@ public class KafkaTargetConfig {
           new HashMap<String, Object>(kafkaProducerConfigs),
           partitionStrategy,
           metadataBrokerList,
-          dataFormat
+          dataFormat,
+          sendResponse
       );
       kafkaProducer = SdcKafkaProducerFactory.create(settings).create();
       try {
