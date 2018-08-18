@@ -29,7 +29,8 @@
            ng-model="pipelineConfig.description"
            ui-refresh="refreshCodemirror"
            ui-codemirror-opts="{
-                readOnly: (isPipelineReadOnly || isPipelineRunning)
+                readOnly: (isPipelineReadOnly || isPipelineRunning),
+                lineWrapping: true
               }"
            data-type="'STRING'">
       </div>
@@ -72,7 +73,8 @@
            ng-model="detailPaneConfig.uiInfo.description"
            ui-refresh="refreshCodemirror"
            ui-codemirror-opts="{
-                readOnly: (isPipelineReadOnly || isPipelineRunning)
+                readOnly: (isPipelineReadOnly || isPipelineRunning),
+                lineWrapping: true
               }"
            data-type="'STRING'">
       </div>
