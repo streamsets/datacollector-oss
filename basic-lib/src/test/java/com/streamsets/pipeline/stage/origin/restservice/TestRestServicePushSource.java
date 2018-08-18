@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.origin.restservice;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.httpsource.RawHttpConfigs;
+import com.streamsets.pipeline.lib.microservice.ResponseConfigBean;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import com.streamsets.pipeline.stage.destination.sdcipc.Constants;
@@ -54,7 +55,7 @@ public class TestRestServicePushSource {
     httpConfigs.maxConcurrentRequests = 1;
     httpConfigs.tlsConfigBean.tlsEnabled = false;
 
-    RestServiceResponseConfigBean responseConfigBean = new RestServiceResponseConfigBean();
+    ResponseConfigBean responseConfigBean = new ResponseConfigBean();
     responseConfigBean.dataFormat = DataFormat.JSON;
     responseConfigBean.dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
 

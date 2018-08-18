@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.restservice;
+package com.streamsets.pipeline.lib.microservice;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
@@ -21,7 +21,7 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 
-public class RestServiceResponseConfigBean {
+public class ResponseConfigBean {
 
   @ConfigDef(
       required = true,
@@ -30,12 +30,12 @@ public class RestServiceResponseConfigBean {
       defaultValue = "JSON",
       description = "HTTP payload data format",
       displayPosition = 220,
-      group = "HTTP_RESPONSE"
+      group = "#0"
   )
   @ValueChooserModel(ResponseDataFormatChooserValues.class)
   public DataFormat dataFormat = DataFormat.JSON;
 
-  @ConfigDefBean(groups = {"HTTP_RESPONSE"})
+  @ConfigDefBean(groups = {"#0"})
   public DataGeneratorFormatConfig dataGeneratorFormatConfig;
 
 }

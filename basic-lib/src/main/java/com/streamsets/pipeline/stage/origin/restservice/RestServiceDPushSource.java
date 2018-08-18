@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.http.DataFormatChooserValues;
 import com.streamsets.pipeline.lib.httpsource.RawHttpConfigs;
+import com.streamsets.pipeline.lib.microservice.ResponseConfigBean;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
 import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
@@ -39,6 +40,7 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
     icon="api.png",
     execution = {ExecutionMode.STANDALONE},
     recordsByRef = true,
+    sendsResponse = true,
     onlineHelpRefUrl ="index.html?contextID=task_upp_lgp_q2b"
 )
 @ConfigGroups(Groups.class)
@@ -85,7 +87,7 @@ public class RestServiceDPushSource extends DPushSource {
   public DataParserFormatConfig dataFormatConfig = new DataParserFormatConfig();
 
   @ConfigDefBean(groups = "HTTP_RESPONSE")
-  public RestServiceResponseConfigBean responseConfig = new RestServiceResponseConfigBean();
+  public ResponseConfigBean responseConfig = new ResponseConfigBean();
 
   @Override
   protected PushSource createPushSource() {

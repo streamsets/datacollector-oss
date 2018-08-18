@@ -21,6 +21,7 @@ import com.streamsets.pipeline.lib.http.AbstractHttpReceiverServer;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
 import com.streamsets.pipeline.lib.http.HttpReceiver;
 import com.streamsets.pipeline.lib.httpsource.AbstractHttpServerPushSource;
+import com.streamsets.pipeline.lib.microservice.ResponseConfigBean;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
 import java.util.List;
@@ -30,14 +31,14 @@ public class RestServicePushSource extends AbstractHttpServerPushSource<HttpRece
   private final HttpConfigs httpConfigs;
   private final DataFormat dataFormat;
   private final DataParserFormatConfig dataFormatConfig;
-  private final RestServiceResponseConfigBean responseConfig;
+  private final ResponseConfigBean responseConfig;
 
   RestServicePushSource(
       HttpConfigs httpConfigs,
       int maxRequestSizeMB,
       DataFormat dataFormat,
       DataParserFormatConfig dataFormatConfig,
-      RestServiceResponseConfigBean responseConfig
+      ResponseConfigBean responseConfig
   ) {
     super(httpConfigs, new RestServiceReceiver(
         httpConfigs,

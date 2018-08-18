@@ -24,10 +24,15 @@ import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
+import com.streamsets.pipeline.lib.microservice.ResponseConfigBean;
+import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.stage.origin.httpserver.PushHttpReceiver;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import com.streamsets.pipeline.stage.util.http.HttpStageUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,16 +47,18 @@ import java.util.Set;
 
 public class RestServiceReceiver extends PushHttpReceiver {
 
+  private static final Logger LOG = LoggerFactory.getLogger(RestServiceReceiver.class);
   public final static String STATUS_CODE_RECORD_HEADER_ATTR_NAME = "responseStatusCode";
+  public final static String RAW_DATA_RECORD_HEADER_ATTR_NAME = "rawPayloadRecord";
   final static String EMPTY_PAYLOAD_RECORD_HEADER_ATTR_NAME = "emptyPayloadRecord";
-  private final RestServiceResponseConfigBean responseConfig;
+  private final ResponseConfigBean responseConfig;
   private DataGeneratorFactory dataGeneratorFactory;
 
   RestServiceReceiver(
       HttpConfigs httpConfigs,
       int maxRequestSizeMB,
       DataParserFormatConfig dataParserFormatConfig,
-      RestServiceResponseConfigBean responseConfig
+      ResponseConfigBean responseConfig
   ) {
     super(httpConfigs, maxRequestSizeMB, dataParserFormatConfig);
     this.responseConfig = responseConfig;
@@ -165,7 +172,23 @@ public class RestServiceReceiver extends PushHttpReceiver {
   private List<Field> convertRecordsToFields(List<Record> recordList) {
     List<Field> fieldList = new ArrayList<>();
     recordList.forEach(record -> {
-      fieldList.add(record.get());
+      String rawDataHeader = record.getHeader().getAttribute(RAW_DATA_RECORD_HEADER_ATTR_NAME);
+      if (StringUtils.isNotEmpty(rawDataHeader)) {
+        String rawData = record.get().getValueAsString();
+        try (DataParser parser = getParserFactory().getParser("rawData", rawData)) {
+          Record parsedRecord = parser.parse();
+          while (parsedRecord != null) {
+            fieldList.add(parsedRecord.get());
+            parsedRecord = parser.parse();
+          }
+        } catch (Exception e) {
+          // If fails to parse data, add raw data from response to envelope record
+          fieldList.add(record.get());
+          LOG.debug("Failed to parse rawPayloadRecord from Response sink", e);
+        }
+      } else {
+        fieldList.add(record.get());
+      }
     });
     return fieldList;
   }

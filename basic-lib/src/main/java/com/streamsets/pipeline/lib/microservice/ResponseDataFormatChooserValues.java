@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.restservice;
+package com.streamsets.pipeline.lib.microservice;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 import com.streamsets.pipeline.config.DataFormat;

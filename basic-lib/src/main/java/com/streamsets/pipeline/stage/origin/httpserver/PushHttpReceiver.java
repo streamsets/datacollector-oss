@@ -114,7 +114,7 @@ public class PushHttpReceiver implements HttpReceiver {
   }
 
   @VisibleForTesting
-  DataParserFactory getParserFactory() {
+  protected DataParserFactory getParserFactory() {
     return parserFactory;
   }
 
