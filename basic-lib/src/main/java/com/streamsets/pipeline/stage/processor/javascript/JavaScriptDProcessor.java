@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.StageBehaviorFlags;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
@@ -42,6 +43,7 @@ import com.streamsets.pipeline.stage.processor.scripting.ProcessingModeChooserVa
     },
     upgrader = JavaScriptProcessorUpgrader.class,
     producesEvents = true,
+    flags = StageBehaviorFlags.USER_CODE_INJECTION,
     onlineHelpRefUrl ="index.html?contextID=task_mzc_1by_nr"
 )
 @ConfigGroups(Groups.class)

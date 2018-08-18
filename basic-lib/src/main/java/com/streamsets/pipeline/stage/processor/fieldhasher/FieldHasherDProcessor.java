@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.StageBehaviorFlags;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
@@ -32,6 +33,7 @@ import com.streamsets.pipeline.config.OnStagePreConditionFailureChooserValues;
     description = "Uses an algorithm to hash field values",
     icon="hash.png",
     upgrader = FieldHasherProcessorUpgrader.class,
+    flags = StageBehaviorFlags.PURE_FUNCTION,
     onlineHelpRefUrl ="index.html?contextID=task_xjd_dlk_wq"
 )
 @ConfigGroups(Groups.class)

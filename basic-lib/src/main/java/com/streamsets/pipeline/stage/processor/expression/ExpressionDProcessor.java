@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.StageBehaviorFlags;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
 
@@ -33,6 +34,7 @@ import java.util.List;
     icon="expression.png",
     upgrader = ExpressionProcessorUpgrader.class,
     onlineHelpRefUrl ="index.html?contextID=task_x2h_tv4_yq",
+    flags = StageBehaviorFlags.PURE_FUNCTION,
     execution = {
         ExecutionMode.STANDALONE,
         ExecutionMode.CLUSTER_BATCH,

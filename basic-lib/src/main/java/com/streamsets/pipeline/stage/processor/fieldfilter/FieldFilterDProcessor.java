@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.StageBehaviorFlags;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
@@ -37,6 +38,7 @@ import java.util.List;
     description="Removes fields from a record",
     icon="filter.png",
     onlineHelpRefUrl ="index.html?contextID=task_c1j_btr_wq",
+    flags = StageBehaviorFlags.PURE_FUNCTION,
     execution = {
         ExecutionMode.STANDALONE,
         ExecutionMode.CLUSTER_BATCH,

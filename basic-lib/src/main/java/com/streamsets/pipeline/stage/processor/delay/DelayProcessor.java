@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageBehaviorFlags;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
@@ -42,6 +43,7 @@ import java.util.Iterator;
         ExecutionMode.EMR_BATCH
 
     },
+    flags = StageBehaviorFlags.PASSTHROUGH,
     onlineHelpRefUrl ="index.html?contextID=task_jh5_qxf_wbb"
 )
 public class DelayProcessor extends SingleLaneRecordProcessor {

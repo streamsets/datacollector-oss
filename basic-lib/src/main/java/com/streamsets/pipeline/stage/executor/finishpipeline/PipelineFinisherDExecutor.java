@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.executor.finishpipeline;
 
 import com.streamsets.pipeline.api.Executor;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.StageBehaviorFlags;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DExecutor;
 
@@ -26,6 +27,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DExecutor;
     label = "Pipeline Finisher Executor",
     description = "Forces pipeline to transition to Finished after receiving an event.",
     icon = "finisher.png",
+    flags = StageBehaviorFlags.PASSTHROUGH,
     onlineHelpRefUrl ="index.html?contextID=task_lrm_pws_3z"
 )
 

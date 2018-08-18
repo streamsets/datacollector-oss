@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.ConfigDef.Type;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.StageBehaviorFlags;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
@@ -35,6 +36,7 @@ import java.util.List;
     description = "Replaces null values with a constant and replaces values with NULL",
     icon="replacer.png",
     onlineHelpRefUrl ="index.html?contextID=task_ihq_ymf_zq",
+    flags = StageBehaviorFlags.PURE_FUNCTION,
     upgrader = FieldValueReplacerUpgrader.class
 )
 @ConfigGroups(Groups.class)

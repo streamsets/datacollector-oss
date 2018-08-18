@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.PipelineLifecycleStage;
+import com.streamsets.pipeline.api.StageBehaviorFlags;
 import com.streamsets.pipeline.api.StageDef;
 
 @StageDef(
@@ -36,6 +37,7 @@ import com.streamsets.pipeline.api.StageDef;
         ExecutionMode.EDGE,
         ExecutionMode.EMR_BATCH
     },
+    flags = StageBehaviorFlags.PASSTHROUGH,
     onlineHelpRefUrl ="index.html?contextID=concept_kgc_l4y_5r"
 )
 @HideConfigs(preconditions = true, onErrorRecord = true)

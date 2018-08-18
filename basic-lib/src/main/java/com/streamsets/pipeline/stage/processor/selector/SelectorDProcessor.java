@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.PredicateModel;
 import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.StageBehaviorFlags;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
 import com.streamsets.pipeline.lib.el.RecordEL;
@@ -36,6 +37,7 @@ import java.util.Map;
     icon="laneSelector.png",
     outputStreams = StageDef.VariableOutputStreams.class,
     outputStreamsDrivenByConfig = "lanePredicates",
+    flags = StageBehaviorFlags.PASSTHROUGH,
     onlineHelpRefUrl ="index.html?contextID=task_iss_2zx_wq",
     execution = {
         ExecutionMode.STANDALONE,

@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.StageBehaviorFlags;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
 
@@ -28,6 +29,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     label = "Base64 Field Decoder",
     icon = "base64decoder.png",
     description = "Decodes a Base64 encoded Byte Array field",
+    flags = StageBehaviorFlags.PURE_FUNCTION,
     onlineHelpRefUrl ="index.html?contextID=task_pnn_5py_kv"
 )
 @ConfigGroups(Groups.class)

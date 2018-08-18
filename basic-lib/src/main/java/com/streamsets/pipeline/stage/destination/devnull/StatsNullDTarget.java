@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.destination.devnull;
 
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.HideStage;
+import com.streamsets.pipeline.api.StageBehaviorFlags;
 import com.streamsets.pipeline.api.StatsAggregatorStage;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
@@ -36,6 +37,7 @@ import com.streamsets.pipeline.api.StageDef;
         ExecutionMode.EMR_BATCH
 
     },
+    flags = StageBehaviorFlags.PASSTHROUGH,
     onlineHelpRefUrl = ""
 )
 @HideConfigs(preconditions = true, onErrorRecord = true)
