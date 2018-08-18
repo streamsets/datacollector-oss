@@ -37,6 +37,7 @@ import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.interceptor.Interceptor;
+import com.streamsets.pipeline.api.interceptor.InterceptorCreator;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -49,6 +50,7 @@ import java.util.Map;
 public class InterceptorContext implements Interceptor.Context {
   private static final String CUSTOM_METRICS_PREFIX = "interceptor.custom.";
 
+  private final InterceptorCreator.InterceptorType type;
   private final StageLibraryTask stageLibrary;
   private final String pipelineId;
   private final String pipelineTitle;
@@ -99,6 +101,7 @@ public class InterceptorContext implements Interceptor.Context {
   private final ClassLoader containerClassLoader;
 
   public InterceptorContext(
+    InterceptorCreator.InterceptorType type,
     BlobStore blobStore,
     Configuration configuration,
     String stageInstanceName,
@@ -119,6 +122,7 @@ public class InterceptorContext implements Interceptor.Context {
     long startTime,
     LineagePublisherDelegator lineagePublisherDelegator
   ) {
+    this.type = type;
     this.blobStore = blobStore;
     this.configuration = configuration;
     this.stageInstanceName = stageInstanceName;
@@ -212,7 +216,7 @@ public class InterceptorContext implements Interceptor.Context {
   }
 
   private String createMetricName(String name) {
-    return CUSTOM_METRICS_PREFIX + stageInstanceName + "." + metricName + "." + name;
+    return CUSTOM_METRICS_PREFIX + type.name() + "." + stageInstanceName + "." + metricName + "." + name;
   }
 
   @Override

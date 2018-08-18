@@ -55,6 +55,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.interceptor.InterceptorCreator;
 import com.streamsets.pipeline.api.lineage.LineageEvent;
 import com.streamsets.pipeline.api.lineage.LineageEventType;
 import org.slf4j.Logger;
@@ -1038,9 +1039,13 @@ public class Pipeline {
     // Properly wrap the interceptors
     List<InterceptorRuntime> preInterceptors = new ArrayList<>();
     for(InterceptorBean interceptorBean : stageBean.getPreInterceptors()) {
-      InterceptorRuntime interceptorRuntime = new InterceptorRuntime(interceptorBean);
+      InterceptorRuntime interceptorRuntime = new InterceptorRuntime(
+        InterceptorCreator.InterceptorType.PRE_STAGE,
+        interceptorBean
+      );
 
       interceptorRuntime.setContext(new InterceptorContext(
+        InterceptorCreator.InterceptorType.PRE_STAGE,
         blobStore,
         configuration,
         stageBean.getConfiguration().getInstanceName(),
@@ -1066,9 +1071,13 @@ public class Pipeline {
     }
     List<InterceptorRuntime> postInterceptors = new ArrayList<>();
     for(InterceptorBean interceptorBean : stageBean.getPostInterceptors()) {
-      InterceptorRuntime interceptorRuntime = new InterceptorRuntime(interceptorBean);
+      InterceptorRuntime interceptorRuntime = new InterceptorRuntime(
+        InterceptorCreator.InterceptorType.POST_STAGE,
+        interceptorBean
+      );
 
       interceptorRuntime.setContext(new InterceptorContext(
+        InterceptorCreator.InterceptorType.POST_STAGE,
         blobStore,
         configuration,
         stageBean.getConfiguration().getInstanceName(),

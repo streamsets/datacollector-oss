@@ -24,6 +24,7 @@ import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.ConfigIssue;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.interceptor.Interceptor;
+import com.streamsets.pipeline.api.interceptor.InterceptorCreator;
 
 import java.util.List;
 
@@ -33,6 +34,7 @@ import java.util.List;
  */
 public class InterceptorRuntime implements Interceptor {
 
+  private final InterceptorCreator.InterceptorType type;
   private final InterceptorBean bean;
   private InterceptorContext context;
 
@@ -40,8 +42,10 @@ public class InterceptorRuntime implements Interceptor {
   private Timer processingTimer;
 
   public InterceptorRuntime(
+    InterceptorCreator.InterceptorType type,
     InterceptorBean bean
   ) {
+    this.type = type;
     this.bean = bean;
   }
 
@@ -56,6 +60,8 @@ public class InterceptorRuntime implements Interceptor {
   public List<Issue> init() {
     MetricRegistry metrics = getContext().getMetrics();
     String metricsBaseName = "interceptor.stage."
+      + this.type.name()
+      + "."
       + this.context.getStageInstanceName()
       + "."
       + bean.getMetricName()

@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.BlobStore;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.interceptor.InterceptorCreator;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -51,6 +52,7 @@ public class InterceptorContextTest {
     this.configuration = Mockito.mock(Configuration.class);
 
     this.context = new InterceptorContext(
+      InterceptorCreator.InterceptorType.PRE_STAGE,
       blobStore,
       configuration,
       "stageInstance",
