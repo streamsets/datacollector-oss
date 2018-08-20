@@ -154,6 +154,7 @@ public class InterceptorContext implements Interceptor.Context {
     return rev;
   }
 
+  @Override
   public String getStageInstanceName() {
     return stageInstanceName;
   }
