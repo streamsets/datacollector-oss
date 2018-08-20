@@ -17,6 +17,8 @@ package com.streamsets.pipeline.lib.event;
 
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.FieldVisitor;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import org.junit.Before;
 import org.junit.Test;
@@ -87,6 +89,10 @@ public class EventCreatorTest {
     @Override
     public Field set(String fieldPath, Field newField) {
       return null;
+    }
+
+    @Override
+    public void forEachField(FieldVisitor visitor) throws StageException {
     }
 
     public Header setHeader(Header header) {
