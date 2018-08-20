@@ -19,7 +19,11 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.util.EscapeUtil;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.FieldOperator;
+import com.streamsets.pipeline.api.FieldVisitor;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.RecordField;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.ArrayList;
@@ -578,5 +582,63 @@ public class RecordImpl implements Record, Cloneable {
       }
     }
     return fieldToReplace;
+  }
+
+  @Override
+  public void forEachField(FieldVisitor visitor) throws StageException {
+    RecordFieldImpl recordField = new RecordFieldImpl(this);
+    if (value != null) {
+      visitFieldsInternal(recordField, visitor, "", value);
+    }
+  }
+
+  private void visitFieldsInternal(RecordFieldImpl recordField, FieldVisitor visitor, String path, Field currentField) throws StageException {
+    // For nested types, visit their children first
+    switch (currentField.getType()) {
+      case MAP:
+      case LIST_MAP:
+        for(Map.Entry<String, Field> entry : currentField.getValueAsMap().entrySet()) {
+          visitFieldsInternal(recordField, visitor, path + "/" + escapeName(entry.getKey(), true), entry.getValue());
+        }
+        break;
+      case LIST:
+        int index = 0;
+        for(Field childField : currentField.getValueAsList()) {
+          visitFieldsInternal(recordField, visitor, path + "[" + index + "]", childField);
+          index++;
+        }
+        break;
+      default:
+    }
+
+    // And always visit this field itself (whether it's terminal type of nested type doesn't matter)
+    recordField.path = path;
+    recordField.field = currentField;
+    visitor.visit(recordField);
+  }
+
+  private static class RecordFieldImpl implements RecordField {
+    String path;
+    Field field;
+    Record record;
+
+    RecordFieldImpl(Record record) {
+      this.record = record;
+    }
+
+    @Override
+    public String getFieldPath() {
+      return path;
+    }
+
+    @Override
+    public Field getField() {
+      return field;
+    }
+
+    @Override
+    public Record getRecord() {
+      return record;
+    }
   }
 }

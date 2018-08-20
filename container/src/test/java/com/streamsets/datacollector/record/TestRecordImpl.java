@@ -16,14 +16,17 @@
 package com.streamsets.datacollector.record;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -743,5 +746,26 @@ public class TestRecordImpl {
         Assert.assertEquals("value", f.getValueAsString());
       }
     }
+  }
+
+  @Test
+  public void testForEachField() throws StageException {
+    RecordImpl r = new RecordImpl("stage", "source", null, null);
+    r.set(Field.create(ImmutableMap.of(
+      "string", Field.create(Field.Type.STRING, "text"),
+      "map", Field.create(ImmutableMap.of(
+        "inner", Field.create("inner")
+      )),
+      "list", Field.create(ImmutableList.of(
+        Field.create(0),
+        Field.create(1)
+      ))
+    )));
+
+    Set<String> fieldPaths = new HashSet<>();
+    r.forEachField(recordField -> fieldPaths.add(recordField.getFieldPath()));
+
+    Assert.assertEquals(fieldPaths, r.getEscapedFieldPaths());
+
   }
 }

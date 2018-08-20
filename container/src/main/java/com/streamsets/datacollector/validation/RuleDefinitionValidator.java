@@ -29,7 +29,9 @@ import com.streamsets.datacollector.el.ELEvaluator;
 import com.streamsets.datacollector.el.ELVariables;
 import com.streamsets.datacollector.el.RuleELRegistry;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.FieldVisitor;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import org.apache.commons.collections.CollectionUtils;
@@ -369,6 +371,11 @@ public class RuleDefinitionValidator {
       public Field set(String fieldPath, Field newField) {
         return null;
       }
+
+      @Override
+      public void forEachField(FieldVisitor visitor) throws StageException {
+      }
+
     };
 
     RecordEL.setRecordInContext(variables, record);
