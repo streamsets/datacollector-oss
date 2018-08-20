@@ -62,7 +62,7 @@ public class AmazonS3Util {
       AmazonS3 s3Client,
       S3ConfigBean s3ConfigBean,
       AntPathMatcher pathMatcher,
-      AmazonS3Source.S3Offset s3Offset,
+      S3Offset s3Offset,
       int fetchSize
   ) {
     // Incrementally scan objects after the marker (s3Offset).
@@ -118,7 +118,7 @@ public class AmazonS3Util {
       AmazonS3 s3Client,
       S3ConfigBean s3ConfigBean,
       AntPathMatcher pathMatcher,
-      AmazonS3Source.S3Offset s3Offset,
+      S3Offset s3Offset,
       int fetchSize
   ) {
 
@@ -162,7 +162,7 @@ public class AmazonS3Util {
     return new ArrayList<>(treeSet);
   }
 
-  private static boolean isEligible(S3ObjectSummary s, AmazonS3Source.S3Offset s3Offset) {
+  private static boolean isEligible(S3ObjectSummary s, S3Offset s3Offset) {
 
     //The object is eligible if
     //1. The timestamp is greater than that of the current object in offset

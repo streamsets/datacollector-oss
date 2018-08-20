@@ -21,7 +21,20 @@ import com.streamsets.pipeline.common.InterfaceStability;
 @InterfaceAudience.LimitedPrivate
 @InterfaceStability.Unstable
 public class S3Constants {
-  public static final String MINUS_ONE = "-1";
+  static final String MINUS_ONE = "-1";
+  static final String ZERO = "0";
+  static final String AMAZON_S3_THREAD_PREFIX = "Amazon S3 Runner - ";
+  static final String AMAZON_S3_METRICS = "Amazon S3 Metrics for Thread - ";
+
+  static final long DEFAULT_FETCH_SIZE = 1024 * 1024L;
+  static final String BUCKET = "bucket";
+  static final String OBJECT_KEY = "objectKey";
+  static final String OWNER = "owner";
+  static final String OFFSET = "Current Offset";
+  static final String SIZE = "size";
+  static final String CONTENT_LENGTH = "Content-Length";
+  static final String THREAD_NAME = "Thread Name";
+  static final String STATUS = "Status";
 
   private S3Constants() {}
 }

@@ -152,6 +152,11 @@
       <artifactId>awaitility</artifactId>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-common</artifactId>
+      <scope>compile</scope>
+    </dependency>
 
     <!-- Test Dependencies -->
     <dependency>

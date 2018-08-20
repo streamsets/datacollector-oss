@@ -72,6 +72,18 @@ public class S3ConfigBean {
   )
   public boolean enableMetaData = false;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "1",
+      label = "Number of Threads",
+      description = "Number of parallel threads to read data",
+      displayPosition = 60,
+      group = "ADVANCED",
+      min = 1
+  )
+  public int numberOfThreads = 1;
+
   public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
     s3FileConfig.init(context, issues);
     basicConfig.init(context, Groups.S3.name(), BASIC_CONFIG_PREFIX, issues);

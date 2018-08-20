@@ -94,6 +94,12 @@ public abstract class S3ConnectionBaseConfig {
   )
   public String delimiter;
 
+  private int maxErrorRetries;
+
+  public int getMaxErrorRetries(){
+    return maxErrorRetries;
+  }
+
   /* Max Error retries >=0 are set in ClientConfig for S3Client, < 0 will use default (3)
    */
   public void init(
@@ -103,6 +109,7 @@ public abstract class S3ConnectionBaseConfig {
       List<Stage.ConfigIssue> issues,
       int maxErrorRetries
   ) {
+    this.maxErrorRetries = maxErrorRetries;
     commonPrefix = AWSUtil.normalizePrefix(commonPrefix, delimiter);
     try {
       createConnection(context, configPrefix, proxyConfig, issues, maxErrorRetries);

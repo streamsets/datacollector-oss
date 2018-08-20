@@ -19,15 +19,15 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.base.configurablestage.DSource;
+import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
 import com.streamsets.pipeline.api.service.ServiceConfiguration;
 import com.streamsets.pipeline.api.service.ServiceDependency;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
 
 @StageDef(
-    version = 10,
+    version = 11,
     label = "Amazon S3",
     description = "Reads files from Amazon S3",
     icon="s3.png",
@@ -46,13 +46,13 @@ import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
-public class AmazonS3DSource extends DSource {
+public class AmazonS3DSource extends DPushSource {
 
   @ConfigDefBean()
   public S3ConfigBean s3ConfigBean;
 
   @Override
-  protected Source createSource() {
-    return new AmazonS3Source(s3ConfigBean);
+  protected PushSource createPushSource() {
+    return new AmazonS3SourceImpl(s3ConfigBean);
   }
 }

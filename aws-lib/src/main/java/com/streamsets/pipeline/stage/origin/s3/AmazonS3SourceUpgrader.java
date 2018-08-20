@@ -57,6 +57,9 @@ public class AmazonS3SourceUpgrader implements StageUpgrader {
         // fall through
       case 9:
         upgradeV9ToV10(configs, context);
+        // fall through
+      case 10:
+        upgradeV10ToV11(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", context.getFromVersion()));
@@ -178,5 +181,9 @@ public class AmazonS3SourceUpgrader implements StageUpgrader {
 
     // And finally register new service
     context.registerService(DataFormatParserService.class, dataFormatConfigs);
+  }
+
+  private static void upgradeV10ToV11(List<Config> configs) {
+    configs.add(new Config(S3ConfigBean.S3_CONFIG_BEAN_PREFIX + "numberOfThreads", 1));
   }
 }

@@ -20,7 +20,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.codahale.metrics.Meter;
 import com.google.common.base.Preconditions;
-import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.util.AntPathMatcher;
@@ -31,28 +31,31 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class S3Spooler {
 
   private static final Logger LOG = LoggerFactory.getLogger(S3Spooler.class);
 
-  private final Source.Context context;
+  private final PushSource.Context context;
   private final S3ConfigBean s3ConfigBean;
   private final AmazonS3 s3Client;
   private AntPathMatcher pathMatcher;
+  private AtomicBoolean filling;
 
-  public S3Spooler(Source.Context context, S3ConfigBean s3ConfigBean) {
+  public S3Spooler(PushSource.Context context, S3ConfigBean s3ConfigBean) {
     this.context = context;
     this.s3ConfigBean = s3ConfigBean;
     this.s3Client = s3ConfigBean.s3Config.getS3Client();
   }
 
-  private S3ObjectSummary currentObject;
+  private volatile S3ObjectSummary currentObject;
   private ArrayBlockingQueue<S3ObjectSummary> objectQueue;
   private Meter spoolQueueMeter;
 
   public void init() {
     try {
+      filling = new AtomicBoolean(false);
       objectQueue = new ArrayBlockingQueue<>(s3ConfigBean.s3FileConfig.poolSize);
       spoolQueueMeter = context.createMeter("spoolQueue");
       pathMatcher = new AntPathMatcher(s3ConfigBean.s3Config.delimiter);
@@ -68,8 +71,7 @@ public class S3Spooler {
     }
   }
 
-  S3ObjectSummary findAndQueueObjects(AmazonS3Source.S3Offset s3offset, boolean checkCurrent)
-    throws AmazonClientException {
+  S3ObjectSummary findAndQueueObjects(S3Offset s3offset, boolean checkCurrent) throws AmazonClientException {
     List<S3ObjectSummary> s3ObjectSummaries;
     ObjectOrdering objectOrdering = s3ConfigBean.s3FileConfig.objectOrdering;
     switch (objectOrdering) {
@@ -116,13 +118,14 @@ public class S3Spooler {
     }
   }
 
-  public S3ObjectSummary poolForObject(AmazonS3Source.S3Offset s3Offset, long wait, TimeUnit timeUnit)
-    throws InterruptedException, AmazonClientException {
+  public S3ObjectSummary poolForObject(AmazonS3Source amazonS3Source, long wait, TimeUnit timeUnit)
+      throws InterruptedException, AmazonClientException {
     Preconditions.checkArgument(wait >= 0, "wait must be zero or greater");
     Preconditions.checkNotNull(timeUnit, "timeUnit cannot be null");
 
-    if(objectQueue.isEmpty()) {
-      findAndQueueObjects(s3Offset, false);
+    if (objectQueue.isEmpty() && filling.compareAndSet(false, true)) {
+      findAndQueueObjects(amazonS3Source.getLatestOffset(), false);
+      filling.set(false);
     }
 
     S3ObjectSummary next = null;
@@ -202,7 +205,7 @@ public class S3Spooler {
     }
   }
 
-  public void postProcessOlderObjectIfNeeded(AmazonS3Source.S3Offset s3Offset) {
+  public void postProcessOlderObjectIfNeeded(S3Offset s3Offset) {
     //If sdc was shutdown after reading an object but before post processing it, handle it now.
 
     //The scenario is detected as follows:
