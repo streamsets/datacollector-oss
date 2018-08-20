@@ -59,7 +59,7 @@ angular.module('dataCollectorApp.common')
           stagePreviewData.stageErrors = stageOutput.stageErrors;
           stagePreviewData.eventRecords = [];
           if (stageOutput.eventRecords && stageOutput.eventRecords.length) {
-            var eventLane = eventRecords = stageOutput.instanceName + '_EventLane';
+            var eventLane = stageOutput.instanceName + '_EventLane';
             angular.forEach(stageOutput.eventRecords, function(eventRecord) {
               eventRecord.laneName = eventLane;
               stagePreviewData.eventRecords.push(eventRecord);
@@ -119,7 +119,7 @@ angular.module('dataCollectorApp.common')
 
           stagePreviewData.eventRecords = [];
           if (stageOutput.eventRecords && stageOutput.eventRecords.length) {
-            var eventLane = eventRecords = stageOutput.instanceName + '_EventLane';
+            var eventLane = stageOutput.instanceName + '_EventLane';
             angular.forEach(stageOutput.eventRecords, function(eventRecord) {
               eventRecord.laneName = eventLane;
               stagePreviewData.eventRecords.push(eventRecord);

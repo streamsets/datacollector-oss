@@ -59,7 +59,6 @@
               <goal>build</goal>
             </goals>
             <configuration>
-              <buildArgs>--force</buildArgs>
               <bowerInstallArgs>${bowerInstallArgs}</bowerInstallArgs>
             </configuration>
           </execution>

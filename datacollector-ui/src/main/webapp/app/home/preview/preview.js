@@ -136,7 +136,7 @@ angular
         var previewBatchOutput = $scope.previewData.batchesOutput[0];
         var previewConfig = $scope.pipelineConfig.uiInfo.previewConfig;
         var stageOutputs = [];
-        var testOrigin = (previewConfig.previewSource === pipelineConstant.TEST_ORIGIN)
+        var testOrigin = (previewConfig.previewSource === pipelineConstant.TEST_ORIGIN);
 
         angular.forEach(previewBatchOutput, function(stageOutput, index) {
           var lanesList = _.keys(stageOutput.output);
@@ -469,7 +469,7 @@ angular
             $scope.dirtyLanes = [];
 
             if (!$scope.previewMultipleStages) {
-            
+
               $scope.changeStageSelection({
                 selectedObject: firstStageInstance,
                 type: pipelineConstant.STAGE_INSTANCE

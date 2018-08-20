@@ -99,18 +99,18 @@ angular
       },
 
       severityFilterChanged: function(severity) {
-        if ($scope.filterSeverity != severity) {
+        if ($scope.filterSeverity !== severity) {
           $scope.filterSeverity = severity;
           $scope.refreshLogs();
         }
       },
 
       pipelineFilterChanged: function(pipeline) {
-        if (pipeline && $scope.filterPipeline != pipeline.name) {
+        if (pipeline && $scope.filterPipeline !== pipeline.name) {
           $scope.filterPipeline = pipeline.name;
           $scope.filterPipelineLabel = pipeline.title + '/' + pipeline.name;
           $scope.refreshLogs();
-        } else if (pipeline == undefined && $scope.filterPipeline != undefined) {
+        } else if (pipeline === undefined && $scope.filterPipeline !== undefined) {
           $scope.filterPipeline = undefined;
           $scope.filterPipelineLabel = 'All';
           $scope.refreshLogs();

@@ -2057,7 +2057,7 @@ angular
               configuration: saConfig
             });
 
-            newValue.startEventStages = [ startEventStageInstance ]
+            newValue.startEventStages = [ startEventStageInstance ];
           }
         }
 
@@ -2093,7 +2093,7 @@ angular
               configuration: saConfig
             });
 
-            newValue.stopEventStages = [ stopEventStageInstance ]
+            newValue.stopEventStages = [ stopEventStageInstance ];
           }
         }
 

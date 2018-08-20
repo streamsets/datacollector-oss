@@ -308,7 +308,7 @@ angular
         if (tab.name === 'rules') {
           var pipelineRules = $scope.pipelineRules;
           return pipelineRules && ((pipelineRules.ruleIssues && pipelineRules.ruleIssues.length) ||
-              (pipelineRules.configIssues && pipelineRules.configIssues.length))
+              (pipelineRules.configIssues && pipelineRules.configIssues.length));
         }
         return false;
       },

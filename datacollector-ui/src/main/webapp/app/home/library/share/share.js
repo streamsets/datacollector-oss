@@ -192,7 +192,7 @@ angular
       var filteredSubjects = [];
       angular.forEach(groupList.concat(userList), function(subject) {
         if(alreadyAddedSubjects.indexOf(subject) === -1 && filteredSubjects.indexOf(subject) === -1) {
-          filteredSubjects.push(subject)
+          filteredSubjects.push(subject);
         }
       });
 

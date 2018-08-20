@@ -228,7 +228,7 @@ angular
       duplicatePipelines: function() {
         if ($scope.selectedPipelineList && $scope.selectedPipelineList.length > 0) {
           var selectedPipeline = _.find($scope.filteredPipelines, function(pipeline) {
-            return $scope.selectedPipelineList[0] === pipeline.pipelineId
+            return $scope.selectedPipelineList[0] === pipeline.pipelineId;
           });
           pipelineService.duplicatePipelineConfigCommand(selectedPipeline)
             .then(function(pipelines) {
@@ -250,7 +250,7 @@ angular
       shareSelectedPipelineConfig: function () {
         if ($scope.selectedPipelineList && $scope.selectedPipelineList.length > 0) {
           var selectedPipeline = _.find($scope.filteredPipelines, function(pipeline) {
-            return $scope.selectedPipelineList[0] === pipeline.pipelineId
+            return $scope.selectedPipelineList[0] === pipeline.pipelineId;
           });
           pipelineService.sharePipelineConfigCommand(selectedPipeline);
         }
@@ -350,7 +350,7 @@ angular
 
         modalInstance.result.then(function(res) {
           angular.forEach(res.successEntities, function(pipelineName) {
-            var pipeline = _.find($scope.filteredPipelines, function(p) { return p.pipelineId === pipelineName });
+            var pipeline = _.find($scope.filteredPipelines, function(p) { return p.pipelineId === pipelineName; });
             var mergedLabels = (pipeline.metadata.labels || []).concat(res.labels);
             pipeline.metadata.labels = _(mergedLabels).uniq();
           });

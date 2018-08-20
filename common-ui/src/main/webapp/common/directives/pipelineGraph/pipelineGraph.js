@@ -687,7 +687,7 @@ angular.module('pipelineGraphDirectives', [])
           'cy': consts.rectHeight,
           'r': 10,
           'class': function(d) {
-            return 'graph-bootstrap-tooltip ' + d.eventLanes[0]
+            return 'graph-bootstrap-tooltip ' + d.eventLanes[0];
           },
           'title': 'Events'
         })
@@ -1712,7 +1712,7 @@ angular.module('pipelineGraphDirectives', [])
         });
         graph.updateGraph();
       }
-    }
+    };
 
   })
   .controller('DeleteOriginModalInstanceController', function ($scope, $modalInstance) {

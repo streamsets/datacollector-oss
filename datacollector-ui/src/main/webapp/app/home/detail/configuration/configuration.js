@@ -571,7 +571,7 @@ angular
        * @returns {*}
        */
       getConfig: function(name, instance) {
-        var value = undefined;
+        var value;
 
         angular.forEach(instance.configuration, function(config) {
           if(config.name === name) {

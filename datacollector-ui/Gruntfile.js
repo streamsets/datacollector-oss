@@ -436,7 +436,9 @@ module.exports = function(grunt) {
         boss: true,
         eqnull: true,
         esnext: true,
-        debug: true  //TODO: Set this flag only for development mode.
+        debug: false,
+        loopfunc: true,
+        reporterOutput: ""
       },
       globals: {}
     },

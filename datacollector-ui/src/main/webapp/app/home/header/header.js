@@ -471,7 +471,7 @@ angular
        * Returns true if pipeline is Edge pipeline
        */
       isEdgePipeline: function() {
-        return $scope.executionMode === 'EDGE'
+        return $scope.executionMode === 'EDGE';
       },
 
       publishToEdge: function () {

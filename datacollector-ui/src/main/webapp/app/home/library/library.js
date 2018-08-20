@@ -173,17 +173,17 @@ angular
      */
     var highlight = function() {
       $('.predefined-labels .label-display').each(function(i, el) {
-        var el = $(el);
+        var $el = $(el);
 
         // Filter value is not present, revert to default state
         if (!$scope.labelFilter.value) {
-          el.html(el.text());
+          $el.html($el.text());
 
           // Filter value is present, apply the highlight
         } else {
           var safeString = $scope.labelFilter.value.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
           var regex = new RegExp(safeString, 'g');
-          el.html(el.text().replace(regex, '<span class="highlight">' + $scope.labelFilter.value + '</span>'));
+          $el.html(el.text().replace(regex, '<span class="highlight">' + $scope.labelFilter.value + '</span>'));
         }
       });
     };
