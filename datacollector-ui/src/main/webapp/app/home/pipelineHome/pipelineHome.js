@@ -1253,7 +1253,7 @@ angular
         var statsAggregatorStageConfig = _.find($scope.pipelineConfig.configuration, function (c) {
           return c.name === 'statsAggregatorStage';
         });
-        if (statsAggregatorStage) {
+        if (statsAggregatorStageConfig) {
           statsAggregatorStageConfig.value = "streamsets-datacollector-basic-lib::" +
             "com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget::1";
         }
@@ -2013,6 +2013,7 @@ angular
           });
 
           if (statsAggregatorStage) {
+            var saConfig;
             if (statsAggregatorStageInst && statsAggregatorStageInst.stageName === statsAggregatorStage.name  &&
               statsAggregatorStageInst.stageVersion === statsAggregatorStage.version) {
               saConfig = statsAggregatorStageInst.configuration;
@@ -2046,15 +2047,16 @@ angular
           });
 
           if (startEventStage) {
+            var startConf;
             if (startEventStageInst && startEventStageInst.stageName === startEventStage.name  &&
               startEventStageInst.stageVersion === startEventStage.version) {
-              saConfig = startEventStageInst.configuration;
+              startConf = startEventStageInst.configuration;
             }
             var startEventStageInstance = pipelineService.getNewStageInstance({
               stage: startEventStage,
               pipelineConfig: $scope.pipelineConfig,
               startEventStage: true,
-              configuration: saConfig
+              configuration: startConf
             });
 
             newValue.startEventStages = [ startEventStageInstance ];
@@ -2081,16 +2083,16 @@ angular
           });
 
           if (stopEventStage) {
-            var saConfig;
+            var stopConf;
             if (stopEventStageInst && stopEventStageInst.stageName === stopEventStage.name  &&
               stopEventStageInst.stageVersion === stopEventStage.version) {
-              saConfig = stopEventStageInst.configuration;
+              stopConf = stopEventStageInst.configuration;
             }
             var stopEventStageInstance = pipelineService.getNewStageInstance({
               stage: stopEventStage,
               pipelineConfig: $scope.pipelineConfig,
               stopEventStage: true,
-              configuration: saConfig
+              configuration: stopConf
             });
 
             newValue.stopEventStages = [ stopEventStageInstance ];

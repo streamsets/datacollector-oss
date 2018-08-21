@@ -653,26 +653,26 @@ module.exports = function(grunt) {
    * before watching for changes.
    */
   grunt.renameTask( 'watch', 'delta' );
-  grunt.registerTask( 'watch', [ 'build', 'delta' ] );
+  grunt.registerTask( 'watch', [ 'build-dev', 'delta' ] );
 
   /**
    * The default task is to build and compile.
    */
-  grunt.registerTask( 'default', [ 'build', 'compile' ] );
-  //grunt.registerTask( 'default', [ 'build' ] );
+  grunt.registerTask( 'default', [ 'build' ] );
+
+  grunt.registerTask( 'build', [ 'build-dev', 'compile' ] );
 
   grunt.registerTask( 'test', []);
 
   /**
    * The `build` task gets your app ready to run for development and testing.
    */
-  grunt.registerTask( 'build', [
+  grunt.registerTask( 'build-dev', [
     'clean:build', 'html2js', 'jshint', 'less:build', 'concat:build_css',
     'copy:build_app_assets', 'copy:build_appjs',
     'copy:build_common_app_assets', 'copy:build_common_appjs',
     'copy:build_vendor_assets', 'copy:build_vendor_fonts',
     'copy:build_vendorjs', 'copy:build_docs', 'index:build', 'login:build', 'karmaconfig'
-    //,'karma:continuous'
   ]);
 
   /**
