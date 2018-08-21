@@ -177,7 +177,6 @@ configurations {
   api
   container
   rootClasspath
-  coreStageLibs
 }
 
 dependencies {
@@ -188,10 +187,6 @@ dependencies {
   container(
       project(':core:container'),
       project(':core:container-common'),
-  )
-  coreStageLibs(
-      project(':lib:stage:basic-lib'),
-      project(':core:dataformats-lib'),
   )
   rootClasspath "org.xerial.snappy:snappy-java:1.0.5"
 }
@@ -205,7 +200,7 @@ tasks.withType(Zip) {
   enabled = false
 }
 
-def generateDistCopySpec(Set<Project> bundledStageLibs, String distPath = '', String confPath = 'etc') {
+def generateDistCopySpec(Set<Project> bundledStageLibs, String distPath = '', String confPath = '/etc') {
   copySpec {
     // SDC_CONF
     into(confPath) {
@@ -271,13 +266,14 @@ def generateDistCopySpec(Set<Project> bundledStageLibs, String distPath = '', St
       }
       // The UI
       into('sdc-static-web') {
-        from new File(project(':ui:datacollector-ui').projectDir, 'target/dist')
+        from project(':ui:datacollector-ui').tasks.build.outputs
+        // from new File(project(':ui:datacollector-ui').projectDir, 'target/dist')
       }
     }
     bundledStageLibs.forEach { library ->
       into("$distPath/streamsets-libs/streamsets-datacollector-${library.name}/lib") {
         from library.tasks.withType(Jar)// the stage library jar
-        from library.configurations.runtime // the runtime dependencies
+        from library.configurations.runtimeClasspath // the runtime dependencies
       }
     }
   }

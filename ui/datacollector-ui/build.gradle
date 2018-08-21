@@ -8,12 +8,12 @@ node {
   download = true
 }
 
-def srcDir = new File(projectDir, "src/main/webapp")
-def targetDir = new File(projectDir, "target/dist")
+def inputDir = new File(projectDir, "src/main/webapp")
+def outputDir = new File(projectDir, "target/dist")
 
 task gruntBuildForce(type: GruntTask) {
-  inputs.dir(srcDir)
-  outputs.dir(targetDir)
+  inputs.dir(inputDir)
+  outputs.dir(outputDir)
 }
 
 task yarnInstall(type: YarnTask) {
@@ -42,6 +42,7 @@ gruntBuildForce.dependsOn 'yarnInstall'
 
 // runs "grunt build" as part of your Gradle build
 build.dependsOn gruntBuildForce
+build.outputs.dir(outputDir)
 
 // delete node modules on clean task
 clean.dependsOn cleanNodeModules
