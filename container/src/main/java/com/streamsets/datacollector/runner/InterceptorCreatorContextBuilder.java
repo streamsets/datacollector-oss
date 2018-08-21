@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.runner;
 
+import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.util.Configuration;
@@ -48,12 +49,14 @@ public class InterceptorCreatorContextBuilder {
     private final Map<String, String> parameters;
     private final ExecutionMode executionMode;
     private final DeliveryGuarantee deliveryGuarantee;
+    private final StageConfiguration stageConfiguration;
     private final StageDefinition stageDefinition;
     private final Set<StageBehaviorFlags> stageBehaviorFlags;
 
     ContextImpl(
       BlobStore blobStore,
       Configuration configuration,
+      StageConfiguration stageConfiguration,
       StageDefinition stageDefinition,
       InterceptorCreator.InterceptorType interceptorType,
       Map<String, String> parameters,
@@ -62,6 +65,7 @@ public class InterceptorCreatorContextBuilder {
     ) {
       this.blobStore = blobStore;
       this.configuration = configuration;
+      this.stageConfiguration = stageConfiguration;
       this.stageDefinition = stageDefinition;
       this.interceptorType = interceptorType;
       this.parameters = parameters;
@@ -115,6 +119,11 @@ public class InterceptorCreatorContextBuilder {
     }
 
     @Override
+    public String getStageInstanceName() {
+      return stageConfiguration.getInstanceName();
+    }
+
+    @Override
     public Set<StageBehaviorFlags> getStageBehaviorFlags() {
       return stageBehaviorFlags;
     }
@@ -156,6 +165,7 @@ public class InterceptorCreatorContextBuilder {
   public InterceptorCreator.Context buildFor(
     String stageLibrary,
     String className,
+    StageConfiguration stageConfiguration,
     StageDefinition stageDefinition,
     InterceptorCreator.InterceptorType interceptorType
   ) {
@@ -172,6 +182,7 @@ public class InterceptorCreatorContextBuilder {
     return new ContextImpl(
         blobStore,
         sdcConf,
+        stageConfiguration,
         stageDefinition,
         interceptorType,
         actualParameters,

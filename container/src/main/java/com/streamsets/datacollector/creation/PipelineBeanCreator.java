@@ -637,8 +637,8 @@ public abstract class PipelineBeanCreator {
       stage,
       classLoaderReleaser,
       services,
-      createInterceptors(stageLib, stageDef, interceptorContextBuilder, InterceptorCreator.InterceptorType.PRE_STAGE, errors),
-      createInterceptors(stageLib, stageDef, interceptorContextBuilder, InterceptorCreator.InterceptorType.POST_STAGE, errors)
+      createInterceptors(stageLib, stageConf, stageDef, interceptorContextBuilder, InterceptorCreator.InterceptorType.PRE_STAGE, errors),
+      createInterceptors(stageLib, stageConf, stageDef, interceptorContextBuilder, InterceptorCreator.InterceptorType.POST_STAGE, errors)
     );
   }
 
@@ -692,6 +692,7 @@ public abstract class PipelineBeanCreator {
    */
   public List<InterceptorBean> createInterceptors(
     StageLibraryTask stageLib,
+    StageConfiguration stageConfiguration,
     StageDefinition stageDefinition,
     InterceptorCreatorContextBuilder contextBuilder,
     InterceptorCreator.InterceptorType interceptorType,
@@ -703,7 +704,7 @@ public abstract class PipelineBeanCreator {
     }
 
     for(InterceptorDefinition definition : stageLib.getInterceptorDefinitions()) {
-      InterceptorBean bean = createInterceptor(stageLib, definition, stageDefinition, contextBuilder, interceptorType, issues);
+      InterceptorBean bean = createInterceptor(stageLib, definition, stageConfiguration, stageDefinition, contextBuilder, interceptorType, issues);
       if (bean != null) {
         beans.add(bean);
       }
@@ -720,6 +721,7 @@ public abstract class PipelineBeanCreator {
   public InterceptorBean createInterceptor(
     StageLibraryTask stageLib,
     InterceptorDefinition definition,
+    StageConfiguration stageConfiguration,
     StageDefinition stageDefinition,
     InterceptorCreatorContextBuilder contextBuilder,
     InterceptorCreator.InterceptorType interceptorType,
@@ -733,6 +735,7 @@ public abstract class PipelineBeanCreator {
       Interceptor interceptor = creator.create(contextBuilder.buildFor(
         definition.getLibraryDefinition().getName(),
         definition.getKlass().getName(),
+        stageConfiguration,
         stageDefinition,
         interceptorType
       ));
