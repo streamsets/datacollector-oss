@@ -53,7 +53,7 @@ You also need the artifacts for datacollector-edge installed into your local mav
 
 - Gradle is used in this project as a build tool, so in order to install it to your local maven repository execute:
 
-  `./gradlew clean buildAll publish`
+  `./gradlew clean dist publishToMavenLocal`
 
 Finally, get the latest Data Collector code from Github
 
