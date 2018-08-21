@@ -12,7 +12,6 @@ def srcDir = new File(projectDir, "src/main/webapp")
 def targetDir = new File(projectDir, "target/dist")
 
 task gruntBuildForce(type: GruntTask) {
-  args = ["--force"]
   inputs.dir(srcDir)
   outputs.dir(targetDir)
 }
