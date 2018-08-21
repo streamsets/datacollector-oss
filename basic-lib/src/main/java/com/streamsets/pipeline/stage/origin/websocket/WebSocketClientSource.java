@@ -21,13 +21,17 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.common.DataFormatConstants;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.http.AuthenticationType;
+import com.streamsets.pipeline.lib.microservice.ResponseConfigBean;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.websocket.Errors;
 import com.streamsets.pipeline.lib.websocket.Groups;
 import com.streamsets.pipeline.lib.websocket.WebSocketCommon;
+import com.streamsets.pipeline.lib.websocket.WebSocketOriginGroups;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.StatusCode;
@@ -58,6 +62,7 @@ public class WebSocketClientSource implements PushSource {
   private static final Logger LOG = LoggerFactory.getLogger(WebSocketClientSource.class);
   private static final String RESOURCE_URL_CONFIG = "conf.resourceUrl";
   private final WebSocketClientSourceConfigBean conf;
+  private final ResponseConfigBean responseConfig;
   private DataParserFactory dataParserFactory;
   private Context context;
   private AtomicLong counter = new AtomicLong();
@@ -65,9 +70,15 @@ public class WebSocketClientSource implements PushSource {
   private List<Exception> errorList;
   private WebSocketClient webSocketClient = null;
   private boolean destroyed = false;
+  private DataGeneratorFactory dataGeneratorFactory;
+  private Session wsSession = null;
 
-  WebSocketClientSource(WebSocketClientSourceConfigBean conf) {
+  WebSocketClientSource(
+      WebSocketClientSourceConfigBean conf,
+      ResponseConfigBean responseConfig
+  ) {
     this.conf = conf;
+    this.responseConfig = responseConfig;
   }
 
   @Override
@@ -117,6 +128,15 @@ public class WebSocketClientSource implements PushSource {
     );
     dataParserFactory = conf.dataFormatConfig.getParserFactory();
 
+    responseConfig.dataGeneratorFormatConfig.init(
+        context,
+        responseConfig.dataFormat,
+        WebSocketOriginGroups.WEB_SOCKET_RESPONSE.name(),
+        "responseConfig.dataGeneratorFormatConfig",
+        issues
+    );
+    dataGeneratorFactory = responseConfig.dataGeneratorFormatConfig.getDataGeneratorFactory();
+
     errorQueue = new ArrayBlockingQueue<>(100);
     errorList = new ArrayList<>(100);
     return issues;
@@ -126,7 +146,6 @@ public class WebSocketClientSource implements PushSource {
 
   @Override
   public void produce(Map<String, String> map, int i) throws StageException {
-    Session wsSession = null;
     try {
       wsSession = connectToWebSocket();
 
@@ -264,6 +283,17 @@ public class WebSocketClientSource implements PushSource {
       batchContext.getBatchMaker().addRecord(record);
     }
     context.processBatch(batchContext);
+
+    List<Record> sourceResponseRecords = batchContext.getSourceResponseRecords();
+    if (CollectionUtils.isNotEmpty(sourceResponseRecords)) {
+      WebSocketCommon.sendOriginResponseToWebSocketClient(
+          wsSession,
+          context,
+          dataParserFactory,
+          dataGeneratorFactory,
+          sourceResponseRecords
+      );
+    }
   }
 
 }

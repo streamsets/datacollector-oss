@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.DataFormat;
 
 import java.util.List;
 
@@ -29,6 +30,12 @@ public class WebSocketClientSourceUpgrader implements StageUpgrader {
     switch(context.getFromVersion()) {
       case 1:
         upgradeV1ToV2(configs);
+        if (context.getToVersion() == 2) {
+          break;
+        }
+        // fall through
+      case 2:
+        upgradeV2ToV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", context.getFromVersion()));
@@ -39,6 +46,13 @@ public class WebSocketClientSourceUpgrader implements StageUpgrader {
 
   private void upgradeV1ToV2(List<Config> configs) {
     configs.add(new Config("conf.requestBody", ""));
+  }
+
+  private void upgradeV2ToV3(List<Config> configs) {
+    // Added Response Config Bean
+    configs.add(new Config("responseConfig.dataFormat", DataFormat.JSON.toString()));
+    configs.add(new Config("responseConfig.dataGeneratorFormatConfig.charset", "UTF-8"));
+    configs.add(new Config("responseConfig.dataGeneratorFormatConfig.jsonMode", "MULTIPLE_OBJECTS"));
   }
 
 }
