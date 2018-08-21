@@ -35,6 +35,7 @@ public class WebSocketReceiverSocket extends WebSocketAdapter {
   private final Meter errorRequestMeter;
   private final Meter requestMeter;
   private final Timer requestTimer;
+  private Session session;
 
   public WebSocketReceiverSocket(
       String requester,
@@ -63,7 +64,7 @@ public class WebSocketReceiverSocket extends WebSocketAdapter {
     long start = System.currentTimeMillis();
     try {
       LOG.debug("Processing request from '{}'", requester);
-      if (getReceiver().process(payload, offset, len)) {
+      if (getReceiver().process(this.session, payload, offset, len)) {
         requestMeter.mark();
       } else {
         errorRequestMeter.mark();
@@ -82,7 +83,7 @@ public class WebSocketReceiverSocket extends WebSocketAdapter {
     long start = System.currentTimeMillis();
     try {
       LOG.debug("Processing request from '{}'", requester);
-      getReceiver().process(message);
+      getReceiver().process(this.session, message);
       requestMeter.mark();
     } catch (IOException ex) {
       errorQueue.offer(ex);
@@ -100,6 +101,7 @@ public class WebSocketReceiverSocket extends WebSocketAdapter {
 
   @Override
   public void onWebSocketConnect(Session sess) {
+    this.session = sess;
     super.onWebSocketConnect(sess);
   }
 

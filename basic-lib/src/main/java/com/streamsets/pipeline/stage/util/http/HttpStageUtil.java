@@ -15,10 +15,17 @@
  */
 package com.streamsets.pipeline.stage.util.http;
 
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.PushSource;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.http.AuthenticationFailureException;
 import com.streamsets.pipeline.lib.http.oauth2.OAuth2ConfigBean;
+import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.parser.DataParserFactory;
+import com.streamsets.pipeline.stage.origin.restservice.RestServiceReceiver;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +33,8 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -87,6 +96,48 @@ public abstract class HttpStageUtil {
         // Default is binary blob
         return MediaType.APPLICATION_OCTET_STREAM;
     }
+  }
+
+  public static Record createEnvelopeRecord(
+      PushSource.Context context,
+      DataParserFactory parserFactory,
+      List<Record> successRecords,
+      List<Record> errorRecords,
+      int statusCode,
+      String errorMessage
+  ) {
+    LinkedHashMap<String,Field> envelopeRecordVal = new LinkedHashMap<>();
+    envelopeRecordVal.put("httpStatusCode", Field.create(statusCode));
+    envelopeRecordVal.put("data", Field.create(convertRecordsToFields(parserFactory, successRecords)));
+    envelopeRecordVal.put("error", Field.create(convertRecordsToFields(parserFactory, errorRecords)));
+    envelopeRecordVal.put("errorMessage", Field.create(errorMessage));
+    Record envelopeRecord = context.createRecord("envelopeRecord");
+    envelopeRecord.set(Field.createListMap(envelopeRecordVal));
+    return envelopeRecord;
+  }
+
+  private static List<Field> convertRecordsToFields(DataParserFactory parserFactory, List<Record> recordList) {
+    List<Field> fieldList = new ArrayList<>();
+    recordList.forEach(record -> {
+      String rawDataHeader = record.getHeader().getAttribute(RestServiceReceiver.RAW_DATA_RECORD_HEADER_ATTR_NAME);
+      if (StringUtils.isNotEmpty(rawDataHeader)) {
+        String rawData = record.get().getValueAsString();
+        try (DataParser parser = parserFactory.getParser("rawData", rawData)) {
+          Record parsedRecord = parser.parse();
+          while (parsedRecord != null) {
+            fieldList.add(parsedRecord.get());
+            parsedRecord = parser.parse();
+          }
+        } catch (Exception e) {
+          // If fails to parse data, add raw data from response to envelope record
+          fieldList.add(record.get());
+          LOG.debug("Failed to parse rawPayloadRecord from Response sink", e);
+        }
+      } else {
+        fieldList.add(record.get());
+      }
+    });
+    return fieldList;
   }
 
 }

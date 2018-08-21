@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgradeUtil;
 
 import java.util.List;
@@ -46,11 +47,24 @@ public class WebSocketServerPushSourceUpgrader implements StageUpgrader {
             "sslEnabled",
             "tlsEnabled"
         );
+        if (toVersion == 10) {
+          break;
+        }
+        // fall through
+      case 10:
+        upgradeV10ToV11(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
     return configs;
+  }
+
+  private void upgradeV10ToV11(List<Config> configs) {
+    // Added Response Config Bean
+    configs.add(new Config("responseConfig.dataFormat", DataFormat.JSON.toString()));
+    configs.add(new Config("responseConfig.dataGeneratorFormatConfig.charset", "UTF-8"));
+    configs.add(new Config("responseConfig.dataGeneratorFormatConfig.jsonMode", "MULTIPLE_OBJECTS"));
   }
 
 }

@@ -17,7 +17,9 @@ package com.streamsets.pipeline.stage.origin.websocketserver;
 
 import com.streamsets.pipeline.common.DataFormatConstants;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.lib.microservice.ResponseConfigBean;
 import com.streamsets.pipeline.lib.websocket.Groups;
+import com.streamsets.pipeline.lib.websocket.WebSocketOriginGroups;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
 import java.util.List;
@@ -25,20 +27,21 @@ import java.util.List;
 public class WebSocketServerPushSource extends AbstractWebSocketServerPushSource<WebSocketReceiver> {
 
   private final WebSocketConfigs webSocketConfigs;
-
   private final DataFormat dataFormat;
-
   private final DataParserFormatConfig dataFormatConfig;
+  private final ResponseConfigBean responseConfig;
 
   public WebSocketServerPushSource(
       WebSocketConfigs webSocketConfigs,
       DataFormat dataFormat,
-      DataParserFormatConfig dataFormatConfig
+      DataParserFormatConfig dataFormatConfig,
+      ResponseConfigBean responseConfig
   ) {
-    super(webSocketConfigs, new PushWebSocketReceiver(webSocketConfigs, dataFormatConfig));
+    super(webSocketConfigs, new PushWebSocketReceiver(webSocketConfigs, dataFormatConfig, responseConfig));
     this.webSocketConfigs = webSocketConfigs;
     this.dataFormat = dataFormat;
     this.dataFormatConfig = dataFormatConfig;
+    this.responseConfig = responseConfig;
   }
 
   @Override
@@ -51,6 +54,13 @@ public class WebSocketServerPushSource extends AbstractWebSocketServerPushSource
         Groups.DATA_FORMAT.name(),
         "dataFormatConfig",
         DataFormatConstants.MAX_OVERRUN_LIMIT,
+        issues
+    );
+    responseConfig.dataGeneratorFormatConfig.init(
+        getContext(),
+        responseConfig.dataFormat,
+        WebSocketOriginGroups.WEB_SOCKET_RESPONSE.name(),
+        "responseConfig.dataGeneratorFormatConfig",
         issues
     );
     issues.addAll(getReceiver().init(getContext()));

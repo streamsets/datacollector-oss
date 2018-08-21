@@ -25,12 +25,10 @@ import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
 import com.streamsets.pipeline.lib.microservice.ResponseConfigBean;
-import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.stage.origin.httpserver.PushHttpReceiver;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import com.streamsets.pipeline.stage.util.http.HttpStageUtil;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -125,7 +123,9 @@ public class RestServiceReceiver extends PushHttpReceiver {
       responseStatusCode = 207;
     }
 
-    Record responseEnvelopeRecord = createEnvelopeRecord(
+    Record responseEnvelopeRecord = HttpStageUtil.createEnvelopeRecord(
+        getContext(),
+        getParserFactory(),
         successRecords,
         errorRecords,
         responseStatusCode,
@@ -151,46 +151,6 @@ public class RestServiceReceiver extends PushHttpReceiver {
     customHeaderAttributes.forEach((key, value) -> placeholderRecord.getHeader().setAttribute(key, value));
     placeholderRecord.getHeader().setAttribute(EMPTY_PAYLOAD_RECORD_HEADER_ATTR_NAME, "true");
     return placeholderRecord;
-  }
-
-  private Record createEnvelopeRecord(
-      List<Record> successRecords,
-      List<Record> errorRecords,
-      int statusCode,
-      String errorMessage
-  ) {
-    LinkedHashMap<String,Field> envelopeRecordVal = new LinkedHashMap<>();
-    envelopeRecordVal.put("httpStatusCode", Field.create(statusCode));
-    envelopeRecordVal.put("data", Field.create(convertRecordsToFields(successRecords)));
-    envelopeRecordVal.put("error", Field.create(convertRecordsToFields(errorRecords)));
-    envelopeRecordVal.put("errorMessage", Field.create(errorMessage));
-    Record envelopeRecord = getContext().createRecord("envelopeRecord");
-    envelopeRecord.set(Field.createListMap(envelopeRecordVal));
-    return envelopeRecord;
-  }
-
-  private List<Field> convertRecordsToFields(List<Record> recordList) {
-    List<Field> fieldList = new ArrayList<>();
-    recordList.forEach(record -> {
-      String rawDataHeader = record.getHeader().getAttribute(RAW_DATA_RECORD_HEADER_ATTR_NAME);
-      if (StringUtils.isNotEmpty(rawDataHeader)) {
-        String rawData = record.get().getValueAsString();
-        try (DataParser parser = getParserFactory().getParser("rawData", rawData)) {
-          Record parsedRecord = parser.parse();
-          while (parsedRecord != null) {
-            fieldList.add(parsedRecord.get());
-            parsedRecord = parser.parse();
-          }
-        } catch (Exception e) {
-          // If fails to parse data, add raw data from response to envelope record
-          fieldList.add(record.get());
-          LOG.debug("Failed to parse rawPayloadRecord from Response sink", e);
-        }
-      } else {
-        fieldList.add(record.get());
-      }
-    });
-    return fieldList;
   }
 
 }

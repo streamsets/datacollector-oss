@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.origin.websocketserver;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.http.HttpConstants;
+import com.streamsets.pipeline.lib.microservice.ResponseConfigBean;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
@@ -37,6 +38,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+
 import static org.awaitility.Awaitility.await;
 
 public class TestWebSocketServerPushSource {
@@ -48,8 +50,12 @@ public class TestWebSocketServerPushSource {
     webSocketConfigs.port = NetworkUtils.getRandomPort();
     webSocketConfigs.maxConcurrentRequests = 1;
     webSocketConfigs.tlsConfigBean.tlsEnabled = false;
-    WebSocketServerPushSource source =
-        new WebSocketServerPushSource(webSocketConfigs, DataFormat.JSON, new DataParserFormatConfig());
+    WebSocketServerPushSource source = new WebSocketServerPushSource(
+        webSocketConfigs,
+        DataFormat.JSON,
+        new DataParserFormatConfig(),
+        new ResponseConfigBean()
+    );
     final PushSourceRunner runner =
         new PushSourceRunner.Builder(WebSocketServerDPushSource.class, source).addOutputLane("a").build();
     runner.runInit();
@@ -59,7 +65,11 @@ public class TestWebSocketServerPushSource {
         @Override
         public void processBatch(StageRunner.Output output) {
           records.clear();
+          runner.getSourceResponseSink().getResponseRecords().clear();
           records.addAll(output.getRecords().get("a"));
+          records.forEach(record -> {
+            runner.getSourceResponseSink().addResponse(record);
+          });
           runner.setStop();
         }
       });
@@ -93,6 +103,13 @@ public class TestWebSocketServerPushSource {
 
       Assert.assertEquals(1, records.size());
       Assert.assertEquals("value", records.get(0).get("/field1").getValue());
+
+      // check response from WebSocket Server
+      Assert.assertNotNull(socket.receivedMessage);
+      Assert.assertEquals(
+          "{\"httpStatusCode\":200,\"data\":[{\"field1\":\"value\"}],\"error\":[],\"errorMessage\":null}",
+          socket.receivedMessage
+      );
     } finally {
       runner.runDestroy();
     }
@@ -106,8 +123,12 @@ public class TestWebSocketServerPushSource {
     webSocketConfigs.maxConcurrentRequests = 1;
     webSocketConfigs.tlsConfigBean.tlsEnabled = false;
     webSocketConfigs.appIdViaQueryParamAllowed = true;
-    WebSocketServerPushSource source =
-        new WebSocketServerPushSource(webSocketConfigs, DataFormat.JSON, new DataParserFormatConfig());
+    WebSocketServerPushSource source = new WebSocketServerPushSource(
+        webSocketConfigs,
+        DataFormat.JSON,
+        new DataParserFormatConfig(),
+        new ResponseConfigBean()
+    );
     final PushSourceRunner runner =
         new PushSourceRunner.Builder(WebSocketServerDPushSource.class, source).addOutputLane("a").build();
     runner.runInit();

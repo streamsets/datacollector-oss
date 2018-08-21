@@ -36,6 +36,6 @@ public class ResponseConfigBean {
   public DataFormat dataFormat = DataFormat.JSON;
 
   @ConfigDefBean(groups = {"#0"})
-  public DataGeneratorFormatConfig dataGeneratorFormatConfig;
+  public DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
 
 }

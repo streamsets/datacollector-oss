@@ -16,10 +16,27 @@
 
 package com.streamsets.pipeline.lib.websocket;
 
+import com.streamsets.pipeline.api.PushSource;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.lib.generator.DataGenerator;
+import com.streamsets.pipeline.lib.generator.DataGeneratorException;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
+import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
+import com.streamsets.pipeline.stage.origin.restservice.RestServiceReceiver;
+import com.streamsets.pipeline.stage.util.http.HttpStageUtil;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
+import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.glassfish.jersey.internal.util.Base64;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class WebSocketCommon {
 
@@ -78,5 +95,61 @@ public class WebSocketCommon {
     System.arraycopy(passwordByte, 0, usernamePassword, prefix.length, passwordByte.length);
 
     return "Basic " + Base64.encodeAsString(usernamePassword);
+  }
+
+
+  public static void sendOriginResponseToWebSocketClient(
+      Session wsSession,
+      PushSource.Context context,
+      DataParserFactory dataParserFactory,
+      DataGeneratorFactory dataGeneratorFactory,
+      List<Record> sourceResponseRecords
+  ) throws IOException {
+    int responseStatusCode = HttpServletResponse.SC_OK;
+    Set<Integer> statusCodesFromResponse = new HashSet<>();
+    String errorMessage = null;
+
+    List<Record> successRecords = new ArrayList<>();
+    List<Record> errorRecords = new ArrayList<>();
+    for (Record responseRecord : sourceResponseRecords) {
+      String statusCode = responseRecord.getHeader().getAttribute(
+          RestServiceReceiver.STATUS_CODE_RECORD_HEADER_ATTR_NAME
+      );
+      if (statusCode != null) {
+        statusCodesFromResponse.add(Integer.valueOf(statusCode));
+      }
+      if (responseRecord.getHeader().getErrorMessage() == null) {
+        successRecords.add(responseRecord);
+      } else {
+        errorMessage = responseRecord.getHeader().getErrorMessage();
+        errorRecords.add(responseRecord);
+      }
+    }
+
+    if (statusCodesFromResponse.size() == 1) {
+      responseStatusCode = statusCodesFromResponse.iterator().next();
+    } else if (statusCodesFromResponse.size() > 1) {
+      // If we received more than one status code, return 207 MULTI-STATUS Code
+      // https://httpstatuses.com/207
+      responseStatusCode = 207;
+    }
+
+    Record responseEnvelopeRecord = HttpStageUtil.createEnvelopeRecord(
+        context,
+        dataParserFactory,
+        successRecords,
+        errorRecords,
+        responseStatusCode,
+        errorMessage
+    );
+
+    ByteArrayOutputStream byteBufferOutputStream = new ByteArrayOutputStream();
+    try (DataGenerator dataGenerator = dataGeneratorFactory.getGenerator(byteBufferOutputStream)) {
+      dataGenerator.write(responseEnvelopeRecord);
+      dataGenerator.flush();
+      wsSession.getRemote().sendString(byteBufferOutputStream.toString());
+    } catch (DataGeneratorException e) {
+      throw new IOException(e);
+    }
   }
 }
