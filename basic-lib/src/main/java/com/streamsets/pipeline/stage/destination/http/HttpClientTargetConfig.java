@@ -24,6 +24,7 @@ import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.lib.http.HttpMethod;
 import com.streamsets.pipeline.lib.http.JerseyClientConfigBean;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
+import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
 import com.streamsets.pipeline.stage.processor.http.HttpMethodChooserValues;
 
 import java.util.HashMap;
@@ -136,5 +137,7 @@ public class HttpClientTargetConfig {
   )
   public long maxRequestCompletionSecs = 60L;
 
+  @ConfigDefBean(groups = {"RESPONSE"})
+  public ToOriginResponseConfig responseConf = new ToOriginResponseConfig();
 
 }

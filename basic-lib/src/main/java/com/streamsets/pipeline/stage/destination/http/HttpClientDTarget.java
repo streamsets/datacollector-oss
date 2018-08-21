@@ -22,10 +22,9 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.configurablestage.DTarget;
-import com.streamsets.pipeline.lib.http.Groups;
 
 @StageDef(
-    version = 3,
+    version = 4,
     label = "HTTP Client",
     description = "Uses an HTTP client to write data.",
     icon = "httpclient.png",
@@ -42,7 +41,7 @@ import com.streamsets.pipeline.lib.http.Groups;
     },
     upgrader = HttpClientTargetUpgrader.class
 )
-@ConfigGroups(Groups.class)
+@ConfigGroups(HttpClientTargetGroups.class)
 @GenerateResourceBundle
 public class HttpClientDTarget extends DTarget {
 

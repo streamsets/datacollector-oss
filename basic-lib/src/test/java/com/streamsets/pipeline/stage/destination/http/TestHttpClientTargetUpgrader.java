@@ -49,4 +49,18 @@ public class TestHttpClientTargetUpgrader {
         "conf.client.requestLoggingConfig.maxEntitySize"
     );
   }
+
+  @Test
+  public void testV3ToV4() throws Exception {
+    List<Config> configs = new ArrayList<>();
+
+    HttpClientTargetUpgrader upgrader = new HttpClientTargetUpgrader();
+    upgrader.upgrade("lib", "stage", "inst", 3, 4, configs);
+
+    UpgraderTestUtils.assertAllExist(
+        configs,
+        "conf.responseConf.sendResponseToOrigin",
+        "conf.responseConf.responseType"
+    );
+  }
 }

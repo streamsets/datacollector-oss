@@ -198,6 +198,37 @@ public class TestHttpClientTarget extends AbstractHttpStageTest {
       runner.runWrite(input);
       Assert.assertTrue(runner.getErrorRecords().isEmpty());
       Assert.assertTrue(runner.getErrors().isEmpty());
+
+      List<Record> responseRecords = runner.getSourceResponseSink().getResponseRecords();
+      Assert.assertEquals(0, responseRecords.size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testHttpTargetSendingResponseBackToOrigin() throws Exception {
+    HttpClientTargetConfig config = getConf(server.getURI().toString());
+    config.responseConf.sendResponseToOrigin = true;
+
+    HttpClientTarget target = new HttpClientTarget(config);
+    TargetRunner runner = new TargetRunner.Builder(HttpClientDTarget.class, target)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+
+    List<Record> input = new ArrayList<>();
+    input.add(createRecord("a"));
+    input.add(createRecord("b"));
+    Assert.assertTrue(runner.runValidateConfigs().isEmpty());
+    runner.runInit();
+    try {
+      runner.runWrite(input);
+      Assert.assertTrue(runner.getErrorRecords().isEmpty());
+      Assert.assertTrue(runner.getErrors().isEmpty());
+
+      List<Record> responseRecords = runner.getSourceResponseSink().getResponseRecords();
+      Assert.assertEquals(2, responseRecords.size());
+
     } finally {
       runner.runDestroy();
     }
