@@ -23,6 +23,7 @@ import com.streamsets.pipeline.config.DatagramMode;
 import com.streamsets.pipeline.lib.parser.net.netflow.NetflowTestUtil;
 import com.streamsets.pipeline.lib.parser.net.raw.RawDataMode;
 import com.streamsets.pipeline.lib.parser.net.syslog.SyslogMessage;
+import com.streamsets.pipeline.lib.parser.udp.separated.SeparatedDataParser;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.testing.NetworkUtils;
@@ -43,7 +44,10 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assume.assumeTrue;
+import static org.hamcrest.Matchers.containsString;
 
 public abstract class BaseUDPSourceTest {
 
@@ -203,10 +207,20 @@ public abstract class BaseUDPSourceTest {
         // records cycle between the raw values strings
         for (int i = 0; i < records.size(); i++) {
           final int recordIndex = i + startingRecordNum;
+          final Record record = records.get(i);
           Assert.assertEquals(
               RAW_DATA_VALUES[recordIndex % RAW_DATA_VALUES.length],
-              records.get(i).get(RAW_DATA_OUTPUT_FIELD).getValueAsString()
+              record.get(RAW_DATA_OUTPUT_FIELD).getValueAsString()
           );
+
+          final String senderAttr = record.getHeader().getAttribute(SeparatedDataParser.SENDER_HEADER_ATTR_NAME);
+          Assert.assertThat(senderAttr, notNullValue());
+          // in our test, the sender is localhost (or 127.0.0.1)
+          Assert.assertThat(senderAttr, anyOf(containsString("localhost"), containsString("127.0.0.1")));
+          final String recipientAttr = record.getHeader().getAttribute(SeparatedDataParser.RECIPIENT_HEADER_ATTR_NAME);
+          Assert.assertThat(recipientAttr, notNullValue());
+          // and the recipient is the 'any' address
+          Assert.assertThat(recipientAttr, anyOf(containsString("0.0.0.0"), containsString("0:0:0:0:0:0:0:0")));
         }
         break;
       default:

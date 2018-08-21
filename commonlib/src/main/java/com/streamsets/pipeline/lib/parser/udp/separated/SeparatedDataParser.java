@@ -33,6 +33,9 @@ import java.util.List;
 
 public class SeparatedDataParser extends AbstractParser {
 
+  public static final String SENDER_HEADER_ATTR_NAME = "UDP_Sender";
+  public static final String RECIPIENT_HEADER_ATTR_NAME = "UDP_Recipient";
+
   private final RawDataMode rawDataMode;
   private final Charset charset;
   private final String outputFieldPath;
@@ -80,6 +83,12 @@ public class SeparatedDataParser extends AbstractParser {
           throw new IllegalStateException(String.format("Unrecognized rawDataMode: %s", rawDataMode.name()));
       }
 
+      if (sender != null) {
+        record.getHeader().setAttribute(SENDER_HEADER_ATTR_NAME, sender.toString());
+      }
+      if (recipient != null) {
+        record.getHeader().setAttribute(RECIPIENT_HEADER_ATTR_NAME, recipient.toString());
+      }
       records.add(record);
     }
 
