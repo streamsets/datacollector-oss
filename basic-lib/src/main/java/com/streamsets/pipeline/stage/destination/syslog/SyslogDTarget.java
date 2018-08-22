@@ -31,7 +31,7 @@ import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorServic
     description = "Writes data to syslog",
     icon = "syslog.png",
     recordsByRef = true,
-    onlineHelpRefUrl = "",
+    onlineHelpRefUrl = "index.html?contextID=task_bbc_pt5_w2b",
     services = @ServiceDependency(
         service = DataFormatGeneratorService.class,
         configuration = {
