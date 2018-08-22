@@ -56,24 +56,22 @@ public final class MSQueryUtil {
 
   private static final String CHANGE_TRACKING_CURRENT_VERSION_QUERY = "SELECT CHANGE_TRACKING_CURRENT_VERSION()";
 
-  private static final String INIT_CHANGE_TRACKING_QUERY = "SET NOCOUNT ON;\n" +
-      "DECLARE @synchronization_version BIGINT = %1$s;\n" +
+  private static final String INIT_CHANGE_TRACKING_QUERY = "DECLARE @synchronization_version BIGINT = %1$s;\n" +
       "\n" +
-      "SELECT TOP %2$s * \n" +
-      "FROM %3$s AS P\n" +
-      "RIGHT OUTER JOIN CHANGETABLE(CHANGES %3$s, @synchronization_version) AS " + CT_TABLE_NAME + "\n" +
-      "%4$s\n" +
-      "%5$s";
+      "SELECT * \n" +
+      "FROM %2$s AS P\n" +
+      "RIGHT OUTER JOIN CHANGETABLE(CHANGES %2$s, @synchronization_version) AS " + CT_TABLE_NAME + "\n" +
+      "%3$s\n" +
+      "%4$s";
 
-  private static final String CHANGE_TRACKING_QUERY = "SET NOCOUNT ON;\n" +
-      "SELECT TOP %1$s * \n" +
-          "FROM %2$s AS " + TABLE_NAME + "\n" +
-          "RIGHT OUTER JOIN CHANGETABLE(CHANGES %2$s, %3$s) AS " + CT_TABLE_NAME + "\n" +
+  private static final String CHANGE_TRACKING_QUERY = "SELECT * \n" +
+          "FROM %1$s AS " + TABLE_NAME + "\n" +
+          "RIGHT OUTER JOIN CHANGETABLE(CHANGES %1$s, %2$s) AS " + CT_TABLE_NAME + "\n" +
+          "%3$s\n" +
           "%4$s\n" +
-          "%5$s\n" +
-          "%6$s";
+          "%5$s\n";
 
-  private static final String SELECT_CT_CLAUSE = "SELECT TOP %s * FROM CHANGETABLE(CHANGES %s, %s) AS CT %s %s";
+  private static final String SELECT_CT_CLAUSE = "SELECT * FROM CHANGETABLE(CHANGES %s, %s) AS CT %s %s";
   private static final String SELECT_CLAUSE = "SELECT * FROM %s ";
 
   private static final Joiner COMMA_SPACE_JOINER = Joiner.on(", ");
@@ -141,8 +139,17 @@ public final class MSQueryUtil {
 
       if (includeJoin) {
         return String.format(
+            CHANGE_TRACKING_QUERY,
+            tableName,
+            offset,
+            equal,
+            greater,
+            orderby
+        );
+
+      } else {
+        return String.format(
             SELECT_CT_CLAUSE,
-            maxBatchSize,
             tableName,
             offset,
             greater,
@@ -155,7 +162,6 @@ public final class MSQueryUtil {
       return String.format(
           INIT_CHANGE_TRACKING_QUERY,
           offset,
-          maxBatchSize,
           tableName,
           equal,
           orderby
@@ -163,7 +169,6 @@ public final class MSQueryUtil {
     } else {
       return String.format(
           SELECT_CT_CLAUSE,
-          maxBatchSize,
           tableName,
           offset,
           greater,
