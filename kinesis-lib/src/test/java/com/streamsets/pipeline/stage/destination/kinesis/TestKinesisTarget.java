@@ -26,6 +26,7 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
+import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
 import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisConfigBean;
@@ -62,7 +63,7 @@ public class TestKinesisTarget {
   public void testDefaultProduce() throws Exception {
     KinesisProducerConfigBean config = getKinesisTargetConfig();
 
-    KinesisTarget target = new KinesisTarget(config);
+    KinesisTarget target = new KinesisTarget(config, new ToOriginResponseConfig());
     TargetRunner targetRunner = new TargetRunner.Builder(KinesisDTarget.class, target).build();
 
     KinesisTestUtil.mockKinesisUtil(1);
@@ -99,7 +100,7 @@ public class TestKinesisTarget {
     KinesisProducerConfigBean config = getKinesisTargetConfig();
     config.preserveOrdering = true;
 
-    KinesisTarget target = new KinesisTarget(config);
+    KinesisTarget target = new KinesisTarget(config, new ToOriginResponseConfig());
     TargetRunner targetRunner = new TargetRunner.Builder(KinesisDTarget.class, target).build();
 
     PowerMockito.mockStatic(KinesisUtil.class);
@@ -146,7 +147,7 @@ public class TestKinesisTarget {
   public void testRecordTooLarge() throws Exception {
     KinesisProducerConfigBean config = getKinesisTargetConfig();
 
-    KinesisTarget target = new KinesisTarget(config);
+    KinesisTarget target = new KinesisTarget(config, new ToOriginResponseConfig());
     TargetRunner targetRunner = new TargetRunner.Builder(
         KinesisDTarget.class,
         target

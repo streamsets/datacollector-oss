@@ -25,9 +25,10 @@ import com.streamsets.pipeline.api.StatsAggregatorStage;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
 
 @StageDef(
-    version = 6,
+    version = 7,
     label = "Write to Kinesis",
     description = "Writes Pipeline Statistic records to Kinesis",
     icon = "",
@@ -52,6 +53,6 @@ public class StatsKinesisDTarget extends DTarget {
   protected Target createTarget() {
     kinesisConfig.dataFormat = DataFormat.SDC_JSON;
     kinesisConfig.preserveOrdering = true;
-    return new KinesisTarget(kinesisConfig);
+    return new KinesisTarget(kinesisConfig, new ToOriginResponseConfig());
   }
 }

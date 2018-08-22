@@ -21,11 +21,12 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.configurablestage.DTarget;
+import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
 
 @StageDef(
     // We're reusing upgrader for both ToErrorKinesisDTarget & KinesisDTarget, make sure that you
     // upgrade both versions at the same time when changing.
-    version = 6,
+    version = 7,
     label = "Kinesis Producer",
     description = "Writes data to Amazon Kinesis",
     icon = "kinesis.png",
@@ -39,8 +40,11 @@ public class KinesisDTarget extends DTarget {
   @ConfigDefBean(groups = {"KINESIS", "DATA_FORMAT"})
   public KinesisProducerConfigBean kinesisConfig;
 
+  @ConfigDefBean(groups = {"RESPONSE"})
+  public ToOriginResponseConfig responseConf = new ToOriginResponseConfig();
+
   @Override
   protected Target createTarget() {
-    return new KinesisTarget(kinesisConfig);
+    return new KinesisTarget(kinesisConfig, responseConf);
   }
 }

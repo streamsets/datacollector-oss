@@ -23,11 +23,12 @@ import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
 
 @StageDef(
     // We're reusing upgrader for both ToErrorKinesisDTarget & KinesisDTarget, make sure that you
     // upgrade both versions at the same time when changing.
-    version = 6,
+    version = 7,
     label = "Write to Kinesis",
     description = "Writes records to Kinesis as SDC Records",
     onlineHelpRefUrl ="index.html?contextID=concept_kgc_l4y_5r",
@@ -48,7 +49,7 @@ public class ToErrorKinesisDTarget extends KinesisDTarget {
   @Override
   protected Target createTarget() {
     kinesisConfig.dataFormat = DataFormat.SDC_JSON;
-    return new KinesisTarget(kinesisConfig);
+    return new KinesisTarget(kinesisConfig, new ToOriginResponseConfig());
   }
 
 }

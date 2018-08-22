@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.Label;
 public enum Groups implements Label {
   KINESIS("Kinesis"),
   DATA_FORMAT("Data Format"),
+  RESPONSE("Response"),
   ;
 
   private final String label;

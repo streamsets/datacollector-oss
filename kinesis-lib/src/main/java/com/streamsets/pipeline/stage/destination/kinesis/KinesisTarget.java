@@ -22,6 +22,7 @@ import com.amazonaws.services.kinesis.producer.KinesisProducerConfiguration;
 import com.amazonaws.services.kinesis.producer.UserRecordResult;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
@@ -36,6 +37,8 @@ import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.destination.lib.ResponseType;
+import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
 import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.Errors;
@@ -49,7 +52,9 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -63,6 +68,7 @@ public class KinesisTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(KinesisTarget.class);
 
   private final KinesisProducerConfigBean conf;
+  private final ToOriginResponseConfig responseConf;
   private final Properties additionalConfigs = new Properties();
 
   private ErrorRecordHandler errorRecordHandler;
@@ -73,8 +79,9 @@ public class KinesisTarget extends BaseTarget {
   private ELEval partitionEval;
   private ELVars partitionVars;
 
-  public KinesisTarget(KinesisProducerConfigBean conf) {
+  public KinesisTarget(KinesisProducerConfigBean conf, ToOriginResponseConfig responseConf) {
     this.conf = conf;
+    this.responseConf = responseConf;
     additionalConfigs.putAll(conf.producerConfigs);
   }
 
@@ -236,6 +243,10 @@ public class KinesisTarget extends BaseTarget {
           putFutures.add(kinesisProducer.addUserRecord(conf.streamName, partitionKey, data));
         }
 
+        if (responseConf.sendResponseToOrigin && this.responseConf.responseType.equals(ResponseType.SUCCESS_RECORDS)) {
+          getContext().toSourceResponse(record);
+        }
+
       } catch (IOException e) {
         LOG.error(Errors.KINESIS_05.getMessage(), record, e.toString(), e);
         errorRecordHandler.onError(
@@ -266,10 +277,39 @@ public class KinesisTarget extends BaseTarget {
         }
         throw new StageException(Errors.KINESIS_00, result.getAttempts().get(0).getErrorMessage());
       }
+
+      if (responseConf.sendResponseToOrigin &&
+          this.responseConf.responseType.equals(ResponseType.DESTINATION_RESPONSE)) {
+        getContext().toSourceResponse(generateDestResponseRecord(result));
+      }
+
     } catch (InterruptedException | ExecutionException e) {
       LOG.error("Pipeline is shutting down.", e);
       // We should flush if we encounter an error.
       kinesisProducer.flushSync();
     }
   }
+
+
+  private Record generateDestResponseRecord(UserRecordResult result) {
+    Record record = getContext().createRecord("responseRecord");
+    List<Field> attemptsVal = new ArrayList<>();
+    for(Attempt attempt: result.getAttempts()) {
+      LinkedHashMap<String, Field> attemptVal = new LinkedHashMap<>();
+      attemptVal.put("delay", Field.create(attempt.getDelay()));
+      attemptVal.put("duration", Field.create(attempt.getDuration()));
+      attemptVal.put("errorMessage", Field.create(attempt.getErrorMessage()));
+      attemptVal.put("errorCode", Field.create(attempt.getErrorCode()));
+      attemptVal.put("success", Field.create(attempt.isSuccessful()));
+      attemptsVal.add(Field.createListMap(attemptVal));
+    }
+    LinkedHashMap<String, Field> resultVal = new LinkedHashMap<>();
+    resultVal.put("sequenceNumber", Field.create(result.getSequenceNumber()));
+    resultVal.put("shardId", Field.create(result.getShardId()));
+    resultVal.put("successful", Field.create(result.isSuccessful()));
+    resultVal.put("attempts", Field.create(attemptsVal));
+    record.set(Field.createListMap(resultVal));
+    return record;
+  }
+
 }
