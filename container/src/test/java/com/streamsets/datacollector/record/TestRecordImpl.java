@@ -763,9 +763,14 @@ public class TestRecordImpl {
     )));
 
     Set<String> fieldPaths = new HashSet<>();
-    r.forEachField(recordField -> fieldPaths.add(recordField.getFieldPath()));
+    Set<String> fieldNames = new HashSet<>();
+    r.forEachField(recordField -> {
+      fieldPaths.add(recordField.getFieldPath());
+      fieldNames.add(recordField.getFieldName());
+    });
 
     Assert.assertEquals(fieldPaths, r.getEscapedFieldPaths());
+    Assert.assertEquals(fieldNames, ImmutableSet.of("", "string", "map", "inner", "list"));
 
   }
 }
