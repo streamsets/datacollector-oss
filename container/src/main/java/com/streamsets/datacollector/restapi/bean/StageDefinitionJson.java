@@ -17,6 +17,7 @@ package com.streamsets.datacollector.restapi.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.pipeline.api.ExecutionMode;
 
 import java.util.List;
@@ -24,9 +25,9 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StageDefinitionJson {
 
-  private final com.streamsets.datacollector.config.StageDefinition stageDefinition;
+  private final StageDefinition stageDefinition;
 
-  public StageDefinitionJson(com.streamsets.datacollector.config.StageDefinition stageDefinition) {
+  public StageDefinitionJson(StageDefinition stageDefinition) {
     this.stageDefinition = stageDefinition;
   }
 
@@ -114,6 +115,10 @@ public class StageDefinitionJson {
 
   public String getOutputStreamLabelProviderClass() {
     return stageDefinition.getOutputStreamLabelProviderClass();
+  }
+
+  public String getOutputStreamsDrivenByConfig() {
+    return stageDefinition.getOutputStreamsDrivenByConfig();
   }
 
   public String getLibrary() {

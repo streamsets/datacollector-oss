@@ -608,6 +608,10 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     return hideStage;
   }
 
+  public String getOutputStreamsDrivenByConfig() {
+    return stageDef != null ? stageDef.outputStreamsDrivenByConfig(): null;
+  }
+
   public StageDef getStageDef() {
     return stageDef;
   }
