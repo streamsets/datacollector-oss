@@ -56,15 +56,11 @@ class ForceLookupLoader extends CacheLoader<String, Optional<List<Map<String, Fi
       QueryResult queryResult = processor.conf.queryAll
           ? processor.partnerConnection.queryAll(preparedQuery)
           : processor.partnerConnection.query(preparedQuery);
+      addResult(lookupItems, queryResult);
 
-      SObject[] records = queryResult.getRecords();
-
-      LOG.info("Retrieved {} records", records.length);
-
-      for (int i = 0; i < records.length; i++) {
-        lookupItems.add(processor.recordCreator.addFields(
-            records[i],
-            processor.columnsToTypes));
+      while (!queryResult.isDone()) {
+        queryResult = processor.partnerConnection.queryMore(queryResult.getQueryLocator());
+        addResult(lookupItems, queryResult);
       }
 
       // If no lookup items were found, use defaults
@@ -77,5 +73,17 @@ class ForceLookupLoader extends CacheLoader<String, Optional<List<Map<String, Fi
     }
 
     return Optional.of(lookupItems);
+  }
+
+  private void addResult(List<Map<String, Field>> lookupItems, QueryResult queryResult) throws StageException {
+    SObject[] records = queryResult.getRecords();
+
+    LOG.info("Retrieved {} records", records.length);
+
+    for (int i = 0; i < records.length; i++) {
+      lookupItems.add(processor.recordCreator.addFields(
+          records[i],
+          processor.columnsToTypes));
+    }
   }
 }
