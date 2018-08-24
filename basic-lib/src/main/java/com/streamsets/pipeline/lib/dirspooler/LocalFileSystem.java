@@ -18,6 +18,7 @@ package com.streamsets.pipeline.lib.dirspooler;
 import com.streamsets.pipeline.lib.io.DirectoryPathCreationWatcher;
 import com.streamsets.pipeline.lib.io.fileref.AbstractSpoolerFileRef;
 import com.streamsets.pipeline.lib.io.fileref.LocalFileRef;
+import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 
 import static com.streamsets.pipeline.lib.dirspooler.PathMatcherMode.GLOB;
 import static com.streamsets.pipeline.lib.dirspooler.PathMatcherMode.REGEX;
@@ -248,11 +250,17 @@ public class LocalFileSystem implements WrappedFileSystem {
               return 1;
             }
 
+            final Map<String, Object> metadata1 = file1.getCustomMetadata();
+            final Map<String, Object> metadata2 = file2.getCustomMetadata();
             long mtime1 = getLastModifiedTime(file1);
+            metadata1.putIfAbsent(HeaderAttributeConstants.LAST_MODIFIED_TIME, mtime1);
             long mtime2 = getLastModifiedTime(file2);
+            metadata2.putIfAbsent(HeaderAttributeConstants.LAST_MODIFIED_TIME, mtime2);
 
             long ctime1 = getChangedTime(file1);
+            metadata1.putIfAbsent(HeaderAttributeConstants.LAST_CHANGE_TIME, ctime1);
             long ctime2 = getChangedTime(file2);
+            metadata2.putIfAbsent(HeaderAttributeConstants.LAST_CHANGE_TIME, ctime2);
 
             long time1 = Math.max(mtime1, ctime1);
             long time2 = Math.max(mtime2, ctime2);

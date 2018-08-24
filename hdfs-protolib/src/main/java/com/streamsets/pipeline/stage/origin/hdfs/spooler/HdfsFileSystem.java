@@ -19,6 +19,7 @@ import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
 import com.streamsets.pipeline.lib.io.fileref.AbstractSpoolerFileRef;
 import com.streamsets.pipeline.lib.dirspooler.WrappedFile;
 import com.streamsets.pipeline.lib.dirspooler.WrappedFileSystem;
+import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
@@ -296,7 +297,9 @@ public class HdfsFileSystem implements WrappedFileSystem {
             }
 
             long mtime1 = getLastModifiedTime(file1);
+            file1.getCustomMetadata().putIfAbsent(HeaderAttributeConstants.LAST_MODIFIED_TIME, mtime1);
             long mtime2 = getLastModifiedTime(file2);
+            file2.getCustomMetadata().putIfAbsent(HeaderAttributeConstants.LAST_MODIFIED_TIME, mtime2);
 
             int compares = Long.compare(mtime1, mtime2);
             if (compares != 0) {

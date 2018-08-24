@@ -74,4 +74,11 @@ public interface WrappedFile {
    * @return  the {@code Map<String, Object>} file metatdata
    */
   Map<String, Object> getFileMetadata() throws IOException;
+
+  /**
+   * Returns the custom metadata map for the wrapped file (which is persisted across invocations)
+   *
+   * @return the {@code Map<String, Object>} file custom metatdata
+   */
+  Map<String, Object> getCustomMetadata();
 }

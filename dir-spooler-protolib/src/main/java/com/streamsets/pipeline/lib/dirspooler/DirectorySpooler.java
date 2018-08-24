@@ -21,8 +21,17 @@ import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+
+import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -447,9 +456,53 @@ public class DirectorySpooler {
   private void addFileToQueue(WrappedFile file, boolean checkCurrent) {
     Preconditions.checkNotNull(file, "file cannot be null");
     if (checkCurrent) {
-      boolean valid = currentFile == null || StringUtils.isEmpty(currentFile.toString()) || fs.compare(file, currentFile, useLastModified) < 0;
-      if (!valid) {
-        LOG.warn("File cannot be added to the queue: " + file.toString());
+      final boolean currentFileExists = currentFile != null && StringUtils.isNotEmpty(currentFile.toString());
+      final boolean newFileLessThanCurrent = fs.compare(file, currentFile, useLastModified) < 0;
+      final boolean invalid = currentFileExists && newFileLessThanCurrent;
+      if (invalid) {
+        String invalidReason;
+        if (useLastModified) {
+          final Map<String, Object> currentFileMetadata = currentFile != null
+              ? currentFile.getCustomMetadata()
+              : Collections.emptyMap();
+          final Map<String, Object> newFileMetadata = file.getCustomMetadata();
+
+          final long currentMtime = (long) currentFileMetadata.getOrDefault(
+              HeaderAttributeConstants.LAST_MODIFIED_TIME,
+              -1l
+          );
+          final long currentCtime = (long) currentFileMetadata.getOrDefault(
+              HeaderAttributeConstants.LAST_CHANGE_TIME,
+              -1l
+          );
+          final long newMtime = (long) newFileMetadata.getOrDefault(
+              HeaderAttributeConstants.LAST_MODIFIED_TIME,
+              -1l
+          );
+          final long newCtime = (long) newFileMetadata.getOrDefault(
+              HeaderAttributeConstants.LAST_CHANGE_TIME,
+              -1l
+          );
+          invalidReason = String.format(
+              "it is older than the current file (which is '%s' with %s %d, %s %d): %s %d, %s %d",
+              currentFile.getAbsolutePath(),
+              HeaderAttributeConstants.LAST_MODIFIED_TIME,
+              currentMtime,
+              HeaderAttributeConstants.LAST_CHANGE_TIME,
+              currentCtime,
+              HeaderAttributeConstants.LAST_MODIFIED_TIME,
+              newMtime,
+              HeaderAttributeConstants.LAST_CHANGE_TIME,
+              newCtime
+          );
+        } else {
+          invalidReason = String.format(
+              "it is earlier lexicographically than the current file (%s)",
+              currentFile.getAbsolutePath()
+          );
+        }
+        LOG.warn("File '{}' cannot be added to the queue; reason: {}", file.getAbsolutePath(), invalidReason);
+        // allow control to flow through anyway (so file gets added to queue), since that has been the behavior forever
       }
     }
     if (!filesSet.contains(file)) {

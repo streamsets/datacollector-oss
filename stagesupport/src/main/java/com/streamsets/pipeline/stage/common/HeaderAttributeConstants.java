@@ -60,6 +60,11 @@ public class HeaderAttributeConstants {
   public static final String LAST_ACCESS_TIME = "atime";
 
   /**
+   * Last changed time (ctime) of the file.
+   */
+  public static final String LAST_CHANGE_TIME = "ctime";
+
+  /**
    * Is the file the directory.
    *
    * Applicable for Hdfs Spooling Origin, ...

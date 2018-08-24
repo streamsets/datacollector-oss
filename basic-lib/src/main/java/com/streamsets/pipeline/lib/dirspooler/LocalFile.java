@@ -35,6 +35,8 @@ import static com.streamsets.pipeline.lib.dirspooler.LocalFileSystem.PERMISSIONS
 
 public class LocalFile implements WrappedFile {
 
+  private Map<String, Object> customMetadata = null;
+
   private Path filePath;
 
   public LocalFile(Path filePath) {
@@ -78,6 +80,14 @@ public class LocalFile implements WrappedFile {
       metadata.put(PERMISSIONS, PosixFilePermissions.toString(posixFilePermissions));
     }
     return metadata;
+  }
+
+  @Override
+  public Map<String, Object> getCustomMetadata() {
+    if (customMetadata == null) {
+      customMetadata = new HashMap<>();
+    }
+    return customMetadata;
   }
 
   public long getSize() throws IOException {

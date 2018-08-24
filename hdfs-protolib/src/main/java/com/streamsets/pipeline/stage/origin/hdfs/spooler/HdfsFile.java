@@ -30,6 +30,7 @@ import java.util.Map;
 public class HdfsFile implements WrappedFile {
   public static final String PERMISSIONS = "permissions";
 
+  private Map<String, Object> customMetadata = null;
   private Path filePath;
   private FileSystem fs;
 
@@ -91,6 +92,14 @@ public class HdfsFile implements WrappedFile {
     }
 
     return metadata;
+  }
+
+  @Override
+  public Map<String, Object> getCustomMetadata() {
+    if (customMetadata == null) {
+      customMetadata = new HashMap<>();
+    }
+    return customMetadata;
   }
 
   public String toString() {
