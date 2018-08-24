@@ -51,8 +51,8 @@ public class HttpRouterLaneConfig {
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "/",
-      label = "Path Parameters",
-      description = "URL path parameters",
+      label = "Path Parameter",
+      description = "URL path parameter",
       displayPosition = 30,
       group = "ROUTER"
   )

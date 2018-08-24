@@ -2,10 +2,10 @@
   "pipelineConfig" : {
     "schemaVersion" : 6,
     "version" : 10,
-    "pipelineId" : "SampleMicroservicePipeline3bc01ba5-7e73-4590-bed3-a2ba184723a3",
+    "pipelineId" : "SampleMicroservicePipeline69446855-c17e-47cf-8fc7-09fdff33ade5",
     "title" : "Sample Microservice Pipeline",
     "description" : "Usage:\n\nGET Request:\n➜  ~ curl -i -X GET http://localhost:8000/rest/v1/user --header \"X-SDC-APPLICATION-ID:microservice\"\nHTTP/1.1 200 OK\nDate: Sat, 21 Jul 2018 17:50:15 GMT\nContent-Type: application/json\nTransfer-Encoding: chunked\nServer: Jetty(9.4.2.v20170220)\n\n{\"httpStatusCode\":200,\"data\":[{\"ID\":\"1\",\"NAME\":\"Sample User Name\",\"AGE\":\"37\",\"ADDRESS\":\"1234 San Francisco\"}],\"error\":[],\"errorMessage\":null}\n\n\nPOST Request:\n➜  ~ curl -i -X POST http://localhost:8000/rest/v1/user --header \"X-SDC-APPLICATION-ID:microservice\" -d '{\"ID\":1, \"NAME\": \"Sample Name\", \"AGE\":34, \"ADDRESS\": \"2333 San Francisco\"}'\nHTTP/1.1 200 OK\nDate: Sat, 21 Jul 2018 17:51:42 GMT\nContent-Type: application/json\nTransfer-Encoding: chunked\nServer: Jetty(9.4.2.v20170220)\n\n{\"httpStatusCode\":200,\"data\":[{\"ID\":1,\"NAME\":\"Sample Name\",\"AGE\":34,\"ADDRESS\":\"2333 San Francisco\",\"sampleData\":\"POST Request Processed\"}],\"error\":[],\"errorMessage\":null}\n\nBad Request:\n➜  ~ curl -i -X GET http://localhost:8000/invalidPath --header \"X-SDC-APPLICATION-ID:microservice\"\nHTTP/1.1 400 Bad Request\nDate: Sat, 21 Jul 2018 17:48:53 GMT\nContent-Type: application/json\nTransfer-Encoding: chunked\nServer: Jetty(9.4.2.v20170220)\n\n{\"httpStatusCode\":400,\"data\":[{}],\"error\":[],\"errorMessage\":null}",
-    "uuid" : "fafc0162-4cbd-4495-b098-cf0b256b8080",
+    "uuid" : "1737de2d-b574-4fc8-ac74-c2af3d141185",
     "configuration" : [ {
       "name" : "executionMode",
       "value" : "STANDALONE"
@@ -86,7 +86,7 @@
       "value" : [ ]
     }, {
       "name" : "statsAggregatorStage",
-      "value" : ""
+      "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget::1"
     }, {
       "name" : "testOriginStage",
       "value" : "streamsets-datacollector-dev-lib::com_streamsets_pipeline_stage_devtest_rawdata_RawDataDSource::3"
@@ -545,21 +545,20 @@
       "eventLanes" : [ ],
       "services" : [ ]
     }, {
-      "instanceName" : "StreamSelector_01",
+      "instanceName" : "HTTPRouter_01",
       "library" : "streamsets-datacollector-basic-lib",
-      "stageName" : "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor",
+      "stageName" : "com_streamsets_pipeline_stage_processor_httprouter_HttpRouterDProcessor",
       "stageVersion" : "1",
       "configuration" : [ {
-        "name" : "lanePredicates",
+        "name" : "routerLaneConfigs",
         "value" : [ {
-          "outputLane" : "StreamSelector_01OutputLane1526657379109",
-          "predicate" : "${record:attribute('method') == 'GET' && str:contains(record:attribute('path'), '/rest/v1/user')}"
+          "outputLane" : "HTTPRouter_01OutputLane1535135657986",
+          "httpMethod" : "GET",
+          "pathParam" : "/rest/v1/user"
         }, {
-          "outputLane" : "StreamSelector_01OutputLane1526657356574",
-          "predicate" : "${record:attribute('method') == 'POST' && str:contains(record:attribute('path'), '/rest/v1/user')}"
-        }, {
-          "outputLane" : "StreamSelector_01OutputLane1526657340710",
-          "predicate" : "default"
+          "outputLane" : "HTTPRouter_01OutputLane1535135662125",
+          "httpMethod" : "POST",
+          "pathParam" : "/rest/v1/user"
         } ]
       }, {
         "name" : "stageOnRecordError",
@@ -573,33 +572,13 @@
       } ],
       "uiInfo" : {
         "description" : "",
-        "label" : "HTTP Request Router",
+        "label" : "HTTP Router 1",
         "xPos" : 280,
-        "yPos" : 140,
+        "yPos" : 110,
         "stageType" : "PROCESSOR"
       },
       "inputLanes" : [ "RESTService_01OutputLane15278905110860" ],
-      "outputLanes" : [ "StreamSelector_01OutputLane1526657379109", "StreamSelector_01OutputLane1526657356574", "StreamSelector_01OutputLane1526657340710" ],
-      "eventLanes" : [ ],
-      "services" : [ ]
-    }, {
-      "instanceName" : "SendtoOriginResponse_03",
-      "library" : "streamsets-datacollector-basic-lib",
-      "stageName" : "com_streamsets_pipeline_stage_destination_tooriginresponse_ToOriginResponseDTarget",
-      "stageVersion" : "1",
-      "configuration" : [ {
-        "name" : "statusCode",
-        "value" : 400
-      } ],
-      "uiInfo" : {
-        "description" : "",
-        "label" : "Bad Request 400",
-        "xPos" : 500,
-        "yPos" : 300,
-        "stageType" : "TARGET"
-      },
-      "inputLanes" : [ "StreamSelector_01OutputLane1526657340710" ],
-      "outputLanes" : [ ],
+      "outputLanes" : [ "HTTPRouter_01OutputLane1535135657986", "HTTPRouter_01OutputLane1535135662125" ],
       "eventLanes" : [ ],
       "services" : [ ]
     }, {
@@ -647,7 +626,7 @@
         "yPos" : 40,
         "stageType" : "PROCESSOR"
       },
-      "inputLanes" : [ "StreamSelector_01OutputLane1526657379109" ],
+      "inputLanes" : [ "HTTPRouter_01OutputLane1535135657986" ],
       "outputLanes" : [ "ExpressionEvaluator_01OutputLane15321928486580" ],
       "eventLanes" : [ ],
       "services" : [ ]
@@ -707,7 +686,7 @@
         "yPos" : 170,
         "stageType" : "PROCESSOR"
       },
-      "inputLanes" : [ "StreamSelector_01OutputLane1526657356574" ],
+      "inputLanes" : [ "HTTPRouter_01OutputLane1535135662125" ],
       "outputLanes" : [ "ExpressionEvaluator_02OutputLane15321928591860" ],
       "eventLanes" : [ ],
       "services" : [ ]
@@ -739,7 +718,7 @@
       "stageVersion" : "1",
       "configuration" : [ {
         "name" : "statusCode",
-        "value" : 500
+        "value" : 400
       } ],
       "uiInfo" : {
         "description" : "",
@@ -754,27 +733,46 @@
       "services" : [ ]
     },
     "info" : {
-      "pipelineId" : "SampleMicroservicePipeline3bc01ba5-7e73-4590-bed3-a2ba184723a3",
+      "pipelineId" : "SampleMicroservicePipeline69446855-c17e-47cf-8fc7-09fdff33ade5",
       "title" : "Sample Microservice Pipeline",
       "description" : "Usage:\n\nGET Request:\n➜  ~ curl -i -X GET http://localhost:8000/rest/v1/user --header \"X-SDC-APPLICATION-ID:microservice\"\nHTTP/1.1 200 OK\nDate: Sat, 21 Jul 2018 17:50:15 GMT\nContent-Type: application/json\nTransfer-Encoding: chunked\nServer: Jetty(9.4.2.v20170220)\n\n{\"httpStatusCode\":200,\"data\":[{\"ID\":\"1\",\"NAME\":\"Sample User Name\",\"AGE\":\"37\",\"ADDRESS\":\"1234 San Francisco\"}],\"error\":[],\"errorMessage\":null}\n\n\nPOST Request:\n➜  ~ curl -i -X POST http://localhost:8000/rest/v1/user --header \"X-SDC-APPLICATION-ID:microservice\" -d '{\"ID\":1, \"NAME\": \"Sample Name\", \"AGE\":34, \"ADDRESS\": \"2333 San Francisco\"}'\nHTTP/1.1 200 OK\nDate: Sat, 21 Jul 2018 17:51:42 GMT\nContent-Type: application/json\nTransfer-Encoding: chunked\nServer: Jetty(9.4.2.v20170220)\n\n{\"httpStatusCode\":200,\"data\":[{\"ID\":1,\"NAME\":\"Sample Name\",\"AGE\":34,\"ADDRESS\":\"2333 San Francisco\",\"sampleData\":\"POST Request Processed\"}],\"error\":[],\"errorMessage\":null}\n\nBad Request:\n➜  ~ curl -i -X GET http://localhost:8000/invalidPath --header \"X-SDC-APPLICATION-ID:microservice\"\nHTTP/1.1 400 Bad Request\nDate: Sat, 21 Jul 2018 17:48:53 GMT\nContent-Type: application/json\nTransfer-Encoding: chunked\nServer: Jetty(9.4.2.v20170220)\n\n{\"httpStatusCode\":400,\"data\":[{}],\"error\":[],\"errorMessage\":null}",
-      "created" : 1532193411825,
-      "lastModified" : 1532195556487,
+      "created" : 1535135632457,
+      "lastModified" : 1535135704101,
       "creator" : "admin",
       "lastModifier" : "admin",
       "lastRev" : "0",
-      "uuid" : "fafc0162-4cbd-4495-b098-cf0b256b8080",
+      "uuid" : "1737de2d-b574-4fc8-ac74-c2af3d141185",
       "valid" : true,
       "metadata" : {
-        "labels" : [ ]
+        "labels" : [ ],
+        "MICROSERVICE" : true
       },
-      "name" : "SampleMicroservicePipeline3bc01ba5-7e73-4590-bed3-a2ba184723a3",
+      "name" : "SampleMicroservicePipeline69446855-c17e-47cf-8fc7-09fdff33ade5",
       "sdcVersion" : "3.5.0-SNAPSHOT",
-      "sdcId" : "db2b9e5d-8d02-11e8-8a14-477a3f75f198"
+      "sdcId" : "f3994d57-a7cb-11e8-8407-f9e4fef9672c"
     },
     "metadata" : {
-      "labels" : [ ]
+      "labels" : [ ],
+      "MICROSERVICE" : true
     },
-    "statsAggregatorStage" : null,
+    "statsAggregatorStage" : {
+      "instanceName" : "Discard_StatsAggregatorStage",
+      "library" : "streamsets-datacollector-basic-lib",
+      "stageName" : "com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget",
+      "stageVersion" : "1",
+      "configuration" : [ ],
+      "uiInfo" : {
+        "description" : "",
+        "label" : "Stats Aggregator - Discard",
+        "xPos" : 940,
+        "yPos" : 50,
+        "stageType" : "TARGET"
+      },
+      "inputLanes" : [ ],
+      "outputLanes" : [ ],
+      "eventLanes" : [ ],
+      "services" : [ ]
+    },
     "startEventStages" : [ {
       "instanceName" : "Discard_StartEventStage",
       "library" : "streamsets-datacollector-basic-lib",
@@ -1052,11 +1050,11 @@
       } ]
     },
     "issues" : {
-      "stageIssues" : { },
       "issueCount" : 0,
-      "pipelineIssues" : [ ]
+      "pipelineIssues" : [ ],
+      "stageIssues" : { }
     },
-    "previewable" : false,
+    "previewable" : true,
     "valid" : true
   },
   "pipelineRules" : {
@@ -1071,7 +1069,7 @@
       "condition" : "${value() > 100}",
       "sendEmail" : false,
       "enabled" : false,
-      "timestamp" : 1526579644030,
+      "timestamp" : 1535135632674,
       "valid" : true
     }, {
       "id" : "stageErrorAlertID",
@@ -1082,7 +1080,7 @@
       "condition" : "${value() > 100}",
       "sendEmail" : false,
       "enabled" : false,
-      "timestamp" : 1526579644030,
+      "timestamp" : 1535135632674,
       "valid" : true
     }, {
       "id" : "idleGaugeID",
@@ -1093,7 +1091,7 @@
       "condition" : "${time:now() - value() > 120000}",
       "sendEmail" : false,
       "enabled" : false,
-      "timestamp" : 1526579644030,
+      "timestamp" : 1535135632674,
       "valid" : true
     }, {
       "id" : "batchTimeAlertID",
@@ -1104,7 +1102,7 @@
       "condition" : "${value() > 200}",
       "sendEmail" : false,
       "enabled" : false,
-      "timestamp" : 1526579644030,
+      "timestamp" : 1535135632674,
       "valid" : true
     }, {
       "id" : "memoryLimitAlertID",
@@ -1115,12 +1113,12 @@
       "condition" : "${value() > (jvm:maxMemoryMB() * 0.65)}",
       "sendEmail" : false,
       "enabled" : false,
-      "timestamp" : 1526579644030,
+      "timestamp" : 1535135632674,
       "valid" : true
     } ],
     "dataRuleDefinitions" : [ ],
     "driftRuleDefinitions" : [ ],
-    "uuid" : "8a9adea3-c941-4141-b1cf-3ca52ec28c7a",
+    "uuid" : "3f2f1570-6870-49ef-b91a-5aa5ab3e4a0c",
     "configuration" : [ {
       "name" : "emailIDs",
       "value" : [ ]
