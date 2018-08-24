@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Controller for Configuration.
- */
 
+// Controller for Configuration.
 angular
   .module('dataCollectorApp.home')
   .controller('ConfigurationController', function (
@@ -382,7 +380,6 @@ angular
         configValue.splice($index, 1);
       },
 
-
       /**
        * Add Object to Custom Field Configuration.
        *
@@ -394,6 +391,7 @@ angular
         var complexFieldObj = {};
         angular.forEach(configDefinitions, function (complexFiledConfigDefinition) {
           var complexFieldConfig = pipelineService.setDefaultValueForConfig(
+            $scope.detailPaneConfigDefn,
             complexFiledConfigDefinition,
             stageInstance
           );
@@ -401,6 +399,13 @@ angular
             (complexFieldConfig.value !== undefined && complexFieldConfig.value !== null) ? complexFieldConfig.value :
               undefined;
         });
+
+        if (config.name === $scope.detailPaneConfigDefn.outputStreamsDrivenByConfig) {
+          var outputLaneName = stageInstance.instanceName + 'OutputLane' + (new Date()).getTime();
+          stageInstance.outputLanes.push(outputLaneName);
+          complexFieldObj.outputLane = outputLaneName;
+        }
+
         if (config.value) {
           config.value.push(complexFieldObj);
         } else {
@@ -408,15 +413,34 @@ angular
         }
       },
 
-
       /**
        * Remove Object from Custom Field Configuration.
        *
        * @param stageInstance
+       * @param config
        * @param configValue
        * @param $index
        */
-      removeFromCustomField: function(stageInstance, configValue, $index) {
+      removeFromCustomField: function(stageInstance, config, configValue, $index) {
+        if (config.name === $scope.detailPaneConfigDefn.outputStreamsDrivenByConfig) {
+
+          if (configValue.length === 1) {
+            // at-least one output lanes required
+            return;
+          }
+
+          var stages = $scope.stageInstances;
+          stageInstance.outputLanes.splice($index, 1);
+          // Remove input lanes from stage instances
+          _.each(stages, function(stage) {
+            if (stage.instanceName !== stageInstance.instanceName) {
+              stage.inputLanes = _.filter(stage.inputLanes, function(inputLane) {
+                return inputLane !== configValue[$index].outputLane;
+              });
+            }
+          });
+        }
+
         configValue.splice($index, 1);
       },
 
@@ -437,11 +461,11 @@ angular
        * @returns {string|config.value.predicate|predicate|d.value.predicate}
        */
       getLanePredicate: function(edge) {
-        var laneIndex = _.indexOf(edge.source.outputLanes, edge.outputLane),
-          lanePredicatesConfiguration = _.find(edge.source.configuration, function(configuration) {
-            return configuration.name === 'lanePredicates';
-          }),
-          lanePredicateObject = lanePredicatesConfiguration ? lanePredicatesConfiguration.value[laneIndex] : '';
+        var laneIndex = _.indexOf(edge.source.outputLanes, edge.outputLane);
+        var lanePredicatesConfiguration = _.find(edge.source.configuration, function (configuration) {
+          return configuration.name === 'lanePredicates';
+        });
+        var lanePredicateObject = lanePredicatesConfiguration ? lanePredicatesConfiguration.value[laneIndex] : '';
         return lanePredicateObject ? lanePredicateObject.predicate : '';
       },
 
@@ -525,8 +549,12 @@ angular
           });
 
           if (configIndex === undefined) {
-            //No configuration found, added the configuration with default value
-            stageInstance.configuration.push(pipelineService.setDefaultValueForConfig(configDefinition, stageInstance));
+            // No configuration found, added the configuration with default value
+            stageInstance.configuration.push(pipelineService.setDefaultValueForConfig(
+              $scope.detailPaneConfigDefn,
+              configDefinition,
+              stageInstance
+            ));
             configIndex = stageInstance.configuration.length - 1;
           }
 

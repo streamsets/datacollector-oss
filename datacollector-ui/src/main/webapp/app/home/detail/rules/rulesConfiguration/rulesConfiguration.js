@@ -140,7 +140,11 @@ angular
         console.log('addToCustomField');
         var complexFieldObj = {};
         angular.forEach(configDefinitions, function (complexFiledConfigDefinition) {
-          var complexFieldConfig = pipelineService.setDefaultValueForConfig(complexFiledConfigDefinition, stageInstance);
+          var complexFieldConfig = pipelineService.setDefaultValueForConfig(
+            $scope.pipelineRulesConfigDefinition,
+            complexFiledConfigDefinition,
+            stageInstance
+          );
           complexFieldObj[complexFieldConfig.name] = (complexFieldConfig.value !== undefined && complexFieldConfig.value !== null) ? complexFieldConfig.value : undefined;
         });
         if (config.value) {

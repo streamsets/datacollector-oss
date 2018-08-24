@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Service for providing access to the Pipeline utility functions.
- */
+
+// Service for providing access to the Pipeline utility functions.
 angular.module('dataCollectorApp.common')
   .service('pipelineService', function(pipelineConstant, api, $q, $translate, $modal, $location, $route, _) {
 
@@ -53,13 +52,13 @@ angular.module('dataCollectorApp.common')
         self.initializeDefer = $q.defer();
 
         $q.all([
-            api.pipelineAgent.getDefinitions()
-          ])
+          api.pipelineAgent.getDefinitions()
+        ])
           .then(function (results) {
-            var definitions = results[0].data,
-              rulesElMetadata = definitions.rulesElMetadata,
-              elFunctionDefinitions = [],
-              elConstantDefinitions = [];
+            var definitions = results[0].data;
+            var rulesElMetadata = definitions.rulesElMetadata;
+            var elFunctionDefinitions = [];
+            var elConstantDefinitions = [];
 
             // Definitions
             self.pipelineConfigDefinition = definitions.pipeline[0];
@@ -107,7 +106,7 @@ angular.module('dataCollectorApp.common')
               regex: 'wordColonSlash'
             };
 
-            //Alert Text Rules
+            // Alert Text Rules
             elFunctionDefinitions = [];
             elConstantDefinitions = [];
 
@@ -412,7 +411,6 @@ angular.module('dataCollectorApp.common')
       return defer.promise;
     };
 
-
     /**
      * Publish Pipeline to Remote Command Handler
      */
@@ -715,7 +713,7 @@ angular.module('dataCollectorApp.common')
       }
 
       angular.forEach(stage.configDefinitions, function (configDefinition) {
-        stageInstance.configuration.push(self.setDefaultValueForConfig(configDefinition, stageInstance));
+        stageInstance.configuration.push(self.setDefaultValueForConfig(stage, configDefinition, stageInstance));
       });
 
       if (stage.rawSourceDefinition && stage.rawSourceDefinition.configDefinitions) {
@@ -725,12 +723,12 @@ angular.module('dataCollectorApp.common')
         };
 
         angular.forEach(stage.rawSourceDefinition.configDefinitions, function (configDefinition) {
-          stageInstance.uiInfo.rawSource.configuration.push(self.setDefaultValueForConfig(configDefinition, stageInstance));
+          stageInstance.uiInfo.rawSource.configuration.push(self.setDefaultValueForConfig(stage, configDefinition, stageInstance));
         });
       }
 
       if (configuration) {
-        //Special handling for lanePredicates
+        // Special handling for outputStreamsDrivenByConfig
         angular.forEach(configuration, function(config) {
           if (config.name === 'lanePredicates') {
             stageInstance.outputLanes = [];
@@ -759,7 +757,7 @@ angular.module('dataCollectorApp.common')
         angular.forEach(serviceDef.configDefinitions, function(configDefinition) {
           // We're passing null for stageInstance as that should be used only for calculating output lane
           // name, which is operation that does not make sense for service.
-          serviceInstance.configuration.push(self.setDefaultValueForConfig(configDefinition, null));
+          serviceInstance.configuration.push(self.setDefaultValueForConfig(stage, configDefinition, null));
         });
 
         // Propagate RUNTIME configuration injected by the stage
@@ -861,15 +859,16 @@ angular.module('dataCollectorApp.common')
     /**
      * Sets default value for config.
      *
+     * @param stage
      * @param configDefinition
      * @param stageInstance
      * @returns {{name: *, value: (defaultValue|*|string|Variable.defaultValue|undefined)}}
      */
-    this.setDefaultValueForConfig = function(configDefinition, stageInstance) {
+    this.setDefaultValueForConfig = function(stage, configDefinition, stageInstance) {
       var config = {
-          name: configDefinition.name,
-          value: (configDefinition.defaultValue !== undefined && configDefinition.defaultValue !== null) ? configDefinition.defaultValue : undefined
-        };
+        name: configDefinition.name,
+        value: (configDefinition.defaultValue !== undefined && configDefinition.defaultValue !== null) ? configDefinition.defaultValue : undefined
+      };
 
       if (configDefinition.type === 'MODEL') {
         if (configDefinition.model.modelType === 'FIELD_SELECTOR_MULTI_VALUE' && !config.value) {
@@ -882,9 +881,14 @@ angular.module('dataCollectorApp.common')
         } else if (configDefinition.model.modelType === 'LIST_BEAN') {
           var complexFieldObj = {};
           angular.forEach(configDefinition.model.configDefinitions, function (complexFiledConfigDefinition) {
-            var complexFieldConfig = self.setDefaultValueForConfig(complexFiledConfigDefinition, stageInstance);
-            complexFieldObj[complexFieldConfig.name] = (complexFieldConfig.value !== undefined && complexFieldConfig.value !== null) ? complexFieldConfig.value : undefined;
+            var complexFieldConfig = self.setDefaultValueForConfig(stage, complexFiledConfigDefinition, stageInstance);
+            complexFieldObj[complexFieldConfig.name] =
+              (complexFieldConfig.value !== undefined && complexFieldConfig.value !== null) ? complexFieldConfig.value : undefined;
           });
+
+          if (stage.outputStreamsDrivenByConfig === configDefinition.name) {
+            complexFieldObj.outputLane = stageInstance.outputLanes[0];
+          }
           config.value = [complexFieldObj];
         }
       } else if (configDefinition.type === 'BOOLEAN' && config.value === undefined) {
@@ -978,42 +982,42 @@ angular.module('dataCollectorApp.common')
     var getConfigValueString = function(configDefinition, configValue) {
       var valStr = [];
       if (configDefinition.type === 'MODEL') {
-         switch(configDefinition.model.modelType) {
-            case 'VALUE_CHOOSER':
-              if (configDefinition.model.chooserMode === 'PROVIDED') {
-                var ind = _.indexOf(configDefinition.model.values, configValue);
-                return configDefinition.model.labels[ind];
-              }
-              break;
-            case 'PREDICATE':
-              valStr = [];
-              angular.forEach(configValue, function(lanePredicate, index) {
-                valStr.push({
-                  Stream: index + 1,
-                  Condition: lanePredicate.predicate
-                });
+        switch(configDefinition.model.modelType) {
+          case 'VALUE_CHOOSER':
+            if (configDefinition.model.chooserMode === 'PROVIDED') {
+              var ind = _.indexOf(configDefinition.model.values, configValue);
+              return configDefinition.model.labels[ind];
+            }
+            break;
+          case 'PREDICATE':
+            valStr = [];
+            angular.forEach(configValue, function(lanePredicate, index) {
+              valStr.push({
+                Stream: index + 1,
+                Condition: lanePredicate.predicate
               });
-              configValue = valStr;
-              break;
-            case 'LIST_BEAN':
-              valStr = [];
-              angular.forEach(configValue, function(groupValueObject) {
-                var groupValStr = {};
-                angular.forEach(configDefinition.model.configDefinitions, function(groupConfigDefinition) {
+            });
+            configValue = valStr;
+            break;
+          case 'LIST_BEAN':
+            valStr = [];
+            angular.forEach(configValue, function(groupValueObject) {
+              var groupValStr = {};
+              angular.forEach(configDefinition.model.configDefinitions, function(groupConfigDefinition) {
 
-                  if ((groupConfigDefinition.dependsOn && groupConfigDefinition.triggeredByValues) &&
-                    (groupValueObject[groupConfigDefinition.dependsOn] === undefined ||
-                      !_.contains(groupConfigDefinition.triggeredByValues, groupValueObject[groupConfigDefinition.dependsOn] + ''))) {
-                    return;
-                  }
+                if ((groupConfigDefinition.dependsOn && groupConfigDefinition.triggeredByValues) &&
+                  (groupValueObject[groupConfigDefinition.dependsOn] === undefined ||
+                    !_.contains(groupConfigDefinition.triggeredByValues, groupValueObject[groupConfigDefinition.dependsOn] + ''))) {
+                  return;
+                }
 
-                  groupValStr[groupConfigDefinition.label] = groupValueObject[groupConfigDefinition.name];
-                });
-                valStr.push(groupValStr);
+                groupValStr[groupConfigDefinition.label] = groupValueObject[groupConfigDefinition.name];
               });
-              configValue = valStr;
-              break;
-          }
+              valStr.push(groupValStr);
+            });
+            configValue = valStr;
+            break;
+        }
       }
 
       if (_.isObject(configValue)) {
@@ -1606,76 +1610,76 @@ angular.module('dataCollectorApp.common')
           }
         ],
         COUNTER: [
-            {
-              value: 'pipeline.memoryConsumed.counter',
-              label: 'Pipeline Memory Consumption Counter (MB)'
-            },
-            {
-              value: 'pipeline.batchCount.counter',
-              label: 'Pipeline Batch Counter'
-            },
-            {
-              value: 'pipeline.batchInputRecords.counter',
-              label: 'Pipeline Input Records Counter'
-            },
-            {
-              value: 'pipeline.batchOutputRecords.counter',
-              label: 'Pipeline Output Records Counter '
-            },
-            {
-              value: 'pipeline.batchErrorRecords.counter',
-              label: 'Pipeline Error Records Counter'
-            },
-            {
-              value: 'pipeline.batchErrorMessages.counter',
-              label: 'Pipeline Stage Errors Counter'
-            }
+          {
+            value: 'pipeline.memoryConsumed.counter',
+            label: 'Pipeline Memory Consumption Counter (MB)'
+          },
+          {
+            value: 'pipeline.batchCount.counter',
+            label: 'Pipeline Batch Counter'
+          },
+          {
+            value: 'pipeline.batchInputRecords.counter',
+            label: 'Pipeline Input Records Counter'
+          },
+          {
+            value: 'pipeline.batchOutputRecords.counter',
+            label: 'Pipeline Output Records Counter '
+          },
+          {
+            value: 'pipeline.batchErrorRecords.counter',
+            label: 'Pipeline Error Records Counter'
+          },
+          {
+            value: 'pipeline.batchErrorMessages.counter',
+            label: 'Pipeline Stage Errors Counter'
+          }
         ],
         HISTOGRAM: [
-            {
-              value: 'pipeline.inputRecordsPerBatch.histogramM5',
-              label: 'Pipeline Input Records Per Batch Histogram M5'
-            },
-            {
-              value: 'pipeline.outputRecordsPerBatch.histogramM5',
-              label: 'Pipeline Output Records Per Batch Histogram M5'
-            },
-            {
-              value: 'pipeline.errorRecordsPerBatch.histogramM5',
-              label: 'Pipeline Bad Records Per Batch Histogram M5'
-            },
-            {
-              value: 'pipeline.errorsPerBatch.histogramM5',
-              label: 'Pipeline Errors Per Batch Histogram M5'
-            }
-          ],
+          {
+            value: 'pipeline.inputRecordsPerBatch.histogramM5',
+            label: 'Pipeline Input Records Per Batch Histogram M5'
+          },
+          {
+            value: 'pipeline.outputRecordsPerBatch.histogramM5',
+            label: 'Pipeline Output Records Per Batch Histogram M5'
+          },
+          {
+            value: 'pipeline.errorRecordsPerBatch.histogramM5',
+            label: 'Pipeline Bad Records Per Batch Histogram M5'
+          },
+          {
+            value: 'pipeline.errorsPerBatch.histogramM5',
+            label: 'Pipeline Errors Per Batch Histogram M5'
+          }
+        ],
         METER: [
-            {
-              value: 'pipeline.batchCount.meter',
-              label: 'Pipeline Batch Count Meter'
-            },
-            {
-              value: 'pipeline.batchInputRecords.meter',
-              label: 'Pipeline Batch Input Records Meter'
-            },
-            {
-              value: 'pipeline.batchOutputRecords.meter',
-              label: 'Pipeline Batch Output Records Meter '
-            },
-            {
-              value: 'pipeline.batchErrorRecords.meter',
-              label: 'Pipeline Batch Error Records Meter'
-            },
-            {
-              value: 'pipeline.batchErrorMessages.meter',
-              label: 'Pipeline Batch Stage Errors Meter'
-            }
-          ],
+          {
+            value: 'pipeline.batchCount.meter',
+            label: 'Pipeline Batch Count Meter'
+          },
+          {
+            value: 'pipeline.batchInputRecords.meter',
+            label: 'Pipeline Batch Input Records Meter'
+          },
+          {
+            value: 'pipeline.batchOutputRecords.meter',
+            label: 'Pipeline Batch Output Records Meter '
+          },
+          {
+            value: 'pipeline.batchErrorRecords.meter',
+            label: 'Pipeline Batch Error Records Meter'
+          },
+          {
+            value: 'pipeline.batchErrorMessages.meter',
+            label: 'Pipeline Batch Stage Errors Meter'
+          }
+        ],
         TIMER: [{
-            value: 'pipeline.batchProcessing.timer',
-            label: 'Pipeline Batch Processing Timer'
-          }]
-        };
+          value: 'pipeline.batchProcessing.timer',
+          label: 'Pipeline Batch Processing Timer'
+        }]
+      };
 
 
 

@@ -122,7 +122,8 @@
           <thead>
           <tr>
             <th class="custom-field-property"
-                ng-repeat="customeFieldConfigDefintion in configDefinition.model.configDefinitions | orderBy: 'displayPosition'">
+                ng-repeat="customeFieldConfigDefintion in configDefinition.model.configDefinitions | orderBy: 'displayPosition'"
+                ng-class="{'output-lane': $index === 0 && configDefinition.name === detailPaneConfigDefn.outputStreamsDrivenByConfig}">
               <span>{{customeFieldConfigDefintion.label}}</span>
               <i class="fa fa-info-circle help-icon"
                  ng-if="customeFieldConfigDefintion.description"
@@ -135,26 +136,30 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="customFieldValue in customeFieldValueList = detailPaneConfig.configuration[configIndex].value track by $index">
+          <tr ng-repeat="customFieldValue in customeFieldValueList = detailPaneConfig.configuration[configIndex].value track by $index"
+              ng-init="parentConfigIndex=configIndex; configIndex = $index">
 
-            <td class="col-md-5"
-                ng-repeat="customFieldConfigDefinition in configDefinition.model.configDefinitions | orderBy: 'displayPosition'">
+            <td ng-repeat="customFieldConfigDefinition in configDefinition.model.configDefinitions | orderBy: 'displayPosition'">
 
-              <div ng-if="(verifyCustomFieldDependsOn(detailPaneConfig, customFieldValue, customFieldConfigDefinition))">
-                <ng-include src="'app/home/detail/configuration/listBeanConfiguration.tpl.html'"></ng-include>
+              <div ng-if="$index === 0 && configDefinition.name === detailPaneConfigDefn.outputStreamsDrivenByConfig">
+                <label class="output-lane-value">{{configIndex + 1}}</label>
               </div>
 
+              <div ng-if="(verifyCustomFieldDependsOn(detailPaneConfig, customFieldValue, customFieldConfigDefinition)) && !($index === 0 && configDefinition.name === detailPaneConfigDefn.outputStreamsDrivenByConfig)">
+                <ng-include src="'app/home/detail/configuration/listBeanConfiguration.tpl.html'"></ng-include>
+              </div>
             </td>
 
             <td>
               <div class="btn-group" role="group" aria-label="Default button group" ng-hide="isPipelineReadOnly || isPipelineRunning">
                 <button type="button" class="btn btn-default"
-                        ng-click="removeFromCustomField(detailPaneConfig, customeFieldValueList, $index)">
+                        ng-hide="configDefinition.name === detailPaneConfigDefn.outputStreamsDrivenByConfig && detailPaneConfig.configuration[configIndex].value.length === 1"
+                        ng-click="removeFromCustomField(detailPaneConfig, detailPaneConfig.configuration[parentConfigIndex], customeFieldValueList, $index)">
                   <i class="fa fa-minus pointer"></i>
                 </button>
                 <button type="button" class="btn btn-default"
                         ng-show="$last"
-                        ng-click="addToCustomField(detailPaneConfig, detailPaneConfig.configuration[configIndex], configDefinition.model.configDefinitions)">
+                        ng-click="addToCustomField(detailPaneConfig, detailPaneConfig.configuration[parentConfigIndex], configDefinition.model.configDefinitions)">
                   <i class="fa fa-plus pointer"></i>
                 </button>
               </div>
@@ -193,7 +198,7 @@
             <td>
               <div class="btn-group" role="group" aria-label="Default button group" ng-hide="isPipelineReadOnly || isPipelineRunning">
                 <button type="button" class="btn btn-default"
-                        ng-click="removeFromCustomField(detailPaneConfig, customeFieldValueList, $index)">
+                        ng-click="removeFromCustomField(detailPaneConfig, detailPaneConfig.configuration[parentConfigIndex], customeFieldValueList, $index)">
                   <i class="fa fa-minus pointer"></i>
                 </button>
                 <button type="button" class="btn btn-default"
@@ -234,7 +239,7 @@
           <i class="fa fa-plus pointer"></i>
         </button>
 
-        <div class="pull-right field-selector-btn" ng-hide="isPipelineReadOnly || isPipelineRunning">
+        <div class="pull-right field-selector-btn" ng-hide="isPipelineReadOnly || isPipelineRunning || configDefinition.name === detailPaneConfigDefn.outputStreamsDrivenByConfig">
           <button type="button" class="btn btn-link"
                   ng-click="bulkEdit = !bulkEdit">
             {{bulkEdit ? ('home.detailPane.configurationTab.switchToSimpleMode' | translate) : ('home.detailPane.configurationTab.switchToBulkMode' | translate)}}
