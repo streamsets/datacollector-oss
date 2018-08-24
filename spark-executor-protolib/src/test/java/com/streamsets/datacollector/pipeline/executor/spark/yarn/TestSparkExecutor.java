@@ -40,12 +40,11 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-
 public class TestSparkExecutor extends BaseSparkExecutorTest {
 
   private void verifyMethodCalls() throws IOException {
     verify(launcher, times(1))
-        .setMaster(eq(conf.clusterManager.getLabel().toLowerCase()));
+        .setMaster(eq("yarn"));
     verify(launcher, times(1))
         .setDeployMode(eq(conf.yarnConfigBean.deployMode.getLabel().toLowerCase()));
     verify(launcher, times(1)).setAppName(eq(conf.yarnConfigBean.appName));

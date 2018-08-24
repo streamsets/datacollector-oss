@@ -15,11 +15,9 @@
  */
 package com.streamsets.datacollector.pipeline.executor.spark;
 
-import com.streamsets.datacollector.pipeline.executor.spark.databricks.DatabricksConfigBean;
 import com.streamsets.datacollector.pipeline.executor.spark.yarn.YarnConfigBean;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
-import com.streamsets.pipeline.api.ValueChooserModel;
 
 public class SparkExecutorConfigBean {
 
@@ -27,20 +25,7 @@ public class SparkExecutorConfigBean {
   public YarnConfigBean yarnConfigBean = new YarnConfigBean();
 
   @ConfigDefBean
-  public DatabricksConfigBean databricksConfigBean = new DatabricksConfigBean();
-
-  @ConfigDefBean
   public CredentialsConfigBean credentialsConfigBean = new CredentialsConfigBean();
-
-  @ConfigDef(
-      type = ConfigDef.Type.MODEL,
-      required = true,
-      label = "Cluster Manager",
-      group = "SPARK",
-      displayPosition = 10
-  )
-  @ValueChooserModel(ClusterManagerChooserValues.class)
-  public ClusterManager clusterManager;
 
   /*
    * For all three below, display positions must be co-ordinated with other config beans!

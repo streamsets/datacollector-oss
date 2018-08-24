@@ -13,26 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.pipeline.executor.spark;
+package com.streamsets.pipeline.stage.executor.databricks;
 
-import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.Label;
 
-public class CredentialsConfigBean {
+public enum CredentialType implements Label {
 
-  @ConfigDef(
-      type = ConfigDef.Type.STRING,
-      required = false,
-      label = "Kerberos Principal",
-      group = "CREDENTIALS"
-  )
-  public String principal = "";
+  PASSWORD("Username/Password"),
+  TOKEN("Token"),
+  ;
 
-  @ConfigDef(
-      type = ConfigDef.Type.STRING,
-      required = false,
-      label = "Kerberos Keytab",
-      group = "CREDENTIALS"
-  )
-  public String keytab = "";
+  private final String label;
 
+  CredentialType(String label) {
+    this.label = label;
+  }
+
+  @Override
+  public String getLabel() {
+    return label;
+  }
 }

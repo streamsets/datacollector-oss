@@ -38,8 +38,6 @@ public class YarnConfigBean {
       type = ConfigDef.Type.MODEL,
       required = true,
       label = "Deploy Mode",
-      dependsOn = "clusterManager^",
-      triggeredByValue = "YARN", // Applies only to YARN, not Databricks
       group = "SPARK",
       displayPosition = 20
   )
@@ -51,8 +49,6 @@ public class YarnConfigBean {
       required = true,
       label = "Driver Memory",
       group = "SPARK",
-      dependsOn = "clusterManager^",
-      triggeredByValue = "YARN",
       displayPosition = 30
   )
   public String driverMemory = "";
@@ -62,10 +58,7 @@ public class YarnConfigBean {
       required = true,
       label = "Executor Memory",
       group = "SPARK",
-      dependsOn = "clusterManager^",
-      triggeredByValue = "YARN",
       displayPosition = 40
-
   )
   public String executorMemory = "";
 
@@ -76,8 +69,6 @@ public class YarnConfigBean {
       label = "Dynamic Allocation",
       description = "Enable the dynamic allocation of Spark worker nodes",
       group = "SPARK",
-      dependsOn = "clusterManager^",
-      triggeredByValue = "YARN",
       displayPosition = 50
   )
   public boolean dynamicAllocation = true;
@@ -88,8 +79,6 @@ public class YarnConfigBean {
       min = 0,
       label = "Minimum Number of Worker Nodes",
       group = "SPARK",
-      dependsOn = "dynamicAllocation",
-      triggeredByValue = "true",
       displayPosition = 60
 
   )
@@ -101,8 +90,6 @@ public class YarnConfigBean {
       min = 0,
       label = "Maximum Number of Worker Nodes",
       group = "SPARK",
-      dependsOn = "dynamicAllocation",
-      triggeredByValue = "true",
       displayPosition = 70
   )
   public int maxExecutors;
@@ -113,8 +100,6 @@ public class YarnConfigBean {
       min = 1,
       label = "Number of Worker Nodes",
       group = "SPARK",
-      dependsOn = "dynamicAllocation",
-      triggeredByValue = "false",
       displayPosition = 80
   )
   public int numExecutors;
@@ -124,8 +109,6 @@ public class YarnConfigBean {
       required = false,
       label = "Proxy User",
       group = "SPARK",
-      dependsOn = "clusterManager^",
-      triggeredByValue = "YARN",
       displayPosition = 110
   )
   public String proxyUser = "";
@@ -136,8 +119,6 @@ public class YarnConfigBean {
       label = "Additional Spark Arguments",
       description = "Use this to pass any additional arguments to Spark Launcher/Spark Submit. Overrides other parameters",
       group = "SPARK",
-      dependsOn = "clusterManager^",
-      triggeredByValue = "YARN",
       displayPosition = 140
   )
   public List<String> noValueArgs = new ArrayList<>();
@@ -148,8 +129,6 @@ public class YarnConfigBean {
       label = "Additional Spark Arguments and Values",
       description = "Use this to pass any additional arguments to Spark Launcher/Spark Submit. Overrides other parameters",
       group = "SPARK",
-      dependsOn = "clusterManager^",
-      triggeredByValue = "YARN",
       displayPosition = 150
   )
   public Map<String, String> args = new HashMap<>();
@@ -159,8 +138,6 @@ public class YarnConfigBean {
       required = false,
       label = "Environment Variables",
       group = "SPARK",
-      dependsOn = "clusterManager^",
-      triggeredByValue = "YARN",
       displayPosition = 160
   )
   public Map<String, String> env = new HashMap<>();
@@ -172,8 +149,6 @@ public class YarnConfigBean {
       type = ConfigDef.Type.MODEL,
       required = true,
       label = "Language",
-      dependsOn = "clusterManager^",
-      triggeredByValue = "YARN", // Applies only to YARN, not Databricks
       group = "APPLICATION",
       displayPosition = 10
   )
@@ -185,8 +160,6 @@ public class YarnConfigBean {
       required = true,
       label = "Application Name",
       group = "APPLICATION",
-      dependsOn = "clusterManager^",
-      triggeredByValue = "YARN",
       displayPosition = 20
   )
   public String appName = "";
@@ -196,8 +169,6 @@ public class YarnConfigBean {
       required = true,
       label = "Application Resource",
       group = "APPLICATION",
-      dependsOn = "clusterManager^",
-      triggeredByValue = "YARN",
       displayPosition = 30
   )
   public String appResource = "";
@@ -220,8 +191,6 @@ public class YarnConfigBean {
       elDefs = {RecordEL.class, VaultEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       group = "APPLICATION",
-      dependsOn = "clusterManager^",
-      triggeredByValue = "YARN",
       displayPosition = 50
   )
   public List<String> appArgs = new ArrayList<>();
@@ -254,8 +223,6 @@ public class YarnConfigBean {
       required = false,
       label = "Additional Files",
       group = "APPLICATION",
-      dependsOn = "clusterManager^",
-      triggeredByValue = "YARN",
       displayPosition = 80
   )
   public List<String> additionalFiles = new ArrayList<>();
@@ -293,8 +260,6 @@ public class YarnConfigBean {
       label = "Enable Verbose Logging",
       description = "Enable only for testing, as a lot of additional log data is written to sdc.log",
       group = "APPLICATION",
-      dependsOn = "clusterManager^",
-      triggeredByValue = "YARN",
       displayPosition = 110
   )
   public boolean verbose;

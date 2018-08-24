@@ -18,7 +18,6 @@ package com.streamsets.datacollector.pipeline.executor.spark.yarn;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.pipeline.executor.spark.AppLauncher;
-import com.streamsets.datacollector.pipeline.executor.spark.ClusterManager;
 import com.streamsets.datacollector.pipeline.executor.spark.DeployMode;
 import com.streamsets.datacollector.pipeline.executor.spark.SparkExecutor;
 import com.streamsets.datacollector.pipeline.executor.spark.SparkExecutorConfigBean;
@@ -52,7 +51,6 @@ public class BaseSparkExecutorTest { //NOSONAR
     conf = new SparkExecutorConfigBean();
     conf.yarnConfigBean.appName = "test";
     conf.yarnConfigBean.deployMode = DeployMode.CLIENT;
-    conf.clusterManager = ClusterManager.YARN;
     conf.javaHome = testFolder.newFolder(JAVA_HOME).toString();
     conf.sparkHome = testFolder.newFolder(SPARK_HOME).toString();
     conf.yarnConfigBean.appResource = getTempFile("resource");

@@ -17,10 +17,10 @@ package com.streamsets.datacollector.pipeline.executor.spark.yarn;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.pipeline.executor.spark.AppLauncher;
-import com.streamsets.datacollector.pipeline.executor.spark.ApplicationLaunchFailureException;
 import com.streamsets.datacollector.pipeline.executor.spark.DeployMode;
 import com.streamsets.datacollector.pipeline.executor.spark.Errors;
 import com.streamsets.datacollector.pipeline.executor.spark.SparkExecutorConfigBean;
+import com.streamsets.datacollector.pipeline.executor.spark.ApplicationLaunchFailureException;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.el.ELEvalException;

@@ -16,7 +16,6 @@
 package com.streamsets.datacollector.pipeline.executor.spark;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.streamsets.datacollector.pipeline.executor.spark.databricks.DatabricksAppLauncher;
 import com.streamsets.datacollector.pipeline.executor.spark.yarn.YarnAppLauncher;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
@@ -93,15 +92,7 @@ public class SparkExecutor extends BaseExecutor {
 
   @VisibleForTesting
   protected AppLauncher getLauncher() {
-    switch (configBean.clusterManager) {
-      case YARN:
-        return new YarnAppLauncher();
-      case DATABRICKS:
-        return new DatabricksAppLauncher();
-      default:
-        throw new IllegalArgumentException(
-            Utils.format("{} is not a valid cluster manager", configBean.clusterManager));
-    }
+    return new YarnAppLauncher();
   }
 
 }

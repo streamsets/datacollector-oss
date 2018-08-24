@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2018 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.pipeline.executor.spark;
+package com.streamsets.pipeline.stage.executor.databricks;
 
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public enum ClusterManager implements Label {
+public class JobTypeChooserValues extends BaseEnumChooserValues<JobType> {
 
-  YARN("YARN"),
-  DATABRICKS("Databricks"),
-  ;
-
-  private final String label;
-
-  ClusterManager(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return label;
+  public JobTypeChooserValues() {
+    super(JobType.class);
   }
 }

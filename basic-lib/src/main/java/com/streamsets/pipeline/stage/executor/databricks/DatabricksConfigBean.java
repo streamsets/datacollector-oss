@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2018 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.pipeline.executor.spark.databricks;
+package com.streamsets.pipeline.stage.executor.databricks;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
@@ -25,6 +25,8 @@ import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.VaultEL;
+import com.streamsets.pipeline.lib.http.HttpProxyConfigBean;
+import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,19 +35,20 @@ import java.util.Map;
 
 public class DatabricksConfigBean {
 
+  @ConfigDefBean(groups = "CREDENTIALS")
+  public CredentialsConfigBean credentialsConfigBean = new CredentialsConfigBean();
+
   @ConfigDefBean(groups = "PROXY")
   public HttpProxyConfigBean proxyConfigBean = new HttpProxyConfigBean();
 
-  @ConfigDefBean(groups = "SSL")
-  public SslConfigBean sslConfigBean = new SslConfigBean();
+  @ConfigDefBean(groups = "TLS")
+  public TlsConfigBean tlsConfigBean = new TlsConfigBean();
 
   @ConfigDef(
       type = ConfigDef.Type.STRING,
       required = true,
       label = "Cluster Base URL",
-      group = "SPARK",
-      dependsOn = "clusterManager^",
-      triggeredByValue = "DATABRICKS",
+      group = "APPLICATION",
       displayPosition = 20
   )
   public String baseUrl = "";
@@ -59,8 +62,6 @@ public class DatabricksConfigBean {
       required = true,
       label = "Job Type",
       group = "APPLICATION",
-      dependsOn = "clusterManager^",
-      triggeredByValue = "DATABRICKS",
       displayPosition = 10
   )
   @ValueChooserModel(JobTypeChooserValues.class)
@@ -71,8 +72,6 @@ public class DatabricksConfigBean {
       required = true,
       label = "Job ID",
       group = "APPLICATION",
-      dependsOn = "clusterManager^",
-      triggeredByValue = "DATABRICKS",
       displayPosition = 20
   )
   public int jobId;
@@ -133,8 +132,7 @@ public class DatabricksConfigBean {
         }
       }
     }
-    sslConfigBean.init(context, prefix + "sslConfigBean.", issues);
-    proxyConfigBean.init();
+    tlsConfigBean.init(context, "HTTP", prefix + "tlsConfigBean.", issues);
     return issues;
   }
 
