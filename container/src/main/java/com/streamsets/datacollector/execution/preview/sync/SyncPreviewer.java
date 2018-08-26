@@ -22,6 +22,7 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RawSourceDefinition;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
+import com.streamsets.datacollector.el.JobEL;
 import com.streamsets.datacollector.el.PipelineEL;
 import com.streamsets.datacollector.execution.PreviewOutput;
 import com.streamsets.datacollector.execution.PreviewStatus;
@@ -54,10 +55,8 @@ import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.pipeline.api.RawSourcePreviewer;
 import com.streamsets.pipeline.api.StageException;
-
 import com.streamsets.pipeline.api.StageType;
 import dagger.ObjectGraph;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.BoundedInputStream;
 import org.slf4j.Logger;
@@ -65,7 +64,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.MultivaluedMap;
-
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -166,6 +164,7 @@ public class SyncPreviewer implements Previewer {
       throw new PipelineException(PreviewError.PREVIEW_0003, e.toString(), e) ;
     } finally {
       PipelineEL.unsetConstantsInContext();
+      JobEL.unsetConstantsInContext();
     }
   }
 
@@ -257,6 +256,7 @@ public class SyncPreviewer implements Previewer {
         previewPipeline = null;
       }
       PipelineEL.unsetConstantsInContext();
+      JobEL.unsetConstantsInContext();
     }
   }
 
@@ -271,6 +271,7 @@ public class SyncPreviewer implements Previewer {
       changeState(PreviewStatus.CANCELLED, null);
     }
     PipelineEL.unsetConstantsInContext();
+    JobEL.unsetConstantsInContext();
   }
 
   public void prepareForTimeout() {
@@ -287,6 +288,7 @@ public class SyncPreviewer implements Previewer {
       changeState(PreviewStatus.TIMED_OUT, null);
     }
     PipelineEL.unsetConstantsInContext();
+    JobEL.unsetConstantsInContext();
   }
 
   private void destroyPipeline(PipelineStopReason reason) {
@@ -341,6 +343,7 @@ public class SyncPreviewer implements Previewer {
         userContext,
         System.currentTimeMillis()
     );
+    JobEL.setConstantsInContext(null);
     batches = Math.min(maxBatches, batches);
     SourceOffsetTracker tracker = new PreviewSourceOffsetTracker(Collections.emptyMap());
     PreviewPipelineRunner runner = new PreviewPipelineRunner(

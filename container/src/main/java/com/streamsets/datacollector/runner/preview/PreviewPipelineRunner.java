@@ -24,6 +24,7 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.el.JobEL;
 import com.streamsets.datacollector.el.PipelineEL;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
@@ -251,6 +252,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
         originPipe.getStage().getContext().getUserContext(),
         System.currentTimeMillis()
     );
+    JobEL.setConstantsInContext(null);
 
     return batchContext;
   }
@@ -293,6 +295,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
       return  false;
     } finally {
       PipelineEL.unsetConstantsInContext();
+      JobEL.unsetConstantsInContext();
     }
   }
 

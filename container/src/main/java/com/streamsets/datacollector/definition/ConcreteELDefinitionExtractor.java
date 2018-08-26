@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.definition;
 
+import com.streamsets.datacollector.el.JobEL;
 import com.streamsets.datacollector.el.JvmEL;
 import com.streamsets.datacollector.el.PipelineEL;
 import com.streamsets.datacollector.el.RuntimeEL;
@@ -25,7 +26,14 @@ import com.streamsets.pipeline.lib.el.StringEL;
 
 public class ConcreteELDefinitionExtractor extends ELDefinitionExtractor {
   static final Class[] DEFAULT_EL_DEFS = {
-      Base64EL.class, FileEL.class,  JvmEL.class, MathEL.class, RuntimeEL.class, StringEL.class, PipelineEL.class
+      Base64EL.class,
+      FileEL.class,
+      JvmEL.class,
+      MathEL.class,
+      RuntimeEL.class,
+      StringEL.class,
+      PipelineEL.class,
+      JobEL.class
   };
 
   private static final ELDefinitionExtractor EXTRACTOR = new ConcreteELDefinitionExtractor(DEFAULT_EL_DEFS) {};

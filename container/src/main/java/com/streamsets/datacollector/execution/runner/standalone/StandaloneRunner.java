@@ -33,6 +33,7 @@ import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.el.JobEL;
 import com.streamsets.datacollector.el.JvmEL;
 import com.streamsets.datacollector.el.PipelineEL;
 import com.streamsets.datacollector.execution.AbstractRunner;
@@ -761,6 +762,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         if (pipelineConfigBean == null) {
           throw new PipelineRuntimeException(ContainerError.CONTAINER_0116, errors);
         }
+        JobEL.setConstantsInContext(pipelineConfigBean.constants);
         maxRetries = pipelineConfigBean.retryAttempts;
 
         MemoryLimitConfiguration memoryLimitConfiguration = getMemoryLimitConfiguration(pipelineConfigBean);

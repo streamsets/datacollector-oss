@@ -35,6 +35,7 @@ import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.el.JobEL;
 import com.streamsets.datacollector.el.PipelineEL;
 import com.streamsets.datacollector.execution.AbstractRunner;
 import com.streamsets.datacollector.execution.EventListenerManager;
@@ -491,6 +492,14 @@ public class ClusterRunner extends AbstractRunner {
           runningUser,
           getState().getTimeStamp()
       );
+      PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(
+          pipelineConf,
+          new ArrayList<>(),
+          getStartPipelineContext().getRuntimeParameters()
+      );
+      if (pipelineConfigBean != null) {
+        JobEL.setConstantsInContext(pipelineConfigBean.constants);
+      }
       doStart(context.getUser(), pipelineConf, getClusterSourceInfo(context, getName(), getRev(), pipelineConf), getAcl(getName()), context.getRuntimeParameters());
     } catch (Exception e) {
       validateAndSetStateTransition(context.getUser(), PipelineStatus.START_ERROR, e.toString(), getAttributes());

@@ -33,6 +33,7 @@ import com.streamsets.datacollector.config.MemoryLimitConfiguration;
 import com.streamsets.datacollector.config.MemoryLimitExceeded;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.el.JobEL;
 import com.streamsets.datacollector.el.PipelineEL;
 import com.streamsets.datacollector.execution.SnapshotInfo;
 import com.streamsets.datacollector.execution.SnapshotStore;
@@ -186,6 +187,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   private Lock destroyLock = new ReentrantLock();
 
   private long pipelineStartTime;
+  private Map<String, Object> parameters;
 
   @Inject
   public ProductionPipelineRunner(
@@ -308,6 +310,10 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
 
   public void setPipelineStartTime(long pipelineStartTime) {
     this.pipelineStartTime = pipelineStartTime;
+  }
+
+  public void setParameters(Map<String, Object> parameters) {
+    this.parameters = parameters;
   }
 
   public void setThreadHealthReporter(ThreadHealthReporter threadHealthReporter) {
@@ -458,6 +464,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
         originPipe.getStage().getContext().getUserContext(),
         pipelineStartTime
     );
+    JobEL.setConstantsInContext(parameters);
 
     // Run batch listeners
     for (BatchListener batchListener : batchListenerList) {
@@ -514,6 +521,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       return false;
     } finally {
       PipelineEL.unsetConstantsInContext();
+      JobEL.unsetConstantsInContext();
     }
 
     return true;

@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.execution.runner.common;
 
+import com.streamsets.datacollector.el.JobEL;
 import com.streamsets.datacollector.el.PipelineEL;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.runner.standalone.StandaloneRunner;
@@ -87,6 +88,7 @@ public class ProductionPipelineRunnable implements Runnable {
       }
     } finally {
       PipelineEL.unsetConstantsInContext();
+      JobEL.unsetConstantsInContext();
       postStop();
       countDownLatch.countDown();
       Thread.currentThread().setName(originalThreadName);
