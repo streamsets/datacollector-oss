@@ -186,6 +186,37 @@
             <scope>compile</scope>
         </dependency>
 
+        <!--
+        Due to a quirk (bug?) in maven-assembly plugin, these Jackson dependencies must be explicitly declared here;
+        they seem to be getting removed by the assembly plugin because they are at compile scope under a test scoped
+        dependency elsewhere (jackson-module-scala_2.11).
+
+        This behavior does not seem to match what dependency:tree shows!
+        -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <scope>compile</scope>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <scope>compile</scope>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <scope>compile</scope>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-paranamer</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
         <dependency>
           <groupId>com.streamsets</groupId>
           <artifactId>streamsets-datacollector-spark-executor-protolib</artifactId>
