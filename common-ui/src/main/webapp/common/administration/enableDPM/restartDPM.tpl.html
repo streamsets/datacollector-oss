@@ -1,40 +1,44 @@
+<label>Select how this Data Collector was started to see instructions for restart.</label>
 <accordion close-others="true" style="min-height:135px;display:block;">
-    <div accordion-group
-         class="panel-default"
-         heading="StreamSets Data Collector was started manually"
-         is-open="false"
-         is-disabled="false">
-        <p>Click the button below to restart this Data Collector:</p>
-        <button ng-click="restart()"
-                class="btn btn-primary ng-scope"
-                translate="global.form.restart"></button>
-    </div>
-    <div accordion-group
-         class="panel-default"
-         heading="StreamSets Data Collector was started as a service"
-         is-open="false"
-         is-disabled="false">
-        <p>Run this command to restart this Data Collector:</p>
-        <p style="font-family: monospace;">
-            service sdc start
-        </p>
-    </div>
-    <div accordion-group
-         class="panel-default"
-         heading="StreamSets Data Collector was started from Cloudera Manager"
-         is-open="false"
-         is-disabled="false">
-        <p>You must use Cloudera Manager to restart Data Collector. For information about
-            how to restart a service through Cloudera Manager, see the Cloudera documentation.</p>
-    </div>
-    <div accordion-group
-         class="panel-default"
-         heading="StreamSets Data Collector was started from Docker"
-         is-open="false"
-         is-disabled="false">
-        <p>Run this command to restart this Data Collector:</p>
-        <p style="font-family: monospace;">
-            docker restart &lt;containerId&gt;
-        </p>
-    </div>
+  <accordion-group is-open="status1.open">
+    <accordion-heading>StreamSets Data Collector was started manually
+      <i class="pull-right glyphicon"
+         ng-class="{'glyphicon-chevron-down': status1.open, 'glyphicon-chevron-right': !status1.open}"></i>
+    </accordion-heading>
+    <p>Click the button below to restart this Data Collector:</p>
+    <button ng-click="restart()"
+            class="btn btn-primary ng-scope"
+            translate="global.form.restart"></button>
+  </accordion-group>
+
+  <accordion-group is-open="status2.open">
+    <accordion-heading>StreamSets Data Collector was started as a service
+      <i class="pull-right glyphicon"
+         ng-class="{'glyphicon-chevron-down': status2.open, 'glyphicon-chevron-right': !status2.open}"></i>
+    </accordion-heading>
+    <p>Run this command to restart this Data Collector:</p>
+    <p style="font-family: monospace;">
+      service sdc restart
+    </p>
+  </accordion-group>
+
+  <accordion-group is-open="status3.open">
+    <accordion-heading>StreamSets Data Collector was started from Cloudera Manager
+      <i class="pull-right glyphicon"
+         ng-class="{'glyphicon-chevron-down': status3.open, 'glyphicon-chevron-right': !status3.open}"></i>
+    </accordion-heading>
+    <p>You must use Cloudera Manager to restart Data Collector. For information about
+      how to restart a service through Cloudera Manager, see the Cloudera documentation.</p>
+  </accordion-group>
+
+  <accordion-group is-open="status4.open">
+    <accordion-heading>StreamSets Data Collector was started from Docker
+      <i class="pull-right glyphicon"
+         ng-class="{'glyphicon-chevron-down': status4.open, 'glyphicon-chevron-right': !status4.open}"></i>
+    </accordion-heading>
+    <p>Run this command to restart this Data Collector:</p>
+    <p style="font-family: monospace;">
+      docker restart &lt;containerId&gt;
+    </p>
+  </accordion-group>
 </accordion>
