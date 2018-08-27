@@ -68,7 +68,7 @@ public class PulsarSourceConfig extends BasePulsarConfig {
           "Example: persistent://public/default/sdc-.* would match topics like 'sdc-topic' or 'sdc-data'",
       displayPosition = 70,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      defaultValue = "sdc-.*",
+      defaultValue = "persistent://public/default/sdc-.*",
       dependencies = {
           @Dependency(configName = "pulsarTopicsSelector",
               triggeredByValues = "TOPICS_PATTERN"),
