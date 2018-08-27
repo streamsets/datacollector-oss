@@ -61,7 +61,7 @@ public class SpoolDirUtil {
       return false;
     }
 
-    return f1.getFileName().compareTo(f2.getFileName()) > 0;
+    return f1.getAbsolutePath().compareTo(f2.getAbsolutePath()) > 0;
   }
 
   /*

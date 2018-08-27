@@ -73,11 +73,7 @@ public class Offset {
   }
 
   public String getOffset() {
-    if (fileOffset == null) {
-      return ZERO;
-    }
-
-    if (fileOffset.isEmpty()) {
+    if (fileOffset != null && fileOffset.isEmpty()) {
       return MINUS_ONE;
     }
 

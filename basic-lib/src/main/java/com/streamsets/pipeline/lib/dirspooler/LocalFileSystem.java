@@ -270,7 +270,7 @@ public class LocalFileSystem implements WrappedFileSystem {
               return compares;
             }
           }
-          return file1.getFileName().compareTo(file2.getFileName());
+          return file1.getAbsolutePath().compareTo(file2.getAbsolutePath());
         } catch (NoSuchFileException ex) {
           // Logged later, so don't log here.
           throw new RuntimeException(ex);
