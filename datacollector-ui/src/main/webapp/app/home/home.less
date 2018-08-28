@@ -15,7 +15,7 @@
  */
 
 .pipeline-empty-container {
-  background: #29b4e1 url('/assets/logo-watermark-big.png') no-repeat center bottom;
+  background: #3d5583 url('/assets/logo-watermark-big.png') no-repeat center;
   position: absolute;
   top: 0;
   left: 0;
@@ -25,51 +25,43 @@
 
   display: none;
 
+  .show {
+    display: inherit;
+  }
+
   .error-alert-div {
     margin-top: 50px;
   }
 
-  .create-pipeline-btn-group {
-    height: 70%;
-    display: table;
-    margin: auto;
-    color: #ffffff;
+  .btn-group-left {
+    margin: 80px 120px;
+    float: left;
+  }
 
-    .create-pipeline-btn-group-cell {
-      display: table-cell;
-      vertical-align: middle;
+  .btn-group-right {
+    margin: 80px 0;
+    float: left;
+  }
 
-      h2 {
-        padding-left: 200px;
-        padding-bottom: @defaultPadding * 2;
-        font-style: italic;
-        font-family: serif;
-      }
+  .btn {
+    display: block;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+    font-size: 12px;
 
-      .btn {
-        margin-right: @defaultPadding;
-      }
-
-      .download-edge-pipelines-btn {
-        margin-top: 30px;
-        margin-left: 170px;
-      }
-
-      .download-pipeline-btn {
-        margin-top: 30px;
-        margin-left: 160px;
-      }
-
-      .get-started-with-tutorial {
-        margin-top: 30px;
-        margin-left: 210px;
-      }
+    .glyphicon, .fa {
+      padding-right: 5px;
     }
   }
 
-  .show {
-    display: inherit;
+  .create-btn {
+    color: #3a845d;
   }
+
+  .import-btn {
+    color: #1b49a0;
+  }
+
 }
 
 .home-page {
