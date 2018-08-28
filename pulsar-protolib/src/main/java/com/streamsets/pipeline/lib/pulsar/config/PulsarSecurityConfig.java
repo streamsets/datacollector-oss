@@ -61,7 +61,7 @@ public class PulsarSecurityConfig {
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "TLS Authentication Enabled",
+      label = "Mutual Authentication Enabled",
       description = "If enabled communication with Pulsar will be done using TLS with mutual authentication",
       displayPosition = 20,
       group = "SECURITY",

@@ -50,7 +50,7 @@ public class BasePulsarConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      label = "Pulsar Keep Alive Interval (ms)",
+      label = "Keep Alive Interval (ms)",
       description = "How often to check whether the connections are still alive",
       displayPosition = 30,
       defaultValue = "30000",
@@ -62,9 +62,9 @@ public class BasePulsarConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      label = "Pulsar Operation Timeout (ms)",
-      description = "Pulsar Producer-create, Consumer-subscribe and Consumer-unsubscribe operations will be retried " +
-          "until this interval, after which the operation will be marked as failed",
+      label = "Operation Timeout (ms)",
+      description = "Pulsar operations will be retried until this interval, after which the operation will be marked " +
+          "as failed",
       displayPosition = 40,
       defaultValue = "30000",
       min = 0,

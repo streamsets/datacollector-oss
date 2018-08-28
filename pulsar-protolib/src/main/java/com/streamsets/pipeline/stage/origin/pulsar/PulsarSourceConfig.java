@@ -63,9 +63,10 @@ public class PulsarSourceConfig extends BasePulsarConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Pulsar Topics Pattern",
+      label = "Topics Pattern",
       description = "Pattern used to select the list of Pulsar topics from which messages have to be retrieved. " +
-          "Example: persistent://public/default/sdc-.* would match topics like 'sdc-topic' or 'sdc-data'",
+          "Pattern format: {persistent|non-persistent}://<tenant>/<namespace>/<topic pattern> Example: " +
+          "persistent://public/default/sdc-.* would match topics like 'sdc-topic' or 'sdc-data'",
       displayPosition = 70,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       defaultValue = "persistent://public/default/sdc-.*",
@@ -81,7 +82,8 @@ public class PulsarSourceConfig extends BasePulsarConfig {
       required = true,
       type = ConfigDef.Type.LIST,
       label = "Topics List",
-      description = "List of Pulsar topics from which messages have to be retrieved",
+      description = "List of Pulsar topics from which messages have to be retrieved. Each topic should have next " +
+          "format: {persistent|non-persistent}://<tenant>/<namespace>/<topic name>",
       displayPosition = 70,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       dependencies = {
@@ -96,7 +98,8 @@ public class PulsarSourceConfig extends BasePulsarConfig {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Topic",
-      description = "Pulsar topic from which messages have to be retrieved",
+      description = "Pulsar topic from which messages have to be retrieved. Topic should have next format: " +
+          "{persistent|non-persistent}://<tenant>/<namespace>/<topic name>",
       displayPosition = 70,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       dependencies = {
@@ -134,8 +137,8 @@ public class PulsarSourceConfig extends BasePulsarConfig {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "LATEST",
-      label = "Subscription Initial Position",
-      description = "Initial position from which to start reading Pulsar messages",
+      label = "Initial Offset",
+      description = "Initial offset from which to start reading Pulsar messages",
       displayPosition = 30,
       group = "ADVANCED"
   )
