@@ -32,6 +32,7 @@ public class RemoteSSOService extends AbstractSSOService {
   private static final Logger LOG = LoggerFactory.getLogger(RemoteSSOService.class);
 
   public static final String DPM_BASE_URL_CONFIG = "dpm.base.url";
+  public static final String DPM_APP_SECURITY_URL_CONFIG = "dpm.app.security.url";
   public static final String DPM_BASE_URL_DEFAULT = "http://localhost:18631";
 
   public static final String SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG = CONFIG_PREFIX + "appAuthToken";
@@ -59,8 +60,13 @@ public class RemoteSSOService extends AbstractSSOService {
   @Override
   public void setConfiguration(Configuration conf) {
     super.setConfiguration(conf);
-    String dpmBaseUrl = getValidURL(conf.get(DPM_BASE_URL_CONFIG, DPM_BASE_URL_DEFAULT));
-    String baseUrl = dpmBaseUrl + "security";
+    String securityAppUrl = getValidURL(
+        conf.get(
+            DPM_APP_SECURITY_URL_CONFIG,
+            conf.get(DPM_BASE_URL_CONFIG, DPM_BASE_URL_DEFAULT)
+        )
+    );
+    String baseUrl = securityAppUrl + "security";
 
     Utils.checkArgument(
         baseUrl.toLowerCase().startsWith("http:") || baseUrl.toLowerCase().startsWith("https:"),
@@ -69,8 +75,9 @@ public class RemoteSSOService extends AbstractSSOService {
     if (baseUrl.toLowerCase().startsWith("http://")) {
       LOG.warn("Security service base URL is not secure '{}'", baseUrl);
     }
-    setLoginPageUrl(baseUrl + "/login");
-    setLogoutUrl(baseUrl + "/_logout");
+    final String externalUrl = getValidURL(conf.get(DPM_BASE_URL_CONFIG, DPM_BASE_URL_DEFAULT)) + "security";
+    setLoginPageUrl(externalUrl + "/login");
+    setLogoutUrl(externalUrl + "/_logout");
 
     componentId = conf.get(SECURITY_SERVICE_COMPONENT_ID_CONFIG, null);
     appToken = conf.get(SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, null);
@@ -126,7 +133,7 @@ public class RemoteSSOService extends AbstractSSOService {
     connTimeout = (timeout == null) ? connTimeout: Integer.parseInt(timeout);
   }
 
-  boolean checkServiceActive() {
+  protected boolean checkServiceActive() {
     boolean active;
     try {
       URL url = new URL(getLoginPageUrl());

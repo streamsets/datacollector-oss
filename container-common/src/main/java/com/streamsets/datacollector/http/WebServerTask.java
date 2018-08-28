@@ -475,7 +475,7 @@ public abstract class WebServerTask extends AbstractTask implements Registration
     }
   }
 
-  RemoteSSOService createRemoteSSOService(Configuration appConf) {
+  protected RemoteSSOService createRemoteSSOService(Configuration appConf) {
     RemoteSSOService remoteSsoService = new RemoteSSOService();
     remoteSsoService.setConfiguration(appConf);
     remoteSsoService.setRegistrationResponseDelegate(this);
