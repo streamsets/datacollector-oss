@@ -1,56 +1,117 @@
-<div class="pipeline-empty-container" ng-class="{'show': loaded}" ng-show="totalPipelinesCount == 0">
+<div class="home-empty-container" ng-class="{'show': loaded}" ng-show="totalPipelinesCount == 0">
   <div class="error-alert-div">
     <ng-include ng-if="common.errors" src="'app/home/alerts/error/errorModal.tpl.html'"></ng-include>
     <ng-include ng-if="common.errors" src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
     <ng-include src="'app/home/alerts/info/infoAlert.tpl.html'"></ng-include>
   </div>
 
+  <div class="top-container">
+    <div class="btn-group-left">
+      <button class="btn btn-light create-btn"
+              ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || common.isSlaveNode"
+              ng-click="addPipelineConfig()">
+        <span class="glyphicon glyphicon-plus-sign"></span>
+        <span translate="home.createPipeline">Create Pipeline</span>
+      </button>
 
-  <div class="btn-group-left">
-    <button class="btn btn-light create-btn"
-            ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || common.isSlaveNode"
-            ng-click="addPipelineConfig()">
-      <span class="glyphicon glyphicon-plus-sign"></span>
-      <span translate="home.createPipeline">Create Pipeline</span>
-    </button>
+      <a class="btn tutorial-btn"
+         href="https://github.com/streamsets/tutorials" target="_blank">
+        <span class="fa fa-book"></span>
+        <span translate="home.getStartedWithTutorials">Try a Tutorial</span>
+      </a>
+    </div>
 
-    <a class="btn btn-primary"
-       href="https://github.com/streamsets/tutorials" target="_blank">
-      <span class="fa fa-book"></span>
-      <span translate="home.getStartedWithTutorials">Try a Tutorial</span>
-    </a>
+
+    <div class="btn-group-right">
+      <button class="btn btn-light import-btn"
+              ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || common.isSlaveNode"
+              ng-click="importPipelineConfig()">
+        <span class="glyphicon glyphicon-log-out"></span>
+        <span translate="home.importPipeline">Import Pipeline</span>
+      </button>
+
+      <button class="btn btn-light import-btn"
+              ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || common.isSlaveNode"
+              ng-click="importPipelinesFromArchive()">
+        <span class="glyphicon glyphicon-log-out"></span>
+        <span translate="home.importPipelinesFromArchive">Import Pipelines From Archive</span>
+      </button>
+
+      <button class="btn btn-light import-btn"
+              ng-if="common.isDPMEnabled"
+              ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || common.isSlaveNode"
+              ng-click="downloadRemotePipelineConfig()">
+        <span class="fa fa-cloud-download"></span>
+        <span translate="home.downloadRemotePipeline">Download Remote Pipeline</span>
+      </button>
+
+      <button class="btn btn-light import-btn"
+              ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || common.isSlaveNode"
+              ng-click="downloadEdgePipelines()">
+        <span class="fa fa-cloud-download"></span>
+        <span translate="home.downloadEdgePipelines.title">Download Edge Pipelines</span>
+      </button>
+    </div>
+
   </div>
 
+  <div class="bottom-container">
+    <div class="center-container">
 
-  <div class="btn-group-right">
-    <button class="btn btn-light import-btn"
-            ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || common.isSlaveNode"
-            ng-click="importPipelineConfig()">
-      <span class="glyphicon glyphicon-log-out"></span>
-      <span translate="home.importPipeline">Import Pipeline</span>
-    </button>
+      <div class="panel-div">
+        <div class="panel-div-container">
+          <span class="panel-div-title">Edge </span>
 
-    <button class="btn btn-light import-btn"
-            ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || common.isSlaveNode"
-            ng-click="importPipelinesFromArchive()">
-      <span class="glyphicon glyphicon-log-out"></span>
-      <span translate="home.importPipelinesFromArchive">Import Pipelines From Archive</span>
-    </button>
+          <div class="panel-div-body">
+            <p>Ultralight data ingestion at the edge</p>
+            <ul>
+              <li>Enables at-scale data ingestion and analytics for IoT and cybersecurity edge systems</li>
+              <li>Limited Memory, CPU and Connectivity</li>
+              <li>One Solution Across Platforms and Protocols</li>
+            </ul>
+          </div>
 
-    <button class="btn btn-light import-btn"
-            ng-if="common.isDPMEnabled"
-            ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || common.isSlaveNode"
-            ng-click="downloadRemotePipelineConfig()">
-      <span class="fa fa-cloud-download"></span>
-      <span translate="home.downloadRemotePipeline">Download Remote Pipeline</span>
-    </button>
+        </div>
+        <div class="bottom-btn" ng-click="openEdgeTutorialPage()">
+          <span>Data Collector Edge Tutorial</span>
+        </div>
+      </div>
 
-    <button class="btn btn-light import-btn"
-            ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || common.isSlaveNode"
-            ng-click="downloadEdgePipelines()">
-      <span class="fa fa-cloud-download"></span>
-      <span translate="home.downloadEdgePipelines.title">Download Edge Pipelines</span>
-    </button>
+
+      <div class="panel-div">
+        <div class="panel-div-container">
+          <span class="panel-div-title">Microservice </span>
+
+          <div class="panel-div-body">
+            <p>A new type of dataflow pipeline for implementing RESTful web services natively in Data Collector.</p>
+            <p>Microservice pipelines use a REST Service origin, similar to the HTTP Server origin, to listen for requests.</p>
+          </div>
+        </div>
+        <div class="bottom-btn" ng-click="openMicroserviceTutorialPage()">
+          <span>Microservice Pipeline Tutorial</span>
+        </div>
+      </div>
+
+      <div class="panel-div">
+        <div class="panel-div-container">
+          <span class="panel-div-title">Control Hub </span>
+
+          <div class="panel-div-body">
+            <p>Disciplined Management of Dataflow Architectures</p>
+            <ul>
+              <li>Cloud-based collaborative pipeline design with a shared repository</li>
+              <li>Automate pipeline deployment</li>
+              <li>End-to-end lineage and support for data governance</li>
+            </ul>
+          </div>
+        </div>
+        <div class="bottom-btn" ng-click="openControlHubTutorialPage()">
+          <span>Control Hub Tutorial</span>
+        </div>
+      </div>
+
+    </div>
   </div>
+
 
 </div>

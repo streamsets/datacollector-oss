@@ -14,52 +14,127 @@
  * limitations under the License.
  */
 
-.pipeline-empty-container {
-  background: #3d5583 url('/assets/logo-watermark-big.png') no-repeat center;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: -45px;
-  width: 100%;
-  overflow: hidden;
-
+.home-empty-container {
   display: none;
 
   .show {
     display: inherit;
   }
 
+
   .error-alert-div {
     margin-top: 50px;
   }
 
-  .btn-group-left {
-    margin: 80px 120px;
-    float: left;
-  }
+  .top-container {
+    background: #375587 url('/assets/streamSets-logo-bground.png') no-repeat top;
+    position: absolute;
+    top: 50px;
+    left: 0;
+    bottom: -45px;
+    width: 100%;
 
-  .btn-group-right {
-    margin: 80px 0;
-    float: left;
-  }
-
-  .btn {
-    display: block;
-    margin-bottom: 40px;
-    text-transform: uppercase;
-    font-size: 12px;
-
-    .glyphicon, .fa {
-      padding-right: 5px;
+    .btn-group-left {
+      margin: 50px 120px;
+      float: left;
     }
+
+    .btn-group-right {
+      margin: 50px 0;
+      float: left;
+    }
+
+    .btn {
+      display: block;
+      margin-bottom: 25px;
+      text-transform: uppercase;
+      font-size: 12px;
+
+      .glyphicon, .fa {
+        padding-right: 5px;
+      }
+    }
+
+    .create-btn {
+      color: #00875A;
+    }
+
+    .import-btn {
+      color: #0747A6;
+    }
+
+    .tutorial-btn {
+      background-color: #1E7BC7;
+      color: white;
+    }
+
   }
 
-  .create-btn {
-    color: #3a845d;
-  }
+  .bottom-container {
+    background-color: #F5F9FC;
+    position: absolute;
+    top: 55%;
+    bottom: 0;
+    width: 100%;
+    border-top: 1px solid #b3d4ff;
 
-  .import-btn {
-    color: #1b49a0;
+    .center-container {
+      width: 1200px;
+      text-align: left;
+      margin: 0 auto;
+
+
+      .panel-div {
+        background: #FFFFFF;
+        border: 1px solid #DCDCDC;
+        box-shadow: 0 2px 4px 0 rgba(0,0,0,0.07);
+        border-radius: 4px;
+        height: 330px;
+        width: 330px;
+        float: left;
+        margin-right: 70px;
+        position: relative;
+        top: -60px;
+
+
+        .panel-div-container {
+          padding: 20px;
+
+          .panel-div-title {
+            font-size: 22px;
+            color: #42526E;
+          }
+
+          .panel-div-body {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #42526E;
+
+            li {
+              line-height: 25px;
+            }
+          }
+        }
+
+        .bottom-btn {
+          background-color: #1E7BC7;
+          font-size: 14px;
+          color: #FFFFFF;
+          text-align: center;
+          line-height: 30px;
+          position: absolute;
+          bottom: 0;
+          width: 100%;
+          height: 50px;
+          padding: 10px;
+          cursor: pointer;
+          text-transform: uppercase;
+        }
+
+      }
+
+    }
+
   }
 
 }
