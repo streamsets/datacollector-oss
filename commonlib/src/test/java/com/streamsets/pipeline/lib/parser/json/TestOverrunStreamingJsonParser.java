@@ -43,6 +43,7 @@ public class TestOverrunStreamingJsonParser {
   @Before
   public void setUp() {
     System.getProperties().remove(OverrunReader.READ_LIMIT_SYS_PROP);
+    OverrunReader.reInitializeDefaultReadLimit();
   }
 
   @After
@@ -110,6 +111,7 @@ public class TestOverrunStreamingJsonParser {
 
   public void testStreamLevelOverrunArray(boolean attemptNextRead) throws Exception {
     System.setProperty(OverrunReader.READ_LIMIT_SYS_PROP, "10000");
+    OverrunReader.reInitializeDefaultReadLimit();
     String json = "[[\"a\"],[\"" + Strings.repeat("a", 20000) + "\"],[\"b\"]]";
     StreamingJsonParser parser = new OverrunStreamingJsonParser(getContext(), new CountingReader(new StringReader(json)),
                                                                 Mode.ARRAY_OBJECTS, 50);
@@ -143,6 +145,7 @@ public class TestOverrunStreamingJsonParser {
 
   public void testStreamLevelOverrunMultipleObjects(boolean attemptNextRead) throws Exception {
     System.setProperty(OverrunReader.READ_LIMIT_SYS_PROP, "10000");
+    OverrunReader.reInitializeDefaultReadLimit();
     String json = "[\"a\"][\"" + Strings.repeat("a", 20000) + "\"][\"b\"]";
     StreamingJsonParser parser = new OverrunStreamingJsonParser(getContext(), new CountingReader(new StringReader(json)),
                                                                 Mode.MULTIPLE_OBJECTS, 50);
@@ -176,6 +179,7 @@ public class TestOverrunStreamingJsonParser {
   @Test
   public void testFastForwardBeyondOverrunMultipleObjects() throws Exception {
     System.setProperty(OverrunReader.READ_LIMIT_SYS_PROP, "10000");
+    OverrunReader.reInitializeDefaultReadLimit();
     String json = "[\"a\"][\"" + Strings.repeat("a", 10000) + "\"][\"b\"]";
     json += "[\"a\"][\"" + Strings.repeat("a", 20000) + "\"][\"b\"]";
     int initialPos = json.length();

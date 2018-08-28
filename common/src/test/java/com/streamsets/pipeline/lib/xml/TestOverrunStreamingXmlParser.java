@@ -40,6 +40,7 @@ public class TestOverrunStreamingXmlParser {
   @Before
   public void setUp() {
     System.getProperties().remove(OverrunReader.READ_LIMIT_SYS_PROP);
+    OverrunReader.reInitializeDefaultReadLimit();
   }
 
   @After
@@ -49,6 +50,7 @@ public class TestOverrunStreamingXmlParser {
 
   public void testStreamLevelOverrunArray(boolean attemptNextRead) throws Exception {
     System.setProperty(OverrunReader.READ_LIMIT_SYS_PROP, "10000");
+    OverrunReader.reInitializeDefaultReadLimit();
     String xml = "<root><record/><record>" + Strings.repeat("a", 20000) + "</record></root>";
     StreamingXmlParser parser = new OverrunStreamingXmlParser(new StringReader(xml), "record", 0, 100);
     Assert.assertNotNull(parser.read());
