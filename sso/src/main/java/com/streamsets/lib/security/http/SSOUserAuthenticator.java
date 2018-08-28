@@ -22,6 +22,7 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.eclipse.jetty.security.ServerAuthException;
 import org.eclipse.jetty.server.Authentication;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,27 +38,23 @@ import java.util.Set;
 public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
   private static final Logger LOG = LoggerFactory.getLogger(SSOUserAuthenticator.class);
 
-  private final static Set<String> TOKEN_PARAM_SET =
+  private static final Set<String> TOKEN_PARAM_SET =
       ImmutableSet.of(SSOConstants.USER_AUTH_TOKEN_PARAM, SSOConstants.REPEATED_REDIRECT_PARAM);
 
-  public static final String HTTP_LOAD_BALANCER_URL = "http.load.balancer.url";
   public static final String HTTP_META_REDIRECT_TO_SSO = "http.meta.redirect.to.sso";
 
   private Configuration conf;
-  private String loadBalancerURL;
-  private boolean loadBalancerSecure;
   private boolean doMetaRedirectToSso;
+  private String dpmBaseUrl;
+  private final boolean isDataCollector;
 
-  public SSOUserAuthenticator(SSOService ssoService, Configuration conf) {
+  public SSOUserAuthenticator(SSOService ssoService, @NotNull Configuration conf) {
     super(ssoService);
     this.conf = conf;
-    if (this.conf != null) {
-      this.loadBalancerURL = conf.get(HTTP_LOAD_BALANCER_URL, null);
-      if (this.loadBalancerURL != null && this.loadBalancerURL.trim().toLowerCase().startsWith("https")) {
-        this.loadBalancerSecure = true;
-      }
-      this.doMetaRedirectToSso = conf.get(HTTP_META_REDIRECT_TO_SSO, false);
-    }
+
+    this.dpmBaseUrl = conf.get(RemoteSSOService.DPM_BASE_URL_CONFIG, null);
+    this.isDataCollector = !conf.hasName(RemoteSSOService.DPM_APP_SECURITY_URL_CONFIG);
+    this.doMetaRedirectToSso = conf.get(HTTP_META_REDIRECT_TO_SSO, false);
   }
 
   @Override
@@ -68,12 +65,13 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
   StringBuffer getRequestUrl(HttpServletRequest request, Set<String> queryStringParamsToRemove) {
     StringBuffer requestUrl;
 
-    if (this.loadBalancerURL != null) {
-      requestUrl = new StringBuffer(this.loadBalancerURL);
+    if (this.dpmBaseUrl != null && !isDataCollector) {
+      requestUrl = new StringBuffer(this.dpmBaseUrl);
       requestUrl.append(request.getRequestURI());
     } else {
       requestUrl = new StringBuffer(request.getRequestURL());
     }
+
 
     String qs = request.getQueryString();
     if (qs != null) {
@@ -90,7 +88,7 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
   }
 
   String getRequestUrl(HttpServletRequest request) {
-    return getRequestUrl(request, Collections.<String>emptySet()).toString();
+    return getRequestUrl(request, Collections.emptySet()).toString();
   }
 
   String getRequestUrlWithoutToken(HttpServletRequest request) {
@@ -183,7 +181,16 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
       // to delete the cookie
       authCookie.setMaxAge(0);
     }
-    authCookie.setSecure(httpReq.isSecure() || loadBalancerSecure);
+
+
+    if (isDataCollector) {
+      // When an SDC is accessing SCH, set the cookie based on the SDC's scheme
+      authCookie.setSecure(httpReq.isSecure());
+    } else {
+      // When a browser accesses SCH, set the cookie based on the SCH endpoint
+      authCookie.setSecure(dpmBaseUrl.startsWith("https"));
+    }
+
     return authCookie;
   }
 

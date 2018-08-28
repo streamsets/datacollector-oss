@@ -15,6 +15,7 @@
  */
 package com.streamsets.lib.security.http;
 
+import com.streamsets.datacollector.util.Configuration;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -24,7 +25,7 @@ public class TestSSOUtils {
   @Test
   public void testGetAuthTokenForLogging() {
     SSOService ssoService = Mockito.mock(SSOService.class);
-    SSOUserAuthenticator authenticator = Mockito.spy(new SSOUserAuthenticator(ssoService, null));
+    SSOUserAuthenticator authenticator = Mockito.spy(new SSOUserAuthenticator(ssoService, new Configuration()));
     Assert.assertEquals("TOKEN:null", SSOUtils.tokenForLog(null));
     Assert.assertEquals("TOKEN:abcdefghij123456...", SSOUtils.tokenForLog("abcdefghij1234567"));
   }
