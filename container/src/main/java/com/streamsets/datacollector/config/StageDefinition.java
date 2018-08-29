@@ -74,6 +74,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
   private final List<ServiceDependencyDefinition> services;
   private final List<HideStage.Type> hideStage;
   private final StageDef stageDef;
+  private final boolean sendsResponse;
 
   // localized version
   private StageDefinition(
@@ -108,7 +109,8 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
       boolean offsetCommitTrigger,
       boolean producesEvents,
       List<ServiceDependencyDefinition> services,
-      List<HideStage.Type> hideStage
+      List<HideStage.Type> hideStage,
+      boolean sendsResponse
   ) {
     this.stageDef = stageDef;
     this.libraryDefinition = libraryDefinition;
@@ -156,6 +158,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     this.producesEvents = producesEvents;
     this.services = Collections.unmodifiableList(services);
     this.hideStage = Collections.unmodifiableList(hideStage);
+    this.sendsResponse = sendsResponse;
   }
 
   @SuppressWarnings("unchecked")
@@ -198,6 +201,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     pipelineLifecycleStage = def.pipelineLifecycleStage;
     services = def.services;
     hideStage = def.hideStage;
+    sendsResponse = def.sendsResponse;
   }
 
   public StageDefinition(
@@ -231,7 +235,8 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
       boolean offsetCommitTrigger,
       boolean producesEvents,
       List<ServiceDependencyDefinition> services,
-      List<HideStage.Type> hideStage
+      List<HideStage.Type> hideStage,
+      boolean sendsResponse
   ) {
     this.stageDef = stageDef;
     this.libraryDefinition = libraryDefinition;
@@ -278,6 +283,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     this.producesEvents = producesEvents;
     this.services = Collections.unmodifiableList(services);
     this.hideStage = Collections.unmodifiableList(hideStage);
+    this.sendsResponse = sendsResponse;
   }
 
   public List<ExecutionMode> getLibraryExecutionModes() {
@@ -562,7 +568,8 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
         offsetCommitTrigger,
         producesEvents,
         services,
-        hideStage
+        hideStage,
+        sendsResponse
     );
   }
 
@@ -614,6 +621,10 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
 
   public StageDef getStageDef() {
     return stageDef;
+  }
+
+  public boolean getSendsResponse() {
+    return sendsResponse;
   }
 }
 

@@ -210,7 +210,8 @@ public class StageDefinitionBuilder {
       offsetCommitTrigger,
       producesEvents,
       services,
-      hideStage
+      hideStage,
+      false
     );
   }
 

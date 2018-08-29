@@ -2014,7 +2014,7 @@ angular.module('dataCollectorApp.common')
             s.library !== 'streamsets-datacollector-stats-lib' &&
             (!executionMode || s.executionModes.indexOf(executionMode) !== -1) &&
             (!isMicroservicePipeline || s.type !== pipelineConstant.SOURCE_STAGE_TYPE ||
-              s.name === pipelineConstant.REST_SERVICE_STAGE_NAME)
+              s.sendsResponse)
           ) {
             alreadyAdded[s.name + s.version] = true;
             return true;

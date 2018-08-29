@@ -153,4 +153,8 @@ public class StageDefinitionJson {
   public List<String> getHideStage() {
     return BeanHelper.wrapHideStage(stageDefinition.getHideStage());
   }
+
+  public boolean getSendsResponse() {
+    return stageDefinition.getSendsResponse();
+  }
 }

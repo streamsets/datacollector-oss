@@ -319,7 +319,8 @@ public abstract class StageDefinitionExtractor {
             offsetCommitController,
             producesEvents,
             services,
-            hideStage
+            hideStage,
+            sDef.sendsResponse()
         );
       } catch (Exception e) {
         throw new IllegalStateException("Exception while extracting stage definition for " + getStageName(klass), e);

@@ -56,7 +56,7 @@ angular
             stageLibrary.name.indexOf('_fragment_') === -1 &&
             ($scope.executionMode !== 'EDGE' || stageLibrary.executionModes.indexOf($scope.executionMode) !== -1) &&
             (!isMicroservicePipeline || stageLibrary.type !== pipelineConstant.SOURCE_STAGE_TYPE ||
-              stageLibrary.name === pipelineConstant.REST_SERVICE_STAGE_NAME)
+              stageLibrary.sendsResponse)
           ) {
             stageNameList.push(stageLibrary.name);
             $scope.filteredStageLibraries.push(stageLibrary);
