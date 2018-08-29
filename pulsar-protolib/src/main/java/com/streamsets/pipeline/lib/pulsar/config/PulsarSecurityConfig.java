@@ -40,8 +40,9 @@ public class PulsarSecurityConfig {
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "TLS Enabled",
-      description = "If enabled the Pulsar URL must be pulsar+ssl://localhost:6651",
+      label = "Enable TLS",
+      description = "Enable TLS authentication for this stage. If enabled, the Pulsar URL must use pulsar+ssl " +
+          "protocol. For example: pulsar+ssl://localhost:6651",
       displayPosition = 10,
       group = "SECURITY")
   public boolean tlsEnabled;
@@ -61,8 +62,8 @@ public class PulsarSecurityConfig {
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Mutual Authentication Enabled",
-      description = "If enabled communication with Pulsar will be done using TLS with mutual authentication",
+      label = "Enable Mutual Authentication",
+      description = "Enable mutual TLS authentication for this stage",
       displayPosition = 20,
       group = "SECURITY",
       dependencies = {
