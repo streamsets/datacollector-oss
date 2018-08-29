@@ -393,4 +393,18 @@ public class Configuration {
     return Utils.format("Configuration['{}']", map);
   }
 
+  /**
+   * Set multiple configs at once.
+   *
+   * If a value of given config is 'null', then this config key will be un-set.
+   */
+  public void set(Map<String, String> newConfiguration) {
+    for(Map.Entry<String, String> entry : newConfiguration.entrySet()) {
+      if(entry.getValue() == null) {
+        this.unset(entry.getKey());
+      } else {
+        this.set(entry.getKey(), entry.getValue());
+      }
+    }
+  }
 }

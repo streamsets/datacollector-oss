@@ -439,13 +439,7 @@ public class RemoteDataCollector implements DataCollector {
   @Override
   public void storeConfiguration(Map<String, String> newConfiguration) throws IOException {
     RuntimeInfo.storeControlHubConfigs(runtimeInfo, newConfiguration);
-    for(Map.Entry<String, String> entry : newConfiguration.entrySet()) {
-      if(entry.getValue() == null) {
-        configuration.unset(entry.getKey());
-      } else {
-        configuration.set(entry.getKey(), entry.getValue());
-      }
-    }
+    configuration.set(newConfiguration);
   }
 
   private List<WorkerInfo> getWorkers(Collection<CallbackInfo> callbackInfos) {
