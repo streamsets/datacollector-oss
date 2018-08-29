@@ -49,10 +49,9 @@ public final class MSQueryUtil {
   private static final String BEGIN_QUERY = "BEGIN";
   private static final String END_QUERY = "END";
 
-  private static final String CHANGE_TRACKING_TABLE_QUERY = "SET NOCOUNT ON;\n" +
-      "SELECT min_valid_version \n" +
+  private static final String CHANGE_TRACKING_TABLE_QUERY = "SELECT min_valid_version \n" +
       "FROM sys.change_tracking_tables t\n" +
-      "WHERE t.object_id = OBJECT_ID('%s')";
+      "WHERE t.object_id = OBJECT_ID('%s.%s')";
 
   private static final String CHANGE_TRACKING_CURRENT_VERSION_QUERY = "SELECT CHANGE_TRACKING_CURRENT_VERSION()";
 
@@ -93,8 +92,8 @@ public final class MSQueryUtil {
     return CHANGE_TRACKING_CURRENT_VERSION_QUERY;
   }
 
-  public static String getMinVersion() {
-    return CHANGE_TRACKING_TABLE_QUERY;
+  public static String getMinVersion(String schema, String table) {
+    return String.format(CHANGE_TRACKING_TABLE_QUERY, schema, table);
   }
 
   public static String buildQuery(

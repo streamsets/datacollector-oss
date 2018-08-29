@@ -102,4 +102,17 @@ public class TestQueryUtil {
 
     Assert.assertTrue(StringUtils.contains(query, expected));
   }
+
+  @Test
+  public void testMSSQLCTValidateQuery() {
+    final String schema = "sa";
+    final String table = "name";
+    String query = MSQueryUtil.getMinVersion(schema, table);
+
+    final String expected = "SELECT min_valid_version \n"
+        + "FROM sys.change_tracking_tables t\n"
+        + "WHERE t.object_id = OBJECT_ID('sa.name')";
+
+    Assert.assertTrue(StringUtils.contains(query, expected));
+  }
 }

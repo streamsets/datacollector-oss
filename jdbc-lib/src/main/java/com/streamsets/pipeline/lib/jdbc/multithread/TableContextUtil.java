@@ -602,7 +602,7 @@ public final class TableContextUtil {
         if (p == null || !p.matcher(tableName).matches()) {
           // validate table is change tracking enabled
           try {
-            long min_valid_version = validateTable(connection, tableName);
+            long min_valid_version = validateTable(connection, schemaName, tableName);
             if (min_valid_version <= currentVersion) {
               tableContextMap.put(
                   getQualifiedTableName(schemaName, tableName),
@@ -677,8 +677,9 @@ public final class TableContextUtil {
     throw new StageException(JdbcErrors.JDBC_201, -1);
   }
 
-  private static long validateTable(Connection connection, String table) throws SQLException, StageException {
-    PreparedStatement validation = connection.prepareStatement(String.format(MSQueryUtil.getMinVersion(), table));
+  private static long validateTable(Connection connection, String schema, String table) throws SQLException, StageException {
+    String query = MSQueryUtil.getMinVersion(schema, table);
+    PreparedStatement validation = connection.prepareStatement(query);
     ResultSet resultSet = validation.executeQuery();
     if (resultSet.next()) {
       return resultSet.getLong("min_valid_version");
