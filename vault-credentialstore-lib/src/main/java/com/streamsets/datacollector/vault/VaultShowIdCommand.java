@@ -15,10 +15,14 @@
  */
 package com.streamsets.datacollector.vault;
 
-public class VaultShowId {
-  private VaultShowId() {}
+import io.airlift.airline.Command;
 
-  public static void main(String[] args) {
+@Command(name = "show-id", description = "Shows Vault ID")
+public class VaultShowIdCommand implements Runnable {
+
+  @Override
+  public void run() {
     System.out.println(Vault.calculateUserId("*"));
   }
+
 }

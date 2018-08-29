@@ -37,6 +37,7 @@
     <google.http.version>1.22.0</google.http.version>
     <guava.version>18.0</guava.version>
     <commons-io.version>2.4</commons-io.version>
+    <airlift.version>0.7</airlift.version>
   </properties>
 
   <dependencies>
@@ -94,6 +95,12 @@
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
       <version>${commons-io.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.airlift</groupId>
+      <artifactId>airline</artifactId>
+      <version>${airlift.version}</version>
       <scope>compile</scope>
     </dependency>
 

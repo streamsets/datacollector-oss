@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright 2017 StreamSets Inc.
+# Copyright 2018 StreamSets Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 
 # resolve links - $0 may be a softlink
 PRG="${0}"
@@ -46,20 +45,21 @@ SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.resources.dir=${SDC_RESOURCES}"
 SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.conf.dir=${SDC_CONF}"
 SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.data.dir=${SDC_DATA}"
 SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.log.dir=${SDC_LOG}"
+SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dlog4j.configuration=sdc-log4j.properties"
 
-JKS_CS_DIR="${SDC_DIST}/streamsets-libs/streamsets-datacollector-jks-credentialstore-lib"
+STAGELIB_DIR="${SDC_DIST}/streamsets-libs/streamsets-datacollector-$1-lib"
 
-if [ ! -d "${JKS_CS_DIR}" ]
+if [ ! -d "${STAGELIB_DIR}" ]
 then
   echo
-  echo "Java Credential Store stage library not installed"
+  echo "Stage $1 library not installed"
   echo
   exit 1
 fi
 
 API_CLASSPATH="${SDC_DIST}/api-lib/"'*'
-JKS_CS_LIB="${JKS_CS_DIR}/lib/"'*'
-JARS=${API_CLASSPATH}:${JKS_CS_LIB}
+STAGELIB_LIB="${STAGELIB_DIR}/lib/"'*'
+JARS=${API_CLASSPATH}:${STAGELIB_LIB}
 
 if [ -z "$JAVA_HOME" ]
 then
@@ -94,8 +94,8 @@ then
   fi
 fi
 
-exec ${JAVA} -classpath ${JARS} ${SDC_JAVA_OPTS} \
-com.streamsets.datacollector.credential.javakeystore.cli.JavaKeystoreCredentialStoreCli "$@"
+shift
+exec ${JAVA} -classpath ${SDC_CONF}:${JARS} ${SDC_JAVA_OPTS} com.streamsets.datacollector.StageLibCli "$@"
 
 status=$?
 exit $status

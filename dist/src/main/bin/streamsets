@@ -28,6 +28,7 @@ done
 
 BASEDIR=`dirname ${PRG}`
 BASEDIR=`cd ${BASEDIR}/..;pwd`
+cd ${BASEDIR}
 
 while test $# -gt 0; do
   case "$1" in
@@ -45,7 +46,10 @@ while test $# -gt 0; do
       ;;
     jks-cs)
       shift
-      exec ${BASEDIR}/libexec/_jks_cs "$@"
+      echo ""
+      echo "WARNING: Sub-command jks-cs is deprecated, use 'streamsets stagelib-cli jks-credentialstore'"
+      echo ""
+      exec ${BASEDIR}/libexec/_stagelib_cli jks-credentialstore "$@"
       ;;
     sch)
       shift
@@ -57,11 +61,29 @@ while test $# -gt 0; do
       ;;
     show-vault-id)
       shift
-      exec ${BASEDIR}/libexec/_show_vault_id
+      echo ""
+      echo "WARNING: Sub-command show-vault-id is deprecated, use 'streamsets stagelib-cli vault-credentialstore show-id'"
+      echo ""
+      exec ${BASEDIR}/libexec/_stagelib_cli vault-credentialstore show-id
       ;;
     setup-mapr)
       shift
       exec ${BASEDIR}/libexec/_mapr_setup
+      ;;
+    stagelib-cli)
+      shift
+      if [ ! -d "streamsets-libs/streamsets-datacollector-$1-lib" ];
+      then
+        echo ""
+        echo "Stage library $1 not found, available stage libraries are:"
+        echo ""
+        cd streamsets-libs
+        ls -d *lib | sed -e 's/^streamsets-datacollector-/  /' -e "s/-lib$//"
+        cd ..
+        echo ""
+        exit 1
+      fi
+      exec ${BASEDIR}/libexec/_stagelib_cli "$@"
       ;;
     help)
       ${PRG} --help
@@ -83,21 +105,22 @@ while test $# -gt 0; do
       echo ""
       echo "    cli: Data Collector CLI"
       echo ""
-      echo "    jks-cs: Java Keystore Credential Store"
+      echo "    jks-cs: Java Keystore Credential Store (DEPRECATED)"
       echo ""
       echo "    sch: Enable or Disable Control Hub integration"
       echo ""
       echo "    stagelibs: Data Collector Stage library installer"
       echo ""
-      echo "    show-vault-id: Shows the user-id to authorize in Vault"
+      echo "    show-vault-id: Shows the user-id to authorize in Vault (DEPRECATED)"
       echo ""
       echo "    setup-mapr: Enables the MapR stage library for the detected"
       echo "                MapR installation."
       echo ""
+      echo "    stagelib-cli <STAGE LIB>: Runs the command line tool of the specified Stage Library if available."
+      echo ""
       exit 0
       ;;
     *)
-      echo ""
       echo "Invalid sub-command"
       ${PRG} -help
       exit 1

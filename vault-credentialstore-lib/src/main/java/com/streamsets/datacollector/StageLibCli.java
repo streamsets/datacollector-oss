@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2018 StreamSets Inc.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.credential.javakeystore.cli;
+package com.streamsets.datacollector;
 
+import com.streamsets.datacollector.vault.VaultShowIdCommand;
 import io.airlift.airline.Cli;
 import io.airlift.airline.Help;
 
 import java.util.Arrays;
 
-public class JavaKeystoreCredentialStoreCli {
+public class StageLibCli {
 
   public static void main(String[] args) {
-    if (new JavaKeystoreCredentialStoreCli().doMain(args)) {
+    if (new StageLibCli().doMain(args)) {
       System.exit(0);
     } else {
       System.exit(-1);
@@ -31,15 +32,10 @@ public class JavaKeystoreCredentialStoreCli {
   }
 
   boolean doMain(String[] args) {
-    Cli.CliBuilder<Runnable> builder = Cli.<Runnable>builder("streamsets stagelib-cli jks-credentialstore")
-        .withDescription("StreamSets Data Collector Java Keystore Credential Store CLI")
+    Cli.CliBuilder<Runnable> builder = Cli.<Runnable>builder("streamsets stagelib-cli vault-credentialstore")
+        .withDescription("StreamSets Data Collector Vault Credential Store CLI")
         .withDefaultCommand(Help.class)
-        .withCommands(
-            Help.class,
-            ListCredentialsCommand.class,
-            AddCredentialCommand.class,
-            DeleteCredentialCommand.class
-        );
+        .withCommands(Help.class, VaultShowIdCommand.class);
 
     try {
       builder.build().parse(args).run();
