@@ -1,0 +1,14 @@
+description = 'StreamSets Data Collector Cryptography Stage Library'
+
+def awsEncryptionSdkVersion = '1.3.5'
+def awsSdkVersion = '1.11.365'
+def bouncyCastleVersion = '1.60'
+def guavaVersion = '25.1-jre'
+
+dependencies {
+  implementation project(":lib:commonlib")
+  implementation "com.amazonaws:aws-encryption-sdk-java:$awsEncryptionSdkVersion"
+  implementation "com.google.guava:guava:$guavaVersion"
+  implementation "org.bouncycastle:bcprov-jdk15on:$bouncyCastleVersion"
+  implementation "com.amazonaws:aws-java-sdk-kms:$awsSdkVersion"
+}
