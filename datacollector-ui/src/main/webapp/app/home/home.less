@@ -48,7 +48,7 @@
       display: block;
       margin-bottom: 25px;
       text-transform: uppercase;
-      font-size: 12px;
+      // font-size: 12px;
 
       .glyphicon, .fa {
         padding-right: 5px;
@@ -67,7 +67,6 @@
       background-color: #1E7BC7;
       color: white;
     }
-
   }
 
   .bottom-container {
@@ -82,57 +81,6 @@
       width: 1200px;
       text-align: left;
       margin: 0 auto;
-
-
-      .panel-div {
-        background: #FFFFFF;
-        border: 1px solid #DCDCDC;
-        box-shadow: 0 2px 4px 0 rgba(0,0,0,0.07);
-        border-radius: 4px;
-        height: 330px;
-        width: 330px;
-        float: left;
-        margin-right: 70px;
-        position: relative;
-        top: -60px;
-
-
-        .panel-div-container {
-          padding: 20px;
-
-          .panel-div-title {
-            font-size: 22px;
-            color: #42526E;
-          }
-
-          .panel-div-body {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #42526E;
-
-            li {
-              line-height: 25px;
-            }
-          }
-        }
-
-        .bottom-btn {
-          background-color: #1E7BC7;
-          font-size: 14px;
-          color: #FFFFFF;
-          text-align: center;
-          line-height: 30px;
-          position: absolute;
-          bottom: 0;
-          width: 100%;
-          height: 50px;
-          padding: 10px;
-          cursor: pointer;
-          text-transform: uppercase;
-        }
-
-      }
-
     }
 
   }
@@ -580,3 +528,64 @@
     width: 100%;
   }
 }
+
+.help-panel {
+  background: #FFFFFF;
+  border: 1px solid #DCDCDC;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.07);
+  border-radius: 4px;
+  height: 330px;
+  width: 330px;
+  float: left;
+  margin-right: 70px;
+  position: relative;
+  top: -60px;
+
+  .help-panel-container {
+    padding: 20px;
+
+    .help-panel-title {
+      font-size: 22px;
+      color: #42526E;
+    }
+
+    .help-panel-title-btn {
+      font-size: 16px;
+      color: #1E7BC7;
+      cursor: pointer;
+      position: relative;
+      top: -5px;
+      right: -5px;
+    }
+
+    .help-panel-body {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #42526E;
+
+      li {
+        line-height: 25px;
+      }
+    }
+  }
+
+  .bottom-btn {
+    background-color: #1E7BC7;
+    font-size: 14px;
+    color: #FFFFFF;
+    text-align: center;
+    line-height: 30px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    padding: 10px;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+}
+
+.help-panel-center-parent {
+  margin: 15% 36%
+}
+

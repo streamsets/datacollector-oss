@@ -19,7 +19,7 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('CreateModalInstanceController', function ($scope, $modalInstance, $translate, api) {
+  .controller('CreateModalInstanceController', function ($scope, $modalInstance, $translate, api, pipelineType) {
     angular.extend($scope, {
       common: {
         errors: []
@@ -30,7 +30,7 @@ angular
       newConfig : {
         name: '',
         description: '',
-        pipelineType: 'DATA_COLLECTOR'
+        pipelineType: pipelineType !== undefined ? pipelineType: 'DATA_COLLECTOR'
       },
 
       save : function () {

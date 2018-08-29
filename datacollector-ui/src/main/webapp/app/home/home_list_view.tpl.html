@@ -283,3 +283,11 @@
     </ul>
   </div>
 </section>
+
+<div class="help-panel-center-parent" ng-if="filteredPipelines.length === 0">
+  <ng-include ng-if="selectedPipelineLabel === 'system:edgePipelines'" src="'edgeHelpTemplate'"></ng-include>
+  <ng-include ng-if="selectedPipelineLabel === 'system:microServicePipelines'" src="'microServiceHelpTemplate'"></ng-include>
+</div>
+
+
+

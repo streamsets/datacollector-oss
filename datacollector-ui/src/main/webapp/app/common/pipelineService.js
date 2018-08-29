@@ -262,12 +262,17 @@ angular.module('dataCollectorApp.common')
      * Add Pipeline Config Command Handler.
      *
      */
-    this.addPipelineConfigCommand = function() {
+    this.addPipelineConfigCommand = function(pipelineType) {
       var modalInstance = $modal.open({
         templateUrl: 'app/home/library/create/create.tpl.html',
         controller: 'CreateModalInstanceController',
         size: '',
-        backdrop: 'static'
+        backdrop: 'static',
+        resolve: {
+          pipelineType: function () {
+            return pipelineType;
+          }
+        }
       });
 
       modalInstance.result.then(function (configObject) {

@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-/**
- * Home module for displaying home page content.
- */
-
+// Home module for displaying home page content.
 angular
   .module('dataCollectorApp.home')
   .config(['$routeProvider', function ($routeProvider) {
@@ -150,8 +147,8 @@ angular
       /**
        * Add New Pipeline Configuration
        */
-      addPipelineConfig: function() {
-        pipelineService.addPipelineConfigCommand();
+      addPipelineConfig: function(pipelineType) {
+        pipelineService.addPipelineConfigCommand(pipelineType);
       },
 
       /**
@@ -261,10 +258,10 @@ angular
        */
       resetOffsetForSelectedPipelines: function() {
         $rootScope.common.trackEvent(
-            pipelineConstant.BUTTON_CATEGORY,
-            pipelineConstant.CLICK_ACTION,
-            'Reset Offsets',
-            1
+          pipelineConstant.BUTTON_CATEGORY,
+          pipelineConstant.CLICK_ACTION,
+          'Reset Offsets',
+          1
         );
 
         var selectedPipelineList = $scope.selectedPipelineList;
@@ -274,9 +271,9 @@ angular
           if (selectedPipelineList.indexOf(pipelineInfo.pipelineId) !== -1) {
             var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.pipelineId];
             if (pipelineStatus && pipelineStatus.pipelineId === pipelineInfo.pipelineId &&
-                _.contains(PIPELINE_ACTIVE_STATUSES, pipelineStatus.status)) {
+              _.contains(PIPELINE_ACTIVE_STATUSES, pipelineStatus.status)) {
               validationIssues.push('Reset Origin operation is not supported for Pipeline "' +
-                  pipelineInfo.pipelineId + '" with state ' +  pipelineStatus.status);
+                pipelineInfo.pipelineId + '" with state ' +  pipelineStatus.status);
             }
             selectedPipelineInfoList.push(pipelineInfo);
           }
@@ -309,10 +306,10 @@ angular
        */
       addLabelsToSelectedPipelines: function() {
         $rootScope.common.trackEvent(
-            pipelineConstant.BUTTON_CATEGORY,
-            pipelineConstant.CLICK_ACTION,
-            'Add labels to selected pipelines',
-            1
+          pipelineConstant.BUTTON_CATEGORY,
+          pipelineConstant.CLICK_ACTION,
+          'Add labels to selected pipelines',
+          1
         );
 
         var selectedPipelineList = $scope.selectedPipelineList;
@@ -322,9 +319,9 @@ angular
           if (selectedPipelineList.indexOf(pipelineInfo.pipelineId) !== -1) {
             var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.pipelineId];
             if (pipelineStatus && pipelineStatus.pipelineId === pipelineInfo.pipelineId &&
-                _.contains(PIPELINE_ACTIVE_STATUSES, pipelineStatus.status)) {
+              _.contains(PIPELINE_ACTIVE_STATUSES, pipelineStatus.status)) {
               validationIssues.push('Add Label is not supported for Pipeline "' +
-                  pipelineInfo.pipelineId + '" with state ' +  pipelineStatus.status );
+                pipelineInfo.pipelineId + '" with state ' +  pipelineStatus.status );
             }
             selectedPipelineInfoList.push(pipelineInfo);
           }
@@ -835,18 +832,6 @@ angular
        */
       onLabelsLoaded: function(callback) {
         $scope.onLabelsLoadedCallback = callback;
-      },
-
-      openEdgeTutorialPage() {
-        window.open('https://streamsets.com/documentation/datacollector/latest/help/datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html', '_blank');
-      },
-
-      openMicroserviceTutorialPage() {
-        window.open('https://streamsets.com/blog/create-microservice-pipelines-streamsets-data-collector-tutorial/', '_blank');
-      },
-
-      openControlHubTutorialPage() {
-        window.open('https://streamsets.com/documentation/controlhub/latest/help/controlhub/UserGuide/GettingStarted/GettingStarted_title.html', '_blank');
       }
 
     });
