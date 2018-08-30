@@ -1090,8 +1090,7 @@ public class OracleCDCSource extends BaseSource {
           getContext().createConfigIssue(
               Groups.JDBC.name(),
               CONNECTION_STR,
-              JDBC_00,
-              hikariConfigBean.connectionString
+              JDBC_00, hikariConfigBean.getConnectionString()
           )
       );
     }
@@ -1214,8 +1213,7 @@ public class OracleCDCSource extends BaseSource {
           getContext().createConfigIssue(
               Groups.JDBC.name(),
               CONNECTION_STR,
-              JDBC_00,
-              hikariConfigBean.connectionString
+              JDBC_00, hikariConfigBean.getConnectionString()
           )
       );
       return issues;
@@ -1270,8 +1268,7 @@ public class OracleCDCSource extends BaseSource {
           getContext().createConfigIssue(
               Groups.JDBC.name(),
               CONNECTION_STR,
-              JDBC_00,
-              hikariConfigBean.connectionString
+              JDBC_00, hikariConfigBean.getConnectionString()
           )
       );
     }

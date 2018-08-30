@@ -83,7 +83,7 @@ public class JdbcTarget extends BaseTarget {
     @Override
     public JdbcRecordWriter load(String tableName) throws Exception {
       return JdbcRecordReaderWriterFactory.createJdbcRecordWriter(
-          hikariConfigBean.connectionString,
+          hikariConfigBean.getConnectionString(),
           dataSource,
           schema,
           tableName,

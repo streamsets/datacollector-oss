@@ -125,7 +125,7 @@ public class JdbcMetadataProcessor extends RecordProcessor {
 
     if (issues.isEmpty()) {
       try {
-        schemaWriter = JdbcSchemaWriterFactory.create(hikariConfigBean.connectionString, dataSource);
+        schemaWriter = JdbcSchemaWriterFactory.create(hikariConfigBean.getConnectionString(), dataSource);
       } catch (JdbcStageCheckedException e) {
         issues.add(getContext().createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, e.getErrorCode(), e.getParams()));
       }

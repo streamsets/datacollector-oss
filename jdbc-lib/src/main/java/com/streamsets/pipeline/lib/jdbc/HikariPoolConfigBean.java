@@ -345,4 +345,7 @@ public class HikariPoolConfigBean {
     return properties;
   }
 
+  public String getConnectionString() {
+    return connectionString;
+  }
 }

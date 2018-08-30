@@ -709,7 +709,7 @@ public class JdbcUtil {
       LOG.info("Driver class {} (version {}.{})", driver.getClass().getName(), driver.getMajorVersion(), driver.getMinorVersion());
     });
 
-    config.setJdbcUrl(hikariConfigBean.connectionString);
+    config.setJdbcUrl(hikariConfigBean.getConnectionString());
     if (hikariConfigBean.useCredentials){
        config.setUsername(hikariConfigBean.username.get());
        config.setPassword(hikariConfigBean.password.get());

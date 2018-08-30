@@ -251,20 +251,20 @@ public class JdbcSource extends BaseSource {
     event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, query);
     event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.JDBC.name());
     Map<String, String> props = new HashMap<>();
-    props.put("Connection String", hikariConfigBean.connectionString);
+    props.put("Connection String", hikariConfigBean.getConnectionString());
     props.put("Offset Column", offsetColumn);
     props.put("Is Incremental Mode", isIncrementalMode ? "true" : "false");
     if (!StringUtils.isEmpty(tableNames)) {
       event.setSpecificAttribute(
           LineageSpecificAttribute.ENTITY_NAME,
-          hikariConfigBean.connectionString +
+          hikariConfigBean.getConnectionString() +
           " " +
           tableNames
       );
       props.put("Table Names", tableNames);
 
     } else {
-      event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, hikariConfigBean.connectionString);
+      event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, hikariConfigBean.getConnectionString());
 
     }
 
@@ -370,7 +370,7 @@ public class JdbcSource extends BaseSource {
 
           int fetchSize = batchSize;
           // MySQL does not support cursors or fetch size except 0 and "streaming" (1 at a time).
-          if (hikariConfigBean.connectionString.toLowerCase().contains("mysql")) {
+          if (hikariConfigBean.getConnectionString().toLowerCase().contains("mysql")) {
             // Enable MySQL streaming mode.
             fetchSize = Integer.MIN_VALUE;
           }
@@ -577,7 +577,7 @@ public class JdbcSource extends BaseSource {
     }
     // We will add cdc operation type to record header even if createJDBCNsHeaders is false
     // we currently support CDC on only MS SQL.
-    if (hikariConfigBean.connectionString.startsWith("jdbc:sqlserver")) {
+    if (hikariConfigBean.getConnectionString().startsWith("jdbc:sqlserver")) {
       MSOperationCode.addOperationCodeToRecordHeader(record);
     }
 

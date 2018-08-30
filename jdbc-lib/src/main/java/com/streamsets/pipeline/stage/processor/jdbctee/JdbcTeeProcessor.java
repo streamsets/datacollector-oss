@@ -128,7 +128,7 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
     @Override
     public JdbcRecordWriter load(String tableName) throws Exception {
       return JdbcRecordReaderWriterFactory.createJdbcRecordWriter(
-          hikariConfigBean.connectionString,
+          hikariConfigBean.getConnectionString(),
           dataSource,
           schema,
           tableName,
@@ -159,7 +159,7 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
 
     issues = hikariConfigBean.validateConfigs(context, issues);
 
-    if (hikariConfigBean.connectionString.toLowerCase().startsWith("jdbc:sqlserver") && useMultiRowOp) {
+    if (hikariConfigBean.getConnectionString().toLowerCase().startsWith("jdbc:sqlserver") && useMultiRowOp) {
       issues.add(getContext().createConfigIssue(Groups.JDBC.name(), MULTI_ROW_OP, JdbcErrors.JDBC_57));
     }
 
@@ -215,7 +215,7 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
     boolean perRecord = false;
     // MS SQL Server does not support returning generateKey after executeBatch
     // Instead of executeBatch, do executeUpdate per record
-    if (hikariConfigBean.connectionString.toLowerCase().startsWith("jdbc:sqlserver")) {
+    if (hikariConfigBean.getConnectionString().toLowerCase().startsWith("jdbc:sqlserver")) {
       perRecord = true;
     }
 

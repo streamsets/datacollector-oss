@@ -30,7 +30,7 @@ import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaAndTable;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaTableConfigBean;
-import com.zaxxer.hikari.HikariDataSource;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -205,7 +205,7 @@ public class PostgresCDCWalReceiver {
       }
 
       try (Connection localConnection = DriverManager.getConnection(
-          hikariConfigBean.connectionString,
+          hikariConfigBean.getConnectionString(),
           hikariConfigBean.username.get(),
           hikariConfigBean.password.get()
       )) {
@@ -228,7 +228,7 @@ public class PostgresCDCWalReceiver {
   {
     try {
       try (Connection localConnection = DriverManager.getConnection(
-          hikariConfigBean.connectionString,
+          hikariConfigBean.getConnectionString(),
           hikariConfigBean.username.get(),
           hikariConfigBean.password.get()
       )) {
@@ -321,7 +321,8 @@ public class PostgresCDCWalReceiver {
     /* TODO resolve issue with using internal Jdbc Read only connection - didn't work
      with postgres replication connection - keeping HikariConfigBean for now */
     try {
-      this.connection = getConnection(hikariConfigBean.connectionString,
+      this.connection = getConnection(
+          hikariConfigBean.getConnectionString(),
           hikariConfigBean.username.get(),
           hikariConfigBean.password.get());
     } catch (SQLException e) {
@@ -330,7 +331,7 @@ public class PostgresCDCWalReceiver {
 
     this.slotName = configBean.slot;
     this.outputPlugin = configBean.decoderValue;
-    this.uri = hikariConfigBean.connectionString;
+    this.uri = hikariConfigBean.getConnectionString();
     this.configuredPlugin = null;
     this.configuredSlotType = null;
     this.slotActive = false;
