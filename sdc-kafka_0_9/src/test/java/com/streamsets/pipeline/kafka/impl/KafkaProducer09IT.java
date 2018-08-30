@@ -21,9 +21,7 @@ import com.streamsets.pipeline.kafka.api.PartitionStrategy;
 import com.streamsets.pipeline.kafka.api.ProducerFactorySettings;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducer;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducerFactory;
-import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtil;
 import com.streamsets.pipeline.lib.kafka.KafkaConstants;
-import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtilFactory;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.testing.NetworkUtils;
 import kafka.admin.AdminUtils;
@@ -66,7 +64,6 @@ public class KafkaProducer09IT {
   private static KafkaServer kafkaServer = null;
   private static String[] topics = new String[4];
   private int topicIndex = 0;
-  private static final SdcKafkaTestUtil sdcKafkaTestUtil = SdcKafkaTestUtilFactory.getInstance().create();
 
   @BeforeClass
   public static void setUpClass() throws Exception {

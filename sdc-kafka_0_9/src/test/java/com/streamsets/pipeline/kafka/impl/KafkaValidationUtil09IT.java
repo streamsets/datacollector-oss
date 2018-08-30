@@ -23,8 +23,6 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtil;
 import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtilFactory;
-import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtil;
-import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtilFactory;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.testing.NetworkUtils;
 import kafka.admin.AdminUtils;
@@ -53,7 +51,6 @@ public class KafkaValidationUtil09IT {
   private static ZkUtils zkUtils;
   private static KafkaServer kafkaServer;
   private static SdcKafkaValidationUtil sdcKafkaValidationUtil;
-  private static final SdcKafkaTestUtil sdcKafkaTestUtil = SdcKafkaTestUtilFactory.getInstance().create();
 
   @BeforeClass
   public static void setUp() throws IOException {
