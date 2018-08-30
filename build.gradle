@@ -46,6 +46,7 @@ allprojects {
         compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
         compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion
         compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-cbor', version: jacksonVersion
+        compile group: 'io.airlift', name: 'airline', version: '0.7'
         compile 'org.awaitility:awaitility:2.0.0'
         testCompile 'org.awaitility:awaitility:2.0.0'
         testCompile 'junit:junit:4.12'

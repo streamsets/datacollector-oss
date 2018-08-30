@@ -8,7 +8,7 @@
     "bower": "1.8.4",
     "express": "4.x",
     "frisby": "2.1.0",
-    "grunt": "1.0.3",
+    "grunt": "^1.0.3",
     "grunt-contrib-clean": "1.1.0",
     "grunt-contrib-concat": "1.0.1",
     "grunt-contrib-copy": "1.0.0",

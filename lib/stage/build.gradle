@@ -11,7 +11,7 @@ subprojects {
       contents {
         into('lib') {
           from jar // the stage library jar
-          from(project.configurations.runtime) // the runtime dependencies
+          from(project.configurations.runtimeClasspath) // the runtime dependencies
         }
       }
     }
@@ -21,12 +21,6 @@ subprojects {
 //    compression = Compression.GZIP
 //    extension = 'tgz'
     archiveName = "streamsets-datacollector-${baseName}-${version}.${extension}"
-  }
-
-  task printRuntime {
-    doLast {
-      project.configurations.runtime.each { println it }
-    }
   }
 }
 

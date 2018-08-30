@@ -1,0 +1,37 @@
+description = 'StreamSets Data Collector CDH5 Spark 2.1 Release 1 Lib'
+
+def jacksonVersion = '2.6.5'
+def jacksonProtolibVersion = '2.8.9'
+def sparkVersion = '2.1.0.cloudera1'
+
+dependencies {
+  implementation "com.streamsets:streamsets-datacollector-spark-api:${project.version}"
+  implementation project(':lib:proto:spark-processor-protolib')
+  implementation project(':lib:proto:spark-executor-protolib')
+  implementation("org.apache.spark:spark-core_2.11:$sparkVersion") {
+    exclude group: 'com.fasterxml.jackson.core', module: 'jackson-databind'
+    exclude group: 'com.fasterxml.jackson.core', module: 'jackson-annotations'
+  }
+  implementation "org.apache.spark:spark-launcher_2.11:$sparkVersion"
+  implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:$jacksonVersion"
+  implementation 'javax.servlet:javax.servlet-api'
+  testCompile "org.powermock:powermock-module-junit4"
+  testCompile "org.powermock:powermock-api-mockito"
+  testCompile project(path: ':lib:commonlib', configuration: 'testArtifacts')
+  implementation "com.fasterxml.jackson.core:jackson-core:$jacksonProtolibVersion"
+  implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonProtolibVersion"
+}
+
+sourceSets {
+  test {
+    java {
+      srcDir project(':lib:proto:spark-processor-protolib').sourceSets.test.java.srcDirs
+      srcDir project(':lib:proto:spark-executor-protolib').sourceSets.test.java.srcDirs
+
+    }
+    resources {
+      srcDir project(':lib:proto:spark-processor-protolib').sourceSets.test.resources.srcDirs
+      srcDir project(':lib:proto:spark-executor-protolib').sourceSets.test.resources.srcDirs
+    }
+  }
+}
