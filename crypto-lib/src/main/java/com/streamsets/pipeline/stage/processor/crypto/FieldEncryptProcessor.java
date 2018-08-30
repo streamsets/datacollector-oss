@@ -54,6 +54,8 @@ import java.util.function.Function;
 import static com.streamsets.pipeline.lib.crypto.CryptoErrors.CRYPTO_01;
 import static com.streamsets.pipeline.lib.crypto.CryptoErrors.CRYPTO_02;
 import static com.streamsets.pipeline.lib.crypto.CryptoErrors.CRYPTO_03;
+import static com.streamsets.pipeline.lib.crypto.CryptoErrors.CRYPTO_04;
+import static com.streamsets.pipeline.lib.crypto.CryptoErrors.CRYPTO_05;
 
 public class FieldEncryptProcessor extends SingleLaneRecordProcessor {
   private static final String SDC_FIELD_TYPE = "SDC_FIELD_TYPE";
@@ -80,14 +82,10 @@ public class FieldEncryptProcessor extends SingleLaneRecordProcessor {
       Security.addProvider(new BouncyCastleProvider());
     }
 
-    try {
-      encryptionProvider = createProvider();
-    } catch (StageException e) {
-      issues.add(getContext().createConfigIssue("conf.aws.accessKeyId",
-          EncryptGroups.PROVIDER.name(),
-          CRYPTO_01,
-          e.toString()
-      ));
+    encryptionProvider = createProvider(issues);
+
+    if (!issues.isEmpty()) {
+      return issues;
     }
 
     issues.addAll(encryptionProvider.init(getContext()));
@@ -105,8 +103,12 @@ public class FieldEncryptProcessor extends SingleLaneRecordProcessor {
     return issues;
   }
 
-  private EncryptionProvider createProvider() throws StageException {
-    final CryptoMaterialsManager cmManager = createCryptoMaterialsManager();
+  private EncryptionProvider createProvider(List<ConfigIssue> issues) {
+    CryptoMaterialsManager cmManager = createCryptoMaterialsManager(issues);
+
+    if (!issues.isEmpty()) {
+      return null;
+    }
 
     AwsCrypto crypto = new AwsCrypto();
     crypto.setEncryptionAlgorithm(conf.cipher);
@@ -115,10 +117,19 @@ public class FieldEncryptProcessor extends SingleLaneRecordProcessor {
     return AWSEncryptionProvider.builder().withMode(conf.mode).withCrypto(crypto).withCmManager(cmManager).build();
   }
 
-  private CryptoMaterialsManager createCryptoMaterialsManager() throws StageException {
-    AWSCredentialsProvider credentialsProvider = AWSEncryptionProvider.getCredentialsProvider(conf.aws.accessKeyId,
-        conf.aws.secretAccessKey
-    );
+  private CryptoMaterialsManager createCryptoMaterialsManager(List<ConfigIssue> issues) {
+    AWSCredentialsProvider credentialsProvider;
+    try {
+      credentialsProvider = AWSEncryptionProvider.getCredentialsProvider(conf.aws.accessKeyId, conf.aws.secretAccessKey);
+    } catch (StageException e) {
+      issues.add(getContext().createConfigIssue(
+          EncryptGroups.PROVIDER.name(),
+          "conf.aws.accessKeyId",
+          CRYPTO_01,
+          e.toString()
+      ));
+      return null;
+    }
 
     MasterKeyProvider<?> keyProvider;
     if (conf.masterKeyProvider == MasterKeyProviders.AWS_KMS) {
@@ -132,13 +143,38 @@ public class FieldEncryptProcessor extends SingleLaneRecordProcessor {
 
     CryptoMaterialsManager cmManager = new DefaultCryptoMaterialsManager(keyProvider);
 
+    long maxBytesPerKey;
+    try {
+      maxBytesPerKey = Long.parseLong(conf.maxBytesPerKey);
+    } catch (NumberFormatException e) {
+      issues.add(getContext().createConfigIssue(
+          EncryptGroups.PROVIDER.name(),
+          "conf.maxBytesPerKey",
+          CRYPTO_04,
+          conf.maxBytesPerKey
+      ));
+      return null;
+    }
+
+    if (maxBytesPerKey < 1) {
+      issues.add(getContext().createConfigIssue(
+          EncryptGroups.PROVIDER.name(),
+          "conf.maxBytesPerKey",
+          CRYPTO_05,
+          conf.maxBytesPerKey,
+          1L,
+          Long.MAX_VALUE
+      ));
+      return null;
+    }
+
     if (conf.dataKeyCaching) {
       cmManager = CachingCryptoMaterialsManager.newBuilder()
           .withMasterKeyProvider(keyProvider)
           .withCache(cache)
           .withMaxAge(conf.maxKeyAge, TimeUnit.SECONDS)
           .withMessageUseLimit(conf.maxRecordsPerKey)
-          .withByteUseLimit(conf.maxBytesPerKey)
+          .withByteUseLimit(maxBytesPerKey)
           .build();
     }
 

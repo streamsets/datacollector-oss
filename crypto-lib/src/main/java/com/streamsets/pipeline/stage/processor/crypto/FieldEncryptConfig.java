@@ -198,11 +198,10 @@ public class FieldEncryptConfig {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.NUMBER,
+      type = ConfigDef.Type.STRING, // Javascript does not support the full range of Long values
       label = "Max Bytes per Data Key",
       description = "Maximum number of bytes to encrypt with the same key.",
       defaultValue = "9223372036854775807", // Long.MAX_VALUE
-      min = 1,
       dependencies = {
           @Dependency(configName = "dataKeyCaching", triggeredByValues = "true"),
           @Dependency(configName = "mode", triggeredByValues = {"ENCRYPT"})
@@ -210,5 +209,5 @@ public class FieldEncryptConfig {
       displayPosition = 150,
       group = "PROVIDER"
   )
-  public long maxBytesPerKey;
+  public String maxBytesPerKey;
 }

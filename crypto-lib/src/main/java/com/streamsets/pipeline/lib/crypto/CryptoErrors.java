@@ -26,6 +26,8 @@ public enum CryptoErrors implements ErrorCode {
   CRYPTO_01("Unable to get credentials provider for AWS: '{}'"),
   CRYPTO_02("Expected decryption input to be a BYTE_ARRAY but found '{}'"),
   CRYPTO_03("Received a '{}' but complex field types are not supported"),
+  CRYPTO_04("The value '{}' is not a valid integer"),
+  CRYPTO_05("The value '{}' must be in the range {} and {}"),
   ;
 
   private final String message;

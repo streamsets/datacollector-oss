@@ -67,6 +67,7 @@ public class TestFieldEncryptProcessor {
     conf.key = key;
     conf.keyId = "keyId";
     conf.context = aad;
+    conf.maxBytesPerKey = String.valueOf(Long.MAX_VALUE);
 
     Processor processor = new FieldEncryptProcessor(conf);
 
@@ -87,6 +88,7 @@ public class TestFieldEncryptProcessor {
     decryptConfig.key = key;
     decryptConfig.keyId = "keyId";
     decryptConfig.context = aad;
+    decryptConfig.maxBytesPerKey = String.valueOf(Long.MAX_VALUE);
 
     Processor decryptProcessor = new FieldEncryptProcessor(decryptConfig);
 
@@ -108,6 +110,55 @@ public class TestFieldEncryptProcessor {
   }
 
   @Test
+  public void testOutOfRangeConfigValue() throws Exception {
+    FieldEncryptConfig config = new FieldEncryptConfig();
+    config.mode = EncryptionMode.ENCRYPT;
+    config.cipher = CryptoAlgorithm.ALG_AES_256_GCM_IV12_TAG16_HKDF_SHA384_ECDSA_P384;
+    config.fieldPaths = ImmutableList.of("/");
+    config.key = key;
+    config.keyId = "keyId";
+    config.context = aad;
+    config.dataKeyCaching = true;
+    config.maxKeyAge = 600;
+    config.maxRecordsPerKey = 1000;
+    config.maxBytesPerKey = String.valueOf(Long.MAX_VALUE);
+
+    Processor encryptProcessor = new FieldEncryptProcessor(config);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(
+        FieldEncryptDProcessor.class,
+        encryptProcessor
+    ).addOutputLane("lane").build();
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    assertTrue(issues.isEmpty());
+
+    // bytes < 1
+    config.maxBytesPerKey = "0";
+    encryptProcessor = new FieldEncryptProcessor(config);
+
+    runner = new ProcessorRunner.Builder(
+        FieldEncryptDProcessor.class,
+        encryptProcessor
+    ).addOutputLane("lane").build();
+
+    issues = runner.runValidateConfigs();
+    assertTrue(issues.get(0).toString().contains("must be in the range"));
+
+    // value is not an integer
+    config.maxBytesPerKey = "abc";
+    encryptProcessor = new FieldEncryptProcessor(config);
+
+    runner = new ProcessorRunner.Builder(
+        FieldEncryptDProcessor.class,
+        encryptProcessor
+    ).addOutputLane("lane").build();
+
+    issues = runner.runValidateConfigs();
+    assertTrue(issues.get(0).toString().contains("not a valid integer"));
+  }
+
+  @Test
   public void testProcess() throws Exception {
     final String message = "Hello, World!";
     final long longValue = 1234L;
@@ -120,6 +171,7 @@ public class TestFieldEncryptProcessor {
     encryptConfig.key = key;
     encryptConfig.keyId = "keyId";
     encryptConfig.context = aad;
+    encryptConfig.maxBytesPerKey = String.valueOf(Long.MAX_VALUE);
 
     FieldEncryptConfig decryptConfig = new FieldEncryptConfig();
     decryptConfig.mode = EncryptionMode.DECRYPT;
@@ -128,6 +180,7 @@ public class TestFieldEncryptProcessor {
     decryptConfig.key = key;
     decryptConfig.keyId = "keyId";
     decryptConfig.context = aad;
+    decryptConfig.maxBytesPerKey = String.valueOf(Long.MAX_VALUE);
 
     Processor encryptProcessor = new FieldEncryptProcessor(encryptConfig);
 
