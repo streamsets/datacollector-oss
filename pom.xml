@@ -203,7 +203,6 @@
     <module>mesos-bootstrap</module>
     <module>client-api</module>
     <module>cli</module>
-    <module>common-ui</module>
     <module>sdc-solr-api</module>
     <module>sdc-solr_cdh_4</module>
     <module>sdc-solr_6</module>
@@ -341,7 +340,7 @@
             <exclude>python/**</exclude>
             <exclude>docs/**</exclude>
             <exclude>cloudera-integration/csd/**</exclude>
-            <exclude>common-ui/src/main/webapp/common/directives/**</exclude>
+            <exclude>datacollector-ui/src/main/webapp/common/directives/**</exclude>
 
           </excludes>
           <goal>run</goal>

@@ -40,7 +40,7 @@ module.exports = function(grunt) {
     build_dir: 'target/dist',
     target_dir: 'target',
     base_dir: 'src/main/webapp/',
-    common_base_dir: '../common-ui/src/main/webapp/',
+    common_base_dir: 'src/main/webapp/',
     docs_dir: '../docs/generated',
 
     /**
