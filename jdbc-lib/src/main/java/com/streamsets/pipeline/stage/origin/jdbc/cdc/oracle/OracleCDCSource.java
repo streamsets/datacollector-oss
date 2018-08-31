@@ -370,8 +370,8 @@ public class OracleCDCSource extends BaseSource {
             throw new StageException(JDBC_83);
           }
           startTimestamp = getDateForSCN(new BigDecimal(offset.scn));
-          offset.timestamp = startTimestamp;
         }
+        offset.timestamp = startTimestamp;
         adjustStartTimeAndStartLogMnr(startTimestamp);
       } else { // reset the start date only if it not set.
         if (configBean.startValue != StartValues.SCN) {
