@@ -250,6 +250,11 @@
         <artifactId>netty-codec-http</artifactId>
         <version>${netty.version}</version>
       </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-all</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
 
       <!--
           The necessary classes from this dependency (for ORC file writing) might also be provided under separate Hive
