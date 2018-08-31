@@ -40,7 +40,7 @@ import com.streamsets.pipeline.lib.hbase.common.Errors;
 import com.streamsets.pipeline.lib.hbase.common.FieldConversionException;
 import com.streamsets.pipeline.lib.hbase.common.HBaseColumn;
 import com.streamsets.pipeline.lib.hbase.common.HBaseConnectionConfig;
-import com.streamsets.pipeline.lib.hbase.common.HBaseUtil;
+import com.streamsets.pipeline.lib.hbase.common.HBaseConnectionHelper;
 import com.streamsets.pipeline.lib.util.JsonUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
@@ -85,6 +85,7 @@ public class HBaseTarget extends BaseTarget {
   private ErrorRecordHandler errorRecordHandler;
   private ELEval timeDriverElEval;
   private Date batchTime;
+  private HBaseConnectionHelper hbaseConnectionHelper;
 
   public HBaseTarget(
     HBaseConnectionConfig conf,
@@ -108,12 +109,13 @@ public class HBaseTarget extends BaseTarget {
     this.ignoreMissingField = ignoreMissingField;
     this.ignoreInvalidColumn = ignoreInvalidColumn;
     this.timeDriver = timeDriver;
+    hbaseConnectionHelper = new HBaseConnectionHelper();
   }
 
   @Override
   protected List<ConfigIssue> init() {
     final List<ConfigIssue> issues = super.init();
-    hbaseConf = HBaseUtil.getHBaseConfiguration(
+    hbaseConf = hbaseConnectionHelper.getHBaseConfiguration(
         issues,
         getContext(),
         Groups.HBASE.name(),
@@ -123,20 +125,20 @@ public class HBaseTarget extends BaseTarget {
     );
 
     validateQuorumConfigs(issues);
-    HBaseUtil.validateSecurityConfigs(issues, getContext(), Groups.HBASE.name(), conf.hbaseUser, hbaseConf, conf.kerberosAuth);
+    hbaseConnectionHelper.validateSecurityConfigs(issues, getContext(), Groups.HBASE.name(), conf.hbaseUser, hbaseConf, conf.kerberosAuth);
 
     if(issues.isEmpty()) {
-      HBaseUtil.setIfNotNull(hbaseConf, HConstants.ZOOKEEPER_QUORUM, conf.zookeeperQuorum);
+      HBaseConnectionHelper.setIfNotNull(hbaseConf, HConstants.ZOOKEEPER_QUORUM, conf.zookeeperQuorum);
       hbaseConf.setInt(HConstants.ZOOKEEPER_CLIENT_PORT, conf.clientPort);
-      HBaseUtil.setIfNotNull(hbaseConf, HConstants.ZOOKEEPER_ZNODE_PARENT, conf.zookeeperParentZNode);
+      HBaseConnectionHelper.setIfNotNull(hbaseConf, HConstants.ZOOKEEPER_ZNODE_PARENT, conf.zookeeperParentZNode);
     }
 
     HTableDescriptor hTableDescriptor = null;
     if (issues.isEmpty()) {
       try {
-        hTableDescriptor = HBaseUtil.getUGI().doAs((PrivilegedExceptionAction<HTableDescriptor>) () -> {
+        hTableDescriptor = hbaseConnectionHelper.getUGI().doAs((PrivilegedExceptionAction<HTableDescriptor>) () -> {
           checkHBaseAvailable(hbaseConf, issues);
-          return HBaseUtil.checkConnectionAndTableExistence(
+          return HBaseConnectionHelper.checkConnectionAndTableExistence(
               issues,
               getContext(),
               hbaseConf,
@@ -170,7 +172,7 @@ public class HBaseTarget extends BaseTarget {
     validateStorageTypes(issues);
     if (issues.isEmpty() && hTableDescriptor != null) {
       for (HBaseFieldMappingConfig column : hbaseFieldColumnMapping) {
-        HBaseColumn hbaseColumn = HBaseUtil.getColumn(column.columnName);
+        HBaseColumn hbaseColumn = HBaseConnectionHelper.getColumn(column.columnName);
         if (hbaseColumn == null) {
           issues.add(getContext().createConfigIssue(Groups.HBASE.name(), HBASE_FIELD_COLUMN_MAPPING, Errors.HBASE_28,
             column.columnName, KeyValue.COLUMN_FAMILY_DELIMITER));
@@ -205,7 +207,7 @@ public class HBaseTarget extends BaseTarget {
   }
 
   protected void validateQuorumConfigs(List<ConfigIssue> issues) {
-    HBaseUtil.validateQuorumConfigs(issues, getContext(), Groups.HBASE.name(), conf.zookeeperQuorum,
+    HBaseConnectionHelper.validateQuorumConfigs(issues, getContext(), Groups.HBASE.name(), conf.zookeeperQuorum,
         conf.zookeeperParentZNode, conf.clientPort);
   }
 
@@ -321,7 +323,7 @@ public class HBaseTarget extends BaseTarget {
         if (fieldPath.charAt(0) == '/') {
           fieldPathColumn = fieldPath.substring(1);
         }
-        HBaseColumn hbaseColumn = HBaseUtil.getColumn(fieldPathColumn.replace("'", ""));
+        HBaseColumn hbaseColumn = HBaseConnectionHelper.getColumn(fieldPathColumn.replace("'", ""));
         if (hbaseColumn != null) {
           byte[] value = getBytesForValue(record, fieldPath, null);
           addCell(p, hbaseColumn.getCf(), hbaseColumn.getQualifier(), recordTime, value);
@@ -365,7 +367,7 @@ public class HBaseTarget extends BaseTarget {
   public void write(final Batch batch) throws StageException {
     setBatchTime();
     try {
-      HBaseUtil.getUGI().doAs((PrivilegedExceptionAction<Void>) () -> {
+      hbaseConnectionHelper.getUGI().doAs((PrivilegedExceptionAction<Void>) () -> {
         writeBatch(batch);
         return null;
       });
@@ -399,7 +401,7 @@ public class HBaseTarget extends BaseTarget {
       hTable.flushCommits();
     } catch (RetriesExhaustedWithDetailsException rex) {
       LOG.debug("Got exception while flushing commits to HBase", rex);
-      HBaseUtil.handleHBaseException(rex, null, rowKeyToRecord, errorRecordHandler);
+      HBaseConnectionHelper.handleHBaseException(rex, null, rowKeyToRecord, errorRecordHandler);
     } catch (OnRecordErrorException ex) {
       LOG.debug("Got exception while writing to HBase", ex);
       errorRecordHandler.onError(ex);
@@ -432,7 +434,7 @@ public class HBaseTarget extends BaseTarget {
       hTable.put(p);
     } catch (RetriesExhaustedWithDetailsException rex) {
       // There may be more than one row which failed to persist
-      HBaseUtil.handleHBaseException(rex, record, null, errorRecordHandler);
+      HBaseConnectionHelper.handleHBaseException(rex, record, null, errorRecordHandler);
     }
   }
 

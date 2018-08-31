@@ -36,7 +36,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class HBaseUtilTest {
+public class HBaseConnectionHelperTest {
 
   @Test
   public void handleHBaseException() throws Exception {
@@ -54,7 +54,7 @@ public class HBaseUtilTest {
     );
 
     try {
-      HBaseUtil.handleHBaseException(e, records.iterator(), errorRecordHandler);
+      HBaseConnectionHelper.handleHBaseException(e, records.iterator(), errorRecordHandler);
     } catch (StageException ex) {
       assertEquals(StageException.class, ex.getClass());
       assertEquals(Errors.HBASE_36, ex.getErrorCode());
@@ -78,7 +78,7 @@ public class HBaseUtilTest {
     Exception e = new UndeclaredThrowableException(new ExecutionException(new NullPointerException()));
 
     try {
-      HBaseUtil.handleHBaseException(e, records.iterator(), errorRecordHandler);
+      HBaseConnectionHelper.handleHBaseException(e, records.iterator(), errorRecordHandler);
     } catch (StageException ex) {
       assertEquals(StageException.class, ex.getClass());
       assertEquals(Errors.HBASE_37, ex.getErrorCode());
