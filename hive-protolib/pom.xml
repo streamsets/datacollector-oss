@@ -35,8 +35,6 @@
   <properties>
     <hadoop.version>2.6.0</hadoop.version>
     <hive.version>1.2.1</hive.version>
-    <minikdc-hadoop.version>2.6.0</minikdc-hadoop.version>
-    <minikdc-jdbm1.version>2.0.0-M3</minikdc-jdbm1.version>
   </properties>
 
   <dependencies>
@@ -283,63 +281,6 @@
         </exclusion>
       </exclusions>
     </dependency>
-
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-hdfs-protolib</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-hdfs-protolib</artifactId>
-      <version>${project.version}</version>
-      <type>test-jar</type>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-mapreduce-protolib</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-
-    <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-minicluster</artifactId>
-      <version>${hadoop.version}</version>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>javax.servlet</groupId>
-          <artifactId>servlet-api</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-minikdc</artifactId>
-      <version>${minikdc-hadoop.version}</version>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.directory.jdbm</groupId>
-          <artifactId>apacheds-jdbm1</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.directory.jdbm</groupId>
-      <artifactId>apacheds-jdbm1</artifactId>
-      <version>${minikdc-jdbm1.version}</version>
-      <scope>test</scope>
-    </dependency>
-
   </dependencies>
 
   <build>

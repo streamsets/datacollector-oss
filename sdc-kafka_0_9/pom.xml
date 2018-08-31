@@ -38,8 +38,6 @@
     <confluent.version>2.0.1</confluent.version>
     <tec.version>0.7</tec.version>
     <scala.version>2.11.7</scala.version>
-    <minikdc-hadoop.version>2.6.0</minikdc-hadoop.version>
-    <minikdc-jdbm1.version>2.0.0-M3</minikdc-jdbm1.version>
     <zookeeper.version>3.4.5</zookeeper.version>
     <guava.version>18.0</guava.version>
     <commons.version>3.4</commons.version>
@@ -72,13 +70,6 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-kafka-common</artifactId>
-      <version>${project.version}</version>
-      <type>test-jar</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-api</artifactId>
       <scope>provided</scope>
     </dependency>
@@ -103,17 +94,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>${commons.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-sdk</artifactId>
       <scope>test</scope>
@@ -135,42 +115,6 @@
       <artifactId>kafka_2.11</artifactId>
       <version>${kafka.version}</version>
       <classifier>test</classifier>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.kafka</groupId>
-      <artifactId>kafka-clients</artifactId>
-      <version>${kafka.version}</version>
-      <classifier>test</classifier>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.confluent</groupId>
-      <artifactId>kafka-avro-serializer</artifactId>
-      <version>${confluent.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.bouncycastle</groupId>
-      <artifactId>bcpkix-jdk15on</artifactId>
-      <version>${bouncycastle.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-minikdc</artifactId>
-      <version>${minikdc-hadoop.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.directory.jdbm</groupId>
-          <artifactId>apacheds-jdbm1</artifactId>
-        </exclusion>
-      </exclusions>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.directory.jdbm</groupId>
-      <artifactId>apacheds-jdbm1</artifactId>
-      <version>${minikdc-jdbm1.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>

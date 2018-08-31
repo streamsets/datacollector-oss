@@ -17,7 +17,6 @@ package com.streamsets.pipeline.kafka.impl;
 
 import com.streamsets.testing.NetworkUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.hadoop.minikdc.MiniKdc;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -52,13 +51,10 @@ public class TestSaslEnabledKafka extends SecureKafkaBase {
   public static final String JAVA_SECURITY_AUTH_LOGIN_CONFIG = "java.security.auth.login.config";
   public static final String TEST_KEYTAB = "test.keytab";
   public static final String KDC = "kdc";
-  public static final String KAFKA_BROKER_PRINCIPAL = "kafkaBroker/localhost";
-  public static final String KAFKA_CLIENT_PRINCIPAL = "kafkaClient/localhost";
   public static final String KAFKA_JAAS_CONF = "kafka_jaas.conf";
 
   private static File testDir;
   private static File keytabFile;
-  private static MiniKdc miniKdc;
   private static File jaasConfigFile;
 
   private static int plainTextPort;
@@ -72,10 +68,6 @@ public class TestSaslEnabledKafka extends SecureKafkaBase {
     File kdcDir = new File(testDir, KDC);
     Assert.assertTrue(kdcDir.mkdirs());
     keytabFile = new File(testDir, TEST_KEYTAB);
-
-    miniKdc = new MiniKdc(MiniKdc.createConf(), kdcDir);
-    miniKdc.start();
-    miniKdc.createPrincipal(keytabFile, KAFKA_BROKER_PRINCIPAL, KAFKA_CLIENT_PRINCIPAL);
 
     jaasConfigFile = new File(testDir, KAFKA_JAAS_CONF);
     jaasConfigFile.createNewFile();
@@ -98,10 +90,6 @@ public class TestSaslEnabledKafka extends SecureKafkaBase {
   @AfterClass
   public static void afterClass() {
     SecureKafkaBase.afterClass();
-    if (miniKdc != null) {
-      miniKdc.stop();
-      miniKdc = null;
-    }
     System.clearProperty(JAVA_SECURITY_AUTH_LOGIN_CONFIG);
     Configuration.setConfiguration(null);
     if(jaasConfigFile.exists()) {

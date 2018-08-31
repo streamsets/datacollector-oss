@@ -45,8 +45,6 @@ import com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheType;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.DecimalHiveTypeSupport;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hive.conf.HiveConf;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -91,24 +89,6 @@ public class TestHiveMetadataProcessor {
       TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING, "column1"),
       "column2",
       TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.INT, "column2")
-  )
-  );
-
-  static final LinkedHashMap<String, HiveTypeInfo> SAMPLE_RECORD2
-      = new LinkedHashMap<>(ImmutableMap.of(
-      "column1",
-      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.BOOLEAN, "column1"),
-      "column2",
-      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.DOUBLE, "column2")
-  )
-  );
-
-  static final LinkedHashMap<String, HiveTypeInfo> SAMPLE_RECORD3
-      = new LinkedHashMap<>(ImmutableMap.of(
-      "first",
-      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING, "first"),
-      "second",
-      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.INT, "second")
   )
   );
 
@@ -179,18 +159,6 @@ public class TestHiveMetadataProcessor {
             "getHiveConnection"
         )
     ).with((proxy, method, args) -> null);
-
-    PowerMockito.replace(
-        MemberMatcher.method(
-            HiveTestUtil.class,
-            "getHiveConfigBean"
-        )
-    ).with((proxy, method, args) -> {
-      HiveConfigBean bean = HiveTestUtil.getHiveConfigBean();
-      bean.setConfiguration(new Configuration());
-      bean.setHiveConf(new HiveConf());
-      return bean;
-    });
 
     PowerMockito.replace(MemberMatcher.method(HiveQueryExecutor.class, "executeDescribeDatabase"))
         .with((proxy, method, args) -> "/user/hive/warehouse/" + args[0].toString() + ".db/");

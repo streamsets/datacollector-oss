@@ -66,8 +66,6 @@
     </repositories>
 
     <dependencies>
-
-        <!--
         <dependency>
             <groupId>com.streamsets</groupId>
             <artifactId>streamsets-datacollector-cluster-hdfs-protolib</artifactId>
@@ -96,11 +94,15 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        -->
 
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
+            <version>${netty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-codec</artifactId>
             <version>${netty.version}</version>
         </dependency>
 
@@ -289,7 +291,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!--
         <dependency>
             <groupId>com.streamsets</groupId>
             <artifactId>streamsets-datacollector-kafka_target-protolib</artifactId>
@@ -306,7 +307,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        -->
 
         <!-- Kafka -->
         <dependency>
@@ -351,7 +351,6 @@
         </dependency>
 
         <!-- Hive related -->
-        <!--
         <dependency>
             <groupId>com.streamsets</groupId>
             <artifactId>streamsets-datacollector-hive-protolib</artifactId>
@@ -447,7 +446,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        -->
 
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -487,19 +485,6 @@
                 <exclusion>
                     <groupId>com.fasterxml.jackson.core</groupId>
                     <artifactId>jackson-core</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-minicluster</artifactId>
-            <version>${hadoop.version}</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.servlet</groupId>
-                    <artifactId>servlet-api</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -774,6 +759,24 @@
         </dependency>
 
         <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <scope>compile</scope>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <scope>compile</scope>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-paranamer</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-scala_2.11</artifactId>
             <version>${jackson.version}</version>
@@ -831,23 +834,18 @@
                         </goals>
                         <configuration>
                           <sources>
-                                <!--
                                 <source>${basedir}/../cluster-hdfs-protolib/src/test/java</source>
-                                -->
                                 <source>${basedir}/../flume-protolib/src/test/java</source>
                                 <source>${basedir}/../hdfs-protolib/src/test/java</source>
                                 <source>${basedir}/../hbase-protolib/src/test/java</source>
-                                <!-- Tests are failing compilation -->
-                                <!--                                <source>${basedir}/../hive-protolib/src/test/java</source> -->
+                                <source>${basedir}/../hive-protolib/src/test/java</source>
                                 <source>${basedir}/../kudu-protolib/src/test/java</source>
                                 <source>${basedir}/../mapreduce-protolib/src/test/java</source>
                                 <source>${basedir}/../solr-protolib/src/test/java</source>
-
-                                <!--<source>${basedir}/../kafka_target-protolib/src/test/java</source>-->
+                                <source>${basedir}/../kafka_target-protolib/src/test/java</source>
                                 <source>${basedir}/../cluster-kafka-protolib/src/test/java</source>
                                 <source>${basedir}/../kafka_source-protolib/src/test/java</source>
                                 <source>${basedir}/../kafka_multisource-0_10-protolib/src/test/java</source>
-
                                 <source>${basedir}/../spark-executor-protolib/src/test/java</source>
                                 <source>${basedir}/../spark-processor-protolib/src/test/java</source>
                             </sources>
@@ -867,16 +865,8 @@
                                 <resource>
                                     <directory>${basedir}/../mapreduce-protolib/src/test/resources</directory>
                                 </resource>
-                                  <!--
                                 <resource>
                                     <directory>${basedir}/../hive-protolib/src/test/resources</directory>
-                                </resource>
-                                 -->
-                                <resource>
-                                    <directory>${basedir}/../hbase-protolib/src/test/resources</directory>
-                                </resource>
-                                <resource>
-                                    <directory>${basedir}/../kudu-protolib/src/test/resources</directory>
                                 </resource>
                                 <resource>
                                     <directory>${basedir}/../solr-protolib/src/test/resources</directory>
@@ -884,29 +874,12 @@
                                 <resource>
                                     <directory>${basedir}/../flume-protolib/src/test/resources</directory>
                                 </resource>
-                                <!--
                                 <resource>
                                     <directory>${basedir}/../cluster-hdfs-protolib/src/test/resources</directory>
                                 </resource>
-                                -->
                                 <resource>
-                                    <directory>${basedir}/../spark-processor-protolib/src/test/resources</directory>
-                                </resource>
-                                <resource>
-                                  <directory>${basedir}/../spark-executor-protolib/src/test/resources</directory>
-                                </resource>
-                                <resource>
-                                    <directory>${basedir}/../cluster-kafka-protolib/src/test/resources</directory>
-                                </resource>
-                                <resource>
-                                    <directory>${basedir}/../kafka_source-protolib/src/test/resources</directory>
-                                </resource>
-                                <resource>
-                                    <directory>${basedir}/../kafka_multisource-0_10-protolib/src/test/resources</directory>
-                                </resource>
-                                <!--<resource>
                                     <directory>${basedir}/../kafka_target-protolib/src/test/resources</directory>
-                                </resource>-->
+                                </resource>
                             </resources>
                         </configuration>
                     </execution>
