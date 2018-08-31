@@ -56,20 +56,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-public final class HBaseUtil {
+public final class HBaseConnectionHelper {
   private static final String TABLE_NAME = "tableName";
-  private static final Logger LOG = LoggerFactory.getLogger(HBaseUtil.class);
+  private static final Logger LOG = LoggerFactory.getLogger(HBaseConnectionHelper.class);
   // master and region server principals are not defined in HBase constants, so do it here
   private static final String MASTER_KERBEROS_PRINCIPAL = "hbase.master.kerberos.principal";
   private static final String REGIONSERVER_KERBEROS_PRINCIPAL = "hbase.regionserver.kerberos.principal";
   private static final String HBASE_CONF_DIR_CONFIG = "hbaseConfDir";
-  private static UserGroupInformation loginUgi;
-  private static UserGroupInformation userUgi;
+  private UserGroupInformation loginUgi;
+  private UserGroupInformation userUgi;
 
-  private HBaseUtil() {
-  }
-
-  public static Configuration getHBaseConfiguration(
+  public Configuration getHBaseConfiguration(
       List<Stage.ConfigIssue> issues,
       Stage.Context context,
       String hbaseName,
@@ -172,7 +169,7 @@ public final class HBaseUtil {
 
   }
 
-  public static void validateSecurityConfigs(
+  public void validateSecurityConfigs(
       List<Stage.ConfigIssue> issues,
       Stage.Context context,
       String hbaseName,
@@ -237,7 +234,7 @@ public final class HBaseUtil {
     }
   }
 
-  public static UserGroupInformation getUGI() {
+  public UserGroupInformation getUGI() {
     return userUgi;
   }
 
