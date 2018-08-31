@@ -106,30 +106,20 @@ public class AmazonS3Target extends BaseTarget {
     TimeNowEL.setTimeNowInContext(elVars, new Date());
 
     if (partitionTemplate.contains(EL_PREFIX)) {
-      ELUtils.validateExpression(
-          partitionEval,
-          elVars,
-          partitionTemplate,
+      ELUtils.validateExpression(partitionTemplate,
           getContext(),
           Groups.S3.getLabel(),
           S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + PARTITION_TEMPLATE,
-          Errors.S3_03,
-          String.class,
-          issues
+          Errors.S3_03, issues
       );
     }
 
     if (timeDriverTemplate.contains(EL_PREFIX)) {
-      ELUtils.validateExpression(
-          timeDriverEval,
-          elVars,
-          timeDriverTemplate,
+      ELUtils.validateExpression(timeDriverTemplate,
           getContext(),
           Groups.S3.getLabel(),
           S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + TIME_DRIVER_TEMPLATE,
-          Errors.S3_04,
-          Date.class,
-          issues
+          Errors.S3_04, issues
       );
     }
     if (getContext().getService(DataFormatGeneratorService.class).isWholeFileFormat()) {

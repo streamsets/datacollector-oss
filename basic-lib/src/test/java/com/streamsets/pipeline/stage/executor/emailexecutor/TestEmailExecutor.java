@@ -44,7 +44,7 @@ public class TestEmailExecutor {
     EmailConfig conf = new EmailConfig();
     conf.email = new ArrayList<>();
 
-    conf.email.add("${badEL}admin@example.com");
+    conf.email.add("${badEL x}admin@example.com");
 
     conf.condition = "${str:contains(time:extractStringFromDate(time:now(), \"YYYY-MM-dd hh:mm:ss\"), \"20\")}";
     conf.subject = "subject ${time:extractStringFromDate(time:now(), \"yyyy\")} subject";
@@ -68,7 +68,7 @@ public class TestEmailExecutor {
     conf.email = new ArrayList<>();
     conf.email.add("admin@exa${record:id()}mple.com");
 
-    conf.subject = "${thisIsAnError} subject";
+    conf.subject = "${thisIsAnError x} subject";
 
     conf.condition = "${str:contains(time:extractStringFromDate(time:now(), \"YYYY-MM-dd hh:mm:ss\"), \"20\")}";
     conf.body = "body ${time:extractStringFromDate(time:now(), \"yyyy\")} body";
@@ -91,7 +91,7 @@ public class TestEmailExecutor {
     conf.email = new ArrayList<>();
     conf.email.add("admin@exa${record:id()}mple.com");
 
-    conf.body = "body ${record:hahaha()}";
+    conf.body = "body ${record:hahaha()x}";
 
     conf.condition = "${str:contains(time:extractStringFromDate(time:now(), \"YYYY-MM-dd hh:mm:ss\"), \"20\")}";
     conf.subject = "subject subject";
@@ -113,7 +113,7 @@ public class TestEmailExecutor {
     EmailConfig conf = new EmailConfig();
     conf.email = new ArrayList<>();
 
-    conf.condition = "${total_junk}";
+    conf.condition = "${total_junk x}";
     conf.subject = "subject ${time:extractStringFromDate(time:now(), \"yyyy\")} subject";
     conf.body = "body ${time:extractStringFromDate(time:now(), \"yyyy\")} body";
 

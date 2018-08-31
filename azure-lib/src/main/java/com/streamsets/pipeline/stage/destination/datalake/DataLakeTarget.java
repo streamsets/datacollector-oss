@@ -108,16 +108,11 @@ public class DataLakeTarget extends BaseTarget {
       TimeNowEL.setTimeNowInContext(dirPathTemplateVars, new Date());
 
       // Validate Evals
-      ELUtils.validateExpression(
-          dirPathTemplateEval,
-          getContext().createELVars(),
-          conf.dirPathTemplate,
+      ELUtils.validateExpression(conf.dirPathTemplate,
           getContext(),
           Groups.DATALAKE.getLabel(),
           DataLakeConfigBean.ADLS_CONFIG_BEAN_PREFIX + "dirPathTemplate",
-          Errors.ADLS_00,
-          String.class,
-          issues
+          Errors.ADLS_00, issues
       );
     }
 
@@ -125,16 +120,11 @@ public class DataLakeTarget extends BaseTarget {
       TimeEL.setCalendarInContext(timeDriverVars, calendar);
       TimeNowEL.setTimeNowInContext(timeDriverVars, new Date());
 
-      ELUtils.validateExpression(
-          timeDriverEval,
-          timeDriverVars,
-          conf.timeDriver,
+      ELUtils.validateExpression(conf.timeDriver,
           getContext(),
           Groups.DATALAKE.getLabel(),
           DataLakeConfigBean.ADLS_CONFIG_BEAN_PREFIX + "timeDriver",
-          Errors.ADLS_01,
-          Date.class,
-          issues
+          Errors.ADLS_01, issues
       );
     }
 

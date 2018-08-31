@@ -59,41 +59,29 @@ public class EmailExecutor extends BaseExecutor {
     for (EmailConfig co : conf) {
       co.subjectELEval = getContext().createELEval("subject");
       co.subjectELVars = getContext().createELVars();
-      ELUtils.validateExpression(co.subjectELEval,
-          co.subjectELVars,
-          co.subject,
+      ELUtils.validateExpression(co.subject,
           getContext(),
           Groups.EMAILS.name(),
           co.subject,
-          Errors.EMAIL_01,
-          String.class,
-          issues
+          Errors.EMAIL_01, issues
       );
 
       co.bodyELEval = getContext().createELEval("body");
       co.bodyELVars = getContext().createELVars();
-      ELUtils.validateExpression(co.bodyELEval,
-          co.bodyELVars,
-          co.body,
+      ELUtils.validateExpression(co.body,
           getContext(),
           Groups.EMAILS.name(),
           co.body,
-          Errors.EMAIL_02,
-          String.class,
-          issues
+          Errors.EMAIL_02, issues
       );
 
       co.conditionELEval = getContext().createELEval("condition");
       co.conditionELVars = getContext().createELVars();
-      ELUtils.validateExpression(co.conditionELEval,
-          co.conditionELVars,
-          co.condition,
+      ELUtils.validateExpression(co.condition,
           getContext(),
           Groups.EMAILS.name(),
           co.condition,
-          Errors.EMAIL_06,
-          String.class,
-          issues
+          Errors.EMAIL_06, issues
       );
 
       co.emailELEval = new HashMap<>();
@@ -101,15 +89,11 @@ public class EmailExecutor extends BaseExecutor {
       for (String str : co.email) {
         ELEval eval = getContext().createELEval("email");
         ELVars vars = getContext().createELVars();
-        ELUtils.validateExpression(eval,
-            vars,
-            str,
+        ELUtils.validateExpression(str,
             getContext(),
             Groups.EMAILS.name(),
             str,
-            Errors.EMAIL_07,
-            String.class,
-            issues
+            Errors.EMAIL_07, issues
         );
         co.emailELEval.put(str, eval);
         co.emailELVars.put(str, vars);

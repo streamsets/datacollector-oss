@@ -149,16 +149,11 @@ public class KuduLookupProcessor extends SingleLaneRecordProcessor {
     }
     if (issues.isEmpty()) {
       if (conf.kuduTableTemplate.contains(EL_PREFIX)) {
-        ELUtils.validateExpression(
-            tableNameEval,
-            tableNameVars,
-            conf.kuduTableTemplate,
+        ELUtils.validateExpression(conf.kuduTableTemplate,
             getContext(),
             com.streamsets.pipeline.stage.destination.kudu.Groups.KUDU.getLabel(),
             KUDU_TABLE,
-            Errors.KUDU_12,
-            String.class,
-            issues
+            Errors.KUDU_12, issues
         );
       } else {
         // We have a table name that's not EL. We can validate if the table exists.

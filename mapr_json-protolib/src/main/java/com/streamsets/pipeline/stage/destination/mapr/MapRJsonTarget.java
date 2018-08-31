@@ -101,16 +101,11 @@ public class MapRJsonTarget extends BaseTarget {
 
         tableNameEval = getContext().createELEval("tableName");
         tableNameVars = getContext().createELVars();
-        ELUtils.validateExpression(
-            tableNameEval,
-            tableNameVars,
-            mapRJsonConfigBean.tableName,
+        ELUtils.validateExpression(mapRJsonConfigBean.tableName,
             getContext(),
             Groups.MAPR_JSON.name(),
             mapRJsonConfigBean.tableName,
-            Errors.MAPR_JSON_16,
-            String.class,
-            issues
+            Errors.MAPR_JSON_16, issues
         );
 
       } else {

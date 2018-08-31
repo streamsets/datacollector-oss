@@ -74,9 +74,8 @@ public class SelectorProcessor extends RecordProcessor {
               issues.add(getContext().createConfigIssue(Groups.CONDITIONS.name(), "lanePredicates", Errors.SELECTOR_08,
                                                         predicateLane[0]));
             } else {
-              ELUtils.validateExpression(predicateLanesEval, variables, predicateLane[0], getContext(),
-                                         Groups.CONDITIONS.name(), "lanePredicates", Errors.SELECTOR_03,
-                                         Boolean.class, issues);
+              ELUtils.validateExpression(predicateLane[0], getContext(),
+                                         Groups.CONDITIONS.name(), "lanePredicates", Errors.SELECTOR_03, issues);
             }
           }
         }

@@ -97,16 +97,11 @@ public class KinesisTarget extends BaseTarget {
 
     // There is no scope to provide partitionVars for the Kinesis target as of today, create empty partitionVars
     if (conf.partitionStrategy == PartitionStrategy.EXPRESSION) {
-      ELUtils.validateExpression(
-          partitionEval,
-          getContext().createELVars(),
-          conf.partitionExpression,
+      ELUtils.validateExpression(conf.partitionExpression,
           getContext(),
           Groups.KINESIS.name(),
           KINESIS_CONFIG_BEAN + ".partitionExpression",
-          Errors.KINESIS_05,
-          Object.class,
-          issues
+          Errors.KINESIS_05, issues
       );
     }
 

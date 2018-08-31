@@ -257,16 +257,11 @@ public class TCPServerSource extends BasePushSource {
       Record validationRecord = getContext().createRecord("recordProcessedAckMessageValidationRecord");
       RecordEL.setRecordInContext(vars, validationRecord);
 
-      ELUtils.validateExpression(
-          eval,
-          vars,
-          config.recordProcessedAckMessage,
+      ELUtils.validateExpression(config.recordProcessedAckMessage,
           getContext(),
           Groups.TCP.name(),
           CONF_PREFIX + "recordProcessedAckMessage",
-          Errors.TCP_30,
-          String.class,
-          issues
+          Errors.TCP_30, issues
       );
     }
 
@@ -280,16 +275,11 @@ public class TCPServerSource extends BasePushSource {
       Record validationRecord = getContext().createRecord("batchCompletedAckMessageValidationRecord");
       RecordEL.setRecordInContext(vars, validationRecord);
 
-      ELUtils.validateExpression(
-          eval,
-          vars,
-          config.batchCompletedAckMessage,
+      ELUtils.validateExpression(config.batchCompletedAckMessage,
           getContext(),
           Groups.TCP.name(),
           CONF_PREFIX + "batchCompletedAckMessage",
-          Errors.TCP_31,
-          String.class,
-          issues
+          Errors.TCP_31, issues
       );
     }
 

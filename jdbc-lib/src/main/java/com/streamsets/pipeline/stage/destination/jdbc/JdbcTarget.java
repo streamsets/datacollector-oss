@@ -153,16 +153,11 @@ public class JdbcTarget extends BaseTarget {
 
     tableNameVars = getContext().createELVars();
     tableNameEval = context.createELEval(JdbcUtil.TABLE_NAME);
-    ELUtils.validateExpression(
-        tableNameEval,
-        tableNameVars,
-        tableNameTemplate,
+    ELUtils.validateExpression(tableNameTemplate,
         getContext(),
         Groups.JDBC.getLabel(),
         JdbcUtil.TABLE_NAME,
-        JdbcErrors.JDBC_26,
-        String.class,
-        issues
+        JdbcErrors.JDBC_26, issues
     );
 
     if (issues.isEmpty() && null == dataSource) {

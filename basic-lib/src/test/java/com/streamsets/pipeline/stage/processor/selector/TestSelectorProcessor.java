@@ -101,11 +101,9 @@ public class TestSelectorProcessor {
         .addConstants(constants)
         .build();
     issues = runner.runValidateConfigs();
-    Assert.assertEquals(3, issues.size());
+    Assert.assertEquals(2, issues.size());
     Assert.assertTrue(issues.get(0).toString().contains("SELECTOR_02"));
     Assert.assertTrue(issues.get(1).toString().contains("SELECTOR_08"));
-    Assert.assertTrue(issues.get(2).toString().contains("SELECTOR_03"));
-
   }
 
   @Test

@@ -244,16 +244,11 @@ public class KuduTarget extends BaseTarget {
     }
 
     if (tableNameTemplate.contains(EL_PREFIX)) {
-      ELUtils.validateExpression(
-          tableNameEval,
-          tableNameVars,
-          tableNameTemplate,
+      ELUtils.validateExpression(tableNameTemplate,
           getContext(),
           Groups.KUDU.getLabel(),
           TABLE_NAME_TEMPLATE,
-          Errors.KUDU_12,
-          String.class,
-          issues
+          Errors.KUDU_12, issues
       );
     } else {
       KuduTable table = null;

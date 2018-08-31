@@ -296,26 +296,16 @@ public class HiveMetadataProcessor extends RecordProcessor {
           String attributeNameExpression = entry.getKey();
           String attributeValueExpression = entry.getValue();
 
-          ELUtils.validateExpression(
-                  elEvals.metadataHeaderAttributeEL,
-                  getContext().createELVars(),
-                  attributeNameExpression,
+          ELUtils.validateExpression(attributeNameExpression,
                   getContext(),
                   ATTRIBUTE_EXPRESSION,
                   "headerAttributeConfigs",
-                  Errors.HIVE_METADATA_12,
-                  Object.class,
-                  issues);
-          ELUtils.validateExpression(
-                  elEvals.metadataHeaderAttributeEL,
-                  getContext().createELVars(),
-                  attributeValueExpression,
+                  Errors.HIVE_METADATA_12, issues);
+          ELUtils.validateExpression(attributeValueExpression,
                   getContext(),
                   ATTRIBUTE_EXPRESSION,
                   "headerAttributeConfigs",
-                  Errors.HIVE_METADATA_12,
-                  Object.class,
-                  issues);
+                  Errors.HIVE_METADATA_12, issues);
         }
       } else {
         metadataHeadersToAddExist = false;

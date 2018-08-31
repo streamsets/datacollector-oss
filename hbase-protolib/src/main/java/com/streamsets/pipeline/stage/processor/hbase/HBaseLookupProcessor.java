@@ -116,42 +116,27 @@ public class HBaseLookupProcessor extends BaseProcessor {
             Errors.HBASE_35
         ));
       } else {
-        ELUtils.validateExpression(
-            keyExprEval,
-            getContext().createELVars(),
-            lookup.rowExpr,
+        ELUtils.validateExpression(lookup.rowExpr,
             getContext(),
             Groups.HBASE.getLabel(),
             lookup.rowExpr,
-            Errors.HBASE_38,
-            String.class,
-            issues
+            Errors.HBASE_38, issues
         );
       }
 
       // Column and timestamps are optional
-      ELUtils.validateExpression(
-          columnExprEval,
-          getContext().createELVars(),
-          lookup.columnExpr,
+      ELUtils.validateExpression(lookup.columnExpr,
           getContext(),
           Groups.HBASE.getLabel(),
           lookup.columnExpr,
-          Errors.HBASE_38,
-          String.class,
-          issues
+          Errors.HBASE_38, issues
       );
 
-      ELUtils.validateExpression(
-          timestampExprEval,
-          getContext().createELVars(),
-          lookup.timestampExpr,
+      ELUtils.validateExpression(lookup.timestampExpr,
           getContext(),
           Groups.HBASE.getLabel(),
           lookup.timestampExpr,
-          Errors.HBASE_38,
-          Date.class,
-          issues
+          Errors.HBASE_38, issues
       );
 
       if(lookup.outputFieldPath.length() < 1) {

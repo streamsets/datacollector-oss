@@ -115,28 +115,20 @@ public class ForceTarget extends BaseTarget {
 
     sObjectNameVars = getContext().createELVars();
     sObjectNameEval = context.createELEval(SOBJECT_NAME);
-    ELUtils.validateExpression(sObjectNameEval,
-        sObjectNameVars,
-        conf.sObjectNameTemplate,
+    ELUtils.validateExpression(conf.sObjectNameTemplate,
         context,
         Groups.FORCE.getLabel(),
         SOBJECT_NAME,
-        Errors.FORCE_12,
-        String.class,
-        issues
+        Errors.FORCE_12, issues
     );
 
     externalIdFieldVars = getContext().createELVars();
     externalIdFieldEval = context.createELEval(EXTERNAL_ID_NAME);
-    ELUtils.validateExpression(externalIdFieldEval,
-        externalIdFieldVars,
-        conf.externalIdField,
+    ELUtils.validateExpression(conf.externalIdField,
         context,
         Groups.FORCE.getLabel(),
         EXTERNAL_ID_NAME,
-        Errors.FORCE_24,
-        String.class,
-        issues
+        Errors.FORCE_24, issues
     );
 
     if (issues.isEmpty()) {

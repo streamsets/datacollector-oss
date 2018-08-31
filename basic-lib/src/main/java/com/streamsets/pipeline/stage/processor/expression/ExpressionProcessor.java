@@ -67,32 +67,26 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
     expressionVars.addContextVariable(StringELConstants.MEMOIZED, memoizedVars);
     expressionEval = createExpressionEval(getContext());
     for(ExpressionProcessorConfig expressionProcessorConfig : expressionProcessorConfigs) {
-      ELUtils.validateExpression(expressionEval, expressionVars, expressionProcessorConfig.expression, getContext(),
-        Groups.EXPRESSIONS.name(), "expressionProcessorConfigs", Errors.EXPR_00,
-        Object.class, issues);
+      ELUtils.validateExpression(expressionProcessorConfig.expression, getContext(),
+        Groups.EXPRESSIONS.name(), "expressionProcessorConfigs", Errors.EXPR_00, issues);
     }
 
     if(headerAttributeConfigs != null && !headerAttributeConfigs.isEmpty()) {
       headerAttributeEval = createHeaderAttributeEval(getContext());
       for (HeaderAttributeConfig headerAttributeConfig : headerAttributeConfigs) {
-        ELUtils.validateExpression(headerAttributeEval, expressionVars, headerAttributeConfig.headerAttributeExpression,
-          getContext(), Groups.EXPRESSIONS.name(), "headerAttributeConfigs", Errors.EXPR_00, Object.class, issues);
+        ELUtils.validateExpression(headerAttributeConfig.headerAttributeExpression,
+          getContext(), Groups.EXPRESSIONS.name(), "headerAttributeConfigs", Errors.EXPR_00, issues);
       }
     }
 
     if (fieldAttributeConfigs != null && !fieldAttributeConfigs.isEmpty()) {
       fieldAttributeEval = createFieldAttributeEval(getContext());
       for (FieldAttributeConfig fieldAttributeConfig : fieldAttributeConfigs) {
-        ELUtils.validateExpression(
-            fieldAttributeEval,
-            expressionVars,
-            fieldAttributeConfig.fieldAttributeExpression,
+        ELUtils.validateExpression(fieldAttributeConfig.fieldAttributeExpression,
             getContext(),
             Groups.EXPRESSIONS.name(),
             "fieldAttributeConfigs",
-            Errors.EXPR_00,
-            Object.class,
-            issues
+            Errors.EXPR_00, issues
         );
       }
     }

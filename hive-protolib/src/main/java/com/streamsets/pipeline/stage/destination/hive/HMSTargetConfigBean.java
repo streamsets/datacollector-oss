@@ -182,26 +182,16 @@ public class HMSTargetConfigBean {
         String attributeNameExpression = entry.getKey();
         String attributeValueExpression = entry.getValue();
 
-        ELUtils.validateExpression(
-                headerAttributeConfigsEL,
-                context.createELVars(),
-                attributeNameExpression,
+        ELUtils.validateExpression(attributeNameExpression,
                 context,
                 Groups.ADVANCED.getLabel(),
                 "headerAttributeConfigs",
-                Errors.HIVE_39,
-                Object.class,
-                issues);
-        ELUtils.validateExpression(
-                headerAttributeConfigsEL,
-                context.createELVars(),
-                attributeValueExpression,
+                Errors.HIVE_39, issues);
+        ELUtils.validateExpression(attributeValueExpression,
                 context,
                 Groups.ADVANCED.getLabel(),
                 "headerAttributeConfigs",
-                Errors.HIVE_39,
-                Object.class,
-                issues);
+                Errors.HIVE_39, issues);
       }
     } else {
       headersEmpty = true;

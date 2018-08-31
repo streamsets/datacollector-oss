@@ -59,13 +59,37 @@ public class ELUtils {
     return variables;
   }
 
-  public static void validateExpression(ELEval elEvaluator, ELVars variables, String expression,
-      Stage.Context context, String group, String config, ErrorCode err, Class<?> type, List<Stage.ConfigIssue> issues)
-  {
-    RecordEL.setRecordInContext(variables, context.createRecord("forValidation"));
+  @Deprecated
+  public static void validateExpression(
+      ELEval elEvaluator,
+      ELVars variables,
+      String expression,
+      Stage.Context context,
+      String group,
+      String config,
+      ErrorCode err,
+      Class<?> type,
+      List<Stage.ConfigIssue> issues
+  ) {
+    validateExpression(expression, context, group, config, err, issues);
     try {
       context.parseEL(expression);
-      elEvaluator.eval(variables, expression, type);
+    } catch (Exception ex) {
+      issues.add(context.createConfigIssue(group, config, err, expression, ex.toString(), ex));
+    }
+  }
+
+  public static void validateExpression(
+      String expression,
+      Stage.Context context,
+      String group,
+      String config,
+      ErrorCode err,
+      List<Stage.ConfigIssue> issues
+  )
+  {
+    try {
+      context.parseEL(expression);
     } catch (Exception ex) {
       issues.add(context.createConfigIssue(group, config, err, expression, ex.toString(), ex));
     }
