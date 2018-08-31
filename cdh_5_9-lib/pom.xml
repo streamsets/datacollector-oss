@@ -43,7 +43,7 @@
         <thrift.version>0.9.3</thrift.version>
         <avro.version>1.7.7</avro.version>
         <spark.version>2.1.0.cloudera1</spark.version>
-        <jackson.version>2.2.3</jackson.version>
+        <jackson.version>2.8.9</jackson.version>
         <netty.version>4.0.29.Final</netty.version>
     </properties>
 
@@ -118,10 +118,6 @@
             <exclusions>
                 <exclusion>
                     <groupId>io.netty</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>io.netty</groupId>
                     <artifactId>netty-transport-native-epoll</artifactId>
                 </exclusion>
                 <exclusion>
@@ -129,6 +125,18 @@
                     <artifactId>netty-transport-native-unix-common</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>${netty.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-codec</artifactId>
+            <version>${netty.version}</version>
         </dependency>
 
         <dependency>
@@ -172,6 +180,29 @@
                     <artifactId>jackson-annotations</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <scope>compile</scope>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <scope>compile</scope>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <scope>compile</scope>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-paranamer</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
 
         <dependency>

@@ -153,10 +153,6 @@
             <exclusions>
                 <exclusion>
                     <groupId>io.netty</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>io.netty</groupId>
                     <artifactId>netty-transport-native-epoll</artifactId>
                 </exclusion>
                 <exclusion>
@@ -164,6 +160,18 @@
                     <artifactId>netty-transport-native-unix-common</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>${netty.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-codec</artifactId>
+            <version>${netty.version}</version>
         </dependency>
 
         <dependency>
@@ -735,7 +743,6 @@
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-scala_2.11</artifactId>
             <version>${jackson.version}</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
