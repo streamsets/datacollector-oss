@@ -242,10 +242,11 @@ public class TlsConfigBean {
 
   public boolean pathRelativeToResourcesDir = true;
 
-  private SSLEngine sslEngine;
   private SSLContext sslContext;
   private KeyStore keyStore;
   private KeyStore trustStore;
+  private String[] finalCipherSuites;
+  private String[] finalProtocols;
 
   private Set<String> getSupportedValuesFromSpecified(
       Collection<String> supportedValues, Collection<String> specifiedValues, String type
@@ -298,7 +299,14 @@ public class TlsConfigBean {
   }
 
   public boolean isInitialized() {
-    return sslEngine != null;
+    return sslContext != null;
+  }
+
+  protected SSLEngine createBaseSslEngine() {
+    SSLEngine sslEngine = sslContext.createSSLEngine();
+    sslEngine.setUseClientMode(false);
+    sslEngine.setNeedClientAuth(false);
+    return sslEngine;
   }
 
   public boolean init(
@@ -337,6 +345,7 @@ public class TlsConfigBean {
           null
       );
     } catch (KeyManagementException | NoSuchAlgorithmException e) {
+      sslContext = null;
       issues.add(context.createConfigIssue(
           groupName,
           "trustStoreFilePath",
@@ -346,23 +355,19 @@ public class TlsConfigBean {
       ));
       return false;
     }
-
-    sslEngine = sslContext.createSSLEngine();
-    sslEngine.setUseClientMode(false);
-    sslEngine.setNeedClientAuth(false);
-
-    sslEngine.setEnabledProtocols(getFinalProtocols());
-
-    sslEngine.setEnabledCipherSuites(getFinalCipherSuites());
-
-    sslEngine.setEnableSessionCreation(true);
-    sslEngine.setUseClientMode(isClientMode());
-
+    SSLEngine sslEngine = createBaseSslEngine();
+    finalCipherSuites = determineFinalCipherSuites(sslEngine);
+    finalProtocols = determineFinalProtocols(sslEngine);
     return true;
   }
 
   @NotNull
   public String[] getFinalCipherSuites() {
+    return finalCipherSuites;
+  }
+
+  @NotNull
+  private String[] determineFinalCipherSuites(SSLEngine sslEngine) {
     Collection<String> filteredCipherSuites;
     if (useDefaultCiperSuites) {
       filteredCipherSuites = getSupportedValuesFromSpecified(
@@ -381,6 +386,11 @@ public class TlsConfigBean {
 
   @NotNull
   public String[] getFinalProtocols() {
+    return finalProtocols;
+  }
+
+  @NotNull
+  private String[] determineFinalProtocols(SSLEngine sslEngine) {
     Collection<String> filteredProtocols;
     if (useDefaultProtocols) {
       filteredProtocols = getSupportedValuesFromSpecified(
@@ -524,7 +534,14 @@ public class TlsConfigBean {
     return sslContext;
   }
 
-  public SSLEngine getSslEngine() {
+  public SSLEngine createSslEngine() {
+    SSLEngine sslEngine = createBaseSslEngine();
+    sslEngine.setEnabledProtocols(getFinalProtocols());
+
+    sslEngine.setEnabledCipherSuites(getFinalCipherSuites());
+
+    sslEngine.setEnableSessionCreation(true);
+    sslEngine.setUseClientMode(isClientMode());
     return sslEngine;
   }
 

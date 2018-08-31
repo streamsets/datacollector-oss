@@ -185,7 +185,7 @@ public class TCPServerSource extends BasePushSource {
           public void initChannel(SocketChannel ch) throws Exception {
             if (config.tlsConfigBean.isEnabled()) {
               // Add TLS handler into pipeline in the first position
-              ch.pipeline().addFirst("TLS", new SslHandler(config.tlsConfigBean.getSslEngine()));
+              ch.pipeline().addFirst("TLS", new SslHandler(config.tlsConfigBean.createSslEngine()));
             }
 
             ch.pipeline().addLast(
