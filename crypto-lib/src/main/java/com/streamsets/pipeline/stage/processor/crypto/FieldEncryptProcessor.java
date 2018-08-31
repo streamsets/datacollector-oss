@@ -56,6 +56,7 @@ import static com.streamsets.pipeline.lib.crypto.CryptoErrors.CRYPTO_02;
 import static com.streamsets.pipeline.lib.crypto.CryptoErrors.CRYPTO_03;
 import static com.streamsets.pipeline.lib.crypto.CryptoErrors.CRYPTO_04;
 import static com.streamsets.pipeline.lib.crypto.CryptoErrors.CRYPTO_05;
+import static com.streamsets.pipeline.lib.crypto.CryptoErrors.CRYPTO_06;
 
 public class FieldEncryptProcessor extends SingleLaneRecordProcessor {
   private static final String SDC_FIELD_TYPE = "SDC_FIELD_TYPE";
@@ -82,13 +83,17 @@ public class FieldEncryptProcessor extends SingleLaneRecordProcessor {
       Security.addProvider(new BouncyCastleProvider());
     }
 
+    if (conf.dataKeyCaching && !conf.cipher.isSafeToCache()) {
+      issues.add(getContext().createConfigIssue(EncryptGroups.PROVIDER.name(), "conf.dataKeyCaching", CRYPTO_06));
+    }
+
     encryptionProvider = createProvider(issues);
 
     if (!issues.isEmpty()) {
       return issues;
     }
 
-    issues.addAll(encryptionProvider.init(getContext()));
+    issues.addAll(encryptionProvider.init(getContext())); // NOSONAR false positive
 
     if (conf.mode == EncryptionMode.ENCRYPT) {
       prepare = this::prepareEncrypt;

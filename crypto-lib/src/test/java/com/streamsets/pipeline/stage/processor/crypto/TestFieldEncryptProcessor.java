@@ -159,6 +159,32 @@ public class TestFieldEncryptProcessor {
   }
 
   @Test
+  public void testNonCacheableCipher() throws Exception {
+    FieldEncryptConfig config = new FieldEncryptConfig();
+    config.mode = EncryptionMode.ENCRYPT;
+    config.cipher = CryptoAlgorithm.ALG_AES_128_GCM_IV12_TAG16_NO_KDF;
+    config.fieldPaths = ImmutableList.of("/");
+    config.key = key;
+    config.keyId = "keyId";
+    config.context = aad;
+    config.dataKeyCaching = true;
+    config.maxKeyAge = 600;
+    config.maxRecordsPerKey = 1000;
+    config.maxBytesPerKey = String.valueOf(Long.MAX_VALUE);
+
+    Processor encryptProcessor = new FieldEncryptProcessor(config);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(
+        FieldEncryptDProcessor.class,
+        encryptProcessor
+    ).addOutputLane("lane").build();
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    assertEquals(1, issues.size());
+    assertTrue(issues.get(0).toString().contains("Data key caching is not supported"));
+  }
+
+  @Test
   public void testProcess() throws Exception {
     final String message = "Hello, World!";
     final long longValue = 1234L;

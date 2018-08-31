@@ -28,6 +28,8 @@ public enum CryptoErrors implements ErrorCode {
   CRYPTO_03("Received a '{}' but complex field types are not supported"),
   CRYPTO_04("The value '{}' is not a valid integer"),
   CRYPTO_05("The value '{}' must be in the range {} and {}"),
+  CRYPTO_06("Data key caching is not supported without a key derivation function (KDF).\n" +
+      "Please choose a compatible cipher or disable data key caching."),
   ;
 
   private final String message;
@@ -38,7 +40,7 @@ public enum CryptoErrors implements ErrorCode {
 
   @Override
   public String getCode() {
-    return null;
+    return name();
   }
 
   @Override
