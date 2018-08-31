@@ -103,6 +103,9 @@ final class DefaultOutputStreamHandler implements OutputStreamHelper {
       return false;
     }
 
+    if (countingOutputStream == null) { //We don't have an open file, no need to roll
+      return false;
+    }
     Long count = filePathCount.get(dirPath);
     long size = countingOutputStream.getByteCount();
 
