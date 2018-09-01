@@ -329,7 +329,7 @@ public class DataLakeTarget extends BaseTarget {
       Record record = recordIterator.next();
 
       try {
-        Date recordTime = writer.getRecordTime(timeDriverEval, timeDriverVars, conf.timeDriver, record);
+        Date recordTime = ELUtils.getRecordTime(timeDriverEval, timeDriverVars, conf.timeDriver, record);
 
         if (recordTime == null) {
           LOG.error(Errors.ADLS_07.getMessage(), conf.timeDriver);

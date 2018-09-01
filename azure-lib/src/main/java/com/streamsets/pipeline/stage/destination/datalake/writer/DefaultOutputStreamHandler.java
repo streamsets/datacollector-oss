@@ -15,24 +15,31 @@
  */
 package com.streamsets.pipeline.stage.destination.datalake.writer;
 
+import com.google.common.collect.ImmutableSet;
 import com.microsoft.azure.datalake.store.ADLFileOutputStream;
 import com.microsoft.azure.datalake.store.ADLStoreClient;
 import com.microsoft.azure.datalake.store.IfExists;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.generator.StreamCloseEventHandler;
+import com.streamsets.pipeline.stage.destination.datalake.Errors;
 import org.apache.commons.io.output.CountingOutputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 final class DefaultOutputStreamHandler implements OutputStreamHelper {
-  private final static String DOT = ".";
+  private static final Logger LOG = LoggerFactory.getLogger(DefaultOutputStreamHandler.class);
+  private static final String DOT = ".";
 
   private final ADLStoreClient client;
   private final String uniquePrefix;
@@ -41,7 +48,6 @@ final class DefaultOutputStreamHandler implements OutputStreamHelper {
   private final long maxRecordsPerFile;
   private final long maxFileSize;
   private final String tempFileName;
-  private final String uniqueId;
   private CountingOutputStream countingOutputStream;
   private final ConcurrentLinkedQueue<String> closedPaths;
 
@@ -58,10 +64,10 @@ final class DefaultOutputStreamHandler implements OutputStreamHelper {
     this.client = client;
     this.uniquePrefix = uniquePrefix;
     this.fileNameSuffix = fileNameSuffix;
-    this.uniqueId = uniqueId.replaceAll(":", "-");
     this.maxRecordsPerFile = maxRecordsPerFile;
     this.maxFileSize = maxFileSize;
-    this.tempFileName = TMP_FILE_PREFIX + uniquePrefix + "-" + this.uniqueId + getExtention();
+    this.tempFileName = TMP_FILE_PREFIX + uniquePrefix + "-" +
+        uniqueId.replaceAll(":", "-") + getExtention();
     this.closedPaths = closedPaths;
   }
 
@@ -80,7 +86,15 @@ final class DefaultOutputStreamHandler implements OutputStreamHelper {
   @Override
   public void commitFile(String dirPath) throws IOException {
     String filePath = dirPath + "/" + uniquePrefix + "-" + UUID.randomUUID() + getExtention();
-    client.rename(dirPath + "/" + tempFileName, filePath);
+    String tmpFileToRename = dirPath + "/" + tempFileName;
+    boolean renamed = client.rename(tmpFileToRename, filePath);
+    if (!renamed) {
+      String errorMessage = Utils.format("Failed to rename file '{}' to '{}'", tmpFileToRename, filePath);
+      LOG.error(errorMessage);
+      throw new IOException(tmpFileToRename);
+    }
+    //Once committed remove the dirPath from filePathCount
+    filePathCount.remove(dirPath);
     closedPaths.add(filePath);
   }
 
@@ -91,10 +105,10 @@ final class DefaultOutputStreamHandler implements OutputStreamHelper {
 
   @Override
   public void clearStatus() throws IOException {
-    for (String dirPath : filePathCount.keySet()) {
+    Set<String> dirPathsToCommit = ImmutableSet.copyOf(filePathCount.keySet());
+    for (String dirPath : dirPathsToCommit) {
       commitFile(dirPath);
     }
-    filePathCount.clear();
   }
 
   @Override

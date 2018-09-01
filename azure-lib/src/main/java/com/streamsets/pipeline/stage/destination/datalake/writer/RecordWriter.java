@@ -171,22 +171,6 @@ public class RecordWriter {
     outputStreamHelper.clearStatus();
   }
 
-  public static Date getRecordTime(
-      ELEval elEvaluator,
-      ELVars variables,
-      String expression,
-      Record record
-  ) throws OnRecordErrorException {
-    try {
-      TimeNowEL.setTimeNowInContext(variables, new Date());
-      RecordEL.setRecordInContext(variables, record);
-      return elEvaluator.eval(variables, expression, Date.class);
-    } catch (ELEvalException e) {
-      LOG.error("Failed to evaluate expression '{}' : ", expression, e.toString(), e);
-      throw new OnRecordErrorException(record, e.getErrorCode(), e.getParams());
-    }
-  }
-
   public void flush(String filePath) throws IOException {
     DataLakeDataGenerator generator = generators.get(filePath);
     if (generator == null) {
@@ -272,7 +256,7 @@ public class RecordWriter {
   private void produceCloseFileEvent(String finalPath) throws IOException {
     ContentSummary summary = client.getContentSummary(finalPath);
     DataLakeEvents.CLOSED_FILE.create(context)
-        .with("filepath", finalPath.toString())
+        .with("filepath", finalPath)
         .with("filename", finalPath.substring(finalPath.lastIndexOf("/")+1))
         .with("length", summary.length)
         .createAndSend();
