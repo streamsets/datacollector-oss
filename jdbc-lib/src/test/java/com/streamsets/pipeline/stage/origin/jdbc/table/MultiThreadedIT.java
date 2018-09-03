@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.event.CommonEvents;
 import com.streamsets.pipeline.lib.jdbc.multithread.BatchTableStrategy;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableJdbcEvents;
@@ -234,7 +235,7 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
     }
 
     @Override
-    public synchronized void processBatch(StageRunner.Output output) {
+    public synchronized void processBatch(StageRunner.Output output) throws StageException {
       List<Record> records = output.getRecords().get("a");
       if (!records.isEmpty()) {
         Record record = records.get(0);

@@ -29,7 +29,15 @@ public interface PipeBatch {
 
   void setNewOffset(String offset);
 
-  BatchImpl getBatch(Pipe pipe, List<? extends Interceptor> interceptors) throws StageException;
+  /**
+   * Start processing stage pipe.
+   */
+  BatchMakerImpl startStage(StagePipe pipe);
+
+  /**
+   * Create batch for given pipe (stage).
+   */
+  BatchImpl getBatch(Pipe pipe) throws StageException;
 
   /**
    * During destroy() phase, rather then running this stage, simply skip it (but still propagate empty output).
@@ -37,19 +45,14 @@ public interface PipeBatch {
   void skipStage(Pipe pipe);
 
   /**
-   * Start processing stage
-   */
-  BatchMakerImpl startStage(StagePipe pipe);
-
-  /**
    * Complete stage on normal execution (while pipeline is running)
    */
-  void completeStage(BatchMakerImpl batchMaker, List<? extends Interceptor> interceptors) throws StageException;
+  void completeStage(BatchMakerImpl batchMaker) throws StageException;
 
   /**
    * Complete stage on during destroy() phase.
    */
-  void completeStage(StagePipe pipe);
+  void completeStage(StagePipe pipe) throws StageException;
 
   Map<String, List<Record>> getLaneOutputRecords(List<String> pipeLanes);
 

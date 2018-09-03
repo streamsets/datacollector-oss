@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.runner;
 
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 
@@ -30,7 +31,12 @@ public class StageOutput {
   private final List<Record> eventRecords;
 
   @SuppressWarnings("unchecked")
-  public StageOutput(String instanceName, Map<String, List<Record>> output, ErrorSink errorSink, EventSink eventSink) {
+  public StageOutput(
+      String instanceName,
+      Map<String, List<Record>> output,
+      ErrorSink errorSink,
+      EventSink eventSink
+  ) throws StageException {
     this(
         instanceName,
         output,

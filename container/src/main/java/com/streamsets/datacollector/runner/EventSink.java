@@ -15,11 +15,16 @@
  */
 package com.streamsets.datacollector.runner;
 
+import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.interceptor.Interceptor;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,35 +35,49 @@ import java.util.Map;
  */
 public class EventSink {
   private Map<String, List<EventRecord>> eventRecords;
+  private final Map<String, List<? extends Interceptor>> interceptors;
 
   public EventSink() {
     this.eventRecords = new LinkedHashMap<>();
+    interceptors = new HashMap<>();
+  }
+
+  public void registerInterceptorsForStage(String stage, List<? extends Interceptor> interceptors) {
+    Preconditions.checkState(!this.interceptors.containsKey(stage), Utils.format("Interceptors for stage '{}' already registered", stage));
+    this.interceptors.put(stage, interceptors);
   }
 
   public void addEvent(String stage, EventRecord event) {
-    List<EventRecord> events = eventRecords.get(stage);
-    if(events == null) {
-      events = new ArrayList<>();
-      eventRecords.put(stage, events);
-    }
-
+    List<EventRecord> events = eventRecords.computeIfAbsent(stage, k -> new ArrayList<>());
     events.add(event);
   }
 
-  public List<EventRecord> getStageEventsAsEventRecords(String stage) {
-    return eventRecords.containsKey(stage) ? eventRecords.get(stage) : Collections.emptyList();
+  public List<EventRecord> getStageEventsAsEventRecords(String stage) throws StageException {
+    Preconditions.checkState(interceptors.containsKey(stage), Utils.format("No interceptors registered for stage '{}'", stage));
+    return intercept(
+      eventRecords.getOrDefault(stage, Collections.emptyList()),
+      interceptors.get(stage)
+    );
   }
 
-  public List<Record> getStageEvents(String stage) {
+  public List<Record> getStageEvents(String stage) throws StageException {
     final List<EventRecord> eventRecords = getStageEventsAsEventRecords(stage);
     final List<Record> records = new LinkedList<>();
     if (eventRecords != null) {
-      eventRecords.forEach(r -> records.add(r));
+      records.addAll(eventRecords);
     }
     return records;
   }
 
   public void clear() {
     this.eventRecords.clear();
+  }
+
+  private List<EventRecord> intercept(List<EventRecord> records, List<? extends Interceptor> interceptors) throws StageException {
+    for(Interceptor interceptor : interceptors)  {
+      records = interceptor.intercept((List)records);
+    }
+
+    return records;
   }
 }

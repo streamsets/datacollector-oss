@@ -680,6 +680,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       pipeBatch = new FullPipeBatch(null, null, batchSize, false);
       try {
         LOG.trace("Destroying origin pipe");
+        pipeBatch.startStage(originPipe);
         originPipe.destroy(pipeBatch);
       } catch (RuntimeException e) {
         LOG.warn("Exception throw while destroying pipe", e);

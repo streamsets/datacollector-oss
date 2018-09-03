@@ -170,7 +170,7 @@ public class TestStageRunner {
   }
 
   @Test
-  public void testBuilderWithClass() {
+  public void testBuilderWithClass() throws Exception {
     DummyStageRunner.Builder builder = new DummyStageRunner.Builder(DummyStage1.class);
     DummyStageRunner runner = builder.build();
     Assert.assertNotNull(runner);
@@ -230,7 +230,7 @@ public class TestStageRunner {
   }
 
   @Test
-  public void testBuilderWithInstance() {
+  public void testBuilderWithInstance() throws Exception {
     DummyStage1 stage = new DummyStage1();
     DummyStageRunner.Builder builder = new DummyStageRunner.Builder(stage);
     DummyStageRunner runner = builder.build();

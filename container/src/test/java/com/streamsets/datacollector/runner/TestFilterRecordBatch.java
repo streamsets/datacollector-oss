@@ -63,6 +63,7 @@ public class TestFilterRecordBatch {
 
   public StageContext runBaseTest(OnRecordError onRecordError) {
     StageContext context = createContext(onRecordError);
+    context.getErrorSink().registerInterceptorsForStage("i", Collections.emptyList());
 
     FilterRecordBatch.Predicate predicate = new PreconditionsPredicate(context, Arrays.asList("${record:value('/') == 'Hello'}"));
 
@@ -80,7 +81,7 @@ public class TestFilterRecordBatch {
   }
 
   @Test
-  public void testOnRecordErrorIgnore() {
+  public void testOnRecordErrorIgnore() throws Exception {
     StageContext context = runBaseTest(OnRecordError.DISCARD);
     Assert.assertEquals(0, context.getErrorSink().getErrorRecords("i").size());
   }
@@ -91,14 +92,14 @@ public class TestFilterRecordBatch {
   }
 
   @Test
-  public void testOnRecordErrorToError() {
+  public void testOnRecordErrorToError() throws Exception {
     StageContext context = runBaseTest(OnRecordError.TO_ERROR);
     Assert.assertEquals(1, context.getErrorSink().getErrorRecords("i").size());
   }
 
   // This case will happen if stage have @HideConfigs(onErrorRecord = true)
   @Test
-  public void testOnRecordErrorNull() {
+  public void testOnRecordErrorNull() throws Exception {
     StageContext context = runBaseTest(OnRecordError.TO_ERROR);
     Assert.assertEquals(1, context.getErrorSink().getErrorRecords("i").size());
   }

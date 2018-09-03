@@ -24,6 +24,8 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageType;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.interceptor.Interceptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -38,6 +40,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class FullPipeBatch implements PipeBatch {
+  private static final Logger LOG = LoggerFactory.getLogger(FullPipeBatch.class);
 
   private final String sourceEntity;
   private final String lastOffset;
@@ -100,7 +103,7 @@ public class FullPipeBatch implements PipeBatch {
 
   @Override
   @SuppressWarnings("unchecked")
-  public BatchImpl getBatch(final Pipe pipe, List<? extends Interceptor> interceptors) throws StageException {
+  public BatchImpl getBatch(final Pipe pipe) throws StageException {
     List<Record> records = new ArrayList<>();
     List<String> inputLanes = pipe.getInputLanes();
     for (String inputLane : inputLanes) {
@@ -111,7 +114,7 @@ public class FullPipeBatch implements PipeBatch {
     }
 
     // Run interceptors as part before providing data to the stage
-    records = intercept(records, interceptors);
+    records = intercept(records, pipe.getStage().getPreInterceptors());
 
     // And finally give the batch to the stage itself
     return new BatchImpl(pipe.getStage().getInfo().getInstanceName(), sourceEntity, lastOffset, records);
@@ -123,6 +126,9 @@ public class FullPipeBatch implements PipeBatch {
     Preconditions.checkState(!processedStages.contains(stageName), Utils.formatL(
       "The stage '{}' has been processed already", stageName));
     processedStages.add(stageName);
+    // Keep interceptors for this batch and stage
+    this.errorSink.registerInterceptorsForStage(stageName, pipe.getStage().getPreInterceptors());
+    this.eventSink.registerInterceptorsForStage(stageName, pipe.getStage().getPostInterceptors());
     for (String output : pipe.getOutputLanes()) {
       fullPayload.put(output, null);
     }
@@ -144,13 +150,14 @@ public class FullPipeBatch implements PipeBatch {
   }
 
   @Override
-  public void completeStage(BatchMakerImpl batchMaker, List<? extends Interceptor> interceptors) throws StageException {
+  public void completeStage(BatchMakerImpl batchMaker) throws StageException {
     StagePipe pipe = batchMaker.getStagePipe();
     if (pipe.getStage().getDefinition().getType() == StageType.SOURCE) {
       inputRecords += batchMaker.getSize() +
           errorSink.getErrorRecords(pipe.getStage().getInfo().getInstanceName()).size();
     }
     Map<String, List<Record>> stageOutput = batchMaker.getStageOutput();
+    List<? extends Interceptor> interceptors = pipe.getStage().getPostInterceptors();
     // convert lane names from stage naming to pipe naming when adding to the payload
     // leveraging the fact that the stage output lanes and the pipe output lanes are in the same order
     List<String> stageLaneNames = pipe.getStage().getConfiguration().getOutputLanes();
@@ -178,7 +185,7 @@ public class FullPipeBatch implements PipeBatch {
   }
 
   @Override
-  public void completeStage(StagePipe pipe) {
+  public void completeStage(StagePipe pipe) throws StageException {
     List<String> inputLanes = pipe.getInputLanes();
     for(String inputLane : inputLanes) {
       fullPayload.remove(inputLane);
@@ -270,11 +277,18 @@ public class FullPipeBatch implements PipeBatch {
       stageOutput.putIfAbsent(laneName, records);
     });
 
-    // Convert salvaged structure to final snapshot
-    List<StageOutput> stageOutputSnapshot = new ArrayList<>();
-    salvagedStageOutputs.forEach((stageName, outputs) -> {
-      stageOutputSnapshot.add(new StageOutput(stageName, outputs, errorSink, eventSink));
-    });
+      // Convert salvaged structure to final snapshot
+      List<StageOutput> stageOutputSnapshot = new ArrayList<>();
+      salvagedStageOutputs.forEach((stageName, outputs) -> {
+        try {
+          stageOutputSnapshot.add(new StageOutput(stageName, outputs, errorSink, eventSink));
+        } catch (StageException e) {
+          // This method creates snapshot on a failure, thus this is in a sense a "follow up failure" that might be
+          // caused by the first one. Hence we only log the exception and move on in the spirit of this method -
+          // trying to scrap as much data as possible for the failure snapshot to ease troubleshooting.
+          LOG.debug("Ignoring exception during failure snapshot generation: {}", e.toString(), e);
+        }
+      });
 
     return stageOutputSnapshot;
   }

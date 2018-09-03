@@ -280,6 +280,7 @@ public class TestStageContext {
     StageContext context = createStageContextForSDK();
 
     EventSink sink = new EventSink();
+    sink.registerInterceptorsForStage("stage", Collections.emptyList());
     context.setEventSink(sink);
 
     EventRecord event = new EventRecordImpl("custom-type", 1, "local-stage", "super-secret-id", null, null);

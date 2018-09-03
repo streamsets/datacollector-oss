@@ -209,6 +209,8 @@ public abstract class StageRunner<S extends Stage> extends ProtoRunner {
         runtimeInfo,
         serviceMap
     );
+    context.getErrorSink().registerInterceptorsForStage(getInfo().getInstanceName(), Collections.emptyList());
+    context.getEventSink().registerInterceptorsForStage(getInfo().getInstanceName(), Collections.emptyList());
     status = Status.CREATED;
   }
 
@@ -288,7 +290,7 @@ public abstract class StageRunner<S extends Stage> extends ProtoRunner {
     LOG.debug("Stage '{}' destroy ends", getInfo().getInstanceName());
   }
 
-  public List<Record> getErrorRecords() {
+  public List<Record> getErrorRecords() throws StageException {
     return context.getErrorSink().getErrorRecords(info.getInstanceName());
   }
 
@@ -305,7 +307,7 @@ public abstract class StageRunner<S extends Stage> extends ProtoRunner {
     context.getErrorSink().clear();
   }
 
-  public List<EventRecord> getEventRecords() {
+  public List<EventRecord> getEventRecords() throws StageException {
     return context.getEventSink().getStageEventsAsEventRecords(info.getInstanceName());
   }
 

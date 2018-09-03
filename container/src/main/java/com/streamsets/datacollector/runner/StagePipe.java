@@ -229,7 +229,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
   @SuppressWarnings("unchecked")
   public void process(PipeBatch pipeBatch) throws StageException {
     BatchMakerImpl batchMaker = pipeBatch.startStage(this);
-    BatchImpl batchImpl = pipeBatch.getBatch(this, getStage().getPreInterceptors());
+    BatchImpl batchImpl = pipeBatch.getBatch(this);
     ErrorSink errorSink = pipeBatch.getErrorSink();
     EventSink eventSink = pipeBatch.getEventSink();
     ProcessedSink processedSink = pipeBatch.getProcessedSink();
@@ -328,7 +328,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     batchMetrics.put(AggregatorUtil.STAGE_ERROR, stageErrorsCount);
     batchMetrics.put(AggregatorUtil.OUTPUT_RECORDS_PER_LANE, outputRecordsPerLane);
 
-    pipeBatch.completeStage(batchMaker, getStage().getPostInterceptors());
+    pipeBatch.completeStage(batchMaker);
 
     // In this is source pipe, update source-specific metrics
     if(isSource()) {
@@ -349,7 +349,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
   }
 
   @Override
-  public void destroy(PipeBatch pipeBatch) {
+  public void destroy(PipeBatch pipeBatch) throws StageException {
     EventSink eventSink = pipeBatch.getEventSink();
     ErrorSink errorSink = pipeBatch.getErrorSink();
     ProcessedSink processedSink = pipeBatch.getProcessedSink();

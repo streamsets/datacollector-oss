@@ -40,9 +40,18 @@ public class TestStagePipe {
   private boolean process;
   private boolean write;
 
+  private EventSink eventSink;
+  private ErrorSink errorSink;
+
   @Before
   public void setUp() {
     MockStages.resetStageCaptures();
+    this.eventSink = new EventSink();
+    this.errorSink = new ErrorSink();
+    ImmutableList.of("e", "s", "p", "t").forEach(instanceName -> {
+      this.eventSink.registerInterceptorsForStage(instanceName, Collections.emptyList());
+      this.errorSink.registerInterceptorsForStage(instanceName, Collections.emptyList());
+    });
   }
 
   @Test
@@ -85,8 +94,9 @@ public class TestStagePipe {
 
     BatchImpl batch = Mockito.mock(BatchImpl.class);
     Mockito.when(batch.getSize()).thenReturn(1);
-    Mockito.when(pipeBatch.getBatch(Mockito.eq(pipe), Mockito.anyList())).thenReturn(batch);
-    Mockito.when(pipeBatch.getErrorSink()).thenReturn(new ErrorSink());
+    Mockito.when(pipeBatch.getBatch(Mockito.eq(pipe))).thenReturn(batch);
+    Mockito.when(pipeBatch.getErrorSink()).thenReturn(errorSink);
+    Mockito.when(pipeBatch.getEventSink()).thenReturn(eventSink);
 
     Mockito.when(pipeBatch.startStage(Mockito.eq(pipe))).thenReturn(batchMaker);
     Assert.assertTrue(pipe.init(new PipeContext()).isEmpty());
@@ -99,10 +109,10 @@ public class TestStagePipe {
 
     Mockito.verify(pipeBatch, Mockito.times(1)).startStage(Mockito.eq(pipe));
     Mockito.verify(pipeBatch, Mockito.times(1)).getBatchSize();
-    Mockito.verify(pipeBatch, Mockito.times(1)).getBatch(Mockito.any(Pipe.class), Mockito.anyList());
+    Mockito.verify(pipeBatch, Mockito.times(1)).getBatch(Mockito.any(Pipe.class));
     Mockito.verify(pipeBatch, Mockito.times(1)).getPreviousOffset();
     Mockito.verify(pipeBatch, Mockito.times(1)).setNewOffset(Mockito.eq("offset2"));
-    Mockito.verify(pipeBatch, Mockito.times(1)).completeStage(Mockito.eq(batchMaker), Mockito.anyList());
+    Mockito.verify(pipeBatch, Mockito.times(1)).completeStage(Mockito.eq(batchMaker));
     Mockito.verify(pipeBatch, Mockito.times(1)).completeStage(Mockito.any(StagePipe.class));
     Mockito.verify(pipeBatch, Mockito.times(2)).getErrorSink();
     Mockito.verify(pipeBatch, Mockito.times(2)).getEventSink();
@@ -118,8 +128,9 @@ public class TestStagePipe {
     Mockito.when(batch.getRecords()).thenReturn(Collections.emptyIterator());
     Mockito.when(batchMaker.getSize()).thenReturn(0);
 
-    Mockito.when(pipeBatch.getBatch(Mockito.eq(pipe), Mockito.anyList())).thenReturn(batch);
-    Mockito.when(pipeBatch.getErrorSink()).thenReturn(new ErrorSink());
+    Mockito.when(pipeBatch.getBatch(Mockito.eq(pipe))).thenReturn(batch);
+    Mockito.when(pipeBatch.getErrorSink()).thenReturn(errorSink);
+    Mockito.when(pipeBatch.getEventSink()).thenReturn(eventSink);
 
     batchMaker = Mockito.mock(BatchMakerImpl.class);
     Mockito.when(batchMaker.getLanes()).thenReturn(ImmutableList.of("s"));
@@ -128,8 +139,9 @@ public class TestStagePipe {
     Mockito.when(pipeBatch.getPreviousOffset()).thenReturn("offset1");
 
     Mockito.when(pipeBatch.startStage(Mockito.eq(pipe))).thenReturn(batchMaker);
-    Mockito.when(pipeBatch.getBatch(Mockito.eq(pipe), Mockito.anyList())).thenReturn(batch);
-    Mockito.when(pipeBatch.getErrorSink()).thenReturn(new ErrorSink());
+    Mockito.when(pipeBatch.getBatch(Mockito.eq(pipe))).thenReturn(batch);
+    Mockito.when(pipeBatch.getErrorSink()).thenReturn(errorSink);
+    Mockito.when(pipeBatch.getEventSink()).thenReturn(eventSink);
     pipe.process(pipeBatch);
 
     pipe = (StagePipe) pipeline.getSourcePipe();
@@ -180,8 +192,9 @@ public class TestStagePipe {
 
     PipeBatch pipeBatch = Mockito.mock(FullPipeBatch.class);
     Mockito.when(pipeBatch.startStage(Mockito.eq(pipe))).thenReturn(batchMaker);
-    Mockito.when(pipeBatch.getBatch(Mockito.eq(pipe), Mockito.anyList())).thenReturn(batch);
-    Mockito.when(pipeBatch.getErrorSink()).thenReturn(new ErrorSink());
+    Mockito.when(pipeBatch.getBatch(Mockito.eq(pipe))).thenReturn(batch);
+    Mockito.when(pipeBatch.getErrorSink()).thenReturn(errorSink);
+    Mockito.when(pipeBatch.getEventSink()).thenReturn(eventSink);
 
     Assert.assertTrue(pipe.init(new PipeContext()).isEmpty());
     pipe.process(pipeBatch);
@@ -192,10 +205,10 @@ public class TestStagePipe {
     pipe.destroy(pipeBatch);
 
     Mockito.verify(pipeBatch, Mockito.times(1)).startStage(Mockito.eq(pipe));
-    Mockito.verify(pipeBatch, Mockito.times(1)).getBatch(Mockito.eq(pipe), Mockito.anyList());
+    Mockito.verify(pipeBatch, Mockito.times(1)).getBatch(Mockito.eq(pipe));
     Mockito.verify(pipeBatch, Mockito.times(1)).getPreviousOffset();
     Mockito.verify(pipeBatch, Mockito.times(1)).getBatchSize();
-    Mockito.verify(pipeBatch, Mockito.times(1)).completeStage(Mockito.eq(batchMaker), Mockito.anyList());
+    Mockito.verify(pipeBatch, Mockito.times(1)).completeStage(Mockito.eq(batchMaker));
     Mockito.verify(pipeBatch, Mockito.times(1)).completeStage(Mockito.any(StagePipe.class));
     Mockito.verify(pipeBatch, Mockito.times(2)).getErrorSink();
     Mockito.verify(pipeBatch, Mockito.times(2)).getEventSink();
@@ -243,18 +256,19 @@ public class TestStagePipe {
 
     PipeBatch pipeBatch = Mockito.mock(FullPipeBatch.class);
     Mockito.when(pipeBatch.startStage(Mockito.eq(pipe))).thenReturn(batchMaker);
-    Mockito.when(pipeBatch.getBatch(Mockito.eq(pipe), Mockito.anyList())).thenReturn(batch);
-    Mockito.when(pipeBatch.getErrorSink()).thenReturn(new ErrorSink());
+    Mockito.when(pipeBatch.getBatch(Mockito.eq(pipe))).thenReturn(batch);
+    Mockito.when(pipeBatch.getErrorSink()).thenReturn(errorSink);
+    Mockito.when(pipeBatch.getEventSink()).thenReturn(eventSink);
 
     Assert.assertTrue(pipe.init(new PipeContext()).isEmpty());
     pipe.process(pipeBatch);
     pipe.destroy(pipeBatch);
 
     Mockito.verify(pipeBatch, Mockito.times(1)).startStage(Mockito.eq(pipe));
-    Mockito.verify(pipeBatch, Mockito.times(1)).getBatch(Mockito.eq(pipe), Mockito.anyList());
+    Mockito.verify(pipeBatch, Mockito.times(1)).getBatch(Mockito.eq(pipe));
     Mockito.verify(pipeBatch, Mockito.times(1)).getPreviousOffset();
     Mockito.verify(pipeBatch, Mockito.times(1)).getBatchSize();
-    Mockito.verify(pipeBatch, Mockito.times(1)).completeStage(Mockito.eq(batchMaker), Mockito.anyList());
+    Mockito.verify(pipeBatch, Mockito.times(1)).completeStage(Mockito.eq(batchMaker));
     Mockito.verify(pipeBatch, Mockito.times(1)).completeStage(Mockito.any(StagePipe.class));
     Mockito.verify(pipeBatch, Mockito.times(2)).getErrorSink();
     Mockito.verify(pipeBatch, Mockito.times(2)).getEventSink();
@@ -305,18 +319,19 @@ public class TestStagePipe {
 
     PipeBatch pipeBatch = Mockito.mock(FullPipeBatch.class);
     Mockito.when(pipeBatch.startStage(Mockito.eq(pipe))).thenReturn(batchMaker);
-    Mockito.when(pipeBatch.getBatch(Mockito.eq(pipe), Mockito.anyList())).thenReturn(batch);
-    Mockito.when(pipeBatch.getErrorSink()).thenReturn(new ErrorSink());
+    Mockito.when(pipeBatch.getBatch(Mockito.eq(pipe))).thenReturn(batch);
+    Mockito.when(pipeBatch.getErrorSink()).thenReturn(errorSink);
+    Mockito.when(pipeBatch.getEventSink()).thenReturn(eventSink);
 
     Assert.assertTrue(pipe.init(new PipeContext()).isEmpty());
     pipe.process(pipeBatch);
     pipe.destroy(pipeBatch);
 
     Mockito.verify(pipeBatch, Mockito.times(1)).startStage(Mockito.eq(pipe));
-    Mockito.verify(pipeBatch, Mockito.times(1)).getBatch(Mockito.eq(pipe), Mockito.anyList());
+    Mockito.verify(pipeBatch, Mockito.times(1)).getBatch(Mockito.eq(pipe));
     Mockito.verify(pipeBatch, Mockito.times(1)).getPreviousOffset();
     Mockito.verify(pipeBatch, Mockito.times(1)).getBatchSize();
-    Mockito.verify(pipeBatch, Mockito.times(1)).completeStage(Mockito.eq(batchMaker), Mockito.anyList());
+    Mockito.verify(pipeBatch, Mockito.times(1)).completeStage(Mockito.eq(batchMaker));
     Mockito.verify(pipeBatch, Mockito.times(1)).completeStage(Mockito.any(StagePipe.class));
     Mockito.verify(pipeBatch, Mockito.times(2)).getErrorSink();
     Mockito.verify(pipeBatch, Mockito.times(2)).getEventSink();

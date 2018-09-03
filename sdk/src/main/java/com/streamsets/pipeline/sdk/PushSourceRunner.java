@@ -45,7 +45,7 @@ public class PushSourceRunner extends StageRunner<PushSource>  implements PushSo
    * Interface that caller needs to implement to get produced data.
    */
   public interface Callback {
-    public void processBatch(Output output);
+    public void processBatch(Output output) throws StageException;
   }
 
   public PushSourceRunner(
@@ -203,7 +203,12 @@ public class PushSourceRunner extends StageRunner<PushSource>  implements PushSo
 
   @Override
   public boolean processBatch(BatchContext batchContext, String entityName, String entityOffset) {
-    callback.processBatch(StageRunner.getOutput(entityName, entityOffset, batchContext.getBatchMaker()));
+    try {
+      callback.processBatch(StageRunner.getOutput(entityName, entityOffset, batchContext.getBatchMaker()));
+    } catch (StageException e) {
+      LOG.error("StageException while processing batch: {}", e.toString(), e);
+      return false;
+    }
 
     if(entityName != null) {
       commitOffset(entityName, entityOffset);

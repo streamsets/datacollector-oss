@@ -17,6 +17,7 @@ package com.streamsets.datacollector.runner;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.creation.InterceptorBean;
 import com.streamsets.datacollector.creation.PipelineBean;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.record.RecordImpl;
@@ -80,7 +81,7 @@ public class TestPipeBatch {
     batchMaker.addRecord(origRecord, stageOutputLanes.get(0));
 
     // completing source
-    pipeBatch.completeStage(batchMaker, Collections.emptyList());
+    pipeBatch.completeStage(batchMaker);
 
     pipe = new StagePipe(stages[1], LaneResolver.getPostFixed(stageOutputLanes, LaneResolver.STAGE_OUT),
       Collections.EMPTY_LIST, Collections.EMPTY_LIST);
@@ -88,10 +89,10 @@ public class TestPipeBatch {
     // starting target
     batchMaker = pipeBatch.startStage(pipe);
 
-    BatchImpl batch = pipeBatch.getBatch(pipe, Collections.emptyList());
+    BatchImpl batch = pipeBatch.getBatch(pipe);
 
     // completing target
-    pipeBatch.completeStage(batchMaker, Collections.emptyList());
+    pipeBatch.completeStage(batchMaker);
 
     Iterator<Record> records = batch.getRecords();
     Record recordFromBatch = records.next();
@@ -144,7 +145,7 @@ public class TestPipeBatch {
     batchMaker.addRecord(origRecord, stageOutputLanes.get(0));
 
     // completing source
-    pipeBatch.completeStage(batchMaker, Collections.emptyList());
+    pipeBatch.completeStage(batchMaker);
 
     StagePipe targetPipe = new StagePipe(stages[1], LaneResolver.getPostFixed(stageOutputLanes, LaneResolver.STAGE_OUT),
       Collections.EMPTY_LIST, Collections.EMPTY_LIST);
@@ -152,10 +153,10 @@ public class TestPipeBatch {
     // starting target
     batchMaker = pipeBatch.startStage(targetPipe);
 
-    BatchImpl batch = pipeBatch.getBatch(targetPipe, Collections.emptyList());
+    BatchImpl batch = pipeBatch.getBatch(targetPipe);
 
     // completing target
-    pipeBatch.completeStage(batchMaker, Collections.emptyList());
+    pipeBatch.completeStage(batchMaker);
 
     Iterator<Record> records = batch.getRecords();
     Record recordFromBatch = records.next();
@@ -237,7 +238,7 @@ public class TestPipeBatch {
     batchMaker.addRecord(record, stageOutputLanes.get(0));
 
     // completing source
-    pipeBatch.completeStage(batchMaker, Collections.emptyList());
+    pipeBatch.completeStage(batchMaker);
 
     Record origRecord = pipeBatch.getFullPayload().get(pipe.getOutputLanes().get(0)).get(0);
     pipeBatch.moveLane(pipe.getOutputLanes().get(0), "x");
@@ -278,7 +279,7 @@ public class TestPipeBatch {
     batchMaker.addRecord(record, stageOutputLanes.get(0));
 
     // completing source
-    pipeBatch.completeStage(batchMaker, Collections.emptyList());
+    pipeBatch.completeStage(batchMaker);
 
     List<String> list = ImmutableList.of("x", "y");
 
@@ -332,7 +333,7 @@ public class TestPipeBatch {
     batchMaker.addRecord(origRecord, stageOutputLanes.get(0));
 
     // completing source
-    pipeBatch.completeStage(batchMaker, Collections.emptyList());
+    pipeBatch.completeStage(batchMaker);
 
     StagePipe targetPipe = new StagePipe(stages[1], LaneResolver.getPostFixed(stageOutputLanes,
       LaneResolver.STAGE_OUT), Collections.EMPTY_LIST, Collections.EMPTY_LIST);
@@ -340,10 +341,10 @@ public class TestPipeBatch {
     // starting target
     batchMaker = pipeBatch.startStage(targetPipe);
 
-    BatchImpl batch = pipeBatch.getBatch(targetPipe, Collections.emptyList());
+    BatchImpl batch = pipeBatch.getBatch(targetPipe);
 
     // completing target
-    pipeBatch.completeStage(batchMaker, Collections.emptyList());
+    pipeBatch.completeStage(batchMaker);
 
     // getting stages ouptut
     List<StageOutput> stageOutputs = pipeBatch.getSnapshotsOfAllStagesOutput();
@@ -364,7 +365,7 @@ public class TestPipeBatch {
 
     // starting target
     pipeBatch.startStage(targetPipe);
-    batch = pipeBatch.getBatch(targetPipe, Collections.emptyList());
+    batch = pipeBatch.getBatch(targetPipe);
     Iterator<Record> it = batch.getRecords();
     Record tRecord = it.next();
     //check that we get the injected record.
@@ -372,13 +373,14 @@ public class TestPipeBatch {
     Assert.assertFalse(it.hasNext());
 
     // completing target
-    pipeBatch.completeStage(batchMaker, Collections.emptyList());
+    pipeBatch.completeStage(batchMaker);
   }
 
-  private static class DummyInterceptor extends BaseInterceptor {
+  private static class DummyInterceptor extends InterceptorRuntime {
     private final String mark;
 
     public DummyInterceptor(String mark)  {
+      super(null, null);
       this.mark = mark;
     }
 
@@ -398,8 +400,8 @@ public class TestPipeBatch {
 
     PipelineBean pipelineBean = getPipelineBean();
     StageRuntime[] stages = {
-      new StageRuntime(pipelineBean, pipelineBean.getOrigin(), Collections.emptyList(), Collections.emptyList(), Collections.emptyList()),
-      new StageRuntime(pipelineBean, pipelineBean.getPipelineStageBeans().getStages().get(0), Collections.emptyList(), Collections.emptyList(), Collections.emptyList())
+      new StageRuntime(pipelineBean, pipelineBean.getOrigin(), Collections.emptyList(), Collections.emptyList(), Collections.singletonList(new DummyInterceptor("source"))),
+      new StageRuntime(pipelineBean, pipelineBean.getPipelineStageBeans().getStages().get(0), Collections.emptyList(), Collections.singletonList(new DummyInterceptor("target")), Collections.emptyList())
     };
 
     StageContext context = Mockito.mock(StageContext.class);
@@ -424,7 +426,8 @@ public class TestPipeBatch {
     batchMaker.addRecord(origRecord, stageOutputLanes.get(0));
 
     // completing source
-    pipeBatch.completeStage(batchMaker, Collections.singletonList(new DummyInterceptor("source")));
+//    pipeBatch.completeStage(batchMaker,
+    pipeBatch.completeStage(batchMaker);
 
     StagePipe targetPipe = new StagePipe(
       stages[1],
@@ -436,7 +439,8 @@ public class TestPipeBatch {
     // starting target
     batchMaker = pipeBatch.startStage(targetPipe);
 
-    BatchImpl batch = pipeBatch.getBatch(targetPipe, Collections.singletonList(new DummyInterceptor("target")));
+//    BatchImpl batch = pipeBatch.getBatch(targetPipe, Collections.singletonList(new DummyInterceptor("target")));
+    BatchImpl batch = pipeBatch.getBatch(targetPipe);
 
     Record record = batch.getRecords().next();
     assertNotNull(record);
@@ -444,6 +448,6 @@ public class TestPipeBatch {
     assertEquals("passed", record.getHeader().getAttribute("target"));
 
     // completing target
-    pipeBatch.completeStage(batchMaker, Collections.emptyList());
+    pipeBatch.completeStage(batchMaker);
   }
 }

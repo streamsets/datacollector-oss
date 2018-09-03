@@ -26,6 +26,7 @@ import com.streamsets.datacollector.runner.SourceResponseSink;
 import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.runner.StagePipe;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.interceptor.Interceptor;
 
 import java.util.ArrayList;
@@ -67,7 +68,7 @@ public class StagePreviewPipeBatch implements PipeBatch {
   }
 
   @Override
-  public BatchImpl getBatch(Pipe pipe, List<? extends Interceptor> interceptors) {
+  public BatchImpl getBatch(Pipe pipe) {
     return new BatchImpl(instanceName, null, null, inputRecords);
   }
 
@@ -81,7 +82,7 @@ public class StagePreviewPipeBatch implements PipeBatch {
   }
 
   @Override
-  public void completeStage(BatchMakerImpl batchMaker, List<? extends Interceptor> interceptors) {
+  public void completeStage(BatchMakerImpl batchMaker) throws StageException {
     stageOutputSnapshot.add(new StageOutput(instanceName, batchMaker.getStageOutputSnapshot(), errorSink, eventSink));
   }
 

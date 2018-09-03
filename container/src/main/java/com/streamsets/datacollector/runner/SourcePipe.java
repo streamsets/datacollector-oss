@@ -107,7 +107,7 @@ public class SourcePipe extends StagePipe implements ReportErrorDelegate {
       batchContext.getStartTime(),
       batchContext.getPipeBatch(),
       (BatchMakerImpl) batchContext.getBatchMaker(),
-      batchContext.getPipeBatch().getBatch(this, Collections.emptyList()),
+      batchContext.getPipeBatch().getBatch(this),
       batchContext.getPipeBatch().getErrorSink(),
       batchContext.getPipeBatch().getEventSink(),
       null
