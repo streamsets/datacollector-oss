@@ -40,7 +40,7 @@ public class TensorFlowConfigBean {
       type = ConfigDef.Type.LIST,
       defaultValue = "",
       label = "Model Tags",
-      description = "Model Tags",
+      description = "Tags applied to the TensorFlow model",
       displayPosition = 20,
       group = "TENSOR_FLOW"
   )
@@ -52,6 +52,7 @@ public class TensorFlowConfigBean {
       required = false,
       type = ConfigDef.Type.MODEL,
       label = "Input Configs",
+      description = "Input tensor information as configured during the training and exporting of the model",
       displayPosition = 30,
       group = "TENSOR_FLOW"
   )
@@ -62,6 +63,7 @@ public class TensorFlowConfigBean {
       required = false,
       type = ConfigDef.Type.MODEL,
       label = "Output Configs",
+      description = "Output tensor information as configured during the training and exporting of the model",
       displayPosition = 40,
       group = "TENSOR_FLOW"
   )
@@ -74,7 +76,8 @@ public class TensorFlowConfigBean {
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
       label = "Entire Batch",
-      description = "Use entire batch",
+      description = "Evaluates the full batch at once. Select when the TensorFlow model expects many inputs to " +
+          "generate one output. Clear when the TensorFlow model expects one input to generate one output.",
       displayPosition = 50,
       group = "TENSOR_FLOW"
   )
@@ -85,7 +88,7 @@ public class TensorFlowConfigBean {
       type = ConfigDef.Type.MODEL,
       defaultValue = "/output",
       label = "Output Field",
-      description = "Field for the tensor output",
+      description = "Output field for the prediction or classification result",
       displayPosition = 60,
       group = "TENSOR_FLOW",
       dependsOn = "useEntireBatch",

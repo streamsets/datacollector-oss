@@ -47,7 +47,7 @@ public class TensorConfig {
       type = ConfigDef.Type.MODEL,
       defaultValue = "",
       label = "Tensor Type",
-      description = "Tensor Type",
+      description = "Datatype of the tensor",
       displayPosition = 30,
       group = "TENSOR_FLOW"
   )

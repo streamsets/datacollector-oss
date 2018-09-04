@@ -26,7 +26,7 @@ public class TensorInputConfig extends TensorConfig {
       type = ConfigDef.Type.MODEL,
       defaultValue="",
       label = "Fields to Convert",
-      description = "You can convert multiple fields to the same type",
+      description = "Fields in the record to convert to tensor fields as required by the operation",
       displayPosition = 20
   )
   @FieldSelectorModel
@@ -37,7 +37,7 @@ public class TensorInputConfig extends TensorConfig {
       type = ConfigDef.Type.LIST,
       defaultValue= "",
       label = "Shape",
-      description = "Shape of the tensor",
+      description = "Number of elements in each dimension",
       displayPosition = 20
   )
   public List<Integer> shape;
