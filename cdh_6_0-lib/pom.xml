@@ -57,7 +57,7 @@
     <repositories>
         <repository>
             <id>cdh6.repo</id>
-            <url>http://bits.cloudera.com/f93c6c9d/cdh6/6.0.0-beta1/maven-repository/</url>
+            <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
             <name>Cloudera Repositories</name>
             <snapshots>
                 <enabled>false</enabled>
