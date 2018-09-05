@@ -324,7 +324,9 @@ public class OracleCDCSource extends BaseSource {
         errorRecordHandler.onError(JDBC_44, Throwables.getStackTraceAsString(ex));
       }
 
-      for (int i = 0; i < batchSize; i++) {
+      int batchCount = 0;
+
+      while (batchCount < batchSize) {
         try {
           RecordOffset recordOffset = recordQueue.poll(1, TimeUnit.SECONDS);
           if (recordOffset != null) {
@@ -336,6 +338,7 @@ public class OracleCDCSource extends BaseSource {
               if (recordOffset.record != dummyRecord) {
                 batchMaker.addRecord(recordOffset.record);
                 recordsProduced = true;
+                batchCount++;
               }
             }
             nextOffset = recordOffset.offset.toString();
