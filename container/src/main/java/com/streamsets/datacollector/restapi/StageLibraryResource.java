@@ -17,8 +17,6 @@ package com.streamsets.datacollector.restapi;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.classpath.ClasspathValidatorResult;
-import com.streamsets.datacollector.config.CredentialStoreDefinition;
-import com.streamsets.datacollector.config.LineagePublisherDefinition;
 import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
@@ -72,9 +70,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 @Path("/v1")
 @Api(value = "definitions")
@@ -239,9 +239,12 @@ public class StageLibraryResource {
         Properties properties = new Properties();
         properties.load(inputStream);
 
+        Set<String> addedLibraryIds = new HashSet<>();
+
         for (final String name: properties.stringPropertyNames()) {
           if (name.startsWith(STAGE_LIB_PREFIX)) {
             String libraryId = name.replace(STAGE_LIB_PREFIX, "");
+            addedLibraryIds.add(libraryId);
             libraries.add(new StageLibraryJson(
                 libraryId,
                 properties.getProperty(name),
@@ -249,6 +252,13 @@ public class StageLibraryResource {
             ));
           }
         }
+
+        // Add installed custom/user stage libraries to the list which are not part of Archives manifest file
+        for (StageLibraryJson installedLibrary: installedLibraries) {
+          if (!addedLibraryIds.contains(installedLibrary.getId())) {
+            libraries.add(installedLibrary);
+          }
+        };
       } finally {
         if (response != null) {
           response.close();
