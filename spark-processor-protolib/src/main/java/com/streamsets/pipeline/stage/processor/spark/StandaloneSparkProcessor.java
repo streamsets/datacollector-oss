@@ -32,16 +32,21 @@ import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.sql.SparkSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.Tuple2;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.streamsets.pipeline.stage.processor.spark.Errors.SPARK_00;
 import static com.streamsets.pipeline.stage.processor.spark.Errors.SPARK_01;
@@ -61,6 +66,7 @@ public class StandaloneSparkProcessor extends SingleLaneProcessor {
   private final SparkProcessorConfigBean configBean;
   private transient SparkTransformer transformer; // NOSONAR
   private transient JavaSparkContext jsc; // NOSONAR
+  private transient SparkSession session;
 
   private ErrorRecordHandler errorRecordHandler = null;
   private boolean transformerInited = false;
@@ -81,7 +87,8 @@ public class StandaloneSparkProcessor extends SingleLaneProcessor {
 
     final File[] jars = getJarFiles(issues);
     if (issues.isEmpty()) {
-      jsc = startSparkContext(jars);
+      session = getSparkSession(jars);
+      jsc = startSparkContext();
     }
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     final Class<? extends SparkTransformer> transformerClazz = getTransformerClass(issues);
@@ -93,23 +100,24 @@ public class StandaloneSparkProcessor extends SingleLaneProcessor {
     return issues;
   }
 
-  private JavaSparkContext startSparkContext(File[] jars) {
+  private SparkSession getSparkSession(File[] jars) {
     SparkConf sparkConf = new SparkConf();
+    if (jars == null) {
+      jars = new File[0];
+    }
     sparkConf.setMaster(Utils.format("local[{}]", configBean.threadCount))
         .setAppName(configBean.appName)
         .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
         .set("spark.ui.enabled", "false")
         .set("spark.driver.userClassPathFirst", "true")
         .set("spark.executor.userClassPathFirst", "true")
-        .set("spark.io.compression.codec", "lz4");
-    JavaSparkContext sparkContext = new JavaSparkContext(sparkConf);
-    if (jars != null) {
-      for (File jar : jars) {
-        LOG.info(Utils.format("Added {} to Spark Context", jar.getName()));
-        sparkContext.addJar(jar.toString());
-      }
-    }
-    return sparkContext;
+        .set("spark.io.compression.codec", "lz4")
+        .set("spark.jars", Arrays.stream(jars).map(File::toString).collect(Collectors.joining(",")));
+    return SparkSession.builder().config(sparkConf).getOrCreate();
+  }
+
+  private JavaSparkContext startSparkContext() {
+    return new JavaSparkContext(session.sparkContext());
   }
 
   private File[] getJarFiles(List<ConfigIssue> issues) {
@@ -173,9 +181,18 @@ public class StandaloneSparkProcessor extends SingleLaneProcessor {
 
   private void initTransformer(List<ConfigIssue> issues) {
     if (issues.isEmpty()) {
+      List<String> args = configBean.preprocessMethodArgs == null ? new ArrayList<>() : configBean.preprocessMethodArgs;
       try {
-        transformer.init(jsc,
-            configBean.preprocessMethodArgs == null ? new ArrayList<String>() : configBean.preprocessMethodArgs);
+        Method sparkSessionInit = transformer.getClass().getMethod("init", SparkSession.class, List.class);
+        sparkSessionInit.invoke(transformer, session, args);
+      } catch (NoSuchMethodException e) {
+        LOG.info("SparkSession support not found in SparkTransformer", e);
+      } catch (IllegalAccessException | InvocationTargetException e) {
+        LOG.error("Error while initializing transformer class", e);
+        issues.add(getContext().createConfigIssue(SPARK.name(), TRANSFORMER_CLASS, SPARK_05, configBean.transformerClass, getExceptionString(e)));
+      }
+      try {
+        transformer.init(jsc,args);
       } catch (Exception ex) {
         LOG.error("Error while initializing transformer class", ex);
         issues.add(getContext().createConfigIssue(SPARK.name(), TRANSFORMER_CLASS, SPARK_05, configBean.transformerClass, getExceptionString(ex)));
@@ -238,8 +255,8 @@ public class StandaloneSparkProcessor extends SingleLaneProcessor {
         LOG.warn("Transformer threw exception during destroy", ex);
       }
     }
-    if (jsc != null) {
-      jsc.stop();
+    if (session != null) {
+      session.stop();
     }
   }
 }
