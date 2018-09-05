@@ -62,7 +62,7 @@ public class ForceConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      defaultValue = "39.0",
+      defaultValue = "43.0",
       label = "API Version",
       description = "Salesforce API Version",
       displayPosition = 40,
