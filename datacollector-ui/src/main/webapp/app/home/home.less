@@ -532,7 +532,7 @@
 .help-panel {
   background: #FFFFFF;
   border: 1px solid #DCDCDC;
-  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.07);
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.07);
   border-radius: 4px;
   height: 330px;
   width: 330px;
@@ -540,6 +540,12 @@
   margin-right: 70px;
   position: relative;
   top: -60px;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+
+  &:hover {
+    box-shadow: 0 2px 8px 0 rgba(0,0,0,.2);
+    transform: translateY(-1px);
+  }
 
   .help-panel-container {
     padding: 20px;
