@@ -501,6 +501,18 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+    <!-- Databricks ML libs -->
+    <fileSet>
+      <directory>${basedir}/../${databricks-ml_2-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
+    <!-- TensorFlow -->
+    <fileSet>
+      <directory>${basedir}/../${tensorflow-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
     <!-- vault-credentialstore-lib -->
     <fileSet>
       <directory>${basedir}/../vault-credentialstore-lib/target/streamsets-libs/</directory>
@@ -516,11 +528,6 @@
     <!-- cyberark-credentialstore-lib -->
     <fileSet>
       <directory>${basedir}/../cyberark-credentialstore-lib/target/streamsets-libs/</directory>
-    </fileSet>
-
-    <fileSet>
-      <directory>${basedir}/../${tensorflow-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
     <!-- wholefile-transformer-lib -->

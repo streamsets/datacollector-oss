@@ -42,6 +42,8 @@ angular
     $location.search('auth_user', null);
     $rootScope.common.errors = [];
 
+    var mlRegex = new RegExp('(TensorFlow)|(Databricks ML)', 'i');
+
     var pipelinesLimit = 60;
 
     angular.extend($scope, {
@@ -49,6 +51,7 @@ angular
       navigationItems: [
         'All Stage Libraries',
         'Installed Stage Libraries',
+        'Machine Learning',
         'Amazon Web Services',
         'Apache Kafka',
         'Apache Kudu',
@@ -112,6 +115,11 @@ angular
           case 'Installed Stage Libraries':
             $scope.filteredStageLibraries = _.filter($scope.stageLibraries, function(stageLibrary) {
               return regex.test(stageLibrary.label) && stageLibrary.installed;
+            });
+            break;
+          case 'Machine Learning':
+            $scope.filteredStageLibraries = _.filter($scope.stageLibraries, function(stageLibrary) {
+              return regex.test(stageLibrary.label) && mlRegex.test(stageLibrary.label);
             });
             break;
           default:

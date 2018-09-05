@@ -211,6 +211,7 @@
     <module>scripting-protolib</module>
     <module>wholefile-converter-protolib</module>
     <module>emr-protolib</module>
+    <module>databricks-ml-protolib</module>
 
     <!--
          Stage libraries that always built with the data collector (they dont have protolibs)
@@ -341,6 +342,9 @@
             <exclude>docs/**</exclude>
             <exclude>cloudera-integration/csd/**</exclude>
             <exclude>datacollector-ui/src/main/webapp/common/directives/**</exclude>
+
+            <!-- Test Databricks ML Model files -->
+            <exclude>databricks-ml-protolib/src/test/resources/**</exclude>
 
           </excludes>
           <goal>run</goal>
@@ -515,6 +519,7 @@
         <mapr_6_0_mep5-lib>mapr_6_0-mep5-lib</mapr_6_0_mep5-lib>
         <mapr_spark_2_1_mep_3_0-lib>mapr_spark_2_1_mep_3_0-lib</mapr_spark_2_1_mep_3_0-lib>
         <mongodb_3-lib>mongodb_3-lib</mongodb_3-lib>
+        <databricks-ml_2-lib>databricks-ml_2-lib</databricks-ml_2-lib>
       </properties>
       <modules>
         <!--
@@ -591,6 +596,7 @@
         <module>mapr_6_0-mep5-lib</module>
         <module>mapr_spark_2_1_mep_3_0-lib</module>
         <module>mongodb_3-lib</module>
+        <module>databricks-ml_2-lib</module>
       </modules>
     </profile>
 
@@ -635,6 +641,7 @@
         <mapr_spark_2_1_mep_3_0-lib>mapr_spark_2_1_mep_3_0-lib</mapr_spark_2_1_mep_3_0-lib>
         <mongodb_3-lib>mongodb_3-lib</mongodb_3-lib>
         <azure-lib>azure_lib</azure-lib>
+        <databricks-ml_2-lib>databricks-ml_2-lib</databricks-ml_2-lib>
       </properties>
       <modules>
         <!--
@@ -668,6 +675,7 @@
         <module>mapr_6_0-mep5-lib</module>
         <module>mapr_spark_2_1_mep_3_0-lib</module>
         <module>mongodb_3-lib</module>
+        <module>databricks-ml_2-lib</module>
       </modules>
     </profile>
 
