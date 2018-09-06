@@ -460,6 +460,20 @@ public class TestStringEL {
   }
 
   @Test
+  public void testKVSplitterWithSeparatorInValue() throws Exception {
+    ELEvaluator eval = new ELEvaluator("kvSplitter", elDefinitionExtractor, StringEL.class);
+    ELVariables vars = new ELVariables();
+
+    Map<String, Field> result = eval.eval(vars, "${str:splitKV('key1=val1&key2=val=2', '&', '=')}", Map.class);
+
+    Assert.assertEquals(2, result.size());
+    Assert.assertTrue(result.containsKey("key1"));
+    Assert.assertEquals("val1", result.get("key1").getValueAsString());
+    Assert.assertTrue(result.containsKey("key2"));
+    Assert.assertEquals("val=2", result.get("key2").getValueAsString());
+  }
+
+  @Test
   public void testSplitter() throws Exception {
     ELEvaluator eval = new ELEvaluator("splitter", elDefinitionExtractor, StringEL.class);
     ELVariables vars = new ELVariables();

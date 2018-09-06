@@ -436,7 +436,7 @@ public class StringEL {
       return Collections.emptyMap();
     }
 
-    Splitter.MapSplitter splitter = Splitter.on(separator).trimResults().omitEmptyStrings().withKeyValueSeparator(kvSeparator);
+    Splitter.MapSplitter splitter = Splitter.on(separator).trimResults().omitEmptyStrings().withKeyValueSeparator(Splitter.on(kvSeparator).limit(2));
 
     return splitter.split(string).entrySet().stream()
         .collect(Collectors.toMap(Map.Entry::getKey, e -> Field.create(e.getValue())));
