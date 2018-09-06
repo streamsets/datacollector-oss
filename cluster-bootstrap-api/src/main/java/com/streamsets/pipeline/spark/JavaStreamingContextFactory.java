@@ -15,9 +15,12 @@
  */
 package com.streamsets.pipeline.spark;
 
+import org.apache.spark.sql.SparkSession;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 
 public interface JavaStreamingContextFactory {
   @SuppressWarnings("unchecked")
   JavaStreamingContext create();
+
+  SparkSession getSparkSession();
 }

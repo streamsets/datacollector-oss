@@ -34,7 +34,7 @@ public class BootstrapClusterStreaming {
     try {
       binding = SparkStreamingBindingFactory.build(BootstrapCluster.getProperties());
       binding.init();
-      BootstrapCluster.createTransformers(binding.getStreamingContext().sparkContext());
+      BootstrapCluster.createTransformers(binding.getStreamingContext().sparkContext(), binding.getSparkSession());
       binding.startContext();
       binding.awaitTermination();
     } catch (Throwable error) {

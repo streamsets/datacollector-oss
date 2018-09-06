@@ -24,7 +24,9 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.deploy.SparkHadoopUtil;
+import org.apache.spark.sql.SparkSession;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.slf4j.Logger;
@@ -48,6 +50,7 @@ public abstract class SparkStreamingBinding implements ClusterBinding {
   private JavaStreamingContext ssc;
   private final Properties properties;
   private FileSystem hdfs;
+  private SparkSession sparkSession;
 
 
   //Static mainly because we can't change the SparkDriverFunction to add this as a private variable instance
@@ -130,6 +133,7 @@ public abstract class SparkStreamingBinding implements ClusterBinding {
     );
 
     ssc = javaStreamingContextFactory.create();
+    sparkSession = javaStreamingContextFactory.getSparkSession();
     Path rddCheckpointDir = new Path(checkPointPath, RDD_CHECKPOINT_DIR);
     if (hdfs.exists(rddCheckpointDir)) {
       hdfs.delete(rddCheckpointDir, true);
@@ -247,6 +251,10 @@ public abstract class SparkStreamingBinding implements ClusterBinding {
       boolean isRunningInMesos
   );
 
+  public SparkSession getSparkSession() {
+    return sparkSession;
+  }
+
   public abstract class JavaStreamingContextFactoryImpl implements JavaStreamingContextFactory {
 
     final SparkConf sparkConf;
@@ -258,6 +266,7 @@ public abstract class SparkStreamingBinding implements ClusterBinding {
     final boolean isRunningInMesos;
     final int maxRatePerPartition;
     final Map<String, String> extraKafkaConfigs;
+    SparkSession session;
     String autoOffsetValue;
 
     public JavaStreamingContextFactoryImpl (
@@ -292,7 +301,10 @@ public abstract class SparkStreamingBinding implements ClusterBinding {
       sparkConf.set("spark.driver.userClassPathFirst", "true");
       sparkConf.set("spark.executor.userClassPathFirst", "true");
 
-      JavaStreamingContext result = new JavaStreamingContext(sparkConf, new Duration(duration));
+      session = SparkSession.builder().config(sparkConf).getOrCreate();
+
+      JavaStreamingContext result =
+          new JavaStreamingContext(new JavaSparkContext(session.sparkContext()), new Duration(duration));
       Map<String, Object> props = new HashMap<>();
 
       props.put("group.id", groupId);
@@ -306,6 +318,11 @@ public abstract class SparkStreamingBinding implements ClusterBinding {
       logMessage("Topic is " + topic, isRunningInMesos);
       logMessage("Auto offset reset is set to " + autoOffsetValue, isRunningInMesos);
       return createDStream(result, props);
+    }
+
+    @Override
+    public SparkSession getSparkSession() {
+      return session;
     }
 
     public abstract JavaStreamingContext createDStream(JavaStreamingContext result, Map<String, Object> props);

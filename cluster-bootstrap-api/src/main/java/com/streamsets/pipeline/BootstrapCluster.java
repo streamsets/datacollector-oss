@@ -18,6 +18,7 @@ package com.streamsets.pipeline;
 import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.pipeline.spark.api.SparkTransformer;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.sql.SparkSession;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -309,7 +310,7 @@ public class BootstrapCluster {
   }
 
   @SuppressWarnings("unchecked")
-  public static void createTransformers(JavaSparkContext context) throws Exception {
+  public static void createTransformers(JavaSparkContext context, SparkSession sparkSession) throws Exception {
     transformers = new ArrayList<>();
     if (transformerCLs == null) {
       return;
@@ -326,6 +327,12 @@ public class BootstrapCluster {
         List<String> params =
             (List<String>) transformerConfig.getClass().
                 getMethod("getTransformerParameters").invoke(transformerConfig);
+        try {
+          Method sparkSessionInit = transformer.getClass().getMethod("init", SparkSession.class, List.class);
+          sparkSessionInit.invoke(transformer, sparkSession, params);
+        } catch (NoSuchMethodException e) {
+          System.out.format("SparkSession support not found in SparkTransformer: %s", e);
+        }
         transformer.init(context, params);
         transformers.add(transformer);
       } catch (Exception ex) {
