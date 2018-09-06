@@ -197,7 +197,6 @@
               "http.access.control.allow.headers",
               "http.access.control.allow.methods",
               "ui.header.title",
-              "ui.enable.usage.data.collection",
               "ui.enable.webSocket",
               "ui.undo.limit",
               "mail.transport.protocol",
@@ -221,7 +220,6 @@
               "production.maxPipelineErrors",
               "stage.conf_hadoop.always.impersonate.current.user",
               "ui.enable.webSocket",
-              "ui.enable.usage.data.collection",
               "dpm.enabled",
               "dpm.base.url",
               "dpm.remote.control.job.labels",
@@ -721,13 +719,6 @@
           "description": "Optional text to display in the Data Collector console next to the StreamSets logo.",
           "type": "string",
           "default":  ""
-        },
-        {
-          "name": "ui.enable.usage.data.collection",
-          "label": "Usage collection",
-          "description": "Allows anonymous Google Analytics information to be sent to StreamSets.",
-          "type": "boolean",
-          "default": "true"
         },
         {
           "name": "ui.enable.webSocket",

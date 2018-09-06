@@ -24,7 +24,6 @@ angular.module('dataCollectorApp.common')
     var JVM_METRICS_REFRESH_INTERVAL = 'ui.jvmMetrics.refresh.interval.ms';
     var UI_LOCAL_HELP_BASE_URL = 'ui.local.help.base.url';
     var UI_HOSTED_HELP_BASE_URL = 'ui.hosted.help.base.url';
-    var UI_ENABLE_USAGE_DATA_COLLECTION = 'ui.enable.usage.data.collection';
     var UI_ENABLE_WEB_SOCKET = 'ui.enable.webSocket';
     var UI_SERVER_TIMEZONE = 'ui.server.timezone';
     var UI_DEBUG = 'ui.debug';
@@ -49,12 +48,14 @@ angular.module('dataCollectorApp.common')
         self.initializeDefer = $q.defer();
         $q.all([
           api.pipelineAgent.getConfiguration(),
-          api.pipelineAgent.getUIConfiguration()
+          api.pipelineAgent.getUIConfiguration(),
+          api.system.getStats()
         ]).then(function(results) {
           self.config = results[0].data;
           angular.forEach(results[1].data, function(value, key) {
             self.config[key] = value;
           });
+          self.stats = results[2].data;
           self.initializeDefer.resolve(self.config);
         });
       }
@@ -124,12 +125,12 @@ angular.module('dataCollectorApp.common')
     };
 
     /**
-     * Returns ui.enable.usage.data.collection flag value
+     * Returns stats.active flag value
      * @returns {*}
      */
     this.isAnalyticsEnabled = function() {
-      if (self.config) {
-        return self.config[UI_ENABLE_USAGE_DATA_COLLECTION] === 'true';
+      if (self.stats) {
+        return self.stats.active;
       }
       return false;
     };
