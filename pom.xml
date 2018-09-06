@@ -946,6 +946,15 @@
       <url>http://files.kinetica.com/nexus/content/repositories/releases/</url>
     </repository>
 
+    <!-- Databricks ML -->
+    <repository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>bintray-databricks-maven</id>
+      <name>bintray</name>
+      <url>https://dl.bintray.com/databricks/maven</url>
+    </repository>
 
   </repositories>
 
