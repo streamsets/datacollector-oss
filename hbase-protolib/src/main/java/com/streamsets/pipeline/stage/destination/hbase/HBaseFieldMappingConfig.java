@@ -19,6 +19,8 @@ import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.hbase.api.common.producer.StorageType;
+import com.streamsets.pipeline.hbase.api.common.producer.StorageTypeChooserValues;
 
 public class HBaseFieldMappingConfig {
 

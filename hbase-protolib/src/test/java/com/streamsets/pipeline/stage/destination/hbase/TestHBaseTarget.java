@@ -19,6 +19,7 @@ import com.google.common.io.Files;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.hbase.api.common.producer.StorageType;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.apache.hadoop.conf.Configuration;
 import org.junit.Assert;

@@ -24,9 +24,12 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.configurablestage.DTarget;
+import com.streamsets.pipeline.hbase.api.common.producer.Groups;
+import com.streamsets.pipeline.hbase.api.common.producer.HBaseConnectionConfig;
+import com.streamsets.pipeline.hbase.api.common.producer.RowKeyStorageTypeChooserValues;
+import com.streamsets.pipeline.hbase.api.common.producer.StorageType;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
-import com.streamsets.pipeline.lib.hbase.common.HBaseConnectionConfig;
 
 import java.util.List;
 

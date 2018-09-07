@@ -22,6 +22,8 @@ import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
+import com.streamsets.pipeline.hbase.api.common.processor.Groups;
+import com.streamsets.pipeline.hbase.api.common.processor.HBaseLookupConfig;
 
 @StageDef(
     version = 3,

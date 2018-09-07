@@ -15,11 +15,10 @@
  */
 package com.streamsets.pipeline.stage.destination.maprdb;
 
-import com.streamsets.pipeline.lib.hbase.common.HBaseConnectionConfig;
+import com.streamsets.pipeline.hbase.api.common.producer.HBaseConnectionConfig;
+import com.streamsets.pipeline.hbase.api.common.producer.StorageType;
 import com.streamsets.pipeline.stage.destination.hbase.HBaseFieldMappingConfig;
 import com.streamsets.pipeline.stage.destination.hbase.HBaseTarget;
-import com.streamsets.pipeline.stage.destination.hbase.StorageType;
-import org.apache.hadoop.conf.Configuration;
 
 import java.util.List;
 
@@ -51,13 +50,11 @@ public class MapRDBTarget extends HBaseTarget {
   }
 
   @Override
-  protected void validateQuorumConfigs(List<ConfigIssue> issues) {
-    // Disable zooekeepr checks because zookeeper is not needed and we're hiding it's configuration completely
-  }
-
-  @Override
-  protected void checkHBaseAvailable(Configuration conf, List<ConfigIssue> issues) {
-    // Call to HBaseAdmin.checkHBaseAvailable is not supported on MapR DB
-    // http://doc.mapr.com/display/MapR/Support+for+the+HBaseAdmin+class
+  protected boolean isReallyHBase() {
+    return false;
+    /* In case of a MapRDB, we don't want to do some operations and validations.
+    - Disable zooekeepr checks because zookeeper is not needed and we're hiding it's configuration completely
+    - Call to HBaseAdmin.checkHBaseAvailable is not supported on MapR DB
+     http://doc.mapr.com/display/MapR/Support+for+the+HBaseAdmin+class */
   }
 }

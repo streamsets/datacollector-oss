@@ -195,6 +195,9 @@
     <module>flume-protolib</module>
 
     <module>cluster-hdfs-protolib</module>
+    <module>sdc-hbase-0_98</module>
+    <module>sdc-hbase-2_0</module>
+    <module>sdc-hbase-api</module>
     <module>hbase-protolib</module>
     <module>kudu-protolib</module>
     <module>cluster-common</module>

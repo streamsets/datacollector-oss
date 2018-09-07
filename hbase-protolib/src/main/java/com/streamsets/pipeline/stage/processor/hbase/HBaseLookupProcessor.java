@@ -32,21 +32,26 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.hbase.api.HBaseConnectionHelper;
+import com.streamsets.pipeline.hbase.api.HBaseProcessor;
+import com.streamsets.pipeline.hbase.api.HBaseFactory;
+import com.streamsets.pipeline.hbase.api.common.Errors;
+import com.streamsets.pipeline.hbase.api.common.processor.Groups;
+import com.streamsets.pipeline.hbase.api.common.processor.HBaseLookupConfig;
+import com.streamsets.pipeline.hbase.api.common.processor.HBaseLookupParameterConfig;
+import com.streamsets.pipeline.hbase.api.common.processor.HBaseStore;
+import com.streamsets.pipeline.hbase.api.common.producer.HBaseColumn;
+import com.streamsets.pipeline.hbase.api.impl.AbstractHBaseConnectionHelper;
 import com.streamsets.pipeline.lib.cache.CacheCleaner;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.hbase.common.Errors;
-import com.streamsets.pipeline.lib.hbase.common.HBaseColumn;
-import com.streamsets.pipeline.lib.hbase.common.HBaseConnectionHelper;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.processor.kv.LookupMode;
 import com.streamsets.pipeline.stage.processor.kv.LookupUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HConstants;
 import org.apache.hadoop.hbase.HTableDescriptor;
-import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -70,7 +75,6 @@ public class HBaseLookupProcessor extends BaseProcessor {
   private static final String COLUMN_EXPR = "columnExpr";
   private static final String TIMESTAMP_EXPR = "timestampExpr";
   private HBaseLookupConfig conf;
-  private Configuration hbaseConf;
   private ErrorRecordHandler errorRecordHandler;
   private ELEval keyExprEval;
   private ELEval columnExprEval;
@@ -86,13 +90,20 @@ public class HBaseLookupProcessor extends BaseProcessor {
         CharMatcher.WHITESPACE.removeFrom(conf.hBaseConnectionConfig.zookeeperQuorum);
     }
     this.conf = conf;
-    this.hbaseConnectionHelper = new HBaseConnectionHelper();
   }
 
   @SuppressWarnings("unchecked")
   @Override
   protected List<ConfigIssue> init() {
     final List<ConfigIssue> issues = super.init();
+
+    HBaseProcessor hBaseProcessor = HBaseFactory.createProcessor(
+        getContext(),
+        conf,
+        errorRecordHandler
+    );
+    hbaseConnectionHelper = hBaseProcessor.getHBaseConnectionHelper();
+
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     keyExprEval = getContext().createELEval(ROW_EXPR);
     columnExprEval = getContext().createELEval(COLUMN_EXPR);
@@ -149,7 +160,7 @@ public class HBaseLookupProcessor extends BaseProcessor {
     }
 
     if(issues.isEmpty()) {
-      hbaseConf = hbaseConnectionHelper.getHBaseConfiguration(issues,
+      hbaseConnectionHelper.createHBaseConfiguration(issues,
           getContext(),
           Groups.HBASE.getLabel(),
           conf.hBaseConnectionConfig.hbaseConfDir,
@@ -157,7 +168,7 @@ public class HBaseLookupProcessor extends BaseProcessor {
           conf.hBaseConnectionConfig.hbaseConfigs
       );
 
-      HBaseConnectionHelper.validateQuorumConfigs(issues,
+      AbstractHBaseConnectionHelper.validateQuorumConfigs(issues,
           getContext(),
           Groups.HBASE.getLabel(),
           conf.hBaseConnectionConfig.zookeeperQuorum,
@@ -169,24 +180,22 @@ public class HBaseLookupProcessor extends BaseProcessor {
           getContext(),
           Groups.HBASE.getLabel(),
           conf.hBaseConnectionConfig.hbaseUser,
-          hbaseConf,
           conf.hBaseConnectionConfig.kerberosAuth
       );
     }
 
     if(issues.isEmpty()) {
-      HBaseConnectionHelper.setIfNotNull(hbaseConf, HConstants.ZOOKEEPER_QUORUM, conf.hBaseConnectionConfig.zookeeperQuorum);
-      hbaseConf.setInt(HConstants.ZOOKEEPER_CLIENT_PORT, conf.hBaseConnectionConfig.clientPort);
-      HBaseConnectionHelper.setIfNotNull(hbaseConf, HConstants.ZOOKEEPER_ZNODE_PARENT, conf.hBaseConnectionConfig.zookeeperParentZNode);
+      AbstractHBaseConnectionHelper.setIfNotNull(HConstants.ZOOKEEPER_QUORUM, conf.hBaseConnectionConfig.zookeeperQuorum);
+      hbaseConnectionHelper.setConfigurationIntProperty(HConstants.ZOOKEEPER_CLIENT_PORT, conf.hBaseConnectionConfig.clientPort);
+      AbstractHBaseConnectionHelper.setIfNotNull(HConstants.ZOOKEEPER_ZNODE_PARENT, conf.hBaseConnectionConfig.zookeeperParentZNode);
     }
 
     if (issues.isEmpty()) {
       try {
-        hbaseConnectionHelper.getUGI().doAs((PrivilegedExceptionAction<HTableDescriptor>) () -> HBaseConnectionHelper
+        hbaseConnectionHelper.getUGI().doAs((PrivilegedExceptionAction<HTableDescriptor>) () -> hbaseConnectionHelper
             .checkConnectionAndTableExistence(
           issues,
           getContext(),
-          hbaseConf,
           Groups.HBASE.getLabel(),
           conf.hBaseConnectionConfig.tableName
         ));
@@ -200,7 +209,7 @@ public class HBaseLookupProcessor extends BaseProcessor {
       try {
         hbaseConnectionHelper.getUGI().doAs((PrivilegedExceptionAction<Void>) () -> {
           keyExprEval = getContext().createELEval("rowExpr");
-          store = new HBaseStore(conf, hbaseConf);
+          store = new HBaseStore(hBaseProcessor);
           return null;
         });
       } catch (Exception e) {
@@ -277,7 +286,7 @@ public class HBaseLookupProcessor extends BaseProcessor {
         LOG.error(Errors.HBASE_38.getMessage(), e1.toString(), e1);
         errorRecordHandler.onError(new OnRecordErrorException(record, Errors.HBASE_38, e1.toString()));
       } catch (IOException | InterruptedException | UncheckedExecutionException e) {
-        HBaseConnectionHelper.handleHBaseException(e, ImmutableList.of(record).iterator(), errorRecordHandler);
+        AbstractHBaseConnectionHelper.handleHBaseException(e, ImmutableList.of(record).iterator(), errorRecordHandler);
       }
 
       batchMaker.addRecord(record);
@@ -290,7 +299,7 @@ public class HBaseLookupProcessor extends BaseProcessor {
 
     try {
       Map<Pair<String, HBaseColumn>, Optional<String>> values = hbaseConnectionHelper.getUGI()
-        .doAs((PrivilegedExceptionAction<ImmutableMap<Pair<String, HBaseColumn>, Optional<String>>>) () -> cache.getAll(keys));
+                                                                                     .doAs((PrivilegedExceptionAction<ImmutableMap<Pair<String, HBaseColumn>, Optional<String>>>) () -> cache.getAll(keys));
       Record record;
       while (records.hasNext()) {
         record = records.next();
@@ -314,7 +323,7 @@ public class HBaseLookupProcessor extends BaseProcessor {
         errorRecordHandler.onError(new OnRecordErrorException(record, Errors.HBASE_38, e1.toString()));
       }
     } catch (IOException | InterruptedException | UndeclaredThrowableException e2) {
-      HBaseConnectionHelper.handleHBaseException(e2, records, errorRecordHandler);
+      AbstractHBaseConnectionHelper.handleHBaseException(e2, records, errorRecordHandler);
     }
   }
 
@@ -377,19 +386,11 @@ public class HBaseLookupProcessor extends BaseProcessor {
 
     String rowKey = keyExprEval.eval(elVars, config.rowExpr, String.class);
     String column = columnExprEval.eval(elVars, config.columnExpr, String.class);
-    byte[][] parts = KeyValue.parseColumn(Bytes.toBytes(column));
-    byte[] cf = null;
-    byte[] qualifier = null;
-    if (parts.length == 2) {
-      cf = parts[0];
-      qualifier = parts[1];
-    }
     Date timestamp = timestampExprEval.eval(elVars, config.timestampExpr, Date.class);
-    HBaseColumn hBaseColumn = new HBaseColumn(cf, qualifier);
+    HBaseColumn hBaseColumn = hbaseConnectionHelper.getColumn(column);
     if(timestamp != null) {
       hBaseColumn.setTimestamp(timestamp.getTime());
     }
-
     return Pair.of(rowKey, hBaseColumn);
   }
 

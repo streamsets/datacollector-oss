@@ -182,8 +182,20 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-hbase-protolib</artifactId>
       <version>${project.version}</version>
+      <scope>compile</scope>
     </dependency>
-
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-sdc-hbase-0_98</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.hbase</groupId>
+          <artifactId>hbase-client</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
     <dependency>
       <groupId>org.apache.hbase</groupId>
       <artifactId>hbase-client</artifactId>
