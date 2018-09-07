@@ -78,6 +78,8 @@ public class YarnConfigBean {
       required = true,
       min = 0,
       label = "Minimum Number of Worker Nodes",
+      dependsOn = "dynamicAllocation",
+      triggeredByValue = "true",
       group = "SPARK",
       displayPosition = 60
 
@@ -89,6 +91,8 @@ public class YarnConfigBean {
       required = true,
       min = 0,
       label = "Maximum Number of Worker Nodes",
+      dependsOn = "dynamicAllocation",
+      triggeredByValue = "true",
       group = "SPARK",
       displayPosition = 70
   )
@@ -99,6 +103,8 @@ public class YarnConfigBean {
       required = true,
       min = 1,
       label = "Number of Worker Nodes",
+      dependsOn = "dynamicAllocation",
+      triggeredByValue = "false",
       group = "SPARK",
       displayPosition = 80
   )
