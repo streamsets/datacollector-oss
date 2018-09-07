@@ -35,8 +35,6 @@ public class SparkExecutorConfigBean {
       required = false,
       label = "Custom Spark Home",
       group = "SPARK",
-      dependsOn = "clusterManager",
-      triggeredByValue = "YARN",
       displayPosition = 120
   )
   public String sparkHome = "";
@@ -46,8 +44,6 @@ public class SparkExecutorConfigBean {
       required = false,
       label = "Custom Java Home",
       group = "SPARK",
-      dependsOn = "clusterManager",
-      triggeredByValue = "YARN",
       displayPosition = 130
   )
   public String javaHome = "";

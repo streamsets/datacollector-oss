@@ -27,7 +27,6 @@ import com.streamsets.pipeline.lib.event.EventCreator;
 import com.streamsets.pipeline.lib.http.GrizzlyClientCustomizer;
 import com.streamsets.pipeline.lib.http.HttpProxyConfigBean;
 import com.streamsets.pipeline.lib.http.JerseyClientUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.RequestEntityProcessing;
@@ -97,10 +96,9 @@ public class DatabricksJobExecutor extends BaseExecutor {
         databricksConfigBean.baseUrl;
 
     HttpProxyConfigBean proxyConf = databricksConfigBean.proxyConfigBean;
-    boolean useProxy = !StringUtils.isEmpty(proxyConf.uri);
     String proxyUsername = null;
     String proxyPassword = null;
-    if(useProxy) {
+    if(databricksConfigBean.useProxy) {
       proxyUsername = proxyConf.resolveUsername(getContext(), "PROXY", "conf.proxyConfigBean.", issues);
       proxyPassword = proxyConf.resolvePassword(getContext(), "PROXY", "conf.proxyConfigBean.", issues);
     }
@@ -110,9 +108,9 @@ public class DatabricksJobExecutor extends BaseExecutor {
           .property(ClientProperties.ASYNC_THREADPOOL_SIZE, 1)
           .property(ClientProperties.REQUEST_ENTITY_PROCESSING, RequestEntityProcessing.BUFFERED);
 
-      if(useProxy) {
+      if(databricksConfigBean.useProxy) {
         clientConfig = clientConfig.connectorProvider(new GrizzlyConnectorProvider(new GrizzlyClientCustomizer(
-            useProxy,
+            databricksConfigBean.useProxy,
             proxyUsername,
             proxyPassword
         )));
@@ -152,7 +150,7 @@ public class DatabricksJobExecutor extends BaseExecutor {
 
       JerseyClientUtil.configureSslContext(databricksConfigBean.tlsConfigBean, builder);
 
-      if(useProxy) {
+      if(databricksConfigBean.useProxy) {
         JerseyClientUtil.configureProxy(
             proxyConf.uri,
             proxyUsername,

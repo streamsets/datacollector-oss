@@ -21,7 +21,7 @@ public enum Groups implements Label {
   APPLICATION("Job"),
   CREDENTIALS("Credentials"),
   PROXY("Proxy"),
-  SSL("TLS")
+  TLS("TLS")
   ;
 
   private final String label;
