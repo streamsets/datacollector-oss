@@ -50,6 +50,10 @@ public enum Errors implements ErrorCode {
   MONGODB_33("Invalid Oplog Collection Name '{}', Oplog collection should start with 'oplog.'"),
   MONGODB_34("Can't create credential object: {}"),
 
+  MONGODB_40("No results for query: '{}'"),
+  MONGODB_41("Missing filters: SDC Field to Document Field Mapping needs to be provided."),
+  MONGODB_42("Record does not contain values to perform lookup"),
+
   ;
   private final String msg;
 

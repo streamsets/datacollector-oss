@@ -28,6 +28,7 @@ import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.mongodb.Errors;
 import com.streamsets.pipeline.stage.common.mongodb.Groups;
 import com.streamsets.pipeline.stage.common.mongodb.MongoDBConfig;
+import com.streamsets.pipeline.stage.common.mongodb.MongoDBUtil;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
@@ -139,7 +140,7 @@ public class MongoDBSource extends AbstractMongoDBSource {
 
         Map<String, Field> fields;
         try {
-          fields = MongoDBSourceUtil.createFieldFromDocument(doc);
+          fields = MongoDBUtil.createFieldFromDocument(doc);
         } catch (IOException e) {
           errorRecordHandler.onError(Errors.MONGODB_10, e.toString(), e);
           ++errorRecordsSinceLastNMREvent;
@@ -150,7 +151,7 @@ public class MongoDBSource extends AbstractMongoDBSource {
         nextSourceOffset = getNextSourceOffset(doc);
 
         final String recordContext =
-            MongoDBSourceUtil.getSourceRecordId(
+            MongoDBUtil.getSourceRecordId(
                 configBean.mongoConfig.connectionString,
                 configBean.mongoConfig.database,
                 configBean.mongoConfig.collection,

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.mongodb;
+package com.streamsets.pipeline.stage.common.mongodb;
 
 import com.google.common.base.Joiner;
 import com.streamsets.pipeline.api.Field;
@@ -33,12 +33,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public final class MongoDBSourceUtil {
+public final class MongoDBUtil {
   public static final String BSON_TS_TIME_T_FIELD = "timestamp";
   public static final String BSON_TS_ORDINAL_FIELD = "ordinal";
   private static final Joiner JOINER = Joiner.on("::");
 
-  private MongoDBSourceUtil() {
+  private MongoDBUtil() {
   }
 
   public static String getSourceRecordId(

@@ -34,7 +34,7 @@ import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.origin.mongodb.MongoDBSource;
-import com.streamsets.pipeline.stage.origin.mongodb.MongoDBSourceUtil;
+import com.streamsets.pipeline.stage.common.mongodb.MongoDBUtil;
 import org.apache.commons.lang3.tuple.Pair;
 import org.awaitility.Awaitility;
 import org.bson.BsonTimestamp;
@@ -132,7 +132,7 @@ public class MongoDBOplogSourceIT {
     Assert.assertEquals(Field.Type.INTEGER, record.get("/" + MongoDBOplogSource.VERSION_FIELD).getType());
 
     Map<String, Field> timeStampField = record.get("/" + MongoDBOplogSource.TIMESTAMP_FIELD).getValueAsMap();
-    Assert.assertTrue(timeStampField.keySet().containsAll(Arrays.asList(MongoDBSourceUtil.BSON_TS_TIME_T_FIELD, MongoDBSourceUtil.BSON_TS_ORDINAL_FIELD)));
+    Assert.assertTrue(timeStampField.keySet().containsAll(Arrays.asList(MongoDBUtil.BSON_TS_TIME_T_FIELD, MongoDBUtil.BSON_TS_ORDINAL_FIELD)));
 
     Assert.assertEquals(2,record.get("/" + MongoDBOplogSource.VERSION_FIELD).getValueAsInteger());
 
@@ -175,7 +175,7 @@ public class MongoDBOplogSourceIT {
   }
 
   private void checkRecord(Record record, Document document) throws Exception {
-    Field expectedField = Field.create(MongoDBSourceUtil.createFieldFromDocument(document));
+    Field expectedField = Field.create(MongoDBUtil.createFieldFromDocument(document));
     walkAndCheckField("", expectedField, record.get());
   }
 

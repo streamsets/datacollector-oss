@@ -31,7 +31,7 @@ import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.mongodb.Errors;
 import com.streamsets.pipeline.stage.common.mongodb.Groups;
 import com.streamsets.pipeline.stage.origin.mongodb.AbstractMongoDBSource;
-import com.streamsets.pipeline.stage.origin.mongodb.MongoDBSourceUtil;
+import com.streamsets.pipeline.stage.common.mongodb.MongoDBUtil;
 import com.streamsets.pipeline.stage.origin.mongodb.MongoSourceConfigBean;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.BsonTimestamp;
@@ -250,7 +250,7 @@ public class MongoDBOplogSource extends AbstractMongoDBSource {
       Long opId = doc.getLong(OP_LONG_HASH_FIELD);
 
       Record record = getContext().createRecord(
-          MongoDBSourceUtil.getSourceRecordId(
+              MongoDBUtil.getSourceRecordId(
               configBean.mongoConfig.connectionString,
               configBean.mongoConfig.database,
               configBean.mongoConfig.collection,
@@ -263,7 +263,7 @@ public class MongoDBOplogSource extends AbstractMongoDBSource {
       record.getHeader().setAttribute(OP_TYPE_FIELD, opType);
       //Populate Generic operation type
       populateGenericOperationTypeInHeader(record, opType);
-      record.set(Field.create(MongoDBSourceUtil.createFieldFromDocument(doc)));
+      record.set(Field.create(MongoDBUtil.createFieldFromDocument(doc)));
       return record;
     } else {
       LOG.trace("Document from Cursor is null, No More Records");
