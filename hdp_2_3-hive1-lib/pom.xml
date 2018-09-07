@@ -123,6 +123,11 @@
       <version>${hive.version}</version>
       <scope>runtime</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-client</artifactId>
+      <version>${hadoop.version}</version>
+    </dependency>
 
     <!-- Test dependencies-->
     <dependency>
