@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.destination.mongodb;
 
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
@@ -24,6 +25,7 @@ import com.streamsets.pipeline.stage.common.mongodb.MongoDBConfig;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MongoDBTargetUpgrader implements StageUpgrader {
   @Override
@@ -47,6 +49,9 @@ public class MongoDBTargetUpgrader implements StageUpgrader {
         // fall through
       case 3:
         upgradeV3toV4(configs);
+        // fall through
+      case 4:
+        upgradeV4toV5(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -120,5 +125,15 @@ public class MongoDBTargetUpgrader implements StageUpgrader {
 
   private void upgradeV3toV4(List<Config> configs) {
     configs.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "authSource", ""));
+  }
+
+  private void upgradeV4toV5(List<Config> configs) {
+    String configToChange = MongoDBConfig.CONFIG_PREFIX + "uniqueKeyField";
+    List<Config> remove = configs.stream()
+        .filter(c -> c.getName().equals(configToChange))
+        .collect(Collectors.toList());
+
+    configs.removeAll(remove);
+    configs.add(new Config(configToChange, ImmutableList.of(remove.get(0).getValue())));
   }
 }

@@ -21,21 +21,22 @@ import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.stage.common.mongodb.MongoDBConfig;
 
+import java.util.List;
+
 public class MongoTargetConfigBean {
 
   @ConfigDefBean(groups = {"MONGODB", "CREDENTIALS", "ADVANCED"})
   public MongoDBConfig mongoConfig;
 
   @ConfigDef(
-      type = ConfigDef.Type.MODEL,
+      type = ConfigDef.Type.LIST,
       label = "Unique Key Field",
-      description = "Unique key field is required for update and replace while optional for inserts and deletes",
+      description = "Unique key field(s) is required for update and replace while optional for inserts and deletes",
       required = false,
       displayPosition = 1000,
       group = "MONGODB"
   )
-  @FieldSelectorModel(singleValued = true)
-  public String uniqueKeyField;
+  public List<String> uniqueKeyField;
 
   @ConfigDef(
       type = ConfigDef.Type.BOOLEAN,

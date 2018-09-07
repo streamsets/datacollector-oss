@@ -38,6 +38,7 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.testcontainers.containers.GenericContainer;
+import com.google.common.collect.ImmutableList;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -99,7 +100,7 @@ public class MongoDBTargetIT {
     mongoTargetConfigBean.mongoConfig.authenticationType = AuthenticationType.NONE;
     mongoTargetConfigBean.mongoConfig.username = null;
     mongoTargetConfigBean.mongoConfig.password = null;
-    mongoTargetConfigBean.uniqueKeyField = "/name";
+    mongoTargetConfigBean.uniqueKeyField = ImmutableList.of("/name");
     mongoTargetConfigBean.writeConcern = WriteConcernLabel.JOURNALED;
     mongoTargetConfigBean.isUpsert = true;
 
@@ -164,7 +165,7 @@ public class MongoDBTargetIT {
     mongoTargetConfigBean.mongoConfig.authenticationType = AuthenticationType.NONE;
     mongoTargetConfigBean.mongoConfig.username = null;
     mongoTargetConfigBean.mongoConfig.password = null;
-    mongoTargetConfigBean.uniqueKeyField = "/name";
+    mongoTargetConfigBean.uniqueKeyField = ImmutableList.of("/name");
     mongoTargetConfigBean.writeConcern = WriteConcernLabel.JOURNALED;
     mongoTargetConfigBean.isUpsert = true;
 
@@ -205,7 +206,7 @@ public class MongoDBTargetIT {
     mongoTargetConfigBean.mongoConfig.authenticationType = AuthenticationType.NONE;
     mongoTargetConfigBean.mongoConfig.username = null;
     mongoTargetConfigBean.mongoConfig.password = null;
-    mongoTargetConfigBean.uniqueKeyField = "/name";
+    mongoTargetConfigBean.uniqueKeyField = ImmutableList.of("/name");
     mongoTargetConfigBean.writeConcern = WriteConcernLabel.JOURNALED;
     mongoTargetConfigBean.isUpsert = false;
 
@@ -233,7 +234,7 @@ public class MongoDBTargetIT {
     mongoTargetConfigBean.mongoConfig.authenticationType = AuthenticationType.NONE;
     mongoTargetConfigBean.mongoConfig.username = null;
     mongoTargetConfigBean.mongoConfig.password = null;
-    mongoTargetConfigBean.uniqueKeyField = "/randomUniqueKeyField";
+    mongoTargetConfigBean.uniqueKeyField = ImmutableList.of("/randomUniqueKeyField");
     mongoTargetConfigBean.writeConcern = WriteConcernLabel.NORMAL;
 
     TargetRunner targetRunner = new TargetRunner.Builder(
@@ -249,6 +250,61 @@ public class MongoDBTargetIT {
     List<Record> errorRecords = targetRunner.getErrorRecords();
     assertEquals(logRecords.size(), errorRecords.size());
 
+  }
+
+  @Test
+  public void testUpdateWithMultipleFilters() throws Exception {
+    Document doc = new Document();
+    doc.put("/name", 123);
+    doc.put("/column1", "column1");
+    doc.put("/column2", "column2");
+    testWriteCollection.insertOne(doc);
+
+    MongoTargetConfigBean mongoTargetConfigBean = new MongoTargetConfigBean();
+    mongoTargetConfigBean.mongoConfig = new MongoDBConfig();
+    mongoTargetConfigBean.mongoConfig.connectionString =
+        "mongodb://" + mongoContainer.getContainerIpAddress() + ":" + mongoContainer.getMappedPort(MONGO_PORT);
+    mongoTargetConfigBean.mongoConfig.collection = TEST_WRITE_COLLECTION;
+    mongoTargetConfigBean.mongoConfig.database = DATABASE_NAME;
+    mongoTargetConfigBean.mongoConfig.authenticationType = AuthenticationType.NONE;
+    mongoTargetConfigBean.mongoConfig.username = null;
+    mongoTargetConfigBean.mongoConfig.password = null;
+    mongoTargetConfigBean.uniqueKeyField = ImmutableList.of("/name", "/column1");
+    mongoTargetConfigBean.writeConcern = WriteConcernLabel.JOURNALED;
+    mongoTargetConfigBean.isUpsert = false;
+
+    TargetRunner targetRunner = new TargetRunner.Builder(
+        MongoDBDTarget.class,
+        new MongoDBTarget(mongoTargetConfigBean)
+    ).build();
+    targetRunner.runInit();
+/*
+    targetRunner.runInit();
+    List<Record> logRecords = new ArrayList<>();
+    Record record = RecordCreator.create();
+    Map<String, Field> map = new HashMap<>();
+    map.put("name", Field.create(123));
+    map.put("column1", Field.create("column1"));
+    map.put("column2", Field.create("initial data"));
+    record.set(Field.create(map));
+    record.getHeader().setAttribute(OperationType.SDC_OPERATION_TYPE, String.valueOf(OperationType.INSERT_CODE));
+    targetRunner.runWrite(logRecords);
+*/
+    List<Record> updatedRecords = new ArrayList<>();
+    Record update = RecordCreator.create();
+    Map<String, Field> map2 = new HashMap<>();
+    map2.put("name", Field.create(123));
+    map2.put("column1", Field.create("column1"));
+    update.set(Field.create(map2));
+    update.getHeader().setAttribute(OperationType.SDC_OPERATION_TYPE, String.valueOf(OperationType.UPDATE_CODE));
+    updatedRecords.add(update);
+
+    targetRunner.runWrite(updatedRecords);
+
+    for (Document next : testWriteCollection.find(eq("name", 123))) {
+      assertEquals("column1", next.get("column1"));
+      assertEquals("column2", next.get("column2"));
+    }
   }
 
   private List<Record> createJsonRecords(int operationCode) throws IOException {

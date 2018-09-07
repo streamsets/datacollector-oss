@@ -145,12 +145,13 @@ public class MongoDBTarget extends BaseTarget {
           case "REPLACE":
             validateUniqueKey(operation, record);
             recordList.add(record);
+            Document replaceKey = new Document();
+            mongoTargetConfigBean.uniqueKeyField.forEach( key ->
+                replaceKey.put(removeLeadingSlash(key), record.get(key).getValueAsString())
+            );
             documentList.add(
                 new ReplaceOneModel<>(
-                    new Document(
-                        removeLeadingSlash(mongoTargetConfigBean.uniqueKeyField),
-                        record.get(mongoTargetConfigBean.uniqueKeyField).getValueAsString()
-                    ),
+                    replaceKey,
                     document,
                     new UpdateOptions().upsert(mongoTargetConfigBean.isUpsert)
                 )
@@ -159,12 +160,13 @@ public class MongoDBTarget extends BaseTarget {
           case "UPDATE":
             validateUniqueKey(operation, record);
             recordList.add(record);
+            Document updateKey = new Document();
+            mongoTargetConfigBean.uniqueKeyField.forEach( key ->
+                updateKey.put(removeLeadingSlash(key), record.get(key).getValueAsString())
+            );
             documentList.add(
                 new UpdateOneModel<>(
-                    new Document(
-                        removeLeadingSlash(mongoTargetConfigBean.uniqueKeyField),
-                        record.get(mongoTargetConfigBean.uniqueKeyField).getValueAsString()
-                    ),
+                    updateKey,
                     new Document("$set", document),
                     new UpdateOptions().upsert(mongoTargetConfigBean.isUpsert)
                 )
@@ -227,18 +229,19 @@ public class MongoDBTarget extends BaseTarget {
           operation
       );
     }
-
-    if (!record.has(mongoTargetConfigBean.uniqueKeyField)) {
-      LOG.error(
-        Errors.MONGODB_16.getMessage(),
-        record.getHeader().getSourceId(),
-        mongoTargetConfigBean.uniqueKeyField
-      );
-      throw new OnRecordErrorException(
-        Errors.MONGODB_16,
-        record.getHeader().getSourceId(),
-        mongoTargetConfigBean.uniqueKeyField
-      );
+    for (String keyField : mongoTargetConfigBean.uniqueKeyField) {
+      if (!record.has(keyField)) {
+        LOG.error(
+            Errors.MONGODB_16.getMessage(),
+            record.getHeader().getSourceId(),
+            keyField
+        );
+        throw new OnRecordErrorException(
+            Errors.MONGODB_16,
+            record.getHeader().getSourceId(),
+            keyField
+        );
+      }
     }
   }
 
