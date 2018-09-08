@@ -31,15 +31,15 @@ import java.util.concurrent.Callable;
 
 public class DataLakeWriterThread implements Callable<List<OnRecordErrorException>> {
   private static final Logger LOG = LoggerFactory.getLogger(DataLakeTarget.class);
+  private static final int MAX_RETRY = 3;
 
   private String tmpFilePath;
   private List<Record> records;
-  private RecordWriter writer;
+  private DataLakeGeneratorManager generatorManager;
   private final long threadId;
-  private final int MAX_RETRY = 3;
 
-  public DataLakeWriterThread(RecordWriter writer, String tmpFilePath, List<Record> records) {
-    this.writer = writer;
+  public DataLakeWriterThread(DataLakeGeneratorManager generatorManager, String tmpFilePath, List<Record> records) {
+    this.generatorManager = generatorManager;
     this.tmpFilePath = tmpFilePath;
     this.records = records;
     threadId = Thread.currentThread().getId();
@@ -47,7 +47,7 @@ public class DataLakeWriterThread implements Callable<List<OnRecordErrorExceptio
 
   private int flush(List<Record> records, List<OnRecordErrorException> errorRecords, int numErrorRecords) {
     try {
-      handleError(() -> writer.flush(tmpFilePath));
+      handleError(() -> generatorManager.flush(tmpFilePath));
     } catch (IOException | StageException ex) {
       if (!(ex instanceof ADLException)) {
         LOG.debug(Errors.ADLS_03.getMessage(), tmpFilePath, ex.toString(), ex);
@@ -69,21 +69,18 @@ public class DataLakeWriterThread implements Callable<List<OnRecordErrorExceptio
     List<OnRecordErrorException> errorRecords = new ArrayList<>();
     List<Record> currentRecordList = new ArrayList<>();
 
-    for (int i = 0; i < records.size(); i++) {
-      Record record = records.get(i);
-      String dirPath = tmpFilePath.substring(0, tmpFilePath.lastIndexOf("/"));
-
-      if (writer.shouldRoll(record, dirPath)) {
+    for (Record record : records) {
+      if (generatorManager.shouldRoll(record, tmpFilePath)) {
         try {
           // flush the temp file
           flush(currentRecordList, errorRecords, numErrorRecords);
           // close and rename the temp file
-          handleError(() -> writer.close());
+          handleError(() -> generatorManager.close(tmpFilePath));
         } catch (IOException | StageException ex) {
           if (!(ex instanceof ADLException)) {
             LOG.debug(Errors.ADLS_13.getMessage(), tmpFilePath, ex.toString(), ex);
           }
-          // acutal throwing the error happening on the main thread
+          // actual throwing the error happening on the main thread
           errorRecords.add(new OnRecordErrorException(record, Errors.ADLS_13, ex.toString()));
           numErrorRecords++;
         } finally {
@@ -92,13 +89,13 @@ public class DataLakeWriterThread implements Callable<List<OnRecordErrorExceptio
       }
 
       try {
-        handleError(() -> writer.write(tmpFilePath, record));
+        handleError(() -> generatorManager.write(tmpFilePath, record));
         currentRecordList.add(record);
       } catch (IOException | StageException ex) {
         if (!(ex instanceof ADLException)) {
           LOG.debug(Errors.ADLS_03.getMessage(), tmpFilePath, ex.toString(), ex);
         }
-        // acutal throwing the error happening on the main thread
+        // actual throwing the error happening on the main thread
         errorRecords.add(new OnRecordErrorException(record, Errors.ADLS_03, ex.toString()));
         numErrorRecords++;
       }
@@ -141,7 +138,7 @@ public class DataLakeWriterThread implements Callable<List<OnRecordErrorExceptio
 
         if (httpResponseCode == 401 || httpResponseCode == 400) {
           try {
-            writer.updateToken();
+            generatorManager.updateToken();
             LOG.debug("Thread {} obtained a renewed access token", threadId);
           } catch (IOException ex1) {
             LOG.error("Thread {} obtained a renewed access token failed retrying..", threadId);

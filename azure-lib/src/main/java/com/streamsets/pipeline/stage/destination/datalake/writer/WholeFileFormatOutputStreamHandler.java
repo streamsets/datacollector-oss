@@ -91,14 +91,17 @@ final class WholeFileFormatOutputStreamHandler implements OutputStreamHelper {
   }
 
   @Override
-  public void commitFile(String dirPath) throws IOException {
-    if (dirPath != null && tmpFileName != null) {
+  public void commitFile(String tmpFilePath) throws IOException {
+    if (tmpFilePath != null) {
       boolean overwrite = wholeFileAlreadyExistsAction == WholeFileExistsAction.OVERWRITE;
+      String dirPath = getDirPathForFile(tmpFilePath);
+
       String filePath = dirPath + "/" + tmpFileName.replaceFirst(TMP_FILE_PREFIX, "");
       client.rename(dirPath + "/" + tmpFileName, filePath, overwrite);
 
       //Throw file copied event here.
       context.toEvent(wholeFileEventRecord);
+      tmpFilePath = null;
     }
   }
 
@@ -115,13 +118,9 @@ final class WholeFileFormatOutputStreamHandler implements OutputStreamHelper {
     return tmpFilePath;
   }
 
-  @Override
-  public void clearStatus() throws IOException {
-    tmpFilePath = null;
-  }
 
   @Override
-  public boolean shouldRoll(String dirPath) {
+  public boolean shouldRoll(DataLakeDataGenerator dataGenerator) {
     return true;
   }
 

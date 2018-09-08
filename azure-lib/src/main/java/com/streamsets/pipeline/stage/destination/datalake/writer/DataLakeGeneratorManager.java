@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.destination.datalake.writer;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableSet;
 import com.microsoft.azure.datalake.store.ADLStoreClient;
 import com.microsoft.azure.datalake.store.ContentSummary;
 import com.microsoft.azure.datalake.store.oauth2.AzureADAuthenticator;
@@ -23,7 +24,6 @@ import com.microsoft.azure.datalake.store.oauth2.AzureADToken;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
@@ -32,7 +32,6 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.WholeFileExistsAction;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
-import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.stage.destination.datalake.DataLakeTarget;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import org.slf4j.Logger;
@@ -41,15 +40,15 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class RecordWriter {
-  private final static Logger LOG = LoggerFactory.getLogger(RecordWriter.class);
+public class DataLakeGeneratorManager {
+  private final static Logger LOG = LoggerFactory.getLogger(DataLakeGeneratorManager.class);
 
-  // FilePath with ADLS connections stream
-  private Map<String, DataLakeDataGenerator> generators;
   private final ADLStoreClient client;
   private final DataFormat dataFormat;
   private final DataGeneratorFormatConfig dataFormatConfig;
@@ -73,10 +72,12 @@ public class RecordWriter {
   private final String clientId;
   private final String clientKey;
   private final long idleTimeSecs;
-
   private final ConcurrentLinkedQueue<String> closedPaths;
 
-  public RecordWriter(
+  // File Path with ADLS connections stream
+  private Map<String, DataLakeDataGenerator> tmpFilePathToGenerators;
+
+  public DataLakeGeneratorManager(
       ADLStoreClient client,
       DataFormat dataFormat,
       DataGeneratorFormatConfig dataFormatConfig,
@@ -95,13 +96,6 @@ public class RecordWriter {
       String clientKey,
       long idleTimeSecs
   ) {
-    generators = new HashMap<>();
-    dirPathTemplateEval = context.createELEval("dirPathTemplate");
-    dirPathTemplateVars = context.createELVars();
-    fileNameEval = context.createELEval("fileNameEL");
-    fileNameVars = context.createELVars();
-    closedPaths = new ConcurrentLinkedQueue<>();
-
     this.client = client;
     this.dataFormat = dataFormat;
     this.dataFormatConfig = dataFormatConfig;
@@ -120,21 +114,27 @@ public class RecordWriter {
     this.clientKey = clientKey;
     this.idleTimeSecs = idleTimeSecs;
 
+    this.tmpFilePathToGenerators = new ConcurrentHashMap<>();
+    this.closedPaths = new ConcurrentLinkedQueue<>();
     this.outputStreamHelper = getOutputStreamHelper();
+    this.dirPathTemplateEval = context.createELEval("dirPathTemplate");
+    this.dirPathTemplateVars = context.createELVars();
+    this.fileNameEval = context.createELEval("fileNameEL");
+    this.fileNameVars = context.createELVars();
   }
 
-  public void updateToken() throws IOException {
+  void updateToken() throws IOException {
     AzureADToken token = AzureADAuthenticator.getTokenUsingClientCreds(authTokenEndpoint, clientId, clientKey);
     client.updateToken(token);
   }
 
-  public void write(String filePath, Record record) throws StageException, IOException {
-    DataLakeDataGenerator generator = getGenerator(filePath);
-    generator.write(record);
-  }
-
-  /*
-  return the full filePath for a record
+  /**
+   * Returns the temp file path to write records to
+   * @param dirPathTemplate Directory Template
+   * @param record Record for which file path is calculated
+   * @param recordTime Record time
+   * @return Temporary File Path to write records to
+   * @throws StageException
    */
   public String getFilePath(
       String dirPathTemplate,
@@ -145,7 +145,6 @@ public class RecordWriter {
     // get directory path
     if (dirPathTemplateInHeader) {
       dirPath = record.getHeader().getAttribute(DataLakeTarget.TARGET_DIRECTORY_HEADER);
-
       Utils.checkArgument(!(dirPath == null || dirPath.isEmpty()), "Directory Path cannot be null");
     } else {
       dirPath = resolvePath(dirPathTemplateEval, dirPathTemplateVars, dirPathTemplate, recordTime, record);
@@ -160,39 +159,48 @@ public class RecordWriter {
     return outputStreamHelper.getTempFilePath(dirPath, record, recordTime);
   }
 
-  public void close() throws IOException, StageException {
-    for (Map.Entry<String, DataLakeDataGenerator> entry : generators.entrySet()) {
-      String dirPath = entry.getKey().substring(0, entry.getKey().lastIndexOf("/"));
-      entry.getValue().close();
-      generators.remove(dirPath);
-      outputStreamHelper.commitFile(dirPath);
+  /**
+   * Close all generators (and underlying streams/files)
+   * @throws IOException
+   * @throws StageException
+   */
+  public void closeAll() throws IOException, StageException {
+    Set<String> filePathsToClose = ImmutableSet.copyOf(tmpFilePathToGenerators.keySet());
+    for (String filePath : filePathsToClose) {
+      close(filePath);
     }
-    generators.clear();
-    outputStreamHelper.clearStatus();
   }
 
-  public void flush(String filePath) throws IOException {
-    DataLakeDataGenerator generator = generators.get(filePath);
-    if (generator == null) {
-      return;
-    }
-    generator.flush();
+  void write(String filePath, Record record) throws StageException, IOException {
+    DataLakeDataGenerator generator = getGenerator(filePath);
+    generator.write(record);
   }
 
-  private DataLakeDataGenerator getGenerator(String filePath) throws StageException, IOException {
-    DataLakeDataGenerator generator = generators.get(filePath);
+  void close(String filePath) throws IOException, StageException {
+    DataLakeDataGenerator generator = tmpFilePathToGenerators.remove(filePath);
+    if (generator != null) {
+      generator.close();
+    }
+    outputStreamHelper.commitFile(filePath);
+  }
+
+  void flush(String filePath) throws IOException {
+    DataLakeDataGenerator generator = tmpFilePathToGenerators.get(filePath);
+    if (generator != null) {
+      generator.flush();
+    }
+  }
+
+  private DataLakeDataGenerator getGenerator(String dirPath)  throws StageException, IOException {
+    DataLakeDataGenerator generator = tmpFilePathToGenerators.get(dirPath);
     if (generator == null) {
-      generator = createDataGenerator(filePath);
-      generators.put(filePath, generator);
+      generator = new DataLakeDataGenerator(dirPath, outputStreamHelper, dataFormatConfig, idleTimeSecs);
+      tmpFilePathToGenerators.put(dirPath, generator);
     }
     return generator;
   }
 
-  private DataLakeDataGenerator createDataGenerator(String filePath) throws StageException, IOException {
-    return new DataLakeDataGenerator(filePath, outputStreamHelper, dataFormatConfig, idleTimeSecs);
-  }
-
-  OutputStreamHelper getOutputStreamHelper() {
+  private OutputStreamHelper getOutputStreamHelper() {
     final String uniqueId = context.getSdcId() + "-" + context.getPipelineId() + "-" + context.getRunnerId();
 
     if (dataFormat != DataFormat.WHOLE_FILE) {
@@ -226,21 +234,22 @@ public class RecordWriter {
       Record record
   ) throws ELEvalException {
     RecordEL.setRecordInContext(dirPathTemplateVars, record);
-    if (date != null) {
+    Optional.ofNullable(date).ifPresent(d -> {
       Calendar calendar = Calendar.getInstance();
-      calendar.setTime(date);
+      calendar.setTime(d);
       TimeEL.setCalendarInContext(dirPathTemplateVars, calendar);
-    }
+    });
     return dirPathTemplateEval.eval(dirPathTemplateVars, dirPathTemplate, String.class);
   }
 
   @VisibleForTesting
-  boolean shouldRoll(Record record, String dirPath) {
+  boolean shouldRoll(Record record, String tmpFilePath) {
     if (rollIfHeader && record.getHeader().getAttribute(rollHeaderName) != null) {
       return true;
     }
-
-    return outputStreamHelper.shouldRoll(dirPath);
+    return Optional.ofNullable(tmpFilePathToGenerators.get(tmpFilePath))
+        .map(outputStreamHelper::shouldRoll)
+        .orElse(false);
   }
 
   /**

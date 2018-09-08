@@ -23,25 +23,25 @@ import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.stage.destination.datalake.DataLakeDTarget;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 
-public class RecordWriterTestBuilder {
-  ADLStoreClient client;
-  DataFormat dataFormat;
-  DataGeneratorFormatConfig dataFormatConfig;
-  String uniquePrefix;
-  String fileNameSuffix;
-  String fileNameEL;
-  boolean dirPathTemplateInHeader;
-  boolean rollIfHeader;
-  String rollHeaderName;
-  long maxRecordsPerFile;
-  long maxFileSize;
-  WholeFileExistsAction wholeFileExistsAction;
-  String authTokenEndpoint;
-  String clientId;
-  String clientKey;
-  long idleTimeout;
+public class DataLakeGeneratorManagerTestBuilder {
+  private ADLStoreClient client;
+  private DataFormat dataFormat;
+  private DataGeneratorFormatConfig dataFormatConfig;
+  private String uniquePrefix;
+  private String fileNameSuffix;
+  private String fileNameEL;
+  private boolean dirPathTemplateInHeader;
+  private boolean rollIfHeader;
+  private String rollHeaderName;
+  private long maxRecordsPerFile;
+  private long maxFileSize;
+  private WholeFileExistsAction wholeFileExistsAction;
+  private String authTokenEndpoint;
+  private String clientId;
+  private String clientKey;
+  private long idleTimeout;
 
-  public RecordWriterTestBuilder() {
+  public DataLakeGeneratorManagerTestBuilder() {
     this.client = null;
     this.dataFormat = DataFormat.TEXT;
     this.dataFormatConfig = new DataGeneratorFormatConfig();
@@ -60,33 +60,33 @@ public class RecordWriterTestBuilder {
     this.idleTimeout = -1L;
   }
 
-  public RecordWriterTestBuilder uniquePrefix(String uniquePrefix) {
+  public DataLakeGeneratorManagerTestBuilder uniquePrefix(String uniquePrefix) {
     this.uniquePrefix = uniquePrefix;
     return this;
   }
 
-  public RecordWriterTestBuilder fileNameSuffix(String fileSuffix) {
+  public DataLakeGeneratorManagerTestBuilder fileNameSuffix(String fileSuffix) {
     this.fileNameSuffix = fileSuffix;
     return this;
   }
 
-  public RecordWriterTestBuilder dirPathTemplateInHeader(boolean dirPathTemplateInHeader) {
+  public DataLakeGeneratorManagerTestBuilder dirPathTemplateInHeader(boolean dirPathTemplateInHeader) {
     this.dirPathTemplateInHeader = dirPathTemplateInHeader;
     return this;
   }
 
-  public RecordWriterTestBuilder rollHeaderName(String rollHeaderName) {
+  public DataLakeGeneratorManagerTestBuilder rollHeaderName(String rollHeaderName) {
     this.rollHeaderName = rollHeaderName;
     return this;
   }
 
-  public RecordWriterTestBuilder rollIfHeader(boolean rollIfHeader) {
+  public DataLakeGeneratorManagerTestBuilder rollIfHeader(boolean rollIfHeader) {
     this.rollIfHeader = rollIfHeader;
     return this;
   }
 
-  public RecordWriter build() {
-    return new RecordWriter(
+  public DataLakeGeneratorManager build() {
+    return new DataLakeGeneratorManager(
         client,
         dataFormat,
         dataFormatConfig,

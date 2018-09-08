@@ -38,7 +38,7 @@ import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.destination.datalake.writer.DataLakeWriterThread;
-import com.streamsets.pipeline.stage.destination.datalake.writer.RecordWriter;
+import com.streamsets.pipeline.stage.destination.datalake.writer.DataLakeGeneratorManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +71,7 @@ public class DataLakeTarget extends BaseTarget {
   private ELEval timeDriverEval;
   private ELVars timeDriverVars;
   private Calendar calendar;
-  private RecordWriter writer;
+  private DataLakeGeneratorManager generatorManager;
   private ErrorRecordHandler errorRecordHandler;
   private SafeScheduledExecutorService scheduledExecutor;
   private long idleTimeSecs = -1;
@@ -190,7 +190,7 @@ public class DataLakeTarget extends BaseTarget {
     }
 
     if (issues.isEmpty()) {
-      writer = new RecordWriter(
+      generatorManager = new DataLakeGeneratorManager(
           client,
           conf.dataFormat,
           conf.dataFormatConfig,
@@ -239,10 +239,10 @@ public class DataLakeTarget extends BaseTarget {
 
   @Override
   public void destroy() {
-    if (writer != null) {
+    if (generatorManager != null) {
       try {
-        writer.close();
-        writer.issueCachedEvents();
+        generatorManager.closeAll();
+        generatorManager.issueCachedEvents();
       } catch (StageException | IOException ex) {
         String errorMessage = ex.toString();
         if (ex instanceof ADLException) {
@@ -275,7 +275,7 @@ public class DataLakeTarget extends BaseTarget {
     for (Map.Entry<String, List<Record>> entry : recordsPerFile.entrySet()) {
       String filePath = entry.getKey();
       List<Record> records = entry.getValue();
-      Callable<List<OnRecordErrorException>> worker = new DataLakeWriterThread(writer, filePath, records);
+      Callable<List<OnRecordErrorException>> worker = new DataLakeWriterThread(generatorManager, filePath, records);
       Future<List<OnRecordErrorException>> future = scheduledExecutor.submit(worker);
       futures.add(future);
     }
@@ -303,7 +303,7 @@ public class DataLakeTarget extends BaseTarget {
     }
 
     try {
-      writer.issueCachedEvents();
+      generatorManager.issueCachedEvents();
     } catch (IOException ex) {
       throw new StageException(Errors.ADLS_12, String.valueOf(ex), ex);
     }
@@ -326,7 +326,7 @@ public class DataLakeTarget extends BaseTarget {
           errorRecordHandler.onError(new OnRecordErrorException(record, Errors.ADLS_07, conf.timeDriver));
         }
 
-        String filePath = writer.getFilePath(
+        String filePath = generatorManager.getFilePath(
             conf.dirPathTemplate,
             record,
             recordTime

@@ -37,7 +37,7 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.Callable;
 
-public class TestRecordWriter {
+public class TestDataLakeGeneratorManager {
   final String TEMP = "_tmp_";
 
   @BeforeClass
@@ -87,12 +87,12 @@ public class TestRecordWriter {
 
     final String targetFilePathPrefix = dirPath + year + "-" + month + "-" + day + "/" + TEMP + uniquePrefix + "-";
 
-    RecordWriter recordWriter = new RecordWriterTestBuilder()
+    DataLakeGeneratorManager dataLakeGeneratorManager = new DataLakeGeneratorManagerTestBuilder()
         .uniquePrefix(uniquePrefix)
         .fileNameSuffix(fileSuffix)
         .build();
 
-    String filePath = recordWriter.getFilePath(dirPathTemplate, r, date);
+    String filePath = dataLakeGeneratorManager.getFilePath(dirPathTemplate, r, date);
     Assert.assertTrue(filePath.startsWith(targetFilePathPrefix));
     Assert.assertTrue(filePath.endsWith(fileSuffix));
   }
@@ -110,13 +110,13 @@ public class TestRecordWriter {
     final String uniquePrefix = "sdc";
     final String fileSuffix = "txt";
 
-    RecordWriter recordWriter = new RecordWriterTestBuilder()
+    DataLakeGeneratorManager dataLakeGeneratorManager = new DataLakeGeneratorManagerTestBuilder()
         .uniquePrefix(uniquePrefix)
         .fileNameSuffix(fileSuffix)
         .dirPathTemplateInHeader(true)
         .build();
     final String dirPathTemplate = "";
-    String filePath = recordWriter.getFilePath(dirPathTemplate, r, null);
+    String filePath = dataLakeGeneratorManager.getFilePath(dirPathTemplate, r, null);
 
     final String targetFilePathPrefix = dirPath + "/" + TEMP + uniquePrefix;
     Assert.assertTrue(filePath.startsWith(targetFilePathPrefix));
@@ -132,11 +132,11 @@ public class TestRecordWriter {
     Record.Header header = record.getHeader();
     header.setAttribute(rollHeaderName, rollHeaderName);
 
-    RecordWriter recordWriter = new RecordWriterTestBuilder()
+    DataLakeGeneratorManager dataLakeGeneratorManager = new DataLakeGeneratorManagerTestBuilder()
         .rollHeaderName(rollHeaderName)
         .rollIfHeader(rollIfHeader)
         .build();
 
-    Assert.assertTrue(recordWriter.shouldRoll(record, dirPath));
+    Assert.assertTrue(dataLakeGeneratorManager.shouldRoll(record, dirPath));
   }
 }

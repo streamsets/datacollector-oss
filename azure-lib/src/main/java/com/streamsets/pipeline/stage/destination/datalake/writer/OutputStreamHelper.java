@@ -18,18 +18,23 @@ package com.streamsets.pipeline.stage.destination.datalake.writer;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.generator.StreamCloseEventHandler;
+import org.apache.commons.io.output.CountingOutputStream;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Date;
 
 interface OutputStreamHelper {
-  final static String TMP_FILE_PREFIX = "_tmp_";
+  String TMP_FILE_PREFIX = "_tmp_";
+
   OutputStream getOutputStream(String filePath)
       throws StageException, IOException;
   String getTempFilePath(String dirPath, Record record, Date recordTime) throws StageException;
-  void commitFile(String dirPath) throws IOException;
-  void clearStatus() throws IOException;
-  boolean shouldRoll(String dirPath);
+  void commitFile(String tmpFilePath) throws IOException;
+  boolean shouldRoll(DataLakeDataGenerator dataGenerator);
   StreamCloseEventHandler<?> getStreamCloseEventHandler();
+
+  default String getDirPathForFile(String tmpFilePath) {
+    return tmpFilePath.substring(0, tmpFilePath.lastIndexOf('/'));
+  }
 }
