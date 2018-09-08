@@ -17,15 +17,19 @@ package com.streamsets.pipeline.lib.elasticsearch;
 
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.aws.AwsRegion;
+import com.streamsets.pipeline.lib.aws.AwsUtil;
 import com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchConfig;
 import com.streamsets.pipeline.stage.config.elasticsearch.Errors;
 import com.streamsets.pipeline.stage.config.elasticsearch.Groups;
 import com.streamsets.pipeline.stage.config.elasticsearch.SecurityConfig;
+import com.streamsets.pipeline.stage.config.elasticsearch.SecurityMode;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
+import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.ssl.SSLContexts;
@@ -59,6 +63,7 @@ public class ElasticsearchStageDelegate {
   private static final Logger LOG = LoggerFactory.getLogger(ElasticsearchStageDelegate.class);
   private static final Pattern URI_PATTERN = Pattern.compile("\\S+:(\\d+)");
   private static final Pattern SECURITY_USER_PATTERN = Pattern.compile("\\S+:\\S+");
+  private static final String AWS_SERVICE_NAME = "es";
 
   private final Stage.Context context;
   private final ElasticsearchConfig conf;
@@ -120,13 +125,35 @@ public class ElasticsearchStageDelegate {
       if (conf.useSecurity) {
         buildSSLContext(issues, restClientBuilder);
 
-        restClient = restClientBuilder.build();
+        switch (conf.securityConfig.securityMode) {
+          case BASIC:
+            restClient = restClientBuilder.build();
+            break;
+          case AWSSIGV4:
+            AwsRegion awsRegion = conf.securityConfig.awsRegion;
+            if (awsRegion == AwsRegion.OTHER) {
+              if (conf.securityConfig.endpoint == null || conf.securityConfig.endpoint.isEmpty()) {
+                issues.add(context.createConfigIssue(Groups.SECURITY.name(), SecurityConfig.CONF_PREFIX + "endpoint", Errors.ELASTICSEARCH_33));
+                return issues;
+              }
+            }
+
+            HttpRequestInterceptor interceptor = AwsUtil.getAwsSigV4Interceptor(
+                AWS_SERVICE_NAME,
+                awsRegion,
+                conf.securityConfig.endpoint,
+                conf.securityConfig.awsAccessKeyId,
+                conf.securityConfig.awsSecretAccessKey);
+            restClient = RestClient.builder(hosts).setHttpClientConfigCallback(hacb -> hacb.addInterceptorLast(interceptor)).build();
+            break;
+        }
+
         restClient.performRequest("GET", "/", getAuthenticationHeader(securityUser));
       } else {
         restClient = restClientBuilder.build();
         restClient.performRequest("GET", "/");
       }
-    } catch (IOException e) {
+    } catch (IOException | StageException e) {
       issues.add(
           context.createConfigIssue(
               Groups.ELASTIC_SEARCH.name(),
@@ -285,7 +312,7 @@ public class ElasticsearchStageDelegate {
   }
 
   public Header[] getAuthenticationHeader(String securityUser) {
-    if (!conf.useSecurity) {
+    if (!conf.useSecurity || conf.securityConfig.securityMode.equals(SecurityMode.AWSSIGV4)) {
       return new Header[0];
     }
 
