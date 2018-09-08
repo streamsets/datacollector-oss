@@ -32,9 +32,9 @@
   <name>StreamSets Data Collector Amazon AWS Support</name>
   <packaging>jar</packaging>
 
-
   <properties>
     <awssdk.version>1.11.385</awssdk.version>
+    <apache-http.version>4.5.5</apache-http.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -63,11 +63,21 @@
 
     <dependency>
       <groupId>com.amazonaws</groupId>
+      <artifactId>aws-java-sdk-bundle</artifactId>
+      <version>${awssdk.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-core</artifactId>
     </dependency>
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-s3</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>${apache-http.version}</version>
     </dependency>
 
     <!-- Test Dependencies -->

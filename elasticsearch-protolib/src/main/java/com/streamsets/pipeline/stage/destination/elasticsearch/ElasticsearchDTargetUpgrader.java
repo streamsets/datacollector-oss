@@ -33,6 +33,7 @@ public class ElasticsearchDTargetUpgrader implements StageUpgrader {
   static final String OLD_SECURITY_PREFIX = "elasticSearchConfigBean.securityConfigBean.";
 
   static final String CURRENT_CONFIG_PREFIX = "elasticSearchConfig.";
+  static final String CURRENT_SECURITY_CONFIG_PREFIX = "securityConfig.";
 
   @Override
   public List<Config> upgrade(
@@ -77,6 +78,12 @@ public class ElasticsearchDTargetUpgrader implements StageUpgrader {
         // fall through
       case 7:
         upgradeV7ToV8(configs);
+        if (toVersion == 8) {
+          break;
+        }
+        // fall through
+      case 8:
+        upgradeV8ToV9(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -269,6 +276,11 @@ public class ElasticsearchDTargetUpgrader implements StageUpgrader {
   private void upgradeV7ToV8(List<Config> configs) {
     configs.add(new Config(CURRENT_CONFIG_PREFIX + "parentIdTemplate", ""));
     configs.add(new Config(CURRENT_CONFIG_PREFIX + "routingTemplate", ""));
+  }
+
+  private void upgradeV8ToV9(List<Config> configs) {
+    configs.add(new Config(CURRENT_CONFIG_PREFIX + CURRENT_SECURITY_CONFIG_PREFIX + "securityMode", "BASIC"));
+    configs.add(new Config(CURRENT_CONFIG_PREFIX + CURRENT_SECURITY_CONFIG_PREFIX + "awsRegion", "US_EAST_2"));
   }
 
 }
