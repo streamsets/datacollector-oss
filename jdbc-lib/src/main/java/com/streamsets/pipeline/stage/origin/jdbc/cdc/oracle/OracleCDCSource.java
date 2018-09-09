@@ -45,6 +45,7 @@ import com.streamsets.pipeline.stage.origin.jdbc.cdc.ChangeTypeValues;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaAndTable;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaTableConfigBean;
 import com.zaxxer.hikari.HikariDataSource;
+import jdk.management.resource.internal.FutureWrapper;
 import net.jcip.annotations.GuardedBy;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.apache.commons.io.FileUtils;
@@ -76,6 +77,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -186,6 +189,8 @@ public class OracleCDCSource extends BaseSource {
   public static final String CURRENT_LATEST_SCN_IS = "Current latest SCN is: {}";
 
   public static final int LOGMINER_START_MUST_BE_CALLED = 1306;
+  public static final String ROLLBACK = "rollback";
+  public static final String ONE = "1";
   private DateTimeColumnHandler dateTimeColumnHandler;
 
 
@@ -201,6 +206,7 @@ public class OracleCDCSource extends BaseSource {
 
   @GuardedBy(value = "bufferedRecordsLock")
   private final Map<TransactionIdKey, HashQueue<RecordSequence>> bufferedRecords = new HashMap<>();
+  private final Map<TransactionIdKey, List<String>> rollbacks = new HashMap<>();
 
   private final AtomicReference<BigDecimal> cachedSCNForRedoLogs = new AtomicReference<>(BigDecimal.ZERO);
 
@@ -499,6 +505,8 @@ public class OracleCDCSource extends BaseSource {
             String rsId = resultSet.getString(13);
             Object ssn = resultSet.getObject(14);
             String schema = String.valueOf(resultSet.getString(15));
+            int rollback = resultSet.getInt(16);
+            String rowId = resultSet.getString(17);
             SchemaAndTable schemaAndTable = new SchemaAndTable(schema, table);
             String xid = xidUsn + "." + xidSlt + "." + xidSqn;
             TransactionIdKey key = new TransactionIdKey(xid);
@@ -514,8 +522,8 @@ public class OracleCDCSource extends BaseSource {
             }
             Offset offset = null;
             if (LOG.isDebugEnabled()) {
-              LOG.debug("Commit SCN = {}, SCN = {}, Operation = {}, Txn Id = {}, Timestamp = {}, Redo SQL = {}",
-                  commitSCN, scn, op, xid, tsDate, queryString
+              LOG.debug("Commit SCN = {}, SCN = {}, Operation = {}, Txn Id = {}, Timestamp = {}, Row Id = {}, Redo SQL = {}",
+                  commitSCN, scn, op, xid, tsDate, rowId, queryString
               );
             }
 
@@ -533,6 +541,8 @@ public class OracleCDCSource extends BaseSource {
               attributes.put(RS_ID, rsId);
               attributes.put(SSN, ssn.toString());
               attributes.put(SCHEMA, schema);
+              attributes.put(ROLLBACK, String.valueOf(rollback));
+              attributes.put(ROWID_KEY, rowId);
               if (!useLocalBuffering || getContext().isPreview()) {
                 if (commitSCN.compareTo(lastCommitSCN) < 0 ||
                     (commitSCN.compareTo(lastCommitSCN) == 0 && seq < sequenceNumber)) {
@@ -667,14 +677,7 @@ public class OracleCDCSource extends BaseSource {
         }
         try {
           if (error) {
-            try {
-              resetDBConnectionsIfRequired();
-            } catch (SQLException sqlEx) {
-              LOG.error("Error while connecting to DB", sqlEx);
-              addToStageExceptionsQueue(new StageException(JDBC_00, sqlEx));
-            } catch (StageException stageException) {
-              addToStageExceptionsQueue(stageException);
-            }
+            resetConnectionsQuietly();
           } else {
             discardOldUncommitted(startTime);
             startTime = adjustStartTime(endTime);
@@ -696,6 +699,17 @@ public class OracleCDCSource extends BaseSource {
           addToStageExceptionsQueue(ex);
         }
       }
+    }
+  }
+
+  private void resetConnectionsQuietly() {
+    try {
+      resetDBConnectionsIfRequired();
+    } catch (SQLException sqlEx) {
+      LOG.error("Error while connecting to DB", sqlEx);
+      addToStageExceptionsQueue(new StageException(JDBC_00, sqlEx));
+    } catch (StageException stageException) {
+      addToStageExceptionsQueue(stageException);
     }
   }
 
@@ -786,7 +800,6 @@ public class OracleCDCSource extends BaseSource {
       record.set(Field.create(fields));
       attributes.forEach((k, v) -> record.getHeader().setAttribute(k, v));
 
-      LOG.debug(GENERATED_RECORD, record, attributes.get(XID));
       Joiner errorStringJoiner = Joiner.on(", ");
       List<String> errorColumns = Collections.emptyList();
       if (!fieldTypeExceptions.isEmpty()) {
@@ -862,32 +875,35 @@ public class OracleCDCSource extends BaseSource {
     }
     final List<FutureWrapper> parseFutures = new ArrayList<>();
     while (!records.isEmpty()) {
-      if (getContext().isStopped()) {
-        return seq;
-      }
       RecordSequence r = records.remove();
       if (configBean.keepOriginalQuery) {
         r.headers.put(QUERY_KEY, r.sqlString);
       }
-      seq = r.seq;
       final Future<Record> recordFuture = parsingExecutor.submit(() -> generateRecord(r.sqlString, r.headers, r.opCode));
       parseFutures.add(new FutureWrapper(recordFuture, r.sqlString, r.seq));
     }
     records.close();
+    LinkedList<RecordOffset> recordOffsets = new LinkedList<>();
     for (FutureWrapper recordFuture : parseFutures) {
       try {
         Record record = recordFuture.future.get();
         if (record != null) {
           final RecordOffset recordOffset =
-              new RecordOffset(record, new Offset(VERSION_UNCOMMITTED, commitTimestamp, commitScn, recordFuture.seq)
-              );
-          // If produce is not called because pipeline was stopped and the queue is full,
-          // we simply return
-          while (!recordQueue.offer(recordOffset, 1, TimeUnit.SECONDS)) {
-            // if pipeline was stopped just return last added offset.
-            if (getContext().isStopped()) {
-              return seq;
+              new RecordOffset(record, new Offset(VERSION_UNCOMMITTED, commitTimestamp, commitScn, recordFuture.seq));
+
+          // Is this a record generated by a rollback? If it is find the previous record that matches this row id and
+          // remove it from the queue.
+          if (recordOffset.record.getHeader().getAttribute(ROLLBACK).equals(ONE)) {
+            String rowId = recordOffset.record.getHeader().getAttribute(ROWID_KEY);
+            Iterator<RecordOffset> reverseIter = recordOffsets.descendingIterator();
+            while (reverseIter.hasNext()) {
+              if (reverseIter.next().record.getHeader().getAttribute(ROWID_KEY).equals(rowId)) {
+                reverseIter.remove();
+                break;
+              }
             }
+          } else {
+            recordOffsets.add(recordOffset);
           }
         }
       } catch (ExecutionException e) {
@@ -898,6 +914,24 @@ public class OracleCDCSource extends BaseSource {
           } else {
             errorRecordHandler.onError(JDBC_405, cause);
           }
+        } catch (StageException stageException) {
+          addToStageExceptionsQueue(stageException);
+        }
+      }
+    }
+
+    for (RecordOffset ro : recordOffsets) {
+      try {
+        seq = ro.offset.sequence;
+        while (!recordQueue.offer(ro, 1, TimeUnit.SECONDS)) {
+          if (getContext().isStopped()) {
+            return seq;
+          }
+        }
+        LOG.debug(GENERATED_RECORD, ro.record, ro.record.getHeader().getAttribute(XID));
+      } catch (InterruptedException ex) {
+        try {
+          errorRecordHandler.onError(JDBC_405, ex);
         } catch (StageException stageException) {
           addToStageExceptionsQueue(stageException);
         }
@@ -1035,14 +1069,7 @@ public class OracleCDCSource extends BaseSource {
       startLogMnrForData.execute();
     } catch (SQLException ex) {
       LOG.debug("SQLException while starting LogMiner", ex);
-      try {
-        resetDBConnectionsIfRequired();
-      } catch (SQLException sqlEx) {
-        LOG.error("Error while connecting to DB", sqlEx);
-        addToStageExceptionsQueue(new StageException(JDBC_00, sqlEx));
-      } catch (StageException stageException) {
-        addToStageExceptionsQueue(stageException);
-      }
+      resetConnectionsQuietly();
       throw ex;
     }
   }
@@ -1239,7 +1266,7 @@ public class OracleCDCSource extends BaseSource {
 
     final String base =
         "SELECT SCN, USERNAME, OPERATION_CODE, TIMESTAMP, SQL_REDO, TABLE_NAME, " + commitScnField +
-            ", SEQUENCE#, CSF, XIDUSN, XIDSLT, XIDSQN, RS_ID, SSN, SEG_OWNER " +
+            ", SEQUENCE#, CSF, XIDUSN, XIDSLT, XIDSQN, RS_ID, SSN, SEG_OWNER, ROLLBACK, ROW_ID " +
             " FROM V$LOGMNR_CONTENTS" +
             " WHERE ";
 
