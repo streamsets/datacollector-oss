@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -133,14 +134,10 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
    */
   private List<OnRecordErrorException> write(Collection<Record> batch, boolean perRecord) throws StageException {
     List<OnRecordErrorException> errorRecords = new LinkedList<>();
-    Connection connection = null;
     PreparedStatementMap statementsForBatch = null;
-    List<PreparedStatement> statementsToExecute = new ArrayList<>();
     // Map that keeps list of records that has been used for each statement -- for error handling
-    Map<PreparedStatement, List<Record>> statementsToRecords  = new HashMap<>();
-    try {
-      connection = getDataSource().getConnection();
-
+    Map<PreparedStatement, List<Record>> statementsToRecords  = new LinkedHashMap<>();
+    try (Connection connection = getDataSource().getConnection()) {
       statementsForBatch = new PreparedStatementMap(
           connection,
           getTableName(),
@@ -185,10 +182,6 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
 
           if (!perRecord) {
             statement.addBatch();
-
-            if (!statementsToExecute.contains(statement)) {
-              statementsToExecute.add(statement);
-            }
           } else {
             statement.executeUpdate();
 
@@ -204,18 +197,20 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
       }
 
       if (!perRecord) {
-        for (PreparedStatement statement : statementsToExecute) {
+        for (Map.Entry<PreparedStatement, List<Record>> entry : statementsToRecords.entrySet()) {
+          PreparedStatement statement = entry.getKey();
+          List<Record> statementRecords = entry.getValue();
           try {
             statement.executeBatch();
           } catch(SQLException e){
             if (getRollbackOnError()) {
               connection.rollback();
             }
-            handleBatchUpdateException(statementsToRecords.get(statement), e, errorRecords);
+            handleBatchUpdateException(statementRecords, e, errorRecords);
           }
 
           if (getGeneratedColumnMappings() != null) {
-            writeGeneratedColumns(statement, batch.iterator(), errorRecords);
+            writeGeneratedColumns(statement, statementRecords.iterator(), errorRecords);
           }
         }
       }
@@ -223,14 +218,6 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
       connection.commit();
     } catch (SQLException e) {
       handleSqlException(e);
-    } finally {
-      if (connection != null) {
-        try {
-          connection.close();
-        } catch (SQLException e) {
-          handleSqlException(e);
-        }
-      }
     }
     return errorRecords;
   }
