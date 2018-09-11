@@ -186,7 +186,9 @@ public abstract class DetachedStage {
     StageContext context = new StageContext(
       pipelineId,
       pipelineTitle,
+      null, //TODO. Will need to set here if this stage needs to publish lineage events
       rev,
+      null, //TODO. Will need to set here if this stage needs to publish lineage events
       Collections.emptyList(),
       userContext,
       stageBean.getDefinition().getType(),

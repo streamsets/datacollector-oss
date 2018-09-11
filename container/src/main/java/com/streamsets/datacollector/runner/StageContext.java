@@ -55,8 +55,9 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class StageContext extends ProtoContext implements
@@ -79,6 +80,8 @@ public class StageContext extends ProtoContext implements
   private final DeliveryGuarantee deliveryGuarantee;
   private final String sdcId;
   private final String pipelineTitle;
+  private final String pipelineDescription;
+  private final Map<String, Object> pipelineMetadata;
   private volatile boolean stop;
   private final Map<String, Object> sharedRunnerMap;
   private final long startTime;
@@ -122,6 +125,8 @@ public class StageContext extends ProtoContext implements
       resourcesDir
     );
     this.pipelineTitle = "My Pipeline";
+    this.pipelineDescription = "Sample Pipeline";
+    this.pipelineMetadata = new HashMap<>();
     this.sdcId = "mySDC";
     // create dummy info for Stage Runners. This is required for stages that expose custom metrics
     this.stageInfo = new Stage.Info() {
@@ -178,7 +183,9 @@ public class StageContext extends ProtoContext implements
   public StageContext(
       String pipelineId,
       String pipelineTitle,
+      String pipelineDescription,
       String rev,
+      Map<String, Object> metadata,
       List<Stage.Info> pipelineInfo,
       Stage.UserContext userContext,
       StageType stageType,
@@ -218,6 +225,8 @@ public class StageContext extends ProtoContext implements
     );
     this.pipelineTitle = pipelineTitle;
     this.pipelineInfo = pipelineInfo;
+    this.pipelineDescription = pipelineDescription;
+    this.pipelineMetadata = metadata;
     this.userContext = userContext;
     this.runnerId = runnerId;
     this.isPreview = isPreview;
@@ -447,7 +456,6 @@ public class StageContext extends ProtoContext implements
     if (type.isFrameworkOnly()) {
       throw new IllegalArgumentException(Utils.format(ContainerError.CONTAINER_01401.getMessage(), type.getLabel()));
     }
-
     return new LineageEventImpl(
         type,
         pipelineId,
@@ -456,7 +464,11 @@ public class StageContext extends ProtoContext implements
         pipelineId,
         getSdcId(),
         runtimeInfo.getBaseHttpUrl() + LineageEventImpl.PARTIAL_URL + pipelineId,
-        stageInfo.getInstanceName()
+        stageInfo.getInstanceName(),
+        pipelineDescription,
+        rev,
+        pipelineMetadata,
+        getPipelineConstants()
     );
 
   }

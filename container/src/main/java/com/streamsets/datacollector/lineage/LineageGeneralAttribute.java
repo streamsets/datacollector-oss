@@ -27,6 +27,12 @@ public enum LineageGeneralAttribute implements Label {
   //pipeline unique ID: devlocal99cf1aef-b609-4e2a-88ee-4ea436aafb93
   PIPELINE_ID("Id"),
   PIPELINE_USER("user"),
+  PIPELINE_VERSION("pipeline_version"),
+  PIPELINE_LABELS("labels"),
+  PIPELINE_PARAMETERS("pipeline_parameters"),
+
+  // This description is used in the Description space hence it won't go in to custom metadata
+  PIPELINE_DESCRIPTION("description"),
 
   // this timestamp is pulled from system time,
   // and it may be posted to the UI.
