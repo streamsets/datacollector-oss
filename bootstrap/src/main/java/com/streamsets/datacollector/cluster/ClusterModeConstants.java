@@ -35,6 +35,7 @@ public class ClusterModeConstants {
   public static final String AVRO_JAR_REGEX = "avro-\\d+.*";
 
   public static final String EXTRA_KAFKA_CONFIG_PREFIX = "EXTRA_KAFKA_CONFIG_PREFIX_";
+  public static final String SECURE_KAFKA_IDENTIFIER = "SASL";
 
 
   private ClusterModeConstants() {}
