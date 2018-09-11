@@ -615,8 +615,11 @@ public class TestShellClusterProvider {
         Mockito.any(StageLibraryTask.class)
     );
 
+    Map<String, String> sourceInfoCopy = new HashMap<>(sourceInfo);
+    sourceInfoCopy.put(ClusterModeConstants.EXTRA_KAFKA_CONFIG_PREFIX+"security.protocol", "SASL_PLAINTEXT");
     Assert.assertEquals(id, sparkProvider.startPipeline(
-        providerTemp, sourceInfo,
+        providerTemp,
+        sourceInfoCopy,
         pipelineConfKrb, pipelineConfigBean, stageLibrary,
         Mockito.mock(CredentialStoresTask.class),
         etcDir,

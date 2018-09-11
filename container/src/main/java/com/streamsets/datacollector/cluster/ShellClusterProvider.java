@@ -242,6 +242,14 @@ public class ShellClusterProvider extends BaseClusterProvider {
     Utils.checkArgument(config != null, Utils.formatL("Invalid pipeline configuration: {}", errors));
     String numExecutors = config.workerCount == 0 ?
                           sourceInfo.get(ClusterModeConstants.NUM_EXECUTORS_KEY) : String.valueOf(config.workerCount);
+
+    String securityProtocol = sourceInfo.get(ClusterModeConstants.EXTRA_KAFKA_CONFIG_PREFIX + "security.protocol");
+    boolean secureKafka = false;
+    if (securityProtocol != null && securityProtocol.toUpperCase().contains(ClusterModeConstants
+        .SECURE_KAFKA_IDENTIFIER)) {
+      secureKafka = true;
+    }
+
     List<String> args;
     File hostingDir = null;
     String slaveJavaOpts = config.clusterSlaveJavaOpts + Optional.ofNullable(System.getProperty(MAPR_UNAME_PWD_SECURITY_ENABLED_KEY))
@@ -281,7 +289,8 @@ public class ShellClusterProvider extends BaseClusterProvider {
           bootstrapJar.getAbsolutePath(),
           jarsToShip,
           pipelineConfiguration.getTitle(),
-          clusterBootstrapApiJar
+          clusterBootstrapApiJar,
+          secureKafka
       );
     } else if (executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
       getLog().info("Submitting Spark Job on Mesos");
@@ -436,7 +445,8 @@ public class ShellClusterProvider extends BaseClusterProvider {
       String bootstrapJar,
       Set<String> jarsToShip,
       String pipelineTitle,
-      String clusterBootstrapJar
+      String clusterBootstrapJar,
+      boolean secureKafka
   ) {
     List<String> args = new ArrayList<>();
     args.add(clusterManager);
@@ -476,7 +486,9 @@ public class ShellClusterProvider extends BaseClusterProvider {
       args.add(getSecurityConfiguration().getKerberosKeytab());
       args.add("--principal");
       args.add(getSecurityConfiguration().getKerberosPrincipal());
+    }
 
+    if (secureKafka) {
       String jaasPath = System.getProperty(WebServerTask.JAVA_SECURITY_AUTH_LOGIN_CONFIG);
       String loginConf = "-Djava.security.auth.login.config";
       args.add("--conf");

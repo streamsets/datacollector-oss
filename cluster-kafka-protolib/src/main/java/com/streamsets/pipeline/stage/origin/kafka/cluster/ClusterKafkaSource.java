@@ -144,7 +144,7 @@ public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitt
     try {
       Map<String, String> configBeanPrefixedMap = new HashMap<>();
       conf.kafkaConsumerConfigs.forEach((k, v) -> configBeanPrefixedMap.put(
-          ClusterModeConstants.EXTRA_KAFKA_CONFIG_PREFIX + k,
+          ClusterModeConstants.EXTRA_KAFKA_CONFIG_PREFIX + k.trim(),
           v
       ));
 
