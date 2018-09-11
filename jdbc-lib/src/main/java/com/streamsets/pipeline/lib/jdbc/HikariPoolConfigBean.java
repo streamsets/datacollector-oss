@@ -41,7 +41,7 @@ public class HikariPoolConfigBean {
   private static final int MIN_IDLE_MIN = 0;
   private static final int CONNECTION_TIMEOUT_MIN = 1;
   private static final int IDLE_TIMEOUT_MIN = 0;
-  private static final int MAX_LIFETIME_MIN = 0;
+  private static final int MAX_LIFETIME_MIN = 1800;
 
   public static final int MILLISECONDS = 1000;
   public static final int DEFAULT_CONNECTION_TIMEOUT = THIRTY_SECONDS;
@@ -162,7 +162,7 @@ public class HikariPoolConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      label = "Connection Timeout",
+      label = "Connection Timeout (Seconds)",
       description = "Maximum time to wait for a connection to become available. Exceeding will cause a pipeline error.",
       min = 1,
       defaultValue = DEFAULT_CONNECTION_TIMEOUT_EL,
@@ -175,9 +175,10 @@ public class HikariPoolConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      label = "Idle Timeout",
-      description = "Maximum amount of time that a connection is allowed to sit idle in the pool. 0 means don't " +
-          "remove idle connections.",
+      label = "Idle Timeout (Seconds)",
+      description = "Maximum amount of time that a connection is allowed to sit idle in the pool. " +
+          "Use 0 to opt out of an idle timeout. " +
+          "If set to close or more than Max Connection Lifetime, the property is ignored.",
       min = 0,
       defaultValue = DEFAULT_IDLE_TIMEOUT_EL,
       elDefs = {TimeEL.class},
@@ -189,9 +190,9 @@ public class HikariPoolConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      label = "Max Connection Lifetime",
-      description = "Maximum lifetime of a connection in the pool. When reached it will be retired from the pool. 0 " +
-          "means no maximum lifetime.",
+      label = "Max Connection Lifetime (Seconds)",
+      description = "Maximum lifetime of a connection in the pool. When reached, the connection is retired from the pool. " +
+          "Use 0 to set no maximum lifetime. When set, the minimum lifetime is 30 minutes.",
       min = 0,
       defaultValue = DEFAULT_MAX_LIFETIME_EL,
       elDefs = {TimeEL.class},
