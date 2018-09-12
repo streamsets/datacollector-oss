@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
 
 @StageDef(
     version=1,
-    label="TensorFlow",
+    label="TensorFlow Evaluator",
     description="Uses TensorFlow models to generate predictions or classifications of data",
     icon="tensorflow.png",
     producesEvents = true,

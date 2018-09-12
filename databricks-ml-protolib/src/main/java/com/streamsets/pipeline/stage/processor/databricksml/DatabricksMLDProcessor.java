@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
 
 @StageDef(
     version = 1,
-    label = "Databricks ML",
+    label = "Databricks ML Evaluator",
     description = "Uses Spark-trained models to generate evaluations, scoring, or classification of data",
     icon = "databricks.png",
     execution = {
