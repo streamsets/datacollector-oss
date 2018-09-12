@@ -398,7 +398,12 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
     for(PipeRunner pipeRunner: pipeRunners) {
       final FullPipeBatch pipeBatch = new FullPipeBatch(null,null, batchSize, true);
       pipeBatch.skipStage(originPipe);
-      pipeRunner.executeBatch(null, null, start, p -> p.destroy(pipeBatch));
+      pipeRunner.executeBatch(null, null, start, p -> {
+        if(p instanceof StagePipe) {
+          pipeBatch.startStage((StagePipe)p);
+        }
+        p.destroy(pipeBatch);
+      });
     }
   }
 
