@@ -38,6 +38,7 @@ import com.streamsets.pipeline.lib.pulsar.config.PulsarErrors;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.apache.pulsar.client.api.Producer;
+import org.apache.pulsar.client.api.ProducerBuilder;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
 import org.apache.pulsar.client.api.TypedMessageBuilder;
@@ -113,16 +114,28 @@ public class PulsarMessageProducerImpl implements PulsarMessageProducer {
                                      .build(new CacheLoader<String, Producer>() {
                                        @Override
                                        public Producer load(String key) throws Exception {
-                                         return pulsarClient.newProducer()
-                                                            .properties(pulsarConfig.properties)
-                                                            .topic(key)
-                                                            .messageRoutingMode(pulsarConfig.partitionType
-                                                                .getMessageRoutingMode())
-                                                            .hashingScheme(pulsarConfig.hashingScheme
-                                                                .getHashingScheme())
-                                                            .compressionType(pulsarConfig.compressionType
-                                                                .getCompressionType())
-                                                            .create();
+                                         ProducerBuilder producerBuilder = pulsarClient.newProducer()
+                                                                       .properties(pulsarConfig.properties)
+                                                                       .topic(key)
+                                                                       .messageRoutingMode(pulsarConfig.partitionType
+                                                                           .getMessageRoutingMode())
+                                                                       .hashingScheme(pulsarConfig.hashingScheme
+                                                                           .getHashingScheme())
+                                                                       .compressionType(pulsarConfig.compressionType
+                                                                           .getCompressionType())
+                                                                       .maxPendingMessages(
+                                                                           pulsarConfig.maxPendingMessages)
+                                                                       .blockIfQueueFull(true);
+
+                                         if (pulsarConfig.asyncSend) {
+                                           producerBuilder.enableBatching(pulsarConfig.enableBatching)
+                                                          .batchingMaxMessages(pulsarConfig.batchMaxMessages)
+                                                          .batchingMaxPublishDelay(pulsarConfig.batchMaxPublishDelay,
+                                                              TimeUnit.MILLISECONDS);
+
+                                         }
+
+                                         return producerBuilder.create();
                                        }
                                      });
     }
@@ -169,7 +182,20 @@ public class PulsarMessageProducerImpl implements PulsarMessageProducer {
             String messageKey = messageKeyEval.eval(elVars, pulsarConfig.messageKey, String.class);
             typedMessageBuilder.key(messageKey);
           }
-          typedMessageBuilder.value(byteArrayOutputStream.toByteArray()).send();
+          if (pulsarConfig.asyncSend) {
+            final String finalDestinationName = destinationName;
+            typedMessageBuilder.value(byteArrayOutputStream.toByteArray()).sendAsync().exceptionally((ex) -> {
+              try {
+                handleError(record, new StageException(PulsarErrors.PULSAR_03, finalDestinationName, ex.toString(),
+                      ex));
+              } catch (StageException e) {
+                LOG.error(PulsarErrors.PULSAR_03.getMessage(), finalDestinationName, ex.toString(), ex);
+              }
+              return null;
+            });
+          } else {
+            typedMessageBuilder.value(byteArrayOutputStream.toByteArray()).send();
+          }
 
           usedProducers.add(producer);
         } catch (PulsarClientException e) {
