@@ -27,17 +27,13 @@ import com.streamsets.pipeline.lib.io.fileref.LocalFileRef;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
-import com.streamsts.pipeline.stage.processor.transformer.Errors;
-import com.streamsts.pipeline.stage.processor.transformer.JobConfig;
-import com.streamsts.pipeline.stage.processor.transformer.WholeFileTransformerDProcessor;
-import org.junit.AfterClass;
+
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;

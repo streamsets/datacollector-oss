@@ -13,19 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsts.pipeline.stage.processor.transformer;
+package com.streamsets.pipeline.stage.processor.transformer;
 
 import com.google.common.collect.ImmutableSet;
 
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
 import com.streamsets.pipeline.lib.io.fileref.AbstractFileRef;
-import com.streamsets.pipeline.lib.io.fileref.AbstractSpoolerFileRef;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
-import org.apache.parquet.hadoop.ParquetFileReader;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 

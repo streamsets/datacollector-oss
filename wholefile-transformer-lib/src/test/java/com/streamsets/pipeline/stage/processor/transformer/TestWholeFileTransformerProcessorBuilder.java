@@ -16,9 +16,6 @@
 package com.streamsets.pipeline.stage.processor.transformer;
 
 import com.streamsets.pipeline.lib.converter.AvroParquetConfig;
-import com.streamsts.pipeline.stage.processor.transformer.JobConfig;
-import com.streamsts.pipeline.stage.processor.transformer.JobType;
-import com.streamsts.pipeline.stage.processor.transformer.WholeFileTransformerProcessor;
 
 public class TestWholeFileTransformerProcessorBuilder {
   JobConfig jobConfig = new JobConfig();
