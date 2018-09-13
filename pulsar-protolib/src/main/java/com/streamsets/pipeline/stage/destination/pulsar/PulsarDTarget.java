@@ -28,11 +28,12 @@ import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorServic
 import com.streamsets.pipeline.lib.pulsar.config.PulsarGroups;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Pulsar Producer",
     description = "Write data to Pulsar topics",
     icon = "pulsar.png",
     recordsByRef = true,
+    upgrader = PulsarTargetUpgrader.class,
     onlineHelpRefUrl ="index.html?contextID=task_j5s_lpc_r2b",
     services = @ServiceDependency(
         service = DataFormatGeneratorService.class,

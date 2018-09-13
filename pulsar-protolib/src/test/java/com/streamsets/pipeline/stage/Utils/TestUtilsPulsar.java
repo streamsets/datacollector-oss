@@ -49,6 +49,11 @@ public class TestUtilsPulsar {
     pulsarTargetConfig.securityConfig.tlsEnabled = false;
     pulsarTargetConfig.securityConfig.tlsAuthEnabled = false;
     pulsarTargetConfig.messageKey = null;
+    pulsarTargetConfig.maxPendingMessages = 1000;
+    pulsarTargetConfig.asyncSend = false;
+    pulsarTargetConfig.enableBatching = false;
+    pulsarTargetConfig.batchMaxMessages = 2000;
+    pulsarTargetConfig.batchMaxPublishDelay = 1000;
     return pulsarTargetConfig;
   }
 

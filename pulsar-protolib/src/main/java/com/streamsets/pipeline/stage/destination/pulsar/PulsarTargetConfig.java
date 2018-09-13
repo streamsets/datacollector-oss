@@ -17,6 +17,7 @@
 package com.streamsets.pipeline.stage.destination.pulsar;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.pulsar.config.BasePulsarConfig;
@@ -89,5 +90,73 @@ public class PulsarTargetConfig extends BasePulsarConfig {
   )
   @ValueChooserModel(PulsarCompressionTypeChooserValues.class)
   public PulsarCompressionType compressionType;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = "Max Pending Messages",
+      description = "Maximum size of the queue holding the messages pending to receive an acknowledgment " +
+          "from the broker",
+      displayPosition = 50,
+      defaultValue = "1000",
+      min = 1,
+      group = "ADVANCED")
+  public int maxPendingMessages;
+
+  @ConfigDef(required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Async Send",
+      description = "Send messages asynchronously",
+      displayPosition = 60,
+      group = "ADVANCED")
+  public boolean asyncSend;
+
+  @ConfigDef(required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Enable Batching",
+      description = "Send a batch of messages in a single request",
+      displayPosition = 70,
+      group = "ADVANCED",
+      dependencies = {
+          @Dependency(configName = "asyncSend",
+              triggeredByValues = "true")
+      })
+  public boolean enableBatching;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = "Max Batch Size (messages)",
+      description = "Maximum number of messages to include in a batch",
+      displayPosition = 80,
+      defaultValue = "2000",
+      min = 1,
+      group = "ADVANCED",
+      dependencies = {
+          @Dependency(configName = "asyncSend",
+              triggeredByValues = "true"),
+          @Dependency(configName = "enableBatching",
+              triggeredByValues = "true")
+      })
+  public int batchMaxMessages;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = "Batch Max Publish Latency(ms)",
+      description = "Maximum milliseconds to wait before sending the next batch",
+      displayPosition = 90,
+      defaultValue = "1000",
+      min = 0,
+      group = "ADVANCED",
+      dependencies = {
+          @Dependency(configName = "asyncSend",
+              triggeredByValues = "true"),
+          @Dependency(configName = "enableBatching",
+              triggeredByValues = "true")
+      })
+  public int batchMaxPublishDelay;
 
 }
