@@ -219,7 +219,7 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
    */
   private void createDefaultFieldMappings() throws StageException {
     try (Connection connection = dataSource.getConnection()) {
-      try (ResultSet res = JdbcUtil.getTableMetadata(connection, schema, tableName, caseSensitive)) {
+      try (ResultSet res = JdbcUtil.getTableMetadata(connection, schema, tableName)) {
         if (!res.next()) {
           throw new StageException(JdbcErrors.JDBC_16, getTableName());
         }

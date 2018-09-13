@@ -22,7 +22,6 @@ import com.streamsets.pipeline.lib.jdbc.typesupport.JdbcTypeInfo;
 import com.zaxxer.hikari.HikariDataSource;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
@@ -51,13 +50,12 @@ public class JdbcSchemaReader {
     LinkedHashMap<String, JdbcTypeInfo> columns = new LinkedHashMap<>();
 
     try (Connection connection = dataSource.getConnection()) {
-      DatabaseMetaData metaData = connection.getMetaData();
-      try (ResultSet metaDataTables = metaData.getTables(null, schema, tableName, new String[]{"TABLE"});) {
+      try (ResultSet metaDataTables = JdbcUtil.getTableMetadata(connection, schema, tableName)) {
         if (!metaDataTables.next()) {
           return columns;
         }
 
-        ResultSet metaDataColumns = metaData.getColumns(null, schema, tableName, null);
+        ResultSet metaDataColumns = JdbcUtil.getColumnMetadata(connection, schema, tableName);
         while (metaDataColumns.next()) {
           JdbcType jdbcType = JdbcType.valueOf(metaDataColumns.getInt(DATA_TYPE));
           columns.put(metaDataColumns.getString(COLUMN_NAME),

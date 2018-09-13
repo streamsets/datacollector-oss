@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcSchemaReader;
+import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -37,7 +38,6 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -152,8 +152,7 @@ public class TestJdbcMetadata {
       Assert.assertEquals(fieldMap1.get(entry.getKey()).getRight(), entry.getValue().getValue());
     }
 
-    DatabaseMetaData metaData = connection.getMetaData();
-    try (ResultSet metaDataColumns = metaData.getColumns(null, null, tableName, null)) {
+    try (ResultSet metaDataColumns = JdbcUtil.getColumnMetadata(connection, null, tableName)) {
       while (metaDataColumns.next()) {
         Pair<Field.Type, Object> typeAndValue = fieldMap1.get(metaDataColumns.getString(JdbcSchemaReader.COLUMN_NAME).toLowerCase());
         Assert.assertEquals(typeAndValue.getLeft(), typeMap.get(metaDataColumns.getInt(JdbcSchemaReader.DATA_TYPE)));
@@ -182,8 +181,7 @@ public class TestJdbcMetadata {
       Assert.assertEquals(fieldMap2.get(entry.getKey()).getRight(), entry.getValue().getValue());
     }
 
-    DatabaseMetaData metaData = connection.getMetaData();
-    try (ResultSet metaDataColumns = metaData.getColumns(null, null, tableName, null)) {
+    try (ResultSet metaDataColumns = JdbcUtil.getColumnMetadata(connection, null, tableName)) {
       while (metaDataColumns.next()) {
         Pair<Field.Type, Object> typeAndValue = fieldMap2.get(metaDataColumns.getString(JdbcSchemaReader.COLUMN_NAME).toLowerCase());
         Assert.assertEquals(typeAndValue.getLeft(), typeMap.get(metaDataColumns.getInt(JdbcSchemaReader.DATA_TYPE)));

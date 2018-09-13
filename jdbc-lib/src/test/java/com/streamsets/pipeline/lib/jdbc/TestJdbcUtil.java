@@ -142,8 +142,7 @@ public class TestJdbcUtil {
     HikariDataSource dataSource = JdbcUtil.createDataSourceForRead(config);
     Connection connection = dataSource.getConnection();
 
-    boolean caseSensitive = false;
-    ResultSet resultSet = JdbcUtil.getTableMetadata(connection, schema, tableName, caseSensitive);
+    ResultSet resultSet = JdbcUtil.getTableMetadata(connection, schema, tableName);
     assertEquals(true, resultSet.next());
   }
 
@@ -154,9 +153,7 @@ public class TestJdbcUtil {
     HikariDataSource dataSource = JdbcUtil.createDataSourceForRead(config);
     Connection connection = dataSource.getConnection();
 
-    boolean caseSensitive = true;
-
-    ResultSet resultSet = JdbcUtil.getTableMetadata(connection, schema, tableNameWithSpecialChars, caseSensitive);
+    ResultSet resultSet = JdbcUtil.getTableMetadata(connection, schema, tableNameWithSpecialChars);
     assertEquals(true, resultSet.next());
   }
 

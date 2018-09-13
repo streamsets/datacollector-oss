@@ -368,7 +368,7 @@ public final class TableContextUtil {
     Pattern schemaExclusion =
         StringUtils.isEmpty(tableConfigBean.schemaExclusionPattern)?
             null : Pattern.compile(tableConfigBean.schemaExclusionPattern);
-    try (ResultSet rs = JdbcUtil.getTableMetadata(connection, null, tableConfigBean.schema, tableConfigBean.tablePattern, true)) {
+    try (ResultSet rs = JdbcUtil.getTableAndViewMetadata(connection, tableConfigBean.schema, tableConfigBean.tablePattern)) {
       while (rs.next()) {
         String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
         String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);
@@ -595,7 +595,7 @@ public final class TableContextUtil {
 
     long currentVersion = getCurrentVersion(connection);
 
-    try (ResultSet rs = JdbcUtil.getTableMetadata(connection, null, tableConfigBean.schema, tableConfigBean.tablePattern, false)) {
+    try (ResultSet rs = JdbcUtil.getTableMetadata(connection, tableConfigBean.schema, tableConfigBean.tablePattern)) {
       while (rs.next()) {
         String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
         String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);
@@ -633,7 +633,7 @@ public final class TableContextUtil {
 
     final String tablePattern = tableConfigBean.capture_instance + SQL_SERVER_CDC_TABLE_SUFFIX;
     final String cdcSchema = "cdc";
-    try (ResultSet rs = JdbcUtil.getTableMetadata(connection, null, cdcSchema, tablePattern, false)) {
+    try (ResultSet rs = JdbcUtil.getTableMetadata(connection, cdcSchema, tablePattern)) {
       while (rs.next()) {
         String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
         String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);

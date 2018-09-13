@@ -101,7 +101,7 @@ public class PostgresCDCWalReceiver {
     List<ConfigIssue> issues = new ArrayList<>();
     Pattern p = StringUtils.isEmpty(tables.excludePattern) ? null : Pattern.compile(tables.excludePattern);
     try (ResultSet rs =
-        JdbcUtil.getTableMetadata(connection, null, tables.schema, tables.table, true)) {
+        JdbcUtil.getTableAndViewMetadata(connection, tables.schema, tables.table)) {
       while (rs.next()) {
         String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
         String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);

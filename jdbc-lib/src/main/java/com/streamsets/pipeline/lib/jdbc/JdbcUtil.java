@@ -116,6 +116,9 @@ public class JdbcUtil {
   private static final Joiner joinerColumnWithQuote = Joiner.on("\" = ?, \"");
   private static final Joiner joinerWhereClauseWitheQuote =  Joiner.on("\" = ? AND \"");
 
+  private static final String[] METADATA_TABLE_TYPE = new String[]{"TABLE"};
+  private static final String[] METADATA_TABLE_VIEW_TYPE = new String[]{"TABLE", "VIEW"};
+
   /**
    * The query to select the min value for a particular offset column
    */
@@ -218,48 +221,45 @@ public class JdbcUtil {
    */
   public static ResultSet getColumnMetadata(Connection connection, String schema, String tableName) throws SQLException {
     DatabaseMetaData metadata = connection.getMetaData();
-    return metadata.getColumns(null, schema, tableName, null); // Get all columns for this table
+    return metadata.getColumns(connection.getCatalog(), schema, tableName, null); // Get all columns for this table
   }
 
   /**
    * Wrapper for {@link java.sql.DatabaseMetaData#getTables(String, String, String, String[])}
    *
-   * @param connection An open JDBC connection
-   * @param catalog Catalog name.
-   * @param schemaPattern Schema name, Can be null.
-   * @param schemaLessTablePattern table name / pattern which is not fully qualfied
-   * @return ResultSet containing the table metadata for a table
+   * @param connection open JDBC connection
+   * @param schema schema name, can be null
+   * @param tableName table name or pattern, optionally fully qualified in the form schema.tableName
+   * @return ResultSet containing the table and view metadata
    *
    * @throws SQLException
    */
-  public static ResultSet getTableMetadata(
+  public static ResultSet getTableAndViewMetadata(
       Connection connection,
-      String catalog,
-      String schemaPattern,
-      String schemaLessTablePattern,
-      boolean includeViews
+      String schema,
+      String tableName
   ) throws SQLException {
     return connection.getMetaData().getTables(
-        catalog,
-        schemaPattern,
-        schemaLessTablePattern,
-        includeViews ? new String[]{"TABLE", "VIEW"} : new String[]{"TABLE"}
+        connection.getCatalog(),
+        schema,
+        tableName,
+        METADATA_TABLE_VIEW_TYPE
     );
   }
 
   /**
    * Wrapper for {@link java.sql.DatabaseMetaData#getTables(String, String, String, String[])}
    *
-   * @param connection An open JDBC connection
-   * @param tableName table name that is optionally fully qualified with a schema in the form schema.tableName
-   * @return ResultSet containing the table metadata for a table
+   * @param connection open JDBC connection
+   * @param schema schema name, can be null
+   * @param tableName table name or pattern, optionally fully qualified in the form schema.tableName
+   * @return ResultSet containing the table metadata
    *
    * @throws SQLException
    */
-  public static ResultSet getTableMetadata(Connection connection, String schema, String tableName, boolean caseSensitive) throws SQLException {
-    String table = tableName;
+  public static ResultSet getTableMetadata(Connection connection, String schema, String tableName) throws SQLException {
     DatabaseMetaData metadata = connection.getMetaData();
-    return metadata.getTables(null, schema, table, new String[]{"TABLE"});
+    return metadata.getTables(connection.getCatalog(), schema, tableName, METADATA_TABLE_TYPE);
   }
 
   /**
@@ -352,7 +352,7 @@ public class JdbcUtil {
   public static Set<String> getReferredTables(Connection connection, String schema, String tableName) throws SQLException {
     DatabaseMetaData metadata = connection.getMetaData();
 
-    ResultSet result = metadata.getImportedKeys(null, schema, tableName);
+    ResultSet result = metadata.getImportedKeys(connection.getCatalog(), schema, tableName);
     Set<String> referredTables = new HashSet<>();
     while (result.next()) {
       referredTables.add(result.getString(PK_TABLE_NAME));
@@ -757,7 +757,7 @@ public class JdbcUtil {
     if (tableNameTemplate != null && !tableNameTemplate.contains(EL_PREFIX)) {
       try (
         Connection connection = dataSource.getConnection();
-        ResultSet res = JdbcUtil.getTableMetadata(connection, schema, tableNameTemplate, caseSensitive);
+        ResultSet res = JdbcUtil.getTableMetadata(connection, schema, tableNameTemplate);
       ) {
         if (!res.next()) {
           issues.add(context.createConfigIssue(Groups.JDBC.name(), TABLE_NAME, JdbcErrors.JDBC_16, tableNameTemplate));
