@@ -113,9 +113,7 @@ public class WholeFileTransformerProcessor extends SingleLaneRecordProcessor {
 
       DataFileStream<GenericRecord> fileReader = getFileReader(is, sourceFileName);
 
-      if (!context.isPreview()) {
-        writeParquet(sourceFileName, fileReader, tempParquetFile);
-      }
+      writeParquet(sourceFileName, fileReader, tempParquetFile);
 
       Map<String, Object> metadata = generateHeaderAttrs(tempParquetFile);
 
@@ -155,13 +153,11 @@ public class WholeFileTransformerProcessor extends SingleLaneRecordProcessor {
       Map<String, Object> recordHeaderAttr = new HashMap<>();
       recordHeaderAttr.put(HeaderAttributeConstants.FILE, file.toAbsolutePath());
       recordHeaderAttr.put(HeaderAttributeConstants.FILE_NAME, file.getFileName());
-      if (!context.isPreview()) {
-        recordHeaderAttr.put(HeaderAttributeConstants.SIZE, Files.size(file));
-        recordHeaderAttr.put(HeaderAttributeConstants.LAST_MODIFIED_TIME, Files.getLastModifiedTime(file));
-      } else {
-        recordHeaderAttr.put(HeaderAttributeConstants.SIZE, 0);
-        recordHeaderAttr.put(HeaderAttributeConstants.LAST_MODIFIED_TIME, 0);
-      }
+      recordHeaderAttr.put(HeaderAttributeConstants.SIZE, Files.size(file));
+      recordHeaderAttr.put(HeaderAttributeConstants.LAST_MODIFIED_TIME, Files.getLastModifiedTime(file));
+      recordHeaderAttr.put(HeaderAttributeConstants.SIZE, 0);
+      recordHeaderAttr.put(HeaderAttributeConstants.LAST_MODIFIED_TIME, 0);
+
       return recordHeaderAttr;
     } catch (IOException e) {
       throw new TransformerStageCheckedException(Errors.CONVERT_09, e.toString(), e);
