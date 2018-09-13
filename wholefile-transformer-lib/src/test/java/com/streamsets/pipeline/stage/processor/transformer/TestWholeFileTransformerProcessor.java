@@ -34,6 +34,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -253,6 +254,32 @@ public class TestWholeFileTransformerProcessor {
       List<Record> errorRecords = runner.getErrorRecords();
       Assert.assertEquals(1, errorRecords.size());
       Assert.assertEquals(Errors.CONVERT_11.getCode(), errorRecords.get(0).getHeader().getErrorCode());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testTempParquetSubDirectoryPath() throws Exception {
+    final String tempSubDir = rootPath + "/subdir1/subsubdir1" + "/.parquet";
+    WholeFileTransformerProcessor wholeFileTransofrmer  = new TestWholeFileTransformerProcessorBuilder()
+        .tempDir(tempSubDir)
+        .build();
+
+    final Record record = createRecord(validAvroFile);
+    final String sourceFileName = "testFile";
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(WholeFileTransformerDProcessor.class, wholeFileTransofrmer)
+        .addOutputLane("a")
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+
+    try {
+      runner.runInit();
+
+      Path tempFilePath = wholeFileTransofrmer.getAndValidateTempFilePath(record, sourceFileName);
+      Assert.assertEquals(tempSubDir, tempFilePath.getParent().toString());
+      Assert.assertTrue(Files.exists(tempFilePath.getParent()));
     } finally {
       runner.runDestroy();
     }

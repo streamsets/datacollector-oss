@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.processor.transformer;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.Processor;
@@ -181,7 +182,8 @@ public class WholeFileTransformerProcessor extends SingleLaneRecordProcessor {
    * @param record the {@link com.streamsets.pipeline.api.Record} whole file record
    * @param sourceFileName the source Avro file name
    */
-  private Path getAndValidateTempFilePath(Record record, String sourceFileName) throws StageException {
+  @VisibleForTesting
+  Path getAndValidateTempFilePath(Record record, String sourceFileName) throws StageException {
     RecordEL.setRecordInContext(variables, record);
     String dirPath;
     try {
@@ -206,7 +208,7 @@ public class WholeFileTransformerProcessor extends SingleLaneRecordProcessor {
 
     try {
       if (!Files.exists(tempParquetFile.getParent())) {
-        Files.createDirectory(Paths.get(dirPath));
+        Files.createDirectories(Paths.get(dirPath));
       }
     } catch (IOException ex) {
       throw new TransformerStageCheckedException(Errors.CONVERT_10, tempParquetFile.toString(), ex);
