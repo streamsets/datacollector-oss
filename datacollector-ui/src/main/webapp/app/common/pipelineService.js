@@ -337,7 +337,7 @@ angular.module('dataCollectorApp.common')
     /**
      * Import from HTTP URL command handler
      */
-    this.importPipelinesFromHttpUrl = function($event, pipelineTitle, pipelineHttpUrl) {
+    this.importPipelinesFromHttpUrl = function(pipelineTitle, pipelineHttpUrl) {
       var modalInstance = $modal.open({
         templateUrl: 'app/home/library/importFromUrl/importFromUrlModal.tpl.html',
         controller: 'ImportFromURLModalInstanceController',
@@ -353,13 +353,12 @@ angular.module('dataCollectorApp.common')
         }
       });
 
-      if ($event) {
-        $event.stopPropagation();
-      }
-
-      modalInstance.result.then(function() {
-        $window.location.href = '/';
-      }, function () {
+      modalInstance.result.then(function(pipelineEnvelope) {
+        if (pipelineEnvelope && pipelineEnvelope.pipelineConfig) {
+          $location.path('/collector/pipeline/' + pipelineEnvelope.pipelineConfig.info.pipelineId);
+        } else {
+          $location.path('/');
+        }
       });
     };
 

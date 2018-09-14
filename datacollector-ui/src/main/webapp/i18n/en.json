@@ -645,6 +645,7 @@
       "deletePipelinesConfirmationMessage": "Are you sure you want to delete below Pipelines?",
       "duplicatePipelineDefinition": "Duplicate Pipeline Definition",
       "emptyPipelineList": "No Pipeline to view.",
+      "httpUrlPlaceholder": "Pipeline Definition HTTP URL",
       "newPipelineDefinition": "New Pipeline",
       "namePlaceholder": "Pipeline Definition Title",
       "nameRequiredValidation": "Please enter title of the pipeline.",

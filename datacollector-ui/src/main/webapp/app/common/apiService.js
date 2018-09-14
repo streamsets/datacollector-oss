@@ -798,7 +798,8 @@ angular.module('dataCollectorApp.common')
           method: 'POST',
           url: url,
           params: {
-            pipelineHttpUrl: pipelineHttpUrl
+            pipelineHttpUrl: pipelineHttpUrl,
+            autoGeneratePipelineId: true
           }
         });
       },

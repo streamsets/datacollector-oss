@@ -17,7 +17,9 @@
 // Controller for Import from HTTP URL Modal Dialog.
 angular
   .module('dataCollectorApp.home')
-  .controller('ImportFromURLModalInstanceController', function ($scope, $modalInstance, api, pipelineTitle, pipelineHttpUrl) {
+  .controller('ImportFromURLModalInstanceController', function (
+    $scope, $modalInstance, api, pipelineTitle, pipelineHttpUrl
+  ) {
 
     angular.extend($scope, {
       common: {
@@ -32,14 +34,12 @@ angular
       operationDone: false,
       operationInProgress: false,
 
-      /**
-       * Import button callback function.
-       */
       import: function () {
         $scope.operationInProgress = true;
         api.pipelineAgent.importPipelineFromUrl($scope.newConfig.title, $scope.newConfig.pipelineHttpUrl)
           .then(function(response) {
-            console.log(response);
+            $scope.operationDone = true;
+            $scope.operationInProgress = false;
             $modalInstance.close(response.data);
           })
           .catch(function(res) {
@@ -49,9 +49,6 @@ angular
           });
       },
 
-      /**
-       * Cancel button callback.
-       */
       cancel: function () {
         $modalInstance.dismiss('cancel');
       }

@@ -1350,7 +1350,30 @@ public class PipelineStoreResource {
         ));
       }
       String responseString = response.readEntity(String.class);
-      pipelineEnvelope = ObjectMapperFactory.get().readValue(responseString, PipelineEnvelopeJson.class);
+
+      // Support importing both pipeline config json or pipeline envelope json (pipeline config + rules)
+      if (responseString != null && responseString.contains("\"pipelineConfig\"") &&
+          responseString.contains("\"pipelineRules\"")) {
+        pipelineEnvelope = ObjectMapperFactory.get().readValue(responseString, PipelineEnvelopeJson.class);
+      } else {
+        pipelineEnvelope = new PipelineEnvelopeJson();
+        PipelineConfigurationJson pipelineConfigurationJson = ObjectMapperFactory.get().readValue(
+            responseString,
+            PipelineConfigurationJson.class
+        );
+        pipelineEnvelope.setPipelineConfig(pipelineConfigurationJson);
+        RuleDefinitions ruleDefinitions = new RuleDefinitions(
+            PipelineStoreTask.RULE_DEFINITIONS_SCHEMA_VERSION,
+            RuleDefinitionsConfigBean.VERSION,
+            Collections.emptyList(),
+            Collections.emptyList(),
+            Collections.emptyList(),
+            Collections.emptyList(),
+            null,
+            stageLibrary.getPipelineRules().getPipelineRulesDefaultConfigs()
+        );
+        pipelineEnvelope.setPipelineRules(BeanHelper.wrapRuleDefinitions(ruleDefinitions));
+      }
     } finally {
       if (response != null) {
         response.close();
@@ -1401,7 +1424,7 @@ public class PipelineStoreResource {
     if (!draft) {
       newRuleDefinitions = store.retrieveRules(name, rev);
       ruleDefinitions.setUuid(newRuleDefinitions.getUuid());
-
+      pipelineConfig.setTitle(label);
       pipelineConfig.setUuid(newPipelineConfig.getUuid());
       pipelineConfig.setPipelineId(newPipelineConfig.getPipelineId());
       pipelineConfig = store.save(user, name, rev, pipelineConfig.getDescription(), pipelineConfig);

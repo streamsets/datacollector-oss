@@ -38,15 +38,11 @@ angular
   ) {
 
     // Handle importing pipeline from github URL
-    var pathName = location.pathname;
-    if (pathName.indexOf('/collector/importFromUrl/') !== -1 ) {
-      pathName = pathName.replace('/collector/importFromUrl/', '');
-      var params = pathName.split('/');
-      if (params.length > 1) {
-        var pipelineTitle = params[0];
-        var pipelineHttpUrl = pathName.replace(pipelineTitle + '/', '') + location.search;
-        pipelineService.importPipelinesFromHttpUrl(null, pipelineTitle, pipelineHttpUrl);
-      }
+    var searchObject = $location.search();
+    var importPipelineFromUrl = searchObject['importPipelineFromUrl'];
+    var pipelineTitle = searchObject['pipelineTitle'];
+    if (importPipelineFromUrl) {
+      pipelineService.importPipelinesFromHttpUrl(pipelineTitle, importPipelineFromUrl);
     }
 
     $location.search('auth_token', null);
@@ -181,8 +177,8 @@ angular
       /**
        * Import Pipelines from Http Url
        */
-      importPipelinesFromHttpUrl: function($event) {
-        pipelineService.importPipelinesFromHttpUrl($event);
+      importPipelinesFromHttpUrl: function() {
+        pipelineService.importPipelinesFromHttpUrl();
       },
 
       /**
