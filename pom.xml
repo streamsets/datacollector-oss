@@ -77,6 +77,7 @@
     <jdbc-lib>jdbc-lib</jdbc-lib>
     <jms-lib>jms-lib</jms-lib>
     <kinesis-lib>kinesis-lib</kinesis-lib>
+    <mleap-lib>mleap-lib</mleap-lib>
     <mysql-binlog-lib>mysql-binlog-lib</mysql-binlog-lib>
     <omniture-lib>omniture-lib</omniture-lib>
     <rabbitmq-lib>rabbitmq-lib</rabbitmq-lib>
@@ -237,6 +238,7 @@
     <module>jdbc-lib</module>
     <module>jms-lib</module>
     <module>kinesis-lib</module>
+    <module>mleap-lib</module>
     <module>mysql-binlog-lib</module>
     <module>omniture-lib</module>
     <module>rabbitmq-lib</module>

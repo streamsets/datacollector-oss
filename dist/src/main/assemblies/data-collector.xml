@@ -477,6 +477,12 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+    <!-- MLeap -->
+    <fileSet>
+      <directory>${basedir}/../${mleap-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
     <!-- Mongo libs -->
     <fileSet>
       <directory>${basedir}/../${mongodb_3-lib}/target/streamsets-libs/</directory>

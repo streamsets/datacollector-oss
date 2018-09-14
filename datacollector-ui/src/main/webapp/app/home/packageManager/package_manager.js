@@ -42,8 +42,7 @@ angular
     $location.search('auth_user', null);
     $rootScope.common.errors = [];
 
-    var mlRegex = new RegExp('(TensorFlow)|(Databricks ML)', 'i');
-
+    var mlRegex = new RegExp('(TensorFlow)|(Databricks ML)|(PMML)|(MLeap)', 'i');
     var pipelinesLimit = 60;
 
     angular.extend($scope, {
