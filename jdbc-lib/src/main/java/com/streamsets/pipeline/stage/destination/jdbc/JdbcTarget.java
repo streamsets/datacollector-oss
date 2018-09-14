@@ -26,7 +26,6 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.cache.CacheCleaner;
 import com.streamsets.pipeline.lib.el.ELUtils;
-import com.streamsets.pipeline.lib.operation.ChangeLogFormat;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JDBCOperationType;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
@@ -34,6 +33,7 @@ import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnParamMapping;
 import com.streamsets.pipeline.lib.jdbc.JdbcRecordReaderWriterFactory;
 import com.streamsets.pipeline.lib.jdbc.JdbcRecordWriter;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
+import com.streamsets.pipeline.lib.operation.ChangeLogFormat;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
@@ -41,7 +41,6 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -64,6 +63,7 @@ public class JdbcTarget extends BaseTarget {
   private final String tableNameTemplate;
   private final List<JdbcFieldColumnParamMapping> customMappings;
   private final boolean caseSensitive;
+  private final boolean dynamicTableName;
 
   private final ChangeLogFormat changeLogFormat;
   private final HikariPoolConfigBean hikariConfigBean;
@@ -73,8 +73,6 @@ public class JdbcTarget extends BaseTarget {
   private HikariDataSource dataSource = null;
   private ELEval tableNameEval = null;
   private ELVars tableNameVars = null;
-
-  private Connection connection = null;
 
   private JDBCOperationType defaultOperation;
   private UnsupportedOperationAction unsupportedAction;
@@ -128,6 +126,7 @@ public class JdbcTarget extends BaseTarget {
     this.defaultOperation = defaultOperation;
     this.unsupportedAction = unsupportedAction;
     this.hikariConfigBean = hikariConfigBean;
+    this.dynamicTableName = JdbcUtil.isElString(tableNameTemplate);
 
     CacheBuilder cacheBuilder = CacheBuilder.newBuilder()
         .maximumSize(500)
@@ -151,14 +150,18 @@ public class JdbcTarget extends BaseTarget {
 
     issues = hikariConfigBean.validateConfigs(context, issues);
 
-    tableNameVars = getContext().createELVars();
-    tableNameEval = context.createELEval(JdbcUtil.TABLE_NAME);
-    ELUtils.validateExpression(tableNameTemplate,
-        getContext(),
-        Groups.JDBC.getLabel(),
-        JdbcUtil.TABLE_NAME,
-        JdbcErrors.JDBC_26, issues
-    );
+    if (dynamicTableName) {
+      tableNameVars = getContext().createELVars();
+      tableNameEval = context.createELEval(JdbcUtil.TABLE_NAME);
+      ELUtils.validateExpression(
+          tableNameTemplate,
+          getContext(),
+          Groups.JDBC.getLabel(),
+          JdbcUtil.TABLE_NAME,
+          JdbcErrors.JDBC_26,
+          issues
+      );
+    }
 
     if (issues.isEmpty() && null == dataSource) {
       try {
@@ -183,8 +186,6 @@ public class JdbcTarget extends BaseTarget {
 
   @Override
   public void destroy() {
-    JdbcUtil.closeQuietly(connection);
-
     if (null != dataSource) {
       dataSource.close();
     }
@@ -192,7 +193,6 @@ public class JdbcTarget extends BaseTarget {
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public void write(Batch batch) throws StageException {
     if (!batch.getRecords().hasNext()) {
       // No records - take the opportunity to clean up the cache so that we don't hold on to memory indefinitely
@@ -200,6 +200,18 @@ public class JdbcTarget extends BaseTarget {
     }
     // jdbc target always commit batch execution
     final boolean perRecord = false;
-    JdbcUtil.write(batch, schema, tableNameEval, tableNameVars, tableNameTemplate, caseSensitive, recordWriters, errorRecordHandler, perRecord);
+    if (dynamicTableName) {
+      JdbcUtil.write(
+          batch,
+          tableNameEval,
+          tableNameVars,
+          tableNameTemplate,
+          recordWriters,
+          errorRecordHandler,
+          perRecord
+      );
+    } else {
+      JdbcUtil.write(batch.getRecords(), tableNameTemplate, recordWriters, errorRecordHandler, perRecord);
+    }
   }
 }

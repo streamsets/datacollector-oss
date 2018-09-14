@@ -123,7 +123,7 @@ public class TestGenericRecordWriter {
         caseSensitive
     );
     List<Record> batch = ImmutableList.of(record);
-    writer.writeBatch(batch);
+    writer.writeBatch(batch.iterator());
 
     connection = DriverManager.getConnection(connectionString, username, password);
     try (Statement statement = connection.createStatement()) {
@@ -171,7 +171,7 @@ public class TestGenericRecordWriter {
         caseSensitive
     );
     List<Record> batch = ImmutableList.of(insertRecord, updateRecord);
-    writer.writeBatch(batch);
+    writer.writeBatch(batch.iterator());
 
     connection = DriverManager.getConnection(connectionString, username, password);
     try (Statement statement = connection.createStatement()) {
@@ -220,7 +220,7 @@ public class TestGenericRecordWriter {
         caseSensitive
     );
     List<Record> batch = ImmutableList.of(insertRecord, deleteRecord);
-    writer.writeBatch(batch);
+    writer.writeBatch(batch.iterator());
 
     connection = DriverManager.getConnection(connectionString, username, password);
     try (Statement statement = connection.createStatement()) {
@@ -270,7 +270,7 @@ public class TestGenericRecordWriter {
         caseSensitive
     );
     List<Record> batch = ImmutableList.of(insertRecord, updateRecord);
-    writer.writeBatch(batch);
+    writer.writeBatch(batch.iterator());
 
     connection = DriverManager.getConnection(connectionString, username, password);
     try (Statement statement = connection.createStatement()) {
@@ -322,7 +322,7 @@ public class TestGenericRecordWriter {
         caseSensitive
     );
     List<Record> batch = ImmutableList.of(insertRecord, deleteRecord);
-    writer.writeBatch(batch);
+    writer.writeBatch(batch.iterator());
 
     connection = DriverManager.getConnection(connectionString, username, password);
     try (Statement statement = connection.createStatement()) {
@@ -402,7 +402,7 @@ public class TestGenericRecordWriter {
         caseSensitive
     );
     List<Record> batch = ImmutableList.of(record);
-    final List<OnRecordErrorException> errors = writer.writeBatch(batch);
+    final List<OnRecordErrorException> errors = writer.writeBatch(batch.iterator());
     assertTrue(errors.isEmpty());
   }
 

@@ -19,7 +19,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 
-import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -28,19 +28,21 @@ import java.util.List;
  * inserts, updates, and deletes.
  */
 public interface JdbcRecordWriter {
+
   /**
    * Accepts a batch of records to write to a JDBC destination.
-   * @param batch batch of SDC records
+   * @param recordIterator iterator of SDC records
    * @return any records that failed to be written to the destination
    * @throws StageException
    */
-  List<OnRecordErrorException> writeBatch(Collection<Record> batch) throws StageException;
-  /*
+  List<OnRecordErrorException> writeBatch(Iterator<Record> recordIterator) throws StageException;
+
+  /**
    * Accepts a batch of records to write to a JDBC destination record by record
    * only supports Microsoft SQL Server
-   * @param batch batch of SDC records
+   * @param recordIterator iterator of SDC records
    * @return any records that failed to be written to the destination
    * @throws StageException
    */
-  List<OnRecordErrorException> writePerRecord(Collection<Record> batch) throws StageException;
+  List<OnRecordErrorException> writePerRecord(Iterator<Record> recordIterator) throws StageException;
 }

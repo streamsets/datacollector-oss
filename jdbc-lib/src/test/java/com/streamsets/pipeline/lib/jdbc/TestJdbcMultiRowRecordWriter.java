@@ -123,7 +123,7 @@ public class TestJdbcMultiRowRecordWriter {
         false
     );
     List<Record> batch = generateRecords(10);
-    writer.writeBatch(batch);
+    writer.writeBatch(batch.iterator());
 
     connection = DriverManager.getConnection(connectionString, username, password);
     try (Statement statement = connection.createStatement()) {
@@ -152,7 +152,7 @@ public class TestJdbcMultiRowRecordWriter {
     );
     List<Record> batch = generateRecords(10);
     batch.get(0).getHeader().setAttribute(OperationType.SDC_OPERATION_TYPE, "-5");
-    List<OnRecordErrorException> errors = writer.writeBatch(batch);
+    List<OnRecordErrorException> errors = writer.writeBatch(batch.iterator());
 
     assertEquals(1, errors.size());
 
@@ -184,7 +184,7 @@ public class TestJdbcMultiRowRecordWriter {
     );
     List<Record> batch = generateRecords(10);
 
-    writer.writePerRecord(batch);
+    writer.writePerRecord(batch.iterator());
   }
 
   @Test
@@ -207,7 +207,7 @@ public class TestJdbcMultiRowRecordWriter {
     );
 
     Collection<Record> records = generateRecords(10);
-    writer.writeBatch(records);
+    writer.writeBatch(records.iterator());
 
 
     // note that unfortunately we have no way to directly observe that the expected batching is actually occurring -
@@ -240,7 +240,7 @@ public class TestJdbcMultiRowRecordWriter {
     );
 
     Collection<Record> records = generateRecords(1);
-    writer.writeBatch(records);
+    writer.writeBatch(records.iterator());
 
     connection = DriverManager.getConnection(connectionString, username, password);
     try (Statement statement = connection.createStatement()) {
@@ -394,7 +394,7 @@ public class TestJdbcMultiRowRecordWriter {
         caseSensitive
     );
     List<Record> batch = ImmutableList.of(insertRecord, updateRecord);
-    writer.writeBatch(batch);
+    writer.writeBatch(batch.iterator());
 
     connection = DriverManager.getConnection(connectionString, username, password);
     try (Statement statement = connection.createStatement()) {
@@ -423,7 +423,7 @@ public class TestJdbcMultiRowRecordWriter {
         false
     );
     List<Record> batch = Collections.singletonList(RecordCreator.create());
-    List<OnRecordErrorException> errors = writer.writeBatch(batch);
+    List<OnRecordErrorException> errors = writer.writeBatch(batch.iterator());
     Assert.assertTrue(errors.isEmpty());
   }
 

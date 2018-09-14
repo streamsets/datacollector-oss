@@ -32,7 +32,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -111,28 +111,26 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
   }
 
   @Override
-  public List<OnRecordErrorException> writePerRecord(Collection<Record> batch) throws StageException {
+  public List<OnRecordErrorException> writePerRecord(Iterator<Record> recordIterator) throws StageException {
     final boolean perRecord = true;
-    return write(batch, perRecord);
+    return write(recordIterator, perRecord);
   }
 
-  /** {@inheritDoc} */
-  @SuppressWarnings("unchecked")
   @Override
-  public List<OnRecordErrorException> writeBatch(Collection<Record> batch) throws StageException {
+  public List<OnRecordErrorException> writeBatch(Iterator<Record> recordIterator) throws StageException {
     final boolean perRecord = false;
-    return write(batch, perRecord);
+    return write(recordIterator, perRecord);
   }
 
   /**
    * write the batch of the records if it is not perRecord
    * otherwise, execute one statement per record
-   * @param batch
+   * @param recordIterator
    * @param perRecord
    * @return List<OnRecordErrorException>
    * @throws StageException
    */
-  private List<OnRecordErrorException> write(Collection<Record> batch, boolean perRecord) throws StageException {
+  private List<OnRecordErrorException> write(Iterator<Record> recordIterator, boolean perRecord) throws StageException {
     List<OnRecordErrorException> errorRecords = new LinkedList<>();
     PreparedStatementMap statementsForBatch = null;
     // Map that keeps list of records that has been used for each statement -- for error handling
@@ -147,7 +145,8 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
           caseSensitive
       );
 
-      for (Record record : batch) {
+      while (recordIterator.hasNext()) {
+        Record record = recordIterator.next();
         // First, find the operation code
         int opCode = recordReader.getOperationFromRecord(record, defaultOp, unsupportedAction, errorRecords);
         if (opCode <= 0) {

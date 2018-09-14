@@ -23,6 +23,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchContext;
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
@@ -72,6 +73,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -812,13 +814,23 @@ public class JdbcUtil {
     }
   }
 
+  /**
+   * Write records to the evaluated tables and handle errors.
+   *
+   * @param batch batch of SDC records
+   * @param tableNameEval table name EL eval
+   * @param tableNameVars table name EL vars
+   * @param tableNameTemplate table name template
+   * @param recordWriters JDBC record writer cache
+   * @param errorRecordHandler error record handler
+   * @param perRecord indicate record or batch update
+   * @throws StageException
+   */
   public static void write(
       Batch batch,
-      String schema,
       ELEval tableNameEval,
       ELVars tableNameVars,
       String tableNameTemplate,
-      boolean caseSensitive,
       LoadingCache<String, JdbcRecordWriter> recordWriters,
       ErrorRecordHandler errorRecordHandler,
       boolean perRecord
@@ -829,35 +841,57 @@ public class JdbcUtil {
         tableNameTemplate,
         batch
     );
-    Set<String> tableNames = partitions.keySet();
-    for (String tableName : tableNames) {
-      try {
-        JdbcRecordWriter jdbcRecordWriter = recordWriters.getUnchecked(tableName);
+    for (String tableName : partitions.keySet()) {
+      Iterator<Record> recordIterator = partitions.get(tableName).iterator();
+      write(recordIterator, tableName, recordWriters, errorRecordHandler, perRecord);
+    }
+  }
 
-        List<OnRecordErrorException> errors;
-        if (perRecord) {
-          errors = jdbcRecordWriter.writePerRecord(partitions.get(tableName));
-        } else {
-          errors = jdbcRecordWriter.writeBatch(partitions.get(tableName));
-        }
-        for (OnRecordErrorException error : errors) {
-          errorRecordHandler.onError(error);
-        }
-      } catch (UncheckedExecutionException ex) {
-        Throwable throwable = ex.getCause();
-        if (throwable instanceof StageException) {
-          StageException stageEx = (StageException) ex.getCause();
-          if (stageEx.getErrorCode() == JdbcErrors.JDBC_16) {
-            for (Record record : partitions.get(tableName)) {
-              errorRecordHandler.onError(new OnRecordErrorException(record, JdbcErrors.JDBC_16, tableName, ex.getCause()));
-            }
-          } else {
-            errorRecordHandler.onError(stageEx.getErrorCode(), stageEx.getParams());
-          }
-        } else {
-          errorRecordHandler.onError(JdbcErrors.JDBC_301, ex.getMessage(), ex.getCause());
-        }
+  /**
+   * Write records to the given table and handle errors.
+   *
+   * @param recordIterator iterator of SDC records
+   * @param tableName table name
+   * @param recordWriters JDBC record writer cache
+   * @param errorRecordHandler error record handler
+   * @param perRecord indicate record or batch update
+   * @throws StageException
+   */
+  public static void write(
+      Iterator<Record> recordIterator,
+      String tableName,
+      LoadingCache<String, JdbcRecordWriter> recordWriters,
+      ErrorRecordHandler errorRecordHandler,
+      boolean perRecord
+  ) throws StageException {
+    final JdbcRecordWriter jdbcRecordWriter;
+    try {
+      jdbcRecordWriter = recordWriters.getUnchecked(tableName);
+    } catch (UncheckedExecutionException ex) {
+      final Throwable throwable = ex.getCause();
+      final ErrorCode errorCode;
+      final Object[] messageParams;
+      if (throwable instanceof StageException) {
+        StageException stageEx = (StageException) ex.getCause();
+        errorCode = stageEx.getErrorCode();
+        messageParams = stageEx.getParams();
+      } else {
+        errorCode = JdbcErrors.JDBC_301;
+        messageParams = new Object[] {ex.getMessage(), ex.getCause()};
       }
+      // Failed to create RecordWriter, report all as error records.
+      while (recordIterator.hasNext()) {
+        Record record = recordIterator.next();
+        errorRecordHandler.onError(new OnRecordErrorException(record, errorCode, messageParams));
+      }
+      return;
+    }
+    List<OnRecordErrorException> errors = perRecord
+        ? jdbcRecordWriter.writePerRecord(recordIterator)
+        : jdbcRecordWriter.writeBatch(recordIterator);
+
+    for (OnRecordErrorException error : errors) {
+      errorRecordHandler.onError(error);
     }
   }
 
@@ -1017,5 +1051,12 @@ public class JdbcUtil {
     BatchContext batchContext = context.startBatch();
     CommonEvents.NO_MORE_DATA.create(context, batchContext).createAndSend();
     context.processBatch(batchContext);
+  }
+
+  /**
+   * @return true if the value is an EL string
+   */
+  public static boolean isElString(String value) {
+    return value != null && value.startsWith("${");
   }
 }
