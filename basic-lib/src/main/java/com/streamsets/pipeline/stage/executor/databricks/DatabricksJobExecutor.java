@@ -108,9 +108,9 @@ public class DatabricksJobExecutor extends BaseExecutor {
           .property(ClientProperties.ASYNC_THREADPOOL_SIZE, 1)
           .property(ClientProperties.REQUEST_ENTITY_PROCESSING, RequestEntityProcessing.BUFFERED);
 
-      if(databricksConfigBean.useProxy) {
+      if (databricksConfigBean.useProxy) {
         clientConfig = clientConfig.connectorProvider(new GrizzlyConnectorProvider(new GrizzlyClientCustomizer(
-            databricksConfigBean.useProxy,
+            true,
             proxyUsername,
             proxyPassword
         )));
@@ -186,9 +186,16 @@ public class DatabricksJobExecutor extends BaseExecutor {
           break;
         case 401:
         case 403:
+          String credentialField =
+              databricksConfigBean.credentialsConfigBean.credentialType == CredentialType.PASSWORD ?
+                  "conf.credentialsConfigBean.username" :
+                  "conf.credentialsConfigBean.token";
           issues.add(context.createConfigIssue(
-              "CREDENTIALS", "conf.credentialsConfigBean.username",
-              DATABRICKS_05, databricksConfigBean.jobId));
+              "CREDENTIALS",
+              credentialField,
+              DATABRICKS_05,
+              databricksConfigBean.jobId
+          ));
           break;
         case 200:
           verifyTaskType(context, issues, listResponse);

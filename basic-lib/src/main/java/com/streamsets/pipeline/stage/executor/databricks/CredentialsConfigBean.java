@@ -61,7 +61,7 @@ public class CredentialsConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.CREDENTIAL,
-      label = "Password",
+      label = "Token",
       displayPosition = 30,
       group = "#0",
       dependsOn = "credentialType",
@@ -109,7 +109,7 @@ public class CredentialsConfigBean {
       List<Stage.ConfigIssue> issues
   ) {
     return resolveCredential(
-        password,
+        token,
         "token",
         context,
         groupName,
