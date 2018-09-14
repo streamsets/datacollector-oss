@@ -20,18 +20,7 @@ angular.module('dataCollectorApp')
     $httpProvider, AnalyticsProvider
   ) {
     $locationProvider.html5Mode({enabled: true, requireBase: false});
-    $routeProvider.otherwise({
-      templateUrl: 'app/home/home.tpl.html',
-      controller: 'HomeController',
-      resolve: {
-        myVar: function(authService) {
-          return authService.init();
-        }
-      },
-      data: {
-        authorizedRoles: ['admin', 'creator', 'manager', 'guest']
-      }
-    });
+    $routeProvider.otherwise({redirectTo: '/'});
 
     // Default Timezone (local storage)
     $provide.decorator('dateFilter', ['$delegate', '$rootScope', function ($delegate, $rootScope) {
