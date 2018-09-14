@@ -312,4 +312,16 @@ public class TCPServerSourceConfig {
       evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String batchCompletedAckMessage;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "300",
+      label = "Read Timeout (seconds)",
+      description = "Period of time a connection can be idle. After that time, the connection is closed. Values <= 0 " +
+          "means no idle timeout applied",
+      displayPosition = 300,
+      group = "TCP"
+  )
+  public int readTimeout;
 }

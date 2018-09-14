@@ -31,4 +31,17 @@ public class TestTCPServerSourceUpgrader {
     upgrader.upgrade("lib", "stage", "stageInst", 1, 2, configs);
     UpgraderTestUtils.assertAllExist(configs, "conf.lengthFieldCharset");
   }
+
+  @Test
+  public void testV2ToV3() throws Exception {
+    List<Config> configs = new LinkedList<>();
+    TCPServerSourceUpgrader upgrader = new TCPServerSourceUpgrader();
+    upgrader.upgrade("lib", "stage", "stageInst", 2, 3, configs);
+    UpgraderTestUtils.assertAllExist(configs, "conf.readTimeout");
+
+    configs.clear();
+    upgrader.upgrade("lib", "stage", "stageInst", 1, 3, configs);
+    UpgraderTestUtils.assertAllExist(configs, "conf.lengthFieldCharset");
+    UpgraderTestUtils.assertAllExist(configs, "conf.readTimeout");
+  }
 }

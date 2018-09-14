@@ -41,6 +41,7 @@ import io.netty.channel.epoll.Epoll;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.ssl.SslHandler;
+import io.netty.handler.timeout.ReadTimeoutHandler;
 import org.apache.avro.ipc.NettyServer;
 import org.apache.avro.ipc.specific.SpecificResponder;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -210,6 +211,12 @@ public class TCPServerSource extends BasePushSource {
                     Charset.forName(config.ackMessageCharset)
                 )
             );
+
+            if (config.readTimeout > 0) {
+              ch.pipeline().addLast(
+                new ReadTimeoutHandler(config.readTimeout)
+              );
+            }
           }
         }
     );

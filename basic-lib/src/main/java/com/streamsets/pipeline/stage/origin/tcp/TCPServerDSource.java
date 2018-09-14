@@ -26,7 +26,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
 import com.streamsets.pipeline.api.impl.Utils;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "TCP Server",
     description = "Listens for TCP messages on one or more ports",
     icon = "ethernet_multithreaded.png",
