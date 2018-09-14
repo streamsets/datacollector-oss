@@ -36,6 +36,19 @@ angular
     $scope, $rootScope, $routeParams, $q, $modal, $location, pipelineService, api, configuration, pipelineConstant,
     Analytics, $route, $translate
   ) {
+
+    // Handle importing pipeline from github URL
+    var pathName = location.pathname;
+    if (pathName.indexOf('/collector/importFromUrl/') !== -1 ) {
+      pathName = pathName.replace('/collector/importFromUrl/', '');
+      var params = pathName.split('/');
+      if (params.length > 1) {
+        var pipelineTitle = params[0];
+        var pipelineHttpUrl = pathName.replace(pipelineTitle + '/', '') + location.search;
+        pipelineService.importPipelinesFromHttpUrl(null, pipelineTitle, pipelineHttpUrl);
+      }
+    }
+
     $location.search('auth_token', null);
     $location.search('auth_user', null);
     $rootScope.common.successList = [];
@@ -163,6 +176,13 @@ angular
        */
       importPipelinesFromArchive: function($event) {
         pipelineService.importPipelinesFromArchive($event);
+      },
+
+      /**
+       * Import Pipelines from Http Url
+       */
+      importPipelinesFromHttpUrl: function($event) {
+        pipelineService.importPipelinesFromHttpUrl($event);
       },
 
       /**

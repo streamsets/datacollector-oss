@@ -103,6 +103,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -1298,6 +1299,64 @@ public class PipelineStoreResource {
     );
     return Response.ok().
         type(MediaType.APPLICATION_JSON).entity(pipelineEnvelope).build();
+  }
+
+
+  @Path("/pipeline/{pipelineId}/importFromURL")
+  @POST
+  @ApiOperation(value = "Import Pipeline Configuration & Rules from HTTP URL", response = PipelineEnvelopeJson.class,
+      authorizations = @Authorization(value = "basic"))
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({
+      AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
+  })
+  public Response importPipelineFromURL(
+      @PathParam("pipelineId") String name,
+      @QueryParam("rev") @DefaultValue("0") String rev,
+      @QueryParam("pipelineHttpUrl") String pipelineHttpUrl,
+      @QueryParam("overwrite") @DefaultValue("false") boolean overwrite,
+      @QueryParam("autoGeneratePipelineId") @DefaultValue("false") boolean autoGeneratePipelineId,
+      @QueryParam("draft") @DefaultValue("false") boolean draft,
+      @QueryParam("includeLibraryDefinitions") @DefaultValue("true") boolean includeLibraryDefinitions
+  ) throws PipelineException, IOException {
+    RestAPIUtils.injectPipelineInMDC("*");
+    PipelineEnvelopeJson pipelineEnvelope = getPipelineEnvelopeFromFromUrl(pipelineHttpUrl);
+    pipelineEnvelope = importPipelineEnvelope(
+        name,
+        rev,
+        overwrite,
+        autoGeneratePipelineId,
+        pipelineEnvelope,
+        draft,
+        includeLibraryDefinitions
+    );
+    return Response.ok().
+        type(MediaType.APPLICATION_JSON).entity(pipelineEnvelope).build();
+  }
+
+  private PipelineEnvelopeJson getPipelineEnvelopeFromFromUrl(String pipelineHttpUrl) throws IOException {
+    Response response = null;
+    PipelineEnvelopeJson pipelineEnvelope = null;
+    try {
+      response = ClientBuilder.newClient()
+          .target(pipelineHttpUrl)
+          .request()
+          .get();
+      if (response.getStatus() != Response.Status.OK.getStatusCode()) {
+        throw new RuntimeException(Utils.format("Failed to fetch pipeline from URL '{}' status code '{}': {}",
+            pipelineHttpUrl,
+            response.getStatus(),
+            response.readEntity(String.class)
+        ));
+      }
+      String responseString = response.readEntity(String.class);
+      pipelineEnvelope = ObjectMapperFactory.get().readValue(responseString, PipelineEnvelopeJson.class);
+    } finally {
+      if (response != null) {
+        response.close();
+      }
+    }
+    return pipelineEnvelope;
   }
 
   private PipelineEnvelopeJson importPipelineEnvelope(

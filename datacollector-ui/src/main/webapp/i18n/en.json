@@ -107,6 +107,7 @@
       "hideNameColumn": "Hide Pipeline ID Column",
       "hideValue": "Hide Value",
       "histogram": "Records Per Batch Histogram (5 minutes decay)",
+      "httpUrl": "HTTP URL",
       "id": "ID",
       "import": "Import",
       "importing": "Importing...",
@@ -298,6 +299,7 @@
     "getStarted": "Get Started",
     "importPipeline": "Import Pipeline",
     "importPipelinesFromArchive": "Import Pipelines From Archive",
+    "importPipelineFromHttpUrl": "Import Pipeline from HTTP URL",
     "invalidStatus": "Pipeline is invalid",
     "header" : {
       "addLabels": "Add Labels",

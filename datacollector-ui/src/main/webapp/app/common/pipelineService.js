@@ -16,7 +16,7 @@
 
 // Service for providing access to the Pipeline utility functions.
 angular.module('dataCollectorApp.common')
-  .service('pipelineService', function(pipelineConstant, api, $q, $translate, $modal, $location, $route, _) {
+  .service('pipelineService', function(pipelineConstant, api, $q, $translate, $modal, $location, $route, _, $window) {
 
     var self = this;
     var translations = {};
@@ -314,7 +314,7 @@ angular.module('dataCollectorApp.common')
     };
 
     /**
-     * Import link command handler
+     * Import from archives link command handler
      */
     this.importPipelinesFromArchive = function($event) {
       var modalInstance = $modal.open({
@@ -330,6 +330,35 @@ angular.module('dataCollectorApp.common')
 
       modalInstance.result.then(function() {
         $route.reload();
+      }, function () {
+      });
+    };
+
+    /**
+     * Import from HTTP URL command handler
+     */
+    this.importPipelinesFromHttpUrl = function($event, pipelineTitle, pipelineHttpUrl) {
+      var modalInstance = $modal.open({
+        templateUrl: 'app/home/library/importFromUrl/importFromUrlModal.tpl.html',
+        controller: 'ImportFromURLModalInstanceController',
+        size: '',
+        backdrop: 'static',
+        resolve: {
+          pipelineTitle: function () {
+            return pipelineTitle;
+          },
+          pipelineHttpUrl: function () {
+            return pipelineHttpUrl;
+          }
+        }
+      });
+
+      if ($event) {
+        $event.stopPropagation();
+      }
+
+      modalInstance.result.then(function() {
+        $window.location.href = '/';
       }, function () {
       });
     };

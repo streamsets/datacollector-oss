@@ -37,6 +37,13 @@
       </button>
 
       <button class="btn btn-light import-btn"
+              ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || common.isSlaveNode"
+              ng-click="importPipelinesFromHttpUrl()">
+        <span class="glyphicon glyphicon-log-out"></span>
+        <span translate="home.importPipelineFromHttpUrl">Import Pipelines From URL</span>
+      </button>
+
+      <button class="btn btn-light import-btn"
               ng-if="common.isDPMEnabled"
               ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || common.isSlaveNode"
               ng-click="downloadRemotePipelineConfig()">
@@ -63,7 +70,6 @@
   </div>
 
 </div>
-
 
 <script type="text/ng-template" id="edgeHelpTemplate">
   <div class="help-panel">
