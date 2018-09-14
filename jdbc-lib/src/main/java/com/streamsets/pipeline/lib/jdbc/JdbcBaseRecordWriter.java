@@ -493,7 +493,12 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
           case TIME:
           case DATETIME:
             if (!isColumnTypeDate(columnType)) {
-              throw new IllegalArgumentException("Incorrect type");
+              LOG.debug("fieldType: {} and column: {} not directly compatible. Attempting to use setObject()",
+                  fieldType,
+                  column
+              );
+              statement.setObject(paramIdx, value, getColumnType(column));
+              break;
             }
             // Java Date types are not accepted by JDBC drivers, so we need to convert to java.sql.Timestamp
             statement.setTimestamp(paramIdx,
@@ -502,62 +507,112 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
             break;
           case BOOLEAN:
             if (columnType != Types.BOOLEAN) {
-              throw new IllegalArgumentException("Incorrect type");
+              LOG.debug("fieldType: {} and column: {} not directly compatible. Attempting to use setObject()",
+                  fieldType,
+                  column
+              );
+              statement.setObject(paramIdx, value, getColumnType(column));
+              break;
             }
             statement.setBoolean(paramIdx, (Boolean)value);
             break;
           case CHAR:
           case STRING:
             if (!isColumnTypeText(columnType)) {
-              throw new IllegalArgumentException("Incorrect type");
+              LOG.debug("fieldType: {} and column: {} not directly compatible. Attempting to use setObject()",
+                  fieldType,
+                  column
+              );
+              statement.setObject(paramIdx, value, getColumnType(column));
+              break;
             }
             statement.setString(paramIdx, String.valueOf(value));
             break;
           case BYTE:
             if (!isColumnTypeNumeric(columnType)) {
-              throw new IllegalArgumentException("Incorrect type");
+              LOG.debug("fieldType: {} and column: {} not directly compatible. Attempting to use setObject()",
+                  fieldType,
+                  column
+              );
+              statement.setObject(paramIdx, value, getColumnType(column));
+              break;
             }
             statement.setByte(paramIdx, (Byte)value);
             break;
           case SHORT:
             if (!isColumnTypeNumeric(columnType)) {
-              throw new IllegalArgumentException("Incorrect type");
+              LOG.debug("fieldType: {} and column: {} not directly compatible. Attempting to use setObject()",
+                  fieldType,
+                  column
+              );
+              statement.setObject(paramIdx, value, getColumnType(column));
+              break;
             }
             statement.setShort(paramIdx, (Short)value);
             break;
           case INTEGER:
             if (!isColumnTypeNumeric(columnType)) {
-              throw new IllegalArgumentException("Incorrect type");
+              LOG.debug("fieldType: {} and column: {} not directly compatible. Attempting to use setObject()",
+                  fieldType,
+                  column
+              );
+              statement.setObject(paramIdx, value, getColumnType(column));
+              break;
             }
             statement.setInt(paramIdx, (Integer)value);
             break;
           case LONG:
             if (!isColumnTypeNumeric(columnType)) {
-              throw new IllegalArgumentException("Incorrect type");
+              LOG.debug("fieldType: {} and column: {} not directly compatible. Attempting to use setObject()",
+                  fieldType,
+                  column
+              );
+              statement.setObject(paramIdx, value, getColumnType(column));
+              break;
             }
             statement.setLong(paramIdx, (Long)value);
             break;
           case FLOAT:
             if (!isColumnTypeNumeric(columnType)) {
-              throw new IllegalArgumentException("Incorrect type");
+              LOG.debug("fieldType: {} and column: {} not directly compatible. Attempting to use setObject()",
+                  fieldType,
+                  column
+              );
+              statement.setObject(paramIdx, value, getColumnType(column));
+              break;
             }
             statement.setFloat(paramIdx, (Float)value);
             break;
           case DOUBLE:
             if (!isColumnTypeNumeric(columnType)) {
-              throw new IllegalArgumentException("Incorrect type");
+              LOG.debug("fieldType: {} and column: {} not directly compatible. Attempting to use setObject()",
+                  fieldType,
+                  column
+              );
+              statement.setObject(paramIdx, value, getColumnType(column));
+              break;
             }
             statement.setDouble(paramIdx, (Double)value);
             break;
           case DECIMAL:
             if (!isColumnTypeNumeric(columnType)) {
-              throw new IllegalArgumentException("Incorrect type");
+              LOG.debug("fieldType: {} and column: {} not directly compatible. Attempting to use setObject()",
+                  fieldType,
+                  column
+              );
+              statement.setObject(paramIdx, value, getColumnType(column));
+              break;
             }
             statement.setBigDecimal(paramIdx, (BigDecimal)value);
             break;
           case BYTE_ARRAY:
             if (!isColumnTypeBinary(columnType)) {
-              throw new IllegalArgumentException("Incorrect type");
+              LOG.debug("fieldType: {} and column: {} not directly compatible. Attempting to use setObject()",
+                  fieldType,
+                  column
+              );
+              statement.setObject(paramIdx, value, getColumnType(column));
+              break;
             }
             statement.setBytes(paramIdx, (byte[])value);
             break;
@@ -567,15 +622,13 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
             throw new DataFormatException(fieldType.name());
           case ZONED_DATETIME: //guidance is to use setObject() for this type
           default:
+            LOG.debug("fieldType: {} handled by default case. Attempting to use setObject()", fieldType);
             statement.setObject(paramIdx, value, getColumnType(column));
             break;
         }
       } catch (DataFormatException e) {
         LOG.error("Query failed unsupported type {}", e.getMessage());
         throw new OnRecordErrorException(record, JdbcErrors.JDBC_05, field.getValue(), fieldType.toString(), column);
-      } catch (IllegalArgumentException e) {
-        LOG.error("Query failed due to type mismatch {} for column {}", fieldType.toString(), column);
-        throw new OnRecordErrorException(record, JdbcErrors.JDBC_23, field.getValue(), fieldType.toString(), column);
       } catch (SQLException e) {
         LOG.error("Query failed due to {}", e.getMessage(), e);
         throw new OnRecordErrorException(record, JdbcErrors.JDBC_23, field.getValue(), fieldType.toString(), column);
