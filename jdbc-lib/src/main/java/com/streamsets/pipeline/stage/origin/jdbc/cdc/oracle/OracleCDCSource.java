@@ -93,6 +93,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -211,6 +212,10 @@ public class OracleCDCSource extends BaseSource {
   private final AtomicReference<BigDecimal> cachedSCNForRedoLogs = new AtomicReference<>(BigDecimal.ZERO);
 
   private BlockingQueue<RecordOffset> recordQueue;
+  private final BlockingQueue<RecordErrorString> errorRecords = new LinkedBlockingQueue<>();
+  private final BlockingQueue<String> unparseable = new LinkedBlockingQueue<>();
+  private final BlockingQueue<RecordTxnInfo> expiredRecords = new LinkedBlockingQueue<>();
+  private final BlockingQueue<ErrorAndCause> otherErrors = new LinkedBlockingQueue<>();
 
   private String selectString;
   private String version;
@@ -351,8 +356,41 @@ public class OracleCDCSource extends BaseSource {
         }
       }
     }
+    sendErrors();
     pollForStageExceptions();
     return nextOffset;
+  }
+
+  private void sendErrors() throws StageException {
+    handleErrors(errorRecords.iterator(),
+        r -> getContext().toError(r.record, JDBC_85, r.errorString, r.record.getHeader().getAttribute(TABLE))
+    );
+
+    handleErrors(unparseable.iterator(), r -> {
+      try {
+        errorRecordHandler.onError(JDBC_43, r);
+      } catch (StageException e) {
+        addToStageExceptionsQueue(e);
+      }
+    });
+
+    handleErrors(expiredRecords.iterator(), r -> getContext().toError(r.record, JDBC_84, r.txnId, r.txnStartTime));
+
+    handleErrors(otherErrors.iterator(), r -> {
+      try {
+        errorRecordHandler.onError(r.error, r.ex);
+      } catch (StageException e) {
+        addToStageExceptionsQueue(e);
+      }
+    });
+  }
+
+  private <E> void handleErrors(Iterator<E> iterator, Consumer<E> consumerMethod) {
+    while (iterator.hasNext()) {
+      E e = iterator.next();
+      iterator.remove();
+      consumerMethod.accept(e);
+    }
   }
 
   private void pollForStageExceptions() throws StageException {
@@ -562,11 +600,7 @@ public class OracleCDCSource extends BaseSource {
                     recordQueue.put(new RecordOffset(record, offset));
                   }
                 } catch (UnparseableSQLException ex) {
-                  try {
-                    errorRecordHandler.onError(JDBC_43, queryString);
-                  } catch (StageException stageException) {
-                    addToStageExceptionsQueue(stageException);
-                  }
+                  unparseable.offer(queryString);
                 }
               } else {
                 bufferedRecordsLock.lock();
@@ -692,11 +726,7 @@ public class OracleCDCSource extends BaseSource {
           );
         } catch (SQLException ex) {
           LOG.error("Error while attempting to start LogMiner", ex);
-          try {
-            errorRecordHandler.onError(JDBC_52, ex);
-          } catch (StageException e) {
-            addToStageExceptionsQueue(e);
-          }
+          otherErrors.offer(new ErrorAndCause(JDBC_52, ex));
         } catch (StageException ex) {
           LOG.error("Error while attempting to start logminer for redo log dictionary", ex);
           addToStageExceptionsQueue(ex);
@@ -844,7 +874,7 @@ public class OracleCDCSource extends BaseSource {
         if (LOG.isDebugEnabled()) {
           LOG.debug(UNSUPPORTED_TO_ERR, error, r.getHeader().getAttribute(TABLE));
         }
-        getContext().toError(r, JDBC_85, error, r.getHeader().getAttribute(TABLE));
+        errorRecords.offer(new RecordErrorString(r, error));
         return false;
       case DISCARD:
         if (LOG.isDebugEnabled()) {
@@ -910,15 +940,11 @@ public class OracleCDCSource extends BaseSource {
           }
         }
       } catch (ExecutionException e) {
-        try {
-          final Throwable cause = e.getCause();
-          if (cause instanceof UnparseableSQLException) {
-            errorRecordHandler.onError(JDBC_43, recordFuture.sql);
-          } else {
-            errorRecordHandler.onError(JDBC_405, cause);
-          }
-        } catch (StageException stageException) {
-          addToStageExceptionsQueue(stageException);
+        final Throwable cause = e.getCause();
+        if (cause instanceof UnparseableSQLException) {
+          unparseable.offer(recordFuture.sql);
+        } else {
+          otherErrors.offer(new ErrorAndCause(JDBC_405, cause));
         }
       }
     }
@@ -1106,7 +1132,6 @@ public class OracleCDCSource extends BaseSource {
     }
 
     recordQueue = new LinkedBlockingQueue<>(2 * configBean.baseConfigBean.maxBatchSize);
-
     String container = configBean.pdb;
 
     List<SchemaAndTable> schemasAndTables;
@@ -1696,14 +1721,10 @@ public class OracleCDCSource extends BaseSource {
               try {
                 Record record = generateRecord(x.sqlString, x.headers, x.opCode);
                 if (record != null) {
-                  getContext().toError(record, JDBC_84, entry.getKey().txnId, entry.getKey().txnStartTime);
+                  expiredRecords.offer(new RecordTxnInfo(record, entry.getKey().txnId, entry.getKey().txnStartTime));
                 }
               } catch(UnparseableSQLException ex) {
-                try {
-                  errorRecordHandler.onError(JDBC_43, x.sqlString);
-                } catch (StageException stageException) {
-                  addToStageExceptionsQueue(stageException);
-                }
+                unparseable.offer(x.sqlString);
               } catch (Exception ex) {
                 LOG.error("Error while generating expired record from SQL: " + x.sqlString);
               }
@@ -1832,6 +1853,38 @@ public class OracleCDCSource extends BaseSource {
       this.future = future;
       this.sql = sql;
       this.seq = seq;
+    }
+  }
+
+  private class RecordTxnInfo {
+    final Record record;
+    final String txnId;
+    final LocalDateTime txnStartTime;
+
+    private RecordTxnInfo(Record record, String txnId, LocalDateTime txnStartTime) {
+      this.record = record;
+      this.txnId = txnId;
+      this.txnStartTime = txnStartTime;
+    }
+  }
+
+  private class RecordErrorString {
+    final Record record;
+    final String errorString;
+
+    private RecordErrorString(Record record, String errorString) {
+      this.record = record;
+      this.errorString = errorString;
+    }
+  }
+
+  private class ErrorAndCause {
+    final JdbcErrors error;
+    final Throwable ex;
+
+    private ErrorAndCause(JdbcErrors error, Throwable ex) {
+      this.error = error;
+      this.ex = ex;
     }
   }
 
