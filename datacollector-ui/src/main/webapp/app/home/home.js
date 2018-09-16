@@ -48,6 +48,7 @@ angular
     $location.search('auth_token', null);
     $location.search('auth_user', null);
     $rootScope.common.successList = [];
+    $rootScope.common.infoList = [];
 
     if ($routeParams.errors) {
       $rootScope.common.errors = [$routeParams.errors];

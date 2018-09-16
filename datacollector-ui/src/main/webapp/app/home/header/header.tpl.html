@@ -209,7 +209,7 @@
          tooltip-popup-delay="500"
          ng-hide="previewMode || snapshotMode"
          ng-if="isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])"
-         ng-href="/collector/logs/{{pipelineConfig.info.title + '/' + pipelineConfig.info.pipelineId}}">
+         ng-click="viewPipelineLog()">
         <span class="fa fa-file-text fa-14x"></span>
       </a>
 
