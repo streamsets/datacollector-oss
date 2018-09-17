@@ -16,23 +16,22 @@
 
 package com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroconvert;
 
-import com.streamsets.pipeline.lib.converter.AvroParquetConstants;
 
 public abstract class AvroConversionCommonConstants {
   /**
    * Full path to input avro file that needs to be converted.
    */
-  public final static String INPUT_FILE = AvroParquetConstants.class.getCanonicalName() + ".input";
+  public final static String INPUT_FILE = AvroConversionCommonConstants.class.getCanonicalName() + ".input";
   /**
    * Directory into which the converted parquet file should be stored.
    */
-  public final static String OUTPUT_DIR = AvroParquetConstants.class.getCanonicalName() + ".output";
+  public final static String OUTPUT_DIR = AvroConversionCommonConstants.class.getCanonicalName() + ".output";
   /**
    * Whether or not to keep input file after the conversion is done.
    */
-  public final static String KEEP_INPUT_FILE = AvroParquetConstants.class.getCanonicalName() + ".keep_input_file";
+  public final static String KEEP_INPUT_FILE = AvroConversionCommonConstants.class.getCanonicalName() + ".keep_input_file";
   /**
    * Overwrite tmp file - if the tmp file exists it will be removed.
    */
-  public final static String OVERWRITE_TMP_FILE = AvroParquetConstants.class.getCanonicalName() + ".overwrite_tmp_file";
+  public final static String OVERWRITE_TMP_FILE = AvroConversionCommonConstants.class.getCanonicalName() + ".overwrite_tmp_file";
 }
