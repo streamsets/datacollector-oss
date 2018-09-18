@@ -13,22 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.couchbase;
+package com.streamsets.pipeline.stage.processor.couchbase;
 
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
-public enum Groups implements Label {
-  COUCHBASE("Couchbase"),
-  CREDENTIALS("Credentials"),
-  DOCUMENT("Document Handling"),
-  DATA_FORMAT("Data Format");
-
+public enum MissingValueType implements Label {
+  PASS("Pass the record along the pipeline unchanged"),
+  ERROR("Send to error");
 
   private final String label;
 
-  Groups(String label) {
+  MissingValueType(String label) {
     this.label = label;
   }
 

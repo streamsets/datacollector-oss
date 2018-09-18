@@ -15,23 +15,11 @@
  */
 package com.streamsets.pipeline.stage.destination.couchbase;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.couchbase.client.java.PersistTo;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-@GenerateResourceBundle
-public enum CouchbaseVersionTypes implements Label {
-  VERSION4("Version 4 or earlier"),
-  VERSION5("Version 5")
-  ;
-
-  private final String label;
-
-  CouchbaseVersionTypes(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return this.label;
+public class PersistToChooserValues extends BaseEnumChooserValues<PersistTo> {
+  public PersistToChooserValues() {
+    super(PersistTo.class);
   }
 }

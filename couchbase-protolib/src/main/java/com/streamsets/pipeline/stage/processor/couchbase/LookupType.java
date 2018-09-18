@@ -13,12 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.couchbase;
+package com.streamsets.pipeline.stage.processor.couchbase;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 
-public class CouchbaseVersionChooserValues extends BaseEnumChooserValues<CouchbaseVersionTypes> {
-  public CouchbaseVersionChooserValues() {
-    super(CouchbaseVersionTypes.class);
+@GenerateResourceBundle
+public enum LookupType implements Label {
+  KV("Key/Value"),
+  N1QL("N1QL");
+
+  private final String label;
+
+  LookupType(String label) {
+    this.label = label;
+  }
+
+  @Override
+  public String getLabel() {
+    return this.label;
   }
 }

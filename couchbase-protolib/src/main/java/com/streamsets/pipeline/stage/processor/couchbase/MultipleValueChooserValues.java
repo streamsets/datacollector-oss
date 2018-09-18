@@ -13,27 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.couchbase;
+package com.streamsets.pipeline.stage.processor.couchbase;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  COUCHBASE("Couchbase"),
-  CREDENTIALS("Credentials"),
-  DOCUMENT("Document Handling"),
-  DATA_FORMAT("Data Format");
-
-
-  private final String label;
-
-  Groups(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return this.label;
+public class MultipleValueChooserValues extends BaseEnumChooserValues<MultipleValueType> {
+  public MultipleValueChooserValues() {
+    super(MultipleValueType.class);
   }
 }

@@ -13,27 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.couchbase;
+package com.streamsets.pipeline.lib.couchbase;
 
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
-public enum Groups implements Label {
-  COUCHBASE("Couchbase"),
-  CREDENTIALS("Credentials"),
-  DOCUMENT("Document Handling"),
-  DATA_FORMAT("Data Format");
-
+public enum EnvDataType implements Label {
+  STRING("String", String.class),
+  INT("int", int.class),
+  LONG("long", long.class),
+  DOUBLE("double", double.class),
+  BOOLEAN("boolean", boolean.class);
 
   private final String label;
+  private final Class className;
 
-  Groups(String label) {
+  EnvDataType(String label, Class className) {
     this.label = label;
+    this.className = className;
   }
 
   @Override
   public String getLabel() {
     return this.label;
+  }
+
+  public Class getClassName() {
+    return className;
   }
 }

@@ -30,7 +30,8 @@
   <packaging>jar</packaging>
 
   <properties>
-    <couchbase.version>2.5.9</couchbase.version>
+    <couchbase.version>2.7.4</couchbase.version>
+    <couchbaseencryptionextension.version>1.0.0</couchbaseencryptionextension.version>
   </properties>
 
   <!-- Core StreamSets Dependencies for Stage Libraries -->
@@ -44,6 +45,11 @@
       <groupId>com.couchbase.client</groupId>
       <artifactId>java-client</artifactId>
       <version>${couchbase.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.couchbase.client</groupId>
+      <artifactId>encryption</artifactId>
+      <version>${couchbaseencryptionextension.version}</version>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
@@ -70,6 +76,17 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>1.10.19</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-sdk</artifactId>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 

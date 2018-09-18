@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 StreamSets Inc.
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +15,20 @@
  */
 package com.streamsets.pipeline.stage.destination.couchbase;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.config.DataFormat;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  COUCHBASE("Couchbase"),
-  CREDENTIALS("Credentials"),
-  DOCUMENT("Document Handling"),
-  DATA_FORMAT("Data Format");
+public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
 
-
-  private final String label;
-
-  Groups(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return this.label;
+  public DataFormatChooserValues() {
+    super(
+      DataFormat.AVRO,
+      DataFormat.BINARY,
+      DataFormat.DELIMITED,
+      DataFormat.JSON,
+      DataFormat.PROTOBUF,
+      DataFormat.SDC_JSON,
+      DataFormat.TEXT
+    );
   }
 }

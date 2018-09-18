@@ -1,13 +1,9 @@
 /*
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2018 StreamSets Inc.
  *
- * Licensed under the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -22,27 +18,34 @@ package com.streamsets.pipeline.stage.destination.couchbase;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Couchbase",
     description = "Writes data to Couchbase",
     icon = "couchbase.png",
     recordsByRef = true,
-    onlineHelpRefUrl = "index.html?contextID=task_cnl_dwq_h2b"
+    onlineHelpRefUrl = "index.html?contextID=task_cnl_dwq_h2b",
+    upgrader = CouchbaseTargetUpgrader.class
 )
+@HideConfigs({
+    "config.dataFormatConfig.jsonMode",
+    "config.couchbase.tls.useDefaultCiperSuites",
+    "config.couchbase.tls.useDefaultProtocols"
+})
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
-public class CouchbaseConnectorDTarget extends DTarget {
+public class CouchbaseDTarget extends DTarget {
 
   @ConfigDefBean
-  public CouchbaseTargetConfiguration config;
+  public CouchbaseTargetConfig config;
 
   @Override
   protected Target createTarget() {
-    return new CouchbaseConnectorTarget(config);
+    return new CouchbaseTarget(config);
   }
 }

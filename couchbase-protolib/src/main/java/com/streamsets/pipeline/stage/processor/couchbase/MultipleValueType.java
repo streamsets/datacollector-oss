@@ -13,30 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.couchbase.lib;
+package com.streamsets.pipeline.stage.processor.couchbase;
 
-import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
-public enum Errors implements ErrorCode {
-  ERROR_00("Document Key is Null"),
-  ERROR_01("Error IO writing JSON Object from Record"),
-  ERROR_03("Can't connect to CouchBase: {}"),
-  ;
-  private final String msg;
+public enum MultipleValueType implements Label {
+  FIRST("First value only"),
+  MULTI("Split into multiple records");
 
-  Errors(String msg) {
-    this.msg = msg;
+  private final String label;
+
+  MultipleValueType(String label) {
+    this.label = label;
   }
 
   @Override
-  public String getCode() {
-    return name();
-  }
-
-  @Override
-  public String getMessage() {
-    return msg;
+  public String getLabel() {
+    return this.label;
   }
 }

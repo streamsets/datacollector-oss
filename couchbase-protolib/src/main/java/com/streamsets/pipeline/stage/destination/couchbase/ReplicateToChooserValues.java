@@ -15,25 +15,11 @@
  */
 package com.streamsets.pipeline.stage.destination.couchbase;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.couchbase.client.java.ReplicateTo;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  COUCHBASE("Couchbase"),
-  CREDENTIALS("Credentials"),
-  DOCUMENT("Document Handling"),
-  DATA_FORMAT("Data Format");
-
-
-  private final String label;
-
-  Groups(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return this.label;
+public class ReplicateToChooserValues extends BaseEnumChooserValues<ReplicateTo> {
+  public ReplicateToChooserValues() {
+    super(ReplicateTo.class);
   }
 }

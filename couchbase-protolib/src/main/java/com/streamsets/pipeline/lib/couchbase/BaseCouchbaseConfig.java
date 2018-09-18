@@ -13,27 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.couchbase;
+package com.streamsets.pipeline.lib.couchbase;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.ConfigDefBean;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  COUCHBASE("Couchbase"),
-  CREDENTIALS("Credentials"),
-  DOCUMENT("Document Handling"),
-  DATA_FORMAT("Data Format");
+public class BaseCouchbaseConfig {
+  /**
+   * Connection tab
+   */
+  @ConfigDefBean(groups = "COUCHBASE")
+  public CouchbaseConfig couchbase = new CouchbaseConfig();
 
 
-  private final String label;
+  /**
+   * Credentials tab
+   */
+  @ConfigDefBean(groups = "CREDENTIALS")
+  public CredentialsConfig credentials= new CredentialsConfig();
 
-  Groups(String label) {
-    this.label = label;
-  }
 
-  @Override
-  public String getLabel() {
-    return this.label;
-  }
+  /**
+   * Shared constants
+   */
+  public final String CAS_HEADER_ATTRIBUTE = "couchbase.cas";
 }

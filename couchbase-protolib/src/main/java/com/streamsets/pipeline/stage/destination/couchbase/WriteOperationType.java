@@ -19,16 +19,15 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
-public enum Groups implements Label {
-  COUCHBASE("Couchbase"),
-  CREDENTIALS("Credentials"),
-  DOCUMENT("Document Handling"),
-  DATA_FORMAT("Data Format");
-
+public enum WriteOperationType implements Label {
+  INSERT("Insert"),
+  REPLACE("Update"),
+  UPSERT("Upsert"),
+  DELETE("Delete");
 
   private final String label;
 
-  Groups(String label) {
+  WriteOperationType(String label) {
     this.label = label;
   }
 

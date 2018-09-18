@@ -13,24 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.couchbase;
+package com.streamsets.pipeline.lib.couchbase;
 
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
-public enum Groups implements Label {
-  COUCHBASE("Couchbase"),
-  CREDENTIALS("Credentials"),
-  DOCUMENT("Document Handling"),
-  DATA_FORMAT("Data Format");
-
+public enum AuthenticationType implements Label {
+  BUCKET("Bucket Authentication"),
+  USER("User Authentication");
 
   private final String label;
 
-  Groups(String label) {
-    this.label = label;
-  }
+  AuthenticationType(String label) { this.label = label; }
 
   @Override
   public String getLabel() {
