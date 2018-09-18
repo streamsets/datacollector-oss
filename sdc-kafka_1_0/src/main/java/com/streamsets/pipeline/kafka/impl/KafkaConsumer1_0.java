@@ -16,6 +16,10 @@
 package com.streamsets.pipeline.kafka.impl;
 
 import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.kafka.api.MessageAndOffset;
+import com.streamsets.pipeline.kafka.api.MessageAndOffsetWithTimestamp;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.common.record.TimestampType;
 
 import java.util.Collections;
 import java.util.Map;
@@ -27,13 +31,35 @@ public class KafkaConsumer1_0 extends KafkaConsumer09 {
       String consumerGroup,
       Map<String, Object> kafkaConsumerConfigs,
       Source.Context context,
-      int batchSize
+      int batchSize,
+      boolean isTimestampEnabled
   ) {
-    super(bootStrapServers, topic, consumerGroup, kafkaConsumerConfigs, context, batchSize);
+    super(bootStrapServers, topic, consumerGroup, kafkaConsumerConfigs, context, batchSize, isTimestampEnabled);
   }
 
   @Override
   protected void subscribeConsumer() {
     kafkaConsumer.subscribe(Collections.singletonList(topic), this);
+  }
+
+  @Override
+  MessageAndOffset getMessageAndOffset(ConsumerRecord message, boolean isEnabled) {
+    MessageAndOffset messageAndOffset;
+    if (message.timestampType() != TimestampType.NO_TIMESTAMP_TYPE && message.timestamp() > 0 && isEnabled) {
+      messageAndOffset = new MessageAndOffsetWithTimestamp(message.value(),
+          message.offset(),
+          message.partition(),
+          message.timestamp(),
+          message.timestampType().toString()
+      );
+    } else {
+      messageAndOffset = new MessageAndOffset(message.value(), message.offset(), message.partition());
+    }
+    return messageAndOffset;
+  }
+
+  @Override
+  protected boolean isTimestampSupported() {
+    return true;
   }
 }

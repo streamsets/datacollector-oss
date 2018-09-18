@@ -177,6 +177,17 @@ public class KafkaConfigBean {
   )
   public Map<String, String> kafkaConsumerConfigs = new HashMap<>();
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Include Timestamps",
+      description = "Includes the timestamps inherited from Kafka in the record header",
+      displayPosition = 130,
+      group = "KAFKA"
+  )
+  public boolean timestampsEnabled;
+
   public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
     if (keyDeserializer == Deserializer.CONFLUENT || valueDeserializer == Deserializer.CONFLUENT) {
       try {

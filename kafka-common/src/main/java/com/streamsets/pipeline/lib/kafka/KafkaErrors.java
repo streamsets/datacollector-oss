@@ -76,6 +76,7 @@ public enum KafkaErrors implements ErrorCode {
   KAFKA_71("Schema Registry URLs must be configured to use Confluent Serializer"),
   KAFKA_72("Subject or Schema ID must be defined to use Confluent Serializer"),
   KAFKA_73("Confluent Avro Serializer not supported by this version of Kafka."),
+  KAFKA_75("Inherited timestamps from Kafka are enabled but not supported in this Kafka version."),
   ;
 
   private final String msg;

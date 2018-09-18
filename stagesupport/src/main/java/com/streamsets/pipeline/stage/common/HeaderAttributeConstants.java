@@ -149,4 +149,18 @@ public class HeaderAttributeConstants {
    */
   public static final String AVRO_SCHEMA = "avroSchema";
 
+  /**
+   * Kafka timestamp.
+   *
+   * Applicable for Kafka starting at 0.10.
+   */
+  public static final String KAFKA_TIMESTAMP = "timestamp";
+
+
+  /**
+   * Kafka timestampo type.[logAppendTime, createTime]
+   *
+   * Applicable for Kafka starting at 0.10.
+   */
+  public static final String KAFKA_TIMESTAMP_TYPE = "timestampType";
 }

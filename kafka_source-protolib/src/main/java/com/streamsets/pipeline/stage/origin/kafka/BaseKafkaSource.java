@@ -188,7 +188,8 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
           getContext(),
           kafkaConsumerConfigs,
           conf.consumerGroup,
-          conf.maxBatchSize
+          conf.maxBatchSize,
+          conf.timestampsEnabled
       );
       kafkaConsumer = SdcKafkaConsumerFactory.create(settings).create();
       kafkaConsumer.validate(issues, getContext());
@@ -215,8 +216,15 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
     return originParallelism;
   }
 
-  protected List<Record> processKafkaMessageDefault(String partition, long offset, String messageId, byte[] payload)
-    throws StageException {
+  protected List<Record> processKafkaMessageDefault(
+      String partition, long offset, String messageId, byte[] payload
+  ) throws StageException {
+    return processKafkaMessageDefault(partition, offset, messageId, payload, 0, "");
+  }
+
+  protected List<Record> processKafkaMessageDefault(
+      String partition, long offset, String messageId, byte[] payload, long timestamp, String timestampType
+  ) throws StageException {
     List<Record> records = new ArrayList<>();
     if (payload == null) {
       Record record = getContext().createRecord(messageId);
@@ -233,6 +241,10 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
     try (DataParser parser = Utils.checkNotNull(parserFactory, "Initialization failed").getParser(messageId, payload)) {
       Record record = parser.parse();
       while (record != null) {
+        if (timestamp != 0) {
+          record.getHeader().setAttribute(HeaderAttributeConstants.KAFKA_TIMESTAMP, String.valueOf(timestamp));
+          record.getHeader().setAttribute(HeaderAttributeConstants.KAFKA_TIMESTAMP_TYPE, timestampType);
+        }
         record.getHeader().setAttribute(HeaderAttributeConstants.TOPIC, conf.topic);
         record.getHeader().setAttribute(HeaderAttributeConstants.PARTITION, partition);
         record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, String.valueOf(offset));

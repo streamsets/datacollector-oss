@@ -255,7 +255,8 @@ public abstract class KafkaNewConsumerITBase {
         context,
         kafkaConfigs,
         group,
-      100
+      100,
+        false
     );
     SdcKafkaConsumerFactory sdcKafkaConsumerFactory = SdcKafkaConsumerFactory.create(settings);
     return sdcKafkaConsumerFactory.create();

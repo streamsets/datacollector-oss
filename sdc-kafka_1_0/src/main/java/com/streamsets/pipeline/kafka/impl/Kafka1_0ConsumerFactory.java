@@ -39,7 +39,8 @@ public class Kafka1_0ConsumerFactory extends SdcKafkaConsumerFactory {
         settings.getConsumerGroup(),
         settings.getKafkaConsumerConfigs(),
         settings.getContext(),
-        settings.getBatchSize()
+        settings.getBatchSize(),
+        settings.isTimestampsEnabled()
     );
   }
 }

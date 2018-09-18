@@ -117,7 +117,8 @@ public abstract class SecureKafkaBase {
       sourceContext,
       consumerConfig,
       "test",
-      100
+      100,
+        false
     );
     SdcKafkaConsumerFactory sdcKafkaConsumerFactory = SdcKafkaConsumerFactory.create(consumerFactorySettings);
     SdcKafkaConsumer sdcKafkaConsumer = sdcKafkaConsumerFactory.create();

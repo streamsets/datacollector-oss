@@ -58,6 +58,12 @@ public class KafkaSourceUpgrader implements StageUpgrader {
         // fall through
       case 4:
         upgradeV4ToV5(configs);
+        if (toVersion == 5) {
+          break;
+        }
+        // fall through
+      case 5:
+        upgradeV5ToV6(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -140,5 +146,10 @@ public class KafkaSourceUpgrader implements StageUpgrader {
 
     DataFormatUpgradeHelper.ensureAvroSchemaExists(configs, joiner.join(CONF, DATA_FORMAT_CONFIG));
     DataFormatUpgradeHelper.upgradeAvroParserWithSchemaRegistrySupport(configs);
+  }
+
+
+  private static void upgradeV5ToV6(List<Config> configs) {
+    configs.add(new Config(joiner.join(CONF, "timestampsEnabled"), false));
   }
 }

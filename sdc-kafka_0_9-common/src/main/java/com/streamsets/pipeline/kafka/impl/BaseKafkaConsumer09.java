@@ -20,8 +20,10 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.kafka.api.KafkaOriginGroups;
 import com.streamsets.pipeline.kafka.api.MessageAndOffset;
 import com.streamsets.pipeline.kafka.api.SdcKafkaConsumer;
+import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import org.apache.commons.lang.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -56,6 +58,8 @@ public abstract class BaseKafkaConsumer09 implements SdcKafkaConsumer, ConsumerR
   private static final int CONSUMER_POLLING_WINDOW_MS = 100;
   private static final String REBALANCE_IN_PROGRESS = "Rebalance In Progress";
   private static final String WAITING_ON_POLL = "Waiting on poll";
+  public static final String KAFKA_CONFIG_BEAN_PREFIX = "kafkaConfigBean.";
+  public static final String TIMESTAMPS = "timestamps.";
 
   protected KafkaConsumer<String, byte[]> kafkaConsumer;
 
@@ -88,6 +92,18 @@ public abstract class BaseKafkaConsumer09 implements SdcKafkaConsumer, ConsumerR
 
   private static final Logger LOG = LoggerFactory.getLogger(BaseKafkaConsumer09.class);
 
+  boolean isTimestampSupported(){
+    return false;
+  }
+
+  boolean isTimestampEnabled(){
+    return false;
+  }
+
+  MessageAndOffset getMessageAndOffset(ConsumerRecord message, boolean isEnabled){
+    return null;
+  }
+
   public BaseKafkaConsumer09(String topic, Source.Context context, int batchSize) {
     this.topic = topic;
     this.topicPartitionToOffsetMetadataMap = new HashMap<>();
@@ -103,6 +119,12 @@ public abstract class BaseKafkaConsumer09 implements SdcKafkaConsumer, ConsumerR
 
   @Override
   public void validate(List<Stage.ConfigIssue> issues, Stage.Context context) {
+    if (isTimestampEnabled() && !isTimestampSupported()) {
+      issues.add(context.createConfigIssue(KafkaOriginGroups.KAFKA.name(),
+          KAFKA_CONFIG_BEAN_PREFIX + TIMESTAMPS,
+          KafkaErrors.KAFKA_75
+      ));
+    }
     createConsumer();
     subscribeConsumer();
     try {
@@ -250,7 +272,7 @@ public abstract class BaseKafkaConsumer09 implements SdcKafkaConsumer, ConsumerR
     MessageAndOffset messageAndOffset = null;
     if(next != null) {
       updateEntry(next);
-      messageAndOffset = new MessageAndOffset(next.value(), next.offset(), next.partition());
+      messageAndOffset = getMessageAndOffset(next, isTimestampEnabled());
     }
     return messageAndOffset;
   }

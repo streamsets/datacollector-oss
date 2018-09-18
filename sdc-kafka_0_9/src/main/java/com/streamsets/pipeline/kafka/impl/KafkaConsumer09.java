@@ -18,9 +18,11 @@ package com.streamsets.pipeline.kafka.impl;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.kafka.api.MessageAndOffset;
 import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.KafkaException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +41,7 @@ public class KafkaConsumer09 extends BaseKafkaConsumer09 {
   private final String bootStrapServers;
   private final String consumerGroup;
   private final Map<String, Object> kafkaConsumerConfigs;
+  private final boolean isTimestampsEnabled;
 
   public KafkaConsumer09(
       String bootStrapServers,
@@ -46,13 +49,30 @@ public class KafkaConsumer09 extends BaseKafkaConsumer09 {
       String consumerGroup,
       Map<String, Object> kafkaConsumerConfigs,
       Source.Context context,
-      int batchSize
+      int batchSize,
+      boolean isTimestampsEnabled
   ) {
     super(topic, context, batchSize);
     this.bootStrapServers = bootStrapServers;
     this.consumerGroup = consumerGroup;
     this.context = context;
     this.kafkaConsumerConfigs = kafkaConsumerConfigs;
+    this.isTimestampsEnabled = isTimestampsEnabled;
+  }
+
+  @Override
+  boolean isTimestampSupported() {
+    return false;
+  }
+
+  @Override
+  boolean isTimestampEnabled() {
+    return isTimestampsEnabled;
+  }
+
+  @Override
+  MessageAndOffset getMessageAndOffset(ConsumerRecord message, boolean isEnabled) {
+    return new MessageAndOffset(message.value(), message.offset(), message.partition());
   }
 
   @Override

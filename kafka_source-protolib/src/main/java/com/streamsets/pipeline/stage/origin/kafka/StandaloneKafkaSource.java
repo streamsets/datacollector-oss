@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.lineage.LineageEvent;
 import com.streamsets.pipeline.api.lineage.LineageEventType;
 import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.kafka.api.MessageAndOffset;
+import com.streamsets.pipeline.kafka.api.MessageAndOffsetWithTimestamp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,11 +74,22 @@ public class StandaloneKafkaSource extends BaseKafkaSource {
       if (message != null) {
         String messageId = getMessageID(message);
         List<Record> records;
-        records = processKafkaMessageDefault(String.valueOf(message.getPartition()),
-            message.getOffset(),
-            messageId,
-            (byte[]) message.getPayload()
-        );
+        if (conf.timestampsEnabled && message instanceof MessageAndOffsetWithTimestamp){
+          records = processKafkaMessageDefault(String.valueOf(message.getPartition()),
+              message.getOffset(),
+              messageId,
+              (byte[]) message.getPayload(),
+              ((MessageAndOffsetWithTimestamp) message).getTimestamp(),
+              ((MessageAndOffsetWithTimestamp) message).getTimestampType()
+          );
+        }else{
+          records = processKafkaMessageDefault(String.valueOf(message.getPartition()),
+              message.getOffset(),
+              messageId,
+              (byte[]) message.getPayload()
+          );
+        }
+
         // If we are in preview mode, make sure we don't send a huge number of messages.
         if (getContext().isPreview() && recordCounter + records.size() > batchSize) {
           records = records.subList(0, batchSize - recordCounter);
