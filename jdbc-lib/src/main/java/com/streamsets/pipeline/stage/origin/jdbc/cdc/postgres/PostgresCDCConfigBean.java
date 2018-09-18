@@ -97,7 +97,7 @@ public class PostgresCDCConfigBean {
       type = ConfigDef.Type.STRING,
       label = "Replication Slot",
       description = "Name of slot to create.",
-      defaultValue="SDC",
+      defaultValue="sdc",
       displayPosition = 50,
       group = "CDC"
   )
