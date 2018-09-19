@@ -237,7 +237,7 @@
             </exclusions>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>com.streamsets</groupId>
             <artifactId>streamsets-datacollector-hbase-protolib</artifactId>
             <version>${project.version}</version>
@@ -248,7 +248,7 @@
                     <artifactId>hbase-client</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency>-->
 
         <!-- Inherited from cdh-spark_2_3_lib -->
         <dependency>
@@ -836,7 +836,7 @@
                                 <source>${basedir}/../cluster-hdfs-protolib/src/test/java</source>
                                 <source>${basedir}/../flume-protolib/src/test/java</source>
                                 <source>${basedir}/../hdfs-protolib/src/test/java</source>
-                                <source>${basedir}/../hbase-protolib/src/test/java</source>
+                                <!--<source>${basedir}/../hbase-protolib/src/test/java</source>-->
                                 <source>${basedir}/../hive-protolib/src/test/java</source>
                                 <source>${basedir}/../kudu-protolib/src/test/java</source>
                                 <source>${basedir}/../mapreduce-protolib/src/test/java</source>
