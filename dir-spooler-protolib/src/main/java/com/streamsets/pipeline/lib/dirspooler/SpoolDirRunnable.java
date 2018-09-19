@@ -443,7 +443,7 @@ public class SpoolDirRunnable implements Runnable {
             (useLastModified && SpoolDirUtil.compareFiles(fs, fs.getFile(spooler.getSpoolDir(), file), currentFile)) ||
             // the current file is lexicographically lesser than the one reported via offset tracking
             // this can happen if somebody drop
-            currentFile.getFileName().compareTo(file) < 0 ||
+            (!useLastModified && currentFile.getFileName().compareTo(file) < 0) ||
             // the current file has been fully processed
             MINUS_ONE.equals(offset);
   }
