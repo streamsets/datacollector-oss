@@ -31,7 +31,7 @@ import com.streamsets.pipeline.stage.common.mongodb.Groups;
         description = "Performs KV lookups to enrich records",
         icon = "mongodb.png",
         privateClassLoader = true,
-        onlineHelpRefUrl ="index.html" //Need to add a URL here (SDC-10021)
+        onlineHelpRefUrl ="index.html?contextID=task_yt1_w4w_2fb"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
