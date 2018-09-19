@@ -778,19 +778,6 @@
     </profile>
 
     <profile>
-      <id>miniIT</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <property>
-          <name>miniIT</name>
-        </property>
-      </activation>
-      <modules>
-        <module>miniIT</module>
-      </modules>
-    </profile>
-
-    <profile>
       <id>release</id>
       <activation>
         <activeByDefault>false</activeByDefault>
