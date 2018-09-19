@@ -130,7 +130,7 @@
             <scope>compile</scope>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>com.streamsets</groupId>
             <artifactId>streamsets-datacollector-spark-processor-protolib</artifactId>
             <version>${project.version}</version>
@@ -141,7 +141,7 @@
                     <artifactId>jackson-annotations</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency>-->
 
         <dependency>
           <groupId>com.streamsets</groupId>
@@ -846,7 +846,7 @@
                                 <source>${basedir}/../kafka_source-protolib/src/test/java</source>
                                 <source>${basedir}/../kafka_multisource-0_10-protolib/src/test/java</source>
                                 <source>${basedir}/../spark-executor-protolib/src/test/java</source>
-                                <source>${basedir}/../spark-processor-protolib/src/test/java</source>
+                                <!--<source>${basedir}/../spark-processor-protolib/src/test/java</source>-->
                             </sources>
                         </configuration>
                     </execution>
