@@ -41,6 +41,7 @@ import com.streamsets.pipeline.lib.jdbc.parser.sql.UnsupportedFieldTypeException
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.ChangeTypeValues;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaAndTable;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaTableConfigBean;
@@ -815,19 +816,25 @@ public class OracleCDCSource extends BaseSource {
       List<UnsupportedFieldTypeException> fieldTypeExceptions = new ArrayList<>();
       for (Map.Entry<String, String> column : columns.entrySet()) {
         String columnName = column.getKey();
+        Field createdField = null;
         try {
-          fields.put(columnName, objectToField(table, columnName, column.getValue()));
+          createdField = objectToField(table, columnName, column.getValue());
         } catch (UnsupportedFieldTypeException ex) {
           if (configBean.sendUnsupportedFields) {
-            fields.put(columnName, Field.create(column.getValue()));
+            createdField = Field.create(column.getValue());
           }
           fieldTypeExceptions.add(ex);
         }
-        if (decimalColumns.containsKey(table) && decimalColumns.get(table).containsKey(columnName)) {
-          int precision = decimalColumns.get(table).get(columnName).precision;
-          int scale = decimalColumns.get(table).get(columnName).scale;
-          attributes.put("jdbc." + columnName + ".precision", String.valueOf(precision));
-          attributes.put("jdbc." + columnName + ".scale", String.valueOf(scale));
+        if (createdField != null) {
+          if (decimalColumns.containsKey(table) && decimalColumns.get(table).containsKey(columnName)) {
+            String precision = String.valueOf(decimalColumns.get(table).get(columnName).precision);
+            String scale = String.valueOf(decimalColumns.get(table).get(columnName).scale);
+            attributes.put("jdbc." + columnName + ".precision", precision);
+            attributes.put("jdbc." + columnName + ".scale", scale);
+            createdField.setAttribute(HeaderAttributeConstants.ATTR_PRECISION, precision);
+            createdField.setAttribute(HeaderAttributeConstants.ATTR_SCALE, scale);
+          }
+          fields.put(columnName, createdField);
         }
       }
       record.set(Field.create(fields));
