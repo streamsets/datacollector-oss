@@ -97,7 +97,7 @@ public class LineageEventImpl implements LineageEvent {
         if (sensitiveProperties.matcher(entry.getKey()).matches()) {
           properties.put(entry.getKey(), StringUtils.repeat("*", ((String)entry.getValue()).length()));
         } else {
-          properties.put(entry.getKey(), (String)entry.getValue());
+          properties.put(entry.getKey(), String.valueOf(entry.getValue()));
         }
       }
     }
