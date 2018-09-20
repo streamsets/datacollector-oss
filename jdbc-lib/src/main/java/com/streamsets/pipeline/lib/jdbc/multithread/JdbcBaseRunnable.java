@@ -233,7 +233,9 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
             recordCount++;
           }
 
-          generateSchemaChanges(batchContext);
+          if (commonSourceConfigBean.enableSchemaChanges) {
+            generateSchemaChanges(batchContext);
+          }
 
           tableRuntimeContext.setResultSetProduced(true);
 
