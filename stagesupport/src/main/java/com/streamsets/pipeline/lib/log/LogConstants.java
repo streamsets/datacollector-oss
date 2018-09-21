@@ -19,6 +19,7 @@ public class LogConstants {
   public static final String USER = "s-user";
   public static final String ENTITY = "s-entity";
   public static final String RUNNER = "s-runner";
+  public static final String STAGE = "s-stage";
 
   private LogConstants() {}
 }

@@ -37,7 +37,7 @@ public class LogUtils {
       "log4j.appender.streamsets.layout.ConversionPattern";
   public static final String LOG4J_APPENDER_STDERR_LAYOUT_CONVERSION_PATTERN = "log4j.appender.stderr.layout.ConversionPattern";
   public static final String LOG4J_GROK_ATTR = "log4j.grok";
-  public static final String LOG4J_CONVERSION_PATTERN = "%d{ISO8601} [user:%X{s-user}] [pipeline:%X{s-entity}] [runner:%X{s-runner}][thread:%t] %-5p %c{1} - %m%n";
+  public static final String LOG4J_CONVERSION_PATTERN = "%d{ISO8601} [user:%X{s-user}] [pipeline:%X{s-entity}] [runner:%X{s-runner}] [thread:%t] [stage:%X{s-stage}] %-5p %c{1} - %m%n";
 
   private LogUtils() {}
 

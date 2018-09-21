@@ -127,7 +127,9 @@ public class PipeRunner {
     try {
       // Run one pipe at a time
       for(Pipe p : pipes) {
-        this.runtimeMetricGauge.put(METRIC_CURRENT_STAGE, p.getStage().getInfo().getInstanceName());
+        String instanceName = p.getStage().getInfo().getInstanceName();
+        this.runtimeMetricGauge.put(METRIC_CURRENT_STAGE, instanceName);
+        MDC.put(LogConstants.STAGE, instanceName);
         if(p instanceof StagePipe) {
           this.runtimeMetricGauge.put(METRIC_STAGE_START_TIME, System.currentTimeMillis());
         }
@@ -141,6 +143,7 @@ public class PipeRunner {
     } finally {
       resetBatchSpecificMetrics();
       MDC.put(LogConstants.RUNNER, "");
+      MDC.put(LogConstants.STAGE, "");
     }
   }
 
@@ -163,10 +166,12 @@ public class PipeRunner {
       MDC.put(LogConstants.RUNNER, String.valueOf(runnerId));
       try {
         for(Pipe p : pipes) {
+          MDC.put(LogConstants.STAGE, p.getStage().getInfo().getInstanceName());
           consumer.accept(p);
         }
       } finally {
         MDC.put(LogConstants.RUNNER, "");
+        MDC.put(LogConstants.STAGE, "");
       }
     } catch (PipelineException|StageException e) {
       throw new RuntimeException(e);

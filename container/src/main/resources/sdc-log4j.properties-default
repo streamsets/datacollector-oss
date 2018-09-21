@@ -22,7 +22,7 @@ log4j.appender.null.layout.ConversionPattern=null
 log4j.appender.stdout=org.apache.log4j.ConsoleAppender
 log4j.appender.stdout.Target=System.out
 log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
-log4j.appender.stdout.layout.ConversionPattern=%d{ISO8601} [user:%X{s-user}] [pipeline:%X{s-entity}] [runner:%X{s-runner}] [thread:%t] %-5p %c{1} - %m%n
+log4j.appender.stdout.layout.ConversionPattern=%d{ISO8601} [user:%X{s-user}] [pipeline:%X{s-entity}] [runner:%X{s-runner}] [thread:%t] [stage:%X{s-stage}] %-5p %c{1} - %m%n
 
 # sdc.log appender
 log4j.appender.streamsets=org.apache.log4j.RollingFileAppender
@@ -31,7 +31,7 @@ log4j.appender.streamsets.MaxBackupIndex=10
 log4j.appender.streamsets.File=${sdc.log.dir}/sdc.log
 log4j.appender.streamsets.Append=true
 log4j.appender.streamsets.layout=org.apache.log4j.PatternLayout
-log4j.appender.streamsets.layout.ConversionPattern=%d{ISO8601} [user:%X{s-user}] [pipeline:%X{s-entity}] [runner:%X{s-runner}] [thread:%t] %-5p %c{1} - %m%n
+log4j.appender.streamsets.layout.ConversionPattern=%d{ISO8601} [user:%X{s-user}] [pipeline:%X{s-entity}] [runner:%X{s-runner}] [thread:%t] [stage:%X{s-stage}] %-5p %c{1} - %m%n
 
 log4j.rootLogger=INFO, streamsets
 log4j.logger.com.streamsets=${sdc.log4j.level}
