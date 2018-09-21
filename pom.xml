@@ -493,6 +493,7 @@
         <cdh_kafka_2_0-lib>cdh_kafka_2_0-lib</cdh_kafka_2_0-lib>
         <cdh_kafka_2_1-lib>cdh_kafka_2_1-lib</cdh_kafka_2_1-lib>
         <cdh_kafka_3_0-lib>cdh_kafka_3_0-lib</cdh_kafka_3_0-lib>
+        <cdh_kafka_3_1-lib>cdh_kafka_3_1-lib</cdh_kafka_3_1-lib>
         <couchbase_5-lib>couchbase_5-lib</couchbase_5-lib>
         <cdh_spark_2_1_r1-lib>cdh_spark_2_1_r1-lib</cdh_spark_2_1_r1-lib>
         <elasticsearch_5-lib>elasticsearch_5-lib</elasticsearch_5-lib>
@@ -567,6 +568,7 @@
         <module>cdh_kafka_2_0-lib</module>
         <module>cdh_kafka_2_1-lib</module>
         <module>cdh_kafka_3_0-lib</module>
+        <module>cdh_kafka_3_1-lib</module>
         <module>cdh_spark_2_1_r1-lib</module>
         <module>cdh-spark_2_1-lib</module>
         <module>cdh-spark_2_2-lib</module>
@@ -626,7 +628,7 @@
         <cdh-spark_2_1-lib>cdh-spark_2_1-lib</cdh-spark_2_1-lib>
         <cdh_5_15-lib>cdh_5_15-lib</cdh_5_15-lib>
         <cdh_6_0-lib>cdh_6_0-lib</cdh_6_0-lib>
-        <cdh_kafka_3_0-lib>cdh_kafka_3_0-lib</cdh_kafka_3_0-lib>
+        <cdh_kafka_3_1-lib>cdh_kafka_3_1-lib</cdh_kafka_3_1-lib>
         <cdh_spark_2_1_r1-lib>cdh_spark_2_1_r1-lib</cdh_spark_2_1_r1-lib>
         <couchbase_5-lib>couchbase_5-lib</couchbase_5-lib>
         <elasticsearch_5-lib>elasticsearch_5-lib</elasticsearch_5-lib>
@@ -661,7 +663,7 @@
         <module>cdh-spark_2_1-lib</module>
         <module>cdh_5_15-lib</module>
         <module>cdh_6_0-lib</module>
-        <module>cdh_kafka_3_0-lib</module>
+        <module>cdh_kafka_3_1-lib</module>
         <module>cdh_spark_2_1_r1-lib</module>
         <module>couchbase_5-lib</module>
         <module>elasticsearch_5-lib</module>

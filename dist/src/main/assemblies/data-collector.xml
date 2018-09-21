@@ -421,6 +421,10 @@
       <directory>${basedir}/../${cdh_kafka_3_0-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
+    <fileSet>
+      <directory>${basedir}/../${cdh_kafka_3_1-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
 
     <fileSet>
       <directory>${basedir}/../${cdh_spark_2_1_r1-lib}/target/streamsets-libs/</directory>
