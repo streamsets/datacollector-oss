@@ -347,11 +347,6 @@
       <artifactId>hadoop-azure</artifactId>
       <version>${hadoop.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-azure-datalake</artifactId>
-      <version>${hadoop.version}</version>
-    </dependency>
 
     <dependency>
       <groupId>org.apache.hadoop</groupId>
