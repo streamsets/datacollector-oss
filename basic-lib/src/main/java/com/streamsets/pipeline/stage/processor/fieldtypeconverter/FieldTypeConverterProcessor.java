@@ -221,7 +221,11 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
       if (!converterConfig.targetType.isOneOf(Field.Type.STRING, Field.Type.ZONED_DATETIME)) {
         throw new OnRecordErrorException(Errors.CONVERTER_04, converterConfig.targetType);
       }
-      return Field.create(converterConfig.getFormatter().format(field.getValueAsZonedDateTime()));
+      if(field.getValue() == null) {
+        return Field.create(Field.Type.STRING, null);
+      } else {
+        return Field.create(converterConfig.getFormatter().format(field.getValueAsZonedDateTime()));
+      }
     }
 
     if(field.getType() == Field.Type.BYTE_ARRAY && converterConfig.targetType == Field.Type.STRING) {
