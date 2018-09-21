@@ -34,7 +34,7 @@
   <packaging>jar</packaging>
 
   <properties>
-    <elasticsearch.version>5.2.0</elasticsearch.version>
+    <elasticsearch.version>5.3.0</elasticsearch.version>
     <gson.version>2.2.4</gson.version>
     <log4j2.version>2.7</log4j2.version>
   </properties>

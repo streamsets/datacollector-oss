@@ -17,8 +17,8 @@ package com.streamsets.pipeline.stage.elasticsearch.common;
 
 import com.streamsets.testing.NetworkUtils;
 import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.node.InternalSettingsPreparer;
 import org.elasticsearch.node.Node;
-import org.elasticsearch.node.internal.InternalSettingsPreparer;
 import org.elasticsearch.transport.Netty4Plugin;
 import org.junit.ClassRule;
 import org.junit.rules.TemporaryFolder;
