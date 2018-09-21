@@ -291,6 +291,45 @@ public class TestFieldRenamer {
   }
 
   @Test
+  public void testExpressions() throws StageException {
+    FieldRenamerConfig renameConfig = new FieldRenamerConfig();
+    //Any field containing a non-word character should be in single quotes
+    renameConfig.fromFieldExpression = "/(.*)";
+    renameConfig.toFieldExpression = "/${str:toUpper(\"$1\")}";
+
+    FieldRenamerProcessorErrorHandler errorHandler = new FieldRenamerProcessorErrorHandler();
+    errorHandler.nonExistingFromFieldHandling = OnStagePreConditionFailure.CONTINUE;
+    errorHandler.multipleFromFieldsMatching = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.existingToFieldHandling = ExistingToFieldHandling.APPEND_NUMBERS;
+
+    FieldRenamerProcessor processor = new FieldRenamerProcessor(ImmutableList.of(renameConfig),  errorHandler);
+
+    // Test non-existent source with existing target field
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class, processor)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("field", Field.create(Field.Type.STRING, "field"));
+      map.put("col", Field.create(Field.Type.STRING, "col"));
+
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(Field.Type.MAP, map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Record r = output.getRecords().get("a").get(0);
+      Assert.assertTrue(r.has("/FIELD"));
+      Assert.assertTrue(r.has("/COL"));
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+
+  @Test
   public void testMultipleRegexMatchingSameField() throws StageException {
     FieldRenamerConfig renameConfig1 = new FieldRenamerConfig();
     renameConfig1.fromFieldExpression = "/sql(.*)";

@@ -25,6 +25,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.OnStagePreConditionFailure;
 import com.streamsets.pipeline.lib.util.FieldRegexUtil;
@@ -69,6 +71,7 @@ public class FieldRenamerProcessor extends SingleLaneRecordProcessor {
 
   private final List<FieldRenamerConfig> renameMapping;
 
+  private ELEval targetFieldEval;
   private LoadingCache<Set<String>, CachedResults> cache;
   private int count = 0;
 
@@ -122,6 +125,8 @@ public class FieldRenamerProcessor extends SingleLaneRecordProcessor {
       }
     }
 
+    targetFieldEval = getContext().createELEval("toFieldExpression");
+
     cache = CacheBuilder
         .newBuilder()
         .maximumSize(500)
@@ -174,7 +179,7 @@ public class FieldRenamerProcessor extends SingleLaneRecordProcessor {
       Map<String, Set<String>> multipleRegexMatchingSameFields,
       Map<String, String> matchedByRegularExpression,
       Map<String, String> fromFieldToFieldMap
-  ) {
+  ) throws ELEvalException {
     boolean hasSourceFieldsMatching = false;
     //Making sure array fields  matched by regular expressions
     //are always sorted in descending order so as to preserve ordering
@@ -183,7 +188,13 @@ public class FieldRenamerProcessor extends SingleLaneRecordProcessor {
       Matcher matcher = fromFieldPattern.matcher(existingFieldPath);
       if (matcher.matches()) {
         hasSourceFieldsMatching = true;
-        String toFieldPath = matcher.replaceAll(toFieldExpression);
+//        String toFieldPath = matcher.replaceAll(toFieldExpression);
+        String toFieldPath = toFieldExpression;
+        for(int i = 0; i <= matcher.groupCount(); i++) {
+          toFieldPath = toFieldPath.replace("$" + i,  matcher.group(i));
+        }
+
+        toFieldPath = targetFieldEval.eval(getContext().createELVars(), toFieldPath, String.class);
         if (fromFieldToFieldMap.containsKey(existingFieldPath)) {
           Set<String> patterns =  multipleRegexMatchingSameFields.get(existingFieldPath);
           if (patterns == null) {
@@ -205,11 +216,11 @@ public class FieldRenamerProcessor extends SingleLaneRecordProcessor {
   }
 
   private class CachedResults {
-    Set<String> fieldsRequiringOverwrite = new HashSet<>();
-    Set<String> fieldsThatDoNotExist = new HashSet<>();
-    Map<String, Set<String>> multipleRegexMatchingSameFields = new HashMap<>();
+    Set<String> fieldsRequiringOverwrite;
+    Set<String> fieldsThatDoNotExist;
+    Map<String, Set<String>> multipleRegexMatchingSameFields;
     //So that the ordering of fieldPaths will be preserved
-    Map<String, String> fromFieldToFieldMap = new LinkedHashMap<>();
+    Map<String, String> fromFieldToFieldMap;
 
     public CachedResults(
         Set<String> fieldsRequiringOverwrite,
@@ -227,7 +238,7 @@ public class FieldRenamerProcessor extends SingleLaneRecordProcessor {
 
   }
 
-  private CachedResults findFields(Set<String> newPaths) {
+  private CachedResults findFields(Set<String> newPaths) throws ELEvalException {
 
     Set<String> fieldsRequiringOverwrite = new HashSet<>();
     Set<String> fieldsThatDoNotExist = new HashSet<>();
@@ -307,8 +318,8 @@ public class FieldRenamerProcessor extends SingleLaneRecordProcessor {
             break;
           case APPEND_NUMBERS:
             int i = 1;
-            for (;record.has(toFieldName+String.valueOf(i));i++);
-            toFieldName = toFieldName+String.valueOf(i);
+            for (; record.has(toFieldName + i); i++);
+            toFieldName = toFieldName + i;
             //Fall through so as to edit.
           case REPLACE:
             record.set(toFieldName, fromField);

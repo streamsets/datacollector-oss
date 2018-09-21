@@ -44,6 +44,7 @@ public class FieldRenamerConfig {
       label = "Target Field Expression",
       description = "New name for the field. You can use regular expressions to rename a set of fields.",
       displayPosition = 20,
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
       group = "RENAME"
   )
   public String toFieldExpression;
