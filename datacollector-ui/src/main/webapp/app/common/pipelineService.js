@@ -67,6 +67,12 @@ angular.module('dataCollectorApp.common')
             self.serviceDefinitions = definitions.services;
             self.elCatalog = definitions.elCatalog;
 
+            self.betaStages = {};
+            angular.forEach(self.stageDefinitions, function (stageDefinition) {
+              if (stageDefinition.beta) {
+                self.betaStages[stageDefinition.name] = true;
+              }
+            });
 
             self.serviceDefinitionsMap = {};
             angular.forEach(self.serviceDefinitions, function (serviceDefinition) {
@@ -2052,6 +2058,10 @@ angular.module('dataCollectorApp.common')
         })
         .sortBy('libraryLabel')
         .value();
+    };
+
+    this.isBetaStage = function(stageName) {
+      return this.betaStages[stageName];
     };
 
   });

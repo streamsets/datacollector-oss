@@ -75,6 +75,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
   private final List<HideStage.Type> hideStage;
   private final StageDef stageDef;
   private final boolean sendsResponse;
+  private final boolean beta;
 
   // localized version
   private StageDefinition(
@@ -110,7 +111,8 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
       boolean producesEvents,
       List<ServiceDependencyDefinition> services,
       List<HideStage.Type> hideStage,
-      boolean sendsResponse
+      boolean sendsResponse,
+      boolean beta
   ) {
     this.stageDef = stageDef;
     this.libraryDefinition = libraryDefinition;
@@ -159,6 +161,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     this.services = Collections.unmodifiableList(services);
     this.hideStage = Collections.unmodifiableList(hideStage);
     this.sendsResponse = sendsResponse;
+    this.beta = beta;
   }
 
   @SuppressWarnings("unchecked")
@@ -202,6 +205,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     services = def.services;
     hideStage = def.hideStage;
     sendsResponse = def.sendsResponse;
+    beta = def.beta;
   }
 
   public StageDefinition(
@@ -236,7 +240,8 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
       boolean producesEvents,
       List<ServiceDependencyDefinition> services,
       List<HideStage.Type> hideStage,
-      boolean sendsResponse
+      boolean sendsResponse,
+      boolean beta
   ) {
     this.stageDef = stageDef;
     this.libraryDefinition = libraryDefinition;
@@ -284,6 +289,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     this.services = Collections.unmodifiableList(services);
     this.hideStage = Collections.unmodifiableList(hideStage);
     this.sendsResponse = sendsResponse;
+    this.beta = beta;
   }
 
   public List<ExecutionMode> getLibraryExecutionModes() {
@@ -569,7 +575,8 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
         producesEvents,
         services,
         hideStage,
-        sendsResponse
+        sendsResponse,
+        beta
     );
   }
 
@@ -625,6 +632,10 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
 
   public boolean getSendsResponse() {
     return sendsResponse;
+  }
+
+  public boolean getBeta() {
+    return beta;
   }
 }
 

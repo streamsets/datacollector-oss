@@ -22,6 +22,7 @@
         <li draggable drag-data="stageLibrary"
             ng-repeat="stageLibrary in filteredStageLibraries | orderBy: 'label'"
             ng-init="icon=getStageIconURL(stageLibrary)"
+            ng-class="{'beta-stage': stageLibrary.beta}"
             tooltip-placement="{{$index < filteredStageLibraries.length - 2 ? 'bottom' : 'top'}}"
             tooltip="{{stageLibrary.description}}"
             tooltip-append-to-body="true"
@@ -29,7 +30,13 @@
           <a role="menuitem" tabindex="-1" href="/"
              ng-click="addStageInstance({stage: stageLibrary}, $event)"
              ng-style="{'background-image': 'url({{icon}})'}">
+
+            <img ng-if="stageLibrary.beta"
+                 title="{{'global.form.betaStageTooltip' | translate}}"
+                 class="beta-icon" src="/assets/beta.svg" />
+
             <span>{{stageLibrary.label}}</span>
+
             <span
               ng-if="$storage.stageFilterGroup.group !== 'Type' && stageLibrary.type == 'SOURCE'"
               class="circle origin">O</span>
@@ -45,6 +52,7 @@
             <span
               ng-if="$storage.stageFilterGroup.group !== 'Type' && stageLibrary.type == 'EXECUTOR'"
               class="circle executor">E</span>
+
           </a>
         </li>
 
