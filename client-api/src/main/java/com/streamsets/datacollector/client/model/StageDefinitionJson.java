@@ -98,6 +98,7 @@ public class StageDefinitionJson   {
   private Boolean producingEvents = null;
   private String onlineHelpRefUrl = null;
   private Boolean sendsResponse = null;
+  private Boolean beta = null;
 
   /**
    **/
@@ -460,5 +461,16 @@ public class StageDefinitionJson   {
   }
   public void setSendsResponse(Boolean sendsResponse) {
     this.sendsResponse = sendsResponse;
+  }
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("beta")
+  public Boolean getBeta() {
+    return beta;
+  }
+  public void setBeta(Boolean beta) {
+    this.beta = beta;
   }
 }

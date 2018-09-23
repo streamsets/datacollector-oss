@@ -35,7 +35,8 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
         ExecutionMode.CLUSTER_MESOS_STREAMING,
         ExecutionMode.EMR_BATCH
     },
-    onlineHelpRefUrl = "index.html?contextID=task_bgq_g3r_1fb"
+    onlineHelpRefUrl = "index.html?contextID=task_bgq_g3r_1fb",
+    beta = true
 )
 @GenerateResourceBundle
 @ConfigGroups(Groups.class)

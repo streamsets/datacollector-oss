@@ -211,7 +211,8 @@ public class StageDefinitionBuilder {
       producesEvents,
       services,
       hideStage,
-      false
+      false,
+        false
     );
   }
 

@@ -604,11 +604,11 @@ angular.module('pipelineGraphDirectives', [])
     // call to propagate changes to graph
     GraphCreator.prototype.updateGraph = function(){
 
-      var thisGraph = this,
-        consts = thisGraph.consts,
-        state = $scope.state,
-        stageErrorCounts = thisGraph.stageErrorCounts,
-        firstConfigIssue;
+      var thisGraph = this;
+      var consts = thisGraph.consts;
+      var state = $scope.state;
+      var stageErrorCounts = thisGraph.stageErrorCounts;
+      var firstConfigIssue;
 
       if (graph.isPreviewMode) {
         stageErrorCounts = graph.previewStageErrorCounts;
@@ -833,6 +833,17 @@ angular.module('pipelineGraphDirectives', [])
         .on('mouseup', function(d){
           firstConfigIssue = undefined;
         });
+
+      // Add beta icon
+      newGs.append('svg:image')
+        .filter(function(d) {
+          return pipelineService.isBetaStage(d.stageName);
+        })
+        .attr('x', 10)
+        .attr('y', 10)
+        .attr('width', 12)
+        .attr('height', 12)
+        .attr('xlink:href', '/assets/beta.svg');
 
       //Add Configuration Icon
       /*
