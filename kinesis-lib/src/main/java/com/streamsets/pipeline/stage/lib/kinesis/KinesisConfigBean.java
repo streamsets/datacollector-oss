@@ -18,9 +18,9 @@ package com.streamsets.pipeline.stage.lib.kinesis;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ValueChooserModel;
-import com.streamsets.pipeline.stage.lib.aws.AWSRegionChooserValues;
+import com.streamsets.pipeline.lib.aws.AwsRegion;
+import com.streamsets.pipeline.lib.aws.AwsRegionChooserValues;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
-import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 
 public class KinesisConfigBean {
 
@@ -35,8 +35,8 @@ public class KinesisConfigBean {
       displayPosition = 10,
       group = "KINESIS"
   )
-  @ValueChooserModel(AWSRegionChooserValues.class)
-  public AWSRegions region;
+  @ValueChooserModel(AwsRegionChooserValues.class)
+  public AwsRegion region;
 
   @ConfigDef(
       required = false,

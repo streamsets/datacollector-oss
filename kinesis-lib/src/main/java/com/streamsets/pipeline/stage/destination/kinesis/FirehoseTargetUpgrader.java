@@ -15,10 +15,12 @@
  */
 package com.streamsets.pipeline.stage.destination.kinesis;
 
+import com.streamsets.datacollector.config.AmazonEMRConfig;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
+import com.streamsets.pipeline.lib.aws.AwsRegion;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisBaseUpgrader;
 
 import java.util.List;
@@ -42,11 +44,25 @@ public class FirehoseTargetUpgrader extends KinesisBaseUpgrader {
         // fall through
       case 2:
         upgradeV2toV3(configs);
+        // fall through
+      case 3:
+        upgradeV3toV4(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
     return configs;
+  }
+
+  private static void upgradeV3toV4(List<Config> configs) {
+    String regionProperty = KINESIS_CONFIG_BEAN + ".region";
+    for (int i = 0; i < configs.size(); i++) {
+      if (configs.get(i).getName().equals(regionProperty)) {
+        if ("GovCloud".equals(configs.get(i).getValue())) {
+          configs.set(i, new Config(regionProperty, AwsRegion.US_GOV_WEST_1.name()));
+        }
+      }
+    }
   }
 
   private static void upgradeV2toV3(List<Config> configs) {

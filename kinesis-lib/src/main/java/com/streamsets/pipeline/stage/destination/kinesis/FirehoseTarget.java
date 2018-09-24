@@ -27,11 +27,11 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.aws.AwsRegion;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
-import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.Errors;
 import org.slf4j.Logger;
@@ -81,10 +81,10 @@ public class FirehoseTarget extends BaseTarget {
         .standard()
         .withCredentials(AWSUtil.getCredentialsProvider(conf.awsConfig));
 
-      if (conf.region == AWSRegions.OTHER) {
+      if (conf.region == AwsRegion.OTHER) {
         builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(conf.endpoint, null));
       } else {
-        builder.withRegion(conf.region.getLabel());
+        builder.withRegion(conf.region.getId());
       }
 
       firehoseClient = builder.build();

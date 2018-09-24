@@ -20,6 +20,10 @@ import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.lib.aws.AwsInstanceType;
+import com.streamsets.pipeline.lib.aws.AwsInstanceTypeChooserValues;
+import com.streamsets.pipeline.lib.aws.AwsRegion;
+import com.streamsets.pipeline.lib.aws.AwsRegionChooserValues;
 
 import java.util.Properties;
 
@@ -45,7 +49,7 @@ public class AmazonEMRConfig {
       label = "AWS user region (Custom)",
       group = "EMR",
       dependsOn = "userRegion",
-      triggeredByValue = "CUSTOM",
+      triggeredByValue = "OTHER",
       displayPosition = 105,
       dependencies = {
           @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH")
@@ -318,7 +322,7 @@ public class AmazonEMRConfig {
       dependencies = {
           @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH"),
           @Dependency(configName = "provisionNewCluster", triggeredByValues = "true"),
-          @Dependency(configName = "masterInstanceType", triggeredByValues = "CUSTOM")
+          @Dependency(configName = "masterInstanceType", triggeredByValues = "OTHER")
       }
   )
   public String masterInstanceTypeCustom;
@@ -346,13 +350,13 @@ public class AmazonEMRConfig {
       dependencies = {
           @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH"),
           @Dependency(configName = "provisionNewCluster", triggeredByValues = "true"),
-          @Dependency(configName = "slaveInstanceType", triggeredByValues = "CUSTOM")
+          @Dependency(configName = "slaveInstanceType", triggeredByValues = "OTHER")
       }
   )
   public String slaveInstanceTypeCustom;
 
   public String getUserRegion() {
-    if (userRegion != AwsRegion.CUSTOM) {
+    if (userRegion != AwsRegion.OTHER) {
       return userRegion.getId();
     } else {
       return userRegionCustom;
@@ -360,7 +364,7 @@ public class AmazonEMRConfig {
   }
 
   public String getMasterInstanceType() {
-    if (masterInstanceType != null && masterInstanceType!= AwsInstanceType.CUSTOM) {
+    if (masterInstanceType != null && masterInstanceType!= AwsInstanceType.OTHER) {
       return masterInstanceType.getId();
     } else {
       return masterInstanceTypeCustom;
@@ -368,7 +372,7 @@ public class AmazonEMRConfig {
   }
 
   public String getSlaveInstanceType() {
-    if (slaveInstanceType != null && slaveInstanceType != AwsInstanceType.CUSTOM) {
+    if (slaveInstanceType != null && slaveInstanceType != AwsInstanceType.OTHER) {
       return slaveInstanceType.getId();
     } else {
       return slaveInstanceTypeCustom;

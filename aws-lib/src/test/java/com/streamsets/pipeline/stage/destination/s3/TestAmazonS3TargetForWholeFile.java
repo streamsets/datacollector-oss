@@ -34,6 +34,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
 import com.streamsets.pipeline.api.service.dataformats.WholeFileChecksumAlgorithm;
 import com.streamsets.pipeline.config.ChecksumAlgorithm;
+import com.streamsets.pipeline.lib.aws.AwsRegion;
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.io.fileref.LocalFileRef;
@@ -43,7 +44,6 @@ import com.streamsets.pipeline.sdk.service.SdkWholeFileDataFormatGeneratorServic
 import com.streamsets.pipeline.stage.common.AmazonS3TestSuite;
 import com.streamsets.pipeline.stage.common.TestUtil;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
-import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 import com.streamsets.pipeline.stage.lib.aws.TransferManagerConfig;
 import com.streamsets.pipeline.stage.origin.s3.S3FileRef;
@@ -268,7 +268,7 @@ public class TestAmazonS3TargetForWholeFile extends AmazonS3TestSuite {
 
   private AmazonS3Target createS3targetWithWholeFile() {
     S3ConnectionTargetConfig s3Config = new S3ConnectionTargetConfig();
-    s3Config.region = AWSRegions.OTHER;
+    s3Config.region = AwsRegion.OTHER;
     s3Config.endpoint = "http://localhost:" + port;
     s3Config.bucketTemplate = "${record:attribute('bucket')}";
     s3Config.awsConfig = new AWSConfig();

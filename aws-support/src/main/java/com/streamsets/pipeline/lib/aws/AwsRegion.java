@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.config;
+package com.streamsets.pipeline.lib.aws;
 
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
-import com.streamsets.pipeline.api.impl.Utils;
 
 @GenerateResourceBundle
 public enum AwsRegion implements Label {
@@ -25,6 +24,7 @@ public enum AwsRegion implements Label {
   US_EAST_1("US East (N. Virginia) us-east-1"),
   US_WEST_1("US West (N. California) us-west-1"),
   US_WEST_2("US West (Oregon) us-west-2"),
+  US_GOV_WEST_1("AWS GovCloud (US)"),
   AP_NORTHEAST_1("Aisa Pacific (Tokyo) ap-northeast-1"),
   AP_NORTHEAST_2("Asia Pacific (Seoul) ap-northeast-2"),
   AP_NORTHEAST_3("Asia Pacific (Osaka-Local) ap-northeast-3"),
@@ -39,8 +39,7 @@ public enum AwsRegion implements Label {
   EU_WEST_2("EU (London) eu-west-2"),
   EU_WEST_3("EU (Paris) eu-west-3"),
   SA_EAST_1("South America (São Paulo) sa-east-1"),
-
-  CUSTOM("Custom")
+  OTHER("Other - specify")
   ;
 
   private final String label;

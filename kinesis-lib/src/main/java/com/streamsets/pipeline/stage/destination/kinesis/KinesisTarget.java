@@ -31,6 +31,7 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.aws.AwsRegion;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
@@ -39,7 +40,6 @@ import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.destination.lib.ResponseType;
 import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
-import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.Errors;
 import com.streamsets.pipeline.stage.lib.kinesis.ExpressionPartitioner;
@@ -105,7 +105,7 @@ public class KinesisTarget extends BaseTarget {
       );
     }
 
-    if (conf.region == AWSRegions.OTHER && (conf.endpoint == null || conf.endpoint.isEmpty())) {
+    if (conf.region == AwsRegion.OTHER && (conf.endpoint == null || conf.endpoint.isEmpty())) {
       issues.add(getContext().createConfigIssue(
           Groups.KINESIS.name(),
           KINESIS_CONFIG_BEAN + ".endpoint",
@@ -136,10 +136,10 @@ public class KinesisTarget extends BaseTarget {
             .fromProperties(additionalConfigs)
             .setCredentialsProvider(AWSUtil.getCredentialsProvider(conf.awsConfig));
 
-        if (conf.region == AWSRegions.OTHER) {
+        if (conf.region == AwsRegion.OTHER) {
           producerConfig.setKinesisEndpoint(conf.endpoint);
         } else {
-          producerConfig.setRegion(conf.region.getLabel());
+          producerConfig.setRegion(conf.region.getId());
         }
 
         // Mock injected during testing, we shouldn't clobber it.

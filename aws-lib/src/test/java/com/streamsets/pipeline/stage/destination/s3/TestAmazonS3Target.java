@@ -27,13 +27,13 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
+import com.streamsets.pipeline.lib.aws.AwsRegion;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.sdk.service.SdkJsonDataFormatGeneratorService;
 import com.streamsets.pipeline.stage.common.FakeS3;
 import com.streamsets.pipeline.stage.common.TestUtil;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
-import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 import com.streamsets.pipeline.stage.lib.aws.TransferManagerConfig;
 import org.junit.AfterClass;
@@ -264,7 +264,7 @@ public class TestAmazonS3Target {
   ) {
 
     S3ConnectionTargetConfig s3Config = new S3ConnectionTargetConfig();
-    s3Config.region = AWSRegions.OTHER;
+    s3Config.region = AwsRegion.OTHER;
     s3Config.endpoint = "http://localhost:" + port;
     s3Config.bucketTemplate = "${record:attribute('bucket')}";
     s3Config.awsConfig = new AWSConfig();

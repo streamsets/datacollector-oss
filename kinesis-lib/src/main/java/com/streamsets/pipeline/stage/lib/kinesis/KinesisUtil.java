@@ -30,10 +30,10 @@ import com.amazonaws.services.kinesis.model.Shard;
 import com.amazonaws.services.kinesis.model.StreamDescription;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.aws.AwsRegion;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
-import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.origin.kinesis.Groups;
 import org.slf4j.Logger;
@@ -129,10 +129,10 @@ public class KinesisUtil {
         .withClientConfiguration(checkNotNull(awsClientConfig))
         .withCredentials(AWSUtil.getCredentialsProvider(conf.awsConfig));
 
-    if (AWSRegions.OTHER == conf.region) {
+    if (AwsRegion.OTHER == conf.region) {
       builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(conf.endpoint, null));
     } else {
-      builder.withRegion(conf.region.getLabel());
+      builder.withRegion(conf.region.getId());
     }
 
     return builder.build();
