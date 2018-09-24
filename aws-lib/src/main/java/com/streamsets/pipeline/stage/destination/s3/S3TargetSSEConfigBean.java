@@ -15,13 +15,13 @@
  */
 package com.streamsets.pipeline.stage.destination.s3;
 
+import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.credential.CredentialValue;
-import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
-import com.streamsets.pipeline.stage.lib.aws.SSEChooserValues;
-import com.streamsets.pipeline.stage.lib.aws.SSEOption;
+import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.lib.aws.SseOption;
+import com.streamsets.pipeline.lib.aws.SseOptionChooserValues;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,8 +52,8 @@ public class S3TargetSSEConfigBean {
       triggeredByValue = "true",
       group = "#0"
   )
-  @ValueChooserModel(SSEChooserValues.class)
-  public SSEOption encryption;
+  @ValueChooserModel(SseOptionChooserValues.class)
+  public SseOption encryption;
 
   @ConfigDef(
       required = false,

@@ -28,9 +28,9 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ToErrorContext;
 import com.streamsets.pipeline.api.base.BasePushSource;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
+import com.streamsets.pipeline.lib.aws.AwsRegion;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
-import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,7 +74,7 @@ public class SqsConsumer extends BasePushSource {
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
 
-    if (conf.region == AWSRegions.OTHER && (conf.endpoint == null || conf.endpoint.isEmpty())) {
+    if (conf.region == AwsRegion.OTHER && (conf.endpoint == null || conf.endpoint.isEmpty())) {
       issues.add(getContext().createConfigIssue(
           Groups.SQS.name(),
           SQS_CONFIG_PREFIX + "endpoint",
@@ -112,7 +112,7 @@ public class SqsConsumer extends BasePushSource {
       return issues;
     }
 
-    AmazonSQS validationClient = AmazonSQSClientBuilder.standard().withRegion(conf.region.getLabel())
+    AmazonSQS validationClient = AmazonSQSClientBuilder.standard().withRegion(conf.region.getId())
         .withClientConfiguration(clientConfiguration).withCredentials(credentials).build();
 
     for (int i = 0; i < conf.queuePrefixes.size(); i++) {
@@ -146,7 +146,7 @@ public class SqsConsumer extends BasePushSource {
 
   private AmazonSQSAsync buildAsyncClient() {
     final AmazonSQSAsyncClientBuilder builder = AmazonSQSAsyncClientBuilder.standard();
-    builder.setRegion(conf.region.getLabel());
+    builder.setRegion(conf.region.getId());
     builder.setCredentials(credentials);
     builder.setClientConfiguration(clientConfiguration);
     return builder.build();
@@ -187,7 +187,7 @@ public class SqsConsumer extends BasePushSource {
               conf.numberOfMessagesPerRequest,
               conf.maxBatchTimeMs,
               conf.maxBatchSize,
-              conf.region.getLabel(),
+              conf.region.getId(),
               conf.sqsAttributesOption,
               new DefaultErrorRecordHandler(getContext(), (ToErrorContext) getContext()),
               conf.pollWaitTimeSeconds,

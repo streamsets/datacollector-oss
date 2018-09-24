@@ -32,6 +32,7 @@ import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.lib.aws.AwsRegion;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.common.FakeS3;
@@ -39,7 +40,6 @@ import com.streamsets.pipeline.stage.common.TestUtil;
 import com.streamsets.pipeline.stage.executor.s3.config.AmazonS3ExecutorConfig;
 import com.streamsets.pipeline.stage.executor.s3.config.TaskType;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
-import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import org.apache.commons.io.IOUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -301,7 +301,7 @@ public class TestAmazonS3Executor {
   private AmazonS3ExecutorConfig getConfig() {
     AmazonS3ExecutorConfig config = new AmazonS3ExecutorConfig();
 
-    config.s3Config.region = AWSRegions.OTHER;
+    config.s3Config.region = AwsRegion.OTHER;
     config.s3Config.endpoint = "http://localhost:" + port;
     config.s3Config.bucketTemplate = "${record:attribute('bucket')}";
     config.s3Config.awsConfig = new AWSConfig();

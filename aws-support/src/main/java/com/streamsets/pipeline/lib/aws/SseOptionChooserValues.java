@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.lib.aws;
+package com.streamsets.pipeline.lib.aws;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public class SSEChooserValues extends BaseEnumChooserValues<SSEOption> {
+public class SseOptionChooserValues extends BaseEnumChooserValues<SseOption> {
 
-  public SSEChooserValues() {
-    super(
-        SSEOption.S3,
-        SSEOption.KMS,
-        SSEOption.CUSTOMER
-    );
+  public SseOptionChooserValues() {
+    super(SseOption.class);
   }
+
 }

@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
+import com.streamsets.pipeline.lib.aws.AwsRegion;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,6 +32,9 @@ public class SqsUpgrader implements StageUpgrader {
     switch(context.getFromVersion()) {
       case 1:
         upgradeV1ToV2(configs, context);
+        // fall through
+      case 2:
+        upgradeV2ToV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", context.getFromVersion()));
@@ -55,4 +59,16 @@ public class SqsUpgrader implements StageUpgrader {
     // And finally register new service
     context.registerService(DataFormatParserService.class, dataFormatConfigs);
   }
+
+  private static void upgradeV2ToV3(List<Config> configs) {
+    String regionProperty = "sqsConfig.region";
+    for (int i = 0; i < configs.size(); i++) {
+      if (configs.get(i).getName().equals(regionProperty)) {
+        if ("GovCloud".equals(configs.get(i).getValue())) {
+          configs.set(i, new Config(regionProperty, AwsRegion.US_GOV_WEST_1.name()));
+        }
+      }
+    }
+  }
+
 }

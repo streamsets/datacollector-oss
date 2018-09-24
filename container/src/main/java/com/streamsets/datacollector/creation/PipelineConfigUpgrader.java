@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.creation;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.config.AmazonEMRConfig;
 import com.streamsets.datacollector.config.PipelineState;
 import com.streamsets.pipeline.api.Config;
@@ -66,6 +67,9 @@ public class PipelineConfigUpgrader implements StageUpgrader {
         // fall through
       case 9:
         upgradeV9ToV10(configs);
+        // fall through
+      case 10:
+        upgradeV10ToV11(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", context.getFromVersion()));
@@ -220,6 +224,23 @@ public class PipelineConfigUpgrader implements StageUpgrader {
     configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.ACCESS_KEY, null));
     configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.SECRET_KEY, null));
     configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.PROVISION_NEW_CLUSTER, false));
+  }
+
+  private final static Set<String> PROPERTIES_TO_CHECK_FOR_CUSTOM =
+      ImmutableSet.of(
+          "amazonEMRConfig." + AmazonEMRConfig.USER_REGION,
+          "amazonEMRConfig." + AmazonEMRConfig.MASTER_INSTANCE_TYPE,
+          "amazonEMRConfig." + AmazonEMRConfig.SLAVE_INSTANCE_TYPE
+      );
+
+  private void upgradeV10ToV11(List<Config> configs) {
+    for (int i = 0; i < configs.size(); i++) {
+      if (PROPERTIES_TO_CHECK_FOR_CUSTOM.contains(configs.get(i).getName())) {
+        if ("CUSTOM".equals(configs.get(i).getValue())) {
+          configs.set(i, new Config(configs.get(i).getName(), "OTHER"));
+        }
+      }
+    }
   }
 
 }

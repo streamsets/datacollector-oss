@@ -53,9 +53,9 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BasePushSource;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.aws.AwsRegion;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
-import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.Errors;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil;
@@ -112,7 +112,7 @@ public class KinesisSource extends BasePushSource {
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
 
-    if (conf.region == AWSRegions.OTHER && (conf.endpoint == null || conf.endpoint.isEmpty())) {
+    if (conf.region == AwsRegion.OTHER && (conf.endpoint == null || conf.endpoint.isEmpty())) {
       issues.add(getContext().createConfigIssue(
           Groups.KINESIS.name(),
           KINESIS_CONFIG_BEAN + ".endpoint",
@@ -171,7 +171,7 @@ public class KinesisSource extends BasePushSource {
     // KCL currently requires a mutable client
     dynamoDBClient = new AmazonDynamoDBClient(credentials, clientConfiguration);
     cloudWatchClient = new AmazonCloudWatchClient(credentials, clientConfiguration);
-    if (conf.region == AWSRegions.OTHER) {
+    if (conf.region == AwsRegion.OTHER) {
       dynamoDBClient.setEndpoint(conf.endpoint);
       cloudWatchClient.setEndpoint(conf.endpoint);
     } else {
@@ -215,10 +215,10 @@ public class KinesisSource extends BasePushSource {
       kclConfig.withTimestampAtInitialPositionInStream(new Date(conf.initialTimestamp));
     }
 
-    if (conf.region == AWSRegions.OTHER) {
+    if (conf.region == AwsRegion.OTHER) {
       kclConfig.withKinesisEndpoint(conf.endpoint);
     } else {
-      kclConfig.withRegionName(conf.region.getLabel());
+      kclConfig.withRegionName(conf.region.getId());
     }
 
     return new Worker.Builder()

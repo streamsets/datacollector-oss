@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2018 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.lib.aws;
+package com.streamsets.pipeline.lib.aws;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-@GenerateResourceBundle
-public enum SSEOption implements Label {
-  S3("SSE-S3"),
-  KMS("SSE-KMS"),
-  CUSTOMER("SSE-C")
-  ;
-
-  private final String label;
-
-  SSEOption(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return label;
+public class AwsRegionChooserValues extends BaseEnumChooserValues<AwsRegion> {
+  public AwsRegionChooserValues() {
+    super(AwsRegion.class);
   }
 }

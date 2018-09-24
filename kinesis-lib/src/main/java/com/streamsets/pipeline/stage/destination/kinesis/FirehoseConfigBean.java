@@ -21,9 +21,9 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.lib.aws.AwsRegion;
 import com.streamsets.pipeline.stage.common.DataFormatGroups;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
-import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import com.streamsets.pipeline.stage.lib.kinesis.Errors;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisConfigBean;
 
@@ -94,7 +94,7 @@ public class FirehoseConfigBean extends KinesisConfigBean {
       );
     }
 
-    if (region == AWSRegions.OTHER && (endpoint == null || endpoint.isEmpty())) {
+    if (region == AwsRegion.OTHER && (endpoint == null || endpoint.isEmpty())) {
       issues.add(
           context.createConfigIssue(
               Groups.KINESIS.name(),

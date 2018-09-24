@@ -28,7 +28,7 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
 
 @StageDef(
-    version = 7,
+    version = 8,
     label = "Write to Kinesis",
     description = "Writes Pipeline Statistic records to Kinesis",
     icon = "",

@@ -16,8 +16,6 @@
 package com.streamsets.datacollector.cluster;
 
 import com.streamsets.datacollector.config.AmazonEMRConfig;
-import com.streamsets.datacollector.config.AwsInstanceType;
-import com.streamsets.datacollector.config.AwsRegion;
 import com.streamsets.datacollector.config.LogLevel;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
@@ -26,6 +24,8 @@ import com.streamsets.datacollector.security.SecurityConfiguration;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.delegate.exported.ClusterJob;
+import com.streamsets.pipeline.lib.aws.AwsInstanceType;
+import com.streamsets.pipeline.lib.aws.AwsRegion;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;

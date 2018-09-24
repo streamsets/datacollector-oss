@@ -27,9 +27,9 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.common.InterfaceAudience;
 import com.streamsets.pipeline.common.InterfaceStability;
+import com.streamsets.pipeline.lib.aws.AwsRegion;
+import com.streamsets.pipeline.lib.aws.AwsRegionChooserValues;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
-import com.streamsets.pipeline.stage.lib.aws.AWSRegionChooserValues;
-import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 import com.streamsets.pipeline.stage.origin.s3.Errors;
@@ -57,8 +57,8 @@ public abstract class S3ConnectionBaseConfig {
     displayPosition = 10,
     group = "#0"
   )
-  @ValueChooserModel(AWSRegionChooserValues.class)
-  public AWSRegions region;
+  @ValueChooserModel(AwsRegionChooserValues.class)
+  public AwsRegion region;
 
   @ConfigDef(
       required = false,
@@ -152,14 +152,14 @@ public abstract class S3ConnectionBaseConfig {
         .withChunkedEncodingDisabled(awsConfig.disableChunkedEncoding)
         .withPathStyleAccessEnabled(true);
 
-    if (region == AWSRegions.OTHER) {
+    if (region == AwsRegion.OTHER) {
       if (endpoint == null || endpoint.isEmpty()) {
         issues.add(context.createConfigIssue(Groups.S3.name(), configPrefix + "endpoint", Errors.S3_SPOOLDIR_10));
         return;
       }
       builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint, null));
     } else {
-      builder.withRegion(region.getLabel());
+      builder.withRegion(region.getId());
     }
     s3Client = builder.build();
   }

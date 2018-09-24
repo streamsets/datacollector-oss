@@ -28,7 +28,7 @@ import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
 @StageDef(
     // We're reusing upgrader for both ToErrorKinesisDTarget & KinesisDTarget, make sure that you
     // upgrade both versions at the same time when changing.
-    version = 7,
+    version = 8,
     label = "Write to Kinesis",
     description = "Writes records to Kinesis as SDC Records",
     onlineHelpRefUrl ="index.html?contextID=concept_kgc_l4y_5r",

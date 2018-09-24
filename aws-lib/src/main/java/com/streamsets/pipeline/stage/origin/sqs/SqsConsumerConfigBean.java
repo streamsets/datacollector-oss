@@ -18,9 +18,9 @@ package com.streamsets.pipeline.stage.origin.sqs;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.lib.aws.AwsRegion;
+import com.streamsets.pipeline.lib.aws.AwsRegionChooserValues;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
-import com.streamsets.pipeline.stage.lib.aws.AWSRegionChooserValues;
-import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 
 import java.util.List;
@@ -38,8 +38,8 @@ public class SqsConsumerConfigBean {
       displayPosition = 100,
       group = "SQS"
   )
-  @ValueChooserModel(AWSRegionChooserValues.class)
-  public AWSRegions region;
+  @ValueChooserModel(AwsRegionChooserValues.class)
+  public AwsRegion region;
 
   @ConfigDef(
       required = false,

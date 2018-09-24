@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.config;
+package com.streamsets.pipeline.lib.aws;
 
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
@@ -60,7 +60,7 @@ public enum AwsInstanceType implements Label {
   P3_8XLARGE("p3.8xlarge"),
   P3_16XLARGE("p3.16xlarge"),
 
-  CUSTOM("Custom")
+  OTHER("Custom")
   ;
 
   private final String label;

@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
+import com.streamsets.pipeline.lib.aws.AwsRegion;
 import com.streamsets.pipeline.stage.destination.lib.ResponseType;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisBaseUpgrader;
@@ -58,6 +59,9 @@ public class KinesisTargetUpgrader extends KinesisBaseUpgrader {
         // fall through
       case 6:
         upgradeV6toV7(configs);
+        // fall through
+      case 7:
+        upgradeV7toV8(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -125,4 +129,16 @@ public class KinesisTargetUpgrader extends KinesisBaseUpgrader {
     configs.add(new Config("responseConf.sendResponseToOrigin", false));
     configs.add(new Config("responseConf.responseType", ResponseType.SUCCESS_RECORDS));
   }
+
+  private static void upgradeV7toV8(List<Config> configs) {
+    String regionProperty = KINESIS_CONFIG_BEAN + ".region";
+    for (int i = 0; i < configs.size(); i++) {
+      if (configs.get(i).getName().equals(regionProperty)) {
+        if ("GovCloud".equals(configs.get(i).getValue())) {
+          configs.set(i, new Config(regionProperty, AwsRegion.US_GOV_WEST_1.name()));
+        }
+      }
+    }
+  }
+
 }
