@@ -30,6 +30,7 @@ import soql.SOQLParser;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -377,7 +378,10 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
       } else if (INT_TYPES.contains(sfdcType)) {
         return  com.streamsets.pipeline.api.Field.create(com.streamsets.pipeline.api.Field.Type.INTEGER, val);
       } else if (DECIMAL_TYPES.contains(sfdcType)) {
-        return  com.streamsets.pipeline.api.Field.create(com.streamsets.pipeline.api.Field.Type.DECIMAL, val);
+        // Salesforce can return a string value with greater scale than that defined in the schema - see SDC-10152
+        // Ensure that the created BigDecimal value matches the Salesforce schema
+        return  com.streamsets.pipeline.api.Field.create(com.streamsets.pipeline.api.Field.Type.DECIMAL,
+            (new BigDecimal(val.toString())).setScale(sfdcField.getScale(), RoundingMode.HALF_UP));
       } else if (STRING_TYPES.contains(sfdcType)) {
         return  com.streamsets.pipeline.api.Field.create(com.streamsets.pipeline.api.Field.Type.STRING, val);
       } else if (BINARY_TYPES.contains(sfdcType)) {
