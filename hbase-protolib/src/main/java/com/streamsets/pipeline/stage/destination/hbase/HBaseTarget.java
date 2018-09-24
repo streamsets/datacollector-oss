@@ -87,6 +87,8 @@ public class HBaseTarget extends BaseTarget {
   private Date batchTime;
   private HBaseConnectionHelper hbaseConnectionHelper;
 
+  private HTable hTable;
+
   public HBaseTarget(
     HBaseConnectionConfig conf,
     String hbaseRowKey,
@@ -151,6 +153,9 @@ public class HBaseTarget extends BaseTarget {
         throw Throwables.propagate(e);
       }
     }
+    if(!issues.isEmpty()) {
+      return issues;
+    }
 
     if (!timeDriver.trim().isEmpty()) {
       timeDriverElEval = getContext().createELEval("timeDriver");
@@ -186,6 +191,19 @@ public class HBaseTarget extends BaseTarget {
     }
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
+    try {
+      hbaseConnectionHelper.getUGI().doAs((PrivilegedExceptionAction<Void>) () -> {
+        hTable = new HTable(hbaseConf, conf.tableName);
+        return null;
+      });
+    } catch(InterruptedException | IOException ex) {
+      issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "tableName", Errors.HBASE_42,
+          conf.tableName));
+    }
+    if(!issues.isEmpty()) {
+      return issues;
+    }
+
     LineageEvent event = getContext().createLineageEvent(LineageEventType.ENTITY_WRITTEN);
     event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, conf.tableName);
     event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.HBASE.name());
@@ -204,6 +222,22 @@ public class HBaseTarget extends BaseTarget {
     getContext().publishLineageEvent(event);
 
     return issues;
+  }
+
+  @Override
+  public void destroy() {
+    super.destroy();
+    if(hTable != null) {
+      try {
+        hbaseConnectionHelper.getUGI().doAs((PrivilegedExceptionAction<Void>) () -> {
+          hTable.close();
+          return null;
+        });
+
+      } catch (InterruptedException | IOException ex) {
+        LOG.debug("error closing HBase table {}", ex.getMessage(), ex);
+      }
+    }
   }
 
   protected void validateQuorumConfigs(List<ConfigIssue> issues) {
@@ -389,7 +423,7 @@ public class HBaseTarget extends BaseTarget {
   private void writeBatch(Batch batch) throws StageException {
     Iterator<Record> it = batch.getRecords();
     Map<String, Record> rowKeyToRecord = new HashMap<>();
-    try (HTable hTable = new HTable(hbaseConf, conf.tableName)) {
+    try {
       // Disable auto-flush to increase performance by reducing the number of RPCs.
       // HTable is deprecated as of HBase 1.0 and replaced by Table which does not use autoFlush
       hTable.setAutoFlushTo(false);

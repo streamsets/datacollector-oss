@@ -63,6 +63,7 @@ public enum Errors implements ErrorCode {
   HBASE_39("Cannot resolve host '{}' from ZooKeeper quorum"),
   HBASE_40("Output field has empty value"),
   HBASE_41("No key on Record '{}' with key:'{}', column:'{}', timestamp:'{}'"),
+  HBASE_42("Error while opening HBase table: '{}'"),
   ;
   private final String msg;
 
