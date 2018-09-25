@@ -1704,20 +1704,24 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      getStats: () => $http({
-        method: 'GET',
-        url: apiBase + '/system/stats'
-      }),
+      getStats: function() {
+        return $http({
+          method: 'GET',
+          url: apiBase + '/system/stats'
+        });
+      },
 
       /**
        * Set opt in/out status for stats
        *
        * @returns {*}
        */
-      setOptInStatus: isOptIn => $http({
-        method: 'POST',
-        url: apiBase + '/system/stats?active=' + (!!isOptIn)
-      }),
+      setOptInStatus: function(isOptIn) {
+        return $http({
+          method: 'POST',
+          url: apiBase + '/system/stats?active=' + (!!isOptIn)
+        });
+      },
 
       /**
        * Get all support bundle generators

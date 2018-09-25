@@ -500,19 +500,19 @@ angular.module('dataCollectorApp')
         });
       },
 
-      openEdgeTutorialPage() {
+      openEdgeTutorialPage: function() {
         window.open('https://streamsets.com/documentation/datacollector/latest/help/datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html', '_blank');
       },
 
-      openMicroserviceTutorialPage() {
+      openMicroserviceTutorialPage: function() {
         window.open('https://streamsets.com/blog/create-microservice-pipelines-streamsets-data-collector-tutorial/', '_blank');
       },
 
-      openControlHubTutorialPage() {
+      openControlHubTutorialPage: function() {
         window.open('https://streamsets.com/documentation/controlhub/latest/help/controlhub/UserGuide/GettingStarted/GettingStarted_title.html', '_blank');
       },
 
-      openGithubTutorial() {
+      openGithubTutorial: function() {
         window.open('https://github.com/streamsets/tutorials', '_blank');
       }
     };
