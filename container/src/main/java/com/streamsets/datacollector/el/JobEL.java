@@ -58,7 +58,7 @@ public class JobEL {
   @ElFunction(
       prefix = JOB_EL_PREFIX,
       name = "startTime",
-      description = "Returns the start time stamp of job in milliseconds."
+      description = "Returns start time of job or pipeline as a datetime value."
   )
   public static Date startTime() {
     return (Date)getVariableFromScope(JOB_START_TIME_VAR);
