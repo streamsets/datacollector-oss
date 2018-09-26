@@ -16,34 +16,23 @@
 
 package com.streamsets.datacollector.restapi;
 
-import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
-import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
-import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
-import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
-import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
-import org.apache.commons.io.IOUtils;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.StreamingOutput;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
 public class EdgeExecutableStreamingOutput implements StreamingOutput {
   private final static String EDGE_DIST_DIR = "/edge-binaries/";
-  private final static String PIPELINE_JSON_FILE = "pipeline.json";
-  private final static String PIPELINE_INFO_FILE = "info.json";
-  private final static String DATA_PIPELINES_FOLDER = "streamsets-datacollector-edge/data/pipelines/";
   private final static String TAR_FILE_PREFIX = "streamsets-datacollector-edge-";
 
   private final File edgeTarFile;
   private final List<PipelineConfigurationJson> pipelineConfigurationList;
+  private final EdgeArchiveType edgeArchiveType;
 
   EdgeExecutableStreamingOutput(
       RuntimeInfo runtimeInfo,
@@ -51,7 +40,12 @@ public class EdgeExecutableStreamingOutput implements StreamingOutput {
       String edgeArch,
       List<PipelineConfigurationJson> pipelineConfigurationList
   ) {
-    String endsWith = "-" + edgeOs + "-" + edgeArch + ".tgz";
+    if(edgeOs.equalsIgnoreCase("windows")) {
+      edgeArchiveType = EdgeArchiveType.ZIP;
+    } else {
+      edgeArchiveType = EdgeArchiveType.TAR;
+    }
+    String endsWith = "-" + edgeOs + "-" + edgeArch + edgeArchiveType.getFileSuffix();
     File dir = new File(runtimeInfo.getRuntimeDir() + EDGE_DIST_DIR);
     File[] files = dir.listFiles((dir1, name) -> name.startsWith(TAR_FILE_PREFIX) && name.endsWith(endsWith));
 
@@ -65,63 +59,27 @@ public class EdgeExecutableStreamingOutput implements StreamingOutput {
 
   @Override
   public void write(OutputStream output) throws IOException, WebApplicationException {
-    try (
-        TarArchiveOutputStream tarArchiveOutput = new TarArchiveOutputStream(new GzipCompressorOutputStream(output));
-        TarArchiveInputStream tarArchiveInput = new TarArchiveInputStream(
-            new GzipCompressorInputStream(new FileInputStream(edgeTarFile))
-        )
-    ) {
-      tarArchiveOutput.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
-      TarArchiveEntry entry = tarArchiveInput.getNextTarEntry();
+    EdgeArchiveBuilder edgeArchiveBuilder;
 
-      while (entry != null) {
-        tarArchiveOutput.putArchiveEntry(entry);
-        IOUtils.copy(tarArchiveInput, tarArchiveOutput);
-        tarArchiveOutput.closeArchiveEntry();
-        entry = tarArchiveInput.getNextTarEntry();
-      }
-
-      for (PipelineConfigurationJson pipelineConfiguration: pipelineConfigurationList) {
-        addArchiveEntry(
-            tarArchiveOutput,
-            pipelineConfiguration,
-            pipelineConfiguration.getPipelineId(),
-            PIPELINE_JSON_FILE
-        );
-        addArchiveEntry(
-            tarArchiveOutput,
-            pipelineConfiguration.getInfo(),
-            pipelineConfiguration.getPipelineId(),
-            PIPELINE_INFO_FILE
-        );
-      }
-
-      tarArchiveOutput.finish();
+    switch (edgeArchiveType) {
+      case TAR:
+        edgeArchiveBuilder = new TarEdgeArchiveBuilder();
+        break;
+      case ZIP:
+        edgeArchiveBuilder = new ZipEdgeArchiveBuilder();
+        break;
+      default:
+        throw new IllegalArgumentException("Unsupported edge archive type: " + edgeArchiveType.name());
     }
+
+    edgeArchiveBuilder
+        .archive(edgeTarFile)
+        .to(output)
+        .with(pipelineConfigurationList)
+        .finish();
   }
 
   public String getFileName() {
     return this.edgeTarFile.getName();
-  }
-
-  private void addArchiveEntry(
-      TarArchiveOutputStream tarArchiveOutput,
-      Object fileContent,
-      String pipelineId,
-      String fileName
-  ) throws IOException {
-    File pipelineFile = File.createTempFile(pipelineId, fileName);
-    FileOutputStream pipelineOutputStream = new FileOutputStream(pipelineFile);
-    ObjectMapperFactory.get().writeValue(pipelineOutputStream, fileContent);
-    pipelineOutputStream.flush();
-    pipelineOutputStream.close();
-    TarArchiveEntry archiveEntry = new TarArchiveEntry(
-        pipelineFile,
-        DATA_PIPELINES_FOLDER + pipelineId + "/" + fileName
-    );
-    archiveEntry.setSize(pipelineFile.length());
-    tarArchiveOutput.putArchiveEntry(archiveEntry);
-    IOUtils.copy(new FileInputStream(pipelineFile), tarArchiveOutput);
-    tarArchiveOutput.closeArchiveEntry();
   }
 }
