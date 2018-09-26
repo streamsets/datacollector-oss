@@ -22,7 +22,6 @@
         <li draggable drag-data="stageLibrary"
             ng-repeat="stageLibrary in filteredStageLibraries | orderBy: 'label'"
             ng-init="icon=getStageIconURL(stageLibrary)"
-            ng-class="{'beta-stage': stageLibrary.beta}"
             tooltip-placement="{{$index < filteredStageLibraries.length - 2 ? 'bottom' : 'top'}}"
             tooltip="{{stageLibrary.description}}"
             tooltip-append-to-body="true"
@@ -52,7 +51,6 @@
             <span
               ng-if="$storage.stageFilterGroup.group !== 'Type' && stageLibrary.type == 'EXECUTOR'"
               class="circle executor">E</span>
-
           </a>
         </li>
 

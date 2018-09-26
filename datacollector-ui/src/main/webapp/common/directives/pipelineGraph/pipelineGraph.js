@@ -834,16 +834,6 @@ angular.module('pipelineGraphDirectives', [])
           firstConfigIssue = undefined;
         });
 
-      // Add beta icon
-      newGs.append('svg:image')
-        .filter(function(d) {
-          return pipelineService.isBetaStage(d.stageName);
-        })
-        .attr('x', 10)
-        .attr('y', 10)
-        .attr('width', 12)
-        .attr('height', 12)
-        .attr('xlink:href', '/assets/beta.svg');
 
       //Add Configuration Icon
       /*
@@ -907,6 +897,20 @@ angular.module('pipelineGraphDirectives', [])
         .on('mouseup', function() {
           $scope.state.showBadRecords = false;
         });
+
+      // Add beta icon
+      newGs.append('svg:image')
+        .filter(function(d) {
+            return pipelineService.isBetaStage(d.stageName);
+        })
+        .attr('x', 10)
+        .attr('y', 10)
+        .attr('width', 10.5)
+        .attr('height', 19.5)
+        .attr('xlink:href', '/assets/beta.svg')
+        .attr('class', 'graph-bootstrap-tooltip')
+        .attr('data-placement', 'top')
+        .attr('title', 'This is a technology preview stage, do not use in production');
 
 
       // remove old nodes
@@ -1037,7 +1041,6 @@ angular.module('pipelineGraphDirectives', [])
       } else {
         graphWarning.style('visibility', 'hidden');
       }
-
 
       $('.graph-bootstrap-tooltip').each(function() {
         var $this = $(this),
