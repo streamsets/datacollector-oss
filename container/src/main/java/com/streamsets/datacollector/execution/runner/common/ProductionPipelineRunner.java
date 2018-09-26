@@ -680,7 +680,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       pipeBatch = new FullPipeBatch(null, null, batchSize, false);
       try {
         LOG.trace("Destroying origin pipe");
-        pipeBatch.startStage(originPipe);
+        pipeBatch.skipStage(originPipe);
         originPipe.destroy(pipeBatch);
       } catch (RuntimeException e) {
         LOG.warn("Exception throw while destroying pipe", e);
@@ -693,7 +693,6 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       // be destroyed before the runner with id '0'.
       for (PipeRunner pipeRunner : Lists.reverse(pipeRunners)) {
         final FullPipeBatch finalPipeBatch = pipeBatch;
-        finalPipeBatch.skipStage(originPipe);
 
         pipeRunner.executeBatch(null, null, start, pipe -> {
           // Set the last batch time in the stage context of each pipe
@@ -728,6 +727,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
 
         // Next iteration should have new and empty PipeBatch
         pipeBatch = new FullPipeBatch(null, null, batchSize, false);
+        pipeBatch.skipStage(originPipe);
       }
       if (isStatsAggregationEnabled()) {
         List<Record> stats = new ArrayList<>();
