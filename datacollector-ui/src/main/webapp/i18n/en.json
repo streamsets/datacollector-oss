@@ -54,7 +54,7 @@
       "architecture": "Architecture",
       "autoArrange": "Auto Arrange",
       "batchNumber": "Batch Number",
-      "betaStageTooltip": "This is a technology preview stage, currently in βeta mode.",
+      "betaStageTooltip": "This is a technology preview stage, do not use in production",
       "cancel": "Cancel",
       "changeRule": "Change Rule",
       "captured": "Captured",
