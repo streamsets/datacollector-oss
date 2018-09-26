@@ -36,6 +36,7 @@
 
   <properties>
     <mleap.version>0.11.0</mleap.version>
+    <guava.version>18.0</guava.version>
   </properties>
 
   <dependencies>
@@ -79,6 +80,12 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>${guava.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
