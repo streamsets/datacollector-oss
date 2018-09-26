@@ -43,6 +43,8 @@ public class TestHadoopSecurityUtil {
   public void testGetProxyUser() throws Exception {
     final UserGroupInformation fooUgi = UserGroupInformation.createUserForTesting("foo", new String[] { "all" });
     Stage.Context context = mock(Stage.Context.class);
+    com.streamsets.pipeline.api.Configuration configuration = mock(com.streamsets.pipeline.api.Configuration.class);
+    when(context.getConfiguration()).thenReturn(configuration);
     List<Stage.ConfigIssue> issues = new ArrayList<>();
 
     UserGroupInformation ugi = HadoopSecurityUtil.getProxyUser(
@@ -71,7 +73,9 @@ public class TestHadoopSecurityUtil {
     Stage.Context context = mock(Stage.Context.class);
     List<Stage.ConfigIssue> issues = new ArrayList<>();
 
-    when(context.getConfig(eq(HadoopConfigConstants.IMPERSONATION_ALWAYS_CURRENT_USER))).thenReturn("true");
+    com.streamsets.pipeline.api.Configuration configuration = mock(com.streamsets.pipeline.api.Configuration.class);
+    when(configuration.get(eq(HadoopConfigConstants.IMPERSONATION_ALWAYS_CURRENT_USER), eq(false))).thenReturn(true);
+    when(context.getConfiguration()).thenReturn(configuration);
     when(context.getUserContext()).thenReturn(userContext);
 
     UserGroupInformation ugi = HadoopSecurityUtil.getProxyUser(
@@ -91,10 +95,12 @@ public class TestHadoopSecurityUtil {
     Stage.Context context = mock(Stage.Context.class);
     List<Stage.ConfigIssue> issues = new ArrayList<>();
 
-    when(context.getConfig(anyString())).thenReturn("true");
+    com.streamsets.pipeline.api.Configuration configuration = mock(com.streamsets.pipeline.api.Configuration.class);
+    when(configuration.get(anyString(), eq(false))).thenReturn(true);
+    when(context.getConfiguration()).thenReturn(configuration);
     when(context.getUserContext()).thenReturn(userContext);
 
-    UserGroupInformation ugi = HadoopSecurityUtil.getProxyUser(
+    HadoopSecurityUtil.getProxyUser(
       "employee-of-the-year",
       context,
       fooUgi,
@@ -112,8 +118,10 @@ public class TestHadoopSecurityUtil {
     Stage.Context context = mock(Stage.Context.class);
     List<Stage.ConfigIssue> issues = new ArrayList<>();
 
-    when(context.getConfig(eq(HadoopConfigConstants.IMPERSONATION_ALWAYS_CURRENT_USER))).thenReturn("true");
-    when(context.getConfig(eq(HadoopConfigConstants.LOWERCASE_USER))).thenReturn("true");
+    com.streamsets.pipeline.api.Configuration configuration = mock(com.streamsets.pipeline.api.Configuration.class);
+    when(configuration.get(eq(HadoopConfigConstants.IMPERSONATION_ALWAYS_CURRENT_USER), eq(false))).thenReturn(true);
+    when(configuration.get(eq(HadoopConfigConstants.LOWERCASE_USER), eq(false))).thenReturn(true);
+    when(context.getConfiguration()).thenReturn(configuration);
     when(context.getUserContext()).thenReturn(userContext);
 
     UserGroupInformation ugi = HadoopSecurityUtil.getProxyUser(

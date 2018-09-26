@@ -54,12 +54,13 @@ public class HadoopSecurityUtil {
     String configName               // Config name of "HDFS User"
   ) {
     // Should we always impersonate current user?
-    String alwaysImpersonateString = Optional
-      .ofNullable(context.getConfig(HadoopConfigConstants.IMPERSONATION_ALWAYS_CURRENT_USER))
-      .orElse("false");
+    boolean alwaysImpersonate = context.getConfiguration().get(
+      HadoopConfigConstants.IMPERSONATION_ALWAYS_CURRENT_USER,
+      false
+    );
 
     // If so, propagate current user to "user" (the one to be impersonated)
-    if(Boolean.parseBoolean(alwaysImpersonateString)) {
+    if(alwaysImpersonate) {
       if(!StringUtils.isEmpty(user)) {
         issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOP_00001));
       }
@@ -72,10 +73,11 @@ public class HadoopSecurityUtil {
     }
 
     // Optionally lower case the user name
-    String lowercasedString = Optional
-      .ofNullable(context.getConfig(HadoopConfigConstants.LOWERCASE_USER))
-      .orElse("false");
-    if(Boolean.parseBoolean(lowercasedString)) {
+    boolean lowerCase = context.getConfiguration().get(
+      HadoopConfigConstants.LOWERCASE_USER,
+      false
+    );
+    if(lowerCase) {
       user = user.toLowerCase();
     }
     return UserGroupInformation.createProxyUser(user, loginUser);

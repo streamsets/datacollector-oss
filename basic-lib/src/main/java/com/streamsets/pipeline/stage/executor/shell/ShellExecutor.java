@@ -45,7 +45,6 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Scanner;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -102,9 +101,7 @@ public class ShellExecutor extends BaseExecutor {
     this.eval = getContext().createELEval("environmentVariables");
 
     this.impersonationMode = ImpersonationMode.valueOf(
-      Optional.ofNullable(getContext().getConfig(ShellConfigConstants.IMPERSONATION_MODE))
-              .orElse(ShellConfigConstants.IMPERSONATION_MODE_DEFAULT)
-      .toUpperCase()
+      getContext().getConfiguration().get(ShellConfigConstants.IMPERSONATION_MODE, ShellConfigConstants.IMPERSONATION_MODE_DEFAULT).toUpperCase()
     );
 
     switch (impersonationMode) {
@@ -117,11 +114,15 @@ public class ShellExecutor extends BaseExecutor {
        throw new IllegalArgumentException("Unknown impersonation mode: " + impersonationMode);
     }
 
-    Optional<String> shellConfig = Optional.ofNullable(getContext().getConfig(ShellConfigConstants.SHELL));
-    this.shell = shellConfig.orElse(ShellConfigConstants.SHELL_DEFAULT);
+    this.shell = getContext().getConfiguration().get(
+      ShellConfigConstants.SHELL,
+      ShellConfigConstants.SHELL_DEFAULT
+    );
 
-    Optional<String> sudoConfig = Optional.ofNullable(getContext().getConfig(ShellConfigConstants.SUDO));
-    this.sudo = sudoConfig.orElse(ShellConfigConstants.SUDO_DEFAULT);
+    this.sudo = getContext().getConfiguration().get(
+      ShellConfigConstants.SUDO,
+      ShellConfigConstants.SUDO_DEFAULT
+    );
 
     // We're using static UTC calendar as the timeout is just few seconds/minutes max
     ELVars vars = getContext().createELVars();
