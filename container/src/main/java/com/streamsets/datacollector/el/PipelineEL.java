@@ -85,7 +85,7 @@ public class PipelineEL {
   @ElFunction(
       prefix = PIPELINE_EL_PREFIX,
       name = "startTime",
-      description = "Returns the start time stamp in milliseconds."
+      description = "Returns the start time of the pipeline as a datetime value."
   )
   public static Date startTime() {
     return (Date)getVariableFromScope(SDC_PIPELINE_START_TIME_VAR);
