@@ -114,6 +114,10 @@
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-api</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>com.streamsets</groupId>

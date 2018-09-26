@@ -128,6 +128,20 @@ public class TestConfiguration {
   }
 
   @Test
+  public void testSubSetDropPrefix() {
+    Configuration conf = new Configuration();
+
+    conf.set("a.s", "S");
+    conf.set("a.b", true);
+    conf.set("x.i", Integer.MAX_VALUE);
+    conf.set("x.l", Long.MAX_VALUE);
+
+    Configuration subSet = conf.getSubSetConfiguration("a.", true);
+    Assert.assertEquals(ImmutableSet.of("s", "b"), subSet.getNames());
+
+  }
+
+  @Test
   public void testFilterSensitive() {
     Configuration conf = new Configuration();
 

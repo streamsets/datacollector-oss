@@ -80,7 +80,7 @@ public abstract class ProtoContext implements ProtoConfigurableEntity.Context, C
   private static final String SDC_RECORD_SAMPLING_POPULATION_SIZE = "sdc.record.sampling.population.size";
   private static final String SDC_RECORD_SAMPLING_SAMPLE_SIZE = "sdc.record.sampling.sample.size";
 
-  protected final Configuration configuration;
+  private final Configuration configuration;
   private final Map<String, Class<?>[]> configToElDefMap;
   private final Map<String, Object> constants;
   private final EmailSender emailSender;
@@ -107,7 +107,7 @@ public abstract class ProtoContext implements ProtoConfigurableEntity.Context, C
       String serviceInstanceName,
       String resourcesDir
   ) {
-    this.configuration = configuration.getSubSetConfiguration(STAGE_CONF_PREFIX);
+    this.configuration = configuration.getSubSetConfiguration(STAGE_CONF_PREFIX, true);
     this.configToElDefMap = configToElDefMap;
     this.constants = constants;
     this.emailSender = emailSender;
@@ -158,7 +158,12 @@ public abstract class ProtoContext implements ProtoConfigurableEntity.Context, C
 
   @Override
   public String getConfig(String configName) {
-    return configuration.get(STAGE_CONF_PREFIX + configName, null);
+    return configuration.get(configName, null);
+  }
+
+  @Override
+  public com.streamsets.pipeline.api.Configuration getConfiguration() {
+    return configuration;
   }
 
   @Override

@@ -233,6 +233,11 @@ public class InterceptorContext implements Interceptor.Context {
   }
 
   @Override
+  public com.streamsets.pipeline.api.Configuration getConfiguration() {
+    return configuration;
+  }
+
+  @Override
   public BlobStore getBlobStore() {
     return blobStore;
   }
