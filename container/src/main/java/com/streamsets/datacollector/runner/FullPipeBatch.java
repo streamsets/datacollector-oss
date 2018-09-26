@@ -142,6 +142,10 @@ public class FullPipeBatch implements PipeBatch {
   @Override
   @SuppressWarnings("unchecked")
   public void skipStage(Pipe pipe) {
+    String stageName = pipe.getStage().getInfo().getInstanceName();
+    this.errorSink.registerInterceptorsForStage(stageName, pipe.getStage().getPreInterceptors());
+    this.eventSink.registerInterceptorsForStage(stageName, pipe.getStage().getPostInterceptors());
+
     // Fill expected stage output lanes with empty lists
     pipe.getOutputLanes().stream().forEach(lane -> fullPayload.put((String)lane, Collections.emptyList()));
     // Components are allowed to generate events on destroy phase and hence we need to use default empty

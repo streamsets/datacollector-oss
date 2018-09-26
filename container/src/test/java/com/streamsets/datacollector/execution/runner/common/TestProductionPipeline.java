@@ -107,6 +107,7 @@ public class TestProductionPipeline {
     DEFAULT,
     OFFSET_COMMITTERS,
     EVENTS,
+    MULTIPLE_EVENTS,
     PUSH_SOURCE,
   }
 
@@ -437,6 +438,9 @@ public class TestProductionPipeline {
       case EVENTS:
         pConf =  MockStages.createPipelineConfigurationSourceTargetWithEventsProcessed();
         break;
+      case MULTIPLE_EVENTS:
+        pConf =  MockStages.createPipelineConfigurationSourceTargetWithMultipleEventsProcessed();
+        break;
       case PUSH_SOURCE:
         pConf =  MockStages.createPipelineConfigurationPushSourceTarget();
         break;
@@ -657,10 +661,24 @@ public class TestProductionPipeline {
 
     @Override
     public void destroy() {
-      EventRecord event = getContext().createEventRecord("x", 1, "recordSourceId");
-      event.set(Field.create("event"));
+      EventRecord event = getContext().createEventRecord("source", 1, "recordSourceId");
+      event.set(Field.create("sourceEvent"));
       getContext().toEvent(event);
     }
+  }
+
+  private static class ProduceEventOnDestroyTarget extends BaseTarget {
+    @Override
+    public void write(Batch batch) throws StageException {
+      // No-op
+    }
+    @Override
+    public void destroy() {
+      EventRecord event = getContext().createEventRecord("target", 1, "recordSourceId");
+      event.set(Field.create("targetEvent"));
+      getContext().toEvent(event);
+    }
+
   }
 
   private static class CaptureExecutor extends BaseExecutor {
@@ -680,13 +698,17 @@ public class TestProductionPipeline {
   public void testPropagatingEventsOnDestroy() throws Exception {
     Source source = new ProduceEventOnDestroySource();
     MockStages.setSourceCapture(source);
+    Target target = new ProduceEventOnDestroyTarget();
+    MockStages.setTargetCapture(target);
     CaptureExecutor executor = new CaptureExecutor();
     MockStages.setExecutorCapture(executor);
-    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, PipelineType.EVENTS);
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, PipelineType.MULTIPLE_EVENTS);
     pipeline.registerStatusListener(new MyStateListener());
     pipeline.run();
 
-    Assert.assertEquals(1, executor.records.size());
+    Assert.assertEquals(2, executor.records.size());
+    Assert.assertEquals("sourceEvent", executor.records.get(0).get().getValueAsString());
+    Assert.assertEquals("targetEvent", executor.records.get(1).get().getValueAsString());
   }
 
   private static class ToErrorExecutor extends BaseExecutor {
