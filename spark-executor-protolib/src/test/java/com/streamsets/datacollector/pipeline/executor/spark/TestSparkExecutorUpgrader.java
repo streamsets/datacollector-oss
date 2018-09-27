@@ -44,6 +44,7 @@ public class TestSparkExecutorUpgrader {
     configs.add(new Config("conf.databricksConfigBean.jobId", 404));
     configs.add(new Config("conf.credentialsConfigBean.username", "username"));
     configs.add(new Config("conf.credentialsConfigBean.password", "password"));
+    configs.add(new Config("conf.clusterManager", "YARN"));
 
     List<Config> upgraded = upgrader.upgrade(configs, context);
 

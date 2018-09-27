@@ -42,6 +42,7 @@ public class SparkExecutorUpgrader implements StageUpgrader {
         .filter(config -> !config.getName().startsWith("conf.databricks")
             && !config.getName().equals("conf.credentialsConfigBean.username")
             && !config.getName().equals("conf.credentialsConfigBean.password")
+            && !config.getName().equals("conf.clusterManager")
         )
         .collect(Collectors.toList());
   }
