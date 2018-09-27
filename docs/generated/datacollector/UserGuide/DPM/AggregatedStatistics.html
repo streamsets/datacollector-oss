@@ -3,7 +3,7 @@
   PUBLIC "" "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
     <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link>        
-      <meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Pipeline Statistics" /><meta name="abstract" content="A Control Hub job defines the pipeline to run and the Data Collectors that run the pipeline. When you start a job, Control Hub remotely runs the pipeline on the group of Data Collectors. To monitor the job statistics and metrics within Control Hub, you must configure the pipeline to write statistics to Control Hub or to another system." /><meta name="description" content="A Control Hub job defines the pipeline to run and the Data Collectors that run the pipeline. When you start a job, Control Hub remotely runs the pipeline on the group of Data Collectors. To monitor the job statistics and metrics within Control Hub, you must configure the pipeline to write statistics to Control Hub or to another system." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/DPM/DPM_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/DPM/RegisterSDCwithDPM.html#concept_kc4_xyf_xw" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/DPM/PipelineManagement.html#concept_eq5_qjd_fx" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_h2q_mb5_xw" /><title>Pipeline Statistics</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_h2q_mb5_xw-d46e99939" />         
+      <meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Pipeline Statistics" /><meta name="abstract" content="A Control Hub job defines the pipeline to run and the Data Collectors or Edge Data Collectors (SDC Edge) that run the pipeline. When you start a job, Control Hub remotely runs the pipeline on the group of Data Collectors or Edge Data Collectors. To monitor the job statistics and metrics within Control Hub, you must configure the pipeline to write statistics to Control Hub or to another system." /><meta name="description" content="A Control Hub job defines the pipeline to run and the Data Collectors or Edge Data Collectors (SDC Edge) that run the pipeline. When you start a job, Control Hub remotely runs the pipeline on the group of Data Collectors or Edge Data Collectors. To monitor the job statistics and metrics within Control Hub, you must configure the pipeline to write statistics to Control Hub or to another system." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/DPM/DPM_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/DPM/RegisterSDCwithDPM.html#concept_kc4_xyf_xw" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/DPM/PipelineManagement.html#concept_eq5_qjd_fx" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_h2q_mb5_xw" /><title>Pipeline Statistics</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_h2q_mb5_xw-d46e105806" />         
         
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <!-- Latest compiled and minified Bootstrap CSS -->
@@ -81,7 +81,7 @@
    <li><span class="topicref" data-id="concept_ugp_kwf_xw"><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
    <li class="active"><span class="topicref" data-id="concept_h2q_mb5_xw"><span class="title"><a href="../../../datacollector/UserGuide/DPM/AggregatedStatistics.html#concept_h2q_mb5_xw">Pipeline Statistics</a><span class="wh-tooltip">
                
-               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">A <span class="ph">Control Hub</span>         job defines the pipeline to run and the <span class="ph">Data Collector</span>s that         run the pipeline. When you start a job, <span class="ph">Control Hub</span>         remotely runs the pipeline on the group of <span class="ph">Data Collector</span>s. To         monitor the job statistics and metrics within <span class="ph">Control Hub</span>, you         must configure the pipeline to write statistics to <span class="ph">Control Hub</span> or to         another system.
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">A <span class="ph">Control Hub</span>         job defines the pipeline to run and the <span class="ph">Data Collector</span>s or <span class="ph">Edge Data Collectors</span>             (<span class="ph">SDC Edge</span>)         that run the pipeline. When you start a job, <span class="ph">Control Hub</span>         remotely runs the pipeline on the group of <span class="ph">Data Collector</span>s or <span class="ph">Edge Data Collectors</span>.         To monitor the job statistics and metrics within <span class="ph">Control Hub</span>, you         must configure the pipeline to write statistics to <span class="ph">Control Hub</span> or to         another system.
                   
                </p>
                </span></span></span></li>
@@ -105,87 +105,88 @@
                         <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
                             <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
    <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
-   <li><span data-tocid="concept_hz3_5fk_fy-d46e557" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e804" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_l4q_flb_kr-d46e4414" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
-   <li><span data-tocid="concept_ylh_yyz_ky-d46e6481" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
-   <li><span data-tocid="concept_ejk_f1f_5v-d46e13895" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
-   <li><span data-tocid="concept_qsw_cjy_bt-d46e18499" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
-   <li><span data-tocid="concept_qn1_wn4_kq-d46e20154" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
-   <li><span data-tocid="concept_hdr_gyw_41b-d46e22651" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_l4q_flb_kr-d46e4946" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e7013" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e15233" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e20058" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e21738" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e24235" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e24466" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e64169" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
-   <li><span data-tocid="concept_agj_cfj_br-d46e77391" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
-   <li><span data-tocid="concept_umc_1lk_fx-d46e92871" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
-   <li><span data-tocid="concept_ugp_kwf_xw-d46e98772" class="topicref" data-id="concept_ugp_kwf_xw" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span><ul class="nav nav-list">
-         <li><span data-tocid="concept_l45_qwf_xw-d46e98794" class="topicref" data-id="concept_l45_qwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM.html#concept_l45_qwf_xw">Meet <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Control Hub</span></a><span class="wh-tooltip">
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e26050" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e66793" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e81156" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e97133" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e102895" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e104639" class="topicref" data-id="concept_ugp_kwf_xw" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_l45_qwf_xw-d46e104661" class="topicref" data-id="concept_l45_qwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM.html#concept_l45_qwf_xw">Meet <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Control Hub</span></a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"><span class="ph">StreamSets Control Hub</span><sup class="ph sup">TM</sup> is a central point of control for all of your dataflow pipelines. <span class="ph">Control Hub</span> allows         teams to build and execute large numbers of complex dataflows at scale. 
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_evb_3bs_bx-d46e99215" class="topicref" data-id="concept_evb_3bs_bx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/WorkingWithDPM.html#concept_evb_3bs_bx">Working with <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span></a><span class="wh-tooltip">
+         <li><span data-tocid="concept_evb_3bs_bx-d46e105082" class="topicref" data-id="concept_evb_3bs_bx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/WorkingWithDPM.html#concept_evb_3bs_bx">Working with <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span></a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_lry_34g_xw-d46e99241" class="topicref" data-id="concept_lry_34g_xw" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/OrgUserAccount.html#concept_lry_34g_xw">Request a <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span> Organization and User Account
+         <li><span data-tocid="concept_lry_34g_xw-d46e105108" class="topicref" data-id="concept_lry_34g_xw" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/OrgUserAccount.html#concept_lry_34g_xw">Request a <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span> Organization and User Account
                      </a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_kc4_xyf_xw-d46e99268" class="topicref" data-id="concept_kc4_xyf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/RegisterSDCwithDPM.html#concept_kc4_xyf_xw">Register Data Collector with <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span></a><span class="wh-tooltip">
+         <li><span data-tocid="concept_kc4_xyf_xw-d46e105135" class="topicref" data-id="concept_kc4_xyf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/RegisterSDCwithDPM.html#concept_kc4_xyf_xw">Register Data Collector with <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span></a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You must register a <span class="ph">Data Collector</span> to         work with <span class="ph">StreamSets Control Hub</span>.         When you register a <span class="ph">Data Collector</span>, <span class="ph">Data Collector</span>         generates an authentication token that it uses to issue authenticated requests to <span class="ph">Control Hub</span>.
                         
                      </p>
                      </span></span></span></li>
-         <li class="active"><span data-tocid="concept_h2q_mb5_xw-d46e99939" class="topicref" data-id="concept_h2q_mb5_xw" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/AggregatedStatistics.html#concept_h2q_mb5_xw">Pipeline Statistics</a><span class="wh-tooltip">
+         <li class="active"><span data-tocid="concept_h2q_mb5_xw-d46e105806" class="topicref" data-id="concept_h2q_mb5_xw" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/AggregatedStatistics.html#concept_h2q_mb5_xw">Pipeline Statistics</a><span class="wh-tooltip">
                      
-                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">A <span class="ph">Control Hub</span>         job defines the pipeline to run and the <span class="ph">Data Collector</span>s that         run the pipeline. When you start a job, <span class="ph">Control Hub</span>         remotely runs the pipeline on the group of <span class="ph">Data Collector</span>s. To         monitor the job statistics and metrics within <span class="ph">Control Hub</span>, you         must configure the pipeline to write statistics to <span class="ph">Control Hub</span> or to         another system.
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">A <span class="ph">Control Hub</span>         job defines the pipeline to run and the <span class="ph">Data Collector</span>s or <span class="ph">Edge Data Collectors</span>             (<span class="ph">SDC Edge</span>)         that run the pipeline. When you start a job, <span class="ph">Control Hub</span>         remotely runs the pipeline on the group of <span class="ph">Data Collector</span>s or <span class="ph">Edge Data Collectors</span>.         To monitor the job statistics and metrics within <span class="ph">Control Hub</span>, you         must configure the pipeline to write statistics to <span class="ph">Control Hub</span> or to         another system.
                         
                      </p>
                      </span></span></span><ul class="nav nav-list">
-               <li><span data-tocid="concept_pyb_2fc_jcb-d46e100124" class="topicref" data-id="concept_pyb_2fc_jcb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/AggregatedStatistics.html#concept_pyb_2fc_jcb">Pipeline Execution Mode</a><span class="wh-tooltip">
+               <li><span data-tocid="concept_pyb_2fc_jcb-d46e106000" class="topicref" data-id="concept_pyb_2fc_jcb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/AggregatedStatistics.html#concept_pyb_2fc_jcb">Pipeline Execution Mode</a><span class="wh-tooltip">
                            
                            <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Pipelines can run in standalone, cluster, or edge execution mode. Some pipeline         execution modes do not support all
                               statistics aggregator options.
                               
                            </p>
                            </span></span></span></li>
-               <li><span data-tocid="concept_abc_1w1_c1b-d46e100149" class="topicref" data-id="concept_abc_1w1_c1b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/AggregatedStatistics.html#concept_abc_1w1_c1b">Write Statistics Directly to <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span></a><span class="wh-tooltip">
+               <li><span data-tocid="concept_abc_1w1_c1b-d46e106025" class="topicref" data-id="concept_abc_1w1_c1b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/AggregatedStatistics.html#concept_abc_1w1_c1b">Write Statistics Directly to <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span></a><span class="wh-tooltip">
                            
-                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">When you write statistics directly to <span class="ph">Control Hub</span>, <span class="ph">Control Hub</span> does         not generate a system pipeline for the job. Instead, the <span class="ph">Data Collector</span>         directly sends the statistics to <span class="ph">Control Hub</span>.
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">When you write statistics directly to <span class="ph">Control Hub</span>, <span class="ph">Control Hub</span> does         not generate a system pipeline for the job. Instead, the <span class="ph">Data Collector</span> or <span class="ph">SDC Edge</span>         directly sends the statistics to <span class="ph">Control Hub</span>.
                               
                            </p>
                            </span></span></span></li>
-               <li><span data-tocid="concept_c53_pzp_yy-d46e100198" class="topicref" data-id="concept_c53_pzp_yy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/AggregatedStatistics.html#concept_c53_pzp_yy">Write Statistics to SDC RPC</a></span></span></li>
-               <li><span data-tocid="concept_wmv_cbb_fx-d46e100292" class="topicref" data-id="concept_wmv_cbb_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/AggregatedStatistics.html#concept_wmv_cbb_fx">Write Statistics to Kafka</a><span class="wh-tooltip">
+               <li><span data-tocid="concept_c53_pzp_yy-d46e106077" class="topicref" data-id="concept_c53_pzp_yy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/AggregatedStatistics.html#concept_c53_pzp_yy">Write Statistics to SDC RPC</a></span></span></li>
+               <li><span data-tocid="concept_wmv_cbb_fx-d46e106171" class="topicref" data-id="concept_wmv_cbb_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/AggregatedStatistics.html#concept_wmv_cbb_fx">Write Statistics to Kafka</a><span class="wh-tooltip">
                            
                            <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">When you write statistics to a Kafka cluster, <span class="ph">Data Collector</span>         effectively adds a Kafka Producer destination to the pipeline that you are configuring. <span class="ph">Control Hub</span>         automatically generates and runs a system pipeline for the job. The system pipeline reads         the statistics
                               from Kafka, and then aggregates and sends the statistics to <span class="ph">Control Hub</span>. 
                               
                            </p>
                            </span></span></span></li>
-               <li><span data-tocid="concept_em4_2bb_fx-d46e100525" class="topicref" data-id="concept_em4_2bb_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/AggregatedStatistics.html#concept_em4_2bb_fx">Write Statistics to Kinesis Streams</a><span class="wh-tooltip">
+               <li><span data-tocid="concept_em4_2bb_fx-d46e106404" class="topicref" data-id="concept_em4_2bb_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/AggregatedStatistics.html#concept_em4_2bb_fx">Write Statistics to Kinesis Streams</a><span class="wh-tooltip">
                            
                            <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"> When you write statistics to Amazon Kinesis Streams, <span class="ph">Data Collector</span>         effectively adds a Kinesis Producer destination to the pipeline that you are configuring.             <span class="ph">Control Hub</span>         automatically generates and runs a system pipeline for the job. The system pipeline reads         the statistics
                               from Kinesis Streams, and then aggregates and sends the statistics to <span class="ph">Control Hub</span>. 
                               
                            </p>
                            </span></span></span></li>
-               <li><span data-tocid="concept_qh5_v5t_mbb-d46e100849" class="topicref" data-id="concept_qh5_v5t_mbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/AggregatedStatistics.html#concept_qh5_v5t_mbb">Write Statistics to MapR Streams</a><span class="wh-tooltip">
+               <li><span data-tocid="concept_qh5_v5t_mbb-d46e106728" class="topicref" data-id="concept_qh5_v5t_mbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/AggregatedStatistics.html#concept_qh5_v5t_mbb">Write Statistics to MapR Streams</a><span class="wh-tooltip">
                            
                            <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">When you write statistics to MapR Streams, <span class="ph">Data Collector</span>         effectively adds a MapR Streams Producer destination to the pipeline that you are         configuring. <span class="ph">Control Hub</span>         automatically generates and runs a system pipeline for the job. The system pipeline reads         the statistics
                               from MapR Streams, and then aggregates and sends the statistics to <span class="ph">Control Hub</span>. 
                               
                            </p>
                            </span></span></span></li>
-               <li><span data-tocid="task_lcd_ng5_xw-d46e101263" class="topicref" data-id="task_lcd_ng5_xw" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/AggregatedStatistics.html#task_lcd_ng5_xw">Configuring a Pipeline to Write Statistics</a><span class="wh-tooltip">
+               <li><span data-tocid="task_lcd_ng5_xw-d46e107142" class="topicref" data-id="task_lcd_ng5_xw" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/AggregatedStatistics.html#task_lcd_ng5_xw">Configuring a Pipeline to Write Statistics</a><span class="wh-tooltip">
                            
                            <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can configure a pipeline to write statistics<span class="ph"> after the <span class="ph">Data Collector</span>             has been registered with <span class="ph">Control Hub</span></span>.
                               
@@ -193,18 +194,18 @@
                            </span></span></span></li>
             </ul>
          </li>
-         <li><span data-tocid="concept_eq5_qjd_fx-d46e101427" class="topicref" data-id="concept_eq5_qjd_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/PipelineManagement.html#concept_eq5_qjd_fx">Pipeline Management with <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span></a><span class="wh-tooltip">
+         <li><span data-tocid="concept_eq5_qjd_fx-d46e107306" class="topicref" data-id="concept_eq5_qjd_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/PipelineManagement.html#concept_eq5_qjd_fx">Pipeline Management with <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span></a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">After you register a <span class="ph">Data Collector</span> with             <span class="ph">StreamSets Control Hub</span>,         you can manage how the pipelines work with <span class="ph">Control Hub</span>.
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_hrn_zz3_fx-d46e101932" class="topicref" data-id="concept_hrn_zz3_fx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPMConfiguration.html#concept_hrn_zz3_fx"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span> Configuration File
+         <li><span data-tocid="concept_hrn_zz3_fx-d46e107811" class="topicref" data-id="concept_hrn_zz3_fx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPMConfiguration.html#concept_hrn_zz3_fx"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span> Configuration File
                      </a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_ldb_sr5_cx-d46e101958" class="topicref" data-id="concept_ldb_sr5_cx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/UnregisterSDCwithDPM.html#concept_ldb_sr5_cx">Unregister Data Collector from <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span></a><span class="wh-tooltip">
+         <li><span data-tocid="concept_ldb_sr5_cx-d46e107837" class="topicref" data-id="concept_ldb_sr5_cx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/UnregisterSDCwithDPM.html#concept_ldb_sr5_cx">Unregister Data Collector from <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Control Hub</span></a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can unregister a <span class="ph">Data Collector</span> from             <span class="ph">StreamSets Control Hub</span>         when you no longer want to use that <span class="ph">Data Collector</span>         installation with <span class="ph">Control Hub</span>. 
                         
@@ -212,49 +213,49 @@
                      </span></span></span></li>
       </ul>
    </li>
-   <li><span data-tocid="concept_xxd_f5r_kx-d46e102096" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e108040" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_fjj_zcf_2w-d46e106011" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
-   <li><span data-tocid="concept_kgt_pnr_4cb-d46e108837" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
-   <li><span data-tocid="concept_wwq_gxc_py-d46e109636" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e111954" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e114780" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e115579" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_fyf_gkq_4bb-d46e110218" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html">Edge Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_wr1_ktz_bt-d46e111818" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_fpz_5r4_vs-d46e112299" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_jjk_23z_sq-d46e113641" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
-   <li><span data-tocid="concept_pgk_brx_rr-d46e114610" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_gzw_tdm_p2b-d46e116161" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e116383" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e116865" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e118212" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e119181" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_asx_fdz_sq-d46e117238" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_asx_fdz_sq-d46e121809" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_o3l_dtr_5q-d46e118495" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
-   <li><span data-tocid="concept_yms_ftm_sq-d46e120286" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e123066" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e124857" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_nls_w1r_ks-d46e124782" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
-   <li><span data-tocid="concept_sh3_frm_tq-d46e125996" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_nls_w1r_ks-d46e129354" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e130567" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_xbx_rs1_tq-d46e129904" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
-   <li><span data-tocid="concept_jn1_nzb_kv-d46e129959" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e134475" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e134530" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_pvm_yt3_wq-d46e130119" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
-   <li><span data-tocid="concept_vcj_1ws_js-d46e131600" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e134690" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e136334" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_chv_vmj_wr-d46e131822" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_chv_vmj_wr-d46e136557" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
@@ -268,21 +269,24 @@
 
  
  <div class="body conbody"><p class="shortdesc">A <span class="ph">Control Hub</span>
-        job defines the pipeline to run and the <span class="ph">Data Collector</span>s that
-        run the pipeline. When you start a job, <span class="ph">Control Hub</span>
-        remotely runs the pipeline on the group of <span class="ph">Data Collector</span>s. To
-        monitor the job statistics and metrics within <span class="ph">Control Hub</span>, you
+        job defines the pipeline to run and the <span class="ph">Data Collector</span>s or <span class="ph">Edge Data Collectors</span>
+            (<span class="ph">SDC Edge</span>)
+        that run the pipeline. When you start a job, <span class="ph">Control Hub</span>
+        remotely runs the pipeline on the group of <span class="ph">Data Collector</span>s or <span class="ph">Edge Data Collectors</span>.
+        To monitor the job statistics and metrics within <span class="ph">Control Hub</span>, you
         must configure the pipeline to write statistics to <span class="ph">Control Hub</span> or to
         another system.</p>
 
-  <p class="p">When a job runs on a
-            single <span class="ph">Data Collector</span>,
-            you can simply configure the pipeline to write the statistics directly to <span class="ph">Control Hub</span>. By
-            default, pipelines are configured to write statistics directly to <span class="ph">Control Hub</span>.</p>
+  <p class="p">When a job for an edge
+            pipeline runs on <span class="ph">SDC Edge</span> or
+            when a job for a standalone pipeline runs on a single <span class="ph">Data Collector</span>,
+            you can configure the pipeline to write the statistics directly to <span class="ph">Control Hub</span>.</p>
 
-        <p class="p">When a job runs on multiple <span class="ph">Data Collector</span>s,
-            a remote pipeline instance runs on each of the <span class="ph">Data Collector</span>s.
-            To view aggregated statistics for the job within <span class="ph">Control Hub</span>,
+        <p class="p">When a job for a standalone pipeline runs on multiple <span class="ph">Data Collector</span>s, a
+            remote pipeline instance runs on each <span class="ph">Data Collector</span>.
+            When a job for a cluster pipeline runs on a single <span class="ph">Data Collector</span>,
+            remote pipeline instances run on multiple worker nodes in the cluster. To view
+            aggregated statistics for these jobs within <span class="ph">Control Hub</span>,
             you must configure the pipeline to write the statistics to one of the following
             systems:</p>
 
@@ -304,10 +308,11 @@
             Streams, or SDC RPC. Then, the system pipeline aggregates and sends the statistics to
                 <span class="ph">Control Hub</span>. </p>
 
-        <div class="note important"><span class="importanttitle">Important:</span> For a production environment, use a Kafka
-                  cluster, Amazon Kinesis Streams, or MapR Streams to aggregate statistics. Using
-                  SDC RPC to aggregate statistics is not highly available and might cause the loss
-                  of some data. It should be used for development purposes only.</div>
+        <div class="note important"><span class="importanttitle">Important:</span> For standalone and cluster pipelines in a
+                  production environment, use a Kafka cluster, Amazon Kinesis Streams, or MapR
+                  Streams to aggregate statistics. Using SDC RPC to aggregate statistics is not
+                  highly available and might cause the loss of some data. It should be used for
+                  development purposes only.</div>
 
         <p class="p">When a <span class="ph">Control Hub</span> job includes a pipeline that is configured to write statistics, you can view the
             statistics and metrics when you monitor the job in <span class="ph">Control Hub</span>:</p>
@@ -332,25 +337,25 @@
             options that it supports:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_pyb_2fc_jcb__table_ihb_ggc_jcb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d48560e367">Pipeline Execution Mode</th>
+                            <th class="entry cellrowborder" id="d51967e379">Pipeline Execution Mode</th>
 
-                            <th class="entry cellrowborder" id="d48560e370">Supported Statistics Aggregator Options</th>
+                            <th class="entry cellrowborder" id="d51967e382">Supported Statistics Aggregator Options</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d48560e367 ">Standalone</td>
+                            <td class="entry cellrowborder" headers="d51967e379 ">Standalone</td>
 
-                            <td class="entry cellrowborder" headers="d48560e370 ">All options are supported.</td>
+                            <td class="entry cellrowborder" headers="d51967e382 ">All options are supported.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d48560e367 "><a class="xref" href="../Cluster_Mode/ClusterPipelines.html#concept_hmh_kfn_1s" title="A cluster pipeline is a pipeline that runs in cluster execution mode. You can run a pipeline in standalone execution mode or cluster execution mode.">Cluster</a></td>
+                            <td class="entry cellrowborder" headers="d51967e379 "><a class="xref" href="../Cluster_Mode/ClusterPipelines.html#concept_hmh_kfn_1s" title="A cluster pipeline is a pipeline that runs in cluster execution mode. You can run a pipeline in standalone execution mode or cluster execution mode.">Cluster</a></td>
 
-                            <td class="entry cellrowborder" headers="d48560e370 ">
+                            <td class="entry cellrowborder" headers="d51967e382 ">
                                 <ul class="ul" id="concept_pyb_2fc_jcb__ul_dcj_vgc_jcb">
                                     <li class="li">Write to SDC RPC</li>
 
@@ -367,9 +372,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d48560e367 "><a class="xref" href="../Edge_Mode/EdgePipelines_Overview.html#concept_d4h_kkq_4bb" title="An edge pipeline is a pipeline that runs on an edge device with limited resources. Use edge pipelines to read data from the edge device or to receive data from another pipeline and then act on that data to control the edge device.">Edge</a></td>
+                            <td class="entry cellrowborder" headers="d51967e379 "><a class="xref" href="../Edge_Mode/EdgePipelines_Overview.html#concept_d4h_kkq_4bb" title="StreamSets Data Collector EdgeTM (SDC Edge) is a lightweight execution agent without a UI that runs pipelines on edge devices with limited resources. Use SDC Edge to read data from an edge device or to receive data from another pipeline and then act on that data to control an edge device.">Edge</a></td>
 
-                            <td class="entry cellrowborder" headers="d48560e370 ">
+                            <td class="entry cellrowborder" headers="d51967e382 ">
                                 <ul class="ul" id="concept_pyb_2fc_jcb__ul_ubg_3gc_jcb">
                                     <li class="li">Write to SCH Directly</li>
 
@@ -384,6 +389,14 @@
 </div>
 </div>
 
+        <div class="note important"><span class="importanttitle">Important:</span> For standalone and cluster
+                  pipelines in a production environment, use a Kafka cluster, Amazon Kinesis
+                  Streams, or MapR Streams to aggregate statistics. Writing statistics directly to
+                        <span class="ph">Control Hub</span> is supported
+                  only when a job with a standalone pipeline runs on a single <span class="ph">Data Collector</span>. Writing
+                  statistics to SDC RPC is not highly available and might cause the loss of some
+                  data. These methods should be used for development purposes only.</div>
+
     </div>
 
 </article>
@@ -392,15 +405,14 @@
 
  
  <div class="body conbody"><p class="shortdesc">When you write statistics directly to <span class="ph">Control Hub</span>, <span class="ph">Control Hub</span> does
-        not generate a system pipeline for the job. Instead, the <span class="ph">Data Collector</span>
+        not generate a system pipeline for the job. Instead, the <span class="ph">Data Collector</span> or <span class="ph">SDC Edge</span>
         directly sends the statistics to <span class="ph">Control Hub</span>.</p>
 
   <p class="p">Write statistics directly to <span class="ph">Control Hub</span>
-            when the job runs on a single <span class="ph">Data Collector</span>.
-            If the job runs on multiple <span class="ph">Data Collector</span>s,
-                <span class="ph">Control Hub</span>
-            can display the pipeline statistics for each individual <span class="ph">Data Collector</span>.
-            However, <span class="ph">Control Hub</span>
+            when the job for a standalone or edge pipeline runs on a single <span class="ph">Data Collector</span> or
+                <span class="ph">SDC Edge</span>. If the job runs on multiple <span class="ph">Data Collector</span>s or
+                <span class="ph">Edge Data Collectors</span>, <span class="ph">Control Hub</span>
+            can display the pipeline statistics for each individual pipeline. However, <span class="ph">Control Hub</span>
             cannot display an aggregated view of the statistics across all running pipeline
             instances.</p>
 
@@ -411,13 +423,21 @@
  <h2 class="title topictitle2" id="ariaid-title4">Write Statistics to SDC RPC</h2>
 
  <div class="body conbody">
-        <p class="p">When you write statistics to SDC RPC, <span class="ph">Data Collector</span>
+        <p class="p">When you write
+            statistics to SDC RPC, <span class="ph">Data Collector</span>
             effectively adds an SDC RPC destination to the pipeline that you are configuring. <span class="ph">Control Hub</span>
             automatically generates and runs a system pipeline for the job. The system pipeline is a
             pipeline with a Dev SDC RPC with Buffering origin that reads the statistics passed from
             the SDC RPC destination, and then aggregates and sends the statistics to <span class="ph">Control Hub</span>. </p>
 
-        <p class="p">Write statistics to SDC RPC when the job runs on multiple <span class="ph">Data Collector</span>s.</p>
+        <div class="p">
+            <div class="note important"><span class="importanttitle">Important:</span> For standalone and cluster pipelines in a
+                  production environment, use a Kafka cluster, Amazon Kinesis Streams, or MapR
+                  Streams to aggregate statistics. Using SDC RPC to aggregate statistics is not
+                  highly available and might cause the loss of some data. It should be used for
+                  development purposes only.</div>
+
+        </div>
 
         <div class="p">When you configure a pipeline to write statistics to an SDC RPC destination, you specify
             the following information: <ul class="ul" id="concept_c53_pzp_yy__ul_dzy_wm3_1z">
@@ -435,14 +455,6 @@
 
         <p class="p">You can optionally enable encryption to pass data securely and define retry and timeout
             properties.</p>
-
-  <div class="p">
-            <div class="note important"><span class="importanttitle">Important:</span> For a production environment, use a Kafka
-                  cluster, Amazon Kinesis Streams, or MapR Streams to aggregate statistics. Using
-                  SDC RPC to aggregate statistics is not highly available and might cause the loss
-                  of some data. It should be used for development purposes only.</div>
-
-        </div>
 
         <p class="p">For more information about SDC RPC pipelines, see <a class="xref" href="../RPC_Pipelines/SDC_RPCpipelines_title.html#concept_lnh_z3z_bt" title="Data Collector Remote Protocol Call pipelines, a.k.a. SDC RPC pipelines, are a set of StreamSets pipelines that pass data from one pipeline to another without writing to an intermediary system.">SDC RPC Pipeline Overview</a>.</p>
 
@@ -485,11 +497,8 @@
         automatically generates and runs a system pipeline for the job. The system pipeline reads
         the statistics from Kafka, and then aggregates and sends the statistics to <span class="ph">Control Hub</span>. </p>
 
-        <p class="p">Write statistics to a Kafka cluster when the
-            job runs on multiple <span class="ph">Data Collector</span>s.</p>
-
-        <p class="p">When you write statistics to a Kafka cluster, you define connection information and the
-            topic to write to. </p>
+        <p class="p">When you write statistics to a Kafka cluster,
+            you define connection information and the topic to write to. </p>
 
         <p class="p">You also configure the partition strategy. The pipeline passes data to partitions in the
             Kafka topic based on the partition strategy that you choose. You can add additional
@@ -584,10 +593,8 @@
         automatically generates and runs a system pipeline for the job. The system pipeline reads
         the statistics from Kinesis Streams, and then aggregates and sends the statistics to <span class="ph">Control Hub</span>. </p>
 
-        <p class="p">Write statistics to Kinesis Streams when the job runs on multiple <span class="ph">Data Collector</span>s.</p>
-
-        <p class="p">When you write statistics to Kinesis Streams, you define connection information and the
-            stream to write to.</p>
+        <p class="p">When you write statistics to Kinesis Streams,
+            you define connection information and the stream to write to.</p>
 
         <p class="p">You also configure the partition strategy. The pipeline passes data to partitions in
             Kinesis shards based on the partition strategy that you choose. You can add additional
@@ -672,13 +679,10 @@
         automatically generates and runs a system pipeline for the job. The system pipeline reads
         the statistics from MapR Streams, and then aggregates and sends the statistics to <span class="ph">Control Hub</span>. </p>
 
-        <p class="p">Write statistics to MapR Streams when the job
-            runs on multiple <span class="ph">Data Collector</span>s.</p>
-
-        <p class="p">When you write statistics to MapR Streams, you define the topic to write to. You also
-            configure the partition strategy. The pipeline passes data to partitions in the MapR
-            Streams topic based on the partition strategy that you choose. You can add additional
-            MapR Streams configuration properties as needed. </p>
+        <p class="p">When you write statistics to MapR Streams, you
+            define the topic to write to. You also configure the partition strategy. The pipeline
+            passes data to partitions in the MapR Streams topic based on the partition strategy that
+            you choose. You can add additional MapR Streams configuration properties as needed. </p>
 
      <p class="p">Before you can write statistics to MapR Streams, you must
                   perform additional steps to enable <span class="ph">Data Collector</span> to process MapR
@@ -783,19 +787,18 @@
                     <ul class="ul" id="task_lcd_ng5_xw__ul_ljj_brd_dx">
                         <li class="li">Discard - Discard the pipeline statistics. <span class="ph">Control Hub</span> cannot display statistics and metrics for the job.</li>
 
-                        <li class="li">Write to <span class="ph">Control Hub</span> Directly - Write the pipeline statistics directly to <span class="ph">Control Hub</span>. Use when the job runs on a single <span class="ph">Data Collector</span>.</li>
+                        <li class="li">Write to <span class="ph">Control Hub</span> Directly - Write the pipeline statistics directly to <span class="ph">Control Hub</span>. Use for edge pipelines that run on <span class="ph">SDC Edge</span>. Or use for development purposes when a job with a standalone
+                            pipeline runs on a single <span class="ph">Data Collector</span>.</li>
 
                         <li class="li">Write to SDC RPC - Write the pipeline statistics to an SDC RPC
-                            destination. Use when the job runs on multiple <span class="ph">Data Collector</span>s and for development purposes only.</li>
+                            destination. Use for development purposes only.</li>
 
-                        <li class="li">Write to Kafka - Write the pipeline statistics to a Kafka cluster. Use
-                            when the job runs on multiple <span class="ph">Data Collector</span>s.</li>
+                        <li class="li">Write to Kafka - Write the pipeline statistics to a Kafka cluster. </li>
 
                         <li class="li">Write to Kinesis - Write the pipeline statistics to Amazon Kinesis
-                            Streams. Use when the job runs on multiple <span class="ph">Data Collector</span>s.</li>
+                            Streams. </li>
 
-                        <li class="li">Write to MapR Streams - Write the pipeline statistics to MapR Streams.
-                            Use when the job runs on multiple <span class="ph">Data Collector</span>s.</li>
+                        <li class="li">Write to MapR Streams - Write the pipeline statistics to MapR Streams. </li>
 
                     </ul>
 
@@ -809,18 +812,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lcd_ng5_xw__table_jxy_4sq_yy" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d48560e1208">SDC RPC Properties</th>
+                                    <th class="entry cellrowborder" id="d51967e1227">SDC RPC Properties</th>
 
-                                    <th class="entry cellrowborder" id="d48560e1211">Description</th>
+                                    <th class="entry cellrowborder" id="d51967e1230">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d48560e1208 ">SDC RPC Connection</td>
+                                    <td class="entry cellrowborder" headers="d51967e1227 ">SDC RPC Connection</td>
 
-                                    <td class="entry cellrowborder" headers="d48560e1211 ">Host and port where the system pipeline runs. The host
+                                    <td class="entry cellrowborder" headers="d51967e1230 ">Host and port where the system pipeline runs. The host
                                         must be a machine with a registered <span class="ph">Data Collector</span> that runs a pipeline instance for the job. <p class="p">Use the
                                             following format: <code class="ph codeph">&lt;host&gt;:&lt;port&gt;</code>.
                                         </p>
@@ -829,9 +832,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d48560e1208 ">Retries per Batch</td>
+                                    <td class="entry cellrowborder" headers="d51967e1227 ">Retries per Batch</td>
 
-                                    <td class="entry cellrowborder" headers="d48560e1211 ">Number of times the SDC RPC destination tries to write a
+                                    <td class="entry cellrowborder" headers="d51967e1230 ">Number of times the SDC RPC destination tries to write a
                                         batch to the Dev SDC RPC with Buffering origin in the system
                                         pipeline. <p class="p">When the SDC RPC destination cannot write the
                                             batch within the configured number of retries, it fails
@@ -842,9 +845,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d48560e1208 ">Back off Period</td>
+                                    <td class="entry cellrowborder" headers="d51967e1227 ">Back off Period</td>
 
-                                    <td class="entry cellrowborder" headers="d48560e1211 ">Milliseconds to wait before retrying writing a batch to
+                                    <td class="entry cellrowborder" headers="d51967e1230 ">Milliseconds to wait before retrying writing a batch to
                                         the Dev SDC RPC with Buffering origin in the system
                                             pipeline.<p class="p">The value that you enter increases
                                             exponentially after each retry. For example, if you set
@@ -860,9 +863,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d48560e1208 ">SDC RPC ID</td>
+                                    <td class="entry cellrowborder" headers="d51967e1227 ">SDC RPC ID</td>
 
-                                    <td class="entry cellrowborder" headers="d48560e1211 ">User-defined ID to allow the SDC RPC destination to pass
+                                    <td class="entry cellrowborder" headers="d51967e1230 ">User-defined ID to allow the SDC RPC destination to pass
                                         statistics to the system pipeline. To avoid mixing
                                         statistics from different jobs, use a unique ID for each
                                             job.<p class="p">You cannot define an expression that evaluates to
@@ -872,9 +875,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d48560e1208 ">Connection Timeout (ms)</td>
+                                    <td class="entry cellrowborder" headers="d51967e1227 ">Connection Timeout (ms)</td>
 
-                                    <td class="entry cellrowborder" headers="d48560e1211 ">Milliseconds to establish a connection to the system
+                                    <td class="entry cellrowborder" headers="d51967e1230 ">Milliseconds to establish a connection to the system
                                         pipeline. <p class="p">The SDC RPC destination retries the connection
                                             based on the Retries Per Batch property.</p>
 <p class="p">Default
@@ -884,16 +887,16 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d48560e1208 ">TLS Enabled</td>
+                                    <td class="entry cellrowborder" headers="d51967e1227 ">TLS Enabled</td>
 
-                                    <td class="entry cellrowborder" headers="d48560e1211 ">Enables the secure transfer of data using TLS. </td>
+                                    <td class="entry cellrowborder" headers="d51967e1230 ">Enables the secure transfer of data using TLS. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d48560e1208 ">Truststore File</td>
+                                    <td class="entry cellrowborder" headers="d51967e1227 ">Truststore File</td>
 
-                                    <td class="entry cellrowborder" headers="d48560e1211 ">Truststore file for TLS. Required if the keystore file is
+                                    <td class="entry cellrowborder" headers="d51967e1230 ">Truststore file for TLS. Required if the keystore file is
                                         a self-signed certificate.<p class="p">Must be stored in the <span class="ph">Data Collector</span> resources directory,
                                                 <span class="ph filepath">$SDC_RESOURCES</span>, on each <span class="ph">Data Collector</span> machine that runs a pipeline instance for the job.
                                         </p>
@@ -902,9 +905,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d48560e1208 ">Truststore Password</td>
+                                    <td class="entry cellrowborder" headers="d51967e1227 ">Truststore Password</td>
 
-                                    <td class="entry cellrowborder" headers="d48560e1211 ">Password for the truststore file.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_lcd_ng5_xw__d127e4830">To
+                                    <td class="entry cellrowborder" headers="d51967e1230 ">Password for the truststore file.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_lcd_ng5_xw__d129e4905">To
                         secure sensitive information such as usernames and passwords, you can use
                               <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
 </td>
@@ -912,9 +915,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d48560e1208 ">Read Timeout (ms)</td>
+                                    <td class="entry cellrowborder" headers="d51967e1227 ">Read Timeout (ms)</td>
 
-                                    <td class="entry cellrowborder" headers="d48560e1211 ">Milliseconds to wait for the Dev SDC RPC with Buffering
+                                    <td class="entry cellrowborder" headers="d51967e1230 ">Milliseconds to wait for the Dev SDC RPC with Buffering
                                         origin in the system pipeline to read data from a batch.
                                             <p class="p">The SDC RPC destination retries the write based on
                                             the Retries Per Batch property.</p>
@@ -925,18 +928,18 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d48560e1208 ">Use Compression</td>
+                                    <td class="entry cellrowborder" headers="d51967e1227 ">Use Compression</td>
 
-                                    <td class="entry cellrowborder" headers="d48560e1211 ">Enables the SDC RPC destination to use compression to
+                                    <td class="entry cellrowborder" headers="d51967e1230 ">Enables the SDC RPC destination to use compression to
                                         pass data to the Dev SDC RPC with Buffering origin in the
                                         system pipeline. Enabled by default. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d48560e1208 ">Verify Host in Server Certificate</td>
+                                    <td class="entry cellrowborder" headers="d51967e1227 ">Verify Host in Server Certificate</td>
 
-                                    <td class="entry cellrowborder" headers="d48560e1211 ">Verifies the host in the keystore file on the <span class="ph">Data Collector</span> machine that runs the system pipeline. </td>
+                                    <td class="entry cellrowborder" headers="d51967e1230 ">Verifies the host in the keystore file on the <span class="ph">Data Collector</span> machine that runs the system pipeline. </td>
 
                                 </tr>
 
@@ -953,18 +956,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lcd_ng5_xw__table_i2g_jwd_dx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d48560e1407">Kafka Properties</th>
+                                    <th class="entry cellrowborder" id="d51967e1426">Kafka Properties</th>
 
-                                    <th class="entry cellrowborder" id="d48560e1410">Description</th>
+                                    <th class="entry cellrowborder" id="d51967e1429">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                        <td class="entry cellrowborder" headers="d48560e1407 ">Broker URI</td>
+                                        <td class="entry cellrowborder" headers="d51967e1426 ">Broker URI</td>
 
-                                        <td class="entry cellrowborder" headers="d48560e1410 ">Connection string for the Kafka broker. Use the
+                                        <td class="entry cellrowborder" headers="d51967e1429 ">Connection string for the Kafka broker. Use the
                                             following format:
                                                 <code class="ph codeph">&lt;host&gt;:&lt;port&gt;</code>.<p class="p">To ensure a
                                                 connection, enter a comma-separated list of
@@ -974,16 +977,16 @@
                                     </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d48560e1407 ">Runtime Topic Resolution </td>
+                                    <td class="entry cellrowborder" headers="d51967e1426 ">Runtime Topic Resolution </td>
 
-                                    <td class="entry cellrowborder" headers="d48560e1410 ">Do not use at this time. </td>
+                                    <td class="entry cellrowborder" headers="d51967e1429 ">Do not use at this time. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d48560e1407 ">Topic</td>
+                                    <td class="entry cellrowborder" headers="d51967e1426 ">Topic</td>
 
-                                    <td class="entry cellrowborder" headers="d48560e1410 ">Topic to use. To avoid mixing statistics from different
+                                    <td class="entry cellrowborder" headers="d51967e1429 ">Topic to use. To avoid mixing statistics from different
                                         jobs, use a unique topic name for each job.<p class="p">You cannot
                                             define an expression that evaluates to the topic name.
                                         </p>
@@ -992,10 +995,10 @@
                                 </tr>
 
                                 <tr>
-                                        <td class="entry cellrowborder" headers="d48560e1407 ">Partition Strategy <a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
-                                                <img class="image" id="task_lcd_ng5_xw__d1326e9749" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                        <td class="entry cellrowborder" headers="d51967e1426 ">Partition Strategy <a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
+                                                <img class="image" id="task_lcd_ng5_xw__d1392e9983" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                        <td class="entry cellrowborder" headers="d48560e1410 ">Strategy to use to write to partitions:<ul class="ul" id="task_lcd_ng5_xw__d1326e9753">
+                                        <td class="entry cellrowborder" headers="d51967e1429 ">Strategy to use to write to partitions:<ul class="ul" id="task_lcd_ng5_xw__d1392e9987">
                                                 <li class="li">Round Robin - Takes turns writing to different
                                                   partitions.</li>
 
@@ -1017,9 +1020,9 @@
                                     </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d48560e1407 ">Partition Expression </td>
+                                    <td class="entry cellrowborder" headers="d51967e1426 ">Partition Expression </td>
 
-                                    <td class="entry cellrowborder" headers="d48560e1410 ">Expression to use when using the expression partition
+                                    <td class="entry cellrowborder" headers="d51967e1429 ">Expression to use when using the expression partition
                                             strategy.<p class="p">Define the expression to evaluate to the
                                             partition where you want statistics written. Partition
                                             numbers start with 0.</p>
@@ -1031,9 +1034,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d48560e1407 ">Kafka Configuration</td>
+                                    <td class="entry cellrowborder" headers="d51967e1426 ">Kafka Configuration</td>
 
-                                    <td class="entry cellrowborder" headers="d48560e1410 ">Additional Kafka properties to use. Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
+                                    <td class="entry cellrowborder" headers="d51967e1429 ">Additional Kafka properties to use. Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                             <span class="ph uicontrol">Add</span> icon and define the Kafka
                                         property name and value.<p class="p">Use the property names and values
                                             as expected by Kafka. Do not use the broker.list
@@ -1043,9 +1046,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d48560e1407 ">ZooKeeper URI</td>
+                                    <td class="entry cellrowborder" headers="d51967e1426 ">ZooKeeper URI</td>
 
-                                    <td class="entry cellrowborder" headers="d48560e1410 ">Connection string for the ZooKeeper of the Kafka cluster.
+                                    <td class="entry cellrowborder" headers="d51967e1429 ">Connection string for the ZooKeeper of the Kafka cluster.
                                         Use the following format:
                                             <code class="ph codeph">&lt;host&gt;:&lt;port&gt;</code>. <p class="p">To use a
                                             ZooKeeper quorum, enter a comma-separated list.
@@ -1071,19 +1074,19 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lcd_ng5_xw__table_kh3_kls_dx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d48560e1561">Kinesis Properties</th>
+                                    <th class="entry cellrowborder" id="d51967e1580">Kinesis Properties</th>
 
-                                    <th class="entry cellrowborder" id="d48560e1564">Description</th>
+                                    <th class="entry cellrowborder" id="d51967e1583">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d48560e1561 ">Access Key ID <a class="xref" href="AggregatedStatistics.html#concept_m3j_2kb_fx" title="When the pipeline writes aggregated statistics to Amazon Kinesis Streams, it must pass credentials to Amazon Web Services."><img class="image" id="task_lcd_ng5_xw__image_ekt_x9g_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry cellrowborder" headers="d51967e1580 ">Access Key ID <a class="xref" href="AggregatedStatistics.html#concept_m3j_2kb_fx" title="When the pipeline writes aggregated statistics to Amazon Kinesis Streams, it must pass credentials to Amazon Web Services."><img class="image" id="task_lcd_ng5_xw__image_ekt_x9g_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry cellrowborder" headers="d48560e1564 ">
+                                    <td class="entry cellrowborder" headers="d51967e1583 ">
         <p class="p">AWS access key ID.</p>
 
         <p class="p">Required when not using IAM roles with IAM instance profile credentials.</p>
@@ -1093,10 +1096,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d48560e1561 ">Secret Access Key <a class="xref" href="AggregatedStatistics.html#concept_m3j_2kb_fx" title="When the pipeline writes aggregated statistics to Amazon Kinesis Streams, it must pass credentials to Amazon Web Services."><img class="image" id="task_lcd_ng5_xw__image_ekt_x6g_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry cellrowborder" headers="d51967e1580 ">Secret Access Key <a class="xref" href="AggregatedStatistics.html#concept_m3j_2kb_fx" title="When the pipeline writes aggregated statistics to Amazon Kinesis Streams, it must pass credentials to Amazon Web Services."><img class="image" id="task_lcd_ng5_xw__image_ekt_x6g_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry cellrowborder" headers="d48560e1564 ">
+                                    <td class="entry cellrowborder" headers="d51967e1583 ">
         <p class="p">AWS secret access key. </p>
 
         <p class="p">Required when not using IAM roles with IAM instance profile credentials. </p>
@@ -1106,24 +1109,24 @@
                                 </tr>
 
                                 <tr>
-      <td class="entry cellrowborder" headers="d48560e1561 ">Region</td>
+      <td class="entry cellrowborder" headers="d51967e1580 ">Region</td>
 
-      <td class="entry cellrowborder" headers="d48560e1564 ">Amazon Web Services region that hosts the Kinesis cluster.</td>
+      <td class="entry cellrowborder" headers="d51967e1583 ">Amazon Web Services region that hosts the Kinesis cluster.</td>
 
      </tr>
 
                                 <tr>
-      <td class="entry cellrowborder" headers="d48560e1561 ">Endpoint</td>
+      <td class="entry cellrowborder" headers="d51967e1580 ">Endpoint</td>
 
-      <td class="entry cellrowborder" headers="d48560e1564 ">Endpoint to connect to when you select Other for the region. Enter the endpoint
+      <td class="entry cellrowborder" headers="d51967e1583 ">Endpoint to connect to when you select Other for the region. Enter the endpoint
        name.</td>
 
      </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d48560e1561 ">Stream Name</td>
+                                    <td class="entry cellrowborder" headers="d51967e1580 ">Stream Name</td>
 
-                                    <td class="entry cellrowborder" headers="d48560e1564 ">Kinesis stream name. To avoid mixing statistics from
+                                    <td class="entry cellrowborder" headers="d51967e1583 ">Kinesis stream name. To avoid mixing statistics from
                                         different jobs, use a unique stream name for each job.<p class="p">You
                                             cannot define an expression that evaluates to the stream
                                             name. </p>
@@ -1132,9 +1135,9 @@
                                 </tr>
 
                                 <tr>
-      <td class="entry cellrowborder" headers="d48560e1561 ">Partitioning Strategy</td>
+      <td class="entry cellrowborder" headers="d51967e1580 ">Partitioning Strategy</td>
 
-      <td class="entry cellrowborder" headers="d48560e1564 ">Strategy to write data to Kinesis shards:<ul class="ul" id="task_lcd_ng5_xw__d1327e1458">
+      <td class="entry cellrowborder" headers="d51967e1583 ">Strategy to write data to Kinesis shards:<ul class="ul" id="task_lcd_ng5_xw__d1393e1458">
         <li class="li">Random - Generates a random partition key.</li>
 
         <li class="li">
@@ -1148,18 +1151,18 @@
      </tr>
 
                                 <tr>
-      <td class="entry cellrowborder" headers="d48560e1561 ">Partition Expression</td>
+      <td class="entry cellrowborder" headers="d51967e1580 ">Partition Expression</td>
 
-      <td class="entry cellrowborder" headers="d48560e1564 ">Expression to generate the partition key used to pass data to different shards. <p class="p">Use
+      <td class="entry cellrowborder" headers="d51967e1583 ">Expression to generate the partition key used to pass data to different shards. <p class="p">Use
         for the expression partition strategy. </p>
 </td>
 
      </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d48560e1561 ">Kinesis Producer Configuration</td>
+                                    <td class="entry cellrowborder" headers="d51967e1580 ">Kinesis Producer Configuration</td>
 
-                                    <td class="entry cellrowborder" headers="d48560e1564 ">Additional Kinesis properties.<p class="p">When you add a
+                                    <td class="entry cellrowborder" headers="d51967e1583 ">Additional Kinesis properties.<p class="p">When you add a
                                             configuration property, enter the exact property name
                                             and the value. The pipeline does not validate the
                                             property names or values.</p>
@@ -1180,25 +1183,25 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lcd_ng5_xw__table_z2j_315_mbb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d48560e1715">MapR Streams Properties</th>
+                                    <th class="entry cellrowborder" id="d51967e1734">MapR Streams Properties</th>
 
-                                    <th class="entry cellrowborder" id="d48560e1718">Description</th>
+                                    <th class="entry cellrowborder" id="d51967e1737">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d48560e1715 ">Runtime Topic Resolution </td>
+                                    <td class="entry cellrowborder" headers="d51967e1734 ">Runtime Topic Resolution </td>
 
-                                    <td class="entry cellrowborder" headers="d48560e1718 ">Do not use at this time. </td>
+                                    <td class="entry cellrowborder" headers="d51967e1737 ">Do not use at this time. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d48560e1715 ">Topic</td>
+                                    <td class="entry cellrowborder" headers="d51967e1734 ">Topic</td>
 
-                                    <td class="entry cellrowborder" headers="d48560e1718 ">Topic to use. To avoid mixing statistics from different
+                                    <td class="entry cellrowborder" headers="d51967e1737 ">Topic to use. To avoid mixing statistics from different
                                         jobs, use a unique topic name for each job.<p class="p">You cannot
                                             define an expression that evaluates to the topic name.
                                         </p>
@@ -1207,10 +1210,10 @@
                                 </tr>
 
                                 <tr>
-                                        <td class="entry cellrowborder" headers="d48560e1715 ">Partition Strategy <a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
-                                                <img class="image" id="task_lcd_ng5_xw__d1326e9749" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                        <td class="entry cellrowborder" headers="d51967e1734 ">Partition Strategy <a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
+                                                <img class="image" id="task_lcd_ng5_xw__d1392e9983" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                        <td class="entry cellrowborder" headers="d48560e1718 ">Strategy to use to write to partitions:<ul class="ul" id="task_lcd_ng5_xw__d1326e9753">
+                                        <td class="entry cellrowborder" headers="d51967e1737 ">Strategy to use to write to partitions:<ul class="ul" id="task_lcd_ng5_xw__d1392e9987">
                                                 <li class="li">Round Robin - Takes turns writing to different
                                                   partitions.</li>
 
@@ -1232,9 +1235,9 @@
                                     </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d48560e1715 ">Partition Expression </td>
+                                    <td class="entry cellrowborder" headers="d51967e1734 ">Partition Expression </td>
 
-                                    <td class="entry cellrowborder" headers="d48560e1718 ">Expression to use when using the expression partition
+                                    <td class="entry cellrowborder" headers="d51967e1737 ">Expression to use when using the expression partition
                                             strategy.<p class="p">Define the expression to evaluate to the
                                             partition where you want statistics written. Partition
                                             numbers start with 0.</p>
@@ -1246,9 +1249,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d48560e1715 ">MapR Streams Configuration</td>
+                                    <td class="entry cellrowborder" headers="d51967e1734 ">MapR Streams Configuration</td>
 
-                                    <td class="entry cellrowborder" headers="d48560e1718 ">Additional configuration properties to use. Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
+                                    <td class="entry cellrowborder" headers="d51967e1737 ">Additional configuration properties to use. Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                             <span class="ph uicontrol">Add</span> icon and define the MapR
                                         Streams property name and value.<p class="p">Use the property names
                                             and values as expected by MapR Streams. You can use MapR

@@ -1,0 +1,1171 @@
+
+<!DOCTYPE html
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link>        
+      <meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="TensorFlow Evaluator" /><meta name="abstract" content="The TensorFlow Evaluator processor uses a TensorFlow machine learning model to generate predictions or classifications of data. The TensorFlow Evaluator processor is a Technology Preview feature. It is not meant for use in production." /><meta name="description" content="The TensorFlow Evaluator processor uses a TensorFlow machine learning model to generate predictions or classifications of data. The TensorFlow Evaluator processor is a Technology Preview feature. It is not meant for use in production." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Processors/Processors_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Processors/StreamSelector.html#concept_tqv_t5r_wq" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Processors/ValueReplacer.html#concept_o5k_dmf_zq" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_otg_csh_z2b" /><title>TensorFlow Evaluator</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_otg_csh_z2b-d46e79405" />         
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018042310" />
+        
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+        
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018042310" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+        
+        
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+        
+        
+        
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+                    
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+                    
+                </div>
+                
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+                
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+                
+                
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+        
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref" data-id="concept_yjl_nc5_jq"><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li class="active"><span class="topicref" data-id="concept_otg_csh_z2b"><span class="title"><a href="../../../datacollector/UserGuide/Processors/TensorFlow.html#concept_otg_csh_z2b">TensorFlow Evaluator</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The TensorFlow Evaluator processor uses a TensorFlow machine learning model to         generate predictions or classifications
+                  of data. The TensorFlow Evaluator processor <span class="ph">is a <a href="../../../datacollector/UserGuide/Pipeline_Design/TechPreview.html#concept_prl_qfv_gfb" class="xref">Technology Preview</a> feature. It is not meant for use in                         production.</span></p>
+               </span></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+  
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Processors/StreamSelector.html#concept_tqv_t5r_wq" title="Stream Selector"></a></span>  
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Processors/ValueReplacer.html#concept_o5k_dmf_zq" title="Value Replacer (Deprecated)"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+                    
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e804" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e4946" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e7013" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e15233" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e20058" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e21738" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e24235" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e26050" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e66793" class="topicref" data-id="concept_yjl_nc5_jq" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_hpr_twm_jq-d46e66815" class="topicref" data-id="concept_hpr_twm_jq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_overview.html#concept_hpr_twm_jq">Processors</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ofb_svm_5bb-d46e66839" class="topicref" data-id="concept_ofb_svm_5bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Aggregator.html#concept_ofb_svm_5bb">Aggregator</a></span></span></li>
+         <li><span data-tocid="concept_ujj_spy_kv-d46e67636" class="topicref" data-id="concept_ujj_spy_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Base64Decoder.html#concept_ujj_spy_kv">Base64 Field Decoder</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Base64 Field Decoder decodes Base64 encoded data to binary data. Use the processor         to decode Base64 encoded data
+                        before evaluating data in the field.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_wtr_mpy_kv-d46e67693" class="topicref" data-id="concept_wtr_mpy_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Base64Encoder.html#concept_wtr_mpy_kv">Base64 Field Encoder</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Base64 Field Encoder encodes binary data using Base64. Use the processor to encode         binary data that must be sent
+                        over channels that expect ASCII data.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_xw3_4xk_r1b-d46e67750" class="topicref" data-id="concept_xw3_4xk_r1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/DataParser.html#concept_xw3_4xk_r1b">Data Parser</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Data Parser processor allows you to parse supported data formats embedded in a         field. You can parse NetFlow embedded
+                        in a byte array field or syslog messages embedded in a         string field. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_nlz_k3v_gfb-d46e67849" class="topicref" data-id="concept_nlz_k3v_gfb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/DatabricksML.html#concept_nlz_k3v_gfb">Databricks ML Evaluator</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Databricks ML Evaluator processor uses Spark-trained machine learning models to         generate evaluations, scoring,
+                        or classifications of data. This processor <span class="ph">is a <a href="../../../datacollector/UserGuide/Pipeline_Design/TechPreview.html#concept_prl_qfv_gfb" class="xref">Technology Preview</a> feature. It is not meant for use in                         production.</span>     
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ez5_pvf_wbb-d46e67915" class="topicref" data-id="concept_ez5_pvf_wbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Delay.html#concept_ez5_pvf_wbb">Delay</a></span></span></li>
+         <li><span data-tocid="concept_zm2_pp3_wq-d46e67969" class="topicref" data-id="concept_zm2_pp3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Expression.html#concept_zm2_pp3_wq">Expression Evaluator</a></span></span></li>
+         <li><span data-tocid="concept_njn_3kk_fx-d46e68179" class="topicref" data-id="concept_njn_3kk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldFlattener.html#concept_njn_3kk_fx">Field Flattener</a></span></span></li>
+         <li><span data-tocid="concept_ivv_c3k_wq-d46e68327" class="topicref" data-id="concept_ivv_c3k_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldHasher.html#concept_ivv_c3k_wq">Field Hasher</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Field Hasher uses an algorithm to encode data. Use Field Hasher to encode         highly-sensitive data. For example,
+                        you might use Field Hasher to encode social security or         credit card numbers.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_hjc_t4k_wq-d46e68548" class="topicref" data-id="concept_hjc_t4k_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldMasker.html#concept_hjc_t4k_wq">Field Masker</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Field Masker masks string values based on the selected mask type. You can use     variable-length, fixed-length, custom,
+                        or regular expression masks. Custom masks can reveal part     of the string value.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_pgm_tsl_gt-d46e68650" class="topicref" data-id="concept_pgm_tsl_gt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldMerger.html#concept_pgm_tsl_gt">Field Merger</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Field Merger merges one or more fields in a record to a different location in the   record. Use only for records with
+                        a list or map structure. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_krp_5fv_vy-d46e68707" class="topicref" data-id="concept_krp_5fv_vy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldOrder.html#concept_krp_5fv_vy">Field Order</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Field Order processor orders fields in a map or list-map field and outputs the         fields into a list-map or list
+                        root field. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ekg_313_qw-d46e68809" class="topicref" data-id="concept_ekg_313_qw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/ListPivoter.html#concept_ekg_313_qw">Field Pivoter</a></span></span></li>
+         <li><span data-tocid="concept_jdd_blr_wq-d46e68908" class="topicref" data-id="concept_jdd_blr_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldRemover.html#concept_jdd_blr_wq">Field Remover</a></span></span></li>
+         <li><span data-tocid="concept_vyv_zsg_ht-d46e68962" class="topicref" data-id="concept_vyv_zsg_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldRenamer.html#concept_vyv_zsg_ht">Field Renamer</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Use the Field Renamer to rename fields in a record. You can specify individual fields to         rename or use regular expressions
+                        to rename sets of fields. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_rw4_2d3_4cb-d46e69067" class="topicref" data-id="concept_rw4_2d3_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldReplacer.html#concept_rw4_2d3_4cb">Field Replacer</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Field Replacer replaces values in fields with nulls or with new values. Use the         Field Replacer to update values
+                        or to replace invalid values.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_vlj_vph_yq-d46e69287" class="topicref" data-id="concept_vlj_vph_yq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldSplitter.html#concept_vlj_vph_yq">Field Splitter</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Field Splitter splits string data based on a regular expression and passes the   separated data to new fields. Use the
+                        Field Splitter to split complex string values into logical   components. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_is3_zkp_wq-d46e69501" class="topicref" data-id="concept_is3_zkp_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldTypeConverter.html#concept_is3_zkp_wq">Field Type Converter</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Field Type Converter processor converts the data types of fields to compatible data     types. You might use the processor
+                        to convert the data types of fields before performing     calculations. You can also use the processor to change the scale
+                        of decimal data.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_o3b_t1k_yx-d46e69658" class="topicref" data-id="concept_o3b_t1k_yx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldZip.html#concept_o3b_t1k_yx">Field Zip</a></span></span></li>
+         <li><span data-tocid="concept_fch_fc3_ms-d46e69868" class="topicref" data-id="concept_fch_fc3_ms" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/GeoIP.html#concept_fch_fc3_ms">Geo IP</a></span></span></li>
+         <li><span data-tocid="concept_ldh_sct_gv-d46e70151" class="topicref" data-id="concept_ldh_sct_gv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Groovy.html#concept_ldh_sct_gv">Groovy Evaluator</a></span></span></li>
+         <li><span data-tocid="concept_mnj_zhq_bw-d46e71090" class="topicref" data-id="concept_mnj_zhq_bw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HBaseLookup.html#concept_mnj_zhq_bw">HBase Lookup</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The HBase Lookup processor performs key-value lookups in HBase and passes the lookup         values to fields. Use the HBase
+                        Lookup to enrich records with additional data.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_rz5_nft_zv-d46e71474" class="topicref" data-id="concept_rz5_nft_zv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HiveMetadata.html#concept_rz5_nft_zv">Hive Metadata</a></span></span></li>
+         <li><span data-tocid="concept_ghx_ypr_fw-d46e72556" class="topicref" data-id="concept_ghx_ypr_fw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HTTPClient.html#concept_ghx_ypr_fw">HTTP Client</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_n2p_jgf_lr-d46e73824" class="topicref" data-id="concept_n2p_jgf_lr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JavaScript.html#concept_n2p_jgf_lr">JavaScript Evaluator</a></span></span></li>
+         <li><span data-tocid="concept_ysc_ccy_hw-d46e74630" class="topicref" data-id="concept_ysc_ccy_hw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JDBCLookup.html#concept_ysc_ccy_hw">JDBC Lookup</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The JDBC Lookup processor uses a JDBC connection to perform lookups in a database         table and pass the lookup values
+                        to fields. Use the JDBC Lookup to enrich records with         additional data.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_qbx_lcy_hw-d46e75005" class="topicref" data-id="concept_qbx_lcy_hw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JDBCTee.html#concept_qbx_lcy_hw">JDBC Tee</a></span></span></li>
+         <li><span data-tocid="concept_jmg_hw1_h1b-d46e75215" class="topicref" data-id="concept_jmg_hw1_h1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JSONGenerator.html#concept_jmg_hw1_h1b">JSON Generator</a></span></span></li>
+         <li><span data-tocid="concept_bs1_4t3_yq-d46e75271" class="topicref" data-id="concept_bs1_4t3_yq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JSONParser.html#concept_bs1_4t3_yq">JSON Parser</a></span></span></li>
+         <li><span data-tocid="concept_a1h_lkf_lr-d46e75328" class="topicref" data-id="concept_a1h_lkf_lr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Jython.html#concept_a1h_lkf_lr">Jython Evaluator</a></span></span></li>
+         <li><span data-tocid="concept_a1x_3wl_p1b-d46e76134" class="topicref" data-id="concept_a1x_3wl_p1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/KuduLookup.html#concept_a1x_3wl_p1b">Kudu Lookup</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Kudu Lookup processor performs lookups in a Kudu table and passes the lookup         values to fields. Use the Kudu Lookup
+                        to enrich records with additional data.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ulm_qdq_fs-d46e76503" class="topicref" data-id="concept_ulm_qdq_fs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/LogParser.html#concept_ulm_qdq_fs">Log Parser</a></span></span></li>
+         <li><span data-tocid="concept_wnr_wlv_gfb-d46e76602" class="topicref" data-id="concept_wnr_wlv_gfb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/MLeap.html#concept_wnr_wlv_gfb">MLeap Evaluator</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MLeap Evaluator processor uses machine learning models stored in MLeap format to         generate evaluations, scoring,
+                        or classifications of data. This processor <span class="ph">is a <a href="../../../datacollector/UserGuide/Pipeline_Design/TechPreview.html#concept_prl_qfv_gfb" class="xref">Technology Preview</a> feature. It is not meant for use in                         production.</span>     
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_rrp_t4w_2fb-d46e76665" class="topicref" data-id="concept_rrp_t4w_2fb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/MongoDBLookup.html#concept_rrp_t4w_2fb">MongoDB Lookup</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MongoDB Lookup processor performs lookups in MongoDB and passes all values from         the returned document to a new
+                        list-map field in the record. Use the MongoDB Lookup         processor to enrich records with additional data.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_r3s_3fv_gfb-d46e77135" class="topicref" data-id="concept_r3s_3fv_gfb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/PMML.html#concept_r3s_3fv_gfb">PMML Evaluator</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The PMML Evaluator processor uses a machine learning model stored in the Predictive         Model Markup Language (PMML) format
+                        to generate evaluations, scoring, or classifications of         data. This processor <span class="ph">is a <a href="../../../datacollector/UserGuide/Pipeline_Design/TechPreview.html#concept_prl_qfv_gfb" class="xref">Technology Preview</a> feature. It is not meant for use in                         production.</span></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_lcp_ssh_qcb-d46e77197" class="topicref" data-id="concept_lcp_ssh_qcb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JDBCMetadata.html#concept_lcp_ssh_qcb">PostgreSQL Metadata</a></span></span></li>
+         <li><span data-tocid="concept_z3m_v52_zq-d46e77482" class="topicref" data-id="concept_z3m_v52_zq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/RDeduplicator.html#concept_z3m_v52_zq">Record Deduplicator</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Record Deduplicator evaluates records for duplicate data and routes data to two         streams -  one for unique records
+                        and one for duplicate records. Use the Record Deduplicator         to discard duplicate data or route duplicate data through
+                        different processing logic. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ng3_lpr_pv-d46e77584" class="topicref" data-id="concept_ng3_lpr_pv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/RedisLookup.html#concept_ng3_lpr_pv">Redis Lookup</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Redis Lookup processor performs key-value lookups in Redis and passes the lookup         values to fields. Use the Redis
+                        Lookup to enrich records with additional data.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_k23_3rk_yx-d46e77744" class="topicref" data-id="concept_k23_3rk_yx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/SalesforceLookup.html#concept_k23_3rk_yx">Salesforce Lookup</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Salesforce Lookup processor performs lookups in a Salesforce object and passes         the lookup values to fields. Use
+                        the Salesforce Lookup to enrich records with additional         data.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_rfz_ks3_x1b-d46e78033" class="topicref" data-id="concept_rfz_ks3_x1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/SchemaGenerator.html#concept_rfz_ks3_x1b">Schema Generator</a></span></span></li>
+         <li><span data-tocid="concept_cpx_1lm_zx-d46e78243" class="topicref" data-id="concept_cpx_1lm_zx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Spark.html#concept_cpx_1lm_zx">Spark Evaluator</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Spark Evaluator performs custom processing within a pipeline based on a Spark         application that you develop.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_zh2_kfj_tdb-d46e78624" class="topicref" data-id="concept_zh2_kfj_tdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/SQLParser.html#concept_zh2_kfj_tdb">SQL Parser</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_aqz_t4r_pv-d46e79188" class="topicref" data-id="concept_aqz_t4r_pv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/StaticLookup.html#concept_aqz_t4r_pv">Static Lookup</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Static Lookup processor performs lookups of key-value pairs that are stored in local         memory and passes the lookup
+                        values to fields. Use the Static Lookup to store String values         in memory that the pipeline can look up at runtime
+                        to enrich records with additional         data.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_tqv_t5r_wq-d46e79248" class="topicref" data-id="concept_tqv_t5r_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/StreamSelector.html#concept_tqv_t5r_wq">Stream Selector</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Stream Selector passes data to streams based on conditions. Define a condition for     each stream of data that you want
+                        to create. The Stream Selector uses a default stream to pass     records that do not match user-defined conditions. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li class="active"><span data-tocid="concept_otg_csh_z2b-d46e79405" class="topicref" data-id="concept_otg_csh_z2b" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/TensorFlow.html#concept_otg_csh_z2b">TensorFlow Evaluator</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The TensorFlow Evaluator processor uses a TensorFlow machine learning model to         generate predictions or classifications
+                        of data. The TensorFlow Evaluator processor <span class="ph">is a <a href="../../../datacollector/UserGuide/Pipeline_Design/TechPreview.html#concept_prl_qfv_gfb" class="xref">Technology Preview</a> feature. It is not meant for use in                         production.</span></p>
+                     </span></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_qlq_jlh_bfb-d46e79506" class="topicref" data-id="concept_qlq_jlh_bfb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/TensorFlow.html#concept_qlq_jlh_bfb">Prerequisites</a></span></span></li>
+               <li><span data-tocid="concept_zvm_qtm_bfb-d46e79528" class="topicref" data-id="concept_zvm_qtm_bfb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/TensorFlow.html#concept_zvm_qtm_bfb">Evaluation Method</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The TensorFlow Evaluator processor can evaluate each record or evaluate the entire         batch at once. </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_xhj_bxm_bfb-d46e79608" class="topicref" data-id="concept_xhj_bxm_bfb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/TensorFlow.html#concept_xhj_bxm_bfb">Event Generation</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">When configured to evaluate the entire batch, the TensorFlow Evaluator processor can         generate events. The events contain
+                              the results of the prediction or classification made for         the batch. 
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_ahh_myh_bfb-d46e79726" class="topicref" data-id="concept_ahh_myh_bfb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/TensorFlow.html#concept_ahh_myh_bfb">Serving a TensorFlow Model</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">If you include a TensorFlow Evaluator processor in a microservice pipeline, you can         serve the TensorFlow model in
+                              the running pipeline.
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="task_fr5_gsh_z2b-d46e79802" class="topicref" data-id="task_fr5_gsh_z2b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/TensorFlow.html#task_fr5_gsh_z2b">Configuring a TensorFlow Evaluator</a></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_o5k_dmf_zq-d46e79885" class="topicref" data-id="concept_o5k_dmf_zq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/ValueReplacer.html#concept_o5k_dmf_zq">Value Replacer (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_nwg_rx4_l2b-d46e80167" class="topicref" data-id="concept_nwg_rx4_l2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/WholeFileTransformer.html#concept_nwg_rx4_l2b">Whole File Transformer</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Whole File Transformer processor transforms fully written Avro files to highly         efficient, columnar Parquet files.
+                        Use the Whole File Transformer in a pipeline that reads         Avro files as whole files and writes the transformed Parquet
+                        files as whole         files.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ck4_255_sv-d46e80999" class="topicref" data-id="concept_ck4_255_sv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/XMLFlattener.html#concept_ck4_255_sv">XML Flattener</a></span></span></li>
+         <li><span data-tocid="concept_dtt_q5q_k5-d46e81098" class="topicref" data-id="concept_dtt_q5q_k5" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/XMLParser.html#concept_dtt_q5q_k5">XML Parser</a></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e81156" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e97133" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e102895" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e104639" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e108040" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e111954" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e114780" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e115579" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_gzw_tdm_p2b-d46e116161" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e116383" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e116865" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e118212" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e119181" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e121809" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e123066" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e124857" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e129354" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e130567" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e134475" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e134530" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e134690" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e136334" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e136557" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+                    
+                    
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_otg_csh_z2b">
+    <h1 class="title topictitle1" id="ariaid-title1">TensorFlow Evaluator</h1>
+
+    
+    <div class="body conbody"><p class="shortdesc">The TensorFlow Evaluator processor uses a TensorFlow machine learning model to
+        generate predictions or classifications of data. The TensorFlow Evaluator processor <span class="ph">is a <a class="xref" href="../Pipeline_Design/TechPreview.html#concept_prl_qfv_gfb" title="Data Collector now includes certain new features and stages with the Technology Preview designation. Technology Preview functionality is available for use in development and testing, but is not meant for use in production.">Technology Preview</a> feature. It is not meant for use in
+                        production.</span></p>
+
+        <p class="p">Using the TensorFlow Evaluator processor, you
+            can design pipelines that read data and then generate predictions or classifications of
+            the data during the pipeline processing - producing data-driven insights in a timely
+            manner. For example, you can design pipelines that detect fraudulent transactions or
+            that perform natural language processing as data passes through the pipeline.</p>
+
+        <p class="p">To use the TensorFlow Evaluator processor, you first build and train the model in
+            TensorFlow. You then save the trained model to file and store the saved model directory
+            on the <span class="ph">Data Collector</span> or
+                <span class="ph">Data Collector Edge</span> (<span class="ph">SDC Edge</span>) machine that runs the pipeline. </p>
+
+        <p class="p">When you configure the TensorFlow Evaluator processor, you define the path to the saved
+            model stored on the <span class="ph">Data Collector</span> or
+                <span class="ph">SDC Edge</span> machine. You also define the input and output tensor information as configured during
+            the building and training of the model. </p>
+
+        <p class="p">You configure whether the processor evaluates each record or evaluates the entire batch
+            at once. When evaluating the entire batch, the processor writes the prediction or
+            classification results to events. </p>
+
+    </div>
+
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_qlq_jlh_bfb">
+    <h2 class="title topictitle2" id="ariaid-title2">Prerequisites</h2>
+
+    <div class="body conbody">
+        <p class="p">Before you configure a
+            TensorFlow Evaluator processor, complete the following prerequisites:</p>
+
+        <dl class="dl">
+            
+                <dt class="dt dlterm"> Build and train the model in TensorFlow</dt>
+
+                <dd class="dd">Build and train the model in TensorFlow. The processor uses the 1.10 TensorFlow
+                    client library and supports all TensorFlow versions.</dd>
+
+                <dd class="dd ddexpand">For a tutorial on building and training a TensorFlow model, see the <a class="xref" href="https://www.tensorflow.org/tutorials/" target="_blank">TensorFlow tutorials</a>. </dd>
+
+            
+            
+                <dt class="dt dlterm"> Save and store the trained model on the Data Collector or SDC Edge machine</dt>
+
+                <dd class="dd">Save the trained model to file in <a class="xref" href="https://www.tensorflow.org/guide/saved_model" target="_blank">SavedModel format</a>. When you save a model in
+                    SavedModel format, TensorFlow creates a directory consisting of the following
+                    subdirectories and
+                    files:<pre class="pre codeblock"><code>assets/
+assets.extra/
+variables/
+saved_model.pb</code></pre></dd>
+
+                <dd class="dd ddexpand">Store the complete SavedModel directory on the <span class="ph">Data Collector</span> or <span class="ph">SDC Edge</span> machine where you plan to run the pipeline. For <span class="ph">Data Collector</span>, StreamSets recommends storing the model directory in the <span class="ph">Data Collector</span> resources directory, $SDC_RESOURCES. For <span class="ph">SDC Edge</span>, store the directory in any location on the edge device.</dd>
+
+            
+        </dl>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title3" id="concept_zvm_qtm_bfb">
+    <h2 class="title topictitle2" id="ariaid-title3">Evaluation Method</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc">The TensorFlow Evaluator processor can evaluate each record or evaluate the entire
+        batch at once. </p>
+
+        <p class="p">Configure the
+            processor to use one of the following evaluation methods, based on the input that the
+            tensor expects: </p>
+
+        <dl class="dl">
+            
+                <dt class="dt dlterm">Evaluate each record</dt>
+
+                <dd class="dd">If the tensor requires one input to produce one output, configure the TensorFlow
+                    Evaluator processor to evaluate each record. By default, the processor evaluates
+                    each record, producing one output per record.</dd>
+
+                <dd class="dd ddexpand">
+                    <p class="p">The processor receives each record as one input, performs the tensor
+                        computations to predict or classify the data, and then produces one output.
+                        The output includes all original fields in the record plus an additional
+                        output field that includes the prediction or classification result. The
+                        output field is a map or list field containing a field for each output that
+                        you configure for the processor.</p>
+
+                    <div class="p">To evaluate each record, ensure that the following processor properties are
+                            cleared:<ul class="ul" id="concept_zvm_qtm_bfb__ul_a2p_dfm_bfb">
+                            <li class="li">On the <span class="keyword wintitle">General</span> tab, clear the
+                                    <span class="ph uicontrol">Produce Events</span> property.</li>
+
+                            <li class="li">On the <span class="keyword wintitle">TensorFlow</span> tab, clear the
+                                    <span class="ph uicontrol">Entire Batch</span> property.</li>
+
+                        </ul>
+</div>
+
+                </dd>
+
+            
+            
+                <dt class="dt dlterm">Evaluate the entire batch</dt>
+
+                <dd class="dd">If the tensor requires multiple inputs to produce one output, configure the
+                    TensorFlow Evaluator processor to evaluate the entire batch.</dd>
+
+                <dd class="dd ddexpand">The processor waits until it receives all records in the batch, performs the
+                    tensor computations to predict or classify the data, and then produces one
+                    output as an event for the entire batch. The processor output includes the
+                    original fields in each record. The event output includes the prediction or
+                    classification result.</dd>
+
+                <dd class="dd ddexpand">To evaluate the entire batch, ensure that the following processor properties are
+                        selected:<ul class="ul" id="concept_zvm_qtm_bfb__ul_umq_l5m_bfb">
+                        <li class="li">On the <span class="keyword wintitle">General</span> tab, select the <span class="ph uicontrol">Produce
+                                Events</span> property.</li>
+
+                        <li class="li">On the <span class="keyword wintitle">TensorFlow</span> tab, select the <span class="ph uicontrol">Entire
+                                Batch</span> property.</li>
+
+                    </ul>
+</dd>
+
+                <dd class="dd ddexpand">Then, connect the event stream from the TensorFlow Evaluator processor to a
+                    destination to store the prediction or classification result, as described in
+                        <a class="xref" href="TensorFlow.html#concept_xhj_bxm_bfb" title="When configured to evaluate the entire batch, the TensorFlow Evaluator processor can generate events. The events contain the results of the prediction or classification made for the batch.">Event Generation</a>.</dd>
+
+            
+        </dl>
+
+    </div>
+
+<article class="topic concept nested2" aria-labelledby="ariaid-title4" id="concept_t4g_g2m_bfb">
+    <h3 class="title topictitle3" id="ariaid-title4">Example: Each Record</h3>
+
+    
+    <div class="body conbody"><p class="shortdesc">In this example, we'll look at how to configure the TensorFlow Evaluator processor to
+        evaluate each record using the sample Iris classification model. </p>
+
+        <div class="p">The
+            model predicts the species of Iris flowers based on the size of their sepals and petals.
+            Each incoming record contains fields with petal and sepal measurements. The processor
+            predicts the species for each record, assigning one of the following long values to an
+            output field added to each record:<ul class="ul" id="concept_t4g_g2m_bfb__ul_gz5_nyn_bfb">
+                <li class="li">0 - Represents the Iris setosa species.</li>
+
+                <li class="li">1 - Represents the Iris versicolor species.</li>
+
+                <li class="li">2 - Represents the Iris virginica species.</li>
+
+            </ul>
+</div>
+
+        <p class="p">In this example, we'll create the following simple pipeline:</p>
+
+        <p class="p"><img class="image" id="concept_t4g_g2m_bfb__image_xfj_svn_bfb" src="../Graphics/TensorFlowEachRecord.png" height="107" width="657" /></p>
+
+        <p class="p">We just want to preview the TensorFlow Evaluator processor output in our example, so
+            we'll simply use the Trash destination. Feel free to use another destination of your
+            choice.</p>
+
+        <p class="p">Complete the following steps to configure the TensorFlow Evaluator processor to predict
+            the species of Iris flowers:</p>
+
+        <ol class="ol" id="concept_t4g_g2m_bfb__ol_ub2_xpn_bfb">
+            <li class="li">Download the sample Iris tensor model from the <a class="xref" href="https://github.com/streamsets/datacollector/tree/master/tensorflow-lib/src/test/resources" target="_blank">StreamSets Data Collector GitHub
+                    repository</a>, and the store the model in the <span class="ph">Data Collector</span>
+                resources directory, $SDC_RESOURCES. <div class="p">For
+                    example:<pre class="pre codeblock"><code>/var/lib/sdc-resources/iris_saved_model</code></pre></div>
+<p class="p">Because
+                    the sample Iris classification model has already been built and trained, we can
+                    skip that prerequisite for this example. For more information about how the
+                    model was built and trained, see <a class="xref" href="https://www.tensorflow.org/guide/premade_estimators" target="_blank">Premade Estimators</a> in the TensorFlow
+                    documentation.</p>
+</li>
+
+            <li class="li">Create a <span class="ph">Data Collector</span>
+                pipeline and add a Dev Raw Data Source origin.<div class="p">Add the following raw data to the
+                    origin, and then configure the origin to process the JSON data
+                    format:<pre class="pre codeblock"><code>{
+  "petalLength": 6.4,
+  "petalWidth": 2.8,
+  "sepalLength": 5.6,
+  "sepalWidth": 2.2
+}
+{
+  "petalLength": 5.0,
+  "petalWidth": 2.3,
+  "sepalLength": 3.3,
+  "sepalWidth": 1.0
+}
+{
+  "petalLength": 4.9,
+  "petalWidth": 2.5,
+  "sepalLength": 4.5,
+  "sepalWidth": 1.7
+}
+{
+  "petalLength": 4.9,
+  "petalWidth": 3.1,
+  "sepalLength": 1.5,
+  "sepalWidth": 0.1
+}</code></pre></div>
+</li>
+
+            <li class="li">The sample Iris model expects float data as input, so add a Field Type Converter
+                processor to the pipeline.<div class="p">On the <span class="keyword wintitle">Conversions</span> tab of the
+                    processor, set the conversion method to <span class="ph uicontrol">By Field Name</span>,
+                    and then configure the conversion properties as follows to convert all fields to
+                        float:<ul class="ul" id="concept_t4g_g2m_bfb__ul_irb_jsn_bfb">
+                        <li class="li"><span class="ph uicontrol">Fields to Convert</span> - /*</li>
+
+                        <li class="li"><span class="ph uicontrol">Conversion Type</span> - FLOAT</li>
+
+                    </ul>
+</div>
+</li>
+
+            <li class="li">Add a TensorFlow Evaluator processor to the pipeline.<p class="p">On the
+                        <span class="keyword wintitle">General</span> tab, ensure that <span class="ph uicontrol">Produce
+                        Events</span> is cleared because we need the processor to evaluate each
+                    record.</p>
+<div class="p">On the <span class="keyword wintitle">TensorFlow</span> tab, define the saved model
+                    path and model tags as follows: <ul class="ul" id="concept_t4g_g2m_bfb__ul_fgq_m24_bfb">
+                        <li class="li"><span class="ph uicontrol">Saved Model Path</span> - Enter the absolute path where
+                            you saved the model on the <span class="ph">Data Collector</span> machine. For example:
+                                <code class="ph codeph">/var/lib/sdc-resources/iris_saved_model</code>.</li>
+
+                        <li class="li"><span class="ph uicontrol">Model Tags</span> - serve</li>
+
+                    </ul>
+</div>
+<div class="p">Configure four input configurations with the following values:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_t4g_g2m_bfb__table_pjf_bxn_bfb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:20%" /><col style="width:20%" /><col style="width:20%" /><col style="width:20%" /><col style="width:20%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d488899e515">Operation</th>
+
+                                    <th class="entry cellrowborder" id="d488899e518">Index</th>
+
+                                    <th class="entry cellrowborder" id="d488899e521">Fields to Convert</th>
+
+                                    <th class="entry cellrowborder" id="d488899e524">Shape</th>
+
+                                    <th class="entry cellrowborder" id="d488899e527">Tensor Type</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d488899e515 ">PetalLength</td>
+
+                                    <td class="entry cellrowborder" headers="d488899e518 ">0</td>
+
+                                    <td class="entry cellrowborder" headers="d488899e521 ">/petalLength</td>
+
+                                    <td class="entry cellrowborder" headers="d488899e524 ">1</td>
+
+                                    <td class="entry cellrowborder" headers="d488899e527 ">FLOAT</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d488899e515 ">PetalWidth</td>
+
+                                    <td class="entry cellrowborder" headers="d488899e518 ">0</td>
+
+                                    <td class="entry cellrowborder" headers="d488899e521 ">/petalWidth</td>
+
+                                    <td class="entry cellrowborder" headers="d488899e524 ">1</td>
+
+                                    <td class="entry cellrowborder" headers="d488899e527 ">FLOAT</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d488899e515 ">SepalLength</td>
+
+                                    <td class="entry cellrowborder" headers="d488899e518 ">0</td>
+
+                                    <td class="entry cellrowborder" headers="d488899e521 ">/sepalLength</td>
+
+                                    <td class="entry cellrowborder" headers="d488899e524 ">1</td>
+
+                                    <td class="entry cellrowborder" headers="d488899e527 ">FLOAT</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d488899e515 ">SepalWidth</td>
+
+                                    <td class="entry cellrowborder" headers="d488899e518 ">0</td>
+
+                                    <td class="entry cellrowborder" headers="d488899e521 ">/sepalWidth</td>
+
+                                    <td class="entry cellrowborder" headers="d488899e524 ">1</td>
+
+                                    <td class="entry cellrowborder" headers="d488899e527 ">FLOAT</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+</div>
+<p class="p">For example, the first input configuration should look like
+                    this:</p>
+<p class="p"><img class="image" id="concept_t4g_g2m_bfb__image_i2w_fyn_bfb" src="../Graphics/TensorFlowEachRecordInputConfig.png" height="237" width="819" /></p>
+<div class="p">Configure two output
+                    configurations with the following values:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_t4g_g2m_bfb__table_gnk_kxn_bfb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:33.33333333333333%" /><col style="width:33.33333333333333%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d488899e628">Operation</th>
+
+                                    <th class="entry cellrowborder" id="d488899e631">Index</th>
+
+                                    <th class="entry cellrowborder" id="d488899e634">Tensor Type</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d488899e628 ">dnn/head/predictions/ExpandDims</td>
+
+                                    <td class="entry cellrowborder" headers="d488899e631 ">0</td>
+
+                                    <td class="entry cellrowborder" headers="d488899e634 ">FLOAT</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d488899e628 ">dnn/head/predictions/probabilities</td>
+
+                                    <td class="entry cellrowborder" headers="d488899e631 ">0</td>
+
+                                    <td class="entry cellrowborder" headers="d488899e634 ">FLOAT</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+</div>
+<p class="p">Ensure that <span class="ph uicontrol">Entire Batch</span> is cleared, and
+                    then leave the default value of /output for the <span class="ph uicontrol">Output
+                        Field</span>.</p>
+</li>
+
+            <li class="li">Finally, add a Trash destination to the pipeline.</li>
+
+        </ol>
+
+        <p class="p">When we run preview and view the output of the TensorFlow Evaluator processor, we can see
+            that each field in the record is passed through the processor untouched. The processor
+            generates an output map field for each record that contains the prediction results in
+            the two fields that we defined in the output configurations. As shown below, the
+            processor predicts the species of the first record to be 2, representing the Iris
+            virginica species:</p>
+
+        <p class="p"><img class="image" id="concept_t4g_g2m_bfb__image_pjt_vzn_bfb" src="../Graphics/TensorFlowEachRecordPreview.png" height="433" width="664" /></p>
+
+        <div class="p">To add to our example, we could add an Expression Evaluator processor following the
+            TensorFlow Evaluator processor to evaluate the prediction value of 0, 1, or 2 stored in
+            the output field and then create a new field with one of the following appropriate
+                values:<ul class="ul" id="concept_t4g_g2m_bfb__ul_fqm_lr4_bfb">
+                <li class="li">Iris setosa</li>
+
+                <li class="li">Iris versicolor</li>
+
+                <li class="li">Iris virginica</li>
+
+            </ul>
+</div>
+
+    </div>
+
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title5" id="concept_xhj_bxm_bfb">
+    <h2 class="title topictitle2" id="ariaid-title5">Event Generation</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc">When configured to evaluate the entire batch, the TensorFlow Evaluator processor can
+        generate events. The events contain the results of the prediction or classification made for
+        the batch. </p>
+
+        <div class="p"><div class="note important"><span class="importanttitle">Important:</span> Configure the TensorFlow Evaluator processor to generate events
+                only when the processor is configured to <a class="xref" href="TensorFlow.html#concept_zvm_qtm_bfb" title="The TensorFlow Evaluator processor can evaluate each record or evaluate the entire batch at once.">evaluate the entire
+                    batch</a>.</div>
+The TensorFlow Evaluator processor events can be
+            used in any logical way. For example: <ul class="ul" id="concept_xhj_bxm_bfb__ul_g1d_k1n_bfb">
+                <li class="li">With a destination to store event information.
+                                    <p class="p">For an example, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_ocb_nnl_px">Case Study: Event Storage</a>.</p>
+</li>
+
+                <li class="li">With <a class="xref" href="../Alerts/RulesAlerts_title.html#concept_tpm_rsk_zq" title="Data rules define the information that you want to see about the data that passes between stages. You can create data rules based on any link in the pipeline. You can also enable metrics and create alerts for data rules."> a data
+                        alert</a> to send notifications.<p class="p">You can configure data alerts on the
+                        event stream to notify upon reaching specified thresholds.</p>
+</li>
+
+            </ul>
+<span class="ph">For more information about dataflow
+                        triggers and the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>.</span>
+        </div>
+
+    </div>
+
+<article class="topic concept nested2" aria-labelledby="ariaid-title6" id="concept_a5j_pcn_bfb">
+    <h3 class="title topictitle3" id="ariaid-title6">Event Records</h3>
+
+    <div class="body conbody">
+        <div class="p">Event records generated by the
+            TensorFlow Evaluator processor have the following event-related record header
+            attributes. Record header attributes are stored as String values:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_a5j_pcn_bfb__table_brz_3gp_qx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                        <tr>
+                            <th class="entry cellrowborder" id="d488899e803">Record Header Attribute</th>
+
+                            <th class="entry cellrowborder" id="d488899e806">Description</th>
+
+                        </tr>
+
+                    </thead>
+<tbody class="tbody">
+                        <tr>
+                            <td class="entry cellrowborder" headers="d488899e803 ">sdc.event.type</td>
+
+                            <td class="entry cellrowborder" headers="d488899e806 ">Event type. Uses the following event type:<ul class="ul" id="concept_a5j_pcn_bfb__ul_m12_mgp_qx">
+                                    <li class="li">tensorflow-event - Contains the results of the prediction or
+                                        classification of the batch. </li>
+
+                                </ul>
+</td>
+
+                        </tr>
+
+                        <tr>
+       <td class="entry cellrowborder" headers="d488899e803 ">sdc.event.version</td>
+
+       <td class="entry cellrowborder" headers="d488899e806 ">An integer that indicates the version of the event record type.</td>
+
+      </tr>
+
+                        <tr>
+       <td class="entry cellrowborder" headers="d488899e803 ">sdc.event.creation_timestamp</td>
+
+       <td class="entry cellrowborder" id="concept_a5j_pcn_bfb__d133e2243" headers="d488899e806 ">Epoch timestamp when the stage created the event.
+       </td>
+
+      </tr>
+
+                    </tbody>
+</table>
+</div>
+</div>
+
+        <p class="p">The TensorFlow Evaluator processor generates a tensorflow-event record when the processor
+            completes processing all records in the batch. The event record is a Map field
+            containing a field for each output configuration that you define for the processor.</p>
+
+    </div>
+
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title7" id="concept_ahh_myh_bfb">
+    <h2 class="title topictitle2" id="ariaid-title7">Serving a TensorFlow Model</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc">If you include a TensorFlow Evaluator processor in a microservice pipeline, you can
+        serve the TensorFlow model in the running pipeline.</p>
+
+        <p class="p">When you serve a TensorFlow model, external clients can
+            use the model to perform computations. In a <a class="xref" href="../Microservice/Microservice_Title.html#concept_qfh_xdm_p2b" title="A microservice pipeline is a pipeline that creates a fine-grained service to perform a specific task.">microservice
+                pipeline</a>, a client makes a REST API call to the origin. The microservice
+            pipeline performs all processing - which can include the predictions or classifications
+            made by the TensorFlow Evaluator processor. The records with the TensorFlow prediction
+            or classification result are sent back to the microservice pipeline origin. The origin
+            then transmits JSON-formatted responses back to the originating REST API client.</p>
+
+    </div>
+
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title8" id="task_fr5_gsh_z2b">
+    <h2 class="title topictitle2" id="ariaid-title8">Configuring a TensorFlow Evaluator</h2>
+
+    <div class="body taskbody">
+        <section class="section context">
+            <p class="p">Configure a TensorFlow
+                Evaluator processor to use a TensorFlow machine learning model to generate
+                predictions or classifications of data. </p>
+
+            <p class="p">The TensorFlow Evaluator processor <span class="ph">is a <a class="xref" href="../Pipeline_Design/TechPreview.html#concept_prl_qfv_gfb" title="Data Collector now includes certain new features and stages with the Technology Preview designation. Technology Preview functionality is available for use in development and testing, but is not meant for use in production.">Technology Preview</a> feature. It is not meant for use in
+                        production.</span></p>
+
+        </section>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_fr5_gsh_z2b__table_vvw_s1h_cy" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d488899e944">General Property</th>
+
+                                    <th class="entry cellrowborder" id="d488899e947">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d488899e944 ">Name</td>
+
+                                    <td class="entry cellrowborder" headers="d488899e947 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d488899e944 ">Description</td>
+
+                                    <td class="entry cellrowborder" headers="d488899e947 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d488899e944 "><a class="xref" href="TensorFlow.html#concept_xhj_bxm_bfb" title="When configured to evaluate the entire batch, the TensorFlow Evaluator processor can generate events. The events contain the results of the prediction or classification made for the batch.">Produce Events</a></td>
+
+                                    <td class="entry cellrowborder" headers="d488899e947 ">Generates event records when
+                                        events occur. Use for event handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
+                                            <img class="image" id="task_fr5_gsh_z2b__d132e5816" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d488899e944 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_fr5_gsh_z2b__d132e5825" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d488899e947 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d488899e944 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_fr5_gsh_z2b__d132e5841" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d488899e947 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d488899e944 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_fr5_gsh_z2b__d132e5859" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d488899e947 ">Error record handling for the stage: <ul class="ul" id="task_fr5_gsh_z2b__d132e5863">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">TensorFlow</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_fr5_gsh_z2b__table_qqv_p34_bfb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d488899e1077">TensorFlow Property</th>
+
+                                    <th class="entry cellrowborder" id="d488899e1080">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d488899e1077 ">Saved Model Path</td>
+
+                                    <td class="entry cellrowborder" headers="d488899e1080 ">Absolute path to the saved TensorFlow model on the <span class="ph">Data Collector</span> or <span class="ph">SDC Edge</span> machine. <div class="p">For example, if you saved a model to the <span class="ph">Data Collector</span> resources directory, enter the following
+                                            path:<pre class="pre codeblock"><code>/var/lib/sdc-resources/my_saved_model</code></pre></div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d488899e1077 ">Model Tags</td>
+
+                                    <td class="entry cellrowborder" headers="d488899e1080 ">Tags applied to the TensorFlow model when the model was
+                                        built and trained.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d488899e1077 ">Input Configurations</td>
+
+                                    <td class="entry cellrowborder" headers="d488899e1080 ">Tensor input information configured during the building
+                                        and training of the model.<div class="p">Define one or more input
+                                            configurations, configuring the following properties for
+                                                each:<ul class="ul" id="task_fr5_gsh_z2b__ul_ut1_tl4_bfb">
+                                                <li class="li">Operation - Operation to perform on the
+                                                  inputs.</li>
+
+                                                <li class="li">Index - Position of this input in the matrix of
+                                                  inputs.</li>
+
+                                                <li class="li">Fields to Convert - Fields in the record to
+                                                  convert to tensor fields as required by the input
+                                                  operation.</li>
+
+                                                <li class="li">Shape - Number of elements in each
+                                                  dimension.</li>
+
+                                                <li class="li">Tensor Type - Data type of the tensor.</li>
+
+                                            </ul>
+</div>
+<p class="p">Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
+                                                <span class="ph uicontrol">Add</span> icon to define another
+                                            input configuration.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d488899e1077 ">Output Configurations</td>
+
+                                    <td class="entry cellrowborder" headers="d488899e1080 ">Tensor output information configured during the building
+                                        and training of the model.<div class="p">Define one or more output
+                                            configurations, configuring the following properties for
+                                                each:<ul class="ul" id="task_fr5_gsh_z2b__ul_yk1_1m4_bfb">
+                                                <li class="li">Operation - Operation to perform on the
+                                                  outputs.</li>
+
+                                                <li class="li">Index - Position of this output in the matrix of
+                                                  outputs.</li>
+
+                                                <li class="li">Tensor Type - Data type of the tensor.</li>
+
+                                            </ul>
+</div>
+<p class="p">Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
+                                                <span class="ph uicontrol">Add</span> icon to define another
+                                            output configuration.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d488899e1077 "><a class="xref" href="TensorFlow.html#concept_zvm_qtm_bfb" title="The TensorFlow Evaluator processor can evaluate each record or evaluate the entire batch at once.">Entire Batch</a></td>
+
+                                    <td class="entry cellrowborder" headers="d488899e1080 ">Evaluates the entire batch at once. Select when the
+                                        TensorFlow model requires many inputs to generate one
+                                        output. Clear when the TensorFlow model requires one input
+                                        to generate one output.<p class="p">Default is cleared.</p>
+<p class="p">If
+                                            selected, you must also configure the processor to <a class="xref" href="TensorFlow.html#concept_xhj_bxm_bfb" title="When configured to evaluate the entire batch, the TensorFlow Evaluator processor can generate events. The events contain the results of the prediction or classification made for the batch.">generate events</a> so that the processor
+                                            produces one output as an event for the entire batch.
+                                            The event output includes the prediction or
+                                            classification result.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d488899e1077 ">Output Field</td>
+
+                                    <td class="entry cellrowborder" headers="d488899e1080 ">If <a class="xref" href="TensorFlow.html#concept_zvm_qtm_bfb" title="The TensorFlow Evaluator processor can evaluate each record or evaluate the entire batch at once.">evaluating each record</a>, the output field for the
+                                        prediction or classification result. The processor adds the
+                                        output field to each record.</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+</article>
+</article></main></div>
+                        
+                        
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script>
+  </div>
+</nav>
+
+        
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+        
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+        
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
+</html>
