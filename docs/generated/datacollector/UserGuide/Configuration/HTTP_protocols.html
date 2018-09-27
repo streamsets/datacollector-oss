@@ -1,0 +1,871 @@
+
+<!DOCTYPE html
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="To secure communication within Data Collector , enable HTTPS for the following components: Data Collector Enable HTTPS for Data Collector to secure the communication to the Data Collector UI and REST ..." /><meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Enabling HTTPS" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Configuration/Config_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Configuration/RolesandPermissions.html#concept_k1r_prc_yy" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Configuration/DCConfig.html#concept_pq5_xjq_kr" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_xyp_lt4_cw" /><title>Enabling HTTPS</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_xyp_lt4_cw-d46e8307" />         
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018042310" />
+        
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+        
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018042310" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+        
+        
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+        
+        
+        
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+                    
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+                    
+                </div>
+                
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+                
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+                
+                
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+        
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref" data-id="concept_ylh_yyz_ky"><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li class="active"><span class="topicref" data-id="concept_xyp_lt4_cw"><span class="title"><a href="../../../datacollector/UserGuide/Configuration/HTTP_protocols.html#concept_xyp_lt4_cw">Enabling HTTPS</a></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+  
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Configuration/RolesandPermissions.html#concept_k1r_prc_yy" title="Roles and Permissions"></a></span>  
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Configuration/DCConfig.html#concept_pq5_xjq_kr" title="Data Collector Configuration"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+                    
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e804" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e4946" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e7013" class="topicref" data-id="concept_ylh_yyz_ky" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_dns_dvg_h5-d46e7035" class="topicref" data-id="concept_dns_dvg_h5" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Authentication.html#concept_dns_dvg_h5">User Authentication</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"><span class="ph">Data Collector</span>         can authenticate user accounts based on LDAP or files. Best practice is to use LDAP if your         organization
+                        has it. By default, <span class="ph">Data Collector</span> uses         file-based authentication.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_k1r_prc_yy-d46e8025" class="topicref" data-id="concept_k1r_prc_yy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/RolesandPermissions.html#concept_k1r_prc_yy">Roles and Permissions</a></span></span></li>
+         <li class="active"><span data-tocid="concept_xyp_lt4_cw-d46e8307" class="topicref" data-id="concept_xyp_lt4_cw" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/HTTP_protocols.html#concept_xyp_lt4_cw">Enabling HTTPS</a></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_tcv_5m5_52b-d46e8379" class="topicref" data-id="concept_tcv_5m5_52b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/HTTP_protocols.html#concept_tcv_5m5_52b">Prerequisites</a></span></span></li>
+               <li><span data-tocid="task_lch_xn5_52b-d46e8401" class="topicref" data-id="task_lch_xn5_52b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/HTTP_protocols.html#task_lch_xn5_52b">Step 1. Create Keystore Files</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Create a keystore file that includes each private key and public certificate pair         signed by the CA. A keystore is
+                              used to verify the identity of the client upon a request         from an SSL/TLS server.
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="task_hzm_ht5_52b-d46e8436" class="topicref" data-id="task_hzm_ht5_52b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/HTTP_protocols.html#task_hzm_ht5_52b">Step 2. Create a Truststore File</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">A truststore file contains certificates from trusted CAs that an SSL/TLS client uses         to verify the identity of an
+                              SSL/TLS server. 
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="task_mhn_j55_52b-d46e8481" class="topicref" data-id="task_mhn_j55_52b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/HTTP_protocols.html#task_mhn_j55_52b">Step 3. Configure Data Collector to Use HTTPS</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Modify the <span class="ph">Data Collector</span>         configuration file, <span class="ph filepath">sdc.properties</span>, to configure <span class="ph">Data Collector</span> to use         a secure port and your keystore file. If you created a custom truststore file or modified a         copy of
+                              the default Java truststore file, configure <span class="ph">Data Collector</span> to use         that truststore file.
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="task_wqf_c1w_52b-d46e8548" class="topicref" data-id="task_wqf_c1w_52b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/HTTP_protocols.html#task_wqf_c1w_52b">Step 4. Configure Cluster Pipelines to Use HTTPS</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">To enable HTTPS for cluster pipelines, configure the gateway and worker nodes in the         cluster to use HTTPS. If you
+                              do not run cluster pipelines, you can skip this         step.
+                              
+                           </p>
+                           </span></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_pq5_xjq_kr-d46e8614" class="topicref" data-id="concept_pq5_xjq_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/DCConfig.html#concept_pq5_xjq_kr">Data Collector Configuration</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can edit the <span class="ph">Data Collector</span>    configuration file, <code class="ph codeph">$SDC_CONF/sdc.properties</code>, to configure properties such as the host name and port     number and account information for email alerts. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_rng_qym_qr-d46e9920" class="topicref" data-id="concept_rng_qym_qr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr">Data Collector Environment Configuration</a></span></span></li>
+         <li><span data-tocid="concept_pdv_qlw_ft-d46e10765" class="topicref" data-id="concept_pdv_qlw_ft" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/ExternalLibs.html#concept_pdv_qlw_ft">Install External Libraries </a></span></span></li>
+         <li><span data-tocid="concept_pmc_jk1_1x-d46e11140" class="topicref" data-id="concept_pmc_jk1_1x" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/CustomStageLibraries.html#concept_pmc_jk1_1x">Custom Stage Libraries</a></span></span></li>
+         <li><span data-tocid="concept_bt1_bpj_r1b-d46e11236" class="topicref" data-id="concept_bt1_bpj_r1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/CredentialStores.html#concept_bt1_bpj_r1b">Credential Stores</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"><span class="ph">Data Collector</span>         pipeline stages communicate with external systems to read and write data. Many of these         external systems
+                        require credentials - user names or passwords - to access the data. When         you configure pipeline stages for these external
+                        systems, you define the credentials that         the stage uses to connect to the system.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_bmq_gl1_mw-d46e13899" class="topicref" data-id="concept_bmq_gl1_mw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Vault-Overview.html#concept_bmq_gl1_mw">Accessing Hashicorp Vault Secrets with Vault Functions (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_rg3_nxy_4cb-d46e13995" class="topicref" data-id="concept_rg3_nxy_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/PublishMetadata.html#concept_rg3_nxy_4cb">Working with Data Governance Tools</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can configure <span class="ph">Data Collector</span> to         integrate with data governance tools, giving you visibility into data movement - where the         data came from,
+                        where it’s going to, and who is interacting with it.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_jdj_4rg_1t-d46e15122" class="topicref" data-id="concept_jdj_4rg_1t" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/JMXMetrics-EnableExternalTools.html#concept_jdj_4rg_1t">Enabling External JMX Tools</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"><span class="ph">Data Collector</span>     uses JMX metrics to generate the graphical display of the status of a running pipeline. You can     provide the same
+                        JMX metrics to external tools if desired.
+                        
+                     </p>
+                     </span></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e15233" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e20058" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e21738" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e24235" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e26050" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e66793" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e81156" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e97133" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e102895" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e104639" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e108040" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e111954" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e114780" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e115579" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_gzw_tdm_p2b-d46e116161" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e116383" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e116865" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e118212" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e119181" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e121809" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e123066" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e124857" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e129354" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e130567" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e134475" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e134530" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e134690" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e136334" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e136557" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+                    
+                    
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_xyp_lt4_cw">
+ <h1 class="title topictitle1" id="ariaid-title1">Enabling HTTPS</h1>
+
+ <div class="body conbody">
+  <div class="p">To secure communication
+            within <span class="ph">Data Collector</span>,
+            enable HTTPS for the following components:<dl class="dl">
+                
+                    <dt class="dt dlterm">Data Collector</dt>
+
+                    <dd class="dd">Enable HTTPS for <span class="ph">Data Collector</span> to secure the communication to the <span class="ph">Data Collector</span> UI and REST API and to use the <span class="ph">Data Collector</span> as an <a class="xref" href="https://streamsets.com/documentation/controlhub/latest/help/controlhub/UserGuide/Pipelines/ConfigurePipelines_PDesigner.html#concept_ygv_l4c_ccb" target="_blank">authoring Data Collector</a> in the
+                            <span class="ph">Control Hub</span> Pipeline Designer. </dd>
+
+                    <dd class="dd ddexpand">For <span class="ph">Control Hub</span> cloud, an authoring <span class="ph">Data Collector</span> must use the HTTPS protocol because <span class="ph">Control Hub</span> cloud also uses the HTTPS protocol. For <span class="ph">Control Hub</span> on-premises, an authoring <span class="ph">Data Collector</span> must use the same protocol as the <span class="ph">Control Hub</span> on-premises installation. </dd>
+
+                
+                
+                    <dt class="dt dlterm">Cluster pipelines</dt>
+
+                    <dd class="dd">If you run cluster pipelines, enable HTTPS for cluster pipelines to secure
+                        the communication between the gateway and worker nodes in the cluster.</dd>
+
+                
+                
+                    <dt class="dt dlterm">Pipeline stages that connect to external systems</dt>
+
+                    <dd class="dd">During pipeline development, developers can enable specific stages to use
+                        SSL/TLS to secure the communication with an external system. For example, if
+                        designing a pipeline that writes to a Cassandra cluster enabled for HTTPS,
+                        the developer must configure the Cassandra destination to use SSL/TLS to
+                        connect to Cassandra.</dd>
+
+                    <dd class="dd ddexpand">For information about enabling HTTPS for pipeline stages, see <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_dd1_n3f_5z">SSL/TLS Configuration</a>.</dd>
+
+                
+            </dl>
+</div>
+
+        <p class="p">By default, <span class="ph">Data Collector</span> and
+            cluster pipelines use the HTTP protocol. <span class="ph">StreamSets</span>
+            recommends using HTTPS in a production environment. HTTPS requires SSL/TLS
+            certificates.</p>
+
+ </div>
+
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_tcv_5m5_52b">
+    <h2 class="title topictitle2" id="ariaid-title2">Prerequisites</h2>
+
+    <div class="body conbody">
+        <p class="p">Before you enable HTTPS for <span class="ph">Data Collector</span> and
+            cluster pipelines, complete the following requirements:</p>
+
+        <dl class="dl">
+            
+                <dt class="dt dlterm">Obtain access to OpenSSL and Java keytool </dt>
+
+                <dd class="dd">If you do not have keystore files that include SSL/TLS certificates signed by a
+                    certificate authority (CA), you can request certificates and create the keystore
+                    files using the following tools:<ul class="ul" id="concept_tcv_5m5_52b__ul_mq2_qld_r2b">
+                        <li class="li">OpenSSL - Use OpenSSL to create a Certificate Signing Request (CSR) that
+                            you send to the CA of your choice, as well as to create the keystore and
+                            truststore files. For more information, see the <a class="xref" href="https://www.openssl.org/docs/" target="_blank">OpenSSL documentation</a>. </li>
+
+                        <li class="li">Java keytool - You can also use Java keytool to create a CSR and to
+                            create keystore and truststore files. Java keytool is part of the Java
+                            Development Kit (JDK). For more information, see the <a class="xref" href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/keytool.html" target="_blank">keytool documentation</a>. </li>
+
+                    </ul>
+</dd>
+
+            
+            
+                <dt class="dt dlterm">Generate SSL/TLS certificate and private key pairs signed by a certificate
+                    authority (CA)</dt>
+
+                <dd class="dd">To enable HTTPS for <span class="ph">Data Collector</span>, generate a single private key and public certificate pair for <span class="ph">Data Collector</span>. <span class="ph">Data Collector</span> provides a self-signed certificate that you can use. However, web browsers
+                    generally issue a warning for self-signed certificates. StreamSets strongly
+                    recommends that you generate a key and certificate pair signed by a CA. </dd>
+
+                <dd class="dd ddexpand">To enable HTTPS for cluster pipelines, each worker node requires a certificate.
+                    You can generate multiple private key and public certificate pairs - one for
+                    each worker node. Or you can generate a single Subject Alternative Names (SAN)
+                    certificate valid for all of the worker nodes. <span class="ph">Data Collector</span> runs on the gateway node in the cluster, so the gateway node uses the same
+                    certificate that you generate for <span class="ph">Data Collector</span>.</dd>
+
+                <dd class="dd ddexpand">
+                    <div class="note important"><span class="importanttitle">Important:</span> Each signed certificate must include the fully qualified
+                        domain name (FQDN) for the <span class="ph">Data Collector</span> machine or worker node. </div>
+
+                </dd>
+
+                <dd class="dd ddexpand">To obtain a certificate from a trusted CA, you must provide proof that you are
+                    the owner of the domain name for which you are requesting the certificate. Use
+                    OpenSSL or keytool to generate a key pair and then submit a Certificate Signing
+                    Request (CSR) to the CA. The exact procedure depends on the CA that you choose
+                    to use - see the documentation provided by the CA.</dd>
+
+            
+        </dl>
+
+    </div>
+
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title3" id="task_lch_xn5_52b">
+    <h2 class="title topictitle2" id="ariaid-title3">Step 1. Create Keystore Files</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Create a keystore file that includes each private key and public certificate pair
+        signed by the CA. A keystore is used to verify the identity of the client upon a request
+        from an SSL/TLS server.</p>
+
+        <section class="section context">
+            <p class="p">To enable HTTPS for <span class="ph">Data Collector</span>, create a single keystore file for <span class="ph">Data Collector</span>.</p>
+
+            <p class="p">To enable HTTPS for cluster pipelines, each worker node requires a keystore file. If
+                you generated a unique certificate for each worker node, create a unique keystore
+                file for each of those certificates. Or if you generated a SAN certificate valid for
+                all of the worker nodes, create a single keystore file that all the worker nodes can
+                use. <span class="ph">Data Collector</span>
+                runs on the gateway node in the cluster, so the gateway node uses the same keystore
+                file that you create for <span class="ph">Data Collector</span>.</p>
+
+            <p class="p"><span class="ph">StreamSets</span> recommends creating keystores in the PKCS #12 (p12 file) format. In most cases, a
+                CA issues certificates in PEM format. Use OpenSSL to directly import the certificate
+                into a PKCS #12 keystore. </p>
+
+        </section>
+
+        <ol class="ol steps"><li class="li step stepexpand" id="task_lch_xn5_52b__step_createKeystore">
+                <span class="ph cmd">Use the following command to import the certificate and private key issued in
+                    PEM format to a PKCS #12 keystore for <span class="ph">Data Collector</span>:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock"><code>openssl pkcs12 -export -in &lt;PEM certificate&gt; -inkey &lt;private key&gt; -out &lt;keystore filename&gt; -name &lt;keystore name&gt; </code></pre>
+                    <p class="p"> You will be prompted to create a password for the keystore file. </p>
+
+                    <div class="p">For example, the following command converts the certificate
+                        sdc_company_com.pem and private key sdc_company_com.key to the PKCS #12
+                        keystore file named
+                        sdc_company_com.p12:<pre class="pre codeblock"><code>openssl pkcs12 -export -in sdc_company_com.pem -inkey sdc_company_com.key -out sdc_company_com.p12 -name sdc_company_com</code></pre></div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Store the <span class="ph">Data Collector</span> keystore file in the <span class="ph">Data Collector</span> configuration directory, <span class="ph filepath">$SDC_CONF</span>.</span>
+                <div class="itemgroup info">For example, for an RPM installation of <span class="ph">Data Collector</span>, we'd store our sdc_company_com.p12 keystore file in the following
+                    directory:<pre class="pre codeblock"><code>/etc/sdc/sdc_company_com.p12</code></pre></div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Store the <span class="ph">Data Collector</span> keystore password in the default password text file used by <span class="ph">Data Collector</span>, <span class="ph filepath">$SDC_CONF/keystore-password.txt</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If enabling HTTPS for cluster pipelines, repeat <a class="xref" href="HTTP_protocols.html#task_lch_xn5_52b__step_createKeystore">step 1</a> for
+                    each worker node in the cluster.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Store each worker keystore file in the same absolute location on each worker
+                    node in the cluster.</span>
+                <div class="itemgroup info">For example, if we generated worker keystore files named sdc_worker.p12, we'd
+                    store the files in the following directory on each worker
+                    node:<pre class="pre codeblock"><code>/opt/security/sdc_worker.p12</code></pre></div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Store the worker keystore password in a password text file in the same absolute
+                    location on each worker node in the cluster.</span>
+                <div class="itemgroup info">
+                    <div class="p">For example, we'd store the keystore-password.txt file in the following
+                        directory on each worker
+                        node:<pre class="pre codeblock"><code>/opt/security/keystore-password.txt</code></pre></div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title4" id="task_hzm_ht5_52b">
+    <h2 class="title topictitle2" id="ariaid-title4">Step 2. Create a Truststore File</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">A truststore file contains certificates from trusted CAs that an SSL/TLS client uses
+        to verify the identity of an SSL/TLS server. </p>
+
+        <section class="section context">
+            <div class="p"><span class="ph">Data Collector</span>
+                requires a truststore file to verify the identity of the following SSL/TLS
+                    servers:<ul class="ul" id="task_hzm_ht5_52b__ul_spv_jf1_z2b">
+                    <li class="li"><a class="xref" href="Authentication.html#task_wyf_kkw_ty">Secure LDAP server</a>
+                        when <span class="ph">Data Collector</span> is configured for secure LDAP authentication.</li>
+
+                    <li class="li"><a class="xref" href="https://streamsets.com/documentation/controlhub/latest/installhelp/controlhub/InstallationGuide/Install/EnableHTTPS.html" target="_blank">Control Hub on-premises installation
+                            enabled for HTTPS</a> when <span class="ph">Data Collector</span> is registered with <span class="ph">Control Hub</span> on-premises.</li>
+
+                    <li class="li">Worker node when <span class="ph">Data Collector</span> runs cluster pipelines enabled for HTTPS.</li>
+
+                </ul>
+</div>
+
+            <p class="p">If you've enabled HTTPS for cluster pipelines, worker nodes require a truststore file
+                to verify the identity of the gateway node where <span class="ph">Data Collector</span>
+                is installed.</p>
+
+            <p class="p">By default, <span class="ph">Data Collector</span>
+                and worker nodes use the default Java truststore file located in
+                    <span class="ph filepath">$JAVA_HOME/jre/lib/security/cacerts</span>. If your certificates
+                are signed by a trusted CA that is included in the default Java truststore file, you
+                do not need to create a truststore file for <span class="ph">Data Collector</span>
+                or worker nodes and can skip this step.</p>
+
+            <p class="p">If your certificates are signed by a private CA or not trusted by the default Java
+                truststore, you must create a custom truststore file or modify a copy of the default
+                Java truststore file to add the root and intermediate CA certificates to the <span class="ph">Data Collector</span>
+                and worker node truststore file. For example, if your organization generates its own
+                certificates, you must add the root and intermediate certificates for your
+                organization to the truststore file.</p>
+
+            <p class="p">You can create a single truststore file used by both <span class="ph">Data Collector</span>
+                and worker nodes. Or you can create separate truststore files. </p>
+
+            <p class="p">In these steps, we show how to modify a copy of the default truststore file to add an
+                additional CA to the list of trusted CAs. We assume that the same CA signed our
+                certificates used by <span class="ph">Data Collector</span>
+                and by each worker node in the cluster. If multiple CAs signed your certificates,
+                you'll need to add each CA to the truststore file.</p>
+
+            <p class="p">If you prefer to create a custom truststore file, see the <a class="xref" href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/keytool.html" target="_blank">keytool documentation</a>.</p>
+
+            <div class="p">You can create the following types of truststores for <span class="ph">Data Collector</span>
+                and worker nodes:<ul class="ul" id="task_hzm_ht5_52b__ul_old_kpt_r2b">
+                    <li class="li">Java keystore file (JKS)</li>
+
+                    <li class="li">PKCS #12 (p12 file)</li>
+
+                </ul>
+</div>
+
+        </section>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">Use the following command to set the JAVA_HOME environment variable:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock"><code>export JAVA_HOME=&lt;Java home directory&gt;</code></pre>
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the following command to set the SDC_CONF environment variable:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock"><code>export SDC_CONF=&lt;<span class="ph">Data Collector</span> configuration directory&gt;</code></pre>
+                    <p class="p">For example, for an RPM installation use:</p>
+
+                    <pre class="pre codeblock"><code>export SDC_CONF=/etc/sdc</code></pre>
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the following command to copy the default Java truststore file to the <span class="ph">Data Collector</span> configuration directory:</span>
+                <div class="itemgroup info">
+                    <div class="p">
+                        <pre class="pre codeblock"><code>cp "${JAVA_HOME}/jre/lib/security/cacerts" "${SDC_CONF}/truststore.jks"</code></pre>
+                    </div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the following keytool command to import the CA certificate into the
+                    truststore file:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock"><code>keytool -import -file &lt;CA certificate&gt; -trustcacerts -noprompt -alias &lt;CA alias&gt; -storepass &lt;password&gt; -keystore "${SDC_CONF}/truststore.jks"</code></pre>
+                    <div class="p">For
+                        example:<pre class="pre codeblock"><code>keytool -import -file  sdc_company_com.pem -trustcacerts -noprompt -alias MyCorporateCA -storepass changeit -keystore "${SDC_CONF}/truststore.jks"</code></pre></div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If you are enabling HTTPS for cluster pipelines, copy the modified truststore
+                    file to the same absolute location on each worker node in the cluster.</span>
+                <div class="itemgroup info">For example, we'd store our truststore.jks file in the following directory on
+                    each worker node:<pre class="pre codeblock"><code>/opt/security/truststore.jks</code></pre></div>
+                <div class="itemgroup info">
+                    <p class="p">Then store the truststore password in a password text file in the same
+                        absolute location on each worker node in the cluster.</p>
+
+                    <div class="p">For our example, we'd store the password in a file named
+                        truststore-password.txt in the following directory on each worker
+                        node:<pre class="pre codeblock"><code>/opt/security/truststore-password.txt</code></pre></div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title5" id="task_mhn_j55_52b">
+    <h2 class="title topictitle2" id="ariaid-title5">Step 3. Configure Data Collector to Use HTTPS</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Modify the <span class="ph">Data Collector</span>
+        configuration file, <span class="ph filepath">sdc.properties</span>, to configure <span class="ph">Data Collector</span> to use
+        a secure port and your keystore file. If you created a custom truststore file or modified a
+        copy of the default Java truststore file, configure <span class="ph">Data Collector</span> to use
+        that truststore file.</p>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">To define the secure port and keystore file, configure the following properties
+                    in the <span class="ph">Data Collector</span> configuration file, <span class="ph filepath">sdc.properties</span>:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mhn_j55_52b__table_knc_1g3_1bb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:66.66666666666666%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d45573e693"><span class="ph">Data Collector</span> HTTPS Property</th>
+
+                                    <th class="entry cellrowborder" id="d45573e698">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d45573e693 ">https.port</td>
+
+                                    <td class="entry cellrowborder" headers="d45573e698 ">Secure port number for <span class="ph">Data Collector</span>. For example, 18636.<p class="p">Any number besides -1 enables the
+                                            secure port number.</p>
+<div class="note note"><span class="notetitle">Note:</span> When both the HTTP and HTTPS
+                                            port properties are defined in the configuration file,
+                                            the HTTP port bounces to the HTTPS port. </div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d45573e693 ">https.keystore.path</td>
+
+                                    <td class="entry cellrowborder" headers="d45573e698 ">Path and name of the keystore file. Enter an absolute
+                                        path or a path relative to the $SDC_CONF directory.<p class="p">In our
+                                            example, we'd configure the property as follows:</p>
+<div class="p">
+                                            <pre class="pre codeblock"><code>https.keystore.path=sdc_company_com.p12</code></pre>
+                                        </div>
+<div class="p">
+                                            <div class="note note"><span class="notetitle">Note:</span> Default is keystore.jks in the $SDC_CONF directory
+                                                which provides a self-signed certificate that you
+                                                can use. However, <span class="ph">StreamSets</span> strongly recommends that you generate a
+                                                certificate signed by a trusted CA, as described in
+                                                  <a class="xref" href="HTTP_protocols.html#concept_tcv_5m5_52b">Prerequisites</a>.</div>
+
+                                        </div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d45573e693 ">https.keystore.password</td>
+
+                                    <td class="entry cellrowborder" headers="d45573e698 ">Path and name of the file that contains the password to
+                                        open the keystore file. Enter an absolute path or a path
+                                        relative to the $SDC_CONF directory.<div class="p">In our example, we
+                                            added the password to the default password text file
+                                            used by <span class="ph">Data Collector</span>. So we'd simply use the default property value as
+                                            follows:<pre class="pre codeblock"><code>https.keystore.password=@keystore-password.txt@</code></pre></div>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For an installation started as a service on operating systems that use the
+                    systemd init system, edit
+                        the <span class="ph filepath">/etc/systemd/system/sdc.socket</span> file to use the same
+                    secure port that you just defined.</span>
+                <div class="itemgroup info">
+                    <div class="p">For example, if you defined the <span class="ph">Data Collector</span> secure port number as 18636, modify these lines as
+                        follows:<pre class="pre codeblock"><code>[Socket]
+ListenStream=18636
+ListenStream=0.0.0.0:18636</code></pre></div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the following command to reload the systemd manager configuration:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock"><code>systemctl daemon-reload</code></pre>
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If you created a custom truststore file or modified a copy of the default Java
+                    truststore file for <span class="ph">Data Collector</span> to use, define the following options in the SDC_JAVA_OPTS environment
+                    variable:</span>
+                <div class="itemgroup info">
+                    <ul class="ul" id="task_mhn_j55_52b__d489e11156">
+                        <li class="li"><samp class="ph systemoutput">javax.net.ssl.trustStore</samp> - Path to the
+                            truststore file on the <span class="ph">Data Collector</span>
+                            machine.</li>
+
+                        <li class="li"><samp class="ph systemoutput">javax.net.ssl.trustStorePassword</samp> -
+                            Truststore password.</li>
+
+                    </ul>
+
+                    <p class="p"><a class="xref" href="DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your installation
+                  type.</p>
+
+                    <div class="p">For example, define the options as
+                        follows:<pre class="pre codeblock"><code>export SDC_JAVA_OPTS="<span class="ph uicontrol">-Djavax.net.ssl.trustStore=/etc/sdc/truststore.jks -Djavax.net.ssl.trustStorePassword=mypassword</span> -Xmx1024m -Xms1024m -server -XX:-OmitStackTraceInFastThrow ${SDC_JAVA_OPTS}"</code></pre></div>
+
+                    <p class="p">Or to avoid saving the password in the export command, save the password in a
+                        text file and then define the truststore password option as follows:
+                            <samp class="ph systemoutput">-Djavax.net.ssl.trustStorePassword=$(cat
+                            passwordfile.txt)</samp></p>
+
+                    <p class="p">Then ensure that the password file is readable only by the user executing the
+                        export command.</p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Restart <span class="ph">Data Collector</span> to enable the changes.</span>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title6" id="task_wqf_c1w_52b">
+    <h2 class="title topictitle2" id="ariaid-title6">Step 4. Configure Cluster Pipelines to Use HTTPS</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">To enable HTTPS for cluster pipelines, configure the gateway and worker nodes in the
+        cluster to use HTTPS. If you do not run cluster pipelines, you can skip this
+        step.</p>
+
+        <section class="section context">
+            <p class="p">Modify the <span class="ph">Data Collector</span>
+                configuration file, <span class="ph filepath">sdc.properties</span>, on the gateway node to
+                configure the worker nodes to use the keystore file stored on each worker node. If
+                you created a custom truststore file or modified a copy of the default Java
+                truststore file, configure the gateway and worker nodes to use the truststore file. </p>
+
+        </section>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">Verify that you've completed the previous step to <a class="xref" href="HTTP_protocols.html#task_mhn_j55_52b" title="Modify the Data Collector configuration file, sdc.properties, to configure Data Collector to use a secure port and your keystore file. If you created a custom truststore file or modified a copy of the default Java truststore file, configure Data Collector to use that truststore file.">configure <span class="ph">Data Collector</span> to use HTTPS</a>.</span>
+                <div class="itemgroup info">The gateway node uses the keystore file and keystore password configured for
+                        <span class="ph">Data Collector</span>.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To define the keystore file used by the worker nodes, configure the following
+                    properties in the <span class="ph">Data Collector</span> configuration file, <span class="ph filepath">sdc.properties</span>, on the gateway
+                    node:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wqf_c1w_52b__table_knc_1g3_1bb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:66.66666666666666%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d45573e952">Cluster Pipeline Keystore Property</th>
+
+                                    <th class="entry cellrowborder" id="d45573e955">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d45573e952 ">https.cluster.keystore.path</td>
+
+                                    <td class="entry cellrowborder" headers="d45573e955 ">Absolute path and file name of the keystore file on
+                                        worker nodes. The file must be in the same location on each
+                                        worker node.<p class="p">In our example, we'd configure the property
+                                            as follows:</p>
+<div class="p">
+                                            <pre class="pre codeblock"><code>https.cluster.keystore.path=/opt/security/sdc_worker.p12</code></pre>
+                                        </div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d45573e952 ">https.cluster.keystore.password</td>
+
+                                    <td class="entry cellrowborder" headers="d45573e955 ">Absolute path and name of the file that contains the
+                                        password to the keystore file on the worker nodes. The file
+                                        must be in the same location on each worker node.<div class="p">In our
+                                            example, we'd configure the property as
+                                            follows:<pre class="pre codeblock"><code>https.cluster.keystore.password=${file("/opt/security/keystore-password.txt")}</code></pre></div>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If you created a custom truststore file or modified a copy of the default Java
+                    truststore file for cluster pipelines, uncomment and configure the following
+                    properties in the <span class="ph">Data Collector</span> configuration file, <span class="ph filepath">sdc.properties</span>, on the gateway
+                    node:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wqf_c1w_52b__table_db4_k9w_58b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:66.66666666666666%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d45573e1021">Cluster Pipeline Truststore Property</th>
+
+                                    <th class="entry cellrowborder" id="d45573e1024">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d45573e1021 ">https.truststore.path</td>
+
+                                    <td class="entry cellrowborder" headers="d45573e1024 ">Path and name of the truststore file on the gateway node
+                                        that stores certificates to trust the identity of the worker
+                                        nodes. Enter the same path that you entered for the
+                                        truststore file configured for <span class="ph">Data Collector</span>.<p class="p">In our example, we'd configure the property as
+                                            follows:</p>
+<div class="p">
+                                            <pre class="pre codeblock"><code>https.cluster.truststore.path=/etc/sdc/truststore.jks</code></pre>
+                                        </div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d45573e1021 ">https.truststore.password</td>
+
+                                    <td class="entry cellrowborder" headers="d45573e1024 ">Password or path and name of the file that contains the
+                                        password to the truststore file on the gateway node. Enter
+                                        the same truststore password that you configured for <span class="ph">Data Collector</span>. <p class="p">If configuring a path to a password file, enter an
+                                            absolute path or a path relative to the $SDC_CONF
+                                            directory.</p>
+<div class="p">In our example, we'd configure the
+                                            property as
+                                            follows:<pre class="pre codeblock"><code>https.cluster.truststore.password=mypassword</code></pre></div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d45573e1021 ">https.cluster.truststore.path</td>
+
+                                    <td class="entry cellrowborder" headers="d45573e1024 ">Absolute path and name of the truststore file on the
+                                        worker nodes that stores the certificate to trust the
+                                        identity of the gateway node. The file must be in the same
+                                        location on each worker node.<p class="p">In our example, we'd
+                                            configure the property as follows:</p>
+<div class="p">
+                                            <pre class="pre codeblock"><code>https.cluster.truststore.path=/opt/security/truststore.jks</code></pre>
+                                        </div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d45573e1021 ">https.cluster.truststore.password</td>
+
+                                    <td class="entry cellrowborder" headers="d45573e1024 ">Absolute path and name of the file that contains the
+                                        password to the truststore file on the worker nodes. The
+                                        file must be in the same location on each worker node.<div class="p">In
+                                            our example, we'd configure the property as
+                                            follows:<pre class="pre codeblock"><code>https.cluster.truststore.password=${file("/opt/security/truststore-password.txt")}</code></pre></div>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Restart <span class="ph">Data Collector</span> to enable the changes.</span>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+</article>
+</article></main></div>
+                        
+                        
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script>
+  </div>
+</nav>
+
+        
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+        
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+        
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
+</html>
