@@ -39,7 +39,10 @@ public class SparkExecutorUpgrader implements StageUpgrader {
 
   private static List<Config> upgradeV1ToV2(List<Config> configs) {
     return configs.parallelStream()
-        .filter(config -> !config.getName().startsWith("conf.databricks"))
+        .filter(config -> !config.getName().startsWith("conf.databricks")
+            && !config.getName().equals("conf.credentialsConfigBean.username")
+            && !config.getName().equals("conf.credentialsConfigBean.password")
+        )
         .collect(Collectors.toList());
   }
 }
