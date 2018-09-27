@@ -108,25 +108,27 @@ public class MultiKafkaSource extends BasePushSource {
 
         // protected loop. want it to finish completely, or not start at all.
         // only 2 conditions that we want to halt execution. must handle gracefully
+        List<ConsumerRecord<String, byte[]>> list = new ArrayList<>();
         while(!getContext().isStopped() && !Thread.interrupted()) {
-          BatchContext batchContext = getContext().startBatch();
-          ErrorRecordHandler errorRecordHandler = new DefaultErrorRecordHandler(getContext(), batchContext);
 
           ConsumerRecords<String, byte[]> messages = consumer.poll(conf.batchWaitTime);
           if(!messages.isEmpty()) {
-            for(ConsumerRecord<String, byte[]> message : messages) {
-              createRecord(
-                  errorRecordHandler,
-                  message.topic(),
-                  message.partition(),
-                  message.offset(),
-                  message.value()
-              ).forEach(batchContext.getBatchMaker()::addRecord);
+            for (ConsumerRecord<String, byte[]> item : messages) {
+              list.add(item);
+              if (list.size() == conf.maxBatchSize) {
+                sendBatch(list);
+                list.clear();
+              }
             }
-
-            getContext().processBatch(batchContext);
             messagesProcessed += messages.count();
             LOG.trace("Kafka thread {} finished processing {} messages", this.threadID, messages.count());
+          } else {
+            if (!list.isEmpty()) {
+              sendBatch(list);
+              list.clear();
+            } else {
+              LOG.debug("No records returned from consumer.poll()");
+            }
           }
         }
       } catch (Exception e) {
@@ -139,6 +141,17 @@ public class MultiKafkaSource extends BasePushSource {
 
       LOG.info("multi kafka thread {} consumed {} messages", threadID, messagesProcessed);
       return messagesProcessed;
+    }
+
+    private void sendBatch(List<ConsumerRecord<String, byte[]>> list) throws StageException {
+      BatchContext batchContext = getContext().startBatch();
+      ErrorRecordHandler errorRecordHandler = new DefaultErrorRecordHandler(getContext(), batchContext);
+      for (ConsumerRecord<String, byte[]> mm : list) {
+        createRecord(errorRecordHandler, mm.topic(), mm.partition(), mm.offset(), mm.value()).forEach(
+            batchContext.getBatchMaker()::addRecord);
+      }
+      LOG.debug("Multi Kafka sendBatch {}", list.size());
+      getContext().processBatch(batchContext);
     }
 
     private List<Record> createRecord(
