@@ -143,7 +143,7 @@ public class ForceLookupConfigBean extends ForceInputConfigBean {
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Missing Values Behavior",
-      description = "How to handle missing values",
+      description = "How to handle missing values when no default value is defined.",
       defaultValue = "PASS_RECORD_ON",
       displayPosition = 97,
       group = "LOOKUP"

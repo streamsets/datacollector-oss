@@ -89,7 +89,7 @@ public class JdbcLookupDProcessor extends DProcessor {
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Missing Values Behavior",
-      description = "How to handle missing values",
+      description = "How to handle missing values when no default value is defined.",
       defaultValue = "PASS_RECORD_ON",
       displayPosition = 37,
       group = "JDBC"

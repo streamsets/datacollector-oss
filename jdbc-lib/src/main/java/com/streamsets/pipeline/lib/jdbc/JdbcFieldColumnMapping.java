@@ -76,7 +76,7 @@ public class JdbcFieldColumnMapping {
       defaultValue = "",
       label = "Default Value",
       description = "The default value to be used when the database returns no row. " +
-          "If not set, the record is sent to error in such a case.",
+          "If not set, the Missing Values Behavior applies.",
       displayPosition = 30
   )
   public String defaultValue;
