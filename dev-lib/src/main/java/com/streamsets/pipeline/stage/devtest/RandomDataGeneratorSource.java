@@ -448,6 +448,9 @@ public class RandomDataGeneratorSource extends BasePushSource {
       case EDUCATOR:
         return Field.create(faker.get().educator().university());
 
+      case EMAIL:
+        return Field.create(faker.get().internet().emailAddress());
+
       case FILE:
         return Field.create(faker.get().file().fileName());
 
@@ -484,6 +487,12 @@ public class RandomDataGeneratorSource extends BasePushSource {
       case POKEMON:
         return Field.create(faker.get().pokemon().name());
 
+      case RACE:
+        return Field.create(faker.get().demographic().race());
+
+      case SEX:
+        return Field.create(faker.get().demographic().sex());
+
       case SHAKESPEARE:
         return Field.create(faker.get().shakespeare().romeoAndJulietQuote());
 
@@ -492,6 +501,9 @@ public class RandomDataGeneratorSource extends BasePushSource {
 
       case SPACE:
         return Field.create(faker.get().space().company());
+
+      case SSN:
+        return Field.create(faker.get().idNumber().ssnValid());
 
       case STOCK:
         return Field.create(faker.get().stock().nsdqSymbol());
@@ -668,6 +680,7 @@ public class RandomDataGeneratorSource extends BasePushSource {
 
     DEMOGRAPHIC,
     EDUCATOR,
+    EMAIL,
     FILE,
     FINANCE,
     FOOD,
@@ -680,9 +693,12 @@ public class RandomDataGeneratorSource extends BasePushSource {
     NAME,
     PHONENUMBER,
     POKEMON,
+    RACE,
+    SEX,
     SHAKESPEARE,
     SLACKEMOJI,
     SPACE,
+    SSN,
     STOCK,
     SUPERHERO,
     TEAM,
