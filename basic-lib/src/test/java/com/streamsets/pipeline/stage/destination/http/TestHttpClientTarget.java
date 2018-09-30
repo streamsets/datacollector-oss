@@ -42,6 +42,7 @@ import org.powermock.api.mockito.PowerMockito;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
@@ -50,9 +51,11 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 public class TestHttpClientTarget extends AbstractHttpStageTest {
+  private static final String CONTENT_TYPE = "Content-type";
   private Server server;
   private static boolean serverRequested = false;
   private static String requestPayload = null;
+  private static String requestContentType = null;
   private static boolean returnErrorResponse = false;
   private static String compressionType = null;
 
@@ -82,6 +85,7 @@ public class TestHttpClientTarget extends AbstractHttpStageTest {
           is = new GZIPInputStream(is);
         }
         requestPayload = IOUtils.toString(is);
+        requestContentType = request.getContentType();
         response.setStatus(HttpServletResponse.SC_OK);
         baseRequest.setHandled(true);
       }
@@ -132,11 +136,14 @@ public class TestHttpClientTarget extends AbstractHttpStageTest {
     config.singleRequestPerBatch = true;
     serverRequested = false;
     requestPayload = null;
+    requestContentType = null;
     returnErrorResponse = false;
     testHttpTarget(config);
     Assert.assertTrue(serverRequested);
     Assert.assertNotNull(requestPayload);
     Assert.assertTrue(requestPayload.contains("a\nb\n"));
+    Assert.assertNotNull(requestContentType);
+    Assert.assertEquals(MediaType.TEXT_PLAIN, requestContentType);
   }
 
   @Test
@@ -145,11 +152,50 @@ public class TestHttpClientTarget extends AbstractHttpStageTest {
     config.singleRequestPerBatch = false;
     serverRequested = false;
     requestPayload = null;
+    requestContentType = null;
     returnErrorResponse = false;
     testHttpTarget(config);
     Assert.assertTrue(serverRequested);
     Assert.assertNotNull(requestPayload);
     Assert.assertTrue(requestPayload.contains("a") || requestPayload.contains("b"));
+    Assert.assertNotNull(requestContentType);
+    Assert.assertNotNull(requestContentType);
+    Assert.assertEquals(MediaType.TEXT_PLAIN, requestContentType);
+  }
+
+  @Test
+  public void testSingleRequestPerBatchFormSubmit() throws Exception {
+    HttpClientTargetConfig config = getConf(server.getURI().toString());
+    config.singleRequestPerBatch = true;
+    config.headers.put(CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED);
+    serverRequested = false;
+    requestPayload = null;
+    requestContentType = null;
+    returnErrorResponse = false;
+    testHttpTarget(config);
+    Assert.assertTrue(serverRequested);
+    Assert.assertNotNull(requestPayload);
+    Assert.assertTrue(requestPayload.contains("a\nb\n"));
+    Assert.assertNotNull(requestContentType);
+    Assert.assertEquals(MediaType.APPLICATION_FORM_URLENCODED, requestContentType);
+  }
+
+  @Test
+  public void testSingleRequestPerRecordFormSubmit() throws Exception {
+    HttpClientTargetConfig config = getConf(server.getURI().toString());
+    config.singleRequestPerBatch = false;
+    config.headers.put(CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED);
+    serverRequested = false;
+    requestPayload = null;
+    requestContentType = null;
+    returnErrorResponse = false;
+    testHttpTarget(config);
+    Assert.assertTrue(serverRequested);
+    Assert.assertNotNull(requestPayload);
+    Assert.assertTrue(requestPayload.contains("a") || requestPayload.contains("b"));
+    Assert.assertNotNull(requestContentType);
+    Assert.assertNotNull(requestContentType);
+    Assert.assertEquals(MediaType.APPLICATION_FORM_URLENCODED, requestContentType);
   }
 
   @Test
@@ -159,12 +205,15 @@ public class TestHttpClientTarget extends AbstractHttpStageTest {
     config.client.httpCompression = HttpCompressionType.SNAPPY;
     serverRequested = false;
     requestPayload = null;
+    requestContentType = null;
     returnErrorResponse = false;
     testHttpTarget(config);
     Assert.assertTrue(serverRequested);
     Assert.assertNotNull(requestPayload);
     Assert.assertTrue(requestPayload.contains("a\nb\n"));
     Assert.assertEquals(compressionType, HttpConstants.SNAPPY_COMPRESSION);
+    Assert.assertNotNull(requestContentType);
+    Assert.assertEquals(MediaType.TEXT_PLAIN, requestContentType);
   }
 
 
@@ -175,12 +224,15 @@ public class TestHttpClientTarget extends AbstractHttpStageTest {
     config.client.httpCompression = HttpCompressionType.GZIP;
     serverRequested = false;
     requestPayload = null;
+    requestContentType = null;
     returnErrorResponse = false;
     testHttpTarget(config);
     Assert.assertTrue(serverRequested);
     Assert.assertNotNull(requestPayload);
     Assert.assertTrue(requestPayload.contains("a\nb\n"));
     Assert.assertEquals(compressionType, HttpConstants.GZIP_COMPRESSION);
+    Assert.assertNotNull(requestContentType);
+    Assert.assertEquals(MediaType.TEXT_PLAIN, requestContentType);
   }
 
   private void testHttpTarget(HttpClientTargetConfig config) throws Exception {
@@ -310,11 +362,14 @@ public class TestHttpClientTarget extends AbstractHttpStageTest {
     config.singleRequestPerBatch = true;
     serverRequested = false;
     requestPayload = null;
+    requestContentType = null;
     returnErrorResponse = false;
     testHttpTarget(config);
     Assert.assertTrue(serverRequested);
     Assert.assertNotNull(requestPayload);
     Assert.assertTrue(requestPayload.contains("[\"a\",\"b\"]"));
+    Assert.assertNotNull(requestContentType);
+    Assert.assertEquals(MediaType.APPLICATION_JSON, requestContentType);
   }
 
   @Test
@@ -323,10 +378,13 @@ public class TestHttpClientTarget extends AbstractHttpStageTest {
     config.singleRequestPerBatch = false;
     serverRequested = false;
     requestPayload = null;
+    requestContentType = null;
     returnErrorResponse = false;
     testHttpTarget(config);
     Assert.assertTrue(serverRequested);
     Assert.assertNotNull(requestPayload);
     Assert.assertTrue(requestPayload.contains("[\"a\"]") || requestPayload.contains("[\"b\"]"));
+    Assert.assertNotNull(requestContentType);
+    Assert.assertEquals(MediaType.APPLICATION_JSON, requestContentType);
   }
 }

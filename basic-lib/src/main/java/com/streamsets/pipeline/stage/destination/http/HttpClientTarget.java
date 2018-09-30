@@ -105,7 +105,9 @@ public class HttpClientTarget extends BaseTarget {
       if (batch.getRecords().hasNext()) {
         // Use first record for resolving url, headers, ...
         Record firstRecord = batch.getRecords().next();
-        Invocation.Builder builder = getBuilder(firstRecord);
+        MultivaluedMap<String, Object> resolvedHeaders =  httpClientCommon.resolveHeaders(conf.headers, firstRecord);
+        Invocation.Builder builder = getBuilder(firstRecord).headers(resolvedHeaders);
+        String contentType = HttpStageUtil.getContentTypeWithDefault(resolvedHeaders, getContentType());
         HttpMethod method = httpClientCommon.getHttpMethod(conf.httpMethod, conf.methodExpression, firstRecord);
 
         if (method == HttpMethod.POST || method == HttpMethod.PUT || method == HttpMethod.PATCH ||
@@ -122,7 +124,7 @@ public class HttpClientTarget extends BaseTarget {
               throw new IOException(e);
             }
           };
-          response = builder.method(method.getLabel(), Entity.entity(streamingOutput, getContentType()));
+          response = builder.method(method.getLabel(), Entity.entity(streamingOutput, contentType));
         } else {
           response = builder.method(method.getLabel());
         }
@@ -171,9 +173,10 @@ public class HttpClientTarget extends BaseTarget {
     Iterator<Record> records = batch.getRecords();
     while (records.hasNext()) {
       Record record = records.next();
-      AsyncInvoker asyncInvoker = getBuilder(record).async();
+      MultivaluedMap<String, Object> resolvedHeaders =  httpClientCommon.resolveHeaders(conf.headers, record);
+      AsyncInvoker asyncInvoker = getBuilder(record).headers(resolvedHeaders).async();
+      String contentType = HttpStageUtil.getContentTypeWithDefault(resolvedHeaders, getContentType());
       HttpMethod method = httpClientCommon.getHttpMethod(conf.httpMethod, conf.methodExpression, record);
-      String contentType = getContentType();
       rateLimiter.acquire();
       try {
         if (method == HttpMethod.POST || method == HttpMethod.PUT) {
@@ -216,10 +219,8 @@ public class HttpClientTarget extends BaseTarget {
         !target.getUri().getScheme().toLowerCase().startsWith("https")) {
       throw new StageException(Errors.HTTP_07);
     }
-    MultivaluedMap<String, Object> resolvedHeaders =  httpClientCommon.resolveHeaders(conf.headers, record);
     return target.request()
-        .property(OAuth1ClientSupport.OAUTH_PROPERTY_ACCESS_TOKEN, httpClientCommon.getAuthToken())
-        .headers(resolvedHeaders);
+        .property(OAuth1ClientSupport.OAUTH_PROPERTY_ACCESS_TOKEN, httpClientCommon.getAuthToken());
   }
 
   /**
