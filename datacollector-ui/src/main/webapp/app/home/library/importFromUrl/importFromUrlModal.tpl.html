@@ -19,6 +19,7 @@
              ng-required
              placeholder="{{'home.library.namePlaceholder' | translate}}"
              ng-model="newConfig.title"
+             ng-disabled="operationInProgress"
              focus-me="true">
       <p class="help-block">{{'home.library.nameValidation' | translate}}</p>
     </div>
@@ -26,6 +27,7 @@
     <div class="form-group">
       <label class="control-label" translate="global.form.description">Description</label>
       <textarea class="form-control" rows="2"
+                ng-disabled="operationInProgress"
                 placeholder="{{'home.library.descriptionPlaceholder' | translate}}"
                 ng-model="newConfig.description"></textarea>
     </div>
@@ -38,14 +40,17 @@
              class="form-control"
              ng-required
              placeholder="{{'home.library.httpUrlPlaceholder' | translate}}"
-             ng-model="newConfig.pipelineHttpUrl">
+             ng-model="newConfig.pipelineHttpUrl"
+             ng-disabled="operationInProgress">
     </div>
 
   </div>
   <div class="modal-footer">
     <button type="reset" class="btn btn-default" ng-click="cancel()"
+            ng-disabled="operationInProgress"
             translate="global.form.cancel">Cancel</button>
     <button type="submit" class="btn btn-primary"
+            ng-disabled="!newConfig.pipelineHttpUrl || operationInProgress"
             translate="global.form.import">Import</button>
   </div>
 </form>
