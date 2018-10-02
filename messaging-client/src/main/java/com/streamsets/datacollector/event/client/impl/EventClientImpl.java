@@ -19,6 +19,7 @@ import com.streamsets.datacollector.event.client.api.EventClient;
 import com.streamsets.datacollector.event.client.api.EventException;
 import com.streamsets.datacollector.event.json.ClientEventJson;
 import com.streamsets.datacollector.event.json.ServerEventJson;
+import com.streamsets.pipeline.api.impl.Utils;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
@@ -77,12 +78,12 @@ public class EventClientImpl implements EventClient {
     try {
       response = builder.post(Entity.json(clientEventJson));
       if (response.getStatus() != 200) {
-        throw new EventException("Failed : HTTP error code : " + response.getStatus());
+        throw new EventException(Utils.format("Failed : {} HTTP error code : {}", path, response.getStatus()));
       }
       return response.readEntity(new GenericType<List<ServerEventJson>>() {
       });
     } catch (Exception ex) {
-      throw new EventException("Failed to read response : " + ex);
+      throw new EventException(Utils.format("Failed to read response for {} : {}", path, ex));
     } finally {
       if (response != null) {
         response.close();
