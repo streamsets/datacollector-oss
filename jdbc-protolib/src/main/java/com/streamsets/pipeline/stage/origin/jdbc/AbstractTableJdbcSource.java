@@ -323,7 +323,7 @@ public abstract class AbstractTableJdbcSource extends BasePushSource {
         }
       } catch (ExecutionException e) {
         LOG.error("Error during Table Order Provider Init", e);
-        throw new StageException(JdbcErrors.JDBC_67, e);
+        throw new StageException(JdbcErrors.JDBC_67, e.getMessage(), e);
       }
 
       //Accessed by all runner threads
@@ -450,7 +450,7 @@ public abstract class AbstractTableJdbcSource extends BasePushSource {
           throw (StageException) cause;
         } else {
           LOG.error("Internal Error", e);
-          throw new StageException(JdbcErrors.JDBC_75, e.toString());
+          throw new StageException(JdbcErrors.JDBC_75, e.toString(), e);
         }
       }
     }
