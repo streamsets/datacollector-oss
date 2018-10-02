@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.generator.avro;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
@@ -124,6 +125,61 @@ public class TestAvroDataGenerator {
     +"    {\"name\": \"boss\", \"type\": [\"null\", \"Employee\"], \"default\" : null}\n"
     +"  ]" +
     " }";
+
+  private static final String NESTED_RECORD_SCHEMA = "{\n"
+      +" \"type\": \"record\",\n"
+      +" \"name\": \"xyz\",\n"
+      +" \"namespace\": \"nested_record\",\n"
+      +" \"doc\": \"\",\n"
+      +" \"fields\": [\n"
+      +"   {\"name\": \"name\", \"type\": [\"null\", \"string\"], \"default\": null}, \n"
+      +"   {\"name\": \"parts\", \"type\": [\"null\", {\n"
+      +"     \"type\": \"record\",\n"
+      +"     \"name\": \"parts\",\n"
+      +"     \"namespace\": \"\",\n"
+      +"     \"fields\": [\n"
+      +"       {\"name\": \"required\", \"type\": [\"null\", {\n"
+      +"         \"type\": \"record\",\n"
+      +"         \"name\": \"parts\",\n"
+      +"         \"namespace\": \"required\",\n"
+      +"         \"fields\": [\n"
+      +"           {\"name\": \"name\", \"type\": [\"null\", \"string\"], \"default\": null},\n"
+      +"           {\"name\": \"params\", \"type\": [\"null\", {\n"
+      +"             \"type\": \"record\",\n"
+      +"             \"name\": \"parts\",\n"
+      +"             \"namespace\": \"params.required\",\n"
+      +"             \"fields\": [\n"
+      +"               {\"name\": \"size\", \"type\": [\"null\", \"string\"], \"default\": null}\n"
+      +"             ]\n"
+      +"           }],\n"
+      +"           \"default\": null\n"
+      +"     }]\n"
+      +"    }],\n"
+      +"    \"default\": null\n"
+      +"   },\n"
+      +"   {\"name\": \"optional\", \"type\": [\"null\", {\n"
+      +"     \"type\": \"record\",\n"
+      +"     \"name\": \"parts\",\n"
+      +"     \"namespace\": \"optional\",\n"
+      +"     \"fields\": [\n"
+      +"       {\"name\": \"name\", \"type\": [\"null\", \"string\"], \"default\": null},\n"
+      +"       {\"name\": \"params\", \"type\": [\"null\", {\n"
+      +"         \"type\": \"record\",\n"
+      +"         \"name\": \"parts\",\n"
+      +"         \"namespace\": \"params.optional\",\n"
+      +"         \"fields\": [\n"
+      +"           {\"name\": \"color\", \"type\": [\"null\", \"string\"], \"default\": null}\n"
+      +"         ]\n"
+      +"       }],\n"
+      +"       \"default\": null\n"
+      +"   }]\n"
+      +"   }],\n"
+      +"   \"default\": null\n"
+      +" }]\n"
+      +"  }],\n"
+      +"  \"default\": null\n"
+      +" }]\n"
+      +"}";
 
   @Test
   public void testFactory() throws Exception {
@@ -396,6 +452,74 @@ public class TestAvroDataGenerator {
     Map<Utf8, Object> phones = (Map<Utf8, Object>) result.get("phones");
     Assert.assertEquals(8675309, (long)phones.get(new Utf8("home")));
     Assert.assertEquals(8675308, (long)phones.get(new Utf8("mobile")));
+  }
+
+
+  @SuppressWarnings("unchecked")
+  @Test
+  public void testGenerateWithNestedRecordsAndDefaults() throws Exception {
+
+    Stage.Context context = ContextInfoCreator.createTargetContext("i", false, OnRecordError.TO_ERROR);
+
+    DataFactory dataFactory = new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.AVRO)
+        .setCharset(Charset.forName("UTF-16"))
+        .setConfig(SCHEMA_KEY, NESTED_RECORD_SCHEMA)
+        .setConfig(
+            DEFAULT_VALUES_KEY,
+            AvroTypeUtil.getDefaultValuesFromSchema(new Schema.Parser().parse(NESTED_RECORD_SCHEMA), new HashSet<String>())
+        )
+        .build();
+    Assert.assertTrue(dataFactory instanceof AvroDataGeneratorFactory);
+    AvroDataGeneratorFactory factory = (AvroDataGeneratorFactory) dataFactory;
+
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    AvroDataOutputStreamGenerator gen = (AvroDataOutputStreamGenerator) factory.getGenerator(baos);
+    Assert.assertNotNull(gen);
+
+    Record record = RecordCreator.create();
+    record.set(Field.create(Field.Type.LIST_MAP, ImmutableMap.builder()
+        .put("name", Field.create(Field.Type.STRING, "my_name"))
+        .put("parts", Field.create(Field.Type.MAP, ImmutableMap.builder()
+            .put("required", Field.create(Field.Type.MAP, ImmutableMap.builder()
+                .put("name", Field.create(Field.Type.STRING, "nothing"))
+                .put("params", Field.create(Field.Type.MAP, ImmutableMap.builder()
+                    .put("size", Field.create(Field.Type.STRING, "size"))
+                    .put("randomField", Field.create(Field.Type.STRING, "random"))
+                    .build()))
+                .build()))
+            .put("optional", Field.create(Field.Type.MAP, ImmutableMap.builder()
+                .put("params", Field.create(Field.Type.MAP, ImmutableMap.builder()
+                    .put("color", Field.create(Field.Type.STRING, "green"))
+                    .put("randomField", Field.create(Field.Type.STRING, "random"))
+                    .build()))
+                .build()))
+            .build()))
+        .build()));
+    gen.write(record);
+    gen.close();
+
+    // reader schema must be extracted from the data file
+    GenericDatumReader<GenericRecord> reader = new GenericDatumReader<>(null);
+    DataFileReader<GenericRecord> dataFileReader = new DataFileReader<>(
+        new SeekableByteArrayInput(baos.toByteArray()), reader);
+    Assert.assertTrue(dataFileReader.hasNext());
+    GenericRecord result = dataFileReader.next();
+
+    Assert.assertEquals("my_name", result.get("name").toString());
+
+    GenericRecord parts = (GenericRecord) result.get("parts");
+    GenericRecord required = (GenericRecord) parts.get("required");
+    Assert.assertEquals("nothing", required.get("name").toString());
+    GenericRecord params1 = (GenericRecord) required.get("params");
+    Assert.assertEquals("size", params1.get("size").toString());
+    Assert.assertNull(params1.get("color"));
+    Assert.assertNull(params1.get("randomField"));
+    GenericRecord optional = (GenericRecord) parts.get("optional");
+    Assert.assertNull(optional.get("name"));
+    GenericRecord params2 = (GenericRecord) optional.get("params");
+    Assert.assertNull(params2.get("size"));
+    Assert.assertEquals("green", params2.get("color").toString());
+    Assert.assertNull(params2.get("randomField"));
   }
 
   @Test

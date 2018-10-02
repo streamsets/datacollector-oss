@@ -696,7 +696,7 @@ public class AvroTypeUtil {
       Schema schema,
       Set<String> processedSchemaSet
   ) throws IOException {
-    if (processedSchemaSet.contains(schema.getName()) || isPrimitive(schema.getType())) {
+    if (processedSchemaSet.contains(schema.getFullName()) || isPrimitive(schema.getType())) {
       return Maps.newHashMap();
     }
 
@@ -704,7 +704,7 @@ public class AvroTypeUtil {
     // as a way to skip processing already processed definitions. As a result without skipping arrays, we would never
     // process more then one array per schema.
     if(schema.getType() != Schema.Type.ARRAY) {
-      processedSchemaSet.add(schema.getName());
+      processedSchemaSet.add(schema.getFullName());
     }
 
     Map<String, Object> defValMap = new HashMap<>();
