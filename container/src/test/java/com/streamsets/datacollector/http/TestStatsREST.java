@@ -35,7 +35,6 @@ import java.io.FileWriter;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 

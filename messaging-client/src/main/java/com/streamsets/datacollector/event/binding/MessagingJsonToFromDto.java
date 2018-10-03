@@ -31,14 +31,18 @@ import com.streamsets.datacollector.event.dto.DisconnectedSsoCredentialsEvent;
 import com.streamsets.datacollector.event.dto.Event;
 import com.streamsets.datacollector.event.dto.EventType;
 import com.streamsets.datacollector.event.dto.PingFrequencyAdjustmentEvent;
-import com.streamsets.datacollector.event.dto.PipelineBaseEvent;
+import com.streamsets.datacollector.event.dto.PipelineDeleteEvent;
+import com.streamsets.datacollector.event.dto.PipelineHistoryDeleteEvent;
 import com.streamsets.datacollector.event.dto.PipelinePreviewEvent;
+import com.streamsets.datacollector.event.dto.PipelineResetEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveRulesEvent;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.event.dto.PipelineStatusEvent;
 import com.streamsets.datacollector.event.dto.PipelineStatusEvents;
 import com.streamsets.datacollector.event.dto.PipelineStopAndDeleteEvent;
+import com.streamsets.datacollector.event.dto.PipelineStopEvent;
+import com.streamsets.datacollector.event.dto.PipelineValidateEvent;
 import com.streamsets.datacollector.event.dto.SDCInfoEvent;
 import com.streamsets.datacollector.event.dto.SDCProcessMetricsEvent;
 import com.streamsets.datacollector.event.dto.SaveConfigurationEvent;
@@ -52,19 +56,25 @@ import com.streamsets.datacollector.event.json.ClientEventJson;
 import com.streamsets.datacollector.event.json.DisconnectedSsoCredentialsEventJson;
 import com.streamsets.datacollector.event.json.EventJson;
 import com.streamsets.datacollector.event.json.PingFrequencyAdjustmentEventJson;
-import com.streamsets.datacollector.event.json.PipelineBaseEventJson;
+import com.streamsets.datacollector.event.json.PipelineDeleteEventJson;
+import com.streamsets.datacollector.event.json.PipelineHistoryDeleteEventJson;
 import com.streamsets.datacollector.event.json.PipelinePreviewEventJson;
+import com.streamsets.datacollector.event.json.PipelineResetEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveRulesEventJson;
 import com.streamsets.datacollector.event.json.PipelineStartEventJson;
 import com.streamsets.datacollector.event.json.PipelineStatusEventJson;
 import com.streamsets.datacollector.event.json.PipelineStatusEventsJson;
 import com.streamsets.datacollector.event.json.PipelineStopAndDeleteEventJson;
+import com.streamsets.datacollector.event.json.PipelineStopEventJson;
+import com.streamsets.datacollector.event.json.PipelineValidateEventJson;
 import com.streamsets.datacollector.event.json.SDCInfoEventJson;
 import com.streamsets.datacollector.event.json.SDCProcessMetricsEventJson;
 import com.streamsets.datacollector.event.json.SaveConfigurationEventJson;
 import com.streamsets.datacollector.event.json.ServerEventJson;
 import com.streamsets.datacollector.event.json.SyncAclEventJson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -88,7 +98,13 @@ public class MessagingJsonToFromDto {
     return new MessagingJsonToFromDto();
   }
 
-  public <T> T deserialize(String body, TypeReference<T> type) throws JsonParseException, JsonMappingException, IOException {
+  private static final Logger LOG = LoggerFactory.getLogger(MessagingJsonToFromDto.class);
+
+  public <T> T deserialize(String body, TypeReference<T> type) throws IOException {
+    return mapper.readValue(body, type);
+  }
+
+  public <T> T deserialize(String body, Class<T> type) throws IOException {
     return mapper.readValue(body, type);
   }
 
@@ -96,69 +112,185 @@ public class MessagingJsonToFromDto {
     return mapper.writeValueAsString(object);
   }
 
+  public Event asDto(EventJson eventJson, int eventTypeId) throws IOException {
+    return asDto(eventJson, EventType.fromValue(eventTypeId));
+  }
+
+  private interface EventJsonSupplier {
+    EventJson supplyJson(Class<? extends EventJson> jsonClass) throws IOException;
+  }
+
+  public Event toDtoHelper(EventType eventType, EventJsonSupplier eventJsonSupplierImpl) throws IOException {
+    final MessagingDtoJsonMapper inst = MessagingDtoJsonMapper.INSTANCE;
+    switch (eventType) {
+      case PING_FREQUENCY_ADJUSTMENT:
+        return inst.asPingFrequencyAdjustmentEventDto((PingFrequencyAdjustmentEventJson) eventJsonSupplierImpl.supplyJson(
+            PingFrequencyAdjustmentEventJson.class
+        ));
+      case SAVE_PIPELINE:
+        return inst.asPipelineSaveEventDto((PipelineSaveEventJson) eventJsonSupplierImpl.supplyJson(
+            PipelineSaveEventJson.class
+        ));
+      case SAVE_RULES_PIPELINE:
+        return inst.asPipelineSaveRulesEventDto((PipelineSaveRulesEventJson) eventJsonSupplierImpl.supplyJson(
+            PipelineSaveRulesEventJson.class
+        ));
+      case STATUS_PIPELINE:
+        return inst.asPipelineStatusEventDto((PipelineStatusEventJson) eventJsonSupplierImpl.supplyJson(
+            PipelineStatusEventJson.class
+        ));
+      case STATUS_MULTIPLE_PIPELINES:
+        return inst.asPipelineStatusEventsDto((PipelineStatusEventsJson) eventJsonSupplierImpl.supplyJson(
+            PipelineStatusEventsJson.class
+        ));
+      case ACK_EVENT:
+        return inst.asAckEventDto((AckEventJson) eventJsonSupplierImpl.supplyJson(
+            AckEventJson.class
+        ));
+      case SDC_INFO_EVENT:
+        return inst.asSDCInfoEventDto((SDCInfoEventJson) eventJsonSupplierImpl.supplyJson(
+            SDCInfoEventJson.class
+        ));
+      case SDC_PROCESS_METRICS_EVENT:
+        return inst.asSDCMetricsEventDto((SDCProcessMetricsEventJson) eventJsonSupplierImpl.supplyJson(
+            SDCProcessMetricsEventJson.class
+        ));
+      case SYNC_ACL:
+        return inst.asSyncAclEventDto((SyncAclEventJson) eventJsonSupplierImpl.supplyJson(
+            SyncAclEventJson.class
+        ));
+      case STOP_DELETE_PIPELINE:
+        return inst.asPipelineStopAndDeleteEventDto((PipelineStopAndDeleteEventJson) eventJsonSupplierImpl.supplyJson(
+            PipelineStopAndDeleteEventJson.class
+        ));
+      case START_PIPELINE:
+        return inst.asPipelineStartEventDto((PipelineStartEventJson) eventJsonSupplierImpl.supplyJson(
+            PipelineStartEventJson.class
+        ));
+      case PREVIEW_PIPELINE:
+        return inst.asPipelinePreviewEventDto((PipelinePreviewEventJson) eventJsonSupplierImpl.supplyJson(
+            PipelinePreviewEventJson.class
+        ));
+      case STOP_PIPELINE:
+        return inst.asPipelineStopEventDto((PipelineStopEventJson) eventJsonSupplierImpl.supplyJson(
+            PipelineStopEventJson.class
+        ));
+      case VALIDATE_PIPELINE:
+        return inst.asPipelineValidateEventDto((PipelineValidateEventJson) eventJsonSupplierImpl.supplyJson(
+            PipelineValidateEventJson.class
+        ));
+      case RESET_OFFSET_PIPELINE:
+        return inst.asPipelineResetEventDto((PipelineResetEventJson) eventJsonSupplierImpl.supplyJson(
+            PipelineResetEventJson.class
+        ));
+      case DELETE_HISTORY_PIPELINE:
+        return inst.asPipelineHistoryDeleteEventDto((PipelineHistoryDeleteEventJson) eventJsonSupplierImpl.supplyJson(
+            PipelineHistoryDeleteEventJson.class
+        ));
+      case DELETE_PIPELINE:
+        return inst.asPipelineDeleteEventDto((PipelineDeleteEventJson) eventJsonSupplierImpl.supplyJson(
+            PipelineDeleteEventJson.class
+        ));
+      case BLOB_STORE:
+        return inst.asBlobStoreEventDto((BlobStoreEventJson) eventJsonSupplierImpl.supplyJson(
+            BlobStoreEventJson.class
+        ));
+      case BLOB_DELETE:
+        return inst.asBlobDeleteEventDto((BlobDeleteEventJson) eventJsonSupplierImpl.supplyJson(
+            BlobDeleteEventJson.class
+        ));
+      case BLOB_DELETE_VERSION:
+        return inst.asBlobDeleteVersionEventDto((BlobDeleteVersionEventJson) eventJsonSupplierImpl.supplyJson(
+            BlobDeleteVersionEventJson.class
+        ));
+      case SAVE_CONFIGURATION:
+        return inst.asSaveConfigurationEventDto((SaveConfigurationEventJson) eventJsonSupplierImpl.supplyJson(
+            SaveConfigurationEventJson.class
+        ));
+      case SSO_DISCONNECTED_MODE_CREDENTIALS:
+        return inst.asDisconectedSsoCredentialsDto((DisconnectedSsoCredentialsEventJson) eventJsonSupplierImpl.supplyJson(
+            DisconnectedSsoCredentialsEventJson.class
+        ));
+      default:
+        throw new IllegalStateException("Unrecognized event type: " + eventType);
+    }
+  }
+
+  public Event asDto(EventJson eventJson, EventType eventType) throws IOException {
+    return toDtoHelper(eventType, cls -> eventJson);
+  }
+
   public ClientEventJson toJson(ClientEvent clientEvent) throws JsonProcessingException {
-    ClientEventJson clientEventJson = MessagingDtoJsonMapper.INSTANCE.toClientEventJson(clientEvent);
+    final MessagingDtoJsonMapper mapper = MessagingDtoJsonMapper.INSTANCE;
+    ClientEventJson clientEventJson = mapper.toClientEventJson(clientEvent);
     EventJson eventJson;
     Event event = clientEvent.getEvent();
     switch (clientEvent.getEventType()) {
       case PING_FREQUENCY_ADJUSTMENT:
-        eventJson = MessagingDtoJsonMapper.INSTANCE.toPingFrequencyAdjustmentEventJson((PingFrequencyAdjustmentEvent) event);
+        eventJson = mapper.toPingFrequencyAdjustmentEventJson((PingFrequencyAdjustmentEvent) event);
         break;
       case SAVE_PIPELINE:
-        eventJson = MessagingDtoJsonMapper.INSTANCE.toPipelineSaveEventJson((PipelineSaveEvent) event);
+        eventJson = mapper.toPipelineSaveEventJson((PipelineSaveEvent) event);
         break;
       case SAVE_RULES_PIPELINE:
-        eventJson = MessagingDtoJsonMapper.INSTANCE.toPipelineSaveRulesEventJson((PipelineSaveRulesEvent) event);
+        eventJson = mapper.toPipelineSaveRulesEventJson((PipelineSaveRulesEvent) event);
         break;
       case STATUS_PIPELINE:
-        eventJson = MessagingDtoJsonMapper.INSTANCE.toPipelineStatusEventJson((PipelineStatusEvent) event);
+        eventJson = mapper.toPipelineStatusEventJson((PipelineStatusEvent) event);
         break;
       case STATUS_MULTIPLE_PIPELINES:
-        eventJson = MessagingDtoJsonMapper.INSTANCE.toPipelineStatusEventsJson((PipelineStatusEvents) event);
+        eventJson = mapper.toPipelineStatusEventsJson((PipelineStatusEvents) event);
         break;
       case ACK_EVENT:
-        eventJson = MessagingDtoJsonMapper.INSTANCE.toAckEventJson((AckEvent) event);
+        eventJson = mapper.toAckEventJson((AckEvent) event);
         break;
       case SDC_INFO_EVENT:
-        eventJson = MessagingDtoJsonMapper.INSTANCE.toSDCInfoEventJson((SDCInfoEvent) event);
+        eventJson = mapper.toSDCInfoEventJson((SDCInfoEvent) event);
         break;
       case SDC_PROCESS_METRICS_EVENT:
-        eventJson = MessagingDtoJsonMapper.INSTANCE.toSDCMetricsEventJson((SDCProcessMetricsEvent) event);
+        eventJson = mapper.toSDCMetricsEventJson((SDCProcessMetricsEvent) event);
         break;
       case SYNC_ACL:
-        eventJson = MessagingDtoJsonMapper.INSTANCE.toSyncAclEventJson((SyncAclEvent)event);
+        eventJson = mapper.toSyncAclEventJson((SyncAclEvent)event);
         break;
       case STOP_DELETE_PIPELINE:
-        eventJson = MessagingDtoJsonMapper.INSTANCE.toPipelineStopAndDeleteEventJson((PipelineStopAndDeleteEvent) event);
+        eventJson = mapper.toPipelineStopAndDeleteEventJson((PipelineStopAndDeleteEvent) event);
         break;
       case START_PIPELINE:
-        eventJson = MessagingDtoJsonMapper.INSTANCE.toPipelineStartEventJson((PipelineStartEvent) event);
+        eventJson = mapper.toPipelineStartEventJson((PipelineStartEvent) event);
         break;
       case PREVIEW_PIPELINE:
-        eventJson = MessagingDtoJsonMapper.INSTANCE.toPipelinePreviewEventJson((PipelinePreviewEvent) event);
+        eventJson = mapper.toPipelinePreviewEventJson((PipelinePreviewEvent) event);
         break;
       case STOP_PIPELINE:
+        eventJson = mapper.toPipelineStopEventJson((PipelineStopEvent) event);
+        break;
       case VALIDATE_PIPELINE:
+        eventJson = mapper.toPipelineValidateEventJson((PipelineValidateEvent) event);
+        break;
       case RESET_OFFSET_PIPELINE:
+        eventJson = mapper.toPipelineResetEventJson((PipelineResetEvent) event);
+        break;
       case DELETE_HISTORY_PIPELINE:
+        eventJson = mapper.toPipelineHistoryDeleteEventJson((PipelineHistoryDeleteEvent) event);
+        break;
       case DELETE_PIPELINE:
-        eventJson = MessagingDtoJsonMapper.INSTANCE.toPipelineBaseEventJson((PipelineBaseEvent) event);
+        eventJson = mapper.toPipelineDeleteEventJson((PipelineDeleteEvent) event);
         break;
       case BLOB_STORE:
-        eventJson = MessagingDtoJsonMapper.INSTANCE.toBlobStoreEventJson((BlobStoreEvent) event);
+        eventJson = mapper.toBlobStoreEventJson((BlobStoreEvent) event);
         break;
       case BLOB_DELETE:
-        eventJson = MessagingDtoJsonMapper.INSTANCE.toBlobDeleteEventJson((BlobDeleteEvent) event);
+        eventJson = mapper.toBlobDeleteEventJson((BlobDeleteEvent) event);
         break;
       case BLOB_DELETE_VERSION:
-        eventJson = MessagingDtoJsonMapper.INSTANCE.toBlobDeleteVersionEventJson((BlobDeleteVersionEvent) event);
+        eventJson = mapper.toBlobDeleteVersionEventJson((BlobDeleteVersionEvent) event);
         break;
       case SAVE_CONFIGURATION:
-        eventJson = MessagingDtoJsonMapper.INSTANCE.toSaveConfigurationEventJson((SaveConfigurationEvent) event);
+        eventJson = mapper.toSaveConfigurationEventJson((SaveConfigurationEvent) event);
         break;
       case SSO_DISCONNECTED_MODE_CREDENTIALS:
-        eventJson =
-            MessagingDtoJsonMapper.INSTANCE.toDisconectedSsoCredentialsJson((DisconnectedSsoCredentialsEvent) event);
+        eventJson = mapper.toDisconectedSsoCredentialsJson((DisconnectedSsoCredentialsEvent) event);
         break;
       default:
         throw new IllegalStateException("Unrecognized event type: " + clientEvent.getEventType());
@@ -176,158 +308,15 @@ public class MessagingJsonToFromDto {
     return clientEventJsonList;
   }
 
-  public ServerEvent asDto(ServerEventJson serverEventJson) throws JsonParseException, JsonMappingException,
-    IOException {
-    ServerEvent serverEvent = MessagingDtoJsonMapper.INSTANCE.asServerEventDto(serverEventJson);
+  public ServerEvent asDto(ServerEventJson serverEventJson) throws IOException {
+    final MessagingDtoJsonMapper mapper = MessagingDtoJsonMapper.INSTANCE;
+    ServerEvent serverEvent = mapper.asServerEventDto(serverEventJson);
     EventType eventType = serverEvent.getEventType();
     if (eventType == null) {
       return null;
     }
-    switch (serverEvent.getEventType()) {
-      case ACK_EVENT: {
-        TypeReference<AckEventJson> typeRef = new TypeReference<AckEventJson>() {
-        };
-        AckEventJson ackEventJson = deserialize(serverEventJson.getPayload(), typeRef);
-        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asAckEventDto(ackEventJson));
-        break;
-      }
-      case PING_FREQUENCY_ADJUSTMENT: {
-        TypeReference<PingFrequencyAdjustmentEventJson> typeRef =
-          new TypeReference<PingFrequencyAdjustmentEventJson>() {
-          };
-        PingFrequencyAdjustmentEventJson pingFrequencyAdjustmentEventJson =
-          deserialize(serverEventJson.getPayload(), typeRef);
-        serverEvent
-          .setEvent(MessagingDtoJsonMapper.INSTANCE.asPingFrequencyAdjustmentEventDto(pingFrequencyAdjustmentEventJson));
-        break;
-      }
-      case SAVE_PIPELINE: {
-        TypeReference<PipelineSaveEventJson> typeRef = new TypeReference<PipelineSaveEventJson>() {
-        };
-        PipelineSaveEventJson pipelineSaveEventJson = deserialize(serverEventJson.getPayload(), typeRef);
-        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asPipelineSaveEventDto(pipelineSaveEventJson));
-      }
-        break;
-      case SAVE_RULES_PIPELINE: {
-        TypeReference<PipelineSaveRulesEventJson> typeRef = new TypeReference<PipelineSaveRulesEventJson>() {
-        };
-        PipelineSaveRulesEventJson pipelineSaveRulesEventJson = deserialize(serverEventJson.getPayload(), typeRef);
-        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asPipelineSaveRulesEventDto(pipelineSaveRulesEventJson));
-        break;
-      }
-      case SDC_INFO_EVENT: {
-        TypeReference<SDCInfoEventJson> typeRef = new TypeReference<SDCInfoEventJson>() {
-        };
-        SDCInfoEventJson sdcInfoEventJson = deserialize(serverEventJson.getPayload(), typeRef);
-        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asSDCInfoEventDto(sdcInfoEventJson));
-        break;
-      }
-      case SDC_PROCESS_METRICS_EVENT: {
-        TypeReference<SDCProcessMetricsEventJson> typeRef = new TypeReference<SDCProcessMetricsEventJson>() {
-        };
-        SDCProcessMetricsEventJson SDCProcessMetricsEventJson = deserialize(serverEventJson.getPayload(), typeRef);
-        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asSDCMetricsEventDto(SDCProcessMetricsEventJson));
-        break;
-      }
-      case STATUS_PIPELINE: {
-        TypeReference<PipelineStatusEventJson> typeRef = new TypeReference<PipelineStatusEventJson>() {
-        };
-        PipelineStatusEventJson pipelineStatusEventJson = deserialize(serverEventJson.getPayload(), typeRef);
-        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asPipelineStatusEventDto(pipelineStatusEventJson));
-        break;
-      }
-      case STATUS_MULTIPLE_PIPELINES:{
-        TypeReference<PipelineStatusEventsJson> typeRef = new TypeReference<PipelineStatusEventsJson>() {
-        };
-        PipelineStatusEventsJson pipelineStatusEventsJson = deserialize(serverEventJson.getPayload(), typeRef);
-        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asPipelineStatusEventsDto(pipelineStatusEventsJson));
-        break;
-      }
-      case SYNC_ACL: {
-        TypeReference<SyncAclEventJson> typeRef = new TypeReference<SyncAclEventJson>() {
-        };
-        SyncAclEventJson syncAclEventJson = deserialize(serverEventJson.getPayload(), typeRef);
-        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asSyncAclEventDto(syncAclEventJson));
-        break;
-      }
-      case STOP_DELETE_PIPELINE: {
-        TypeReference<PipelineStopAndDeleteEventJson> typeRef = new TypeReference<PipelineStopAndDeleteEventJson>() {
-        };
-        PipelineStopAndDeleteEventJson pipelineStopAndDeleteEventJson = deserialize(
-            serverEventJson.getPayload(),
-            typeRef
-        );
-        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asPipelineStopAndDeleteEventDto(
-            pipelineStopAndDeleteEventJson));
-        break;
-      }
-      case START_PIPELINE: {
-        TypeReference<PipelineStartEventJson> typeRef = new TypeReference<PipelineStartEventJson>() {
-        };
-        PipelineStartEventJson pipelineStartEventJson = deserialize(
-          serverEventJson.getPayload(),
-          typeRef
-        );
-        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asPipelineStartEventDto(pipelineStartEventJson));
-        break;
-      }
-      case PREVIEW_PIPELINE: {
-        TypeReference<PipelinePreviewEventJson> typeRef = new TypeReference<PipelinePreviewEventJson>() {
-        };
-        PipelinePreviewEventJson pipelinePreviewEventJson = deserialize(serverEventJson.getPayload(), typeRef);
-        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asPipelinePreviewEventDto(pipelinePreviewEventJson));
-        break;
-      }
-      case DELETE_HISTORY_PIPELINE:
-      case DELETE_PIPELINE:
-      case STOP_PIPELINE:
-      case VALIDATE_PIPELINE:
-      case RESET_OFFSET_PIPELINE: {
-        TypeReference<PipelineBaseEventJson> typeRef = new TypeReference<PipelineBaseEventJson>() {
-        };
-        PipelineBaseEventJson pipelineBaseEventJson = deserialize(serverEventJson.getPayload(), typeRef);
-        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asPipelineBaseEventDto(pipelineBaseEventJson));
-        break;
-      }
-      case BLOB_STORE: {
-        TypeReference<BlobStoreEventJson> typeRef = new TypeReference<BlobStoreEventJson>() {
-        };
-        BlobStoreEventJson eventJson = deserialize(serverEventJson.getPayload(), typeRef);
-        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asBlobStoreEventDto(eventJson));
-        break;
-      }
-      case BLOB_DELETE_VERSION: {
-        TypeReference<BlobDeleteVersionEventJson> typeRef = new TypeReference<BlobDeleteVersionEventJson>() {
-        };
-        BlobDeleteVersionEventJson eventJson = deserialize(serverEventJson.getPayload(), typeRef);
-        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asBlobDeleteVersionEventDto(eventJson));
-        break;
-      }
-      case BLOB_DELETE: {
-        TypeReference<BlobDeleteEventJson> typeRef = new TypeReference<BlobDeleteEventJson>() {
-        };
-        BlobDeleteEventJson eventJson = deserialize(serverEventJson.getPayload(), typeRef);
-        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asBlobDeleteEventDto(eventJson));
-        break;
-      }
-      case SAVE_CONFIGURATION: {
-        TypeReference<SaveConfigurationEventJson> typeRef = new TypeReference<SaveConfigurationEventJson>() {
-        };
-        SaveConfigurationEventJson eventJson = deserialize(serverEventJson.getPayload(), typeRef);
-        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asSaveConfigurationEventDto(eventJson));
-        break;
-      }
-      case SSO_DISCONNECTED_MODE_CREDENTIALS: {
-        TypeReference<DisconnectedSsoCredentialsEventJson> typeRef =
-            new TypeReference<DisconnectedSsoCredentialsEventJson>() {
-            };
-        DisconnectedSsoCredentialsEventJson eventJson = deserialize(serverEventJson.getPayload(), typeRef);
-        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asDisconectedSsoCredentialsDto(eventJson));
-        break;
-      }
-      default:
-        break;
-    }
+    final String payload = serverEventJson.getPayload();
+    serverEvent.setEvent(toDtoHelper(eventType, cls -> deserialize(payload, cls)));
     return serverEvent;
   }
 }

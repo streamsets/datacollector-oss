@@ -42,6 +42,7 @@ import com.streamsets.datacollector.restapi.bean.SDCMetricsJson;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.util.AggregatorUtil;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -80,10 +81,6 @@ public class MetricsEventRunnable implements Runnable {
   private static final String JOB_ID = "JOB_ID";
   private static final String UPDATE_WAIT_TIME_MS = "UPDATE_WAIT_TIME_MS";
   public static final String TIME_SERIES_ANALYSIS = "TIME_SERIES_ANALYSIS";
-  private static final String SDC = "sdc";
-  private static final String X_REQUESTED_BY = "X-Requested-By";
-  private static final String X_SS_APP_AUTH_TOKEN = "X-SS-App-Auth-Token";
-  private static final String X_SS_APP_COMPONENT_ID = "X-SS-App-Component-Id";
 
   public static final String RUNNABLE_NAME = "MetricsEventRunnable";
   private static final Logger LOG = LoggerFactory.getLogger(MetricsEventRunnable.class);
@@ -392,9 +389,9 @@ public class MetricsEventRunnable implements Runnable {
       Response response = null;
       try {
         response = webTarget.request()
-            .header(X_REQUESTED_BY, SDC)
-            .header(X_SS_APP_AUTH_TOKEN, runtimeInfo.getAppAuthToken().replaceAll("(\\r|\\n)", ""))
-            .header(X_SS_APP_COMPONENT_ID, runtimeInfo.getId())
+            .header(SSOConstants.X_REST_CALL, SSOConstants.SDC_COMPONENT_NAME)
+            .header(SSOConstants.X_APP_AUTH_TOKEN, runtimeInfo.getAppAuthToken().replaceAll("(\\r|\\n)", ""))
+            .header(SSOConstants.X_APP_COMPONENT_ID, runtimeInfo.getId())
             .post(
                 Entity.json(
                     sdcMetricsJsonList

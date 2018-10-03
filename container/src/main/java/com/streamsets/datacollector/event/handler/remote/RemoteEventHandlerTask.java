@@ -75,6 +75,7 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.DisconnectedSecurityUtils;
 import com.streamsets.lib.security.http.AbstractSSOService;
 import com.streamsets.lib.security.http.DisconnectedSSOManager;
+import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.sun.management.OperatingSystemMXBean;
@@ -180,9 +181,9 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         SYSTEM_LIMIT_MIN_STATUS_EVENTS_INTERVAL
     );
     requestHeader = new HashMap<>();
-    requestHeader.put("X-Requested-By", "SDC");
-    requestHeader.put("X-SS-App-Auth-Token", runtimeInfo.getAppAuthToken());
-    requestHeader.put("X-SS-App-Component-Id", this.runtimeInfo.getId());
+    requestHeader.put(SSOConstants.X_REST_CALL, SSOConstants.SDC_COMPONENT_NAME);
+    requestHeader.put(SSOConstants.X_APP_AUTH_TOKEN, runtimeInfo.getAppAuthToken());
+    requestHeader.put(SSOConstants.X_APP_COMPONENT_ID, this.runtimeInfo.getId());
     stopWatch = Stopwatch.createUnstarted();
 
     File storeFile = new File(runtimeInfo.getDataDir(), DisconnectedSSOManager.DISCONNECTED_SSO_AUTHENTICATION_FILE);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2018 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,4 +75,5 @@ public interface  SSOConstants {
 
   String SERVICE_BASE_URL_ATTR = "baseHttpUrl";
 
+  String SDC_COMPONENT_NAME = "SDC";
 }

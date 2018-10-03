@@ -23,7 +23,14 @@ public enum PreviewError implements ErrorCode {
 
   PREVIEW_0001("No task is running"),
   PREVIEW_0002("Could not retrieve the preview output : {}"),
-  PREVIEW_0003("Encountered error while previewing : {}")
+  PREVIEW_0003("Encountered error while previewing : {}"),
+
+  // dynamic preview errors
+
+  PREVIEW_0101("Error executing {} actions in dynamic preview: {}"),
+  PREVIEW_0102("Error executing preview event for dynamic preview; no immediate result available from which to fetch" +
+      " previewer ID"),
+  PREVIEW_0103("Error executing dynamic preview: could not detect generated pipeline ID after running before actions"),
 
   ;
 

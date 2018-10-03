@@ -22,14 +22,18 @@ import com.streamsets.datacollector.event.dto.BlobStoreEvent;
 import com.streamsets.datacollector.event.dto.ClientEvent;
 import com.streamsets.datacollector.event.dto.DisconnectedSsoCredentialsEvent;
 import com.streamsets.datacollector.event.dto.PingFrequencyAdjustmentEvent;
-import com.streamsets.datacollector.event.dto.PipelineBaseEvent;
+import com.streamsets.datacollector.event.dto.PipelineDeleteEvent;
+import com.streamsets.datacollector.event.dto.PipelineHistoryDeleteEvent;
 import com.streamsets.datacollector.event.dto.PipelinePreviewEvent;
+import com.streamsets.datacollector.event.dto.PipelineResetEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveRulesEvent;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.event.dto.PipelineStatusEvent;
 import com.streamsets.datacollector.event.dto.PipelineStatusEvents;
 import com.streamsets.datacollector.event.dto.PipelineStopAndDeleteEvent;
+import com.streamsets.datacollector.event.dto.PipelineStopEvent;
+import com.streamsets.datacollector.event.dto.PipelineValidateEvent;
 import com.streamsets.datacollector.event.dto.SDCInfoEvent;
 import com.streamsets.datacollector.event.dto.SDCProcessMetricsEvent;
 import com.streamsets.datacollector.event.dto.SaveConfigurationEvent;
@@ -42,14 +46,18 @@ import com.streamsets.datacollector.event.json.BlobStoreEventJson;
 import com.streamsets.datacollector.event.json.ClientEventJson;
 import com.streamsets.datacollector.event.json.DisconnectedSsoCredentialsEventJson;
 import com.streamsets.datacollector.event.json.PingFrequencyAdjustmentEventJson;
-import com.streamsets.datacollector.event.json.PipelineBaseEventJson;
+import com.streamsets.datacollector.event.json.PipelineDeleteEventJson;
+import com.streamsets.datacollector.event.json.PipelineHistoryDeleteEventJson;
 import com.streamsets.datacollector.event.json.PipelinePreviewEventJson;
+import com.streamsets.datacollector.event.json.PipelineResetEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveRulesEventJson;
 import com.streamsets.datacollector.event.json.PipelineStartEventJson;
 import com.streamsets.datacollector.event.json.PipelineStatusEventJson;
 import com.streamsets.datacollector.event.json.PipelineStatusEventsJson;
 import com.streamsets.datacollector.event.json.PipelineStopAndDeleteEventJson;
+import com.streamsets.datacollector.event.json.PipelineStopEventJson;
+import com.streamsets.datacollector.event.json.PipelineValidateEventJson;
 import com.streamsets.datacollector.event.json.SDCInfoEventJson;
 import com.streamsets.datacollector.event.json.SDCProcessMetricsEventJson;
 import com.streamsets.datacollector.event.json.SaveConfigurationEventJson;
@@ -72,11 +80,7 @@ public abstract class MessagingDtoJsonMapper {
 
   public abstract PipelineSaveRulesEvent asPipelineSaveRulesEventDto(PipelineSaveRulesEventJson pipelineSaveRulesEventJson);
 
-  public abstract PipelineBaseEventJson toPipelineBaseEventJson(PipelineBaseEvent event);
-
   public abstract PipelineStopAndDeleteEventJson toPipelineStopAndDeleteEventJson(PipelineStopAndDeleteEvent event);
-
-  public abstract PipelineBaseEvent asPipelineBaseEventDto(PipelineBaseEventJson pipelineActionEventJson);
 
   public abstract PipelineStartEvent asPipelineStartEventDto(PipelineStartEventJson pipelineActionEventJson);
 
@@ -164,5 +168,24 @@ public abstract class MessagingDtoJsonMapper {
   public abstract PipelinePreviewEvent asPipelinePreviewEventDto(PipelinePreviewEventJson pipelineActionEventJson);
 
   public abstract PipelinePreviewEventJson toPipelinePreviewEventJson(PipelinePreviewEvent event);
+
+  public abstract PipelineStopEvent asPipelineStopEventDto(PipelineStopEventJson pipelineStopEventJson);
+  public abstract PipelineStopEventJson toPipelineStopEventJson(PipelineStopEvent pipelineStopEvent);
+
+  public abstract PipelineDeleteEvent asPipelineDeleteEventDto(PipelineDeleteEventJson pipelineDeleteEventJson);
+  public abstract PipelineDeleteEventJson toPipelineDeleteEventJson(PipelineDeleteEvent pipelineDeleteEvent);
+
+  public abstract PipelineHistoryDeleteEvent asPipelineHistoryDeleteEventDto(
+      PipelineHistoryDeleteEventJson pipelineHistoryDeleteEventJson
+  );
+  public abstract PipelineHistoryDeleteEventJson toPipelineHistoryDeleteEventJson(
+      PipelineHistoryDeleteEvent pipelineHistoryDeleteEvent
+  );
+
+  public abstract PipelineValidateEvent asPipelineValidateEventDto(PipelineValidateEventJson pipelineValidateEventJson);
+  public abstract PipelineValidateEventJson toPipelineValidateEventJson(PipelineValidateEvent pipelineValidateEvent);
+
+  public abstract PipelineResetEvent asPipelineResetEventDto(PipelineResetEventJson pipelineResetEventJson);
+  public abstract PipelineResetEventJson toPipelineResetEventJson(PipelineResetEvent pipelineResetEvent);
 
 }

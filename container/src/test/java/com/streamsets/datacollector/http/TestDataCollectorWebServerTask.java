@@ -46,7 +46,8 @@ public class TestDataCollectorWebServerTask {
         Collections.<WebAppProvider>emptySet(),
         new FileUserGroupManager()
     );
-    Map<String, String> expectedAttrs = ImmutableMap.<String, String>builder().put(SSOConstants.SERVICE_BASE_URL_ATTR,
+    Map<String, String> expectedAttrs = ImmutableMap.<String, String>builder().put(
+        SSOConstants.SERVICE_BASE_URL_ATTR,
         runtimeInfo
         .getBaseHttpUrl())
         .put("sdcJavaVersion", System.getProperty("java.runtime.version"))

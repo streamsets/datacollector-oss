@@ -193,6 +193,10 @@ public class RestClient {
       return conn.getContentType() != null;
     }
 
+    public boolean successful() throws IOException {
+      return getStatus() >= 200 && getStatus() < 300;
+    }
+
     public boolean isJson() {
       String contentType = conn.getContentType();
       return contentType != null && contentType.toLowerCase().trim().startsWith(APPLICATION_JSON);

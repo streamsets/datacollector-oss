@@ -16,13 +16,26 @@
 package com.streamsets.datacollector.restapi;
 
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.dynamicpreview.DynamicPreviewConstants;
+import com.streamsets.datacollector.dynamicpreview.DynamicPreviewRequestJson;
+import com.streamsets.datacollector.dynamicpreview.DynamicPreviewType;
+import com.streamsets.datacollector.event.binding.MessagingDtoJsonMapper;
+import com.streamsets.datacollector.event.binding.MessagingJsonToFromDto;
+import com.streamsets.datacollector.event.dto.EventType;
+import com.streamsets.datacollector.event.dto.PipelinePreviewEvent;
+import com.streamsets.datacollector.event.handler.EventHandlerTask;
+import com.streamsets.datacollector.event.handler.remote.RemoteDataCollectorResult;
+import com.streamsets.datacollector.event.json.DynamicPreviewEventJson;
+import com.streamsets.datacollector.event.json.EventJson;
 import com.streamsets.datacollector.execution.AclManager;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PreviewOutput;
 import com.streamsets.datacollector.execution.PreviewStatus;
 import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.RawPreview;
+import com.streamsets.datacollector.execution.preview.common.PreviewError;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
@@ -39,16 +52,27 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.EdgeUtil;
 import com.streamsets.datacollector.util.PipelineException;
+import com.streamsets.lib.security.http.ForbiddenException;
+import com.streamsets.lib.security.http.RemoteSSOService;
+import com.streamsets.lib.security.http.RestClient;
 import com.streamsets.lib.security.http.SSOPrincipal;
 import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.util.ThreadUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -62,8 +86,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.io.IOException;
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,15 +100,33 @@ import java.util.Map;
 @DenyAll
 @RequiresCredentialsDeployed
 public class PreviewResource {
+  private static final Logger LOG = LoggerFactory.getLogger(PreviewResource.class);
   private static final String MAX_BATCH_SIZE_KEY = "preview.maxBatchSize";
   private static final int MAX_BATCH_SIZE_DEFAULT = 10;
   private static final String MAX_BATCHES_KEY = "preview.maxBatches";
   private static final int MAX_BATCHES_DEFAULT = 10;
 
+  //TODO: look into avoiding duplicating constants with DPM (com.streamsets.apps.common.Roles and ClassificationRoles)
+  private static final List<String> DYNAMIC_PREVIEW_ALLOWED_ROLES_CLASSIFICATION = Arrays.asList(
+      // classification administrator (SDP specific role)
+      "classification:admin",
+      // system administrator (DPM common role)
+      "sys-admin",
+      // organization administrator (DPM common role)
+      "org-admin"
+  );
+
+  private static final int DYNAMIC_PREVIEW_MAX_COUNT = 100;
+
   private final Manager manager;
   private final PipelineStoreTask store;
   private final Configuration configuration;
   private final String user;
+  private final EventHandlerTask eventHandlerTask;
+  private final PipelineStoreTask pipelineStoreTask;
+  private final BlobStoreTask blobStoreTask;
+  private final RuntimeInfo runtimeInfo;
+  private final UserJson currentUser;
 
   @Inject
   public PreviewResource(
@@ -91,13 +136,18 @@ public class PreviewResource {
       PipelineStoreTask store,
       AclStoreTask aclStore,
       RuntimeInfo runtimeInfo,
-      UserGroupManager userGroupManager
+      UserGroupManager userGroupManager,
+      EventHandlerTask eventHandlerTask,
+      PipelineStoreTask pipelineStoreTask,
+      BlobStoreTask blobStoreTask
   ) {
     this.configuration = configuration;
     this.user = principal.getName();
     this.store = store;
+    this.eventHandlerTask = eventHandlerTask;
+    this.pipelineStoreTask = pipelineStoreTask;
+    this.blobStoreTask = blobStoreTask;
 
-    UserJson currentUser;
     if (runtimeInfo.isDPMEnabled()) {
       currentUser = new UserJson((SSOPrincipal)principal);
     } else {
@@ -109,6 +159,8 @@ public class PreviewResource {
     } else {
       this.manager = manager;
     }
+
+    this.runtimeInfo = runtimeInfo;
   }
 
   @Path("/pipeline/{pipelineId}/preview")
@@ -116,6 +168,7 @@ public class PreviewResource {
   @ApiOperation(value = "Run Pipeline preview",
       response = PreviewInfoJson.class, authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
   @RolesAllowed({
       AuthzRole.CREATOR,
       AuthzRole.ADMIN,
@@ -162,6 +215,32 @@ public class PreviewResource {
       }
     }
 
+    return startPreviewer(
+        pipelineId,
+        rev,
+        batchSize,
+        batches,
+        skipTargets,
+        skipLifecycleEvents,
+        endStageInstanceName,
+        timeout,
+        testOrigin,
+        stageOutputsToOverrideJson
+    );
+  }
+
+  private Response startPreviewer(
+      String pipelineId,
+      String rev,
+      int batchSize,
+      int batches,
+      boolean skipTargets,
+      boolean skipLifecycleEvents,
+      String endStageInstanceName,
+      long timeout,
+      boolean testOrigin,
+      List<StageOutputJson> stageOutputsToOverrideJson
+  ) throws PipelineException {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     int maxBatchSize = configuration.get(MAX_BATCH_SIZE_KEY, MAX_BATCH_SIZE_DEFAULT);
@@ -191,6 +270,180 @@ public class PreviewResource {
         throw ex;
       }
     }
+  }
+
+  @Path("/pipeline/dynamicPreview")
+  @POST
+  @ApiOperation(
+      value = "Run dynamic pipeline preview",
+      response = PreviewInfoJson.class,
+      authorizations = @Authorization(value = "basic")
+  )
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @RolesAllowed({
+      AuthzRole.CREATOR,
+      AuthzRole.ADMIN,
+      AuthzRole.CREATOR_REMOTE,
+      AuthzRole.ADMIN_REMOTE,
+      AuthzRole.MANAGER,
+      AuthzRole.MANAGER_REMOTE
+  })
+  public Response dynamicPreview(
+      @ApiParam(name="dynamicPreviewRequest", required = true) DynamicPreviewRequestJson dynamicPreviewRequest
+  ) throws StageException, IOException {
+
+    Utils.checkNotNull(dynamicPreviewRequest, "dynamicPreviewRequest");
+    checkDynamicPreviewPermissions(dynamicPreviewRequest);
+
+    // TODO: fix this hack?
+    final String orgId = StringUtils.substringAfterLast(currentUser.getName(), "@");
+    final Map<String, Object> params = dynamicPreviewRequest.getParameters();
+    params.put(DynamicPreviewConstants.REQUESTING_USER_ID_PARAMETER, currentUser.getName());
+    params.put(DynamicPreviewConstants.REQUESTING_USER_ORG_ID_PARAMETER, orgId);
+
+    String controlHubBaseUrl = RemoteSSOService.getValidURL(configuration.get(
+        RemoteSSOService.DPM_BASE_URL_CONFIG,
+        RemoteSSOService.DPM_BASE_URL_DEFAULT
+    ));
+
+    final DynamicPreviewEventJson dynamicPreviewEvent = getDynamicPreviewEvent(
+        controlHubBaseUrl,
+        "/dynamic_preview/rest/v2/dynamic_preview/createDynamicPreviewEvent",
+        runtimeInfo.getAppAuthToken(),
+        runtimeInfo.getId(),
+        dynamicPreviewRequest
+    );
+
+    String generatedPipelineId = null;
+    try {
+      generatedPipelineId = handlePreviewEvents(
+          "before",
+          dynamicPreviewEvent.getBeforeActionsEventTypeIds(),
+          dynamicPreviewEvent.getBeforeActions()
+      );
+    } catch (IOException e) {
+      throw new StageException(PreviewError.PREVIEW_0101, "before", e.getMessage(), e);
+    }
+
+    if (generatedPipelineId == null) {
+      throw new StageException(PreviewError.PREVIEW_0103);
+    }
+
+    final PipelinePreviewEvent previewEvent =
+        MessagingDtoJsonMapper.INSTANCE.asPipelinePreviewEventDto(dynamicPreviewEvent.getPreviewEvent());
+    final RemoteDataCollectorResult previewEventResult = eventHandlerTask.handleLocalEvent(
+        previewEvent,
+        EventType.fromValue(dynamicPreviewEvent.getPreviewEventTypeId())
+    );
+
+    String previewerId = null;
+
+    if (previewEventResult.getImmediateResult() == null) {
+      throw new StageException(PreviewError.PREVIEW_0102);
+    } else {
+      previewerId = (String) previewEventResult.getImmediateResult();
+    }
+
+    Previewer previewer = manager.getPreviewer(previewerId);
+    if (previewer == null) {
+      return Response.status(Response.Status.NOT_FOUND).entity("Cannot find previewer with id " + previewerId).build();
+    } else {
+      if (EnumSet.of(PreviewStatus.INVALID, PreviewStatus.VALIDATION_ERROR).contains(previewer.getStatus())) {
+        // invalid pipeline; report validation error
+        return Response.status(Response.Status.BAD_REQUEST).entity(previewer.getOutput()).build();
+      }
+      int count = 0;
+      PreviewStatus status;
+      for (status = previewer.getStatus(); status != PreviewStatus.FINISHED && count < DYNAMIC_PREVIEW_MAX_COUNT; count++) {
+        LOG.debug("Waiting for previewerId {} to reach FINISHED status; current status: {}", status);
+        ThreadUtil.sleep(100);
+        status = previewer.getStatus();
+      }
+      if (status != PreviewStatus.FINISHED) {
+        LOG.error("Previewer never reached finished status after {} iterations of waiting", count);
+      }
+    }
+
+    final PreviewOutput output = previewer.getOutput();
+
+    try {
+      handlePreviewEvents("after",
+          dynamicPreviewEvent.getAfterActionsEventTypeIds(),
+          dynamicPreviewEvent.getAfterActions()
+      );
+    } catch (IOException e) {
+      throw new StageException(PreviewError.PREVIEW_0101, "after", e.getMessage(), e);
+    }
+
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapPreviewOutput(output)).build();
+  }
+
+  private void checkDynamicPreviewPermissions(DynamicPreviewRequestJson dynamicPreviewRequest) {
+    switch (dynamicPreviewRequest.getType()) {
+      case CLASSIFICATION_CATALOG:
+        if (!CollectionUtils.containsAny(currentUser.getRoles(), DYNAMIC_PREVIEW_ALLOWED_ROLES_CLASSIFICATION)) {
+          throw new ForbiddenException(Collections.singletonMap("message", String.format(
+              "User did not have any roles that would allow performing %s type dynamic preview",
+              DynamicPreviewType.CLASSIFICATION_CATALOG.name()
+          )));
+        }
+        break;
+      case PROTECTION_POLICY:
+        // permissions on specific policies will be checked on DPM side
+        break;
+    }
+  }
+
+  private DynamicPreviewEventJson getDynamicPreviewEvent(
+      String schBaseUrl,
+      String requestPath,
+      String appAuthToken,
+      String componentId,
+      DynamicPreviewRequestJson requestJson
+  ) throws IOException {
+    final RestClient dynamicPreviewAppClient = RestClient.builder(schBaseUrl).json(true).appAuthToken(appAuthToken)
+        .componentId(componentId).csrf(true).build(requestPath);
+
+    final RestClient.Response response = dynamicPreviewAppClient.post(requestJson);
+    if (response.haveData() && response.successful()) {
+      return response.getData(DynamicPreviewEventJson.class);
+    } else {
+      LOG.error(
+          "Error trying to get DynamicPreviewEventJson; status {}, error: {}",
+          response.getStatus(),
+          response.getError()
+      );
+      return null;
+    }
+  }
+
+  private String handlePreviewEvents(String kind, List<Integer> eventTypeIds, List<EventJson> events) throws IOException {
+    String generatedPipelineId = null;
+    if (eventTypeIds == null && events == null) {
+      LOG.debug("Null {} events; nothing to do", kind);
+      return null;
+    }
+    if (eventTypeIds.size() != events.size()) {
+      throw new IllegalArgumentException(String.format(
+          "Length of type IDs (%d) did not match length of events (%d); cannot process %s events in dynamic preview",
+          eventTypeIds.size(),
+          events.size(),
+          kind
+      ));
+    }
+    for (int i=0; i<eventTypeIds.size(); i++) {
+      final int eventTypeId = eventTypeIds.get(i);
+      final EventType eventType = EventType.fromValue(eventTypeId);
+      final RemoteDataCollectorResult result = eventHandlerTask.handleLocalEvent(
+          MessagingJsonToFromDto.INSTANCE.asDto(events.get(i), eventTypeId),
+          eventType
+      );
+      if (eventType == EventType.SAVE_PIPELINE && result.getImmediateResult() != null) {
+        generatedPipelineId = (String) result.getImmediateResult();
+      }
+    }
+    return generatedPipelineId;
   }
 
   @Path("/pipeline/{pipelineId}/preview/{previewerId}/status")

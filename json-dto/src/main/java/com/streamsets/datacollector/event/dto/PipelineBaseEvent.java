@@ -16,7 +16,8 @@
 package com.streamsets.datacollector.event.dto;
 
 // Events for all commands requiring Pipeline name, rev and user
-public class PipelineBaseEvent implements Event {
+// made abstract under SDC-10218, when Jackson polymorphism was introduced
+public abstract class PipelineBaseEvent implements Event {
 
   private String name;
   private String rev;

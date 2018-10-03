@@ -37,7 +37,6 @@ public class MetricAggregationConstants {
   public static final String OUTPUT_RECORDS = ".outputRecords";
   public static final String ERROR_RECORDS = ".errorRecords";
   public static final String STAGE_ERRORS = ".stageErrors";
-  public static final String SDC = "sdc";
   public static final String AGGREGATOR = "Aggregator";
 
 }

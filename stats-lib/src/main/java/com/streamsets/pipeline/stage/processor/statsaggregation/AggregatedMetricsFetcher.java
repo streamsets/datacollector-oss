@@ -29,6 +29,7 @@ import com.streamsets.datacollector.restapi.bean.MetricsRuleDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.RuleDefinitionsJson;
 import com.streamsets.datacollector.restapi.bean.TimerJson;
 import com.streamsets.datacollector.runner.LaneResolver;
+import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.util.StatsUtil;
@@ -126,9 +127,9 @@ public class AggregatedMetricsFetcher {
             .queryParam("pipelineId", pipelineId)
             .queryParam("pipelineVersion", pipelineVersion)
             .request()
-            .header("X-Requested-By", MetricAggregationConstants.SDC)
-            .header("X-SS-App-Auth-Token", authToken.replaceAll("(\\r|\\n)", ""))
-            .header("X-SS-App-Component-Id", appComponentId)
+            .header(SSOConstants.X_REST_CALL, SSOConstants.SDC_COMPONENT_NAME)
+            .header(SSOConstants.X_APP_AUTH_TOKEN, authToken.replaceAll("(\\r|\\n)", ""))
+            .header(SSOConstants.X_APP_COMPONENT_ID, appComponentId)
             .post(metricRegistryJsonEntity);
 
         if (response.getStatus() == HttpURLConnection.HTTP_OK) {

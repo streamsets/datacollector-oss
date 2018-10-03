@@ -20,10 +20,16 @@ import com.streamsets.datacollector.execution.PreviewStatus;
 public class PreviewInfoJson {
   private String previewerId;
   private PreviewStatus status;
+  private String pipelineId;
 
   public PreviewInfoJson(String previewerId, PreviewStatus previewStatus) {
+    this(previewerId, previewStatus, null);
+  }
+
+  public PreviewInfoJson(String previewerId, PreviewStatus previewStatus, String pipelineId) {
     this.previewerId = previewerId;
     this.status = previewStatus;
+    this.pipelineId = pipelineId;
   }
 
   public String getPreviewerId() {
@@ -40,5 +46,13 @@ public class PreviewInfoJson {
 
   public void setStatus(PreviewStatus previewStatus) {
     this.status = previewStatus;
+  }
+
+  public String getPipelineId() {
+    return pipelineId;
+  }
+
+  public void setPipelineId(String pipelineId) {
+    this.pipelineId = pipelineId;
   }
 }

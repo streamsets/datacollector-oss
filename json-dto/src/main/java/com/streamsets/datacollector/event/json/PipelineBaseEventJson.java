@@ -15,8 +15,8 @@
  */
 package com.streamsets.datacollector.event.json;
 
-
-public class PipelineBaseEventJson implements EventJson {
+// made abstract under SDC-10218, when Jackson polymorphism was introduced
+public abstract class PipelineBaseEventJson implements EventJson {
 
   private String name;
   private String rev;

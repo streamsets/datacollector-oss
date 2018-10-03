@@ -22,6 +22,7 @@ import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
 import com.streamsets.datacollector.restapi.bean.SDCMetricsJson;
 import com.streamsets.datacollector.util.AggregatorUtil;
+import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OffsetCommitTrigger;
@@ -56,10 +57,6 @@ import java.util.concurrent.TimeUnit;
 public class HttpTarget extends BaseTarget implements OffsetCommitTrigger {
 
   private static final Logger LOG = LoggerFactory.getLogger(HttpTarget.class);
-  private static final String SDC = "sdc";
-  private static final String X_REQUESTED_BY = "X-Requested-By";
-  private static final String X_SS_APP_AUTH_TOKEN = "X-SS-App-Auth-Token";
-  private static final String X_SS_APP_COMPONENT_ID = "X-SS-App-Component-Id";
 
   @VisibleForTesting
   static final String DPM_PIPELINE_COMMIT_ID = "dpm.pipeline.commitId";
@@ -186,9 +183,9 @@ public class HttpTarget extends BaseTarget implements OffsetCommitTrigger {
       Response response = null;
       try {
         response = target.request()
-          .header(X_REQUESTED_BY, SDC)
-          .header(X_SS_APP_AUTH_TOKEN, sdcAuthToken.replaceAll("(\\r|\\n)", ""))
-          .header(X_SS_APP_COMPONENT_ID, sdcId)
+          .header(SSOConstants.X_REST_CALL, SSOConstants.SDC_COMPONENT_NAME)
+          .header(SSOConstants.X_APP_AUTH_TOKEN, sdcAuthToken.replaceAll("(\\r|\\n)", ""))
+          .header(SSOConstants.X_APP_COMPONENT_ID, sdcId)
           .post(
             Entity.json(
               sdcMetricsJsonList

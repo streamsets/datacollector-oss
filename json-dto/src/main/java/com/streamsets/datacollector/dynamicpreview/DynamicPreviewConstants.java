@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2018 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.event.json;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+package com.streamsets.datacollector.dynamicpreview;
 
-@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS)
-public interface EventJson {
+public abstract class DynamicPreviewConstants {
+  public static String RAW_JSON_PARAMETER = "rawJson";
+  public static String PIPELINE_ID_PARAMETER = "pipelineId";
+  public static String REQUESTING_USER_ID_PARAMETER = "requestingUserId";
+  public static String REQUESTING_USER_ORG_ID_PARAMETER = "requestingUserOrgId";
 }

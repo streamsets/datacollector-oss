@@ -85,7 +85,7 @@
     <minikdc-hadoop.version>2.6.0</minikdc-hadoop.version>
     <minikdc-jdbm1.version>2.0.0-M3</minikdc-jdbm1.version>
     <mockserver.version>3.10.8</mockserver.version>
-    <selma.version>0.13</selma.version>
+    <selma.version>1.0</selma.version>
     <servlet.version>3.1.0</servlet.version>
     <!-- Swagger starting on version 1.5.14 depends on reflections 0.9.11 that in turns
          require guava on at least version 20. Since we mostly use 18 across our project

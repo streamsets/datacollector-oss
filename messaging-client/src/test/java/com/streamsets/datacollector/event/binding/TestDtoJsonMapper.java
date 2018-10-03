@@ -16,13 +16,23 @@
 package com.streamsets.datacollector.event.binding;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.equalTo;
 
 import java.util.Arrays;
 
+import com.streamsets.datacollector.event.dto.Event;
+import com.streamsets.datacollector.event.dto.PipelineDeleteEvent;
+import com.streamsets.datacollector.event.dto.PipelineHistoryDeleteEvent;
+import com.streamsets.datacollector.event.dto.PipelineResetEvent;
+import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.event.dto.PipelineStatusEvent;
 import com.streamsets.datacollector.event.dto.PipelineStatusEvents;
+import com.streamsets.datacollector.event.dto.PipelineStopEvent;
+import com.streamsets.datacollector.event.dto.PipelineValidateEvent;
 import com.streamsets.datacollector.event.dto.WorkerInfo;
+import com.streamsets.datacollector.event.json.EventJson;
 import com.streamsets.datacollector.event.json.PipelineStatusEventJson;
 import com.streamsets.datacollector.event.json.PipelineStatusEventsJson;
 import com.streamsets.datacollector.event.json.WorkerInfoJson;
@@ -44,17 +54,128 @@ import com.streamsets.datacollector.execution.PipelineStatus;
 
 public class TestDtoJsonMapper {
 
+  interface DtoJsonAssertions<D extends Event, J extends EventJson> {
+    void doAssertions(D original, J json, D converted);
+  }
+
+  interface DtoToJson <D extends Event, J extends EventJson> {
+    J toJson(D dto);
+  }
+
+  interface JsonToDto <D extends Event, J extends EventJson> {
+    D toDto(J json);
+  }
+
+  private static <D extends PipelineBaseEvent, J extends PipelineBaseEventJson> void assertPipelineBaseEventConversions(
+      D original,
+      J json,
+      D converted
+  ) {
+    assertThat(json.getName(), equalTo(original.getName()));
+    assertThat(converted.getName(), equalTo(original.getName()));
+
+    assertThat(json.getRev(), equalTo(original.getRev()));
+    assertThat(converted.getRev(), equalTo(original.getRev()));
+
+    assertThat(json.getUser(), equalTo(original.getUser()));
+    assertThat(converted.getUser(), equalTo(original.getUser()));
+  }
+
+  private static <D extends Event, J extends EventJson> void assertDtoJsonConversion(
+      D originalEvent,
+      DtoToJson<D, J> toJson,
+      JsonToDto<D, J> toDto,
+      DtoJsonAssertions<D, J> assertionFunction
+  ) {
+    final J eventJson = toJson.toJson(originalEvent);
+
+    final D convertedEvent = toDto.toDto(eventJson);
+
+    assertionFunction.doAssertions(originalEvent, eventJson, convertedEvent);
+  }
+
   @Test
-  public void testPipelineBaseEventJson() throws Exception {
-    PipelineBaseEvent pde = new PipelineBaseEvent("name1", "rev1", "user1");
-    PipelineBaseEventJson pdeJson = MessagingDtoJsonMapper.INSTANCE.toPipelineBaseEventJson(pde);
-    assertEquals("name1", pdeJson.getName());
-    assertEquals("rev1", pdeJson.getRev());
-    assertEquals("user1", pdeJson.getUser());
-    PipelineBaseEvent pdeDto = MessagingDtoJsonMapper.INSTANCE.asPipelineBaseEventDto(pdeJson);
-    assertEquals("name1", pdeDto.getName());
-    assertEquals("rev1", pdeDto.getRev());
-    assertEquals("user1", pdeDto.getUser());
+  public void testPipelineStartEventConversion() {
+    final PipelineStartEvent origEvent = new PipelineStartEvent();
+    origEvent.setName("name");
+    origEvent.setRev("rev");
+    origEvent.setUser("user");
+
+    assertDtoJsonConversion(origEvent,
+        MessagingDtoJsonMapper.INSTANCE::toPipelineStartEventJson,
+        MessagingDtoJsonMapper.INSTANCE::asPipelineStartEventDto,
+        TestDtoJsonMapper::assertPipelineBaseEventConversions
+    );
+  }
+
+  @Test
+  public void testPipelineStopEventConversion() {
+    final PipelineStopEvent origEvent = new PipelineStopEvent();
+    origEvent.setName("name");
+    origEvent.setRev("rev");
+    origEvent.setUser("user");
+
+    assertDtoJsonConversion(origEvent,
+        MessagingDtoJsonMapper.INSTANCE::toPipelineStopEventJson,
+        MessagingDtoJsonMapper.INSTANCE::asPipelineStopEventDto,
+        TestDtoJsonMapper::assertPipelineBaseEventConversions
+    );
+  }
+
+  @Test
+  public void testPipelineDeleteEventConversion() {
+    final PipelineDeleteEvent origEvent = new PipelineDeleteEvent();
+    origEvent.setName("name");
+    origEvent.setRev("rev");
+    origEvent.setUser("user");
+
+    assertDtoJsonConversion(origEvent,
+        MessagingDtoJsonMapper.INSTANCE::toPipelineDeleteEventJson,
+        MessagingDtoJsonMapper.INSTANCE::asPipelineDeleteEventDto,
+        TestDtoJsonMapper::assertPipelineBaseEventConversions
+    );
+  }
+
+  @Test
+  public void testPipelineHistoryDeleteEventConversion() {
+    final PipelineHistoryDeleteEvent origEvent = new PipelineHistoryDeleteEvent();
+    origEvent.setName("name");
+    origEvent.setRev("rev");
+    origEvent.setUser("user");
+
+    assertDtoJsonConversion(origEvent,
+        MessagingDtoJsonMapper.INSTANCE::toPipelineHistoryDeleteEventJson,
+        MessagingDtoJsonMapper.INSTANCE::asPipelineHistoryDeleteEventDto,
+        TestDtoJsonMapper::assertPipelineBaseEventConversions
+    );
+  }
+
+  @Test
+  public void testPipelineResetEventConversion() {
+    final PipelineResetEvent origEvent = new PipelineResetEvent();
+    origEvent.setName("name");
+    origEvent.setRev("rev");
+    origEvent.setUser("user");
+
+    assertDtoJsonConversion(origEvent,
+        MessagingDtoJsonMapper.INSTANCE::toPipelineResetEventJson,
+        MessagingDtoJsonMapper.INSTANCE::asPipelineResetEventDto,
+        TestDtoJsonMapper::assertPipelineBaseEventConversions
+    );
+  }
+
+  @Test
+  public void testPipelineValidateEventConversion() {
+    final PipelineValidateEvent origEvent = new PipelineValidateEvent();
+    origEvent.setName("name");
+    origEvent.setRev("rev");
+    origEvent.setUser("user");
+
+    assertDtoJsonConversion(origEvent,
+        MessagingDtoJsonMapper.INSTANCE::toPipelineValidateEventJson,
+        MessagingDtoJsonMapper.INSTANCE::asPipelineValidateEventDto,
+        TestDtoJsonMapper::assertPipelineBaseEventConversions
+    );
   }
 
   @Test

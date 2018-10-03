@@ -47,10 +47,12 @@ public class TestJsonToFromDto {
   @Test
   public void testPipelineClientEventJson() throws Exception {
     UUID uuid = UUID.randomUUID();
-    PipelineStartEvent pde = new PipelineStartEvent("name1", "rev1", "user1", null);
+    PipelineStartEvent pse = new PipelineStartEvent("name1", "rev1", "user1", null);
     ClientEvent clientEvent = new ClientEvent(uuid.toString(), Arrays.asList("SDC1"),
-      true, false, EventType.START_PIPELINE, pde, "org1");
-    String payload = MessagingJsonToFromDto.INSTANCE.serialize(pde);
+      true, false, EventType.START_PIPELINE, pse, "org1");
+    String payload = MessagingJsonToFromDto.INSTANCE.serialize(MessagingDtoJsonMapper.INSTANCE.toPipelineStartEventJson(
+        pse
+    ));
 
     List<ClientEventJson> clientJson = MessagingJsonToFromDto.INSTANCE.toJson(Arrays.asList(clientEvent));
     assertEquals(1, clientJson.size());
@@ -60,7 +62,7 @@ public class TestJsonToFromDto {
     assertEquals(true, clientJson.get(0).isRequiresAck());
     assertEquals("org1", clientJson.get(0).getOrgId());
     assertEquals(EventType.START_PIPELINE, EventType.fromValue(clientJson.get(0).getEventTypeId()));
-    PipelineBaseEvent actualEvent = MessagingJsonToFromDto.INSTANCE.deserialize(payload, new TypeReference<PipelineBaseEvent>() {});
+    PipelineStartEvent actualEvent = MessagingJsonToFromDto.INSTANCE.deserialize(payload, PipelineStartEvent.class);
     assertEquals("name1", actualEvent.getName());
     assertEquals("rev1", actualEvent.getRev());
     assertEquals("user1", actualEvent.getUser());
@@ -89,14 +91,7 @@ public class TestJsonToFromDto {
     pipelineSaveEvent.setPipelineConfigurationAndRules(pipelineConfigAndRules);
     pipelineSaveEvent.setAcl(acl);
 
-    PipelineSaveEventJson pseJson = new PipelineSaveEventJson();
-    PipelineConfigAndRulesJson pipelineConfigAndRulesJson = new PipelineConfigAndRulesJson();
-    pipelineConfigAndRulesJson.setPipelineConfig("config");
-    pipelineConfigAndRulesJson.setPipelineRules("rules");
-    pseJson.setName("name1");
-    pseJson.setRev("rev1");
-    pseJson.setUser("user1");
-    pseJson.setPipelineConfigurationAndRules(pipelineConfigAndRulesJson);
+    PipelineSaveEventJson pseJson = MessagingDtoJsonMapper.INSTANCE.toPipelineSaveEventJson(pipelineSaveEvent);
 
     List<ServerEventJson> serverJsonList = new ArrayList<>();
     ServerEventJson serverEventJson = new ServerEventJson();
@@ -106,7 +101,7 @@ public class TestJsonToFromDto {
     serverEventJson.setRequiresAck(true);
     serverEventJson.setFrom("JOB_RUNNER");
     serverEventJson.setOrgId("org1");
-    serverEventJson.setPayload(MessagingJsonToFromDto.INSTANCE.serialize(pipelineSaveEvent));
+    serverEventJson.setPayload(MessagingJsonToFromDto.INSTANCE.serialize(pseJson));
     serverJsonList.add(serverEventJson);
     ServerEvent serverEvent = MessagingJsonToFromDto.INSTANCE.asDto(serverEventJson);
     assertEquals(uuid.toString(), serverEvent.getEventId());

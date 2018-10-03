@@ -49,15 +49,25 @@ import com.streamsets.datacollector.event.dto.SaveConfigurationEvent;
 import com.streamsets.datacollector.event.dto.StageInfo;
 import com.streamsets.datacollector.event.handler.DataCollector;
 import com.streamsets.datacollector.event.handler.remote.RemoteEventHandlerTask.EventHandlerCallable;
+import com.streamsets.datacollector.event.json.BlobDeleteVersionEventJson;
+import com.streamsets.datacollector.event.json.BlobStoreEventJson;
 import com.streamsets.datacollector.event.json.ClientEventJson;
 import com.streamsets.datacollector.event.json.DisconnectedSsoCredentialsEventJson;
 import com.streamsets.datacollector.event.json.PingFrequencyAdjustmentEventJson;
 import com.streamsets.datacollector.event.json.PipelineBaseEventJson;
+import com.streamsets.datacollector.event.json.PipelineDeleteEventJson;
+import com.streamsets.datacollector.event.json.PipelineHistoryDeleteEventJson;
+import com.streamsets.datacollector.event.json.PipelineResetEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveRulesEventJson;
+import com.streamsets.datacollector.event.json.PipelineStartEventJson;
 import com.streamsets.datacollector.event.json.PipelineStatusEventJson;
 import com.streamsets.datacollector.event.json.PipelineStatusEventsJson;
+import com.streamsets.datacollector.event.json.PipelineStopAndDeleteEventJson;
+import com.streamsets.datacollector.event.json.PipelineStopEventJson;
+import com.streamsets.datacollector.event.json.PipelineValidateEventJson;
 import com.streamsets.datacollector.event.json.SDCInfoEventJson;
+import com.streamsets.datacollector.event.json.SaveConfigurationEventJson;
 import com.streamsets.datacollector.event.json.ServerEventJson;
 import com.streamsets.datacollector.event.json.StageInfoJson;
 import com.streamsets.datacollector.event.json.SyncAclEventJson;
@@ -141,14 +151,21 @@ public class TestRemoteEventHandler {
         List<ClientEventJson> clientEventJson
     ) throws EventException {
       this.clientJson = clientEventJson;
-      PipelineBaseEventJson pipelineBaseEventJson = new PipelineBaseEventJson();
-      pipelineBaseEventJson.setName("name");
-      pipelineBaseEventJson.setRev("rev");
-      pipelineBaseEventJson.setUser("user");
+      final String name = "name";
+      final String rev = "rev";
+      final String user = "user";
 
-      BlobStoreEvent blobStoreEvent = new BlobStoreEvent("n", "a", 1, "X");
-      BlobDeleteVersionEvent blobDeleteEvent = new BlobDeleteVersionEvent("n", "a", 1);
-      SaveConfigurationEvent saveConfigurationEvent = new SaveConfigurationEvent(Collections.singletonMap("a", "b"));
+      BlobStoreEventJson blobStoreEvent = new BlobStoreEventJson();
+      blobStoreEvent.setNamespace("n");
+      blobStoreEvent.setVersion(1l);
+      blobStoreEvent.setId("a");
+      blobStoreEvent.setContent("X");
+      BlobDeleteVersionEventJson blobDeleteEvent = new BlobDeleteVersionEventJson();
+      blobDeleteEvent.setNamespace("n");
+      blobDeleteEvent.setVersion(1l);
+      blobDeleteEvent.setId("a");
+      SaveConfigurationEventJson saveConfigurationEvent = new SaveConfigurationEventJson();
+      saveConfigurationEvent.setConfiguration(Collections.singletonMap("a", "b"));
 
       List<ServerEventJson> serverEventJsonList = new ArrayList<ServerEventJson>();
       try {
@@ -169,7 +186,7 @@ public class TestRemoteEventHandler {
             EventType.START_PIPELINE,
             false,
             true,
-            jsonDto.serialize(pipelineBaseEventJson)
+            jsonDto.serialize(createStartEvent(name, rev, user))
         );
         setServerEvent(
             serverEventJson2,
@@ -177,7 +194,7 @@ public class TestRemoteEventHandler {
             EventType.STOP_PIPELINE,
             false,
             true,
-            jsonDto.serialize(pipelineBaseEventJson)
+            jsonDto.serialize(createStopEvent(name, rev, user))
         );
         setServerEvent(
             serverEventJson3,
@@ -185,14 +202,14 @@ public class TestRemoteEventHandler {
             EventType.DELETE_PIPELINE,
             false,
             true,
-            jsonDto.serialize(pipelineBaseEventJson)
+            jsonDto.serialize(createDeleteEvent(name, rev, user))
         );
         setServerEvent(serverEventJson4,
             id4.toString(),
             EventType.DELETE_HISTORY_PIPELINE,
             false,
             true,
-            jsonDto.serialize(pipelineBaseEventJson)
+            jsonDto.serialize(createHistoryDeleteEvent(name, rev, user))
         );
         setServerEvent(
             serverEventJson5,
@@ -200,14 +217,14 @@ public class TestRemoteEventHandler {
             EventType.VALIDATE_PIPELINE,
             false,
             true,
-            jsonDto.serialize(pipelineBaseEventJson)
+            jsonDto.serialize(createValidateEvent(name, rev, user))
         );
         setServerEvent(serverEventJson6,
             id6.toString(),
             EventType.RESET_OFFSET_PIPELINE,
             false,
             true,
-            jsonDto.serialize(pipelineBaseEventJson)
+            jsonDto.serialize(createResetEvent(name, rev, user))
         );
         setServerEvent(
             serverEventJson7,
@@ -215,7 +232,7 @@ public class TestRemoteEventHandler {
             EventType.STOP_DELETE_PIPELINE,
             false,
             true,
-            jsonDto.serialize(pipelineBaseEventJson)
+            jsonDto.serialize(createStopAndDeleteEvent(name, rev, user))
         );
         setServerEvent(
             serverEventJson9,
@@ -272,7 +289,70 @@ public class TestRemoteEventHandler {
       }
       return serverEventJsonList;
     }
+  }
 
+  private static PipelineStartEventJson createStartEvent(String name, String rev, String user) {
+    return setBaseEventPropertiesAndReturn(new PipelineStartEventJson(), name, rev, user);
+  }
+
+  private static PipelineStopEventJson createStopEvent(String name, String rev, String user) {
+    final PipelineStopEventJson stopEventJson = new PipelineStopEventJson();
+    stopEventJson.setName(name);
+    stopEventJson.setRev(rev);
+    stopEventJson.setUser(user);
+    return stopEventJson;
+  }
+
+  private static PipelineDeleteEventJson createDeleteEvent(String name, String rev, String user) {
+    final PipelineDeleteEventJson deleteEventJson = new PipelineDeleteEventJson();
+    deleteEventJson.setName(name);
+    deleteEventJson.setRev(rev);
+    deleteEventJson.setUser(user);
+    return deleteEventJson;
+  }
+
+  private static PipelineHistoryDeleteEventJson createHistoryDeleteEvent(String name, String rev, String user) {
+    final PipelineHistoryDeleteEventJson deleteHistoryEventJson = new PipelineHistoryDeleteEventJson();
+    deleteHistoryEventJson.setName(name);
+    deleteHistoryEventJson.setRev(rev);
+    deleteHistoryEventJson.setUser(user);
+    return deleteHistoryEventJson;
+  }
+
+  private static PipelineValidateEventJson createValidateEvent(String name, String rev, String user) {
+    final PipelineValidateEventJson validateEventJson = new PipelineValidateEventJson();
+    validateEventJson.setName(name);
+    validateEventJson.setRev(rev);
+    validateEventJson.setUser(user);
+    return validateEventJson;
+  }
+
+  private static PipelineResetEventJson createResetEvent(String name, String rev, String user) {
+    final PipelineResetEventJson resetEventJson = new PipelineResetEventJson();
+    resetEventJson.setName(name);
+    resetEventJson.setRev(rev);
+    resetEventJson.setUser(user);
+    return resetEventJson;
+  }
+
+  private static PipelineStopAndDeleteEventJson createStopAndDeleteEvent(String name, String rev, String user) {
+    final PipelineStopAndDeleteEventJson stopAndDeleteEventJson = new PipelineStopAndDeleteEventJson();
+    stopAndDeleteEventJson.setName(name);
+    stopAndDeleteEventJson.setRev(rev);
+    stopAndDeleteEventJson.setUser(user);
+    return stopAndDeleteEventJson;
+  }
+
+  private static <E extends PipelineBaseEventJson> E setBaseEventPropertiesAndReturn(
+      E baseEvent,
+      String name,
+      String rev,
+      String user
+  ) {
+    baseEvent.setName(name);
+    baseEvent.setRev(rev);
+    baseEvent.setUser(user);
+    return baseEvent;
   }
 
   private static void setServerEvent(
@@ -740,7 +820,8 @@ public class TestRemoteEventHandler {
         new Configuration(),
         dataStore
     );
-    EventHandlerCallable remoteEventHandler = remoteEventHandlerTask.new EventHandlerCallable(mockRemoteDataCollector,
+    EventHandlerCallable remoteEventHandler = remoteEventHandlerTask.new EventHandlerCallable(
+        mockRemoteDataCollector,
         eventSenderReceiver,
         jsonToFromDto,
         ackEventJsonList,
