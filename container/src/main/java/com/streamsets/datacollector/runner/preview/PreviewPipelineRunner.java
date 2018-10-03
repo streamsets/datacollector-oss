@@ -392,7 +392,9 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
     long start = System.currentTimeMillis();
 
     // Destroy origin on it's own
-    originPipe.destroy(new FullPipeBatch(null,null, batchSize, true));
+    FullPipeBatch originBatch = new FullPipeBatch(null, null, batchSize, false);
+    originBatch.skipStage(originPipe);
+    originPipe.destroy(originBatch);
 
     // And destroy each pipeline instance separately
     for(PipeRunner pipeRunner: pipeRunners) {
