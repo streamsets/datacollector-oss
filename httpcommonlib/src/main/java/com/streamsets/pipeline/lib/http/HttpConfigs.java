@@ -48,6 +48,10 @@ public abstract class HttpConfigs {
 
   public abstract TlsConfigBean getTlsConfigBean();
 
+  public boolean getNeedClientAuth() {
+    return false;
+  }
+
   public List<Stage.ConfigIssue> init(Stage.Context context) {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
 

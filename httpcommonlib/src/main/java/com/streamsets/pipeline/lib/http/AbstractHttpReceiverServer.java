@@ -105,6 +105,13 @@ public abstract class AbstractHttpReceiverServer {
         sslContextFactory.setKeyManagerPassword(tlsConfig.keyStorePassword.get());
         sslContextFactory.setIncludeProtocols(tlsConfig.getFinalProtocols());
         sslContextFactory.setIncludeCipherSuites(tlsConfig.getFinalCipherSuites());
+        if (configs.getNeedClientAuth()) {
+          sslContextFactory.setNeedClientAuth(true);
+          sslContextFactory.setTrustStorePath(tlsConfig.trustStoreFilePath);
+          sslContextFactory.setTrustStoreType(tlsConfig.trustStoreType.getJavaValue());
+          sslContextFactory.setTrustStorePassword(tlsConfig.trustStorePassword.get());
+          sslContextFactory.setTrustManagerFactoryAlgorithm(tlsConfig.trustStoreAlgorithm);
+        }
       } catch (Exception e) {
         issues.add(context.createConfigIssue("HTTP", "", HttpServerErrors.HTTP_SERVER_ORIG_12, e.getMessage()));
       }

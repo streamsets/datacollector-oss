@@ -32,6 +32,21 @@ public class RawHttpConfigs extends HttpConfigs {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Require Client Authentication",
+      description = "Enable if SSL needs client authentication (MASSL/MTLS/Two-Way-SSL/Mutual SSL authentication " +
+          "Support). Any client that has its certificate in the server's truststore will be able to establish a TLS " +
+          "connection to the server",
+      defaultValue = "false",
+      displayPosition = 1010,
+      group = "TLS",
+      dependsOn = "tlsConfigBean.tlsEnabled",
+      triggeredByValue = "true"
+  )
+  public boolean needClientAuth = false;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "8000",
       label = "HTTP Listening Port",
@@ -117,6 +132,11 @@ public class RawHttpConfigs extends HttpConfigs {
   @Override
   public TlsConfigBean getTlsConfigBean() {
     return tlsConfigBean;
+  }
+
+  @Override
+  public boolean getNeedClientAuth() {
+    return needClientAuth;
   }
 
 }

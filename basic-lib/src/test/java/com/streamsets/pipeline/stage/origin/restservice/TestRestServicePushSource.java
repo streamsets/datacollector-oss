@@ -19,12 +19,14 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.httpsource.RawHttpConfigs;
 import com.streamsets.pipeline.lib.microservice.ResponseConfigBean;
+import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import com.streamsets.pipeline.stage.destination.sdcipc.Constants;
 import com.streamsets.pipeline.stage.origin.httpserver.HttpServerDPushSource;
 import com.streamsets.pipeline.stage.origin.httpserver.TestHttpServerPushSource;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
+import com.streamsets.pipeline.stage.util.tls.TLSTestUtils;
 import com.streamsets.testing.NetworkUtils;
 import org.awaitility.Duration;
 import org.glassfish.jersey.client.ClientProperties;
@@ -33,15 +35,25 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.internal.util.reflection.Whitebox;
 
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.security.KeyPair;
+import java.security.KeyStore;
+import java.security.cert.Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.awaitility.Awaitility.await;
 
@@ -250,6 +262,147 @@ public class TestRestServicePushSource {
     Assert.assertNotNull(responseBody.getError());
     Assert.assertEquals(1, responseBody.getError().size());
     Assert.assertNotNull(responseBody.getErrorMessage());
+  }
+
+  @Test
+  public void testMLTS() throws Exception {
+    // Server TLS
+    String hostname = TLSTestUtils.getHostname();
+    File testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    File serverKeyStore = new File(testDir, "serverKeystore.jks");
+    Assert.assertTrue(testDir.mkdirs());
+    String keyStorePassword = "keystore";
+    File serverTrustStore = new File(testDir, "serverTruststore.jks");
+    KeyPair keyPair = TLSTestUtils.generateKeyPair();
+    Certificate cert = TLSTestUtils.generateCertificate("CN=" + hostname, keyPair, 30);
+    String trustStorePassword = "truststore";
+    TLSTestUtils.createKeyStore(serverKeyStore.toString(), keyStorePassword, "web", keyPair.getPrivate(), cert);
+    TLSTestUtils.createTrustStore(serverTrustStore.toString(), trustStorePassword, "web", cert);
+
+    // Client TLS
+    File clientKeyStore = new File(testDir, "clientKeystore.jks");
+    File clientTrustStore = new File(testDir, "clientTruststore.jks");
+    KeyPair clientKeyPair = TLSTestUtils.generateKeyPair();
+    Certificate clientCert = TLSTestUtils.generateCertificate("CN=" + hostname, clientKeyPair, 30);
+    TLSTestUtils.createKeyStore(clientKeyStore.toString(), keyStorePassword, "web", clientKeyPair.getPrivate(), clientCert);
+    TLSTestUtils.createTrustStore(clientTrustStore.toString(), trustStorePassword, "web", clientCert);
+
+    RawHttpConfigs httpConfigs = new RawHttpConfigs();
+    httpConfigs.appId = () -> "id";
+    httpConfigs.port = NetworkUtils.getRandomPort();
+    httpConfigs.maxConcurrentRequests = 1;
+
+    // TLS + MTLS Enabled
+    httpConfigs.tlsConfigBean.tlsEnabled = true;
+    httpConfigs.needClientAuth = true;
+
+    httpConfigs.tlsConfigBean.keyStoreFilePath = serverKeyStore.getAbsolutePath();
+    httpConfigs.tlsConfigBean.keyStorePassword = () -> keyStorePassword;
+
+    httpConfigs.tlsConfigBean.trustStoreFilePath = clientTrustStore.getAbsolutePath();
+    httpConfigs.tlsConfigBean.trustStorePassword = () -> trustStorePassword;
+
+    ResponseConfigBean responseConfigBean = new ResponseConfigBean();
+    responseConfigBean.dataFormat = DataFormat.JSON;
+    responseConfigBean.dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+
+    RestServicePushSource source = new RestServicePushSource(
+        httpConfigs,
+        1,
+        DataFormat.JSON,
+        new DataParserFormatConfig(),
+        responseConfigBean
+    );
+
+    final PushSourceRunner runner = new PushSourceRunner
+        .Builder(HttpServerDPushSource.class, source)
+        .addOutputLane("a")
+        .build();
+    runner.runInit();
+
+    String httpServerUrl = "https://" + hostname + ":" + httpConfigs.getPort();
+
+    try {
+      final List<Record> records = new ArrayList<>();
+      runner.runProduce(Collections.emptyMap(), 1, output -> {
+        List<Record> outputRecords = output.getRecords().get("a");
+
+        records.clear();
+        records.addAll(outputRecords);
+
+        runner.getSourceResponseSink().getResponseRecords().clear();
+        records.forEach(record -> {
+          if (record.has("/sendToError")) {
+            Map<String, Object> allAttributes = new HashMap<>(record.getHeader().getAllAttributes());
+            allAttributes.put("_.errorMessage", "sample error");
+            allAttributes.put(RestServiceReceiver.STATUS_CODE_RECORD_HEADER_ATTR_NAME, "500");
+            record.getHeader().overrideUserAndSystemAttributes(allAttributes);
+          } else {
+            record.getHeader().setAttribute(RestServiceReceiver.STATUS_CODE_RECORD_HEADER_ATTR_NAME, "200");
+          }
+          runner.getSourceResponseSink().addResponse(record);
+        });
+      });
+
+      // wait for the HTTP server up and running
+      RestServiceReceiverServer httpServer = (RestServiceReceiverServer) Whitebox.getInternalState(
+          source,
+          "server"
+      );
+      await().atMost(Duration.TEN_SECONDS).until(TestHttpServerPushSource.isServerRunning(httpServer));
+
+      // Test without passing client certificate
+
+
+      KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(TlsConfigBean.DEFAULT_KEY_MANAGER_ALGORITHM);
+      KeyStore keyStore = KeyStore.getInstance("JKS");
+      try (final InputStream keyStoreIs = new FileInputStream(clientKeyStore)){
+        keyStore.load(keyStoreIs, keyStorePassword.toCharArray());
+      }
+      keyManagerFactory.init(keyStore, keyStorePassword.toCharArray());
+
+      TrustManagerFactory trustStoreFactory = TrustManagerFactory.getInstance(TlsConfigBean.DEFAULT_KEY_MANAGER_ALGORITHM);
+      KeyStore trustKeyStore = KeyStore.getInstance("JKS");
+      try (final InputStream trustKeyStoreIs = new FileInputStream(serverTrustStore)){
+        trustKeyStore.load(trustKeyStoreIs, trustStorePassword.toCharArray());
+      }
+      trustStoreFactory.init(trustKeyStore);
+
+
+      // Test Without Client key
+      try {
+        SSLContext sslContextWithoutClientKey = SSLContext.getInstance("TLS");
+        sslContextWithoutClientKey.init(null, trustStoreFactory.getTrustManagers(), null);
+        ClientBuilder.newBuilder().sslContext(sslContextWithoutClientKey).build()
+            .property(ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION, true)
+            .property(HttpUrlConnectorProvider.SET_METHOD_WORKAROUND, true)
+            .target(httpServerUrl)
+            .request()
+            .header(Constants.X_SDC_APPLICATION_ID_HEADER, "id")
+            .get();
+        Assert.fail();
+      } catch (Exception ex) {
+        Assert.assertTrue(ex.getMessage().contains("bad_certificate"));
+      }
+
+      // Test with client key
+      SSLContext sslContextWithClientKey = SSLContext.getInstance("TLS");
+      sslContextWithClientKey.init(keyManagerFactory.getKeyManagers(), trustStoreFactory.getTrustManagers(), null);
+      Response response = ClientBuilder.newBuilder().sslContext(sslContextWithClientKey).build()
+          .property(ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION, true)
+          .property(HttpUrlConnectorProvider.SET_METHOD_WORKAROUND, true)
+          .target(httpServerUrl)
+          .request()
+          .header(Constants.X_SDC_APPLICATION_ID_HEADER, "id")
+          .get();
+      Assert.assertEquals(HttpURLConnection.HTTP_OK, response.getStatus());
+
+      runner.setStop();
+    } catch (Exception e) {
+      Assert.fail(e.getMessage());
+    } finally {
+      runner.runDestroy();
+    }
   }
 
 }

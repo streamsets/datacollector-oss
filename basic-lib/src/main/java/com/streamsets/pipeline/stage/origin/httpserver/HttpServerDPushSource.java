@@ -49,7 +49,8 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
     "httpConfigs.tlsConfigBean.trustStoreFilePath",
     "httpConfigs.tlsConfigBean.trustStoreType",
     "httpConfigs.tlsConfigBean.trustStorePassword",
-    "httpConfigs.tlsConfigBean.trustStoreAlgorithm"
+    "httpConfigs.tlsConfigBean.trustStoreAlgorithm",
+    "httpConfigs.needClientAuth"
 })
 @GenerateResourceBundle
 public class HttpServerDPushSource extends DPushSource {
