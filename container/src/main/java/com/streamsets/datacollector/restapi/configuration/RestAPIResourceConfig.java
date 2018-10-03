@@ -16,7 +16,9 @@
 package com.streamsets.datacollector.restapi.configuration;
 
 import com.streamsets.datacollector.activation.Activation;
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.bundles.SupportBundleManager;
+import com.streamsets.datacollector.event.handler.EventHandlerTask;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.http.RolesAnnotationFilter;
 import com.streamsets.datacollector.main.BuildInfo;
@@ -57,6 +59,8 @@ public class RestAPIResourceConfig extends ResourceConfig {
         bindFactory(StatsCollectorInjector.class).to(StatsCollector.class);
         bindFactory(StandAndClusterManagerInjector.class).to(Manager.class);
         bindFactory(SupportBundleInjector.class).to(SupportBundleManager.class);
+        bindFactory(EventHandlerTaskInjector.class).to(EventHandlerTask.class);
+        bindFactory(BlobStoreTaskInjector.class).to(BlobStoreTask.class);
         bindFactory(UserGroupManagerInjector.class).to(UserGroupManager.class);
         bindFactory(ActivationInjector.class).to(Activation.class);
       }

@@ -19,7 +19,9 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.jmx.JmxReporter;
 import com.streamsets.datacollector.activation.Activation;
 import com.streamsets.datacollector.activation.ActivationLoader;
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.bundles.SupportBundleManager;
+import com.streamsets.datacollector.event.handler.EventHandlerTask;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.main.BuildInfo;
@@ -29,8 +31,10 @@ import com.streamsets.datacollector.publicrestapi.PublicRestAPI;
 import com.streamsets.datacollector.restapi.RestAPI;
 import com.streamsets.datacollector.restapi.configuration.AclStoreInjector;
 import com.streamsets.datacollector.restapi.configuration.ActivationInjector;
+import com.streamsets.datacollector.restapi.configuration.BlobStoreTaskInjector;
 import com.streamsets.datacollector.restapi.configuration.BuildInfoInjector;
 import com.streamsets.datacollector.restapi.configuration.ConfigurationInjector;
+import com.streamsets.datacollector.restapi.configuration.EventHandlerTaskInjector;
 import com.streamsets.datacollector.restapi.configuration.PipelineStoreInjector;
 import com.streamsets.datacollector.restapi.configuration.RestAPIResourceConfig;
 import com.streamsets.datacollector.restapi.configuration.RuntimeInfoInjector;
@@ -311,6 +315,26 @@ public class WebServerModule {
       @Override
       public void init(ServletContextHandler context) {
         context.setAttribute(SupportBundleInjector.SUPPORT_BUNDLE_MANAGER, supportBundleManager);
+      }
+    };
+  }
+
+  @Provides(type = Type.SET)
+  ContextConfigurator provideRemoteEventHandlerTask(final EventHandlerTask eventHandlerTask) {
+    return new ContextConfigurator() {
+      @Override
+      public void init(ServletContextHandler context) {
+        context.setAttribute(EventHandlerTaskInjector.EVENT_HANDLER_TASK, eventHandlerTask);
+      }
+    };
+  }
+
+  @Provides(type = Type.SET)
+  ContextConfigurator provideBlobStoreTask(final BlobStoreTask blobStoreTask) {
+    return new ContextConfigurator() {
+      @Override
+      public void init(ServletContextHandler context) {
+        context.setAttribute(BlobStoreTaskInjector.BLOB_STORE_TASK, blobStoreTask);
       }
     };
   }
