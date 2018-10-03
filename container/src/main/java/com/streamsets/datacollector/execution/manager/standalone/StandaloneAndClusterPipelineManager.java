@@ -19,6 +19,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
+import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.Manager;
@@ -115,11 +116,16 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
   }
 
   @Override
-  public Previewer createPreviewer(String user, String name, String rev) throws PipelineException {
+  public Previewer createPreviewer(
+      String user,
+      String name,
+      String rev,
+      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+  ) throws PipelineException {
     if (!pipelineStore.hasPipeline(name)) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
     }
-    Previewer previewer = previewerProvider.createPreviewer(user, name, rev, this, objectGraph);
+    Previewer previewer = previewerProvider.createPreviewer(user, name, rev, this, objectGraph, interceptorConfs);
     previewerCache.put(previewer.getId(), previewer);
     return previewer;
   }

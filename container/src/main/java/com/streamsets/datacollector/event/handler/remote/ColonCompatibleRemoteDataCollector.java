@@ -20,11 +20,13 @@ import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.event.dto.AckEvent;
+import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.event.handler.DataCollector;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.Runner;
+import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
@@ -137,8 +139,44 @@ public class ColonCompatibleRemoteDataCollector implements DataCollector {
   }
 
   @Override
-  public void validateConfigs(String user, String name, String rev) throws PipelineException {
-    remoteDataCollector.validateConfigs(user, getCompatibleName(name), rev);
+  public void validateConfigs(
+      String user,
+      String name,
+      String rev,
+      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+  ) throws PipelineException {
+    remoteDataCollector.validateConfigs(user, getCompatibleName(name), rev, interceptorConfs);
+  }
+
+  @Override
+  public void previewPipeline(
+      String user,
+      String name,
+      String rev,
+      int batches,
+      int batchSize,
+      boolean skipTargets,
+      boolean skipLifecycleEvents,
+      String stopStage,
+      List<StageOutput> stagesOverride,
+      long timeoutMillis,
+      boolean testOrigin,
+      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+  ) throws PipelineException {
+    remoteDataCollector.previewPipeline(
+        user,
+        name,
+        rev,
+        batches,
+        batchSize,
+        skipTargets,
+        skipLifecycleEvents,
+        stopStage,
+        stagesOverride,
+        timeoutMillis,
+        testOrigin,
+        interceptorConfs
+    );
   }
 
   @Override

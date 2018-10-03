@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.execution.dagger;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.Previewer;
@@ -45,6 +46,10 @@ import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -87,7 +92,12 @@ public class TestPipelineManagerModule {
         new HashMap<String, Object>()
     );
     //Create previewer
-    Previewer previewer = pipelineManager.createPreviewer("user", pc.getInfo().getPipelineId(), "1");
+    Previewer previewer = pipelineManager.createPreviewer(
+        "user",
+        pc.getInfo().getPipelineId(),
+        "1",
+        Collections.emptyList()
+    );
     assertEquals(previewer, pipelineManager.getPreviewer(previewer.getId()));
     ((StandaloneAndClusterPipelineManager)pipelineManager).outputRetrieved(previewer.getId());
     assertNull(pipelineManager.getPreviewer(previewer.getId()));
@@ -117,7 +127,7 @@ public class TestPipelineManagerModule {
     Assert.assertTrue(pipelineManager instanceof SlavePipelineManager);
 
     try {
-      pipelineManager.createPreviewer("user", "p1", "1");
+      pipelineManager.createPreviewer("user", "p1", "1", Collections.emptyList());
       Assert.fail("Expected UnsupportedOperationException");
     } catch (UnsupportedOperationException e) {
 

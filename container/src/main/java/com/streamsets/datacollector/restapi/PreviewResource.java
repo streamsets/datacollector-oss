@@ -169,7 +169,7 @@ public class PreviewResource {
     int maxBatches = configuration.get(MAX_BATCHES_KEY, MAX_BATCHES_DEFAULT);
     batches = Math.min(maxBatches, batches);
 
-    Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev);
+    Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev, Collections.emptyList());
     try {
       previewer.start(
           batches,
@@ -330,7 +330,7 @@ public class PreviewResource {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     MultivaluedMap<String, String> previewParams = uriInfo.getQueryParameters();
-    Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev);
+    Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev, Collections.emptyList());
     RawPreview rawPreview = previewer.getRawSource(4 * 1024, previewParams);
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(rawPreview).build();
   }
@@ -369,7 +369,7 @@ public class PreviewResource {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     try {
-      Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev);
+      Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev, Collections.emptyList());
       previewer.validateConfigs(timeout);
       PreviewStatus previewStatus = previewer.getStatus();
       if(previewStatus == null) {

@@ -36,6 +36,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.streamsets.datacollector.util.AwaitConditionUtil.desiredPreviewStatus;
@@ -44,7 +45,15 @@ import static org.awaitility.Awaitility.await;
 public class TestAsyncPreviewer extends TestPreviewer {
 
   protected Previewer createPreviewer() {
-    return new AsyncPreviewer(new SyncPreviewer(ID, "test-user", NAME, REV, previewerListener, objectGraph),
+    return new AsyncPreviewer(new SyncPreviewer(
+        ID,
+        "test-user",
+        NAME,
+        REV,
+        previewerListener,
+        objectGraph,
+        Collections.emptyList()
+    ),
       new SafeScheduledExecutorService(5, "preview"));
   }
 

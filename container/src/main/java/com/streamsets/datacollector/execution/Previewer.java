@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.execution;
 
+import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.util.PipelineException;
 
@@ -38,6 +39,8 @@ public interface Previewer {
   String getName();
 
   String getRev();
+
+  List<PipelineStartEvent.InterceptorConfiguration> getInterceptorConfs();
 
   void validateConfigs(long timeoutMillis) throws PipelineException;
 

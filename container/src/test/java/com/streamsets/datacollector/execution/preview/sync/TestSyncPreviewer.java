@@ -32,7 +32,7 @@ import java.util.Collections;
 public class TestSyncPreviewer extends TestPreviewer {
 
   protected Previewer createPreviewer() {
-    return new SyncPreviewer(ID, "test-user", NAME, REV, previewerListener, objectGraph);
+    return new SyncPreviewer(ID, "test-user", NAME, REV, previewerListener, objectGraph, Collections.emptyList());
   }
 
   @Test

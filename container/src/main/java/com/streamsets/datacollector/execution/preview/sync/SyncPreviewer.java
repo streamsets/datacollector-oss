@@ -24,6 +24,7 @@ import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.el.JobEL;
 import com.streamsets.datacollector.el.PipelineEL;
+import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.execution.PreviewOutput;
 import com.streamsets.datacollector.execution.PreviewStatus;
 import com.streamsets.datacollector.execution.Previewer;
@@ -86,6 +87,7 @@ public class SyncPreviewer implements Previewer {
   private final String name;
   private final String rev;
   private final PreviewerListener previewerListener;
+  private final List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs;
   @Inject Configuration configuration;
   @Inject StageLibraryTask stageLibrary;
   @Inject PipelineStoreTask pipelineStore;
@@ -104,7 +106,8 @@ public class SyncPreviewer implements Previewer {
       String name,
       String rev,
       PreviewerListener previewerListener,
-      ObjectGraph objectGraph
+      ObjectGraph objectGraph,
+      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
   ) {
     objectGraph.inject(this);
     this.id = id;
@@ -119,6 +122,7 @@ public class SyncPreviewer implements Previewer {
     this.rev = rev;
     this.previewerListener = previewerListener;
     this.previewStatus = PreviewStatus.CREATED;
+    this.interceptorConfs = interceptorConfs;
   }
 
   @Override
@@ -134,6 +138,11 @@ public class SyncPreviewer implements Previewer {
   @Override
   public String getRev() {
     return rev;
+  }
+
+  @Override
+  public List<PipelineStartEvent.InterceptorConfiguration> getInterceptorConfs() {
+    return interceptorConfs;
   }
 
   @Override
@@ -369,7 +378,8 @@ public class SyncPreviewer implements Previewer {
         blobStoreTask,
         lineagePublisherTask,
         statsCollector,
-        testOrigin
+        testOrigin,
+        interceptorConfs
     ).build(userContext, runner);
   }
 

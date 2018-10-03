@@ -22,6 +22,7 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.dto.ValidationStatus;
+import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
@@ -91,7 +92,10 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
 
 public class TestRemoteDataCollector {
 
@@ -102,6 +106,7 @@ public class TestRemoteDataCollector {
 
     Map<String, Previewer> map = new HashMap<>();
     Map<String, PipelineState> stateMap = new HashMap<>();
+    private MockPreviewer lastPreviewer = null;
 
     @Override
     public String getName() {
@@ -139,10 +144,21 @@ public class TestRemoteDataCollector {
     }
 
     @Override
-    public Previewer createPreviewer(String user, String name, String rev) throws PipelineStoreException {
-      Previewer previewer = new MockPreviewer(user, name, rev);
+    public Previewer createPreviewer(
+        String user,
+        String name,
+        String rev,
+        List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+    ) throws PipelineStoreException {
+      final MockPreviewer mockPreviewer = new MockPreviewer(user, name, rev, interceptorConfs);
+      Previewer previewer = mockPreviewer;
       map.put(previewer.getId(), previewer);
+      this.lastPreviewer = mockPreviewer;
       return previewer;
+    }
+
+    MockPreviewer getLastPreviewer() {
+      return lastPreviewer;
     }
 
     @Override
@@ -497,11 +513,19 @@ public class TestRemoteDataCollector {
     private String rev;
     public static int validateConfigsCalled;
     public boolean isValid;
+    private final List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs;
+    public boolean previewStarted;
 
-    MockPreviewer(String user, String name, String rev) {
+    MockPreviewer(
+        String user,
+        String name,
+        String rev,
+        List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+    ) {
       this.user = user;
       this.name = name;
       this.rev = rev;
+      this.interceptorConfs = interceptorConfs;
     }
 
     @Override
@@ -518,6 +542,11 @@ public class TestRemoteDataCollector {
     public String getRev() {
       // TODO Auto-generated method stub
       return rev;
+    }
+
+    @Override
+    public List<PipelineStartEvent.InterceptorConfiguration> getInterceptorConfs() {
+      return interceptorConfs;
     }
 
     @Override
@@ -550,7 +579,7 @@ public class TestRemoteDataCollector {
         long timeoutMillis,
         boolean testOrigin
     ) throws PipelineException {
-
+      previewStarted = true;
     }
 
     @Override
@@ -887,8 +916,8 @@ public class TestRemoteDataCollector {
           Mockito.mock(BlobStoreTask.class),
           new SafeScheduledExecutorService(1, "supportBundleExecutor")
       );
-      dataCollector.validateConfigs("user", "ns:name", "rev");
-      dataCollector.validateConfigs("user1", "ns:name1", "rev1");
+      dataCollector.validateConfigs("user", "ns:name", "rev", Collections.emptyList());
+      dataCollector.validateConfigs("user1", "ns:name1", "rev1", Collections.emptyList());
       assertEquals(2, MockPreviewer.validateConfigsCalled);
       assertEquals("user" + "ns:name" + "rev", dataCollector.getValidatorList().get(0));
       assertEquals("user1" + "ns:name1" + "rev1", dataCollector.getValidatorList().get(1));
@@ -959,8 +988,8 @@ public class TestRemoteDataCollector {
           new SafeScheduledExecutorService(1, "supportBundleExecutor")
       );
       dataCollector.init();
-      dataCollector.validateConfigs("user", "ns:name", "rev");
-      dataCollector.validateConfigs("user1", "ns:name1", "rev1");
+      dataCollector.validateConfigs("user", "ns:name", "rev", Collections.emptyList());
+      dataCollector.validateConfigs("user1", "ns:name1", "rev1", Collections.emptyList());
       Collection<PipelineAndValidationStatus> collectionPipelines = dataCollector.getPipelines();
       assertEquals(4, collectionPipelines.size());
       for (PipelineAndValidationStatus validationStatus : collectionPipelines) {
@@ -1228,5 +1257,45 @@ public class TestRemoteDataCollector {
     } finally {
       MockPipelineStateStore.getStateCalled = 0;
     }
+  }
+
+  @Test
+  public void testPreviewPipeline() throws Exception {
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);
+    final MockManager manager = new MockManager();
+    RemoteDataCollector dataCollector = new RemoteDataCollector(
+        new Configuration(),
+        manager,
+        new MockPipelineStoreTask(),
+        new MockPipelineStateStore(),
+        aclStoreTask,
+        new RemoteStateEventListener(new Configuration()),
+        runtimeInfo,
+        Mockito.mock(AclCacheHelper.class),
+        Mockito.mock(StageLibraryTask.class),
+        Mockito.mock(BlobStoreTask.class),
+        new SafeScheduledExecutorService(1, "testPreviewPipeline")
+    );
+    File testFolder = tempFolder.newFolder();
+    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testFolder.getAbsolutePath());
+
+    dataCollector.previewPipeline(
+        "user",
+        "name",
+        "rev",
+        1,
+        10,
+        true,
+        true,
+        null,
+        null,
+        10000l,
+        false,
+        Collections.emptyList()
+    );
+    final MockPreviewer lastPreviewer = manager.getLastPreviewer();
+    assertThat(lastPreviewer, notNullValue());
+    assertThat(lastPreviewer.previewStarted, equalTo(true));
   }
 }

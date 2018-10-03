@@ -15,16 +15,26 @@
  */
 package com.streamsets.datacollector.execution.manager;
 
+import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.PreviewerListener;
 
 import dagger.ObjectGraph;
+
+import java.util.List;
 
 /**
  * Implementation of this interface provides instances of Previewer.
  */
 public interface PreviewerProvider {
 
-  public Previewer createPreviewer(String user, String name, String rev, PreviewerListener listener, ObjectGraph objectGraph);
+  Previewer createPreviewer(
+      String user,
+      String name,
+      String rev,
+      PreviewerListener listener,
+      ObjectGraph objectGraph,
+      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+  );
 
 }

@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.execution.manager.slave;
 
+import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.Manager;
@@ -69,7 +70,12 @@ public class SlavePipelineManager extends AbstractTask implements Manager {
   }
 
   @Override
-  public Previewer createPreviewer(String user, String name, String rev) {
+  public Previewer createPreviewer(
+      String user,
+      String name,
+      String rev,
+      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+  ) {
     throw new UnsupportedOperationException();
   }
 

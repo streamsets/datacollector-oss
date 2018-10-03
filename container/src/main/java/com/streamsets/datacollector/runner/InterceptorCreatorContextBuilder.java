@@ -174,11 +174,13 @@ public class InterceptorCreatorContextBuilder {
   ) {
     Map<String, String> actualParameters = null;
 
-    // See if this particular interceptor have configuration available
-    for(PipelineStartEvent.InterceptorConfiguration conf : interceptorConf) {
-      if(conf.getStageLibrary().equals(stageLibrary) && conf.getInterceptorClassName().equals(className)) {
-        actualParameters = conf.getParameters();
-        break;
+    if (interceptorConf != null) {
+      // See if this particular interceptor have configuration available
+      for(PipelineStartEvent.InterceptorConfiguration conf : interceptorConf) {
+        if(conf.getStageLibrary().equals(stageLibrary) && conf.getInterceptorClassName().equals(className)) {
+          actualParameters = conf.getParameters();
+          break;
+        }
       }
     }
 

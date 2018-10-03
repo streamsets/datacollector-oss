@@ -18,6 +18,7 @@ package com.streamsets.datacollector.runner.preview;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
+import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRunner;
@@ -69,6 +70,7 @@ public class PreviewPipelineBuilder {
   private final LineagePublisherTask lineagePublisherTask;
   private final StatsCollector statsCollector;
   private final boolean testOrigin;
+  private final List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs;
 
   /**
    * Constructor
@@ -89,7 +91,8 @@ public class PreviewPipelineBuilder {
     BlobStoreTask blobStoreTask,
     LineagePublisherTask lineagePublisherTask,
     StatsCollector statsCollector,
-    boolean testOrigin
+    boolean testOrigin,
+    List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
   ) {
     this.stageLib = new PreviewStageLibraryTask(stageLib);
     this.configuration = configuration;
@@ -101,6 +104,7 @@ public class PreviewPipelineBuilder {
     this.lineagePublisherTask = lineagePublisherTask;
     this.statsCollector = statsCollector;
     this.testOrigin = testOrigin;
+    this.interceptorConfs = interceptorConfs;
   }
 
   public PreviewPipeline build(UserContext userContext, PipelineRunner runner) throws PipelineRuntimeException {
@@ -170,7 +174,7 @@ public class PreviewPipelineBuilder {
        blobStoreTask,
        lineagePublisherTask,
        statsCollector,
-       Collections.emptyList()
+       interceptorConfs
      );
      Pipeline pipeline = builder.build(runner);
      if (pipeline != null) {

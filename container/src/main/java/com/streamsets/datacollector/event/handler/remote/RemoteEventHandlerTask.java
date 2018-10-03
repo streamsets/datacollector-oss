@@ -38,6 +38,7 @@ import com.streamsets.datacollector.event.dto.Event;
 import com.streamsets.datacollector.event.dto.EventType;
 import com.streamsets.datacollector.event.dto.PingFrequencyAdjustmentEvent;
 import com.streamsets.datacollector.event.dto.PipelineBaseEvent;
+import com.streamsets.datacollector.event.dto.PipelinePreviewEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveRulesEvent;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
@@ -559,9 +560,29 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
             break;
           case VALIDATE_PIPELINE:
             PipelineBaseEvent pipelineValidataEvent = (PipelineBaseEvent) event;
-            remoteDataCollector.validateConfigs(pipelineValidataEvent.getUser(),
+            remoteDataCollector.validateConfigs(
+                pipelineValidataEvent.getUser(),
                 pipelineValidataEvent.getName(),
-                pipelineValidataEvent.getRev()
+                pipelineValidataEvent.getRev(),
+                Collections.emptyList()
+            );
+            break;
+          case PREVIEW_PIPELINE:
+            final PipelinePreviewEvent pipelinePreviewEvent = (PipelinePreviewEvent) event;
+            remoteDataCollector.previewPipeline(
+                pipelinePreviewEvent.getUser(),
+                pipelinePreviewEvent.getName(),
+                pipelinePreviewEvent.getRev(),
+                pipelinePreviewEvent.getBatches(),
+                pipelinePreviewEvent.getBatchSize(),
+                pipelinePreviewEvent.isSkipTargets(),
+                pipelinePreviewEvent.isSkipLifecycleEvents(),
+                pipelinePreviewEvent.getStopStage(),
+                //TODO: support this param from event?
+                Collections.emptyList(),
+                pipelinePreviewEvent.getTimeoutMillis(),
+                pipelinePreviewEvent.isTestOrigin(),
+                pipelinePreviewEvent.getInterceptorConfiguration()
             );
             break;
           case RESET_OFFSET_PIPELINE:

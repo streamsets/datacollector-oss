@@ -32,6 +32,7 @@ import com.streamsets.datacollector.event.dto.Event;
 import com.streamsets.datacollector.event.dto.EventType;
 import com.streamsets.datacollector.event.dto.PingFrequencyAdjustmentEvent;
 import com.streamsets.datacollector.event.dto.PipelineBaseEvent;
+import com.streamsets.datacollector.event.dto.PipelinePreviewEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveRulesEvent;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
@@ -52,6 +53,7 @@ import com.streamsets.datacollector.event.json.DisconnectedSsoCredentialsEventJs
 import com.streamsets.datacollector.event.json.EventJson;
 import com.streamsets.datacollector.event.json.PingFrequencyAdjustmentEventJson;
 import com.streamsets.datacollector.event.json.PipelineBaseEventJson;
+import com.streamsets.datacollector.event.json.PipelinePreviewEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveRulesEventJson;
 import com.streamsets.datacollector.event.json.PipelineStartEventJson;
@@ -131,6 +133,9 @@ public class MessagingJsonToFromDto {
         break;
       case START_PIPELINE:
         eventJson = MessagingDtoJsonMapper.INSTANCE.toPipelineStartEventJson((PipelineStartEvent) event);
+        break;
+      case PREVIEW_PIPELINE:
+        eventJson = MessagingDtoJsonMapper.INSTANCE.toPipelinePreviewEventJson((PipelinePreviewEvent) event);
         break;
       case STOP_PIPELINE:
       case VALIDATE_PIPELINE:
@@ -264,6 +269,13 @@ public class MessagingJsonToFromDto {
           typeRef
         );
         serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asPipelineStartEventDto(pipelineStartEventJson));
+        break;
+      }
+      case PREVIEW_PIPELINE: {
+        TypeReference<PipelinePreviewEventJson> typeRef = new TypeReference<PipelinePreviewEventJson>() {
+        };
+        PipelinePreviewEventJson pipelinePreviewEventJson = deserialize(serverEventJson.getPayload(), typeRef);
+        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asPipelinePreviewEventDto(pipelinePreviewEventJson));
         break;
       }
       case DELETE_HISTORY_PIPELINE:

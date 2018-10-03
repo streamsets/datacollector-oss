@@ -23,6 +23,7 @@ import com.streamsets.datacollector.event.dto.ClientEvent;
 import com.streamsets.datacollector.event.dto.DisconnectedSsoCredentialsEvent;
 import com.streamsets.datacollector.event.dto.PingFrequencyAdjustmentEvent;
 import com.streamsets.datacollector.event.dto.PipelineBaseEvent;
+import com.streamsets.datacollector.event.dto.PipelinePreviewEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveRulesEvent;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
@@ -42,6 +43,7 @@ import com.streamsets.datacollector.event.json.ClientEventJson;
 import com.streamsets.datacollector.event.json.DisconnectedSsoCredentialsEventJson;
 import com.streamsets.datacollector.event.json.PingFrequencyAdjustmentEventJson;
 import com.streamsets.datacollector.event.json.PipelineBaseEventJson;
+import com.streamsets.datacollector.event.json.PipelinePreviewEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveRulesEventJson;
 import com.streamsets.datacollector.event.json.PipelineStartEventJson;
@@ -158,4 +160,9 @@ public abstract class MessagingDtoJsonMapper {
   public abstract SaveConfigurationEvent asSaveConfigurationEventDto(SaveConfigurationEventJson saveConfigurationEventJson);
 
   public abstract SaveConfigurationEventJson toSaveConfigurationEventJson(SaveConfigurationEvent saveConfigurationEvent);
+
+  public abstract PipelinePreviewEvent asPipelinePreviewEventDto(PipelinePreviewEventJson pipelineActionEventJson);
+
+  public abstract PipelinePreviewEventJson toPipelinePreviewEventJson(PipelinePreviewEvent event);
+
 }

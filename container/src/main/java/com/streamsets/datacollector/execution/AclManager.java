@@ -17,6 +17,7 @@ package com.streamsets.datacollector.execution;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
+import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.restapi.bean.UserJson;
 import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineStoreException;
@@ -73,9 +74,14 @@ public class AclManager implements Manager {
   }
 
   @Override
-  public Previewer createPreviewer(String user, String name, String rev) throws PipelineException {
+  public Previewer createPreviewer(
+      String user,
+      String name,
+      String rev,
+      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+  ) throws PipelineException {
     aclStore.validateExecutePermission(name, currentUser);
-    return manager.createPreviewer(user, name, rev);
+    return manager.createPreviewer(user, name, rev, interceptorConfs);
   }
 
   @Override

@@ -41,6 +41,7 @@ import com.streamsets.datacollector.event.dto.BlobDeleteVersionEvent;
 import com.streamsets.datacollector.event.dto.BlobStoreEvent;
 import com.streamsets.datacollector.event.dto.ClientEvent;
 import com.streamsets.datacollector.event.dto.EventType;
+import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.event.dto.SDCBuildInfo;
 import com.streamsets.datacollector.event.dto.SDCInfoEvent;
 import com.streamsets.datacollector.event.dto.SaveConfigurationEvent;
@@ -68,6 +69,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
 import com.streamsets.datacollector.runner.MockStages;
+import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
@@ -499,8 +501,31 @@ public class TestRemoteEventHandler {
     }
 
     @Override
-    public void validateConfigs(String user, String name, String rev) throws PipelineException {
+    public void validateConfigs(
+        String user,
+        String name,
+        String rev,
+        List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+    ) throws PipelineException {
       validateConfigsCalled = true;
+    }
+
+    @Override
+    public void previewPipeline(
+        String user,
+        String name,
+        String rev,
+        int batches,
+        int batchSize,
+        boolean skipTargets,
+        boolean skipLifecycleEvents,
+        String stopStage,
+        List<StageOutput> stagesOverride,
+        long timeoutMillis,
+        boolean testOrigin,
+        List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+    ) throws PipelineException {
+      // no-op for now
     }
 
     @Override

@@ -26,6 +26,7 @@ import com.streamsets.datacollector.config.dto.ValidationStatus;
 import com.streamsets.datacollector.event.dto.AckEvent;
 import com.streamsets.datacollector.event.dto.AckEventStatus;
 import com.streamsets.datacollector.event.dto.EventType;
+import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.event.dto.WorkerInfo;
 import com.streamsets.datacollector.event.handler.DataCollector;
 import com.streamsets.datacollector.execution.Manager;
@@ -39,6 +40,7 @@ import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.SourceOffsetJson;
+import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.runner.production.OffsetFileUtil;
 import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.security.GroupsInScope;
@@ -249,11 +251,46 @@ public class RemoteDataCollector implements DataCollector {
   }
 
   @Override
-  public void validateConfigs(String user, String name, String rev) throws PipelineException {
-    Previewer previewer = manager.createPreviewer(user, name, rev);
+  public void validateConfigs(
+      String user,
+      String name,
+      String rev,
+      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+  ) throws PipelineException {
+    Previewer previewer = manager.createPreviewer(user, name, rev, interceptorConfs);
     previewer.validateConfigs(1000L);
     validatorIdList.add(previewer.getId());
   }
+
+  @Override
+  public void previewPipeline(
+      String user,
+      String name,
+      String rev,
+      int batches,
+      int batchSize,
+      boolean skipTargets,
+      boolean skipLifecycleEvents,
+      String stopStage,
+      List<StageOutput> stagesOverride,
+      long timeoutMillis,
+      boolean testOrigin,
+      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+  ) throws PipelineException {
+    Previewer previewer = manager.createPreviewer(user, name, rev, interceptorConfs);
+    previewer.start(
+        batches,
+        batchSize,
+        skipTargets,
+        skipLifecycleEvents,
+        stopStage,
+        stagesOverride,
+        timeoutMillis,
+        testOrigin
+    );
+    validatorIdList.add(previewer.getId());
+  }
+
 
   static class StopAndDeleteCallable implements Callable<AckEvent> {
     private final RemoteDataCollector remoteDataCollector;

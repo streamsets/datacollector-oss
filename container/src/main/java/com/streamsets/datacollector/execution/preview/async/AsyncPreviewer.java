@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.execution.preview.async;
 
+import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.execution.PreviewOutput;
 import com.streamsets.datacollector.execution.PreviewStatus;
 import com.streamsets.datacollector.execution.Previewer;
@@ -60,6 +61,11 @@ public class AsyncPreviewer implements Previewer {
   @Override
   public String getRev() {
     return syncPreviewer.getRev();
+  }
+
+  @Override
+  public List<PipelineStartEvent.InterceptorConfiguration> getInterceptorConfs() {
+    return syncPreviewer.getInterceptorConfs();
   }
 
   @Override
