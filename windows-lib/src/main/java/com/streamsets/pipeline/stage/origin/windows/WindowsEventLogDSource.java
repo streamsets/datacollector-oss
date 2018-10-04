@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.origin.windows;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -23,10 +24,11 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.configurablestage.DSource;
+import com.streamsets.pipeline.stage.origin.windows.wineventlog.WinEventLogConfigBean;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 2,
+    version = 3,
     label = "Windows Event Log",
     description = "Reads data from a Windows event log",
     execution = {ExecutionMode.EDGE},
@@ -38,41 +40,26 @@ import com.streamsets.pipeline.api.base.configurablestage.DSource;
 @ConfigGroups(Groups.class)
 public class WindowsEventLogDSource extends DSource {
 
-  @ConfigDef(required = true,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "Application",
-      label = "Windows log to read from",
-      description = "Log Name",
-      displayPosition = 10,
+      defaultValue = "WINDOWS_EVENT_LOG",
+      label = "Reader API Type",
+      description = "Windows Event Log Reader API Type",
+      displayPosition = 40,
       group = "WINDOWS"
   )
-  @ValueChooserModel(LogNameChooserValues.class)
-  public LogName logName = LogName.Application;
+  @ValueChooserModel(ReaderAPITypeChooserValues.class)
+  public ReaderAPIType readerAPIType = ReaderAPIType.EVENT_LOGGING;
 
-  @ConfigDef(required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "",
-      label = "Custom Log Name",
-      displayPosition = 20,
-      group = "WINDOWS",
-      dependsOn = "logName",
-      triggeredByValue = {"Custom"}
-  )
-  public String customLogName;
+  @ConfigDefBean(groups = "WINDOWS")
+  public CommonConfigBean commonConf;
 
-  @ConfigDef(required = true,
-      type = ConfigDef.Type.MODEL,
-      defaultValue = "ALL",
-      label = "Read Mode",
-      description = "Read all events in the log or only new events that occur after the pipeline starts",
-      displayPosition = 30,
-      group = "WINDOWS"
-  )
-  @ValueChooserModel(ReadModeChooserValues.class)
-  public ReadMode readMode = ReadMode.ALL;
+  @ConfigDefBean(groups = "WINDOWS")
+  public WinEventLogConfigBean winEventLogConf;
 
   @Override
   protected Source createSource() {
-    return new WindowsEventLogSource(logName, readMode);
+    return new WindowsEventLogSource(commonConf, winEventLogConf);
   }
 }

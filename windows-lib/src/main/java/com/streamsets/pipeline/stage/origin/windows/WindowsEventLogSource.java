@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.stage.origin.windows.wineventlog.WinEventLogConfigBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,17 +28,11 @@ import java.util.List;
 public class WindowsEventLogSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(WindowsEventLogSource.class);
 
-  private final LogName logName;
-  private final ReadMode readMode;
-
-  WindowsEventLogSource(LogName logName, ReadMode readMode) {
-    this.logName = logName;
-    this.readMode = readMode;
+  public WindowsEventLogSource(CommonConfigBean commonConf, WinEventLogConfigBean winEventLogConf) {
   }
 
   @Override
   public List<ConfigIssue> init() {
-      LOG.debug("Windows Event Log Origin configured with Log Name - '{}', Read Mode -'{}'", logName, readMode);
       return super.init();
   }
 
