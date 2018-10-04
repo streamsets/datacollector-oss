@@ -240,6 +240,15 @@ public class LocalFileSystem implements WrappedFileSystem {
       @Override
       public int compare(WrappedFile file1, WrappedFile file2) {
         try {
+          if (file1 == null ||
+              file1.getCustomMetadata() == null ||
+              file1.getAbsolutePath() == null ||
+              file2 == null ||
+              file2.getCustomMetadata() == null ||
+              file2.getAbsolutePath() == null) {
+            throw new RuntimeException("File null value passed.");
+          }
+
           if (useLastModified) {
             // if comparing with folder last modified timestamp, always return true
             if (file2.toString().isEmpty()) {

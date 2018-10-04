@@ -457,8 +457,8 @@ public class DirectorySpooler {
     Preconditions.checkNotNull(file, "file cannot be null");
     if (checkCurrent) {
       final boolean currentFileExists = currentFile != null && StringUtils.isNotEmpty(currentFile.toString());
-      final boolean newFileLessThanCurrent = fs.compare(file, currentFile, useLastModified) < 0;
-      final boolean invalid = currentFileExists && newFileLessThanCurrent;
+      /* param "file" is invalid to add to queue if it is "less" than current file, in this case, useLastModified */
+      final boolean invalid = currentFileExists && (fs.compare(file, currentFile, useLastModified) < 0);
       if (invalid) {
         String invalidReason;
         if (useLastModified) {
