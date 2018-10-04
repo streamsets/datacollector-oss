@@ -123,12 +123,10 @@ public class PulsarMessageProducerImpl implements PulsarMessageProducer {
                                                                            .getHashingScheme())
                                                                        .compressionType(pulsarConfig.compressionType
                                                                            .getCompressionType())
-                                                                       .maxPendingMessages(
-                                                                           pulsarConfig.maxPendingMessages)
                                                                        .blockIfQueueFull(true);
-
                                          if (pulsarConfig.asyncSend) {
-                                           producerBuilder.enableBatching(pulsarConfig.enableBatching)
+                                           producerBuilder.maxPendingMessages(pulsarConfig.maxPendingMessages)
+                                                          .enableBatching(pulsarConfig.enableBatching)
                                                           .batchingMaxMessages(pulsarConfig.batchMaxMessages)
                                                           .batchingMaxPublishDelay(pulsarConfig.batchMaxPublishDelay,
                                                               TimeUnit.MILLISECONDS);

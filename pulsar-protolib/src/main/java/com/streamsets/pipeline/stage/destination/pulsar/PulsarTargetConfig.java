@@ -91,26 +91,30 @@ public class PulsarTargetConfig extends BasePulsarConfig {
   @ValueChooserModel(PulsarCompressionTypeChooserValues.class)
   public PulsarCompressionType compressionType;
 
+  @ConfigDef(required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Async Send",
+      description = "Send messages asynchronously",
+      displayPosition = 50,
+      group = "ADVANCED")
+  public boolean asyncSend;
+
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Max Pending Messages",
       description = "Maximum size of the queue holding the messages pending to receive an acknowledgment " +
           "from the broker",
-      displayPosition = 50,
+      displayPosition = 60,
       defaultValue = "1000",
       min = 1,
-      group = "ADVANCED")
+      group = "ADVANCED",
+      dependencies = {
+          @Dependency(configName = "asyncSend",
+              triggeredByValues = "true")
+      })
   public int maxPendingMessages;
-
-  @ConfigDef(required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "true",
-      label = "Async Send",
-      description = "Send messages asynchronously",
-      displayPosition = 60,
-      group = "ADVANCED")
-  public boolean asyncSend;
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.BOOLEAN,
