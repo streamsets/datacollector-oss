@@ -298,8 +298,7 @@ public class HBaseLookupProcessor extends BaseProcessor {
           Pair<String, HBaseColumn> key = getKey(record, parameter);
 
           if (key != null && !key.getKey().trim().isEmpty()) {
-            Optional<String> value = hbaseConnectionHelper.getUGI().doAs((PrivilegedExceptionAction<Optional<String>>) () -> cache
-                .getUnchecked(key));
+            Optional<String> value = values.get(key);
             updateRecord(record, parameter, key, value);
           } else {
             handleEmptyKey(record, key);
