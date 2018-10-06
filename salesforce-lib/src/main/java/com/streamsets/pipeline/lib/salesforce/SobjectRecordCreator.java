@@ -381,7 +381,9 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
         // Salesforce can return a string value with greater scale than that defined in the schema - see SDC-10152
         // Ensure that the created BigDecimal value matches the Salesforce schema
         return  com.streamsets.pipeline.api.Field.create(com.streamsets.pipeline.api.Field.Type.DECIMAL,
-            (new BigDecimal(val.toString())).setScale(sfdcField.getScale(), RoundingMode.HALF_UP));
+            (val == null)
+                ? null
+                : (new BigDecimal(val.toString())).setScale(sfdcField.getScale(), RoundingMode.HALF_UP));
       } else if (STRING_TYPES.contains(sfdcType)) {
         return  com.streamsets.pipeline.api.Field.create(com.streamsets.pipeline.api.Field.Type.STRING, val);
       } else if (BINARY_TYPES.contains(sfdcType)) {
