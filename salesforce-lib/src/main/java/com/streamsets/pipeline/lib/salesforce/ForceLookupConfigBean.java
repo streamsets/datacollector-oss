@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.stage.common.MissingValuesBehavior;
 import com.streamsets.pipeline.stage.common.MissingValuesBehaviorChooserValues;
 import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
@@ -50,7 +51,7 @@ public class ForceLookupConfigBean extends ForceInputConfigBean {
       label = "SOQL Query",
       description =
           "SELECT <field>, ... FROM <object name> WHERE <field> <operator> <expression>",
-      elDefs = {RecordEL.class},
+      elDefs = {RecordEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       dependsOn = "lookupMode",
       triggeredByValue = "QUERY",

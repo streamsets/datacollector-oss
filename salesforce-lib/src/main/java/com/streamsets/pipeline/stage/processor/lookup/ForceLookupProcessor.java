@@ -46,6 +46,7 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.cache.CacheCleaner;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.salesforce.DataType;
 import com.streamsets.pipeline.lib.salesforce.Errors;
 import com.streamsets.pipeline.lib.salesforce.ForceLookupConfigBean;
@@ -64,6 +65,7 @@ import org.slf4j.LoggerFactory;
 import javax.xml.namespace.QName;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -400,6 +402,7 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
     try {
       ELVars elVars = getContext().createELVars();
       RecordEL.setRecordInContext(elVars, record);
+      TimeNowEL.setTimeNowInContext(elVars, new Date());
       String preparedQuery = prepareQuery(queryEval.eval(elVars, conf.soqlQuery, String.class));
       // Need this ugly cast since there isn't a way to do a simple
       // get with the Cache interface
