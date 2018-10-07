@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.destination.toerror;
 
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.StageBehaviorFlags;
@@ -26,6 +27,14 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
     version = 1,
     label = "To Error",
     description = "Sends records to the pipeline configured error records handling",
+    execution = {
+        ExecutionMode.STANDALONE,
+        ExecutionMode.CLUSTER_BATCH,
+        ExecutionMode.CLUSTER_YARN_STREAMING,
+        ExecutionMode.CLUSTER_MESOS_STREAMING,
+        ExecutionMode.EDGE,
+        ExecutionMode.EMR_BATCH
+    },
     icon="toerror.png",
     flags = StageBehaviorFlags.PURE_FUNCTION,
     onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/ToError.html"

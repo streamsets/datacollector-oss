@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.destination;
 
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.EventRecord;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
@@ -31,6 +32,14 @@ import java.util.Iterator;
     version = 1,
     label = "To Event",
     description = "It echoes root field from records as a body of an event. For development purpose only.",
+    execution = {
+        ExecutionMode.STANDALONE,
+        ExecutionMode.CLUSTER_BATCH,
+        ExecutionMode.CLUSTER_YARN_STREAMING,
+        ExecutionMode.CLUSTER_MESOS_STREAMING,
+        ExecutionMode.EDGE,
+        ExecutionMode.EMR_BATCH
+    },
     icon="dev.png",
     producesEvents = true,
     onlineHelpRefUrl ="index.html#datacollector/UserGuide/Pipeline_Design/DevStages.html"
