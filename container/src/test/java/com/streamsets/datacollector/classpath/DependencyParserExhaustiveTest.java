@@ -84,6 +84,7 @@ public class DependencyParserExhaustiveTest {
       {"connect-api-0.9.0.0-mapr-1707-beta.jar", new Dependency("connect-api", "0.9.0.0-mapr-1707-beta")},
       {"commons-logging-1.1.3-api.jar", new Dependency("commons-logging", "1.1.3")},
       {"db2jcc4.jar", new Dependency("db2jcc4", "")},
+      {"dbml-local-0.4.1-spark2.3.jar", new Dependency("dbml-local", "0.4.1-spark2.3")},
       {"derby-10.10.2.0.jar", new Dependency("derby", "10.10.2.0")},
       {"dropwizard-metrics-hadoop-metrics2-reporter-0.1.2.jar", new Dependency("dropwizard-metrics-hadoop-metrics2-reporter", "0.1.2")},
       {"elsa-3.0.0-M5.jar", new Dependency("elsa", "3.0.0-M5")},
