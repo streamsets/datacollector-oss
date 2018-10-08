@@ -92,6 +92,7 @@ public class TestQueryUtil {
     final boolean allowLateTable = false;
     final boolean enableSchemaChanges = false;
     final int fetchSize = 1000;
+    final boolean useTable = true;
 
 
     Map<String, String> startOffset = new HashMap<>();
@@ -103,13 +104,45 @@ public class TestQueryUtil {
         startOffset,
         allowLateTable,
         enableSchemaChanges,
-        fetchSize
+        fetchSize,
+        useTable
     );
 
     String expected = String.format("SELECT TOP %s * FROM %s " +
         "WHERE ((__$start_lsn = CAST(0x1 AS BINARY(10)) ) AND (__$seqval > CAST" +
         "(0x2 AS BINARY(10)) ) ) OR (__$start_lsn > CAST(0x1 AS BINARY(10)) )   " +
         "ORDER BY __$start_lsn, __$seqval", fetchSize, CTTableName);
+
+    Assert.assertTrue(StringUtils.contains(query, expected));
+  }
+
+  @Test
+  public void testMSQLCDCQueryWithNoStartOffsetUsingQuery() {
+    Map<String, String> offsetMap = new HashMap<>();
+    offsetMap.put(MSQueryUtil.SYS_CHANGE_VERSION, "0");
+    offsetMap.put("__$start_lsn", "1");
+    offsetMap.put("__$seqval", "2");
+    final boolean allowLateTable = false;
+    final boolean enableSchemaChanges = false;
+    final int fetchSize = 1000;
+    final boolean useTable = false;
+
+    Map<String, String> startOffset = new HashMap<>();
+
+    String query = MSQueryUtil.buildCDCQuery(
+        offsetMap,
+        CTTableName,
+        startOffset,
+        allowLateTable,
+        enableSchemaChanges,
+        fetchSize,
+        useTable
+    );
+
+    String expected = "SELECT TOP 1000 * " +
+        "FROM cdc.fn_cdc_get_all_changes_dbo_test (@start_lsn, @to_lsn, N'all update old') " +
+        "WHERE ((__$start_lsn = CAST(0x1 AS BINARY(10)) ) AND (__$seqval > CAST(0x2 AS BINARY(10)) ) ) " +
+        "OR (__$start_lsn > CAST(0x1 AS BINARY(10)) )   ORDER BY __$start_lsn, __$seqval ";
 
     Assert.assertTrue(StringUtils.contains(query, expected));
   }

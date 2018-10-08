@@ -31,6 +31,7 @@ import java.util.Map;
 public class SQLServerCDCSourceUpgrader implements StageUpgrader {
   public static final String TABLECONFIG = "cdcTableJdbcConfigBean.tableConfigs";
   public static final String ALLOW_LATE_TABLE = "commonSourceConfigBean.allowLateTable";
+  public static final String USE_TABLE = "cdcTableJdbcConfigBean.useTable";
   private static final String SCHEMA_CONFIG = "schema";
   private static final String TABLEPATTERN_CONFIG = "tablePattern";
   private static final String TABLE_EXCLUSION_CONFIG = "tableExclusionPattern";
@@ -58,6 +59,12 @@ public class SQLServerCDCSourceUpgrader implements StageUpgrader {
         // fall through
       case 3:
         upgradeV3ToV4(configs);
+        if (toVersion == 4) {
+          break;
+        }
+        // fall through
+      case 4:
+        upgradeV4ToV5(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -182,5 +189,9 @@ public class SQLServerCDCSourceUpgrader implements StageUpgrader {
       configs.add(addConfig);
       configs.remove(removeConfig);
     }
+  }
+
+  private static void upgradeV4ToV5(List<Config> configs) {
+    configs.add(new Config(USE_TABLE, true));
   }
 }

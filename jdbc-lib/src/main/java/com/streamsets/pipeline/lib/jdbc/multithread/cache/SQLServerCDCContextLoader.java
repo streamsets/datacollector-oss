@@ -32,19 +32,22 @@ public class SQLServerCDCContextLoader extends CacheLoader<TableRuntimeContext, 
   private final int fetchSize;
   private final boolean allowLateTable;
   private final boolean enableSchemaChanges;
+  private final boolean useTable;
 
   public SQLServerCDCContextLoader(
       ConnectionManager connectionManager,
       Map<String, String> offsets,
       int fetchSize,
       boolean allowLateTable,
-      boolean enableSchemaChanges
+      boolean enableSchemaChanges,
+      boolean useTable
   ) {
     this.connectionManager = connectionManager;
     this.offsets = offsets;
     this.fetchSize = fetchSize;
     this.allowLateTable = allowLateTable;
     this.enableSchemaChanges = enableSchemaChanges;
+    this.useTable = useTable;
   }
 
   @Override
@@ -59,7 +62,8 @@ public class SQLServerCDCContextLoader extends CacheLoader<TableRuntimeContext, 
         tableContext.getOffsetColumnToStartOffset(),
         allowLateTable,
         enableSchemaChanges,
-        fetchSize
+        fetchSize,
+        useTable
     );
 
 

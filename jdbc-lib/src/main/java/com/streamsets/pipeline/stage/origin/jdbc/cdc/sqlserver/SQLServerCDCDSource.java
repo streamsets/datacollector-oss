@@ -27,7 +27,7 @@ import com.streamsets.pipeline.stage.origin.jdbc.table.QuoteChar;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
 
 @StageDef(
-    version = 4,
+    version = 5,
     label = "SQL Server CDC Client",
     description = "Origin that an read change events from an MS SQL Server Database",
     icon = "sql-server-multithreaded.png",
