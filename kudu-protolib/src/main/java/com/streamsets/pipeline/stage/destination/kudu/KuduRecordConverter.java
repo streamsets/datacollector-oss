@@ -26,6 +26,7 @@ import org.apache.kudu.Schema;
 import org.apache.kudu.Type;
 import org.apache.kudu.client.PartialRow;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 public class KuduRecordConverter {
@@ -117,6 +118,9 @@ public class KuduRecordConverter {
               break;
             case BYTE_ARRAY:
               row.addBinary(column, field.getValueAsByteArray());
+              break;
+            case DECIMAL:
+              row.addDecimal(column, field.getValueAsDecimal());
               break;
             default:
               throw new OnRecordErrorException(record, Errors.KUDU_04, fieldName, type.name());

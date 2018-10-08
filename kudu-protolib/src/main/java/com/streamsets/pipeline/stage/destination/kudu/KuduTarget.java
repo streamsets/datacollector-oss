@@ -37,11 +37,11 @@ import com.streamsets.pipeline.api.lineage.LineageEventType;
 import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.lib.cache.CacheCleaner;
 import com.streamsets.pipeline.lib.el.ELUtils;
-import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.operation.ChangeLogFormat;
 import com.streamsets.pipeline.lib.operation.FieldPathConverter;
 import com.streamsets.pipeline.lib.operation.MongoDBOpLogFieldConverter;
 import com.streamsets.pipeline.lib.operation.MySQLBinLogFieldConverter;
+import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.lib.kudu.Errors;
@@ -78,18 +78,19 @@ import java.util.concurrent.TimeUnit;
 public class KuduTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(KuduTarget.class);
 
-  private static final Map<Type, Field.Type> TYPE_MAP = ImmutableMap.<Type, Field.Type> builder()
-    .put(Type.INT8, Field.Type.BYTE)
-    .put(Type.INT16, Field.Type.SHORT)
-    .put(Type.INT32, Field.Type.INTEGER)
-    .put(Type.INT64, Field.Type.LONG)
-    .put(Type.FLOAT, Field.Type.FLOAT)
-    .put(Type.DOUBLE, Field.Type.DOUBLE)
-    .put(Type.BINARY, Field.Type.BYTE_ARRAY)
-    .put(Type.STRING, Field.Type.STRING)
-    .put(Type.BOOL, Field.Type.BOOLEAN)
-    .put(Type.UNIXTIME_MICROS, Field.Type.LONG)
-    .build();
+  private static final Map<Type, Field.Type> TYPE_MAP = ImmutableMap.<Type, Field.Type>builder()
+      .put(Type.INT8, Field.Type.BYTE)
+      .put(Type.INT16, Field.Type.SHORT)
+      .put(Type.INT32, Field.Type.INTEGER)
+      .put(Type.INT64, Field.Type.LONG)
+      .put(Type.FLOAT, Field.Type.FLOAT)
+      .put(Type.DOUBLE, Field.Type.DOUBLE)
+      .put(Type.BINARY, Field.Type.BYTE_ARRAY)
+      .put(Type.STRING, Field.Type.STRING)
+      .put(Type.BOOL, Field.Type.BOOLEAN)
+      .put(Type.UNIXTIME_MICROS, Field.Type.LONG)
+      .put(Type.DECIMAL, Field.Type.DECIMAL)
+      .build();
 
   private static final String EL_PREFIX = "${";
   private static final String KUDU_MASTER = "kuduMaster";

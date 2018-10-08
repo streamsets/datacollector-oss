@@ -16,18 +16,18 @@
 package com.streamsets.pipeline.stage.lib.kudu;
 
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.Stage.Context;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.Stage.Context;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.stage.processor.kudulookup.Groups;
 import com.streamsets.pipeline.stage.processor.kudulookup.KuduLookupConfig;
-import org.apache.kudu.client.AsyncKuduClient;
 import org.apache.kudu.Type;
+import org.apache.kudu.client.AsyncKuduClient;
 import org.apache.kudu.client.RowResult;
 
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 
 public class KuduUtils {
 
@@ -75,6 +75,7 @@ public class KuduUtils {
       case INT64: return Field.Type.LONG;
       case STRING: return  Field.Type.STRING;
       case UNIXTIME_MICROS: return Field.Type.DATETIME;
+      case DECIMAL: return Field.Type.DECIMAL;
       default:
         throw new UnsupportedOperationException("Unknown data type: " + kuduType.getName());
     }
@@ -115,6 +116,8 @@ public class KuduUtils {
       case UNIXTIME_MICROS:
         //UNIXTIME_MICROS is in microsecond
         return Field.create(Field.Type.DATETIME, new Date(result.getLong(fieldName)/1000L));
+      case DECIMAL:
+        return Field.create(Field.Type.DECIMAL, result.getDecimal(fieldName));
       default:
         throw new StageException(Errors.KUDU_10, fieldName, type.getName());
     }
