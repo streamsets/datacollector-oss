@@ -41,7 +41,8 @@ import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
 @ConfigGroups(Groups.class)
 @HideConfigs({
     "commonSourceConfigBean.allowLateTable",
-    "commonSourceConfigBean.enableSchemaChanges"
+    "commonSourceConfigBean.enableSchemaChanges",
+    "commonSourceConfigBean.txnWindow"
 })
 public class SQLServerCTDSource extends DPushSource {
 

@@ -219,7 +219,9 @@ public class TestSQLServerCDCSourceUpgrader {
     SQLServerCDCSourceUpgrader sqlServerCDCSourceUpgrader = new SQLServerCDCSourceUpgrader();
     sqlServerCDCSourceUpgrader.upgrade("a", "b", "c", 4, 5, configs);
 
-    Assert.assertEquals(1, configs.size());
-    Assert.assertEquals(true, configs.get(0).getValue());
+    Assert.assertEquals(2, configs.size());
+
+    UpgraderTestUtils.assertExists(configs, SQLServerCDCSourceUpgrader.TXN_WINDOW, "${1 * HOURS}");
+    UpgraderTestUtils.assertExists(configs, SQLServerCDCSourceUpgrader.USE_TABLE, true);
   }
 }

@@ -43,7 +43,8 @@ import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 @GenerateResourceBundle
 @HideConfigs({
     "commonSourceConfigBean.allowLateTable",
-    "commonSourceConfigBean.enableSchemaChanges"
+    "commonSourceConfigBean.enableSchemaChanges",
+    "commonSourceConfigBean.txnWindow"
 })
 public final class TableJdbcDSource extends DPushSource {
 

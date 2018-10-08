@@ -336,7 +336,7 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
    * After a batch is generate perform needed operations, generate and commit batch
    * Evict entries from {@link #tableReadContextCache}, reset {@link #tableRuntimeContext}
    */
-  private void handlePostBatchAsNeeded(
+  protected void handlePostBatchAsNeeded(
       boolean resultSetEndReached,
       int recordCount,
       int eventCount,

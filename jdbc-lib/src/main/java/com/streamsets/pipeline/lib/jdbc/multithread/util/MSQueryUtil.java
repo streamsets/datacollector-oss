@@ -41,6 +41,7 @@ public final class MSQueryUtil {
   public static final String CDC_OPERATION = "__$operation";
   public static final String CDC_UPDATE_MASK = "__$update_mask";
   public static final String CDC_COMMAND_ID = "__$command_id";
+  public static final String CDC_TXN_WINDOW = "__$sdc.txn_window";
   public static final String CDC_SOURCE_SCHEMA_NAME = "schema_name";
   public static final String CDC_SOURCE_TABLE_NAME = "table_name";
   public static final String CDC_CAPTURE_INSTANCE_NAME = "capture_instance_name";
@@ -185,10 +186,15 @@ public final class MSQueryUtil {
       boolean allowLateTable,
       boolean enableSchemaChanges,
       int fetchSize,
-      boolean useTable
+      boolean useTable,
+      int txnWindow
   ) {
     String captureInstanceName = tableName.substring("cdc.".length(), tableName.length() - "_CT".length());
     StringBuilder query = new StringBuilder();
+    String declare_from_lsn;
+    String declare_to_lsn;
+    String declare_to_lsn2 = "";
+    String where_clause;
 
     // check the existing of CDC table
     if (allowLateTable) {
@@ -198,27 +204,72 @@ public final class MSQueryUtil {
       query.append("\n");
     }
 
+    // initial offset
+    if (offsetMap.get(CDC_START_LSN) == null) {
+      String condition = "";
+      if (startOffset.get(CDC_START_LSN) == null) {
+        declare_from_lsn = String.format("DECLARE @start_lsn binary(10) = sys.fn_cdc_get_min_lsn (N'%s')",
+            captureInstanceName
+        );
+        condition = "__$start_lsn > @start_lsn and __$start_lsn <= @to_lsn";
+      } else {
+
+        if (startOffset.get(CDC_START_LSN).equals("-1")) {
+          declare_from_lsn = String.format("DECLARE @start_lsn binary(10) = sys.fn_cdc_get_max_lsn(); ");
+
+          condition = "__$start_lsn >= @start_lsn and __$start_lsn <= @to_lsn";
+        } else {
+          declare_from_lsn = String.format(
+              "DECLARE @start_lsn binary(10) " + "= sys.fn_cdc_map_time_to_lsn('smallest greater than or equal', sys.fn_cdc_map_lsn_to_time(0x%s)); ",
+              startOffset.get(CDC_START_LSN)
+          );
+          condition = "__$start_lsn > @start_lsn and __$start_lsn <= @to_lsn";
+        }
+      }
+
+      where_clause = String.format(WHERE_CLAUSE, condition);
+
+    } else {
+      declare_from_lsn = String.format("DECLARE @start_lsn binary(10) " +
+              "= sys.fn_cdc_map_time_to_lsn('smallest greater than or equal', sys.fn_cdc_map_lsn_to_time(0x%s)); ",
+          offsetMap.get(CDC_START_LSN));
+
+      String condition1 = String.format(
+          AND_CLAUSE,
+          String.format(BINARY_COLUMN_EQUALS_CLAUSE, CDC_START_LSN,  offsetMap.get(CDC_START_LSN)),
+          String.format(BINARY_COLUMN_GREATER_THAN_CLAUSE, CDC_SEQVAL, offsetMap.get(CDC_SEQVAL))
+      );
+
+      String condition2 = "__$start_lsn > @start_lsn and __$start_lsn <= @to_lsn";
+
+      where_clause = String.format(WHERE_CLAUSE, String.format(OR_CLAUSE, condition1, condition2));
+    }
+
+    if (txnWindow > 0) {
+      declare_to_lsn = String.format(
+          "DECLARE @to_lsn binary(10) = " + "sys.fn_cdc_map_time_to_lsn('largest less than or equal', " +
+              "DATEADD(second, %s, sys.fn_cdc_map_lsn_to_time(@start_lsn))); ",
+          txnWindow
+      );
+      declare_to_lsn2 = String.format("IF @start_lsn = @to_lsn " +
+          "SET @to_lsn = sys.fn_cdc_map_time_to_lsn('largest less than or equal', GETDATE()); ");
+    } else {
+      declare_to_lsn = String.format("DECLARE @to_lsn binary(10) = sys.fn_cdc_map_time_to_lsn('largest less than or equal', GETDATE()); ");
+    }
+
+
+    query.append(declare_from_lsn);
+    query.append(declare_to_lsn);
+    query.append(declare_to_lsn2);
+
     if (useTable) {
       query.append(String.format(SELECT_TABLE_CLAUSE, fetchSize, captureInstanceName));
     } else {
       query.append(String.format(SELECT_CLAUSE, fetchSize, captureInstanceName));
     }
 
-    if (offsetMap == null || offsetMap.size() < 1) {
-      // initial offset
-      if (startOffset != null && startOffset.containsKey(CDC_START_LSN)) {
-        String condition = String.format(BINARY_COLUMN_GREATER_THAN_CLAUSE, CDC_START_LSN, startOffset.get(CDC_START_LSN));
-        query.append(String.format(WHERE_CLAUSE, condition));
-      }
-    } else {
-      String condition1 = String.format(
-          AND_CLAUSE,
-          String.format(BINARY_COLUMN_EQUALS_CLAUSE, CDC_START_LSN, offsetMap.get(CDC_START_LSN)),
-          String.format(BINARY_COLUMN_GREATER_THAN_CLAUSE, CDC_SEQVAL, offsetMap.get(CDC_SEQVAL))
-      );
-      String condition2 = String.format(BINARY_COLUMN_GREATER_THAN_CLAUSE, CDC_START_LSN, offsetMap.get(CDC_START_LSN));
-      query.append(String.format(WHERE_CLAUSE, String.format(OR_CLAUSE, condition1, condition2)));
-    }
+
+    query.append(where_clause);
 
     query.append(String.format(ORDER_BY_CLAUSE, COMMA_SPACE_JOINER.join(ImmutableList.of(CDC_START_LSN, CDC_SEQVAL))));
 

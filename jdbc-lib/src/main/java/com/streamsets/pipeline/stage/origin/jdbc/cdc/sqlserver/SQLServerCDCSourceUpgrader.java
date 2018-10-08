@@ -32,6 +32,7 @@ public class SQLServerCDCSourceUpgrader implements StageUpgrader {
   public static final String TABLECONFIG = "cdcTableJdbcConfigBean.tableConfigs";
   public static final String ALLOW_LATE_TABLE = "commonSourceConfigBean.allowLateTable";
   public static final String USE_TABLE = "cdcTableJdbcConfigBean.useTable";
+  public static final String TXN_WINDOW = "commonSourceConfigBean.txnWindow";
   private static final String SCHEMA_CONFIG = "schema";
   private static final String TABLEPATTERN_CONFIG = "tablePattern";
   private static final String TABLE_EXCLUSION_CONFIG = "tableExclusionPattern";
@@ -193,5 +194,6 @@ public class SQLServerCDCSourceUpgrader implements StageUpgrader {
 
   private static void upgradeV4ToV5(List<Config> configs) {
     configs.add(new Config(USE_TABLE, true));
+    configs.add(new Config(TXN_WINDOW, "${1 * HOURS}"));
   }
 }

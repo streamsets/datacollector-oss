@@ -105,8 +105,11 @@ public class CDCJdbcRunnable extends JdbcBaseRunnable {
     Map<String, String> columnOffsets = new HashMap<>();
 
     // Generate Offset includes __$start_lsn and __$seqval
-    for (String key : tableRuntimeContext.getSourceTableContext().getOffsetColumns()) {
-      columnOffsets.put(key, rs.getString(key));
+    columnOffsets.put(MSQueryUtil.CDC_START_LSN, rs.getString(MSQueryUtil.CDC_START_LSN));
+    columnOffsets.put(MSQueryUtil.CDC_SEQVAL, rs.getString(MSQueryUtil.CDC_SEQVAL));
+
+    if (commonSourceConfigBean.txnWindow > 0) {
+      columnOffsets.put(MSQueryUtil.CDC_TXN_WINDOW, Integer.toString(commonSourceConfigBean.txnWindow));
     }
 
     String offsetFormat = OffsetQueryUtil.getOffsetFormat(columnOffsets);
@@ -140,6 +143,35 @@ public class CDCJdbcRunnable extends JdbcBaseRunnable {
     batchContext.getBatchMaker().addRecord(record);
 
     offsets.put(tableRuntimeContext.getOffsetKey(), offsetFormat);
+  }
+
+  @Override
+  protected void handlePostBatchAsNeeded(
+      boolean resultSetEndReached,
+      int recordCount,
+      int eventCount,
+      BatchContext batchContext
+  ) {
+    if (commonSourceConfigBean.txnWindow > 0) {
+      // update the initial offset
+      int oldTnxWindow = 0;
+      Map<String, String> columnOffsets = OffsetQueryUtil.getColumnsToOffsetMapFromOffsetFormat(offsets.get(
+          tableRuntimeContext.getOffsetKey())
+      );
+
+      if (recordCount == 0) {
+        // add CDC_TXN_WINDOW by commonSourceConfigBean.txnWindow
+        if (columnOffsets.get(MSQueryUtil.CDC_TXN_WINDOW) != null) {
+          oldTnxWindow = Integer.parseInt(columnOffsets.get(MSQueryUtil.CDC_TXN_WINDOW));
+        }
+      }
+
+      columnOffsets.put(MSQueryUtil.CDC_TXN_WINDOW, Integer.toString(oldTnxWindow + commonSourceConfigBean.txnWindow));
+      String offsetFormat = OffsetQueryUtil.getOffsetFormat(columnOffsets);
+      offsets.put(tableRuntimeContext.getOffsetKey(), offsetFormat);
+    }
+
+    super.handlePostBatchAsNeeded(resultSetEndReached, recordCount, eventCount, batchContext);
   }
 
   @Override

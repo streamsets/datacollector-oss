@@ -122,7 +122,8 @@ public class SQLServerCDCSource extends AbstractTableJdbcSource {
         cdcTableJdbcConfigBean.fetchSize,
         commonSourceConfigBean.allowLateTable,
         commonSourceConfigBean.enableSchemaChanges,
-        cdcTableJdbcConfigBean.useTable
+        cdcTableJdbcConfigBean.useTable,
+        commonSourceConfigBean.txnWindow
     );
   }
 }

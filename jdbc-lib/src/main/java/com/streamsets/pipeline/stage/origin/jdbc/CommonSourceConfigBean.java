@@ -147,6 +147,18 @@ public final class CommonSourceConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
+      label = "Maximum Transaction Length",
+      description = "Time window to look for changes within a transaction before commit (in seconds)",
+      displayPosition = 173,
+      group = "JDBC",
+      elDefs = TimeEL.class,
+      defaultValue = "${1 * HOURS}"
+  )
+  public int txnWindow;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
       defaultValue = "0",
       label = "No-more-data Event Generation Delay (seconds)",
       description = "Number of seconds to delay when all rows have been processed, before generating the no-more-data" +

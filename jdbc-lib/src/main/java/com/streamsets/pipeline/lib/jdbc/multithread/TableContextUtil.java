@@ -750,6 +750,7 @@ public final class TableContextUtil {
 
     offsetColumnToType.put(MSQueryUtil.CDC_START_LSN, Types.VARBINARY);
     offsetColumnToType.put(MSQueryUtil.CDC_SEQVAL, Types.VARBINARY);
+    offsetColumnToType.put(MSQueryUtil.CDC_TXN_WINDOW, Types.INTEGER);
 
     final Map<String, String> offsetAdjustments = new HashMap<>();
     final Map<String, String> offsetColumnMinValues = new HashMap<>();
