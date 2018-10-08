@@ -51,7 +51,7 @@
     <awaitility.version>2.0.0</awaitility.version>
     <aws-encryption-sdk.version>1.3.5</aws-encryption-sdk.version>
     <bouncycastle.version>1.60</bouncycastle.version>
-    <metrics.version>3.1.2</metrics.version>
+    <metrics.version>4.0.3</metrics.version>
     <log4j.version>1.2.17</log4j.version>
     <slf4j.version>1.7.7</slf4j.version>
     <protobuf.version>3.3.1</protobuf.version>
@@ -62,7 +62,7 @@
     <hamcrest.version>1.3</hamcrest.version>
     <!-- Mockito and powermock version must be kept in sync based on: https://github.com/powermock/powermock/wiki/Mockito#supported-versions -->
     <mockito.version>1.10.19</mockito.version>
-    <powermock.version>1.7.3</powermock.version>
+    <powermock.version>1.7.4</powermock.version>
     <jackson.version>2.8.9</jackson.version>
     <jacoco.version>0.7.7.201606060606</jacoco.version>
     <hikaricp.version>2.4.1</hikaricp.version>

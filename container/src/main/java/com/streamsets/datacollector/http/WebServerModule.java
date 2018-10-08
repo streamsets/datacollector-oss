@@ -15,8 +15,8 @@
  */
 package com.streamsets.datacollector.http;
 
-import com.codahale.metrics.JmxReporter;
 import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.jmx.JmxReporter;
 import com.streamsets.datacollector.activation.Activation;
 import com.streamsets.datacollector.activation.ActivationLoader;
 import com.streamsets.datacollector.bundles.SupportBundleManager;
