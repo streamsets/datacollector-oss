@@ -127,7 +127,14 @@ public class CDCJdbcRunnable extends JdbcBaseRunnable {
     record.getHeader().setAttribute(OperationType.SDC_OPERATION_TYPE, String.valueOf(op));
 
     for (String fieldName : recordHeader) {
-      record.getHeader().setAttribute(JDBC_NAMESPACE_HEADER + fieldName, rs.getString(fieldName) != null ? rs.getString(fieldName) : "NULL" );
+      try {
+        record.getHeader().setAttribute(JDBC_NAMESPACE_HEADER + fieldName,
+            rs.getString(fieldName) != null ? rs.getString(fieldName) : "NULL"
+        );
+      } catch (SQLException ex) {
+        //no-op
+        LOG.trace("the column name {} does not exists in the table: {}", fieldName, tableRuntimeContext.getQualifiedName());
+      }
     }
 
     batchContext.getBatchMaker().addRecord(record);
