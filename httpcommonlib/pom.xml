@@ -37,7 +37,7 @@
     <commons-io.version>2.4</commons-io.version>
     <xz.version>1.5</xz.version>
     <snappy.version>0.4</snappy.version>
-    <jetty.version>9.4.2.v20170220</jetty.version>
+    <jetty.version>9.4.12.v20180830</jetty.version>
     <tape.version>1.2.3</tape.version>
   </properties>
 

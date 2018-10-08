@@ -260,6 +260,10 @@
                   <shadedPattern>_ss_com.codahale.metrics.json</shadedPattern>
                 </relocation>
                 <relocation>
+                  <pattern>com.codahale.metrics.jmx</pattern>
+                  <shadedPattern>_ss_com.codahale.metrics.jmx</shadedPattern>
+                </relocation>
+                <relocation>
                   <pattern>com.streamsets</pattern>
                   <shadedPattern>_ss_com.streamsets</shadedPattern>
                   <excludes>

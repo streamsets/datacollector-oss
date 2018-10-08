@@ -37,7 +37,7 @@
     <kafka.version>0.8.1.1</kafka.version>
     <tec.version>0.3</tec.version>
     <snappy.version>0.4</snappy.version>
-    <jetty.version>9.4.2.v20170220</jetty.version>
+    <jetty.version>9.4.12.v20180830</jetty.version>
     <commons-io.version>2.4</commons-io.version>
     <commons-pool2.version>2.4.2</commons-pool2.version>
     <h2.version>1.4.187</h2.version>

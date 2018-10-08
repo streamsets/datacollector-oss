@@ -42,7 +42,7 @@
     <joda.version>2.8</joda.version>
     <milo.version>0.1.5</milo.version>
     <xerces.version>2.11.0</xerces.version>
-    <jetty.version>9.4.2.v20170220</jetty.version>
+    <jetty.version>9.4.12.v20180830</jetty.version>
     <paho.version>1.0.2</paho.version>
     <snappy.version>0.4</snappy.version>
     <syslog.version>1.1.3</syslog.version>

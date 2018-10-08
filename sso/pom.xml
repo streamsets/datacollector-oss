@@ -33,7 +33,7 @@
   <packaging>jar</packaging>
 
   <properties>
-    <jaxrpc.version>2.0.1</jaxrpc.version>
+    <jax-ws.version>2.1.1</jax-ws.version>
     <javax.inject.version>1</javax.inject.version>
   </properties>
 
@@ -127,7 +127,7 @@
     <dependency>
       <groupId>javax.ws.rs</groupId>
       <artifactId>javax.ws.rs-api</artifactId>
-      <version>${jaxrpc.version}</version>
+      <version>${jax-ws.version}</version>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
