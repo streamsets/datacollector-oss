@@ -122,10 +122,6 @@ public class CDCJdbcRunnable extends JdbcBaseRunnable {
         JDBC_NAMESPACE_HEADER
     );
 
-    for (String fieldName : recordHeader) {
-      record.getHeader().setAttribute(JDBC_NAMESPACE_HEADER + fieldName, rs.getString(fieldName) != null ? rs.getString(fieldName) : "NULL" );
-    }
-
     //Set SDC Operation Header
     int op = MSOperationCode.convertToJDBCCode(rs.getInt(MSQueryUtil.CDC_OPERATION));
     record.getHeader().setAttribute(OperationType.SDC_OPERATION_TYPE, String.valueOf(op));
