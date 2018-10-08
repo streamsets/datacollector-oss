@@ -28,6 +28,7 @@ import java.util.Map;
 public class TestQueryUtil {
   private final int maxBatchSize = 1;
   private final String tableName = "dbo.test";
+  private final String CTTableName = "cdc.dbo_test_CT";
   private final List<String> offsetColumns = ImmutableList.of(MSQueryUtil.SYS_CHANGE_VERSION, "pk1", "pk2");
 
   @Test
@@ -90,15 +91,25 @@ public class TestQueryUtil {
     offsetMap.put("__$seqval", "2");
     final boolean allowLateTable = false;
     final boolean enableSchemaChanges = false;
+    final int fetchSize = 1000;
 
 
     Map<String, String> startOffset = new HashMap<>();
 
 
-    String query = MSQueryUtil.buildCDCQuery(offsetMap, tableName, startOffset, allowLateTable, enableSchemaChanges);
+    String query = MSQueryUtil.buildCDCQuery(
+        offsetMap,
+        CTTableName,
+        startOffset,
+        allowLateTable,
+        enableSchemaChanges,
+        fetchSize
+    );
 
-    String expected = "SELECT * FROM dbo.test WHERE ((__$start_lsn = CAST(0x1 AS BINARY(10)) ) AND (__$seqval > CAST" +
-        "(0x2 AS BINARY(10)) ) ) OR (__$start_lsn > CAST(0x1 AS BINARY(10)) )   ORDER BY __$start_lsn, __$seqval";
+    String expected = String.format("SELECT TOP %s * FROM %s " +
+        "WHERE ((__$start_lsn = CAST(0x1 AS BINARY(10)) ) AND (__$seqval > CAST" +
+        "(0x2 AS BINARY(10)) ) ) OR (__$start_lsn > CAST(0x1 AS BINARY(10)) )   " +
+        "ORDER BY __$start_lsn, __$seqval", fetchSize, CTTableName);
 
     Assert.assertTrue(StringUtils.contains(query, expected));
   }

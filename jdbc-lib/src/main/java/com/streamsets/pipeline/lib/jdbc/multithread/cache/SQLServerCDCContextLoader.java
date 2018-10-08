@@ -58,7 +58,8 @@ public class SQLServerCDCContextLoader extends CacheLoader<TableRuntimeContext, 
         tableContext.getQualifiedName(),
         tableContext.getOffsetColumnToStartOffset(),
         allowLateTable,
-        enableSchemaChanges
+        enableSchemaChanges,
+        fetchSize
     );
 
 
