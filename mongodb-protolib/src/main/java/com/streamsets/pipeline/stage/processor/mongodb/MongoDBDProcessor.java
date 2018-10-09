@@ -39,7 +39,7 @@ import com.streamsets.pipeline.stage.common.mongodb.Groups;
         "configBean.cacheConfig.retryOnCacheMiss"
 )
 public class MongoDBDProcessor extends DProcessor  {
-  @ConfigDefBean(groups = {"MONGODB", "CREDENTIALS", "ADVANCED"})
+  @ConfigDefBean(groups = {"MONGODB", "LOOKUP", "CREDENTIALS", "ADVANCED"})
   public MongoDBProcessorConfigBean configBean;
 
   @Override

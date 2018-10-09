@@ -26,7 +26,7 @@ public class MongoDBFieldColumnMapping {
           required = true,
           type = ConfigDef.Type.STRING,
           defaultValue="",
-          label = "Field Name in Document",
+          label = "Document Field",
           description = "Field name in document. It allows dot notation for embedded documents. " +
                   "For example 'field1.field2.field3'",
           displayPosition = 10

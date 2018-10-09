@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum Groups implements Label {
   MONGODB("MongoDB"),
+  LOOKUP("Lookup"),
   CREDENTIALS("Credentials"),
   ADVANCED("Advanced"),
   ;

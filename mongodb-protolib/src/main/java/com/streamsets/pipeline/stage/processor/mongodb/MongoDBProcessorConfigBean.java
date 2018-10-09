@@ -36,22 +36,22 @@ public class MongoDBProcessorConfigBean {
 
   @ConfigDef(
           type = ConfigDef.Type.MODEL,
-          label = "SDC Field to Document Field mapping",
+          label = "Document to SDC Field Mappings",
           description = "Mapping between SDC record to Document fields to construct a find() query",
           required = true,
           displayPosition = 50,
-          group = "MONGODB"
+          group = "LOOKUP"
   )
   @ListBeanModel
   public List<MongoDBFieldColumnMapping> fieldMapping;
 
   @ConfigDef(
           type = ConfigDef.Type.STRING,
-          label = "New Field to Save Lookup Result",
+          label = "Result Field",
           description = "Field name to store lookup result. It should start with '/'",
           required = true,
           displayPosition = 55,
-          group = "MONGODB"
+          group = "LOOKUP"
   )
   @ListBeanModel
   public String resultField;
@@ -63,7 +63,7 @@ public class MongoDBProcessorConfigBean {
           description = "How to handle multiple values",
           defaultValue = "FIRST_ONLY",
           displayPosition = 60,
-          group = "MONGODB"
+          group = "LOOKUP"
   )
   @ValueChooserModel(MongoDBLookupMultipleValuesBehaviorChooserValues.class)
   public MultipleValuesBehavior multipleValuesBehavior = MultipleValuesBehavior.DEFAULT;
@@ -75,7 +75,7 @@ public class MongoDBProcessorConfigBean {
           description = "How to handle missing values",
           defaultValue = "PASS_RECORD_ON",
           displayPosition = 70,
-          group = "MONGODB"
+          group = "LOOKUP"
   )
   @ValueChooserModel(MissingValuesBehaviorChooserValues.class)
   public MissingValuesBehavior missingValuesBehavior = MissingValuesBehavior.DEFAULT;
@@ -92,6 +92,6 @@ public class MongoDBProcessorConfigBean {
   @ValueChooserModel(ReadPreferenceChooserValues.class)
   public ReadPreferenceLabel readPreference;
 
-  @ConfigDefBean(groups = "MONGODB")
+  @ConfigDefBean(groups = "LOOKUP")
   public CacheConfig cacheConfig = new CacheConfig();
 }
