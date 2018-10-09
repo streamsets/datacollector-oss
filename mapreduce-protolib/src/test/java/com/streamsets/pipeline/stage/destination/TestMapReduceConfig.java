@@ -38,6 +38,7 @@ import static org.mockito.Matchers.contains;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class TestMapReduceConfig {
   private static String confDir = new File("target/test-data/mapreduce-config-" + UUID.randomUUID().toString()).getAbsolutePath();
@@ -57,7 +58,9 @@ public class TestMapReduceConfig {
     config.mapreduceUser = "doctor-who";
     config.kerberos = false;
 
+    com.streamsets.pipeline.api.Configuration configuration = mock(com.streamsets.pipeline.api.Configuration.class);
     context = mock(Stage.Context.class);
+    when(context.getConfiguration()).thenReturn(configuration);
 
     FileUtils.deleteQuietly(new File(confDir, "yarn-site.xml"));
     FileUtils.deleteQuietly(new File(confDir, "core-site.xml"));
