@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.bundles;
 
+import com.amazonaws.AmazonClientException;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -278,12 +279,19 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
       s3Metadata.addUserMetadata((String)entry.getKey(), (String)entry.getValue());
     }
 
-    // Uploading part by part
-    LOG.info("Initiating multi-part support bundle upload");
-    List<PartETag> partETags = new ArrayList<>();
-    InitiateMultipartUploadRequest initRequest = new InitiateMultipartUploadRequest(bucket, bundle.getBundleKey());
-    initRequest.setObjectMetadata(s3Metadata);
-    InitiateMultipartUploadResult initResponse = s3Client.initiateMultipartUpload(initRequest);
+    List<PartETag> partETags;
+    InitiateMultipartUploadResult initResponse = null;
+    try {
+      // Uploading part by part
+      LOG.info("Initiating multi-part support bundle upload");
+      partETags = new ArrayList<>();
+      InitiateMultipartUploadRequest initRequest = new InitiateMultipartUploadRequest(bucket, bundle.getBundleKey());
+      initRequest.setObjectMetadata(s3Metadata);
+      initResponse = s3Client.initiateMultipartUpload(initRequest);
+    } catch (AmazonClientException e) {
+      LOG.error("Support bundle upload failed: ", e);
+      throw new IOException("Support bundle upload failed", e);
+    }
 
     try {
       byte[] buffer = new byte[bufferSize];
