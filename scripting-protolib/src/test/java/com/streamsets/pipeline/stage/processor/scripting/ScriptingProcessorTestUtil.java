@@ -43,9 +43,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.LinkedList;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -791,7 +791,13 @@ public class ScriptingProcessorTestUtil {
         map,
         null
     );
-    record.getHeader().overrideUserAndSystemAttributes(recordHeaderAttributes);
+    Record.Header header = record.getHeader();
+    try {
+      header.getClass().getMethod("overrideUserAndSystemAttributes", Map.class)
+          .invoke(header, recordHeaderAttributes);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
 
     ProcessorRunner runner = new ProcessorRunner.Builder(clazz, processor)
         .addOutputLane("lane")
@@ -809,11 +815,12 @@ public class ScriptingProcessorTestUtil {
     List<Record> records = output.getRecords().get("lane");
     assertEquals(1, records.size());
 
-    assertEquals(1, records.get(0).getHeader().getAttributeNames().size());
+    Record.Header outputHeader = records.get(0).getHeader();
+    assertEquals(1, outputHeader.getAttributeNames().size());
 
     final String key = "key1";
     final String value = "value1";
-    assertEquals(value, records.get(0).getHeader().getAttribute(key));
+    assertEquals(value, outputHeader.getAttribute(key));
 
     AbstractScriptingProcessor abstractScriptingProcessor = (AbstractScriptingProcessor) processor;
     List<ScriptRecord> scriptRecords = abstractScriptingProcessor.getScriptRecords();
@@ -822,8 +829,13 @@ public class ScriptingProcessorTestUtil {
     ScriptRecord scriptRecord = scriptRecords.get(0);
     java.lang.reflect.Field[] fields = scriptRecord.getClass().getFields();
 
-    Map<String, Object> recordHeader = records.get(0).getHeader().getAllAttributes();
-
+    final Map<String, Object> recordHeader;
+    try {
+      recordHeader = (Map<String, Object>) outputHeader.getClass()
+          .getMethod("getAllAttributes").invoke(outputHeader);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
     compareRecordHeaders(recordHeader, fields);
   }
 

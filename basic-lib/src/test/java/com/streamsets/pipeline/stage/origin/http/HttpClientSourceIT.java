@@ -738,8 +738,7 @@ public class HttpClientSourceIT extends JerseyTest {
       List<Record> parsedRecords = getRecords(runner);
       assertEquals(1, parsedRecords.size());
 
-      Map<String, Object> lowerCasedKeys = new HashMap<>();
-      parsedRecords.get(0).getHeader().getAllAttributes().forEach((k, v) -> lowerCasedKeys.put(k.toLowerCase(), v));
+      Map<String, String> lowerCasedKeys = getLowerCaseHeaders(parsedRecords.get(0));
       assertEquals("StreamSets", lowerCasedKeys.get("x-test-header"));
       assertEquals("[a, b]", lowerCasedKeys.get("x-list-header"));
 
@@ -777,8 +776,7 @@ public class HttpClientSourceIT extends JerseyTest {
 
       assertEquals(1, parsedRecords.size());
 
-      Map<String, Object> lowerCasedKeys = new HashMap<>();
-      parsedRecords.get(0).getHeader().getAllAttributes().forEach((k, v) -> lowerCasedKeys.put(k.toLowerCase(), v));
+      Map<String, String> lowerCasedKeys = getLowerCaseHeaders(parsedRecords.get(0));
       assertEquals("StreamSets", lowerCasedKeys.get("x-test-header"));
       assertEquals("[a, b]", lowerCasedKeys.get("x-list-header"));
 
@@ -1271,11 +1269,7 @@ public class HttpClientSourceIT extends JerseyTest {
       for (int i = 0; i < parsedRecords.size(); i++) {
         assertTrue(parsedRecords.get(i).has("/name"));
 
-        // Grizzly might lower-case the header attribute names on some platforms/versions. That is however correct
-        // as RFC 2616 clearly states that header names are case-insensitive.
-        Map<String, Object> lowerCasedKeys = new HashMap<>();
-        parsedRecords.get(i).getHeader().getAllAttributes().forEach((k, v) -> lowerCasedKeys.put(k.toLowerCase(), v));
-
+        Map<String, String> lowerCasedKeys = getLowerCaseHeaders(parsedRecords.get(0));
         assertEquals("StreamSets", lowerCasedKeys.get("x-test-header"));
         assertEquals("[a, b]", lowerCasedKeys.get("x-list-header"));
         assertEquals(EXPECTED_NAMES[i], extractValueFromRecord(parsedRecords.get(i), DataFormat.JSON));
@@ -1644,5 +1638,20 @@ public class HttpClientSourceIT extends JerseyTest {
     } finally {
       runner.runDestroy();
     }
+  }
+
+  /**
+   * Grizzly might lower-case the header attribute names on some platforms/versions. That is
+   * however correct as RFC 2616 clearly states that header names are case-insensitive.
+   *
+   * @param record the recored to get the header attributes
+   * @return the header attribute map with lower-cased names
+   */
+  private Map<String, String> getLowerCaseHeaders(Record record) {
+    Map<String, String> lowerCased = new HashMap<>();
+    Record.Header header = record.getHeader();
+    header.getAttributeNames().forEach(name -> lowerCased.put(
+        name.toLowerCase(), header.getAttribute(name)));
+    return lowerCased;
   }
 }

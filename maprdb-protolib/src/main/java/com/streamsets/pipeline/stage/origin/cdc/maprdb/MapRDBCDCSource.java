@@ -113,7 +113,7 @@ public class MapRDBCDCSource extends BasePushSource {
           ConsumerRecords<byte[], ChangeDataRecord> messages = consumer.poll(conf.batchWaitTime);
 
           for (ConsumerRecord<byte[], ChangeDataRecord> message : messages) {
-            Map<String, Object> attributes = new HashMap<>();
+            Map<String, String> attributes = new HashMap<>();
             attributes.put(HeaderAttributeConstants.TOPIC, message.topic());
             attributes.put(HeaderAttributeConstants.PARTITION, String.valueOf(message.partition()));
             attributes.put(HeaderAttributeConstants.OFFSET, String.valueOf(message.offset()));
@@ -142,7 +142,7 @@ public class MapRDBCDCSource extends BasePushSource {
     }
 
     private void iterateNode(
-        ChangeDataRecord changeRecord, BatchMaker batchMaker, Map<String, Object> attributes
+        ChangeDataRecord changeRecord, BatchMaker batchMaker, Map<String, String> attributes
     ) throws StageException {
       switch (changeRecord.getType()) {
         case RECORD_INSERT:
@@ -151,12 +151,9 @@ public class MapRDBCDCSource extends BasePushSource {
             String fieldPath = entry.getKey().asPathString();
             ChangeNode node = entry.getValue();
 
-            Record record = getContext().createRecord(getMessageId((String) attributes.get(HeaderAttributeConstants.TOPIC),
-                (String) attributes.get(HeaderAttributeConstants.PARTITION),
-                (String) attributes.get(HeaderAttributeConstants.OFFSET)
-            ));
+            Record record = getContext().createRecord(getMessageId(attributes));
             Record.Header recordHeader = record.getHeader();
-            recordHeader.setUserAttributes(attributes);
+            attributes.forEach((k, v) -> recordHeader.setAttribute(k, v));
             recordHeader.setAttribute(MAPR_OP_TIMESTAMP, String.valueOf(node.getOpTimestamp()));
             recordHeader.setAttribute(MAPR_SERVER_TIMESTAMP, String.valueOf(node.getServerTimestamp()));
             if(node.getType() == Value.Type.MAP) {
@@ -187,12 +184,9 @@ public class MapRDBCDCSource extends BasePushSource {
           }
           break;
         case RECORD_DELETE:
-          Record record = getContext().createRecord(getMessageId((String) attributes.get(HeaderAttributeConstants.TOPIC),
-              (String) attributes.get(HeaderAttributeConstants.PARTITION),
-              (String) attributes.get(HeaderAttributeConstants.OFFSET)
-          ));
+          Record record = getContext().createRecord(getMessageId(attributes));
           Record.Header recordHeader = record.getHeader();
-          recordHeader.setUserAttributes(attributes);
+          attributes.forEach((k, v) -> recordHeader.setAttribute(k, v));
 
           HashMap<String, Field> root = new HashMap<>();
           record.set(Field.create(root));
@@ -208,7 +202,10 @@ public class MapRDBCDCSource extends BasePushSource {
       }
     }
 
-    private String getMessageId(String topic, String partition, String offset) {
+    private String getMessageId(Map<String, String> attributes) {
+      String topic = attributes.get(HeaderAttributeConstants.TOPIC);
+      String partition = attributes.get(HeaderAttributeConstants.PARTITION);
+      String offset = attributes.get(HeaderAttributeConstants.OFFSET);
       return topic + "::" + partition + "::" + offset;
     }
 

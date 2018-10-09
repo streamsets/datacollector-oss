@@ -33,6 +33,7 @@ import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 
 import javax.net.ssl.KeyManagerFactory;
@@ -50,9 +51,7 @@ import java.security.KeyStore;
 import java.security.cert.Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import static org.awaitility.Awaitility.await;
@@ -97,13 +96,14 @@ public class TestRestServicePushSource {
 
         runner.getSourceResponseSink().getResponseRecords().clear();
         records.forEach(record -> {
+          Record.Header header = record.getHeader();
           if (record.has("/sendToError")) {
-            Map<String, Object> allAttributes = new HashMap<>(record.getHeader().getAllAttributes());
-            allAttributes.put("_.errorMessage", "sample error");
-            allAttributes.put(RestServiceReceiver.STATUS_CODE_RECORD_HEADER_ATTR_NAME, "500");
-            record.getHeader().overrideUserAndSystemAttributes(allAttributes);
+            Record.Header spyHeader = Mockito.spy(header);
+            Mockito.when(spyHeader.getErrorMessage()).thenReturn("sample error");
+            Whitebox.setInternalState(record, "header", spyHeader);
+            header.setAttribute(RestServiceReceiver.STATUS_CODE_RECORD_HEADER_ATTR_NAME, "500");
           } else {
-            record.getHeader().setAttribute(RestServiceReceiver.STATUS_CODE_RECORD_HEADER_ATTR_NAME, "200");
+            header.setAttribute(RestServiceReceiver.STATUS_CODE_RECORD_HEADER_ATTR_NAME, "200");
           }
           runner.getSourceResponseSink().addResponse(record);
         });
@@ -332,13 +332,14 @@ public class TestRestServicePushSource {
 
         runner.getSourceResponseSink().getResponseRecords().clear();
         records.forEach(record -> {
+          Record.Header header = record.getHeader();
           if (record.has("/sendToError")) {
-            Map<String, Object> allAttributes = new HashMap<>(record.getHeader().getAllAttributes());
-            allAttributes.put("_.errorMessage", "sample error");
-            allAttributes.put(RestServiceReceiver.STATUS_CODE_RECORD_HEADER_ATTR_NAME, "500");
-            record.getHeader().overrideUserAndSystemAttributes(allAttributes);
+            Record.Header spyHeader = Mockito.spy(header);
+            Mockito.when(spyHeader.getErrorMessage()).thenReturn("sample error");
+            Whitebox.setInternalState(record, "header", spyHeader);
+            header.setAttribute(RestServiceReceiver.STATUS_CODE_RECORD_HEADER_ATTR_NAME, "500");
           } else {
-            record.getHeader().setAttribute(RestServiceReceiver.STATUS_CODE_RECORD_HEADER_ATTR_NAME, "200");
+            header.setAttribute(RestServiceReceiver.STATUS_CODE_RECORD_HEADER_ATTR_NAME, "200");
           }
           runner.getSourceResponseSink().addResponse(record);
         });

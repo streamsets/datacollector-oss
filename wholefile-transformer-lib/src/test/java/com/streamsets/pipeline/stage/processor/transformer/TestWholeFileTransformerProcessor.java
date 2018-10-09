@@ -110,10 +110,8 @@ public class TestWholeFileTransformerProcessor {
         .build();
 
     Record record = RecordCreator.create();
-    Map<String, Object> metadata = new HashMap<>();
-    metadata.put("size", 0);
-    metadata.put("file", 0);
-    record.getHeader().setUserAttributes(metadata);
+    record.getHeader().setAttribute("size", "0");
+    record.getHeader().setAttribute("file", "0");
 
     ClassLoader classLoader = getClass().getClassLoader();
     File file = new File(classLoader.getResource("file/not-valid-avro-file.avro").getFile());
@@ -156,10 +154,8 @@ public class TestWholeFileTransformerProcessor {
 
     Record record = createRecord(notValidAvroFile);
     record.set(FileRefUtil.FILE_INFO_FIELD_PATH, Field.create(ImmutableMap.of("size", Field.create(10))));
-    Map<String, Object> metadata = new HashMap<>();
-    metadata.put("size", 0);
-    metadata.put("file", "test");
-    record.getHeader().setUserAttributes(metadata);
+    record.getHeader().setAttribute("size", "0");
+    record.getHeader().setAttribute("file", "test");
 
     try {
       runner.runInit();
@@ -187,11 +183,9 @@ public class TestWholeFileTransformerProcessor {
         .build();
 
     Record record = createRecord(notValidAvroFile);
-    Map<String, Object> metadata = new HashMap<>();
-    metadata.put("size", 0);
-    metadata.put("file", "./test");
-    metadata.put("filename", "test");
-    record.getHeader().setUserAttributes(metadata);
+    record.getHeader().setAttribute("size", "0");
+    record.getHeader().setAttribute("file", "./test");
+    record.getHeader().setAttribute("filename", "test");
 
     try {
       runner.runInit();

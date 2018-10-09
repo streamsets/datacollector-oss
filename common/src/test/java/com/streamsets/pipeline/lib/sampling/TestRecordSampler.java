@@ -149,19 +149,20 @@ public class TestRecordSampler {
             return null;
           }
 
-          @Override
+          /** To be removed */
           public Map<String, Object> getAllAttributes() {
             return null;
           }
 
-          @Override
+          /** To be removed */
           public Map<String, Object> overrideUserAndSystemAttributes(Map<String, Object> newAttrs) {
             return null;
           }
-          @Override
+
+          /** To be removed */
           public Map<String, Object> getUserAttributes() {return null;}
 
-          @Override
+          /** To be removed */
           public Map<String, Object> setUserAttributes(Map<String, Object> newAttributes) {return null;}
 
         };

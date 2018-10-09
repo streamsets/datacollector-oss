@@ -48,16 +48,6 @@ public class RecordCloner {
    * @param context The context of the {@linkplain Processor} to use to clone the record
    * @return Cloned record
    */
-  public static Record clone(Record record, Processor.Context context) {
-    // Kryo loads the RecordImpl class during deserialization in a Spark's classloader.
-    // So directly using the deserialized RecordImpl gives a ClassCastException (RecordImpl -> RecordImpl).
-    // So create a new record and set its root field to be the deserialized one's root field.
-    Record r = context.createRecord(record);
-    r.set(record.get());
-    r.getHeader().overrideUserAndSystemAttributes(record.getHeader().getAllAttributes());
-    return r;
-  }
-
   @SuppressWarnings("unchecked")
   public static Record clone(Object record, Processor.Context context) {
     Record newRecord = context.createRecord("dummyId");
@@ -65,7 +55,8 @@ public class RecordCloner {
       Object origHeaders = record.getClass().getMethod("getHeader").invoke(record);
       Map<String, Object> headers =
           (Map<String, Object>) origHeaders.getClass().getMethod("getAllAttributes").invoke(origHeaders);
-      newRecord.getHeader().overrideUserAndSystemAttributes(headers);
+      Record.Header newHeaders = newRecord.getHeader();
+      newHeaders.getClass().getMethod("overrideUserAndSystemAttributes", Map.class).invoke(newHeaders, headers);
       newRecord.set(RecordCloner.cloneField(record.getClass().getMethod("get").invoke(record)));
       return newRecord;
     } catch(Exception ex) {

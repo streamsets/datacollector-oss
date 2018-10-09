@@ -404,10 +404,6 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable, 
     return Collections.unmodifiableMap(map);
   }
 
-  private boolean isReservedAttribute(String attribute) {
-    return attribute.startsWith(RESERVED_PREFIX);
-  }
-
   private Map<String, Object> getSystemAttributes() {
     Map<String, Object> existingSystemAttr = new HashMap<>();
 
@@ -454,6 +450,7 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable, 
     return old;
   }
 
+  /** To be removed */
   public Map<String, Object> getUserAttributes() {
     return map.entrySet()
         .stream()
@@ -461,6 +458,7 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable, 
         .collect(Collectors.toMap(map -> map.getKey(), map -> map.getValue()));
   }
 
+  /** To be removed */
   public Map<String, Object> setUserAttributes(Map<String, Object> newAttributes) {
     // ImmutableMap can't have null values and our map could have, so use unmodifiable map
     Map<String, Object> old = Collections.unmodifiableMap(getUserAttributes());
