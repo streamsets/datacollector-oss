@@ -117,8 +117,9 @@ public class TestJdbcMultiRowRecordWriter {
         false,
         mappings,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
-        JDBCOperationType.INSERT,
+        JDBCOperationType.INSERT.getCode(),
         UnsupportedOperationAction.DISCARD,
+        null,
         new JdbcRecordReader(),
         false
     );
@@ -145,8 +146,9 @@ public class TestJdbcMultiRowRecordWriter {
         false,
         mappings,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
-        JDBCOperationType.INSERT,
+        JDBCOperationType.INSERT.getCode(),
         UnsupportedOperationAction.SEND_TO_ERROR,
+        null,
         new JdbcRecordReader(),
         false
     );
@@ -177,8 +179,9 @@ public class TestJdbcMultiRowRecordWriter {
         false,
         mappings,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
-        JDBCOperationType.INSERT,
+        JDBCOperationType.INSERT.getCode(),
         UnsupportedOperationAction.DISCARD,
+        null,
         new JdbcRecordReader(),
         caseSensitive
     );
@@ -200,8 +203,9 @@ public class TestJdbcMultiRowRecordWriter {
         false,
         mappings,
         8,
-        JDBCOperationType.INSERT,
+        JDBCOperationType.INSERT.getCode(),
         UnsupportedOperationAction.DISCARD,
+        null,
         new JdbcRecordReader(),
         caseSensitive
     );
@@ -233,8 +237,9 @@ public class TestJdbcMultiRowRecordWriter {
         false,
         mappings,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
-        JDBCOperationType.INSERT,
+        JDBCOperationType.INSERT.getCode(),
         UnsupportedOperationAction.DISCARD,
+        null,
         new JdbcRecordReader(),
         caseSensitive
     );
@@ -271,8 +276,9 @@ public class TestJdbcMultiRowRecordWriter {
         false, //rollback
         new LinkedList<JdbcFieldColumnParamMapping>(),
         15,
-        JDBCOperationType.INSERT,
+        JDBCOperationType.INSERT.getCode(),
         UnsupportedOperationAction.DISCARD,
+        null,
         new JdbcRecordReader(),
         caseSensitive
     );
@@ -322,8 +328,9 @@ public class TestJdbcMultiRowRecordWriter {
         false, //rollback
         new LinkedList<>(),
         15,
-        JDBCOperationType.INSERT,
+        JDBCOperationType.INSERT.getCode(),
         UnsupportedOperationAction.DISCARD,
+        null,
         new JdbcRecordReader(),
         true
     );
@@ -388,8 +395,9 @@ public class TestJdbcMultiRowRecordWriter {
         false, //rollback
         new LinkedList<JdbcFieldColumnParamMapping>(),
         PreparedStatementCache.UNLIMITED_CACHE,
-        JDBCOperationType.INSERT,
+        JDBCOperationType.INSERT.getCode(),
         UnsupportedOperationAction.USE_DEFAULT,
+        null,
         new JdbcRecordReader(),
         caseSensitive
     );
@@ -417,8 +425,9 @@ public class TestJdbcMultiRowRecordWriter {
         false,
         mappings,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
-        JDBCOperationType.INSERT,
+        JDBCOperationType.INSERT.getCode(),
         UnsupportedOperationAction.DISCARD,
+        null,
         new JdbcRecordReader(),
         false
     );

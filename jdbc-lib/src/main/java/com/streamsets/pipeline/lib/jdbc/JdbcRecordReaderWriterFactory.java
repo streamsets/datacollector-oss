@@ -17,6 +17,7 @@ package com.streamsets.pipeline.lib.jdbc;
 
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.operation.ChangeLogFormat;
+import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -37,28 +38,39 @@ public final class JdbcRecordReaderWriterFactory {
       boolean useMultiRowOp,
       int maxPrepStmtParameters,
       int maxPrepStmtCache,
-      JDBCOperationType defaultOperation,
+      int defaultOpCode,
       UnsupportedOperationAction unsupportedAction,
       JdbcRecordReader recordReader,
       boolean caseSensitive
   ) throws StageException {
-
-    return createJdbcRecordWriter(
-        connectionString,
-        dataSource,
-        schema,
-        tableName,
-        customMappings,
-        null,
-        rollbackOnError,
-        useMultiRowOp,
-        maxPrepStmtParameters,
-        maxPrepStmtCache,
-        defaultOperation,
-        unsupportedAction,
-        recordReader,
-        caseSensitive
-    );
+    if (defaultOpCode == OperationType.LOAD_CODE) {
+      return new JdbcLoadRecordWriter(
+          connectionString,
+          dataSource,
+          schema,
+          tableName,
+          customMappings,
+          recordReader,
+          caseSensitive
+      );
+    } else {
+      return createJdbcRecordWriter(
+          connectionString,
+          dataSource,
+          schema,
+          tableName,
+          customMappings,
+          null,
+          rollbackOnError,
+          useMultiRowOp,
+          maxPrepStmtParameters,
+          maxPrepStmtCache,
+          defaultOpCode,
+          unsupportedAction,
+          recordReader,
+          caseSensitive
+          );
+    }
   }
 
   // Called by JdbcTeeProcessor
@@ -73,7 +85,7 @@ public final class JdbcRecordReaderWriterFactory {
        boolean useMultiRowOp,
        int maxPrepStmtParameters,
        int maxPrepStmtCache,
-       JDBCOperationType defaultOperation,
+       int defaultOpCode,
        UnsupportedOperationAction unsupportedAction,
        JdbcRecordReader recordReader,
        boolean caseSensitive
@@ -90,7 +102,7 @@ public final class JdbcRecordReaderWriterFactory {
           rollbackOnError,
           customMappings,
           maxPrepStmtParameters,
-          defaultOperation,
+          defaultOpCode,
           unsupportedAction,
           generatedColumnMappings,
           recordReader,
@@ -105,7 +117,7 @@ public final class JdbcRecordReaderWriterFactory {
           rollbackOnError,
           customMappings,
           maxPrepStmtCache,
-          defaultOperation,
+          defaultOpCode,
           unsupportedAction,
           generatedColumnMappings,
           recordReader,

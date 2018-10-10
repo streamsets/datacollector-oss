@@ -48,7 +48,7 @@ public class JdbcOracleCDCRecordReader extends JdbcRecordReader {
   @VisibleForTesting
   int getOperationFromRecord(
       Record record,
-      JDBCOperationType defaultOp,
+      int defaultOpCode,
       UnsupportedOperationAction unsupportedAction,
       List<OnRecordErrorException> errorRecords ) {
 
@@ -68,7 +68,7 @@ public class JdbcOracleCDCRecordReader extends JdbcRecordReader {
         opCode = JDBCOperationType.convertToIntCode(op);
       }
       if (opCode == -1){
-        opCode = defaultOp.getCode();
+        opCode = defaultOpCode;
       }
     } catch (NumberFormatException | UnsupportedOperationException ex) {
       LOG.debug(
@@ -86,7 +86,7 @@ public class JdbcOracleCDCRecordReader extends JdbcRecordReader {
           errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_70, op));
           break;
         case USE_DEFAULT:
-          opCode = defaultOp.code;
+          opCode = defaultOpCode;
           break;
         default: //unknown action
           LOG.debug("Sending record to error due to unknown operation: {}", op);

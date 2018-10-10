@@ -53,38 +53,7 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
    * @param tableName the name of the table to write to
    * @param rollbackOnError whether to attempt rollback of failed queries
    * @param customMappings any custom mappings the user provided
-   * @param defaultOp Default Opertaion
-   * @param unsupportedAction What action to take if operation is invalid
-   * @param recordReader JDBCRecordReader to obtain data from incoming record
-   * @throws StageException
-   */
-  public JdbcGenericRecordWriter(
-      String connectionString,
-      DataSource dataSource,
-      String schema,
-      String tableName,
-      boolean rollbackOnError,
-      List<JdbcFieldColumnParamMapping> customMappings,
-      int maxStmtCache,
-      JDBCOperationType defaultOp,
-      UnsupportedOperationAction unsupportedAction,
-      JdbcRecordReader recordReader,
-      boolean caseSensitive
-  ) throws StageException {
-    super(connectionString, dataSource, schema, tableName, rollbackOnError,
-        customMappings, defaultOp, unsupportedAction, recordReader, null, caseSensitive);
-    this.maxPrepStmtCache = maxStmtCache;
-    this.caseSensitive = caseSensitive;
-  }
-
-  /**
-   * Class constructor
-   * @param connectionString database connection string
-   * @param dataSource a JDBC {@link javax.sql.DataSource} to get a connection from
-   * @param tableName the name of the table to write to
-   * @param rollbackOnError whether to attempt rollback of failed queries
-   * @param customMappings any custom mappings the user provided
-   * @param defaultOp Default Opertaion
+   * @param defaultOpCode default operation code
    * @param unsupportedAction What action to take if operation is invalid
    * @param generatedColumnMappings mappings from field names to generated column names
    * @param recordReader JDBCRecordReader to obtain data from incoming record
@@ -98,14 +67,14 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
       boolean rollbackOnError,
       List<JdbcFieldColumnParamMapping> customMappings,
       int maxStmtCache,
-      JDBCOperationType defaultOp,
+      int defaultOpCode,
       UnsupportedOperationAction unsupportedAction,
       List<JdbcFieldColumnMapping> generatedColumnMappings,
       JdbcRecordReader recordReader,
       boolean caseSensitive
   ) throws StageException {
     super(connectionString, dataSource, schema, tableName, rollbackOnError,
-        customMappings, defaultOp, unsupportedAction, recordReader, generatedColumnMappings, caseSensitive);
+        customMappings, defaultOpCode, unsupportedAction, recordReader, generatedColumnMappings, caseSensitive);
     this.maxPrepStmtCache = maxStmtCache;
     this.caseSensitive = caseSensitive;
   }
@@ -148,7 +117,7 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
       while (recordIterator.hasNext()) {
         Record record = recordIterator.next();
         // First, find the operation code
-        int opCode = recordReader.getOperationFromRecord(record, defaultOp, unsupportedAction, errorRecords);
+        int opCode = getOperationCode(record, errorRecords);
         if (opCode <= 0) {
           continue;
         }

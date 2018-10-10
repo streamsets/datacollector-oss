@@ -31,6 +31,7 @@ public class OperationType {
   public static final int UNDELETE_CODE = 6;
   public static final int REPLACE_CODE = 7;
   public static final int MERGE_CODE = 8;
+  public static final int LOAD_CODE = 9;
 
   private static final Map<Integer, String> CODE_LABEL;
   static {
@@ -43,6 +44,7 @@ public class OperationType {
     map.put(UNDELETE_CODE, "UNDELETE");
     map.put(REPLACE_CODE, "REPLACE");
     map.put(MERGE_CODE, "MERGE");
+    map.put(LOAD_CODE, "LOAD");
 
     CODE_LABEL = Collections.unmodifiableMap(map);
   }
@@ -58,6 +60,7 @@ public class OperationType {
     map.put("UNDELETE", UNDELETE_CODE);
     map.put("REPLACE", REPLACE_CODE);
     map.put("MERGE", MERGE_CODE);
+    map.put("LOAD", LOAD_CODE);
 
     LABEL_CODE = Collections.unmodifiableMap(map);
   }

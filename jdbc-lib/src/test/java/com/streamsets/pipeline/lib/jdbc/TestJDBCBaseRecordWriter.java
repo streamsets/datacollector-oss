@@ -21,36 +21,32 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.api.impl.DateTypeSupport;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import java.math.BigDecimal;
-import java.sql.SQLFeatureNotSupportedException;
-import java.sql.Types;
-import java.util.Calendar;
-import java.util.Date;
-import javax.validation.constraints.AssertTrue;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
 
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.sql.Statement;
-
-import java.util.List;
-import java.util.Map;
+import java.sql.Types;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 
 
 public class TestJDBCBaseRecordWriter {
@@ -134,8 +130,9 @@ public class TestJDBCBaseRecordWriter {
         false, //rollback
         new LinkedList<JdbcFieldColumnParamMapping>(),
         PreparedStatementCache.UNLIMITED_CACHE,
-        JDBCOperationType.INSERT,
+        JDBCOperationType.INSERT.getCode(),
         UnsupportedOperationAction.DISCARD,
+        null,
         new JdbcRecordReader(),
         caseSensitive
     );
@@ -161,8 +158,9 @@ public class TestJDBCBaseRecordWriter {
         false, //rollback
         new LinkedList<JdbcFieldColumnParamMapping>(),
         PreparedStatementCache.UNLIMITED_CACHE,
-        JDBCOperationType.INSERT,
+        JDBCOperationType.INSERT.getCode(),
         UnsupportedOperationAction.DISCARD,
+        null,
         new JdbcRecordReader(),
         caseSensitive
     );
@@ -200,7 +198,7 @@ public class TestJDBCBaseRecordWriter {
         false, //rollback
         columnMapping,
         PreparedStatementCache.UNLIMITED_CACHE,
-        JDBCOperationType.INSERT,
+        JDBCOperationType.INSERT.getCode(),
         UnsupportedOperationAction.DISCARD,
         generatedColumnMapping,
         new JdbcRecordReader(),
@@ -275,7 +273,7 @@ public class TestJDBCBaseRecordWriter {
         false, //rollback
         columnMapping,
         PreparedStatementCache.UNLIMITED_CACHE,
-        JDBCOperationType.INSERT,
+        JDBCOperationType.INSERT.getCode(),
         UnsupportedOperationAction.DISCARD,
         generatedColumnMapping,
         new JdbcRecordReader(),
@@ -360,8 +358,9 @@ public class TestJDBCBaseRecordWriter {
         false, //rollback
         new LinkedList<JdbcFieldColumnParamMapping>(),
         PreparedStatementCache.UNLIMITED_CACHE,
-        JDBCOperationType.INSERT,
+        JDBCOperationType.INSERT.getCode(),
         UnsupportedOperationAction.DISCARD,
+        null,
         new JdbcRecordReader(),
         false
     );

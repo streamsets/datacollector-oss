@@ -29,8 +29,6 @@ import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
-import com.streamsets.pipeline.lib.jdbc.JDBCOperationChooserValues;
-import com.streamsets.pipeline.lib.jdbc.JDBCOperationType;
 import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnParamMapping;
 import com.streamsets.pipeline.lib.operation.ChangeLogFormat;
 import com.streamsets.pipeline.lib.operation.ChangeLogFormatChooserValues;
@@ -70,7 +68,7 @@ public class MySqlDTarget extends DTarget {
       type = ConfigDef.Type.STRING,
       elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      defaultValue = "${record:attribute('tableName')}",
+      defaultValue = "",
       label = "Table Name",
       description = "Table Names should contain only table names. Schema should be defined in the connection string or " +
           "schema configuration",
@@ -91,65 +89,6 @@ public class MySqlDTarget extends DTarget {
   @ListBeanModel
   public List<JdbcFieldColumnParamMapping> columnNames;
 
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.MODEL,
-      label = "Change Log Format",
-      defaultValue = "NONE",
-      description = "If input is a change data capture log, specify the format.",
-      displayPosition = 40,
-      group = "JDBC"
-  )
-  @ValueChooserModel(ChangeLogFormatChooserValues.class)
-  public ChangeLogFormat changeLogFormat;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      defaultValue = "",
-      label = "Default Operation",
-      description = "Default operation to perform if sdc.operation.type is not set in record header.",
-      displayPosition = 50,
-      group = "JDBC"
-  )
-  @ValueChooserModel(JDBCOperationChooserValues.class)
-  public JDBCOperationType defaultOperation;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      defaultValue= "DISCARD",
-      label = "Unsupported Operation Handling",
-      description = "Action to take when operation type is not supported",
-      displayPosition = 60,
-      group = "JDBC"
-  )
-  @ValueChooserModel(UnsupportedOperationActionChooserValues.class)
-  public UnsupportedOperationAction unsupportedAction;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.NUMBER,
-      defaultValue = "-1",
-      label = "Statement Parameter Limit",
-      description = "Maximum number of prepared statement parameters allowed " +
-          "in each batch insert statement. Set to -1 to disable limit.",
-      displayPosition = 60,
-      group = "JDBC"
-  )
-  public int maxPrepStmtParameters;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      label = "Rollback Batch on Error",
-      description = "Whether or not to rollback the entire batch on error. Some JDBC drivers provide information " +
-          "about individual failed rows, and can insert partial batches.",
-      displayPosition = 70,
-      group = "JDBC"
-  )
-  public boolean rollbackOnError;
 
   @ConfigDefBean()
   public HikariPoolConfigBean hikariConfigBean;
@@ -160,11 +99,6 @@ public class MySqlDTarget extends DTarget {
         schema,
         tableNameTemplate,
         columnNames,
-        rollbackOnError,
-        maxPrepStmtParameters,
-        changeLogFormat,
-        defaultOperation,
-        unsupportedAction,
         hikariConfigBean
     );
   }

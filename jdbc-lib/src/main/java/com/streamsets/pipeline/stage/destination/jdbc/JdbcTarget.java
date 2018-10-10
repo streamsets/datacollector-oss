@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.destination.jdbc;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.cache.RemovalListener;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
@@ -74,7 +75,7 @@ public class JdbcTarget extends BaseTarget {
   private ELEval tableNameEval = null;
   private ELVars tableNameVars = null;
 
-  private JDBCOperationType defaultOperation;
+  private int defaultOpCode;
   private UnsupportedOperationAction unsupportedAction;
 
   class RecordWriterLoader extends CacheLoader<String, JdbcRecordWriter> {
@@ -90,7 +91,7 @@ public class JdbcTarget extends BaseTarget {
           useMultiRowOp,
           maxPrepStmtParameters,
           maxPrepStmtCache,
-          defaultOperation,
+          defaultOpCode,
           unsupportedAction,
           JdbcRecordReaderWriterFactory.createRecordReader(changeLogFormat),
           caseSensitive
@@ -114,6 +115,36 @@ public class JdbcTarget extends BaseTarget {
       final UnsupportedOperationAction unsupportedAction,
       final HikariPoolConfigBean hikariConfigBean
   ) {
+    this(
+        schema,
+        tableNameTemplate,
+        customMappings,
+        caseSensitive,
+        rollbackOnError,
+        useMultiRowOp,
+        maxPrepStmtParameters,
+        maxPrepStmtCache,
+        changeLogFormat,
+        defaultOperation.getCode(),
+        unsupportedAction,
+        hikariConfigBean
+    );
+  }
+
+  public JdbcTarget(
+      final String schema,
+      final String tableNameTemplate,
+      final List<JdbcFieldColumnParamMapping> customMappings,
+      final boolean caseSensitive,
+      final boolean rollbackOnError,
+      final boolean useMultiRowOp,
+      int maxPrepStmtParameters,
+      int maxPrepStmtCache,
+      final ChangeLogFormat changeLogFormat,
+      final int defaultOpCode,
+      final UnsupportedOperationAction unsupportedAction,
+      final HikariPoolConfigBean hikariConfigBean
+  ) {
     this.schema = schema;
     this.tableNameTemplate = tableNameTemplate;
     this.customMappings = customMappings;
@@ -123,14 +154,17 @@ public class JdbcTarget extends BaseTarget {
     this.maxPrepStmtParameters = maxPrepStmtParameters;
     this.maxPrepStmtCache = maxPrepStmtCache;
     this.changeLogFormat = changeLogFormat;
-    this.defaultOperation = defaultOperation;
+    this.defaultOpCode = defaultOpCode;
     this.unsupportedAction = unsupportedAction;
     this.hikariConfigBean = hikariConfigBean;
     this.dynamicTableName = JdbcUtil.isElString(tableNameTemplate);
 
     CacheBuilder cacheBuilder = CacheBuilder.newBuilder()
         .maximumSize(500)
-        .expireAfterAccess(1, TimeUnit.HOURS);
+        .expireAfterAccess(1, TimeUnit.HOURS)
+        .removalListener((RemovalListener<String, JdbcRecordWriter>) removal -> {
+          removal.getValue().deinit();
+        });
 
     if(LOG.isDebugEnabled()) {
       cacheBuilder.recordStats();
@@ -186,6 +220,7 @@ public class JdbcTarget extends BaseTarget {
 
   @Override
   public void destroy() {
+    recordWriters.invalidateAll();
     if (null != dataSource) {
       dataSource.close();
     }

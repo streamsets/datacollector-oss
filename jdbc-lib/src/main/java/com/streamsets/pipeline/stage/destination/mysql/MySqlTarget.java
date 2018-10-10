@@ -18,9 +18,9 @@ package com.streamsets.pipeline.stage.destination.mysql;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
-import com.streamsets.pipeline.lib.jdbc.JDBCOperationType;
 import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnParamMapping;
 import com.streamsets.pipeline.lib.operation.ChangeLogFormat;
+import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import com.streamsets.pipeline.stage.destination.jdbc.JdbcTarget;
 import org.slf4j.Logger;
@@ -38,11 +38,6 @@ public class MySqlTarget extends JdbcTarget {
       String schema,
       String tableNameTemplate,
       List<JdbcFieldColumnParamMapping> customMappings,
-      boolean rollbackOnError,
-      int maxPrepStmtParameters,
-      ChangeLogFormat changeLogFormat,
-      JDBCOperationType defaultOperation,
-      UnsupportedOperationAction unsupportedAction,
       HikariPoolConfigBean hikariConfigBean
   ) {
     super(
@@ -50,13 +45,13 @@ public class MySqlTarget extends JdbcTarget {
         tableNameTemplate,
         customMappings,
         false, // Not require to enclose table names
-        rollbackOnError,
+        false, // No rollback support
         true, // Always use multi-row operation
-        maxPrepStmtParameters,
+        -1, // No statement limit
         -1, // Not applicable
-        changeLogFormat,
-        defaultOperation,
-        unsupportedAction,
+        ChangeLogFormat.NONE,
+        OperationType.LOAD_CODE,
+        UnsupportedOperationAction.SEND_TO_ERROR,
         hikariConfigBean
     );
   }

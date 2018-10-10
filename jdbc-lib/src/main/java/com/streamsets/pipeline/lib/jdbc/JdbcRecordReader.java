@@ -35,24 +35,47 @@ public class JdbcRecordReader {
   private static final Logger LOG = LoggerFactory.getLogger(JdbcRecordReader.class);
 
   /**
-   * Get an operation code from record header. The code should be a numeric number,
-   * and has to be one of the code from insert, delete, update, upsert.
-   * @param record
-   * @return
-   * @throws StageException
+   * Get the numeric operation code from record header. The default code is
+   * used if the operation code is not found in the header.
+   *
+   * @param record the record to find the operation code
+   * @param defaultOp the default operation
+   * @param unsupportedAction the action to take for unsupported code
+   * @param errorRecords the list to take error records
+   * @return the numeric operation code or -1 for unsupported operation
    */
   @VisibleForTesting
-  int getOperationFromRecord(
+  final int getOperationFromRecord(
       Record record,
       JDBCOperationType defaultOp,
       UnsupportedOperationAction unsupportedAction,
-      List<OnRecordErrorException> errorRecords ) {
+      List<OnRecordErrorException> errorRecords
+  ) {
+    return getOperationFromRecord(record, defaultOp.getCode(), unsupportedAction, errorRecords);
+  }
 
+  /**
+   * Get the numeric operation code from record header. The default code is
+   * used if the operation code is not found in the header. This can be
+   * overwritten in inherited classes.
+   *
+   * @param record the record to find the operation code
+   * @param defaultOpCode the default operation code
+   * @param unsupportedAction the action to take for unsupported code
+   * @param errorRecords the list to take error records
+   * @return the numeric operation code or -1 for unsupported operation
+   */
+  int getOperationFromRecord(
+      Record record,
+      int defaultOpCode,
+      UnsupportedOperationAction unsupportedAction,
+      List<OnRecordErrorException> errorRecords
+  ) {
     String op = record.getHeader().getAttribute(OperationType.SDC_OPERATION_TYPE);
     int opCode = -1; // unsupported
 
     if (Strings.isNullOrEmpty(op)) {
-      return defaultOp.code;
+      return defaultOpCode;
     }
 
     // Check if the operation code from header attribute is valid
@@ -70,7 +93,7 @@ public class JdbcRecordReader {
           errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_70, op));
           break;
         case USE_DEFAULT:
-          opCode = defaultOp.code;
+          opCode = defaultOpCode;
           break;
         case DISCARD:
         default: // unknown action

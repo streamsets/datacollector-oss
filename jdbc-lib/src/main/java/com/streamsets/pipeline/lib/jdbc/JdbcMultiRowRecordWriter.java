@@ -64,36 +64,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
    * @param rollbackOnError whether to attempt rollback of failed queries
    * @param customMappings any custom mappings the user provided
    * @param maxPrepStmtParameters max number of parameters to include in each INSERT statement
-   * @throws StageException
-   */
-  public JdbcMultiRowRecordWriter(
-      String connectionString,
-      DataSource dataSource,
-      String schema,
-      String tableName,
-      boolean rollbackOnError,
-      List<JdbcFieldColumnParamMapping> customMappings,
-      int maxPrepStmtParameters,
-      JDBCOperationType defaultOp,
-      UnsupportedOperationAction unsupportedAction,
-      JdbcRecordReader recordReader,
-      boolean caseSensitive
-  ) throws StageException {
-    super(connectionString, dataSource, schema, tableName, rollbackOnError, customMappings, defaultOp, unsupportedAction, recordReader, caseSensitive);
-    this.maxPrepStmtParameters = maxPrepStmtParameters == UNLIMITED_PARAMETERS ? Integer.MAX_VALUE :
-        maxPrepStmtParameters;
-    this.caseSensitive = caseSensitive;
-  }
-
-  /**
-   * Class constructor
-   * @param connectionString database connection string
-   * @param dataSource a JDBC {@link DataSource} to get a connection from
-   * @param tableName the name of the table to write to
-   * @param rollbackOnError whether to attempt rollback of failed queries
-   * @param customMappings any custom mappings the user provided
-   * @param maxPrepStmtParameters max number of parameters to include in each INSERT statement
-   * @param defaultOp Default Opertaion
+   * @param defaultOpCode default operation code
    * @param unsupportedAction What action to take if operation is invalid
    * @param generatedColumnMappings mappings from field names to generated column names
    * @throws StageException
@@ -106,14 +77,14 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       boolean rollbackOnError,
       List<JdbcFieldColumnParamMapping> customMappings,
       int maxPrepStmtParameters,
-      JDBCOperationType defaultOp,
+      int defaultOpCode,
       UnsupportedOperationAction unsupportedAction,
       List<JdbcFieldColumnMapping> generatedColumnMappings,
       JdbcRecordReader recordReader,
       boolean caseSensitive
   ) throws StageException {
     super(connectionString, dataSource, schema, tableName, rollbackOnError, customMappings,
-        defaultOp, unsupportedAction, recordReader, generatedColumnMappings, caseSensitive);
+        defaultOpCode, unsupportedAction, recordReader, generatedColumnMappings, caseSensitive);
     this.maxPrepStmtParameters = maxPrepStmtParameters == UNLIMITED_PARAMETERS ? Integer.MAX_VALUE :
         maxPrepStmtParameters;
     this.caseSensitive = caseSensitive;
@@ -143,7 +114,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       LinkedList<Record> queue = new LinkedList<>();
       while (recordIterator.hasNext()) {
         Record record = recordIterator.next();
-        int opCode = recordReader.getOperationFromRecord(record, defaultOp, unsupportedAction, errorRecords);
+        int opCode = getOperationCode(record, errorRecords);
 
         // Need to consider the number of columns in query. If different, process saved records in queue.
         HashCode columnHash = getColumnHash(record, opCode);
@@ -311,8 +282,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       List<OnRecordErrorException> errorRecords,
       PreparedStatement statement,
       Connection connection
-      ) throws SQLException
-  {
+  ) throws SQLException {
     try {
       if (LOG.isDebugEnabled()) {
         LOG.debug("Executing query: {}", statement.toString());

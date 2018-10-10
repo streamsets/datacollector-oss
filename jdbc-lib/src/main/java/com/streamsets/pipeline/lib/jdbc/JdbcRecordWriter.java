@@ -30,6 +30,11 @@ import java.util.List;
 public interface JdbcRecordWriter {
 
   /**
+   * Cleans up resources used by JdbcRecordWriter.
+   */
+  void deinit();
+
+  /**
    * Accepts a batch of records to write to a JDBC destination.
    * @param recordIterator iterator of SDC records
    * @return any records that failed to be written to the destination

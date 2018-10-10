@@ -110,9 +110,9 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
   private static final int COLUMN_NAME = 4;
   private static final int DATA_TYPE = 5;
 
-  JDBCOperationType defaultOp;
-  UnsupportedOperationAction unsupportedAction;
-  private List<String> primaryKeyParams;
+  private final int defaultOpCode;
+  private final UnsupportedOperationAction unsupportedAction;
+  private final List<String> primaryKeyParams;
 
   public JdbcBaseRecordWriter(
       String connectionString,
@@ -121,22 +121,7 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
       String tableName,
       boolean rollbackOnError,
       List<JdbcFieldColumnParamMapping> customMappings,
-      JDBCOperationType defaultOp,
-      UnsupportedOperationAction unsupportedAction,
-      JdbcRecordReader recordReader,
-      boolean caseSensitive
-  ) throws StageException {
-    this(connectionString, dataSource, schema, tableName, rollbackOnError, customMappings, defaultOp, unsupportedAction, recordReader, null, caseSensitive);
-  }
-
-  public JdbcBaseRecordWriter(
-      String connectionString,
-      DataSource dataSource,
-      String schema,
-      String tableName,
-      boolean rollbackOnError,
-      List<JdbcFieldColumnParamMapping> customMappings,
-      JDBCOperationType defaultOp,
+      int defaultOpCode,
       UnsupportedOperationAction unsupportedAction,
       JdbcRecordReader recordReader,
       List<JdbcFieldColumnMapping> generatedColumnMappings,
@@ -163,7 +148,7 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
     }
     this.rollbackOnError = rollbackOnError;
     this.customMappings = customMappings;
-    this.defaultOp = defaultOp;
+    this.defaultOpCode = defaultOpCode;
     this.unsupportedAction = unsupportedAction;
     this.recordReader = recordReader;
     this.generatedColumnMappings = generatedColumnMappings;
@@ -178,6 +163,10 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
       primaryKeyParams.add(getColumnsToParameters().get(key));
       columnsWithoutPrimaryKeys.remove(key);
     }
+  }
+
+  @Override
+  public void deinit() {
   }
 
   /**
@@ -681,4 +670,21 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
     LOG.error(formattedError, e);
     throw new StageException(JdbcErrors.JDBC_14, formattedError);
   }
+
+  /**
+   * Get the numeric operation code from record header. The default code is
+   * used if the operation code is not found in the header.
+   *
+   * @param record the record to find the operation code
+   * @param errorRecords the list to take error records
+   * @return the numeric operation code or -1 for unsupported operation
+   */
+  protected int getOperationCode(Record record, List<OnRecordErrorException> errorRecords) {
+    return recordReader.getOperationFromRecord(
+        record,
+        defaultOpCode,
+        unsupportedAction,
+        errorRecords);
+  }
+
 }
