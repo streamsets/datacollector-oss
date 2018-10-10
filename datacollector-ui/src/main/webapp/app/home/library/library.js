@@ -174,16 +174,18 @@ angular
     var highlight = function() {
       $('.predefined-labels .label-display').each(function(i, el) {
         var $el = $(el);
+        var labelTxt = el.id || '';
 
         // Filter value is not present, revert to default state
         if (!$scope.labelFilter.value) {
-          $el.html($el.text());
+          // this is already escaped and can be set as html
+          $el.html(labelTxt);
 
           // Filter value is present, apply the highlight
         } else {
           var safeString = $scope.labelFilter.value.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
           var regex = new RegExp(safeString, 'g');
-          $el.html(el.text().replace(regex, '<span class="highlight">' + $scope.labelFilter.value + '</span>'));
+          $el.html(labelTxt.replace(regex, '<span class="highlight">' + $scope.labelFilter.value + '</span>'));
         }
       });
     };
@@ -265,7 +267,8 @@ angular
     $scope.onLabelsLoaded(function(systemPipelineLabels, rawPipelineLabels) {
       $scope.fetchingSystemLabels = false;
       $scope.systemPipelineLabels = systemPipelineLabels;
-      $scope.rawPipelineLabels = rawPipelineLabels;
+      // We have a escapeHTML implmentation available globally
+      $scope.rawPipelineLabels = rawPipelineLabels.map(label => escapeHtml(label));
       $scope.pipelineLabels = parsePipelineLabels();
     });
   });
