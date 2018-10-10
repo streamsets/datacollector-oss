@@ -86,7 +86,7 @@
             <i ng-show="hasChildren(node) && !node.isExpanded" class="fa fa-caret-right"></i>
           </span>
 
-          <span class="label-display">{{::node.label}}</span>
+          <span class="label-display" ng-attr-id="{{::node.label}}"></span>
         </div>
       </li>
 
