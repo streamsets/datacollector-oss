@@ -36,6 +36,9 @@ import java.util.Set;
 public final class MongoDBUtil {
   public static final String BSON_TS_TIME_T_FIELD = "timestamp";
   public static final String BSON_TS_ORDINAL_FIELD = "ordinal";
+  public static final String ID = "$id";
+  public static final String REF = "$ref";
+  public static final String DB = "$db";
   private static final Joiner JOINER = Joiner.on("::");
 
   private MongoDBUtil() {
@@ -86,6 +89,15 @@ public final class MongoDBUtil {
       Map<String, Field> map = new LinkedHashMap<>();
       for (Map.Entry<String, Object> entry : jsonMap.entrySet()) {
         map.put(entry.getKey(), jsonToField(entry.getValue()));
+      }
+      return Field.create(map);
+    } else if (object instanceof com.mongodb.DBRef) {
+      Map<String, Field> map = new LinkedHashMap<>();
+      com.mongodb.DBRef ref = (com.mongodb.DBRef)object;
+      map.put(REF, Field.create(ref.getCollectionName()));
+      map.put(ID, Field.create(ref.getId().toString()));
+      if (ref.getDatabaseName() != null) {
+        map.put(DB, Field.create(ref.getDatabaseName()));
       }
       return Field.create(map);
     }
