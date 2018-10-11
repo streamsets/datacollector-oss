@@ -30,19 +30,17 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
-import org.apache.cassandra.exceptions.ConfigurationException;
-import org.apache.thrift.transport.TTransportException;
-import org.cassandraunit.utils.EmbeddedCassandraServerHelper;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testcontainers.containers.CassandraContainer;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -53,31 +51,33 @@ import static org.junit.Assert.fail;
 public class TestCassandraTarget {
   private static final Logger LOG = LoggerFactory.getLogger(TestCassandraTarget.class);
 
+  @ClassRule
+  public static CassandraContainer cassandra = new CassandraContainer();
+
   private static final Double EPSILON = 1e-15;
-  private static final long CASSANDRA_STARTUP_TIMEOUT = 20000;
   private static final String SAMPLE_TIMEUUID = "474b1386-0379-11e7-bdfe-fa245441bcee";
   private static final String SAMPLE_UUID = "46c5379c-a083-4ccd-bfac-c4a8d17574c7";
-  private static int CASSANDRA_NATIVE_PORT = 9142;
+  private static int CASSANDRA_NATIVE_PORT = 9042;
 
   private static Cluster cluster = null;
   private static Session session = null;
 
   @SuppressWarnings("unchecked")
   @BeforeClass
-  public static void setUpClass() throws InterruptedException, TTransportException, ConfigurationException, IOException {
-    EmbeddedCassandraServerHelper.startEmbeddedCassandra(CASSANDRA_STARTUP_TIMEOUT);
-    cluster = Cluster.builder()
-        .addContactPoint("127.0.0.1")
-        .withPort(CASSANDRA_NATIVE_PORT)
-        .withProtocolVersion(ProtocolVersion.V4)
-        .build();
+  public static void setUpClass() {
+    cluster = cassandra.getCluster();
     session = cluster.connect();
   }
 
   @AfterClass
   public static void tearDownClass() {
-    session.close();
-    cluster.close();
+    if (session != null) {
+      session.close();
+    }
+
+    if (cluster != null) {
+      cluster.close();
+    }
   }
 
   @Before
@@ -106,6 +106,7 @@ public class TestCassandraTarget {
     session.execute(
         "CREATE TABLE IF NOT EXISTS test.test_null_values (a varchar, b varchar, PRIMARY KEY(a));"
     );
+    LOG.info("Finished table setup");
   }
 
   @After
@@ -130,8 +131,8 @@ public class TestCassandraTarget {
     );
 
     CassandraTargetConfig conf = new CassandraTargetConfig();
-    conf.contactPoints.add("localhost");
-    conf.port = CASSANDRA_NATIVE_PORT;
+    conf.contactPoints.add(cassandra.getContainerIpAddress());
+    conf.port = cassandra.getMappedPort(CASSANDRA_NATIVE_PORT);
     conf.protocolVersion = ProtocolVersion.V4;
     conf.authProviderOption = AuthProviderOption.NONE;
     conf.compression = CassandraCompressionCodec.NONE;
@@ -163,8 +164,8 @@ public class TestCassandraTarget {
     );
 
     CassandraTargetConfig conf = new CassandraTargetConfig();
-    conf.contactPoints.add("localhost");
-    conf.port = CASSANDRA_NATIVE_PORT;
+    conf.contactPoints.add(cassandra.getContainerIpAddress());
+    conf.port = cassandra.getMappedPort(CASSANDRA_NATIVE_PORT);
     conf.protocolVersion = ProtocolVersion.V4;
     conf.authProviderOption = AuthProviderOption.NONE;
     conf.compression = CassandraCompressionCodec.NONE;
@@ -227,8 +228,8 @@ public class TestCassandraTarget {
     );
 
     CassandraTargetConfig conf = new CassandraTargetConfig();
-    conf.contactPoints.add("localhost");
-    conf.port = CASSANDRA_NATIVE_PORT;
+    conf.contactPoints.add(cassandra.getContainerIpAddress());
+    conf.port = cassandra.getMappedPort(CASSANDRA_NATIVE_PORT);
     conf.protocolVersion = ProtocolVersion.V4;
     conf.authProviderOption = AuthProviderOption.NONE;
     conf.compression = CassandraCompressionCodec.NONE;
@@ -279,8 +280,8 @@ public class TestCassandraTarget {
     );
 
     CassandraTargetConfig conf = new CassandraTargetConfig();
-    conf.contactPoints.add("localhost");
-    conf.port = CASSANDRA_NATIVE_PORT;
+    conf.contactPoints.add(cassandra.getContainerIpAddress());
+    conf.port = cassandra.getMappedPort(CASSANDRA_NATIVE_PORT);
     conf.protocolVersion = ProtocolVersion.V4;
     conf.authProviderOption = AuthProviderOption.NONE;
     conf.compression = CassandraCompressionCodec.NONE;
@@ -332,8 +333,8 @@ public class TestCassandraTarget {
     );
 
     CassandraTargetConfig conf = new CassandraTargetConfig();
-    conf.contactPoints.add("localhost");
-    conf.port = CASSANDRA_NATIVE_PORT;
+    conf.contactPoints.add(cassandra.getContainerIpAddress());
+    conf.port = cassandra.getMappedPort(CASSANDRA_NATIVE_PORT);
     conf.protocolVersion = ProtocolVersion.V4;
     conf.authProviderOption = AuthProviderOption.NONE;
     conf.compression = CassandraCompressionCodec.NONE;
@@ -386,8 +387,8 @@ public class TestCassandraTarget {
     );
 
     CassandraTargetConfig conf = new CassandraTargetConfig();
-    conf.contactPoints.add("localhost");
-    conf.port = CASSANDRA_NATIVE_PORT;
+    conf.contactPoints.add(cassandra.getContainerIpAddress());
+    conf.port = cassandra.getMappedPort(CASSANDRA_NATIVE_PORT);
     conf.protocolVersion = ProtocolVersion.V4;
     conf.authProviderOption = AuthProviderOption.NONE;
     conf.compression = CassandraCompressionCodec.NONE;
@@ -439,8 +440,8 @@ public class TestCassandraTarget {
     );
 
     CassandraTargetConfig conf = new CassandraTargetConfig();
-    conf.contactPoints.add("localhost");
-    conf.port = CASSANDRA_NATIVE_PORT;
+    conf.contactPoints.add(cassandra.getContainerIpAddress());
+    conf.port = cassandra.getMappedPort(CASSANDRA_NATIVE_PORT);
     conf.protocolVersion = ProtocolVersion.V4;
     conf.authProviderOption = AuthProviderOption.NONE;
     conf.compression = CassandraCompressionCodec.NONE;
@@ -498,8 +499,8 @@ public class TestCassandraTarget {
     );
 
     CassandraTargetConfig conf = new CassandraTargetConfig();
-    conf.contactPoints.add("localhost");
-    conf.port = CASSANDRA_NATIVE_PORT;
+    conf.contactPoints.add(cassandra.getContainerIpAddress());
+    conf.port = cassandra.getMappedPort(CASSANDRA_NATIVE_PORT);
     conf.protocolVersion = ProtocolVersion.V4;
     conf.authProviderOption = AuthProviderOption.NONE;
     conf.compression = CassandraCompressionCodec.NONE;
@@ -527,8 +528,8 @@ public class TestCassandraTarget {
     );
 
     CassandraTargetConfig conf = new CassandraTargetConfig();
-    conf.contactPoints.add("localhost");
-    conf.port = CASSANDRA_NATIVE_PORT;
+    conf.contactPoints.add(cassandra.getContainerIpAddress());
+    conf.port = cassandra.getMappedPort(CASSANDRA_NATIVE_PORT);
     conf.protocolVersion = ProtocolVersion.V4;
     conf.authProviderOption = AuthProviderOption.NONE;
     conf.compression = CassandraCompressionCodec.NONE;
@@ -576,8 +577,8 @@ public class TestCassandraTarget {
     );
 
     CassandraTargetConfig conf = new CassandraTargetConfig();
-    conf.contactPoints.add("localhost");
-    conf.port = CASSANDRA_NATIVE_PORT;
+    conf.contactPoints.add(cassandra.getContainerIpAddress());
+    conf.port = cassandra.getMappedPort(CASSANDRA_NATIVE_PORT);
     conf.protocolVersion = ProtocolVersion.V4;
     conf.authProviderOption = AuthProviderOption.NONE;
     conf.compression = CassandraCompressionCodec.NONE;
