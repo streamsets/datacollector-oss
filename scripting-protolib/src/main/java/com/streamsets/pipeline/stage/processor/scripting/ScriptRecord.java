@@ -26,6 +26,8 @@ public class ScriptRecord {
   public Object value;
   public final String stageCreator;
   public final String sourceId;
+  public final String stagesPath;
+  public final String trackingId;
   public final String previousTrackingId;
   public final Map<String, String> attributes;
   public final String errorDataCollectorId;
@@ -33,13 +35,17 @@ public class ScriptRecord {
   public final String errorCode;
   public final String errorMessage;
   public final String errorStage;
+  public final String errorStageLabel;
   public final long errorTimestamp;
   public final String errorStackTrace;
+  public final String errorJobId;
 
   ScriptRecord(Record record, Object scriptObject) {
     this.record = record;
     this.stageCreator = record.getHeader().getStageCreator();
     this.sourceId = record.getHeader().getSourceId();
+    this.stagesPath = record.getHeader().getStagesPath();
+    this.trackingId = record.getHeader().getTrackingId();
     this.previousTrackingId = record.getHeader().getPreviousTrackingId();
     Set<String> headerAttributeNames = record.getHeader().getAttributeNames();
     attributes = new HashMap<>();
@@ -51,8 +57,10 @@ public class ScriptRecord {
     this.errorCode = record.getHeader().getErrorCode();
     this.errorMessage = record.getHeader().getErrorMessage();
     this.errorStage = record.getHeader().getErrorStage();
+    this.errorStageLabel = record.getHeader().getErrorStageLabel();
     this.errorTimestamp = record.getHeader().getErrorTimestamp();
     this.errorStackTrace = record.getHeader().getErrorStackTrace();
+    this.errorJobId = record.getHeader().getErrorJobId();
 
     value = scriptObject;
   }
