@@ -28,12 +28,10 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.lib.jdbc.DuplicateKeyAction;
+import com.streamsets.pipeline.lib.jdbc.DuplicateKeyActionChooserValues;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnParamMapping;
-import com.streamsets.pipeline.lib.operation.ChangeLogFormat;
-import com.streamsets.pipeline.lib.operation.ChangeLogFormatChooserValues;
-import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
-import com.streamsets.pipeline.lib.operation.UnsupportedOperationActionChooserValues;
 import com.streamsets.pipeline.stage.destination.jdbc.Groups;
 
 import java.util.List;
@@ -89,6 +87,17 @@ public class MySqlDTarget extends DTarget {
   @ListBeanModel
   public List<JdbcFieldColumnParamMapping> columnNames;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue= "IGNORE",
+      label = "Duplicate-key Error Handling",
+      description = "Action to take for input records that duplicate existing rows on unique key values.",
+      displayPosition = 50,
+      group = "JDBC"
+  )
+  @ValueChooserModel(DuplicateKeyActionChooserValues.class)
+  public DuplicateKeyAction duplicateKeyAction;
 
   @ConfigDefBean()
   public HikariPoolConfigBean hikariConfigBean;
@@ -99,6 +108,7 @@ public class MySqlDTarget extends DTarget {
         schema,
         tableNameTemplate,
         columnNames,
+        duplicateKeyAction,
         hikariConfigBean
     );
   }

@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.cache.CacheCleaner;
 import com.streamsets.pipeline.lib.el.ELUtils;
+import com.streamsets.pipeline.lib.jdbc.DuplicateKeyAction;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JDBCOperationType;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
@@ -75,8 +76,9 @@ public class JdbcTarget extends BaseTarget {
   private ELEval tableNameEval = null;
   private ELVars tableNameVars = null;
 
-  private int defaultOpCode;
-  private UnsupportedOperationAction unsupportedAction;
+  private final int defaultOpCode;
+  private final UnsupportedOperationAction unsupportedAction;
+  private final DuplicateKeyAction duplicateKeyAction;
 
   class RecordWriterLoader extends CacheLoader<String, JdbcRecordWriter> {
     @Override
@@ -93,6 +95,7 @@ public class JdbcTarget extends BaseTarget {
           maxPrepStmtCache,
           defaultOpCode,
           unsupportedAction,
+          duplicateKeyAction,
           JdbcRecordReaderWriterFactory.createRecordReader(changeLogFormat),
           caseSensitive
       );
@@ -127,6 +130,7 @@ public class JdbcTarget extends BaseTarget {
         changeLogFormat,
         defaultOperation.getCode(),
         unsupportedAction,
+        null, // no support for duplicate-key errors
         hikariConfigBean
     );
   }
@@ -142,8 +146,9 @@ public class JdbcTarget extends BaseTarget {
       int maxPrepStmtCache,
       final ChangeLogFormat changeLogFormat,
       final int defaultOpCode,
-      final UnsupportedOperationAction unsupportedAction,
-      final HikariPoolConfigBean hikariConfigBean
+      UnsupportedOperationAction unsupportedAction,
+      DuplicateKeyAction duplicateKeyAction,
+      HikariPoolConfigBean hikariConfigBean
   ) {
     this.schema = schema;
     this.tableNameTemplate = tableNameTemplate;
@@ -156,6 +161,7 @@ public class JdbcTarget extends BaseTarget {
     this.changeLogFormat = changeLogFormat;
     this.defaultOpCode = defaultOpCode;
     this.unsupportedAction = unsupportedAction;
+    this.duplicateKeyAction = duplicateKeyAction;
     this.hikariConfigBean = hikariConfigBean;
     this.dynamicTableName = JdbcUtil.isElString(tableNameTemplate);
 

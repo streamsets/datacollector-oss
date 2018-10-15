@@ -55,6 +55,9 @@ import java.util.concurrent.Future;
 public class JdbcLoadRecordWriter extends JdbcBaseRecordWriter {
   private static final Logger LOG = LoggerFactory.getLogger(JdbcLoadRecordWriter.class);
 
+  /** Action to take for duplicate-key errors */
+  private final DuplicateKeyAction duplicateKeyAction;
+
   /** Single thread executor to write LOAD output stream */
   private final ExecutorService loadOutputExecutor;
 
@@ -66,6 +69,7 @@ public class JdbcLoadRecordWriter extends JdbcBaseRecordWriter {
    * @param schema schema name
    * @param tableName table name
    * @param customMappings any custom mappings the user provided
+   * @param duplicateKeyAction action to take for duplicate-key errors
    * @param recordReader base JdbcRecordReader, no CDC support
    * @param caseSensitive indicate whether to enclose the table name or not
    * @throws StageException
@@ -76,6 +80,7 @@ public class JdbcLoadRecordWriter extends JdbcBaseRecordWriter {
       String schema,
       String tableName,
       List<JdbcFieldColumnParamMapping> customMappings,
+      DuplicateKeyAction duplicateKeyAction,
       JdbcRecordReader recordReader,
       boolean caseSensitive
   ) throws StageException {
@@ -92,6 +97,7 @@ public class JdbcLoadRecordWriter extends JdbcBaseRecordWriter {
         null,
         caseSensitive
     );
+    this.duplicateKeyAction = duplicateKeyAction;
     String threadName = "JDBC LOAD DATA Stream " + getTableName();
     loadOutputExecutor = Executors.newSingleThreadExecutor(
         new ThreadFactoryBuilder().setNameFormat(threadName).build());
@@ -129,8 +135,8 @@ public class JdbcLoadRecordWriter extends JdbcBaseRecordWriter {
     }
 
     final Set<String> columnNames = columnsToParameters.keySet();
-    final String loadSql = "LOAD DATA LOCAL INFILE '' INTO TABLE " + getTableName()
-        + " (" + Joiner.on(", ").join(columnNames) + ")";
+    final String loadSql = "LOAD DATA LOCAL INFILE '' " + duplicateKeyAction.getKeyword()
+        + " INTO TABLE " + getTableName() + " (" + Joiner.on(", ").join(columnNames) + ")";
     try (Connection connection = getDataSource().getConnection()) {
       Connection conn = ((ConnectionProxy) connection).unwrap(Connection.class);
       try (PreparedStatement statement = conn.prepareStatement(loadSql)) {

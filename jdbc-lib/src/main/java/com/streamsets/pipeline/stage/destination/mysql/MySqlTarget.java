@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.destination.mysql;
 
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.jdbc.DuplicateKeyAction;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnParamMapping;
 import com.streamsets.pipeline.lib.operation.ChangeLogFormat;
@@ -38,6 +39,7 @@ public class MySqlTarget extends JdbcTarget {
       String schema,
       String tableNameTemplate,
       List<JdbcFieldColumnParamMapping> customMappings,
+      DuplicateKeyAction duplicateKeyAction,
       HikariPoolConfigBean hikariConfigBean
   ) {
     super(
@@ -52,6 +54,7 @@ public class MySqlTarget extends JdbcTarget {
         ChangeLogFormat.NONE,
         OperationType.LOAD_CODE,
         UnsupportedOperationAction.SEND_TO_ERROR,
+        duplicateKeyAction,
         hikariConfigBean
     );
   }

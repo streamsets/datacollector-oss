@@ -40,6 +40,7 @@ public final class JdbcRecordReaderWriterFactory {
       int maxPrepStmtCache,
       int defaultOpCode,
       UnsupportedOperationAction unsupportedAction,
+      DuplicateKeyAction duplicateKeyAction,
       JdbcRecordReader recordReader,
       boolean caseSensitive
   ) throws StageException {
@@ -50,6 +51,7 @@ public final class JdbcRecordReaderWriterFactory {
           schema,
           tableName,
           customMappings,
+          duplicateKeyAction,
           recordReader,
           caseSensitive
       );
