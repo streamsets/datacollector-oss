@@ -444,7 +444,7 @@ public class OracleCDCSource extends BaseSource {
     } catch (SQLException ex) {
       LOG.error("SQLException while trying to setup record generator thread", ex);
       generationStarted = false;
-      return;
+      throw new StageException(JDBC_52, ex);
     }
     final Offset os = offset;
     final PreparedStatement select = selectFromLogMnrContents;
@@ -727,7 +727,7 @@ public class OracleCDCSource extends BaseSource {
           );
         } catch (SQLException ex) {
           LOG.error("Error while attempting to start LogMiner", ex);
-          otherErrors.offer(new ErrorAndCause(JDBC_52, ex));
+          addToStageExceptionsQueue(new StageException(JDBC_52, ex));
         } catch (StageException ex) {
           LOG.error("Error while attempting to start logminer for redo log dictionary", ex);
           addToStageExceptionsQueue(ex);
