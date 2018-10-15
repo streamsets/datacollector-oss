@@ -692,11 +692,7 @@ public class OracleCDCSource extends BaseSource {
           );
         } catch (SQLException ex) {
           LOG.error("Error while attempting to start LogMiner", ex);
-          try {
-            errorRecordHandler.onError(JDBC_52, ex);
-          } catch (StageException e) {
-            addToStageExceptionsQueue(e);
-          }
+          addToStageExceptionsQueue(new StageException(JDBC_52, ex));
         } catch (StageException ex) {
           LOG.error("Error while attempting to start logminer for redo log dictionary", ex);
           addToStageExceptionsQueue(ex);
