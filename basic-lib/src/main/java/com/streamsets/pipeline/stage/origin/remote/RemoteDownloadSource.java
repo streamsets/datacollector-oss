@@ -90,6 +90,7 @@ public class RemoteDownloadSource extends BaseSource {
   private static final String REMOTE_ADDRESS_CONF = CONF_PREFIX + "remoteAddress";
   private static final String MINUS_ONE = "-1";
   private static final String ZERO = "0";
+  private static final int MAX_RETRIES = 2;
 
   static final String NOTHING_READ = "null";
 
@@ -615,14 +616,14 @@ public class RemoteDownloadSource extends BaseSource {
     }
   }
 
-  private Optional<RemoteFile> getNextFile() throws FileSystemException {
+  private Optional<RemoteFile> getNextFile() throws FileSystemException, StageException {
     if (fileQueue.isEmpty()) {
       queueFiles();
     }
     return Optional.fromNullable(fileQueue.pollFirst());
   }
 
-  private void queueFiles() throws FileSystemException {
+  private void queueFiles() throws FileSystemException, StageException {
     FileSelector selector = new FileSelector() {
       @Override
       public boolean includeFile(FileSelectInfo fileInfo) {
@@ -636,8 +637,29 @@ public class RemoteDownloadSource extends BaseSource {
     };
 
     FileObject[] theFiles;
+
     // get files from current directory.
-    remoteDir.refresh();
+    boolean done = false;
+    int retryCounter = 0;
+    while (!done && retryCounter < MAX_RETRIES) {
+      try {
+        remoteDir.refresh();
+        done = true;
+      } catch (FileSystemException fse) {
+        // Refresh can fail due to session is down, a timeout, or SSH_MSG_CHANNEL_OPEN_FAILURE.
+        // So Try getting a new connection
+        if (retryCounter < MAX_RETRIES - 1) {
+          LOG.info("Got FileSystemException when trying to refresh remote directory. '{}'", fse.getMessage());
+          LOG.warn("Retrying connection to remote directory");
+          FileSystemManager fsManager = VFS.getManager();
+          remoteDir = fsManager.resolveFile(remoteURI.toString(), options);
+        } else {
+          throw new StageException(Errors.REMOTE_18, fse.getMessage(), fse);
+        }
+      }
+      retryCounter++;
+    }
+
     theFiles = remoteDir.getChildren();
 
     if (conf.processSubDirectories) {
