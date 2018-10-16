@@ -857,7 +857,6 @@
                                 <source>${basedir}/../hdfs-protolib/src/test/java</source>
                                 <source>${basedir}/../hbase-protolib/src/test/java</source>
                                 <source>${basedir}/../hive-protolib/src/test/java</source>
-                                <source>${basedir}/../kudu-protolib/src/test/java</source>
                                 <source>${basedir}/../mapreduce-protolib/src/test/java</source>
                                 <source>${basedir}/../solr-protolib/src/test/java</source>
                                 <source>${basedir}/../kafka_target-protolib/src/test/java</source>
