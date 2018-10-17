@@ -789,6 +789,7 @@
                                 <source>${basedir}/../hdfs-protolib/src/test/java</source>
                                 <source>${basedir}/../hbase-protolib/src/test/java</source>
                                 <source>${basedir}/../hive-protolib/src/test/java</source>
+                                <source>${basedir}/../kudu-protolib/src/test/java</source>
                                 <source>${basedir}/../mapreduce-protolib/src/test/java</source>
                                 <source>${basedir}/../spark-executor-protolib/src/test/java</source>
                                 <source>${basedir}/../spark-processor-protolib/src/test/java</source>
@@ -814,6 +815,9 @@
                                 </resource>
                                 <resource>
                                     <directory>${basedir}/../hbase-protolib/src/test/resources</directory>
+                                </resource>
+                                <resource>
+                                    <directory>${basedir}/../kudu-protolib/src/test/resources</directory>
                                 </resource>
                                 <resource>
                                     <directory>${basedir}/../solr-protolib/src/test/resources</directory>
