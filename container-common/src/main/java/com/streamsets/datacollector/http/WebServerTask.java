@@ -38,6 +38,10 @@ import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.lib.security.http.SSOService;
 import com.streamsets.lib.security.http.SSOUtils;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
+import org.eclipse.jetty.http.HttpVersion;
+import org.eclipse.jetty.http2.HTTP2Cipher;
+import org.eclipse.jetty.http2.server.HTTP2ServerConnectionFactory;
 import org.eclipse.jetty.jaas.JAASLoginService;
 import org.eclipse.jetty.rewrite.handler.RewriteHandler;
 import org.eclipse.jetty.rewrite.handler.RewriteRegexRule;
@@ -125,6 +129,7 @@ public abstract class WebServerTask extends AbstractTask implements Registration
   private static final int HTTP_PORT_DEFAULT = 0;
 
   public static final String HTTPS_PORT_KEY = "https.port";
+  public static final String HTTP2_ENABLE_KEY = "http2.enable";
   private static final int HTTPS_PORT_DEFAULT = -1;
   public static final String HTTPS_KEYSTORE_PATH_KEY = "https.keystore.path";
   private static final String HTTPS_KEYSTORE_PATH_DEFAULT = "keystore.jks";
@@ -601,6 +606,7 @@ public abstract class WebServerTask extends AbstractTask implements Registration
     return conf.get(HTTPS_PORT_KEY, HTTPS_PORT_DEFAULT) != -1 && conf.get(HTTP_PORT_KEY, HTTP_PORT_DEFAULT) != -1;
   }
 
+  @SuppressWarnings("squid:S2095")
   private Server createServer() {
     port = isSSLEnabled() ?
       conf.get(HTTPS_PORT_KEY, HTTPS_PORT_DEFAULT) :
@@ -622,13 +628,27 @@ public abstract class WebServerTask extends AbstractTask implements Registration
       connector.setPort(addr.getPort());
       server.setConnectors(new Connector[]{connector});
     } else {
-      //Create a connector for HTTPS
-      httpConf.addCustomizer(new SecureRequestCustomizer());
+      // Create a configuration for HTTPS
+      HttpConfiguration httpsConf = new HttpConfiguration(httpConf);
+      httpsConf.addCustomizer(new SecureRequestCustomizer());
 
       SslContextFactory sslContextFactory = createSslContextFactory();
-      ServerConnector httpsConnector = new ServerConnector(server,
-                                                           new SslConnectionFactory(sslContextFactory, "http/1.1"),
-                                                           new HttpConnectionFactory(httpConf));
+      SslConnectionFactory ssl;
+      ServerConnector httpsConnector;
+
+      if (conf.get(HTTP2_ENABLE_KEY, false)) {
+        // HTTP/2 Connection Factory
+        HTTP2ServerConnectionFactory h2 = new HTTP2ServerConnectionFactory(httpsConf);
+        ALPNServerConnectionFactory alpn = new ALPNServerConnectionFactory();
+        alpn.setDefaultProtocol("h2");
+
+        ssl = new SslConnectionFactory(sslContextFactory, alpn.getProtocol());
+        httpsConnector = new ServerConnector(server, ssl, alpn, h2, new HttpConnectionFactory(httpsConf));
+      } else {
+        ssl = new SslConnectionFactory(sslContextFactory, HttpVersion.HTTP_1_1.asString());
+        httpsConnector = new ServerConnector(server, ssl, new HttpConnectionFactory(httpsConf));
+      }
+
       httpsConnector.setPort(port);
       httpsConnector.setHost(hostname);
       server.setConnectors(new Connector[]{httpsConnector});
@@ -646,6 +666,11 @@ public abstract class WebServerTask extends AbstractTask implements Registration
     sslContextFactory.setKeyStorePath(keyStore.getPath());
     sslContextFactory.setKeyStorePassword(password);
     sslContextFactory.setKeyManagerPassword(password);
+    if (conf.get(HTTP2_ENABLE_KEY, false)) {
+      sslContextFactory.setProvider("Conscrypt");
+      sslContextFactory.setCipherComparator(HTTP2Cipher.COMPARATOR);
+      sslContextFactory.setUseCipherSuitesOrder(true);
+    }
     File trustStoreFile = getHttpsTruststore(conf, runtimeInfo.getConfigDir());
     if (trustStoreFile != null) {
       if (trustStoreFile.exists()) {
@@ -702,6 +727,7 @@ public abstract class WebServerTask extends AbstractTask implements Registration
     }
   }
 
+  @SuppressWarnings("squid:S2095")
   private Server createRedirectorServer() {
     int unsecurePort = conf.get(HTTP_PORT_KEY, HTTP_PORT_DEFAULT);
     String hostname = conf.get(HTTP_BIND_HOST, HTTP_BIND_HOST_DEFAULT);
