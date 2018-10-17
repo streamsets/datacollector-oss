@@ -244,14 +244,15 @@ public class KuduLookupLoader extends CacheLoader<KuduLookupKey, List<Map<String
         case UNIXTIME_MICROS:
           predicate = KuduPredicate.newComparisonPredicate(schema, KuduPredicate.ComparisonOp.EQUAL, field.getValueAsDatetime().getTime() * 1000L);
           break;
-        case DECIMAL:
-          predicate = KuduPredicate.newComparisonPredicate(
-              schema,
-              KuduPredicate.ComparisonOp.EQUAL,
-              field.getValueAsDecimal()
-          );
-          break;
         default:
+          if ("DECIMAL".equals(type.name())) {
+            predicate = KuduPredicate.newComparisonPredicate(
+                schema,
+                KuduPredicate.ComparisonOp.EQUAL,
+                field.getValueAsDecimal()
+            );
+            break;
+          }
           throw new StageException(Errors.KUDU_33, type.getName());
       }
     } catch (IllegalArgumentException ex){

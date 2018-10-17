@@ -75,8 +75,10 @@ public class KuduUtils {
       case INT64: return Field.Type.LONG;
       case STRING: return  Field.Type.STRING;
       case UNIXTIME_MICROS: return Field.Type.DATETIME;
-      case DECIMAL: return Field.Type.DECIMAL;
       default:
+        if ("DECIMAL".equals(kuduType.name())) {
+          return Field.Type.DECIMAL;
+        }
         throw new UnsupportedOperationException("Unknown data type: " + kuduType.getName());
     }
   }
@@ -116,9 +118,10 @@ public class KuduUtils {
       case UNIXTIME_MICROS:
         //UNIXTIME_MICROS is in microsecond
         return Field.create(Field.Type.DATETIME, new Date(result.getLong(fieldName)/1000L));
-      case DECIMAL:
-        return Field.create(Field.Type.DECIMAL, result.getDecimal(fieldName));
       default:
+        if ("DECIMAL".equals(type.name())) {
+          return Field.create(Field.Type.DECIMAL, result.getDecimal(fieldName));
+        }
         throw new StageException(Errors.KUDU_10, fieldName, type.getName());
     }
   }
