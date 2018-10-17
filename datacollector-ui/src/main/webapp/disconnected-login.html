@@ -96,9 +96,6 @@
   }
 
   function login(loginForm) {
-    console.log('login called');
-    console.log(loginForm.j_username.value);
-    console.log(loginForm.j_password.value);
     var userName = loginForm.j_username.value;
     var password = loginForm.j_password.value;
     var loginData = {
@@ -123,8 +120,6 @@
         }
         errorDiv.style.visibility = 'hidden';
       } else {
-        console.log(request.status);
-        console.log(request.responseText);
         errorDiv.style.visibility = 'visible';
       }
     };
