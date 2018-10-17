@@ -256,6 +256,10 @@
       <artifactId>commons-el</artifactId>
       <scope>compile</scope>
     </dependency>
+      <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-bootstrap</artifactId>
+      </dependency>
   </dependencies>
 
   <build>

@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.main;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.datacollector.security.SdcSecurityManager;
 import com.streamsets.datacollector.security.SecurityContext;
 import com.streamsets.datacollector.security.SecurityUtil;
 import com.streamsets.datacollector.task.Task;
@@ -70,9 +71,12 @@ public class Main {
       log.info("-----------------------------------------------------------------");
       dagger.get(BuildInfo.class).log(log);
       log.info("-----------------------------------------------------------------");
-      dagger.get(RuntimeInfo.class).log(log);
+      RuntimeInfo runtimeInfo = dagger.get(RuntimeInfo.class);
+      runtimeInfo.log(log);
       log.info("-----------------------------------------------------------------");
       if (System.getSecurityManager() != null) {
+        // Replace security manager with our own to protect some special folders that can never be accessed or altered
+        System.setSecurityManager(new SdcSecurityManager(runtimeInfo));
         log.info("  Security Manager : ENABLED, policy file: {}", System.getProperty("java.security.policy"));
       } else {
         log.warn("  Security Manager : DISABLED");

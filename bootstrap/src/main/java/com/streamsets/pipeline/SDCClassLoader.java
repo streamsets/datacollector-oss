@@ -373,7 +373,7 @@ public class SDCClassLoader extends BlackListURLClassLoader {
   }
 
   public static SDCClassLoader getContainerCLassLoader(List<URL> containerURLs, ClassLoader apiCL) {
-    return new SDCClassLoader("container-lib", "Container", containerURLs, apiCL,
+    return new ContainerClassLoader("container-lib", "Container", containerURLs, apiCL,
       null, new SystemPackage(SYSTEM_API_CHILDREN_CLASSES),
       ApplicationPackage.get(apiCL.getParent()), false, true, false);
 
