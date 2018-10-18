@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.runner;
 
+import com.streamsets.datacollector.blobstore.BlobStoreRuntime;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
@@ -180,7 +181,7 @@ public class InterceptorCreatorContextBuilder {
     }
 
     return new ContextImpl(
-        blobStore,
+        new BlobStoreRuntime(Thread.currentThread().getContextClassLoader(), blobStore),
         sdcConf,
         stageConfiguration,
         stageDefinition,
