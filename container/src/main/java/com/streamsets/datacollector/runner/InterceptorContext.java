@@ -23,6 +23,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.streamsets.datacollector.blobstore.BlobStoreRuntime;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -122,8 +123,9 @@ public class InterceptorContext implements Interceptor.Context {
     long startTime,
     LineagePublisherDelegator lineagePublisherDelegator
   ) {
+    this.containerClassLoader = Thread.currentThread().getContextClassLoader();
     this.type = type;
-    this.blobStore = blobStore;
+    this.blobStore = new BlobStoreRuntime(containerClassLoader, blobStore);
     this.configuration = configuration;
     this.stageInstanceName = stageInstanceName;
     this.metricName = metricName;
@@ -142,7 +144,6 @@ public class InterceptorContext implements Interceptor.Context {
     this.emailSender = emailSender;
     this.startTime = startTime;
     this.lineagePublisherDelegator = lineagePublisherDelegator;
-    this.containerClassLoader = Thread.currentThread().getContextClassLoader();
   }
 
   @Override
