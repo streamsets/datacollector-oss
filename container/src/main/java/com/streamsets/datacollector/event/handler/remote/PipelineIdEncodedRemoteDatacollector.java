@@ -71,7 +71,7 @@ public class PipelineIdEncodedRemoteDatacollector implements DataCollector {
   }
 
   @Override
-  public void savePipeline(
+  public String savePipeline(
       String user,
       String name,
       String rev,
@@ -84,7 +84,7 @@ public class PipelineIdEncodedRemoteDatacollector implements DataCollector {
     Map<String, Object> attribs = new HashMap<>();
     attribs.put(RemoteDataCollector.IS_REMOTE_PIPELINE, true);
     attribs.put(RemoteDataCollector.SCH_GENERATED_PIPELINE_NAME, name);
-    remoteDataCollector.savePipeline(
+    return remoteDataCollector.savePipeline(
         user,
         replaceColonWithDoubleUnderscore(name),
         rev,
@@ -162,7 +162,7 @@ public class PipelineIdEncodedRemoteDatacollector implements DataCollector {
   }
 
   @Override
-  public void previewPipeline(
+  public String previewPipeline(
       String user,
       String name,
       String rev,
@@ -176,7 +176,7 @@ public class PipelineIdEncodedRemoteDatacollector implements DataCollector {
       boolean testOrigin,
       List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
   ) throws PipelineException {
-    remoteDataCollector.previewPipeline(
+    return remoteDataCollector.previewPipeline(
         user,
         name,
         rev,
@@ -195,5 +195,4 @@ public class PipelineIdEncodedRemoteDatacollector implements DataCollector {
   static String replaceColonWithDoubleUnderscore(String name) {
     return name.replaceAll(":", "__");
   }
-
 }

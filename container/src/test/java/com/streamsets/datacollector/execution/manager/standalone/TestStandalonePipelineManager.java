@@ -76,6 +76,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -305,8 +306,17 @@ public class TestStandalonePipelineManager {
   @Test
   public void testPreviewer() throws PipelineException {
     pipelineStoreTask.create("user", "abcd", "label","blah", false, false, new HashMap<String, Object>());
-    Previewer previewer = pipelineManager.createPreviewer("user", "abcd", "0", Collections.emptyList());
+
+    final List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs = new LinkedList<>();
+    final PipelineStartEvent.InterceptorConfiguration interceptorConf = new PipelineStartEvent.InterceptorConfiguration();
+    interceptorConf.setStageLibrary("testing-stagelib");
+    interceptorConf.setInterceptorClassName("com.streamsets.test.TestInterceptor");
+    interceptorConf.setParameters(Collections.singletonMap("paramKey", "paramValue"));
+
+    interceptorConfs.add(interceptorConf);
+    Previewer previewer = pipelineManager.createPreviewer("user", "abcd", "0", interceptorConfs);
     assertEquals(previewer, pipelineManager.getPreviewer(previewer.getId()));
+    assertEquals(interceptorConfs, previewer.getInterceptorConfs());
     ((StandaloneAndClusterPipelineManager)pipelineManager).outputRetrieved(previewer.getId());
     assertNull(pipelineManager.getPreviewer(previewer.getId()));
   }

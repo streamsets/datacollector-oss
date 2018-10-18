@@ -35,6 +35,9 @@ import com.streamsets.pipeline.api.StageException;
 
 public interface DataCollector {
 
+  /**
+   * initializes the DataCollector
+   */
   void init();
 
   void start(Runner.StartPipelineContext context, String name, String rev) throws PipelineException, StageException;
@@ -45,7 +48,7 @@ public interface DataCollector {
 
   void deleteHistory(String user, String name, String rev) throws PipelineException;
 
-  void savePipeline(
+  String savePipeline(
       String user,
       String name,
       String rev,
@@ -83,9 +86,10 @@ public interface DataCollector {
    * @param timeoutMillis
    * @param testOrigin
    * @param interceptorConfs the list of interceptor configs to use
+   * @return the previewer ID
    * @throws PipelineException
    */
-  void previewPipeline(
+  String previewPipeline(
       String user,
       String name,
       String rev,

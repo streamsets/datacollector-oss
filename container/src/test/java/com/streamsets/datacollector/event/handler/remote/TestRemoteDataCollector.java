@@ -1280,9 +1280,9 @@ public class TestRemoteDataCollector {
     File testFolder = tempFolder.newFolder();
     Mockito.when(runtimeInfo.getDataDir()).thenReturn(testFolder.getAbsolutePath());
 
-    dataCollector.previewPipeline(
+    final String previewerId = dataCollector.previewPipeline(
         "user",
-        "name",
+        "ns:name",
         "rev",
         1,
         10,
@@ -1295,7 +1295,9 @@ public class TestRemoteDataCollector {
         Collections.emptyList()
     );
     final MockPreviewer lastPreviewer = manager.getLastPreviewer();
+
     assertThat(lastPreviewer, notNullValue());
     assertThat(lastPreviewer.previewStarted, equalTo(true));
+    assertThat(lastPreviewer.getId(), equalTo(previewerId));
   }
 }

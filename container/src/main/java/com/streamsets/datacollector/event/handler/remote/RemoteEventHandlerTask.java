@@ -142,6 +142,18 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       RuntimeInfo runtimeInfo,
       Configuration conf
   ) {
+    this(remoteDataCollector, eventSenderReceiver, executorService, stageLibrary, runtimeInfo, conf, null);
+  }
+
+  public RemoteEventHandlerTask(
+      DataCollector remoteDataCollector,
+      EventClient eventSenderReceiver,
+      SafeScheduledExecutorService executorService,
+      StageLibraryTask stageLibrary,
+      RuntimeInfo runtimeInfo,
+      Configuration conf,
+      DataStore disconnectedSsoCredentialsDataStore
+  ) {
     super("REMOTE_EVENT_HANDLER");
     this.remoteDataCollector = remoteDataCollector;
     this.jsonToFromDto = MessagingJsonToFromDto.INSTANCE;
@@ -174,18 +186,22 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     stopWatch = Stopwatch.createUnstarted();
 
     File storeFile = new File(runtimeInfo.getDataDir(), DisconnectedSSOManager.DISCONNECTED_SSO_AUTHENTICATION_FILE);
-    dataStore = new DataStore(storeFile);
-    try {
-      dataStore.exists(); // to trigger recovery if last write was incomplete
-    } catch (IOException ex) {
-      LOG.warn("Could not recover disconnected credentials file '{}': {}", dataStore.getFile(), ex.toString(), ex);
+    if (disconnectedSsoCredentialsDataStore != null) {
+      dataStore = disconnectedSsoCredentialsDataStore;
+    } else {
+      dataStore = new DataStore(storeFile);
       try {
-        dataStore.delete();
-      } catch (IOException ex1) {
-        throw new RuntimeException(Utils.format("Could not clear invalid disconected credentials file '{}': {}",
-            dataStore.getFile(),
-            ex.toString()),
-            ex);
+        dataStore.exists(); // to trigger recovery if last write was incomplete
+      } catch (IOException ex) {
+        LOG.warn("Could not recover disconnected credentials file '{}': {}", dataStore.getFile(), ex.toString(), ex);
+        try {
+          dataStore.delete();
+        } catch (IOException ex1) {
+          throw new RuntimeException(Utils.format("Could not clear invalid disconected credentials file '{}': {}",
+              dataStore.getFile(),
+              ex.toString()),
+              ex);
+        }
       }
     }
     remoteDataCollector.init();
@@ -212,7 +228,6 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         requestHeader,
         stopWatch,
         sendAllStatusEventsInterval,
-        dataStore,
         new LinkedHashMap<>(),
         runtimeInfo
     ));
@@ -257,8 +272,232 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     executorService.shutdownNow();
   }
 
+  @Override
+  public RemoteDataCollectorResult handleLocalEvent(Event event, EventType eventType) {
+    RemoteDataCollectorResult result;
+    try {
+      switch (eventType) {
+        case PREVIEW_PIPELINE:
+          final PipelinePreviewEvent pipelinePreviewEvent = (PipelinePreviewEvent) event;
+          result = RemoteDataCollectorResult.immediate(remoteDataCollector.previewPipeline(
+              pipelinePreviewEvent.getUser(),
+              pipelinePreviewEvent.getName(),
+              pipelinePreviewEvent.getRev(),
+              pipelinePreviewEvent.getBatches(),
+              pipelinePreviewEvent.getBatchSize(),
+              pipelinePreviewEvent.isSkipTargets(),
+              pipelinePreviewEvent.isSkipLifecycleEvents(),
+              pipelinePreviewEvent.getStopStage(),
+              //TODO: support this param from event?
+              Collections.emptyList(),
+              pipelinePreviewEvent.getTimeoutMillis(),
+              pipelinePreviewEvent.isTestOrigin(),
+              pipelinePreviewEvent.getInterceptorConfiguration()
+          ));
+          break;
+        default:
+          result = handleEventHelper(event, eventType);
+          break;
+      }
+    } catch (Exception e) {
+      LOG.error("Encountered exception handling local event type: '{}': {}", eventType, e.getMessage(), e);
+      result = RemoteDataCollectorResult.error(Utils.format(
+          "Local event type: '{}' encountered exception '{}'",
+          eventType,
+          e.getMessage()
+      ));
+    }
+    return result;
+  }
+
+  @Override
+  public RemoteDataCollectorResult handleRemoteEvent(Event event, EventType eventType) {
+    RemoteDataCollectorResult result;
+    try {
+      result = handleEventHelper(event, eventType);
+    } catch (Exception ex) {
+      LOG.error("Encountered exception handling remote event type: '{}': {}", eventType, ex.getMessage(), ex);
+      result = RemoteDataCollectorResult.error(Utils.format(
+          "Remote event type: '{}' encountered exception '{}'",
+          eventType,
+          ex.getMessage()
+      ));
+    }
+    return result;
+  }
+
+  private RemoteDataCollectorResult handleEventHelper(Event event, EventType eventType) throws Exception {
+    RemoteDataCollectorResult result = RemoteDataCollectorResult.empty();
+    switch (eventType) {
+      case PING_FREQUENCY_ADJUSTMENT:
+        result = RemoteDataCollectorResult.immediate(((PingFrequencyAdjustmentEvent) event).getPingFrequency());
+        break;
+      case SAVE_PIPELINE: {
+        PipelineSaveEvent pipelineSaveEvent = (PipelineSaveEvent) event;
+        PipelineConfigAndRules pipelineConfigAndRules = pipelineSaveEvent.getPipelineConfigurationAndRules();
+        TypeReference<PipelineConfigurationJson> typeRef = new TypeReference<PipelineConfigurationJson>() {
+        };
+        PipelineConfigurationJson pipelineConfigJson = jsonToFromDto.deserialize(
+            pipelineConfigAndRules.getPipelineConfig(),
+            typeRef
+        );
+        RuleDefinitionsJson ruleDefinitionsJson = jsonToFromDto.deserialize(
+            pipelineConfigAndRules.getPipelineRules(),
+            new TypeReference<RuleDefinitionsJson>() {
+            }
+        );
+        SourceOffset sourceOffset = getSourceOffset(pipelineSaveEvent);
+
+        final String pipelineId = remoteDataCollector.savePipeline(pipelineSaveEvent.getUser(),
+            pipelineSaveEvent.getName(),
+            pipelineSaveEvent.getRev(),
+            pipelineSaveEvent.getDescription(),
+            sourceOffset,
+            BeanHelper.unwrapPipelineConfiguration(pipelineConfigJson),
+            BeanHelper.unwrapRuleDefinitions(ruleDefinitionsJson),
+            pipelineSaveEvent.getAcl(),
+            new HashMap<>()
+        );
+        result = RemoteDataCollectorResult.immediate(pipelineId);
+        break;
+      }
+      case SAVE_RULES_PIPELINE: {
+        PipelineSaveRulesEvent pipelineSaveRulesEvent = (PipelineSaveRulesEvent) event;
+        RuleDefinitionsJson ruleDefinitionsJson = jsonToFromDto.deserialize(
+            pipelineSaveRulesEvent.getRuleDefinitions(),
+            new TypeReference<RuleDefinitionsJson>() {
+            }
+        );
+        remoteDataCollector.savePipelineRules(pipelineSaveRulesEvent.getName(),
+            pipelineSaveRulesEvent.getRev(),
+            BeanHelper.unwrapRuleDefinitions(ruleDefinitionsJson)
+        );
+        break;
+      }
+      case START_PIPELINE:
+        PipelineStartEvent pipelineStartEvent = (PipelineStartEvent) event;
+        Runner.StartPipelineContext startPipelineContext = new StartPipelineContextBuilder(pipelineStartEvent.getUser())
+            .withInterceptorConfigurations(pipelineStartEvent.getInterceptorConfiguration())
+            .build();
+        remoteDataCollector.start(
+            startPipelineContext,
+            pipelineStartEvent.getName(),
+            pipelineStartEvent.getRev()
+        );
+        break;
+      case STOP_PIPELINE:
+        PipelineBaseEvent pipelineStopEvent = (PipelineBaseEvent) event;
+        remoteDataCollector.stop(
+            pipelineStopEvent.getUser(),
+            pipelineStopEvent.getName(),
+            pipelineStopEvent.getRev()
+        );
+        break;
+      case VALIDATE_PIPELINE:
+        PipelineBaseEvent pipelineValidataEvent = (PipelineBaseEvent) event;
+        remoteDataCollector.validateConfigs(
+            pipelineValidataEvent.getUser(),
+            pipelineValidataEvent.getName(),
+            pipelineValidataEvent.getRev(),
+            Collections.emptyList()
+        );
+        break;
+      case RESET_OFFSET_PIPELINE:
+        PipelineBaseEvent pipelineResetOffsetEvent = (PipelineBaseEvent) event;
+        remoteDataCollector.resetOffset(pipelineResetOffsetEvent.getUser(),
+            pipelineResetOffsetEvent.getName(),
+            pipelineResetOffsetEvent.getRev()
+        );
+        break;
+      case DELETE_HISTORY_PIPELINE:
+        PipelineBaseEvent pipelineDeleteHistoryEvent = (PipelineBaseEvent) event;
+        remoteDataCollector.deleteHistory(pipelineDeleteHistoryEvent.getUser(),
+            pipelineDeleteHistoryEvent.getName(),
+            pipelineDeleteHistoryEvent.getRev()
+        );
+        break;
+      case DELETE_PIPELINE:
+        PipelineBaseEvent pipelineDeleteEvent = (PipelineBaseEvent) event;
+        remoteDataCollector.delete(pipelineDeleteEvent.getName(), pipelineDeleteEvent.getRev());
+        break;
+      case STOP_DELETE_PIPELINE:
+        PipelineStopAndDeleteEvent pipelineStopDeleteEvent = (PipelineStopAndDeleteEvent) event;
+        result = RemoteDataCollectorResult.futureAck(remoteDataCollector.stopAndDelete(
+            pipelineStopDeleteEvent.getUser(),
+            pipelineStopDeleteEvent.getName(),
+            pipelineStopDeleteEvent.getRev(),
+            pipelineStopDeleteEvent.getForceTimeoutMillis()
+        ));
+        break;
+      case BLOB_STORE:
+        BlobStoreEvent blobStoreEvent = (BlobStoreEvent) event;
+        remoteDataCollector.blobStore(
+            blobStoreEvent.getNamespace(),
+            blobStoreEvent.getId(),
+            blobStoreEvent.getVersion(),
+            blobStoreEvent.getContent()
+        );
+        break;
+      case BLOB_DELETE:
+        BlobDeleteEvent blobDeleteEvent = (BlobDeleteEvent) event;
+        remoteDataCollector.blobDelete(
+            blobDeleteEvent.getNamespace(),
+            blobDeleteEvent.getId()
+        );
+        break;
+      case BLOB_DELETE_VERSION:
+        BlobDeleteVersionEvent blobDeleteVersionEvent = (BlobDeleteVersionEvent) event;
+        remoteDataCollector.blobDelete(
+            blobDeleteVersionEvent.getNamespace(),
+            blobDeleteVersionEvent.getId(),
+            blobDeleteVersionEvent.getVersion()
+        );
+        break;
+      case SAVE_CONFIGURATION:
+        SaveConfigurationEvent saveConfigurationEvent = (SaveConfigurationEvent)event;
+        remoteDataCollector.storeConfiguration(saveConfigurationEvent.getConfiguration());
+        break;
+      case SYNC_ACL:
+        remoteDataCollector.syncAcl(((SyncAclEvent) event).getAcl());
+        break;
+      case SSO_DISCONNECTED_MODE_CREDENTIALS:
+        DisconnectedSecurityUtils.writeDisconnectedCredentials(
+            getDisconnectedSsoCredentialsDataStore(),
+            (DisconnectedSsoCredentialsEvent) event
+        );
+        break;
+      default:
+        result = RemoteDataCollectorResult.error(Utils.format("Unrecognized event: '{}'", eventType));
+        break;
+    }
+    return result;
+  }
+
+  @Nullable
+  private static SourceOffset getSourceOffset(PipelineSaveEvent pipelineSaveEvent) throws IOException {
+    String offset = pipelineSaveEvent.getOffset();
+    SourceOffset sourceOffset;
+    if (pipelineSaveEvent.getOffsetProtocolVersion() < 2) {
+      // If the offset protocol version is less than 2, convert it to a structure similar to offset.json
+      sourceOffset = new SourceOffset();
+      sourceOffset.setOffset(offset);
+    } else if (null == offset) {
+      // First run when offset is null
+      sourceOffset = new SourceOffset(
+          SourceOffset.CURRENT_VERSION,
+          Collections.emptyMap()
+      );
+    } else {
+      // Offset exists
+      SourceOffsetJson sourceOffsetJson = ObjectMapperFactory.get().readValue(offset, SourceOffsetJson.class);
+      sourceOffset = BeanHelper.unwrapSourceOffset(sourceOffsetJson);
+    }
+    new SourceOffsetUpgrader().upgrade(sourceOffset);
+    return sourceOffset;
+  }
+
   @VisibleForTesting
-  static class EventHandlerCallable implements Callable<Void> {
+  class EventHandlerCallable implements Callable<Void> {
     private final DataCollector remoteDataCollector;
     private final EventClient eventClient;
     private final MessagingJsonToFromDto jsonToFromDto;
@@ -268,7 +507,6 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     private final List<String> processAppDestinationList;
     private final Stopwatch stopWatch;
     private final long waitBetweenSendingStatusEvents;
-    private final DataStore disconnectedCredentialsDataStore;
     private List<ClientEvent> ackEventList;
     private List<ClientEvent> remoteEventList;
     private ClientEvent sdcInfoEvent;
@@ -290,7 +528,6 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         Map<String, String> requestHeader,
         Stopwatch stopWatch,
         long waitBetweenSendingStatusEvents,
-        DataStore disconnectedCredentialsDataStore,
         Map<ServerEvent, Future<AckEvent>> eventToAckEventFuture,
         RuntimeInfo runtimeInfo
     ) {
@@ -307,7 +544,6 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       this.requestHeader = requestHeader;
       this.stopWatch = stopWatch;
       this.waitBetweenSendingStatusEvents = waitBetweenSendingStatusEvents;
-      this.disconnectedCredentialsDataStore = disconnectedCredentialsDataStore;
       this.eventToAckEventFuture = eventToAckEventFuture;
       this.runtimeInfo = runtimeInfo;
     }
@@ -334,7 +570,6 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
             requestHeader,
             stopWatch,
             waitBetweenSendingStatusEvents,
-            disconnectedCredentialsDataStore,
             eventToAckEventFuture,
             runtimeInfo
         ), delay, TimeUnit.MILLISECONDS);
@@ -491,200 +726,32 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
 
     private String handleServerEvent(ServerEvent serverEvent) {
       String ackEventMessage = null;
-      try {
-        Event event = serverEvent.getEvent();
-        EventType eventType = serverEvent.getEventType();
-        LOG.info(Utils.format("Handling event: '{}' ", serverEvent));
-        switch (eventType) {
-          case PING_FREQUENCY_ADJUSTMENT:
-            delay = ((PingFrequencyAdjustmentEvent) event).getPingFrequency();
-            break;
-          case SAVE_PIPELINE: {
-            PipelineSaveEvent pipelineSaveEvent = (PipelineSaveEvent) event;
-            PipelineConfigAndRules pipelineConfigAndRules = pipelineSaveEvent.getPipelineConfigurationAndRules();
-            TypeReference<PipelineConfigurationJson> typeRef = new TypeReference<PipelineConfigurationJson>() {
-            };
-            PipelineConfigurationJson pipelineConfigJson = jsonToFromDto.deserialize(
-                pipelineConfigAndRules.getPipelineConfig(),
-                typeRef
-            );
-            RuleDefinitionsJson ruleDefinitionsJson = jsonToFromDto.deserialize(
-                pipelineConfigAndRules.getPipelineRules(),
-                new TypeReference<RuleDefinitionsJson>() {
-                }
-            );
-            SourceOffset sourceOffset = getSourceOffset(pipelineSaveEvent);
-
-            remoteDataCollector.savePipeline(pipelineSaveEvent.getUser(),
-                pipelineSaveEvent.getName(), pipelineSaveEvent.getRev(),
-                pipelineSaveEvent.getDescription(),
-                sourceOffset,
-                BeanHelper.unwrapPipelineConfiguration(pipelineConfigJson),
-                BeanHelper.unwrapRuleDefinitions(ruleDefinitionsJson),
-                pipelineSaveEvent.getAcl(),
-                new HashMap<String, Object>()
-            );
-            break;
-          }
-          case SAVE_RULES_PIPELINE: {
-            PipelineSaveRulesEvent pipelineSaveRulesEvent = (PipelineSaveRulesEvent) event;
-            RuleDefinitionsJson ruleDefinitionsJson = jsonToFromDto.deserialize(
-                pipelineSaveRulesEvent.getRuleDefinitions(),
-                new TypeReference<RuleDefinitionsJson>() {
-                }
-            );
-            remoteDataCollector.savePipelineRules(pipelineSaveRulesEvent.getName(),
-                pipelineSaveRulesEvent.getRev(),
-                BeanHelper.unwrapRuleDefinitions(ruleDefinitionsJson)
-            );
-            break;
-          }
-          case START_PIPELINE:
-            PipelineStartEvent pipelineStartEvent = (PipelineStartEvent) event;
-            Runner.StartPipelineContext startPipelineContext = new StartPipelineContextBuilder(pipelineStartEvent.getUser())
-                .withInterceptorConfigurations(pipelineStartEvent.getInterceptorConfiguration())
-                .build();
-            remoteDataCollector.start(
-                startPipelineContext,
-                pipelineStartEvent.getName(),
-                pipelineStartEvent.getRev()
-            );
-            break;
-          case STOP_PIPELINE:
-            PipelineBaseEvent pipelineStopEvent = (PipelineBaseEvent) event;
-            remoteDataCollector.stop(
-                pipelineStopEvent.getUser(),
-                pipelineStopEvent.getName(),
-                pipelineStopEvent.getRev()
-            );
-            break;
-          case VALIDATE_PIPELINE:
-            PipelineBaseEvent pipelineValidataEvent = (PipelineBaseEvent) event;
-            remoteDataCollector.validateConfigs(
-                pipelineValidataEvent.getUser(),
-                pipelineValidataEvent.getName(),
-                pipelineValidataEvent.getRev(),
-                Collections.emptyList()
-            );
-            break;
-          case PREVIEW_PIPELINE:
-            final PipelinePreviewEvent pipelinePreviewEvent = (PipelinePreviewEvent) event;
-            remoteDataCollector.previewPipeline(
-                pipelinePreviewEvent.getUser(),
-                pipelinePreviewEvent.getName(),
-                pipelinePreviewEvent.getRev(),
-                pipelinePreviewEvent.getBatches(),
-                pipelinePreviewEvent.getBatchSize(),
-                pipelinePreviewEvent.isSkipTargets(),
-                pipelinePreviewEvent.isSkipLifecycleEvents(),
-                pipelinePreviewEvent.getStopStage(),
-                //TODO: support this param from event?
-                Collections.emptyList(),
-                pipelinePreviewEvent.getTimeoutMillis(),
-                pipelinePreviewEvent.isTestOrigin(),
-                pipelinePreviewEvent.getInterceptorConfiguration()
-            );
-            break;
-          case RESET_OFFSET_PIPELINE:
-            PipelineBaseEvent pipelineResetOffsetEvent = (PipelineBaseEvent) event;
-            remoteDataCollector.resetOffset(pipelineResetOffsetEvent.getUser(),
-                pipelineResetOffsetEvent.getName(),
-                pipelineResetOffsetEvent.getRev()
-            );
-            break;
-          case DELETE_HISTORY_PIPELINE:
-            PipelineBaseEvent pipelineDeleteHistoryEvent = (PipelineBaseEvent) event;
-            remoteDataCollector.deleteHistory(pipelineDeleteHistoryEvent.getUser(),
-                pipelineDeleteHistoryEvent.getName(),
-                pipelineDeleteHistoryEvent.getRev()
-            );
-            break;
-          case DELETE_PIPELINE:
-            PipelineBaseEvent pipelineDeleteEvent = (PipelineBaseEvent) event;
-            remoteDataCollector.delete(pipelineDeleteEvent.getName(), pipelineDeleteEvent.getRev());
-            break;
-          case STOP_DELETE_PIPELINE:
-            PipelineStopAndDeleteEvent pipelineStopDeleteEvent = (PipelineStopAndDeleteEvent) event;
-            eventToAckEventFuture.put(serverEvent, remoteDataCollector.stopAndDelete(
-                pipelineStopDeleteEvent.getUser(),
-                pipelineStopDeleteEvent.getName(),
-                pipelineStopDeleteEvent.getRev(),
-                pipelineStopDeleteEvent.getForceTimeoutMillis()
-            ));
-            break;
-          case BLOB_STORE:
-            BlobStoreEvent blobStoreEvent = (BlobStoreEvent) event;
-            remoteDataCollector.blobStore(
-                blobStoreEvent.getNamespace(),
-                blobStoreEvent.getId(),
-                blobStoreEvent.getVersion(),
-                blobStoreEvent.getContent()
-            );
-            break;
-          case BLOB_DELETE:
-            BlobDeleteEvent blobDeleteEvent = (BlobDeleteEvent) event;
-            remoteDataCollector.blobDelete(
-                blobDeleteEvent.getNamespace(),
-                blobDeleteEvent.getId()
-            );
-            break;
-          case BLOB_DELETE_VERSION:
-            BlobDeleteVersionEvent blobDeleteVersionEvent = (BlobDeleteVersionEvent) event;
-            remoteDataCollector.blobDelete(
-                blobDeleteVersionEvent.getNamespace(),
-                blobDeleteVersionEvent.getId(),
-                blobDeleteVersionEvent.getVersion()
-            );
-            break;
-          case SAVE_CONFIGURATION:
-            SaveConfigurationEvent saveConfigurationEvent = (SaveConfigurationEvent)event;
-            remoteDataCollector.storeConfiguration(saveConfigurationEvent.getConfiguration());
-            break;
-          case SYNC_ACL:
-            remoteDataCollector.syncAcl(((SyncAclEvent) event).getAcl());
-            break;
-          case SSO_DISCONNECTED_MODE_CREDENTIALS:
-            DisconnectedSecurityUtils.writeDisconnectedCredentials(
-                disconnectedCredentialsDataStore,
-                (DisconnectedSsoCredentialsEvent) event
-            );
-            break;
-          default:
-            ackEventMessage = Utils.format("Unrecognized event: '{}'", eventType);
-            LOG.warn(ackEventMessage);
-            break;
+      Event event = serverEvent.getEvent();
+      EventType eventType = serverEvent.getEventType();
+      LOG.info("Handling {} event: '{}' ", eventType, serverEvent);
+      RemoteDataCollectorResult result = handleRemoteEvent(event, eventType);
+      if (result.isError()) {
+        LOG.error(result.getErrorMessage());
+        ackEventMessage = result.getErrorMessage();
+      } else {
+        if (result.getFutureAck() != null) {
+          eventToAckEventFuture.put(serverEvent, result.getFutureAck());
         }
-      } catch (Exception ex) {
-        ackEventMessage = Utils.format("Remote event type: '{}' encountered exception '{}'",
-            serverEvent.getEventType(),
-            ex.getMessage()
-        );
-        LOG.warn(ackEventMessage, ex);
+        if (result.getImmediateResult() != null) {
+          switch (eventType) {
+            case PING_FREQUENCY_ADJUSTMENT:
+              delay = (long) result.getImmediateResult();
+              break;
+            default:
+              // we don't need the immediate result, so just log for now
+              if (LOG.isDebugEnabled()) {
+                LOG.debug("Immediate result from handling remote {} event: {}", eventType, result.getImmediateResult());
+              }
+              break;
+          }
+        }
       }
       return ackEventMessage;
-    }
-
-    @Nullable
-    private SourceOffset getSourceOffset(PipelineSaveEvent pipelineSaveEvent) throws IOException {
-      String offset = pipelineSaveEvent.getOffset();
-      SourceOffset sourceOffset;
-      if (pipelineSaveEvent.getOffsetProtocolVersion() < 2) {
-        // If the offset protocol version is less than 2, convert it to a structure similar to offset.json
-        sourceOffset = new SourceOffset();
-        sourceOffset.setOffset(offset);
-      } else if (null == offset) {
-        // First run when offset is null
-        sourceOffset = new SourceOffset(
-            SourceOffset.CURRENT_VERSION,
-            Collections.emptyMap()
-        );
-      } else {
-        // Offset exists
-        SourceOffsetJson sourceOffsetJson = ObjectMapperFactory.get().readValue(offset, SourceOffsetJson.class);
-        sourceOffset = BeanHelper.unwrapSourceOffset(sourceOffsetJson);
-      }
-      new SourceOffsetUpgrader().upgrade(sourceOffset);
-      return sourceOffset;
     }
 
     private List<ClientEvent> getQueuedAckEvents() {

@@ -17,6 +17,9 @@ package com.streamsets.datacollector.event.handler;
 
 import javax.inject.Inject;
 
+import com.streamsets.datacollector.event.dto.Event;
+import com.streamsets.datacollector.event.dto.EventType;
+import com.streamsets.datacollector.event.handler.remote.RemoteDataCollectorResult;
 import com.streamsets.datacollector.task.AbstractTask;
 
 public class NoOpEventHandlerTask extends AbstractTask implements EventHandlerTask {
@@ -24,5 +27,15 @@ public class NoOpEventHandlerTask extends AbstractTask implements EventHandlerTa
   @Inject
   public NoOpEventHandlerTask() {
     super("NO_OP_HANDLER_TASK");
+  }
+
+  @Override
+  public RemoteDataCollectorResult handleLocalEvent(Event event, EventType eventType) {
+    return RemoteDataCollectorResult.empty();
+  }
+
+  @Override
+  public RemoteDataCollectorResult handleRemoteEvent(Event event, EventType eventType) {
+    return RemoteDataCollectorResult.empty();
   }
 }

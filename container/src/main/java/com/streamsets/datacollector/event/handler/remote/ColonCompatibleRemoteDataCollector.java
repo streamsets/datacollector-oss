@@ -22,18 +22,11 @@ import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.event.dto.AckEvent;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.event.handler.DataCollector;
-import com.streamsets.datacollector.execution.PipelineState;
-import com.streamsets.datacollector.execution.PipelineStateStore;
-import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.runner.production.SourceOffset;
-import com.streamsets.datacollector.store.PipelineStoreException;
-import com.streamsets.datacollector.store.PipelineStoreTask;
-import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.lib.security.acl.dto.Acl;
-import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 
@@ -102,7 +95,7 @@ public class ColonCompatibleRemoteDataCollector implements DataCollector {
   }
 
   @Override
-  public void savePipeline(
+  public String savePipeline(
       String user,
       String name,
       String rev,
@@ -113,7 +106,7 @@ public class ColonCompatibleRemoteDataCollector implements DataCollector {
       Acl acl,
       Map<String, Object> metadata
   ) throws PipelineException {
-    remoteDataCollector.savePipeline(
+    return remoteDataCollector.savePipeline(
         user,
         name,
         rev,
@@ -149,7 +142,7 @@ public class ColonCompatibleRemoteDataCollector implements DataCollector {
   }
 
   @Override
-  public void previewPipeline(
+  public String previewPipeline(
       String user,
       String name,
       String rev,
@@ -163,7 +156,7 @@ public class ColonCompatibleRemoteDataCollector implements DataCollector {
       boolean testOrigin,
       List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
   ) throws PipelineException {
-    remoteDataCollector.previewPipeline(
+    return remoteDataCollector.previewPipeline(
         user,
         name,
         rev,

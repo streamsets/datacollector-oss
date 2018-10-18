@@ -53,6 +53,7 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.LogUtil;
 import com.streamsets.datacollector.util.PipelineException;
+import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
 import com.streamsets.lib.security.acl.dto.Acl;
@@ -72,8 +73,10 @@ import javax.inject.Named;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -202,7 +205,7 @@ public class RemoteDataCollector implements DataCollector {
   }
 
   @Override
-  public void savePipeline(
+  public String savePipeline(
       String user,
       String name,
       String rev,
@@ -235,6 +238,7 @@ public class RemoteDataCollector implements DataCollector {
     if (offset != null) {
       OffsetFileUtil.saveSourceOffset(runtimeInfo, name, rev, offset);
     }
+    return uuid.toString();
   }
 
   @Override
@@ -263,7 +267,7 @@ public class RemoteDataCollector implements DataCollector {
   }
 
   @Override
-  public void previewPipeline(
+  public String previewPipeline(
       String user,
       String name,
       String rev,
@@ -277,20 +281,23 @@ public class RemoteDataCollector implements DataCollector {
       boolean testOrigin,
       List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
   ) throws PipelineException {
-    Previewer previewer = manager.createPreviewer(user, name, rev, interceptorConfs);
-    previewer.start(
-        batches,
-        batchSize,
-        skipTargets,
-        skipLifecycleEvents,
-        stopStage,
-        stagesOverride,
-        timeoutMillis,
-        testOrigin
-    );
-    validatorIdList.add(previewer.getId());
-  }
+    final Previewer previewer = manager.createPreviewer(user, name, rev, interceptorConfs);
+    previewer.validateConfigs(10000l);
 
+    if (!EnumSet.of(PreviewStatus.VALIDATION_ERROR,  PreviewStatus.INVALID).contains(previewer.getStatus())) {
+      previewer.start(
+          batches,
+          batchSize,
+          skipTargets,
+          skipLifecycleEvents,
+          stopStage,
+          stagesOverride,
+          timeoutMillis,
+          testOrigin
+      );
+    }
+    return previewer.getId();
+  }
 
   static class StopAndDeleteCallable implements Callable<AckEvent> {
     private final RemoteDataCollector remoteDataCollector;
