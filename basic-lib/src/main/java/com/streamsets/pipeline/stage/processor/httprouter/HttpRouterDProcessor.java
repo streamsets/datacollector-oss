@@ -50,8 +50,7 @@ public class HttpRouterDProcessor extends DProcessor {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      label = "Router",
-      description = "Records that match the condition pass to the stream",
+      label = "",
       displayPosition = 10,
       group = "ROUTER"
   )

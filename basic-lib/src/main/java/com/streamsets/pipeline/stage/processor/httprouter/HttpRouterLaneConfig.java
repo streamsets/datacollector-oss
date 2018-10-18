@@ -26,8 +26,8 @@ public class HttpRouterLaneConfig {
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "",
-      label = "Output Lane",
-      description = "Output Lane",
+      label = "Stream",
+      description = "Records that match the specified method and path pass to the stream",
       displayPosition = 10,
       group = "ROUTER"
   )
@@ -38,7 +38,7 @@ public class HttpRouterLaneConfig {
       type = ConfigDef.Type.MODEL,
       label = "HTTP Method",
       defaultValue = "GET",
-      description = "HTTP method to send",
+      description = "HTTP method in record header attribute",
       elDefs = RecordEL.class,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 20,
@@ -52,7 +52,7 @@ public class HttpRouterLaneConfig {
       type = ConfigDef.Type.STRING,
       defaultValue = "/",
       label = "Path Parameter",
-      description = "URL path parameter",
+      description = "URL path in record header attribute",
       displayPosition = 30,
       group = "ROUTER"
   )
