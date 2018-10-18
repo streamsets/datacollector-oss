@@ -728,17 +728,18 @@ public abstract class PipelineBeanCreator {
     List<Issue> issues
   ) {
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+    InterceptorCreator.Context context = contextBuilder.buildFor(
+      definition.getLibraryDefinition().getName(),
+      definition.getKlass().getName(),
+      stageConfiguration,
+      stageDefinition,
+      interceptorType
+    );
+
     try {
       Thread.currentThread().setContextClassLoader(definition.getStageClassLoader());
-
       InterceptorCreator creator = definition.getDefaultCreator().newInstance();
-      Interceptor interceptor = creator.create(contextBuilder.buildFor(
-        definition.getLibraryDefinition().getName(),
-        definition.getKlass().getName(),
-        stageConfiguration,
-        stageDefinition,
-        interceptorType
-      ));
+      Interceptor interceptor = creator.create(context);
 
       if(interceptor == null) {
         return null;
