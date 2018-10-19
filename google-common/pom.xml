@@ -22,13 +22,13 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root</artifactId>
-    <version>3.5.1</version>
+    <version>3.5.2-SNAPSHOT</version>
     <relativePath>../root</relativePath>
   </parent>
 
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-google-common</artifactId>
-  <version>3.5.1</version>
+  <version>3.5.2-SNAPSHOT</version>
   <description>StreamSets Data Collector Google Cloud Common</description>
   <name>StreamSets Data Collector Google Cloud Common</name>
   <packaging>jar</packaging>
