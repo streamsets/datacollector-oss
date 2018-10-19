@@ -185,6 +185,29 @@ public class TestRecordImpl {
   // tests for field-path expressions
 
   @Test
+  public void testRootFieldAccessOptimizationCorrectness() {
+    RecordImpl r = new RecordImpl("stage", "source", null, null);
+
+    Field f = Field.create(1);
+    r.set(f);
+    Assert.assertEquals(f, r.get());
+    Assert.assertEquals(f, r.get(""));
+    Assert.assertEquals(f, r.get("/"));
+
+    f = Field.create(1);
+    r.set("", f);
+    Assert.assertEquals(f, r.get());
+    Assert.assertEquals(f, r.get(""));
+    Assert.assertEquals(f, r.get("/"));
+
+    f = Field.create(1);
+    r.set("/", f);
+    Assert.assertEquals(f, r.get());
+    Assert.assertEquals(f, r.get(""));
+    Assert.assertEquals(f, r.get("/"));
+  }
+
+    @Test
   public void testRootBasicField() {
     RecordImpl r = new RecordImpl("stage", "source", null, null);
 

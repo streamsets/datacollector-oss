@@ -325,9 +325,14 @@ public class RecordImpl implements Record, Cloneable {
 
   @Override
   public Field get(String fieldPath) {
-    List<PathElement> elements = parse(fieldPath);
-    List<Field> fields = get(elements);
-    return (elements.size() == fields.size()) ? fields.get(fields.size() - 1) : null;
+    if ("/".equals(fieldPath) || fieldPath.isEmpty()) {
+      // if asking for the root field we can return it without and fieldpath parsing
+      return value;
+    } else {
+      List<PathElement> elements = parse(fieldPath);
+      List<Field> fields = get(elements);
+      return (elements.size() == fields.size()) ? fields.get(fields.size() - 1) : null;
+    }
   }
 
 
@@ -525,24 +530,30 @@ public class RecordImpl implements Record, Cloneable {
 
   @Override
   public Field set(String fieldPath, Field newField) {
-    //get all the elements present in the fieldPath, including the newest element
-    //For example, if the existing record has /a/b/c and the argument fieldPath is /a/b/d the parser returns three
-    // elements - a, b and d
-    List<PathElement> elements = parse(fieldPath);
-    //return all *existing* fields form the list of elements
-    //In the above case it is going to return only field a and field b. Field d does not exist.
-    List<Field> fields = get(elements);
     Field fieldToReplace;
-    int fieldPos = fields.size();
-    if (elements.size() == fieldPos) {
-      //The number of elements in the path is same as the number of fields => set use case
-      fieldPos--;
-      fieldToReplace = doSet(fieldPos, newField, elements, fields);
-    } else if (elements.size() -1 == fieldPos) {
-      //The number of elements in the path is on more than the number of fields => add use case
-      fieldToReplace = doSet(fieldPos, newField, elements, fields);
+    if ("/".equals(fieldPath) || fieldPath.isEmpty()) {
+      // if asking for the root field we can set it without any field path parsing
+      fieldToReplace = value;
+      value = newField;
     } else {
-      throw new IllegalArgumentException(Utils.format("Field-path '{}' not reachable", fieldPath));
+      //get all the elements present in the fieldPath, including the newest element
+      //For example, if the existing record has /a/b/c and the argument fieldPath is /a/b/d the parser returns three
+      // elements - a, b and d
+      List<PathElement> elements = parse(fieldPath);
+      //return all *existing* fields form the list of elements
+      //In the above case it is going to return only field a and field b. Field d does not exist.
+      List<Field> fields = get(elements);
+      int fieldPos = fields.size();
+      if (elements.size() == fieldPos) {
+        //The number of elements in the path is same as the number of fields => set use case
+        fieldPos--;
+        fieldToReplace = doSet(fieldPos, newField, elements, fields);
+      } else if (elements.size() - 1 == fieldPos) {
+        //The number of elements in the path is on more than the number of fields => add use case
+        fieldToReplace = doSet(fieldPos, newField, elements, fields);
+      } else {
+        throw new IllegalArgumentException(Utils.format("Field-path '{}' not reachable", fieldPath));
+      }
     }
     return fieldToReplace;
   }
