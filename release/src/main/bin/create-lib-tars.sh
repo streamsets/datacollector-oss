@@ -57,18 +57,26 @@ do
     LIB_NAME=`unzip -p ${STAGE_LIBS}/${LIB_DIR}/lib/${LIB_DIR}-*.jar data-collector-library-bundle.properties | grep library.name | sed 's/library.name=//'`
     echo "stage-lib.${LIB_DIR}=${LIB_NAME}" >> ${STAGE_LIB_MANIFEST_FILE_PATH}
 
-    STAGE_DEF_LIST_JSON=`unzip -p ${STAGE_LIBS}/${LIB_DIR}/lib/${LIB_DIR}-*.jar StageDefList.json`
-
-    if [ "$STAGE_DEF_LIST_JSON" ]
-    then
     echo "${JSON_SEPARATOR}" >> ${STAGE_LIB_MANIFEST_JSON_FILE_PATH}
     echo "\"stage-lib.${LIB_DIR}\": {" >> ${STAGE_LIB_MANIFEST_JSON_FILE_PATH}
     echo "  \"label\": \"${LIB_NAME}\"," >> ${STAGE_LIB_MANIFEST_JSON_FILE_PATH}
-    echo "  \"stageDefList\": ${STAGE_DEF_LIST_JSON}" >> ${STAGE_LIB_MANIFEST_JSON_FILE_PATH}
-    echo "}" >> ${STAGE_LIB_MANIFEST_JSON_FILE_PATH}
+    echo "  \"stageDefList\": [" >> ${STAGE_LIB_MANIFEST_JSON_FILE_PATH}
 
+    JSON_SEPARATOR_FOR_LIST=""
+    for PROTO_LIB in ${STAGE_LIBS}/${LIB_DIR}/lib/*.jar
+    do
+        STAGE_DEF_LIST_JSON=`unzip -p ${PROTO_LIB} StageDefList.json`
+        if [ "$STAGE_DEF_LIST_JSON" ]
+        then
+        echo "${JSON_SEPARATOR_FOR_LIST}" >> ${STAGE_LIB_MANIFEST_JSON_FILE_PATH}
+        echo "${STAGE_DEF_LIST_JSON}" >> ${STAGE_LIB_MANIFEST_JSON_FILE_PATH}
+        JSON_SEPARATOR_FOR_LIST=","
+        fi
+    done
+
+    echo "  ]" >> ${STAGE_LIB_MANIFEST_JSON_FILE_PATH}
+    echo "}" >> ${STAGE_LIB_MANIFEST_JSON_FILE_PATH}
     JSON_SEPARATOR=","
-    fi
   fi
 done
 
