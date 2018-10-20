@@ -158,7 +158,7 @@ public class StageDefinitionJson {
     return stageDefinition.getSendsResponse();
   }
 
-  public boolean getBeta() {
-    return stageDefinition.getBeta();
+  public boolean isBeta() {
+    return stageDefinition.isBeta();
   }
 }

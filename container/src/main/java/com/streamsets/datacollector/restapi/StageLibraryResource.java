@@ -15,7 +15,9 @@
  */
 package com.streamsets.datacollector.restapi;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.classpath.ClasspathValidatorResult;
 import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
@@ -23,6 +25,7 @@ import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.definition.ConcreteELDefinitionExtractor;
 import com.streamsets.datacollector.el.RuntimeEL;
 import com.streamsets.datacollector.execution.alerts.DataRuleEvaluator;
+import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
@@ -31,6 +34,7 @@ import com.streamsets.datacollector.restapi.bean.PipelineDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.PipelineFragmentDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.PipelineRulesDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.StageDefinitionJson;
+import com.streamsets.datacollector.restapi.bean.StageInfoJson;
 import com.streamsets.datacollector.restapi.bean.StageLibraryExtrasJson;
 import com.streamsets.datacollector.restapi.bean.StageLibraryJson;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -48,6 +52,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
@@ -69,11 +75,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
 @Path("/v1")
@@ -81,6 +87,8 @@ import java.util.Set;
 @DenyAll
 @RequiresCredentialsDeployed
 public class StageLibraryResource {
+
+  private static final Logger LOG = LoggerFactory.getLogger(StageLibraryResource.class);
   private static final String DEFAULT_ICON_FILE = "PipelineDefinition-bundle.properties";
   private static final String PNG_MEDIA_TYPE = "image/png";
   private static final String SVG_MEDIA_TYPE = "image/svg+xml";
@@ -88,6 +96,7 @@ public class StageLibraryResource {
   private static final String NIGHTLY_URL = "http://nightly.streamsets.com/datacollector/";
   private static final String ARCHIVES_URL = "http://archives.streamsets.com/datacollector/";
   private static final String STAGE_LIB_MANIFEST_PATH = "stage-lib-manifest.properties";
+  private static final String STAGE_LIB_MANIFEST_JSON_PATH = "stage-lib-manifest.json";
   private static final String LATEST = "latest";
   private static final String SNAPSHOT = "-SNAPSHOT";
   private static final String REPO_URL = "REPO_URL";
@@ -202,17 +211,30 @@ public class StageLibraryResource {
   public Response getLibraries(
       @QueryParam("repoUrl") String repoUrl,
       @QueryParam("installedOnly") boolean installedOnly
-  ) throws IOException {
+  ) {
     List<StageLibraryJson> installedLibraries = new ArrayList<>();
     List<StageLibraryJson> libraries = new ArrayList<>();
-    Map<String, Boolean> installedLibrariesMap = new HashMap<>();
 
+    Map<String, List<StageInfoJson>> installedStagesMap = new HashMap<>();
+    for(StageDefinition stageDefinition: stageLibrary.getStages()) {
+      List<StageInfoJson> stagesList;
+      if (installedStagesMap.containsKey(stageDefinition.getLibrary())) {
+        stagesList = installedStagesMap.get(stageDefinition.getLibrary());
+      } else {
+        stagesList = new ArrayList<>();
+        installedStagesMap.put(stageDefinition.getLibrary(), stagesList);
+      }
+      stagesList.add(new StageInfoJson(stageDefinition));
+    }
+
+    Map<String, Boolean> installedLibrariesMap = new HashMap<>();
     for(StageLibraryDefinition libDef : stageLibrary.getLoadedStageLibraries()) {
       installedLibrariesMap.put(libDef.getName(), true);
       installedLibraries.add(new StageLibraryJson(
-        libDef.getName(),
-        libDef.getLabel(),
-        true
+          libDef.getName(),
+          libDef.getLabel(),
+          true,
+          installedStagesMap.containsKey(libDef.getName()) ? ImmutableList.of(installedStagesMap.get(libDef.getName())): Collections.emptyList()
       ));
     }
 
@@ -226,42 +248,35 @@ public class StageLibraryResource {
       } else if (!repoUrl.endsWith("/")) {
         repoUrl = repoUrl + "/";
       }
-      String url = repoUrl + STAGE_LIB_MANIFEST_PATH;
+      String url = repoUrl + STAGE_LIB_MANIFEST_JSON_PATH;
 
-      Response response = null;
-      try {
-        response = ClientBuilder.newClient()
-            .target(url)
-            .request()
-            .get();
-
-        InputStream inputStream =  response.readEntity(InputStream.class);
-        Properties properties = new Properties();
-        properties.load(inputStream);
-
+      try (Response response = ClientBuilder.newClient().target(url).request().get()) {
+        InputStream inputStream = response.readEntity(InputStream.class);
         Set<String> addedLibraryIds = new HashSet<>();
 
-        for (final String name: properties.stringPropertyNames()) {
-          if (name.startsWith(STAGE_LIB_PREFIX)) {
-            String libraryId = name.replace(STAGE_LIB_PREFIX, "");
-            addedLibraryIds.add(libraryId);
+        try {
+          Map<String, StageLibraryJson> stageLibManifestJson = ObjectMapperFactory.get()
+              .readValue(inputStream, new TypeReference<Map<String, StageLibraryJson>>() {});
+          for(String libraryName: stageLibManifestJson.keySet()) {
+            StageLibraryJson stageLibrary = stageLibManifestJson.get(libraryName);
             libraries.add(new StageLibraryJson(
-                libraryId,
-                properties.getProperty(name),
-                installedLibrariesMap.containsKey(libraryId)
+                libraryName,
+                stageLibrary.getLabel(),
+                installedLibrariesMap.containsKey(libraryName),
+                stageLibrary.getStageDefList()
             ));
+            addedLibraryIds.add(libraryName);
           }
+        } catch (Exception ex) {
+          LOG.error("Failed to read stage-lib-manifest.json", ex);
+          addedLibraryIds = new HashSet<>();
         }
 
         // Add installed custom/user stage libraries to the list which are not part of Archives manifest file
-        for (StageLibraryJson installedLibrary: installedLibraries) {
+        for (StageLibraryJson installedLibrary : installedLibraries) {
           if (!addedLibraryIds.contains(installedLibrary.getId())) {
             libraries.add(installedLibrary);
           }
-        };
-      } finally {
-        if (response != null) {
-          response.close();
         }
       }
     } else {
@@ -476,9 +491,9 @@ public class StageLibraryResource {
   @GET
   @Path("/stageLibraries/classpathHealth")
   @ApiOperation(
-    value = "Validate health of classpath of all loaded stages.",
-    response = Object.class,
-    authorizations = @Authorization(value = "basic")
+      value = "Validate health of classpath of all loaded stages.",
+      response = Object.class,
+      authorizations = @Authorization(value = "basic")
   )
   @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
   @Produces(MediaType.APPLICATION_JSON)

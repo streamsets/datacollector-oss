@@ -634,7 +634,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     return sendsResponse;
   }
 
-  public boolean getBeta() {
+  public boolean isBeta() {
     return beta;
   }
 }
