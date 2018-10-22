@@ -720,7 +720,7 @@ public class TestPipelineStoreResource extends JerseyTest {
           LOG.debug("Ignoring exception", e);
         }
 
-        Mockito.when(pipelineStore.create("user1", "newFromImport", "newFromImport",null, false, false)).thenReturn(
+        Mockito.when(pipelineStore.create("user1", "newFromImport", "label",null, false, false)).thenReturn(
             MockStages.createPipelineConfigurationSourceProcessorTarget());
 
       } catch (com.streamsets.datacollector.util.PipelineException e) {

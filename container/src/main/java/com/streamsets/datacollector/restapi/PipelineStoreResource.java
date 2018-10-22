@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.restapi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -1403,7 +1404,10 @@ public class PipelineStoreResource {
     PipelineConfiguration newPipelineConfig;
     RuleDefinitions newRuleDefinitions;
 
-    String label = name;
+    String label = pipelineConfig.getTitle();
+    if(Strings.isNullOrEmpty(label)) {
+      label = name;
+    }
 
     if (overwrite) {
       if (store.hasPipeline(name)) {
