@@ -30,6 +30,7 @@ public class StageInfoJson {
   private boolean statsAggregatorStage;
   private boolean beta;
   private String icon;
+  private String onlineHelpRefUrl;
 
   public StageInfoJson() { }
 
@@ -116,6 +117,14 @@ public class StageInfoJson {
 
   public void setIcon(String icon) {
     this.icon = icon;
+  }
+
+  public String getOnlineHelpRefUrl() {
+    return onlineHelpRefUrl;
+  }
+
+  public void setOnlineHelpRefUrl(String onlineHelpRefUrl) {
+    this.onlineHelpRefUrl = onlineHelpRefUrl;
   }
 }
 

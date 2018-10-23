@@ -302,7 +302,7 @@
           }
 
           .stage-library-name {
-            width: 30%;
+            width: 25%;
             display: inline-block;
             word-break: break-all;
             padding-left: 10px;
@@ -314,8 +314,35 @@
             padding-left: 10px;
           }
 
+          .stage-library-list {
+            width: 60%;
+            display: inline-block;
+            padding-left: 10px;
+
+            .badge {
+              margin-right: 10px;
+              margin-bottom: 10px;
+
+              &.source {
+                background: @brand-info;
+              }
+
+              &.processor {
+                background: @brand-warning;
+              }
+
+              &.target {
+                background: @brand-success;
+              }
+
+              &.executor {
+                background: #6f9a66;
+              }
+            }
+          }
+
           .stage-library-installed {
-            width: 10%;
+            width: 6%;
             display: inline-block;
           }
 

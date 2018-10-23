@@ -91,6 +91,7 @@ angular
       manifestURL: '',
       isManagedByClouderaManager: false,
       fetching: true,
+      showLibraryId: false,
 
       toggleLibraryPanel: function () {
         $scope.hideLibraryPanel = !$scope.hideLibraryPanel;
@@ -358,6 +359,16 @@ angular
 
       uploadFileBtn: function(uploadFile) {
         api.pipelineAgent.installExtras('libraryId', uploadFile);
+      },
+
+      getStageInfoList: function(stageDefList) {
+        var stageInfoList = [];
+        angular.forEach(stageDefList, function (list) {
+          angular.forEach(list, function (stageInfo) {
+            stageInfoList.push(stageInfo);
+          });
+        });
+        return stageInfoList;
       }
 
     });

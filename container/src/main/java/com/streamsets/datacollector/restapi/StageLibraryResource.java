@@ -234,7 +234,9 @@ public class StageLibraryResource {
           libDef.getName(),
           libDef.getLabel(),
           true,
-          installedStagesMap.containsKey(libDef.getName()) ? ImmutableList.of(installedStagesMap.get(libDef.getName())): Collections.emptyList()
+          installedStagesMap.containsKey(libDef.getName()) ?
+              ImmutableList.of(installedStagesMap.get(libDef.getName())): Collections.emptyList(),
+          null
       ));
     }
 
@@ -249,6 +251,7 @@ public class StageLibraryResource {
         repoUrl = repoUrl + "/";
       }
       String url = repoUrl + STAGE_LIB_MANIFEST_JSON_PATH;
+      String version = buildInfo.getVersion();
 
       try (Response response = ClientBuilder.newClient().target(url).request().get()) {
         InputStream inputStream = response.readEntity(InputStream.class);
@@ -257,15 +260,17 @@ public class StageLibraryResource {
         try {
           Map<String, StageLibraryJson> stageLibManifestJson = ObjectMapperFactory.get()
               .readValue(inputStream, new TypeReference<Map<String, StageLibraryJson>>() {});
-          for(String libraryName: stageLibManifestJson.keySet()) {
-            StageLibraryJson stageLibrary = stageLibManifestJson.get(libraryName);
+          for(String name: stageLibManifestJson.keySet()) {
+            String libraryId = name.replace(STAGE_LIB_PREFIX, "");
+            StageLibraryJson stageLibrary = stageLibManifestJson.get(name);
             libraries.add(new StageLibraryJson(
-                libraryName,
+                libraryId,
                 stageLibrary.getLabel(),
-                installedLibrariesMap.containsKey(libraryName),
-                stageLibrary.getStageDefList()
+                installedLibrariesMap.containsKey(libraryId),
+                stageLibrary.getStageDefList(),
+                repoUrl + libraryId + "-" + version + TGZ_FILE_EXTENSION
             ));
-            addedLibraryIds.add(libraryName);
+            addedLibraryIds.add(libraryId);
           }
         } catch (Exception ex) {
           LOG.error("Failed to read stage-lib-manifest.json", ex);
@@ -303,31 +308,28 @@ public class StageLibraryResource {
     String runtimeDir = runtimeInfo.getRuntimeDir();
     String version = buildInfo.getVersion();
 
-    for (String libraryId : libraryList) {
-      Response response = null;
-
-      if (repoUrl == null || repoUrl.isEmpty()) {
-        repoUrl = ARCHIVES_URL + version + TARBALL_PATH;
-        if (version.contains(SNAPSHOT)) {
-          repoUrl = NIGHTLY_URL + LATEST + TARBALL_PATH;
-        }
-      } else if (!repoUrl.endsWith("/")) {
-        repoUrl = repoUrl + "/";
+    if (repoUrl == null || repoUrl.isEmpty()) {
+      repoUrl = ARCHIVES_URL + version + TARBALL_PATH;
+      if (version.contains(SNAPSHOT)) {
+        repoUrl = NIGHTLY_URL + LATEST + TARBALL_PATH;
       }
+    } else if (!repoUrl.endsWith("/")) {
+      repoUrl = repoUrl + "/";
+    }
 
+    for (String libraryId : libraryList) {
       String tarFileURL = repoUrl + libraryId + "-" + version + TGZ_FILE_EXTENSION;
-      try {
-        response = ClientBuilder.newClient()
-            .target(tarFileURL)
-            .request()
-            .get();
+      try (Response response = ClientBuilder.newClient()
+          .target(tarFileURL)
+          .request()
+          .get()) {
 
         String directory = runtimeDir + "/..";
-        String [] runtimeDirStrSplitArr = runtimeDir.split("/");
+        String[] runtimeDirStrSplitArr = runtimeDir.split("/");
         String installDirName = runtimeDirStrSplitArr[runtimeDirStrSplitArr.length - 1];
         String tarDirRootName = STREAMSETS_ROOT_DIR_PREFIX + version;
 
-        InputStream inputStream =  response.readEntity(InputStream.class);
+        InputStream inputStream = response.readEntity(InputStream.class);
 
         TarArchiveInputStream myTarFile = new TarArchiveInputStream(new GzipCompressorInputStream(inputStream));
 
@@ -350,10 +352,6 @@ public class StageLibraryResource {
         }
         myTarFile.close();
 
-      } finally {
-        if (response != null) {
-          response.close();
-        }
       }
     }
 
