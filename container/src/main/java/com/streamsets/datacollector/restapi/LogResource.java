@@ -281,9 +281,11 @@ public class LogResource {
     Grok logFileGrok = LogUtils.getLogGrok(runtimeInfo);
     String thisLine;
     boolean lastMessageFiltered = false;
+    boolean beginningOfRead = true;
     while ((thisLine = bufferedReader.readLine()) != null) {
       Map<String, String> namedGroupToValuesMap = logFileGrok.extractNamedGroups(thisLine);
       if(namedGroupToValuesMap != null) {
+        beginningOfRead = false;
         if(severity != null && !severity.equals(namedGroupToValuesMap.get("severity"))) {
           lastMessageFiltered = true;
           continue;
@@ -315,10 +317,14 @@ public class LogResource {
             lastLogData.put(EXCEPTION, thisLine);
           }
         } else {
-          //First incomplete line
-          Map<String, String> lastLogData = new HashMap<>();
-          lastLogData.put("exception", thisLine);
-          logData.add(lastLogData);
+          if(beginningOfRead) {
+            // Skipping the initial partial lines as we're randomly seeking into the log file
+          } else {
+            //First incomplete line
+            Map<String, String> lastLogData = new HashMap<>();
+            lastLogData.put(EXCEPTION, thisLine);
+            logData.add(lastLogData);
+          }
         }
       }
     }
