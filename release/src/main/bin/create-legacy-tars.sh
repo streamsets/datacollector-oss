@@ -31,18 +31,25 @@ echo "<h1>StreamSets Data Collector Legacy Stage Libraries</h1><ul>" > $INDEX_FI
 STAGE_LIB_MANIFEST_FILE="stage-lib-manifest.properties"
 STAGE_LIB_MANIFEST_FILE_PATH="${TARGET}/${STAGE_LIB_MANIFEST_FILE}"
 
+STAGE_LIB_MANIFEST_JSON_FILE="stage-lib-manifest.json"
+STAGE_LIB_MANIFEST_JSON_FILE_PATH="${TARGET}/${STAGE_LIB_MANIFEST_JSON_FILE}"
+JSON_SEPARATOR=""
+
 DOWNLOAD_URL=${4:-"https://archives.streamsets.com/datacollector/${VERSION}/legacy/"}
+
+DIST_NAME=`basename ${DIST}`
 
 STAGE_LIBS="${DIST}/${DIST_NAME}/streamsets-libs"
 
 echo "#" > ${STAGE_LIB_MANIFEST_FILE_PATH}
-echo "# Copyright 2015 StreamSets Inc. " >> ${STAGE_LIB_MANIFEST_FILE_PATH}
+echo "# Copyright 2018 StreamSets Inc. " >> ${STAGE_LIB_MANIFEST_FILE_PATH}
 echo "#" >> ${STAGE_LIB_MANIFEST_FILE_PATH}
 echo "" >> ${STAGE_LIB_MANIFEST_FILE_PATH}
 
 echo "download.url=${DOWNLOAD_URL}" >> ${STAGE_LIB_MANIFEST_FILE_PATH}
 echo "version=${VERSION}" >> ${STAGE_LIB_MANIFEST_FILE_PATH}
 
+echo "{" >> ${STAGE_LIB_MANIFEST_JSON_FILE_PATH}
 
 cd ${DIST} || exit
 for STAGE_LIB in ${DIST}/*
@@ -61,11 +68,35 @@ do
 
     # Human readable file
     echo "<li><a href='${LIB_DIR}-${VERSION}.tgz'>$LIB_DIR</a> (<a href='${LIB_DIR}-${VERSION}.tgz.sha1'>checksum</a>)</li>" >> $INDEX_FILE_PATH
+
+    echo "${JSON_SEPARATOR}" >> ${STAGE_LIB_MANIFEST_JSON_FILE_PATH}
+    echo "  \"stage-lib.${LIB_DIR}\": {" >> ${STAGE_LIB_MANIFEST_JSON_FILE_PATH}
+    echo "    \"label\": \"${LIB_NAME}\"," >> ${STAGE_LIB_MANIFEST_JSON_FILE_PATH}
+    echo "    \"stageDefList\": [" >> ${STAGE_LIB_MANIFEST_JSON_FILE_PATH}
+
+    JSON_SEPARATOR_FOR_LIST=""
+    for PROTO_LIB in ${DIST}/${LIB_DIR}/lib/*.jar
+    do
+        STAGE_DEF_LIST_JSON=`unzip -p ${PROTO_LIB} StageDefList.json`
+        if [ "$STAGE_DEF_LIST_JSON" ]
+        then
+        echo "${JSON_SEPARATOR_FOR_LIST}" >> ${STAGE_LIB_MANIFEST_JSON_FILE_PATH}
+        echo "${STAGE_DEF_LIST_JSON}" >> ${STAGE_LIB_MANIFEST_JSON_FILE_PATH}
+        JSON_SEPARATOR_FOR_LIST=","
+        fi
+    done
+
+    echo "    ]" >> ${STAGE_LIB_MANIFEST_JSON_FILE_PATH}
+    echo "  }" >> ${STAGE_LIB_MANIFEST_JSON_FILE_PATH}
+    JSON_SEPARATOR=","
   fi
 done
 
+echo "}" >> ${STAGE_LIB_MANIFEST_JSON_FILE_PATH}
+
 cd ${TARGET} || exit
 sha1sum ${STAGE_LIB_MANIFEST_FILE} > ${STAGE_LIB_MANIFEST_FILE}.sha1
+sha1sum ${STAGE_LIB_MANIFEST_JSON_FILE} > ${STAGE_LIB_MANIFEST_JSON_FILE}.sha1
 
 # Finish the human readable index file
 echo "</ul></body></html>" >> $INDEX_FILE_PATH
