@@ -39,6 +39,7 @@ import com.streamsets.datacollector.record.EventRecordImpl;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
 import com.streamsets.datacollector.runner.production.StatsAggregationHandler;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.validation.Issue;
@@ -564,6 +565,7 @@ public class Pipeline {
     private final BlobStoreTask blobStore;
     private final LineagePublisherTask lineagePublisherTask;
     private final InterceptorCreatorContextBuilder interceptorCreatorContextBuilder;
+    private final StatsCollector statsCollector;
     private Observer observer;
     private final ResourceControlledScheduledExecutor scheduledExecutor =
         new ResourceControlledScheduledExecutor(0.01f); // consume 1% of a cpu calculating stage memory consumption
@@ -582,6 +584,7 @@ public class Pipeline {
         long startTime,
         BlobStoreTask blobStore,
         LineagePublisherTask lineagePublisherTask,
+        StatsCollector statsCollector,
         List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
     ) {
       this.stageLib = stageLib;
@@ -595,6 +598,7 @@ public class Pipeline {
       this.startTime = startTime;
       this.blobStore = blobStore;
       this.lineagePublisherTask = lineagePublisherTask;
+      this.statsCollector = statsCollector;
       this.interceptorCreatorContextBuilder = new InterceptorCreatorContextBuilder(
         blobStore,
         configuration,
@@ -839,6 +843,7 @@ public class Pipeline {
         laneResolver.getStageEventLanes(0),
         scheduledExecutor,
         memoryUsageCollectorResourceBundle,
+        statsCollector,
         runner.getMetricRegistryJson()
       );
     }

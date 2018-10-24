@@ -35,6 +35,7 @@ import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
@@ -91,7 +92,8 @@ public abstract class TestPreviewer {
       PipelineStoreTask.class,
       SyncPreviewer.class,
       BlobStoreTask.class,
-      LineagePublisherTask.class
+      LineagePublisherTask.class,
+      StatsCollector.class
     },
     library = true
   )
@@ -117,6 +119,11 @@ public abstract class TestPreviewer {
     @Provides @Singleton
     public StageLibraryTask provideStageLibraryTask() {
       return MockStages.createStageLibrary(new URLClassLoader(new URL[0]));
+    }
+
+    @Provides @Singleton
+    public StatsCollector provideStatsCollector() {
+      return Mockito.mock(StatsCollector.class);
     }
 
     @Provides

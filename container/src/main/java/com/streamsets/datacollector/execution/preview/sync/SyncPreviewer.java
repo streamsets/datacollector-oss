@@ -47,6 +47,7 @@ import com.streamsets.datacollector.runner.preview.PreviewSourceOffsetTracker;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
@@ -91,6 +92,7 @@ public class SyncPreviewer implements Previewer {
   @Inject RuntimeInfo runtimeInfo;
   @Inject BlobStoreTask blobStoreTask;
   @Inject LineagePublisherTask lineagePublisherTask;
+  @Inject StatsCollector statsCollector;
   private volatile PreviewStatus previewStatus;
   private volatile PreviewOutput previewOutput;
   private volatile PreviewPipeline previewPipeline;
@@ -366,6 +368,7 @@ public class SyncPreviewer implements Previewer {
         endStageInstanceName,
         blobStoreTask,
         lineagePublisherTask,
+        statsCollector,
         testOrigin
     ).build(userContext, runner);
   }

@@ -20,6 +20,7 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 import org.mockito.Mockito;
 
@@ -42,6 +43,7 @@ public class MockPipelineBuilder {
   private BlobStoreTask blobStoreTask;
   private LineagePublisherTask lineagePublisherTask;
   private List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs;
+  private StatsCollector statsCollector;
   private Observer observer;
 
   public MockPipelineBuilder() {
@@ -56,6 +58,7 @@ public class MockPipelineBuilder {
     this.blobStoreTask = Mockito.mock(BlobStoreTask.class);
     this.lineagePublisherTask = Mockito.mock(LineagePublisherTask.class);
     this.interceptorConfs = Collections.emptyList();
+    this.statsCollector = Mockito.mock(StatsCollector.class);
     this.observer = null;
   }
 
@@ -131,6 +134,7 @@ public class MockPipelineBuilder {
       startTime,
       blobStoreTask,
       lineagePublisherTask,
+      statsCollector,
       interceptorConfs
     ).setObserver(observer);
   }

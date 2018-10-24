@@ -704,7 +704,8 @@ public class TestUtil {
         (ProductionPipelineRunner)runner,
         observer,
         Mockito.mock(BlobStoreTask.class),
-        Mockito.mock(LineagePublisherTask.class)
+        Mockito.mock(LineagePublisherTask.class),
+        Mockito.mock(StatsCollector.class)
       );
     }
   }

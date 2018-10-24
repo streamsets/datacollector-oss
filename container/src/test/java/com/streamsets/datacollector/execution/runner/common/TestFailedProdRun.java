@@ -18,6 +18,7 @@ package com.streamsets.datacollector.execution.runner.common;
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ErrorListener;
@@ -96,7 +97,8 @@ public class TestFailedProdRun {
       runner,
       null,
       Mockito.mock(BlobStoreTask.class),
-      Mockito.mock(LineagePublisherTask.class)
+      Mockito.mock(LineagePublisherTask.class),
+      Mockito.mock(StatsCollector.class)
     ).build(
       MockStages.userContext(),
       pipelineConfiguration,
@@ -158,7 +160,8 @@ public class TestFailedProdRun {
       runner,
       null,
       Mockito.mock(BlobStoreTask.class),
-      Mockito.mock(LineagePublisherTask.class)
+      Mockito.mock(LineagePublisherTask.class),
+      Mockito.mock(StatsCollector.class)
     ).build(
       MockStages.userContext(),
       pipelineConfiguration,

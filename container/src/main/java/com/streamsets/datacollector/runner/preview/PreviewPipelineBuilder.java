@@ -24,6 +24,7 @@ import com.streamsets.datacollector.runner.PipelineRunner;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.UserContext;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.ValidationUtil;
@@ -66,6 +67,7 @@ public class PreviewPipelineBuilder {
   private final String endStageInstanceName;
   private final BlobStoreTask blobStoreTask;
   private final LineagePublisherTask lineagePublisherTask;
+  private final StatsCollector statsCollector;
   private final boolean testOrigin;
 
   /**
@@ -86,6 +88,7 @@ public class PreviewPipelineBuilder {
     String endStageInstanceName,
     BlobStoreTask blobStoreTask,
     LineagePublisherTask lineagePublisherTask,
+    StatsCollector statsCollector,
     boolean testOrigin
   ) {
     this.stageLib = new PreviewStageLibraryTask(stageLib);
@@ -96,6 +99,7 @@ public class PreviewPipelineBuilder {
     this.endStageInstanceName = endStageInstanceName;
     this.blobStoreTask = blobStoreTask;
     this.lineagePublisherTask = lineagePublisherTask;
+    this.statsCollector = statsCollector;
     this.testOrigin = testOrigin;
   }
 
@@ -165,6 +169,7 @@ public class PreviewPipelineBuilder {
        System.currentTimeMillis(),
        blobStoreTask,
        lineagePublisherTask,
+       statsCollector,
        Collections.emptyList()
      );
      Pipeline pipeline = builder.build(runner);

@@ -71,6 +71,7 @@ import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.updatechecker.UpdateChecker;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
@@ -131,6 +132,7 @@ public class ClusterRunner extends AbstractRunner {
   @Inject BlobStoreTask blobStoreTask;
   @Inject LineagePublisherTask lineagePublisherTask;
   @Inject SupportBundleManager supportBundleManager;
+  @Inject StatsCollector statsCollector;
 
   private String pipelineTitle = null;
   private ObjectGraph objectGraph;
@@ -783,7 +785,8 @@ public class ClusterRunner extends AbstractRunner {
       runner,
       null,
       blobStoreTask,
-      lineagePublisherTask
+      lineagePublisherTask,
+      statsCollector
     );
     return builder.build(new UserContext(context.getUser(),
         getRuntimeInfo().isDPMEnabled(),

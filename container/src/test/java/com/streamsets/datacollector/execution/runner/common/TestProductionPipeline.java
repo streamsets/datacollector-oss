@@ -39,6 +39,7 @@ import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.SourceOffsetTracker;
 import com.streamsets.datacollector.runner.SourcePipe;
 import com.streamsets.datacollector.runner.production.StatsAggregationHandler;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineDirectoryUtil;
@@ -455,7 +456,8 @@ public class TestProductionPipeline {
       runner,
       null,
       Mockito.mock(BlobStoreTask.class),
-      Mockito.mock(LineagePublisherTask.class)
+      Mockito.mock(LineagePublisherTask.class),
+      Mockito.mock(StatsCollector.class)
     ).build(
       MockStages.userContext(),
       pConf,

@@ -30,6 +30,7 @@ import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRunner;
 import com.streamsets.datacollector.runner.SourceOffsetTracker;
 import com.streamsets.datacollector.runner.StageOutput;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.pipeline.api.Batch;
@@ -158,6 +159,7 @@ public class TestPreviewRun {
         null,
         Mockito.mock(BlobStoreTask.class),
         Mockito.mock(LineagePublisherTask.class),
+        Mockito.mock(StatsCollector.class),
         false
     ).build(MockStages.userContext(), runner);
     PreviewPipelineOutput previewOutput = pipeline.run();
@@ -193,6 +195,7 @@ public class TestPreviewRun {
         "p",
         Mockito.mock(BlobStoreTask.class),
         Mockito.mock(LineagePublisherTask.class),
+        Mockito.mock(StatsCollector.class),
         false
     ).build(MockStages.userContext(), runner);
 
@@ -215,6 +218,7 @@ public class TestPreviewRun {
         "p1",
         Mockito.mock(BlobStoreTask.class),
         Mockito.mock(LineagePublisherTask.class),
+        Mockito.mock(StatsCollector.class),
         false
     ).build(MockStages.userContext(), runner);
     previewOutput = pipeline.run();
@@ -235,6 +239,7 @@ public class TestPreviewRun {
         "p5",
         Mockito.mock(BlobStoreTask.class),
         Mockito.mock(LineagePublisherTask.class),
+        Mockito.mock(StatsCollector.class),
         false
     ).build(MockStages.userContext(), runner);
     previewOutput = pipeline.run();
@@ -255,6 +260,7 @@ public class TestPreviewRun {
         "p6",
         Mockito.mock(BlobStoreTask.class),
         Mockito.mock(LineagePublisherTask.class),
+        Mockito.mock(StatsCollector.class),
         false
     ).build(MockStages.userContext(), runner);
     previewOutput = pipeline.run();
@@ -273,6 +279,7 @@ public class TestPreviewRun {
         "t",
         Mockito.mock(BlobStoreTask.class),
         Mockito.mock(LineagePublisherTask.class),
+        Mockito.mock(StatsCollector.class),
         false
     ).build(MockStages.userContext(), runner);
     previewOutput = pipeline.run();
@@ -309,6 +316,7 @@ public class TestPreviewRun {
         null,
         Mockito.mock(BlobStoreTask.class),
         Mockito.mock(LineagePublisherTask.class),
+        Mockito.mock(StatsCollector.class),
         false
     ).build(MockStages.userContext(), runner);
     PreviewPipelineOutput previewOutput = pipeline.run();
@@ -347,6 +355,7 @@ public class TestPreviewRun {
         null,
         Mockito.mock(BlobStoreTask.class),
         Mockito.mock(LineagePublisherTask.class),
+        Mockito.mock(StatsCollector.class),
         false
     ).build(MockStages.userContext(), runner);
     Assert.assertFalse(pp.validateConfigs().isEmpty());

@@ -45,6 +45,7 @@ import com.streamsets.datacollector.runner.production.ProductionSourceOffsetTrac
 import com.streamsets.datacollector.runner.production.RulesConfigLoaderRunnable;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 import dagger.Module;
 import dagger.Provides;
@@ -202,7 +203,8 @@ public class PipelineProviderModule {
     PipelineRunner runner,
     Observer observer,
     BlobStoreTask blobStoreTask,
-    LineagePublisherTask lineagePublisherTask
+    LineagePublisherTask lineagePublisherTask,
+    StatsCollector statsCollector
   ) {
     return new ProductionPipelineBuilder(
       name,
@@ -213,7 +215,8 @@ public class PipelineProviderModule {
       (ProductionPipelineRunner)runner,
       observer,
       blobStoreTask,
-      lineagePublisherTask
+      lineagePublisherTask,
+      statsCollector
     );
   }
 

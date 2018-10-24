@@ -28,6 +28,7 @@ import com.streamsets.datacollector.runner.UserContext;
 import com.streamsets.datacollector.runner.production.ProductionSourceOffsetCommitterOffsetTracker;
 import com.streamsets.datacollector.runner.production.ProductionSourceOffsetTracker;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
@@ -52,6 +53,7 @@ public class ProductionPipelineBuilder {
   private final RuntimeInfo runtimeInfo;
   private final BlobStoreTask blobStoreTask;
   private final LineagePublisherTask lineagePublisherTask;
+  private final StatsCollector statsCollector;
 
   private final ProductionPipelineRunner runner;
   private final Observer observer;
@@ -65,7 +67,8 @@ public class ProductionPipelineBuilder {
       ProductionPipelineRunner runner,
       Observer observer,
       BlobStoreTask blobStoreTask,
-      LineagePublisherTask lineagePublisherTask
+      LineagePublisherTask lineagePublisherTask,
+      StatsCollector statsCollector
   ) {
     this.name = name;
     this.rev = rev;
@@ -76,6 +79,7 @@ public class ProductionPipelineBuilder {
     this.observer = observer;
     this.blobStoreTask = blobStoreTask;
     this.lineagePublisherTask = lineagePublisherTask;
+    this.statsCollector = statsCollector;
   }
 
   public ProductionPipeline build(
@@ -109,6 +113,7 @@ public class ProductionPipelineBuilder {
         startTime,
         blobStoreTask,
         lineagePublisherTask,
+        statsCollector,
         interceptorConfs
     ).setObserver(observer).build(runner, runtimeParameters);
 

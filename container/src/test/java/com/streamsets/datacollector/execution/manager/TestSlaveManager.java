@@ -37,6 +37,7 @@ import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.store.impl.FileAclStoreTask;
 import com.streamsets.datacollector.store.impl.SlavePipelineStoreTask;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.TestUtil;
@@ -145,6 +146,12 @@ public class TestSlaveManager {
     @Named("runnerExecutor")
     public SafeScheduledExecutorService provideRunnerExecutor() {
       return new SafeScheduledExecutorService(10, "runner");
+    }
+
+    @Provides
+    @Singleton
+    public StatsCollector provideStatsCollector() {
+      return Mockito.mock(StatsCollector.class);
     }
 
     @Provides
