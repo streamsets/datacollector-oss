@@ -145,7 +145,11 @@ public class EmailSender {
       }
 
       Transport transport = session.getTransport(protocol);
-      transport.connect(host, user, password);
+      if(auth) {
+        transport.connect(host, user, password);
+      } else {
+        transport.connect(host, null, null);
+      }
       transport.sendMessage(message, message.getAllRecipients());
       transport.close();
     } catch (Exception ex) {
