@@ -51,6 +51,7 @@ public class RuleDefinitionValidator {
   private static final String CONDITION = "condition";
   private static final String VAL = "value()";
   private static final String TIME_NOW = "time:now()";
+  private static final String START_TIME = "pipeline:startTime()";
   private static final String METRIC_ID = "metric id";
   private static final String DEFAULT_VALUE = "10";
   private static final String PROPERTY = "property";
@@ -194,7 +195,8 @@ public class RuleDefinitionValidator {
     }
     String predicateWithValue = condition
       .replace(VAL, DEFAULT_VALUE)
-      .replace(TIME_NOW, DEFAULT_VALUE);
+      .replace(TIME_NOW, DEFAULT_VALUE)
+      .replace(START_TIME, DEFAULT_VALUE);
     try {
       elEvaluator.eval(variables, predicateWithValue, Object.class);
     } catch (ELEvalException e) {

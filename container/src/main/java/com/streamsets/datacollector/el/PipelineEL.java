@@ -28,7 +28,7 @@ import java.util.Optional;
 public class PipelineEL {
 
   private static final String PIPELINE_EL_PREFIX = "pipeline";
-  private static final String DEFAULT_VALUE = "UNDEFINED";
+  public static final String DEFAULT_VALUE = "UNDEFINED";
 
   public static final String SDC_PIPELINE_TITLE_VAR = "SDC_PIPELINE_TITLE";
   public static final String SDC_PIPELINE_USER_VAR = "SDC_PIPELINE_USER";
@@ -88,7 +88,12 @@ public class PipelineEL {
       description = "Returns the start time of the pipeline as a datetime value."
   )
   public static Date startTime() {
-    return (Date)getVariableFromScope(SDC_PIPELINE_START_TIME_VAR);
+    Map<String, Object> variablesInScope = CONSTANTS_IN_SCOPE_TL.get();
+    if (variablesInScope.containsKey(SDC_PIPELINE_START_TIME_VAR)) {
+      return (Date)variablesInScope.get(SDC_PIPELINE_START_TIME_VAR);
+    }
+
+    return new Date();
   }
 
   private static Object getVariableFromScope(String varName) {

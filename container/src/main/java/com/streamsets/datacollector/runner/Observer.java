@@ -31,4 +31,5 @@ public interface Observer {
 
   public void setConfiguration(RulesConfigurationChangeRequest rulesConfigurationChangeRequest);
 
+  public void setPipelineStartTime(long pipelineStartTime);
 }

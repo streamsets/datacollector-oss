@@ -22,6 +22,7 @@ import com.streamsets.pipeline.lib.el.DataUnitsEL;
 import com.streamsets.pipeline.lib.el.MathEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
+import com.streamsets.pipeline.lib.el.TimeEL;
 
 /**
  * Registry which holds all EL functions which are useful for rules/conditions.
@@ -51,6 +52,7 @@ public class RuleELRegistry {
             DataUnitsEL.class,
             RuntimeEL.class,
             JvmEL.class,
+            TimeEL.class
         };
       case DRIFT:
         return new Class[] {

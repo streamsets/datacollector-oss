@@ -25,6 +25,7 @@ import com.streamsets.datacollector.config.MetricsRuleDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinition;
 import com.streamsets.datacollector.config.StageConfiguration;
+import com.streamsets.datacollector.el.PipelineEL;
 import com.streamsets.datacollector.execution.alerts.AlertManagerHelper;
 import com.streamsets.datacollector.execution.alerts.MetricRuleEvaluatorHelper;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
@@ -255,7 +256,8 @@ public class MetricRuleHandler {
         );
 
         if(value != null) {
-          if (MetricRuleEvaluatorHelper.evaluate(value, metricsRuleDefinition.getCondition())) {
+          // We get start time from PipelineEL directly
+          if (MetricRuleEvaluatorHelper.evaluate(PipelineEL.startTime().getTime(), value, metricsRuleDefinition.getCondition())) {
             evaluator.raiseAlert(metrics, metricsRuleDefinition, value);
           }
         }

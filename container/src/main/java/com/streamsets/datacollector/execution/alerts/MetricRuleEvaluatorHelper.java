@@ -41,6 +41,7 @@ public class MetricRuleEvaluatorHelper {
 
   private static final String VAL = "value()";
   private static final String TIME_NOW = "time:now()";
+  private static final String START_TIME = "pipeline:startTime()";
   private static final ELEvaluator EL_EVALUATOR =  new ELEvaluator(
     "condition", false, ConcreteELDefinitionExtractor.get(),
     RuleELRegistry.getRuleELs(RuleELRegistry.GENERAL)
@@ -245,13 +246,14 @@ public class MetricRuleEvaluatorHelper {
   }
 
 
-  public static boolean evaluate(Object value, String condition) throws ObserverException {
+  public static boolean evaluate(long pipelineStartTime, Object value, String condition) throws ObserverException {
     //predicate String is of the form "val()<200" or "val() < 200 && val() > 100" etc
     //replace val() with the actual value, append dollar and curly braces and evaluate the resulting EL expression
     // string
     String predicateWithValue = condition
       .replace(VAL, String.valueOf(value))
-      .replace(TIME_NOW, System.currentTimeMillis() + "");
+      .replace(TIME_NOW, System.currentTimeMillis() + "")
+      .replace(START_TIME, pipelineStartTime + "");
     return AlertsUtil.evaluateExpression(predicateWithValue, new ELVariables(), EL_EVALUATOR);
   }
 

@@ -43,6 +43,7 @@ public class MetricsObserverRunner {
   private final String rev;
   private final boolean statsAggregationEnabled;
   private Map<String, Object> resolvedParameters;
+  private long pipelineStartTime;
 
   public MetricsObserverRunner(
       String name,
@@ -58,6 +59,10 @@ public class MetricsObserverRunner {
     this.rev = rev;
     this.statsAggregationEnabled = statsAggregationEnabled;
     this.resolvedParameters = resolvedParameters;
+  }
+
+  public void setPipelineStartTime(long pipelineStartTime) {
+    this.pipelineStartTime = pipelineStartTime;
   }
 
   public void evaluate() {
@@ -89,7 +94,8 @@ public class MetricsObserverRunner {
               metricsRuleDefinition,
               metrics,
               alertManager,
-              ruleDefinitionsConfigBean
+              ruleDefinitionsConfigBean,
+              pipelineStartTime
           );
           metricAlertsHelper.checkForAlerts();
         }

@@ -30,17 +30,20 @@ public class MetricRuleEvaluator {
   private final MetricRegistry metrics;
   private final RuleDefinitionsConfigBean ruleDefinitionsConfigBean;
   private final AlertManager alertManager;
+  private final long pipelineStartTime;
 
   public MetricRuleEvaluator(
       MetricsRuleDefinition metricsRuleDefinition,
       MetricRegistry metricRegistry,
       AlertManager alertManager,
-      RuleDefinitionsConfigBean ruleDefinitionsConfigBean
+      RuleDefinitionsConfigBean ruleDefinitionsConfigBean,
+      long pipelineStartTime
   ) {
     this.metricsRuleDefinition = metricsRuleDefinition;
     this.metrics = metricRegistry;
     this.ruleDefinitionsConfigBean = ruleDefinitionsConfigBean;
     this.alertManager = alertManager;
+    this.pipelineStartTime = pipelineStartTime;
   }
 
   public void checkForAlerts() {
@@ -54,7 +57,7 @@ public class MetricRuleEvaluator {
         );
 
         if(value != null) {
-          if (MetricRuleEvaluatorHelper.evaluate(value, metricsRuleDefinition.getCondition())) {
+          if (MetricRuleEvaluatorHelper.evaluate(pipelineStartTime, value, metricsRuleDefinition.getCondition())) {
             alertManager.alert(value, ruleDefinitionsConfigBean, metricsRuleDefinition);
           }
         }

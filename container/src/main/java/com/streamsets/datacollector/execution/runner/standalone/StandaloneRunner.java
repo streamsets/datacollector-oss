@@ -805,6 +805,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         ImmutableList.Builder<Future<?>> taskBuilder = ImmutableList.builder();
 
         ProductionObserver productionObserver = (ProductionObserver) objectGraph.get(Observer.class);
+        productionObserver.setPipelineStartTime(getState().getTimeStamp());
         RulesConfigLoader rulesConfigLoader = objectGraph.get(RulesConfigLoader.class);
         RulesConfigLoaderRunnable rulesConfigLoaderRunnable = objectGraph.get(RulesConfigLoaderRunnable.class);
         MetricObserverRunnable metricObserverRunnable = objectGraph.get(MetricObserverRunnable.class);

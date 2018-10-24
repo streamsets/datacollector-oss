@@ -90,6 +90,11 @@ public class ProductionObserver implements Observer {
   }
 
   @Override
+  public void setPipelineStartTime(long pipelineStartTime) {
+    metricsObserverRunner.setPipelineStartTime(pipelineStartTime);
+  }
+
+  @Override
   public void reconfigure() {
     if(currentConfig != newConfig){
       this.currentConfig = this.newConfig;
