@@ -560,6 +560,13 @@ public class KuduTarget extends BaseTarget {
 
   @Override
   public void destroy() {
+    if (kuduSession != null) {
+      try {
+        kuduSession.close();
+      } catch (Exception ex) {
+        LOG.warn("Error closing Kudu session: {}", ex.toString(), ex);
+      }
+    }
     if (kuduClient != null) {
       try {
         kuduClient.close();
