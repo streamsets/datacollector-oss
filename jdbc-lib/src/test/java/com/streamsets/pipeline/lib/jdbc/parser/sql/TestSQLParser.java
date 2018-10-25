@@ -316,6 +316,10 @@ public class TestSQLParser {
         " \"HIREDATE\" = TO_DATE('21-11-2016 11:34:09', 'DD-MM-YYYY HH24:MI:SS') and " +
         "\"SALARY=\" = '1332.322' and \"LASTLOGIN\" = TO_TIMESTAMP('2016-11-21 11:34:09.982753') and ROWID = " +
         "'AAAAxhdjhjsdhaks'";
+    doTestSQLWithNulls(sqlInternal);
+  }
+
+  private void doTestSQLWithNulls(String sqlInternal) throws UnparseableSQLException {
     SQLParser parser = Parboiled.createParser(SQLParser.class);
     Map<String, String> colVals;
     int code = OracleCDCOperationCode.UPDATE_CODE;
@@ -336,6 +340,15 @@ public class TestSQLParser {
     Assert.assertEquals(exp, colVals);
   }
 
+  @Test
+  public void testSQLWithNullsTableAlias() throws Exception {
+    String sqlInternal = " update \"SYS\".\"MANYCOLS\" a set a.\"SALARY=\" = NULL, a.\"NAME\" = 'New Name' " +
+        "where a.\"ID\" = '1' and a.\"NAME\" = '=sdc' and" +
+        " a.\"HIREDATE\" = TO_DATE('21-11-2016 11:34:09', 'DD-MM-YYYY HH24:MI:SS') and " +
+        "a.\"SALARY=\" = '1332.322' and a.\"LASTLOGIN\" = TO_TIMESTAMP('2016-11-21 11:34:09.982753') and a.ROWID = " +
+        "'AAAAxhdjhjsdhaks'";
+    doTestSQLWithNulls(sqlInternal);
+  }
 
   @Test (expected = UnparseableSQLException.class)
   public void testInvalidSql() throws Exception {
