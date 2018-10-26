@@ -405,7 +405,7 @@ public class OracleCDCSource extends BaseSource {
     } catch (SQLException ex) {
       LOG.error("SQLException while trying to setup record generator thread", ex);
       generationStarted = false;
-      return;
+      throw new StageException(JDBC_52, ex);
     }
     final Offset os = offset;
     final PreparedStatement select = selectFromLogMnrContents;
