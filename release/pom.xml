@@ -163,19 +163,7 @@
                   <arg line="src/main/bin/create-lib-tars.sh ${project.version} ${basedir}/../dist/target/streamsets-datacollector-${project.version} ${project.build.directory}"/>
                 </exec>
                 <exec executable="/bin/bash" dir="${basedir}" failonerror="true">
-                  <arg line="src/main/bin/create-stagelib-manifest.sh --stagelibsDir ${project.build.directory}"/>
-                </exec>
-                <exec executable="/bin/bash" dir="${basedir}" failonerror="true">
-                  <arg line='src/main/bin/create-repo-manifest.sh --repoLabel "StreamSets Data Collector Stage Libraries" --stagelibsDir ${project.build.directory} --stagelibsVersion ${project.version} --stagelibsMinSdcVersion same --stagelibsLicense Apache2.0'/>
-                </exec>
-                <exec executable="/bin/bash" dir="${basedir}" failonerror="true">
                   <arg line="src/main/bin/create-legacy-tars.sh ${project.version} ${basedir}/../dist/target/streamsets-datacollector-${project.version}-legacy ${project.build.directory}/legacy/"/>
-                </exec>
-                <exec executable="/bin/bash" dir="${basedir}" failonerror="true">
-                  <arg line="src/main/bin/create-stagelib-manifest.sh --stagelibsDir ${project.build.directory}/legacy"/>
-                </exec>
-                <exec executable="/bin/bash" dir="${basedir}" failonerror="true">
-                  <arg line='src/main/bin/create-repo-manifest.sh --repoLabel "StreamSets Data Collector Legacy Stage Libraries" --stagelibsDir ${project.build.directory}/legacy --stagelibsVersion ${project.version} --stagelibsMinSdcVersion same --stagelibsLicense Apache2.0'/>
                 </exec>
               </target>
             </configuration>
