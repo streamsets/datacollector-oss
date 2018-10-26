@@ -29,6 +29,7 @@ import com.streamsets.pipeline.kafka.api.SdcKafkaConsumer;
 import com.streamsets.pipeline.kafka.api.SdcKafkaConsumerFactory;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducer;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducerFactory;
+import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetReset;
 import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.testing.SingleForkNoReuseTest;
@@ -118,7 +119,9 @@ public abstract class SecureKafkaBase {
       consumerConfig,
       "test",
       100,
-        false
+      false,
+      KafkaAutoOffsetReset.EARLIEST.name().toLowerCase(),
+      0
     );
     SdcKafkaConsumerFactory sdcKafkaConsumerFactory = SdcKafkaConsumerFactory.create(consumerFactorySettings);
     SdcKafkaConsumer sdcKafkaConsumer = sdcKafkaConsumerFactory.create();

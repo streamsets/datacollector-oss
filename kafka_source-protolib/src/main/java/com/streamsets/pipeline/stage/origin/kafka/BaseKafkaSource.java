@@ -189,7 +189,9 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
           kafkaConsumerConfigs,
           conf.consumerGroup,
           conf.maxBatchSize,
-          conf.timestampsEnabled
+          conf.timestampsEnabled,
+          conf.kafkaAutoOffsetReset.name(),
+          conf.timestampToSearchOffsets
       );
       kafkaConsumer = SdcKafkaConsumerFactory.create(settings).create();
       kafkaConsumer.validate(issues, getContext());

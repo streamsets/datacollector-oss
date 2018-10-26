@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.kafka.api.KafkaOriginGroups;
 import com.streamsets.pipeline.kafka.api.MessageAndOffset;
 import com.streamsets.pipeline.kafka.api.SdcKafkaConsumer;
+import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetReset;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import kafka.consumer.Consumer;
 import kafka.consumer.ConsumerConfig;
@@ -57,6 +58,9 @@ public class KafkaConsumer08 implements SdcKafkaConsumer {
   private static final String AUTO_OFFSET_RESET_KEY = "auto.offset.reset";
   private static final String AUTO_OFFSET_RESET_PREVIEW = "smallest";
 
+  public static final String KAFKA_CONFIG_BEAN_PREFIX = "kafkaConfigBean.";
+  public static final String KAFKA_AUTO_OFFSET_RESET = "kafkaAutoOffsetReset";
+
   private static final Logger LOG = LoggerFactory.getLogger(KafkaConsumer08.class);
 
   private ConsumerConnector consumer;
@@ -70,28 +74,33 @@ public class KafkaConsumer08 implements SdcKafkaConsumer {
   private final Map<String, Object> kafkaConsumerConfigs;
   private final String consumerGroup;
   private ConsumerConfig consumerConfig;
+  private String kafkaAutoOffsetReset;
 
   public KafkaConsumer08(String zookeeperConnect, String topic, String consumerGroup,
                          int consumerTimeout, Map<String, Object> kafkaConsumerConfigs,
-                         Source.Context context) {
+                         Source.Context context, String kafkaAutoOffsetReset) {
     this.topic = topic;
     this.maxWaitTime = consumerTimeout;
     this.kafkaConsumerConfigs = kafkaConsumerConfigs;
     this.zookeeperConnect = zookeeperConnect;
     this.consumerGroup = consumerGroup;
     this.context = context;
+    this.kafkaAutoOffsetReset = kafkaAutoOffsetReset;
   }
 
   @Override
   public void validate(List<Stage.ConfigIssue> issues, Stage.Context context) {
-    Properties props = new Properties();
-    configureKafkaProperties(props);
-    LOG.debug("Creating Kafka Consumer with properties {}" , props.toString());
-    consumerConfig = new ConsumerConfig(props);
-    try {
-      createConsumer(issues, context);
-    } catch (StageException ex) {
-      issues.add(context.createConfigIssue(null, null, KafkaErrors.KAFKA_10, ex.toString()));
+    validateKafkaTimestamp(issues);
+    if (issues.isEmpty()) {
+      Properties props = new Properties();
+      configureKafkaProperties(props);
+      LOG.debug("Creating Kafka Consumer with properties {}" , props.toString());
+      consumerConfig = new ConsumerConfig(props);
+      try {
+        createConsumer(issues, context);
+      } catch (StageException ex) {
+        issues.add(context.createConfigIssue(null, null, KafkaErrors.KAFKA_10, ex.toString()));
+      }
     }
   }
 
@@ -214,9 +223,12 @@ public class KafkaConsumer08 implements SdcKafkaConsumer {
 
     props.put(ZK_CONNECTION_TIMEOUT_MS_KEY, ZK_CONNECTION_TIMEOUT_MS_DEFAULT);
     props.put(ZK_SESSION_TIMEOUT_MS_KEY, ZK_SESSION_TIMEOUT_MS_DEFAULT);
+
+    props.put(AUTO_OFFSET_RESET_KEY, kafkaAutoOffsetReset.toLowerCase());
+
     if (this.context.isPreview()) {
       // Set to smallest value only for preview mode
-      // When running actual pipeline, the default configs from kafka client should be picked up.
+      // When running actual pipeline, the kafkaAutoOffsetReset config from kafka consumer stage should be picked up.
       props.put(AUTO_OFFSET_RESET_KEY, AUTO_OFFSET_RESET_PREVIEW);
     }
 
@@ -230,10 +242,20 @@ public class KafkaConsumer08 implements SdcKafkaConsumer {
       kafkaConsumerConfigs.remove(GROUP_ID_KEY);
       kafkaConsumerConfigs.remove(AUTO_COMMIT_ENABLED_KEY);
       kafkaConsumerConfigs.remove(CONSUMER_TIMEOUT_KEY);
+      kafkaConsumerConfigs.remove(AUTO_OFFSET_RESET_KEY);
 
       for (Map.Entry<String, Object> producerConfig : kafkaConsumerConfigs.entrySet()) {
         props.put(producerConfig.getKey(), producerConfig.getValue());
       }
+    }
+  }
+
+  private void validateKafkaTimestamp(List<Stage.ConfigIssue> issues) {
+    if(KafkaAutoOffsetReset.TIMESTAMP.name().equals(kafkaAutoOffsetReset)) {
+      issues.add(context.createConfigIssue(KafkaOriginGroups.KAFKA.name(),
+          KAFKA_CONFIG_BEAN_PREFIX + KAFKA_AUTO_OFFSET_RESET,
+          KafkaErrors.KAFKA_76
+      ));
     }
   }
 

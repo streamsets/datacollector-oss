@@ -60,6 +60,7 @@ public abstract class BaseKafkaConsumer09 implements SdcKafkaConsumer, ConsumerR
   private static final String WAITING_ON_POLL = "Waiting on poll";
   public static final String KAFKA_CONFIG_BEAN_PREFIX = "kafkaConfigBean.";
   public static final String TIMESTAMPS = "timestamps.";
+  public static final String KAFKA_AUTO_OFFSET_RESET = "kafkaAutoOffsetReset";
 
   protected KafkaConsumer<String, byte[]> kafkaConsumer;
 
@@ -125,12 +126,24 @@ public abstract class BaseKafkaConsumer09 implements SdcKafkaConsumer, ConsumerR
           KafkaErrors.KAFKA_75
       ));
     }
-    createConsumer();
-    subscribeConsumer();
+
     try {
-      kafkaConsumer.partitionsFor(topic);
-    } catch (WakeupException | AuthorizationException e) { // NOSONAR
-      handlePartitionsForException(issues, context, e);
+      validateAutoOffsetReset(issues);
+    } catch (StageException e) {
+      issues.add(context.createConfigIssue(KafkaOriginGroups.KAFKA.name(),
+          KAFKA_CONFIG_BEAN_PREFIX + KAFKA_AUTO_OFFSET_RESET,
+          e.getErrorCode()
+      ));
+    }
+
+    if (issues.isEmpty()) {
+      createConsumer();
+      subscribeConsumer();
+      try {
+        kafkaConsumer.partitionsFor(topic);
+      } catch (WakeupException | AuthorizationException e) { // NOSONAR
+        handlePartitionsForException(issues, context, e);
+      }
     }
   }
 
@@ -278,6 +291,8 @@ public abstract class BaseKafkaConsumer09 implements SdcKafkaConsumer, ConsumerR
   }
 
   protected abstract void configureKafkaProperties(Properties props);
+
+  protected abstract void validateAutoOffsetReset(List<Stage.ConfigIssue> issues) throws StageException;
 
   protected abstract void handlePartitionsForException(
     List<Stage.ConfigIssue> issues,

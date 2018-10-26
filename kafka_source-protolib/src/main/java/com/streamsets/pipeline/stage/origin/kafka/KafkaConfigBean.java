@@ -21,6 +21,8 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.kafka.api.KafkaOriginGroups;
+import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetReset;
+import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetResetValues;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
@@ -165,6 +167,32 @@ public class KafkaConfigBean {
   )
   @ValueChooserModel(ValueDeserializerChooserValues.class)
   public Deserializer valueDeserializer = Deserializer.DEFAULT;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Auto Offset Reset",
+      description = "Strategy to select the position to start consuming messages from the Kafka partition when no offset is currently saved",
+      defaultValue = "EARLIEST",
+      displayPosition = 110,
+      group = "KAFKA"
+  )
+  @ValueChooserModel(KafkaAutoOffsetResetValues.class)
+  public KafkaAutoOffsetReset kafkaAutoOffsetReset;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = "Auto Offset Reset Timestamp (ms)",
+      description = "Date in milliseconds from which to start consuming messages. Default is January 1st, 1970",
+      defaultValue = "0",
+      dependsOn = "kafkaAutoOffsetReset",
+      triggeredByValue = "TIMESTAMP",
+      displayPosition = 115,
+      group = "KAFKA",
+      min = 0
+  )
+  public long timestampToSearchOffsets;
 
   @ConfigDef(
       required = false,

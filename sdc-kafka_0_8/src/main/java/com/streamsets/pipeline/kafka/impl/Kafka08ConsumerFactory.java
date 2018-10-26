@@ -39,7 +39,8 @@ public class Kafka08ConsumerFactory extends SdcKafkaConsumerFactory {
         settings.getConsumerGroup(),
         settings.getMaxWaitTime(),
         settings.getKafkaConsumerConfigs(),
-        settings.getContext()
+        settings.getContext(),
+        settings.getKafkaAutoOffsetReset()
     );
   }
 }

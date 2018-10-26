@@ -16,15 +16,29 @@
 package com.streamsets.pipeline.kafka.impl;
 
 import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.kafka.api.MessageAndOffset;
 import com.streamsets.pipeline.kafka.api.MessageAndOffsetWithTimestamp;
+import com.streamsets.pipeline.lib.kafka.KafkaConstants;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.OffsetAndMetadata;
+import org.apache.kafka.clients.consumer.OffsetAndTimestamp;
+import org.apache.kafka.clients.consumer.OffsetResetStrategy;
+import org.apache.kafka.common.PartitionInfo;
+import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.record.TimestampType;
+import org.apache.kafka.common.serialization.StringDeserializer;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
-public class KafkaConsumer11 extends KafkaConsumer09 {
+public class KafkaConsumer11 extends BaseKafkaConsumer11 {
+
   public KafkaConsumer11(
       String bootStrapServers,
       String topic,
@@ -32,34 +46,21 @@ public class KafkaConsumer11 extends KafkaConsumer09 {
       Map<String, Object> kafkaConsumerConfigs,
       Source.Context context,
       int batchSize,
-      boolean isTimestampEnabled
+      boolean isTimestampEnabled,
+      String kafkaAutoOffsetReset,
+      long timestampToSearchOffsets
   ) {
-    super(bootStrapServers, topic, consumerGroup, kafkaConsumerConfigs, context, batchSize, isTimestampEnabled);
+    super(
+        bootStrapServers,
+        topic,
+        consumerGroup,
+        kafkaConsumerConfigs,
+        context,
+        batchSize,
+        isTimestampEnabled,
+        kafkaAutoOffsetReset,
+        timestampToSearchOffsets
+    );
   }
 
-  @Override
-  protected void subscribeConsumer() {
-    kafkaConsumer.subscribe(Collections.singletonList(topic), this);
-  }
-
-  @Override
-  MessageAndOffset getMessageAndOffset(ConsumerRecord message, boolean isEnabled) {
-    MessageAndOffset messageAndOffset;
-    if (message.timestampType() != TimestampType.NO_TIMESTAMP_TYPE && message.timestamp() > 0 && isEnabled) {
-      messageAndOffset = new MessageAndOffsetWithTimestamp(message.value(),
-          message.offset(),
-          message.partition(),
-          message.timestamp(),
-          message.timestampType().toString()
-      );
-    } else {
-      messageAndOffset = new MessageAndOffset(message.value(), message.offset(), message.partition());
-    }
-    return messageAndOffset;
-  }
-
-  @Override
-  protected boolean isTimestampSupported() {
-    return true;
-  }
 }

@@ -18,7 +18,9 @@ package com.streamsets.pipeline.kafka.impl;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.kafka.api.KafkaOriginGroups;
 import com.streamsets.pipeline.kafka.api.MessageAndOffset;
+import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetReset;
 import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -42,6 +44,7 @@ public class KafkaConsumer09 extends BaseKafkaConsumer09 {
   private final String consumerGroup;
   private final Map<String, Object> kafkaConsumerConfigs;
   private final boolean isTimestampsEnabled;
+  protected String kafkaAutoOffsetReset;
 
   public KafkaConsumer09(
       String bootStrapServers,
@@ -50,7 +53,8 @@ public class KafkaConsumer09 extends BaseKafkaConsumer09 {
       Map<String, Object> kafkaConsumerConfigs,
       Source.Context context,
       int batchSize,
-      boolean isTimestampsEnabled
+      boolean isTimestampsEnabled,
+      String kafkaAutoOffsetReset
   ) {
     super(topic, context, batchSize);
     this.bootStrapServers = bootStrapServers;
@@ -58,6 +62,7 @@ public class KafkaConsumer09 extends BaseKafkaConsumer09 {
     this.context = context;
     this.kafkaConsumerConfigs = kafkaConsumerConfigs;
     this.isTimestampsEnabled = isTimestampsEnabled;
+    this.kafkaAutoOffsetReset = kafkaAutoOffsetReset;
   }
 
   @Override
@@ -76,10 +81,21 @@ public class KafkaConsumer09 extends BaseKafkaConsumer09 {
   }
 
   @Override
+  protected void validateAutoOffsetReset(List<Stage.ConfigIssue> issues) throws StageException {
+    if(KafkaAutoOffsetReset.TIMESTAMP.name().equals(kafkaAutoOffsetReset)) {
+      issues.add(context.createConfigIssue(KafkaOriginGroups.KAFKA.name(),
+          KAFKA_CONFIG_BEAN_PREFIX + KAFKA_AUTO_OFFSET_RESET,
+          KafkaErrors.KAFKA_76
+      ));
+    }
+  }
+
+  @Override
   protected void configureKafkaProperties(Properties props) {
     props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootStrapServers);
     props.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroup);
     props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, AUTO_COMMIT_ENABLED_DEFAULT);
+    props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, kafkaAutoOffsetReset.toLowerCase());
     if (this.context.isPreview()) {
       props.setProperty(KafkaConstants.AUTO_OFFSET_RESET_CONFIG, KafkaConstants.AUTO_OFFSET_RESET_PREVIEW_VALUE);
     }
@@ -107,6 +123,7 @@ public class KafkaConsumer09 extends BaseKafkaConsumer09 {
       kafkaConsumerConfigs.remove(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG);
       kafkaConsumerConfigs.remove(ConsumerConfig.GROUP_ID_CONFIG);
       kafkaConsumerConfigs.remove(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG);
+      kafkaConsumerConfigs.remove(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG);
 
       for (Map.Entry<String, Object> producerConfig : kafkaConsumerConfigs.entrySet()) {
         props.put(producerConfig.getKey(), producerConfig.getValue());

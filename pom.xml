@@ -166,6 +166,7 @@
     <module>sdc-kafka_0_9_mapr_5_1</module>
     <module>sdc-kafka_0_9_mapr_5_2</module>
     <module>sdc-kafka_0_10</module>
+    <module>sdc-kafka_0_11-common</module>
     <module>sdc-kafka_0_11</module>
     <module>sdc-kafka_1_0</module>
     <module>kafka-common</module>

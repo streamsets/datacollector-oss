@@ -32,9 +32,18 @@ public class KafkaConsumer10 extends KafkaConsumer09 {
       Map<String, Object> kafkaConsumerConfigs,
       Source.Context context,
       int batchSize,
-      boolean isTimestampEnabled
+      boolean isTimestampEnabled,
+      String kafkaAutoOffsetReset
   ) {
-    super(bootStrapServers, topic, consumerGroup, kafkaConsumerConfigs, context, batchSize, isTimestampEnabled);
+    super(bootStrapServers,
+        topic,
+        consumerGroup,
+        kafkaConsumerConfigs,
+        context,
+        batchSize,
+        isTimestampEnabled,
+        kafkaAutoOffsetReset
+    );
   }
 
   @Override

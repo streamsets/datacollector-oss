@@ -24,6 +24,7 @@ import com.streamsets.pipeline.kafka.api.ConsumerFactorySettings;
 import com.streamsets.pipeline.kafka.api.MessageAndOffset;
 import com.streamsets.pipeline.kafka.api.SdcKafkaConsumer;
 import com.streamsets.pipeline.kafka.api.SdcKafkaConsumerFactory;
+import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetReset;
 import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
@@ -255,8 +256,10 @@ public abstract class KafkaNewConsumerITBase {
         context,
         kafkaConfigs,
         group,
-      100,
-        false
+        100,
+        false,
+        KafkaAutoOffsetReset.EARLIEST.name().toLowerCase(),
+        0
     );
     SdcKafkaConsumerFactory sdcKafkaConsumerFactory = SdcKafkaConsumerFactory.create(settings);
     return sdcKafkaConsumerFactory.create();

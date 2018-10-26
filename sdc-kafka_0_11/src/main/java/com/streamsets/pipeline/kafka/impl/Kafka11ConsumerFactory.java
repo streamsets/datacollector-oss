@@ -40,7 +40,9 @@ public class Kafka11ConsumerFactory extends SdcKafkaConsumerFactory {
         settings.getKafkaConsumerConfigs(),
         settings.getContext(),
         settings.getBatchSize(),
-        settings.isTimestampsEnabled()
+        settings.isTimestampsEnabled(),
+        settings.getKafkaAutoOffsetReset(),
+        settings.getTimestampToSearchOffsets()
     );
   }
 }
