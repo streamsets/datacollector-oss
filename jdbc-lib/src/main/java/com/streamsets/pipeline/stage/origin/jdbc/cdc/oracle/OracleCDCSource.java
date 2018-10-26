@@ -601,6 +601,7 @@ public class OracleCDCSource extends BaseSource {
                     recordQueue.put(new RecordOffset(record, offset));
                   }
                 } catch (UnparseableSQLException ex) {
+                  LOG.error("Parsing failed", ex);
                   unparseable.offer(queryString);
                 }
               } else {
@@ -820,6 +821,7 @@ public class OracleCDCSource extends BaseSource {
         try {
           createdField = objectToField(table, columnName, column.getValue());
         } catch (UnsupportedFieldTypeException ex) {
+          LOG.error("Unsupported field type exception", ex);
           if (configBean.sendUnsupportedFields) {
             createdField = Field.create(column.getValue());
           }
@@ -947,6 +949,7 @@ public class OracleCDCSource extends BaseSource {
           }
         }
       } catch (ExecutionException e) {
+        LOG.error("{}:{}", JDBC_405.getMessage(), e.getMessage(), e);
         final Throwable cause = e.getCause();
         if (cause instanceof UnparseableSQLException) {
           unparseable.offer(recordFuture.sql);
