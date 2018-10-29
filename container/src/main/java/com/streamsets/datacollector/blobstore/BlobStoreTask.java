@@ -17,6 +17,7 @@ package com.streamsets.datacollector.blobstore;
 
 import com.streamsets.datacollector.task.Task;
 import com.streamsets.pipeline.api.BlobStore;
+import com.streamsets.pipeline.api.StageException;
 
 import java.util.Set;
 
@@ -34,4 +35,9 @@ public interface BlobStoreTask extends Task, BlobStore {
    * List all objects in given namespace.
    */
   public Set<String> listObjects(String namespace);
+
+  /**
+   * Retrieve content file name of the given namespace,  ID, and version.
+   */
+  public String retrieveContentFileName(String namespace, String id, long version) throws StageException;
 }

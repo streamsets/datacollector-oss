@@ -371,4 +371,15 @@ public class BlobStoreTaskImpl extends AbstractTask implements BlobStoreTask {
 
     return Collections.unmodifiableSet(namespaceMetadata.getObjects().keySet());
   }
+
+  @Override
+  public String retrieveContentFileName(String namespace, String id, long version) throws StageException {
+    LOG.debug("Retrieve content file name on namespace={}, id={}, version={}", namespace, id, version);
+    ObjectMetadata objectMetadata = getObjectDieIfNotExists(namespace, id);
+
+    if (!objectMetadata.containsVersion(version)) {
+      throw new StageException(BlobStoreError.BLOB_STORE_0007, namespace, id, version);
+    }
+    return objectMetadata.uuidForVersion(version);
+  }
 }

@@ -204,4 +204,15 @@ public class BlobStoreTaskImplTest {
     assertFalse(Files.exists(store.newMetadataFile));
     assertTrue(store.exists("policy", "1234", 10));
   }
+
+  @Test
+  public void tetstRetrieveContentFileName() throws Exception {
+
+    BlobStoreTask store = new BlobStoreTaskImpl(createRuntimeInfo());
+    store.init();
+    store.store("policy", "1234", 10, "10");
+    String filename = store.retrieveContentFileName("policy", "1234", 10);
+    assertTrue(filename.startsWith("policy"));
+    assertTrue(filename.endsWith(".content"));
+  }
 }
