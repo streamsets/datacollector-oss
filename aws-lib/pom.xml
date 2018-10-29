@@ -36,6 +36,7 @@
     <commons-lang3.version>3.4</commons-lang3.version>
     <commons-math3.version>3.5</commons-math3.version>
     <sqs.version>1.0.4</sqs.version>
+    <awssdk.version>1.11.385</awssdk.version>
   </properties>
 
   <dependencyManagement>
@@ -43,7 +44,7 @@
       <dependency>
         <groupId>com.amazonaws</groupId>
         <artifactId>aws-java-sdk-bom</artifactId>
-        <version>1.11.151</version>
+        <version>${awssdk.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
