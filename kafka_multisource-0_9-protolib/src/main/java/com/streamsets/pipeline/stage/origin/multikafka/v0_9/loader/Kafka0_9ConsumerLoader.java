@@ -15,8 +15,13 @@
  */
 package com.streamsets.pipeline.stage.origin.multikafka.v0_9.loader;
 
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetReset;
+import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.stage.origin.multikafka.MultiSdcKafkaConsumer;
 import com.streamsets.pipeline.stage.origin.multikafka.loader.KafkaConsumerLoader;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 
@@ -24,6 +29,23 @@ import java.util.List;
 import java.util.Properties;
 
 public class Kafka0_9ConsumerLoader extends KafkaConsumerLoader {
+
+  @Override
+  protected void validateConsumerConfiguration(
+      Properties properties,
+      Stage.Context context,
+      KafkaAutoOffsetReset kafkaAutoOffsetReset,
+      long timestampToSearchOffsets,
+      List<String> topicsList
+  ) throws StageException {
+    if (!context.isPreview()) {
+      if (kafkaAutoOffsetReset == KafkaAutoOffsetReset.TIMESTAMP) {
+          throw new StageException(KafkaErrors.KAFKA_76);
+      } else {
+        properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, kafkaAutoOffsetReset.name().toLowerCase());
+      }
+    }
+  }
 
   @Override
   protected MultiSdcKafkaConsumer createConsumerInternal(Properties properties) {

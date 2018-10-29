@@ -18,15 +18,54 @@ package com.streamsets.pipeline.stage.origin.multikafka;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
+import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetReset;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 
 import java.util.List;
+import java.util.Map;
 
 public class MultiKafkaSourceUpgrader implements StageUpgrader {
   @Override
   public List<Config> upgrade(
       String library, String stageName, String stageInstance, int fromVersion, int toVersion, List<Config> configs
   ) throws StageException {
-    //noop
+    switch (fromVersion) {
+      case 1:
+        upgradeV1ToV2(configs);
+        if (toVersion == 2) {
+          break;
+        }
+        // fall through
+      default:
+        throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
+    }
     return configs;
+  }
+
+  private void upgradeV1ToV2(List<Config> configs) {
+    String autoOffsetReset = "null";
+    for (Config config : configs) {
+      if ("kafkaOptions".equals(config.getName())) {
+        Map<String, String> kafkaOptions = (Map<String, String>) config.getValue();
+        autoOffsetReset = kafkaOptions.remove(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG);
+      }
+    }
+
+    switch (autoOffsetReset) {
+      case "earliest":
+        configs.add(new Config("conf.kafkaAutoOffsetReset", KafkaAutoOffsetReset.EARLIEST));
+        break;
+      case "latest":
+        configs.add(new Config("conf.kafkaAutoOffsetReset", KafkaAutoOffsetReset.LATEST));
+        break;
+      case "none":
+        configs.add(new Config("conf.kafkaAutoOffsetReset", KafkaAutoOffsetReset.NONE));
+        break;
+      default:
+        configs.add(new Config("conf.kafkaAutoOffsetReset", KafkaAutoOffsetReset.EARLIEST));
+    }
+
+    configs.add(new Config("conf.timestampToSearchOffsets", 0));
   }
 }

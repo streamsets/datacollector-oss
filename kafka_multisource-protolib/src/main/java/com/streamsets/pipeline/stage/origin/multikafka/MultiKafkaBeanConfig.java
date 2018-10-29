@@ -20,6 +20,8 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetReset;
+import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetResetValues;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
 import java.util.ArrayList;
@@ -119,12 +121,39 @@ public class MultiKafkaBeanConfig {
   public int batchWaitTime;
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Auto Offset Reset",
+      description = "Strategy to select the position to start consuming messages from the Kafka partition when no " +
+          "offset is currently saved",
+      defaultValue = "EARLIEST",
+      displayPosition = 80,
+      group = "KAFKA"
+  )
+  @ValueChooserModel(KafkaAutoOffsetResetValues.class)
+  public KafkaAutoOffsetReset kafkaAutoOffsetReset;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = "Auto Offset Reset Timestamp (ms)",
+      description = "Date in milliseconds from which to start consuming messages. Default is January 1st, 1970",
+      defaultValue = "0",
+      dependsOn = "kafkaAutoOffsetReset",
+      triggeredByValue = "TIMESTAMP",
+      displayPosition = 90,
+      group = "KAFKA",
+      min = 0
+  )
+  public long timestampToSearchOffsets;
+
+  @ConfigDef(
       required = false,
       type = ConfigDef.Type.MAP,
       defaultValue = "",
       label = "Configuration properties",
       description = "Additional Kafka properties to pass to the underlying Kafka consumer",
-      displayPosition = 80,
+      displayPosition = 100,
       group = "KAFKA"
   )
   public Map<String, String> kafkaOptions;
@@ -137,7 +166,7 @@ public class MultiKafkaBeanConfig {
       defaultValue = "STRING",
       dependsOn = "dataFormat",
       triggeredByValue = "AVRO",
-      displayPosition = 90,
+      displayPosition = 110,
       group = "KAFKA"
   )
   @ValueChooserModel(KeyDeserializerChooserValues.class)
@@ -151,7 +180,7 @@ public class MultiKafkaBeanConfig {
       defaultValue = "DEFAULT",
       dependsOn = "dataFormat",
       triggeredByValue = "AVRO",
-      displayPosition = 100,
+      displayPosition = 120,
       group = "KAFKA"
   )
   @ValueChooserModel(ValueDeserializerChooserValues.class)

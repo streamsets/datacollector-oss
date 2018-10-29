@@ -17,11 +17,15 @@ package com.streamsets.pipeline.stage.origin.multikafka.loader;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetReset;
 import com.streamsets.pipeline.stage.origin.multikafka.MultiSdcKafkaConsumer;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.Set;
@@ -37,7 +41,9 @@ public abstract class KafkaConsumerLoader {
    * Since the test delegate lives in different scope (test one), we load it as usual, but thread it differently.
    */
   private static KafkaConsumerLoader testDelegate;
-  private static final String TEST_DELEGATE_NAME = "com.streamsets.pipeline.stage.origin.multikafka.loader.MockKafkaConsumerLoader";
+  private static final String
+      TEST_DELEGATE_NAME
+      = "com.streamsets.pipeline.stage.origin.multikafka.loader.MockKafkaConsumerLoader";
 
   @VisibleForTesting
   public static boolean isTest = false;
@@ -46,11 +52,11 @@ public abstract class KafkaConsumerLoader {
     int count = 0;
 
     Set<String> loaderClasses = new HashSet<>();
-    for(KafkaConsumerLoader loader : ServiceLoader.load(KafkaConsumerLoader.class)) {
+    for (KafkaConsumerLoader loader : ServiceLoader.load(KafkaConsumerLoader.class)) {
       String loaderName = loader.getClass().getName();
       loaderClasses.add(loaderName);
 
-      if(TEST_DELEGATE_NAME.equals(loaderName)) {
+      if (TEST_DELEGATE_NAME.equals(loaderName)) {
         testDelegate = loader;
       } else {
         count++;
@@ -58,23 +64,48 @@ public abstract class KafkaConsumerLoader {
       }
     }
 
-    if(count > 1) {
-      throw new RuntimeException(Utils.format(
-        "Unexpected number of loaders, found {} instead of 1: {}",
-        count,
-        StringUtils.join(loaderClasses, ", ")
+    if (count > 1) {
+      throw new RuntimeException(Utils.format("Unexpected number of loaders, found {} instead of 1: {}",
+          count,
+          StringUtils.join(loaderClasses, ", ")
       ));
     }
   }
 
+  protected abstract void validateConsumerConfiguration(
+      Properties properties,
+      Stage.Context context,
+      KafkaAutoOffsetReset kafkaAutoOffsetReset,
+      long timestampToSearchOffsets,
+      List<String> topicsList
+  ) throws StageException;
+
   protected abstract MultiSdcKafkaConsumer createConsumerInternal(Properties properties);
 
-  public static MultiSdcKafkaConsumer createConsumer(Properties properties) {
-    if(isTest) {
+  public static MultiSdcKafkaConsumer createConsumer(
+      Properties properties,
+      Stage.Context context,
+      KafkaAutoOffsetReset kafkaAutoOffsetReset,
+      long timestampToSearchOffsets,
+      List<String> topics
+  ) throws StageException {
+    if (isTest) {
       Preconditions.checkNotNull(testDelegate);
+      testDelegate.validateConsumerConfiguration(properties,
+          context,
+          kafkaAutoOffsetReset,
+          timestampToSearchOffsets,
+          topics
+      );
       return testDelegate.createConsumerInternal(properties);
     } else {
       Preconditions.checkNotNull(delegate);
+      delegate.validateConsumerConfiguration(properties,
+          context,
+          kafkaAutoOffsetReset,
+          timestampToSearchOffsets,
+          topics
+      );
       return delegate.createConsumerInternal(properties);
     }
   }

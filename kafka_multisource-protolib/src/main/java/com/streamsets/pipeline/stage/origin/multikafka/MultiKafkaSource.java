@@ -262,11 +262,18 @@ public class MultiKafkaSource extends BasePushSource {
     CountDownLatch startProcessingGate = new CountDownLatch(numThreads);
 
     // Run all the threads
+    Stage.Context context = getContext();
     for(int i = 0; i < numThreads; i++) {
       try {
         futures.add(executor.submit(new MultiTopicCallable(i,
             conf.topicList,
-            KafkaConsumerLoader.createConsumer(getKafkaProperties(getContext())),
+            KafkaConsumerLoader.createConsumer(
+                getKafkaProperties(context),
+                context,
+                conf.kafkaAutoOffsetReset,
+                conf.timestampToSearchOffsets,
+                conf.topicList
+            ),
             startProcessingGate
         )));
       } catch (Exception e) {

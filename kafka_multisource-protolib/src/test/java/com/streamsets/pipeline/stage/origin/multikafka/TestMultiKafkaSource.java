@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.lineage.LineageEvent;
 import com.streamsets.pipeline.api.lineage.LineageEventType;
 import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetReset;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -72,6 +73,8 @@ public class TestMultiKafkaSource {
     conf.dataFormatConfig.charset = "UTF-8";
     conf.dataFormatConfig.removeCtrlChars = false;
     conf.dataFormatConfig.textMaxLineLen = 4096;
+    conf.kafkaAutoOffsetReset = KafkaAutoOffsetReset.EARLIEST;
+    conf.timestampToSearchOffsets = 0;
 
     return conf;
   }

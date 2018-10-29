@@ -15,6 +15,9 @@
  */
 package com.streamsets.pipeline.stage.origin.multikafka.loader;
 
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetReset;
 import com.streamsets.pipeline.stage.origin.multikafka.MultiSdcKafkaConsumer;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -34,6 +37,17 @@ public class MockKafkaConsumerLoader extends KafkaConsumerLoader {
    * Set this in the test to list of consumers that should be used in the origin.
    */
   public static Iterator<KafkaConsumer> consumers;
+
+  @Override
+  protected void validateConsumerConfiguration(
+      Properties properties,
+      Stage.Context context,
+      KafkaAutoOffsetReset kafkaAutoOffsetReset,
+      long timestampToSearchOffsets,
+      List<String> topicsList
+  ) throws StageException {
+    // Do nothing for testing
+  }
 
   /**
    * Creating consumer will just delegate to the iterator.
