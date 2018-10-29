@@ -28,6 +28,10 @@ the pipeline.
 
 To learn more, check out [http://streamsets.com](http://streamsets.com)
 
+Building StreamSets Data Collector
+-----------
+To build the StreamSets Data Collector from source code, [click here for details](BUILD.md).
+
 License
 ------
 StreamSets Data Collector is built on open source technologies, our code is licensed with the
@@ -44,10 +48,9 @@ tag #StreamSets. Post bugs at [http://issues.streamsets.com](http://issues.strea
 If you need help with production systems, you can check out the variety of support options offered on our
 [support page](http://streamsets.com/support).
 
-Contributing code
+Contributing Code
 -----------
 We welcome contributors, please check out our [guidelines](CONTRIBUTING.md) to get started.
-
 
 Changelog
 ----------
