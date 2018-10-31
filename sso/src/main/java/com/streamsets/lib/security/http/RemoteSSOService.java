@@ -60,12 +60,12 @@ public class RemoteSSOService extends AbstractSSOService {
   @Override
   public void setConfiguration(Configuration conf) {
     super.setConfiguration(conf);
-    String securityAppUrl = getValidURL(
-        conf.get(
-            DPM_APP_SECURITY_URL_CONFIG,
-            conf.get(DPM_BASE_URL_CONFIG, DPM_BASE_URL_DEFAULT)
-        )
-    );
+    String securityAppUrl = conf.get(DPM_APP_SECURITY_URL_CONFIG, null);
+    if (securityAppUrl == null || securityAppUrl.isEmpty()) {
+      securityAppUrl = conf.get(DPM_BASE_URL_CONFIG, DPM_BASE_URL_DEFAULT);
+      LOG.debug("Security App URL was NULL and has been set to dpm.base.url: {}", securityAppUrl);
+    }
+    securityAppUrl = getValidURL(securityAppUrl);
     String baseUrl = securityAppUrl + "security";
 
     Utils.checkArgument(
