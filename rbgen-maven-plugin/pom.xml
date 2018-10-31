@@ -41,7 +41,7 @@
     <maven.plugin-tools.version>3.4</maven.plugin-tools.version>
 
     <commons-io.version>2.4</commons-io.version>
-    <jackson.version>2.4.3</jackson.version>
+    <jackson.version>2.9.7</jackson.version>
     <maven-deploy-plugin-version>2.8.2</maven-deploy-plugin-version>
   </properties>
 
@@ -76,12 +76,6 @@
       <scope>compile</scope>
       <version>${commons-io.version}</version>
     </dependency>
-    <!--<dependency>-->
-      <!--<groupId>com.fasterxml.jackson.core</groupId>-->
-      <!--<artifactId>jackson-core</artifactId>-->
-      <!--<scope>compile</scope>-->
-      <!--<version>${jackson.version}</version>-->
-    <!--</dependency>-->
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
