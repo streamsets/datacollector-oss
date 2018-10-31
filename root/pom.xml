@@ -61,7 +61,7 @@
     <commons-beanutils.version>1.9.3</commons-beanutils.version>
     <commons-cli.version>1.2</commons-cli.version>
     <commons-codec.version>1.10</commons-codec.version>
-    <commons-compress.version>1.16.1</commons-compress.version>
+    <commons-compress.version>1.18</commons-compress.version>
     <commons-configuration.version>2.0</commons-configuration.version>
     <commons-csv.version>1.5</commons-csv.version>
     <commons-el.version>1.0</commons-el.version>
