@@ -217,7 +217,7 @@ public class ClusterRunner extends AbstractRunner {
     super(name, rev);
     this.objectGraph = objectGraph;
     this.objectGraph.inject(this);
-    this.tempDir = new File(new File(getRuntimeInfo().getDataDir(), "temp"), PipelineUtils.
+    this.tempDir = new File(new File(getRuntimeInfo().getResourcesDir(), "temp"), PipelineUtils.
       escapedPipelineName(Utils.format("cluster-pipeline-{}-{}", name, rev)));
     FileUtils.deleteQuietly(tempDir);
     if (!(this.tempDir.mkdirs())) {
