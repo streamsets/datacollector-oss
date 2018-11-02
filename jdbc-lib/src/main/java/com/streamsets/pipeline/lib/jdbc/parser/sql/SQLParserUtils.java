@@ -71,9 +71,6 @@ public class SQLParserUtils {
     if (!result.matched) {
       throw new UnparseableSQLException(sql);
     }
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("Parse Tree for Query: " + sql + "\n" + ParseTreeUtils.printNodeTree(result));
-    }
     Collection<Node<Object>> names = new ArrayList<>();
 
     ParseTreeUtils.collectNodes(
