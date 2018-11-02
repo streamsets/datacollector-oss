@@ -295,19 +295,21 @@ public class SpoolDirRunnable implements Runnable {
     Offset newOffset = new Offset(Offset.VERSION_ONE, file, offset);
 
     // Process And Commit offsets
-    context.processBatch(batchContext, newOffset.getFile(), newOffset.getOffsetString());
+    boolean batchProcessed = context.processBatch(batchContext, newOffset.getFile(), newOffset.getOffsetString());
 
-    if (lastSourceFile != null && !lastSourceFile.equals(newOffset.getFile())) {
-      context.commitOffset(lastSourceFile, null);
-    }
+    // Commit offset and perform post-processing only if the batch was properly processed
+    if(batchProcessed && !context.isPreview()) {
+      if (lastSourceFile != null && !lastSourceFile.equals(newOffset.getFile())) {
+        context.commitOffset(lastSourceFile, null);
+      }
 
-    // if this is the end of the file, do post processing
-    if (currentFile != null && newOffset.getOffset().equals(MINUS_ONE)) {
-      spooler.doPostProcessing(fs.getFile(conf.spoolDir, newOffset.getFile()));
+      // if this is the end of the file, do post processing
+      if (currentFile != null && newOffset.getOffset().equals(MINUS_ONE)) {
+        spooler.doPostProcessing(fs.getFile(conf.spoolDir, newOffset.getFile()));
+      }
     }
 
     updateGauge(Status.BATCH_GENERATED, offset);
-
     return newOffset;
   }
 
