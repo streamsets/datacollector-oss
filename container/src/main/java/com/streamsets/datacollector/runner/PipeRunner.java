@@ -122,7 +122,7 @@ public class PipeRunner {
     // Persist static information for the batch (this won't change as the batch progresses)
     this.runtimeMetricGauge.put(METRIC_BATCH_START_TIME, batchStartTime);
     this.runtimeMetricGauge.put(METRIC_OFFSET_KEY, Optional.ofNullable(offsetKey).orElse(""));
-    this.runtimeMetricGauge.put(METRIC_OFFSET_KEY, Optional.ofNullable(offsetValue).orElse(""));
+    this.runtimeMetricGauge.put(METRIC_OFFSET_VALUE, Optional.ofNullable(offsetValue).orElse(""));
     this.runtimeMetricGauge.put(METRIC_STAGE_START_TIME, System.currentTimeMillis());
     try {
       // Run one pipe at a time
