@@ -21,6 +21,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
+import com.streamsets.datacollector.config.InterceptorDefinition;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
@@ -632,6 +633,11 @@ public abstract class BaseClusterProvider implements ClusterProvider {
           extractClassLoaderInfo(streamsetsLibsCl, userLibsCL, serviceDef.getStageClassLoader(), serviceDef.getClassName());
         }
       }
+    }
+
+    for(InterceptorDefinition interceptor: stageLibrary.getInterceptorDefinitions()) {
+      getLog().debug("Adding interceptor {} for stage {} ", interceptor.getName(), interceptor.getLibraryDefinition().getName());
+      extractClassLoaderInfo(streamsetsLibsCl, userLibsCL, interceptor.getClassLoader(), interceptor.getName());
     }
 
     if(configuration != null && configuration.hasName(LineagePublisherConstants.CONFIG_LINEAGE_PUBLISHERS)) {
