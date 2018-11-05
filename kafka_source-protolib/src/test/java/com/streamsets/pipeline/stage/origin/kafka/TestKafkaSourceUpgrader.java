@@ -18,12 +18,14 @@ package com.streamsets.pipeline.stage.origin.kafka;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetReset;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TestKafkaSourceUpgrader {
 
@@ -88,5 +90,32 @@ public class TestKafkaSourceUpgrader {
 
     Assert.assertTrue(configValues.containsKey("kafkaConfigBean.dataFormatConfig.textMaxLineLen"));
     Assert.assertEquals(1024, configValues.get("kafkaConfigBean.dataFormatConfig.textMaxLineLen"));
+  }
+
+  @Test
+  public void testupgradeV6ToV7() throws StageException {
+    List<Config> configs = new ArrayList<>();
+    configs.add(new Config("dataFormat", DataFormat.TEXT));
+    configs.add(new Config("metadataBrokerList", "MY_LIST"));
+    configs.add(new Config("zookeeperConnect", "MY_ZK_CONNECTION"));
+    configs.add(new Config("consumerGroup", "MY_GROUP"));
+    configs.add(new Config("topic", "MY_TOPIC"));
+    configs.add(new Config("produceSingleRecordPerMessage", false));
+    configs.add(new Config("maxBatchSize", 1000));
+    configs.add(new Config("maxWaitTime", 10));
+    configs.add(new Config("kafkaConsumerConfigs", null));
+    configs.add(new Config("charset", "UTF-8"));
+    configs.add(new Config("removeCtrlChars", false));
+    configs.add(new Config("textMaxLineLen", 1024));
+
+    Map<String, String> kafkaOptions = new HashMap<>();
+    kafkaOptions.put("auto.offset.reset", "latest");
+
+    configs.add(new Config("kafkaOptions", kafkaOptions));
+    KafkaSourceUpgrader kafkaSourceUpgrader = new KafkaSourceUpgrader();
+    kafkaSourceUpgrader.upgrade("a", "b", "c", 6, 7, configs);
+
+    Assert.assertEquals(KafkaAutoOffsetReset.LATEST, configs.get(configs.size() - 2).getValue());
+
   }
 }
