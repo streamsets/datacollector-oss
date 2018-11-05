@@ -1,5 +1,5 @@
 /**
- * Oracle(c) PL/SQL 11g Parser  
+ * Oracle(c) PL/SQL 11g Parser
  *
  * Copyright (c) 2009-2011 Alexandre Porcelli <alexandre.porcelli@gmail.com>
  * Copyright (c) 2015 Ivan Kochurkin (KvanTTT, kvanttt@gmail.com).
@@ -137,24 +137,24 @@ package_obj_spec
     ;
 
 procedure_spec
-    : PROCEDURE procedure_name ('(' parameter ( ',' parameter )* ')')? ';' 
+    : PROCEDURE procedure_name ('(' parameter ( ',' parameter )* ')')? ';'
     ;
 
 function_spec
-    : FUNCTION function_name ('(' parameter ( ',' parameter)* ')')? RETURN type_spec ';' 
+    : FUNCTION function_name ('(' parameter ( ',' parameter)* ')')? RETURN type_spec ';'
     ;
 
 package_obj_body
-    : variable_declaration 
-    | subtype_declaration 
-    | cursor_declaration 
-    | exception_declaration 
+    : variable_declaration
+    | subtype_declaration
+    | cursor_declaration
+    | exception_declaration
     | record_declaration
     | table_declaration
     | create_procedure_body
-    | create_function_body 
+    | create_function_body
     | procedure_spec
-    | function_spec    
+    | function_spec
     ;
 
 // $<Procedure DDLs
@@ -168,7 +168,7 @@ alter_procedure
     ;
 
 create_procedure_body
-    : (CREATE (OR REPLACE)?)? PROCEDURE procedure_name ('(' parameter (',' parameter)* ')')? 
+    : (CREATE (OR REPLACE)?)? PROCEDURE procedure_name ('(' parameter (',' parameter)* ')')?
       invoker_rights_clause? (IS | AS)
       (DECLARE? declare_spec* body | call_spec | EXTERNAL) ';'
     ;
@@ -353,7 +353,7 @@ type_definition
     ;
 
 object_type_def
-    : invoker_rights_clause? (object_as_part | object_under_part) sqlj_object_type? 
+    : invoker_rights_clause? (object_as_part | object_under_part) sqlj_object_type?
       ('(' object_member_spec (',' object_member_spec)* ')')? modifier_clause*
     ;
 
@@ -391,12 +391,12 @@ subprog_decl_in_type
     ;
 
 proc_decl_in_type
-    : PROCEDURE procedure_name '(' type_elements_parameter (',' type_elements_parameter)* ')' 
+    : PROCEDURE procedure_name '(' type_elements_parameter (',' type_elements_parameter)* ')'
       (IS | AS) (call_spec | DECLARE? declare_spec* body ';')
     ;
 
 func_decl_in_type
-    : FUNCTION function_name ('(' type_elements_parameter (',' type_elements_parameter)* ')')? 
+    : FUNCTION function_name ('(' type_elements_parameter (',' type_elements_parameter)* ')')?
       RETURN type_spec (IS | AS) (call_spec | DECLARE? declare_spec* body ';')
     ;
 
@@ -575,12 +575,12 @@ parameter_spec
     : parameter_name (IN? type_spec)? default_value_part?
     ;
 
-exception_declaration 
+exception_declaration
     : exception_name EXCEPTION ';'
     ;
 
 pragma_declaration
-    : PRAGMA (SERIALLY_REUSABLE 
+    : PRAGMA (SERIALLY_REUSABLE
     | AUTONOMOUS_TRANSACTION
     | EXCEPTION_INIT '(' exception_name ',' numeric_negative ')'
     | INLINE '(' id1=id ',' expression ')'
@@ -839,7 +839,7 @@ transaction_control_statements
     ;
 
 set_transaction_command
-    : SET TRANSACTION 
+    : SET TRANSACTION
       (READ (ONLY | WRITE) | ISOLATION LEVEL (SERIALIZABLE | READ COMMITTED) | USE ROLLBACK SEGMENT rollback_segment_name)?
       (NAME quoted_string)?
     ;
@@ -849,7 +849,7 @@ set_constraint_command
     ;
 
 commit_statement
-    : COMMIT WORK? 
+    : COMMIT WORK?
       (COMMENT expression | FORCE (CORRUPT_XID expression| CORRUPT_XID_ALL | expression (',' expression)?))?
       write_clause?
     ;
@@ -863,7 +863,7 @@ rollback_statement
     ;
 
 savepoint_statement
-    : SAVEPOINT savepoint_name 
+    : SAVEPOINT savepoint_name
     ;
 
 // Dml
@@ -875,7 +875,7 @@ compilation_unit
     ;
 
 //SHOULD BE OVERRIDEN!
-seq_of_statements 
+seq_of_statements
     : select_statement
     | update_statement
     | delete_statement
@@ -967,7 +967,7 @@ table_ref_aux
     ;
 
 join_clause
-    : query_partition_clause? (CROSS | NATURAL)? (INNER | outer_join_type)? 
+    : query_partition_clause? (CROSS | NATURAL)? (INNER | outer_join_type)?
       JOIN table_ref_aux query_partition_clause? (join_on_part | join_using_part)*
     ;
 
@@ -1047,7 +1047,7 @@ group_by_clause
 
 group_by_elements
     : grouping_sets_clause
-    | rollup_cube_clause 
+    | rollup_cube_clause
     | expression
     ;
 
@@ -1075,7 +1075,7 @@ model_clause
 
 cell_reference_options
     : (IGNORE | KEEP) NAV
-    | UNIQUE (DIMENSION | SINGLE REFERENCE) 
+    | UNIQUE (DIMENSION | SINGLE REFERENCE)
     ;
 
 return_rows_clause
@@ -1447,7 +1447,7 @@ for_increment_decrement_type
     ;
 
 multi_column_for_loop
-    : FOR 
+    : FOR
       '(' column_name (',' column_name)* ')' IN '(' (subquery | '(' expression_list (',' expression_list)* ')') ')'
     ;
 
@@ -1528,7 +1528,7 @@ standard_function
     | DECOMPOSE '(' concatenation_wrapper (CANONICAL | COMPATIBILITY)? ')'
     | EXTRACT '(' regular_id FROM concatenation_wrapper ')'
     | (FIRST_VALUE | LAST_VALUE) function_argument_analytic respect_or_ignore_nulls? over_clause
-    | standard_prediction_function_keyword 
+    | standard_prediction_function_keyword
       '(' expression_wrapper (',' expression_wrapper)* cost_matrix_clause? using_clause? ')'
     | TRANSLATE '(' expression_wrapper (USING (CHAR_CS | NCHAR_CS))? (',' expression_wrapper)* ')'
     | TREAT '(' expression_wrapper AS REF? type_spec ')'
@@ -1536,7 +1536,7 @@ standard_function
     | XMLAGG '(' expression_wrapper order_by_clause? ')' ('.' general_element_part)?
     | (XMLCOLATTVAL|XMLFOREST)
       '(' xml_multiuse_expression_element (',' xml_multiuse_expression_element)* ')' ('.' general_element_part)?
-    | XMLELEMENT 
+    | XMLELEMENT
       '(' (ENTITYESCAPING | NOENTITYESCAPING)? (NAME | EVALNAME)? expression_wrapper
        (/*TODO{input.LT(2).getText().equalsIgnoreCase("xmlattributes")}?*/ ',' xml_attributes_clause)?
        (',' expression_wrapper column_alias?)* ')' ('.' general_element_part)?
@@ -1574,7 +1574,7 @@ over_clause_keyword
     | VAR_
     | COVAR_
     ;
-    
+
 /*TODO
 stantard_function_enabling_using
     : {enablesUsingClause(input.LT(1).getText())}? REGULAR_ID
@@ -1590,7 +1590,7 @@ within_or_over_clause_keyword
     | PERCENTILE_DISC
     | RANK
     ;
-    
+
 standard_prediction_function_keyword
     : PREDICTION
     | PREDICTION_BOUNDS
@@ -1599,7 +1599,7 @@ standard_prediction_function_keyword
     | PREDICTION_PROBABILITY
     | PREDICTION_SET
     ;
-    
+
 over_clause
     : OVER '(' query_partition_clause? (order_by_clause windowing_clause?)? ')'
     ;
@@ -1690,10 +1690,10 @@ xmlserialize_param_ident_part
     : NO INDENT
     | INDENT (SIZE '=' concatenation_wrapper)?
     ;
-    
+
 // SqlPlus
 
-sql_plus_command 
+sql_plus_command
     : ('/' | whenever_command | exit_command | prompt_command | set_command) ';'?
     ;
 
@@ -1707,7 +1707,7 @@ set_command
     ;
 
 exit_command
-    : EXIT 
+    : EXIT
     ;
 
 prompt_command
@@ -1742,8 +1742,8 @@ current_of_clause
     ;
 
 into_clause
-    : INTO variable_name (',' variable_name)* 
-    | BULK COLLECT INTO variable_name (',' variable_name)* 
+    : INTO variable_name (',' variable_name)*
+    | BULK COLLECT INTO variable_name (',' variable_name)*
     ;
 
 // $>
@@ -1828,7 +1828,7 @@ sequence_name
     ;
 
 exception_name
-    : id ('.' id_expression)* 
+    : id ('.' id_expression)*
     ;
 
 function_name
@@ -1875,7 +1875,7 @@ column_name
     ;
 
 tableview_name
-    : id ('.' id_expression)? 
+    : id ('.' id_expression)?
       ('@' link_name | /*TODO{!(input.LA(2) == SQL92_RESERVED_BY)}?*/ partition_extension_clause)?
     ;
 
@@ -1946,14 +1946,14 @@ native_datatype_element
     | NUMERIC
     | SMALLINT
     | NUMBER
-    | DECIMAL 
+    | DECIMAL
     | DOUBLE PRECISION?
     | FLOAT
     | REAL
     | NCHAR
     | LONG RAW?
-    | CHAR  
-    | CHARACTER 
+    | CHAR
+    | CHARACTER
     | VARCHAR2
     | VARCHAR
     | STRING
@@ -2020,7 +2020,7 @@ constant
     | NULL
     | TRUE
     | FALSE
-    | DBTIMEZONE 
+    | DBTIMEZONE
     | SESSIONTIMEZONE
     | MINVALUE
     | MAXVALUE
@@ -2076,7 +2076,7 @@ concatenation_op
 outer_join_sign
     : '(' '+' ')'
     ;
-    
+
 regular_id
     : REGULAR_ID
     | A_LETTER
@@ -3009,7 +3009,7 @@ PREDICTION_COST:              P R E D I C T I O N '_' C O S T;
 PREDICTION_DETAILS:           P R E D I C T I O N '_' D E T A I L S;
 PREDICTION_PROBABILITY:       P R E D I C T I O N '_' P R O B A B I L I T Y;
 PREDICTION_SET:               P R E D I C T I O N '_' S E T;
-                              
+
 CUME_DIST:                    C U M E '_' D I S T;
 DENSE_RANK:                   D E N S E '_' R A N K;
 LISTAGG:                      L I S T A G G;
@@ -3017,7 +3017,7 @@ PERCENT_RANK:                 P E R C E N T '_' R A N K;
 PERCENTILE_CONT:              P E R C E N T I L E '_' C O N T;
 PERCENTILE_DISC:              P E R C E N T I L E '_' D I S C;
 RANK:                         R A N K;
-                              
+
 AVG:                          A V G;
 CORR:                         C O R R;
 LAG:                          L A G;
@@ -3090,7 +3090,7 @@ BIT_STRING_LIT
 //{ Rule #284 <HEX_STRING_LIT> - subtoken typecast in <REGULAR_ID>
 //  Lowercase 'x' is a usual addition to the standard
 HEX_STRING_LIT
-    : X ('\'' ('a'..'f' | 'A'..'F' | '0'..'9')* '\'' /*SEPARATOR?*/ )+ 
+    : X ('\'' ('a'..'f' | 'A'..'F' | '0'..'9')* '\'' /*SEPARATOR?*/ )+
     ;
 //}
 
@@ -3102,8 +3102,8 @@ PERIOD
     : '.'
     ;
 
-//{ Rule #238 <EXACT_NUM_LIT> 
-//  This rule is a bit tricky - it resolves the ambiguity with <PERIOD> 
+//{ Rule #238 <EXACT_NUM_LIT>
+//  This rule is a bit tricky - it resolves the ambiguity with <PERIOD>
 //  It als44o incorporates <mantisa> and <exponent> for the <APPROXIMATE_NUM_LIT>
 //  Rule #501 <signed_integer> was incorporated directly in the token <APPROXIMATE_NUM_LIT>
 //  See also the rule #617 <unsigned_num_lit>
@@ -3153,14 +3153,14 @@ fragment QS_OTHER_CH: ~('<' | '{' | '[' | '(' | ' ' | '\t' | '\n' | '\r');
 //		}
 		:
 		QUOTE delimiter=QS_OTHER_CH
-// JAVA Syntax 
+// JAVA Syntax
     ( { input.LT(1) != $delimiter.text.charAt(0) || ( input.LT(1) == $delimiter.text.charAt(0) && input.LT(2) != '\'') }? => . )*
     ( { input.LT(1) == $delimiter.text.charAt(0) && input.LT(2) == '\'' }? => . ) QUOTE
 		;*/
 
 //{ Rule #163 <DELIMITED_ID>
 DELIMITED_ID
-    : '"' (~('"' | '\r' | '\n') | '"' '"')+ '"' 
+    : '"' (~('"' | '\r' | '\n') | '"' '"')+ '"'
     ;
 //}
 
@@ -3192,7 +3192,7 @@ ASTERISK
 PLUS_SIGN
     : '+'
     ;
-    
+
 MINUS_SIGN
     : '-'
     ;
@@ -3203,7 +3203,7 @@ COMMA
 
 SOLIDUS
     : '/'
-    ; 
+    ;
 
 AT_SIGN
     : '@'
@@ -3212,7 +3212,7 @@ AT_SIGN
 ASSIGN_OP
     : ':='
     ;
-    
+
 // See OCI reference for more information about this
 BINDVAR
     : ':' SIMPLE_LETTER  (SIMPLE_LETTER | '0' .. '9' | '_')*
@@ -3247,7 +3247,7 @@ NOT_EQUAL_OP
     | '^='
     | '~='
     ;
-    
+
 CARRET_OPERATOR_PART
     : '^'
     ;
@@ -3299,7 +3299,7 @@ INTRODUCER
     ;
 
 //{ Rule #479 <SEPARATOR>
-//  It was originally a protected rule set to be filtered out but the <COMMENT> and <'-'> clashed. 
+//  It was originally a protected rule set to be filtered out but the <COMMENT> and <'-'> clashed.
 /*SEPARATOR
     : '-' -> type('-')
     | COMMENT -> channel(HIDDEN)
@@ -3310,7 +3310,7 @@ INTRODUCER
 SPACES
     : [ \t\r\n]+ -> skip
     ;
-    
+
 //{ Rule #504 <SIMPLE_LETTER> - simple_latin _letter was generalised into SIMPLE_LETTER
 //  Unicode is yet to be implemented - see NSF0
 fragment
@@ -3320,11 +3320,11 @@ SIMPLE_LETTER
     ;
 //}
 
-//  Rule #176 <DIGIT> was incorporated by <UNSIGNED_INTEGER> 
-//{ Rule #615 <UNSIGNED_INTEGER> - subtoken typecast in <EXACT_NUM_LIT> 
+//  Rule #176 <DIGIT> was incorporated by <UNSIGNED_INTEGER>
+//{ Rule #615 <UNSIGNED_INTEGER> - subtoken typecast in <EXACT_NUM_LIT>
 fragment
 UNSIGNED_INTEGER_FRAGMENT
-    : ('0'..'9')+ 
+    : ('0'..'9')+
     ;
 //}
 
@@ -3346,7 +3346,7 @@ PROMPT
 //{ Rule #360 <NEWLINE>
 fragment
 NEWLINE: '\r'? '\n';
-    
+
 fragment
 SPACE: [ \t];
 

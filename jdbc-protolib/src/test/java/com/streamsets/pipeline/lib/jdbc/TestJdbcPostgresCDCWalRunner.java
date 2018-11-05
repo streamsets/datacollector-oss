@@ -81,7 +81,7 @@ public class TestJdbcPostgresCDCWalRunner {
       add(PostgresChangeTypeValues.UPDATE);
       add(PostgresChangeTypeValues.INSERT);
     }};
-    
+
   }
 
   private void setupBaseCDCRecordField() {

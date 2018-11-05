@@ -241,6 +241,7 @@
     <module>influxdb_0_9-lib</module>
     <module>jks-credentialstore-lib</module>
     <module>jdbc-lib</module>
+    <module>jdbc-protolib</module>
     <module>jms-lib</module>
     <module>kinesis-lib</module>
     <module>mleap-lib</module>

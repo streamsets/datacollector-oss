@@ -428,6 +428,6 @@ public class TestJDBCBaseRecordWriter {
     Assert.assertFalse(writer.isColumnTypeDate(Types.INTEGER));
     Assert.assertFalse(writer.isColumnTypeDate(Types.TIMESTAMP_WITH_TIMEZONE));
     Assert.assertFalse(writer.isColumnTypeDate(Types.TIME_WITH_TIMEZONE));
-    
+
   }
 }
