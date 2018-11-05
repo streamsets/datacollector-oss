@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ToErrorContext;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
+import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.jdbc.multithread.cache.JdbcTableReadContextInvalidationListener;
 import com.streamsets.pipeline.lib.jdbc.multithread.cache.JdbcTableReadContextLoader;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
@@ -91,6 +92,8 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
 
   private final RateLimiter queryRateLimiter;
 
+  protected final JdbcUtil jdbcUtil;
+
   private enum Status {
     WAITING_FOR_RATE_LIMIT_PERMIT,
     ACQUIRED_RATE_LIMIT_PERMIT,
@@ -112,6 +115,7 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
       CacheLoader<TableRuntimeContext, TableReadContext> tableCacheLoader,
       RateLimiter queryRateLimiter
   ) {
+    this.jdbcUtil = UtilsProvider.getJdbcUtil();
     this.context = context;
     this.threadNumber = threadNumber;
     this.lastQueryIntervalTime = -1;
@@ -310,7 +314,7 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
     if (numSQLErrors < commonSourceConfigBean.numSQLErrorRetries) {
       LOG.error(
           "SQL Exception happened : {}, will retry. Retries Count : {}, Max Retries Count : {}",
-          JdbcUtil.formatSqlException(sqlE),
+          jdbcUtil.formatSqlException(sqlE),
           numSQLErrors,
           commonSourceConfigBean.numSQLErrorRetries
       );
@@ -474,7 +478,7 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
    * Handle Exception
    */
   private void handleStageError(ErrorCode errorCode, Exception e) {
-    String errorMessage = (e instanceof SQLException)? JdbcUtil.formatSqlException((SQLException)e) : "Failure Happened";
+    String errorMessage = (e instanceof SQLException)? jdbcUtil.formatSqlException((SQLException)e) : "Failure Happened";
     LOG.error(errorMessage, e);
 
     try {

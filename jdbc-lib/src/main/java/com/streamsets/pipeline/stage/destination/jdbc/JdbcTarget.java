@@ -35,6 +35,7 @@ import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnParamMapping;
 import com.streamsets.pipeline.lib.jdbc.JdbcRecordReaderWriterFactory;
 import com.streamsets.pipeline.lib.jdbc.JdbcRecordWriter;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
+import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.operation.ChangeLogFormat;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
@@ -79,6 +80,8 @@ public class JdbcTarget extends BaseTarget {
   private final int defaultOpCode;
   private final UnsupportedOperationAction unsupportedAction;
   private final DuplicateKeyAction duplicateKeyAction;
+
+  private final JdbcUtil jdbcUtil;
 
   class RecordWriterLoader extends CacheLoader<String, JdbcRecordWriter> {
     @Override
@@ -150,6 +153,7 @@ public class JdbcTarget extends BaseTarget {
       DuplicateKeyAction duplicateKeyAction,
       HikariPoolConfigBean hikariConfigBean
   ) {
+    this.jdbcUtil = UtilsProvider.getJdbcUtil();
     this.schema = schema;
     this.tableNameTemplate = tableNameTemplate;
     this.customMappings = customMappings;
@@ -163,7 +167,7 @@ public class JdbcTarget extends BaseTarget {
     this.unsupportedAction = unsupportedAction;
     this.duplicateKeyAction = duplicateKeyAction;
     this.hikariConfigBean = hikariConfigBean;
-    this.dynamicTableName = JdbcUtil.isElString(tableNameTemplate);
+    this.dynamicTableName = jdbcUtil.isElString(tableNameTemplate);
 
     CacheBuilder cacheBuilder = CacheBuilder.newBuilder()
         .maximumSize(500)
@@ -207,7 +211,7 @@ public class JdbcTarget extends BaseTarget {
       try {
         String tableName = tableNameTemplate;
 
-        dataSource = JdbcUtil.createDataSourceForWrite(
+        dataSource = jdbcUtil.createDataSourceForWrite(
             hikariConfigBean, schema,
             tableName,
             caseSensitive,
@@ -242,7 +246,7 @@ public class JdbcTarget extends BaseTarget {
     // jdbc target always commit batch execution
     final boolean perRecord = false;
     if (dynamicTableName) {
-      JdbcUtil.write(
+      jdbcUtil.write(
           batch,
           tableNameEval,
           tableNameVars,
@@ -252,7 +256,7 @@ public class JdbcTarget extends BaseTarget {
           perRecord
       );
     } else {
-      JdbcUtil.write(batch.getRecords(), tableNameTemplate, recordWriters, errorRecordHandler, perRecord);
+      jdbcUtil.write(batch.getRecords(), tableNameTemplate, recordWriters, errorRecordHandler, perRecord);
     }
   }
 }

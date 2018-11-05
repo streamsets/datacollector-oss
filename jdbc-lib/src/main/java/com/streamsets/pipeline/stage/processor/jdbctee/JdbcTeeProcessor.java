@@ -35,6 +35,7 @@ import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnParamMapping;
 import com.streamsets.pipeline.lib.jdbc.JdbcRecordReaderWriterFactory;
 import com.streamsets.pipeline.lib.jdbc.JdbcRecordWriter;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
+import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.operation.ChangeLogFormat;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
@@ -72,6 +73,8 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
   private final HikariPoolConfigBean hikariConfigBean;
   private final CacheCleaner cacheCleaner;
 
+  private final JdbcUtil jdbcUtil;
+
   private ELEval tableNameEval = null;
   private ELVars tableNameVars = null;
 
@@ -96,6 +99,7 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
       JDBCOperationType defaultOp,
       UnsupportedOperationAction unsupportedAction
   ) {
+    this.jdbcUtil = UtilsProvider.getJdbcUtil();
     this.schema = schema;
     this.tableNameTemplate = tableNameTemplate;
     this.customMappings = customMappings;
@@ -109,7 +113,7 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
     this.hikariConfigBean = hikariConfigBean;
     this.defaultOperation = defaultOp;
     this.unsupportedAction = unsupportedAction;
-    this.dynamicTableName = JdbcUtil.isElString(tableNameTemplate);
+    this.dynamicTableName = this.jdbcUtil.isElString(tableNameTemplate);
 
     CacheBuilder cacheBuilder = CacheBuilder.newBuilder()
         .maximumSize(500)
@@ -178,7 +182,7 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
 
     if (issues.isEmpty() && null == dataSource) {
       try {
-        dataSource = JdbcUtil.createDataSourceForWrite(
+        dataSource = jdbcUtil.createDataSourceForWrite(
             hikariConfigBean, schema,
             tableNameTemplate,
             caseSensitive,
@@ -198,7 +202,7 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
 
   @Override
   public void destroy() {
-    JdbcUtil.closeQuietly(dataSource);
+    jdbcUtil.closeQuietly(dataSource);
     super.destroy();
   }
 
@@ -218,7 +222,7 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
     }
 
     if (dynamicTableName) {
-      JdbcUtil.write(
+      jdbcUtil.write(
           batch,
           tableNameEval,
           tableNameVars,
@@ -228,7 +232,7 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
           perRecord
       );
     } else {
-      JdbcUtil.write(batch.getRecords(), tableNameTemplate, recordWriters, errorRecordHandler, perRecord);
+      jdbcUtil.write(batch.getRecords(), tableNameTemplate, recordWriters, errorRecordHandler, perRecord);
     }
 
     Iterator<Record> it = batch.getRecords();

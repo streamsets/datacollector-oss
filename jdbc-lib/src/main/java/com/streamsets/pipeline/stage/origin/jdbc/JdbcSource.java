@@ -37,6 +37,7 @@ import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.jdbc.MSOperationCode;
 import com.streamsets.pipeline.lib.jdbc.UnknownTypeAction;
+import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
@@ -123,6 +124,8 @@ public class JdbcSource extends BaseSource {
   private boolean shouldFire = true;
   private boolean firstTime = true;
 
+  private final JdbcUtil jdbcUtil;
+
   public JdbcSource(
       boolean isIncrementalMode,
       String query,
@@ -139,6 +142,7 @@ public class JdbcSource extends BaseSource {
       UnknownTypeAction unknownTypeAction,
       long queryInterval
   ) {
+    this.jdbcUtil = UtilsProvider.getJdbcUtil();
     this.isIncrementalMode = isIncrementalMode;
     this.query = query;
     this.initialOffset = initialOffset;
@@ -217,7 +221,7 @@ public class JdbcSource extends BaseSource {
     try {
       driverProps = hikariConfigBean.getDriverProperties();
       if (null == dataSource) {
-        dataSource = JdbcUtil.createDataSourceForRead(hikariConfigBean);
+        dataSource = jdbcUtil.createDataSourceForRead(hikariConfigBean);
       }
     } catch (StageException e) {
       LOG.error(JdbcErrors.JDBC_00.getMessage(), e.toString(), e);
@@ -240,7 +244,7 @@ public class JdbcSource extends BaseSource {
         executeValidationQuery(issues, context, statement, preparedQuery);
       }
     } catch (SQLException e) {
-      String formattedError = JdbcUtil.formatSqlException(e);
+      String formattedError = jdbcUtil.formatSqlException(e);
       LOG.error(formattedError);
       LOG.debug(formattedError, e);
       issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, formattedError));
@@ -293,7 +297,7 @@ public class JdbcSource extends BaseSource {
     try (ResultSet rs = statement.executeQuery(preparedQuery)) {
       validateResultSetMetadata(issues, context, rs);
     } catch (SQLException e) {
-      String formattedError = JdbcUtil.formatSqlException(e);
+      String formattedError = jdbcUtil.formatSqlException(e);
       LOG.error(formattedError);
       LOG.debug(formattedError, e);
       issues.add(
@@ -326,7 +330,7 @@ public class JdbcSource extends BaseSource {
       // Log a warning instead of an error because some implementations such as Oracle have implicit
       // "columns" such as ROWNUM that won't appear as part of the result set.
       LOG.warn(JdbcErrors.JDBC_33.getMessage(), offsetColumn, query);
-      LOG.warn(JdbcUtil.formatSqlException(e));
+      LOG.warn(jdbcUtil.formatSqlException(e));
     }
     tableNames = StringUtils.join(allTables, ", ");
   }
@@ -471,7 +475,7 @@ public class JdbcSource extends BaseSource {
         if (++numQueryErrors == 1) {
           firstQueryException = e;
         }
-        String formattedError = JdbcUtil.formatSqlException(e);
+        String formattedError = jdbcUtil.formatSqlException(e);
         LOG.error(formattedError, e);
         if (resultSet != null) {
           try {
@@ -498,7 +502,7 @@ public class JdbcSource extends BaseSource {
               e.getClass().getSimpleName(),
               preparedQuery,
               numQueryErrors,
-              JdbcUtil.formatSqlException(firstQueryException)
+              jdbcUtil.formatSqlException(firstQueryException)
           );
         } // else allow nextSourceOffset to be returned, to retry
       }
@@ -542,7 +546,7 @@ public class JdbcSource extends BaseSource {
     ResultSetMetaData md = resultSet.getMetaData();
     int numColumns = md.getColumnCount();
 
-    LinkedHashMap<String, Field> fields = JdbcUtil.resultSetToFields(
+    LinkedHashMap<String, Field> fields = jdbcUtil.resultSetToFields(
         resultSet,
         commonSourceConfigBean,
         errorRecordHandler,
@@ -573,7 +577,7 @@ public class JdbcSource extends BaseSource {
       record.set(Field.create(row));
     }
     if (createJDBCNsHeaders) {
-      JdbcUtil.setColumnSpecificHeaders(record, Collections.<String>emptySet(), md, jdbcNsHeaderPrefix);
+      jdbcUtil.setColumnSpecificHeaders(record, Collections.<String>emptySet(), md, jdbcNsHeaderPrefix);
     }
     // We will add cdc operation type to record header even if createJDBCNsHeaders is false
     // we currently support CDC on only MS SQL.

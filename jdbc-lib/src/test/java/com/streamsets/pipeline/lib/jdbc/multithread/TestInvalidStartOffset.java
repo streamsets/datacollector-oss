@@ -20,9 +20,9 @@ import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
-import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
-import com.streamsets.pipeline.sdk.DataCollectorServicesUtils;
+import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
+import com.streamsets.pipeline.sdk.DataCollectorServicesUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -42,9 +42,11 @@ import java.util.UUID;
 public class TestInvalidStartOffset {
 
   private final int sqlType;
+  private final TableContextUtil tableContextUtil;
 
   public TestInvalidStartOffset(int sqlType) {
     this.sqlType = sqlType;
+    this.tableContextUtil = UtilsProvider.getTableContextUtil();
   }
 
   @Parameterized.Parameters(name = "SQL Type : {0}")
@@ -74,7 +76,7 @@ public class TestInvalidStartOffset {
   public void testCheckErrorOnInvalidStartOffset() throws Exception {
     String randomStringValue = UUID.randomUUID().toString();
     try {
-      TableContextUtil.checkForInvalidInitialOffsetValues(
+      tableContextUtil.checkForInvalidInitialOffsetValues(
           Mockito.mock(PushSource.Context.class),
           new LinkedList<Stage.ConfigIssue>(),
           "",

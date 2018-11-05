@@ -39,10 +39,12 @@ public class JdbcSchemaReader {
 
   private final HikariDataSource dataSource;
   private final JdbcSchemaWriter schemaWriter;
+  private final JdbcUtil jdbcUtil;
 
   public JdbcSchemaReader(HikariDataSource dataSource, JdbcSchemaWriter schemaWriter) {
     this.dataSource = dataSource;
     this.schemaWriter = schemaWriter;
+    this.jdbcUtil = UtilsProvider.getJdbcUtil();
   }
 
   public LinkedHashMap<String,JdbcTypeInfo> getTableSchema(String schema, String tableName) throws
@@ -50,12 +52,12 @@ public class JdbcSchemaReader {
     LinkedHashMap<String, JdbcTypeInfo> columns = new LinkedHashMap<>();
 
     try (Connection connection = dataSource.getConnection()) {
-      try (ResultSet metaDataTables = JdbcUtil.getTableMetadata(connection, schema, tableName)) {
+      try (ResultSet metaDataTables = jdbcUtil.getTableMetadata(connection, schema, tableName)) {
         if (!metaDataTables.next()) {
           return columns;
         }
 
-        ResultSet metaDataColumns = JdbcUtil.getColumnMetadata(connection, schema, tableName);
+        ResultSet metaDataColumns = jdbcUtil.getColumnMetadata(connection, schema, tableName);
         while (metaDataColumns.next()) {
           JdbcType jdbcType = JdbcType.valueOf(metaDataColumns.getInt(DATA_TYPE));
           columns.put(metaDataColumns.getString(COLUMN_NAME),

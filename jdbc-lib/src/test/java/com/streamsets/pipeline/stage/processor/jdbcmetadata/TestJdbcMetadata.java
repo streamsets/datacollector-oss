@@ -25,6 +25,7 @@ import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcSchemaReader;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
+import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -32,8 +33,10 @@ import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -61,6 +64,7 @@ public class TestJdbcMetadata {
   private final String h2ConnectionString = "jdbc:h2:mem:" + database;
 
   private Connection connection = null;
+  private static JdbcUtil jdbcUtil;
 
   // Records to create
   private Map<String, Pair<Field.Type, Object>> fieldMap1 = ImmutableMap.<String, Pair<Field.Type, Object>>builder()
@@ -110,6 +114,16 @@ public class TestJdbcMetadata {
     return bean;
   }
 
+  @BeforeClass
+  public static void beforeClass() {
+    jdbcUtil = UtilsProvider.getJdbcUtil();
+  }
+
+  @AfterClass
+  public static void afterClass() {
+    jdbcUtil = null;
+  }
+
   @Before
   public void setUp() throws SQLException {
     connection = DriverManager.getConnection(h2ConnectionString, username, password);
@@ -152,7 +166,7 @@ public class TestJdbcMetadata {
       Assert.assertEquals(fieldMap1.get(entry.getKey()).getRight(), entry.getValue().getValue());
     }
 
-    try (ResultSet metaDataColumns = JdbcUtil.getColumnMetadata(connection, null, tableName)) {
+    try (ResultSet metaDataColumns = jdbcUtil.getColumnMetadata(connection, null, tableName)) {
       while (metaDataColumns.next()) {
         Pair<Field.Type, Object> typeAndValue = fieldMap1.get(metaDataColumns.getString(JdbcSchemaReader.COLUMN_NAME).toLowerCase());
         Assert.assertEquals(typeAndValue.getLeft(), typeMap.get(metaDataColumns.getInt(JdbcSchemaReader.DATA_TYPE)));
@@ -181,7 +195,7 @@ public class TestJdbcMetadata {
       Assert.assertEquals(fieldMap2.get(entry.getKey()).getRight(), entry.getValue().getValue());
     }
 
-    try (ResultSet metaDataColumns = JdbcUtil.getColumnMetadata(connection, null, tableName)) {
+    try (ResultSet metaDataColumns = jdbcUtil.getColumnMetadata(connection, null, tableName)) {
       while (metaDataColumns.next()) {
         Pair<Field.Type, Object> typeAndValue = fieldMap2.get(metaDataColumns.getString(JdbcSchemaReader.COLUMN_NAME).toLowerCase());
         Assert.assertEquals(typeAndValue.getLeft(), typeMap.get(metaDataColumns.getInt(JdbcSchemaReader.DATA_TYPE)));

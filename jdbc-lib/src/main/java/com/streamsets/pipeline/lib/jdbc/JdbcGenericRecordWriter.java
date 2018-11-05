@@ -236,8 +236,8 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
   private void handleBatchUpdateException(
       Collection<Record> failedRecords, SQLException e, List<OnRecordErrorException> errorRecords
   ) throws StageException {
-    if (JdbcUtil.isDataError(getConnectionString(), e)) {
-      String formattedError = JdbcUtil.formatSqlException(e);
+    if (jdbcUtil.isDataError(getConnectionString(), e)) {
+      String formattedError = jdbcUtil.formatSqlException(e);
       LOG.error(formattedError);
       LOG.debug(formattedError, e);
 

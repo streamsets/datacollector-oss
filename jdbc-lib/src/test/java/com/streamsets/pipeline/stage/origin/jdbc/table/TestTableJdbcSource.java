@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.jdbc.DataType;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.jdbc.UnknownTypeAction;
+import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.jdbc.multithread.BatchTableStrategy;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
@@ -199,7 +200,7 @@ public class TestTableJdbcSource {
     columnsToTypes.put(dateCol, DataType.USE_COLUMN_TYPE);
     columnsToTypes.put(timeCol, DataType.USE_COLUMN_TYPE);
 
-    LinkedHashMap<String, Field> fields = JdbcUtil.resultSetToFields(rs, 0, 0,
+    LinkedHashMap<String, Field> fields = UtilsProvider.getJdbcUtil().resultSetToFields(rs, 0, 0,
         columnsToTypes, new FailTestErrorRecordHandler(), UnknownTypeAction.CONVERT_TO_STRING);
 
     assertThat(fields, hasKey(timestampColWithNanos));

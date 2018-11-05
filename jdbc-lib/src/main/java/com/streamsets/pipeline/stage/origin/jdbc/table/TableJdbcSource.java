@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
+import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.jdbc.multithread.ConnectionManager;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
@@ -49,20 +50,22 @@ public class TableJdbcSource extends AbstractTableJdbcSource {
   public static final String OFFSET_VERSION_2 = "2";
 
   private static final Logger LOG = LoggerFactory.getLogger(TableJdbcSource.class);
-  private final HikariPoolConfigBean hikariConfigBean;
-  private final TableJdbcConfigBean tableJdbcConfigBean;
-  private final CommonSourceConfigBean commonSourceConfigBean;
-
 
   public TableJdbcSource(
       HikariPoolConfigBean hikariConfigBean,
       CommonSourceConfigBean commonSourceConfigBean,
       TableJdbcConfigBean tableJdbcConfigBean
   ) {
-    super(hikariConfigBean, commonSourceConfigBean, tableJdbcConfigBean);
-    this.hikariConfigBean = hikariConfigBean;
-    this.commonSourceConfigBean = commonSourceConfigBean;
-    this.tableJdbcConfigBean = tableJdbcConfigBean;
+    this(hikariConfigBean, commonSourceConfigBean, tableJdbcConfigBean, UtilsProvider.getTableContextUtil());
+  }
+
+  public TableJdbcSource(
+      HikariPoolConfigBean hikariConfigBean,
+      CommonSourceConfigBean commonSourceConfigBean,
+      TableJdbcConfigBean tableJdbcConfigBean,
+      TableContextUtil tableContextUtil
+  ) {
+    super(hikariConfigBean, commonSourceConfigBean, tableJdbcConfigBean, tableContextUtil);
   }
 
   protected void checkConnectionAndBootstrap(Stage.Context context, List<ConfigIssue> issues) {
@@ -103,7 +106,7 @@ public class TableJdbcSource extends AbstractTableJdbcSource {
     for (TableConfigBean tableConfigBean : tableJdbcConfigBean.tableConfigs) {
       //No duplicates even though a table matches multiple configurations, we will add it only once.
       allTableContexts.putAll(
-          TableContextUtil.listTablesForConfig(
+          tableContextUtil.listTablesForConfig(
           getContext(),
           issues,
           connectionManager.getConnection(),

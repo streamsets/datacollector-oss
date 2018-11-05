@@ -21,7 +21,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
-import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
+import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,7 +68,7 @@ public class JdbcQueryExecutorConfig {
 
     if(issues.isEmpty()) {
       try {
-        dataSource = JdbcUtil.createDataSourceForRead(hikariConfigBean);
+        dataSource = UtilsProvider.getJdbcUtil().createDataSourceForRead(hikariConfigBean);
       } catch (StageException e) {
         LOG.error("Can't open connection", e);
         issues.add(

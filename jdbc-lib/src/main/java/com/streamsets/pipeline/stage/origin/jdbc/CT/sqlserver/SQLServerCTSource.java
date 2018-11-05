@@ -19,6 +19,7 @@ import com.google.common.cache.CacheLoader;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.jdbc.multithread.ConnectionManager;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
@@ -43,19 +44,30 @@ public class SQLServerCTSource extends AbstractTableJdbcSource {
       "$com.streamsets.pipeline.stage.origin.jdbc.CT.sqlserver.SQLServerCTSource.offset.version$";
   public static final String OFFSET_VERSION_1 = "1";
 
-  private final CommonSourceConfigBean commonSourceConfigBean;
   private final CTTableJdbcConfigBean ctTableJdbcConfigBean;
-  private final TableJdbcConfigBean tableJdbcConfigBean;
 
   public SQLServerCTSource(
       HikariPoolConfigBean hikariConfigBean,
       CommonSourceConfigBean commonSourceConfigBean,
       CTTableJdbcConfigBean ctTableJdbcConfigBean,
       TableJdbcConfigBean tableJdbcConfigBean) {
-    super(hikariConfigBean, commonSourceConfigBean, tableJdbcConfigBean);
-    this.commonSourceConfigBean = commonSourceConfigBean;
+    this(
+        hikariConfigBean,
+        commonSourceConfigBean,
+        ctTableJdbcConfigBean,
+        tableJdbcConfigBean,
+        UtilsProvider.getTableContextUtil()
+    );
+  }
+
+  public SQLServerCTSource(
+      HikariPoolConfigBean hikariConfigBean,
+      CommonSourceConfigBean commonSourceConfigBean,
+      CTTableJdbcConfigBean ctTableJdbcConfigBean,
+      TableJdbcConfigBean tableJdbcConfigBean,
+      TableContextUtil tableContextUtil) {
+    super(hikariConfigBean, commonSourceConfigBean, tableJdbcConfigBean, tableContextUtil);
     this.ctTableJdbcConfigBean = ctTableJdbcConfigBean;
-    this.tableJdbcConfigBean = tableJdbcConfigBean;
   }
 
   @Override
@@ -76,7 +88,7 @@ public class SQLServerCTSource extends AbstractTableJdbcSource {
     for (CTTableConfigBean tableConfigBean : ctTableJdbcConfigBean.tableConfigs) {
       //No duplicates even though a table matches multiple configurations, we will add it only once.
       allTableContexts.putAll(
-          TableContextUtil.listCTTablesForConfig(
+          tableContextUtil.listCTTablesForConfig(
               connectionManager.getConnection(),
               tableConfigBean
           ));

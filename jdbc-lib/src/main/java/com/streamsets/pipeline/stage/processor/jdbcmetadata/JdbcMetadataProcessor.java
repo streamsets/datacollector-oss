@@ -34,6 +34,7 @@ import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcMetastoreUtil;
 import com.streamsets.pipeline.lib.jdbc.JdbcSchemaReader;
+import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.jdbc.schemawriter.JdbcSchemaWriter;
 import com.streamsets.pipeline.lib.jdbc.JdbcStageCheckedException;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
@@ -79,6 +80,8 @@ public class JdbcMetadataProcessor extends RecordProcessor {
   private JdbcSchemaReader schemaReader;
   private JdbcSchemaWriter schemaWriter;
 
+  private final JdbcUtil jdbcUtil;
+
   private static class JdbcMetadataProcessorELEvals {
     private ELEval dbNameELEval;
     private ELEval tableNameELEval;
@@ -94,6 +97,7 @@ public class JdbcMetadataProcessor extends RecordProcessor {
     this.tableNameEL = configBean.tableNameEL;
     this.hikariConfigBean = configBean.hikariConfigBean;
     this.decimalDefaultsConfig = configBean.decimalDefaultsConfig;
+    this.jdbcUtil = UtilsProvider.getJdbcUtil();
   }
 
   /** {@inheritDoc} */
@@ -111,7 +115,7 @@ public class JdbcMetadataProcessor extends RecordProcessor {
 
     if (issues.isEmpty() && null == dataSource) {
       try {
-        dataSource = JdbcUtil.createDataSourceForWrite(hikariConfigBean, null, null,
+        dataSource = jdbcUtil.createDataSourceForWrite(hikariConfigBean, null, null,
             false,
             issues,
             Collections.emptyList(),
@@ -146,7 +150,7 @@ public class JdbcMetadataProcessor extends RecordProcessor {
   /** {@inheritDoc} */
   @Override
   public void destroy() {
-    JdbcUtil.closeQuietly(dataSource);
+    jdbcUtil.closeQuietly(dataSource);
     super.destroy();
   }
 

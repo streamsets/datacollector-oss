@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.jdbc.multithread.ConnectionManager;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
@@ -46,8 +47,6 @@ public class SQLServerCDCSource extends AbstractTableJdbcSource {
       "$com.streamsets.pipeline.stage.origin.jdbc.CDC.sqlserver.SQLServerCDCSource.offset.version$";
   public static final String OFFSET_VERSION_1 = "1";
 
-  private final CommonSourceConfigBean commonSourceConfigBean;
-  private final TableJdbcConfigBean tableJdbcConfigBean;
   private final CDCTableJdbcConfigBean cdcTableJdbcConfigBean;
 
   public SQLServerCDCSource(
@@ -56,10 +55,24 @@ public class SQLServerCDCSource extends AbstractTableJdbcSource {
       CDCTableJdbcConfigBean cdcTableJdbcConfigBean,
       TableJdbcConfigBean tableJdbcConfigBean
   ) {
-    super(hikariConfigBean, commonSourceConfigBean, tableJdbcConfigBean);
-    this.commonSourceConfigBean = commonSourceConfigBean;
+    this(
+        hikariConfigBean,
+        commonSourceConfigBean,
+        cdcTableJdbcConfigBean,
+        tableJdbcConfigBean,
+        UtilsProvider.getTableContextUtil()
+    );
+  }
+
+  public SQLServerCDCSource(
+      HikariPoolConfigBean hikariConfigBean,
+      CommonSourceConfigBean commonSourceConfigBean,
+      CDCTableJdbcConfigBean cdcTableJdbcConfigBean,
+      TableJdbcConfigBean tableJdbcConfigBean,
+      TableContextUtil tableContextUtil
+  ) {
+    super(hikariConfigBean, commonSourceConfigBean, tableJdbcConfigBean, tableContextUtil);
     this.cdcTableJdbcConfigBean = cdcTableJdbcConfigBean;
-    this.tableJdbcConfigBean = tableJdbcConfigBean;
   }
 
   @Override
@@ -101,7 +114,7 @@ public class SQLServerCDCSource extends AbstractTableJdbcSource {
     for (CDCTableConfigBean tableConfigBean : cdcTableJdbcConfigBean.tableConfigs) {
       //No duplicates even though a table matches multiple configurations, we will add it only once.
       allTableContexts.putAll(
-          TableContextUtil.listCDCTablesForConfig(
+          tableContextUtil.listCDCTablesForConfig(
               connectionManager.getConnection(),
               tableConfigBean,
               commonSourceConfigBean.enableSchemaChanges

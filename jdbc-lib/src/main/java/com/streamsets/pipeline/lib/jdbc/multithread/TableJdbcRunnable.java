@@ -63,7 +63,6 @@ public final class TableJdbcRunnable extends JdbcBaseRunnable {
         tableReadContextCache,
         queryRateLimiter
     );
-
   }
 
   @Override
@@ -74,7 +73,7 @@ public final class TableJdbcRunnable extends JdbcBaseRunnable {
   ) throws SQLException, StageException {
     ResultSetMetaData md = rs.getMetaData();
 
-    LinkedHashMap<String, Field> fields = JdbcUtil.resultSetToFields(
+    LinkedHashMap<String, Field> fields = jdbcUtil.resultSetToFields(
         rs,
         commonSourceConfigBean,
         errorRecordHandler,
@@ -96,7 +95,7 @@ public final class TableJdbcRunnable extends JdbcBaseRunnable {
     record.set(Field.createListMap(fields));
 
     //Set Column Headers
-    JdbcUtil.setColumnSpecificHeaders(
+    jdbcUtil.setColumnSpecificHeaders(
         record,
         Collections.singleton(tableRuntimeContext.getSourceTableContext().getTableName()),
         md,

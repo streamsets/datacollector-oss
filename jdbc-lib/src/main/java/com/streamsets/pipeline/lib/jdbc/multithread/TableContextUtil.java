@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
+import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.stage.origin.jdbc.CT.sqlserver.CTTableConfigBean;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.MSQueryUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.CT.sqlserver.Groups;
@@ -57,7 +58,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-public final class TableContextUtil {
+public class TableContextUtil {
   private static final Logger LOG = LoggerFactory.getLogger(TableContext.class);
   //JDBC Result set constants
   private static final String TABLE_METADATA_TABLE_CATALOG_CONSTANT = "TABLE_CAT";
@@ -86,12 +87,23 @@ public final class TableContextUtil {
     .add(Types.NUMERIC)
     .build();
 
+  private JdbcUtil jdbcUtil;
 
-  private TableContextUtil() {}
+  public TableContextUtil() {
+    this(UtilsProvider.getJdbcUtil());
+  }
 
-  private static Map<String, Integer> getColumnNameType(Connection connection, String schema, String tableName) throws SQLException {
+  public TableContextUtil(JdbcUtil jdbcUtil) {
+    this.jdbcUtil = jdbcUtil;
+  }
+
+  public JdbcUtil getJdbcUtil() {
+    return jdbcUtil;
+  }
+
+  private Map<String, Integer> getColumnNameType(Connection connection, String schema, String tableName) throws SQLException {
     Map<String, Integer> columnNameToType = new LinkedHashMap<>();
-    try (ResultSet rs = JdbcUtil.getColumnMetadata(connection, schema, tableName)) {
+    try (ResultSet rs = jdbcUtil.getColumnMetadata(connection, schema, tableName)) {
       while (rs.next()) {
         String column = rs.getString(COLUMN_METADATA_COLUMN_NAME);
         int type = rs.getInt(COLUMN_METADATA_COLUMN_TYPE);
@@ -101,7 +113,7 @@ public final class TableContextUtil {
     return columnNameToType;
   }
 
-  private static void checkForUnsupportedOffsetColumns(
+  private void checkForUnsupportedOffsetColumns(
       LinkedHashMap<String, Integer> offsetColumnToType
   ) throws StageException {
     //Validate if there are partition column types for offset maintenance
@@ -139,7 +151,7 @@ public final class TableContextUtil {
         quotedTableName: String.format(OffsetQueryUtil.QUOTED_NAME, qC, schema, qC)  + "." + quotedTableName ;
   }
 
-  private static TableContext createTableContext(
+  private TableContext createTableContext(
       PushSource.Context context,
       List<Stage.ConfigIssue> issues,
       Connection connection,
@@ -179,7 +191,7 @@ public final class TableContextUtil {
         offsetColumnToType.put(overridenPartitionColumn, columnNameToType.get(overridenPartitionColumn));
       }
     } else {
-      List<String> primaryKeys = JdbcUtil.getPrimaryKeys(connection, schemaName, tableName);
+      List<String> primaryKeys = jdbcUtil.getPrimaryKeys(connection, schemaName, tableName);
       if (primaryKeys.isEmpty() && !tableConfigBean.enableNonIncremental) {
         issues.add(context.createConfigIssue(
             Groups.TABLE.name(),
@@ -196,7 +208,7 @@ public final class TableContextUtil {
 
     Map<String, String> offsetColumnMinValues = new HashMap<>();
     if (tableConfigBean.partitioningMode != PartitioningMode.DISABLED) {
-      offsetColumnMinValues.putAll(JdbcUtil.getMinimumOffsetValues(
+      offsetColumnMinValues.putAll(jdbcUtil.getMinimumOffsetValues(
           connection,
           schemaName,
           tableName,
@@ -260,7 +272,7 @@ public final class TableContextUtil {
    * Evaluate ELs in Initial offsets as needed and populate the final String representation of initial offsets
    * in {@param offsetColumnToStartOffset}
    */
-  private static void populateInitialOffset(
+  private void populateInitialOffset(
       PushSource.Context context,
       List<Stage.ConfigIssue> issues,
       Map<String, String> configuredColumnToInitialOffset,
@@ -306,7 +318,7 @@ public final class TableContextUtil {
    * for columns.
    */
   //@VisibleForTesting
-  static void checkForInvalidInitialOffsetValues(
+  void checkForInvalidInitialOffsetValues(
       PushSource.Context context,
       List<Stage.ConfigIssue> issues,
       String qualifiedTableName,
@@ -317,7 +329,7 @@ public final class TableContextUtil {
     offsetColumnToType.forEach((offsetColumn, offsetSqlType) -> {
       String initialOffsetValue = offsetColumnToStartOffset.get(offsetColumn);
       try {
-        if (JdbcUtil.isSqlTypeOneOf(offsetSqlType, Types.DATE, Types.TIME, Types.TIMESTAMP)) {
+        if (jdbcUtil.isSqlTypeOneOf(offsetSqlType, Types.DATE, Types.TIME, Types.TIMESTAMP)) {
           Long.valueOf(initialOffsetValue); //NOSONAR
         } else {
           //Use native field conversion strategy to conver string to specify type and get value
@@ -353,7 +365,7 @@ public final class TableContextUtil {
    * @throws SQLException If list tables call fails
    * @throws StageException if partition configuration is not correct.
    */
-  public static Map<String, TableContext> listTablesForConfig(
+  public Map<String, TableContext> listTablesForConfig(
       PushSource.Context context,
       List<Stage.ConfigIssue> issues,
       Connection connection,
@@ -368,7 +380,7 @@ public final class TableContextUtil {
     Pattern schemaExclusion =
         StringUtils.isEmpty(tableConfigBean.schemaExclusionPattern)?
             null : Pattern.compile(tableConfigBean.schemaExclusionPattern);
-    try (ResultSet rs = JdbcUtil.getTableAndViewMetadata(connection, tableConfigBean.schema, tableConfigBean.tablePattern)) {
+    try (ResultSet rs = jdbcUtil.getTableAndViewMetadata(connection, tableConfigBean.schema, tableConfigBean.tablePattern)) {
       while (rs.next()) {
         String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
         String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);
@@ -584,7 +596,7 @@ public final class TableContextUtil {
     return timestamp;
   }
 
-  public static Map<String, TableContext> listCTTablesForConfig(
+  public Map<String, TableContext> listCTTablesForConfig(
       Connection connection,
       CTTableConfigBean tableConfigBean
   ) throws SQLException, StageException {
@@ -595,7 +607,7 @@ public final class TableContextUtil {
 
     long currentVersion = getCurrentVersion(connection);
 
-    try (ResultSet rs = JdbcUtil.getTableMetadata(connection, tableConfigBean.schema, tableConfigBean.tablePattern)) {
+    try (ResultSet rs = jdbcUtil.getTableMetadata(connection, tableConfigBean.schema, tableConfigBean.tablePattern)) {
       while (rs.next()) {
         String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
         String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);
@@ -621,7 +633,7 @@ public final class TableContextUtil {
     return tableContextMap;
   }
 
-  public static Map<String, TableContext> listCDCTablesForConfig(
+  public Map<String, TableContext> listCDCTablesForConfig(
       Connection connection,
       CDCTableConfigBean tableConfigBean,
       boolean enableSchemaChanges
@@ -633,7 +645,7 @@ public final class TableContextUtil {
 
     final String tablePattern = tableConfigBean.capture_instance + SQL_SERVER_CDC_TABLE_SUFFIX;
     final String cdcSchema = "cdc";
-    try (ResultSet rs = JdbcUtil.getTableMetadata(connection, cdcSchema, tablePattern)) {
+    try (ResultSet rs = jdbcUtil.getTableMetadata(connection, cdcSchema, tablePattern)) {
       while (rs.next()) {
         String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
         String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);
@@ -667,7 +679,7 @@ public final class TableContextUtil {
     return tableContextMap;
   }
 
-  private static long getCurrentVersion(Connection connection) throws SQLException, StageException {
+  private long getCurrentVersion(Connection connection) throws SQLException, StageException {
     PreparedStatement preparedStatement = connection.prepareStatement(MSQueryUtil.getCurrentVersion());
     ResultSet resultSet = preparedStatement.executeQuery();
     while (resultSet.next()) {
@@ -677,7 +689,7 @@ public final class TableContextUtil {
     throw new StageException(JdbcErrors.JDBC_201, -1);
   }
 
-  private static long validateTable(Connection connection, String schema, String table) throws SQLException, StageException {
+  private long validateTable(Connection connection, String schema, String table) throws SQLException, StageException {
     String query = MSQueryUtil.getMinVersion(schema, table);
     PreparedStatement validation = connection.prepareStatement(query);
     ResultSet resultSet = validation.executeQuery();
@@ -688,7 +700,7 @@ public final class TableContextUtil {
     throw new StageException(JdbcErrors.JDBC_200, table);
   }
 
-  private static TableContext createCTTableContext(
+  private TableContext createCTTableContext(
       Connection connection,
       String schemaName,
       String tableName,
@@ -700,7 +712,7 @@ public final class TableContextUtil {
     Map<String, Integer> columnNameToType = getColumnNameType(connection, schemaName, tableName);
     Map<String, String> offsetColumnToStartOffset = new HashMap<>();
 
-    List<String> primaryKeys = JdbcUtil.getPrimaryKeys(connection, schemaName, tableName);
+    List<String> primaryKeys = jdbcUtil.getPrimaryKeys(connection, schemaName, tableName);
     if (primaryKeys.isEmpty()) {
       throw new StageException(JdbcErrors.JDBC_62, tableName);
     }
@@ -735,7 +747,7 @@ public final class TableContextUtil {
     );
   }
 
-  private static TableContext createCDCTableContext(
+  private TableContext createCDCTableContext(
       String schemaName,
       String tableName,
       String initalOffset,

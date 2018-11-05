@@ -94,7 +94,7 @@ public class CDCJdbcRunnable extends JdbcBaseRunnable {
   ) throws SQLException, StageException {
     ResultSetMetaData md = rs.getMetaData();
 
-    LinkedHashMap<String, Field> fields = JdbcUtil.resultSetToFields(
+    LinkedHashMap<String, Field> fields = jdbcUtil.resultSetToFields(
         rs,
         commonSourceConfigBean,
         errorRecordHandler,
@@ -118,7 +118,7 @@ public class CDCJdbcRunnable extends JdbcBaseRunnable {
     record.set(Field.createListMap(fields));
 
     //Set Column Headers
-    JdbcUtil.setColumnSpecificHeaders(
+    jdbcUtil.setColumnSpecificHeaders(
         record,
         Collections.singleton(tableRuntimeContext.getSourceTableContext().getTableName()),
         md,

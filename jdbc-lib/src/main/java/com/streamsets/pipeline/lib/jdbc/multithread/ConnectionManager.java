@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.jdbc.multithread;
 
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
+import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,11 +35,13 @@ public final class ConnectionManager {
   private final HikariDataSource hikariDataSource;
   private final ThreadLocal<Connection> threadLocalConnection;
   private final Set<Connection> connectionsToCloseDuringDestroy;
+  private final JdbcUtil jdbcUtil;
 
   public ConnectionManager(HikariDataSource hikariDataSource) {
     this.hikariDataSource = hikariDataSource;
     this.connectionsToCloseDuringDestroy = new HashSet<>();
     this.threadLocalConnection = new ThreadLocal<>();
+    this.jdbcUtil = UtilsProvider.getJdbcUtil();
   }
 
   private synchronized Connection getNewConnection() throws SQLException{
@@ -65,7 +68,7 @@ public final class ConnectionManager {
   public void closeConnection() {
     LOGGER.debug("Closing connection");
     Connection connectionToRemove = threadLocalConnection.get();
-    JdbcUtil.closeQuietly(connectionToRemove);
+    jdbcUtil.closeQuietly(connectionToRemove);
     if (connectionToRemove != null) {
       synchronized (this) {
         connectionsToCloseDuringDestroy.remove(connectionToRemove);
@@ -79,6 +82,6 @@ public final class ConnectionManager {
    */
   public synchronized void closeAll() {
     LOGGER.debug("Closing all connections");
-    connectionsToCloseDuringDestroy.forEach(JdbcUtil::closeQuietly);
+    connectionsToCloseDuringDestroy.forEach(jdbcUtil::closeQuietly);
   }
 }

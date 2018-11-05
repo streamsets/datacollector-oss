@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
+import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaAndTable;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaTableConfigBean;
@@ -74,6 +75,8 @@ public class PostgresCDCWalReceiver {
   private PostgresCDCConfigBean configBean;
   private HikariPoolConfigBean hikariConfigBean;
 
+  private final JdbcUtil jdbcUtil;
+
   public PGReplicationStream getStream() {
     return stream;
   }
@@ -101,7 +104,7 @@ public class PostgresCDCWalReceiver {
     List<ConfigIssue> issues = new ArrayList<>();
     Pattern p = StringUtils.isEmpty(tables.excludePattern) ? null : Pattern.compile(tables.excludePattern);
     try (ResultSet rs =
-        JdbcUtil.getTableAndViewMetadata(connection, tables.schema, tables.table)) {
+        jdbcUtil.getTableAndViewMetadata(connection, tables.schema, tables.table)) {
       while (rs.next()) {
         String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
         String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);
@@ -314,6 +317,7 @@ public class PostgresCDCWalReceiver {
       HikariPoolConfigBean hikariConfigBean,
       Stage.Context context
   ) throws StageException {
+    this.jdbcUtil = UtilsProvider.getJdbcUtil();
     this.configBean = configBean;
     this.hikariConfigBean = hikariConfigBean;
     this.context = context;

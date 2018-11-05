@@ -114,6 +114,8 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
   private final UnsupportedOperationAction unsupportedAction;
   private final List<String> primaryKeyParams;
 
+  protected final JdbcUtil jdbcUtil;
+
   public JdbcBaseRecordWriter(
       String connectionString,
       DataSource dataSource,
@@ -127,6 +129,8 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
       List<JdbcFieldColumnMapping> generatedColumnMappings,
       boolean caseSensitive
   ) throws StageException {
+    this.jdbcUtil = UtilsProvider.getJdbcUtil();
+
     this.connectionString = connectionString;
     this.dataSource = dataSource;
 
@@ -179,9 +183,9 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
     Connection connection = null;
     try {
       connection = dataSource.getConnection();
-      primaryKeyColumns = JdbcUtil.getPrimaryKeys(connection, schema, tableName);
+      primaryKeyColumns = jdbcUtil.getPrimaryKeys(connection, schema, tableName);
     } catch (SQLException e) {
-      String formattedError = JdbcUtil.formatSqlException(e);
+      String formattedError = jdbcUtil.formatSqlException(e);
       LOG.error(formattedError, e);
       throw new StageException(JdbcErrors.JDBC_17, tableName, formattedError);
     } finally {
@@ -189,7 +193,7 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
         try {
           connection.close();
         } catch (SQLException e) {
-          String formattedError = JdbcUtil.formatSqlException(e);
+          String formattedError = jdbcUtil.formatSqlException(e);
           LOG.error(formattedError, e);
         }
       }
@@ -208,13 +212,13 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
    */
   private void createDefaultFieldMappings() throws StageException {
     try (Connection connection = dataSource.getConnection()) {
-      try (ResultSet res = JdbcUtil.getTableMetadata(connection, schema, tableName)) {
+      try (ResultSet res = jdbcUtil.getTableMetadata(connection, schema, tableName)) {
         if (!res.next()) {
           throw new StageException(JdbcErrors.JDBC_16, getTableName());
         }
       }
 
-      try (ResultSet columns = JdbcUtil.getColumnMetadata(connection, schema, tableName)) {
+      try (ResultSet columns = jdbcUtil.getColumnMetadata(connection, schema, tableName)) {
         while (columns.next()) {
           String columnName = columns.getString(COLUMN_NAME);
           columnsToFields.put(columnName, "/" + columnName); // Default implicit field mappings
@@ -223,7 +227,7 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
         }
       }
     } catch (SQLException e) {
-      String errorMessage = JdbcUtil.formatSqlException(e);
+      String errorMessage = jdbcUtil.formatSqlException(e);
       LOG.error(errorMessage);
       LOG.debug(errorMessage, e);
       throw new StageException(JdbcErrors.JDBC_09, tableName);
@@ -401,7 +405,7 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
         try {
           // Assuming generated columns can't be CLOBs/BLOBs, so just pass
           // zero for maxClobSize
-          Field field = JdbcUtil.resultToField(
+          Field field = jdbcUtil.resultToField(
             md,
             resultSet,
             i,
@@ -666,7 +670,7 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
    * @throws StageException
    */
   void handleSqlException(SQLException e) throws StageException {
-    String formattedError = JdbcUtil.formatSqlException(e);
+    String formattedError = jdbcUtil.formatSqlException(e);
     LOG.error(formattedError, e);
     throw new StageException(JdbcErrors.JDBC_14, formattedError);
   }

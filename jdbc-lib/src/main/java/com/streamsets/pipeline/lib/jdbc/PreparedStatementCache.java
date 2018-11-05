@@ -48,13 +48,15 @@ public class PreparedStatementCache {
 
   private final LoadingCache<SortedMap<String, String>, PreparedStatement> cacheMap;
 
+  private final JdbcUtil jdbcUtil;
+
   class PreparedStatementLoader extends CacheLoader<SortedMap<String, String>, PreparedStatement> {
     @Override
     public PreparedStatement load(SortedMap<String, String> columns) throws Exception {
       String query = generateQuery(columns);
       LOG.debug("Generated query: {}", query);
 
-      PreparedStatement statement = JdbcUtil.getPreparedStatement(generatedColumnMappings, query, connection);
+      PreparedStatement statement = jdbcUtil.getPreparedStatement(generatedColumnMappings, query, connection);
       return statement;
     }
   }
@@ -81,6 +83,7 @@ public class PreparedStatementCache {
                          int maxCacheSize,
                          boolean caseSensitive)
   {
+    this.jdbcUtil = UtilsProvider.getJdbcUtil();
     this.connection = connection;
     this.tableName = tableName;
     this.generatedColumnMappings = generatedColumnMappings;
@@ -112,7 +115,7 @@ public class PreparedStatementCache {
     }
 
     final int recordSize = 1;
-    String query = JdbcUtil.generateQuery(opCode, tableName, primaryKeyColumns, primaryKeyParams, columns, recordSize, caseSensitive, false);
+    String query = jdbcUtil.generateQuery(opCode, tableName, primaryKeyColumns, primaryKeyParams, columns, recordSize, caseSensitive, false);
     LOG.debug("Generated single-row query:" + query);
     return query;
   }

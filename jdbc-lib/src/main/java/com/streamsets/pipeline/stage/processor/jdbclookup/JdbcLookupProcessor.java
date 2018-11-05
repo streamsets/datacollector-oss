@@ -36,6 +36,7 @@ import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnMapping;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
+import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.MissingValuesBehavior;
@@ -46,7 +47,6 @@ import com.streamsets.pipeline.stage.processor.kv.LookupUtils;
 import com.zaxxer.hikari.HikariDataSource;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -61,8 +61,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
-
-import static com.streamsets.pipeline.lib.jdbc.JdbcUtil.closeQuietly;
 
 public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(JdbcLookupProcessor.class);
@@ -99,6 +97,7 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
 
   private List<ExecutorService> generationExecutors = new ArrayList<>();
   private int preprocessThreads = 0;
+  private JdbcUtil jdbcUtil;
 
   public JdbcLookupProcessor(
       String query,
@@ -126,6 +125,10 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
     // Validate configuration values and open any required resources.
     List<ConfigIssue> issues = super.init();
 
+    if (issues.isEmpty()) {
+      jdbcUtil = UtilsProvider.getJdbcUtil();
+    }
+
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     Processor.Context context = getContext();
 
@@ -135,7 +138,7 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
 
     if (issues.isEmpty() && null == dataSource) {
       try {
-        dataSource = JdbcUtil.createDataSourceForRead(hikariConfigBean);
+        dataSource = jdbcUtil.createDataSourceForRead(hikariConfigBean);
       } catch (StageException e) {
         issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, e.toString()));
       }
@@ -232,7 +235,7 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
   /** {@inheritDoc} */
   @Override
   public void destroy() {
-    closeQuietly(dataSource);
+    jdbcUtil.closeQuietly(dataSource);
     for (ExecutorService generationExecutor : generationExecutors) {
       generationExecutor.shutdown();
       try {

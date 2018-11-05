@@ -21,6 +21,7 @@ import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
+import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
@@ -63,6 +64,7 @@ public class DifferentTypesAsOffsetIT extends BaseTableJdbcSourceIT {
 
   private final int offsetSqlType;
   private final Field.Type offsetFieldType;
+  private final JdbcUtil jdbcUtil;
   private String offsetFieldName;
   private List<Record> expectedRecords;
 
@@ -70,6 +72,7 @@ public class DifferentTypesAsOffsetIT extends BaseTableJdbcSourceIT {
     this.offsetSqlType = offsetSqlType;
     this.offsetFieldType = offsetFieldType;
     expectedRecords = new ArrayList<>();
+    this.jdbcUtil = UtilsProvider.getJdbcUtil();
   }
 
   @Parameterized.Parameters(name = "Offset Field Type: ({1}), SQL Type: ({0})")
@@ -253,7 +256,7 @@ public class DifferentTypesAsOffsetIT extends BaseTableJdbcSourceIT {
   public void testInitialOffset() throws Exception {
     final int batchSize = NUMBER_OF_RECORDS / 2;
     String initialOffset;
-    if (JdbcUtil.isSqlTypeOneOf(offsetSqlType, Types.DATE, Types.TIME, Types.TIMESTAMP)) {
+    if (jdbcUtil.isSqlTypeOneOf(offsetSqlType, Types.DATE, Types.TIME, Types.TIMESTAMP)) {
       Date date = new Date(expectedRecords.get(batchSize-1).get("/" + offsetFieldName).getValueAsLong());
       initialOffset = getTimeELForInitialOffsetForDateTimeTypes(date);
     } else {

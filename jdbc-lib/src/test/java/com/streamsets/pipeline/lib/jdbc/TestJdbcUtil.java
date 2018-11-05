@@ -20,7 +20,9 @@ import com.streamsets.pipeline.stage.origin.jdbc.table.QuoteChar;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.sql.Connection;
@@ -67,6 +69,17 @@ public class TestJdbcUtil {
   }
 
   private Connection connection;
+  private static JdbcUtil jdbcUtil;
+
+  @BeforeClass
+  public static void beforeClass() {
+    jdbcUtil = UtilsProvider.getJdbcUtil();
+  }
+
+  @AfterClass
+  public static void afterClass() {
+    jdbcUtil = null;
+  }
 
   @Before
   public void setUp() throws SQLException {
@@ -128,7 +141,7 @@ public class TestJdbcUtil {
     HikariPoolConfigBean config = createConfigBean();
     config.transactionIsolation = TransactionIsolationLevel.TRANSACTION_READ_COMMITTED;
 
-    HikariDataSource dataSource = JdbcUtil.createDataSourceForRead(config);
+    HikariDataSource dataSource = jdbcUtil.createDataSourceForRead(config);
     Connection connection = dataSource.getConnection();
     assertNotNull(connection);
     assertEquals(Connection.TRANSACTION_READ_COMMITTED, connection.getTransactionIsolation());
@@ -139,10 +152,10 @@ public class TestJdbcUtil {
   public void testGetTableMetadata() throws Exception {
     HikariPoolConfigBean config = createConfigBean();
 
-    HikariDataSource dataSource = JdbcUtil.createDataSourceForRead(config);
+    HikariDataSource dataSource = jdbcUtil.createDataSourceForRead(config);
     Connection connection = dataSource.getConnection();
 
-    ResultSet resultSet = JdbcUtil.getTableMetadata(connection, schema, tableName);
+    ResultSet resultSet = jdbcUtil.getTableMetadata(connection, schema, tableName);
     assertEquals(true, resultSet.next());
   }
 
@@ -150,23 +163,23 @@ public class TestJdbcUtil {
   public void testGetTableMetadataWithDots() throws Exception {
     HikariPoolConfigBean config = createConfigBean();
 
-    HikariDataSource dataSource = JdbcUtil.createDataSourceForRead(config);
+    HikariDataSource dataSource = jdbcUtil.createDataSourceForRead(config);
     Connection connection = dataSource.getConnection();
 
-    ResultSet resultSet = JdbcUtil.getTableMetadata(connection, schema, tableNameWithSpecialChars);
+    ResultSet resultSet = jdbcUtil.getTableMetadata(connection, schema, tableNameWithSpecialChars);
     assertEquals(true, resultSet.next());
   }
 
   @Test
   public void testResultToField() throws Exception {
     HikariPoolConfigBean config = createConfigBean();
-    try (HikariDataSource dataSource = JdbcUtil.createDataSourceForRead(config)) {
+    try (HikariDataSource dataSource = jdbcUtil.createDataSourceForRead(config)) {
       try (Connection connection = dataSource.getConnection()) {
         try (Statement stmt = connection.createStatement()) {
           // Currently only validates TIMESTAMP WITH TIME ZONE (H2 does not support TIME WITH TIME ZONE)
           ResultSet resultSet = stmt.executeQuery("SELECT * FROM " + schema + "." + dataTypesTestTable);
           assertTrue(resultSet.next());
-          Field field = JdbcUtil.resultToField(
+          Field field = jdbcUtil.resultToField(
             resultSet.getMetaData(),
             resultSet,
             2,
@@ -191,10 +204,10 @@ public class TestJdbcUtil {
   public void testGetMinValues() throws Exception {
     HikariPoolConfigBean config = createConfigBean();
 
-    HikariDataSource dataSource = JdbcUtil.createDataSourceForRead(config);
+    HikariDataSource dataSource = jdbcUtil.createDataSourceForRead(config);
     Connection connection = dataSource.getConnection();
 
-    Map<String, String> emptyTableMin = JdbcUtil.getMinimumOffsetValues(
+    Map<String, String> emptyTableMin = jdbcUtil.getMinimumOffsetValues(
         connection,
         schema,
         emptyTableName,
@@ -203,7 +216,7 @@ public class TestJdbcUtil {
     );
     assertThat(emptyTableMin.size(), equalTo(0));
 
-    Map<String, String> typedTableMin = JdbcUtil.getMinimumOffsetValues(
+    Map<String, String> typedTableMin = jdbcUtil.getMinimumOffsetValues(
         connection,
         schema,
         dataTypesTestTable,

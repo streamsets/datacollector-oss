@@ -26,6 +26,7 @@ import com.streamsets.pipeline.lib.jdbc.DataType;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.jdbc.UnknownTypeAction;
+import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +53,7 @@ public class JdbcLookupLoader extends CacheLoader<String, Optional<List<Map<Stri
   private final DataSource dataSource;
   private final Meter selectMeter;
   private final Timer selectTimer;
+  private final JdbcUtil jdbcUtil;
 
   public JdbcLookupLoader(
     Stage.Context context,
@@ -68,6 +70,7 @@ public class JdbcLookupLoader extends CacheLoader<String, Optional<List<Map<Stri
     this.errorRecordHandler = errorRecordHandler;
     this.selectMeter = context.createMeter("Select Queries");
     this.selectTimer = context.createTimer("Select Queries");
+    this.jdbcUtil = UtilsProvider.getJdbcUtil();
   }
 
   @Override
@@ -93,7 +96,7 @@ public class JdbcLookupLoader extends CacheLoader<String, Optional<List<Map<Stri
       while(resultSet.next()) {
         ResultSetMetaData md = resultSet.getMetaData();
 
-        LinkedHashMap<String, Field> fields = JdbcUtil.resultSetToFields(resultSet,
+        LinkedHashMap<String, Field> fields = jdbcUtil.resultSetToFields(resultSet,
           maxClobSize,
           maxBlobSize,
           columnsToTypes,

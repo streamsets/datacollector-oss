@@ -28,6 +28,7 @@ import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.jdbc.OracleCDCOperationCode;
 import com.streamsets.pipeline.lib.jdbc.PrecisionAndScale;
+import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.DateTimeColumnHandler;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.ParseUtil;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.SQLListener;
@@ -101,11 +102,14 @@ public class SqlParserProcessor extends SingleLaneProcessor {
   private final Map<SchemaAndTable, Map<String, Integer>> tableSchemas = new HashMap<>();
   private final ParseTreeWalker parseTreeWalker = new ParseTreeWalker();
 
+  private final JdbcUtil jdbcUtil;
+
   private static final String CONNECTION_STR = "configBean.hikariConfigBean.connectionString";
 
   SqlParserProcessor(SqlParserConfigBean configBean) {
     this.configBean = configBean;
     this.listener = new SQLListener();
+    this.jdbcUtil = UtilsProvider.getJdbcUtil();
   }
 
   @Override
@@ -116,7 +120,7 @@ public class SqlParserProcessor extends SingleLaneProcessor {
       issues = configBean.hikariConfigBean.init(getContext(), issues);
       if (issues.isEmpty() && connection == null) {
         try {
-          dataSource = JdbcUtil.createDataSourceForRead(configBean.hikariConfigBean.getUnderlying());
+          dataSource = jdbcUtil.createDataSourceForRead(configBean.hikariConfigBean.getUnderlying());
           connection = dataSource.getConnection();
           connection.setAutoCommit(false);
         } catch (StageException | SQLException e) {

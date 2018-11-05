@@ -29,6 +29,7 @@ import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
+import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.jdbc.multithread.BatchTableStrategy;
 import com.streamsets.pipeline.lib.jdbc.multithread.ConnectionManager;
 import com.streamsets.pipeline.lib.jdbc.multithread.JdbcBaseRunnable;
@@ -62,7 +63,6 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
@@ -77,9 +77,9 @@ public abstract class AbstractTableJdbcSource extends BasePushSource {
   private static final String HIKARI_CONFIG_PREFIX = "hikariConfigBean.";
   private static final String CONNECTION_STRING = HIKARI_CONFIG_PREFIX + "connectionString";
 
-  private final HikariPoolConfigBean hikariConfigBean;
-  private final CommonSourceConfigBean commonSourceConfigBean;
-  private final TableJdbcConfigBean tableJdbcConfigBean;
+  protected final HikariPoolConfigBean hikariConfigBean;
+  protected final CommonSourceConfigBean commonSourceConfigBean;
+  protected final TableJdbcConfigBean tableJdbcConfigBean;
   private Map<String, TableContext> allTableContexts;
   private final Map<String, Integer> qualifiedTableNameToConfigIndex;
   //If we have more state to clean up, we can introduce a state manager to do that which
@@ -94,21 +94,35 @@ public abstract class AbstractTableJdbcSource extends BasePushSource {
   private MultithreadedTableProvider tableOrderProvider;
   private int numberOfThreads;
 
+  protected JdbcUtil jdbcUtil;
+  protected TableContextUtil tableContextUtil;
+
   public AbstractTableJdbcSource(
       HikariPoolConfigBean hikariConfigBean,
       CommonSourceConfigBean commonSourceConfigBean,
       TableJdbcConfigBean tableJdbcConfigBean) {
+    this(hikariConfigBean, commonSourceConfigBean, tableJdbcConfigBean, UtilsProvider.getTableContextUtil());
+  }
+
+  public AbstractTableJdbcSource(
+      HikariPoolConfigBean hikariConfigBean,
+      CommonSourceConfigBean commonSourceConfigBean,
+      TableJdbcConfigBean tableJdbcConfigBean,
+      TableContextUtil tableContextUtil) {
     this.hikariConfigBean = hikariConfigBean;
     this.commonSourceConfigBean = commonSourceConfigBean;
     this.tableJdbcConfigBean = tableJdbcConfigBean;
     allTableContexts = new LinkedHashMap<>();
     qualifiedTableNameToConfigIndex = new HashMap<>();
     toBeInvalidatedThreadCaches = new ArrayList<>();
+    this.tableContextUtil = tableContextUtil;
+    this.jdbcUtil = UtilsProvider.getJdbcUtil();
   }
 
   @Override
   protected List<Stage.ConfigIssue> init() {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
+
     PushSource.Context context = getContext();
     issues = hikariConfigBean.validateConfigs(context, issues);
     issues = commonSourceConfigBean.validateConfigs(context, issues);
@@ -118,12 +132,13 @@ public abstract class AbstractTableJdbcSource extends BasePushSource {
     if (issues.isEmpty()) {
       checkConnectionAndBootstrap(context, issues);
     }
+
     return issues;
   }
 
   protected void checkConnectionAndBootstrap(Stage.Context context, List<ConfigIssue> issues) {
     try {
-      hikariDataSource = JdbcUtil.createDataSourceForRead(hikariConfigBean);
+      hikariDataSource = jdbcUtil.createDataSourceForRead(hikariConfigBean);
     } catch (StageException e) {
       issues.add(context.createConfigIssue(com.streamsets.pipeline.stage.origin.jdbc.table.Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, e.toString()));
     }
@@ -133,8 +148,10 @@ public abstract class AbstractTableJdbcSource extends BasePushSource {
 
         getTables(getContext(), issues, connectionManager);
 
+        jdbcUtil.logDatabaseAndDriverInfo(connectionManager);
+
       } catch (SQLException e) {
-        JdbcUtil.logError(e);
+        jdbcUtil.logError(e);
         issues.add(context.createConfigIssue(com.streamsets.pipeline.stage.origin.jdbc.table.Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, e.toString()));
       } catch (StageException e) {
         LOG.debug("Error when finding tables:", e);
@@ -243,7 +260,7 @@ public abstract class AbstractTableJdbcSource extends BasePushSource {
           ));
         }
 
-        final String validationError = TableContextUtil.getPartitionSizeValidationError(
+        final String validationError = tableContextUtil.getPartitionSizeValidationError(
             entry.getValue(),
             entry.getKey(),
             partitionSize
@@ -366,11 +383,11 @@ public abstract class AbstractTableJdbcSource extends BasePushSource {
             Executors.newSingleThreadScheduledExecutor().schedule(new Runnable() {
               @Override
               public void run() {
-                JdbcUtil.generateNoMoreDataEvent(getContext());
+                jdbcUtil.generateNoMoreDataEvent(getContext());
               }
             }, delay, TimeUnit.SECONDS);
           } else {
-            JdbcUtil.generateNoMoreDataEvent(getContext());
+            jdbcUtil.generateNoMoreDataEvent(getContext());
           }
         }
 
@@ -442,7 +459,7 @@ public abstract class AbstractTableJdbcSource extends BasePushSource {
     toBeInvalidatedThreadCaches.forEach(Cache::invalidateAll);
     //Closes all connections
     Optional.ofNullable(connectionManager).ifPresent(ConnectionManager::closeAll);
-    JdbcUtil.closeQuietly(hikariDataSource);
+    jdbcUtil.closeQuietly(hikariDataSource);
     if (interrupted) {
       Thread.currentThread().interrupt();
     }
@@ -507,4 +524,5 @@ public abstract class AbstractTableJdbcSource extends BasePushSource {
       ConnectionManager connectionManager,
       Map<String, String> offsets
   );
+
 }

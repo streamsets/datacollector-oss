@@ -31,6 +31,7 @@ import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.jdbc.PrecisionAndScale;
+import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.DateTimeColumnHandler;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.ParseUtil;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.SQLListener;
@@ -46,7 +47,6 @@ import com.streamsets.pipeline.stage.origin.jdbc.cdc.ChangeTypeValues;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaAndTable;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaTableConfigBean;
 import com.zaxxer.hikari.HikariDataSource;
-import jdk.management.resource.internal.FutureWrapper;
 import net.jcip.annotations.GuardedBy;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.apache.commons.io.FileUtils;
@@ -78,7 +78,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -288,7 +287,10 @@ public class OracleCDCSource extends BaseSource {
 
   private ExecutorService parsingExecutor;
 
+  private final JdbcUtil jdbcUtil;
+
   public OracleCDCSource(HikariPoolConfigBean hikariConf, OracleCDCConfigBean oracleCDCConfigBean) {
+    this.jdbcUtil = UtilsProvider.getJdbcUtil();
     this.configBean = oracleCDCConfigBean;
     this.hikariConfigBean = hikariConf;
     this.shouldTrackDDL = configBean.dictionary == DictionaryValues.DICT_FROM_REDO_LOGS;
@@ -471,7 +473,7 @@ public class OracleCDCSource extends BaseSource {
   private void resetDBConnectionsIfRequired() throws StageException, SQLException {
     if (dataSource == null || dataSource.isClosed()) {
       connection = null; // Force re-init without checking validity which takes time.
-      dataSource = JdbcUtil.createDataSourceForRead(hikariConfigBean);
+      dataSource = jdbcUtil.createDataSourceForRead(hikariConfigBean);
     }
     if (connection == null || !connection.isValid(30)) {
       if (connection != null) {
@@ -1131,7 +1133,7 @@ public class OracleCDCSource extends BaseSource {
     issues = hikariConfigBean.validateConfigs(getContext(), issues);
     if (connection == null) { // For tests, we set a mock connection
       try {
-        dataSource = JdbcUtil.createDataSourceForRead(hikariConfigBean);
+        dataSource = jdbcUtil.createDataSourceForRead(hikariConfigBean);
         connection = dataSource.getConnection();
         connection.setAutoCommit(false);
       } catch (StageException | SQLException e) {
@@ -1227,7 +1229,7 @@ public class OracleCDCSource extends BaseSource {
         Pattern p = StringUtils.isEmpty(tables.excludePattern) ? null : Pattern.compile(tables.excludePattern);
 
         try (ResultSet rs =
-                 JdbcUtil.getTableAndViewMetadata(connection, tables.schema, tables.table)) {
+                 jdbcUtil.getTableAndViewMetadata(connection, tables.schema, tables.table)) {
           while (rs.next()) {
             String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
             String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);

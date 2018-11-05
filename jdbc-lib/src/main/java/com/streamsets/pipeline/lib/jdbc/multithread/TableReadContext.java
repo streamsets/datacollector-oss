@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
+import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
@@ -40,6 +41,7 @@ public final class TableReadContext {
   private final ResultSet rs;
   private final boolean neverEvict;
   private int numberOfBatches;
+  private final JdbcUtil jdbcUtil;
 
   public TableReadContext(
       Connection connection,
@@ -57,6 +59,7 @@ public final class TableReadContext {
       int fetchSize,
       boolean neverEvict
   ) throws SQLException, StageException {
+    jdbcUtil = UtilsProvider.getJdbcUtil();
     this.query = query;
     ps = connection.prepareStatement(query);
     ps.setFetchSize(fetchSize);
@@ -135,8 +138,8 @@ public final class TableReadContext {
   }
 
   public void destroy() {
-    JdbcUtil.closeQuietly(rs);
-    JdbcUtil.closeQuietly(ps);
+    jdbcUtil.closeQuietly(rs);
+    jdbcUtil.closeQuietly(ps);
   }
 
   public ResultSet getMoreResultSet() throws SQLException {

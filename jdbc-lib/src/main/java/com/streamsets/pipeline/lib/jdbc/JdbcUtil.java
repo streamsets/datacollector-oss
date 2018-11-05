@@ -34,6 +34,7 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.event.CommonEvents;
+import com.streamsets.pipeline.lib.jdbc.multithread.ConnectionManager;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
@@ -134,7 +135,7 @@ public class JdbcUtil {
   public static final int NANOS_TO_MILLIS_ADJUSTMENT = 1_000_000;
   public static final String FIELD_ATTRIBUTE_NANOSECONDS = "nanoSeconds";
 
-  private JdbcUtil() {
+  public JdbcUtil() {
   }
 
   /**
@@ -170,7 +171,11 @@ public class JdbcUtil {
       "1391", "Key part '%s' length cannot be 0"
   );
 
-  public static boolean isDataError(String connectionString, SQLException ex) {
+  public static String[] getMetadataTableViewType() {
+    return METADATA_TABLE_VIEW_TYPE;
+  }
+
+  public boolean isDataError(String connectionString, SQLException ex) {
     String sqlState = Strings.nullToEmpty(ex.getSQLState());
     String errorCode = String.valueOf(ex.getErrorCode());
     if (sqlState.equals(MYSQL_GENERAL_ERROR) && connectionString.contains(":mysql")) {
@@ -187,7 +192,7 @@ public class JdbcUtil {
    * @param ex SQLException
    * @return Formatted string with database-specific error code, error message, and SQLState
    */
-  public static String formatSqlException(SQLException ex) {
+  public String formatSqlException(SQLException ex) {
     StringBuilder sb = new StringBuilder();
     Set<String> messages = new HashSet<>();
     for (Throwable e : ex) {
@@ -221,7 +226,7 @@ public class JdbcUtil {
    *
    * @throws SQLException
    */
-  public static ResultSet getColumnMetadata(Connection connection, String schema, String tableName) throws SQLException {
+  public ResultSet getColumnMetadata(Connection connection, String schema, String tableName) throws SQLException {
     DatabaseMetaData metadata = connection.getMetaData();
     return metadata.getColumns(connection.getCatalog(), schema, tableName, null); // Get all columns for this table
   }
@@ -236,7 +241,7 @@ public class JdbcUtil {
    *
    * @throws SQLException
    */
-  public static ResultSet getTableAndViewMetadata(
+  public ResultSet getTableAndViewMetadata(
       Connection connection,
       String schema,
       String tableName
@@ -259,7 +264,7 @@ public class JdbcUtil {
    *
    * @throws SQLException
    */
-  public static ResultSet getTableMetadata(Connection connection, String schema, String tableName) throws SQLException {
+  public ResultSet getTableMetadata(Connection connection, String schema, String tableName) throws SQLException {
     DatabaseMetaData metadata = connection.getMetaData();
     return metadata.getTables(connection.getCatalog(), schema, tableName, METADATA_TABLE_TYPE);
   }
@@ -273,7 +278,7 @@ public class JdbcUtil {
    *
    * @throws SQLException
    */
-  public static List<String> getPrimaryKeys(Connection connection, String schema, String tableName) throws SQLException {
+  public List<String> getPrimaryKeys(Connection connection, String schema, String tableName) throws SQLException {
     String table = tableName;
     DatabaseMetaData metadata = connection.getMetaData();
     List<String> keys = new ArrayList<>();
@@ -284,7 +289,7 @@ public class JdbcUtil {
     return keys;
   }
 
-  public static Map<String, String> getMinimumOffsetValues(
+  public Map<String, String> getMinimumOffsetValues(
       Connection connection,
       String schema,
       String tableName,
@@ -351,7 +356,7 @@ public class JdbcUtil {
    *
    * @throws SQLException
    */
-  public static Set<String> getReferredTables(Connection connection, String schema, String tableName) throws SQLException {
+  public Set<String> getReferredTables(Connection connection, String schema, String tableName) throws SQLException {
     DatabaseMetaData metadata = connection.getMetaData();
 
     ResultSet result = metadata.getImportedKeys(connection.getCatalog(), schema, tableName);
@@ -362,7 +367,7 @@ public class JdbcUtil {
     return referredTables;
   }
 
-  public static void setColumnSpecificHeaders(
+  public void setColumnSpecificHeaders(
       Record record,
       Set<String> knownTableNames,
       ResultSetMetaData metaData,
@@ -397,7 +402,7 @@ public class JdbcUtil {
     header.setAttribute(jdbcNameSpacePrefix + "tables", Joiner.on(",").join(tableNames));
   }
 
-  private static String getClobString(Clob data, int maxClobSize) throws IOException, SQLException {
+  private String getClobString(Clob data, int maxClobSize) throws IOException, SQLException {
     if (data == null) {
       return null;
     }
@@ -423,7 +428,7 @@ public class JdbcUtil {
     return sb.toString();
   }
 
-  private static byte[] getBlobBytes(Blob data, int maxBlobSize) throws IOException, SQLException {
+  private byte[] getBlobBytes(Blob data, int maxBlobSize) throws IOException, SQLException {
     if (data == null) {
       return null;
     }
@@ -449,7 +454,7 @@ public class JdbcUtil {
     return os.toByteArray();
   }
 
-  public static Field resultToField(
+  public Field resultToField(
       ResultSetMetaData md,
       ResultSet rs,
       int columnIndex,
@@ -469,7 +474,7 @@ public class JdbcUtil {
     );
   }
 
-  public static Field resultToField(
+  public Field resultToField(
       ResultSetMetaData md,
       ResultSet rs,
       int columnIndex,
@@ -602,7 +607,7 @@ public class JdbcUtil {
       return field;
   }
 
-  public static LinkedHashMap<String, Field> resultSetToFields(
+  public LinkedHashMap<String, Field> resultSetToFields(
       ResultSet rs,
       int maxClobSize,
       int maxBlobSize,
@@ -622,7 +627,7 @@ public class JdbcUtil {
     );
   }
 
-  public static LinkedHashMap<String, Field> resultSetToFields(
+  public LinkedHashMap<String, Field> resultSetToFields(
       ResultSet rs,
       CommonSourceConfigBean commonSourceBean,
       ErrorRecordHandler errorRecordHandler,
@@ -640,7 +645,7 @@ public class JdbcUtil {
     );
   }
 
-  public static LinkedHashMap<String, Field> resultSetToFields(
+  public LinkedHashMap<String, Field> resultSetToFields(
       ResultSet rs,
       CommonSourceConfigBean commonSourceBean,
       ErrorRecordHandler errorRecordHandler,
@@ -659,7 +664,7 @@ public class JdbcUtil {
     );
   }
 
-  public static LinkedHashMap<String, Field> resultSetToFields(
+  public LinkedHashMap<String, Field> resultSetToFields(
       ResultSet rs,
       int maxClobSize,
       int maxBlobSize,
@@ -698,7 +703,7 @@ public class JdbcUtil {
     return fields;
   }
 
-  private static HikariConfig createDataSourceConfig(
+  private HikariConfig createDataSourceConfig(
     HikariPoolConfigBean hikariConfigBean,
     boolean autoCommit,
     boolean readOnly
@@ -745,7 +750,7 @@ public class JdbcUtil {
     return config;
   }
 
-  public static HikariDataSource createDataSourceForWrite(
+  public HikariDataSource createDataSourceForWrite(
       HikariPoolConfigBean hikariConfigBean, String schema,
       String tableNameTemplate,
       boolean caseSensitive,
@@ -759,12 +764,12 @@ public class JdbcUtil {
     if (tableNameTemplate != null && !tableNameTemplate.contains(EL_PREFIX)) {
       try (
         Connection connection = dataSource.getConnection();
-        ResultSet res = JdbcUtil.getTableMetadata(connection, schema, tableNameTemplate);
+        ResultSet res = getTableMetadata(connection, schema, tableNameTemplate);
       ) {
         if (!res.next()) {
           issues.add(context.createConfigIssue(Groups.JDBC.name(), TABLE_NAME, JdbcErrors.JDBC_16, tableNameTemplate));
         } else {
-          try(ResultSet columns = JdbcUtil.getColumnMetadata(connection, schema, tableNameTemplate)) {
+          try(ResultSet columns = getColumnMetadata(connection, schema, tableNameTemplate)) {
             Set<String> columnNames = new HashSet<>();
             while (columns.next()) {
               columnNames.add(columns.getString(4));
@@ -787,7 +792,7 @@ public class JdbcUtil {
     return dataSource;
   }
 
-  public static HikariDataSource createDataSourceForRead(
+  public HikariDataSource createDataSourceForRead(
       HikariPoolConfigBean hikariConfigBean
   ) throws StageException {
     HikariDataSource dataSource;
@@ -805,7 +810,7 @@ public class JdbcUtil {
     return dataSource;
   }
 
-  public static void closeQuietly(AutoCloseable c) {
+  public void closeQuietly(AutoCloseable c) {
     try {
       if (null != c) {
         c.close();
@@ -826,7 +831,7 @@ public class JdbcUtil {
    * @param perRecord indicate record or batch update
    * @throws StageException
    */
-  public static void write(
+  public void write(
       Batch batch,
       ELEval tableNameEval,
       ELVars tableNameVars,
@@ -857,7 +862,7 @@ public class JdbcUtil {
    * @param perRecord indicate record or batch update
    * @throws StageException
    */
-  public static void write(
+  public void write(
       Iterator<Record> recordIterator,
       String tableName,
       LoadingCache<String, JdbcRecordWriter> recordWriters,
@@ -901,7 +906,7 @@ public class JdbcUtil {
    * @param sqlTypes arbitrary list of sql types
    * @return true if actual Sql Type is one of the sql Types else false.
    */
-  public static boolean isSqlTypeOneOf(int actualSqlType, int... sqlTypes) {
+  public boolean isSqlTypeOneOf(int actualSqlType, int... sqlTypes) {
     for (int sqlType : sqlTypes) {
       if (sqlType == actualSqlType) {
         return true;
@@ -910,7 +915,7 @@ public class JdbcUtil {
     return false;
   }
 
-  public static String generateQuery(
+  public String generateQuery(
       int opCode,
       String tableName,
       List<String> primaryKeys,
@@ -1019,7 +1024,7 @@ public class JdbcUtil {
     return query;
   }
 
-  protected static PreparedStatement getPreparedStatement(
+  protected PreparedStatement getPreparedStatement(
       List<JdbcFieldColumnMapping> generatedColumnMappings,
       String query,
       Connection connection
@@ -1037,8 +1042,8 @@ public class JdbcUtil {
     return statement;
   }
 
-  public static String logError(SQLException e) {
-    String formattedError = JdbcUtil.formatSqlException(e);
+  public String logError(SQLException e) {
+    String formattedError = formatSqlException(e);
     LOG.error(formattedError, e);
     return formattedError;
   }
@@ -1046,7 +1051,7 @@ public class JdbcUtil {
   /**
    * Generates the no-more-data event
    */
-  public static void generateNoMoreDataEvent(PushSource.Context context) {
+  public void generateNoMoreDataEvent(PushSource.Context context) {
     LOG.info("No More data to process, Triggered No More Data Event");
     BatchContext batchContext = context.startBatch();
     CommonEvents.NO_MORE_DATA.create(context, batchContext).createAndSend();
@@ -1056,7 +1061,15 @@ public class JdbcUtil {
   /**
    * @return true if the value is an EL string
    */
-  public static boolean isElString(String value) {
+  public boolean isElString(String value) {
     return value != null && value.startsWith("${");
+  }
+
+  public void logDatabaseAndDriverInfo(ConnectionManager connectionManager) throws SQLException {
+    DatabaseMetaData databaseMetaData = connectionManager.getConnection().getMetaData();
+    LOG.info("Database Product name: {}", databaseMetaData.getDatabaseProductName());
+    LOG.info("Database product version: {}", databaseMetaData.getDatabaseProductVersion());
+    LOG.info("Driver name: {}", databaseMetaData.getDriverName());
+    LOG.info("Driver version: {}", databaseMetaData.getDriverVersion());
   }
 }

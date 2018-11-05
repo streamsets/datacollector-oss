@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
@@ -66,9 +67,11 @@ public class TestTableExclusion {
 
   private static Connection connection;
   private static TableJdbcELEvalContext tableJdbcELEvalContext;
+  private static TableContextUtil tableContextUtil;
 
   @BeforeClass
   public static void setup() throws SQLException {
+    tableContextUtil = UtilsProvider.getTableContextUtil();
     connection = DriverManager.getConnection(JDBC_URL, USER_NAME, PASSWORD);
     try (Statement s = connection.createStatement()) {
       Arrays.asList(SCHEMA, MULTISCHEMA_SCHEMA_1, MULTISCHEMA_SCHEMA_2, MULTISCHEMA_SCHEMA_3).forEach(schema -> {
@@ -112,6 +115,7 @@ public class TestTableExclusion {
       s.executeBatch();
     }
     connection.close();
+    tableContextUtil = null;
   }
 
   public static Map<String, TableContext> listTablesForConfig(
@@ -119,7 +123,7 @@ public class TestTableExclusion {
       TableConfigBean tableConfigBean,
       TableJdbcELEvalContext tableJdbcELEvalContext
   ) throws SQLException, StageException {
-    return TableContextUtil.listTablesForConfig(
+    return tableContextUtil.listTablesForConfig(
         createTestContext(),
         new LinkedList<Stage.ConfigIssue>(),
         connection,
@@ -137,7 +141,7 @@ public class TestTableExclusion {
         .build();
     Assert.assertEquals(
         TABLE_NAMES.size(),
-        TableContextUtil.listTablesForConfig(
+        tableContextUtil.listTablesForConfig(
             createTestContext(),
             new LinkedList<Stage.ConfigIssue>(),
             connection,

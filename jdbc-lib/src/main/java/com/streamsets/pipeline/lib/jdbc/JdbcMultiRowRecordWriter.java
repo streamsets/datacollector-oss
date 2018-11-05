@@ -218,7 +218,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
     // to records for Jdbc Tee Processor.
     LinkedList<Record> removed = new LinkedList<>();
 
-    try (PreparedStatement statement = JdbcUtil.getPreparedStatement(getGeneratedColumnMappings(), query, connection)) {
+    try (PreparedStatement statement = jdbcUtil.getPreparedStatement(getGeneratedColumnMappings(), query, connection)) {
       int paramIdx = 1;
       // Start processing records in queue. All records have the same operation to the same table.
       while (!queue.isEmpty()) {
@@ -256,7 +256,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
           removed.size() // always the remainder
       );
 
-      try (PreparedStatement statement = JdbcUtil.getPreparedStatement(
+      try (PreparedStatement statement = jdbcUtil.getPreparedStatement(
           getGeneratedColumnMappings(),
           query,
           connection
@@ -309,7 +309,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       int numRecords
   ) throws OnRecordErrorException {
 
-    String query = JdbcUtil.generateQuery(opCode, getTableName(), primaryKeys, getPrimaryKeyParams(), columns, numRecords, caseSensitive, true);
+    String query = jdbcUtil.generateQuery(opCode, getTableName(), primaryKeys, getPrimaryKeyParams(), columns, numRecords, caseSensitive, true);
 
     LOG.debug("Generated multi-row operation query: {}", query);
     return query;

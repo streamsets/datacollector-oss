@@ -21,6 +21,7 @@ import com.google.common.cache.LoadingCache;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
+import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.DirectedGraph;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.TopologicalSorter;
 
@@ -45,16 +46,18 @@ public final class ReferentialTblOrderProvider extends TableOrderProvider.BaseTa
 
   private volatile boolean areAllEdgesConstructed;
   private Queue<String> orderedTables;
+  private final JdbcUtil jdbcUtil;
 
 
   public ReferentialTblOrderProvider(Connection conn) {
+    this.jdbcUtil = UtilsProvider.getJdbcUtil();
     this.connection = conn;
     directedGraph = new DirectedGraph<>();
     referredTables = CacheBuilder.newBuilder().maximumSize(MAX_REFERRED_TABLE_CACHE_SIZE).build(new CacheLoader<String, Set<String>>() {
       @Override
       public Set<String> load(String key) throws SQLException {
         TableContext tableContext =  getTableContext(key);
-        return JdbcUtil.getReferredTables(connection, tableContext.getSchema(), tableContext.getTableName());
+        return jdbcUtil.getReferredTables(connection, tableContext.getSchema(), tableContext.getTableName());
       }
     });
     areAllEdgesConstructed = false;
