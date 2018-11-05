@@ -113,9 +113,11 @@ public class TestKafkaSourceUpgrader {
 
     configs.add(new Config("kafkaOptions", kafkaOptions));
     KafkaSourceUpgrader kafkaSourceUpgrader = new KafkaSourceUpgrader();
+    Assert.assertTrue(!kafkaOptions.isEmpty());
     kafkaSourceUpgrader.upgrade("a", "b", "c", 6, 7, configs);
 
     Assert.assertEquals(KafkaAutoOffsetReset.LATEST, configs.get(configs.size() - 2).getValue());
+    Assert.assertTrue(kafkaOptions.isEmpty());
 
   }
 }

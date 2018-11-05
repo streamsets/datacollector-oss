@@ -177,6 +177,9 @@ public class KafkaSourceUpgrader implements StageUpgrader {
       case "latest":
         configs.add(new Config(joiner.join(CONF, "conf.kafkaAutoOffsetReset"), KafkaAutoOffsetReset.LATEST));
         break;
+      case "none":
+        configs.add(new Config(joiner.join(CONF, "conf.kafkaAutoOffsetReset"), KafkaAutoOffsetReset.NONE));
+        break;
       default:
         configs.add(new Config(joiner.join(CONF, "conf.kafkaAutoOffsetReset"), KafkaAutoOffsetReset.EARLIEST));
     }
