@@ -151,4 +151,17 @@ public class ElasticsearchTargetConfig extends ElasticsearchConfig {
   )
   @ValueChooserModel(UnsupportedOperationActionChooserValues.class)
   public UnsupportedOperationAction unsupportedAction = UnsupportedOperationAction.DISCARD;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.TEXT,
+      mode = ConfigDef.Mode.JSON,
+      label = "Additional Properties",
+      description = "Additional properties for the request",
+      defaultValue = "{\n}",
+      evaluation = ConfigDef.Evaluation.IMPLICIT,
+      displayPosition = 120,
+      group = "ELASTIC_SEARCH"
+  )
+  public String rawAdditionalProperties;
 }

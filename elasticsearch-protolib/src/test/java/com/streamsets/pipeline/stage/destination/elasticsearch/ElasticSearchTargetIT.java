@@ -79,6 +79,7 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     conf.defaultOperation = ElasticsearchOperationType.INDEX;
     conf.useSecurity= false;
     conf.securityConfig = new SecurityConfig();
+    conf.rawAdditionalProperties =  "{\n}";
 
     Target target = new ElasticsearchTarget(conf);
     TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
@@ -100,6 +101,7 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     conf.defaultOperation = ElasticsearchOperationType.INDEX;
     conf.useSecurity = false;
     conf.securityConfig = new SecurityConfig();
+    conf.rawAdditionalProperties =  "{\n}";
 
     target = new ElasticsearchTarget(conf);
     runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
@@ -119,6 +121,7 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     conf.defaultOperation = ElasticsearchOperationType.INDEX;
     conf.useSecurity = false;
     conf.securityConfig = new SecurityConfig();
+    conf.rawAdditionalProperties =  "{\n}";
 
     target = new ElasticsearchTarget(conf);
     runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
@@ -138,6 +141,7 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     conf.defaultOperation = ElasticsearchOperationType.INDEX;
     conf.useSecurity = false;
     conf.securityConfig= new SecurityConfig();
+    conf.rawAdditionalProperties =  "{\n}";
 
     target = new ElasticsearchTarget(conf);
     runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
@@ -145,6 +149,34 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     Assert.assertEquals(2, issues.size());
     Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_27.name()));
     Assert.assertTrue(issues.get(1).toString().contains(Errors.ELASTICSEARCH_30.name()));
+
+    conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
+    conf.timeDriver = "${time:now()}";
+    conf.timeZoneID = "UTC";
+    conf.indexTemplate = "${record:value('/index')}";
+    conf.typeTemplate = "${record:value('/type')}";
+    conf.docIdTemplate = "docId";
+    conf.parentIdTemplate = "";
+    conf.routingTemplate = "";
+    conf.charset = "UTF-8";
+    conf.defaultOperation = ElasticsearchOperationType.UPDATE;
+    conf.useSecurity = false;
+    conf.securityConfig = new SecurityConfig();
+    conf.rawAdditionalProperties =  "{\n\"_retry_on_conflict\"}";
+
+    target = new ElasticsearchTarget(conf);
+    runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+    issues = runner.runValidateConfigs();
+    Assert.assertEquals(1, issues.size());
+    Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_34.name()));
+
+    conf.rawAdditionalProperties =  "{\n\"_retry_on_conflict\":3,}";
+
+    target = new ElasticsearchTarget(conf);
+    runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+    issues = runner.runValidateConfigs();
+    Assert.assertEquals(1, issues.size());
+    Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_34.name()));
   }
 
   private Target createTarget() {
@@ -176,6 +208,7 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     conf.defaultOperation = op;
     conf.useSecurity = false;
     conf.securityConfig = new SecurityConfig();
+    conf.rawAdditionalProperties =  "{\n\"_retry_on_conflict\":1\n}";
 
     return new ElasticsearchTarget(conf);
   }
@@ -365,6 +398,7 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     conf.defaultOperation = ElasticsearchOperationType.INDEX;
     conf.useSecurity = false;
     conf.securityConfig = new SecurityConfig();
+    conf.rawAdditionalProperties =  "{\n}";
 
     ElasticsearchTarget target = new ElasticsearchTarget(conf);
     TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
@@ -480,6 +514,7 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     conf.defaultOperation = ElasticsearchOperationType.INDEX;
     conf.useSecurity = false;
     conf.securityConfig = new SecurityConfig();
+    conf.rawAdditionalProperties = "{}";
 
     // Invalid url
     conf.httpUris = Collections.singletonList("127.0.0.1:" + "NOT_A_NUMBER");
@@ -524,6 +559,7 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     conf.defaultOperation = ElasticsearchOperationType.CREATE;
     conf.useSecurity = false;
     conf.securityConfig = new SecurityConfig();
+    conf.rawAdditionalProperties =  "{\n}";
 
     ElasticsearchTarget target = new ElasticsearchTarget(conf);
     TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
@@ -695,4 +731,18 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     }
   }
 
+  @Test
+  public void testAddAdditionalProperties() {
+    ElasticsearchTarget target = createTarget("${time:now()}",
+        "${record:value('/index')}",
+        "docId",
+        ElasticsearchOperationType.UPDATE,
+        "",
+        ""
+    );
+
+    String expected = ",\"_retry_on_conflict\":1";
+
+    Assert.assertEquals(expected, target.addAdditionalProperties());
+  }
 }

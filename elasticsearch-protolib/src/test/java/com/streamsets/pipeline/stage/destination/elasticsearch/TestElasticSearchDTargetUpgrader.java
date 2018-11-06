@@ -82,4 +82,14 @@ public class TestElasticSearchDTargetUpgrader {
         "elasticSearchConfig.securityConfig.awsRegion"
     );
   }
+
+  @Test
+  public void testV9ToV10() throws StageException {
+    StageUpgrader upgrader = new ElasticsearchDTargetUpgrader();
+    List<Config> configs = createConfigs();
+    List<Config> newConfigs = upgrader.upgrade("library", "stageName", "stageInstance", 2, 10, configs);
+    UpgraderTestUtils.assertAllExist(newConfigs,
+        "elasticSearchConfig.rawAdditionalProperties"
+    );
+  }
 }

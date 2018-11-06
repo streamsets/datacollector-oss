@@ -84,6 +84,12 @@ public class ElasticsearchDTargetUpgrader implements StageUpgrader {
         // fall through
       case 8:
         upgradeV8ToV9(configs);
+        if (toVersion == 9) {
+        break;
+      }
+      // fall through
+      case 9:
+        upgradeV9toV10(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -281,6 +287,10 @@ public class ElasticsearchDTargetUpgrader implements StageUpgrader {
   private void upgradeV8ToV9(List<Config> configs) {
     configs.add(new Config(CURRENT_CONFIG_PREFIX + CURRENT_SECURITY_CONFIG_PREFIX + "securityMode", "BASIC"));
     configs.add(new Config(CURRENT_CONFIG_PREFIX + CURRENT_SECURITY_CONFIG_PREFIX + "awsRegion", "US_EAST_2"));
+  }
+
+  private void upgradeV9toV10(List<Config> configs) {
+    configs.add(new Config(CURRENT_CONFIG_PREFIX + "rawAdditionalProperties", "{\n}"));
   }
 
 }

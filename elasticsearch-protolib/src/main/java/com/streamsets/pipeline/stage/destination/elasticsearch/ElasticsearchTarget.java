@@ -64,6 +64,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 public class ElasticsearchTarget extends BaseTarget {
@@ -187,6 +188,19 @@ public class ElasticsearchTarget extends BaseTarget {
               Errors.ELASTICSEARCH_30,
               issues
       );
+    }
+
+    try{
+      // try to create JSONObject from input, validation issue if it fails.
+      JsonParser parser = new JsonParser();
+      parser.parse(conf.rawAdditionalProperties).getAsJsonObject();
+    }catch (Exception e){
+      issues.add(getContext().createConfigIssue(
+          Groups.ELASTIC_SEARCH.name(),
+          "rawAdditionalProperties",
+          Errors.ELASTICSEARCH_34,
+          e.getMessage()
+      ));
     }
 
     delegate = new ElasticsearchStageDelegate(getContext(), conf);
@@ -401,7 +415,24 @@ public class ElasticsearchTarget extends BaseTarget {
     if (!StringUtils.isEmpty(routing)) {
       sb.append(String.format(",\"routing\":\"%s\"", routing));
     }
+    // Add additional properties from JSON editor.
+    String additionalProperties = addAdditionalProperties();
+    if (!StringUtils.isEmpty(additionalProperties)){
+      sb.append(additionalProperties);
+    }
     sb.append(String.format("}}%n"));
+  }
+
+  @VisibleForTesting
+  String addAdditionalProperties() {
+    JsonParser parser = new JsonParser();
+    JsonObject additionalPropertiesAsJson = parser.parse(conf.rawAdditionalProperties).getAsJsonObject();
+
+    StringBuilder sb = new StringBuilder();
+    //Create a String appending all the input properties
+    additionalPropertiesAsJson.entrySet().forEach(e -> sb.append(String.format(",\"%s\":%s", e.getKey(), e.getValue())));
+
+    return sb.toString();
   }
 
   private List<ErrorItem> extractErrorItems(JsonObject json) {

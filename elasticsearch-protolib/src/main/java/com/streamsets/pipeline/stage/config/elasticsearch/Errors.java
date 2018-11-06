@@ -55,6 +55,7 @@ public enum Errors implements ErrorCode {
   ELASTICSEARCH_31("Can't resolve password for TrustStore"),
   ELASTICSEARCH_32("Can't resolve user: {}"),
   ELASTICSEARCH_33("Endpoint cannot be empty"),
+  ELASTICSEARCH_34("Invalid Json format"),
   ;
   private final String msg;
 
