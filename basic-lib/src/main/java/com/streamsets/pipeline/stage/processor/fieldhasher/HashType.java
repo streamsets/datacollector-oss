@@ -20,7 +20,8 @@ import com.streamsets.pipeline.lib.hashing.HashingUtil;
 public enum HashType {
   MD5("MD5", HashingUtil.HashType.MD5),
   SHA1("SHA-1", HashingUtil.HashType.SHA1),
-  SHA2("SHA-256", HashingUtil.HashType.SHA256),
+  SHA256("SHA-256", HashingUtil.HashType.SHA256),
+  SHA512("SHA-512", HashingUtil.HashType.SHA512),
   MURMUR3_128("murmur3_128", HashingUtil.HashType.MURMUR3_128),;
 
   private String digest;
