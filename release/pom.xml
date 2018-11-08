@@ -23,19 +23,19 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root</artifactId>
-    <version>3.6.0-SNAPSHOT</version>
+    <version>3.7.0-SNAPSHOT</version>
     <relativePath>../root</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-release</artifactId>
-  <version>3.6.0-SNAPSHOT</version>
+  <version>3.7.0-SNAPSHOT</version>
   <description>StreamSets Data Collector Release TARs</description>
   <name>StreamSets Data Collector Release TARs</name>
   <packaging>jar</packaging>
 
   <properties>
     <edge.release-dir>target/SDCe</edge.release-dir>
-    <datacollector-edge.version>3.6.0-SNAPSHOT</datacollector-edge.version>
+    <datacollector-edge.version>3.7.0-SNAPSHOT</datacollector-edge.version>
   </properties>
 
   <dependencies>

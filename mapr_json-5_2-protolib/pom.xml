@@ -23,12 +23,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root-lib</artifactId>
-    <version>3.6.0-SNAPSHOT</version>
+    <version>3.7.0-SNAPSHOT</version>
     <relativePath>../root-lib</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-mapr_json-5_2-protolib</artifactId>
-  <version>3.6.0-SNAPSHOT</version>
+  <version>3.7.0-SNAPSHOT</version>
   <description>StreamSets Data Collector MapR DB Json Protolib (5.2)</description>
   <name>StreamSets Data Collector MapR DB Json Protolib (5.2)</name>
   <packaging>jar</packaging>

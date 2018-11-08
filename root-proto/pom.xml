@@ -23,10 +23,10 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector</artifactId>
-    <version>3.6.0-SNAPSHOT</version>
+    <version>3.7.0-SNAPSHOT</version>
   </parent>
   <artifactId>streamsets-datacollector-root-proto</artifactId>
-  <version>3.6.0-SNAPSHOT</version>
+  <version>3.7.0-SNAPSHOT</version>
   <description>StreamSets Data Collector Root Prototype POM</description>
   <name>StreamSets Data Collector Root Prototype POM</name>
   <packaging>pom</packaging>
@@ -80,7 +80,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <hive-storage-api.version>2.2.1</hive-storage-api.version>
-    <streamsets-datacollector-rbgen-maven-plugin.version>3.6.0-SNAPSHOT</streamsets-datacollector-rbgen-maven-plugin.version>
+    <streamsets-datacollector-rbgen-maven-plugin.version>3.7.0-SNAPSHOT</streamsets-datacollector-rbgen-maven-plugin.version>
   </properties>
 
   <!-- API dependencies ONLY -->
