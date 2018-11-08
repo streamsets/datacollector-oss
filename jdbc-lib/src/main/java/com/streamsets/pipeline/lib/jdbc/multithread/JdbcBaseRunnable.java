@@ -226,12 +226,17 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
           updateGauge(JdbcBaseRunnable.Status.GENERATING_BATCH);
           while (recordCount < batchSize) {
             if (rs.isClosed() || !rs.next()) {
+              if (rs.isClosed()) {
+                LOG.trace("ResultSet is closed");
+              }
               resultSetEndReached = true;
               break;
             }
             createAndAddRecord(rs, tableRuntimeContext, batchContext);
             recordCount++;
           }
+
+          LOG.trace("{} records generated", recordCount);
 
           if (commonSourceConfigBean.enableSchemaChanges) {
             generateSchemaChanges(batchContext);
