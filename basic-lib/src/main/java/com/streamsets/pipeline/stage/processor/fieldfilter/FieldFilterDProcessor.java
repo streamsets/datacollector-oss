@@ -80,9 +80,22 @@ public class FieldFilterDProcessor extends DProcessor {
   @FieldSelectorModel
   public List<String> fields;
 
+  @ConfigDef(
+      required = true,
+      type = Type.STRING,
+      defaultValue = "",
+      label = "Constant",
+      description = "",
+      displayPosition = 30,
+      group = "FILTER",
+      dependsOn = "filterOperation",
+      triggeredByValue = "REMOVE_CONSTANT"
+  )
+  public String constant;
+
   @Override
   protected Processor createProcessor() {
-    return new FieldFilterProcessor(filterOperation, fields);
+    return new FieldFilterProcessor(filterOperation, fields, constant);
   }
 
 }

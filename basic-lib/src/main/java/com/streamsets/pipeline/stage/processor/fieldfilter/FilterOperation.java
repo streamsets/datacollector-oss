@@ -22,7 +22,10 @@ import com.streamsets.pipeline.api.Label;
 public enum FilterOperation implements Label {
   KEEP("Keep Listed Fields"),
   REMOVE("Remove Listed Fields"),
-  REMOVE_NULL("Remove Listed Fields If Their Values Are Null");
+  REMOVE_NULL("Remove Listed Fields If Their Values Are Null"),
+  REMOVE_EMPTY("Remove Listed Fields If Their Values Are Empty String"),
+  REMOVE_NULL_EMPTY("Remove Listed Fields If Their Values Are Null or Empty String"),
+  REMOVE_CONSTANT("Remove Listed Fields If Their Values Are The Given Constant");
 
   private String label;
 

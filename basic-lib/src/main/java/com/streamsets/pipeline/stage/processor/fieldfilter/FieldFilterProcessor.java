@@ -37,13 +37,15 @@ public class FieldFilterProcessor extends SingleLaneRecordProcessor {
 
   private final FilterOperation filterOperation;
   private final List<String> fields;
+  private final String constant;
   private ELEval fieldPathEval;
   private ELVars fieldPathVars;
 
 
-  public FieldFilterProcessor(FilterOperation filterOperation, List<String> fields) {
+  public FieldFilterProcessor(FilterOperation filterOperation, List<String> fields, String constant) {
     this.filterOperation = filterOperation;
     this.fields = fields;
+    this.constant = constant;
   }
 
   @Override
@@ -84,7 +86,63 @@ public class FieldFilterProcessor extends SingleLaneRecordProcessor {
               allFieldPaths
           );
           for (String fieldPath : matchingFieldPaths) {
-            if (record.has(fieldPath) && record.get(fieldPath).getValue() == null) fieldsToRemove.add(fieldPath);
+            if (record.has(fieldPath) && record.get(fieldPath).getValue() == null) {
+              fieldsToRemove.add(fieldPath);
+            }
+          }
+        }
+        break;
+      case REMOVE_EMPTY:
+        fieldsToRemove = new LinkedHashSet<>();
+        for (String field : fields) {
+          List<String> matchingFieldPaths = FieldPathExpressionUtil.evaluateMatchingFieldPaths(
+              field,
+              fieldPathEval,
+              fieldPathVars,
+              record,
+              allFieldPaths
+          );
+          for (String fieldPath : matchingFieldPaths) {
+            if (record.has(fieldPath)
+                && record.get(fieldPath).getValue() != null && record.get(fieldPath).getValue().equals("")) {
+              fieldsToRemove.add(fieldPath);
+            }
+          }
+        }
+        break;
+      case REMOVE_NULL_EMPTY:
+        fieldsToRemove = new LinkedHashSet<>();
+        for (String field : fields) {
+          List<String> matchingFieldPaths = FieldPathExpressionUtil.evaluateMatchingFieldPaths(
+              field,
+              fieldPathEval,
+              fieldPathVars,
+              record,
+              allFieldPaths
+          );
+          for (String fieldPath : matchingFieldPaths) {
+            if (record.has(fieldPath)
+                && (record.get(fieldPath).getValue() == null || record.get(fieldPath).getValue().equals(""))) {
+              fieldsToRemove.add(fieldPath);
+            }
+          }
+        }
+        break;
+      case REMOVE_CONSTANT:
+        fieldsToRemove = new LinkedHashSet<>();
+        for (String field : fields) {
+          List<String> matchingFieldPaths = FieldPathExpressionUtil.evaluateMatchingFieldPaths(
+              field,
+              fieldPathEval,
+              fieldPathVars,
+              record,
+              allFieldPaths
+          );
+          for (String fieldPath : matchingFieldPaths) {
+            if (record.has(fieldPath)
+                && record.get(fieldPath).getValue() != null && record.get(fieldPath).getValue().equals(constant)) {
+              fieldsToRemove.add(fieldPath);
+            }
           }
         }
         break;
