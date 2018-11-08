@@ -282,9 +282,10 @@ public class JdbcUtil {
     String table = tableName;
     DatabaseMetaData metadata = connection.getMetaData();
     List<String> keys = new ArrayList<>();
-    ResultSet result = metadata.getPrimaryKeys(connection.getCatalog(), schema, table);
-    while (result.next()) {
-      keys.add(result.getString(COLUMN_NAME));
+    try (ResultSet result = metadata.getPrimaryKeys(connection.getCatalog(), schema, table)) {
+      while (result.next()) {
+        keys.add(result.getString(COLUMN_NAME));
+      }
     }
     return keys;
   }
