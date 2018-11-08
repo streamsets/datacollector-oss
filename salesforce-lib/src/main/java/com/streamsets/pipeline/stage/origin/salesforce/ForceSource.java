@@ -115,7 +115,7 @@ public class ForceSource extends BaseSource {
   private JobInfo job;
   private QueryResultList queryResultList;
   private int resultIndex;
-  private XMLEventReader rdr;
+  private XMLEventReader xmlEventReader;
   private Set<String> processedBatches;
   private BatchInfoList batchList;
 
@@ -509,19 +509,19 @@ public class ForceSource extends BaseSource {
       try {
         // PK Chunking gives us multiple batches - process them in turn
         batchList = bulkConnection.getBatchInfoList(job.getId());
-        for (BatchInfo b : batchList.getBatchInfo()) {
-          if (b.getState() == BatchStateEnum.Failed) {
-            LOG.error("Batch {} failed: {}", b.getId(), b.getStateMessage());
-            throw new StageException(Errors.FORCE_03, b.getStateMessage());
-          } else if (!processedBatches.contains(b.getId())) {
-            if (b.getState() == BatchStateEnum.NotProcessed) {
+        for (BatchInfo batchInfo : batchList.getBatchInfo()) {
+          if (batchInfo.getState() == BatchStateEnum.Failed) {
+            LOG.error("Batch {} failed: {}", batchInfo.getId(), batchInfo.getStateMessage());
+            throw new StageException(Errors.FORCE_03, batchInfo.getStateMessage());
+          } else if (!processedBatches.contains(batchInfo.getId())) {
+            if (batchInfo.getState() == BatchStateEnum.NotProcessed) {
               // Skip this batch - it's the 'original batch' in PK chunking
               // See https://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/asynch_api_code_curl_walkthrough_pk_chunking.htm
-              LOG.info("Batch {} not processed", b.getId());
-              processedBatches.add(b.getId());
-            } else if (b.getState() == BatchStateEnum.Completed) {
-              LOG.info("Batch {} completed", b.getId());
-              batch = b;
+              LOG.info("Batch {} not processed", batchInfo.getId());
+              processedBatches.add(batchInfo.getId());
+            } else if (batchInfo.getState() == BatchStateEnum.Completed) {
+              LOG.info("Batch {} completed", batchInfo.getId());
+              batch = batchInfo;
               queryResultList = bulkConnection.getQueryResultList(job.getId(), batch.getId());
               LOG.info("Query results: {}", queryResultList.getResult());
               resultIndex = 0;
@@ -548,13 +548,13 @@ public class ForceSource extends BaseSource {
       }
     }
 
-    if (rdr == null && queryResultList != null) {
+    if (xmlEventReader == null && queryResultList != null) {
       // We have results - retrieve the next one!
       String resultId = queryResultList.getResult()[resultIndex];
       resultIndex++;
 
       try {
-        rdr = xmlInputFactory.createXMLEventReader(bulkConnection.getQueryResultStream(job.getId(), batch.getId(), resultId));
+        xmlEventReader = xmlInputFactory.createXMLEventReader(bulkConnection.getQueryResultStream(job.getId(), batch.getId(), resultId));
       } catch (AsyncApiException e) {
         throw new StageException(Errors.FORCE_05, e);
       } catch (XMLStreamException e) {
@@ -562,16 +562,15 @@ public class ForceSource extends BaseSource {
       }
     }
 
-    if (rdr != null){
+    if (xmlEventReader != null){
       int numRecords = 0;
-      while (rdr.hasNext() && numRecords < maxBatchSize) {
+      while (xmlEventReader.hasNext() && numRecords < maxBatchSize) {
         try {
-          XMLEvent event = rdr.nextEvent();
+          XMLEvent event = xmlEventReader.nextEvent();
           if (event.isStartElement() && event.asStartElement().getName().getLocalPart().equals(RECORDS)) {
             // SDC-9731 will refactor record creators so we don't need this downcast
-            String offset = ((BulkRecordCreator)recordCreator).createRecord(rdr, batchMaker);
+            String offset = ((BulkRecordCreator) recordCreator).createRecord(xmlEventReader, batchMaker);
             nextSourceOffset = RECORD_ID_OFFSET_PREFIX + offset;
-            final String sourceId = conf.soqlQuery + "::" + offset;
             ++numRecords;
           }
         } catch (XMLStreamException e) {
@@ -579,9 +578,9 @@ public class ForceSource extends BaseSource {
         }
       }
 
-      if (!rdr.hasNext()) {
+      if (!xmlEventReader.hasNext()) {
         // Exhausted this result - come back in on the next batch
-        rdr = null;
+        xmlEventReader = null;
         if (resultIndex == queryResultList.getResult().length) {
           // We're out of results, too!
           processedBatches.add(batch.getId());
@@ -609,14 +608,9 @@ public class ForceSource extends BaseSource {
             }
           }
         }
-        return nextSourceOffset;
       }
-
       LOG.info("Full batch of {} records", numRecords);
-
-      return nextSourceOffset;
     }
-
     return nextSourceOffset;
   }
 
