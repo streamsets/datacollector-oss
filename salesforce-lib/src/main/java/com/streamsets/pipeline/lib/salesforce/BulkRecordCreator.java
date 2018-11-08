@@ -26,7 +26,9 @@ import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.XMLEvent;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +38,8 @@ public class BulkRecordCreator extends SobjectRecordCreator {
   private static final String TYPE = "type";
   private static final QName XSI_TYPE = new QName("http://www.w3.org/2001/XMLSchema-instance", "type");
   private static final String S_OBJECT = "sObject";
+  private static final ThreadLocal<SimpleDateFormat> dateFormat = ThreadLocal.withInitial(() -> new SimpleDateFormat(
+      "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
 
   // Hide the superclass config with a more specific one
   protected final ForceSourceConfigBean conf;
@@ -46,22 +50,27 @@ public class BulkRecordCreator extends SobjectRecordCreator {
   }
 
   public String createRecord(Object source, BatchMaker batchMaker) throws StageException {
-    XMLEventReader reader = (XMLEventReader)source;
-    String nextSourceOffset = null;
+    XMLEventReader reader = (XMLEventReader) source;
+    String nextSourceOffset;
 
     try {
       // Pull the root map from the reader
       Field field = pullMap(reader);
 
       // Get the offset from the record
-      Object o = getIgnoreCase(field.getValueAsMap(), conf.offsetColumn);
-      if (o == null || !(o instanceof String)) {
+      Object newRawOffset = getIgnoreCase(field.getValueAsMap(), conf.offsetColumn);
+      if (newRawOffset == null) {
         throw new StageException(Errors.FORCE_22, conf.offsetColumn);
       }
-      String offset = fixOffset(conf.offsetColumn, (String)o);
+      String newOffset;
+      if (newRawOffset instanceof Date){
+        newOffset = dateFormat.get().format((Date) newRawOffset);
+      } else {
+        newOffset = newRawOffset.toString();
+      }
+      nextSourceOffset = fixOffset(conf.offsetColumn, newOffset);
 
-      nextSourceOffset = RECORD_ID_OFFSET_PREFIX + offset;
-      final String sourceId = conf.soqlQuery + "::" + offset;
+      final String sourceId = conf.soqlQuery + "::" + nextSourceOffset;
 
       Record record = context.createRecord(sourceId);
       record.set(field);
@@ -73,7 +82,6 @@ public class BulkRecordCreator extends SobjectRecordCreator {
     } catch (XMLStreamException e) {
       throw new StageException(Errors.FORCE_37, e);
     }
-
   }
 
   // When pullMap is called, the caller should have consumed the opening tag for the record
