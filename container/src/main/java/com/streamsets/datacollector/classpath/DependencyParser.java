@@ -99,6 +99,7 @@ public class DependencyParser {
     "(netty(?!-tcnative-boringssl-static)).*",
     "(parquet).*",
     "(spark).*",
+    "(streamsets-datacollector-dataprotector).*",
     "(streamsets(?!-datacollector-spark-api)).*",
     "(swagger).*",
     "(tachyon).*",

@@ -165,6 +165,7 @@ public class DependencyParserExhaustiveTest {
       {"streamsets-datacollector-apache-kafka_0_10-lib-3.0.0.0.jar", new Dependency("streamsets", "3.0.0.0")},
       // This is specific of SDC build - from some reason we resolve "SNAPSHOT" into the timestamp
       {"streamsets-datacollector-spark-api-3.1.0.0-20171107.193324-1.jar", new Dependency("streamsets-datacollector-spark-api", "3.1.0.0-20171107.193324-1")},
+      {"streamsets-datacollector-dataprotector-lib-1.3.0.jar", new Dependency("streamsets-datacollector-dataprotector", "1.3.0")},
       {"swagger-annotations-1.5.13.jar", new Dependency("swagger", "1.5.13")},
       {"swagger-core-1.5.13.jar", new Dependency("swagger", "1.5.13")},
       {"swagger-jaxrs-1.5.13.jar", new Dependency("swagger", "1.5.13")},
