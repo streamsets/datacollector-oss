@@ -30,6 +30,7 @@ import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.cluster.ApplicationState;
 import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.datacollector.cluster.ClusterPipelineStatus;
+import com.streamsets.datacollector.config.InterceptorDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.StageConfiguration;
@@ -55,10 +56,12 @@ import com.streamsets.datacollector.execution.runner.common.ProductionPipeline;
 import com.streamsets.datacollector.execution.runner.common.ProductionPipelineBuilder;
 import com.streamsets.datacollector.execution.runner.common.ProductionPipelineRunner;
 import com.streamsets.datacollector.execution.runner.common.SampledRecord;
+import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.IssuesJson;
+import com.streamsets.datacollector.runner.InterceptorCreatorContextBuilder;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.UserContext;
@@ -82,6 +85,7 @@ import com.streamsets.dc.execution.manager.standalone.ResourceManager;
 import com.streamsets.dc.execution.manager.standalone.ThreadUsage;
 import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.lib.security.http.RemoteSSOService;
+import com.streamsets.pipeline.api.BlobStoreDef;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.ProtoSource;
@@ -91,6 +95,7 @@ import com.streamsets.pipeline.api.impl.ClusterSource;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.PipelineUtils;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.interceptor.InterceptorCreator;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import dagger.ObjectGraph;
 import org.apache.commons.io.FileUtils;
@@ -502,7 +507,42 @@ public class ClusterRunner extends AbstractRunner {
       if (pipelineConfigBean != null) {
         JobEL.setConstantsInContext(pipelineConfigBean.constants);
       }
-      doStart(context.getUser(), pipelineConf, getClusterSourceInfo(context, getName(), getRev(), pipelineConf), getAcl(getName()), context.getRuntimeParameters());
+
+      InterceptorCreatorContextBuilder contextBuilder = new InterceptorCreatorContextBuilder(blobStoreTask, getConfiguration(), context.getInterceptorConfigurations());
+      ClusterSourceInfo sourceInfo = getClusterSourceInfo(context, getName(), getRev(), pipelineConf);
+      // Find a list of BlobStore resource to ship to a cluster job
+      List<BlobStoreDef> listOfResources = new ArrayList<>();
+      ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+      for(PipelineStartEvent.InterceptorConfiguration conf : context.getInterceptorConfigurations()) {
+        for (InterceptorDefinition def : getStageLibrary().getInterceptorDefinitions()) {
+          String className = def.getKlass().getName();
+          String stageLib = def.getLibraryDefinition().getName();
+          if (conf.getStageLibrary().equals(stageLib) && conf.getInterceptorClassName().equals(className)) {
+            try {
+              Thread.currentThread().setContextClassLoader(def.getStageClassLoader());
+              InterceptorCreator creator = def.getDefaultCreator().newInstance();
+              listOfResources.addAll(creator.blobStoreResource(conf.getParameters()));
+            } catch (IllegalAccessException | InstantiationException ex) {
+              throw new RuntimeException("Error while getting BlobStore resource from Interceptor ", ex);
+            } finally {
+              Thread.currentThread().setContextClassLoader(classLoader);
+            }
+          }
+        }
+      }
+      List<String> files = null;
+      if (!listOfResources.isEmpty()) {
+        files = new ArrayList<>();
+        for (BlobStoreDef def : listOfResources) {
+          long version = blobStoreTask.latestVersion(def.getNamespace(), def.getId());
+          files.add(blobStoreTask.retrieveContentFileName(def.getNamespace(), def.getId(), version));
+        }
+        files.add("metadata.json");
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Ship BlobStore Resources: {}", String.join(",", files));
+        }
+      }
+      doStart(context.getUser(), pipelineConf, sourceInfo, getAcl(getName()), context.getRuntimeParameters(), contextBuilder, files);
     } catch (Exception e) {
       validateAndSetStateTransition(context.getUser(), PipelineStatus.START_ERROR, e.toString(), getAttributes());
       throw e;
@@ -930,7 +970,9 @@ public class ClusterRunner extends AbstractRunner {
       PipelineConfiguration pipelineConf,
       ClusterSourceInfo clusterSourceInfo,
       Acl acl,
-      Map<String, Object> runtimeParameters
+      Map<String, Object> runtimeParameters,
+      InterceptorCreatorContextBuilder interceptorCreatorContextBuilder,
+      List<String> blobStoreResources
   ) throws PipelineStoreException, PipelineRunnerException {
     String msg;
     try {
@@ -982,7 +1024,9 @@ public class ClusterRunner extends AbstractRunner {
           sourceInfo,
           SUBMIT_TIMEOUT_SECS,
           getRules(),
-          acl
+          acl,
+          interceptorCreatorContextBuilder,
+          blobStoreResources
       );
       // set state of running before adding callback which modified attributes
       Map<String, Object> attributes = createStateAttributes();

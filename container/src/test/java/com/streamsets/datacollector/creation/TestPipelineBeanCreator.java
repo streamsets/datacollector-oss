@@ -17,6 +17,7 @@ package com.streamsets.datacollector.creation;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.pipeline.api.BlobStoreDef;
 import com.streamsets.datacollector.config.InterceptorDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.ServiceDefinition;
@@ -71,6 +72,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -367,6 +369,11 @@ public class TestPipelineBeanCreator {
     @Override
     public Interceptor create(Context context) {
       return new MyInterceptor(context.getStageType().name() + " " + context.getInterceptorType().name());
+    }
+
+    @Override
+    public List<BlobStoreDef> blobStoreResource(Map<String, String> ids){
+      return new ArrayList<>();
     }
   }
 

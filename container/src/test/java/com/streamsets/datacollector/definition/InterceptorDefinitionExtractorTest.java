@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.definition;
 
+import com.streamsets.pipeline.api.BlobStoreDef;
 import com.streamsets.datacollector.config.InterceptorDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.pipeline.api.Record;
@@ -25,6 +26,8 @@ import com.streamsets.pipeline.api.interceptor.InterceptorDef;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.LinkedList;
+import java.util.Map;
 import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
@@ -36,6 +39,11 @@ public class InterceptorDefinitionExtractorTest {
     @Override
     public Interceptor create(Context context) {
       return null;
+    }
+
+    @Override
+    public List<BlobStoreDef> blobStoreResource(Map<String, String> ids) {
+      return new LinkedList<>();
     }
   }
 

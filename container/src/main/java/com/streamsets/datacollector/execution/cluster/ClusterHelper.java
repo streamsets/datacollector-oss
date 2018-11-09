@@ -24,7 +24,9 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.credential.CredentialStoresTask;
+import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.runner.InterceptorCreatorContextBuilder;
 import com.streamsets.datacollector.security.SecurityConfiguration;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.SystemProcessFactory;
@@ -36,6 +38,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLClassLoader;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
@@ -100,7 +103,9 @@ public class ClusterHelper {
       final Map<String, String> sourceInfo,
       final long timeout,
       RuleDefinitions ruleDefinitions,
-      Acl acl
+      Acl acl,
+      InterceptorCreatorContextBuilder interceptorCreatorContextBuilder,
+      List<String> blobStoreResources
   ) throws TimeoutException, IOException, StageException {
 
     return clusterProvider.startPipeline(
@@ -117,8 +122,9 @@ public class ClusterHelper {
         containerCL,
         timeout,
         ruleDefinitions,
-        acl
-    );
+        acl,
+        interceptorCreatorContextBuilder,
+        blobStoreResources);
   }
 
   public void kill(

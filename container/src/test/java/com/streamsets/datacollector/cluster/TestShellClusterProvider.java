@@ -269,6 +269,8 @@ public class TestShellClusterProvider {
             UUID.randomUUID(),
             Collections.emptyList()
         ),
+        null,
+        null,
         null
         ).getAppId());
   }
@@ -315,6 +317,8 @@ public class TestShellClusterProvider {
             UUID.randomUUID(),
             Collections.<Config>emptyList()
         ),
+        null,
+        null,
         null
     ).getAppId());
     Assert.assertEquals(
@@ -369,6 +373,8 @@ public class TestShellClusterProvider {
             UUID.randomUUID(),
             Collections.<Config>emptyList()
         ),
+        null,
+        null,
         null
     );
     Assert.assertNotNull(appState.getAppId());
@@ -427,6 +433,8 @@ public class TestShellClusterProvider {
             UUID.randomUUID(),
             Collections.<Config>emptyList()
         ),
+        null,
+        null,
         null
     ).getAppId());
     Assert.assertEquals(
@@ -491,6 +499,8 @@ public class TestShellClusterProvider {
             UUID.randomUUID(),
             Collections.<Config>emptyList()
         ),
+        null,
+        null,
         null
         ).getAppId());
     Assert.assertEquals(ShellClusterProvider.CLUSTER_TYPE_MAPREDUCE, MockSystemProcess.env.get(ShellClusterProvider.CLUSTER_TYPE));
@@ -528,6 +538,8 @@ public class TestShellClusterProvider {
               UUID.randomUUID(),
               Collections.<Config>emptyList()
           ),
+          null,
+          null,
           null
       ).getAppId();
       Assert.fail("Expected IO Exception");
@@ -561,6 +573,8 @@ public class TestShellClusterProvider {
             UUID.randomUUID(),
             Collections.<Config>emptyList()
         ),
+        null,
+        null,
         null
         ).getAppId());
       Assert.assertArrayEquals(
@@ -638,6 +652,8 @@ public class TestShellClusterProvider {
             UUID.randomUUID(),
             Collections.<Config>emptyList()
         ),
+        null,
+        null,
         null
         ).getAppId());
     Assert.assertArrayEquals(
@@ -767,6 +783,7 @@ public class TestShellClusterProvider {
 
     sparkProvider.rewriteProperties(
       sdcPropertiesFile,
+      new ArrayList<>(),
       etcDir,
       Collections.emptyMap(),
       Collections.emptyMap(),

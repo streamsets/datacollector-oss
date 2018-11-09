@@ -42,6 +42,7 @@ import com.streamsets.datacollector.lineage.LineagePublisherConstants;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
+import com.streamsets.datacollector.runner.InterceptorCreatorContextBuilder;
 import com.streamsets.datacollector.security.SecurityConfiguration;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.stagelibrary.StageLibraryUtils;
@@ -92,6 +93,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -106,6 +108,7 @@ import static com.streamsets.datacollector.definition.StageLibraryDefinitionExtr
 import static java.util.Arrays.stream;
 
 public abstract class BaseClusterProvider implements ClusterProvider {
+
   static final Pattern YARN_APPLICATION_ID_REGEX = Pattern.compile("\\s(application_[0-9]+_[0-9]+)(\\s|$)");
   static final Pattern MESOS_DRIVER_ID_REGEX = Pattern.compile("\\s(driver-[0-9]+-[0-9]+)(\\s|$)");
   static final Pattern NO_VALID_CREDENTIALS = Pattern.compile("(No valid credentials provided.*)");
@@ -138,6 +141,8 @@ public abstract class BaseClusterProvider implements ClusterProvider {
   public static final String SPARK_PROCESSOR_STAGE = "com.streamsets.pipeline.stage.processor.spark.SparkDProcessor";
   private static final String YARN_SPARK_APP_LOG_PATH = "${spark.yarn.app.container.log.dir}/sdc.log";
   private static final String YARN_MAPREDUCE_APP_LOG_PATH = "${yarn.app.container.log.dir}/sdc.log";
+
+  private static final String BLOBSTORE_BASE_DIR = "blobstore";
 
   @VisibleForTesting
   static final Map<ExecutionMode, String> executionModeToAppLogPath =
@@ -216,6 +221,7 @@ public abstract class BaseClusterProvider implements ClusterProvider {
   @VisibleForTesting
   void rewriteProperties(
       File sdcPropertiesFile,
+      List<File> additionalPropFiles,
       File etcStagingDir,
       Map<String, String> sourceConfigs,
       Map<String, String> sourceInfo,
@@ -228,6 +234,11 @@ public abstract class BaseClusterProvider implements ClusterProvider {
     try {
       sdcInStream = new FileInputStream(sdcPropertiesFile);
       sdcProperties.load(sdcInStream);
+
+      for (File propFiles : additionalPropFiles) {
+        sdcInStream = new FileInputStream(propFiles);
+        sdcProperties.load(sdcInStream);
+      }
       copyDpmTokenIfRequired(sdcProperties, etcStagingDir);
       sdcProperties.setProperty(RuntimeModule.PIPELINE_EXECUTION_MODE_KEY, ExecutionMode.SLAVE.name());
       sdcProperties.setProperty(WebServerTask.REALM_FILE_PERMISSION_CHECK, "false");
@@ -439,7 +450,9 @@ public abstract class BaseClusterProvider implements ClusterProvider {
       URLClassLoader containerCL,
       long timeToWaitForFailure,
       RuleDefinitions ruleDefinitions,
-      Acl acl
+      Acl acl,
+      InterceptorCreatorContextBuilder interceptorCreatorContextBuilder,
+      List<String> blobStoreResources
   ) throws IOException, TimeoutException, StageException {
     File stagingDir = new File(outputDir, "staging");
     if (!stagingDir.mkdirs() || !stagingDir.isDirectory()) {
@@ -463,7 +476,9 @@ public abstract class BaseClusterProvider implements ClusterProvider {
           timeToWaitForFailure,
           stagingDir,
           ruleDefinitions,
-          acl
+          acl,
+          interceptorCreatorContextBuilder,
+          blobStoreResources
       );
     } finally {
       // in testing mode the staging dir is used by yarn
@@ -502,9 +517,10 @@ public abstract class BaseClusterProvider implements ClusterProvider {
       long timeToWaitForFailure,
       File stagingDir,
       RuleDefinitions ruleDefinitions,
-      Acl acl
+      Acl acl,
+      InterceptorCreatorContextBuilder interceptorCreatorContextBuilder,
+      List<String> blobStoreResources
   ) throws IOException, TimeoutException, StageException {
-
     // create libs.tar.gz file for pipeline
     Map<String, List<URL>> streamsetsLibsCl = new HashMap<>();
     Map<String, List<URL>> userLibsCL = new HashMap<>();
@@ -519,7 +535,7 @@ public abstract class BaseClusterProvider implements ClusterProvider {
         false,
         stageLibrary,
         pipelineConfiguration,
-        null,
+        interceptorCreatorContextBuilder,
         errors
     );
     if (!errors.isEmpty()) {
@@ -754,6 +770,9 @@ public abstract class BaseClusterProvider implements ClusterProvider {
         File aclFile = new File(pipelineDir, FileAclStoreTask.ACL_FILE);
         ObjectMapperFactory.getOneLine().writeValue(aclFile, AclDtoJsonMapper.INSTANCE.toAclJson(acl));
       }
+
+      copyBlobstore(blobStoreResources, rootDataDir, pipelineDir);
+
       sdcPropertiesFile = new File(etcDir, "sdc.properties");
       if (executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
         String hdfsS3ConfDirValue = PipelineBeanCreator.get().getHdfsS3ConfDirectory(pipelineConfiguration);
@@ -776,7 +795,15 @@ public abstract class BaseClusterProvider implements ClusterProvider {
           throw new IllegalStateException("HDFS/S3 Checkpoint configuration directory is required");
         }
       }
-      rewriteProperties(sdcPropertiesFile, etcDir, sourceConfigs, sourceInfo, clusterToken, Optional.ofNullable(mesosURL));
+      // Adding SCH generated properties to sdc property to ship together
+      List<File> additionalPropFiles = new LinkedList<>();
+      if (runtimeInfo.isDPMEnabled()) {
+        File schPropertiesFile = new File(runtimeInfo.getDataDir(), RuntimeInfo.SCH_CONF_OVERRIDE);
+        if (schPropertiesFile.exists()) {
+          additionalPropFiles.add(schPropertiesFile);
+        }
+      }
+      rewriteProperties(sdcPropertiesFile, additionalPropFiles, etcDir, sourceConfigs, sourceInfo, clusterToken, Optional.ofNullable(mesosURL));
       TarFileCreator.createTarGz(etcDir, etcTarGz);
     } catch (IOException | RuntimeException ex) {
       String msg = errorString("Error while preparing for cluster job submission: {}", ex);
@@ -830,6 +857,37 @@ public abstract class BaseClusterProvider implements ClusterProvider {
 
         errors
     );
+  }
+
+  /**
+   * Copy BlobStore resources to data directory
+   */
+  private void copyBlobstore(List<String> blobStoreResources, File rootDataDir, File pipelineDir) throws IOException {
+
+    if (blobStoreResources == null) {
+      return;
+    }
+
+    File blobstoreDir = new File(runtimeInfo.getDataDir(), BLOBSTORE_BASE_DIR);
+    File stagingBlobstoreDir = new File(rootDataDir, BLOBSTORE_BASE_DIR);
+    if (!stagingBlobstoreDir.exists()) {
+      if (!stagingBlobstoreDir.mkdirs()) {
+        throw new RuntimeException("Failed to create blobstore directory: " + pipelineDir.getPath());
+      }
+    }
+    for (String blobstoreFile: blobStoreResources) {
+      File srcFile = new File(blobstoreDir, blobstoreFile);
+      if (srcFile.exists()){
+        final File dstFile = new File(stagingBlobstoreDir, srcFile.getName());
+        if (srcFile.canRead()) { // ignore files which cannot be read
+          try (InputStream in = new FileInputStream((srcFile))) {
+            try (OutputStream out = new FileOutputStream((dstFile))) {
+              IOUtils.copy(in, out);
+            }
+          }
+        }
+      }
+    }
   }
 
   protected abstract ApplicationState startPipelineExecute(

@@ -22,9 +22,9 @@ import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.creation.PipelineBean;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
-import com.streamsets.datacollector.creation.StageLibraryDelegateCreator;
 import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.runner.InterceptorCreatorContextBuilder;
 import com.streamsets.datacollector.security.SecurityConfiguration;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
@@ -37,6 +37,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
@@ -110,7 +111,9 @@ public class ClusterProviderSelector implements ClusterProvider {
       URLClassLoader containerCL,
       long timeToWaitForFailure,
       RuleDefinitions ruleDefinitions,
-      Acl acl
+      Acl acl,
+      InterceptorCreatorContextBuilder interceptorCreatorContextBuilder,
+      List<String> blobStoreResources
   ) throws TimeoutException, IOException, StageException {
     return getProvider(pipelineConfiguration).startPipeline(
         tempDir, sourceInfo,
@@ -124,7 +127,9 @@ public class ClusterProviderSelector implements ClusterProvider {
         containerCL,
         timeToWaitForFailure,
         ruleDefinitions,
-        acl
+        acl,
+        interceptorCreatorContextBuilder,
+        blobStoreResources
     );
   }
 

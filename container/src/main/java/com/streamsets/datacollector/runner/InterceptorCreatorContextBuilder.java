@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.runner;
 
 import com.streamsets.datacollector.blobstore.BlobStoreRuntime;
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
@@ -31,6 +32,7 @@ import com.streamsets.pipeline.api.interceptor.InterceptorCreator;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -144,7 +146,7 @@ public class InterceptorCreatorContextBuilder {
   }
 
   public InterceptorCreatorContextBuilder(
-    BlobStore blobStore,
+      BlobStore blobStore,
     Configuration configuration,
     List<PipelineStartEvent.InterceptorConfiguration> interceptorConf
   ) {
