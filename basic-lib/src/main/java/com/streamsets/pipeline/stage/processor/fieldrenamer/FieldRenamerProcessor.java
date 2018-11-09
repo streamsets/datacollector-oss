@@ -322,8 +322,11 @@ public class FieldRenamerProcessor extends SingleLaneRecordProcessor {
             toFieldName = toFieldName + i;
             //Fall through so as to edit.
           case REPLACE:
-            record.set(toFieldName, fromField);
-            record.delete(fromFieldName);
+            // No need to bother if the field is being renamed to itself; plus, we don't want to delete it either
+            if (!toFieldName.equals(fromFieldName)) {
+              record.set(toFieldName, fromField);
+              record.delete(fromFieldName);
+            }
             break;
         }
       } else {
