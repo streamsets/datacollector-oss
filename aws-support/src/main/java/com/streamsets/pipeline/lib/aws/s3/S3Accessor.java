@@ -35,6 +35,7 @@ import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
 import com.amazonaws.services.s3.transfer.Upload;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.aws.AwsRegion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,6 +62,7 @@ public class S3Accessor implements Closeable {
       return this;
     }
 
+    // if the region in the given configs is NULL or empty the S3Accessor will have global bucket access enabled
     public Builder setConnectionConfigs(ConnectionConfigs connectionConfigs) {
       this.connectionConfigs = connectionConfigs;
       return this;
@@ -210,13 +212,19 @@ public class S3Accessor implements Closeable {
                                                                      .isChunkedEncodingEnabled())
                                                                  .withPathStyleAccessEnabled(true);
 
+    String region = (connectionConfigs.getRegion() == null || connectionConfigs.getRegion().isEmpty())
+                    ? null
+                    : connectionConfigs.getRegion();
+
     if (connectionConfigs.isUseEndpoint()) {
-      String signingRegion = connectionConfigs.getRegion().isEmpty() ? null : connectionConfigs.getRegion();
       builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(connectionConfigs.getEndpoint(),
-          signingRegion
+          region
       ));
-    } else {
+    } else if (region != null) {
       builder.withRegion(connectionConfigs.getRegion());
+    } else {
+      builder.withRegion(AwsRegion.US_WEST_1.getId());
+      builder.withForceGlobalBucketAccessEnabled(true);
     }
     return (AmazonS3Client) builder.build();
   }
