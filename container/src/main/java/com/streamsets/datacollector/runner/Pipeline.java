@@ -311,13 +311,14 @@ public class Pipeline {
 
     // Initialize origin
     issues.addAll(initPipe(originPipe, pipeContext));
+    int runnerCount = 1;
 
     // If it's a push source, we need to initialize the remaining source-less pipes
     if(originPipe.getStage().getStage() instanceof PushSource) {
       Preconditions.checkArgument(pipes.size() == 1, "There are already more runners then expected");
 
       // Effective number of runners - either number of source threads or predefined value from user, whatever is *less*
-      int runnerCount = ((PushSource) originPipe.getStage().getStage()).getNumberOfThreads();
+      runnerCount = ((PushSource) originPipe.getStage().getStage()).getNumberOfThreads();
       int pipelineRunnerCount = pipelineBean.getConfig().maxRunners;
       if (pipelineRunnerCount > 0) {
         runnerCount = Math.min(runnerCount, pipelineRunnerCount);
@@ -388,12 +389,15 @@ public class Pipeline {
     }
 
     // Initialize all source-less pipeline runners
+    final int finalRunnerCount = runnerCount;
     for(PipeRunner pipeRunner: pipes) {
       pipeRunner.forEach(pipe -> {
         ((StageContext)pipe.getStage().getContext()).setPipelineFinisherDelegate((PipelineFinisherDelegate)runner);
+        ((StageContext)pipe.getStage().getContext()).setRunnerCount(finalRunnerCount);
         issues.addAll(initPipe(pipe, pipeContext));
       });
     }
+    ((StageContext)originPipe.getStage().getContext()).setRunnerCount(runnerCount);
     ((StageContext)originPipe.getStage().getContext()).setPipelineFinisherDelegate((PipelineFinisherDelegate)runner);
 
     return issues;

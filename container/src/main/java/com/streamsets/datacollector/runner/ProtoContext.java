@@ -87,6 +87,8 @@ public abstract class ProtoContext implements ProtoConfigurableEntity.Context, C
   protected final MetricRegistry metrics;
   protected final String pipelineId;
   protected final int runnerId;
+  // Can't be final as runner count is not known at static initialization time
+  protected int runnerCount;
   protected final String rev;
   private final Sampler sampler;
   protected final String stageInstanceName;
@@ -115,6 +117,7 @@ public abstract class ProtoContext implements ProtoConfigurableEntity.Context, C
     this.pipelineId = pipelineId;
     this.rev = rev;
     this.runnerId = runnerId;
+    this.runnerCount = 1; // By default we're running with a single runner
     this.stageInstanceName = stageInstanceName;
     this.serviceInstanceName = serviceInstanceName;
     this.resourcesDir = resourcesDir;
@@ -169,6 +172,15 @@ public abstract class ProtoContext implements ProtoConfigurableEntity.Context, C
   @Override
   public int getRunnerId() {
     return runnerId;
+  }
+
+  @Override
+  public int getRunnerCount() {
+    return runnerCount;
+  }
+
+  public void setRunnerCount(int count) {
+    this.runnerCount = count;
   }
 
   @Override

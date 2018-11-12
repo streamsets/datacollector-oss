@@ -553,6 +553,14 @@ public class TestPipeline {
     // But the Target is initialized 10 times (~10 different "virtual" instances)
     Mockito.verify(target, Mockito.times(10)).init(Mockito.any(Stage.Info.class), Mockito.any(Target.Context.class));
     Assert.assertEquals(10, pipeline.getRunners().size());
+
+    // Validate that runner count is 10 everywhere
+    Assert.assertEquals(10, pipeline.getSourcePipe().getStage().getContext().getRunnerCount());
+    for(PipeRunner pipeRunner : pipeline.getRunners()) {
+      for(Pipe pipe : pipeRunner.getPipes()) {
+        Assert.assertEquals(10, pipe.getStage().getContext().getRunnerCount());
+      }
+    }
   }
 
   @Test
