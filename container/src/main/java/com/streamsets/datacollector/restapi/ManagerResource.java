@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.restapi;
 
+import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.execution.AclManager;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineState;
@@ -43,8 +44,10 @@ import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.datacollector.util.ContainerError;
+import com.streamsets.datacollector.util.EdgeUtil;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.lib.security.http.SSOPrincipal;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -764,11 +767,26 @@ public class ManagerResource {
       @PathParam("pipelineId") String pipelineId,
       @QueryParam("rev") @DefaultValue("0") String rev,
       @QueryParam ("stageInstanceName") @DefaultValue("") String stageInstanceName,
-      @QueryParam ("size") @DefaultValue("10") int size
+      @QueryParam ("size") @DefaultValue("10") int size,
+      @QueryParam ("edge") boolean edge
   ) throws PipelineException {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     size = size > 100 ? 100 : size;
+    if (edge) {
+      PipelineConfiguration pipelineConfiguration = store.load(pipelineId, "0");
+      Config edgeHttpUrlConfig = pipelineConfiguration.getConfiguration(EdgeUtil.EDGE_HTTP_URL);
+      if (edgeHttpUrlConfig != null) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("stageInstanceName", stageInstanceName);
+        params.put("size", size);
+        return EdgeUtil.proxyRequestGET(
+            (String)edgeHttpUrlConfig.getValue(),
+            "/rest/v1/pipeline/" + pipelineId + "/errorRecords",
+            params
+        );
+      }
+    }
     Runner runner = manager.getRunner(pipelineId, rev);
     if(runner != null) {
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(
@@ -792,11 +810,28 @@ public class ManagerResource {
       @PathParam("pipelineId") String pipelineId,
       @QueryParam("rev") @DefaultValue("0") String rev,
       @QueryParam ("stageInstanceName") @DefaultValue("") String stageInstanceName,
-      @QueryParam ("size") @DefaultValue("10") int size
+      @QueryParam ("size") @DefaultValue("10") int size,
+      @QueryParam ("edge") boolean edge
   ) throws PipelineException {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     size = size > 100 ? 100 : size;
+
+    if (edge) {
+      PipelineConfiguration pipelineConfiguration = store.load(pipelineId, "0");
+      Config edgeHttpUrlConfig = pipelineConfiguration.getConfiguration(EdgeUtil.EDGE_HTTP_URL);
+      if (edgeHttpUrlConfig != null) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("stageInstanceName", stageInstanceName);
+        params.put("size", size);
+        return EdgeUtil.proxyRequestGET(
+            (String)edgeHttpUrlConfig.getValue(),
+            "/rest/v1/pipeline/" + pipelineId + "/errorMessages",
+            params
+        );
+      }
+    }
+
     Runner runner = manager.getRunner(pipelineId, rev);
     if(runner != null) {
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(
