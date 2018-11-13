@@ -903,7 +903,7 @@ angular.module('pipelineGraphDirectives', [])
         .filter(function(d) {
             return pipelineService.isBetaStage(d.stageName);
         })
-        .attr('x', 10)
+        .attr('x', consts.rectWidth - 25)
         .attr('y', 10)
         .attr('width', 10.5)
         .attr('height', 19.5)
