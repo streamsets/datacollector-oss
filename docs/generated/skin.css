@@ -25,50 +25,76 @@ h1 {
 }
 h2 {
 	font-family: 'Lato', Helvetica, Arial, Lucida, sans-serif;
-	font-size: 28px;
+	/* DO font-size: 28px;*/
     line-height: 48px;
 	font-weight: 300;
 	margin-top: 20px !important;
 	margin-bottom: 10px;
 	color: #003399;
 }
+/* DO added for parts */
+h2.title{
+    font-size:28px;
+}
 h3 {
 	font-family: 'Lato', Helvetica, Arial, Lucida, sans-serif !important;
-	font-size: 22px !important;
+	/* DO font-size: 22px !important;*/
     line-height: 32px;
 	font-weight: 400 !important;
 	margin-top: 25px !important;
 	margin-bottom: 12px !important;
 	color: #003399;
 }
+/* DO added for parts */
+h3.title{
+    font-size:22px;
+}
 h4 {
 	font-family: 'Lato', Helvetica, Arial, Lucida, sans-serif !important;
-	font-size: 18px !important;
+	/* DO font-size: 18px !important;*/
 	line-height: 24px;
 	font-weight: 400 !important;
 	margin-top: 25px !important;
 	margin-bottom: 12px;
 	color: #003399;
 }
+/* DO added for parts */
+h4.title{
+    font-size:18px;
+}
+
 h5 {
-	font-family: 'Montserrat', 'Lato', Helvetica, Arial, Lucida, sans-serif !important;
-	font-size: 14px !important;
+	font-family: /* DO 'Montserrat', */ 'Lato', Helvetica, Arial, Lucida, sans-serif !important;
+	/* DO font-size: 14px !important;*/
 	line-height: 16px;
-	font-weight: 600 !important;
-	text-transform: uppercase;
-	letter-spacing: 1px;
+	/*  font-weight: 600 !important;*/
+	/* DO text-transform: uppercase;
+	letter-spacing: 1px; */
 	margin-bottom: 5px;
 	color: #003399;
 }
+/* added for parts */
+h5.title {
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration:none;
+}
 h6 {
-	font-family: 'Montserrat', 'Lato', Helvetica, Arial, Lucida, sans-serif !important;
-	font-size: 12px !important;
-	line-height: 14px;
-	font-weight: 600 !important;
+	font-family: /* DO 'Montserrat', */ 'Lato', Helvetica, Arial, Lucida, sans-serif !important;
+	/*  DO font-size: 12px !important;*/
+	line-height: 15px;
+	/* DO font-weight: 600 !important;
 	text-transform: uppercase;
-	letter-spacing: 1px;
+	letter-spacing: 1px;*/
 	margin-bottom: 2px;
 	color: #003399;
+}
+/* DO added for parts */
+h6.title {
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration:none;
+    letter-spacing: 1px;
 }
 
 /* lc removing stupid link from help 5/30 */
@@ -430,9 +456,7 @@ span.topic {
 	box-shadow: none;
 	text-shadow: none;
 	font-weight: normal;
-	border-bottom: 1px solid #e1e1e1;
 	color: #003399;
-	font-size: 24px;
 	line-height: 1.8em;
 	margin: 0 0 10px 0;
 	padding: 0;
@@ -440,6 +464,12 @@ span.topic {
 
 .title.topictitle2 {
 	font-size: 24px;
+	border-bottom: 1px solid #e1e1e1; /* DO added for parts */
+}
+/* DO added for parts */
+.title.sectiontitle {
+    font-size: 15px;
+    letter-spacing: 1px;
 }
 
 .title.sectiontitle, .title.topictitle2, .topictitle3, .topictitle4, .topictitle5, .topictitle6 {
@@ -666,6 +696,13 @@ li.link.ulchildlink {
 }
 
 .ul .p, .ol .p, .dl .p {
+}
+/* DO added to differentiate second- and third-level lists */
+ul ul, ul .ul {
+    list-style-type:circle;
+}
+ul ul ul , ul ul .ul{
+    list-style-type:square;
 }
 
 /* FOOTER
@@ -959,6 +996,30 @@ span.uicontrol {
 span.wintitle {
   font-weight: bold;
 }
+/* DO added to render userinput, codeph, and filepath tags as monospace */
+kbd.userinput{
+    background-color:inherit;
+    color: inherit;
+    box-shadow: none;
+    padding: 0;
+}
+.codeph {
+    background-color: inherit;
+    padding: 0;
+}
+span.filepath{
+    background-color: inherit;
+    padding: 0;
+}
+pre code, span.filepath, .codeph, kbd.userinput {
+    font-family:"Courier New", monospace;
+    font-size: 118%;
+}
+/*DO Not used currently
+.option, .cmdname, .parmname{
+    font-family:Menlo,Monaco,Consolas,"Courier New",monospace;
+} 
+*/
 
 #undefined undefined {
   border-top-color: rgb(188, 188, 188);

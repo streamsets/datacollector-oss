@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Event Records","href":"datacollector\/UserGuide\/Executors\/Databricks.html#concept_bjf_wfz_cfb","attributes": {"data-id":"concept_bjf_wfz_cfb",},"menu": {"hasChildren":false,},"tocID":"concept_bjf_wfz_cfb-d46e98411","topics":[]}]});

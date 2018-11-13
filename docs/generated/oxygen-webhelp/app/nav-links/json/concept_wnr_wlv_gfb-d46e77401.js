@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Configuring an MLeap Evaluator","href":"datacollector\/UserGuide\/Processors\/MLeap.html#task_k44_2ys_cfb","attributes": {"data-id":"task_k44_2ys_cfb",},"menu": {"hasChildren":false,},"tocID":"task_k44_2ys_cfb-d46e77442","topics":[]}]});
