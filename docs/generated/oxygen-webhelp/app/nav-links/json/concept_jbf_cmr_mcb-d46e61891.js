@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Event Records","href":"datacollector\/UserGuide\/Origins\/SFTP.html#concept_dkf_ctr_mcb","attributes": {"data-id":"concept_dkf_ctr_mcb",},"menu": {"hasChildren":false,},"tocID":"concept_dkf_ctr_mcb-d46e61963","topics":[]}]});

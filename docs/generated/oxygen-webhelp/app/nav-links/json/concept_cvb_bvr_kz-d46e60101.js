@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Event Record","href":"datacollector\/UserGuide\/Origins\/Salesforce.html#concept_gym_czr_kz","attributes": {"data-id":"concept_gym_czr_kz",},"menu": {"hasChildren":false,},"tocID":"concept_gym_czr_kz-d46e60295","topics":[]}]});

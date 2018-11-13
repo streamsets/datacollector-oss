@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Configuring a Databricks ML Evaluator","shortdesc":"\n               <p class=\"shortdesc\">Documentation forthcoming.</p>\n            ","href":"datacollector\/UserGuide\/Processors\/DatabricksML.html#task_bgq_g3r_1fb","attributes": {"data-id":"task_bgq_g3r_1fb",},"menu": {"hasChildren":false,},"tocID":"task_bgq_g3r_1fb-d46e68106","topics":[]}]});

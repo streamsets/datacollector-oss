@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Event Records","href":"datacollector\/UserGuide\/Executors\/MapReduce.html#concept_vjr_cn5_sx","attributes": {"data-id":"concept_vjr_cn5_sx",},"menu": {"hasChildren":false,},"tocID":"concept_vjr_cn5_sx-d46e102114","topics":[]}]});

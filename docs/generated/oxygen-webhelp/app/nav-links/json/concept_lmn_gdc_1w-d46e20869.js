@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Generating Attributes for Record-Based Writes","href":"datacollector\/UserGuide\/Pipeline_Design\/RecordHeaderAttributes.html#concept_th5_3zj_mw","attributes": {"data-id":"concept_th5_3zj_mw",},"menu": {"hasChildren":false,},"tocID":"concept_th5_3zj_mw-d46e20931","topics":[]}]});

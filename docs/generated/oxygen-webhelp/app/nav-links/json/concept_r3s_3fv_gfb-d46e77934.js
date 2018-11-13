@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Configuring a PMML Evaluator Processor","href":"datacollector\/UserGuide\/Processors\/PMML.html#task_rqj_bph_cfb","attributes": {"data-id":"task_rqj_bph_cfb",},"menu": {"hasChildren":false,},"tocID":"task_rqj_bph_cfb-d46e77974","topics":[]}]});

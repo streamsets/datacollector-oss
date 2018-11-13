@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Processing XML Data with Custom Delimiters","href":"datacollector\/UserGuide\/Data_Formats\/TextCDelim.html#concept_okt_kmg_jx","attributes": {"data-id":"concept_okt_kmg_jx",},"menu": {"hasChildren":false,},"tocID":"concept_okt_kmg_jx-d46e24590","topics":[]}]});
