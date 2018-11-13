@@ -516,8 +516,8 @@ public class ClusterRunner extends AbstractRunner {
       String snapshotLabel,
       int batches,
       int batchSize
-  ) {
-    throw new UnsupportedOperationException();
+  ) throws PipelineException {
+    validateAndSetStateTransition(context.getUser(), PipelineStatus.START_ERROR, "Cluster mode does not support snapshots.", getAttributes());
   }
 
   @Override
