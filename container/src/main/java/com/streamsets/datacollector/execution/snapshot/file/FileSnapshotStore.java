@@ -64,6 +64,10 @@ public class FileSnapshotStore implements SnapshotStore {
   @Override
   public SnapshotInfo create(String user, String name, String rev, String id, String label, boolean failureSnapshot) throws PipelineException {
     synchronized (lockCache.getLock(name)) {
+      SnapshotInfo existingInfo = getInfo(name, rev, id);
+      if (existingInfo != null) {
+        throw new PipelineException(ContainerError.CONTAINER_0606, id, name);
+      }
       PipelineDirectoryUtil.createPipelineSnapshotDir(runtimeInfo, name, rev, id);
       SnapshotInfo snapshotInfo = new SnapshotInfoImpl(user, id, label, name, rev, System.currentTimeMillis(), true, 0, failureSnapshot);
       persistSnapshotInfo(snapshotInfo);

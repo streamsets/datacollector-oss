@@ -932,11 +932,16 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
       int batches,
       int batchSize
   ) throws PipelineException, StageException {
-    startPipeline(context);
-    captureSnapshot(context.getUser(), snapshotName, snapshotLabel, batches, batchSize, false);
-    LOG.debug("Starting the runnable for pipeline {} {}", getName(), getRev());
-    if(!pipelineRunnable.isStopped()) {
-      pipelineRunnable.run();
+    try {
+      startPipeline(context);
+      captureSnapshot(context.getUser(), snapshotName, snapshotLabel, batches, batchSize, false);
+      LOG.debug("Starting the runnable for pipeline {} {}", getName(), getRev());
+      if (!pipelineRunnable.isStopped()) {
+        pipelineRunnable.run();
+      }
+    } catch (Exception e) {
+      validateAndSetStateTransition(context.getUser(), PipelineStatus.START_ERROR, e.toString(), null);
+      throw e;
     }
   }
 

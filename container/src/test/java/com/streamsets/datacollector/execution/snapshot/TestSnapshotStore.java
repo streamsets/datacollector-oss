@@ -66,6 +66,16 @@ public abstract class TestSnapshotStore {
     Assert.assertTrue(snapshotInfo.isInProgress());
   }
 
+  @Test(expected = PipelineException.class)
+  public void testCreateWhileSnapshotExists() throws PipelineException {
+    // Create snapshot
+    SnapshotInfo snapshotInfo = snapshotStore.create(USER, PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_ID, SNAPSHOT_LABEL, false);
+    Assert.assertNotNull(snapshotInfo);
+
+    // Try to create it again
+    snapshotStore.create(USER, PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_ID, SNAPSHOT_LABEL, false);
+  }
+
   @Test
   public void testUpdateLabel() throws PipelineException {
     SnapshotInfo snapshotInfo = snapshotStore.create(USER, PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_ID, SNAPSHOT_LABEL, false);

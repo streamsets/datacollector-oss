@@ -123,6 +123,7 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0603("Error persisting snapshot '{}' for pipeline with name '{}' and revision '{}' : '{}'"),
   CONTAINER_0604("Error retrieving snapshot info '{}' for pipeline with name '{}' and revision '{}' : '{}'"),
   CONTAINER_0605("Snapshot must be created before saving"),
+  CONTAINER_0606("Snapshot {} for pipeline {} already exists"),
 
   CONTAINER_0700("Error stage initialization error: {}"),
   CONTAINER_0701("Stage '{}' initialization error: {}"),
