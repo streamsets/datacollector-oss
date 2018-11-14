@@ -847,7 +847,9 @@ public abstract class WebServerTask extends AbstractTask implements Registration
   @Override
   protected void stopTask() {
     try {
-      server.stop();
+      if(server != null) {
+        server.stop();
+      }
     } catch (Exception ex) {
       LOG.error("Error while stopping Jetty, {}", ex.toString(), ex);
     } finally {
