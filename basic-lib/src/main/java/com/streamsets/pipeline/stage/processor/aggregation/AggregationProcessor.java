@@ -80,11 +80,12 @@ public class AggregationProcessor extends SingleLaneProcessor {
 
   @Override
   public void destroy() {
-    synchronized (getClass()) {
-      if (evaluators != null) {
+    synchronized (AggregationProcessor.class) {
+      if (evaluators != null && getContext().getStageRunnerSharedMap().get(EVALUATORS) != null) {
         evaluators.destroy();
         evaluators = null;
         publishEventRecordsIfAny();
+        getContext().getStageRunnerSharedMap().remove(EVALUATORS);
       }
     }
     super.destroy();
