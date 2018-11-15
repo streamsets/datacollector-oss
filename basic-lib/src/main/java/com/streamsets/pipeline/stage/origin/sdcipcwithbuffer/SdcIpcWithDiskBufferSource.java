@@ -64,6 +64,14 @@ public class SdcIpcWithDiskBufferSource extends AbstractHttpServerSource<HttpRec
     if (issues.isEmpty()) {
       issues.addAll(super.init());
     }
+    // Start server
+    if (issues.isEmpty()) {
+      try {
+        server.startServer();
+      } catch (StageException ex) {
+        issues.add(getContext().createConfigIssue("HTTP", "", ex.getErrorCode(), ex.getMessage()));
+      }
+    }
     return issues;
   }
 
