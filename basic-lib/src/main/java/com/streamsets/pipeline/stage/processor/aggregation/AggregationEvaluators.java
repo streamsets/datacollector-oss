@@ -134,7 +134,7 @@ public class AggregationEvaluators {
       Map<Aggregator, AggregatorData> data = aggregators.roll(newWindowCloseTime);
       prepareEvents(data);
     } catch (Exception ex) {
-      LOG.error("Error closing window for '{}': {}", closeWindowDate, ex);
+      LOG.error("Error closing window for '{}': {}", closeWindowDate, ex, ex);
     }
   }
 
