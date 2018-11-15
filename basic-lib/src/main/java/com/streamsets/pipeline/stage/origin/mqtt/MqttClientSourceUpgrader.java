@@ -30,6 +30,12 @@ public class MqttClientSourceUpgrader implements StageUpgrader {
       switch(fromVersion) {
         case 1:
           TlsConfigBeanUpgradeUtil.upgradeHttpSslConfigBeanToTlsConfigBean(configs, "commonConf.");
+          if (toVersion == 2) {
+            break;
+          }
+          // fall through
+        case 2:
+          addCleanSessionFlag(configs);
           break;
         default:
           throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -37,4 +43,7 @@ public class MqttClientSourceUpgrader implements StageUpgrader {
       return configs;
     }
 
+  public static void addCleanSessionFlag(List<Config> configs) {
+    configs.add(new Config("commonConf.cleanSession", false));
+  }
 }

@@ -15,8 +15,15 @@
  */
 package com.streamsets.pipeline.stage.origin.mqtt;
 
+import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.api.StageUpgrader;
+import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
 import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgraderTestUtil;
 import org.junit.Test;
+import org.mockito.Mockito;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class TestMqttClientSourceUpgrader {
 
@@ -27,5 +34,19 @@ public class TestMqttClientSourceUpgrader {
         new MqttClientSourceUpgrader(),
         2
     );
+  }
+
+  @Test
+  public void testV2ToV3() throws Exception {
+    final List<Config> configs = new LinkedList<>();
+    final MqttClientSourceUpgrader upgrader = new MqttClientSourceUpgrader();
+    StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
+    Mockito.doReturn(2).when(context).getFromVersion();
+    Mockito.doReturn(3).when(context).getToVersion();
+    assertCleanSessionFlagAdded(upgrader.upgrade(configs, context));
+  }
+
+  public static void assertCleanSessionFlagAdded(List<Config> configs) {
+    UpgraderTestUtils.assertExists(configs, "commonConf.cleanSession", false);
   }
 }

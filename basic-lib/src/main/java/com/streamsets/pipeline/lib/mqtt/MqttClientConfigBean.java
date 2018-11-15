@@ -111,6 +111,17 @@ public class MqttClientConfigBean {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Clean Session",
+      description = "Controls the 'clean session' flag on the MQTT client; refer to MQTT documentation for specifics",
+      displayPosition = 100,
+      group = "MQTT"
+  )
+  public boolean cleanSession;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.CREDENTIAL,
       label = "Username",
       displayPosition = 71,

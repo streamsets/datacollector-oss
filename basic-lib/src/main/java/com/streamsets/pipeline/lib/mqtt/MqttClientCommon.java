@@ -62,7 +62,7 @@ public class MqttClientCommon {
     mqttClient = new MqttClient(commonConf.brokerUrl, commonConf.clientId, clientPersistence);
     mqttClient.setCallback(mqttCallback);
     MqttConnectOptions connOpts = new MqttConnectOptions();
-    connOpts.setCleanSession(false);
+    connOpts.setCleanSession(commonConf.cleanSession);
     connOpts.setKeepAliveInterval(commonConf.keepAlive);
     if (commonConf.useAuth) {
       connOpts.setUserName(commonConf.username.get());

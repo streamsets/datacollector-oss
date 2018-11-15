@@ -27,7 +27,7 @@ import com.streamsets.pipeline.lib.mqtt.Groups;
 import com.streamsets.pipeline.lib.mqtt.MqttClientConfigBean;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "MQTT Publisher",
     description = "Uses an MQTT Client to publish data to a topic on the MQTT Broker",
     icon = "mqtt.png",
@@ -45,12 +45,6 @@ import com.streamsets.pipeline.lib.mqtt.MqttClientConfigBean;
     upgrader = MqttClientTargetUpgrader.class
 )
 @ConfigGroups(Groups.class)
-@HideConfigs({
-    "commonConf.tlsConfig.keyStoreFilePath",
-    "commonConf.tlsConfig.keyStoreType",
-    "commonConf.tlsConfig.keyStorePassword",
-    "commonConf.tlsConfig.keyStoreAlgorithm"
-})
 @GenerateResourceBundle
 public class MqttClientDTarget extends DTarget {
 

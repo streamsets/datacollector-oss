@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.stage.origin.mqtt.MqttClientSourceUpgrader;
 import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgradeUtil;
 
 import java.util.List;
@@ -30,6 +31,12 @@ public class MqttClientTargetUpgrader implements StageUpgrader {
       switch(fromVersion) {
         case 1:
           TlsConfigBeanUpgradeUtil.upgradeHttpSslConfigBeanToTlsConfigBean(configs, "commonConf.");
+          if (toVersion == 2) {
+            break;
+          }
+          // fall through
+        case 2:
+          MqttClientSourceUpgrader.addCleanSessionFlag(configs);
           break;
         default:
           throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
