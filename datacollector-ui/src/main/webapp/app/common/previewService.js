@@ -132,7 +132,10 @@ angular.module('dataCollectorApp.common')
             if(stageOutput.output[inputLane]) {
               angular.forEach(stageOutput.output[inputLane], function(input) {
                 input.laneName = inputLane;
-                stagePreviewData.input.push(input);
+                // filter records that does not belong to the selected stream
+                if (input.header.trackingId.indexOf(fromStageInstance.instanceName) > 0) {
+                    stagePreviewData.input.push(input);
+                }
               });
             } else if (inputLane === stageOutput.instanceName + '_EventLane')  {
               angular.forEach(stageOutput.eventRecords, function(input) {
