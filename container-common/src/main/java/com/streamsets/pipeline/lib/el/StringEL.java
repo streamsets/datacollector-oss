@@ -264,6 +264,19 @@ public class StringEL {
 
   @ElFunction(
       prefix = "str",
+      name = "lastIndexOf",
+      description = "Returns the index within this string of the last occurrence of the specified substring"
+  )
+  public static int lastIndexOf(
+      @ElParam("string") String string,
+      @ElParam("substring") String substring
+  ) {
+    string = (string == null)? "" : string;
+    return string.lastIndexOf(substring);
+  }
+
+  @ElFunction(
+      prefix = "str",
       name = "urlEncode",
       description = "Returns URL encoded variant of the string."
   )

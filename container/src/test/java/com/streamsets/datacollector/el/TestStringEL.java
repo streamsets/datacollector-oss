@@ -27,7 +27,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableMap;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -309,6 +308,15 @@ public class TestStringEL {
     Assert.assertTrue(eval.eval(variables, "${str:length(str:concat(\"abc\",\"def\"))}", Integer.class) == 6);
     Assert.assertTrue(eval.eval(variables, "${str:length(str:trim(\" abc \"))}", Integer.class) == 3);
     Assert.assertTrue(eval.eval(variables, "${str:length(str:substring(\"abcdef\", 0, 3))}", Integer.class) == 3);
+  }
+
+  @Test
+  public void testStringLastIndexOf() throws Exception {
+    ELEvaluator eval = new ELEvaluator("testStringLastIndexOf", elDefinitionExtractor, StringEL.class);
+    ELVariables variables = new ELVariables();
+    Assert.assertTrue(eval.eval(variables, "${str:lastIndexOf('aabac', 'a')}", Integer.class) == 3);
+    Assert.assertTrue(eval.eval(variables, "${str:lastIndexOf('abcxyzabcxyz', 'xyz')}", Integer.class) == 9);
+    Assert.assertTrue(eval.eval(variables, "${str:lastIndexOf('abcd', 'e')}", Integer.class) == -1);
   }
 
   @Test
