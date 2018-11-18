@@ -34,6 +34,7 @@ import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 import org.tensorflow.TensorFlowException;
 
+import java.io.File;
 import java.nio.Buffer;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -69,7 +70,11 @@ public final class TensorFlowProcessor extends SingleLaneProcessor {
     }
 
     try {
-      this.savedModel = SavedModelBundle.load(conf.modelPath, modelTags);
+      File exportedModelDir = new File(conf.modelPath);
+      if (!exportedModelDir.isAbsolute()) {
+        exportedModelDir = new File(getContext().getResourcesDirectory(), conf.modelPath).getAbsoluteFile();
+      }
+      this.savedModel = SavedModelBundle.load(exportedModelDir.getAbsolutePath(), modelTags);
     } catch (TensorFlowException ex) {
       issues.add(getContext().createConfigIssue(
           Groups.TENSOR_FLOW.name(),
