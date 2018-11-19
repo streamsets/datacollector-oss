@@ -34,7 +34,8 @@ public class MLeapProcessorConfigBean {
       type = ConfigDef.Type.STRING,
       defaultValue = "",
       label = "Saved Model File Path",
-      description = "Local path to the MLeap model archive file",
+      description = "Local path to the MLeap model archive file or directory. " +
+          "Absolute path, or relative to the Data Collector resources directory.",
       displayPosition = 10,
       group = "MLEAP"
   )

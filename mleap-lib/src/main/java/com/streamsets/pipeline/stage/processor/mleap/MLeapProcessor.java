@@ -66,9 +66,13 @@ public class MLeapProcessor extends SingleLaneProcessor {
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     if (configIssues.isEmpty()) {
       try {
+        File mLeapModel = new File(conf.modelPath);
+        if (!mLeapModel.isAbsolute()) {
+          mLeapModel = new File(getContext().getResourcesDirectory(), conf.modelPath).getAbsoluteFile();
+        }
         MleapContext mleapContext = new ContextBuilder().createMleapContext();
         BundleBuilder bundleBuilder = new BundleBuilder();
-        mLeapPipeline = bundleBuilder.load(new File(conf.modelPath), mleapContext).root();
+        mLeapPipeline = bundleBuilder.load(mLeapModel, mleapContext).root();
       } catch (Exception ex) {
         configIssues.add(getContext().createConfigIssue(
             Groups.MLEAP.name(),
