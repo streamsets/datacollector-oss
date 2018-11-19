@@ -41,6 +41,7 @@ import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.HideStage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -81,6 +82,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Path("/v1")
 @Api(value = "definitions")
@@ -135,12 +137,23 @@ public class StageLibraryResource {
       authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
-  public Response getDefinitions() {
+  public Response getDefinitions(
+      @QueryParam("hideStage") final HideStage.Type hideStage
+  ) {
     // The definitions to be returned
     DefinitionsJson definitions = new DefinitionsJson();
 
     // Populate the definitions with all the stage definitions
     List<StageDefinition> stageDefinitions = stageLibrary.getStages();
+
+    // Filter based on the hideStage if specified
+    if (hideStage != null) {
+      stageDefinitions = stageDefinitions
+          .stream()
+          .filter(stageDefinition -> stageDefinition.getHideStage().contains(hideStage))
+          .collect(Collectors.toList());
+    }
+
     List<StageDefinitionJson> stages = new ArrayList<>(stageDefinitions.size());
     stages.addAll(BeanHelper.wrapStageDefinitions(stageDefinitions));
     definitions.setStages(stages);

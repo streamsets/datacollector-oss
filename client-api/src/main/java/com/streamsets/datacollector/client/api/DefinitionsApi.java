@@ -20,6 +20,7 @@ import com.streamsets.datacollector.client.ApiClient;
 import com.streamsets.datacollector.client.Configuration;
 import com.streamsets.datacollector.client.Pair;
 import com.streamsets.datacollector.client.TypeRef;
+import com.streamsets.pipeline.api.HideStage;
 
 import com.streamsets.datacollector.client.model.DefinitionsJson;
 
@@ -50,10 +51,22 @@ public class DefinitionsApi {
 
   /**
    * Returns pipeline &amp; stage configuration definitions
+   * This is to fetch all the definitions
    *
    * @return DefinitionsJson
    */
+  @Deprecated
   public DefinitionsJson getDefinitions () throws ApiException {
+    return this.getDefinitions(null);
+  }
+
+  /**
+   * Returns pipeline &amp; stage configuration definitions
+   * This will fetch defintions based on the hideStage filter
+   *
+   * @return DefinitionsJson
+   */
+  public DefinitionsJson getDefinitions (HideStage.Type hideStage) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
@@ -62,6 +75,9 @@ public class DefinitionsApi {
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
+    if (hideStage != null) {
+      queryParams.add(new Pair("hideStage", hideStage.name()));
+    }
     Map<String, String> headerParams = new HashMap<String, String>();
     Map<String, Object> formParams = new HashMap<String, Object>();
 
