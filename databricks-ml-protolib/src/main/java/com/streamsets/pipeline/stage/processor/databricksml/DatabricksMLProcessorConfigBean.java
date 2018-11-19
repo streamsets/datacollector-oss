@@ -31,7 +31,8 @@ public class DatabricksMLProcessorConfigBean {
       type = ConfigDef.Type.STRING,
       defaultValue = "",
       label = "Saved Model Path",
-      description = "Local path to the Spark-trained model",
+      description = "Local path to the Spark-trained model. " +
+          "Absolute path, or relative to the Data Collector resources directory.",
       displayPosition = 10,
       group = "DATABRICKS_ML"
   )

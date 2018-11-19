@@ -32,6 +32,7 @@ import com.streamsets.pipeline.lib.parser.json.JsonCharDataParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -52,7 +53,11 @@ public class DatabricksMLProcessor extends SingleLaneRecordProcessor {
     List<ConfigIssue> configIssues = super.init();
     if (configIssues.isEmpty()) {
       try {
-        this.localModel = ModelFactory.loadModel(conf.modelPath);
+        File databrickMLModelDir = new File(conf.modelPath);
+        if (!databrickMLModelDir.isAbsolute()) {
+          databrickMLModelDir = new File(getContext().getResourcesDirectory(), conf.modelPath).getAbsoluteFile();
+        }
+        this.localModel = ModelFactory.loadModel(databrickMLModelDir.getAbsolutePath());
       } catch (Exception ex) {
         configIssues.add(getContext().createConfigIssue(
             Groups.DATABRICKS_ML.name(),
