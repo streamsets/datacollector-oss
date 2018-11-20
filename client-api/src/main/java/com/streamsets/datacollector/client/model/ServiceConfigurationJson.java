@@ -25,7 +25,7 @@ import java.util.List;
 public class ServiceConfigurationJson {
 
   private String service = null;
-  private String serviceVersion = null;
+  private int serviceVersion;
   private List<ConfigConfigurationJson> configuration = new ArrayList<>();
 
   /**
@@ -44,10 +44,10 @@ public class ServiceConfigurationJson {
    **/
   @ApiModelProperty(value = "")
   @JsonProperty("serviceVersion")
-  public String getServiceVersion() {
+  public int getServiceVersion() {
     return serviceVersion;
   }
-  public void setServiceVersion(String serviceVersion) {
+  public void setServiceVersion(int serviceVersion) {
     this.serviceVersion = serviceVersion;
   }
 
