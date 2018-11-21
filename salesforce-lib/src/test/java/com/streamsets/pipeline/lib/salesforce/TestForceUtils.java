@@ -324,10 +324,13 @@ public class TestForceUtils {
       // SDC-9742
       {"SELECT Id, Name, (SELECT Id, LastName, AccountId FROM Contacts) FROM Account", "Account"},
       {"SELECT Id, Name, (SELECT Id, LastName, AccountId FROM Contacts ORDER BY Id) FROM Account", "Account"},
+      // SDC-9143
+      {"SELECT * FROM Order WHERE SystemModstamp > ${offset} ORDER BY SystemModstamp", "Order"},
+      {"SELECT * FROM Group WHERE SystemModstamp > ${offset} ORDER BY SystemModstamp", "Group"},
   };
 
   @Parameterized.Parameters
-  public static Collection<Object[]> data() throws Exception {
+  public static Collection<Object[]> data() {
     return Arrays.asList(queries);
   }
 

@@ -60,6 +60,10 @@ fragment LETTER_OR_DIGIT : (LETTER | DIGIT) ;
 
 WHITESPACE	        : (' ' | '\t' | '\r' | '\n' )+ -> skip ;
 
+keyword             : GROUP
+                    | ORDER
+                    ;
+
 SELECT              : S E L E C T ;
 TYPEOF              : T Y P E O F ;
 FROM                : F R O M ;
@@ -198,6 +202,8 @@ STRING              : '\'' ( ~['] )* '\'' ;
 
 EL                  : '$' '{' ( ~[}] )* '}';
 
+id_or_keyword       : IDENTIFIER | keyword ;
+
 /*
  * IDENTIFIER must be last!!!
  */
@@ -242,35 +248,35 @@ subquery            : '('
 
 fieldName           : field alias? ;
 
-field               : IDENTIFIER ('.' IDENTIFIER)* ;
+field               : id_or_keyword ('.' id_or_keyword)* ;
 
 functionCall        : function alias? ;
 
-alias               : IDENTIFIER ;
+alias               : id_or_keyword ;
 
 /*
  * Note - function names, such as MIN, MAX etc are not SOQL tokens -
  * you can use them as field aliases!
  */
-functionName        : IDENTIFIER ;
+functionName        : id_or_keyword ;
 
 function            : functionName '(' fieldElement? ')' ;
 
 typeOfClause        : TYPEOF typeOfField (whenThenClause)+ elseClause? END;
 
-typeOfField         : IDENTIFIER ;
+typeOfField         : id_or_keyword ;
 
 whenThenClause      : WHEN whenObjectType THEN fieldList ;
 
-whenObjectType      : IDENTIFIER ;
+whenObjectType      : id_or_keyword ;
 
 elseClause          : ELSE fieldList ;
 
 objectList          : objectType ( ',' objectType )* ;
 
-objectType          : IDENTIFIER ('.' IDENTIFIER)* ;
+objectType          : id_or_keyword ('.' id_or_keyword)* ;
 
-filterScope         : IDENTIFIER ;
+filterScope         : id_or_keyword ;
 
 conditionExpressions : conditionExpression (logicalOperator conditionExpression)* ;
 
@@ -292,7 +298,7 @@ value               : REAL
                     | subquery
                     | TRUE
                     | FALSE
-                    | IDENTIFIER
+                    | id_or_keyword
                     | EL;
 
 set                 : '(' value (',' value)* ')' ;
@@ -301,13 +307,13 @@ filteringExpression : dataCategorySelection (AND dataCategorySelection)* ;
 
 dataCategorySelection : dataCategoryGroupName filteringSelector dataCategoryName ;
 
-dataCategoryGroupName : IDENTIFIER ;
+dataCategoryGroupName : id_or_keyword ;
 
 filteringSelector   : AT | ABOVE | BELOW | ABOVE_OR_BELOW ;
 
-dataCategoryName    : IDENTIFIER | dataCategoryList ;
+dataCategoryName    : id_or_keyword | dataCategoryList ;
 
-dataCategoryList    : '(' IDENTIFIER (',' IDENTIFIER) ')' ;
+dataCategoryList    : '(' id_or_keyword (',' id_or_keyword) ')' ;
 
 fieldGroupByList    : fieldElement (',' fieldElement)* ;
 
