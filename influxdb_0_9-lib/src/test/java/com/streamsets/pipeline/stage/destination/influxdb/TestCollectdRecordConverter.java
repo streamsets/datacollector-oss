@@ -192,7 +192,7 @@ public class TestCollectdRecordConverter {
 
     final String expectedPointAsString =
         "Point [name=interface_rx, time=1455645265108, tags={host=hostname.streamsets.net, instance=lo0, " +
-            "type=if_octets}, precision=MILLISECONDS, fields={value=2244428004}, useInteger=false]";
+            "type=if_octets}, precision=MILLISECONDS, fields={value=2.244428004E9}]";
     Point point = points.get(0);
     assertEquals(expectedPointAsString, point.toString());
   }

@@ -42,7 +42,7 @@
     <dependency>
       <groupId>org.influxdb</groupId>
       <artifactId>influxdb-java</artifactId>
-      <version>2.1</version>
+      <version>${influxdb-java.version}</version>
     </dependency>
 
     <!-- Common StreamSets Dependencies -->
