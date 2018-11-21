@@ -1395,7 +1395,8 @@ public class OracleCDCSource extends BaseSource {
    * @param schemaAndTables List of SchemaAndTable objects
    * @return SQL string of schemas and tables
    */
-  private String getListOfSchemasAndTables(List<SchemaAndTable> schemaAndTables) {
+  @VisibleForTesting
+  String getListOfSchemasAndTables(List<SchemaAndTable> schemaAndTables) {
     Map<String, List<String>> schemas = new HashMap<>();
     for (SchemaAndTable schemaAndTable : schemaAndTables) {
       if (schemas.containsKey(schemaAndTable.getSchema())) {
@@ -1408,8 +1409,18 @@ public class OracleCDCSource extends BaseSource {
     }
     List<String> queries = new ArrayList<>();
     for (Map.Entry<String, List<String>> entry : schemas.entrySet()) {
-      queries.add(Utils.format(
-          "(SEG_OWNER='{}' AND TABLE_NAME IN ({}))", entry.getKey(), formatTableList(entry.getValue())));
+      List<String> tables = new ArrayList<>();
+      int fromIndex = 0;
+      int range = 1000;
+      int maxIndex = entry.getValue().size();
+      int toIndex = range < maxIndex ? range : maxIndex;
+      while (fromIndex < toIndex) {
+        tables.add(Utils.format(
+            "TABLE_NAME IN ({})", formatTableList(entry.getValue().subList(fromIndex, toIndex))));
+        fromIndex = toIndex;
+        toIndex = (toIndex + range) < maxIndex ? (toIndex + range) : maxIndex;
+      }
+      queries.add(Utils.format("(SEG_OWNER='{}' AND ({}))", entry.getKey(), String.join(" OR ", tables)));
     }
     return "( " + String.join(" OR ", queries) + " )";
   }
