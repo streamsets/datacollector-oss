@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2018 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.streamsets.pipeline.solr.impl;
 
 import com.streamsets.pipeline.api.StageException;
@@ -28,8 +29,6 @@ import org.apache.solr.client.solrj.request.schema.SchemaRequest;
 import org.apache.solr.client.solrj.response.schema.SchemaRepresentation;
 import org.apache.solr.client.solrj.response.schema.SchemaResponse;
 import org.apache.solr.common.SolrInputDocument;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -37,9 +36,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class SolrTarget06 implements SdcSolrTarget {
-  private final static Logger LOG = LoggerFactory.getLogger(SolrTarget06.class);
-  private final static String VERSION ="6.1.0";
+/**
+ * This class is extremely similar to SolrTarget06, but as we want to avoid dependencies between different version of
+ * the implementation, we choose to duplicate some code, but keep them independent.
+ */
+
+public class SolrTarget07 implements SdcSolrTarget {
+  private final static String VERSION = "7.0.0";
   private SolrClient solrClient;
 
   private final String solrURI;
@@ -54,7 +57,7 @@ public class SolrTarget06 implements SdcSolrTarget {
   private final boolean softCommit;
   private List<String> requiredFieldNamesMap;
 
-  public SolrTarget06(
+  public SolrTarget07(
       String instanceType,
       String solrURI,
       String zookeeperConnect,
@@ -79,6 +82,7 @@ public class SolrTarget06 implements SdcSolrTarget {
     this.requiredFieldNamesMap = new ArrayList<>();
   }
 
+  @Override
   public void init() throws Exception {
     solrClient = getSolrClient();
     if (!skipValidation) {
@@ -89,6 +93,7 @@ public class SolrTarget06 implements SdcSolrTarget {
     }
   }
 
+  @Override
   public List<String> getRequiredFieldNamesMap() {
     return requiredFieldNamesMap;
   }
@@ -106,7 +111,7 @@ public class SolrTarget06 implements SdcSolrTarget {
   }
 
   private SolrClient getSolrClient() throws MalformedURLException {
-    if(kerberosAuth) {
+    if (kerberosAuth) {
       // set kerberos before create SolrClient
       addSecurityProperties();
     }
@@ -121,16 +126,17 @@ public class SolrTarget06 implements SdcSolrTarget {
   }
 
   private void addSecurityProperties() {
-    HttpClientUtil.setConfigurer(new SdcKrb5HttpClientConfigurer());
+    HttpClientUtil.setHttpClientBuilder(new SdcKrb5HttpClientConfigurer());
   }
 
-  public void destroy() throws IOException{
-    if(this.solrClient != null) {
+  @Override
+  public void destroy() throws IOException {
+    if (this.solrClient != null) {
       this.solrClient.close();
     }
   }
 
-  @SuppressWarnings("unchecked")
+  @Override
   public void add(Map<String, Object> fieldMap) throws StageException {
     SolrInputDocument document = createDocument(fieldMap);
     try {
@@ -140,10 +146,11 @@ public class SolrTarget06 implements SdcSolrTarget {
     }
   }
 
+  @Override
   @SuppressWarnings("unchecked")
   public void add(List<Map<String, Object>> fieldMaps) throws StageException {
     List<SolrInputDocument> documents = new ArrayList();
-    for(Map<String, Object> fieldMap : fieldMaps) {
+    for (Map<String, Object> fieldMap : fieldMaps) {
       SolrInputDocument document = createDocument(fieldMap);
       documents.add(document);
     }
@@ -163,7 +170,7 @@ public class SolrTarget06 implements SdcSolrTarget {
     return document;
   }
 
-
+  @Override
   public void commit() throws StageException {
     try {
       this.solrClient.commit(waitFlush, waitSearcher, softCommit);
@@ -172,7 +179,8 @@ public class SolrTarget06 implements SdcSolrTarget {
     }
   }
 
+  @Override
   public String getVersion() {
-    return this.VERSION;
+    return VERSION;
   }
 }

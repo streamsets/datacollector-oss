@@ -33,8 +33,6 @@ public interface SdcSolrTarget {
 
   public void commit() throws StageException;
 
-  public void rollback() throws StageException;
-
   public String getVersion();
 
   public List<String> getRequiredFieldNamesMap();

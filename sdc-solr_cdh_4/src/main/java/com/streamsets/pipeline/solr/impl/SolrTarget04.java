@@ -177,14 +177,6 @@ public class SolrTarget04 implements SdcSolrTarget {
     }
   }
 
-  public void rollback() throws StageException {
-    try {
-      this.solrClient.rollback();
-    } catch (SolrServerException | IOException ex) {
-      throw new StageException(Errors.SOLR_05, ex.toString(), ex);
-    }
-  }
-
   public String getVersion() {
     return this.VERSION;
   }
