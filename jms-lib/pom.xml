@@ -32,7 +32,7 @@
   <name>StreamSets Data Collector JMS Lib</name>
 
   <properties>
-    <activemq.version>5.13.4</activemq.version>
+    <activemq.version>5.15.7</activemq.version>
     <guava.version>24.1-jre</guava.version>
   </properties>
 
