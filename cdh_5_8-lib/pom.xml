@@ -48,6 +48,13 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-mapreduce-client-common</artifactId>
+            <version>${hadoop.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
         <!--Dependency for Solr Unit Tests to override SDC Jetty Artifacts -->
         <dependency>
             <groupId>org.eclipse.jetty</groupId>

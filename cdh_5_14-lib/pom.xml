@@ -73,6 +73,14 @@
             </exclusions>
           </dependency>
 
+
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-mapreduce-client-common</artifactId>
+            <version>${hadoop.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
         <!-- Leave this dependency right here so it takes precedence in the classpath over jersey 1.9 brought in by
         hadoop/hive test classes which wrongfully includes the javax.ws.rs-api classes from an older version of the
         api-->
