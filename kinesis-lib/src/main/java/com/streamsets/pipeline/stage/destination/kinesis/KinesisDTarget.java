@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.destination.kinesis;
 
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
@@ -31,7 +32,15 @@ import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
     description = "Writes data to Amazon Kinesis",
     icon = "kinesis.png",
     upgrader = KinesisTargetUpgrader.class,
-    onlineHelpRefUrl ="index.html?contextID=task_q2j_ml4_yr"
+    onlineHelpRefUrl ="index.html?contextID=task_q2j_ml4_yr",
+    execution = {
+        ExecutionMode.STANDALONE,
+        ExecutionMode.CLUSTER_BATCH,
+        ExecutionMode.CLUSTER_YARN_STREAMING,
+        ExecutionMode.CLUSTER_MESOS_STREAMING,
+        ExecutionMode.EDGE,
+        ExecutionMode.EMR_BATCH
+    }
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
