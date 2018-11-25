@@ -170,7 +170,7 @@ public abstract  class AbstractRunner implements Runner {
 
   @Override
   public Map<String, Object> createStateAttributes() throws PipelineStoreException {
-    Map<String, Object> attributes = new HashMap<>();
+    Map<String, Object> attributes = new HashMap<>(getState().getAttributes());
     attributes.put(RUNTIME_PARAMETERS_ATTR, startPipelineContext.getRuntimeParameters());
 
     List<String> interceptors = new ArrayList<>();
@@ -184,14 +184,6 @@ public abstract  class AbstractRunner implements Runner {
       throw new PipelineStoreException(ContainerError.CONTAINER_0214, e);
     }
     attributes.put(INTERCEPTOR_CONFIGS_ATTR, interceptors);
-
-    // We're persisting information whether this is remote pipeline in the state file rather then in some metadata file
-    // and hence we need to transition that information from previous state.
-    Map<String, Object> oldAttributes = getState().getAttributes();
-    if(oldAttributes != null && oldAttributes.containsKey(RemoteDataCollector.IS_REMOTE_PIPELINE)) {
-      attributes.put(RemoteDataCollector.IS_REMOTE_PIPELINE, oldAttributes.get(RemoteDataCollector.IS_REMOTE_PIPELINE));
-    }
-
     return attributes;
   }
 

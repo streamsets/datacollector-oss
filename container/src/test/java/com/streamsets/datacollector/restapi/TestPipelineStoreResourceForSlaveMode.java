@@ -56,6 +56,7 @@ import java.net.URI;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -152,7 +153,9 @@ public class TestPipelineStoreResourceForSlaveMode extends JerseyTest {
                 "xyz lastModifier", "1", UUID.randomUUID(), true, null, "x", "y"))));
         Mockito.when(pipelineStore.load("xyz", "1.0.0")).thenReturn(
             MockStages.createPipelineConfigurationSourceProcessorTarget());
-        Mockito.when(pipelineStore.create("nobody", "myPipeline", "myPipeline", "my description", false, false)).thenReturn(
+        Mockito.when(pipelineStore.create("nobody", "myPipeline", "myPipeline", "my description", false, false,
+            new HashMap<String, Object>()
+        )).thenReturn(
             MockStages.createPipelineConfigurationSourceProcessorTarget());
         Mockito.doNothing().when(pipelineStore).delete("myPipeline");
         Mockito.doThrow(new PipelineStoreException(ContainerError.CONTAINER_0200, "xyz"))

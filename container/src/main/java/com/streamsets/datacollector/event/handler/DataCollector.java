@@ -33,6 +33,8 @@ import com.streamsets.pipeline.api.StageException;
 
 public interface DataCollector {
 
+  void init();
+
   void start(Runner.StartPipelineContext context, String name, String rev) throws PipelineException, StageException;
 
   void stop(String user, String name, String rev) throws PipelineException;
@@ -49,7 +51,8 @@ public interface DataCollector {
       SourceOffset offset,
       PipelineConfiguration pipelineConfiguration,
       RuleDefinitions ruleDefinitions,
-      Acl acl
+      Acl acl,
+      Map<String, Object> metadata
   ) throws PipelineException;
 
   void savePipelineRules(String name, String rev, RuleDefinitions ruleDefinitions) throws PipelineException;

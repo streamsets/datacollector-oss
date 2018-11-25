@@ -91,10 +91,11 @@ public class AclPipelineStoreTask implements PipelineStoreTask {
       String pipelineTitle,
       String description,
       boolean isRemote,
-      boolean draft
+      boolean draft,
+      Map<String, Object> metadata
   ) throws PipelineException {
     PipelineConfiguration pipelineConf = pipelineStore
-        .create(user, pipelineId, pipelineTitle, description, isRemote, draft);
+        .create(user, pipelineId, pipelineTitle, description, isRemote, draft, metadata);
     if (!draft) {
       aclStore.createAcl(pipelineId, ResourceType.PIPELINE, System.currentTimeMillis(), user);
     }

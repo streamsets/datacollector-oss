@@ -117,7 +117,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   public static final int OFFSET_PROTOCOL_VERSION = 2;
 
 
-  private final RemoteDataCollector remoteDataCollector;
+  private final DataCollector remoteDataCollector;
   private final EventClient eventSenderReceiver;
   private final MessagingJsonToFromDto jsonToFromDto;
   private final SafeScheduledExecutorService executorService;
@@ -134,7 +134,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
 
 
   public RemoteEventHandlerTask(
-      RemoteDataCollector remoteDataCollector,
+      DataCollector remoteDataCollector,
       EventClient eventSenderReceiver,
       SafeScheduledExecutorService executorService,
       StageLibraryTask stageLibrary,
@@ -371,6 +371,11 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
           pipelineAndValidationStatus.getAcl(),
           pipelineAndValidationStatus.getRunnerCount()
       );
+      LOG.debug(
+          "Created pipeline status event with name and title {}::{}",
+          pipelineAndValidationStatus.getName(),
+          pipelineAndValidationStatus.getTitle()
+      );
       return pipelineStatusEvent;
     }
 
@@ -510,13 +515,13 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
             SourceOffset sourceOffset = getSourceOffset(pipelineSaveEvent);
 
             remoteDataCollector.savePipeline(pipelineSaveEvent.getUser(),
-                pipelineSaveEvent.getName(),
-                pipelineSaveEvent.getRev(),
+                pipelineSaveEvent.getName(), pipelineSaveEvent.getRev(),
                 pipelineSaveEvent.getDescription(),
                 sourceOffset,
                 BeanHelper.unwrapPipelineConfiguration(pipelineConfigJson),
                 BeanHelper.unwrapRuleDefinitions(ruleDefinitionsJson),
-                pipelineSaveEvent.getAcl()
+                pipelineSaveEvent.getAcl(),
+                new HashMap<String, Object>()
             );
             break;
           }

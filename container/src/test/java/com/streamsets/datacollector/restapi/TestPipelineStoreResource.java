@@ -656,7 +656,7 @@ public class TestPipelineStoreResource extends JerseyTest {
             .thenReturn(MockStages.createPipelineConfigurationSourceProcessorTarget());
         Mockito.when(pipelineStore.load(Matchers.matches("abc|def"), Matchers.matches("0"))).thenReturn(
             MockStages.createPipelineConfigurationWithLabels(new ArrayList<String>()));
-        Mockito.when(pipelineStore.create("user1", "myPipeline", "myPipeline", "my description", false, false)).thenReturn(
+        Mockito.when(pipelineStore.create("user1", "myPipeline", "myPipeline", "my description", false, false, new HashMap<String, Object>())).thenReturn(
           MockStages.createPipelineConfigurationSourceProcessorTarget());
         Mockito.doNothing().when(pipelineStore).delete("myPipeline");
         Mockito.doThrow(new PipelineStoreException(ContainerError.CONTAINER_0200, "xyz"))
@@ -720,7 +720,7 @@ public class TestPipelineStoreResource extends JerseyTest {
           LOG.debug("Ignoring exception", e);
         }
 
-        Mockito.when(pipelineStore.create("user1", "newFromImport", "label",null, false, false)).thenReturn(
+        Mockito.when(pipelineStore.create("user1", "newFromImport", "label",null, false, false, new HashMap<String, Object>())).thenReturn(
             MockStages.createPipelineConfigurationSourceProcessorTarget());
 
       } catch (com.streamsets.datacollector.util.PipelineException e) {

@@ -82,7 +82,9 @@ public class FilePipelineStateStore implements PipelineStateStore {
   }
 
   @Override
-  public PipelineState edited(String user, String name, String rev, ExecutionMode executionMode, boolean isRemote) throws PipelineStoreException {
+  public PipelineState edited(
+      String user, String name, String rev, ExecutionMode executionMode, boolean isRemote, Map<String, Object> metadata
+  ) throws PipelineStoreException {
     PipelineState pipelineState = null;
     if (getPipelineStateFile(name, rev).exists()) {
       pipelineState = getState(name, rev);
@@ -94,6 +96,9 @@ public class FilePipelineStateStore implements PipelineStateStore {
     if (pipelineState == null) {
       attributes = new HashMap<>();
       attributes.put(RemoteDataCollector.IS_REMOTE_PIPELINE, isRemote);
+      if (metadata!=null) {
+        attributes.putAll(metadata);
+      }
     }
     if (pipelineState == null
       || pipelineState.getStatus() != PipelineStatus.EDITED

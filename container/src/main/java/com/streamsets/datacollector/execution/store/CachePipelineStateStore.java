@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.ExecutionMode;
 
 import javax.inject.Inject;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -76,9 +77,11 @@ public class CachePipelineStateStore implements PipelineStateStore {
   }
 
   @Override
-  public PipelineState edited(String user, String name, String rev, ExecutionMode executionMode, boolean isRemote)
+  public PipelineState edited(
+      String user, String name, String rev, ExecutionMode executionMode, boolean isRemote, Map<String, Object> metadata
+  )
       throws PipelineStoreException {
-    PipelineState pipelineState = pipelineStateStore.edited(user, name, rev, executionMode, isRemote);
+    PipelineState pipelineState = pipelineStateStore.edited(user, name, rev, executionMode, isRemote, metadata);
     if (pipelineState != null) {
       pipelineStateCache.put(getNameAndRevString(name, rev), pipelineState);
     }

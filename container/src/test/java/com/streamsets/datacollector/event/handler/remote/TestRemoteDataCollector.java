@@ -595,7 +595,7 @@ public class TestRemoteDataCollector {
         String name,
         String rev,
         ExecutionMode executionMode,
-        boolean isRemote
+        boolean isRemote, Map<String, Object> metadata
     ) throws PipelineStoreException {
       // TODO Auto-generated method stub
       return null;
@@ -736,7 +736,8 @@ public class TestRemoteDataCollector {
         String pipelineTitle,
         String description,
         boolean isRemote,
-        boolean draft
+        boolean draft,
+        Map<String, Object> metadata
     ) throws PipelineStoreException {
       // TODO Auto-generated method stub
       return new PipelineConfiguration(
@@ -1020,8 +1021,15 @@ public class TestRemoteDataCollector {
     sourceOffset.setOffset("offset:1000");
     new SourceOffsetUpgrader().upgrade(sourceOffset);
     Files.createDirectories(PipelineDirectoryUtil.getPipelineDir(runtimeInfo, "foo", "0").toPath());
-    dataCollector.savePipeline("user", "foo", "0", "", sourceOffset, Mockito.mock(PipelineConfiguration.class), null,
-        acl);
+    dataCollector.savePipeline("user",
+        "foo", "0",
+        "",
+        sourceOffset,
+        Mockito.mock(PipelineConfiguration.class),
+        null,
+        acl,
+        new HashMap<String, Object>()
+    );
     Mockito.verify(aclStoreTask, Mockito.times(1)).saveAcl(Mockito.eq("foo"), Mockito.eq(acl));
   }
 
@@ -1076,8 +1084,15 @@ public class TestRemoteDataCollector {
     sourceOffset.setOffset("offset:1000");
     new SourceOffsetUpgrader().upgrade(sourceOffset);
     Files.createDirectories(PipelineDirectoryUtil.getPipelineDir(runtimeInfo, "foo", "0").toPath());
-    dataCollector.savePipeline("user", "foo", "0", "", sourceOffset, Mockito.mock(PipelineConfiguration.class), null,
-        new Acl());
+    dataCollector.savePipeline("user",
+        "foo", "0",
+        "",
+        sourceOffset,
+        Mockito.mock(PipelineConfiguration.class),
+        null,
+        new Acl(),
+        new HashMap<String, Object>()
+    );
     assertTrue("Offset File doesn't exist", OffsetFileUtil.getPipelineOffsetFile(runtimeInfo, "foo", "0").exists());
     assertEquals(
         sourceOffset.getOffsets().get(Source.POLL_SOURCE_OFFSET_KEY),
@@ -1171,41 +1186,47 @@ public class TestRemoteDataCollector {
 
   @Test
   public void testRunnerCount() throws Exception {
-    Manager manager = Mockito.mock(StandaloneAndClusterPipelineManager.class);
-    PipelineStoreTask pipelineStoreTask = Mockito.mock(PipelineStoreTask.class);
-    RemoteDataCollector dataCollector = Mockito.spy(new RemoteDataCollector(
-        new Configuration(),
-        manager,
-        pipelineStoreTask,
-        Mockito.mock(PipelineStateStore.class),
-        Mockito.mock(AclStoreTask.class),
-        Mockito.mock(RemoteStateEventListener.class),
-        Mockito.mock(RuntimeInfo.class),
-        Mockito.mock(AclCacheHelper.class),
-        Mockito.mock(StageLibraryTask.class),
-        Mockito.mock(BlobStoreTask.class),
-        new SafeScheduledExecutorService(1, "supportBundleExecutor")
-    ));
-    PipelineState pipelineStatus1 = new PipelineStateImpl("user",
-        "ns:name",
-        "rev",
-        PipelineStatus.RUNNING,
-        null,
-        System.currentTimeMillis(),
-        null,
-        ExecutionMode.STANDALONE,
-        null,
-        0,
-        -1
-    );
-    Mockito.when(manager.isPipelineActive(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
-    Mockito.when(manager.getPipelines()).thenReturn(Arrays.asList(pipelineStatus1));
-    Mockito.when(pipelineStoreTask.getInfo(Mockito.anyString())).thenReturn(Mockito.mock(PipelineInfo.class));
-    Runner runner = Mockito.mock(Runner.class);
-    Mockito.when(runner.getRunnerCount()).thenReturn(10);
-    Mockito.when(manager.getRunner(Mockito.anyString(), Mockito.anyString())).thenReturn(runner);
-    assertEquals(1, dataCollector.getPipelines().size());
-    PipelineAndValidationStatus pipelineAndValidationStatus = dataCollector.getPipelines().iterator().next();
-    assertEquals(10, pipelineAndValidationStatus.getRunnerCount());
+    try {
+      Manager manager = Mockito.mock(StandaloneAndClusterPipelineManager.class);
+      PipelineStoreTask pipelineStoreTask = Mockito.mock(PipelineStoreTask.class);
+      RemoteDataCollector dataCollector = Mockito.spy(new RemoteDataCollector(
+          new Configuration(),
+          manager,
+          pipelineStoreTask,
+          Mockito.mock(PipelineStateStore.class),
+          Mockito.mock(AclStoreTask.class),
+          Mockito.mock(RemoteStateEventListener.class),
+          Mockito.mock(RuntimeInfo.class),
+          Mockito.mock(AclCacheHelper.class),
+          Mockito.mock(StageLibraryTask.class),
+          Mockito.mock(BlobStoreTask.class),
+          new SafeScheduledExecutorService(1, "supportBundleExecutor")
+      ));
+      PipelineState pipelineStatus1 = new PipelineStateImpl(
+          "user",
+          "ns:name",
+          "rev",
+          PipelineStatus.RUNNING,
+          null,
+          System.currentTimeMillis(),
+          null,
+          ExecutionMode.STANDALONE,
+          null,
+          0,
+          -1
+      );
+      Mockito.when(manager.isPipelineActive(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
+      Mockito.when(manager.getPipelines()).thenReturn(Arrays.asList(pipelineStatus1));
+      Mockito.when(pipelineStoreTask.getInfo(Mockito.anyString())).thenReturn(Mockito.mock(PipelineInfo.class));
+      Mockito.doReturn(pipelineStatus1.getPipelineId()).when(dataCollector).getSchGeneratedPipelineName(pipelineStatus1.getPipelineId(), pipelineStatus1.getRev());
+      Runner runner = Mockito.mock(Runner.class);
+      Mockito.when(runner.getRunnerCount()).thenReturn(10);
+      Mockito.when(manager.getRunner(Mockito.anyString(), Mockito.anyString())).thenReturn(runner);
+      assertEquals(1, dataCollector.getPipelines().size());
+      PipelineAndValidationStatus pipelineAndValidationStatus = dataCollector.getPipelines().iterator().next();
+      assertEquals(10, pipelineAndValidationStatus.getRunnerCount());
+    } finally {
+      MockPipelineStateStore.getStateCalled = 0;
+    }
   }
 }

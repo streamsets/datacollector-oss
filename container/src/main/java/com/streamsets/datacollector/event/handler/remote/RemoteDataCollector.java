@@ -36,10 +36,8 @@ import com.streamsets.datacollector.execution.PreviewOutput;
 import com.streamsets.datacollector.execution.PreviewStatus;
 import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.Runner;
-import com.streamsets.datacollector.execution.StartPipelineContextBuilder;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
-import com.streamsets.datacollector.restapi.RestAPIUtils;
 import com.streamsets.datacollector.restapi.bean.SourceOffsetJson;
 import com.streamsets.datacollector.runner.production.OffsetFileUtil;
 import com.streamsets.datacollector.runner.production.SourceOffset;
@@ -84,6 +82,7 @@ import java.util.concurrent.Future;
 public class RemoteDataCollector implements DataCollector {
 
   public static final String IS_REMOTE_PIPELINE = "IS_REMOTE_PIPELINE";
+  public static final String SCH_GENERATED_PIPELINE_NAME = "SCH_GENERATED_PIPELINE_NAME";
   private static final String NAME_AND_REV_SEPARATOR = "::";
   private static final Logger LOG = LoggerFactory.getLogger(RemoteDataCollector.class);
   private final Configuration configuration;
@@ -127,6 +126,11 @@ public class RemoteDataCollector implements DataCollector {
     this.eventHandlerExecutor = eventHandlerExecutor;
   }
 
+  PipelineStoreTask getPipelineStoreTask() {
+    return pipelineStore;
+  }
+
+  @Override
   public void init() {
     stateEventListener.init();
     this.manager.addStateEventListener(stateEventListener);
@@ -136,7 +140,6 @@ public class RemoteDataCollector implements DataCollector {
   @Override
   public void start(Runner.StartPipelineContext context, String name, String rev) throws PipelineException, StageException {
     //TODO we should receive the groups from DPM, SDC-6793
-
     try {
       // we need to skip enforcement user groups in scope.
       GroupsInScope.executeIgnoreGroups(() -> {
@@ -205,14 +208,15 @@ public class RemoteDataCollector implements DataCollector {
       SourceOffset offset,
       PipelineConfiguration pipelineConfiguration,
       RuleDefinitions ruleDefinitions,
-      Acl acl
+      Acl acl,
+      Map<String, Object> metadata
   ) throws PipelineException {
     // Due to some reason, if pipeline folder doesn't exist but state file exists then remove the state file.
     if (!pipelineStore.hasPipeline(name) && pipelineStateExists(name, rev)) {
       LOG.warn("Deleting state file for pipeline {} as pipeline is deleted", name);
       pipelineStateStore.delete(name, rev);
     }
-    UUID uuid = pipelineStore.create(user, name, name, description, true, false).getUuid();
+    UUID uuid = pipelineStore.create(user, name, name, description, true, false, metadata).getUuid();
     pipelineConfiguration.setUuid(uuid);
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(
         stageLibrary,
@@ -230,8 +234,6 @@ public class RemoteDataCollector implements DataCollector {
       OffsetFileUtil.saveSourceOffset(runtimeInfo, name, rev, offset);
     }
   }
-
-
 
   @Override
   public void savePipelineRules(String name, String rev, RuleDefinitions ruleDefinitions) throws PipelineException {
@@ -391,7 +393,7 @@ public class RemoteDataCollector implements DataCollector {
         title = null;
       }
       pipelineAndValidationStatuses.add(new PipelineAndValidationStatus(
-          name,
+          getSchGeneratedPipelineName(name, rev),
           title,
           rev,
           pipelineState.getTimeStamp(),
@@ -457,6 +459,16 @@ public class RemoteDataCollector implements DataCollector {
     return OffsetFileUtil.getSourceOffset(runtimeInfo, pipelineName, rev);
   }
 
+
+  String getSchGeneratedPipelineName(String name, String rev) throws PipelineException {
+    // return name with colon so control hub can interpret the job id from the name
+    Object schGenName = pipelineStateStore.getState(name, rev)
+        .getAttributes()
+        .get(RemoteDataCollector.SCH_GENERATED_PIPELINE_NAME);
+    // will be null for pipelines with version earlier than 3.7
+    return (schGenName == null) ? name : (String) schGenName;
+  }
+
   @Override
   public Collection<PipelineAndValidationStatus> getPipelines() throws IOException, PipelineException {
     List<PipelineState> pipelineStates = manager.getPipelines();
@@ -490,7 +502,7 @@ public class RemoteDataCollector implements DataCollector {
           acl = aclCacheHelper.getAcl(name);
         }
         pipelineStatusMap.put(getNameAndRevString(name, rev), new PipelineAndValidationStatus(
-            name,
+            getSchGeneratedPipelineName(name, rev),
             title,
             rev,
             pipelineState.getTimeStamp(),

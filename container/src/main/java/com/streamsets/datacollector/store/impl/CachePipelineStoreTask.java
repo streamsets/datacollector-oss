@@ -95,11 +95,12 @@ public class CachePipelineStoreTask implements PipelineStoreTask {
       String pipelineTitle,
       String description,
       boolean isRemote,
-      boolean draft
+      boolean draft,
+      Map<String, Object> metadata
   ) throws PipelineException {
     synchronized (lockCache.getLock(pipelineId)) {
       PipelineConfiguration pipelineConf = pipelineStore
-          .create(user, pipelineId, pipelineTitle, description, isRemote, draft);
+          .create(user, pipelineId, pipelineTitle, description, isRemote, draft, metadata);
       if (!draft) {
         pipelineInfoMap.put(pipelineConf.getInfo().getPipelineId(), pipelineConf.getInfo());
       }

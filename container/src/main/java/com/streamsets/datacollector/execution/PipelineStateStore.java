@@ -35,7 +35,8 @@ public interface PipelineStateStore {
       String name,
       String rev,
       ExecutionMode executionMode,
-      boolean isRemote
+      boolean isRemote,
+      Map<String, Object> metadata
   ) throws PipelineStoreException;
 
  //called by PipelineStore when the pipeline is being deleted from the store.

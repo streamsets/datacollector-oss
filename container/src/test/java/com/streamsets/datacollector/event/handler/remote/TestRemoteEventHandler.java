@@ -433,6 +433,11 @@ public class TestRemoteEventHandler {
     public Map<String, String> savedConfiguration;
 
     @Override
+    public void init() {
+
+    }
+
+    @Override
     public void start(Runner.StartPipelineContext context, String name, String rev) throws PipelineException, StageException {
       startCalled++;
       if (errorInjection) {
@@ -466,12 +471,11 @@ public class TestRemoteEventHandler {
     @Override
     public void savePipeline(
         String user,
-        String name,
-        String rev,
+        String name, String rev,
         String description,
         SourceOffset offset,
         PipelineConfiguration pipelineConfiguration,
-        RuleDefinitions ruleDefinitions, Acl acl
+        RuleDefinitions ruleDefinitions, Acl acl, Map<String, Object> metadata
     ) throws PipelineStoreException {
       savePipelineCalled = true;
     }

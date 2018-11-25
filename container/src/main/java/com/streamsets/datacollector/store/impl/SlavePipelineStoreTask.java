@@ -43,7 +43,8 @@ public class SlavePipelineStoreTask  implements PipelineStoreTask {
       String pipelineTitle,
       String description,
       boolean isRemote,
-      boolean draft
+      boolean draft,
+      Map<String, Object> metadata
   ) throws PipelineStoreException {
     throw new UnsupportedOperationException();
   }

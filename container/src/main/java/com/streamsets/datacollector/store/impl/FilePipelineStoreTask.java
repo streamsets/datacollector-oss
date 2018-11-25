@@ -176,7 +176,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       String pipelineTitle,
       String description,
       boolean isRemote,
-      boolean draft
+      boolean draft,
+      Map<String, Object> metadata
   ) throws PipelineStoreException {
     synchronized (lockCache.getLock(pipelineId)) {
       if (hasPipeline(pipelineId)) {
@@ -244,7 +245,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
           throw new PipelineStoreException(ContainerError.CONTAINER_0202, pipelineId, ex.toString(), ex);
         }
         if (pipelineStateStore != null) {
-          pipelineStateStore.edited(user, pipelineId, REV, ExecutionMode.STANDALONE, isRemote);
+          pipelineStateStore.edited(user, pipelineId, REV, ExecutionMode.STANDALONE, isRemote, metadata);
         }
       }
 
@@ -392,7 +393,13 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         if (pipelineStateStore != null) {
           List<Issue> errors = new ArrayList<>();
           PipelineBeanCreator.get().create(pipeline, errors, null);
-          pipelineStateStore.edited(user, name, tag,  PipelineBeanCreator.get().getExecutionMode(pipeline, errors), false);
+          pipelineStateStore.edited(user,
+              name,
+              tag,
+              PipelineBeanCreator.get().getExecutionMode(pipeline, errors),
+              false,
+              null
+          );
           pipeline.getIssues().addAll(errors);
         }
 

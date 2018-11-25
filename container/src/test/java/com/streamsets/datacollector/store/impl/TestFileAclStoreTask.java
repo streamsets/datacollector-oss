@@ -246,7 +246,7 @@ public class TestFileAclStoreTask {
         "label",
         TestCachePipelineStoreTask.DEFAULT_PIPELINE_DESCRIPTION,
         false,
-        false
+        false, new HashMap<String, Object>()
     );
   }
 
@@ -257,7 +257,7 @@ public class TestFileAclStoreTask {
         "label",
         TestFilePipelineStoreTask.DEFAULT_PIPELINE_DESCRIPTION,
         false,
-        false
+        false, new HashMap<String, Object>()
     );
   }
 }

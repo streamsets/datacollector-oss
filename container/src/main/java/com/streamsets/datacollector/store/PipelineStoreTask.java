@@ -37,7 +37,7 @@ public interface PipelineStoreTask extends Task {
       String pipelineTitle,
       String description,
       boolean isRemote,
-      boolean draft
+      boolean draft, Map<String, Object> metadata
   ) throws PipelineException;
 
   void delete(String name) throws PipelineException;

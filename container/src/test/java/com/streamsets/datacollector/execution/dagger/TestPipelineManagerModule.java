@@ -45,6 +45,7 @@ import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -82,7 +83,9 @@ public class TestPipelineManagerModule {
     Assert.assertTrue(pipelineManager instanceof StandaloneAndClusterPipelineManager);
 
     PipelineStoreTask pipelineStoreTask = pipelineTask.getPipelineStoreTask();
-    PipelineConfiguration pc = pipelineStoreTask.create("user", "p1", "p1", "description", false, false);
+    PipelineConfiguration pc = pipelineStoreTask.create("user", "p1", "p1", "description", false, false,
+        new HashMap<String, Object>()
+    );
     //Create previewer
     Previewer previewer = pipelineManager.createPreviewer("user", pc.getInfo().getPipelineId(), "1");
     assertEquals(previewer, pipelineManager.getPreviewer(previewer.getId()));
@@ -124,7 +127,7 @@ public class TestPipelineManagerModule {
     Assert.assertTrue(pipelineStoreTask instanceof SlavePipelineStoreTask);
 
     try {
-      pipelineStoreTask.create("user", "p1", "p1", "description", false, false);
+      pipelineStoreTask.create("user", "p1", "p1", "description", false, false, new HashMap<String, Object>());
       Assert.fail("Expected UnsupportedOperationException");
     } catch (UnsupportedOperationException e) {
 
