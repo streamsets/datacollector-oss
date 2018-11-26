@@ -236,7 +236,6 @@ public class AmazonS3Runnable implements Runnable {
               batchMaker.addRecord(record);
               i++;
               offset.setOffset(parser.getOffset());
-              amazonS3Source.updateOffset(context.getRunnerId(), offset);
             } else {
               parser.close();
               parser = null;
@@ -245,14 +244,12 @@ public class AmazonS3Runnable implements Runnable {
                 object = null;
               }
               offset.setOffset(S3Constants.MINUS_ONE);
-              amazonS3Source.updateOffset(context.getRunnerId(), offset);
               break;
             }
           } catch (ObjectLengthException ex) {
             errorRecordHandler.onError(Errors.S3_SPOOLDIR_02, s3Object.getKey(), offset.toString(), ex);
 
             offset.setOffset(S3Constants.MINUS_ONE);
-            amazonS3Source.updateOffset(context.getRunnerId(), offset);
           }
         }
       } catch (AmazonClientException e) {
@@ -261,8 +258,6 @@ public class AmazonS3Runnable implements Runnable {
       } catch (IOException | DataParserException ex) {
         if (!(ex.getCause() instanceof AbortedException)) {
           offset.setOffset(S3Constants.MINUS_ONE);
-          amazonS3Source.updateOffset(context.getRunnerId(), offset);
-
           String exOffset;
           if (ex instanceof OverrunException) {
             exOffset = String.valueOf(((OverrunException) ex).getStreamOffset());
@@ -275,7 +270,6 @@ public class AmazonS3Runnable implements Runnable {
             }
           }
           offset.setOffset(exOffset);
-          amazonS3Source.updateOffset(context.getRunnerId(), offset);
 
           switch (context.getOnErrorRecord()) {
             case DISCARD:
