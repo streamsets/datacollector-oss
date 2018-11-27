@@ -178,7 +178,7 @@ public class HikariPoolConfigBean {
       label = "Idle Timeout (Seconds)",
       description = "Maximum amount of time that a connection is allowed to sit idle in the pool. " +
           "Use 0 to opt out of an idle timeout. " +
-          "If set to close or more than Max Connection Lifetime, the property is ignored.",
+          "If set too close to or more than Max Connection Lifetime, the property is ignored.",
       min = 0,
       defaultValue = DEFAULT_IDLE_TIMEOUT_EL,
       elDefs = {TimeEL.class},
