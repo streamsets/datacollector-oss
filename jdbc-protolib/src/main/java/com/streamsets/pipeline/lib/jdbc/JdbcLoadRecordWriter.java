@@ -23,7 +23,6 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
-import com.zaxxer.hikari.proxy.ConnectionProxy;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.slf4j.Logger;
@@ -138,7 +137,7 @@ public class JdbcLoadRecordWriter extends JdbcBaseRecordWriter {
     final String loadSql = "LOAD DATA LOCAL INFILE '' " + duplicateKeyAction.getKeyword()
         + " INTO TABLE " + getTableName() + " (" + Joiner.on(", ").join(columnNames) + ")";
     try (Connection connection = getDataSource().getConnection()) {
-      Connection conn = ((ConnectionProxy) connection).unwrap(Connection.class);
+      Connection conn = connection.unwrap(Connection.class);
       try (PreparedStatement statement = conn.prepareStatement(loadSql)) {
         PipedInputStream is = new PipedInputStream();
         PipedOutputStream os = new PipedOutputStream(is);

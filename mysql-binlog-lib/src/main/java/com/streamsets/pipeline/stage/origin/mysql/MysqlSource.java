@@ -39,7 +39,7 @@ import com.streamsets.pipeline.stage.origin.mysql.filters.IgnoreTableFilter;
 import com.streamsets.pipeline.stage.origin.mysql.filters.IncludeTableFilter;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import com.zaxxer.hikari.pool.PoolInitializationException;
+import com.zaxxer.hikari.pool.HikariPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -147,7 +147,7 @@ public abstract class MysqlSource extends BaseSource {
       offsetFactory = isGtidEnabled()
           ? new GtidSourceOffsetFactory()
           : new BinLogPositionOffsetFactory();
-    } catch (PoolInitializationException e) {
+    } catch (HikariPool.PoolInitializationException e) {
       LOG.error("Error connecting to MySql: {}", e.getMessage(), e);
       issues.add(getContext().createConfigIssue(
           Groups.MYSQL.name(), null, Errors.MYSQL_003, e.getMessage(), e
