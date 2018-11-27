@@ -30,7 +30,7 @@ public class SecurityConfig {
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Mode",
-      description = "Select whether to encrypt or decrypt fields",
+      description = "Security mode to use for Elasticsearch authentication",
       dependsOn = "useSecurity^",
       triggeredByValue = "true",
       defaultValue = "BASIC",
@@ -44,7 +44,7 @@ public class SecurityConfig {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "",
-      label = "AWS Region",
+      label = "Region",
       dependencies = {
           @Dependency(configName = "useSecurity^", triggeredByValues = "true"),
           @Dependency(configName = "securityMode", triggeredByValues = "AWSSIGV4")
@@ -72,7 +72,7 @@ public class SecurityConfig {
       required = false,
       type = ConfigDef.Type.CREDENTIAL,
       defaultValue = "",
-      label = "AWS Access Key",
+      label = "Access Key ID",
       dependencies = {
           @Dependency(configName = "useSecurity^", triggeredByValues = "true"),
           @Dependency(configName = "securityMode", triggeredByValues = "AWSSIGV4")
@@ -86,7 +86,7 @@ public class SecurityConfig {
       required = false,
       type = ConfigDef.Type.CREDENTIAL,
       defaultValue = "",
-      label = "AWS Secret Access Key",
+      label = "Secret Access Key",
       dependencies = {
           @Dependency(configName = "useSecurity^", triggeredByValues = "true"),
           @Dependency(configName = "securityMode", triggeredByValues = "AWSSIGV4")
