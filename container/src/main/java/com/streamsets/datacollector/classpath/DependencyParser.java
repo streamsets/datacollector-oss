@@ -106,8 +106,18 @@ public class DependencyParser {
     "(twill).*",
     "(websocket).*",
 
+    // Oracle cause Oracle is always special
+
     // Most basic name (last resort)
     "([A-Za-z_.0-9-]+)"
+  };
+
+  /**
+   * Whole patterns for some special libraries.
+   */
+  private static String[] SPECIAL_PATTERNS = new String[] {
+    // Oracle needs to be always special
+    "(ojdbc)([0-9]+)\\.jar"
   };
 
   /**
@@ -122,7 +132,6 @@ public class DependencyParser {
     // Various JDBC drivers from vendors who don't follow usual maven scheme
     SPECIAL_CASES.put("db2jcc4.jar", new Dependency("db2jcc4", ""));
     SPECIAL_CASES.put("nzjdbc3.jar", new Dependency("nzjdbc3", ""));
-    SPECIAL_CASES.put("ojdbc6.jar", new Dependency("ojdbc6", ""));
     SPECIAL_CASES.put("sqljdbc4.jar", new Dependency("sqljdbc4", ""));
     SPECIAL_CASES.put("tdgssconfig.jar", new Dependency("tdgssconfig", ""));
     SPECIAL_CASES.put("terajdbc4.jar", new Dependency("terajdbc4", ""));
@@ -135,6 +144,10 @@ public class DependencyParser {
    */
   private static List<Pattern> PATTERNS = new LinkedList<>();
   static {
+    for(String pattern: SPECIAL_PATTERNS) {
+
+      PATTERNS.add(Pattern.compile("^" + pattern + "$"));
+    }
     for(String prefix: PATTERN_PREFIXES) {
       for(String version: VERSION_PATTERNS) {
         PATTERNS.add(Pattern.compile("^" + prefix + version + CLASSIFIERS + "\\.jar$"));
