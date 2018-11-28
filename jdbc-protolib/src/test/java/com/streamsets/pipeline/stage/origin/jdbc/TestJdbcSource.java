@@ -150,6 +150,7 @@ public class TestJdbcSource {
       statement.addBatch("INSERT INTO TEST.TEST_UNKNOWN_TYPE VALUES  (1, 'POINT (30 10)')");
       statement.addBatch("INSERT INTO TEST.TEST_UNKNOWN_TYPE VALUES  (2, null)");
       statement.addBatch("INSERT INTO TEST.TIMESTAMP_9 VALUES (1, '2018-08-09 19:21:36.992415')");
+      statement.addBatch("INSERT INTO TEST.TIMESTAMP_9 VALUES (2, null)");
       statement.executeBatch();
     }
   }
@@ -1456,10 +1457,12 @@ public class TestJdbcSource {
       Map<String, List<Record>> recordMap = output.getRecords();
       List<Record> parsedRecords = recordMap.get("lane");
 
-      assertEquals(1, parsedRecords.size());
+      assertEquals(2, parsedRecords.size());
       assertTrue(parsedRecords.get(0).has("/TS"));
       assertEquals(Field.Type.STRING, parsedRecords.get(0).get("/TS").getType());
       assertEquals("2018-08-09 19:21:36.992415", parsedRecords.get(0).get("/TS").getValueAsString());
+      assertEquals(Field.Type.STRING, parsedRecords.get(1).get("/TS").getType());
+      assertEquals(null, parsedRecords.get(1).get("/TS").getValueAsString());
 
     } finally {
       runner.runDestroy();

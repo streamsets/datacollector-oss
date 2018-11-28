@@ -554,7 +554,7 @@ public class JdbcUtil {
           case Types.TIMESTAMP:
             final Timestamp timestamp = rs.getTimestamp(columnIndex);
             if(timestampToString) {
-             field = Field.create(Field.Type.STRING, timestamp.toString());
+              field = Field.create(Field.Type.STRING, timestamp == null ? null : timestamp.toString());
             } else {
               field = Field.create(Field.Type.DATETIME, timestamp);
               if (timestamp != null) {
