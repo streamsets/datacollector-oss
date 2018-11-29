@@ -34,6 +34,7 @@ import org.apache.kafka.clients.consumer.CommitFailedException;
 import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.errors.AuthorizationException;
+import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.errors.WakeupException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -184,7 +185,7 @@ public abstract class BaseKafkaConsumer09 implements SdcKafkaConsumer, ConsumerR
         kafkaConsumer != null,
         "validate method must be called before init which creates the Kafka Consumer"
     );
-    kafkaConsumerRunner = new KafkaConsumerRunner(this);
+    kafkaConsumerRunner = new KafkaConsumerRunner(this, context);
     executorService.scheduleWithFixedDelay(kafkaConsumerRunner, 0, 20, TimeUnit.MILLISECONDS);
     isInited = true;
   }
@@ -325,9 +326,15 @@ public abstract class BaseKafkaConsumer09 implements SdcKafkaConsumer, ConsumerR
   static class KafkaConsumerRunner implements Runnable {
     private final AtomicBoolean closed = new AtomicBoolean(false);
     private final BaseKafkaConsumer09 consumer;
+    private final Source.Context context;
+    private boolean isErrorReported;
+    private int countOfErrorRecords;
 
-    public KafkaConsumerRunner(BaseKafkaConsumer09 consumer) {
+    public KafkaConsumerRunner(BaseKafkaConsumer09 consumer, Source.Context context) {
       this.consumer = consumer;
+      this.context = context;
+      isErrorReported = false;
+      countOfErrorRecords = 0;
     }
 
     @Override
@@ -364,6 +371,15 @@ public abstract class BaseKafkaConsumer09 implements SdcKafkaConsumer, ConsumerR
         if (!closed.get()) {
           throw e;
         }
+      } catch (Exception e) {
+        if(!isErrorReported || countOfErrorRecords > 1000){
+          isErrorReported = true;
+          countOfErrorRecords = 0;
+          LOG.error(String.format("%s catch trying to serialize Kafka Record: %s", e.getClass().toString(),
+              e.getLocalizedMessage()));
+          context.reportError(e);
+        }
+        countOfErrorRecords++;
       }
     }
 
@@ -376,6 +392,8 @@ public abstract class BaseKafkaConsumer09 implements SdcKafkaConsumer, ConsumerR
     private boolean putConsumerRecord(ConsumerRecord<String, byte[]> record) {
       try {
         consumer.recordQueue.put(record);
+        isErrorReported = false;
+        countOfErrorRecords = 0;
         return true;
       } catch (InterruptedException e) {
         LOG.error("Failed to poll KafkaConsumer, reason : {}", e.toString(), e);
