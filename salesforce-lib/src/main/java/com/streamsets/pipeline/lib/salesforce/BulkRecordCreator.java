@@ -38,8 +38,9 @@ public class BulkRecordCreator extends SobjectRecordCreator {
   private static final String TYPE = "type";
   private static final QName XSI_TYPE = new QName("http://www.w3.org/2001/XMLSchema-instance", "type");
   private static final String S_OBJECT = "sObject";
-  private static final ThreadLocal<SimpleDateFormat> dateFormat = ThreadLocal.withInitial(() -> new SimpleDateFormat(
-      "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+  private static final String datePattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+
+  private SimpleDateFormat dateFormat;
 
   // Hide the superclass config with a more specific one
   protected final ForceSourceConfigBean conf;
@@ -47,6 +48,7 @@ public class BulkRecordCreator extends SobjectRecordCreator {
   public BulkRecordCreator(Stage.Context context, ForceSourceConfigBean conf, String sobjectType) {
     super(context, conf, sobjectType);
     this.conf = conf;
+    dateFormat = new SimpleDateFormat(datePattern);
   }
 
   public String createRecord(Object source, BatchMaker batchMaker) throws StageException {
@@ -64,7 +66,7 @@ public class BulkRecordCreator extends SobjectRecordCreator {
       }
       String newOffset;
       if (newRawOffset instanceof Date){
-        newOffset = dateFormat.get().format((Date) newRawOffset);
+        newOffset = dateFormat.format((Date) newRawOffset);
       } else {
         newOffset = newRawOffset.toString();
       }

@@ -338,6 +338,7 @@ public class ForceSource extends BaseSource {
   private ForceRecordCreator buildRecordCreator() {
     if (conf.queryExistingData) {
       if (conf.useBulkAPI) {
+        //IMPORTANT: BulkRecordCreator is not thread safe since it is using SimpleDateFormat
         return new BulkRecordCreator(getContext(), conf, sobjectType);
       } else {
         return new SoapRecordCreator(getContext(), conf, sobjectType);
