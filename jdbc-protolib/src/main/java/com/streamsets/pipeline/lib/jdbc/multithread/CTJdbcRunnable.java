@@ -16,6 +16,7 @@
 
 package com.streamsets.pipeline.lib.jdbc.multithread;
 
+import com.google.common.base.Strings;
 import com.google.common.cache.CacheLoader;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.RateLimiter;
@@ -112,8 +113,13 @@ public final class CTJdbcRunnable extends JdbcBaseRunnable {
 
     // Generate Offset includes primary keys, sys_change_version, and sys_change_operation
     for (String key : tableRuntimeContext.getSourceTableContext().getOffsetColumns()) {
-      columnOffsets.put(key, rs.getString(key));
+      String value = rs.getString(key);
+      if (Strings.isNullOrEmpty(value)) {
+        value = fields.get(key) != null ? fields.get(key).getValueAsString() : "";
+      }
+      columnOffsets.put(key, value);
     }
+
 
     columnOffsets.put(SYS_CHANGE_OPERATION, rs.getString(SYS_CHANGE_OPERATION));
 
