@@ -55,7 +55,7 @@ public class GrpcClientConfigBean {
       required = false,
       type = ConfigDef.Type.TEXT,
       label = "Request Data",
-      description = "Data that should be sent as argument for gRPC Service method",
+      description = "Data to send as an argument for the gRPC service method",
       displayPosition = 25,
       lines = 2,
       group = "GRPC"
@@ -114,7 +114,7 @@ public class GrpcClientConfigBean {
       required = false,
       type = ConfigDef.Type.MAP,
       label = "Additional Headers",
-      description = "These headers will also be included in reflection requests requests to a server.",
+      description = "These headers will also be included in reflection requests to a server.",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 50,
       group = "GRPC"
@@ -125,7 +125,7 @@ public class GrpcClientConfigBean {
       required = false,
       type = ConfigDef.Type.MAP,
       label = "RPC Headers",
-      description = "These headers will also be included in reflection requests requests to a server.",
+      description = "These headers will also be included in reflection requests to a server.",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 55,
       group = "GRPC"
@@ -135,7 +135,7 @@ public class GrpcClientConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Emit defaults",
+      label = "Emit Defaults",
       description = "Emit default values for responses",
       defaultValue = "false",
       displayPosition = 60,

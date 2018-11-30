@@ -27,11 +27,11 @@ import com.streamsets.pipeline.api.base.configurablestage.DSource;
 @StageDef(
     version = 1,
     label = "gRPC Client",
-    description = "Uses an gRPC client to read records from an URL and method",
+    description = "Processes data from a gRPC server by calling Unary RPC or Server Streaming RPC methods",
     execution = {ExecutionMode.EDGE},
     icon = "grpc.png",
     beta = true,
-    onlineHelpRefUrl ="" //TODO: Update help URL
+    onlineHelpRefUrl = "index.html?contextID=task_dhb_d1t_yfb"
 )
 @ConfigGroups(Groups.class)
 public class GrpcClientDSource extends DSource {
