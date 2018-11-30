@@ -19,6 +19,7 @@ import com.codahale.metrics.Gauge;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.base.Throwables;
+import com.google.common.collect.Iterators;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.EventRecord;
@@ -75,12 +76,14 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
@@ -432,7 +435,7 @@ public class OracleCDCSource extends BaseSource {
             startDate = nowAtDBTz();
           }
           startDate = adjustStartTimeAndStartLogMnr(startDate);
-          offset = new Offset(version, startDate, ZERO, 0);
+          offset = new Offset(version, startDate, ZERO, 0,"");
         } else {
           BigDecimal startCommitSCN = new BigDecimal(configBean.startSCN);
           startLogMnrSCNToDate.setBigDecimal(1, startCommitSCN);
@@ -440,7 +443,7 @@ public class OracleCDCSource extends BaseSource {
           LocalDateTime endTime = getEndTimeForStartTime(start);
           startLogMnrSCNToDate.setString(2, endTime.format(dateTimeColumnHandler.dateFormatter));
           startLogMnrSCNToDate.execute();
-          offset = new Offset(version, start, startCommitSCN.toPlainString(), 0);
+          offset = new Offset(version, start, startCommitSCN.toPlainString(), 0, "");
         }
       }
     } catch (SQLException ex) {
@@ -503,6 +506,7 @@ public class OracleCDCSource extends BaseSource {
     BigDecimal lastCommitSCN = new BigDecimal(startingOffset.scn);
     int sequenceNumber = startingOffset.sequence;
     LocalDateTime startTime = adjustStartTime(startingOffset.timestamp);
+    String lastTxnId = startingOffset.txnId;
     LocalDateTime endTime = getEndTimeForStartTime(startTime);
     ResultSet resultSet = null;
     while (!getContext().isStopped()) {
@@ -512,7 +516,7 @@ public class OracleCDCSource extends BaseSource {
         recordQueue.put(
             new RecordOffset(
                 dummyRecord,
-                new Offset(version, startTime, lastCommitSCN.toPlainString(), sequenceNumber)
+                new Offset(version, startTime, lastCommitSCN.toPlainString(), sequenceNumber, lastTxnId)
             )
         );
         selectChanges = getSelectChangesStatement();
@@ -573,7 +577,7 @@ public class OracleCDCSource extends BaseSource {
 
             if (op != DDL_CODE && op != COMMIT_CODE && op != ROLLBACK_CODE) {
               if (!useLocalBuffering) {
-                offset = new Offset(version, tsDate, commitSCN.toPlainString(), seq);
+                offset = new Offset(version, tsDate, commitSCN.toPlainString(), seq, xid);
               }
               Map<String, String> attributes = new HashMap<>();
               attributes.put(SCN, scn);
@@ -638,19 +642,20 @@ public class OracleCDCSource extends BaseSource {
                 bufferedRecordsLock.lock();
                 try {
                   HashQueue<RecordSequence> records = bufferedRecords.getOrDefault(key, EMPTY_LINKED_HASHSET);
-                  if (lastCommitSCN.equals(scnDecimal)) {
+                  if (lastCommitSCN.equals(scnDecimal) && xid.equals(lastTxnId)) {
                     removeProcessedRecords(records, sequenceNumber);
                   }
                   int bufferedRecordsToBeRemoved = records.size();
                   LOG.debug(FOUND_RECORDS_IN_TRANSACTION, bufferedRecordsToBeRemoved, xid);
                   lastCommitSCN = scnDecimal;
+                  lastTxnId = xid;
                   sequenceNumber = addRecordsToQueue(tsDate, scn, xid);
                 } finally {
                   bufferedRecordsLock.unlock();
                 }
               }
             } else {
-              offset = new Offset(version, tsDate, scn, 0);
+              offset = new Offset(version, tsDate, scn, 0, xid);
               boolean sendSchema = false;
               // Commit/rollback in Preview will also end up here, so don't really do any of the following in preview
               // Don't bother with DDL events here.
@@ -933,7 +938,7 @@ public class OracleCDCSource extends BaseSource {
         Record record = recordFuture.future.get();
         if (record != null) {
           final RecordOffset recordOffset =
-              new RecordOffset(record, new Offset(VERSION_UNCOMMITTED, commitTimestamp, commitScn, recordFuture.seq));
+              new RecordOffset(record, new Offset(VERSION_UNCOMMITTED, commitTimestamp, commitScn, recordFuture.seq, xid));
 
           // Is this a record generated by a rollback? If it is find the previous record that matches this row id and
           // remove it from the queue.
@@ -1828,32 +1833,44 @@ public class OracleCDCSource extends BaseSource {
     final String version;
     LocalDateTime timestamp;
     final String scn;
+    String txnId;
 
     final int sequence;
 
-    public Offset(String version, LocalDateTime timestamp, String scn, int sequence) {
+    public Offset(String version, LocalDateTime timestamp, String scn, int sequence, String txId) {
       this.version = version;
       this.scn = scn;
       this.timestamp = timestamp;
       this.sequence = sequence;
+      this.txnId = (txId == null ? "" : txId);
     }
 
     public Offset(String offsetString) {
-      int index = 0;
-      String[] splits = offsetString.split(OFFSET_DELIM);
-      this.version = splits[index++];
-      this.timestamp =
-          version.equals(VERSION_UNCOMMITTED) ?
-              LocalDateTime.ofInstant(Instant.ofEpochSecond(Long.parseLong(splits[index++])), zoneId) : null;
-      this.scn = splits[index++];
-      this.sequence = Integer.parseInt(splits[index]);
+      Iterator<String> splits = Iterators.forArray(offsetString.split(OFFSET_DELIM));
+      this.version = splits.next();
+      this.timestamp = version.equals(VERSION_UNCOMMITTED) ?
+          LocalDateTime.ofInstant(Instant.ofEpochSecond(Long.parseLong(splits.next())), zoneId) : null;
+      this.scn = splits.next();
+      this.sequence = Integer.parseInt(splits.next());
+      if (splits.hasNext()) {
+        this.txnId = splits.next();
+      } else {
+        this.txnId = "";
+      }
     }
 
     public String toString() {
-      return version + OFFSET_DELIM +
-          (version.equals(VERSION_UNCOMMITTED) ? localDateTimeToEpoch(timestamp) + OFFSET_DELIM : "") +
-          scn + OFFSET_DELIM +
-          sequence;
+      List<String> parts = new ArrayList<>();
+      parts.add(version);
+      if ((version.equals(VERSION_UNCOMMITTED))) {
+        parts.add(String.valueOf(localDateTimeToEpoch(timestamp)));
+      }
+      parts.add(scn);
+      parts.add(String.valueOf(sequence));
+      if (StringUtils.isNotEmpty(txnId)) {
+        parts.add(txnId);
+      }
+      return Joiner.on(OFFSET_DELIM).join(parts);
     }
   }
 
