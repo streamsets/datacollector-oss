@@ -170,4 +170,82 @@ public class TestFieldHasherProcessorUpgrader {
       }
     }
   }
+
+  @Test
+  public void testUpgradeV3ToV4() throws StageException {
+    final String HASHER_CONFIG = "hasherConfig";
+    final String RECORD_HASHER_CONFIG = "recordHasherConfig";
+    final String HASH_TYPE = "hashType";
+    final String INPLACE_FIELD_HASHER_CONFIGS = "inPlaceFieldHasherConfigs";
+    final String TARGET_FIELD_HASHER_CONFIGS = "targetFieldHasherConfigs";
+    final String SHA2 = "SHA2";
+    final String RECORD_HASHER_CONFIG_TYPE = HASHER_CONFIG + "." + RECORD_HASHER_CONFIG + "." + HASH_TYPE;
+    final String HASHER_CONFIG_IN_PLACE_FIELD = HASHER_CONFIG + "." + INPLACE_FIELD_HASHER_CONFIGS;
+    final String HASHER_CONFIG_TARGET_FIELD = HASHER_CONFIG + "." + TARGET_FIELD_HASHER_CONFIGS;
+
+    List<Config> configs = new ArrayList<>();
+    configs.add(new Config(RECORD_HASHER_CONFIG_TYPE, SHA2));
+
+    List<LinkedHashMap<String, Object>> inPlaceFieldHasherConfigs = new ArrayList<>();
+    configs.add(new Config(HASHER_CONFIG_IN_PLACE_FIELD, inPlaceFieldHasherConfigs));
+    inPlaceFieldHasherConfigs.add(createFieldHasherConfig(HashType.MD5.name(), null, "/a", "/b"));
+    inPlaceFieldHasherConfigs.add(createFieldHasherConfig(SHA2, null, "/e", "/f"));
+    inPlaceFieldHasherConfigs.add(createFieldHasherConfig(HashType.SHA256.name(), null, "/c", "/d"));
+
+    List<LinkedHashMap<String, Object>> targetFieldHasherConfigs = new ArrayList<>();
+    configs.add(new Config(HASHER_CONFIG_TARGET_FIELD, targetFieldHasherConfigs));
+    targetFieldHasherConfigs.add(createFieldHasherConfig(HashType.MD5.name(), "/w", "/a", "/b"));
+    targetFieldHasherConfigs.add(createFieldHasherConfig(SHA2, "/x", "/e", "/f"));
+    targetFieldHasherConfigs.add(createFieldHasherConfig(HashType.SHA256.name(), "/y", "/c", "/d"));
+
+    FieldHasherProcessorUpgrader upgrader = new FieldHasherProcessorUpgrader();
+    upgrader.upgrade("a", "b", "c", 3, 4, configs);
+
+    boolean foundRecordHasher = false;
+    boolean foundInPlaceFieldHasher = false;
+    boolean foundTargetPlaceFieldHasher = false;
+    for (Config config : configs) {
+      switch (config.getName()) {
+        case RECORD_HASHER_CONFIG_TYPE:
+          foundRecordHasher = true;
+          Assert.assertEquals(HashType.SHA256.name(), config.getValue());
+          break;
+        case HASHER_CONFIG_IN_PLACE_FIELD:
+          foundInPlaceFieldHasher = true;
+          List<LinkedHashMap<String, Object>> fieldHasherConfigs =
+              (List<LinkedHashMap<String, Object>>) config.getValue();
+          Assert.assertEquals(3, fieldHasherConfigs.size());
+          Assert.assertEquals(HashType.MD5.name(), fieldHasherConfigs.get(0).get(HASH_TYPE));
+          Assert.assertEquals(HashType.SHA256.name(), fieldHasherConfigs.get(1).get(HASH_TYPE));
+          Assert.assertEquals(HashType.SHA256.name(), fieldHasherConfigs.get(2).get(HASH_TYPE));
+          break;
+        case HASHER_CONFIG_TARGET_FIELD:
+          foundTargetPlaceFieldHasher = true;
+          fieldHasherConfigs = (List<LinkedHashMap<String, Object>>) config.getValue();
+          Assert.assertEquals(3, fieldHasherConfigs.size());
+          Assert.assertEquals(HashType.MD5.name(), fieldHasherConfigs.get(0).get(HASH_TYPE));
+          Assert.assertEquals(HashType.SHA256.name(), fieldHasherConfigs.get(1).get(HASH_TYPE));
+          Assert.assertEquals(HashType.SHA256.name(), fieldHasherConfigs.get(2).get(HASH_TYPE));
+          break;
+        default:
+          Assert.fail("Unexpected config found: " + config.toString());
+          break;
+      }
+    }
+    Assert.assertEquals(3, configs.size());
+    Assert.assertTrue("Config for " + RECORD_HASHER_CONFIG_TYPE + " is missing", foundRecordHasher);
+    Assert.assertTrue("Config for " + HASHER_CONFIG_IN_PLACE_FIELD + " is missing", foundInPlaceFieldHasher);
+    Assert.assertTrue("Config for " + HASHER_CONFIG_TARGET_FIELD + " is missing", foundTargetPlaceFieldHasher);
+  }
+
+  private LinkedHashMap<String, Object> createFieldHasherConfig(String hashType, String targetField,
+      String... sourceFields) {
+    LinkedHashMap<String, Object> fieldHasherConfig = new LinkedHashMap<>();
+    fieldHasherConfig.put("sourceFieldsToHash", ImmutableList.of(sourceFields));
+    fieldHasherConfig.put("hashType", hashType);
+    if (targetField != null) {
+      fieldHasherConfig.put("targetField", targetField);
+    }
+    return fieldHasherConfig;
+  }
 }

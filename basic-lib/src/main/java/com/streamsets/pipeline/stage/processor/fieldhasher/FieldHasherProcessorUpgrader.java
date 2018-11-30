@@ -49,6 +49,11 @@ public class FieldHasherProcessorUpgrader implements StageUpgrader{
   // v2 to v3 added this field - must be set to true.
   private static final String USE_SEPARATOR = "useSeparator";
 
+  // v3 to v4 requires renaming SHA2 to SHA256 in these configs
+  private static final String SHA2 = "SHA2";
+  private static final String RECORD_HASHER_CONFIG_TYPE = HASHER_CONFIG + "." + RECORD_HASHER_CONFIG + "." + HASH_TYPE;
+  private static final String HASHER_CONFIG_IN_PLACE_FIELD = HASHER_CONFIG + "." + INPLACE_FIELD_HASHER_CONFIGS;
+  private static final String HASHER_CONFIG_TARGET_FIELD = HASHER_CONFIG + "." + TARGET_FIELD_HASHER_CONFIGS;
 
   @Override
   public List<Config> upgrade (
@@ -65,6 +70,9 @@ public class FieldHasherProcessorUpgrader implements StageUpgrader{
         // fall through.
       case 2:
         upgradeV2ToV3(configs);
+        // fall through.
+      case 3:
+        upgradeV3ToV4(configs);
         break;
 
       default:
@@ -149,6 +157,35 @@ public class FieldHasherProcessorUpgrader implements StageUpgrader{
     // add fields - must default them to true.
     configsToAdd.add(new Config(JOINER.join(HASHER_CONFIG, USE_SEPARATOR), true));
     configsToAdd.add(new Config(JOINER.join(HASHER_CONFIG, RECORD_HASHER_CONFIG, USE_SEPARATOR), true));
+    configs.addAll(configsToAdd);
+  }
+
+  private void upgradeV3ToV4(List<Config> configs) {
+    List<Config> configsToRemove = new ArrayList<>();
+    List<Config> configsToAdd = new ArrayList<>();
+    for (Config config : configs) {
+      switch (config.getName()) {
+        case RECORD_HASHER_CONFIG_TYPE:
+          if (config.getValue().equals(SHA2)) {
+            configsToRemove.add(config);
+            configsToAdd.add(new Config(RECORD_HASHER_CONFIG_TYPE, HashType.SHA256.name()));
+          }
+          break;
+        case HASHER_CONFIG_IN_PLACE_FIELD:
+        case HASHER_CONFIG_TARGET_FIELD:
+          List<LinkedHashMap<String, Object>> fieldHasherConfigs =
+              (List<LinkedHashMap<String, Object>>) config.getValue();
+          for (LinkedHashMap<String, Object> fieldHasherConfig : fieldHasherConfigs) {
+            if (fieldHasherConfig.get(HASH_TYPE).equals(SHA2)) {
+              fieldHasherConfig.replace(HASH_TYPE, HashType.SHA256.name());
+            }
+          }
+          break;
+        default:
+          break;  // NO OP for others
+      }
+    }
+    configs.removeAll(configsToRemove);
     configs.addAll(configsToAdd);
   }
 }
