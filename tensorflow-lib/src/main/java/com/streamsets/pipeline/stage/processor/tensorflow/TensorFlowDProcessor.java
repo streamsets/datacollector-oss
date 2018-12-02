@@ -36,8 +36,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
         ExecutionMode.CLUSTER_MESOS_STREAMING,
         ExecutionMode.EDGE
     },
-    onlineHelpRefUrl ="index.html?contextID=task_fr5_gsh_z2b",
-    beta = true
+    onlineHelpRefUrl ="index.html?contextID=task_fr5_gsh_z2b"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
