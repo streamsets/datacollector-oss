@@ -37,22 +37,22 @@
          This also needs the same stage libs from the CDH 5 streaming libs as both spark 2 and kafka are part of CDH now.
     -->
     <properties>
-        <avro.version>1.8.2-cdh6.0.0</avro.version>
-        <flume.version>1.8.0-cdh6.0.0</flume.version>
-        <hadoop.version>3.0.0-cdh6.0.0</hadoop.version>
-        <hbase.version>2.0.0-cdh6.0.0</hbase.version>
-        <hive.version>2.1.1-cdh6.0.0</hive.version>
-        <kudu.version>1.6.0-cdh6.0.0</kudu.version>
-        <solr.version>7.0.0-cdh6.0.0</solr.version>
+        <avro.version>1.8.2-cdh6.0.1</avro.version>
+        <flume.version>1.8.0-cdh6.0.1</flume.version>
+        <hadoop.version>3.0.0-cdh6.0.1</hadoop.version>
+        <hbase.version>2.0.0-cdh6.0.1</hbase.version>
+        <hive.version>2.1.1-cdh6.0.1</hive.version>
+        <kudu.version>1.6.0-cdh6.0.1</kudu.version>
+        <solr.version>7.0.0-cdh6.0.1</solr.version>
         <solr.test.jetty.version>9.3.20.v20170531</solr.test.jetty.version>
-        <spark.version>2.2.0-cdh6.0.0</spark.version>
-        <kafka.version>1.0.1-cdh6.0.0</kafka.version>
+        <spark.version>2.2.0-cdh6.0.1</spark.version>
+        <kafka.version>1.0.1-cdh6.0.1</kafka.version>
 
         <thrift.version>0.9.3</thrift.version>
         <netty.version>4.1.17.Final</netty.version>
 
         <jackson.version>2.8.9</jackson.version>
-        <parquet.version>1.9.0-cdh6.0.0</parquet.version>
+        <parquet.version>1.9.0-cdh6.0.1</parquet.version>
 
         <scala.version>2.11.8</scala.version>
         <zkclient.version>0.8</zkclient.version>
