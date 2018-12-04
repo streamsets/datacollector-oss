@@ -25,6 +25,12 @@ public enum Errors implements ErrorCode {
   MQTT_02("Error sending resource. Reason: {}"),
   MQTT_03("Error when disconnecting MQTT Client. Reason: {}"),
   MQTT_04("Failed to connect : {}"),
+  MQTT_05("Topic cannot be empty"),
+  MQTT_06("Invalid topic expression '{}': {}"),
+  MQTT_07("Topic White List cannot be empty if topic is resolved at runtime"),
+  MQTT_08("Topic expression '{}' generated a null or empty topic for record '{}'"),
+  MQTT_09("Topic '{}' resolved from record '{}' is not among the allowed topics"),
+  MQTT_10("Error evaluating topic expression '{}' for record '{}': {}"),
   ;
 
   private final String msg;

@@ -18,14 +18,20 @@ package com.streamsets.pipeline.stage.destination.mqtt;
 import com.google.common.collect.Lists;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.lib.el.ELUtils;
+import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
-import com.streamsets.pipeline.lib.http.Groups;
 import com.streamsets.pipeline.lib.http.HttpClientCommon;
 import com.streamsets.pipeline.lib.mqtt.Errors;
+import com.streamsets.pipeline.lib.mqtt.Groups;
 import com.streamsets.pipeline.lib.mqtt.MqttClientCommon;
 import com.streamsets.pipeline.lib.mqtt.MqttClientConfigBean;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
@@ -39,8 +45,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class MqttClientTarget extends BaseTarget implements MqttCallback {
 
@@ -51,6 +61,11 @@ public class MqttClientTarget extends BaseTarget implements MqttCallback {
   private DataGeneratorFactory generatorFactory;
   private ErrorRecordHandler errorRecordHandler;
   private MqttClient mqttClient = null;
+
+  private ELEval topicEval;
+  private ELVars topicVars;
+  private Set<String> allowedTopics;
+  private boolean allowAllTopics;
 
   MqttClientTarget(MqttClientConfigBean commonConf, MqttClientTargetConfigBean publisherConf) {
     this.commonConf = commonConf;
@@ -66,7 +81,7 @@ public class MqttClientTarget extends BaseTarget implements MqttCallback {
       publisherConf.dataGeneratorFormatConfig.init(
           getContext(),
           publisherConf.dataFormat,
-          Groups.HTTP.name(),
+          Groups.MQTT.name(),
           HttpClientCommon.DATA_FORMAT_CONFIG_PREFIX,
           issues
       );
@@ -78,10 +93,93 @@ public class MqttClientTarget extends BaseTarget implements MqttCallback {
       } catch (MqttException|StageException e) {
         throw new RuntimeException(new StageException(Errors.MQTT_04, e, e));
       }
+
+      this.allowedTopics = new HashSet<>();
+      allowAllTopics = false;
+      if (publisherConf.runtimeTopicResolution) {
+        if (publisherConf.topicExpression == null || publisherConf.topicExpression.trim().isEmpty()) {
+          issues.add(
+              getContext().createConfigIssue(
+                  Groups.MQTT.name(),
+                  "publisherConf.topicExpression",
+                  Errors.MQTT_05
+              )
+          );
+        }
+        validateTopicExpression(getContext(), issues);
+        validateTopicWhiteList(getContext(), issues);
+      }
     }
 
     return issues;
   }
+
+  private void validateTopicExpression(Stage.Context context, List<Stage.ConfigIssue> issues) {
+    topicEval = context.createELEval("topicExpression");
+    topicVars = context.createELVars();
+    ELUtils.validateExpression(publisherConf.topicExpression,
+        context,
+        Groups.MQTT.name(),
+        "publisherConf.topicExpression",
+        Errors.MQTT_06, issues
+    );
+  }
+
+  private void validateTopicWhiteList(Stage.Context context, List<Stage.ConfigIssue> issues) {
+    // if runtimeTopicResolution then topic white list cannot be empty
+    if (isEmpty(publisherConf.topicWhiteList)) {
+      issues.add(
+          context.createConfigIssue(
+              Groups.MQTT.name(),
+              "publisherConf.topicWhiteList",
+              Errors.MQTT_07
+          )
+      );
+    } else if ("*".equals(publisherConf.topicWhiteList)) {
+      allowAllTopics = true;
+    } else {
+      // Must be comma separated list of topic names
+      String[] topics = publisherConf.topicWhiteList.split(",");
+      for (String t : topics) {
+        allowedTopics.add(t.trim());
+      }
+    }
+  }
+
+  /**
+   * Returns the topic given the record.
+   *
+   * Returns the configured topic or statically evaluated topic in case runtime resolution is not required.
+   *
+   * If runtime resolution is required then the following is done:
+   * 1. Resolve the topic name by evaluating the topic expression
+   * 2. If the white list does not contain topic name and white list is not configured with "*" throw StageException
+   *    and the record will be handled based on the OnError configuration for the stage
+   * */
+  String getTopic(Record record) throws StageException {
+    String result = publisherConf.topic;
+    if (publisherConf.runtimeTopicResolution) {
+      RecordEL.setRecordInContext(topicVars, record);
+      try {
+        result = topicEval.eval(topicVars, publisherConf.topicExpression, String.class);
+        if (isEmpty(result)) {
+          throw new StageException(Errors.MQTT_08, publisherConf.topicExpression, record.getHeader().getSourceId());
+        }
+        if (!allowedTopics.contains(result) && !allowAllTopics) {
+          throw new StageException(Errors.MQTT_09, result, record.getHeader().getSourceId());
+        }
+      } catch (ELEvalException e) {
+        throw new StageException(
+            Errors.MQTT_10,
+            publisherConf.topicExpression,
+            record.getHeader().getSourceId(),
+            e.toString()
+        );
+      }
+    }
+    return result;
+  }
+
 
   @Override
   public void write(Batch batch) throws StageException {
@@ -100,13 +198,12 @@ public class MqttClientTarget extends BaseTarget implements MqttCallback {
           MqttMessage message = new MqttMessage(byteBufferOutputStream.toByteArray());
           message.setQos(commonConf.qos.getValue());
           message.setRetained(publisherConf.retained);
-          mqttClient.publish(publisherConf.topic, message);
+          mqttClient.publish(getTopic(record), message);
         } catch(Exception ex) {
           LOG.error(Errors.MQTT_01.getMessage(), ex.toString(), ex);
           errorRecordHandler.onError(new OnRecordErrorException(record, Errors.MQTT_01, ex.getMessage()));
         }
       }
-
     } catch(Exception ex) {
       LOG.error(Errors.MQTT_01.getMessage(), ex.toString(), ex);
       errorRecordHandler.onError(Lists.newArrayList(batch.getRecords()), throwStageException(ex));
@@ -145,7 +242,7 @@ public class MqttClientTarget extends BaseTarget implements MqttCallback {
   }
 
   @Override
-  public void messageArrived(String topic, MqttMessage message) throws Exception {
+  public void messageArrived(String topic, MqttMessage message) {
   }
 
   @Override

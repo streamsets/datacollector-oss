@@ -19,10 +19,52 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.destination.http.DataFormatChooserValues;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 
 public class MqttClientTargetConfigBean {
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Runtime Topic Resolution",
+      description = "Select topic at runtime based on the field values in the record",
+      displayPosition = 21,
+      group = "#0"
+  )
+  public boolean runtimeTopicResolution;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "${record:value('/topic')}",
+      label = "Topic Expression",
+      description = "An expression that resolves to the name of the topic to use",
+      displayPosition = 22,
+      elDefs = {RecordEL.class},
+      group = "MQTT",
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      dependsOn = "runtimeTopicResolution",
+      triggeredByValue = "true"
+  )
+  public String topicExpression;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.TEXT,
+      lines = 5,
+      defaultValue = "*",
+      label = "Topic White List",
+      description = "A comma-separated list of valid topic names. " +
+          "Records with invalid topic names are treated as error records. " +
+          "'*' indicates that all topic names are allowed.",
+      displayPosition = 23,
+      group = "MQTT",
+      dependsOn = "runtimeTopicResolution",
+      triggeredByValue = "true"
+  )
+  public String topicWhiteList;
 
   @ConfigDef(
       required = true,
@@ -31,7 +73,9 @@ public class MqttClientTargetConfigBean {
       defaultValue = "",
       description = "Specify the topic to deliver the message to, for example \"finance/stock/cmp\"",
       displayPosition = 30,
-      group = "MQTT"
+      group = "MQTT",
+      dependsOn = "runtimeTopicResolution",
+      triggeredByValue = "false"
   )
   public String topic = "";
 
