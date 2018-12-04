@@ -26,7 +26,7 @@ import com.streamsets.pipeline.config.OnStagePreConditionFailure;
 import com.streamsets.pipeline.lib.el.FieldEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.util.FieldPathExpressionUtil;
-import com.streamsets.pipeline.stage.processor.expression.ExpressionProcessor;
+import com.streamsets.pipeline.lib.util.FieldUtils;
 import com.streamsets.pipeline.stage.processor.fieldreplacer.config.ReplaceRule;
 import com.streamsets.pipeline.stage.processor.fieldreplacer.config.ReplacerConfigBean;
 
@@ -78,13 +78,13 @@ public class FieldReplacerProcessor extends SingleLaneRecordProcessor {
         }
 
         Field field = record.get(path);
-        FieldEL.setFieldInContext(vars, path, field);
+        FieldEL.setFieldInContext(vars, path, null, field);
 
         if(rule.setToNull) {
           record.set(path, Field.create(field.getType(), null));
         } else {
           Object result = replacementEval.eval(vars, rule.replacement, Object.class);
-          record.set(path, Field.create(ExpressionProcessor.getTypeFromObject(result), result));
+          record.set(path, Field.create(FieldUtils.getTypeFromObject(result), result));
         }
 
       }

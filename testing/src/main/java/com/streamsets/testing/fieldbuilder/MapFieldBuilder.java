@@ -24,6 +24,7 @@ import java.util.Map;
 
 public class MapFieldBuilder extends BaseFieldBuilder<MapFieldBuilder> {
   private final ImmutableMap.Builder builder = ImmutableMap.builder();
+  private boolean listMap;
   private final String field;
   private final BaseFieldBuilder<? extends BaseFieldBuilder> parentBuilder;
 
@@ -114,13 +115,18 @@ public class MapFieldBuilder extends BaseFieldBuilder<MapFieldBuilder> {
     return this;
   }
 
+  public MapFieldBuilder listMap(boolean listMap) {
+    this.listMap = listMap;
+    return this;
+  }
+
   @Override
   protected void handleEndChildField(String fieldName, Field fieldValue) {
     builder.put(fieldName, fieldValue);
   }
 
   public Field build() {
-    return Field.create(Field.Type.MAP, builder.build());
+    return Field.create(listMap ? Field.Type.LIST_MAP : Field.Type.MAP, builder.build());
   }
 
 }

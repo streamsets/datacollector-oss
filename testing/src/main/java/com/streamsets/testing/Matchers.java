@@ -25,11 +25,53 @@ import org.hamcrest.TypeSafeMatcher;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 
 public class Matchers {
+
+  public static Matcher<Field> listFieldWithValues(Object... values) {
+    return listFieldWithValues(Arrays.asList(values));
+  }
+
+  public static Matcher<Field> listFieldWithValues(List<?> values) {
+    return new FieldMatcher(Field.Type.LIST, values) {
+      @Override
+      protected Object getValueFromField(Field field) {
+        return LIST_ITEMS_ACCESSOR.getValue(field);
+      }
+    };
+  }
+
+  public static Matcher<Field> listFieldWithSize(final int size) {
+    return new BaseMatcher<Field>() {
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("List field with size ").appendValue(size);
+      }
+
+      @Override
+      public boolean matches(Object item) {
+        if (item != null && item instanceof Field) {
+          final List<Field> valueAsList = ((Field) item).getValueAsList();
+          return valueAsList != null && valueAsList.size() == size;
+        }
+        return false;
+      }
+    };
+  }
+
+  private static ValueAccessor<Object> LIST_ITEMS_ACCESSOR = field -> {
+    final List<Object> fieldValues = new LinkedList<>();
+    for (Field childField : field.getValueAsList()) {
+      fieldValues.add(childField.getValue());
+    }
+    return fieldValues;
+  };
 
   public static Matcher<Field> fieldWithValue(final String value) {
     return new FieldMatcher(Field.Type.STRING, value) {
@@ -121,6 +163,22 @@ public class Matchers {
 
   public static Matcher<Field> mapFieldWithEntry(final String nestedFieldName, final BigDecimal value) {
     return new MapFieldWithEntryMatcher(nestedFieldName, value, Field::getValueAsDecimal);
+  }
+
+  // TODO: make this work properly (ex: fix issue below)
+  /*
+  java.lang.AssertionError:
+Expected: Field of type MAP or LIST_MAP with field entry named values having value <[1, 2, 3]>
+     but: was <Field[MAP:{values=Field[LIST:[Field[INTEGER:1], Field[INTEGER:2], Field[INTEGER:3]]]}]>
+Expected :Field of type MAP or LIST_MAP with field entry named values having value <[1, 2, 3]>
+   */
+
+  public static Matcher<Field> mapFieldWithEntry(final String nestedFieldName, Object... values) {
+    return new MapFieldWithEntryMatcher(nestedFieldName, Arrays.asList(values), LIST_ITEMS_ACCESSOR);
+  }
+
+  public static Matcher<Field> mapFieldWithEntry(final String nestedFieldName, final List<?> value) {
+    return new MapFieldWithEntryMatcher(nestedFieldName, value, LIST_ITEMS_ACCESSOR);
   }
 
   private abstract static class FieldMatcher extends BaseMatcher<Field> {

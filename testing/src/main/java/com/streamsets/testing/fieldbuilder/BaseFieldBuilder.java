@@ -32,6 +32,10 @@ public abstract class BaseFieldBuilder<BT extends BaseFieldBuilder> {
     return new MapFieldBuilder(name, this);
   }
 
+  public MapFieldBuilder startListMap(String name) {
+    return startMap(name).listMap(true);
+  }
+
   public ListFieldBuilder startList(String name) {
     return new ListFieldBuilder(name, this);
   }

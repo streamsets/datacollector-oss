@@ -131,12 +131,12 @@ public class FieldPathExpressionUtil {
     Iterator<PathElement> matcherPathIter = matcherPathElements.iterator();
 
     PathElement currentMatcher = null;
+    PathElement currentPath = null;
     Field currentField = null;
     StringBuilder currentFieldPath = new StringBuilder();
 
     while (matcherPathIter.hasNext()) {
       currentMatcher = matcherPathIter.next();
-      PathElement currentPath;
       switch (currentMatcher.getType()) {
         case MAP:
           if (!currentPathIter.hasNext()) {
@@ -197,7 +197,7 @@ public class FieldPathExpressionUtil {
           break;
         case FIELD_EXPRESSION:
           // see if the current field matches the given expression
-          FieldEL.setFieldInContext(elVars, currentFieldPath.toString(), currentField);
+          FieldEL.setFieldInContext(elVars, currentFieldPath.toString(), currentPath.getName(), currentField);
           String expression = currentMatcher.getName();
           final boolean result = elEval.eval(elVars, expression, Boolean.class);
           if (LOG.isDebugEnabled()) {

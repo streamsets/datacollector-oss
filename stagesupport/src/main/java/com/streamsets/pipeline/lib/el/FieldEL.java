@@ -27,9 +27,14 @@ public class FieldEL {
 
   private static final String FIELD_PATH_CONTEXT_VAR = "fieldPath";
   private static final String FIELD_CONTEXT_VAR = "field";
+  private static final String FIELD_NAME_VAR = "name";
 
   public static String getFieldPathInContext() {
     return (String) ELEval.getVariablesInScope().getContextVariable(FIELD_PATH_CONTEXT_VAR);
+  }
+
+  public static String getFieldNameInContext() {
+    return (String) ELEval.getVariablesInScope().getContextVariable(FIELD_NAME_VAR);
   }
 
   public static Field getFieldInContext() {
@@ -55,6 +60,15 @@ public class FieldEL {
 
   @ElFunction(
       prefix = FIELD_EL_PREFIX,
+      name = "name",
+      description = "Returns the value of the field name (last portion of path) to the field in context, with respect" +
+          " to its containing record")
+  @SuppressWarnings("unchecked")
+  public static String getName() {
+    return getFieldNameInContext();
+  }
+  @ElFunction(
+      prefix = FIELD_EL_PREFIX,
       name = "value",
       description = "Returns the value of the field in context")
   @SuppressWarnings("unchecked")
@@ -71,9 +85,11 @@ public class FieldEL {
     return getFieldInContext().getAttribute(attrName);
   }
 
-  public static void setFieldInContext(ELVars variables, String fieldPath, Field field) {
+  public static void setFieldInContext(ELVars variables, String fieldPath, String fieldName, Field field) {
     Utils.checkNotNull(variables, "variables");
     variables.addContextVariable(FIELD_PATH_CONTEXT_VAR, fieldPath);
+    variables.addContextVariable(FIELD_NAME_VAR, fieldName);
     variables.addContextVariable(FIELD_CONTEXT_VAR, field);
   }
+
 }

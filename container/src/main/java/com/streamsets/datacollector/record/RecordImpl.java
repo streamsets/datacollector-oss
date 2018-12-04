@@ -477,7 +477,7 @@ public class RecordImpl implements Record, Cloneable {
     }
   }
 
-  private String escapeName(String name, boolean includeSingleQuotes) {
+  public static String escapeName(String name, boolean includeSingleQuotes) {
     if(includeSingleQuotes) {
       return EscapeUtil.singleQuoteEscape(name);
     } else {
@@ -599,23 +599,37 @@ public class RecordImpl implements Record, Cloneable {
   public void forEachField(FieldVisitor visitor) throws StageException {
     RecordFieldImpl recordField = new RecordFieldImpl(this);
     if (value != null) {
-      visitFieldsInternal(recordField, visitor, "", "", value);
+      visitFieldsInternal(recordField, visitor, "", "", value, null);
     }
   }
 
-  private void visitFieldsInternal(RecordFieldImpl recordField, FieldVisitor visitor, String name, String path, Field currentField) throws StageException {
+  private void visitFieldsInternal(
+      RecordFieldImpl recordField,
+      FieldVisitor visitor,
+      String name,
+      String path,
+      Field currentField,
+      Field parentField
+  ) throws StageException {
     // For nested types, visit their children first
     switch (currentField.getType()) {
       case MAP:
       case LIST_MAP:
         for(Map.Entry<String, Field> entry : currentField.getValueAsMap().entrySet()) {
-          visitFieldsInternal(recordField, visitor, entry.getKey(), path + "/" + escapeName(entry.getKey(), true), entry.getValue());
+          visitFieldsInternal(
+              recordField,
+              visitor,
+              entry.getKey(),
+              path + "/" + escapeName(entry.getKey(), true),
+              entry.getValue(),
+              currentField
+          );
         }
         break;
       case LIST:
         int index = 0;
         for(Field childField : currentField.getValueAsList()) {
-          visitFieldsInternal(recordField, visitor, name, path + "[" + index + "]", childField);
+          visitFieldsInternal(recordField, visitor, name, path + "[" + index + "]", childField, currentField);
           index++;
         }
         break;
@@ -626,6 +640,7 @@ public class RecordImpl implements Record, Cloneable {
     recordField.path = path;
     recordField.name = name;
     recordField.field = currentField;
+    recordField.parentField = parentField;
     visitor.visit(recordField);
   }
 
@@ -633,6 +648,7 @@ public class RecordImpl implements Record, Cloneable {
     String name;
     String path;
     Field field;
+    Field parentField;
     Record record;
 
     RecordFieldImpl(Record record) {
@@ -647,6 +663,11 @@ public class RecordImpl implements Record, Cloneable {
     @Override
     public String getFieldName() {
       return name;
+    }
+
+    @Override
+    public Field getParentField() {
+      return parentField;
     }
 
     @Override

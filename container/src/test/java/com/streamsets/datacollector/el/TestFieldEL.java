@@ -47,7 +47,7 @@ public class TestFieldEL {
     RecordEL.setRecordInContext(variables, record);
     Field aField = record.get(expectedAFieldPath);
 
-    FieldEL.setFieldInContext(variables, expectedAFieldPath, aField);
+    FieldEL.setFieldInContext(variables, expectedAFieldPath, null, aField);
 
     final Field.Type typeEval = eval.eval(variables, "${f:type()}", Field.Type.class);
     Assert.assertNotNull(typeEval);

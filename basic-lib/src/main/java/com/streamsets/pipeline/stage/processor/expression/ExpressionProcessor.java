@@ -28,11 +28,10 @@ import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringELConstants;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.util.FieldRegexUtil;
+import com.streamsets.pipeline.lib.util.FieldUtils;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -130,7 +129,7 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
         newField = Field.create(record.get(fieldToSet).getType(), null);
       } else {
         // otherwise, deduce type from result, even if it's null (which will result in coercion to string)
-        newField = Field.create(getTypeFromObject(result), result);
+        newField = Field.create(FieldUtils.getTypeFromObject(result), result);
       }
 
       if(FieldRegexUtil.hasWildCards(fieldToSet)) {
@@ -211,44 +210,6 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
     }
 
     batchMaker.addRecord(record);
-  }
-
-  // TODO: Better to move to some util class?
-  public static Field.Type getTypeFromObject(Object result) {
-    if(result instanceof Double) {
-      return Field.Type.DOUBLE;
-    } else if(result instanceof Long) {
-      return Field.Type.LONG;
-    } else if(result instanceof BigDecimal) {
-      return Field.Type.DECIMAL;
-    } else if(result instanceof Date) {
-      //This can only happen in ${time:now()}
-      return Field.Type.DATETIME;
-      //For all the timeEL, we currently return String so we are safe.
-    } else if(result instanceof Short) {
-      return Field.Type.SHORT;
-    } else if(result instanceof Boolean) {
-      return Field.Type.BOOLEAN;
-    } else if(result instanceof Byte) {
-      return Field.Type.BYTE;
-    } else if(result instanceof byte[]) {
-      return Field.Type.BYTE_ARRAY;
-    } else if(result instanceof Character) {
-      return Field.Type.CHAR;
-    } else if(result instanceof Float) {
-      return Field.Type.FLOAT;
-    } else if(result instanceof Integer) {
-      return Field.Type.INTEGER;
-    } else if(result instanceof String) {
-      return Field.Type.STRING;
-    } else if(result instanceof LinkedHashMap) {
-      return Field.Type.LIST_MAP;
-    } else if(result instanceof Map) {
-      return Field.Type.MAP;
-    } else if(result instanceof List) {
-      return Field.Type.LIST;
-    }
-    return Field.Type.STRING;
   }
 
 }

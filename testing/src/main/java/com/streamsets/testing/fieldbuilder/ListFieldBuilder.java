@@ -18,6 +18,7 @@ package com.streamsets.testing.fieldbuilder;
 import com.streamsets.pipeline.api.Field;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,53 +34,58 @@ public class ListFieldBuilder extends BaseFieldBuilder<ListFieldBuilder> {
     this.parentBuilder = parentBuilder;
   }
 
-  public ListFieldBuilder add(String value) {
-    fields.add(Field.create(value));
+  public ListFieldBuilder add(String... value) {
+    Arrays.asList(value).forEach(v -> fields.add(Field.create(v)));
     return this;
   }
 
-  public ListFieldBuilder add(Character value) {
-    fields.add(Field.create(value));
+  public ListFieldBuilder add(Integer... value) {
+    Arrays.asList(value).forEach(v -> fields.add(Field.create(v)));
     return this;
   }
 
-  public ListFieldBuilder add(Byte value) {
-    fields.add(Field.create(value));
+  public ListFieldBuilder add(Character... value) {
+    Arrays.asList(value).forEach(v -> fields.add(Field.create(v)));
     return this;
   }
 
-  public ListFieldBuilder add(Short value) {
-    fields.add(Field.create(value));
+  public ListFieldBuilder add(Byte... value) {
+    Arrays.asList(value).forEach(v -> fields.add(Field.create(v)));
     return this;
   }
 
-  public ListFieldBuilder add(Long value) {
-    fields.add(Field.create(value));
+  public ListFieldBuilder add(Short... value) {
+    Arrays.asList(value).forEach(v -> fields.add(Field.create(v)));
     return this;
   }
 
-  public ListFieldBuilder add(Float value) {
-    fields.add(Field.create(value));
+  public ListFieldBuilder add(Long... value) {
+    Arrays.asList(value).forEach(v -> fields.add(Field.create(v)));
     return this;
   }
 
-  public ListFieldBuilder add(Double value) {
-    fields.add(Field.create(value));
+  public ListFieldBuilder add(Float... value) {
+    Arrays.asList(value).forEach(v -> fields.add(Field.create(v)));
     return this;
   }
 
-  public ListFieldBuilder add(Date value) {
-    fields.add(Field.create(Field.Type.DATETIME, value));
+  public ListFieldBuilder add(Double... value) {
+    Arrays.asList(value).forEach(v -> fields.add(Field.create(v)));
     return this;
   }
 
-  public ListFieldBuilder add(BigDecimal value) {
-    fields.add(Field.create(value));
+  public ListFieldBuilder add(Date... value) {
+    Arrays.asList(value).forEach(v -> fields.add(Field.create(Field.Type.DATETIME, v)));
     return this;
   }
 
-  public ListFieldBuilder add(byte[] value) {
-    fields.add(Field.create(value));
+  public ListFieldBuilder add(BigDecimal... value) {
+    Arrays.asList(value).forEach(v -> fields.add(Field.create(v)));
+    return this;
+  }
+
+  public ListFieldBuilder add(byte[]... value) {
+    Arrays.asList(value).forEach(v -> fields.add(Field.create(v)));
     return this;
   }
 
