@@ -27,6 +27,8 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.base.BaseFieldProcessor;
+import com.streamsets.pipeline.api.impl.RecordBasedFieldBatch;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -44,7 +46,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-public class TestFieldEncryptProcessor {
+public class TestFieldEncryptProtector {
   private static final int KEY_SIZE = 256 / 8;
   private static final byte[] RAW_KEY = new byte[KEY_SIZE];
 
@@ -60,16 +62,15 @@ public class TestFieldEncryptProcessor {
 
   @Test
   public void testInit() throws Exception {
-    ProcessorFieldEncryptConfig conf = new ProcessorFieldEncryptConfig();
-    conf.mode = EncryptionMode.ENCRYPT;
+    ProtectorFieldEncryptConfig conf = new ProtectorFieldEncryptConfig();
     conf.cipher = CryptoAlgorithm.ALG_AES_256_GCM_IV12_TAG16_HKDF_SHA384_ECDSA_P384;
-    conf.fieldPaths = ImmutableList.of("/message");
     conf.key = key;
     conf.keyId = "keyId";
     conf.context = aad;
     conf.maxBytesPerKey = String.valueOf(Long.MAX_VALUE);
 
-    Processor processor = new FieldEncryptProcessor(conf);
+    Processor processor = new EncryptFieldProtector();
+    ((EncryptFieldProtector) processor).conf = conf;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldEncryptDProcessor.class, processor)
         .addOutputLane("lane")
@@ -80,41 +81,9 @@ public class TestFieldEncryptProcessor {
   }
 
   @Test
-  public void testWrongInputType() throws Exception {
-    ProcessorFieldEncryptConfig decryptConfig = new ProcessorFieldEncryptConfig();
-    decryptConfig.mode = EncryptionMode.DECRYPT;
-    decryptConfig.cipher = CryptoAlgorithm.ALG_AES_256_GCM_IV12_TAG16_HKDF_SHA384_ECDSA_P384;
-    decryptConfig.fieldPaths = ImmutableList.of("/");
-    decryptConfig.key = key;
-    decryptConfig.keyId = "keyId";
-    decryptConfig.context = aad;
-    decryptConfig.maxBytesPerKey = String.valueOf(Long.MAX_VALUE);
-
-    Processor decryptProcessor = new FieldEncryptProcessor(decryptConfig);
-
-    ProcessorRunner decryptRunner = new ProcessorRunner.Builder(
-        FieldEncryptDProcessor.class,
-        decryptProcessor
-    ).addOutputLane("lane").build();
-
-    Record record = RecordCreator.create();
-    record.set(Field.create("abcdef"));
-
-    decryptRunner.runInit();
-    StageRunner.Output output = decryptRunner.runProcess(ImmutableList.of(record));
-    List<Record> decryptedRecords = output.getRecords().get("lane");
-    assertEquals(0, decryptedRecords.size());
-    List<Record> errors = decryptRunner.getErrorRecords();
-    assertEquals(1, errors.size());
-    assertEquals(record.get(), errors.get(0).get());
-  }
-
-  @Test
   public void testOutOfRangeConfigValue() throws Exception {
-    ProcessorFieldEncryptConfig config = new ProcessorFieldEncryptConfig();
-    config.mode = EncryptionMode.ENCRYPT;
+    ProtectorFieldEncryptConfig config = new ProtectorFieldEncryptConfig();
     config.cipher = CryptoAlgorithm.ALG_AES_256_GCM_IV12_TAG16_HKDF_SHA384_ECDSA_P384;
-    config.fieldPaths = ImmutableList.of("/");
     config.key = key;
     config.keyId = "keyId";
     config.context = aad;
@@ -123,7 +92,8 @@ public class TestFieldEncryptProcessor {
     config.maxRecordsPerKey = 1000;
     config.maxBytesPerKey = String.valueOf(Long.MAX_VALUE);
 
-    Processor encryptProcessor = new FieldEncryptProcessor(config);
+    Processor encryptProcessor = new EncryptFieldProtector();
+    ((EncryptFieldProtector) encryptProcessor).conf = config;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(
         FieldEncryptDProcessor.class,
@@ -135,7 +105,8 @@ public class TestFieldEncryptProcessor {
 
     // bytes < 1
     config.maxBytesPerKey = "0";
-    encryptProcessor = new FieldEncryptProcessor(config);
+    encryptProcessor = new EncryptFieldProtector();
+    ((EncryptFieldProtector) encryptProcessor).conf = config;
 
     runner = new ProcessorRunner.Builder(
         FieldEncryptDProcessor.class,
@@ -147,7 +118,8 @@ public class TestFieldEncryptProcessor {
 
     // value is not an integer
     config.maxBytesPerKey = "abc";
-    encryptProcessor = new FieldEncryptProcessor(config);
+    encryptProcessor = new EncryptFieldProtector();
+    ((EncryptFieldProtector) encryptProcessor).conf = config;
 
     runner = new ProcessorRunner.Builder(
         FieldEncryptDProcessor.class,
@@ -160,10 +132,8 @@ public class TestFieldEncryptProcessor {
 
   @Test
   public void testNonCacheableCipher() throws Exception {
-    ProcessorFieldEncryptConfig config = new ProcessorFieldEncryptConfig();
-    config.mode = EncryptionMode.ENCRYPT;
+    ProtectorFieldEncryptConfig config = new ProtectorFieldEncryptConfig();
     config.cipher = CryptoAlgorithm.ALG_AES_128_GCM_IV12_TAG16_NO_KDF;
-    config.fieldPaths = ImmutableList.of("/");
     config.key = key;
     config.keyId = "keyId";
     config.context = aad;
@@ -172,9 +142,10 @@ public class TestFieldEncryptProcessor {
     config.maxRecordsPerKey = 1000;
     config.maxBytesPerKey = String.valueOf(Long.MAX_VALUE);
 
-    Processor encryptProcessor = new FieldEncryptProcessor(config);
+    Processor encryptProcessor = new EncryptFieldProtector();
+    ((EncryptFieldProtector) encryptProcessor).conf = config;
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(
+        ProcessorRunner runner = new ProcessorRunner.Builder(
         FieldEncryptDProcessor.class,
         encryptProcessor
     ).addOutputLane("lane").build();
@@ -190,10 +161,8 @@ public class TestFieldEncryptProcessor {
     final long longValue = 1234L;
     final boolean boolValue = true;
 
-    ProcessorFieldEncryptConfig encryptConfig = new ProcessorFieldEncryptConfig();
-    encryptConfig.mode = EncryptionMode.ENCRYPT;
+    ProtectorFieldEncryptConfig encryptConfig = new ProtectorFieldEncryptConfig();
     encryptConfig.cipher = CryptoAlgorithm.ALG_AES_256_GCM_IV12_TAG16_HKDF_SHA384_ECDSA_P384;
-    encryptConfig.fieldPaths = ImmutableList.of("/message", "/long", "/bool", "/nonExistentField", "/nullValuedField");
     encryptConfig.key = key;
     encryptConfig.keyId = "keyId";
     encryptConfig.context = aad;
@@ -208,12 +177,14 @@ public class TestFieldEncryptProcessor {
     decryptConfig.context = aad;
     decryptConfig.maxBytesPerKey = String.valueOf(Long.MAX_VALUE);
 
-    Processor encryptProcessor = new FieldEncryptProcessor(encryptConfig);
+    BaseFieldProcessor encryptProcessor = new EncryptFieldProtector();
+    ((EncryptFieldProtector) encryptProcessor).conf = encryptConfig;
 
     ProcessorRunner encryptRunner = new ProcessorRunner.Builder(
         FieldEncryptDProcessor.class,
         encryptProcessor
     ).addOutputLane("lane").build();
+    encryptRunner.runInit();
 
     Record record = RecordCreator.create();
 
@@ -228,12 +199,6 @@ public class TestFieldEncryptProcessor {
         .build());
     record.set(rootField);
 
-    List<Record> records = Collections.singletonList(record);
-    encryptRunner.runInit();
-    StageRunner.Output output = encryptRunner.runProcess(records);
-    List<Record> encryptedRecords = output.getRecords().get("lane");
-    assertEquals(1, encryptedRecords.size());
-
     Processor decryptProcessor = new FieldEncryptProcessor(decryptConfig);
 
     ProcessorRunner decryptRunner = new ProcessorRunner.Builder(
@@ -242,7 +207,8 @@ public class TestFieldEncryptProcessor {
     ).addOutputLane("lane").build();
 
     decryptRunner.runInit();
-    output = decryptRunner.runProcess(encryptedRecords);
+    encryptProcessor.process(new RecordBasedFieldBatch(record, ImmutableList.of("/message", "/long", "/bool", "/nonExistentField", "/nullValuedField").iterator()));
+    StageRunner.Output output = decryptRunner.runProcess(Collections.singletonList(record));
     List<Record> decryptedRecords = output.getRecords().get("lane");
     assertEquals(1, decryptedRecords.size());
     assertEquals(messageField, decryptedRecords.get(0).get("/message"));

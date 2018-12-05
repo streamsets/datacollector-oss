@@ -17,14 +17,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.streamsets.pipeline.stage.processor.crypto;
 
 import com.amazonaws.encryptionsdk.CryptoResult;
+import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.FieldBatch;
+import com.streamsets.pipeline.api.HideConfigs;
+import com.streamsets.pipeline.api.HideStage;
+import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import com.streamsets.pipeline.api.base.BaseFieldProcessor;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,61 +37,60 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class FieldEncryptProcessor extends SingleLaneRecordProcessor {
-  private final FieldEncrypter encrypter;
-  private ProcessorFieldEncryptConfig conf;
+@StageDef(
+    version = 1,
+    label = "Encrypt Data",
+    description = "Encrypt Fields",
+    onlineHelpRefUrl = "temp.html" ///todo
+)
+@ConfigGroups(ProtectorEncryptGroups.class)
+@HideStage(HideStage.Type.FIELD_PROCESSOR)
+@HideConfigs(preconditions = true, onErrorRecord = true)
+public class EncryptFieldProtector extends BaseFieldProcessor {
+  @ConfigDefBean
+  public ProtectorFieldEncryptConfig conf = new ProtectorFieldEncryptConfig();
+
+  private FieldEncrypter encrypter;
   private BiFunction<Field, Map<String, String>, byte[]> prepare;
-  private BiFunction<Record, Field, Optional<Field>> checkInput;
   private Function<CryptoResult<byte[], ?>, Field> createResultField;
 
-  public FieldEncryptProcessor(ProcessorFieldEncryptConfig conf) {
-    this.conf = conf;
-    this.encrypter = new FieldEncrypter(conf, conf.mode);
+  public EncryptFieldProtector() {
+    super();
   }
 
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+    encrypter = new FieldEncrypter(conf, EncryptionMode.ENCRYPT);
     encrypter.setContext(getContext());
     encrypter.init(issues);
 
-    if (conf.mode == EncryptionMode.ENCRYPT) {
-      prepare = encrypter::prepareEncrypt;
-      checkInput = encrypter::checkInputEncrypt;
-      createResultField = encrypter::createResultFieldEncrypt;
-    } else {
-      prepare = (field, context) -> encrypter.prepareDecrypt(field);
-      checkInput = encrypter::checkInputDecrypt;
-      createResultField = encrypter::createResultFieldDecrypt;
-    }
+    prepare = encrypter::prepareEncrypt;
+    createResultField = encrypter::createResultFieldEncrypt;
 
     return issues;
   }
 
   @Override
-  protected void process(Record record, SingleLaneBatchMaker singleLaneBatchMaker) throws StageException {
+  public void process(FieldBatch batch) throws StageException {
     Map<String, String> encryptionContext = new HashMap<>(conf.context);
 
-    for (String fieldPath : conf.fieldPaths) {
-
-      Field field = record.get(fieldPath);
-
+    while(batch.next()) {
+      Field field = batch.getField();
       // reviewer requested no use of Java 8 streams
       if (field != null && field.getValue() != null) { // process if field is present and non-null
 
-        Optional<Field> input = checkInput.apply(record, field);
+        Optional<Field> input = encrypter.checkInputEncrypt(field);
 
         if (input.isPresent()) {
           byte[] bytes = prepare.apply(input.get(), encryptionContext);
           CryptoResult<byte[], ?> result = encrypter.process(bytes, encryptionContext);
-          field = createResultField.apply(result);
-          record.set(fieldPath, field);
+          Field encryptedField = createResultField.apply(result);
+          batch.replace(encryptedField);
         } else {
           return; // record sent to error, done with this record.
         }
       }
     }
-
-    singleLaneBatchMaker.addRecord(record);
   }
 }
