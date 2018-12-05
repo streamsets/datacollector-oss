@@ -21,6 +21,7 @@ import com.streamsets.pipeline.lib.salesforce.Errors;
 import com.streamsets.pipeline.lib.salesforce.ForceSourceConfigBean;
 import com.streamsets.pipeline.lib.salesforce.ForceUtils;
 import com.streamsets.pipeline.lib.salesforce.SubscriptionType;
+import org.apache.commons.lang3.StringUtils;
 import org.cometd.bayeux.Channel;
 import org.cometd.bayeux.Message;
 import org.cometd.bayeux.client.ClientSession;
@@ -49,6 +50,9 @@ public class ForceStreamConsumer {
       + "Please provide a valid ID, -2 to replay all events, or -1 to replay only new events.";
   private static final String TOPIC_PATH = "/topic/";
   private static final String EVENT_PATH = "/event/";
+  private static final String CDC_PATH = "/data/";
+  public static final String CHANGE_EVENTS = "ChangeEvents";
+  public static final String CHANGE_EVENT = "ChangeEvent";
   private final BlockingQueue<Message> messageQueue;
 
   // The long poll duration.
@@ -76,9 +80,26 @@ public class ForceStreamConsumer {
     this.conf = conf;
     this.messageQueue = messageQueue;
     this.connection = connection;
-    this.bayeuxChannel = (conf.subscriptionType == SubscriptionType.PUSH_TOPIC)
-      ? TOPIC_PATH + conf.pushTopic
-      : EVENT_PATH + conf.platformEvent;
+    switch (conf.subscriptionType) {
+      case PUSH_TOPIC:
+        this.bayeuxChannel = TOPIC_PATH + conf.pushTopic;
+        break;
+      case PLATFORM_EVENT:
+        this.bayeuxChannel = EVENT_PATH + conf.platformEvent;
+        break;
+      case CDC:
+        if (StringUtils.isEmpty(conf.cdcObject)) { // All change events
+          this.bayeuxChannel = CDC_PATH + CHANGE_EVENTS;
+        } else if (conf.cdcObject.endsWith("__c")) { // Custom object
+          this.bayeuxChannel = CDC_PATH + conf.cdcObject.substring(0, conf.cdcObject.length() - 3) + "__" + CHANGE_EVENT;
+        } else { // Standard object
+          this.bayeuxChannel = CDC_PATH + conf.cdcObject + CHANGE_EVENT;
+        }
+        break;
+      default:
+        this.bayeuxChannel = null;
+        break;
+    }
     String streamingEndpointPrefix = conf.apiVersion.equals("36.0") ? "/cometd/replay/" : "/cometd/";
     this.streamingEndpointPath = streamingEndpointPrefix + conf.apiVersion;
   }

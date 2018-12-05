@@ -39,6 +39,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.lib.event.CommonEvents;
 import com.streamsets.pipeline.lib.salesforce.BulkRecordCreator;
+import com.streamsets.pipeline.lib.salesforce.ChangeDataCaptureRecordCreator;
 import com.streamsets.pipeline.lib.salesforce.Errors;
 import com.streamsets.pipeline.lib.salesforce.ForceConfigBean;
 import com.streamsets.pipeline.lib.salesforce.ForceRecordCreator;
@@ -264,39 +265,16 @@ public class ForceSource extends BaseSource {
     }
 
     if (issues.isEmpty() && conf.subscribeToStreaming) {
-      if (conf.subscriptionType == SubscriptionType.PUSH_TOPIC) {
-        String query = "SELECT Id, Query FROM PushTopic WHERE Name = '"+conf.pushTopic+"'";
-
-        try {
-          QueryResult qr = partnerConnection.query(query);
-
-          if (qr.getSize() != 1) {
-            issues.add(
-                getContext().createConfigIssue(
-                    Groups.SUBSCRIBE.name(), ForceConfigBean.CONF_PREFIX + "pushTopic", Errors.FORCE_00,
-                    "Can't find Push Topic '" + conf.pushTopic +"'"
-                )
-            );
-          } else if (null == sobjectType) {
-            String soqlQuery = (String)qr.getRecords()[0].getField("Query");
-            try {
-              sobjectType = ForceUtils.getSobjectTypeFromQuery(soqlQuery);
-              LOG.info("Found sobject type {}", sobjectType);
-            } catch (StageException e) {
-              issues.add(getContext().createConfigIssue(Groups.SUBSCRIBE.name(),
-                  ForceConfigBean.CONF_PREFIX + "pushTopic",
-                  Errors.FORCE_00,
-                  "Badly formed SOQL Query: " + soqlQuery
-              ));
-            }
-          }
-        } catch (ConnectionException e) {
-          issues.add(
-              getContext().createConfigIssue(
-                  Groups.FORCE.name(), ForceConfigBean.CONF_PREFIX + "authEndpoint", Errors.FORCE_00, e
-              )
-          );
-        }
+      switch (conf.subscriptionType) {
+        case PUSH_TOPIC:
+          setObjectTypeFromQuery(issues);
+          break;
+        case PLATFORM_EVENT:
+          // Do nothing
+          break;
+        case CDC:
+          sobjectType = conf.cdcObject;
+          break;
       }
 
       messageQueue = new ArrayBlockingQueue<>(2 * conf.basicConfig.maxBatchSize);
@@ -313,6 +291,41 @@ public class ForceSource extends BaseSource {
 
     // If issues is not empty, the UI will inform the user of each configuration issue in the list.
     return issues;
+  }
+
+  private void setObjectTypeFromQuery(List<ConfigIssue> issues) {
+    String query = "SELECT Id, Query FROM PushTopic WHERE Name = '"+conf.pushTopic+"'";
+
+    try {
+      QueryResult qr = partnerConnection.query(query);
+
+      if (qr.getSize() != 1) {
+        issues.add(
+            getContext().createConfigIssue(
+                Groups.SUBSCRIBE.name(), ForceConfigBean.CONF_PREFIX + "pushTopic", Errors.FORCE_00,
+                "Can't find Push Topic '" + conf.pushTopic +"'"
+            )
+        );
+      } else if (null == sobjectType) {
+        String soqlQuery = (String)qr.getRecords()[0].getField("Query");
+        try {
+          sobjectType = ForceUtils.getSobjectTypeFromQuery(soqlQuery);
+          LOG.info("Found sobject type {}", sobjectType);
+        } catch (StageException e) {
+          issues.add(getContext().createConfigIssue(Groups.SUBSCRIBE.name(),
+              ForceConfigBean.CONF_PREFIX + "pushTopic",
+              Errors.FORCE_00,
+              "Badly formed SOQL Query: " + soqlQuery
+          ));
+        }
+      }
+    } catch (ConnectionException e) {
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.FORCE.name(), ForceConfigBean.CONF_PREFIX + "authEndpoint", Errors.FORCE_00, e
+          )
+      );
+    }
   }
 
   // Returns true if the first ORDER BY field matches fieldName
@@ -344,10 +357,13 @@ public class ForceSource extends BaseSource {
         return new SoapRecordCreator(getContext(), conf, sobjectType);
       }
     } else if (conf.subscribeToStreaming) {
-      if (conf.subscriptionType == SubscriptionType.PUSH_TOPIC) {
-        return new PushTopicRecordCreator(getContext(), conf, sobjectType);
-      } else {
-        return new PlatformEventRecordCreator(getContext(), conf.platformEvent, conf);
+      switch (conf.subscriptionType) {
+        case PUSH_TOPIC:
+          return new PushTopicRecordCreator(getContext(), conf, sobjectType);
+        case PLATFORM_EVENT:
+          return new PlatformEventRecordCreator(getContext(), conf.platformEvent, conf);
+        case CDC:
+          return new ChangeDataCaptureRecordCreator(getContext(), conf, sobjectType);
       }
     }
 
@@ -824,13 +840,15 @@ public class ForceSource extends BaseSource {
       nextSourceOffset = lastSourceOffset;
     }
 
+    if (conf.subscriptionType == SubscriptionType.PUSH_TOPIC && !(recordCreator instanceof PushTopicRecordCreator)) {
+      recordCreator = new PushTopicRecordCreator((SobjectRecordCreator)recordCreator);
+    }
+
     if (recordCreator instanceof SobjectRecordCreator) {
-      // Switch out recordCreator
-      PushTopicRecordCreator pushTopicRecordCreator = new PushTopicRecordCreator((SobjectRecordCreator)recordCreator);
-      if (!pushTopicRecordCreator.metadataCacheExists()) {
-        pushTopicRecordCreator.buildMetadataCache(partnerConnection);
+      SobjectRecordCreator sobjectRecordCreator = (SobjectRecordCreator)recordCreator;
+      if (!StringUtils.isEmpty(sobjectType) && !sobjectRecordCreator.metadataCacheExists()) {
+        sobjectRecordCreator.buildMetadataCache(partnerConnection);
       }
-      recordCreator = pushTopicRecordCreator;
     }
 
     if (forceConsumer == null) {

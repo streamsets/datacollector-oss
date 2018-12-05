@@ -297,22 +297,24 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
         }
       }
 
-      for (List<Pair<String, String>> path : references) {
-        // Top field name in the path should be in the metadata now
-        if (!path.isEmpty()) {
-          Pair<String, String> top = path.get(0);
-          Field field = metadataMap.get(top.getLeft()).getFieldFromRelationship(top.getRight());
-          Set<String> sobjectNames = metadataMap.keySet();
-          for (String ref : field.getReferenceTo()) {
-            ref = ref.toLowerCase();
-            if (!sobjectNames.contains(ref) && !next.contains(ref)) {
-              next.add(ref);
+      if (references != null) {
+        for (List<Pair<String, String>> path : references) {
+          // Top field name in the path should be in the metadata now
+          if (!path.isEmpty()) {
+            Pair<String, String> top = path.get(0);
+            Field field = metadataMap.get(top.getLeft()).getFieldFromRelationship(top.getRight());
+            Set<String> sobjectNames = metadataMap.keySet();
+            for (String ref : field.getReferenceTo()) {
+              ref = ref.toLowerCase();
+              if (!sobjectNames.contains(ref) && !next.contains(ref)) {
+                next.add(ref);
+              }
+              if (path.size() > 1) {
+                path.set(1, Pair.of(ref, path.get(1).getRight()));
+              }
             }
-            if (path.size() > 1) {
-              path.set(1, Pair.of(ref, path.get(1).getRight()));
-            }
+            path.remove(0);
           }
-          path.remove(0);
         }
       }
     }
@@ -453,7 +455,18 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
   }
 
   public com.sforce.soap.partner.Field getFieldMetadata(String objectType, String fieldName) {
-    return metadataCache.get(objectType).getFieldFromName(fieldName);
+    return metadataCache.get(objectType.toLowerCase()).getFieldFromName(fieldName.toLowerCase());
+  }
+
+  public boolean objectTypeIsCached(String objectType) {
+    return (metadataCache != null && metadataCache.get(objectType.toLowerCase()) != null);
+  }
+
+  public void addObjectTypeToCache(PartnerConnection partnerConnection, String objectType) throws ConnectionException {
+    if (metadataCache == null) {
+      metadataCache = new LinkedHashMap<>();
+    }
+    getAllReferences(partnerConnection, metadataCache, null, new String[]{objectType}, 1);
   }
 
   // SDC-9731 will remove the duplicate method from ForceSource

@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.Label;
 public enum SubscriptionType implements Label {
   PUSH_TOPIC("Push Topic"),
   PLATFORM_EVENT("Platform Event"),
+  CDC("Change Data Capture"),
   ;
 
   private final String label;
