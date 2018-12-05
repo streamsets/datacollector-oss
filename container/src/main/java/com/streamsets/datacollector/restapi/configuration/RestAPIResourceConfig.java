@@ -18,6 +18,7 @@ package com.streamsets.datacollector.restapi.configuration;
 import com.streamsets.datacollector.activation.Activation;
 import com.streamsets.datacollector.bundles.SupportBundleManager;
 import com.streamsets.datacollector.execution.Manager;
+import com.streamsets.datacollector.http.RolesAnnotationFilter;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
@@ -35,7 +36,6 @@ import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.filter.CsrfProtectionFilter;
-import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 
 import java.net.URI;
 import java.security.Principal;
@@ -62,7 +62,7 @@ public class RestAPIResourceConfig extends ResourceConfig {
       }
     });
 
-    register(RolesAllowedDynamicFeature.class);
+    register(RolesAnnotationFilter.class);
     register(CsrfProtectionFilter.class);
     register(MultiPartFeature.class);
 
