@@ -23,12 +23,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root</artifactId>
-    <version>3.6.1-SNAPSHOT</version>
+    <version>3.6.1</version>
     <relativePath>../root</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-container</artifactId>
-  <version>3.6.1-SNAPSHOT</version>
+  <version>3.6.1</version>
   <description>StreamSets Data Collector Container</description>
   <name>StreamSets Data Collector Container</name>
   <packaging>jar</packaging>
