@@ -64,7 +64,7 @@ public class HdfsSource extends SpoolDirBaseSource {
     Map<String, Offset> offsetMap = new HashMap<>();
 
     if (lastSourceOffset != null && lastSourceOffset.size() > 0) {
-      String version = lastSourceOffset.get(OFFSET_VERSION);
+      String version = lastSourceOffset.get(OFFSET_VERSION) == null ? Offset.VERSION_ONE : lastSourceOffset.get(OFFSET_VERSION);
       Set<String> key = lastSourceOffset.keySet();
       Iterator iterator = key.iterator();
 
