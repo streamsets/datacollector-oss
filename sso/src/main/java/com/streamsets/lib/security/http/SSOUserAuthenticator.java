@@ -20,6 +20,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.security.ServerAuthException;
 import org.eclipse.jetty.server.Authentication;
 import org.jetbrains.annotations.NotNull;
@@ -55,6 +56,10 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
     this.dpmBaseUrl = conf.get(RemoteSSOService.DPM_BASE_URL_CONFIG, null);
     this.isDataCollector = !conf.hasName(RemoteSSOService.DPM_APP_SECURITY_URL_CONFIG);
     this.doMetaRedirectToSso = conf.get(HTTP_META_REDIRECT_TO_SSO, false);
+
+    if (StringUtils.isNotEmpty(this.dpmBaseUrl) && this.dpmBaseUrl.endsWith("/")) {
+      this.dpmBaseUrl = this.dpmBaseUrl.substring(0, this.dpmBaseUrl.length() - 1);
+    }
   }
 
   @Override
