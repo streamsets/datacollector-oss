@@ -505,8 +505,6 @@
         <elasticsearch_5-lib>elasticsearch_5-lib</elasticsearch_5-lib>
         <emr_hadoop_2_8_3-lib>emr_hadoop_2_8_3-lib</emr_hadoop_2_8_3-lib>
         <groovy_2_4-lib>groovy_2_4-lib</groovy_2_4-lib>
-        <kinetica_6_0-lib>kinetica_6_0-lib</kinetica_6_0-lib>
-        <kinetica_6_1-lib>kinetica_6_1-lib</kinetica_6_1-lib>
         <hdp_2_2-lib>hdp_2_2-lib</hdp_2_2-lib>
         <hdp_2_3-lib>hdp_2_3-lib</hdp_2_3-lib>
         <hdp_2_3-hive1-lib>hdp_2_3-hive1-lib</hdp_2_3-hive1-lib>
@@ -520,6 +518,9 @@
         <hdp_2_6-hive2-lib>hdp_2_6-hive2-lib</hdp_2_6-hive2-lib>
         <hdp_2_6-flume-lib>hdp_2_6-flume-lib</hdp_2_6-flume-lib>
         <jython_2_7-lib>jython_2_7-lib</jython_2_7-lib>
+        <kinetica_6_0-lib>kinetica_6_0-lib</kinetica_6_0-lib>
+        <kinetica_6_1-lib>kinetica_6_1-lib</kinetica_6_1-lib>
+        <kinetica_6_2-lib>kinetica_6_2-lib</kinetica_6_2-lib>
         <mapr_5_0-lib>mapr_5_0-lib</mapr_5_0-lib>
         <mapr_5_1-lib>mapr_5_1-lib</mapr_5_1-lib>
         <mapr_5_2-lib>mapr_5_2-lib</mapr_5_2-lib>
@@ -585,6 +586,7 @@
         <module>groovy_2_4-lib</module>
         <module>kinetica_6_0-lib</module>
         <module>kinetica_6_1-lib</module>
+        <module>kinetica_6_2-lib</module>
         <module>hdp_2_2-lib</module>
         <module>hdp_2_3-lib</module>
         <module>hdp_2_3-hive1-lib</module>
@@ -640,12 +642,12 @@
         <elasticsearch_5-lib>elasticsearch_5-lib</elasticsearch_5-lib>
         <emr_hadoop_2_8_3-lib>emr_hadoop_2_8_3-lib</emr_hadoop_2_8_3-lib>
         <groovy_2_4-lib>groovy_2_4-lib</groovy_2_4-lib>
-        <kinetica_6_1-lib>kinetica_6_1-lib</kinetica_6_1-lib>
         <hdp_2_6-lib>hdp_2_6-lib</hdp_2_6-lib>
         <hdp_2_6_2-hive1-lib>hdp_2_6_2-hive1-lib</hdp_2_6_2-hive1-lib>
         <hdp_2_6-hive2-lib>hdp_2_6-hive2-lib</hdp_2_6-hive2-lib>
         <hdp_2_6-flume-lib>hdp_2_6-flume-lib</hdp_2_6-flume-lib>
         <jython_2_7-lib>jython_2_7-lib</jython_2_7-lib>
+        <kinetica_6_2-lib>kinetica_6_2-lib</kinetica_6_2-lib>
         <mapr_6_0-lib>mapr_6_0-lib</mapr_6_0-lib>
         <mapr_6_0-mep5-lib>mapr_6_0-mep5-lib</mapr_6_0-mep5-lib>
         <mapr_spark_2_1_mep_3_0-lib>mapr_spark_2_1_mep_3_0-lib</mapr_spark_2_1_mep_3_0-lib>
@@ -675,7 +677,7 @@
         <module>elasticsearch_5-lib</module>
         <module>emr_hadoop_2_8_3-lib</module>
         <module>groovy_2_4-lib</module>
-        <module>kinetica_6_1-lib</module>
+        <module>kinetica_6_2-lib</module>
         <module>hdp_2_6-lib</module>
         <module>hdp_2_6_2-hive1-lib</module>
         <module>hdp_2_6-hive2-lib</module>
