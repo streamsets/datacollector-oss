@@ -36,9 +36,11 @@ import com.streamsets.datacollector.execution.PreviewStatus;
 import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.RawPreview;
 import com.streamsets.datacollector.execution.preview.common.PreviewError;
+import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
+import com.streamsets.datacollector.restapi.bean.DynamicPreviewRequestWithOverridesJson;
 import com.streamsets.datacollector.restapi.bean.PreviewInfoJson;
 import com.streamsets.datacollector.restapi.bean.PreviewOutputJson;
 import com.streamsets.datacollector.restapi.bean.StageOutputJson;
@@ -59,7 +61,6 @@ import com.streamsets.lib.security.http.SSOPrincipal;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.util.ThreadUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -90,7 +91,6 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -248,7 +248,7 @@ public class PreviewResource {
     int maxBatches = configuration.get(MAX_BATCHES_KEY, MAX_BATCHES_DEFAULT);
     batches = Math.min(maxBatches, batches);
 
-    Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev, Collections.emptyList());
+    Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev, Collections.emptyList(), p -> null);
     try {
       previewer.start(
           batches,
@@ -289,11 +289,18 @@ public class PreviewResource {
       AuthzRole.MANAGER,
       AuthzRole.MANAGER_REMOTE
   })
-  public Response dynamicPreview(
-      @ApiParam(name="dynamicPreviewRequest", required = true) DynamicPreviewRequestJson dynamicPreviewRequest
+  public Response initiateDynamicPreview(
+      @ApiParam(
+          name="dynamicPreviewRequest",
+          required = true
+      ) DynamicPreviewRequestWithOverridesJson dynamicPreviewWithOverridesRequest
   ) throws StageException, IOException {
+    Utils.checkNotNull(dynamicPreviewWithOverridesRequest, "dynamicPreviewWithOverridesRequest");
+    final DynamicPreviewRequestJson dynamicPreviewRequest =
+        dynamicPreviewWithOverridesRequest.getDynamicPreviewRequestJson();
 
-    Utils.checkNotNull(dynamicPreviewRequest, "dynamicPreviewRequest");
+    Utils.checkNotNull(dynamicPreviewRequest, "dynamicPreviewRequestJson");
+
     checkDynamicPreviewPermissions(dynamicPreviewRequest);
 
     // TODO: fix this hack?
@@ -302,9 +309,15 @@ public class PreviewResource {
     params.put(DynamicPreviewConstants.REQUESTING_USER_ID_PARAMETER, currentUser.getName());
     params.put(DynamicPreviewConstants.REQUESTING_USER_ORG_ID_PARAMETER, orgId);
 
-    String controlHubBaseUrl = RemoteSSOService.getValidURL(configuration.get(
+    final String controlHubBaseUrl = RemoteSSOService.getValidURL(configuration.get(
         RemoteSSOService.DPM_BASE_URL_CONFIG,
         RemoteSSOService.DPM_BASE_URL_DEFAULT
+    ));
+
+    // serialize the stage overrides to a String, to be passed to Control Hub (see Javadocs in DynamicPreviewRequestJson
+    // for a more complete explanation)
+    dynamicPreviewRequest.setStageOutputsToOverrideJsonText(ObjectMapperFactory.get().writeValueAsString(
+        dynamicPreviewWithOverridesRequest.getStageOutputsToOverrideJson()
     ));
 
     final DynamicPreviewEventJson dynamicPreviewEvent = getDynamicPreviewEvent(
@@ -332,6 +345,26 @@ public class PreviewResource {
 
     final PipelinePreviewEvent previewEvent =
         MessagingDtoJsonMapper.INSTANCE.asPipelinePreviewEventDto(dynamicPreviewEvent.getPreviewEvent());
+
+    // set up after actions
+    previewEvent.setAfterActionsFunction(p -> {
+      LOG.debug("Running after actions for dynamic preview");
+      try {
+        handlePreviewEvents(
+            "after",
+            dynamicPreviewEvent.getAfterActionsEventTypeIds(),
+            dynamicPreviewEvent.getAfterActions()
+        );
+      } catch (IOException e) {
+        LOG.error(
+            "IOException attempting to handle after actions for dynamic preview: {}",
+            e.getMessage(),
+            e
+        );
+      }
+      return null;
+    });
+
     final RemoteDataCollectorResult previewEventResult = eventHandlerTask.handleLocalEvent(
         previewEvent,
         EventType.fromValue(dynamicPreviewEvent.getPreviewEventTypeId())
@@ -344,39 +377,13 @@ public class PreviewResource {
     } else {
       previewerId = (String) previewEventResult.getImmediateResult();
     }
-
-    Previewer previewer = manager.getPreviewer(previewerId);
-    if (previewer == null) {
-      return Response.status(Response.Status.NOT_FOUND).entity("Cannot find previewer with id " + previewerId).build();
-    } else {
-      if (EnumSet.of(PreviewStatus.INVALID, PreviewStatus.VALIDATION_ERROR).contains(previewer.getStatus())) {
-        // invalid pipeline; report validation error
-        return Response.status(Response.Status.BAD_REQUEST).entity(previewer.getOutput()).build();
-      }
-      int count = 0;
-      PreviewStatus status;
-      for (status = previewer.getStatus(); status != PreviewStatus.FINISHED && count < DYNAMIC_PREVIEW_MAX_COUNT; count++) {
-        LOG.debug("Waiting for previewerId {} to reach FINISHED status; current status: {}", status);
-        ThreadUtil.sleep(100);
-        status = previewer.getStatus();
-      }
-      if (status != PreviewStatus.FINISHED) {
-        LOG.error("Previewer never reached finished status after {} iterations of waiting", count);
-      }
-    }
-
-    final PreviewOutput output = previewer.getOutput();
-
-    try {
-      handlePreviewEvents("after",
-          dynamicPreviewEvent.getAfterActionsEventTypeIds(),
-          dynamicPreviewEvent.getAfterActions()
-      );
-    } catch (IOException e) {
-      throw new StageException(PreviewError.PREVIEW_0101, "after", e.getMessage(), e);
-    }
-
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapPreviewOutput(output)).build();
+    final Previewer previewer = manager.getPreviewer(previewerId);
+    final PreviewInfoJson previewInfoJson = new PreviewInfoJson(
+        previewer.getId(),
+        previewer.getStatus(),
+        generatedPipelineId
+    );
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewInfoJson).build();
   }
 
   private void checkDynamicPreviewPermissions(DynamicPreviewRequestJson dynamicPreviewRequest) {
@@ -583,7 +590,7 @@ public class PreviewResource {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     MultivaluedMap<String, String> previewParams = uriInfo.getQueryParameters();
-    Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev, Collections.emptyList());
+    Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev, Collections.emptyList(), p -> null);
     RawPreview rawPreview = previewer.getRawSource(4 * 1024, previewParams);
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(rawPreview).build();
   }
@@ -622,7 +629,7 @@ public class PreviewResource {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     try {
-      Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev, Collections.emptyList());
+      Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev, Collections.emptyList(), p -> null);
       previewer.validateConfigs(timeout);
       PreviewStatus previewStatus = previewer.getStatus();
       if(previewStatus == null) {

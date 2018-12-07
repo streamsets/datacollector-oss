@@ -122,6 +122,8 @@ public class AsyncPreviewer implements Previewer {
           syncPreviewer.prepareForTimeout();
           future.cancel(true);
           syncPreviewer.stop();
+        } else {
+          syncPreviewer.runAfterActionsIfNecessary();
         }
       }
     }

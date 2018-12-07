@@ -110,6 +110,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Future;
+import java.util.function.Function;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
@@ -617,7 +618,8 @@ public class TestRemoteEventHandler {
         List<StageOutput> stagesOverride,
         long timeoutMillis,
         boolean testOrigin,
-        List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+        List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
+        Function<Object, Void> afterActionsFunction
     ) throws PipelineException {
       // no-op for now
       return null;
@@ -1215,7 +1217,8 @@ public class TestRemoteEventHandler {
         Mockito.anyList(),
         Mockito.anyLong(),
         Mockito.anyBoolean(),
-        Mockito.anyList()
+        Mockito.anyList(),
+        Mockito.any()
     )).thenReturn(previewerId);
     final MockBaseEventSenderReceiver eventSenderReceiver = new MockBaseEventSenderReceiver();
     final StageLibraryTask mockStageLibraryTask = new MockStages.MockStageLibraryTask.Builder().build();
@@ -1240,7 +1243,8 @@ public class TestRemoteEventHandler {
         false,
         null,
         1000l,
-        false
+        false,
+        null
     ), EventType.PREVIEW_PIPELINE);
 
     assertThat(result.isError(), equalTo(false));

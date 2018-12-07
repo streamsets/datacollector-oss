@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.event.dto;
 
 import java.util.List;
+import java.util.function.Function;
 
 public class PipelinePreviewEvent extends PipelineStartEvent {
 
@@ -24,9 +25,10 @@ public class PipelinePreviewEvent extends PipelineStartEvent {
   private boolean skipTargets;
   private boolean skipLifecycleEvents;
   private String stopStage;
-  //private final List<StageOutput> stagesOverride;
+  private String stageOutputsToOverrideJsonText;
   private long timeoutMillis;
   private boolean testOrigin;
+  private Function<Object, Void> afterActionsFunction;
 
   public PipelinePreviewEvent() {
 
@@ -43,7 +45,8 @@ public class PipelinePreviewEvent extends PipelineStartEvent {
       boolean skipLifecycleEvents,
       String stopStage,
       long timeoutMillis,
-      boolean testOrigin
+      boolean testOrigin,
+      String stageOutputsToOverrideJsonText
   ) {
     super(name, rev, user, interceptorConfiguration);
     this.batches = batches;
@@ -53,6 +56,7 @@ public class PipelinePreviewEvent extends PipelineStartEvent {
     this.stopStage = stopStage;
     this.timeoutMillis = timeoutMillis;
     this.testOrigin = testOrigin;
+    this.stageOutputsToOverrideJsonText = stageOutputsToOverrideJsonText;
   }
 
   public int getBatches() {
@@ -111,4 +115,19 @@ public class PipelinePreviewEvent extends PipelineStartEvent {
     this.testOrigin = testOrigin;
   }
 
+  public Function<Object, Void> getAfterActionsFunction() {
+    return afterActionsFunction;
+  }
+
+  public void setAfterActionsFunction(Function<Object, Void> afterActionsFunction) {
+    this.afterActionsFunction = afterActionsFunction;
+  }
+
+  public String getStageOutputsToOverrideJsonText() {
+    return stageOutputsToOverrideJsonText;
+  }
+
+  public void setStageOutputsToOverrideJsonText(String stageOutputsToOverrideJsonText) {
+    this.stageOutputsToOverrideJsonText = stageOutputsToOverrideJsonText;
+  }
 }

@@ -165,8 +165,10 @@ public abstract class MessagingDtoJsonMapper {
 
   public abstract SaveConfigurationEventJson toSaveConfigurationEventJson(SaveConfigurationEvent saveConfigurationEvent);
 
+  @Maps(withIgnoreFields = "afterActionsFunction")
   public abstract PipelinePreviewEvent asPipelinePreviewEventDto(PipelinePreviewEventJson pipelineActionEventJson);
 
+  @Maps(withIgnoreFields = "afterActionsFunction")
   public abstract PipelinePreviewEventJson toPipelinePreviewEventJson(PipelinePreviewEvent event);
 
   public abstract PipelineStopEvent asPipelineStopEventDto(PipelineStopEventJson pipelineStopEventJson);

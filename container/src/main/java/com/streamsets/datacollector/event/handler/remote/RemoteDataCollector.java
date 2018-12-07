@@ -83,6 +83,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
+import java.util.function.Function;
 
 public class RemoteDataCollector implements DataCollector {
 
@@ -261,7 +262,7 @@ public class RemoteDataCollector implements DataCollector {
       String rev,
       List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
   ) throws PipelineException {
-    Previewer previewer = manager.createPreviewer(user, name, rev, interceptorConfs);
+    Previewer previewer = manager.createPreviewer(user, name, rev, interceptorConfs, p -> null);
     previewer.validateConfigs(1000L);
     validatorIdList.add(previewer.getId());
   }
@@ -279,9 +280,10 @@ public class RemoteDataCollector implements DataCollector {
       List<StageOutput> stagesOverride,
       long timeoutMillis,
       boolean testOrigin,
-      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
+      Function<Object, Void> afterActionsFunction
   ) throws PipelineException {
-    final Previewer previewer = manager.createPreviewer(user, name, rev, interceptorConfs);
+    final Previewer previewer = manager.createPreviewer(user, name, rev, interceptorConfs, afterActionsFunction);
     previewer.validateConfigs(10000l);
 
     if (!EnumSet.of(PreviewStatus.VALIDATION_ERROR,  PreviewStatus.INVALID).contains(previewer.getStatus())) {

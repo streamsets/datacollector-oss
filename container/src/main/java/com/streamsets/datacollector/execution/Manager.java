@@ -21,6 +21,7 @@ import com.streamsets.datacollector.task.Task;
 import com.streamsets.datacollector.util.PipelineException;
 
 import java.util.List;
+import java.util.function.Function;
 
 // one per SDC
 public interface Manager extends Task {
@@ -39,7 +40,8 @@ public interface Manager extends Task {
       String user,
       String name,
       String rev,
-      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
+      Function<Object, Void> afterActionsFunction
   ) throws PipelineException;
 
   // returns the previewer from the cache with the specified ID

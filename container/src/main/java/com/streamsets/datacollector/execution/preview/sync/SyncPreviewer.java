@@ -71,6 +71,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 public class SyncPreviewer implements Previewer {
   private static final Logger LOG = LoggerFactory.getLogger(SyncPreviewer.class);
@@ -88,6 +89,8 @@ public class SyncPreviewer implements Previewer {
   private final String rev;
   private final PreviewerListener previewerListener;
   private final List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs;
+  private final Function afterActionsFunction;
+
   @Inject Configuration configuration;
   @Inject StageLibraryTask stageLibrary;
   @Inject PipelineStoreTask pipelineStore;
@@ -107,7 +110,8 @@ public class SyncPreviewer implements Previewer {
       String rev,
       PreviewerListener previewerListener,
       ObjectGraph objectGraph,
-      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
+      Function<Object, Void> afterActionsFunction
   ) {
     objectGraph.inject(this);
     this.id = id;
@@ -123,6 +127,7 @@ public class SyncPreviewer implements Previewer {
     this.previewerListener = previewerListener;
     this.previewStatus = PreviewStatus.CREATED;
     this.interceptorConfs = interceptorConfs;
+    this.afterActionsFunction = afterActionsFunction;
   }
 
   @Override
@@ -283,6 +288,17 @@ public class SyncPreviewer implements Previewer {
     }
     PipelineEL.unsetConstantsInContext();
     JobEL.unsetConstantsInContext();
+    runAfterActionsIfNecessary();
+  }
+
+  public void runAfterActionsIfNecessary() {
+    if (afterActionsFunction != null) {
+      // to make ErrorProne happy
+      final Object ignored = afterActionsFunction.apply(this);
+      if (LOG.isTraceEnabled()) {
+        LOG.trace("Return value from afterActionsFunction: {}", ignored);
+      }
+    }
   }
 
   public void prepareForTimeout() {

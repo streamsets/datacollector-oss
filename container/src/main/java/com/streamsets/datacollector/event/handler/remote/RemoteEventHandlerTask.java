@@ -67,6 +67,8 @@ import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.RuleDefinitionsJson;
 import com.streamsets.datacollector.restapi.bean.SourceOffsetJson;
+import com.streamsets.datacollector.restapi.bean.StageOutputJson;
+import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.runner.production.SourceOffsetUpgrader;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -79,6 +81,7 @@ import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.sun.management.OperatingSystemMXBean;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,6 +94,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -280,6 +284,22 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       switch (eventType) {
         case PREVIEW_PIPELINE:
           final PipelinePreviewEvent pipelinePreviewEvent = (PipelinePreviewEvent) event;
+
+          // deserialize the JSON String representation of stage overrides in the preview event, into the JSON objects
+          final List<StageOutputJson> stageOutputJsons = new LinkedList<>();
+          final String stageOutputOverridesJsonText = pipelinePreviewEvent.getStageOutputsToOverrideJsonText();
+          if (StringUtils.isNotBlank(stageOutputOverridesJsonText)) {
+            final TypeReference<List<StageOutputJson>> typeRef = new TypeReference<List<StageOutputJson>>() {};
+            stageOutputJsons.addAll(ObjectMapperFactory.get().readValue(
+                stageOutputOverridesJsonText,
+                typeRef
+            ));
+          }
+
+          // convert the JSON objects into the DTO objects
+          final List<StageOutput> stageOutputs = stageOutputJsons.stream().map(
+              json -> json.getStageOutput()
+          ).collect(Collectors.toList());
           result = RemoteDataCollectorResult.immediate(remoteDataCollector.previewPipeline(
               pipelinePreviewEvent.getUser(),
               pipelinePreviewEvent.getName(),
@@ -289,11 +309,11 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
               pipelinePreviewEvent.isSkipTargets(),
               pipelinePreviewEvent.isSkipLifecycleEvents(),
               pipelinePreviewEvent.getStopStage(),
-              //TODO: support this param from event?
-              Collections.emptyList(),
+              stageOutputs,
               pipelinePreviewEvent.getTimeoutMillis(),
               pipelinePreviewEvent.isTestOrigin(),
-              pipelinePreviewEvent.getInterceptorConfiguration()
+              pipelinePreviewEvent.getInterceptorConfiguration(),
+              pipelinePreviewEvent.getAfterActionsFunction()
           ));
           break;
         default:

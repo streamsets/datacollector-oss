@@ -52,7 +52,8 @@ public class TestAsyncPreviewer extends TestPreviewer {
         REV,
         previewerListener,
         objectGraph,
-        Collections.emptyList()
+        Collections.emptyList(),
+        p -> null
     ),
       new SafeScheduledExecutorService(5, "preview"));
   }

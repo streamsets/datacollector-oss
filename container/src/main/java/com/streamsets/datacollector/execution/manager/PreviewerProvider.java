@@ -22,6 +22,7 @@ import com.streamsets.datacollector.execution.PreviewerListener;
 import dagger.ObjectGraph;
 
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * Implementation of this interface provides instances of Previewer.
@@ -34,7 +35,8 @@ public interface PreviewerProvider {
       String rev,
       PreviewerListener listener,
       ObjectGraph objectGraph,
-      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
+      Function<Object, Void> afterActionsFunction
   );
 
 }

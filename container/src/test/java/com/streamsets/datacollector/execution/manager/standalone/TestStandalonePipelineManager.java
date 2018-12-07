@@ -81,6 +81,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Callable;
+import java.util.function.Function;
 
 import static com.streamsets.datacollector.util.AwaitConditionUtil.numPipelinesEqualTo;
 import static org.awaitility.Awaitility.await;
@@ -98,6 +99,12 @@ public class TestStandalonePipelineManager {
   private PipelineStoreTask pipelineStoreTask;
   private Manager pipelineManager;
   private PipelineStateStore pipelineStateStore;
+  private Object afterActionsFunctionCallParam;
+
+  @Before
+  public void resetState() {
+    afterActionsFunctionCallParam = null;
+  }
 
   @Module(
     injects = {
@@ -231,13 +238,20 @@ public class TestStandalonePipelineManager {
             String rev,
             PreviewerListener listener,
             ObjectGraph objectGraph,
-            List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+            List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
+            Function<Object, Void> afterActionsFunction
         ) {
           Previewer mock = Mockito.mock(Previewer.class);
           Mockito.when(mock.getId()).thenReturn(UUID.randomUUID().toString());
           Mockito.when(mock.getName()).thenReturn(name);
           Mockito.when(mock.getRev()).thenReturn(rev);
           Mockito.when(mock.getInterceptorConfs()).thenReturn(interceptorConfs);
+          Mockito.doAnswer(a -> {
+            if (afterActionsFunction != null) {
+              afterActionsFunction.apply(this);
+            }
+            return null;
+          }).when(mock).stop();
           return mock;
         }
       };
@@ -314,11 +328,16 @@ public class TestStandalonePipelineManager {
     interceptorConf.setParameters(Collections.singletonMap("paramKey", "paramValue"));
 
     interceptorConfs.add(interceptorConf);
-    Previewer previewer = pipelineManager.createPreviewer("user", "abcd", "0", interceptorConfs);
+    Previewer previewer = pipelineManager.createPreviewer("user", "abcd", "0", interceptorConfs, p -> {
+      this.afterActionsFunctionCallParam = p;
+      return null;
+    });
     assertEquals(previewer, pipelineManager.getPreviewer(previewer.getId()));
     assertEquals(interceptorConfs, previewer.getInterceptorConfs());
     ((StandaloneAndClusterPipelineManager)pipelineManager).outputRetrieved(previewer.getId());
     assertNull(pipelineManager.getPreviewer(previewer.getId()));
+    previewer.stop();
+    assertNotNull(afterActionsFunctionCallParam);
   }
 
   @Test

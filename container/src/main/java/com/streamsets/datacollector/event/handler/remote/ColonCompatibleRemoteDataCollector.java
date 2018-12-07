@@ -35,6 +35,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
+import java.util.function.Function;
 
 //TODO - Remove this compatibility in next major release (SDC-10541)
 public class ColonCompatibleRemoteDataCollector implements DataCollector {
@@ -154,7 +155,8 @@ public class ColonCompatibleRemoteDataCollector implements DataCollector {
       List<StageOutput> stagesOverride,
       long timeoutMillis,
       boolean testOrigin,
-      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
+      Function<Object, Void> afterActionsFunction
   ) throws PipelineException {
     return remoteDataCollector.previewPipeline(
         user,
@@ -168,7 +170,8 @@ public class ColonCompatibleRemoteDataCollector implements DataCollector {
         stagesOverride,
         timeoutMillis,
         testOrigin,
-        interceptorConfs
+        interceptorConfs,
+        afterActionsFunction
     );
   }
 

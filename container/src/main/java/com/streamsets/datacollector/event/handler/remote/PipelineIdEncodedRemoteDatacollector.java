@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
+import java.util.function.Function;
 
 public class PipelineIdEncodedRemoteDatacollector implements DataCollector {
 
@@ -174,7 +175,8 @@ public class PipelineIdEncodedRemoteDatacollector implements DataCollector {
       List<StageOutput> stagesOverride,
       long timeoutMillis,
       boolean testOrigin,
-      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
+      Function<Object, Void> afterActionsFunction
   ) throws PipelineException {
     return remoteDataCollector.previewPipeline(
         user,
@@ -188,7 +190,8 @@ public class PipelineIdEncodedRemoteDatacollector implements DataCollector {
         stagesOverride,
         timeoutMillis,
         testOrigin,
-        interceptorConfs
+        interceptorConfs,
+        afterActionsFunction
     );
   }
 

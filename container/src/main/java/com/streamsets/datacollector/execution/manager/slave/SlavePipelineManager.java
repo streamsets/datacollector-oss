@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public class SlavePipelineManager extends AbstractTask implements Manager {
   private static final Logger LOG = LoggerFactory.getLogger(SlavePipelineManager.class);
@@ -74,7 +75,8 @@ public class SlavePipelineManager extends AbstractTask implements Manager {
       String user,
       String name,
       String rev,
-      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
+      Function<Object, Void> afterActionsFunction
   ) {
     throw new UnsupportedOperationException();
   }

@@ -19,6 +19,7 @@ package com.streamsets.datacollector.dynamicpreview;
 public abstract class DynamicPreviewConstants {
   public static String RAW_JSON_PARAMETER = "rawJson";
   public static String PIPELINE_ID_PARAMETER = "pipelineId";
+  public static String PIPELINE_COMMIT_ID_PARAMETER = "pipelineCommitId";
   public static String REQUESTING_USER_ID_PARAMETER = "requestingUserId";
   public static String REQUESTING_USER_ORG_ID_PARAMETER = "requestingUserOrgId";
 }

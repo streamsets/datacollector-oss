@@ -72,6 +72,7 @@ import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -88,6 +89,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -101,6 +103,13 @@ public class TestRemoteDataCollector {
 
   @Rule
   public TemporaryFolder tempFolder= new TemporaryFolder();
+
+  public Object afterActionsFunctionParam;
+
+  @Before
+  public void resetState() {
+    this.afterActionsFunctionParam =  null;
+  }
 
   private static class MockManager implements Manager {
 
@@ -148,9 +157,10 @@ public class TestRemoteDataCollector {
         String user,
         String name,
         String rev,
-        List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+        List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
+        Function<Object, Void> afterActionsFunction
     ) throws PipelineStoreException {
-      final MockPreviewer mockPreviewer = new MockPreviewer(user, name, rev, interceptorConfs);
+      final MockPreviewer mockPreviewer = new MockPreviewer(user, name, rev, interceptorConfs, afterActionsFunction);
       Previewer previewer = mockPreviewer;
       map.put(previewer.getId(), previewer);
       this.lastPreviewer = mockPreviewer;
@@ -515,17 +525,21 @@ public class TestRemoteDataCollector {
     public boolean isValid;
     private final List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs;
     public boolean previewStarted;
+    public boolean previewStopped;
+    private final Function afterActionsFunction;
 
     MockPreviewer(
         String user,
         String name,
         String rev,
-        List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+        List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
+        Function<Object, Void> afterActionsFunction
     ) {
       this.user = user;
       this.name = name;
       this.rev = rev;
       this.interceptorConfs = interceptorConfs;
+      this.afterActionsFunction = afterActionsFunction;
     }
 
     @Override
@@ -583,9 +597,12 @@ public class TestRemoteDataCollector {
     }
 
     @Override
+    @SuppressWarnings("ReturnValueIgnored") // needed for lambda call, which always returns null
     public void stop() {
-      // TODO Auto-generated method stub
-
+      previewStopped = true;
+      if (afterActionsFunction != null) {
+        afterActionsFunction.apply(this);
+      }
     }
 
     @Override
@@ -1292,12 +1309,19 @@ public class TestRemoteDataCollector {
         null,
         10000l,
         false,
-        Collections.emptyList()
+        Collections.emptyList(),
+        p -> {
+          this.afterActionsFunctionParam = p;
+          return null;
+        }
     );
     final MockPreviewer lastPreviewer = manager.getLastPreviewer();
 
     assertThat(lastPreviewer, notNullValue());
     assertThat(lastPreviewer.previewStarted, equalTo(true));
     assertThat(lastPreviewer.getId(), equalTo(previewerId));
+    lastPreviewer.stop();
+    assertThat(this.afterActionsFunctionParam, equalTo(lastPreviewer));
+    assertTrue(lastPreviewer.previewStopped);
   }
 }

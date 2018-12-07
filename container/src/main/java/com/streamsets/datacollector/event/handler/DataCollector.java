@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
+import java.util.function.Function;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
@@ -101,7 +102,8 @@ public interface DataCollector {
       List<StageOutput> stagesOverride,
       long timeoutMillis,
       boolean testOrigin,
-      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
+      Function<Object, Void> afterActionsFunction
   ) throws PipelineException;
 
   Future<AckEvent> stopAndDelete(String user, String name, String rev,

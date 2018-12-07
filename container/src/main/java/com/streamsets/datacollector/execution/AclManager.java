@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.function.Function;
 
 public class AclManager implements Manager {
   private static final Logger LOG = LoggerFactory.getLogger(AclManager.class);
@@ -78,10 +79,11 @@ public class AclManager implements Manager {
       String user,
       String name,
       String rev,
-      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
+      Function<Object, Void> afterActionsFunction
   ) throws PipelineException {
     aclStore.validateExecutePermission(name, currentUser);
-    return manager.createPreviewer(user, name, rev, interceptorConfs);
+    return manager.createPreviewer(user, name, rev, interceptorConfs, afterActionsFunction);
   }
 
   @Override

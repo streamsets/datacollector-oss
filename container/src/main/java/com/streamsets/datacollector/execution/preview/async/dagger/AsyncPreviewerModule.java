@@ -28,6 +28,7 @@ import dagger.Provides;
 
 import javax.inject.Named;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * Provides instances of SyncPreviewer.
@@ -42,6 +43,7 @@ public class AsyncPreviewerModule {
   private final ObjectGraph objectGraph;
   private final PreviewerListener previewerListener;
   private final List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs;
+  private final Function<Object, Void> afterActionsFunction;
 
   public AsyncPreviewerModule(
       String id,
@@ -50,7 +52,8 @@ public class AsyncPreviewerModule {
       String rev,
       PreviewerListener previewerListener,
       ObjectGraph objectGraph,
-      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
+      Function<Object, Void> afterActionsFunction
   ) {
     this.id = id;
     this.user = user;
@@ -59,12 +62,22 @@ public class AsyncPreviewerModule {
     this.objectGraph = objectGraph;
     this.previewerListener = previewerListener;
     this.interceptorConfs = interceptorConfs;
+    this.afterActionsFunction = afterActionsFunction;
   }
 
 
   @Provides
   public SyncPreviewer providePreviewer() {
-    return new SyncPreviewer(id, user, name, rev, previewerListener, objectGraph, interceptorConfs);
+    return new SyncPreviewer(
+        id,
+        user,
+        name,
+        rev,
+        previewerListener,
+        objectGraph,
+        interceptorConfs,
+        afterActionsFunction
+    );
   }
 
   @Provides

@@ -28,6 +28,7 @@ import javax.inject.Inject;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
 public class PreviewerProviderImpl implements PreviewerProvider {
 
@@ -42,12 +43,21 @@ public class PreviewerProviderImpl implements PreviewerProvider {
       String rev,
       PreviewerListener listener,
       ObjectGraph objectGraph,
-      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+      List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
+      Function<Object, Void> afterActionsFunction
   ) {
 
     objectGraph = objectGraph.plus(SyncPreviewerInjectorModule.class);
-    objectGraph = objectGraph.plus(
-      new AsyncPreviewerModule(UUID.randomUUID().toString(), user, name, rev, listener, objectGraph, interceptorConfs));
+    objectGraph = objectGraph.plus(new AsyncPreviewerModule(
+        UUID.randomUUID().toString(),
+        user,
+        name,
+        rev,
+        listener,
+        objectGraph,
+        interceptorConfs,
+        afterActionsFunction
+    ));
     return objectGraph.get(Previewer.class);
   }
 }

@@ -21,7 +21,7 @@ public class PipelinePreviewEventJson extends PipelineStartEventJson {
   private boolean skipTargets;
   private boolean skipLifecycleEvents;
   private String stopStage;
-  //private final List<StageOutput> stagesOverride;
+  private String stageOutputsToOverrideJsonText;
   private long timeoutMillis;
   private boolean testOrigin;
 
@@ -36,7 +36,8 @@ public class PipelinePreviewEventJson extends PipelineStartEventJson {
       boolean skipLifecycleEvents,
       String stopStage,
       long timeoutMillis,
-      boolean testOrigin
+      boolean testOrigin,
+      String stageOutputsToOverrideJsonText
   ) {
     this.batches = batches;
     this.batchSize = batchSize;
@@ -45,6 +46,7 @@ public class PipelinePreviewEventJson extends PipelineStartEventJson {
     this.stopStage = stopStage;
     this.timeoutMillis = timeoutMillis;
     this.testOrigin = testOrigin;
+    this.stageOutputsToOverrideJsonText = stageOutputsToOverrideJsonText;
   }
 
   public int getBatches() {
@@ -101,5 +103,13 @@ public class PipelinePreviewEventJson extends PipelineStartEventJson {
 
   public void setTestOrigin(boolean testOrigin) {
     this.testOrigin = testOrigin;
+  }
+
+  public String getStageOutputsToOverrideJsonText() {
+    return stageOutputsToOverrideJsonText;
+  }
+
+  public void setStageOutputsToOverrideJsonText(String stageOutputsToOverrideJsonText) {
+    this.stageOutputsToOverrideJsonText = stageOutputsToOverrideJsonText;
   }
 }

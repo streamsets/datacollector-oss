@@ -103,6 +103,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.function.Function;
 
 public class TestUtil {
   public static final String USER = "user";
@@ -790,7 +791,8 @@ public class TestUtil {
             String rev,
             PreviewerListener listener,
             ObjectGraph objectGraph,
-            List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+            List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
+            Function<Object, Void> afterActionsFunction
         ) {
           Previewer mock = Mockito.mock(Previewer.class);
           Mockito.when(mock.getId()).thenReturn(UUID.randomUUID().toString());
