@@ -21,4 +21,9 @@ public class UnparseableSQLException extends Exception {
   public UnparseableSQLException(String sql) {
     this.sql = sql;
   }
+
+  @Override
+  public String getMessage() {
+    return "Cannot process SQL: " + sql;
+  }
 }

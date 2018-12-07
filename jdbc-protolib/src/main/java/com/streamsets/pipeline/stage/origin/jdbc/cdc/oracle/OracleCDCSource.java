@@ -845,7 +845,9 @@ public class OracleCDCSource extends BaseSource {
         try {
           createdField = objectToField(table, columnName, column.getValue());
         } catch (UnsupportedFieldTypeException ex) {
-          LOG.error("Unsupported field type exception", ex);
+          if (LOG.isDebugEnabled()) {
+            LOG.debug("Unsupported field type exception", ex);
+          }
           if (configBean.sendUnsupportedFields) {
             createdField = Field.create(column.getValue());
           }
@@ -973,7 +975,7 @@ public class OracleCDCSource extends BaseSource {
           }
         }
       } catch (ExecutionException e) {
-        LOG.error("{}:{}", JDBC_405.getMessage(), e.getMessage(), e);
+        LOG.error("{}:{}", e.getMessage(), e);
         final Throwable cause = e.getCause();
         if (cause instanceof UnparseableSQLException) {
           unparseable.offer(recordFuture.sql);
