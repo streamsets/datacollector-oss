@@ -99,7 +99,9 @@ public class EventHubProducerTarget extends BaseTarget {
           errorRecordHandler.onError(new OnRecordErrorException(record, Errors.EVENT_HUB_00, ex.getMessage()));
         }
       }
-      eventHubClient.sendSync(eventDataList);
+      if (!eventDataList.isEmpty()) {
+        eventHubClient.sendSync(eventDataList);
+      }
     } catch(Exception ex) {
       LOG.error(Errors.EVENT_HUB_00.getMessage(), ex.toString(), ex);
       errorRecordHandler.onError(Lists.newArrayList(batch.getRecords()), throwStageException(ex));
