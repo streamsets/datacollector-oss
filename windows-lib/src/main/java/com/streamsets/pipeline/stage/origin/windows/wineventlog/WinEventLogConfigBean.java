@@ -47,4 +47,18 @@ public class WinEventLogConfigBean {
       max = Integer.MAX_VALUE
   )
   public int maxWaitTimeSecs;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "ON_ERROR",
+      label = "Populate Raw Event XML",
+      description = "Strategy for populating raw event XML",
+      displayPosition = 100,
+      dependsOn = "readerAPIType^",
+      triggeredByValue = {"WINDOWS_EVENT_LOG"},
+      group = "#0"
+  )
+  @ValueChooserModel(RawEventPopulationStrategyChooserValues.class)
+  public RawEventPopulationStrategy rawEventPopulationStrategy = RawEventPopulationStrategy.ON_ERROR;
 }
