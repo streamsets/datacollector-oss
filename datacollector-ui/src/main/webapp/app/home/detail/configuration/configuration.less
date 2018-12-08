@@ -32,6 +32,7 @@
   }
 
   .input-sm, .form-group-sm .form-control {
+    position: relative;
     font-size: 14px;
   }
 
@@ -143,5 +144,25 @@
 
   .field-selector-btn {
     padding-top: @defaultPadding * 0.5;
+  }
+}
+
+
+.pc100px {
+  width: 95%;
+  width: ~"calc(100% - 23px)";
+}
+
+.valOrParam {
+  position: absolute;
+  top: 0;
+  right: 15px;
+  z-index: 800;
+
+  >i {
+    color: silver;
+    &:hover {
+      color: black;
+    }
   }
 }

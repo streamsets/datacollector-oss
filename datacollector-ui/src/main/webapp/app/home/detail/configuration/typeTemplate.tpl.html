@@ -170,9 +170,38 @@
 
 <script type="text/ng-template" id="booleanConfigurationTemplate">
   <div class="controls col-lg-7 col-md-8">
-    <input type="checkbox" name="{{configDefinition.name}}"
+    <input ng-if="!fieldParamHash[configDefinition.name]"
+           type="checkbox" name="{{configDefinition.name}}"
            ng-disabled="isPipelineReadOnly || isPipelineRunning"
            ng-model="detailPaneConfig.configuration[configIndex].value">
+
+    <div ui-codemirror
+          ng-if="!isPipelineReadOnly && !isPipelineRunning && fieldParamHash[configDefinition.name]"
+          id="{{configDefinition.name + 'param'}}"
+          ng-class="{'codemirror-read-only': isPipelineReadOnly || isPipelineRunning}"
+          class="pc100px"
+          focus-me="{{autoFocusConfigName === configDefinition.name}}"
+          ng-model="detailPaneConfig.configuration[configIndex].value"
+          ui-refresh="refreshCodemirror"
+          ui-codemirror-opts="getCodeMirrorOptions({
+                readOnly: (isPipelineReadOnly || isPipelineRunning),
+                autofocus: autoFocusConfigName === configDefinition.name,
+                extraKeys: {
+                  'Tab': false,
+                  'Enter': common.ignoreCodeMirrorEnterKey,
+                  'Ctrl-Space': 'autocomplete'
+                }
+              }, configDefinition)"
+          codemirror-el
+          field-paths="fieldPaths"
+          d-field-paths="dFieldPaths"
+          data-type="configDefinition.type">
+    </div>
+
+    <a ng-if="!isPipelineReadOnly && !isPipelineRunning" class="valOrParam" href="Javascript:void(0)" ng-click="onParamClick(configDefinition.name)">
+      <i title="{{fieldParamHash[configDefinition.name] ? 'Use value' : 'Use parameter'}}"
+          class="fa {{fieldParamHash[configDefinition.name] ? 'fa-square-o' : 'fa-caret-square-o-right'}} fa-14x"></i>
+    </a>
 
     <ng-include src="'configurationIssuesTemplate'"></ng-include>
   </div>
@@ -368,7 +397,8 @@
 
 <script type="text/ng-template" id="valueChooserConfigurationTemplate">
   <div class="controls col-lg-7 col-md-8">
-   <select class="form-control"
+   <select ng-if="!fieldParamHash[configDefinition.name]"
+            class="form-control pc100px"
             name="{{configDefinition.name}}"
             focus-me="{{autoFocusConfigName === configDefinition.name}}"
             ng-required="configDefinition.required"
@@ -379,6 +409,34 @@
               value="{{entity.value}}"
               ng-selected="entity.value === detailPaneConfig.configuration[configIndex].value">{{entity.label}}</option>
     </select>
+
+    <div ui-codemirror
+        ng-if="fieldParamHash[configDefinition.name]"
+        id="{{configDefinition.name + 'param'}}"
+        ng-class="{'codemirror-read-only': isPipelineReadOnly || isPipelineRunning}"
+        class="pc100px"
+        focus-me="{{autoFocusConfigName === configDefinition.name}}"
+        ng-model="detailPaneConfig.configuration[configIndex].value"
+        ui-refresh="refreshCodemirror"
+        ui-codemirror-opts="getCodeMirrorOptions({
+              readOnly: (isPipelineReadOnly || isPipelineRunning),
+              autofocus: autoFocusConfigName === configDefinition.name,
+              extraKeys: {
+                'Tab': false,
+                'Enter': common.ignoreCodeMirrorEnterKey,
+                'Ctrl-Space': 'autocomplete'
+              }
+            }, configDefinition)"
+        codemirror-el
+        field-paths="fieldPaths"
+        d-field-paths="dFieldPaths"
+        data-type="configDefinition.type">
+    </div>
+
+    <a ng-if="!isPipelineReadOnly && !isPipelineRunning" class="valOrParam" href="Javascript:void(0)" ng-click="onParamClick(configDefinition.name)">
+      <i title="{{fieldParamHash[configDefinition.name] ? 'Use value' : 'Use parameter'}}"
+        class="fa {{fieldParamHash[configDefinition.name] ? 'fa-square-o' : 'fa-caret-square-o-right'}} fa-14x"></i>
+    </a>
 
     <ng-include src="'configurationIssuesTemplate'"></ng-include>
   </div>
