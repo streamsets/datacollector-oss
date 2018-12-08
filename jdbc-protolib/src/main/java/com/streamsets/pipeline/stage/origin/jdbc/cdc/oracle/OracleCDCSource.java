@@ -195,6 +195,7 @@ public class OracleCDCSource extends BaseSource {
   public static final int LOGMINER_START_MUST_BE_CALLED = 1306;
   public static final String ROLLBACK = "rollback";
   public static final String ONE = "1";
+  public static final String READ_NULL_QUERY_FROM_ORACLE = "Read (null) query from Oracle with SCN: {}, Txn Id: {}";
   private DateTimeColumnHandler dateTimeColumnHandler;
 
 
@@ -531,12 +532,33 @@ public class OracleCDCSource extends BaseSource {
         selectChanges.setFetchSize(configBean.jdbcFetchSize);
         resultSet = selectChanges.executeQuery();
         while (resultSet.next() && !getContext().isStopped()) {
-          query.append(resultSet.getString(5));
+          String queryFragment = resultSet.getString(5);
+          BigDecimal scnDecimal = resultSet.getBigDecimal(1);
+          String scn = scnDecimal.toPlainString();
+          String xidUsn = String.valueOf(resultSet.getLong(10));
+          String xidSlt = String.valueOf(resultSet.getString(11));
+          String xidSqn = String.valueOf(resultSet.getString(12));
+          String xid = xidUsn + "." + xidSlt + "." + xidSqn;
+          // Query Fragment is not null -> we need to process
+          // Query Fragment is null AND the query string buffered from previous rows due to CSF == 0 is null,
+          // nothing to do, go to next row
+          // Query Fragment is null, but there is previously buffered data in the query, go ahead and process.
+          if (queryFragment != null) {
+            query.append(queryFragment);
+          } else if (queryFragment == null && query.length() == 0) {
+            LOG.debug(READ_NULL_QUERY_FROM_ORACLE, scn, xid);
+            continue;
+          }
+
           // CSF is 1 if the query is incomplete, so read the next row before parsing
           // CSF being 0 means query is complete, generate the record
           if (resultSet.getInt(9) == 0) {
-            BigDecimal scnDecimal = resultSet.getBigDecimal(1);
-            String scn = scnDecimal.toPlainString();
+            if (query.length() == 0) {
+              LOG.debug(READ_NULL_QUERY_FROM_ORACLE, scn, xid);
+              continue;
+            }
+            String queryString = query.toString();
+            query.setLength(0);
             String username = resultSet.getString(2);
             short op = resultSet.getShort(3);
             String timestamp = resultSet.getString(4);
@@ -544,19 +566,14 @@ public class OracleCDCSource extends BaseSource {
             delay.getValue().put("delay", getDelay(tsDate));
             String table = resultSet.getString(6);
             BigDecimal commitSCN = resultSet.getBigDecimal(7);
-            String queryString = query.toString();
-            query.setLength(0);
             int seq = resultSet.getInt(8);
-            String xidUsn = String.valueOf(resultSet.getLong(10));
-            String xidSlt = String.valueOf(resultSet.getString(11));
-            String xidSqn = String.valueOf(resultSet.getString(12));
+
             String rsId = resultSet.getString(13);
             Object ssn = resultSet.getObject(14);
             String schema = String.valueOf(resultSet.getString(15));
             int rollback = resultSet.getInt(16);
             String rowId = resultSet.getString(17);
             SchemaAndTable schemaAndTable = new SchemaAndTable(schema, table);
-            String xid = xidUsn + "." + xidSlt + "." + xidSqn;
             TransactionIdKey key = new TransactionIdKey(xid);
             bufferedRecordsLock.lock();
             try {
