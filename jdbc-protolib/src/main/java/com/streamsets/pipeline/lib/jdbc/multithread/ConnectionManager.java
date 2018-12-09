@@ -46,6 +46,10 @@ public final class ConnectionManager {
 
   private synchronized Connection getNewConnection() throws SQLException{
     Connection newConnection = hikariDataSource.getConnection();
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug("connection transaction level: {}", newConnection.getTransactionIsolation());
+      LOGGER.debug("connection auto commit: {}", newConnection.getAutoCommit());
+    }
     connectionsToCloseDuringDestroy.add(newConnection);
     return newConnection;
   }
