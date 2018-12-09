@@ -73,6 +73,7 @@ public class SQLServerCDCSource extends AbstractTableJdbcSource {
   ) {
     super(hikariConfigBean, commonSourceConfigBean, tableJdbcConfigBean, tableContextUtil);
     this.cdcTableJdbcConfigBean = cdcTableJdbcConfigBean;
+    this.isReconnect = cdcTableJdbcConfigBean == null ? false : cdcTableJdbcConfigBean.isReconnect;
   }
 
   @Override
@@ -136,7 +137,8 @@ public class SQLServerCDCSource extends AbstractTableJdbcSource {
         commonSourceConfigBean.allowLateTable,
         commonSourceConfigBean.enableSchemaChanges,
         cdcTableJdbcConfigBean.useTable,
-        commonSourceConfigBean.txnWindow
+        commonSourceConfigBean.txnWindow,
+        cdcTableJdbcConfigBean.isReconnect
     );
   }
 }

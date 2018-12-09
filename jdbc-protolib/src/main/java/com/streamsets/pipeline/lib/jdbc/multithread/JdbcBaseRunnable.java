@@ -91,6 +91,7 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
   private SQLException firstSqlException = null;
 
   private final RateLimiter queryRateLimiter;
+  private boolean isReconnect;
 
   protected final JdbcUtil jdbcUtil;
 
@@ -115,6 +116,34 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
       CacheLoader<TableRuntimeContext, TableReadContext> tableCacheLoader,
       RateLimiter queryRateLimiter
   ) {
+    this(
+        context,
+        threadNumber,
+        batchSize,
+        offsets,
+        tableProvider,
+        connectionManager,
+        tableJdbcConfigBean,
+        commonSourceConfigBean,
+        tableCacheLoader,
+        queryRateLimiter,
+        false
+    );
+  }
+
+  public JdbcBaseRunnable(
+      PushSource.Context context,
+      int threadNumber,
+      int batchSize,
+      Map<String, String> offsets,
+      MultithreadedTableProvider tableProvider,
+      ConnectionManager connectionManager,
+      TableJdbcConfigBean tableJdbcConfigBean,
+      CommonSourceConfigBean commonSourceConfigBean,
+      CacheLoader<TableRuntimeContext, TableReadContext> tableCacheLoader,
+      RateLimiter queryRateLimiter,
+      boolean isReconnect
+  ) {
     this.jdbcUtil = UtilsProvider.getJdbcUtil();
     this.context = context;
     this.threadNumber = threadNumber;
@@ -130,6 +159,7 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
     this.errorRecordHandler = new DefaultErrorRecordHandler(context, (ToErrorContext) context);
     this.numSQLErrors = 0;
     this.firstSqlException = null;
+    this.isReconnect = isReconnect;
 
     // Metrics
     this.gaugeMap = context.createGauge(TABLE_METRICS + threadNumber).getValue();
@@ -173,7 +203,8 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
           offsets,
           tableJdbcConfigBean.fetchSize,
           tableJdbcConfigBean.quoteChar.getQuoteCharacter(),
-          tableJdbcELEvalContext
+          tableJdbcELEvalContext,
+          isReconnect
       ));
     }
   }

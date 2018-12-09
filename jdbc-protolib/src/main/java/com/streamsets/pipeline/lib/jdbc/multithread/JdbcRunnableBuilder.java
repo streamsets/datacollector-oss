@@ -35,6 +35,7 @@ public class JdbcRunnableBuilder {
   private MultithreadedTableProvider tableProvider;
   private CacheLoader<TableRuntimeContext, TableReadContext> tableReadContextCache;
   private RateLimiter queryRateLimiter;
+  private boolean isReconnect;
 
   public JdbcRunnableBuilder() {
   }
@@ -89,6 +90,11 @@ public class JdbcRunnableBuilder {
     return this;
   }
 
+  public JdbcRunnableBuilder isReconnect(boolean isReconnect) {
+    this.isReconnect = isReconnect;
+    return this;
+  }
+
   public JdbcBaseRunnable build() {
     final String SQLServerCT = "SQLServerChangeTrackingClient";
     final String SQLServerCDC = "SQLServerCDCClient";
@@ -117,7 +123,8 @@ public class JdbcRunnableBuilder {
           tableJdbcConfigBean,
           commonSourceConfigBean,
           tableReadContextCache,
-          queryRateLimiter
+          queryRateLimiter,
+          isReconnect
       );
     } else {
       return new TableJdbcRunnable(

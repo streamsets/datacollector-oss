@@ -97,6 +97,8 @@ public abstract class AbstractTableJdbcSource extends BasePushSource {
   protected JdbcUtil jdbcUtil;
   protected TableContextUtil tableContextUtil;
 
+  protected boolean isReconnect;
+
   public AbstractTableJdbcSource(
       HikariPoolConfigBean hikariConfigBean,
       CommonSourceConfigBean commonSourceConfigBean,
@@ -117,6 +119,7 @@ public abstract class AbstractTableJdbcSource extends BasePushSource {
     toBeInvalidatedThreadCaches = new ArrayList<>();
     this.tableContextUtil = tableContextUtil;
     this.jdbcUtil = UtilsProvider.getJdbcUtil();
+    this.isReconnect = false;
   }
 
   @Override
@@ -357,6 +360,7 @@ public abstract class AbstractTableJdbcSource extends BasePushSource {
             .commonSourceConfigBean(commonSourceConfigBean)
             .tableJdbcConfigBean(tableJdbcConfigBean)
             .queryRateLimiter(commonSourceConfigBean.creatQueryRateLimiter())
+            .isReconnect(isReconnect)
             .build();
 
         toBeInvalidatedThreadCaches.add(runnable.getTableReadContextCache());

@@ -128,6 +128,17 @@ public class CDCTableJdbcConfigBean {
   )
   public int fetchSize;
 
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Reconnect for each Query",
+      description = "Reconnect to DB Server on each query",
+      displayPosition = 230,
+      group = "ADVANCED"
+  )
+  public boolean isReconnect;
+
   public static final String TABLE_JDBC_CONFIG_BEAN_PREFIX = "tableJdbcConfigBean.";
   public static final String TABLE_CONFIG = TABLE_JDBC_CONFIG_BEAN_PREFIX + "tableConfigs";
 

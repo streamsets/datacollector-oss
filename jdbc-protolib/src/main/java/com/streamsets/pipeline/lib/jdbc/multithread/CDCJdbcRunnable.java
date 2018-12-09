@@ -61,7 +61,8 @@ public class CDCJdbcRunnable extends JdbcBaseRunnable {
       TableJdbcConfigBean tableJdbcConfigBean,
       CommonSourceConfigBean commonSourceConfigBean,
       CacheLoader<TableRuntimeContext, TableReadContext> tableReadContextCache,
-      RateLimiter queryRateLimiter
+      RateLimiter queryRateLimiter,
+      boolean isReconnect
   ) {
     super(
         context,
@@ -73,7 +74,8 @@ public class CDCJdbcRunnable extends JdbcBaseRunnable {
         tableJdbcConfigBean,
         commonSourceConfigBean,
         tableReadContextCache,
-        queryRateLimiter
+        queryRateLimiter,
+        isReconnect
     );
 
     this.recordHeader = ImmutableSet.of(

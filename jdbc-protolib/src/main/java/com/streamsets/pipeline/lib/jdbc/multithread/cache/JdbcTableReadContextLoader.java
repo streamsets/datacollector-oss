@@ -23,6 +23,8 @@ import com.streamsets.pipeline.lib.jdbc.multithread.TableReadContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableRuntimeContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
 import org.apache.commons.lang3.tuple.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,24 +36,28 @@ import java.util.Map;
  * from the corresponding table
  */
 public class JdbcTableReadContextLoader extends CacheLoader<TableRuntimeContext, TableReadContext>{
+  private static final Logger LOGGER = LoggerFactory.getLogger(JdbcTableReadContextLoader.class);
   private final ConnectionManager connectionManager;
   private final TableJdbcELEvalContext tableJdbcELEvalContext;
   private final Map<String, String> offsets;
   private final int fetchSize;
   private final String quoteChar;
+  private final boolean isReconnect;
 
   public JdbcTableReadContextLoader(
       ConnectionManager connectionManager,
       Map<String, String> offsets,
       int fetchSize,
       String quoteChar,
-      TableJdbcELEvalContext tableJdbcELEvalContext
+      TableJdbcELEvalContext tableJdbcELEvalContext,
+      boolean isReconnect
   ) {
     this.connectionManager = connectionManager;
     this.offsets = offsets;
     this.fetchSize = fetchSize;
     this.quoteChar = quoteChar;
     this.tableJdbcELEvalContext = tableJdbcELEvalContext;
+    this.isReconnect = isReconnect;
   }
 
   @Override
@@ -68,6 +74,11 @@ public class JdbcTableReadContextLoader extends CacheLoader<TableRuntimeContext,
           quoteChar,
           tableJdbcELEvalContext
       );
+    }
+
+    if (isReconnect) {
+      LOGGER.debug("close the connection");
+      connectionManager.closeConnection();
     }
 
     TableReadContext tableReadContext =

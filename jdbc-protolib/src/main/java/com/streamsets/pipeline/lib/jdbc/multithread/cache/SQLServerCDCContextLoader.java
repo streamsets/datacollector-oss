@@ -22,17 +22,21 @@ import com.streamsets.pipeline.lib.jdbc.multithread.TableReadContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableRuntimeContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.MSQueryUtil;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Map;
 
 public class SQLServerCDCContextLoader extends CacheLoader<TableRuntimeContext, TableReadContext> {
+  private static final Logger LOGGER = LoggerFactory.getLogger(SQLServerCDCContextLoader.class);
   private final ConnectionManager connectionManager;
   private final Map<String, String> offsets;
   private final int fetchSize;
   private final boolean allowLateTable;
   private final boolean enableSchemaChanges;
   private final boolean useTable;
+  private final boolean isReconnect;
   private int txnWindow;
 
   public SQLServerCDCContextLoader(
@@ -42,7 +46,8 @@ public class SQLServerCDCContextLoader extends CacheLoader<TableRuntimeContext, 
       boolean allowLateTable,
       boolean enableSchemaChanges,
       boolean useTable,
-      int txnWindow
+      int txnWindow,
+      boolean isReconnect
   ) {
     this.connectionManager = connectionManager;
     this.offsets = offsets;
@@ -51,6 +56,7 @@ public class SQLServerCDCContextLoader extends CacheLoader<TableRuntimeContext, 
     this.enableSchemaChanges = enableSchemaChanges;
     this.useTable = useTable;
     this.txnWindow = txnWindow;
+    this.isReconnect = isReconnect;
   }
 
   @Override
@@ -74,6 +80,10 @@ public class SQLServerCDCContextLoader extends CacheLoader<TableRuntimeContext, 
         txnWindow
     );
 
+    if (isReconnect) {
+      LOGGER.debug("close the connection");
+      connectionManager.closeConnection();
+    }
 
     TableReadContext tableReadContext =
         new TableReadContext(
