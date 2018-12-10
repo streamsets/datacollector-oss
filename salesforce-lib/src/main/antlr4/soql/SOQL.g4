@@ -213,7 +213,7 @@ IDENTIFIER          : LETTER LETTER_OR_DIGIT* ;
  * Parser Rules
  */
 
-statement           : SELECT (fieldList | typeOfClause)+
+statement           : SELECT fieldList+
                       FROM objectList
                       (USING SCOPE filterScope)?
                       (WHERE conditionExpressions)?
@@ -235,6 +235,7 @@ fieldList           : '*' | (fieldElement (',' fieldElement)*) ;
 fieldElement        : subquery
                     | fieldName
                     | functionCall
+                    | typeOfClause
                     ;
 
 subquery            : '('
@@ -266,11 +267,14 @@ typeOfClause        : TYPEOF typeOfField (whenThenClause)+ elseClause? END;
 
 typeOfField         : id_or_keyword ;
 
-whenThenClause      : WHEN whenObjectType THEN fieldList ;
+whenThenClause      : WHEN whenObjectType THEN whenFieldList ;
+
+// Can't have nested TYPEOF, subqueries in TYPEOF
+whenFieldList       : (fieldName (',' fieldName)*) ;
 
 whenObjectType      : id_or_keyword ;
 
-elseClause          : ELSE fieldList ;
+elseClause          : ELSE whenFieldList ;
 
 objectList          : objectType ( ',' objectType )* ;
 

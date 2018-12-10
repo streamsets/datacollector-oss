@@ -327,6 +327,14 @@ public class TestForceUtils {
       // SDC-9143
       {"SELECT * FROM Order WHERE SystemModstamp > ${offset} ORDER BY SystemModstamp", "Order"},
       {"SELECT * FROM Group WHERE SystemModstamp > ${offset} ORDER BY SystemModstamp", "Group"},
+      // SDC-10649 - queries including TYPEOF clauses failed when fields were specified earlier in the query
+      {"SELECT Id,\n" +
+          "  TYPEOF What\n" +
+          "    WHEN Account THEN Phone, NumberOfEmployees\n" +
+          "    WHEN Opportunity THEN Amount, CloseDate\n" +
+          "    ELSE Name, Email\n" +
+          "  END\n" +
+          "FROM Event", "Event"},
   };
 
   @Parameterized.Parameters

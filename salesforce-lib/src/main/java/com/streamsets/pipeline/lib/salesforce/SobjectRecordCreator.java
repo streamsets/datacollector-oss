@@ -187,8 +187,12 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
       List<List<Pair<String, String>>> references,
       SOQLParser.FieldListContext flc
   ) throws StageException {
+    List<String> objectTypes = new ArrayList<>();
+
+    objectTypes.add(objectType);
     for (SOQLParser.FieldElementContext fec : flc.fieldElement()) {
       SOQLParser.SubqueryContext subquery = fec.subquery();
+      SOQLParser.TypeOfClauseContext typeofClause = fec.typeOfClause();
       if (subquery != null) {
         // Recurse into subqueries
         getReferencesFromFieldList(partnerConnection,
@@ -196,6 +200,16 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
             metadataMap.get(objectType).getChildSObjectType(subquery.objectList().getText()),
             references,
             subquery.fieldList());
+      } else if (typeofClause != null) {
+        for (SOQLParser.WhenThenClauseContext whenThen : typeofClause.whenThenClause()) {
+          String whenObjectType = whenThen.whenObjectType().getText();
+          objectTypes.add(whenObjectType);
+          for (SOQLParser.FieldNameContext fieldName : whenThen.whenFieldList().fieldName()) {
+            String[] pathElements = fieldName.getText().split("\\.");
+            // Handle references
+            extractReferences(whenObjectType, references, pathElements);
+          }
+        }
       } else {
         String fieldName = fec.getText();
         String[] pathElements = fieldName.split("\\.");
@@ -205,7 +219,7 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
     }
 
     try {
-      getAllReferences(partnerConnection, metadataMap, references, new String[]{objectType}, METADATA_DEPTH);
+      getAllReferences(partnerConnection, metadataMap, references, objectTypes.toArray(new String[0]), METADATA_DEPTH);
     } catch (ConnectionException e) {
       throw new StageException(Errors.FORCE_21, sobjectType, e);
     }
