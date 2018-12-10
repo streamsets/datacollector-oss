@@ -24,8 +24,8 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 
 @StageDef(
     version = 1,
-    label = "Azure Data Lake Store",
-    description = "Writes data to Azure Data Lake Store",
+    label = "Azure Data Lake Storage",
+    description = "Writes data to Azure Data Lake Storage",
     icon = "data-lake-store.png",
     producesEvents = true,
     onlineHelpRefUrl ="index.html?contextID=task_jfl_nf4_zx"

@@ -245,7 +245,7 @@ public class DataLakeConfigBean {
       type = ConfigDef.Type.MODEL,
       defaultValue = "JSON",
       label = "Data Format",
-      description = "Data format to use when writing records to Azure Data Lake Store",
+      description = "Data format to use when writing records to Azure Data Lake Storage",
       displayPosition = 200,
       group = "DATA_FORMAT"
   )
