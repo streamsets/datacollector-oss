@@ -15,13 +15,10 @@
  */
 package com.streamsets.datacollector.restapi;
 
-import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.bundles.BundleType;
 import com.streamsets.datacollector.bundles.SupportBundleManager;
 import com.streamsets.datacollector.bundles.SupportBundle;
 import com.streamsets.datacollector.cli.sch.SchAdmin;
-import com.streamsets.datacollector.event.handler.remote.RemoteEventHandlerTask;
-import com.streamsets.datacollector.io.DataStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
@@ -32,7 +29,6 @@ import com.streamsets.datacollector.restapi.bean.UserJson;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.datacollector.util.Configuration;
-import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.lib.security.http.SSOPrincipal;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -40,12 +36,6 @@ import com.streamsets.pipeline.lib.util.ThreadUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
-import org.apache.commons.configuration2.PropertiesConfiguration;
-import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
-import org.apache.commons.configuration2.builder.fluent.Parameters;
-import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
-import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.slf4j.Logger;
@@ -65,12 +55,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
@@ -88,8 +75,6 @@ import java.util.Map;
 @RequiresCredentialsDeployed
 public class AdminResource {
   private static final Logger LOG = LoggerFactory.getLogger(AdminResource.class);
-  private static final String APP_TOKEN_FILE = "application-token.txt";
-  private static final String APP_TOKEN_FILE_PROP_VAL = "@application-token.txt@";
 
   private final RuntimeInfo runtimeInfo;
   private final Configuration config;
@@ -115,11 +100,13 @@ public class AdminResource {
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
   public Response shutdown() throws PipelineStoreException {
+    LOG.info("Shutdown requested.");
     Thread thread = new Thread("Shutdown Request") {
       @Override
       public void run() {
         // sleeping  500ms to allow the HTTP response to go back
         ThreadUtil.sleep(500);
+        LOG.info("Initiating shutdown");
         runtimeInfo.shutdown(0);
       }
     };
@@ -134,11 +121,13 @@ public class AdminResource {
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
   public Response restart() throws PipelineStoreException {
+    LOG.info("Restart requested.");
     Thread thread = new Thread("Shutdown Request") {
       @Override
       public void run() {
         // sleeping  500ms to allow the HTTP response to go back
         ThreadUtil.sleep(500);
+        LOG.info("Initiating restart");
         runtimeInfo.shutdown(88);
       }
     };
