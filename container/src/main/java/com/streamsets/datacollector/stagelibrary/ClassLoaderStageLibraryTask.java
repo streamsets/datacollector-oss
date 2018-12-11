@@ -55,6 +55,10 @@ import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.SdcConfiguration;
+import com.streamsets.datacollector.restapi.bean.RepositoryManifestJson;
+import com.streamsets.datacollector.restapi.bean.StageInfoJson;
+import com.streamsets.datacollector.restapi.bean.StageLibrariesJson;
+import com.streamsets.datacollector.restapi.bean.StageLibraryManifestJson;
 import com.streamsets.datacollector.runner.ServiceRuntime;
 import com.streamsets.datacollector.runner.StageLibraryDelegateRuntime;
 import com.streamsets.datacollector.task.AbstractTask;
@@ -76,11 +80,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -115,6 +122,16 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
   private static final String DEFAULT_REQUIRED_STAGELIBS = "";
 
+  private static final String NIGHTLY_URL = "http://nightly.streamsets.com/datacollector/";
+  private static final String ARCHIVES_URL = "http://archives.streamsets.com/datacollector/";
+  private static final String LATEST = "latest";
+  private static final String SNAPSHOT = "-SNAPSHOT";
+  private static final String TARBALL_PATH = "/tarball/";
+  private static final String ENTERPRISE_PATH = "enterprise/";
+  private static final String CONFIG_PACKAGE_MANAGER_REPOSITORY_LINKS = "package.manager.repository.links";
+  private static final String REPOSITORY_MANIFEST_JSON_PATH = "repository.manifest.json";
+  private static final String ADDITIONAL = "additional";
+
   private static final Logger LOG = LoggerFactory.getLogger(ClassLoaderStageLibraryTask.class);
 
   private final RuntimeInfo runtimeInfo;
@@ -137,6 +154,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private Map<String, StageLibraryDelegateDefinitition> delegateMap;
   private ObjectMapper json;
   private KeyedObjectPool<String, ClassLoader> privateClassLoaderPool;
+
+  private List<RepositoryManifestJson> repositoryManifestList = null;
 
   @Inject
   public ClassLoaderStageLibraryTask(RuntimeInfo runtimeInfo, BuildInfo buildInfo, Configuration configuration) {
@@ -860,6 +879,131 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
         }
       }
     }
+  }
+
+  @Override
+  public List<RepositoryManifestJson> getRepositoryManifestList() {
+    if (repositoryManifestList == null) {
+      // initialize when it is called for first time
+      repositoryManifestList = new ArrayList<>();
+
+      // Initialize Repository Links
+      String [] repoURLList;
+      String repoLinksStr = configuration.get(CONFIG_PACKAGE_MANAGER_REPOSITORY_LINKS, "");
+      if (StringUtils.isEmpty(repoLinksStr)) {
+        String version = buildInfo.getVersion();
+        String repoUrl = ARCHIVES_URL + version + TARBALL_PATH;
+        if (version.contains(SNAPSHOT)) {
+          repoUrl = NIGHTLY_URL + LATEST + TARBALL_PATH;
+        }
+        repoURLList = new String[] {
+            repoUrl,
+            repoUrl + ENTERPRISE_PATH
+        };
+      } else {
+        repoURLList = repoLinksStr.split(",");
+      }
+
+      List<StageLibraryManifestJson> installedLibraries = new ArrayList<>();
+      List<StageLibraryManifestJson> additionalLibraries = new ArrayList<>();
+
+      Map<String, List<StageInfoJson>> installedStagesMap = new HashMap<>();
+      for(StageDefinition stageDefinition: getStages()) {
+        List<StageInfoJson> stagesList;
+        if (installedStagesMap.containsKey(stageDefinition.getLibrary())) {
+          stagesList = installedStagesMap.get(stageDefinition.getLibrary());
+        } else {
+          stagesList = new ArrayList<>();
+          installedStagesMap.put(stageDefinition.getLibrary(), stagesList);
+        }
+        stagesList.add(new StageInfoJson(stageDefinition));
+      }
+
+      Map<String, Boolean> installedLibrariesMap = new HashMap<>();
+      for(StageLibraryDefinition libDef : getLoadedStageLibraries()) {
+        installedLibrariesMap.put(libDef.getName(), true);
+        installedLibraries.add(new StageLibraryManifestJson(
+            libDef.getName(),
+            libDef.getLabel(),
+            installedStagesMap.getOrDefault(libDef.getName(), Collections.emptyList()),
+            true
+        ));
+      }
+
+      Set<String> addedLibraryIds = new HashSet<>();
+
+      for (String repoUrl: repoURLList) {
+        if (!repoUrl.endsWith("/")) {
+          repoUrl = repoUrl + "/";
+        }
+        String repoManifestUrl = repoUrl +  REPOSITORY_MANIFEST_JSON_PATH;
+        LOG.info("Reading from Repository Manifest URL: " + repoManifestUrl);
+        RepositoryManifestJson repositoryManifestJson = getRepositoryManifestFile(repoManifestUrl);
+        if (repositoryManifestJson != null) {
+          repositoryManifestJson.setRepoUrl(repoUrl);
+          for(StageLibrariesJson stageLibrariesJson: repositoryManifestJson.getStageLibraries()) {
+            String stageLibManifestUrl = repoUrl + stageLibrariesJson.getStagelibManifest();
+            StageLibraryManifestJson stageLibraryManifestJson = getStageLibraryManifestJson(stageLibManifestUrl);
+            if (stageLibraryManifestJson != null) {
+              stageLibraryManifestJson.setInstalled(
+                  installedLibrariesMap.containsKey(stageLibraryManifestJson.getStageLibId())
+              );
+              stageLibraryManifestJson.setStageLibFile(repoUrl + stageLibraryManifestJson.getStageLibFile());
+              stageLibrariesJson.setStageLibraryManifest(stageLibraryManifestJson);
+              addedLibraryIds.add(stageLibraryManifestJson.getStageLibId());
+            }
+          }
+          repositoryManifestList.add(repositoryManifestJson);
+        }
+      }
+
+      // Add installed custom/user stage libraries to the list which are not part of Archives manifest file
+      List<StageLibrariesJson> additionalList = new ArrayList<>();
+      for (StageLibraryManifestJson installedLibrary : installedLibraries) {
+        if (!addedLibraryIds.contains(installedLibrary.getStageLibId())) {
+          additionalLibraries.add(installedLibrary);
+          StageLibrariesJson stageLibrariesJson = new StageLibrariesJson();
+          stageLibrariesJson.setStageLibraryManifest(installedLibrary);
+          additionalList.add(stageLibrariesJson);
+        }
+      }
+
+      if (!additionalLibraries.isEmpty()) {
+        RepositoryManifestJson additionalRepo = new RepositoryManifestJson();
+        additionalRepo.setRepoUrl(ADDITIONAL);
+        additionalRepo.setRepoLabel(ADDITIONAL);
+        additionalRepo.setStageLibraries(additionalList);
+        repositoryManifestList.add(additionalRepo);
+      }
+    }
+
+    return repositoryManifestList;
+  }
+
+  private RepositoryManifestJson getRepositoryManifestFile(String repoUrl) {
+    RepositoryManifestJson repositoryManifestJson = null;
+    try (Response response = ClientBuilder.newClient().target(repoUrl).request().get()) {
+      InputStream inputStream = response.readEntity(InputStream.class);
+      try {
+        repositoryManifestJson = ObjectMapperFactory.get().readValue(inputStream, RepositoryManifestJson.class);
+      } catch (Exception ex) {
+        LOG.error("Failed to read repository manifest json", ex);
+      }
+    }
+    return repositoryManifestJson;
+  }
+
+  private StageLibraryManifestJson getStageLibraryManifestJson(String stageLibManifestUrl) {
+    StageLibraryManifestJson stageLibManifestJson = null;
+    try (Response response = ClientBuilder.newClient().target(stageLibManifestUrl).request().get()) {
+      InputStream inputStream = response.readEntity(InputStream.class);
+      try {
+        stageLibManifestJson = ObjectMapperFactory.get().readValue(inputStream, StageLibraryManifestJson.class);
+      } catch (Exception ex) {
+        LOG.error("Failed to read stage-lib-manifest.json", ex);
+      }
+    }
+    return stageLibManifestJson;
   }
 
 }

@@ -15,17 +15,13 @@
  */
 package com.streamsets.datacollector.restapi;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.classpath.ClasspathValidatorResult;
 import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
-import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.definition.ConcreteELDefinitionExtractor;
 import com.streamsets.datacollector.el.RuntimeEL;
 import com.streamsets.datacollector.execution.alerts.DataRuleEvaluator;
-import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
@@ -33,15 +29,14 @@ import com.streamsets.datacollector.restapi.bean.DefinitionsJson;
 import com.streamsets.datacollector.restapi.bean.PipelineDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.PipelineFragmentDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.PipelineRulesDefinitionJson;
+import com.streamsets.datacollector.restapi.bean.RepositoryManifestJson;
 import com.streamsets.datacollector.restapi.bean.StageDefinitionJson;
-import com.streamsets.datacollector.restapi.bean.StageInfoJson;
 import com.streamsets.datacollector.restapi.bean.StageLibraryExtrasJson;
-import com.streamsets.datacollector.restapi.bean.StageLibraryJson;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.datacollector.util.ContainerError;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.HideStage;
+import com.streamsets.pipeline.api.impl.Utils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -53,8 +48,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
@@ -76,12 +69,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Path("/v1")
@@ -90,21 +80,12 @@ import java.util.stream.Collectors;
 @RequiresCredentialsDeployed
 public class StageLibraryResource {
 
-  private static final Logger LOG = LoggerFactory.getLogger(StageLibraryResource.class);
   private static final String DEFAULT_ICON_FILE = "PipelineDefinition-bundle.properties";
   private static final String PNG_MEDIA_TYPE = "image/png";
   private static final String SVG_MEDIA_TYPE = "image/svg+xml";
-  private static final String STAGE_LIB_PREFIX = "stage-lib.";
-  private static final String NIGHTLY_URL = "http://nightly.streamsets.com/datacollector/";
-  private static final String ARCHIVES_URL = "http://archives.streamsets.com/datacollector/";
-  private static final String STAGE_LIB_MANIFEST_PATH = "stage-lib-manifest.properties";
-  private static final String STAGE_LIB_MANIFEST_JSON_PATH = "stage-lib-manifest.json";
-  private static final String LATEST = "latest";
-  private static final String SNAPSHOT = "-SNAPSHOT";
   private static final String REPO_URL = "REPO_URL";
-  private static final String TARBALL_PATH = "/tarball/";
-  private static final String TGZ_FILE_EXTENSION = ".tgz";
   private static final String STREAMSETS_LIBS_PATH = "/streamsets-libs/";
+  private static final String STREAMSETS_LIBS_FOLDER_NAME = "streamsets-libs";
   private static final String STREAMSETS_ROOT_DIR_PREFIX = "streamsets-datacollector-";
   private static final String STAGE_LIB_JARS_DIR = "lib";
   private static final String STAGE_LIB_CONF_DIR = "etc";
@@ -225,85 +206,9 @@ public class StageLibraryResource {
       @QueryParam("repoUrl") String repoUrl,
       @QueryParam("installedOnly") boolean installedOnly
   ) {
-    List<StageLibraryJson> installedLibraries = new ArrayList<>();
-    List<StageLibraryJson> libraries = new ArrayList<>();
-
-    Map<String, List<StageInfoJson>> installedStagesMap = new HashMap<>();
-    for(StageDefinition stageDefinition: stageLibrary.getStages()) {
-      List<StageInfoJson> stagesList;
-      if (installedStagesMap.containsKey(stageDefinition.getLibrary())) {
-        stagesList = installedStagesMap.get(stageDefinition.getLibrary());
-      } else {
-        stagesList = new ArrayList<>();
-        installedStagesMap.put(stageDefinition.getLibrary(), stagesList);
-      }
-      stagesList.add(new StageInfoJson(stageDefinition));
-    }
-
-    Map<String, Boolean> installedLibrariesMap = new HashMap<>();
-    for(StageLibraryDefinition libDef : stageLibrary.getLoadedStageLibraries()) {
-      installedLibrariesMap.put(libDef.getName(), true);
-      installedLibraries.add(new StageLibraryJson(
-          libDef.getName(),
-          libDef.getLabel(),
-          true,
-          installedStagesMap.containsKey(libDef.getName()) ?
-              ImmutableList.of(installedStagesMap.get(libDef.getName())): Collections.emptyList(),
-          null
-      ));
-    }
-
-    if (!installedOnly) {
-      if (repoUrl == null || repoUrl.isEmpty()) {
-        String version = buildInfo.getVersion();
-        repoUrl = ARCHIVES_URL + version + TARBALL_PATH;
-        if (version.contains(SNAPSHOT)) {
-          repoUrl = NIGHTLY_URL + LATEST + TARBALL_PATH;
-        }
-      } else if (!repoUrl.endsWith("/")) {
-        repoUrl = repoUrl + "/";
-      }
-      String url = repoUrl + STAGE_LIB_MANIFEST_JSON_PATH;
-      String version = buildInfo.getVersion();
-
-      try (Response response = ClientBuilder.newClient().target(url).request().get()) {
-        InputStream inputStream = response.readEntity(InputStream.class);
-        Set<String> addedLibraryIds = new HashSet<>();
-
-        try {
-          Map<String, StageLibraryJson> stageLibManifestJson = ObjectMapperFactory.get()
-              .readValue(inputStream, new TypeReference<Map<String, StageLibraryJson>>() {});
-          for(String name: stageLibManifestJson.keySet()) {
-            String libraryId = name.replace(STAGE_LIB_PREFIX, "");
-            StageLibraryJson stageLibrary = stageLibManifestJson.get(name);
-            libraries.add(new StageLibraryJson(
-                libraryId,
-                stageLibrary.getLabel(),
-                installedLibrariesMap.containsKey(libraryId),
-                stageLibrary.getStageDefList(),
-                repoUrl + libraryId + "-" + version + TGZ_FILE_EXTENSION
-            ));
-            addedLibraryIds.add(libraryId);
-          }
-        } catch (Exception ex) {
-          LOG.error("Failed to read stage-lib-manifest.json", ex);
-          addedLibraryIds = new HashSet<>();
-        }
-
-        // Add installed custom/user stage libraries to the list which are not part of Archives manifest file
-        for (StageLibraryJson installedLibrary : installedLibraries) {
-          if (!addedLibraryIds.contains(installedLibrary.getId())) {
-            libraries.add(installedLibrary);
-          }
-        }
-      }
-    } else {
-      libraries = installedLibraries;
-    }
-
     return Response.ok()
         .type(MediaType.APPLICATION_JSON)
-        .entity(libraries)
+        .entity(stageLibrary.getRepositoryManifestList())
         .header(REPO_URL, repoUrl)
         .build();
   }
@@ -315,29 +220,36 @@ public class StageLibraryResource {
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
   public Response installLibraries(
-      @QueryParam("repoUrl") String repoUrl,
-      List<String> libraryList
+      List<String> libraryIdList
   ) throws IOException {
     String runtimeDir = runtimeInfo.getRuntimeDir();
     String version = buildInfo.getVersion();
 
-    if (repoUrl == null || repoUrl.isEmpty()) {
-      repoUrl = ARCHIVES_URL + version + TARBALL_PATH;
-      if (version.contains(SNAPSHOT)) {
-        repoUrl = NIGHTLY_URL + LATEST + TARBALL_PATH;
-      }
-    } else if (!repoUrl.endsWith("/")) {
-      repoUrl = repoUrl + "/";
+    List<String> libraryUrlList= new ArrayList<>();
+    List<RepositoryManifestJson> repoManifestList = stageLibrary.getRepositoryManifestList();
+    repoManifestList.forEach(repositoryManifestJson -> {
+      List<String> libraryFilePathList = repositoryManifestJson.getStageLibraries().stream()
+          .filter(stageLibrariesJson ->
+              stageLibrariesJson.getStageLibraryManifest() != null &&
+                  libraryIdList.contains(stageLibrariesJson.getStageLibraryManifest().getStageLibId()))
+          .map(stageLibrariesJson -> stageLibrariesJson.getStageLibraryManifest().getStageLibFile())
+          .collect(Collectors.toList());
+      libraryUrlList.addAll(libraryFilePathList);
+    });
+
+    if (libraryUrlList.size() != libraryIdList.size()) {
+      throw new RuntimeException(
+          Utils.format("Unable to find to stage library {} in configured repository list", libraryIdList)
+      );
     }
 
-    for (String libraryId : libraryList) {
-      String tarFileURL = repoUrl + libraryId + "-" + version + TGZ_FILE_EXTENSION;
+    for (String libraryUrl : libraryUrlList) {
       try (Response response = ClientBuilder.newClient()
-          .target(tarFileURL)
+          .target(libraryUrl)
           .request()
           .get()) {
 
-        String directory = runtimeDir + "/..";
+        String runtimeDirParent = runtimeDir + "/..";
         String[] runtimeDirStrSplitArr = runtimeDir.split("/");
         String installDirName = runtimeDirStrSplitArr[runtimeDirStrSplitArr.length - 1];
         String tarDirRootName = STREAMSETS_ROOT_DIR_PREFIX + version;
@@ -347,15 +259,27 @@ public class StageLibraryResource {
         TarArchiveInputStream myTarFile = new TarArchiveInputStream(new GzipCompressorInputStream(inputStream));
 
         TarArchiveEntry entry = myTarFile.getNextTarEntry();
+
+        String directory = null;
+
         while (entry != null) {
           if (entry.isDirectory()) {
             entry = myTarFile.getNextTarEntry();
+            if (directory == null) {
+              // Initialize root folder
+              if (entry.getName().startsWith(STREAMSETS_LIBS_FOLDER_NAME)) {
+                directory = runtimeDir;
+              } else {
+                directory = runtimeDirParent;
+              }
+            }
             continue;
           }
+
           File curFile = new File(directory, entry.getName().replace(tarDirRootName, installDirName));
           File parent = curFile.getParentFile();
           if (!parent.exists() && !parent.mkdirs()) {
-            // Failed to created directory
+            // Failed to create directory
             throw new RuntimeException(Utils.format("Failed to create directory: {}", parent.getPath()));
           }
           OutputStream out = new FileOutputStream(curFile);

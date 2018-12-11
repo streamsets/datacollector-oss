@@ -26,6 +26,7 @@ import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StageLibraryDelegateDefinitition;
+import com.streamsets.datacollector.restapi.bean.RepositoryManifestJson;
 import com.streamsets.datacollector.task.Task;
 import com.streamsets.pipeline.api.impl.annotationsprocessor.PipelineAnnotationsProcessor;
 
@@ -81,4 +82,6 @@ public interface StageLibraryTask extends Task, ClassLoaderReleaser {
   StageLibraryDelegateDefinitition getStageLibraryDelegateDefinition(String  stageLibrary, Class exportedInterface);
 
   List<StageLibraryDefinition> getLoadedStageLibraries();
+
+  List<RepositoryManifestJson> getRepositoryManifestList();
 }

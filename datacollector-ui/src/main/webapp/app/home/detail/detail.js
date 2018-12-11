@@ -396,8 +396,10 @@ angular
             },
             libraryList: function () {
               return [{
-                id: libraryId,
-                label: libraryId
+                stageLibraryManifest: {
+                  stageLibId: libraryId,
+                  stageLibLabel: libraryId
+                }
               }];
             }
           }

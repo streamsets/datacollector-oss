@@ -38,6 +38,7 @@ import com.streamsets.datacollector.config.StageLibraryDelegateDefinitition;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
+import com.streamsets.datacollector.restapi.bean.RepositoryManifestJson;
 import com.streamsets.datacollector.runner.preview.StageConfigurationBuilder;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineInfo;
@@ -745,6 +746,11 @@ public class MockStages {
     @Override
     public List<StageLibraryDefinition> getLoadedStageLibraries() {
       return Collections.emptyList();
+    }
+
+    @Override
+    public List<RepositoryManifestJson> getRepositoryManifestList() {
+      return null;
     }
 
     @Override

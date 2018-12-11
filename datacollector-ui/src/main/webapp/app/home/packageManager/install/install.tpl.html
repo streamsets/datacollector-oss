@@ -29,21 +29,29 @@
         <i ng-if="inStatus(library, 'installed')" class="fa fa-check"></i>
         <i ng-if="inStatus(library, 'failed')" class="fa fa-remove"></i>
       </span>
-      <span>{{library.label}}</span>
+      <span>{{library.stageLibraryManifest.stageLibLabel}}</span>
       <a href="#" ng-click="showError(library)" ng-show="hasError(library)">show error</a>
     </li>
   </ul>
+
+  <div ng-if="operationStatus !== 'complete'">
+    <div ng-if="agreementCheckModel.hasEnterpriseConnectors" class="alert alert-info checkbox" role="alert">
+      <label>
+        <input type="checkbox" name="agreement" ng-model="agreementCheckModel.agreementChecked"/>
+        I have read and agree to the <a href="https://streamsets.com/license.html" target="_blank">StreamSets Enterprise License</a> Terms and Conditions
+      </label>
+    </div>
+  </div>
 
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-default" ng-click="cancel()"
           ng-if="operationStatus !== 'installing' && operationStatus !== 'restarting'"
-          translate="global.form.cancel">
-    Cancel
-  </button>
+          translate="global.form.cancel">Cancel</button>
 
   <button type="button" class="btn btn-primary" ng-click="install()"
           ng-if="operationStatus === 'incomplete'"
+          ng-disabled="agreementCheckModel.hasEnterpriseConnectors && !agreementCheckModel.agreementChecked"
           translate="global.form.install">Install</button>
 
   <button type="button" class="btn btn-primary" ng-click="retry()"
@@ -53,5 +61,4 @@
   <button type="button" class="btn btn-primary" disabled
           ng-if="operationStatus === 'installing'"
           translate="global.form.installing">Installing...</button>
-
 </div>

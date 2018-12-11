@@ -50,31 +50,6 @@
           <span class="glyphicon glyphicon-remove-circle search-clear"
                 ng-click="header.searchInput = '';updateStageLibraryList();"></span>
         </div>
-
-        <div class="btn-group" dropdown
-             ng-if="isAuthorized([userRoles.admin])"
-             ng-hide="previewMode || snapshotMode">
-       <span class="btn btn-link dropdown-toggle icon-button" dropdown-toggle aria-expanded="true"
-             tooltip-placement="bottom" tooltip="{{'home.header.more' | translate}}"
-             tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
-             tooltip-popup-delay="500"
-             ng-click="$event.stopPropagation();">
-          <i class="fa fa-ellipsis-h fa-14x"></i>
-        </span>
-          <ul class="dropdown-menu pull-right" role="menu">
-
-            <li role="presentation"
-                ng-if="isAuthorized([userRoles.admin])">
-              <a href="#" dropdown-toggle
-                 ng-click="onCustomRepoURLClick()">
-                <i class="fa fa-globe"></i>
-                <span> {{'packageManager.header.customRepoUrl' | translate}}</span>
-              </a>
-            </li>
-
-          </ul>
-        </div>
-
       </div>
     </div>
 

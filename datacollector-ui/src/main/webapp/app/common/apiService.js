@@ -377,16 +377,12 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      installLibraries: function(repoUrl, libraryList) {
+      installLibraries: function(libraryUrlList) {
         var url = apiBase + '/stageLibraries/install';
-        if (repoUrl) {
-          url += '?repoUrl=' + repoUrl;
-        }
-
         return $http({
           method: 'POST',
           url: url,
-          data: libraryList
+          data: libraryUrlList
         });
       },
 

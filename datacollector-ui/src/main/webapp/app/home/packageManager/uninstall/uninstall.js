@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Controller for Stage Library Uninstall Modal.
- */
 
+// Controller for Stage Library Uninstall Modal.
 angular
   .module('dataCollectorApp.home')
   .controller('UninstallModalInstanceController', function ($scope, $modalInstance, libraryList, api) {
@@ -31,7 +29,11 @@ angular
 
       install: function() {
         $scope.operationInProgress = true;
-        api.pipelineAgent.uninstallLibraries(_.pluck(libraryList, 'id'))
+        var stageLibIdList = [];
+        angular.forEach($scope.libraryList, function (lib) {
+          stageLibIdList.push(lib.stageLibraryManifest.stageLibId);
+        });
+        api.pipelineAgent.uninstallLibraries(stageLibIdList)
           .then(
             function (res) {
               $scope.libraryUninstalled = true;
@@ -39,7 +41,7 @@ angular
             },
             function (res) {
               $scope.operationInProgress = false;
-              $scope.common.errors = [res];
+              $scope.common.errors = [res.data];
             }
           );
       },

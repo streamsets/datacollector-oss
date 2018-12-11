@@ -27,6 +27,7 @@ import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StageLibraryDelegateDefinitition;
+import com.streamsets.datacollector.restapi.bean.RepositoryManifestJson;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.task.TaskWrapper;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -186,6 +187,11 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
     if (classLoader != PLUG_STAGE.getClass().getClassLoader()) {
       library.releaseStageClassLoader(classLoader);
     }
+  }
+
+  @Override
+  public List<RepositoryManifestJson> getRepositoryManifestList() {
+    return null;
   }
 
 }

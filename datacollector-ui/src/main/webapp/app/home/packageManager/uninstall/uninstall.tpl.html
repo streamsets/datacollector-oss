@@ -6,7 +6,7 @@
 
   <div ng-if="!libraryUninstalled">
     <p translate="packageManager.uninstall.confirmationMessage"></p>
-    <p class="stage-library-label" ng-repeat="library in libraryList">{{library.label}}</p>
+    <p class="stage-library-label" ng-repeat="library in libraryList">{{library.stageLibraryManifest.stageLibLabel}}</p>
   </div>
 
   <div ng-if="libraryUninstalled && !isRestartInProgress">
