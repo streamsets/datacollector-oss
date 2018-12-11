@@ -90,6 +90,7 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
   protected static final String RECORD_ID_OFFSET_PREFIX = "recordId:";
 
   private static final TimeZone TZ = TimeZone.getTimeZone("GMT");
+  private static final String NAME = "Name";
 
   private final SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss");
   private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -326,6 +327,10 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
               if (path.size() > 1) {
                 path.set(1, Pair.of(ref, path.get(1).getRight()));
               }
+            }
+            // SDC-10422 Polymorphic references have an implicit reference to the Name object type
+            if (field.isPolymorphicForeignKey()) {
+              next.add(NAME);
             }
             path.remove(0);
           }
