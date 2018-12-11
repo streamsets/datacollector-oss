@@ -183,7 +183,9 @@ public class KinesisTarget extends BaseTarget {
     if (kinesisProducer != null) {
       kinesisProducer.flushSync();
       kinesisProducer.destroy();
+      kinesisProducer = null;
     }
+
     super.destroy();
   }
 
