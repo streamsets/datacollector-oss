@@ -111,7 +111,8 @@ public class TestPulsarMessageProducerImpl {
 
     // prepare PulsarTargetConfig
     PulsarTargetConfig targetConfig = TestUtilsPulsar.getTargetConfig();
-    targetConfig.serviceURL = null;
+    targetConfig.securityConfig.caCertPem = null;
+    targetConfig.securityConfig.tlsEnabled = true;
 
     PulsarMessageProducerImpl pulsarMessageProducer = new PulsarMessageProducerImpl(targetConfig, context);
     List<Stage.ConfigIssue> issues = pulsarMessageProducer.init(context);

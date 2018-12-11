@@ -16,14 +16,13 @@
 
 package com.streamsets.pipeline.stage.Utils;
 
-import com.streamsets.datacollector.record.RecordImpl;
-import com.streamsets.datacollector.runner.BatchImpl;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.ConfigIssue;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.pulsar.config.PulsarSecurityConfig;
+import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.stage.destination.pulsar.PulsarTargetConfig;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.MessageConfig;
@@ -33,10 +32,12 @@ import com.streamsets.pipeline.stage.origin.pulsar.PulsarSubscriptionType;
 import com.streamsets.pipeline.stage.origin.pulsar.PulsarTopicsSelector;
 import org.apache.pulsar.client.api.Message;
 import org.apache.pulsar.client.impl.MessageImpl;
+import org.apache.pulsar.shade.io.netty.buffer.Unpooled;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 public class TestUtilsPulsar {
@@ -110,18 +111,37 @@ public class TestUtilsPulsar {
 
   public static List<Record> getRecordsList() {
     List<Record> recordsList = new ArrayList<>();
-
-    recordsList.add(new RecordImpl(null, Field.create("value1")));
-    recordsList.add(new RecordImpl(null, Field.create("value2")));
-    recordsList.add(new RecordImpl(null, Field.create("value3")));
-    recordsList.add(new RecordImpl(null, Field.create("value4")));
-    recordsList.add(new RecordImpl(null, Field.create("value5")));
-
+    recordsList.add(createRecord("value1"));
+    recordsList.add(createRecord("value2"));
+    recordsList.add(createRecord("value3"));
+    recordsList.add(createRecord("value4"));
+    recordsList.add(createRecord("value5"));
     return recordsList;
   }
 
+  public static Record createRecord(String value) {
+    Record record = RecordCreator.create();
+    record.set(Field.create(value));
+    return record;
+  }
+
   public static Batch getBatch() {
-    return new BatchImpl("instanceName", "sourceEntity", "sourceOffset", getRecordsList());
+    return new Batch() {
+      @Override
+      public String getSourceEntity() {
+        return "sourceEntity";
+      }
+
+      @Override
+      public String getSourceOffset() {
+        return "sourceOffset";
+      }
+
+      @Override
+      public Iterator<Record> getRecords() {
+        return getRecordsList().iterator();
+      }
+    };
   }
 
   public static List<String> getTopicsList() {
@@ -143,7 +163,7 @@ public class TestUtilsPulsar {
   }
 
   public static Message getPulsarMessage(String messageId, byte[] payload) {
-    return new MessageImpl(messageId, new HashMap<>(), payload, null);
+    return new MessageImpl<byte[]>(messageId, messageId, new HashMap<>(), Unpooled.wrappedBuffer(payload), null);
   }
 
 }
