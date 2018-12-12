@@ -16,25 +16,83 @@
 package com.streamsets.datacollector.security;
 
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.pipeline.SDCClassLoader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.ContainerClassLoader;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * This is SDC specific security manager which is a wrapper on top of JVM's default security manager.
  *
  * Regardless of what policies are configured, this implementation will prevent access to SDC's private directories
- * for all class loaders other then container (e.g. for all plugable pieces - stages, interceptors, ... - as they run
- * in their own class loaders).
+ * with few exceptions:
+ *
+ * * Container class loader is unrestricted.
+ * * SDC Configuration can specify exceptions to specific files (globally or for given stage libraries).
  */
 public class SdcSecurityManager extends SecurityManager {
 
-  private final RuntimeInfo runtimeInfo;
+  public static final String PROPERTY_EXCEPTIONS = "security_manager.sdc_dirs.exceptions";
+  public static final String PROPERTY_STAGE_EXCEPTIONS = "security_manager.sdc_dirs.exceptions.lib.";
 
-  public SdcSecurityManager(RuntimeInfo runtimeInfo) {
+  private final RuntimeInfo runtimeInfo;
+  private final Set<String> exceptions;
+  private final Map<String, Set<String>> stageLibExceptions;
+
+  public SdcSecurityManager(
+    RuntimeInfo runtimeInfo,
+    Configuration configuration
+  ) {
     this.runtimeInfo = runtimeInfo;
-    // DO NOT REMOVE: This statement have side effect of loading the class which is essential for the proper
-    // functionality of this class.
-    Class klass = ContainerClassLoader.class;
+    this.exceptions = new HashSet<>();
+    this.stageLibExceptions = new HashMap<>();
+
+    // DO NOT REMOVE: The following statements have important side effect - they load both those classes to memory which
+    // is essential for the checks below.
+    Class containerClassLoader = ContainerClassLoader.class;
+    Class sdcClassLoader = SDCClassLoader.class;
+
+    // Finally load exceptions from the configuration
+    setExceptions(configuration);
+  }
+
+  /**
+   * This method should be called only once and before any stages are loaded.
+   */
+  private void setExceptions(Configuration configuration) {
+    this.exceptions.clear();
+    this.stageLibExceptions.clear();
+
+    // Load general exceptions
+    for(String path : configuration.get(PROPERTY_EXCEPTIONS, "").split(",")) {
+      this.exceptions.add(replaceVariables(path));
+    }
+
+    // Load Stage library specific exceptions
+    Configuration stageSpecific = configuration.getSubSetConfiguration(PROPERTY_STAGE_EXCEPTIONS, true);
+    for(Map.Entry<String, String> entry : stageSpecific.getValues().entrySet()) {
+      Set<String> stageExceptions = new HashSet<>();
+      for(String path : entry.getValue().split(",")) {
+        stageExceptions.add(replaceVariables(path));
+      }
+
+      this.stageLibExceptions.put(entry.getKey(), stageExceptions);
+    }
+  }
+
+  /**
+   * Replace variables to internal SDC directories so that users don't have to be entering FQDN.
+   */
+  private String replaceVariables(String path) {
+    return path.replace("$SDC_DATA", runtimeInfo.getDataDir())
+      .replace("$SDC_CONF", runtimeInfo.getConfigDir())
+      .replace("$SDC_RESOURCES", runtimeInfo.getResourcesDir())
+      ;
   }
 
   @Override
@@ -63,24 +121,41 @@ public class SdcSecurityManager extends SecurityManager {
 
   private void checkPrivatePathsForRead(String path) {
     if(path.startsWith(runtimeInfo.getConfigDir()) || path.startsWith(runtimeInfo.getDataDir())) {
-      ensureContainerClassloader(path);
+      ensureProperPermissions(path);
     }
   }
 
   private void checkPrivatePathsForWrite(String path) {
     checkPrivatePathsForRead(path);
     if(path.startsWith(runtimeInfo.getConfigDir()) || path.startsWith(runtimeInfo.getDataDir()) || path.startsWith(runtimeInfo.getResourcesDir())) {
-      ensureContainerClassloader(path);
+      ensureProperPermissions(path);
     }
   }
 
-  private void ensureContainerClassloader(String path) {
+  /**
+   * Make sure that the active code have proper rights to access the file inside protected directory.
+   */
+  private void ensureProperPermissions(String path) {
     ClassLoader cl = Thread.currentThread().getContextClassLoader();
-    // Container class loader is the only classloader that is allowed to touch the protected directories
+    // 1) Container can access anything
     if(cl instanceof ContainerClassLoader) {
         return;
     }
 
+    // 2. Some files are whitelisted globally for all stage libraries
+    if(exceptions.contains(path)) {
+      return;
+    }
+
+    // 3. Some stage libraries have some files whitelisted globally
+    if(cl instanceof SDCClassLoader) {
+      String libraryName = ((SDCClassLoader)cl).getName();
+      if(stageLibExceptions.containsKey(libraryName) && stageLibExceptions.get(libraryName).contains(path)) {
+        return;
+      }
+    }
+
+    // No whitelist, no fun, go away
     throw new SecurityException(Utils.format(
       "Classloader {} is not allowed access to Data Collector internal directories ({}).",
       cl.toString(),

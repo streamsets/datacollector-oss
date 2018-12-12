@@ -74,9 +74,10 @@ public class Main {
       RuntimeInfo runtimeInfo = dagger.get(RuntimeInfo.class);
       runtimeInfo.log(log);
       log.info("-----------------------------------------------------------------");
+      Configuration configuration = dagger.get(Configuration.class);
       if (System.getSecurityManager() != null) {
         // Replace security manager with our own to protect some special folders that can never be accessed or altered
-        System.setSecurityManager(new SdcSecurityManager(runtimeInfo));
+        System.setSecurityManager(new SdcSecurityManager(runtimeInfo, configuration));
         log.info("  Security Manager : ENABLED, policy file: {}", System.getProperty("java.security.policy"));
       } else {
         log.warn("  Security Manager : DISABLED");
@@ -87,7 +88,7 @@ public class Main {
       // Use proxy authenticator that supports username and password
       Authenticator.setDefault(new UserPasswordAuthenticator());
 
-      securityContext = new SecurityContext(dagger.get(RuntimeInfo.class), dagger.get(Configuration.class));
+      securityContext = new SecurityContext(dagger.get(RuntimeInfo.class), configuration);
       securityContext.login();
 
       log.info("-----------------------------------------------------------------");
