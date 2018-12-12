@@ -328,6 +328,10 @@
                     <groupId>org.apache.hadoop</groupId>
                     <artifactId>hadoop-common</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.htrace</groupId>
+                    <artifactId>htrace-core</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
