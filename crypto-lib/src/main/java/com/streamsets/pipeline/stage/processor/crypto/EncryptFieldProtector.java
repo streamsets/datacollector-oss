@@ -41,7 +41,7 @@ import java.util.function.Function;
     version = 1,
     label = "Encrypt Data",
     description = "Encrypt Fields",
-    onlineHelpRefUrl = "temp.html" ///todo
+    onlineHelpRefUrl = "index.html?contextID=concept_w3j_24j_cgb" 
 )
 @ConfigGroups(ProtectorEncryptGroups.class)
 @HideStage(HideStage.Type.FIELD_PROCESSOR)
