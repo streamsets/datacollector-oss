@@ -51,13 +51,13 @@ final class RemoteSourceFileRef extends AbstractFileRef{
 
   @Override
   public String toString() {
-    return "Remote: URI='" + remoteUri + "', File ='" + remoteFile.filename + "'";
+    return "Remote: URI='" + remoteUri + "', File ='" + remoteFile.getFilePath() + "'";
   }
 
   @Override
   @SuppressWarnings("unchecked")
   protected <T extends AutoCloseable> T createInputStream(Class<T> streamClassType) throws IOException {
-    return (T) remoteFile.remoteObject.getContent().getInputStream();
+    return (T) remoteFile.createInputStream();
   }
 
 

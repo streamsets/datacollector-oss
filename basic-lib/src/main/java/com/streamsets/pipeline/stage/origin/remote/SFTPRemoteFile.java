@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2018 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,26 +18,16 @@ package com.streamsets.pipeline.stage.origin.remote;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * Holder for necessary info about a remote file, as well as a way to create an {@link InputStream}.
- * Subclasses can determine how the {@link InputStream} is created based on what the remote source is.
- */
-abstract class RemoteFile {
-  private final String filePath;
-  private final long lastModified;
+class SFTPRemoteFile extends RemoteFile {
+  private final ChrootSFTPClient sftpClient;
 
-  protected RemoteFile(String filePath, long lastModified) {
-    this.filePath = filePath;
-    this.lastModified = lastModified;
+  SFTPRemoteFile(String filePath, long lastModified, ChrootSFTPClient sftpClient) {
+    super(filePath, lastModified);
+    this.sftpClient = sftpClient;
   }
 
-  String getFilePath() {
-    return filePath;
+  @Override
+  InputStream createInputStream() throws IOException {
+    return sftpClient.open(getFilePath());
   }
-
-  long getLastModified() {
-    return lastModified;
-  }
-
-  abstract InputStream createInputStream() throws IOException;
 }
