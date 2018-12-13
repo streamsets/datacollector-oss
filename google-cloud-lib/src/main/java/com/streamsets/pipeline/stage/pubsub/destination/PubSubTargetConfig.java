@@ -49,6 +49,89 @@ public class PubSubTargetConfig {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = "Request Bytes Threshold",
+      description = "After this many bytes are accumulated, the messages will be sent as a batch",
+      displayPosition = 10,
+      defaultValue = "1000",
+      min = 1,
+      group = "ADVANCED")
+  public long requestBytesThreshold;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = "Messages Count Threshold",
+      description = "After this many messages are accumulated, they will be sent as a batch",
+      displayPosition = 20,
+      defaultValue = "100",
+      min = 1,
+      group = "ADVANCED")
+  public long elementsCountThreshold;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = "Default Delay Threshold (ms)",
+      description = "After this amount of time has elapsed (counting from the first message added), the messages will" +
+          " be sent as a batch. This value should not be set too high, usually on the order of milliseconds. " +
+          "Otherwise, calls might appear to never complete",
+      displayPosition = 30,
+      defaultValue = "1",
+      min = 1,
+      group = "ADVANCED")
+  public long defaultDelayThreshold;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Batch Enabled",
+      description = "Set to send messages as a batch. If set to false, the batch logic will be disabled and the " +
+          "simple API call will be used",
+      displayPosition = 40,
+      group = "ADVANCED"
+  )
+  public boolean batchingEnabled;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = "Max Outstanding Message Count",
+      description = "Maximum number of outstanding messages to keep in memory before enforcing flow control. Set to " +
+          "zero to avoid defining a maximum outstanding message count",
+      displayPosition = 50,
+      defaultValue = "0",
+      min = 0,
+      group = "ADVANCED")
+  public long maxOutstandingElementCount;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = "Max Outstanding Request Bytes",
+      description = "Maximum number of outstanding bytes to keep in memory before enforcing flow control. Set to zero" +
+          " to avoid defining a maximum outstanding request bytes",
+      displayPosition = 60,
+      defaultValue = "0",
+      min = 0,
+      group = "ADVANCED")
+  public long maxOutstandingRequestBytes;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "BLOCK",
+      label = "Limit Exceeded Behaviour",
+      description = "Specify the behavior of the flow controller when the specified limits are exceeded",
+      displayPosition = 70,
+      group = "ADVANCED"
+  )
+  @ValueChooserModel(LimitExceededBehaviourChooserValues.class)
+  public LimitExceededBehaviour limitExceededBehavior;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "true",
       label = "Write Delimiter",

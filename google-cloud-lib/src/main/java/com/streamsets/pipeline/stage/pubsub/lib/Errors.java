@@ -27,6 +27,7 @@ public enum Errors implements ErrorCode {
   PUBSUB_06("Error serializing record: '{}'"),
   PUBSUB_07("Failed to create publisher for topic '{}' due to: '{}'"),
   PUBSUB_08("Error publishing message: '{}'"),
+  PUBSUB_09("Invalid Limit Exceeded Behaviour value: '{}'")
   ;
 
   private final String msg;

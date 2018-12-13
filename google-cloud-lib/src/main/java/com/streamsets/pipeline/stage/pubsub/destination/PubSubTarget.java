@@ -17,13 +17,15 @@
 package com.streamsets.pipeline.stage.pubsub.destination;
 
 import com.google.api.core.ApiFuture;
+import com.google.api.gax.batching.BatchingSettings;
+import com.google.api.gax.batching.FlowControlSettings;
+import com.google.api.gax.batching.FlowController;
 import com.google.api.gax.core.CredentialsProvider;
 import com.google.cloud.pubsub.v1.Publisher;
 import com.google.common.base.Throwables;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.ProjectTopicName;
 import com.google.pubsub.v1.PubsubMessage;
-import com.google.pubsub.v1.TopicName;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -38,6 +40,7 @@ import com.streamsets.pipeline.stage.pubsub.lib.Errors;
 import com.streamsets.pipeline.stage.pubsub.lib.Groups;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.threeten.bp.Duration;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -103,7 +106,31 @@ public class PubSubTarget extends BaseTarget {
     conf.credentials.getCredentialsProvider(getContext(), issues).ifPresent(p -> credentialsProvider = p);
 
     try {
-      publisher = Publisher.newBuilder(topic).setCredentialsProvider(credentialsProvider).build();
+      FlowControlSettings.Builder flowControlSettingsBuilder = FlowControlSettings.newBuilder()
+                                                                                  .setLimitExceededBehavior(
+                                                                                      getLimitExceededBehaviour(
+                                                                                          conf.limitExceededBehavior));
+      if (conf.maxOutstandingElementCount > 0) {
+        flowControlSettingsBuilder.setMaxOutstandingElementCount(conf.maxOutstandingElementCount);
+      }
+      if (conf.maxOutstandingRequestBytes > 0) {
+        flowControlSettingsBuilder.setMaxOutstandingRequestBytes(conf.maxOutstandingRequestBytes);
+      }
+      FlowControlSettings flowControlSettings = flowControlSettingsBuilder.build();
+
+      BatchingSettings batchingSettings = BatchingSettings.newBuilder()
+                                                          .setElementCountThreshold(conf.elementsCountThreshold)
+                                                          .setRequestByteThreshold(conf.requestBytesThreshold)
+                                                          .setDelayThreshold(
+                                                              Duration.ofMillis(conf.defaultDelayThreshold))
+                                                          .setIsEnabled(conf.batchingEnabled)
+                                                          .setFlowControlSettings(flowControlSettings)
+                                                          .build();
+
+      publisher = Publisher.newBuilder(topic)
+                           .setCredentialsProvider(credentialsProvider)
+                           .setBatchingSettings(batchingSettings)
+                           .build();
     } catch (IOException e) {
       LOG.error(Errors.PUBSUB_07.getMessage(), conf.topicId, e.toString(), e);
       issues.add(getContext().createConfigIssue(
@@ -111,6 +138,14 @@ public class PubSubTarget extends BaseTarget {
           "conf.topicId",
           Errors.PUBSUB_07,
           conf.topicId,
+          e.toString()
+      ));
+    } catch (StageException e) {
+      issues.add(getContext().createConfigIssue(
+          Groups.ADVANCED.name(),
+          "conf.limitExceededBehavior",
+          Errors.PUBSUB_09,
+          conf.limitExceededBehavior.getLabel(),
           e.toString()
       ));
     }
@@ -187,5 +222,19 @@ public class PubSubTarget extends BaseTarget {
 
     ApiFuture<String> messageIdFuture = publisher.publish(message);
     pendingMessages.add(new PendingMessage(record, messageIdFuture));
+  }
+
+  private FlowController.LimitExceededBehavior getLimitExceededBehaviour(LimitExceededBehaviour limitExceededBehavior)
+      throws StageException {
+    switch (limitExceededBehavior) {
+      case BLOCK:
+        return FlowController.LimitExceededBehavior.Block;
+      case IGNORE:
+        return FlowController.LimitExceededBehavior.Ignore;
+      case THROW_EXCEPTION:
+        return FlowController.LimitExceededBehavior.ThrowException;
+      default:
+        throw new StageException(Errors.PUBSUB_09, limitExceededBehavior.getLabel());
+    }
   }
 }
