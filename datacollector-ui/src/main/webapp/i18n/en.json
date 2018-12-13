@@ -861,7 +861,7 @@
       "uninstall": "Uninstall"
     },
     "install": {
-      "confirmationMessage": "Are you sure you want to install below stage libraries?",
+      "confirmationMessage": "Are you sure you want to install the following stage libraries?",
       "successMessage": "Successfully installed stage libraries. Restart the Data Collector for the changes to take effect.",
       "title": "Install Stage Library"
     },
@@ -870,7 +870,7 @@
     "noStageLibrariesExtras": "No Additional Drivers Found",
     "title": "Package Manager",
     "uninstall": {
-      "confirmationMessage": "Are you sure you want to uninstall below stage libraries?",
+      "confirmationMessage": "Are you sure you want to uninstall the following stage libraries?",
       "successMessage": "Successfully uninstalled stage libraries. Restart the Data Collector for the changes to take effect.",
       "title": "Uninstall Stage Library"
     },
