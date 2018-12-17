@@ -175,15 +175,15 @@ public class KafkaSourceUpgrader implements StageUpgrader {
         configs.add(new Config(joiner.join(CONF, "kafkaAutoOffsetReset"), KafkaAutoOffsetReset.EARLIEST));
         break;
       case "latest":
-        configs.add(new Config(joiner.join(CONF, "conf.kafkaAutoOffsetReset"), KafkaAutoOffsetReset.LATEST));
+        configs.add(new Config(joiner.join(CONF, "kafkaAutoOffsetReset"), KafkaAutoOffsetReset.LATEST));
         break;
       case "none":
-        configs.add(new Config(joiner.join(CONF, "conf.kafkaAutoOffsetReset"), KafkaAutoOffsetReset.NONE));
+        configs.add(new Config(joiner.join(CONF, "kafkaAutoOffsetReset"), KafkaAutoOffsetReset.NONE));
         break;
       default:
-        configs.add(new Config(joiner.join(CONF, "conf.kafkaAutoOffsetReset"), KafkaAutoOffsetReset.EARLIEST));
+        configs.add(new Config(joiner.join(CONF, "kafkaAutoOffsetReset"), KafkaAutoOffsetReset.EARLIEST));
     }
 
-    configs.add(new Config(joiner.join(CONF, "conf.timestampToSearchOffsets"), 0));
+    configs.add(new Config(joiner.join(CONF, "timestampToSearchOffsets"), 0));
   }
 }
