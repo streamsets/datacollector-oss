@@ -384,7 +384,7 @@ public abstract class ConfigInjector {
 
   Object toBoolean(Object value, String groupName, String configName, Context context) {
     if (!(value instanceof Boolean)) {
-      context.createIssue(groupName, configName, CreationError.CREATION_013, value);
+      context.createIssue(groupName, configName, CreationError.CREATION_013, value, value.getClass().getName());
       value = null;
     }
     return value;
