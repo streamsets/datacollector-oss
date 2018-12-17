@@ -69,6 +69,7 @@ public class JmsSourceUpgrader implements StageUpgrader {
 
   private static void upgradeV1ToV2(List<Config> configs) {
     configs.add(new Config("dataFormatConfig.compression", "NONE"));
+    configs.add(new Config("dataFormatConfig.useCustomDelimiter", false));
     configs.add(new Config("dataFormatConfig.filePatternInArchive", "*"));
   }
   private static void upgradeV2ToV3(List<Config> configs) {
@@ -92,8 +93,12 @@ public class JmsSourceUpgrader implements StageUpgrader {
     // Remove those configs
     configs.removeAll(dataFormatConfigs);
 
-    // Compression was originally hidden and hence we have to re-add it
-    dataFormatConfigs.add(new Config("dataFormatConfig.compression", "NONE"));
+    // There is an interesting history with compression - at some point (version 2), we explicitly added it, then
+    // we have hidden it. So this config might or might not exists, depending on the version in which the pipeline
+    // was created. However the service is expecting it and thus we need to ensure that it's there.
+    if(dataFormatConfigs.stream().noneMatch(c -> "dataFormatConfig.compression".equals(c.getName()))) {
+      dataFormatConfigs.add(new Config("dataFormatConfig.compression", "NONE"));
+    }
 
     // And finally register new service
     context.registerService(DataFormatParserService.class, dataFormatConfigs);
