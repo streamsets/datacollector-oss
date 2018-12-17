@@ -56,6 +56,7 @@ public class RawDataSourceUpgrader implements StageUpgrader {
       }
     }
 
+    configs.add(new Config("dataFormatConfig.compression", "NONE"));
     configs.removeAll(toRemove);
   }
 
