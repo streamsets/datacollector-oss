@@ -24,6 +24,7 @@ import com.streamsets.pipeline.stage.common.mongodb.AuthenticationType;
 import com.streamsets.pipeline.stage.common.mongodb.MongoDBConfig;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -134,6 +135,8 @@ public class MongoDBTargetUpgrader implements StageUpgrader {
         .collect(Collectors.toList());
 
     configs.removeAll(remove);
-    configs.add(new Config(configToChange, ImmutableList.of(remove.get(0).getValue())));
+
+    // The value of the config might actually be missing if we're upgrading from really old version
+    configs.add(new Config(configToChange, (remove.isEmpty() || remove.get(0).getValue() == null) ? Collections.emptyList() : ImmutableList.of(remove.get(0).getValue())));
   }
 }
