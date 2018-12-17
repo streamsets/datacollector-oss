@@ -231,6 +231,13 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
     // Remove those configs
     configs.removeAll(dataFormatConfigs);
 
+    // Depending on when exactly this stage was created, this config might be missing and in that case we need to add it
+    // before migrating to services.
+    final String textFieldMissingAction = "s3TargetConfigBean.dataGeneratorFormatConfig.textFieldMissingAction";
+    if(dataFormatConfigs.stream().noneMatch(c -> textFieldMissingAction.equals(c.getName()))) {
+      dataFormatConfigs.add(new Config(textFieldMissingAction, "ERROR"));
+    }
+
     // Provide proper prefix
     dataFormatConfigs = dataFormatConfigs.stream()
       .map(c -> new Config(c.getName().replace("s3TargetConfigBean.", ""), c.getValue()))
