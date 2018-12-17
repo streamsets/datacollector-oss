@@ -320,6 +320,11 @@ public abstract class WebServerTask extends AbstractTask implements Registration
     handler.addRule(uiRewriteRule);
 
     uiRewriteRule = new RewriteRegexRule();
+    uiRewriteRule.setRegex("^/onBoarding/.*");
+    uiRewriteRule.setReplacement("/");
+    handler.addRule(uiRewriteRule);
+
+    uiRewriteRule = new RewriteRegexRule();
     uiRewriteRule.setRegex("^/adminApp/.*");
     uiRewriteRule.setReplacement("/");
     handler.addRule(uiRewriteRule);
