@@ -138,13 +138,19 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
 
     issues = hikariConfigBean.validateConfigs(context, issues);
 
-    if (issues.isEmpty() && null == dataSource) {
-      try {
-        dataSource = jdbcUtil.createDataSourceForRead(hikariConfigBean);
-      } catch (StageException e) {
-        issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, e.toString()));
+    if (context.getRunnerId() == 0) {
+      if (issues.isEmpty() && null == dataSource) {
+        try {
+          dataSource = jdbcUtil.createDataSourceForRead(hikariConfigBean);
+          context.getStageRunnerSharedMap().put("jdbcLookupProcessor.dataSource", dataSource);
+        } catch (StageException e) {
+          issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, e.toString()));
+        }
       }
+    } else {
+      dataSource = (HikariDataSource) context.getStageRunnerSharedMap().get("jdbcLookupProcessor.dataSource");
     }
+
 
     if(issues.isEmpty()) {
       this.defaultValue = calculateDefault(context, issues);
@@ -159,11 +165,17 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
       }
     }
 
-    if (issues.isEmpty() && generationExecutor == null) {
-      generationExecutor = new SafeScheduledExecutorService(
-          hikariConfigBean.maximumPoolSize,
-          "JDBC Lookup Cache Warmer"
-      );
+    if (context.getRunnerId() == 0) {
+      if (issues.isEmpty() && generationExecutor == null) {
+        generationExecutor = new SafeScheduledExecutorService(
+            hikariConfigBean.maximumPoolSize,
+            "JDBC Lookup Cache Warmer"
+        );
+        context.getStageRunnerSharedMap().put("jdbcLookupProcessor.generationExecutor", generationExecutor);
+      }
+    } else {
+      generationExecutor = (SafeScheduledExecutorService) context.getStageRunnerSharedMap().get(
+          "jdbcLookupProcessor.generationExecutor");
     }
 
     // If issues is not empty, the UI will inform the user of each configuration issue in the list.
@@ -245,19 +257,23 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
   /** {@inheritDoc} */
   @Override
   public void destroy() {
-    if (generationExecutor != null) {
-      generationExecutor.shutdown();
-      try {
-        generationExecutor.awaitTermination(5, TimeUnit.SECONDS);
-      } catch (InterruptedException ex) {
-        LOG.error("Interrupted while attempting to shutdown Generator Executor: ", ex);
-        Thread.currentThread().interrupt();
+    if (getContext().getRunnerId() == 0) {
+      if (generationExecutor != null) {
+        generationExecutor.shutdown();
+        try {
+          if (!generationExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
+            generationExecutor.shutdownNow();
+          }
+        } catch (InterruptedException ex) {
+          LOG.error("Interrupted while attempting to shutdown Generator Executor: ", ex);
+          Thread.currentThread().interrupt();
+        }
       }
-    }
 
-    // close dataSource after closing threadpool executor as we could have queries running before closing the executor
-    if (jdbcUtil != null) {
-      jdbcUtil.closeQuietly(dataSource);
+      // close dataSource after closing threadpool executor as we could have queries running before closing the executor
+      if (jdbcUtil != null) {
+        jdbcUtil.closeQuietly(dataSource);
+      }
     }
 
     super.destroy();
