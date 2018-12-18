@@ -31,6 +31,7 @@ import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.cache.CacheCleaner;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.lib.jdbc.DataType;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
@@ -49,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.format.DateTimeFormat;
@@ -95,7 +97,7 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
   private CacheCleaner cacheCleaner;
   private final MissingValuesBehavior missingValuesBehavior;
 
-  private List<ExecutorService> generationExecutors = new ArrayList<>();
+  private ExecutorService generationExecutor;
   private int preprocessThreads = 0;
   private JdbcUtil jdbcUtil;
 
@@ -156,6 +158,14 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
         preprocessThreads = Math.max(preprocessThreads, 1);
       }
     }
+
+    if (issues.isEmpty() && generationExecutor == null) {
+      generationExecutor = new SafeScheduledExecutorService(
+          hikariConfigBean.maximumPoolSize,
+          "JDBC Lookup Cache Warmer"
+      );
+    }
+
     // If issues is not empty, the UI will inform the user of each configuration issue in the list.
     return issues;
   }
@@ -235,16 +245,21 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
   /** {@inheritDoc} */
   @Override
   public void destroy() {
-    jdbcUtil.closeQuietly(dataSource);
-    for (ExecutorService generationExecutor : generationExecutors) {
+    if (generationExecutor != null) {
       generationExecutor.shutdown();
       try {
         generationExecutor.awaitTermination(5, TimeUnit.SECONDS);
       } catch (InterruptedException ex) {
-        LOG.error("Interrupted while attempting to shutdown Generator thread", ex);
+        LOG.error("Interrupted while attempting to shutdown Generator Executor: ", ex);
         Thread.currentThread().interrupt();
       }
     }
+
+    // close dataSource after closing threadpool executor as we could have queries running before closing the executor
+    if (jdbcUtil != null) {
+      jdbcUtil.closeQuietly(dataSource);
+    }
+
     super.destroy();
   }
 
@@ -271,11 +286,8 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
     }
 
     for (int i =0; i < preprocessThreads; i++) {
-      generationExecutors.add(Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat("JDBC Lookup "
-          + "Cache Warmer"+i)
-          .build()));
       final List<String> preparedQueriesPart = preparedQueries.get(i);
-      generationExecutors.get(i).submit(() -> {
+      generationExecutor.submit(() -> {
         try {
           for ( String query : preparedQueriesPart)
             cache.get(query);
