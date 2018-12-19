@@ -40,17 +40,28 @@ public class SdcSecurityManager extends SecurityManager {
   public static final String PROPERTY_EXCEPTIONS = "security_manager.sdc_dirs.exceptions";
   public static final String PROPERTY_STAGE_EXCEPTIONS = "security_manager.sdc_dirs.exceptions.lib.";
 
-  private final RuntimeInfo runtimeInfo;
   private final Set<String> exceptions;
   private final Map<String, Set<String>> stageLibExceptions;
+
+  private final String configDir;
+  private final String dataDir;
+  private final String resourcesDir;
 
   public SdcSecurityManager(
     RuntimeInfo runtimeInfo,
     Configuration configuration
   ) {
-    this.runtimeInfo = runtimeInfo;
     this.exceptions = new HashSet<>();
     this.stageLibExceptions = new HashMap<>();
+
+    // DO NOT REMOVE and DO NOT CACHE THE RuntimeInfo OBJECT. Albeit your favorite CS course would claim that we should
+    // hold the reference to the runtimeInfo class and call those methods, we actually do need to resolve actual values
+    // and have then in memory - resolving the values during permission check itself can lead to a infinite loop - where
+    // in order to resolve permission, we need need to load file from disk which on it's own requires permission check,
+    // which requires permission check, ... .
+    this.configDir = runtimeInfo.getConfigDir();
+    this.dataDir = runtimeInfo.getDataDir();
+    this.resourcesDir = runtimeInfo.getResourcesDir();
 
     // DO NOT REMOVE: The following statements have important side effect - they load both those classes to memory which
     // is essential for the checks below.
@@ -89,9 +100,9 @@ public class SdcSecurityManager extends SecurityManager {
    * Replace variables to internal SDC directories so that users don't have to be entering FQDN.
    */
   private String replaceVariables(String path) {
-    return path.replace("$SDC_DATA", runtimeInfo.getDataDir())
-      .replace("$SDC_CONF", runtimeInfo.getConfigDir())
-      .replace("$SDC_RESOURCES", runtimeInfo.getResourcesDir())
+    return path.replace("$SDC_DATA", dataDir)
+      .replace("$SDC_CONF", configDir)
+      .replace("$SDC_RESOURCES", resourcesDir)
       ;
   }
 
@@ -120,14 +131,14 @@ public class SdcSecurityManager extends SecurityManager {
   }
 
   private void checkPrivatePathsForRead(String path) {
-    if(path.startsWith(runtimeInfo.getConfigDir()) || path.startsWith(runtimeInfo.getDataDir())) {
+    if(path.startsWith(configDir) || path.startsWith(dataDir)) {
       ensureProperPermissions(path);
     }
   }
 
   private void checkPrivatePathsForWrite(String path) {
     checkPrivatePathsForRead(path);
-    if(path.startsWith(runtimeInfo.getConfigDir()) || path.startsWith(runtimeInfo.getDataDir()) || path.startsWith(runtimeInfo.getResourcesDir())) {
+    if(path.startsWith(configDir) || path.startsWith(dataDir) || path.startsWith(resourcesDir)) {
       ensureProperPermissions(path);
     }
   }
