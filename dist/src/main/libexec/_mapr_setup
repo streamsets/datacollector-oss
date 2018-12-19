@@ -167,12 +167,16 @@ function create_symlinks {
     ln -s ${MAPR_HOME}/hbase/hbase-*/lib/*.jar  ${SDC_HOME}/streamsets-libs/${STAGE_LIB}/lib/ 2>/dev/null
   fi
 
-  # SDC-6449: Remove the symlink to metrics-core jar if MapR Hive ships same version as SDC.
-  SDC_METRICS_CORE_VERSION=`ls ${SDC_HOME}/api-lib | grep "metrics-core" | cut -d'-' -f3 | cut -d'.' -f1`
-  MAPR_METRICS_CORE_JAR=`ls ${SDC_HOME}/streamsets-libs/${STAGE_LIB}/lib | grep "metrics-core-${SDC_METRICS_CORE_VERSION}\.[0-9]*\.[0-9]*\.jar"`
- if [ ! -z ${MAPR_METRICS_CORE_JAR} ];then
-    printf "Removing symlink to ${MAPR_METRICS_CORE_JAR} ..."
-    rm ${SDC_HOME}/streamsets-libs/${STAGE_LIB}/lib/${MAPR_METRICS_CORE_JAR}
+  #SDC-6449 and SDC-10679. Need to remove matrics-core jars to avoid Linkage Error.
+  MAPR_METRICS_CORES=($(ls ${SDC_HOME}/streamsets-libs/${STAGE_LIB}/lib | grep "metrics-core" ))
+  LIST_OF_JARS=$(printf ",%s" ${MAPR_METRICS_CORES[@]})
+  LIST_OF_JARS=${LIST_OF_JARS:1}
+  if [[ ${LIST_OF_JARS} ]];then
+    printf "Removing symlink to ${LIST_OF_JARS} ...\n"
+    for toDelete in "${MAPR_METRICS_CORES[@]}"
+      do
+        rm ${SDC_HOME}/streamsets-libs/${STAGE_LIB}/lib/${toDelete}
+      done
     printf "Done.\n"
   fi
 
