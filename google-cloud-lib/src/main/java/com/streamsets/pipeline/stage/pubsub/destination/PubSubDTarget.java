@@ -25,10 +25,11 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 import com.streamsets.pipeline.stage.pubsub.lib.Groups;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Google Pub Sub Publisher",
     description = "Publishes messages to Google Pub/Sub",
     icon = "pubsub.png",
+    upgrader = PubSubTargetUpgrader.class,
     onlineHelpRefUrl ="index.html?contextID=task_n1k_sk1_v1b"
 )
 @ConfigGroups(value = Groups.class)

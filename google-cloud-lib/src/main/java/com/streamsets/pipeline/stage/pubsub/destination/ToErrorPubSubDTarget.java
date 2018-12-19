@@ -24,9 +24,10 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.DataFormat;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Write to Google Pub Sub",
     description = "Writes error records to Google Pub Sub",
+    upgrader = PubSubTargetUpgrader.class,
     onlineHelpRefUrl ="index.html?contextID=concept_kgc_l4y_5r"
 )
 @HideConfigs(preconditions = true, onErrorRecord = true, value = {
