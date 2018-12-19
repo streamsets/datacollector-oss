@@ -2,7 +2,7 @@
 <!DOCTYPE html
   PUBLIC "" "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
-    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="The MongoDB origin reads data from MongoDB. Data Collector generates a record for every MongoDB document. To read change data capture information from the MongoDB Oplog, use the MongoDB Oplog origin. ..." /><meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="MongoDB" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/Origins_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/MapRStreamsCons.html#concept_cvy_xsf_2v" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/MongoDBOplog.html#concept_mjn_yqw_4y" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_bk4_2rs_ns" /><title>MongoDB</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_bk4_2rs_ns-d46e50485" />         
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="The MongoDB origin reads data from MongoDB. Data Collector generates a record for every MongoDB document. To read change data capture information from the MongoDB Oplog, use the MongoDB Oplog origin. ..." /><meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="MongoDB" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/Origins_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/MapRStreamsCons.html#concept_cvy_xsf_2v" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/MongoDBOplog.html#concept_mjn_yqw_4y" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_bk4_2rs_ns" /><title>MongoDB</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_bk4_2rs_ns-d46e52229" />         
         
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <!-- Latest compiled and minified Bootstrap CSS -->
@@ -103,24 +103,24 @@
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_l4q_flb_kr-d46e5240" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
-   <li><span data-tocid="concept_ylh_yyz_ky-d46e7307" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
-   <li><span data-tocid="concept_ejk_f1f_5v-d46e15527" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
-   <li><span data-tocid="concept_qsw_cjy_bt-d46e20362" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
-   <li><span data-tocid="concept_qn1_wn4_kq-d46e22042" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
-   <li><span data-tocid="concept_hdr_gyw_41b-d46e24539" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_l4q_flb_kr-d46e5861" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e7928" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e16281" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e22088" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e23812" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e26050" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e26354" class="topicref" data-id="concept_yjl_nc5_jq" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span><ul class="nav nav-list">
-         <li><span data-tocid="concept_hpr_twm_jq-d46e26376" class="topicref" data-id="concept_hpr_twm_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_overview.html#concept_hpr_twm_jq">Origins</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e27865" class="topicref" data-id="concept_yjl_nc5_jq" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_hpr_twm_jq-d46e27887" class="topicref" data-id="concept_hpr_twm_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_overview.html#concept_hpr_twm_jq">Origins</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">An origin stage represents the source for the pipeline. You can use a single origin     stage in a pipeline.</p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_kvs_3hh_ht-d46e26946" class="topicref" data-id="concept_kvs_3hh_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/AmazonS3.html#concept_kvs_3hh_ht">Amazon S3</a></span></span></li>
-         <li><span data-tocid="concept_xsh_knm_5bb-d46e27886" class="topicref" data-id="concept_xsh_knm_5bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/AmazonSQS.html#concept_xsh_knm_5bb">Amazon SQS Consumer</a></span></span></li>
-         <li><span data-tocid="concept_c1z_15q_1bb-d46e28350" class="topicref" data-id="concept_c1z_15q_1bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/AzureEventHub.html#concept_c1z_15q_1bb">Azure IoT/Event Hub Consumer</a></span></span></li>
-         <li><span data-tocid="concept_wfy_ghn_sz-d46e28632" class="topicref" data-id="concept_wfy_ghn_sz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/CoAPServer.html#concept_wfy_ghn_sz">CoAP Server</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_kvs_3hh_ht-d46e28457" class="topicref" data-id="concept_kvs_3hh_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/AmazonS3.html#concept_kvs_3hh_ht">Amazon S3</a></span></span></li>
+         <li><span data-tocid="concept_xsh_knm_5bb-d46e29542" class="topicref" data-id="concept_xsh_knm_5bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/AmazonSQS.html#concept_xsh_knm_5bb">Amazon SQS Consumer</a></span></span></li>
+         <li><span data-tocid="concept_c1z_15q_1bb-d46e30006" class="topicref" data-id="concept_c1z_15q_1bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/AzureEventHub.html#concept_c1z_15q_1bb">Azure IoT/Event Hub Consumer</a></span></span></li>
+         <li><span data-tocid="concept_wfy_ghn_sz-d46e30288" class="topicref" data-id="concept_wfy_ghn_sz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/CoAPServer.html#concept_wfy_ghn_sz">CoAP Server</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Constrained Application Protocol (CoAP) is a web transfer protocol designed for         machine-to-machine devices. The CoAP
                         Server origin is a multithreaded origin that listens on         a CoAP endpoint and processes the contents of all authorized
@@ -128,53 +128,60 @@
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_qcq_54n_jq-d46e28927" class="topicref" data-id="concept_qcq_54n_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Directory.html#concept_qcq_54n_jq">Directory</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_qcq_54n_jq-d46e30583" class="topicref" data-id="concept_qcq_54n_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Directory.html#concept_qcq_54n_jq">Directory</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Directory origin reads data from files in a directory. The origin can use         multiple threads to enable the parallel
                         processing of files. 
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_f1q_vpm_2z-d46e30199" class="topicref" data-id="concept_f1q_vpm_2z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Elasticsearch.html#concept_f1q_vpm_2z">Elasticsearch </a><span class="wh-tooltip">
+         <li><span data-tocid="concept_f1q_vpm_2z-d46e31855" class="topicref" data-id="concept_f1q_vpm_2z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Elasticsearch.html#concept_f1q_vpm_2z">Elasticsearch </a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Elasticsearch origin is a multithreaded origin that reads data from an Elasticsearch         cluster, including Elastic
-                        Cloud clusters (formerly Found clusters). The origin generates a         record for each Elasticsearch document.
+                        Cloud clusters (formerly Found clusters) and Amazon Elasticsearch         Service clusters. The origin generates a record
+                        for each Elasticsearch document.
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_n1y_qyp_5q-d46e30583" class="topicref" data-id="concept_n1y_qyp_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/FileTail.html#concept_n1y_qyp_5q">File Tail</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_n1y_qyp_5q-d46e32333" class="topicref" data-id="concept_n1y_qyp_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/FileTail.html#concept_n1y_qyp_5q">File Tail</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The File Tail origin reads lines of data as they are written to an active file after         reading related archived files
                         in the same directory. File Tail generates a record for each         line of data.
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_cg3_y3v_q1b-d46e31832" class="topicref" data-id="concept_cg3_y3v_q1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/BigQuery.html#concept_cg3_y3v_q1b">Google BigQuery</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_cg3_y3v_q1b-d46e33582" class="topicref" data-id="concept_cg3_y3v_q1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/BigQuery.html#concept_cg3_y3v_q1b">Google BigQuery</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Google BigQuery origin executes a query job and reads the result from Google         BigQuery. </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_iyd_wql_nbb-d46e32302" class="topicref" data-id="concept_iyd_wql_nbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/GCS.html#concept_iyd_wql_nbb">Google Cloud Storage</a></span></span></li>
-         <li><span data-tocid="concept_pjw_qtl_r1b-d46e32864" class="topicref" data-id="concept_pjw_qtl_r1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/PubSub.html#concept_pjw_qtl_r1b">Google Pub/Sub Subscriber</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_iyd_wql_nbb-d46e34052" class="topicref" data-id="concept_iyd_wql_nbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/GCS.html#concept_iyd_wql_nbb">Google Cloud Storage</a></span></span></li>
+         <li><span data-tocid="concept_pjw_qtl_r1b-d46e34614" class="topicref" data-id="concept_pjw_qtl_r1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/PubSub.html#concept_pjw_qtl_r1b">Google Pub/Sub Subscriber</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Google Pub/Sub Subscriber origin consumes messages from a Google Pub/Sub         subscription. </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_lw2_tnm_vs-d46e33334" class="topicref" data-id="concept_lw2_tnm_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HadoopFS-origin.html#concept_lw2_tnm_vs">Hadoop FS</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_yp1_4zs_yfb-d46e35084" class="topicref" data-id="concept_yp1_4zs_yfb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/gRPCClient.html#concept_yp1_4zs_yfb">gRPC Client</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">An origin that processes data from a gRPC server by calling gRPC server methods. The         origin can call Unary RPC and
+                        Server Streaming RPC methods. This origin is a <a href="../../../datacollector/UserGuide/Pipeline_Design/TechPreview.html#concept_prl_qfv_gfb" class="xref">Technology Preview</a>         feature. It is not meant for use in production.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_lw2_tnm_vs-d46e35144" class="topicref" data-id="concept_lw2_tnm_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HadoopFS-origin.html#concept_lw2_tnm_vs">Hadoop FS</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Hadoop FS origin reads data from the Hadoop Distributed File System (HDFS), Amazon     S3, or other file systems using
                         the Hadoop FileSystem interface. 
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_djz_pdm_hdb-d46e33913" class="topicref" data-id="concept_djz_pdm_hdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HDFSStandalone.html#concept_djz_pdm_hdb">Hadoop FS Standalone</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_djz_pdm_hdb-d46e35723" class="topicref" data-id="concept_djz_pdm_hdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HDFSStandalone.html#concept_djz_pdm_hdb">Hadoop FS Standalone</a><span class="wh-tooltip">
                      
-                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Hadoop FS Standalone origin reads files in HDFS. The origin can use multiple         threads to enable the parallel processing
-                        of files. The files to be processed must all share         a file name pattern and be fully written. You can also configure
-                        the origin to read from         Azure HDInsight.
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Hadoop FS Standalone origin reads files in HDFS. You can also use the origin to         read from Azure Data Lake Storage
+                        or Azure HDInsight. 
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_wk4_bjz_5r-d46e35702" class="topicref" data-id="concept_wk4_bjz_5r" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HTTPClient.html#concept_wk4_bjz_5r">HTTP Client</a></span></span></li>
-         <li><span data-tocid="concept_s2p_5hb_4y-d46e38100" class="topicref" data-id="concept_s2p_5hb_4y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HTTPServer.html#concept_s2p_5hb_4y">HTTP Server</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_wk4_bjz_5r-d46e37708" class="topicref" data-id="concept_wk4_bjz_5r" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HTTPClient.html#concept_wk4_bjz_5r">HTTP Client</a></span></span></li>
+         <li><span data-tocid="concept_s2p_5hb_4y-d46e40106" class="topicref" data-id="concept_s2p_5hb_4y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HTTPServer.html#concept_s2p_5hb_4y">HTTP Server</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and         processes the contents of all
                         authorized HTTP POST and PUT requests. Use the HTTP Server         origin to read high volumes of HTTP POST and PUT requests
@@ -182,72 +189,72 @@
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_izh_mqd_dy-d46e38567" class="topicref" data-id="concept_izh_mqd_dy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HTTPtoKafka.html#concept_izh_mqd_dy">HTTP to Kafka (Deprecated)</a></span></span></li>
-         <li><span data-tocid="concept_zp3_wnw_4y-d46e39128" class="topicref" data-id="concept_zp3_wnw_4y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y">JDBC Multitable Consumer</a></span></span></li>
-         <li><span data-tocid="concept_qhf_hjr_bs-d46e42994" class="topicref" data-id="concept_qhf_hjr_bs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JDBCConsumer.html#concept_qhf_hjr_bs">JDBC Query Consumer</a></span></span></li>
-         <li><span data-tocid="concept_rhh_4nj_dt-d46e44756" class="topicref" data-id="concept_rhh_4nj_dt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JMS.html#concept_rhh_4nj_dt">JMS Consumer</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_izh_mqd_dy-d46e40573" class="topicref" data-id="concept_izh_mqd_dy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HTTPtoKafka.html#concept_izh_mqd_dy">HTTP to Kafka (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_zp3_wnw_4y-d46e41134" class="topicref" data-id="concept_zp3_wnw_4y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y">JDBC Multitable Consumer</a></span></span></li>
+         <li><span data-tocid="concept_qhf_hjr_bs-d46e45000" class="topicref" data-id="concept_qhf_hjr_bs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JDBCConsumer.html#concept_qhf_hjr_bs">JDBC Query Consumer</a></span></span></li>
+         <li><span data-tocid="concept_rhh_4nj_dt-d46e46762" class="topicref" data-id="concept_rhh_4nj_dt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JMS.html#concept_rhh_4nj_dt">JMS Consumer</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The JMS Consumer origin reads data from a Java Messaging Service (JMS). </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_msz_wnr_5q-d46e45127" class="topicref" data-id="concept_msz_wnr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KConsumer.html#concept_msz_wnr_5q">Kafka Consumer</a></span></span></li>
-         <li><span data-tocid="concept_ccs_fn4_x1b-d46e45936" class="topicref" data-id="concept_ccs_fn4_x1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KafkaMultiConsumer.html#concept_ccs_fn4_x1b">Kafka Multitopic Consumer</a></span></span></li>
-         <li><span data-tocid="concept_anh_4y3_yr-d46e46876" class="topicref" data-id="concept_anh_4y3_yr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KinConsumer.html#concept_anh_4y3_yr">Kinesis Consumer</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_msz_wnr_5q-d46e47133" class="topicref" data-id="concept_msz_wnr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KConsumer.html#concept_msz_wnr_5q">Kafka Consumer</a></span></span></li>
+         <li><span data-tocid="concept_ccs_fn4_x1b-d46e47817" class="topicref" data-id="concept_ccs_fn4_x1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KafkaMultiConsumer.html#concept_ccs_fn4_x1b">Kafka Multitopic Consumer</a></span></span></li>
+         <li><span data-tocid="concept_anh_4y3_yr-d46e48620" class="topicref" data-id="concept_anh_4y3_yr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KinConsumer.html#concept_anh_4y3_yr">Kinesis Consumer</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Kinesis Consumer origin reads data from Amazon Kinesis Streams. </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_qwj_5vm_pbb-d46e47349" class="topicref" data-id="concept_qwj_5vm_pbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRdbCDC.html#concept_qwj_5vm_pbb">MapR DB CDC</a></span></span></li>
-         <li><span data-tocid="concept_ywh_k15_3y-d46e47631" class="topicref" data-id="concept_ywh_k15_3y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRDBJSON.html#concept_ywh_k15_3y">MapR DB JSON</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_qwj_5vm_pbb-d46e49093" class="topicref" data-id="concept_qwj_5vm_pbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRdbCDC.html#concept_qwj_5vm_pbb">MapR DB CDC</a></span></span></li>
+         <li><span data-tocid="concept_ywh_k15_3y-d46e49375" class="topicref" data-id="concept_ywh_k15_3y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRDBJSON.html#concept_ywh_k15_3y">MapR DB JSON</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MapR DB JSON origin reads JSON documents from MapR DB JSON tables. The origin         converts each document into a record.</p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_psz_db4_lx-d46e47733" class="topicref" data-id="concept_psz_db4_lx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRFS.html#concept_psz_db4_lx">MapR FS</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_psz_db4_lx-d46e49477" class="topicref" data-id="concept_psz_db4_lx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRFS.html#concept_psz_db4_lx">MapR FS</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MapR FS origin reads files from MapR FS. Use this origin only in pipelines         configured for cluster batch pipeline
                         execution mode. 
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_b43_3qc_mdb-d46e48119" class="topicref" data-id="concept_b43_3qc_mdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRFSStandalone.html#concept_b43_3qc_mdb">MapR FS Standalone</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_b43_3qc_mdb-d46e49863" class="topicref" data-id="concept_b43_3qc_mdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRFSStandalone.html#concept_b43_3qc_mdb">MapR FS Standalone</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MapR FS Standalone origin reads files in MapR. The origin can use multiple         threads to enable the parallel processing
                         of files. The files to be processed must all share         a file name pattern and be fully written. 
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_hvd_hww_lbb-d46e49732" class="topicref" data-id="concept_hvd_hww_lbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRStreamsMultiConsumer.html#concept_hvd_hww_lbb">MapR Multitopic Streams Consumer</a></span></span></li>
-         <li><span data-tocid="concept_cvy_xsf_2v-d46e50193" class="topicref" data-id="concept_cvy_xsf_2v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRStreamsCons.html#concept_cvy_xsf_2v">MapR Streams Consumer</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_hvd_hww_lbb-d46e51476" class="topicref" data-id="concept_hvd_hww_lbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRStreamsMultiConsumer.html#concept_hvd_hww_lbb">MapR Multitopic Streams Consumer</a></span></span></li>
+         <li><span data-tocid="concept_cvy_xsf_2v-d46e51937" class="topicref" data-id="concept_cvy_xsf_2v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRStreamsCons.html#concept_cvy_xsf_2v">MapR Streams Consumer</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MapR Streams Consumer origin reads messages from MapR Streams.</p>
                      </span></span></span></li>
-         <li class="active"><span data-tocid="concept_bk4_2rs_ns-d46e50485" class="topicref" data-id="concept_bk4_2rs_ns" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDB.html#concept_bk4_2rs_ns">MongoDB</a></span></span><ul class="nav nav-list">
-               <li><span data-tocid="concept_gzz_kdr_tz-d46e50588" class="topicref" data-id="concept_gzz_kdr_tz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDB.html#concept_gzz_kdr_tz">Credentials</a></span></span></li>
-               <li><span data-tocid="concept_kx3_zrs_ns-d46e50610" class="topicref" data-id="concept_kx3_zrs_ns" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDB.html#concept_kx3_zrs_ns">Offset Field and Initial Offset</a></span></span></li>
-               <li><span data-tocid="concept_oy2_1dt_ns-d46e50642" class="topicref" data-id="concept_oy2_1dt_ns" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDB.html#concept_oy2_1dt_ns">Read Preference</a></span></span></li>
-               <li><span data-tocid="concept_vx3_1gh_scb-d46e50684" class="topicref" data-id="concept_vx3_1gh_scb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDB.html#concept_vx3_1gh_scb">Event Generation</a></span></span></li>
-               <li><span data-tocid="concept_x1x_2pn_sy-d46e50798" class="topicref" data-id="concept_x1x_2pn_sy" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDB.html#concept_x1x_2pn_sy">BSON Timestamp</a></span></span></li>
-               <li><span data-tocid="task_zry_dg2_ww-d46e50870" class="topicref" data-id="task_zry_dg2_ww" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDB.html#task_zry_dg2_ww">Enabling SSL/TLS</a></span></span></li>
-               <li><span data-tocid="task_mdf_2rs_ns-d46e50953" class="topicref" data-id="task_mdf_2rs_ns" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDB.html#task_mdf_2rs_ns">Configuring a MongoDB Origin</a></span></span></li>
+         <li class="active"><span data-tocid="concept_bk4_2rs_ns-d46e52229" class="topicref" data-id="concept_bk4_2rs_ns" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDB.html#concept_bk4_2rs_ns">MongoDB</a></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_gzz_kdr_tz-d46e52332" class="topicref" data-id="concept_gzz_kdr_tz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDB.html#concept_gzz_kdr_tz">Credentials</a></span></span></li>
+               <li><span data-tocid="concept_kx3_zrs_ns-d46e52354" class="topicref" data-id="concept_kx3_zrs_ns" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDB.html#concept_kx3_zrs_ns">Offset Field and Initial Offset</a></span></span></li>
+               <li><span data-tocid="concept_oy2_1dt_ns-d46e52386" class="topicref" data-id="concept_oy2_1dt_ns" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDB.html#concept_oy2_1dt_ns">Read Preference</a></span></span></li>
+               <li><span data-tocid="concept_vx3_1gh_scb-d46e52428" class="topicref" data-id="concept_vx3_1gh_scb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDB.html#concept_vx3_1gh_scb">Event Generation</a></span></span></li>
+               <li><span data-tocid="concept_x1x_2pn_sy-d46e52542" class="topicref" data-id="concept_x1x_2pn_sy" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDB.html#concept_x1x_2pn_sy">BSON Timestamp</a></span></span></li>
+               <li><span data-tocid="task_zry_dg2_ww-d46e52614" class="topicref" data-id="task_zry_dg2_ww" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDB.html#task_zry_dg2_ww">Enabling SSL/TLS</a></span></span></li>
+               <li><span data-tocid="task_mdf_2rs_ns-d46e52697" class="topicref" data-id="task_mdf_2rs_ns" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDB.html#task_mdf_2rs_ns">Configuring a MongoDB Origin</a></span></span></li>
             </ul>
          </li>
-         <li><span data-tocid="concept_mjn_yqw_4y-d46e51046" class="topicref" data-id="concept_mjn_yqw_4y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDBOplog.html#concept_mjn_yqw_4y">MongoDB Oplog</a></span></span></li>
-         <li><span data-tocid="concept_ukz_3vt_lz-d46e51504" class="topicref" data-id="concept_ukz_3vt_lz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MQTTSubscriber.html#concept_ukz_3vt_lz">MQTT Subscriber</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_mjn_yqw_4y-d46e52790" class="topicref" data-id="concept_mjn_yqw_4y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDBOplog.html#concept_mjn_yqw_4y">MongoDB Oplog</a></span></span></li>
+         <li><span data-tocid="concept_ukz_3vt_lz-d46e53248" class="topicref" data-id="concept_ukz_3vt_lz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MQTTSubscriber.html#concept_ukz_3vt_lz">MQTT Subscriber</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MQTT Subscriber origin subscribes to topics on an MQTT broker to read messages         from the broker. The origin functions
                         as an MQTT client that receives messages, generating a         record for each message.
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_kqg_1yh_xx-d46e51723" class="topicref" data-id="concept_kqg_1yh_xx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MySQLBinaryLog.html#concept_kqg_1yh_xx">MySQL Binary Log</a></span></span></li>
-         <li><span data-tocid="concept_dsr_xmw_1s-d46e52294" class="topicref" data-id="concept_dsr_xmw_1s" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Omniture.html#concept_dsr_xmw_1s">Omniture</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_kqg_1yh_xx-d46e53468" class="topicref" data-id="concept_kqg_1yh_xx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MySQLBinaryLog.html#concept_kqg_1yh_xx">MySQL Binary Log</a></span></span></li>
+         <li><span data-tocid="concept_dsr_xmw_1s-d46e54038" class="topicref" data-id="concept_dsr_xmw_1s" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Omniture.html#concept_dsr_xmw_1s">Omniture</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Omniture origin processes JSON website usage reports generated by the Omniture   reporting APIs. Omniture is also known
                         as the Adobe Marketing Cloud.
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_nmf_1ly_f1b-d46e52351" class="topicref" data-id="concept_nmf_1ly_f1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/OPCUAClient.html#concept_nmf_1ly_f1b">OPC UA Client </a></span></span></li>
-         <li><span data-tocid="concept_rs5_hjj_tw-d46e52563" class="topicref" data-id="concept_rs5_hjj_tw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/OracleCDC.html#concept_rs5_hjj_tw">Oracle CDC Client</a></span></span></li>
-         <li><span data-tocid="concept_cfs_4m4_n2b-d46e56705" class="topicref" data-id="concept_cfs_4m4_n2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/PostgreSQL.html#concept_cfs_4m4_n2b">PostgreSQL CDC Client</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_nmf_1ly_f1b-d46e54095" class="topicref" data-id="concept_nmf_1ly_f1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/OPCUAClient.html#concept_nmf_1ly_f1b">OPC UA Client </a></span></span></li>
+         <li><span data-tocid="concept_rs5_hjj_tw-d46e54307" class="topicref" data-id="concept_rs5_hjj_tw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/OracleCDC.html#concept_rs5_hjj_tw">Oracle CDC Client</a></span></span></li>
+         <li><span data-tocid="concept_cfs_4m4_n2b-d46e58449" class="topicref" data-id="concept_cfs_4m4_n2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/PostgreSQL.html#concept_cfs_4m4_n2b">PostgreSQL CDC Client</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The PostgreSQL CDC Client origin processes Write-Ahead Logging (WAL) data to generate         change data capture records
                         for a PostgreSQL database. Use the PostgreSQL CDC Client origin         to process WAL data from PostgreSQL 9.4 or later.
@@ -255,60 +262,60 @@
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_o2b_1pc_r2b-d46e57174" class="topicref" data-id="concept_o2b_1pc_r2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/PulsarConsumer.html#concept_o2b_1pc_r2b">Pulsar Consumer</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_o2b_1pc_r2b-d46e58918" class="topicref" data-id="concept_o2b_1pc_r2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/PulsarConsumer.html#concept_o2b_1pc_r2b">Pulsar Consumer</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Pulsar Consumer origin reads messages from one or more topics in an Apache Pulsar         cluster.</p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_dyg_lq1_h5-d46e57651" class="topicref" data-id="concept_dyg_lq1_h5" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/RabbitMQ.html#concept_dyg_lq1_h5">RabbitMQ Consumer</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_dyg_lq1_h5-d46e59395" class="topicref" data-id="concept_dyg_lq1_h5" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/RabbitMQ.html#concept_dyg_lq1_h5">RabbitMQ Consumer</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">RabbitMQ Consumer reads AMQP messages from a single RabbitMQ queue.</p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_plr_t3v_jw-d46e57871" class="topicref" data-id="concept_plr_t3v_jw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Redis.html#concept_plr_t3v_jw">Redis Consumer</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_plr_t3v_jw-d46e59615" class="topicref" data-id="concept_plr_t3v_jw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Redis.html#concept_plr_t3v_jw">Redis Consumer</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Redis Consumer origin reads messages from Redis. </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_hfg_2sn_p2b-d46e58025" class="topicref" data-id="concept_hfg_2sn_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/RESTService.html#concept_hfg_2sn_p2b">REST Service </a></span></span></li>
-         <li><span data-tocid="concept_odf_vr3_rx-d46e58705" class="topicref" data-id="concept_odf_vr3_rx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Salesforce.html#concept_odf_vr3_rx">Salesforce</a></span></span></li>
-         <li><span data-tocid="concept_agb_5c1_ct-d46e61303" class="topicref" data-id="concept_agb_5c1_ct" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SDC_RPCorigin.html#concept_agb_5c1_ct">SDC RPC </a><span class="wh-tooltip">
+         <li><span data-tocid="concept_hfg_2sn_p2b-d46e59769" class="topicref" data-id="concept_hfg_2sn_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/RESTService.html#concept_hfg_2sn_p2b">REST Service </a></span></span></li>
+         <li><span data-tocid="concept_odf_vr3_rx-d46e60449" class="topicref" data-id="concept_odf_vr3_rx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Salesforce.html#concept_odf_vr3_rx">Salesforce</a></span></span></li>
+         <li><span data-tocid="concept_agb_5c1_ct-d46e63047" class="topicref" data-id="concept_agb_5c1_ct" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SDC_RPCorigin.html#concept_agb_5c1_ct">SDC RPC </a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"> The SDC RPC origin enables connectivity between two SDC RPC pipelines. The SDC RPC     origin reads data passed from an SDC
                         RPC destination. Use the SDC RPC origin as part of an SDC     RPC destination pipeline.
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_tdk_slk_pw-d46e61360" class="topicref" data-id="concept_tdk_slk_pw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SDCRPCtoKafka.html#concept_tdk_slk_pw">SDC RPC to Kafka (Deprecated)</a></span></span></li>
-         <li><span data-tocid="concept_ic5_bzd_5v-d46e62041" class="topicref" data-id="concept_ic5_bzd_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SFTP.html#concept_ic5_bzd_5v">SFTP/FTP Client</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_tdk_slk_pw-d46e63105" class="topicref" data-id="concept_tdk_slk_pw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SDCRPCtoKafka.html#concept_tdk_slk_pw">SDC RPC to Kafka (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_ic5_bzd_5v-d46e63785" class="topicref" data-id="concept_ic5_bzd_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SFTP.html#concept_ic5_bzd_5v">SFTP/FTP Client</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The SFTP/FTP Client origin reads files from a server using the Secure File Transfer         Protocol (SFTP) or the File Transfer
                         Protocol (FTP). 
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_ut3_ywc_v1b-d46e62608" class="topicref" data-id="concept_ut3_ywc_v1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SQLServerCDC.html#concept_ut3_ywc_v1b">SQL Server CDC Client</a></span></span></li>
-         <li><span data-tocid="concept_ewq_b2s_r1b-d46e64002" class="topicref" data-id="concept_ewq_b2s_r1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SQLServerChange.html#concept_ewq_b2s_r1b">SQL Server Change Tracking</a></span></span></li>
-         <li><span data-tocid="concept_gzy_gmv_32b-d46e65079" class="topicref" data-id="concept_gzy_gmv_32b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SystemMetrics.html#concept_gzy_gmv_32b">System Metrics</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_ut3_ywc_v1b-d46e64352" class="topicref" data-id="concept_ut3_ywc_v1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SQLServerCDC.html#concept_ut3_ywc_v1b">SQL Server CDC Client</a></span></span></li>
+         <li><span data-tocid="concept_ewq_b2s_r1b-d46e65746" class="topicref" data-id="concept_ewq_b2s_r1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SQLServerChange.html#concept_ewq_b2s_r1b">SQL Server Change Tracking</a></span></span></li>
+         <li><span data-tocid="concept_gzy_gmv_32b-d46e66823" class="topicref" data-id="concept_gzy_gmv_32b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SystemMetrics.html#concept_gzy_gmv_32b">System Metrics</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The System Metrics origin reads system metrics from the edge device where <span class="ph">StreamSets</span>         <span class="ph">Data Collector Edge</span>             (<span class="ph">SDC Edge</span>)         is installed. Use the System Metrics origin only in pipelines configured for edge execution         mode. 
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_ppm_xb1_4z-d46e65245" class="topicref" data-id="concept_ppm_xb1_4z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/TCPServer.html#concept_ppm_xb1_4z">TCP Server</a></span></span></li>
-         <li><span data-tocid="concept_wng_g5f_5bb-d46e65703" class="topicref" data-id="concept_wng_g5f_5bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/UDPMulti.html#concept_wng_g5f_5bb">UDP Multithreaded Source</a></span></span></li>
-         <li><span data-tocid="concept_rst_2y5_1s-d46e66068" class="topicref" data-id="concept_rst_2y5_1s" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/UDP.html#concept_rst_2y5_1s">UDP Source</a></span></span></li>
-         <li><span data-tocid="concept_jzq_jcz_pw-d46e66216" class="topicref" data-id="concept_jzq_jcz_pw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/UDPtoKafka.html#concept_jzq_jcz_pw">UDP to Kafka (Deprecated)</a></span></span></li>
-         <li><span data-tocid="concept_unk_nzk_fbb-d46e66677" class="topicref" data-id="concept_unk_nzk_fbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/WebSocketClient.html#concept_unk_nzk_fbb">WebSocket Client</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_ppm_xb1_4z-d46e66989" class="topicref" data-id="concept_ppm_xb1_4z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/TCPServer.html#concept_ppm_xb1_4z">TCP Server</a></span></span></li>
+         <li><span data-tocid="concept_wng_g5f_5bb-d46e67447" class="topicref" data-id="concept_wng_g5f_5bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/UDPMulti.html#concept_wng_g5f_5bb">UDP Multithreaded Source</a></span></span></li>
+         <li><span data-tocid="concept_rst_2y5_1s-d46e67812" class="topicref" data-id="concept_rst_2y5_1s" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/UDP.html#concept_rst_2y5_1s">UDP Source</a></span></span></li>
+         <li><span data-tocid="concept_jzq_jcz_pw-d46e67960" class="topicref" data-id="concept_jzq_jcz_pw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/UDPtoKafka.html#concept_jzq_jcz_pw">UDP to Kafka (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_unk_nzk_fbb-d46e68421" class="topicref" data-id="concept_unk_nzk_fbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/WebSocketClient.html#concept_unk_nzk_fbb">WebSocket Client</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The WebSocket Client origin reads data from a WebSocket server endpoint. Use the         origin to read data from a WebSocket
                         resource URL. The origin can also <span class="ph">send responses back to the origin system when used in a                         microservice pipeline.</span></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_u2r_gpc_3z-d46e66917" class="topicref" data-id="concept_u2r_gpc_3z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/WebSocketServer.html#concept_u2r_gpc_3z">WebSocket Server</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_u2r_gpc_3z-d46e68661" class="topicref" data-id="concept_u2r_gpc_3z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/WebSocketServer.html#concept_u2r_gpc_3z">WebSocket Server</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The WebSocket Server origin is a multithreaded origin that listens on a WebSocket         endpoint and processes the contents
                         of all authorized WebSocket client requests. 
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_agf_5jv_sbb-d46e67409" class="topicref" data-id="concept_agf_5jv_sbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/WindowsLog.html#concept_agf_5jv_sbb">Windows Event Log</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_agf_5jv_sbb-d46e69154" class="topicref" data-id="concept_agf_5jv_sbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/WindowsLog.html#concept_agf_5jv_sbb">Windows Event Log</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Windows Event Log origin reads data from a Microsoft Windows event log located on a         Windows machine. The origin
                         generates a record for each event in the log. 
@@ -317,54 +324,54 @@
                      </span></span></span></li>
       </ul>
    </li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e67467" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
-   <li><span data-tocid="concept_agj_cfj_br-d46e83183" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
-   <li><span data-tocid="concept_umc_1lk_fx-d46e99504" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
-   <li><span data-tocid="concept_fyf_gkq_4bb-d46e105266" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
-   <li><span data-tocid="concept_ugp_kwf_xw-d46e107865" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
-   <li><span data-tocid="concept_xxd_f5r_kx-d46e111266" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e69212" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e84912" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e101473" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e107235" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e109838" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e113417" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_fjj_zcf_2w-d46e115180" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
-   <li><span data-tocid="concept_kgt_pnr_4cb-d46e118006" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
-   <li><span data-tocid="concept_wwq_gxc_py-d46e118805" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e117331" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e120157" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e120956" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_gzw_tdm_p2b-d46e119387" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_wr1_ktz_bt-d46e119763" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_fpz_5r4_vs-d46e120245" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_jjk_23z_sq-d46e121592" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
-   <li><span data-tocid="concept_pgk_brx_rr-d46e122561" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_gzw_tdm_p2b-d46e121538" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e121914" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e122396" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e123861" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e124830" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_asx_fdz_sq-d46e125189" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_asx_fdz_sq-d46e127458" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_o3l_dtr_5q-d46e126446" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
-   <li><span data-tocid="concept_yms_ftm_sq-d46e128432" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e128715" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e130368" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_nls_w1r_ks-d46e132929" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
-   <li><span data-tocid="concept_sh3_frm_tq-d46e134142" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_nls_w1r_ks-d46e134865" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e136078" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_xbx_rs1_tq-d46e138634" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
-   <li><span data-tocid="concept_jn1_nzb_kv-d46e138689" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e140570" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e140625" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_pvm_yt3_wq-d46e138849" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
-   <li><span data-tocid="concept_vcj_1ws_js-d46e141274" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e140785" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e144486" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_chv_vmj_wr-d46e141497" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_chv_vmj_wr-d46e144709" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
@@ -473,7 +480,7 @@
     <p class="p">The read preference determines how the origin reads data from different members
    of the MongoDB replica set. </p>
 
-    <div class="p">You can use the following MongoDB read preferences:<ul class="ul" id="concept_oy2_1dt_ns__d1284e29">
+    <div class="p">You can use the following MongoDB read preferences:<ul class="ul" id="concept_oy2_1dt_ns__d1302e29">
     <li class="li">Primary - Requires reading from the primary member.</li>
 
     <li class="li">Primary Preferred - Prefers reading from the primary, but allows reads from a secondary
@@ -532,18 +539,18 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
             header attributes are stored as String values:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_of3_bgh_scb__table_brz_3gp_qx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d333690e402">Record Header Attribute</th>
+                            <th class="entry cellrowborder" id="d337214e402">Record Header Attribute</th>
 
-                            <th class="entry cellrowborder" id="d333690e405">Description</th>
+                            <th class="entry cellrowborder" id="d337214e405">Description</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d333690e402 ">sdc.event.type</td>
+                            <td class="entry cellrowborder" headers="d337214e402 ">sdc.event.type</td>
 
-                            <td class="entry cellrowborder" headers="d333690e405 ">Event type. Uses the following event type:<ul class="ul" id="concept_of3_bgh_scb__ul_m12_mgp_qx">
+                            <td class="entry cellrowborder" headers="d337214e405 ">Event type. Uses the following event type:<ul class="ul" id="concept_of3_bgh_scb__ul_m12_mgp_qx">
                                     <li class="li">no-more-data - Generated after the origin completes
                                         processing all available objects and the number of seconds
                                         configured for Max Batch Wait Time has elapsed.</li>
@@ -554,16 +561,16 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                         </tr>
 
                         <tr>
-       <td class="entry cellrowborder" headers="d333690e402 ">sdc.event.version</td>
+       <td class="entry cellrowborder" headers="d337214e402 ">sdc.event.version</td>
 
-       <td class="entry cellrowborder" headers="d333690e405 ">An integer that indicates the version of the event record type.</td>
+       <td class="entry cellrowborder" headers="d337214e405 ">An integer that indicates the version of the event record type.</td>
 
       </tr>
 
                         <tr>
-       <td class="entry cellrowborder" headers="d333690e402 ">sdc.event.creation_timestamp</td>
+       <td class="entry cellrowborder" headers="d337214e402 ">sdc.event.creation_timestamp</td>
 
-       <td class="entry cellrowborder" id="concept_of3_bgh_scb__d43e2243" headers="d333690e405 ">Epoch timestamp when the stage created the event.
+       <td class="entry cellrowborder" id="concept_of3_bgh_scb__d45e2289" headers="d337214e405 ">Epoch timestamp when the stage created the event.
        </td>
 
       </tr>
@@ -588,26 +595,26 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                     to no-more-data and include the following fields:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_of3_bgh_scb__table_uw3_g24_scb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
       <tr>
-       <th class="entry cellrowborder" id="d333690e474">Event Record Field</th>
+       <th class="entry cellrowborder" id="d337214e474">Event Record Field</th>
 
-       <th class="entry cellrowborder" id="d333690e477">Description</th>
+       <th class="entry cellrowborder" id="d337214e477">Description</th>
 
       </tr>
 
      </thead>
 <tbody class="tbody">
-      <tr id="concept_of3_bgh_scb__d43e5356">
-       <td class="entry cellrowborder" headers="d333690e474 ">record-count</td>
+      <tr id="concept_of3_bgh_scb__d45e5367">
+       <td class="entry cellrowborder" headers="d337214e474 ">record-count</td>
 
-       <td class="entry cellrowborder" headers="d333690e477 ">Number of records successfully generated since the pipeline started or since the last
+       <td class="entry cellrowborder" headers="d337214e477 ">Number of records successfully generated since the pipeline started or since the last
         no-more-data event was created. </td>
 
       </tr>
 
-      <tr id="concept_of3_bgh_scb__d43e5365">
-       <td class="entry cellrowborder" headers="d333690e474 ">error-count</td>
+      <tr id="concept_of3_bgh_scb__d45e5376">
+       <td class="entry cellrowborder" headers="d337214e474 ">error-count</td>
 
-       <td class="entry cellrowborder" headers="d333690e477 ">Number of error records generated since the pipeline started or since the last
+       <td class="entry cellrowborder" headers="d337214e477 ">Number of error records generated since the pipeline started or since the last
         no-more-data event was created.</td>
 
       </tr>
@@ -684,7 +691,7 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
 </div>
 
                 </div>
-                <ol type="a" class="ol substeps" id="task_zry_dg2_ww__d69e9880">
+                <ol type="a" class="ol substeps" id="task_zry_dg2_ww__d71e9932">
                     <li class="li substep substepexpand">
                         <span class="ph cmd">Use the following command to set the JAVA_HOME environment
                             variable:</span>
@@ -730,7 +737,7 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                         <span class="ph cmd">Define the following options in the SDC_JAVA_OPTS environment
                             variable:</span>
                         <div class="itemgroup info">
-                    <ul class="ul" id="task_zry_dg2_ww__d69e10279">
+                    <ul class="ul" id="task_zry_dg2_ww__d71e10331">
                         <li class="li"><samp class="ph systemoutput">javax.net.ssl.trustStore</samp> - Path to the
                             truststore file on the <span class="ph">Data Collector</span>
                             machine.</li>
@@ -787,43 +794,43 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mdf_2rs_ns__table_ac1_hss_5x" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d333690e803">General Property</th>
+                                    <th class="entry cellrowborder" id="d337214e803">General Property</th>
 
-                                    <th class="entry cellrowborder" id="d333690e806">Description</th>
+                                    <th class="entry cellrowborder" id="d337214e806">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-       <td class="entry cellrowborder" headers="d333690e803 ">Name</td>
+       <td class="entry cellrowborder" headers="d337214e803 ">Name</td>
 
-       <td class="entry cellrowborder" headers="d333690e806 ">Stage name.</td>
-
-      </tr>
-
-                                <tr>
-       <td class="entry cellrowborder" headers="d333690e803 ">Description</td>
-
-       <td class="entry cellrowborder" headers="d333690e806 ">Optional description.</td>
+       <td class="entry cellrowborder" headers="d337214e806 ">Stage name.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d333690e803 ">Produce Events <a class="xref" href="MongoDB.html#concept_vx3_1gh_scb">
+       <td class="entry cellrowborder" headers="d337214e803 ">Description</td>
+
+       <td class="entry cellrowborder" headers="d337214e806 ">Optional description.</td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d337214e803 ">Produce Events <a class="xref" href="MongoDB.html#concept_vx3_1gh_scb">
                                             <img class="image" id="task_mdf_2rs_ns__image_plp_tp2_px" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry cellrowborder" headers="d333690e806 ">Generates event records when events occur. Use for event
+                                    <td class="entry cellrowborder" headers="d337214e806 ">Generates event records when events occur. Use for event
         handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
-         <img class="image" id="task_mdf_2rs_ns__d43e800" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+         <img class="image" id="task_mdf_2rs_ns__d45e800" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry cellrowborder" headers="d333690e803 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-         <img class="image" id="task_mdf_2rs_ns__d43e809" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry cellrowborder" headers="d337214e803 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+         <img class="image" id="task_mdf_2rs_ns__d45e809" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry cellrowborder" headers="d333690e806 ">Error record handling for the stage: <ul class="ul" id="task_mdf_2rs_ns__d43e813">
+       <td class="entry cellrowborder" headers="d337214e806 ">Error record handling for the stage: <ul class="ul" id="task_mdf_2rs_ns__d45e813">
          <li class="li">Discard - Discards the record.</li>
 
          <li class="li">Send to Error - Sends the record to the pipeline for error handling.</li>
@@ -848,21 +855,21 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mdf_2rs_ns__table_prm_rlt_tz" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d333690e899">MongoDB Property</th>
+                                    <th class="entry cellrowborder" id="d337214e899">MongoDB Property</th>
 
-                                    <th class="entry cellrowborder" id="d333690e902">Description</th>
+                                    <th class="entry cellrowborder" id="d337214e902">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr id="task_mdf_2rs_ns__row-MongoConnectString">
-                                    <td class="entry cellrowborder" headers="d333690e899 ">Connection String</td>
+                                    <td class="entry cellrowborder" headers="d337214e899 ">Connection String</td>
 
-                                    <td class="entry cellrowborder" headers="d333690e902 ">
+                                    <td class="entry cellrowborder" headers="d337214e902 ">
                                         <div class="p">Connection string for the MongoDB instance. Use the following
-       format:<pre class="pre codeblock"><code>mongodb://host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]</code></pre>When
-       connecting to a cluster, enter additional node information to ensure a connection.</div>
+        format:<pre class="pre codeblock"><code>mongodb://host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]</code></pre>When
+        connecting to a cluster, enter additional node information to ensure a connection.</div>
 
                                         <p class="p">If the MongoDB server uses username/password or LDAP
                                             authentication, you can include the credentials in the
@@ -873,36 +880,36 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                                 </tr>
 
                                 <tr>
-      <td class="entry cellrowborder" headers="d333690e899 ">Enable Single Mode</td>
+      <td class="entry cellrowborder" headers="d337214e899 ">Enable Single Mode</td>
 
-      <td class="entry cellrowborder" headers="d333690e902 ">Select to connect to a single MongoDB server or node. If multiple nodes are defined in
+      <td class="entry cellrowborder" headers="d337214e902 ">Select to connect to a single MongoDB server or node. If multiple nodes are defined in
        the connection string, the stage connects only to the first node. <p class="p">Use this option with
         care. If the stage cannot connect or the connection fails, the pipeline stops. </p>
 </td>
 
      </tr>
 <tr>
-      <td class="entry cellrowborder" headers="d333690e899 ">Database</td>
+      <td class="entry cellrowborder" headers="d337214e899 ">Database</td>
 
-      <td class="entry cellrowborder" headers="d333690e902 ">Name of the MongoDB database.</td>
-
-     </tr>
-<tr>
-      <td class="entry cellrowborder" headers="d333690e899 ">Collection</td>
-
-      <td class="entry cellrowborder" headers="d333690e902 ">Name of the MongoDB collection to use.</td>
+      <td class="entry cellrowborder" headers="d337214e902 ">Name of the MongoDB database.</td>
 
      </tr>
 <tr>
-      <td class="entry cellrowborder" headers="d333690e899 ">Capped Collection</td>
+      <td class="entry cellrowborder" headers="d337214e899 ">Collection</td>
 
-      <td class="entry cellrowborder" headers="d333690e902 ">The collection is capped. Clear this option to read an uncapped collection.</td>
+      <td class="entry cellrowborder" headers="d337214e902 ">Name of the MongoDB collection to use.</td>
 
      </tr>
 <tr>
-      <td class="entry cellrowborder" headers="d333690e899 ">Initial Offset</td>
+      <td class="entry cellrowborder" headers="d337214e899 ">Capped Collection</td>
 
-      <td class="entry cellrowborder" headers="d333690e902 ">Initial offset to use to begin reading. When using a date or Object ID field as the
+      <td class="entry cellrowborder" headers="d337214e902 ">The collection is capped. Clear this option to read an uncapped collection.</td>
+
+     </tr>
+<tr>
+      <td class="entry cellrowborder" headers="d337214e899 ">Initial Offset</td>
+
+      <td class="entry cellrowborder" headers="d337214e902 ">Initial offset to use to begin reading. When using a date or Object ID field as the
        offset field, enter a timestamp with the following format: <code class="ph codeph">YYYY-MM-DD
         hh:mm:ss</code>. <p class="p">When using a string field, enter the string to use.</p>
 <p class="p">Default is:
@@ -911,9 +918,9 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
 
      </tr>
 <tr>
-      <td class="entry cellrowborder" headers="d333690e899 ">Offset Field Type</td>
+      <td class="entry cellrowborder" headers="d337214e899 ">Offset Field Type</td>
 
-      <td class="entry cellrowborder" headers="d333690e902 ">Data type of the offset field:<ul class="ul" id="task_mdf_2rs_ns__d43e4837">
+      <td class="entry cellrowborder" headers="d337214e902 ">Data type of the offset field:<ul class="ul" id="task_mdf_2rs_ns__d45e4847">
         <li class="li">ObjectId - Use for an Object ID field.</li>
 
         <li class="li">Date - Use for a date field.</li>
@@ -926,11 +933,11 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
 
      </tr>
 <tr>
-      <td class="entry cellrowborder" headers="d333690e899 ">Offset Field <a class="xref" href="MongoDB.html#concept_kx3_zrs_ns">
-        <img class="image" id="task_mdf_2rs_ns__d43e4858" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a>
+      <td class="entry cellrowborder" headers="d337214e899 ">Offset Field <a class="xref" href="MongoDB.html#concept_kx3_zrs_ns">
+        <img class="image" id="task_mdf_2rs_ns__d45e4868" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a>
       </td>
 
-      <td class="entry cellrowborder" headers="d333690e902 ">Field to use to track reads. Default is the _id field. <p class="p">You can use a nested offset
+      <td class="entry cellrowborder" headers="d337214e902 ">Field to use to track reads. Default is the _id field. <p class="p">You can use a nested offset
         field, such as o._id. You can also use any Object ID, date, or string field. Results are not
         guaranteed for anything but the _id field.</p>
 </td>
@@ -938,27 +945,27 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
      </tr>
 
                                 <tr>
-      <td class="entry cellrowborder" headers="d333690e899 ">Batch Size (records)</td>
+      <td class="entry cellrowborder" headers="d337214e899 ">Batch Size (records)</td>
 
-      <td class="entry cellrowborder" headers="d333690e902 ">Maximum number of records allowed in a batch.</td>
+      <td class="entry cellrowborder" headers="d337214e902 ">Maximum number of records allowed in a batch.</td>
 
      </tr>
 <tr>
-      <td class="entry cellrowborder" headers="d333690e899 ">Max Batch Wait Time <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q">
+      <td class="entry cellrowborder" headers="d337214e899 ">Max Batch Wait Time <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q">
         <img class="image" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a>
       </td>
 
-      <td class="entry cellrowborder" id="task_mdf_2rs_ns__d43e4885" headers="d333690e902 ">Amount of time the origin will wait to fill a batch
+      <td class="entry cellrowborder" id="task_mdf_2rs_ns__d45e4895" headers="d337214e902 ">Amount of time the origin will wait to fill a batch
        before sending an empty batch. </td>
 
      </tr>
 
                                 <tr>
-      <td class="entry cellrowborder" headers="d333690e899 ">Read Preference <a class="xref" href="MongoDB.html#concept_oy2_1dt_ns">
-        <img class="image" id="task_mdf_2rs_ns__d43e4895" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a>
+      <td class="entry cellrowborder" headers="d337214e899 ">Read Preference <a class="xref" href="MongoDB.html#concept_oy2_1dt_ns">
+        <img class="image" id="task_mdf_2rs_ns__d45e4905" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a>
       </td>
 
-      <td class="entry cellrowborder" id="task_mdf_2rs_ns__d43e4898" headers="d333690e902 ">Determines how the origin reads data from different members
+      <td class="entry cellrowborder" id="task_mdf_2rs_ns__d45e4908" headers="d337214e902 ">Determines how the origin reads data from different members
        of the MongoDB replica set.</td>
 
      </tr>
@@ -977,42 +984,42 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mdf_2rs_ns__table_qzt_xlz_mcb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
      <tr>
-      <th class="entry cellrowborder" id="d333690e1084">Credentials</th>
+      <th class="entry cellrowborder" id="d337214e1084">Credentials</th>
 
-      <th class="entry cellrowborder" id="d333690e1087">Description</th>
+      <th class="entry cellrowborder" id="d337214e1087">Description</th>
 
      </tr>
 
     </thead>
 <tbody class="tbody">
-     <tr id="task_mdf_2rs_ns__d43e4930">
-      <td class="entry cellrowborder" headers="d333690e1084 ">Authentication Type</td>
+     <tr id="task_mdf_2rs_ns__d45e4941">
+      <td class="entry cellrowborder" headers="d337214e1084 ">Authentication Type</td>
 
-      <td class="entry cellrowborder" headers="d333690e1087 ">Authentication used by the MongoDB server: Username/Password or LDAP.</td>
-
-     </tr>
-
-     <tr id="task_mdf_2rs_ns__d43e4939">
-      <td class="entry cellrowborder" headers="d333690e1084 ">Username</td>
-
-      <td class="entry cellrowborder" headers="d333690e1087 ">MongoDB or LDAP user name.</td>
+      <td class="entry cellrowborder" headers="d337214e1087 ">Authentication used by the MongoDB server: Username/Password or LDAP.</td>
 
      </tr>
 
-     <tr id="task_mdf_2rs_ns__d43e4948">
-      <td class="entry cellrowborder" headers="d333690e1084 ">Password</td>
+     <tr id="task_mdf_2rs_ns__d45e4950">
+      <td class="entry cellrowborder" headers="d337214e1084 ">Username</td>
 
-      <td class="entry cellrowborder" headers="d333690e1087 ">MongoDB or LDAP password.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_mdf_2rs_ns__d9e5272">To
-                        secure sensitive information such as usernames and passwords, you can use
+      <td class="entry cellrowborder" headers="d337214e1087 ">MongoDB or LDAP user name.</td>
+
+     </tr>
+
+     <tr id="task_mdf_2rs_ns__d45e4959">
+      <td class="entry cellrowborder" headers="d337214e1084 ">Password</td>
+
+      <td class="entry cellrowborder" headers="d337214e1087 ">MongoDB or LDAP password.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_mdf_2rs_ns__d9e5276">To
+                        secure sensitive information such as user names and passwords, you can use
                               <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
 </td>
 
      </tr>
 
      <tr>
-      <td class="entry cellrowborder" headers="d333690e1084 ">Authentication Source</td>
+      <td class="entry cellrowborder" headers="d337214e1084 ">Authentication Source</td>
 
-      <td class="entry cellrowborder" headers="d333690e1087 ">An optional alternate database name to perform delegated authentication. <p class="p">Available
+      <td class="entry cellrowborder" headers="d337214e1087 ">An optional alternate database name to perform delegated authentication. <p class="p">Available
         for the Username/Password option.</p>
 </td>
 
@@ -1031,43 +1038,43 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                     <div class="p">The defaults for these properties should work in most cases:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mdf_2rs_ns__table_ekt_wk2_ww" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:34.01360544217687%" /><col style="width:65.98639455782312%" /></colgroup><thead class="thead" style="text-align:left;">
                                     <tr>
-                                        <th class="entry cellrowborder" id="d333690e1183">Advanced Property</th>
+                                        <th class="entry cellrowborder" id="d337214e1183">Advanced Property</th>
 
-                                        <th class="entry cellrowborder" id="d333690e1186">Description</th>
+                                        <th class="entry cellrowborder" id="d337214e1186">Description</th>
 
                                     </tr>
 
                                 </thead>
 <tbody class="tbody">
                                     <tr>
-      <td class="entry cellrowborder" headers="d333690e1183 ">Connections Per Host</td>
+      <td class="entry cellrowborder" headers="d337214e1183 ">Connections Per Host</td>
 
-      <td class="entry cellrowborder" headers="d333690e1186 ">Maximum number of connections for each host.<p class="p">Default is 100.</p>
+      <td class="entry cellrowborder" headers="d337214e1186 ">Maximum number of connections for each host.<p class="p">Default is 100.</p>
 </td>
 
      </tr>
 
                                     <tr>
-      <td class="entry cellrowborder" headers="d333690e1183 ">Min Connections Per Host</td>
+      <td class="entry cellrowborder" headers="d337214e1183 ">Min Connections Per Host</td>
 
-      <td class="entry cellrowborder" headers="d333690e1186 ">Minimum number of connections for each host.<p class="p">Default is 0.</p>
+      <td class="entry cellrowborder" headers="d337214e1186 ">Minimum number of connections for each host.<p class="p">Default is 0.</p>
 </td>
 
      </tr>
 
                                     <tr>
-      <td class="entry cellrowborder" headers="d333690e1183 ">Connection Timeout</td>
+      <td class="entry cellrowborder" headers="d337214e1183 ">Connection Timeout</td>
 
-      <td class="entry cellrowborder" headers="d333690e1186 ">Maximum time in milliseconds to wait for a connection. <p class="p">Default is
+      <td class="entry cellrowborder" headers="d337214e1186 ">Maximum time in milliseconds to wait for a connection. <p class="p">Default is
        10,000.</p>
 </td>
 
      </tr>
 
                                     <tr>
-      <td class="entry cellrowborder" headers="d333690e1183 ">Max Connection Idle Time</td>
+      <td class="entry cellrowborder" headers="d337214e1183 ">Max Connection Idle Time</td>
 
-      <td class="entry cellrowborder" headers="d333690e1186 ">Maximum time in milliseconds that a pooled connection can remain idle. When a pooled
+      <td class="entry cellrowborder" headers="d337214e1186 ">Maximum time in milliseconds that a pooled connection can remain idle. When a pooled
        connection exceeds the idle time, the connection is closed. Use 0 to opt out of this
         property.<p class="p">Default is 0.</p>
 </td>
@@ -1075,9 +1082,9 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
      </tr>
 
                                     <tr>
-      <td class="entry cellrowborder" headers="d333690e1183 ">Max Connection Lifetime</td>
+      <td class="entry cellrowborder" headers="d337214e1183 ">Max Connection Lifetime</td>
 
-      <td class="entry cellrowborder" headers="d333690e1186 ">Maximum time in milliseconds that a pooled connection can be active. When a pooled
+      <td class="entry cellrowborder" headers="d337214e1186 ">Maximum time in milliseconds that a pooled connection can be active. When a pooled
        connection exceeds the lifetime, the connection is closed. Use 0 to opt out of this
         property.<p class="p">Default is 0.</p>
 </td>
@@ -1085,9 +1092,9 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
      </tr>
 
                                     <tr>
-      <td class="entry cellrowborder" headers="d333690e1183 ">Max Wait Time</td>
+      <td class="entry cellrowborder" headers="d337214e1183 ">Max Wait Time</td>
 
-      <td class="entry cellrowborder" headers="d333690e1186 ">Maximum time in milliseconds that a thread can wait for a connection to become
+      <td class="entry cellrowborder" headers="d337214e1186 ">Maximum time in milliseconds that a thread can wait for a connection to become
        available. Use 0 to opt out of this property. Use a negative value to wait
         indefinitely.<p class="p">Default is 120,000.</p>
 </td>
@@ -1095,9 +1102,9 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
      </tr>
 
                                     <tr>
-      <td class="entry cellrowborder" headers="d333690e1183 ">Server Selection Timeout</td>
+      <td class="entry cellrowborder" headers="d337214e1183 ">Server Selection Timeout</td>
 
-      <td class="entry cellrowborder" headers="d333690e1186 ">Maximum time in milliseconds that <span class="ph">Data Collector</span> waits for a server selection
+      <td class="entry cellrowborder" headers="d337214e1186 ">Maximum time in milliseconds that <span class="ph">Data Collector</span> waits for a server selection
        before throwing an exception. If you use 0, an exception is thrown immediately if no server
        is available. Use a negative value to wait indefinitely.<p class="p">Default is 30,000.</p>
 </td>
@@ -1105,9 +1112,9 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
      </tr>
 
                                     <tr>
-      <td class="entry cellrowborder" headers="d333690e1183 ">Threads Allowed to Block for Connection Multiplier</td>
+      <td class="entry cellrowborder" headers="d337214e1183 ">Threads Allowed to Block for Connection Multiplier</td>
 
-      <td class="entry cellrowborder" headers="d333690e1186 ">Multiplier that determines the maximum number of threads that can wait for a connection
+      <td class="entry cellrowborder" headers="d337214e1186 ">Multiplier that determines the maximum number of threads that can wait for a connection
        to become available from the pool. This number multiplied by the Connections Per Host value
        determines the maximum number of threads.<p class="p">Default is 5.</p>
 </td>
@@ -1115,45 +1122,45 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
      </tr>
 
                                     <tr>
-      <td class="entry cellrowborder" headers="d333690e1183 ">Heartbeat Frequency</td>
+      <td class="entry cellrowborder" headers="d337214e1183 ">Heartbeat Frequency</td>
 
-      <td class="entry cellrowborder" headers="d333690e1186 ">The frequency in milliseconds at which <span class="ph">Data Collector</span> attempts to determine the current
+      <td class="entry cellrowborder" headers="d337214e1186 ">The frequency in milliseconds at which <span class="ph">Data Collector</span> attempts to determine the current
        state of each server in the cluster.<p class="p">Default is 10,000.</p>
 </td>
 
      </tr>
 
                                     <tr>
-      <td class="entry cellrowborder" headers="d333690e1183 ">Min Heartbeat Frequency</td>
+      <td class="entry cellrowborder" headers="d337214e1183 ">Min Heartbeat Frequency</td>
 
-      <td class="entry cellrowborder" headers="d333690e1186 ">Minimum heartbeat frequency in milliseconds. <span class="ph">Data Collector</span> waits at least this long before
+      <td class="entry cellrowborder" headers="d337214e1186 ">Minimum heartbeat frequency in milliseconds. <span class="ph">Data Collector</span> waits at least this long before
        checking the state of each server.<p class="p">Default is 500.</p>
 </td>
 
      </tr>
 
                                     <tr>
-      <td class="entry cellrowborder" headers="d333690e1183 ">Heartbeat Connection Timeout</td>
+      <td class="entry cellrowborder" headers="d337214e1183 ">Heartbeat Connection Timeout</td>
 
-      <td class="entry cellrowborder" headers="d333690e1186 ">Maximum time in milliseconds to wait for a connection used for the cluster
+      <td class="entry cellrowborder" headers="d337214e1186 ">Maximum time in milliseconds to wait for a connection used for the cluster
         heartbeat.<p class="p">Default is 20,000.</p>
 </td>
 
      </tr>
 
                                     <tr>
-      <td class="entry cellrowborder" headers="d333690e1183 ">Heartbeat Socket Timeout</td>
+      <td class="entry cellrowborder" headers="d337214e1183 ">Heartbeat Socket Timeout</td>
 
-      <td class="entry cellrowborder" headers="d333690e1186 ">Maximum time in milliseconds for a socket timeout for connections used for the cluster
+      <td class="entry cellrowborder" headers="d337214e1186 ">Maximum time in milliseconds for a socket timeout for connections used for the cluster
         heartbeat.<p class="p">Default is 20,000.</p>
 </td>
 
      </tr>
 
                                     <tr>
-      <td class="entry cellrowborder" headers="d333690e1183 ">Local Threshold</td>
+      <td class="entry cellrowborder" headers="d337214e1183 ">Local Threshold</td>
 
-      <td class="entry cellrowborder" headers="d333690e1186 ">Local threshold in milliseconds. Requests are sent to a server whose ping time is less
+      <td class="entry cellrowborder" headers="d337214e1186 ">Local threshold in milliseconds. Requests are sent to a server whose ping time is less
        than or equal to the server with the fastest ping time plus the local threshold
         value.<p class="p">Default is 15.</p>
 </td>
@@ -1161,39 +1168,39 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
      </tr>
 
                                     <tr>
-      <td class="entry cellrowborder" headers="d333690e1183 ">Required Replica Set Name</td>
+      <td class="entry cellrowborder" headers="d337214e1183 ">Required Replica Set Name</td>
 
-      <td class="entry cellrowborder" headers="d333690e1186 ">Required replica set name to use for the cluster.</td>
-
-     </tr>
-
-                                    <tr>
-      <td class="entry cellrowborder" headers="d333690e1183 ">Cursor Finalizer Enabled</td>
-
-      <td class="entry cellrowborder" headers="d333690e1186 ">Specifies whether to enable cursor finalizers.</td>
+      <td class="entry cellrowborder" headers="d337214e1186 ">Required replica set name to use for the cluster.</td>
 
      </tr>
 
                                     <tr>
-      <td class="entry cellrowborder" headers="d333690e1183 ">Socket Keep Alive</td>
+      <td class="entry cellrowborder" headers="d337214e1183 ">Cursor Finalizer Enabled</td>
 
-      <td class="entry cellrowborder" headers="d333690e1186 ">Specifies whether to enable socket keep alive. </td>
+      <td class="entry cellrowborder" headers="d337214e1186 ">Specifies whether to enable cursor finalizers.</td>
 
      </tr>
 
                                     <tr>
-      <td class="entry cellrowborder" headers="d333690e1183 ">Socket Timeout</td>
+      <td class="entry cellrowborder" headers="d337214e1183 ">Socket Keep Alive</td>
 
-      <td class="entry cellrowborder" headers="d333690e1186 ">Maximum time in milliseconds for the socket timeout. Use 0 to opt out of this
+      <td class="entry cellrowborder" headers="d337214e1186 ">Specifies whether to enable socket keep alive. </td>
+
+     </tr>
+
+                                    <tr>
+      <td class="entry cellrowborder" headers="d337214e1183 ">Socket Timeout</td>
+
+      <td class="entry cellrowborder" headers="d337214e1186 ">Maximum time in milliseconds for the socket timeout. Use 0 to opt out of this
         property.<p class="p">Default is 0.</p>
 </td>
 
      </tr>
 
                                     <tr>
-                                        <td class="entry cellrowborder" headers="d333690e1183 ">SSL Enabled </td>
+                                        <td class="entry cellrowborder" headers="d337214e1183 ">SSL Enabled </td>
 
-                                        <td class="entry cellrowborder" headers="d333690e1186 ">Enables SSL/TLS between <span class="ph">Data Collector</span> and MongoDB.<p class="p">If the MongoDB certificate is signed
+                                        <td class="entry cellrowborder" headers="d337214e1186 ">Enables SSL/TLS between <span class="ph">Data Collector</span> and MongoDB.<p class="p">If the MongoDB certificate is signed
                                                 by a private CA or not trusted by the default Java
                                                 truststore, you also must define the truststore file
                                                 and password in the SDC_JAVA_OPTS environment
@@ -1203,9 +1210,9 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                                     </tr>
 
                                     <tr>
-      <td class="entry cellrowborder" headers="d333690e1183 ">SSL Invalid Host Name Allowed</td>
+      <td class="entry cellrowborder" headers="d337214e1183 ">SSL Invalid Host Name Allowed</td>
 
-      <td class="entry cellrowborder" headers="d333690e1186 ">Specifies whether invalid host names are allowed in SSL/TLS certificates.</td>
+      <td class="entry cellrowborder" headers="d337214e1186 ">Specifies whether invalid host names are allowed in SSL/TLS certificates.</td>
 
      </tr>
 
