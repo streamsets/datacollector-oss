@@ -2,7 +2,7 @@
 <!DOCTYPE html
   PUBLIC "" "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
-    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="The Google Cloud Storage destination writes data to objects in Google Cloud Storage. You can use other destinations to write to Google BigQuery , Google Bigtable , and Google Pub/Sub . The destination ..." /><meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Google Cloud Storage" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/Destinations-title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/Bigtable.html#concept_pl5_tmq_tx" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/PubSubPublisher.html#concept_qsj_hk1_v1b" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_p4n_jrl_nbb" /><title>Google Cloud Storage</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_p4n_jrl_nbb-d46e87261" />         
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="The Google Cloud Storage destination writes data to objects in Google Cloud Storage. You can use other destinations to write to Google BigQuery , Google Bigtable , and Google Pub/Sub . The destination ..." /><meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Google Cloud Storage" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/Destinations-title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/Bigtable.html#concept_pl5_tmq_tx" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/PubSubPublisher.html#concept_qsj_hk1_v1b" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_p4n_jrl_nbb" /><title>Google Cloud Storage</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_p4n_jrl_nbb-d46e89064" />         
         
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <!-- Latest compiled and minified Bootstrap CSS -->
@@ -103,108 +103,109 @@
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_l4q_flb_kr-d46e5240" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
-   <li><span data-tocid="concept_ylh_yyz_ky-d46e7307" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
-   <li><span data-tocid="concept_ejk_f1f_5v-d46e15527" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
-   <li><span data-tocid="concept_qsw_cjy_bt-d46e20362" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
-   <li><span data-tocid="concept_qn1_wn4_kq-d46e22042" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
-   <li><span data-tocid="concept_hdr_gyw_41b-d46e24539" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_l4q_flb_kr-d46e5861" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e7928" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e16281" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e22088" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e23812" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e26050" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e26354" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e67467" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
-   <li><span data-tocid="concept_agj_cfj_br-d46e83183" class="topicref" data-id="concept_agj_cfj_br" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span><ul class="nav nav-list">
-         <li><span data-tocid="concept_hpr_twm_jq-d46e83205" class="topicref" data-id="concept_hpr_twm_jq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations_overview.html#concept_hpr_twm_jq">Destinations</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e27865" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e69212" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e84912" class="topicref" data-id="concept_agj_cfj_br" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_hpr_twm_jq-d46e84934" class="topicref" data-id="concept_hpr_twm_jq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations_overview.html#concept_hpr_twm_jq">Destinations</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_gyq_rpr_4cb-d46e83229" class="topicref" data-id="concept_gyq_rpr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Aerospike.html#concept_gyq_rpr_4cb">Aerospike</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_gyq_rpr_4cb-d46e84958" class="topicref" data-id="concept_gyq_rpr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Aerospike.html#concept_gyq_rpr_4cb">Aerospike</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Aerospike destination writes data to Aerospike.</p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_avx_bnq_rt-d46e83286" class="topicref" data-id="concept_avx_bnq_rt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/AmazonS3.html#concept_avx_bnq_rt">Amazon S3</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_avx_bnq_rt-d46e85015" class="topicref" data-id="concept_avx_bnq_rt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/AmazonS3.html#concept_avx_bnq_rt">Amazon S3</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Amazon S3 destination writes data to Amazon S3. To write data to an Amazon Kinesis         Firehose delivery system, use
                         the Kinesis Firehose destination. To write data to Amazon         Kinesis Streams, use the Kinesis Producer destination.
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_jzm_kf4_zx-d46e84225" class="topicref" data-id="concept_jzm_kf4_zx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DataLakeStore.html#concept_jzm_kf4_zx">Azure Data Lake Store</a></span></span></li>
-         <li><span data-tocid="concept_xq5_d5q_1bb-d46e85158" class="topicref" data-id="concept_xq5_d5q_1bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/AzureEventHubProducer.html#concept_xq5_d5q_1bb">Azure Event Hub Producer</a></span></span></li>
-         <li><span data-tocid="concept_pnd_jkq_1bb-d46e85254" class="topicref" data-id="concept_pnd_jkq_1bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/AzureIoTHub.html#concept_pnd_jkq_1bb">Azure IoT Hub Producer</a></span></span></li>
-         <li><span data-tocid="concept_hfy_mfd_sr-d46e85410" class="topicref" data-id="concept_hfy_mfd_sr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Cassandra.html#concept_hfy_mfd_sr">Cassandra</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_jzm_kf4_zx-d46e85954" class="topicref" data-id="concept_jzm_kf4_zx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DataLakeStore.html#concept_jzm_kf4_zx">Azure Data Lake Storage</a></span></span></li>
+         <li><span data-tocid="concept_xq5_d5q_1bb-d46e86887" class="topicref" data-id="concept_xq5_d5q_1bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/AzureEventHubProducer.html#concept_xq5_d5q_1bb">Azure Event Hub Producer</a></span></span></li>
+         <li><span data-tocid="concept_pnd_jkq_1bb-d46e86983" class="topicref" data-id="concept_pnd_jkq_1bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/AzureIoTHub.html#concept_pnd_jkq_1bb">Azure IoT Hub Producer</a></span></span></li>
+         <li><span data-tocid="concept_hfy_mfd_sr-d46e87139" class="topicref" data-id="concept_hfy_mfd_sr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Cassandra.html#concept_hfy_mfd_sr">Cassandra</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Cassandra destination writes data to a Cassandra cluster.</p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_hw5_s3n_sz-d46e85624" class="topicref" data-id="concept_hw5_s3n_sz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/CoAPClient.html#concept_hw5_s3n_sz">CoAP Client</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_hw5_s3n_sz-d46e87353" class="topicref" data-id="concept_hw5_s3n_sz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/CoAPClient.html#concept_hw5_s3n_sz">CoAP Client</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Constrained Application Protocol (CoAP) is a web transfer protocol designed for         machine-to-machine devices. The CoAP
                         Client destination writes data to a CoAP endpoint. Use         the destination to send requests to a CoAP resource URL.
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_ahq_1wq_h2b-d46e85723" class="topicref" data-id="concept_ahq_1wq_h2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Couchbase.html#concept_ahq_1wq_h2b">Couchbase</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_ahq_1wq_h2b-d46e87452" class="topicref" data-id="concept_ahq_1wq_h2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Couchbase.html#concept_ahq_1wq_h2b">Couchbase</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Couchbase destination writes data to Couchbase Server. Couchbase Server is a         distributed NoSQL document-oriented
                         database.
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_u5t_vpv_4r-d46e85780" class="topicref" data-id="concept_u5t_vpv_4r" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Elasticsearch.html#concept_u5t_vpv_4r">Elasticsearch</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_u5t_vpv_4r-d46e87509" class="topicref" data-id="concept_u5t_vpv_4r" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Elasticsearch.html#concept_u5t_vpv_4r">Elasticsearch</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Elasticsearch destination writes data to an Elasticsearch cluster, including Elastic         Cloud clusters (formerly
-                        Found clusters). The destination uses the Elasticsearch HTTP API to         write each record to Elasticsearch as a document.
+                        Found clusters) and Amazon Elasticsearch Service clusters. The         destination uses the Elasticsearch HTTP module to access
+                        the Bulk API and write each record         to Elasticsearch as a document.
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_hlx_r53_rx-d46e86001" class="topicref" data-id="concept_hlx_r53_rx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/WaveAnalytics.html#concept_hlx_r53_rx">Einstein Analytics</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_hlx_r53_rx-d46e87804" class="topicref" data-id="concept_hlx_r53_rx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/WaveAnalytics.html#concept_hlx_r53_rx">Einstein Analytics</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Einstein Analytics destination writes data to Salesforce Einstein Analytics. The         destination connects to Einstein
                         Analytics to upload external data to a dataset.
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_pzn_hl4_yr-d46e86290" class="topicref" data-id="concept_pzn_hl4_yr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Flume.html#concept_pzn_hl4_yr">Flume</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_pzn_hl4_yr-d46e88093" class="topicref" data-id="concept_pzn_hl4_yr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Flume.html#concept_pzn_hl4_yr">Flume</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Flume destination writes data to a Flume source. When you write data to Flume, you     pass data to a Flume client. The
                         Flume client passes data to hosts based on client configuration     properties. 
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_hj4_brk_dbb-d46e86389" class="topicref" data-id="concept_hj4_brk_dbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/BigQuery.html#concept_hj4_brk_dbb">Google BigQuery</a></span></span></li>
-         <li><span data-tocid="concept_pl5_tmq_tx-d46e86680" class="topicref" data-id="concept_pl5_tmq_tx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Bigtable.html#concept_pl5_tmq_tx">Google Bigtable</a></span></span></li>
-         <li class="active"><span data-tocid="concept_p4n_jrl_nbb-d46e87261" class="topicref" data-id="concept_p4n_jrl_nbb" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/GCS.html#concept_p4n_jrl_nbb">Google Cloud Storage</a></span></span><ul class="nav nav-list">
-               <li><span data-tocid="concept_otx_vxn_sbb-d46e87394" class="topicref" data-id="concept_otx_vxn_sbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/GCS.html#concept_otx_vxn_sbb">Credentials</a></span></span></li>
-               <li><span data-tocid="concept_qsx_ryn_sbb-d46e87490" class="topicref" data-id="concept_qsx_ryn_sbb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/GCS.html#concept_qsx_ryn_sbb">Partition Prefix</a></span></span></li>
-               <li><span data-tocid="concept_ffn_tc4_sbb-d46e87542" class="topicref" data-id="concept_ffn_tc4_sbb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/GCS.html#concept_ffn_tc4_sbb">Time Basis, Data Time Zone, and Time-Based Partition Prefixes</a></span></span></li>
-               <li><span data-tocid="concept_s1m_j24_sbb-d46e87604" class="topicref" data-id="concept_s1m_j24_sbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/GCS.html#concept_s1m_j24_sbb">Object Names</a></span></span></li>
-               <li><span data-tocid="concept_xjx_h4n_sbb-d46e87759" class="topicref" data-id="concept_xjx_h4n_sbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/GCS.html#concept_xjx_h4n_sbb">Event Generation</a></span></span></li>
-               <li><span data-tocid="concept_pt4_y24_sbb-d46e87955" class="topicref" data-id="concept_pt4_y24_sbb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/GCS.html#concept_pt4_y24_sbb">Data Formats</a></span></span></li>
-               <li><span data-tocid="task_vn4_nrl_nbb-d46e88068" class="topicref" data-id="task_vn4_nrl_nbb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/GCS.html#task_vn4_nrl_nbb">Configuring a Google Cloud Storage Destination</a></span></span></li>
+         <li><span data-tocid="concept_hj4_brk_dbb-d46e88192" class="topicref" data-id="concept_hj4_brk_dbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/BigQuery.html#concept_hj4_brk_dbb">Google BigQuery</a></span></span></li>
+         <li><span data-tocid="concept_pl5_tmq_tx-d46e88483" class="topicref" data-id="concept_pl5_tmq_tx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Bigtable.html#concept_pl5_tmq_tx">Google Bigtable</a></span></span></li>
+         <li class="active"><span data-tocid="concept_p4n_jrl_nbb-d46e89064" class="topicref" data-id="concept_p4n_jrl_nbb" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/GCS.html#concept_p4n_jrl_nbb">Google Cloud Storage</a></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_otx_vxn_sbb-d46e89197" class="topicref" data-id="concept_otx_vxn_sbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/GCS.html#concept_otx_vxn_sbb">Credentials</a></span></span></li>
+               <li><span data-tocid="concept_qsx_ryn_sbb-d46e89293" class="topicref" data-id="concept_qsx_ryn_sbb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/GCS.html#concept_qsx_ryn_sbb">Partition Prefix</a></span></span></li>
+               <li><span data-tocid="concept_ffn_tc4_sbb-d46e89345" class="topicref" data-id="concept_ffn_tc4_sbb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/GCS.html#concept_ffn_tc4_sbb">Time Basis, Data Time Zone, and Time-Based Partition Prefixes</a></span></span></li>
+               <li><span data-tocid="concept_s1m_j24_sbb-d46e89407" class="topicref" data-id="concept_s1m_j24_sbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/GCS.html#concept_s1m_j24_sbb">Object Names</a></span></span></li>
+               <li><span data-tocid="concept_xjx_h4n_sbb-d46e89562" class="topicref" data-id="concept_xjx_h4n_sbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/GCS.html#concept_xjx_h4n_sbb">Event Generation</a></span></span></li>
+               <li><span data-tocid="concept_pt4_y24_sbb-d46e89758" class="topicref" data-id="concept_pt4_y24_sbb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/GCS.html#concept_pt4_y24_sbb">Data Formats</a></span></span></li>
+               <li><span data-tocid="task_vn4_nrl_nbb-d46e89871" class="topicref" data-id="task_vn4_nrl_nbb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/GCS.html#task_vn4_nrl_nbb">Configuring a Google Cloud Storage Destination</a></span></span></li>
             </ul>
          </li>
-         <li><span data-tocid="concept_qsj_hk1_v1b-d46e88191" class="topicref" data-id="concept_qsj_hk1_v1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/PubSubPublisher.html#concept_qsj_hk1_v1b">Google Pub/Sub Publisher</a></span></span></li>
-         <li><span data-tocid="concept_awl_4km_zq-d46e88476" class="topicref" data-id="concept_awl_4km_zq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HadoopFS-destination.html#concept_awl_4km_zq">Hadoop FS</a></span></span></li>
-         <li><span data-tocid="concept_wsz_5t5_vr-d46e89706" class="topicref" data-id="concept_wsz_5t5_vr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HBase.html#concept_wsz_5t5_vr">HBase</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_qsj_hk1_v1b-d46e89994" class="topicref" data-id="concept_qsj_hk1_v1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/PubSubPublisher.html#concept_qsj_hk1_v1b">Google Pub/Sub Publisher</a></span></span></li>
+         <li><span data-tocid="concept_awl_4km_zq-d46e90279" class="topicref" data-id="concept_awl_4km_zq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HadoopFS-destination.html#concept_awl_4km_zq">Hadoop FS</a></span></span></li>
+         <li><span data-tocid="concept_wsz_5t5_vr-d46e91675" class="topicref" data-id="concept_wsz_5t5_vr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HBase.html#concept_wsz_5t5_vr">HBase</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The HBase destination writes data to an HBase cluster. The destination can write data       to HBase as text, binary data,
                         or JSON strings. You can define the data format for each column       written to HBase.
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_gcr_z2t_zv-d46e90089" class="topicref" data-id="concept_gcr_z2t_zv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HiveMetastore.html#concept_gcr_z2t_zv">Hive Metastore</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_gcr_z2t_zv-d46e92058" class="topicref" data-id="concept_gcr_z2t_zv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HiveMetastore.html#concept_gcr_z2t_zv">Hive Metastore</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Hive Metastore destination works with the Hive Metadata processor and the Hadoop FS         or MapR FS destination as
                         part of the Drift Synchronization Solution for Hive. 
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_kvs_3hh_ht-d46e90684" class="topicref" data-id="concept_kvs_3hh_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Hive.html#concept_kvs_3hh_ht">Hive Streaming</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_kvs_3hh_ht-d46e92653" class="topicref" data-id="concept_kvs_3hh_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Hive.html#concept_kvs_3hh_ht">Hive Streaming</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Hive Streaming destination writes data to Hive tables stored in the ORC (Optimized   Row Columnar) file format.</p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_khl_sg5_lz-d46e90783" class="topicref" data-id="concept_khl_sg5_lz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HTTPClient.html#concept_khl_sg5_lz">HTTP Client</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_khl_sg5_lz-d46e92752" class="topicref" data-id="concept_khl_sg5_lz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HTTPClient.html#concept_khl_sg5_lz">HTTP Client</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The HTTP Client destination writes data to an HTTP endpoint. The destination sends         requests to an HTTP resource URL.
                         Use the HTTP Client destination to perform a range of         standard requests or use an expression to determine the request
@@ -212,115 +213,115 @@
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_inf_db_sr-d46e91741" class="topicref" data-id="concept_inf_db_sr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/InfluxDB.html#concept_inf_db_sr">InfluxDB</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_inf_db_sr-d46e93710" class="topicref" data-id="concept_inf_db_sr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/InfluxDB.html#concept_inf_db_sr">InfluxDB</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The InfluxDB destination writes data to an InfluxDB database.</p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_kvs_3hh_ht-d46e91798" class="topicref" data-id="concept_kvs_3hh_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/JDBCProducer.html#concept_kvs_3hh_ht">JDBC Producer</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_kvs_3hh_ht-d46e93767" class="topicref" data-id="concept_kvs_3hh_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/JDBCProducer.html#concept_kvs_3hh_ht">JDBC Producer</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The JDBC Producer destination uses a JDBC connection to write data to a database         table. You can also use the JDBC
                         Producer to write change capture data from a Microsoft SQL         Server change log. 
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_sfz_ww5_n1b-d46e92015" class="topicref" data-id="concept_sfz_ww5_n1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/JMSProducer.html#concept_sfz_ww5_n1b">JMS Producer</a></span></span></li>
-         <li><span data-tocid="concept_oq2_5jl_zq-d46e92383" class="topicref" data-id="concept_oq2_5jl_zq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KProducer.html#concept_oq2_5jl_zq">Kafka Producer</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_sfz_ww5_n1b-d46e93984" class="topicref" data-id="concept_sfz_ww5_n1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/JMSProducer.html#concept_sfz_ww5_n1b">JMS Producer</a></span></span></li>
+         <li><span data-tocid="concept_oq2_5jl_zq-d46e94352" class="topicref" data-id="concept_oq2_5jl_zq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KProducer.html#concept_oq2_5jl_zq">Kafka Producer</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Kafka Producer destination writes data to a Kafka cluster. <span class="ph">The destination can also send responses to a <a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_rzc_rbf_kfb" class="xref">microservice origin</a> when used in a <a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_qfh_xdm_p2b" class="xref">microservice pipeline</a>.</span></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_bjv_dpk_kv-d46e93330" class="topicref" data-id="concept_bjv_dpk_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KinFirehose.html#concept_bjv_dpk_kv">Kinesis Firehose</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_bjv_dpk_kv-d46e95299" class="topicref" data-id="concept_bjv_dpk_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KinFirehose.html#concept_bjv_dpk_kv">Kinesis Firehose</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Kinesis Firehose destination writes data to an Amazon Kinesis Firehose delivery         stream. Firehose automatically
                         delivers the data to the Amazon S3 bucket or Amazon Redshift         table that you specify in the delivery stream.
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_swk_h1j_yr-d46e93553" class="topicref" data-id="concept_swk_h1j_yr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KinProducer.html#concept_swk_h1j_yr">Kinesis Producer</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_swk_h1j_yr-d46e95522" class="topicref" data-id="concept_swk_h1j_yr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KinProducer.html#concept_swk_h1j_yr">Kinesis Producer</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Kinesis Producer destination writes data to Amazon Kinesis Streams. <span class="ph">The destination can also send responses to a <a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_rzc_rbf_kfb" class="xref">microservice origin</a> when used in a <a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_qfh_xdm_p2b" class="xref">microservice pipeline</a>.</span></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_hxh_5xg_qbb-d46e93781" class="topicref" data-id="concept_hxh_5xg_qbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KineticaDB.html#concept_hxh_5xg_qbb">KineticaDB</a></span></span></li>
-         <li><span data-tocid="concept_chy_xxg_4v-d46e93929" class="topicref" data-id="concept_chy_xxg_4v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Kudu.html#concept_chy_xxg_4v">Kudu </a><span class="wh-tooltip">
+         <li><span data-tocid="concept_hxh_5xg_qbb-d46e95750" class="topicref" data-id="concept_hxh_5xg_qbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KineticaDB.html#concept_hxh_5xg_qbb">KineticaDB</a></span></span></li>
+         <li><span data-tocid="concept_chy_xxg_4v-d46e95898" class="topicref" data-id="concept_chy_xxg_4v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Kudu.html#concept_chy_xxg_4v">Kudu </a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Kudu destination writes data to a Kudu cluster.</p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_zvc_bv5_1r-d46e94080" class="topicref" data-id="concept_zvc_bv5_1r" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/LocalFS.html#concept_zvc_bv5_1r">Local FS</a></span></span></li>
-         <li><span data-tocid="concept_vxg_w2z_yv-d46e94754" class="topicref" data-id="concept_vxg_w2z_yv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRDB.html#concept_vxg_w2z_yv">MapR DB</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_zvc_bv5_1r-d46e96049" class="topicref" data-id="concept_zvc_bv5_1r" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/LocalFS.html#concept_zvc_bv5_1r">Local FS</a></span></span></li>
+         <li><span data-tocid="concept_vxg_w2z_yv-d46e96723" class="topicref" data-id="concept_vxg_w2z_yv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRDB.html#concept_vxg_w2z_yv">MapR DB</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MapR DB destination writes data to MapR DB binary tables. The destination can write         data to MapR DB as text, binary
                         data, or JSON strings. You can define the data format for         each column written to MapR DB.
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_i4h_2kj_dy-d46e95137" class="topicref" data-id="concept_i4h_2kj_dy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRDBJSON.html#concept_i4h_2kj_dy">MapR DB JSON</a></span></span></li>
-         <li><span data-tocid="concept_spv_xlc_fv-d46e95509" class="topicref" data-id="concept_spv_xlc_fv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRFS.html#concept_spv_xlc_fv">MapR FS </a><span class="wh-tooltip">
+         <li><span data-tocid="concept_i4h_2kj_dy-d46e97106" class="topicref" data-id="concept_i4h_2kj_dy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRDBJSON.html#concept_i4h_2kj_dy">MapR DB JSON</a></span></span></li>
+         <li><span data-tocid="concept_spv_xlc_fv-d46e97478" class="topicref" data-id="concept_spv_xlc_fv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRFS.html#concept_spv_xlc_fv">MapR FS </a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MapR FS destination writes files to MapR FS. You can write the data to MapR as flat         files or Hadoop sequence files.
                         
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_cfj_qbn_2v-d46e96595" class="topicref" data-id="concept_cfj_qbn_2v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRStreamsProd.html#concept_cfj_qbn_2v">MapR Streams Producer</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_cfj_qbn_2v-d46e98564" class="topicref" data-id="concept_cfj_qbn_2v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRStreamsProd.html#concept_cfj_qbn_2v">MapR Streams Producer</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MapR Streams Producer destination writes messages to MapR Streams.</p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_eth_k5n_4v-d46e96894" class="topicref" data-id="concept_eth_k5n_4v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MongoDB.html#concept_eth_k5n_4v">MongoDB</a></span></span></li>
-         <li><span data-tocid="concept_odz_txt_lz-d46e97176" class="topicref" data-id="concept_odz_txt_lz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MQTTPublisher.html#concept_odz_txt_lz">MQTT Publisher</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_eth_k5n_4v-d46e98863" class="topicref" data-id="concept_eth_k5n_4v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MongoDB.html#concept_eth_k5n_4v">MongoDB</a></span></span></li>
+         <li><span data-tocid="concept_odz_txt_lz-d46e99145" class="topicref" data-id="concept_odz_txt_lz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MQTTPublisher.html#concept_odz_txt_lz">MQTT Publisher</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The MQTT Publisher destination publishes messages to a topic on an MQTT broker. The         destination functions as an MQTT
                         client that publishes messages, writing each record as a         message.
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_pl5_tdg_gcb-d46e97330" class="topicref" data-id="concept_pl5_tdg_gcb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/NamedPipe.html#concept_pl5_tdg_gcb">Named Pipe</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_pl5_tdg_gcb-d46e99299" class="topicref" data-id="concept_pl5_tdg_gcb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/NamedPipe.html#concept_pl5_tdg_gcb">Named Pipe</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Named Pipe destination writes data to a UNIX named pipe. </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_fq3_kpc_r2b-d46e97716" class="topicref" data-id="concept_fq3_kpc_r2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/PulsarProducer.html#concept_fq3_kpc_r2b">Pulsar Producer</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_fq3_kpc_r2b-d46e99685" class="topicref" data-id="concept_fq3_kpc_r2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/PulsarProducer.html#concept_fq3_kpc_r2b">Pulsar Producer</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Pulsar Producer destination writes data to topics in an Apache Pulsar         cluster.</p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_pxj_rvy_dv-d46e97870" class="topicref" data-id="concept_pxj_rvy_dv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/RabbitMQ.html#concept_pxj_rvy_dv">RabbitMQ Producer</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_pxj_rvy_dv-d46e99839" class="topicref" data-id="concept_pxj_rvy_dv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/RabbitMQ.html#concept_pxj_rvy_dv">RabbitMQ Producer</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">RabbitMQ Producer writes AMQP messages to a single RabbitMQ queue. </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_ktc_gw2_gw-d46e97969" class="topicref" data-id="concept_ktc_gw2_gw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Redis.html#concept_ktc_gw2_gw">Redis</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_ktc_gw2_gw-d46e99938" class="topicref" data-id="concept_ktc_gw2_gw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Redis.html#concept_ktc_gw2_gw">Redis</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Redis destination writes data to Redis. </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_rlb_rt3_rx-d46e98255" class="topicref" data-id="concept_rlb_rt3_rx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Salesforce.html#concept_rlb_rt3_rx">Salesforce</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_rlb_rt3_rx-d46e100224" class="topicref" data-id="concept_rlb_rt3_rx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Salesforce.html#concept_rlb_rt3_rx">Salesforce</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Salesforce destination writes data to Salesforce objects.</p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_lfk_hx2_ct-d46e98472" class="topicref" data-id="concept_lfk_hx2_ct" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/SDC_RPCdest.html#concept_lfk_hx2_ct">SDC RPC</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_lfk_hx2_ct-d46e100441" class="topicref" data-id="concept_lfk_hx2_ct" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/SDC_RPCdest.html#concept_lfk_hx2_ct">SDC RPC</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The SDC RPC destination enables connectivity between two SDC RPC pipelines. The SDC RPC     destination passes data to one
                         or more SDC RPC origins. Use the SDC RPC destination as part of     an SDC RPC origin pipeline.
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_eyd_zx4_q2b-d46e98629" class="topicref" data-id="concept_eyd_zx4_q2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/SendResponse.html#concept_eyd_zx4_q2b">Send Response to Origin</a></span></span></li>
-         <li><span data-tocid="concept_z2g_q1r_wr-d46e98684" class="topicref" data-id="concept_z2g_q1r_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Solr.html#concept_z2g_q1r_wr">Solr</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_eyd_zx4_q2b-d46e100598" class="topicref" data-id="concept_eyd_zx4_q2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/SendResponse.html#concept_eyd_zx4_q2b">Send Response to Origin</a></span></span></li>
+         <li><span data-tocid="concept_z2g_q1r_wr-d46e100653" class="topicref" data-id="concept_z2g_q1r_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Solr.html#concept_z2g_q1r_wr">Solr</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Solr destination writes data to a Solr node or cluster. </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_zzr_pqn_xdb-d46e98844" class="topicref" data-id="concept_zzr_pqn_xdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Splunk.html#concept_zzr_pqn_xdb">Splunk</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_zzr_pqn_xdb-d46e100813" class="topicref" data-id="concept_zzr_pqn_xdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Splunk.html#concept_zzr_pqn_xdb">Splunk</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Splunk destination writes data to Splunk using the Splunk HTTP Event Collector         (HEC).</p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_idr_ct5_w2b-d46e99067" class="topicref" data-id="concept_idr_ct5_w2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Syslog.html#concept_idr_ct5_w2b">Syslog</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_idr_ct5_w2b-d46e101036" class="topicref" data-id="concept_idr_ct5_w2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Syslog.html#concept_idr_ct5_w2b">Syslog</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Syslog destination writes syslog messages to a Syslog server. </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_ryn_v3z_lr-d46e99356" class="topicref" data-id="concept_ryn_v3z_lr" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/ToError.html">To Error </a><span class="wh-tooltip">
+         <li><span data-tocid="concept_ryn_v3z_lr-d46e101325" class="topicref" data-id="concept_ryn_v3z_lr" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/ToError.html">To Error </a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_htf_ydj_wq-d46e99380" class="topicref" data-id="concept_htf_ydj_wq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Trash.html#concept_htf_ydj_wq">Trash</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_htf_ydj_wq-d46e101349" class="topicref" data-id="concept_htf_ydj_wq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Trash.html#concept_htf_ydj_wq">Trash</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_l4d_mjn_lz-d46e99404" class="topicref" data-id="concept_l4d_mjn_lz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/WebSocketClient.html#concept_l4d_mjn_lz">WebSocket Client</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_l4d_mjn_lz-d46e101373" class="topicref" data-id="concept_l4d_mjn_lz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/WebSocketClient.html#concept_l4d_mjn_lz">WebSocket Client</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The WebSocket Client destination writes data to a WebSocket endpoint. Use the         destination to send data to a WebSocket
                         resource URL. 
@@ -329,52 +330,52 @@
                      </span></span></span></li>
       </ul>
    </li>
-   <li><span data-tocid="concept_umc_1lk_fx-d46e99504" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
-   <li><span data-tocid="concept_fyf_gkq_4bb-d46e105266" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
-   <li><span data-tocid="concept_ugp_kwf_xw-d46e107865" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
-   <li><span data-tocid="concept_xxd_f5r_kx-d46e111266" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_umc_1lk_fx-d46e101473" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e107235" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e109838" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e113417" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_fjj_zcf_2w-d46e115180" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
-   <li><span data-tocid="concept_kgt_pnr_4cb-d46e118006" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
-   <li><span data-tocid="concept_wwq_gxc_py-d46e118805" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e117331" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e120157" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e120956" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_gzw_tdm_p2b-d46e119387" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_wr1_ktz_bt-d46e119763" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_fpz_5r4_vs-d46e120245" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_jjk_23z_sq-d46e121592" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
-   <li><span data-tocid="concept_pgk_brx_rr-d46e122561" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_gzw_tdm_p2b-d46e121538" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e121914" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e122396" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e123861" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e124830" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_asx_fdz_sq-d46e125189" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_asx_fdz_sq-d46e127458" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_o3l_dtr_5q-d46e126446" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
-   <li><span data-tocid="concept_yms_ftm_sq-d46e128432" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e128715" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e130368" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_nls_w1r_ks-d46e132929" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
-   <li><span data-tocid="concept_sh3_frm_tq-d46e134142" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_nls_w1r_ks-d46e134865" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e136078" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_xbx_rs1_tq-d46e138634" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
-   <li><span data-tocid="concept_jn1_nzb_kv-d46e138689" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e140570" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e140625" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_pvm_yt3_wq-d46e138849" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
-   <li><span data-tocid="concept_vcj_1ws_js-d46e141274" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e140785" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e144486" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_chv_vmj_wr-d46e141497" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_chv_vmj_wr-d46e144709" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
@@ -657,18 +658,18 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
             Record header attributes are stored as String values:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_i21_j4n_sbb__table_brz_3gp_qx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d91645e669">Record Header Attribute</th>
+                            <th class="entry cellrowborder" id="d92440e669">Record Header Attribute</th>
 
-                            <th class="entry cellrowborder" id="d91645e672">Description</th>
+                            <th class="entry cellrowborder" id="d92440e672">Description</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d91645e669 ">sdc.event.type</td>
+                            <td class="entry cellrowborder" headers="d92440e669 ">sdc.event.type</td>
 
-                            <td class="entry cellrowborder" headers="d91645e672 ">Event type. Uses one of the following types:<ul class="ul" id="concept_i21_j4n_sbb__ul_m12_mgp_qx">
+                            <td class="entry cellrowborder" headers="d92440e672 ">Event type. Uses one of the following types:<ul class="ul" id="concept_i21_j4n_sbb__ul_m12_mgp_qx">
                                     <li class="li">GCS Object Written - Generated when the destination
                                         completes writing to an object.</li>
 
@@ -681,16 +682,16 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                         </tr>
 
                         <tr>
-       <td class="entry cellrowborder" headers="d91645e669 ">sdc.event.version</td>
+       <td class="entry cellrowborder" headers="d92440e669 ">sdc.event.version</td>
 
-       <td class="entry cellrowborder" headers="d91645e672 ">An integer that indicates the version of the event record type.</td>
+       <td class="entry cellrowborder" headers="d92440e672 ">An integer that indicates the version of the event record type.</td>
 
       </tr>
 
                         <tr>
-       <td class="entry cellrowborder" headers="d91645e669 ">sdc.event.creation_timestamp</td>
+       <td class="entry cellrowborder" headers="d92440e669 ">sdc.event.creation_timestamp</td>
 
-       <td class="entry cellrowborder" id="concept_i21_j4n_sbb__d29e2243" headers="d91645e672 ">Epoch timestamp when the stage created the event.
+       <td class="entry cellrowborder" id="concept_i21_j4n_sbb__d29e2289" headers="d92440e672 ">Epoch timestamp when the stage created the event.
        </td>
 
       </tr>
@@ -712,32 +713,32 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                         following fields:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_i21_j4n_sbb__table_dh2_5gc_rx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                     <tr>
-                                        <th class="entry cellrowborder" id="d91645e749">Field</th>
+                                        <th class="entry cellrowborder" id="d92440e749">Field</th>
 
-                                        <th class="entry cellrowborder" id="d91645e752">Description</th>
+                                        <th class="entry cellrowborder" id="d92440e752">Description</th>
 
                                     </tr>
 
                                 </thead>
 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry cellrowborder" headers="d91645e749 ">bucket</td>
+                                        <td class="entry cellrowborder" headers="d92440e749 ">bucket</td>
 
-                                        <td class="entry cellrowborder" headers="d91645e752 ">Bucket where the object is located.</td>
-
-                                    </tr>
-
-                                    <tr>
-                                        <td class="entry cellrowborder" headers="d91645e749 ">objectKey</td>
-
-                                        <td class="entry cellrowborder" headers="d91645e752 ">Object key name that was written.</td>
+                                        <td class="entry cellrowborder" headers="d92440e752 ">Bucket where the object is located.</td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry cellrowborder" headers="d91645e749 ">recordCount</td>
+                                        <td class="entry cellrowborder" headers="d92440e749 ">objectKey</td>
 
-                                        <td class="entry cellrowborder" headers="d91645e752 ">Number of records written to the object.</td>
+                                        <td class="entry cellrowborder" headers="d92440e752 ">Object key name that was written.</td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td class="entry cellrowborder" headers="d92440e749 ">recordCount</td>
+
+                                        <td class="entry cellrowborder" headers="d92440e752 ">Number of records written to the object.</td>
 
                                     </tr>
 
@@ -757,18 +758,18 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                             fields:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_i21_j4n_sbb__table_eh2_5gc_rx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                     <tr>
-                                        <th class="entry cellrowborder" id="d91645e815">Field</th>
+                                        <th class="entry cellrowborder" id="d92440e815">Field</th>
 
-                                        <th class="entry cellrowborder" id="d91645e818">Description</th>
+                                        <th class="entry cellrowborder" id="d92440e818">Description</th>
 
                                     </tr>
 
                                 </thead>
 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry cellrowborder" headers="d91645e815 ">sourceFileInfo</td>
+                                        <td class="entry cellrowborder" headers="d92440e815 ">sourceFileInfo</td>
 
-                                        <td class="entry cellrowborder" headers="d91645e818 ">A map of attributes about the original whole file
+                                        <td class="entry cellrowborder" headers="d92440e818 ">A map of attributes about the original whole file
                                             that was processed. <p class="p">The attribute names depend on the
                                                 information provided by the origin
                                             system.</p>
@@ -777,9 +778,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                     </tr>
 
                                     <tr>
-                                        <td class="entry cellrowborder" headers="d91645e815 ">targetFileInfo</td>
+                                        <td class="entry cellrowborder" headers="d92440e815 ">targetFileInfo</td>
 
-                                        <td class="entry cellrowborder" headers="d91645e818 ">A map of attributes about the whole file written to
+                                        <td class="entry cellrowborder" headers="d92440e818 ">A map of attributes about the whole file written to
                                             the destination system. The attributes include:<ul class="ul" id="concept_i21_j4n_sbb__ul_pcx_lkc_rx">
                                                 <li class="li">bucket - The bucket where the whole file is
                                                   written.</li>
@@ -793,9 +794,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                     </tr>
 
                                     <tr>
-                                                  <td class="entry cellrowborder" headers="d91645e815 ">checksum</td>
+                                                  <td class="entry cellrowborder" headers="d92440e815 ">checksum</td>
 
-                                                  <td class="entry cellrowborder" headers="d91645e818 ">Checksum generated for the written file.
+                                                  <td class="entry cellrowborder" headers="d92440e818 ">Checksum generated for the written file.
                                                   <p class="p">Included only when you configure the
                                                   destination to include checksums in the event
                                                   record. </p>
@@ -804,9 +805,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                                   </tr>
 
                                     <tr>
-                                                  <td class="entry cellrowborder" headers="d91645e815 ">checksumAlgorithm</td>
+                                                  <td class="entry cellrowborder" headers="d92440e815 ">checksumAlgorithm</td>
 
-                                                  <td class="entry cellrowborder" headers="d91645e818 ">Algorithm used to generate the checksum.
+                                                  <td class="entry cellrowborder" headers="d92440e818 ">Algorithm used to generate the checksum.
                                                   <p class="p">Included only when you configure the
                                                   destination to include checksums in the event
                                                   record. </p>
@@ -842,7 +843,7 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                     Avro schema definition:</dd>
 
                               <dd class="dd ddexpand">
-                                    <ul class="ul" id="concept_pt4_y24_sbb__d30e3519">
+                                    <ul class="ul" id="concept_pt4_y24_sbb__d30e3340">
                                           <li class="li"><span class="ph uicontrol">In Pipeline Configuration</span> - Use
                                                 the schema that you provide in the stage
                                                 configuration.</li>
@@ -915,7 +916,7 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                               <dt class="dt dlterm">JSON</dt>
 
                               <dd class="dd">The destination writes records as JSON data. You can use one of
-                                    the following formats:<ul class="ul" id="concept_pt4_y24_sbb__d30e3681">
+                                    the following formats:<ul class="ul" id="concept_pt4_y24_sbb__d30e3502">
                                           <li class="li">Array - Each file includes a single array. In the
                                                 array, each element is a JSON representation of each
                                                 record.</li>
@@ -1006,43 +1007,43 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vn4_nrl_nbb__table_yxz_pvs_5x" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d91645e1139">General Property</th>
+                                    <th class="entry cellrowborder" id="d92440e1139">General Property</th>
 
-                                    <th class="entry cellrowborder" id="d91645e1142">Description</th>
+                                    <th class="entry cellrowborder" id="d92440e1142">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-       <td class="entry cellrowborder" headers="d91645e1139 ">Name</td>
+       <td class="entry cellrowborder" headers="d92440e1139 ">Name</td>
 
-       <td class="entry cellrowborder" headers="d91645e1142 ">Stage name.</td>
-
-      </tr>
-
-                                <tr>
-       <td class="entry cellrowborder" headers="d91645e1139 ">Description</td>
-
-       <td class="entry cellrowborder" headers="d91645e1142 ">Optional description.</td>
+       <td class="entry cellrowborder" headers="d92440e1142 ">Stage name.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e1139 ">Produce Events <a class="xref" href="GCS.html#concept_xjx_h4n_sbb">
+       <td class="entry cellrowborder" headers="d92440e1139 ">Description</td>
+
+       <td class="entry cellrowborder" headers="d92440e1142 ">Optional description.</td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d92440e1139 ">Produce Events <a class="xref" href="GCS.html#concept_xjx_h4n_sbb">
                                             <img class="image" id="task_vn4_nrl_nbb__image_xsl_2rx_mx" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry cellrowborder" headers="d91645e1142 ">Generates event records when events occur. Use for event
+                                    <td class="entry cellrowborder" headers="d92440e1142 ">Generates event records when events occur. Use for event
         handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
-         <img class="image" id="task_vn4_nrl_nbb__d29e2111" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+         <img class="image" id="task_vn4_nrl_nbb__d29e2157" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry cellrowborder" headers="d91645e1139 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-         <img class="image" id="task_vn4_nrl_nbb__d29e2120" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry cellrowborder" headers="d92440e1139 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+         <img class="image" id="task_vn4_nrl_nbb__d29e2166" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry cellrowborder" headers="d91645e1142 ">Fields that must include data for the record to be passed into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields that the stage uses.</div>
+       <td class="entry cellrowborder" headers="d92440e1142 ">Fields that must include data for the record to be passed into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields that the stage uses.</div>
 <p class="p">Records
          that do not include all required fields are processed based on the error handling
          configured for the pipeline.</p>
@@ -1051,10 +1052,10 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
       </tr>
 
                                 <tr>
-       <td class="entry cellrowborder" headers="d91645e1139 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-         <img class="image" id="task_vn4_nrl_nbb__d29e2137" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry cellrowborder" headers="d92440e1139 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+         <img class="image" id="task_vn4_nrl_nbb__d29e2183" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry cellrowborder" headers="d91645e1142 ">Conditions that must evaluate to TRUE to allow a record to enter the stage for
+       <td class="entry cellrowborder" headers="d92440e1142 ">Conditions that must evaluate to TRUE to allow a record to enter the stage for
         processing. Click <span class="ph uicontrol">Add</span> to create additional preconditions. <p class="p">Records
          that do not meet all preconditions are processed based on the error handling configured for
          the stage.</p>
@@ -1072,45 +1073,45 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                 <span class="ph cmd">On the <span class="keyword wintitle">GCS</span> tab, configure the following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vn4_nrl_nbb__d19e8796" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:22.22222222222222%" /><col style="width:77.77777777777779%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vn4_nrl_nbb__d19e8848" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:22.22222222222222%" /><col style="width:77.77777777777779%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d91645e1246">GCS Property</th>
+                                    <th class="entry cellrowborder" id="d92440e1246">GCS Property</th>
 
-                                    <th class="entry cellrowborder" id="d91645e1249">Description</th>
+                                    <th class="entry cellrowborder" id="d92440e1249">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
-                                <tr id="task_vn4_nrl_nbb__d19e8818">
-                                    <td class="entry cellrowborder" headers="d91645e1246 ">Bucket</td>
+                                <tr id="task_vn4_nrl_nbb__d19e8870">
+                                    <td class="entry cellrowborder" headers="d92440e1246 ">Bucket</td>
 
-                                    <td class="entry cellrowborder" headers="d91645e1249 ">Bucket to use when writing records.<div class="note note"><span class="notetitle">Note:</span> The bucket name must be DNS compliant. For more
-                  information about bucket naming conventions, see the <a class="xref" href="https://cloud.google.com/storage/docs/naming" target="_blank">Google Cloud Storage documentation</a>.<p class="p" id="task_vn4_nrl_nbb__d30e6345">For a full list of
+                                    <td class="entry cellrowborder" headers="d92440e1249 ">Bucket to use when writing records.<div class="note note"><span class="notetitle">Note:</span> The bucket name must be DNS compliant. For more
+                  information about bucket naming conventions, see the <a class="xref" href="https://cloud.google.com/storage/docs/naming" target="_blank">Google Cloud Storage documentation</a>.<p class="p" id="task_vn4_nrl_nbb__d30e6357">For a full list of
                         origins that support this data format, see <a class="xref" href="../Apx-DataFormats/DataFormat_Title.html#concept_kgd_11c_kv" title="The following table lists the data formats supported by each origin.">Origins</a> in the "Data Formats by Stage" appendix.</p>
-<p class="p" id="task_vn4_nrl_nbb__d30e6350">For a full list of destinations that support
+<p class="p" id="task_vn4_nrl_nbb__d30e6362">For a full list of destinations that support
                         this data format, see <a class="xref" href="../Apx-DataFormats/DataFormat_Title.html#concept_odv_w5c_kv" title="The following table lists the data formats supported by each destination.">Destinations</a> in the "Data Formats by Stage" appendix.</p>
-<p class="p" id="task_vn4_nrl_nbb__d30e6355">For a list of origins and destinations that
+<p class="p" id="task_vn4_nrl_nbb__d30e6367">For a list of origins and destinations that
                         process this data format, see <a class="xref" href="../Apx-DataFormats/DataFormat_Title.html#concept_bcw_qzb_kv" title="This appendix lists the data formats supported by origin and destination stages.">Data Format Support</a>.</p>
 </div>
 </td>
 
                                 </tr>
 
-                                <tr id="task_vn4_nrl_nbb__d19e8828">
-                                    <td class="entry cellrowborder" headers="d91645e1246 ">Common Prefix</td>
+                                <tr id="task_vn4_nrl_nbb__d19e8880">
+                                    <td class="entry cellrowborder" headers="d92440e1246 ">Common Prefix</td>
 
-                                    <td class="entry cellrowborder" headers="d91645e1249 ">Common prefix that determines where objects are written.
+                                    <td class="entry cellrowborder" headers="d92440e1249 ">Common prefix that determines where objects are written.
                                     </td>
 
                                 </tr>
 
-                                <tr id="task_vn4_nrl_nbb__d19e8837">
-                                    <td class="entry cellrowborder" headers="d91645e1246 ">Partition Prefix <a class="xref" href="GCS.html#concept_qsx_ryn_sbb">
-                                            <img class="image" id="task_vn4_nrl_nbb__d19e8843" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
+                                <tr id="task_vn4_nrl_nbb__d19e8889">
+                                    <td class="entry cellrowborder" headers="d92440e1246 ">Partition Prefix <a class="xref" href="GCS.html#concept_qsx_ryn_sbb">
+                                            <img class="image" id="task_vn4_nrl_nbb__d19e8895" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry cellrowborder" headers="d91645e1249 ">Optional partition prefix to specify the partition to
+                                    <td class="entry cellrowborder" headers="d92440e1249 ">Optional partition prefix to specify the partition to
                                         use. <p class="p">Use a specific partition prefix or define an
                                             expression that evaluates to a partition prefix.
                                             </p>
@@ -1121,10 +1122,10 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
 
                                 </tr>
 
-                                <tr id="task_vn4_nrl_nbb__d19e8854">
-                                    <td class="entry cellrowborder" headers="d91645e1246 ">Data Time Zone</td>
+                                <tr id="task_vn4_nrl_nbb__d19e8906">
+                                    <td class="entry cellrowborder" headers="d92440e1246 ">Data Time Zone</td>
 
-                                    <td class="entry cellrowborder" headers="d91645e1249 ">
+                                    <td class="entry cellrowborder" headers="d92440e1249 ">
                                         <p class="p">Time zone for the destination system. Used to resolve
                                             datetimes in a time-based partition prefix. </p>
 
@@ -1132,15 +1133,15 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
 
                                 </tr>
 
-                                <tr id="task_vn4_nrl_nbb__d19e8866">
-                                    <td class="entry cellrowborder" headers="d91645e1246 ">Time Basis <a class="xref" href="GCS.html#concept_ffn_tc4_sbb">
-                                            <img class="image" id="task_vn4_nrl_nbb__d19e8872" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
+                                <tr id="task_vn4_nrl_nbb__d19e8918">
+                                    <td class="entry cellrowborder" headers="d92440e1246 ">Time Basis <a class="xref" href="GCS.html#concept_ffn_tc4_sbb">
+                                            <img class="image" id="task_vn4_nrl_nbb__d19e8924" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry cellrowborder" headers="d91645e1249 ">
+                                    <td class="entry cellrowborder" headers="d92440e1249 ">
                                         <div class="p">Time basis to use for writing to a time-based bucket or
                                             partition prefix. Use one of the following
-                                                expressions:<ul class="ul" id="task_vn4_nrl_nbb__d19e8879">
+                                                expressions:<ul class="ul" id="task_vn4_nrl_nbb__d19e8931">
                                                 <li class="li"><code class="ph codeph">${time:now()}</code> - Uses the
                                                   processing time as the time basis in conjunction
                                                   with the specified Data Time Zone.</li>
@@ -1164,12 +1165,12 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
 
                                 </tr>
 
-                                <tr id="task_vn4_nrl_nbb__d19e8905">
-                                    <td class="entry cellrowborder" headers="d91645e1246 ">Object Name Prefix <a class="xref" href="GCS.html#concept_s1m_j24_sbb">
-                                            <img class="image" id="task_vn4_nrl_nbb__d19e8911" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
+                                <tr id="task_vn4_nrl_nbb__d19e8957">
+                                    <td class="entry cellrowborder" headers="d92440e1246 ">Object Name Prefix <a class="xref" href="GCS.html#concept_s1m_j24_sbb">
+                                            <img class="image" id="task_vn4_nrl_nbb__d19e8963" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry cellrowborder" headers="d91645e1249 ">Defines a prefix for object names written by the
+                                    <td class="entry cellrowborder" headers="d92440e1249 ">Defines a prefix for object names written by the
                                         destination. By default, object names start with "sdc" as
                                         follows: <code class="ph codeph">sdc-&lt;UUID&gt;</code>. <p class="p">Not required for
                                             the whole file data format. </p>
@@ -1178,11 +1179,11 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e1246 ">Object Name Suffix <a class="xref" href="GCS.html#concept_s1m_j24_sbb">
-                                            <img class="image" id="task_vn4_nrl_nbb__d19e8929" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry cellrowborder" headers="d92440e1246 ">Object Name Suffix <a class="xref" href="GCS.html#concept_s1m_j24_sbb">
+                                            <img class="image" id="task_vn4_nrl_nbb__d19e8981" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry cellrowborder" headers="d91645e1249 ">Suffix to use for object names, such as txt or json. When
+                                    <td class="entry cellrowborder" headers="d92440e1249 ">Suffix to use for object names, such as txt or json. When
                                         used, the destination adds a period and the configured
                                         suffix as follows: &lt;object name&gt;.&lt;suffix&gt;.<p class="p">You can
                                             include periods within the suffix, but do not start the
@@ -1195,9 +1196,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e1246 ">Compress with Gzip</td>
+                                    <td class="entry cellrowborder" headers="d92440e1246 ">Compress with Gzip</td>
 
-                                    <td class="entry cellrowborder" headers="d91645e1249 ">Compresses files with gzip before writing to Google Cloud
+                                    <td class="entry cellrowborder" headers="d92440e1249 ">Compresses files with gzip before writing to Google Cloud
                                         Storage. <p class="p">Not available for the whole file data
                                             format.</p>
 </td>
@@ -1217,20 +1218,20 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vn4_nrl_nbb__table_hvy_pt3_vx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d91645e1454">Data Format Property</th>
+                                    <th class="entry cellrowborder" id="d92440e1454">Data Format Property</th>
 
-                                    <th class="entry cellrowborder" id="d91645e1457">Description</th>
+                                    <th class="entry cellrowborder" id="d92440e1457">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e1454 ">Data Format <a class="xref" href="GCS.html#concept_pt4_y24_sbb">
+                                    <td class="entry cellrowborder" headers="d92440e1454 ">Data Format <a class="xref" href="GCS.html#concept_pt4_y24_sbb">
                                             <img class="image" id="task_vn4_nrl_nbb__image_ivq_1fj_vx" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry cellrowborder" headers="d91645e1457 ">Data format to write data: <ul class="ul" id="task_vn4_nrl_nbb__ul_jvq_1fj_vx">
+                                    <td class="entry cellrowborder" headers="d92440e1457 ">Data format to write data: <ul class="ul" id="task_vn4_nrl_nbb__ul_jvq_1fj_vx">
                                             <li class="li">Avro</li>
 
                                             <li class="li">Delimited</li>
@@ -1263,21 +1264,21 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vn4_nrl_nbb__d19e6588" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vn4_nrl_nbb__d19e6586" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d91645e1549">Avro Property</th>
+                                    <th class="entry cellrowborder" id="d92440e1549">Avro Property</th>
 
-                                    <th class="entry cellrowborder" id="d91645e1552">Description</th>
+                                    <th class="entry cellrowborder" id="d92440e1552">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e1549 ">Avro Schema Location</td>
+                                    <td class="entry cellrowborder" headers="d92440e1549 ">Avro Schema Location</td>
 
-                                    <td class="entry cellrowborder" headers="d91645e1552 ">Location of the Avro schema definition to use when
-                                        writing data:<ul class="ul" id="task_vn4_nrl_nbb__d19e6617">
+                                    <td class="entry cellrowborder" headers="d92440e1552 ">Location of the Avro schema definition to use when
+                                        writing data:<ul class="ul" id="task_vn4_nrl_nbb__d19e6615">
                                             <li class="li">In Pipeline Configuration - Use the schema that you
                                                 provide in the stage configuration. </li>
 
@@ -1285,7 +1286,7 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                                 record header attribute. Use only when the
                                                 avroSchema attribute is defined for all records.
                                                   <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_lmn_gdc_1w">
-                                                  <img class="image" id="task_vn4_nrl_nbb__d19e6626" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
+                                                  <img class="image" id="task_vn4_nrl_nbb__d19e6624" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
 
                                             <li class="li">Confluent Schema Registry - Retrieve the schema from
                                                 the Confluent Schema Registry. </li>
@@ -1298,9 +1299,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e1549 ">Avro Schema</td>
+                                    <td class="entry cellrowborder" headers="d92440e1549 ">Avro Schema</td>
 
-                                    <td class="entry cellrowborder" headers="d91645e1552 ">Avro schema definition used to write the data. <p class="p">You can
+                                    <td class="entry cellrowborder" headers="d92440e1552 ">Avro schema definition used to write the data. <p class="p">You can
                                             optionally use the runtime:loadResource function to use
                                             a schema definition stored in a runtime resource file.
                                         </p>
@@ -1309,17 +1310,17 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e1549 ">Register Schema</td>
+                                    <td class="entry cellrowborder" headers="d92440e1549 ">Register Schema</td>
 
-                                    <td class="entry cellrowborder" headers="d91645e1552 ">Select to register a new Avro schema with the Confluent
+                                    <td class="entry cellrowborder" headers="d92440e1552 ">Select to register a new Avro schema with the Confluent
                                         Schema Registry.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e1549 ">Schema Registry URLs</td>
+                                    <td class="entry cellrowborder" headers="d92440e1549 ">Schema Registry URLs</td>
 
-                                    <td class="entry cellrowborder" headers="d91645e1552 ">Confluent Schema Registry URLs used to look up the schema
+                                    <td class="entry cellrowborder" headers="d92440e1552 ">Confluent Schema Registry URLs used to look up the schema
                                         or to register a new schema. To add a URL, click
                                             <span class="ph uicontrol">Add</span>. Use the following format to
                                         enter the
@@ -1328,10 +1329,10 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e1549 ">Look Up Schema By</td>
+                                    <td class="entry cellrowborder" headers="d92440e1549 ">Look Up Schema By</td>
 
-                                    <td class="entry cellrowborder" headers="d91645e1552 ">Method used to look up the schema in the Confluent Schema
-                                            Registry:<ul class="ul" id="task_vn4_nrl_nbb__d19e6676">
+                                    <td class="entry cellrowborder" headers="d92440e1552 ">Method used to look up the schema in the Confluent Schema
+                                            Registry:<ul class="ul" id="task_vn4_nrl_nbb__d19e6674">
                                             <li class="li">Subject - Look up the specified Avro schema
                                                 subject.</li>
 
@@ -1344,9 +1345,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e1549 ">Schema Subject</td>
+                                    <td class="entry cellrowborder" headers="d92440e1549 ">Schema Subject</td>
 
-                                    <td class="entry cellrowborder" headers="d91645e1552 ">Avro schema subject to look up or to register in the
+                                    <td class="entry cellrowborder" headers="d92440e1552 ">Avro schema subject to look up or to register in the
                                         Confluent Schema Registry.<p class="p">If the specified subject to
                                             look up has multiple schema versions, the origin uses
                                             the latest schema version for that subject. To use an
@@ -1358,17 +1359,17 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e1549 ">Schema ID</td>
+                                    <td class="entry cellrowborder" headers="d92440e1549 ">Schema ID</td>
 
-                                    <td class="entry cellrowborder" headers="d91645e1552 ">Avro schema ID to look up in the Confluent Schema
+                                    <td class="entry cellrowborder" headers="d92440e1552 ">Avro schema ID to look up in the Confluent Schema
                                         Registry.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e1549 ">Avro Compression Codec</td>
+                                    <td class="entry cellrowborder" headers="d92440e1549 ">Avro Compression Codec</td>
 
-                                    <td class="entry cellrowborder" headers="d91645e1552 ">The Avro compression type to use. <p class="p">When using Avro
+                                    <td class="entry cellrowborder" headers="d92440e1552 ">The Avro compression type to use. <p class="p">When using Avro
                                             compression, do not enable other compression available
                                             in the destination. </p>
 </td>
@@ -1386,20 +1387,20 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vn4_nrl_nbb__d19e7141" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vn4_nrl_nbb__d19e7139" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d91645e1698">Delimited Property</th>
+                                    <th class="entry cellrowborder" id="d92440e1698">Delimited Property</th>
 
-                                    <th class="entry cellrowborder" id="d91645e1701">Description</th>
+                                    <th class="entry cellrowborder" id="d92440e1701">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e1698 ">Delimiter Format</td>
+                                    <td class="entry cellrowborder" headers="d92440e1698 ">Delimiter Format</td>
 
-                                    <td class="entry cellrowborder" headers="d91645e1701 ">Format for delimited data:<ul class="ul" id="task_vn4_nrl_nbb__ul_k3j_vvf_jr">
+                                    <td class="entry cellrowborder" headers="d92440e1701 ">Format for delimited data:<ul class="ul" id="task_vn4_nrl_nbb__ul_k3j_vvf_jr">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
 
@@ -1428,16 +1429,16 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e1698 ">Header Line</td>
+                                    <td class="entry cellrowborder" headers="d92440e1698 ">Header Line</td>
 
-                                    <td class="entry cellrowborder" headers="d91645e1701 ">Indicates whether to create a header line.</td>
+                                    <td class="entry cellrowborder" headers="d92440e1701 ">Indicates whether to create a header line.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e1698 ">Replace New Line Characters</td>
+                                    <td class="entry cellrowborder" headers="d92440e1698 ">Replace New Line Characters</td>
 
-                                    <td class="entry cellrowborder" headers="d91645e1701 ">Replaces new line characters with the configured
+                                    <td class="entry cellrowborder" headers="d92440e1701 ">Replaces new line characters with the configured
                                             string.<p class="p">Recommended when writing data as a single line
                                             of text.</p>
 </td>
@@ -1445,9 +1446,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e1698 ">New Line Character Replacement</td>
+                                    <td class="entry cellrowborder" headers="d92440e1698 ">New Line Character Replacement</td>
 
-                                    <td class="entry cellrowborder" headers="d91645e1701 ">String to replace each new line character. For example,
+                                    <td class="entry cellrowborder" headers="d92440e1701 ">String to replace each new line character. For example,
                                         enter a space to replace each new line character with a
                                         space. <p class="p">Leave empty to remove the new line
                                         characters.</p>
@@ -1456,9 +1457,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e1698 ">Delimiter Character</td>
+                                    <td class="entry cellrowborder" headers="d92440e1698 ">Delimiter Character</td>
 
-                                    <td class="entry cellrowborder" headers="d91645e1701 ">Delimiter character for a custom delimiter format. Select
+                                    <td class="entry cellrowborder" headers="d92440e1701 ">Delimiter character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">You can enter a Unicode control character
                                             using the format \u<em class="ph i">NNNN</em>, where ​<em class="ph i">N</em> is a
@@ -1473,9 +1474,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e1698 ">Escape Character </td>
+                                    <td class="entry cellrowborder" headers="d92440e1698 ">Escape Character </td>
 
-                                    <td class="entry cellrowborder" headers="d91645e1701 ">Escape character for a custom delimiter format. Select
+                                    <td class="entry cellrowborder" headers="d92440e1701 ">Escape character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the backslash character ( \
                                         ).</p>
@@ -1484,9 +1485,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e1698 ">Quote Character</td>
+                                    <td class="entry cellrowborder" headers="d92440e1698 ">Quote Character</td>
 
-                                    <td class="entry cellrowborder" headers="d91645e1701 ">Quote character for a custom delimiter format. Select one
+                                    <td class="entry cellrowborder" headers="d92440e1701 ">Quote character for a custom delimiter format. Select one
                                         of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the quotation mark character ( "
                                             ).</p>
@@ -1495,9 +1496,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-       <td class="entry cellrowborder" headers="d91645e1698 ">Charset</td>
+       <td class="entry cellrowborder" headers="d92440e1698 ">Charset</td>
 
-       <td class="entry cellrowborder" headers="d91645e1701 ">Character set to use when writing data. </td>
+       <td class="entry cellrowborder" headers="d92440e1701 ">Character set to use when writing data. </td>
 
       </tr>
 
@@ -1512,20 +1513,20 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                     following property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vn4_nrl_nbb__d19e7280" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vn4_nrl_nbb__d19e7278" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d91645e1870">JSON Property</th>
+                                    <th class="entry cellrowborder" id="d92440e1870">JSON Property</th>
 
-                                    <th class="entry cellrowborder" id="d91645e1873">Description</th>
+                                    <th class="entry cellrowborder" id="d92440e1873">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e1870 ">JSON Content</td>
+                                    <td class="entry cellrowborder" headers="d92440e1870 ">JSON Content</td>
 
-                                    <td class="entry cellrowborder" headers="d91645e1873 ">Determines how JSON data is written:<ul class="ul" id="task_vn4_nrl_nbb__d19e7309">
+                                    <td class="entry cellrowborder" headers="d92440e1873 ">Determines how JSON data is written:<ul class="ul" id="task_vn4_nrl_nbb__d19e7307">
                                             <li class="li">JSON Array of Objects - Each file includes a single
                                                 array. In the array, each element is a JSON
                                                 representation of each record.</li>
@@ -1540,9 +1541,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-       <td class="entry cellrowborder" headers="d91645e1870 ">Charset</td>
+       <td class="entry cellrowborder" headers="d92440e1870 ">Charset</td>
 
-       <td class="entry cellrowborder" headers="d91645e1873 ">Character set to use when writing data. </td>
+       <td class="entry cellrowborder" headers="d92440e1873 ">Character set to use when writing data. </td>
 
       </tr>
 
@@ -1557,20 +1558,20 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vn4_nrl_nbb__d19e7353" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vn4_nrl_nbb__d19e7351" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d91645e1933">Protobuf Property</th>
+                                    <th class="entry cellrowborder" id="d92440e1933">Protobuf Property</th>
 
-                                    <th class="entry cellrowborder" id="d91645e1936">Description</th>
+                                    <th class="entry cellrowborder" id="d92440e1936">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e1933 ">Protobuf Descriptor File </td>
+                                    <td class="entry cellrowborder" headers="d92440e1933 ">Protobuf Descriptor File </td>
 
-                                    <td class="entry cellrowborder" headers="d91645e1936 ">Descriptor file (.desc) to use. The descriptor file must
+                                    <td class="entry cellrowborder" headers="d92440e1936 ">Descriptor file (.desc) to use. The descriptor file must
                                         be in the <span class="ph">Data Collector</span> resources directory, <code class="ph codeph">$SDC_RESOURCES</code>.
                                                 <p class="p"><span class="ph">For more information about environment variables, see
                               <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr">Data Collector Environment Configuration</a>.</span> For information about generating the descriptor file,
@@ -1580,9 +1581,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e1933 ">Message Type</td>
+                                    <td class="entry cellrowborder" headers="d92440e1933 ">Message Type</td>
 
-                                    <td class="entry cellrowborder" headers="d91645e1936 ">The fully-qualified name for the message type to use when
+                                    <td class="entry cellrowborder" headers="d92440e1936 ">The fully-qualified name for the message type to use when
                                         writing data.<p class="p">Use the following format:
                                                 <code class="ph codeph">&lt;package name&gt;.&lt;message
                                             type&gt;</code>. </p>
@@ -1602,28 +1603,28 @@ Use a message type defined in the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vn4_nrl_nbb__d19e7526" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vn4_nrl_nbb__d19e7524" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d91645e2015">Text Property</th>
+                                    <th class="entry cellrowborder" id="d92440e2015">Text Property</th>
 
-                                    <th class="entry cellrowborder" id="d91645e2018">Description</th>
+                                    <th class="entry cellrowborder" id="d92440e2018">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e2015 ">Text Field Path</td>
+                                    <td class="entry cellrowborder" headers="d92440e2015 ">Text Field Path</td>
 
-                                    <td class="entry cellrowborder" headers="d91645e2018 ">Field that contains the text data to be written. All data
+                                    <td class="entry cellrowborder" headers="d92440e2018 ">Field that contains the text data to be written. All data
                                         must be incorporated into the specified field. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e2015 ">Record Separator</td>
+                                    <td class="entry cellrowborder" headers="d92440e2015 ">Record Separator</td>
 
-                                    <td class="entry cellrowborder" headers="d91645e2018 ">Characters to use to separate records. Use any valid Java
+                                    <td class="entry cellrowborder" headers="d92440e2018 ">Characters to use to separate records. Use any valid Java
                                         string literal. For example, when writing to Windows, you
                                         might use \r\n to separate records. <p class="p">By default, the
                                             destination uses \n.</p>
@@ -1632,18 +1633,18 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e2015 ">On Missing Field</td>
+                                    <td class="entry cellrowborder" headers="d92440e2015 ">On Missing Field</td>
 
-                                    <td class="entry cellrowborder" headers="d91645e2018 ">When a record does not include the text field, determines
+                                    <td class="entry cellrowborder" headers="d92440e2018 ">When a record does not include the text field, determines
                                         whether the destination reports the missing field as an
                                         error or ignores the missing field.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e2015 ">Insert Record Separator if No Text</td>
+                                    <td class="entry cellrowborder" headers="d92440e2015 ">Insert Record Separator if No Text</td>
 
-                                    <td class="entry cellrowborder" headers="d91645e2018 ">When configured to ignore a missing text field, inserts
+                                    <td class="entry cellrowborder" headers="d92440e2018 ">When configured to ignore a missing text field, inserts
                                         the configured record separator string to create an empty
                                             line.<p class="p">When not selected, discards records without the
                                             text field.</p>
@@ -1652,9 +1653,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-       <td class="entry cellrowborder" headers="d91645e2015 ">Charset</td>
+       <td class="entry cellrowborder" headers="d92440e2015 ">Charset</td>
 
-       <td class="entry cellrowborder" headers="d91645e2018 ">Character set to use when writing data. </td>
+       <td class="entry cellrowborder" headers="d92440e2018 ">Character set to use when writing data. </td>
 
       </tr>
 
@@ -1671,18 +1672,18 @@ Use a message type defined in the
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vn4_nrl_nbb__table_wvv_hcw_1x" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d91645e2101">Whole File Property</th>
+                                    <th class="entry cellrowborder" id="d92440e2101">Whole File Property</th>
 
-                                    <th class="entry cellrowborder" id="d91645e2104">Description</th>
+                                    <th class="entry cellrowborder" id="d92440e2104">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e2101 ">File Name Expression</td>
+                                    <td class="entry cellrowborder" headers="d92440e2101 ">File Name Expression</td>
 
-                                    <td class="entry cellrowborder" headers="d91645e2104 ">
+                                    <td class="entry cellrowborder" headers="d92440e2104 ">
                                         <p class="p">Expression to use for the file names. </p>
 
                                         <p class="p">For tips on how to name files based on input file names,
@@ -1693,11 +1694,11 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e2101 ">File Exists</td>
+                                    <td class="entry cellrowborder" headers="d92440e2101 ">File Exists</td>
 
-                                    <td class="entry cellrowborder" headers="d91645e2104 ">Action to take when a file of the same name already
+                                    <td class="entry cellrowborder" headers="d92440e2104 ">Action to take when a file of the same name already
                                         exists in the output directory. Use one of the following
-                                            options:<ul class="ul" id="task_vn4_nrl_nbb__d19e7686">
+                                            options:<ul class="ul" id="task_vn4_nrl_nbb__d19e7684">
                                             <li class="li">Send to Error - Handles the record based on stage
                                                 error record handling. </li>
 
@@ -1709,10 +1710,10 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e2101 ">Include Checksum in Events <a class="xref" href="../Data_Formats/WholeFile.html#concept_ojv_sr4_vx">
-                                            <img class="image" id="task_vn4_nrl_nbb__d19e7702" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry cellrowborder" headers="d92440e2101 ">Include Checksum in Events <a class="xref" href="../Data_Formats/WholeFile.html#concept_ojv_sr4_vx">
+                                            <img class="image" id="task_vn4_nrl_nbb__d19e7700" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry cellrowborder" headers="d91645e2104 ">Includes checksum information in whole file event
+                                    <td class="entry cellrowborder" headers="d92440e2104 ">Includes checksum information in whole file event
                                         records. <p class="p">Use only when the destination generates event
                                             records. </p>
 </td>
@@ -1720,9 +1721,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d91645e2101 ">Checksum Algorithm</td>
+                                    <td class="entry cellrowborder" headers="d92440e2101 ">Checksum Algorithm</td>
 
-                                    <td class="entry cellrowborder" headers="d91645e2104 ">Algorithm to generate the checksum.</td>
+                                    <td class="entry cellrowborder" headers="d92440e2104 ">Algorithm to generate the checksum.</td>
 
                                 </tr>
 
@@ -1737,28 +1738,28 @@ Use a message type defined in the
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vn4_nrl_nbb__d19e8966" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vn4_nrl_nbb__d19e9018" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d91645e2198">Credentials Property</th>
+                                    <th class="entry cellrowborder" id="d92440e2198">Credentials Property</th>
 
-                                    <th class="entry cellrowborder" id="d91645e2201">Description</th>
+                                    <th class="entry cellrowborder" id="d92440e2201">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
-                                <tr id="task_vn4_nrl_nbb__d19e8988">
-                                    <td class="entry cellrowborder" headers="d91645e2198 ">Project ID</td>
+                                <tr id="task_vn4_nrl_nbb__d19e9040">
+                                    <td class="entry cellrowborder" headers="d92440e2198 ">Project ID</td>
 
-                                    <td class="entry cellrowborder" headers="d91645e2201 ">Project ID to connect to.</td>
+                                    <td class="entry cellrowborder" headers="d92440e2201 ">Project ID to connect to.</td>
 
                                 </tr>
 
-                                <tr id="task_vn4_nrl_nbb__d19e8997">
-                                    <td class="entry cellrowborder" headers="d91645e2198 ">Credentials Provider <a class="xref" href="GCS.html#concept_otx_vxn_sbb">
-                                            <img class="image" id="task_vn4_nrl_nbb__d19e9003" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                <tr id="task_vn4_nrl_nbb__d19e9049">
+                                    <td class="entry cellrowborder" headers="d92440e2198 ">Credentials Provider <a class="xref" href="GCS.html#concept_otx_vxn_sbb">
+                                            <img class="image" id="task_vn4_nrl_nbb__d19e9055" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry cellrowborder" headers="d91645e2201 ">Credentials provider to use to connect:<ul class="ul" id="task_vn4_nrl_nbb__d19e9007">
+                                    <td class="entry cellrowborder" headers="d92440e2201 ">Credentials provider to use to connect:<ul class="ul" id="task_vn4_nrl_nbb__d19e9059">
                                             <li class="li">Default credentials provider</li>
 
                                             <li class="li">Service account credentials file (JSON) </li>
@@ -1768,10 +1769,10 @@ Use a message type defined in the
 
                                 </tr>
 
-                                <tr id="task_vn4_nrl_nbb__d19e9017">
-                                    <td class="entry cellrowborder" headers="d91645e2198 ">Credentials File Path (JSON) </td>
+                                <tr id="task_vn4_nrl_nbb__d19e9069">
+                                    <td class="entry cellrowborder" headers="d92440e2198 ">Credentials File Path (JSON) </td>
 
-                                    <td class="entry cellrowborder" headers="d91645e2201 ">When using a Google Cloud service account credentials
+                                    <td class="entry cellrowborder" headers="d92440e2201 ">When using a Google Cloud service account credentials
                                         file, path to the file that the origin uses to connect to
                                         Google Cloud Storage. The credentials file must be a JSON
                                             file.<p class="p">Enter a path relative to the <span class="ph">Data Collector</span> resources directory, <code class="ph codeph">$SDC_RESOURCES</code>,

@@ -28,39 +28,42 @@ h2 {
 	/* DO font-size: 28px;*/
     line-height: 48px;
 	font-weight: 300;
-	margin-top: 20px !important;
+	margin-top: 20px ;
 	margin-bottom: 10px;
 	color: #003399;
 }
 /* DO added for parts */
 h2.title{
     font-size:28px;
+    margin-top:45px;
 }
 h3 {
 	font-family: 'Lato', Helvetica, Arial, Lucida, sans-serif !important;
 	/* DO font-size: 22px !important;*/
     line-height: 32px;
-	font-weight: 400 !important;
-	margin-top: 25px !important;
-	margin-bottom: 12px !important;
+	font-weight: 400 ;
+	margin-top: 25px ;
+	margin-bottom: 12px ;
 	color: #003399;
 }
 /* DO added for parts */
 h3.title{
     font-size:22px;
+    margin-top:45px;
 }
 h4 {
 	font-family: 'Lato', Helvetica, Arial, Lucida, sans-serif !important;
 	/* DO font-size: 18px !important;*/
 	line-height: 24px;
-	font-weight: 400 !important;
-	margin-top: 25px !important;
+	font-weight: 400 ;
+	margin-top: 25px ;
 	margin-bottom: 12px;
 	color: #003399;
 }
 /* DO added for parts */
 h4.title{
     font-size:18px;
+    margin-top:45px;
 }
 
 h5 {
@@ -78,6 +81,7 @@ h5.title {
     font-size: 16px;
     font-weight: 600;
     text-decoration:none;
+    margin-top: 45px;
 }
 h6 {
 	font-family: /* DO 'Montserrat', */ 'Lato', Helvetica, Arial, Lucida, sans-serif !important;
@@ -90,11 +94,12 @@ h6 {
 	color: #003399;
 }
 /* DO added for parts */
-h6.title {
+h6.topictitle6 {
     font-size: 15px;
-    font-weight: 600;
+    font-weight: 800;
     text-decoration:none;
     letter-spacing: 1px;
+    margin-top:45px;
 }
 
 /* lc removing stupid link from help 5/30 */
@@ -451,7 +456,7 @@ span.topic {
 	margin-top: 0;
 	border-top: 1px solid #eee;
 }
-.title.sectiontitle, .title.topictitle2 {
+.title.sectiontitle /*DO ,  .title.topictitle2*/ {
 	background: none;
 	box-shadow: none;
 	text-shadow: none;
@@ -468,8 +473,10 @@ span.topic {
 }
 /* DO added for parts */
 .title.sectiontitle {
-    font-size: 15px;
-    letter-spacing: 1px;
+    font-size: 22px;
+    letter-spacing: 1.5px;
+    /* font-weight:800; */
+    font-variant-caps:all-small-caps;
 }
 
 .title.sectiontitle, .title.topictitle2, .topictitle3, .topictitle4, .topictitle5, .topictitle6 {
@@ -549,7 +556,7 @@ tr {
 .tablecap {
   background: none;
   color: #003399;
-  font-weight: bold;
+  /*DO  font-weight: bold;*/
   font-size: 13px;
   padding: 0;
   margin: 0;
@@ -674,6 +681,9 @@ dl, .dl {
   font-weight: bold;
   font-size: 14px;
   margin: 16px 0 0 0;
+  /*DO To render as bullets uncomment:*/
+  /*display:list-item;*/
+  /*list-style-position:inside; */
 }
 .dd {
   background-color: transparent;
@@ -683,7 +693,7 @@ dl, .dl {
   line-height: 1.5em; /* lc added 5/25 */
   font-variant: normal;
   margin: 10px 0 0 0;
-  padding-left: 30px;
+  padding-left: 20px;
 }
 
 .dd p {
