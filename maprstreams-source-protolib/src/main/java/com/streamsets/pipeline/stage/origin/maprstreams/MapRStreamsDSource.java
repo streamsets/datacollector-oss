@@ -26,10 +26,14 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DClusterSourceOffsetCommitter;
 import com.streamsets.pipeline.api.impl.ClusterSource;
+import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetReset;
 import com.streamsets.pipeline.stage.origin.kafka.ClusterKafkaSourceFactory;
 import com.streamsets.pipeline.stage.origin.kafka.DelegatingKafkaSource;
 import com.streamsets.pipeline.stage.origin.kafka.KafkaConfigBean;
 import com.streamsets.pipeline.stage.origin.kafka.StandaloneKafkaSourceFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @StageDef(
     version = 5,
@@ -92,12 +96,33 @@ public class MapRStreamsDSource extends DClusterSourceOffsetCommitter implements
     KafkaConfigBean kafkaConfigBean = new KafkaConfigBean();
     kafkaConfigBean.dataFormat = maprstreamsSourceConfigBean.dataFormat;
     kafkaConfigBean.dataFormatConfig = maprstreamsSourceConfigBean.dataFormatConfig;
-    kafkaConfigBean.kafkaConsumerConfigs = maprstreamsSourceConfigBean.kafkaConsumerConfigs;
     kafkaConfigBean.consumerGroup = maprstreamsSourceConfigBean.consumerGroup;
     kafkaConfigBean.maxBatchSize = maprstreamsSourceConfigBean.maxBatchSize;
     kafkaConfigBean.produceSingleRecordPerMessage = maprstreamsSourceConfigBean.produceSingleRecordPerMessage;
     kafkaConfigBean.topic = maprstreamsSourceConfigBean.topic;
     kafkaConfigBean.maxWaitTime = maprstreamsSourceConfigBean.maxWaitTime;
+
+    Map<String,String> kafkaConsumerConfigs = new HashMap<>(maprstreamsSourceConfigBean.kafkaConsumerConfigs);
+    String autoOffsetReset = kafkaConsumerConfigs.remove("auto.offset.reset");
+    if (autoOffsetReset != null) {
+      switch (autoOffsetReset) {
+        case "earliest":
+          kafkaConfigBean.kafkaAutoOffsetReset = KafkaAutoOffsetReset.EARLIEST;
+          break;
+        case "latest":
+          kafkaConfigBean.kafkaAutoOffsetReset = KafkaAutoOffsetReset.LATEST;
+          break;
+        case "none":
+          kafkaConfigBean.kafkaAutoOffsetReset = KafkaAutoOffsetReset.NONE;
+          break;
+        default:
+          kafkaConfigBean.kafkaAutoOffsetReset = KafkaAutoOffsetReset.EARLIEST;
+      }
+    } else {
+      kafkaConfigBean.kafkaAutoOffsetReset = KafkaAutoOffsetReset.EARLIEST;
+    }
+    kafkaConfigBean.kafkaConsumerConfigs = kafkaConsumerConfigs;
+    kafkaConfigBean.timestampToSearchOffsets = 0;
 
     return kafkaConfigBean;
   }
