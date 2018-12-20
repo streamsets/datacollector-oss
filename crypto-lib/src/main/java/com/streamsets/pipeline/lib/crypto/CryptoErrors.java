@@ -30,6 +30,7 @@ public enum CryptoErrors implements ErrorCode {
   CRYPTO_05("The value '{}' must be in the range {} and {}"),
   CRYPTO_06("Data key caching is not supported without a key derivation function (KDF).\n" +
       "Please choose a compatible cipher or disable data key caching."),
+  CRYPTO_07("Error while encrypting/decrypting data: {}"),
   ;
 
   private final String message;

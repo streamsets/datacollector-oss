@@ -21,10 +21,12 @@
 package com.streamsets.pipeline.stage.processor.crypto;
 
 import com.amazonaws.encryptionsdk.CryptoResult;
+import com.google.common.base.Throwables;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import com.streamsets.pipeline.lib.crypto.CryptoErrors;
 
 import java.util.HashMap;
 import java.util.List;
@@ -68,24 +70,30 @@ public class FieldEncryptProcessor extends SingleLaneRecordProcessor {
   protected void process(Record record, SingleLaneBatchMaker singleLaneBatchMaker) throws StageException {
     Map<String, String> encryptionContext = new HashMap<>(conf.context);
 
-    for (String fieldPath : conf.fieldPaths) {
+    try {
+      for (String fieldPath : conf.fieldPaths) {
 
-      Field field = record.get(fieldPath);
+        Field field = record.get(fieldPath);
 
-      // reviewer requested no use of Java 8 streams
-      if (field != null && field.getValue() != null) { // process if field is present and non-null
+        // reviewer requested no use of Java 8 streams
+        if (field != null && field.getValue() != null) { // process if field is present and non-null
 
-        Optional<Field> input = checkInput.apply(record, field);
+          Optional<Field> input = checkInput.apply(record, field);
 
-        if (input.isPresent()) {
-          byte[] bytes = prepare.apply(input.get(), encryptionContext);
-          CryptoResult<byte[], ?> result = encrypter.process(bytes, encryptionContext);
-          field = createResultField.apply(result);
-          record.set(fieldPath, field);
-        } else {
-          return; // record sent to error, done with this record.
+          if (input.isPresent()) {
+            byte[] bytes = prepare.apply(input.get(), encryptionContext);
+            CryptoResult<byte[], ?> result = encrypter.process(bytes, encryptionContext);
+            field = createResultField.apply(result);
+            record.set(fieldPath, field);
+          } else {
+            return; // record sent to error, done with this record.
+          }
         }
       }
+    // The encryption process can throw a lot of unchecked exceptions that if not caught would terminate the pipeline
+    } catch (Exception e) {
+      Throwables.propagateIfPossible(e, StageException.class);
+      throw new StageException(CryptoErrors.CRYPTO_07, e.toString(), e);
     }
 
     singleLaneBatchMaker.addRecord(record);
