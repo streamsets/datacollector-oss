@@ -19,6 +19,7 @@ import net.schmizz.sshj.Config;
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
 import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
+import net.schmizz.sshj.userauth.password.PasswordUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,6 +33,7 @@ class SSHClientRebuilder {
   private Config config;
   private File knownHosts;
   private String keyLocation;
+  private String keyPlainText;
   private String keyPassphrase;
   private String hostname;
   private int port;
@@ -47,10 +49,18 @@ class SSHClientRebuilder {
     }
     KeyProvider keyProvider = null;
     if (password == null) {
-      if (keyPassphrase != null) {
-        keyProvider = sshClient.loadKeys(keyLocation, keyPassphrase);
+      if (keyLocation != null) {
+        if (keyPassphrase != null) {
+          keyProvider = sshClient.loadKeys(keyLocation, keyPassphrase);
+        } else {
+          keyProvider = sshClient.loadKeys(keyLocation);
+        }
       } else {
-        keyProvider = sshClient.loadKeys(keyLocation);
+        if (keyPassphrase != null) {
+          keyProvider = sshClient.loadKeys(keyPlainText, null, PasswordUtils.createOneOff(keyPassphrase.toCharArray()));
+        } else {
+          keyProvider = sshClient.loadKeys(keyPlainText, null, null);
+        }
       }
     }
     sshClient.connect(hostname, port);
@@ -72,6 +82,10 @@ class SSHClientRebuilder {
 
   public void setKeyLocation(String keyLocation) {
     this.keyLocation = keyLocation;
+  }
+
+  public void setKeyPlainText(String keyPlainText) {
+    this.keyPlainText = keyPlainText;
   }
 
   public void setKeyPassphrase(String keyPassphrase) {

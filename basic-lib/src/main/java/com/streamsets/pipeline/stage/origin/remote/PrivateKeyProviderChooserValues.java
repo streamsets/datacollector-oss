@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2018 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@ package com.streamsets.pipeline.stage.origin.remote;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public class AuthenticationChooserValues extends BaseEnumChooserValues<Authentication> {
+public class PrivateKeyProviderChooserValues extends BaseEnumChooserValues<PrivateKeyProvider> {
 
-  public AuthenticationChooserValues() {
-    super(Authentication.class);
+  public PrivateKeyProviderChooserValues() {
+    super(PrivateKeyProvider.class);
   }
 }

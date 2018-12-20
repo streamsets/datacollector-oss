@@ -78,16 +78,42 @@ public class RemoteDownloadConfigBean {
   public CredentialValue password;
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "FILE",
+      label = "Private Key Provider",
+      description = "Provide the private key via a file or plain text",
+      displayPosition = 25,
+      group = "CREDENTIALS",
+      dependsOn = "auth",
+      triggeredByValue = {"PRIVATE_KEY"}
+  )
+  @ValueChooserModel(PrivateKeyProviderChooserValues.class)
+  public PrivateKeyProvider privateKeyProvider = PrivateKeyProvider.FILE;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Private Key File",
       description = "Private Key File to use to login to the remote server.",
       displayPosition = 30,
       group = "CREDENTIALS",
-      dependsOn = "auth",
-      triggeredByValue = {"PRIVATE_KEY"}
+      dependsOn = "privateKeyProvider",
+      triggeredByValue = {"FILE"}
   )
   public String privateKey;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.CREDENTIAL,
+      label = "Private Key",
+      description = "Private Key to use to login to the remote server",
+      displayPosition = 30,
+      group = "CREDENTIALS",
+      dependsOn = "privateKeyProvider",
+      triggeredByValue = {"PLAIN_TEXT"}
+  )
+  public CredentialValue privateKeyPlainText;
 
   @ConfigDef(
       required = false,

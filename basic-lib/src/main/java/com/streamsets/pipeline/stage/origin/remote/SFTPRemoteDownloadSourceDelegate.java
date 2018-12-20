@@ -25,6 +25,7 @@ import net.schmizz.sshj.sftp.FileAttributes;
 import net.schmizz.sshj.sftp.FileMode;
 import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
 import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
+import net.schmizz.sshj.userauth.password.PasswordUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,38 +104,62 @@ class SFTPRemoteDownloadSourceDelegate extends RemoteDownloadSourceDelegate {
     String password = null;
     switch (conf.auth) {
       case PRIVATE_KEY:
-        File privateKeyFile = new File(conf.privateKey);
-        if (!privateKeyFile.exists() || !privateKeyFile.isFile() || !privateKeyFile.canRead()) {
-          issues.add(
-              context.createConfigIssue(Groups.CREDENTIALS.getLabel(),
-              CONF_PREFIX + "privateKey",
-              Errors.REMOTE_10,
-              conf.privateKey
-          ));
-        } else {
-          String privateKeyPassphrase = resolveCredential(
-              conf.privateKeyPassphrase,
-              CONF_PREFIX + "privateKeyPassphrase",
-              issues, context
-          );
-          if (privateKeyPassphrase != null && !privateKeyPassphrase.isEmpty()) {
-            keyProvider = sshClient.loadKeys(privateKeyFile.getAbsolutePath(), privateKeyPassphrase);
-            sshClientRebuilder.setKeyPassphrase(privateKeyPassphrase);
-            try {
-              // Verify the passphrase works
-              keyProvider.getPrivate();
-            } catch (IOException e) {
-              issues.add(
-                  context.createConfigIssue(Groups.CREDENTIALS.getLabel(),
-                  CONF_PREFIX + "privateKeyPassphrase",
-                  Errors.REMOTE_19,
-                  e.getMessage()
-            ));
+        String privateKeyPassphrase = resolveCredential(
+            conf.privateKeyPassphrase,
+            CONF_PREFIX + "privateKeyPassphrase",
+            issues,
+            context
+        );
+        switch (conf.privateKeyProvider) {
+          case FILE:
+            File privateKeyFile = new File(conf.privateKey);
+            sshClientRebuilder.setKeyLocation(privateKeyFile.getAbsolutePath());
+            if (!privateKeyFile.exists() || !privateKeyFile.isFile() || !privateKeyFile.canRead()) {
+              issues.add(context.createConfigIssue(
+                  Groups.CREDENTIALS.getLabel(),
+                  CONF_PREFIX + "privateKey",
+                  Errors.REMOTE_10,
+                  conf.privateKey
+              ));
             }
-          } else {
-            keyProvider = sshClient.loadKeys(privateKeyFile.getAbsolutePath());
-          }
-          sshClientRebuilder.setKeyLocation(privateKeyFile.getAbsolutePath());
+            if (privateKeyPassphrase != null && !privateKeyPassphrase.isEmpty()) {
+              keyProvider = sshClient.loadKeys(privateKeyFile.getAbsolutePath(), privateKeyPassphrase);
+              sshClientRebuilder.setKeyPassphrase(privateKeyPassphrase);
+            } else {
+              keyProvider = sshClient.loadKeys(privateKeyFile.getAbsolutePath());
+            }
+            break;
+          case PLAIN_TEXT:
+            String privateKeyPlainText = resolveCredential(
+                conf.privateKeyPlainText,
+                CONF_PREFIX + "privateKeyPlainText",
+                issues,
+                context
+            );
+            sshClientRebuilder.setKeyPlainText(privateKeyPlainText);
+            if (privateKeyPassphrase != null && !privateKeyPassphrase.isEmpty()) {
+              keyProvider = sshClient.loadKeys(
+                  privateKeyPlainText,
+                  null,
+                  PasswordUtils.createOneOff(privateKeyPassphrase.toCharArray()));
+              sshClientRebuilder.setKeyPassphrase(privateKeyPassphrase);
+            } else {
+              keyProvider = sshClient.loadKeys(privateKeyPlainText, null, null);
+            }
+            break;
+          default:
+            break;
+        }
+        try {
+          // Verify we can get the private key
+          keyProvider.getPrivate();
+        } catch (IOException e) {
+          issues.add(context.createConfigIssue(
+              Groups.CREDENTIALS.getLabel(),
+              CONF_PREFIX + "privateKey",
+              Errors.REMOTE_19,
+              e.getMessage()
+          ));
         }
         break;
       case PASSWORD:

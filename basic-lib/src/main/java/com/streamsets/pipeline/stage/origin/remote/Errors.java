@@ -42,7 +42,7 @@ public enum Errors implements ErrorCode {
   REMOTE_16("Initial file '{}' is invalid: {}"),
   REMOTE_17("Can't resolve credential: {}"),
   REMOTE_18("Error accessing remote directory: {}"),
-  REMOTE_19("Unable to load Private Key using Passphrase: {}"),
+  REMOTE_19("Unable to load Private Key: {}"),
   ;
 
   private final String msg;

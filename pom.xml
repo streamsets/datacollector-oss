@@ -340,6 +340,7 @@
             <exclude>commonlib/src/main/resources/*</exclude>
             <exclude>basic-lib/src/test/resources/*.ser</exclude>
             <exclude>**/id_rsa_test</exclude>
+            <exclude>**/id_rsa_test_unencrypted</exclude>
             <exclude>**/*.pub</exclude>
 
             <!-- TestOverrunStreamingXmlParser relies on this file being small, cannot add license header -->
