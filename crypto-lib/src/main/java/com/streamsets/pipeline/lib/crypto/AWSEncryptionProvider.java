@@ -81,7 +81,7 @@ public class AWSEncryptionProvider implements EncryptionProvider {
       CredentialValue secretKey
   ) throws StageException {
     AWSCredentialsProvider credentialsProvider;
-    if (accessKeyId != null && secretKey != null) {
+    if (accessKeyId != null && secretKey != null && !accessKeyId.get().isEmpty() && !secretKey.get().isEmpty()) {
       credentialsProvider = new AWSStaticCredentialsProvider(new BasicAWSCredentials(
           accessKeyId.get(),
           secretKey.get()
