@@ -176,7 +176,7 @@ public class AmazonS3SourceUpgrader implements StageUpgrader {
 
     // Add this config conditionally - some older versions might be missing it
     if(dataFormatConfigs.stream().noneMatch(c -> c.getName().contains("useCustomDelimiter"))) {
-      configs.add(new Config(S3ConfigBean.S3_CONFIG_BEAN_PREFIX + "dataFormatConfig.useCustomDelimiter", false));
+      dataFormatConfigs.add(new Config(S3ConfigBean.S3_CONFIG_BEAN_PREFIX + "dataFormatConfig.useCustomDelimiter", false));
     }
 
     // Remove SQS specific prefix
