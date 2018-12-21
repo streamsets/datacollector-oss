@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.origin.hdfs;
 
 import com.google.common.base.Strings;
 import com.streamsets.pipeline.api.PushSource;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.dirspooler.Offset;
 import com.streamsets.pipeline.lib.dirspooler.SpoolDirBaseSource;
@@ -70,7 +71,7 @@ public class HdfsSource extends SpoolDirBaseSource {
 
       while (iterator.hasNext()) {
         String keyString = (String) iterator.next();
-        if (Strings.isNullOrEmpty(keyString) || keyString.equals(OFFSET_VERSION)) {
+        if (Strings.isNullOrEmpty(keyString) || keyString.equals(OFFSET_VERSION) || keyString.equals(Source.POLL_SOURCE_OFFSET_KEY)) {
           continue;
         }
 

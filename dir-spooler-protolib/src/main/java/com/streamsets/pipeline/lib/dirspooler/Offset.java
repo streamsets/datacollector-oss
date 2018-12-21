@@ -47,7 +47,7 @@ public class Offset {
 
     if (version.equals(VERSION_ONE)) {
       try {
-        if (offset.startsWith("{")) {
+        if (offset != null && offset.startsWith("{")) {
           Map<String, String> map = OffsetUtil.deserializeOffsetMap(offset);
           this.fileOffset = map.get(POS) == null ? ZERO : map.get(POS);
         } else {
