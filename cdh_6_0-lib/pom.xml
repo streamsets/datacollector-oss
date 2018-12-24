@@ -732,7 +732,7 @@
         </dependency>
 
         <!-- Solr related -->
-        <dependency>
+        <!--<dependency>
             <groupId>org.apache.solr</groupId>
             <artifactId>solr-solrj</artifactId>
             <version>${solr.version}</version>
@@ -825,7 +825,7 @@
             <type>test-jar</type>
             <version>${project.version}</version>
             <scope>test</scope>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>com.streamsets</groupId>
@@ -1067,7 +1067,7 @@
                                 <source>${basedir}/../hive-protolib/src/test/java</source>
                                 <source>${basedir}/../kudu-protolib/src/test/java</source>
                                 <source>${basedir}/../mapreduce-protolib/src/test/java</source>
-                                <source>${basedir}/../solr-protolib/src/test/java</source>
+                                <!--<source>${basedir}/../solr-protolib/src/test/java</source>-->
                                 <source>${basedir}/../kafka_target-protolib/src/test/java</source>
                                 <source>${basedir}/../kafka_source-protolib/src/test/java</source>
                                 <source>${basedir}/../kafka_multisource-0_10-protolib/src/test/java</source>
@@ -1093,9 +1093,9 @@
                                 <resource>
                                     <directory>${basedir}/../hive-protolib/src/test/resources</directory>
                                 </resource>
-                                <resource>
+                                <!--<resource>
                                     <directory>${basedir}/../solr-protolib/src/test/resources</directory>
-                                </resource>
+                                </resource>-->
                                 <resource>
                                     <directory>${basedir}/../flume-protolib/src/test/resources</directory>
                                 </resource>
