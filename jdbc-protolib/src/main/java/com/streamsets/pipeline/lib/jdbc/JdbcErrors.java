@@ -100,6 +100,7 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_76("Invalid value '0' for Batches From Result Set"),
   JDBC_77("{} attempting to execute query '{}'. Giving up after {} errors as per stage configuration. First error: {}"),
   JDBC_78("Retries exhausted, giving up after as per stage configuration. First error: {}"),
+  JDBC_79("Records contain invalid data."),
 
   JDBC_80("Invalid transaction window. Must be a valid long or EL"),
   JDBC_81("LogMiner Session Window must be longer than Maximum Transaction Length"),
