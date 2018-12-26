@@ -107,4 +107,14 @@ public class TestOracleCDCSourceUpgrader {
     configs = new OracleCDCSourceUpgrader().upgrade("a", "b", "v", 8, 9, configs);
     Assert.assertTrue(configs.isEmpty());
   }
+
+  @Test
+  public void upgradeV9TOV10() throws Exception {
+    List<Config> configs = new ArrayList<>(1);
+    configs.add(new Config("oracleCDCConfigBean.jdbcFetchSize", 100));
+    List<Config>  ret = new OracleCDCSourceUpgrader().upgrade("a", "b", "v", 9, 10, configs);
+    Assert.assertEquals(2, ret.size());
+    Assert.assertEquals("oracleCDCConfigBean.fetchSizeLatest", ret.get(1).getName());
+    Assert.assertEquals(100, ret.get(1).getValue());
+  }
 }

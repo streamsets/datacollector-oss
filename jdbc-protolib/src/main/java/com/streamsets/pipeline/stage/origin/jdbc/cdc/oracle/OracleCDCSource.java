@@ -191,6 +191,7 @@ public class OracleCDCSource extends BaseSource {
   public static final String STARTED_LOG_MINER_WITH_START_SCN_AND_END_SCN = "Started LogMiner with start SCN: {} and end SCN: {}";
   public static final String REDO_SELECT_QUERY = "Redo select query for selectFromLogMnrContents = {}";
   public static final String CURRENT_LATEST_SCN_IS = "Current latest SCN is: {}";
+  private static final String SESSION_WINDOW_CURRENT_MSG = "Session window is in current time. Fetch size now set to {}";
 
   public static final int LOGMINER_START_MUST_BE_CALLED = 1306;
   public static final String ROLLBACK = "rollback";
@@ -509,6 +510,7 @@ public class OracleCDCSource extends BaseSource {
     LocalDateTime startTime = adjustStartTime(startingOffset.timestamp);
     String lastTxnId = startingOffset.txnId;
     LocalDateTime endTime = getEndTimeForStartTime(startTime);
+    boolean sessionWindowInCurrent = inSessionWindowCurrent(startTime, endTime);
     ResultSet resultSet = null;
     while (!getContext().isStopped()) {
       error = false;
@@ -529,8 +531,17 @@ public class OracleCDCSource extends BaseSource {
             selectChanges.setBigDecimal(4, lastCommitSCN);
           }
         }
-        selectChanges.setFetchSize(configBean.jdbcFetchSize);
+        selectChanges.setFetchSize(1);
         resultSet = selectChanges.executeQuery();
+        if (!sessionWindowInCurrent) {
+          // Overwrite fetch size when session window is past
+          resultSet.setFetchSize(configBean.jdbcFetchSize);
+        } else {
+          if (LOG.isTraceEnabled()) {
+            LOG.trace(SESSION_WINDOW_CURRENT_MSG, configBean.fetchSizeLatest);
+          }
+          resultSet.setFetchSize(configBean.fetchSizeLatest);
+        }
         while (resultSet.next() && !getContext().isStopped()) {
           String queryFragment = resultSet.getString(5);
           BigDecimal scnDecimal = resultSet.getBigDecimal(1);
@@ -746,6 +757,7 @@ public class OracleCDCSource extends BaseSource {
             startTime = adjustStartTime(endTime);
             endTime = getEndTimeForStartTime(startTime);
           }
+          sessionWindowInCurrent = inSessionWindowCurrent(startTime, endTime);
           startLogMinerUsingGivenDates(
               startTime.format(dateTimeColumnHandler.dateFormatter),
               endTime.format(dateTimeColumnHandler.dateFormatter)
@@ -759,6 +771,12 @@ public class OracleCDCSource extends BaseSource {
         }
       }
     }
+  }
+
+  private boolean inSessionWindowCurrent(LocalDateTime startTime, LocalDateTime endTime) {
+    LocalDateTime currentTime = nowAtDBTz();
+    return (currentTime.isAfter(startTime) && currentTime.isBefore(endTime))
+        || currentTime.isEqual(startTime) || currentTime.isEqual(endTime);
   }
 
   private void resetConnectionsQuietly() {
