@@ -171,7 +171,7 @@ public class ValidationUtil {
           preview = false;
         }
       } else {
-        if (stageDef.getType() == StageType.SOURCE) {
+        if (!stageLibrary.isMultipleOriginSupported() && stageDef.getType() == StageType.SOURCE) {
           // no stage other than first stage can be a Source
           issues.add(issueCreator.create(stageConf.getInstanceName(), ValidationError.VALIDATION_0004));
           preview = false;

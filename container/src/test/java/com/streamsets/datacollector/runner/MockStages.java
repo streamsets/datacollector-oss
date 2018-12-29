@@ -754,6 +754,11 @@ public class MockStages {
     }
 
     @Override
+    public boolean isMultipleOriginSupported() {
+      return false;
+    }
+
+    @Override
     public void releaseStageClassLoader(ClassLoader classLoader) {
     }
 

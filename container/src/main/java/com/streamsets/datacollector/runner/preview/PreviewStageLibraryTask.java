@@ -194,4 +194,9 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
     return null;
   }
 
+  @Override
+  public boolean isMultipleOriginSupported() {
+    return false;
+  }
+
 }

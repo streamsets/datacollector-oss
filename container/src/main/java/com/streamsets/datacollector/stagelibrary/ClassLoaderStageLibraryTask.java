@@ -980,6 +980,11 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     return repositoryManifestList;
   }
 
+  @Override
+  public boolean isMultipleOriginSupported() {
+    return false;
+  }
+
   private RepositoryManifestJson getRepositoryManifestFile(String repoUrl) {
     RepositoryManifestJson repositoryManifestJson = null;
     try (Response response = ClientBuilder.newClient().target(repoUrl).request().get()) {

@@ -84,4 +84,6 @@ public interface StageLibraryTask extends Task, ClassLoaderReleaser {
   List<StageLibraryDefinition> getLoadedStageLibraries();
 
   List<RepositoryManifestJson> getRepositoryManifestList();
+
+  boolean isMultipleOriginSupported();
 }
