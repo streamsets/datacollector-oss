@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class SelectorProcessor extends RecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(SelectorProcessor.class);
@@ -87,20 +88,26 @@ public class SelectorProcessor extends RecordProcessor {
 
   private String[][] parsePredicateLanes(List<Map<String, String>> predicateLanesList, List<ConfigIssue> issues) {
     String[][] predicateLanes = new String[predicateLanesList.size()][];
-    int count = 0;
     for (int i = 0; i < predicateLanesList.size(); i++) {
       Map<String, String> predicateLaneMap = predicateLanesList.get(i);
-      String outputLane = predicateLaneMap.get("outputLane");
+      final String outputLaneSuffix = predicateLaneMap.get("outputLane");
+      String outputLane = outputLaneSuffix;
       Object predicate = predicateLaneMap.get("predicate");
-      if (!getContext().getOutputLanes().contains(outputLane)) {
+
+      // pipeline fragments alter output lane names, therefore outputLane
+      // should be appended to composite lane name, rather than exact match.
+      // normal (not pipeline fragment) case is unaffected
+      Optional<String> maybeOutputLane = getContext().getOutputLanes().stream().filter(lane -> lane.endsWith(outputLaneSuffix)).findAny();
+      if (!maybeOutputLane.isPresent()) {
         issues.add(getContext().createConfigIssue(Groups.CONDITIONS.name(), "lanePredicates", Errors.SELECTOR_02,
-                                                  outputLane, predicate));
+                                                  outputLaneSuffix, predicate));
+      } else {
+        outputLane = maybeOutputLane.get();
       }
-      predicateLanes[count] = new String[2];
-      predicateLanes[count][0] = (String) predicate;
-      predicateLanes[count][1] = outputLane;
+      predicateLanes[i] = new String[2];
+      predicateLanes[i][0] = (String) predicate;
+      predicateLanes[i][1] = outputLane;
       LOG.debug("Condition:'{}' to stream:'{}'", predicate, outputLane);
-      count++;
     }
     return predicateLanes;
   }
