@@ -121,6 +121,20 @@ public class TestSelectorProcessor {
   }
 
   @Test
+  public void testInitLanePredicatesFragment() throws Exception {
+    Map<String, Object> constants = new HashMap<>();
+    constants.put("x", "false");
+    ProcessorRunner runner = new ProcessorRunner.Builder(SelectorDProcessor.class)
+        .setOnRecordError(OnRecordError.DISCARD)
+        .addConfiguration("lanePredicates", createLanePredicates("a", "${x}", "b", "default"))
+        .addConstants(constants)
+        .addOutputLane("somefragment-a")
+        .addOutputLane("somefragment-b")
+        .build();
+    runner.runInit();
+  }
+
+  @Test
   public void testInitLanePredicatesWithListMapConstants() throws Exception {
     Map<String, Object> constants = new HashMap<>();
     constants.put("x", "false");
