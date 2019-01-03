@@ -381,6 +381,10 @@
       <directory>${basedir}/../kinesis-lib/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
+    <fileSet>
+      <directory>${basedir}/../aws-secrets-manager-credentialstore-lib/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
 
     <!-- Azure libs -->
     <fileSet>

@@ -64,6 +64,7 @@
 
     <aerospike-lib>aerospike-lib</aerospike-lib>
     <aws-lib>aws-lib</aws-lib>
+    <aws-secrets-manager-credentialstore-lib>aws-secrets-manager-credentialstore-lib</aws-secrets-manager-credentialstore-lib>
     <azure-keyvault-credentialstore-lib>azure-keyvault-credentialstore-lib</azure-keyvault-credentialstore-lib>
     <basic-lib>basic-lib</basic-lib>
     <bigtable-lib>bigtable-lib</bigtable-lib>
@@ -229,6 +230,7 @@
     -->
     <module>aerospike-lib</module>
     <module>aws-lib</module>
+    <module>aws-secrets-manager-credentialstore-lib</module>
     <module>azure-lib</module>
     <module>azure-keyvault-credentialstore-lib</module>
     <module>basic-lib</module>
