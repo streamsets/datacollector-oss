@@ -211,6 +211,10 @@
           <groupId>com.mapr.db</groupId>
           <artifactId>maprdb-cdc</artifactId>
         </exclusion>
+        <exclusion>
+          <groupId>org.apache.hbase</groupId>
+          <artifactId>hbase-client</artifactId>
+        </exclusion>
        </exclusions>
     </dependency>
     <dependency>
