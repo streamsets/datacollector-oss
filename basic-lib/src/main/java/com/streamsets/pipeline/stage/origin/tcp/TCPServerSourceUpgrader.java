@@ -55,7 +55,7 @@ public class TCPServerSourceUpgrader implements StageUpgrader {
   }
 
   private void upgradeV2ToV3(List<Config> configs) {
-    configs.add(new Config("conf.readTimeout", "300"));
+    configs.add(new Config("conf.readTimeout", 300));
   }
 
 }
