@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
@@ -138,7 +139,7 @@ public class HdfsMetadataExecutor extends BaseExecutor {
 
             LOG.debug("Renaming to: {}", destinationFile);
             if(!fs.rename(workingFile, destinationFile)) {
-              throw new IOException("Can't rename file to: " + destinationFile);
+              throw new IOException(Utils.format("Can't rename '{}' to '{}''", workingFile, destinationFile));
             }
             workingFile = destinationFile;
           }
