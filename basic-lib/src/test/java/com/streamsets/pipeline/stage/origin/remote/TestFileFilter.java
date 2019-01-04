@@ -27,8 +27,18 @@ import org.mockito.Mockito;
 public class TestFileFilter {
 
   @Test
-  public void testAccept() {
-    FileFilter filter = new FileFilter("a*");
+  public void testGlobAccept() {
+    FileFilter filter = new FileFilter(FilePatternMode.GLOB, "a*");
+    testAccept(filter);
+  }
+
+  @Test
+  public void testRegexAccept() {
+    FileFilter filter = new FileFilter(FilePatternMode.REGEX, "a.+");
+    testAccept(filter);
+  }
+
+  private void testAccept(FileFilter filter) {
     // Dir but doesn't match the pattern
     Assert.assertTrue(filter.accept(createRemoteResourceInfo("b", false)));
     // File but doesn't match the pattern
@@ -38,8 +48,18 @@ public class TestFileFilter {
   }
 
   @Test
-  public void testIncludeFile() throws Exception {
-    FileFilter filter = new FileFilter("a*");
+  public void testGlobIncludeFile() throws Exception {
+    FileFilter filter = new FileFilter(FilePatternMode.GLOB, "a*");
+    testIncludeFile(filter);
+  }
+
+  @Test
+  public void testRegexIncludeFile() throws Exception {
+    FileFilter filter = new FileFilter(FilePatternMode.REGEX, "a.+");
+    testIncludeFile(filter);
+  }
+
+  private void testIncludeFile(FileFilter filter) throws Exception{
     // Matches the pattern but Dir
     Assert.assertFalse(filter.includeFile(createFileSelectInfo("abc", false)));
     // File but doesn't match the pattern
@@ -49,26 +69,32 @@ public class TestFileFilter {
   }
 
   @Test
-  public void testTraverseDescendents() {
-    FileFilter filter = new FileFilter("*");
+  public void testGlobTraverseDescendents() {
+    FileFilter filter = new FileFilter(FilePatternMode.GLOB, "*");
+    Assert.assertTrue(filter.traverseDescendents(null));
+  }
+
+  @Test
+  public void testRegexTraverseDescendents() {
+    FileFilter filter = new FileFilter(FilePatternMode.REGEX, ".+");
     Assert.assertTrue(filter.traverseDescendents(null));
   }
 
   @Test
   public void testGlobToRegex() {
-    FileFilter filter = new FileFilter("abc*def*");
+    FileFilter filter = new FileFilter(FilePatternMode.GLOB, "abc*def*");
     Assert.assertEquals("abc.+def.+", filter.getRegex().pattern());
 
-    filter = new FileFilter("abc?def?");
+    filter = new FileFilter(FilePatternMode.GLOB, "abc?def?");
     Assert.assertEquals("abc.{1}+def.{1}+", filter.getRegex().pattern());
 
-    filter = new FileFilter("abc*def?");
+    filter = new FileFilter(FilePatternMode.GLOB, "abc*def?");
     Assert.assertEquals("abc.+def.{1}+", filter.getRegex().pattern());
   }
 
   @Test
   public void testGlobToRegexSpecialCharacters() {
-    FileFilter filter = new FileFilter("abc.def.");
+    FileFilter filter = new FileFilter(FilePatternMode.GLOB, "abc.def.");
     Assert.assertEquals("abc\\.def\\.", filter.getRegex().pattern());
 
     String[] illegalPatterns = new String[] {
@@ -77,7 +103,7 @@ public class TestFileFilter {
         "abc~def"};
     for (String illegalPattern : illegalPatterns) {
       try {
-        new FileFilter(illegalPattern);
+        new FileFilter(FilePatternMode.GLOB, illegalPattern);
         Assert.fail("Expected IllegalArgumentException");
       } catch (IllegalArgumentException e) {
         Assert.assertEquals("Invalid character in file glob", e.getMessage());

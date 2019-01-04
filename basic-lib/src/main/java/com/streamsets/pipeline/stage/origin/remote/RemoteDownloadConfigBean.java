@@ -211,12 +211,24 @@ public class RemoteDownloadConfigBean {
   public boolean processSubDirectories;
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "File Name Pattern Mode",
+      description = "Select whether the File Name Pattern specified uses glob pattern syntax or regex syntax.",
+      defaultValue = "GLOB",
+      displayPosition = 35,
+      group = "REMOTE"
+  )
+  @ValueChooserModel(FilePatternModeChooserValues.class)
+  public FilePatternMode filePatternMode;
+
+  @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
       label = "File Name Pattern",
       defaultValue = "*",
-      description =  "A glob that defines the pattern of the file names in the directory. ('*' selects all files)" +
-          "Files are processed in chronological order.",
+      description =  "A glob or regular expression that defines the pattern of the file names in the directory" +
+          " (Glob '*' selects all files). Files are processed in chronological order.",
       group = "REMOTE",
       displayPosition = 40
   )

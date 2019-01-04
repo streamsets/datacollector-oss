@@ -32,8 +32,13 @@ class FileFilter implements RemoteResourceFilter, FileSelector {
 
   protected final Pattern regex;
 
-  FileFilter(String filePattern) {
-    this.regex = globToRegex(filePattern);
+  FileFilter(FilePatternMode filePatternMode, String filePattern) {
+    if (filePatternMode == FilePatternMode.GLOB) {
+        filePattern = globToRegex(filePattern);
+    }
+
+    LOG.debug("Using regex: {}", filePattern);
+    this.regex = Pattern.compile(filePattern);
   }
 
   @Override
@@ -69,13 +74,12 @@ class FileFilter implements RemoteResourceFilter, FileSelector {
   }
 
   /**
-   * Convert a limited file glob into a
-   * simple regex.
+   * Convert a limited file glob into a simple regex.
    *
    * @param glob file specification glob
    * @return regex.
    */
-  private static Pattern globToRegex(String glob) {
+  private static String globToRegex(String glob) {
     if (glob.charAt(0) == '.' || glob.contains("/") || glob.contains("~")) {
       throw new IllegalArgumentException("Invalid character in file glob");
     }
@@ -85,8 +89,7 @@ class FileFilter implements RemoteResourceFilter, FileSelector {
     glob = glob.replace("*", ".+");
     glob = glob.replace("?", ".{1}+");
 
-    LOG.debug("Using regex: {}", glob);
-    return Pattern.compile(glob);
+    return glob;
   }
 
   public Pattern getRegex() {

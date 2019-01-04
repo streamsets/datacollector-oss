@@ -210,11 +210,18 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
               Groups.REMOTE.getLabel(), CONF_PREFIX + "filePattern", Errors.REMOTE_13, conf.filePattern));
     } else {
       try {
-        fileFilter = new FileFilter(conf.filePattern);
+        fileFilter = new FileFilter(conf.filePatternMode, conf.filePattern);
       } catch (IllegalArgumentException ex) {
         issues.add(
             getContext().createConfigIssue(
-                Groups.REMOTE.getLabel(), CONF_PREFIX + "filePattern", Errors.REMOTE_14, conf.filePattern, ex.toString(), ex ));
+                Groups.REMOTE.getLabel(),
+                CONF_PREFIX + "filePattern",
+                Errors.REMOTE_14,
+                conf.filePatternMode,
+                conf.filePattern,
+                ex.toString(),
+                ex
+            ));
       }
     }
   }

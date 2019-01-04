@@ -257,7 +257,16 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
   }
 
   @Test
-  public void testInvalidFilePattern() throws Exception {
+  public void testInvalidFilePatternGlob() throws Exception {
+    testInvalidFilePattern(FilePatternMode.GLOB);
+  }
+
+  @Test
+  public void testInvalidFilePatternRegex() throws Exception {
+    testInvalidFilePattern(FilePatternMode.REGEX);
+  }
+
+  private void testInvalidFilePattern(FilePatternMode filePatternMode) throws Exception {
     path = "remote-download-source/parseNoError";
     setupServer(path, false);
     RemoteDownloadSource origin = new RemoteDownloadSource(getBean(
@@ -272,7 +281,10 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         DataFormat.JSON,
         null,
         false,
-        ""  // empty pattern
+        filePatternMode,
+        "", // empty pattern
+        1000,
+        ""
     ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadDSource.class, origin).addOutputLane("lane").build();
     runInitWithConfigException(runner, Errors.REMOTE_13);
@@ -290,7 +302,10 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         DataFormat.JSON,
         null,
         false,
-        "~"  // invalid glob pattern
+        filePatternMode,
+        "[", // invalid pattern
+        1000,
+        ""
     ));
     runner = new SourceRunner.Builder(RemoteDownloadDSource.class, origin).addOutputLane("lane").build();
     runInitWithConfigException(runner, Errors.REMOTE_14);
@@ -356,6 +371,7 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         DataFormat.JSON,
         null,
         false,
+        FilePatternMode.GLOB,
         "*",
         1000,
         "",
@@ -430,6 +446,7 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         DataFormat.JSON,
         null,
         false,
+        FilePatternMode.GLOB,
         "*",
         1000,
         "",
@@ -501,6 +518,7 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
             DataFormat.JSON,
             null,
             false,
+            FilePatternMode.GLOB,
             "*",
             1000,
             "",
@@ -565,6 +583,7 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
             DataFormat.JSON,
             null,
             false,
+            FilePatternMode.GLOB,
             "*",
             1000,
             "",
@@ -669,8 +688,9 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
             DataFormat.JSON,
             null,
             false,
+            FilePatternMode.GLOB,
             "*",
-              1000,
+            1000,
             "sloth.txt"
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadDSource.class, origin)
@@ -707,8 +727,9 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
             DataFormat.JSON,
             null,
             false,
+            FilePatternMode.GLOB,
             "*",
-              1000,
+            1000,
             "is-arvind-son-of-god.txt"
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadDSource.class, origin)
@@ -2319,6 +2340,7 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         dataFormat,
         errorArchive,
         processSubDirectories,
+        FilePatternMode.GLOB,
         filePattern,
         1000,
         ""
@@ -2352,6 +2374,7 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
       dataFormat,
       errorArchive,
       processSubDirectories,
+      FilePatternMode.GLOB,
       filePattern,
       batchSize,
       ""
@@ -2370,6 +2393,7 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
       DataFormat dataFormat,
       String errorArchive,
       boolean processSubDirectories,
+      FilePatternMode filePatternMode,
       String filePattern,
       int batchSize,
       String initialFile
@@ -2386,6 +2410,7 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         dataFormat,
         errorArchive,
         processSubDirectories,
+        filePatternMode,
         filePattern,
         batchSize,
         initialFile,
@@ -2405,6 +2430,7 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
       DataFormat dataFormat,
       String errorArchive,
       boolean processSubDirectories,
+      FilePatternMode filePatternMode,
       String filePattern,
       int batchSize,
       String initialFile,
@@ -2424,6 +2450,7 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
     configBean.errorArchiveDir = errorArchive;
     configBean.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
     configBean.processSubDirectories = processSubDirectories;
+    configBean.filePatternMode = filePatternMode;
     configBean.filePattern = filePattern;
     configBean.basic.maxBatchSize = batchSize;
     configBean.initialFileToProcess = initialFile;
