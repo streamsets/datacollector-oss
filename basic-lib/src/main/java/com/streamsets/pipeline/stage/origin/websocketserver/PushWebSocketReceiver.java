@@ -159,7 +159,8 @@ public class PushWebSocketReceiver implements WebSocketReceiver {
           getContext(),
           parserFactory,
           dataGeneratorFactory,
-          sourceResponseRecords
+          sourceResponseRecords,
+          responseConfig.dataFormat
       );
     }
 

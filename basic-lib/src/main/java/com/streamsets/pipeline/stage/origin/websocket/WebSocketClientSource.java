@@ -291,7 +291,8 @@ public class WebSocketClientSource implements PushSource {
           context,
           dataParserFactory,
           dataGeneratorFactory,
-          sourceResponseRecords
+          sourceResponseRecords,
+          responseConfig.dataFormat
       );
     }
   }

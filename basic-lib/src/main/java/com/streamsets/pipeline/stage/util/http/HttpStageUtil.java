@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.util.http;
 
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
@@ -104,15 +105,23 @@ public abstract class HttpStageUtil {
       List<Record> successRecords,
       List<Record> errorRecords,
       int statusCode,
-      String errorMessage
+      String errorMessage,
+      DataFormat dataFormat
   ) {
+    Record envelopeRecord = context.createRecord("envelopeRecord");
     LinkedHashMap<String,Field> envelopeRecordVal = new LinkedHashMap<>();
     envelopeRecordVal.put("httpStatusCode", Field.create(statusCode));
+    if (errorMessage != null) {
+      envelopeRecordVal.put("errorMessage", Field.create(errorMessage));
+    }
     envelopeRecordVal.put("data", Field.create(convertRecordsToFields(parserFactory, successRecords)));
     envelopeRecordVal.put("error", Field.create(convertRecordsToFields(parserFactory, errorRecords)));
-    envelopeRecordVal.put("errorMessage", Field.create(errorMessage));
-    Record envelopeRecord = context.createRecord("envelopeRecord");
-    envelopeRecord.set(Field.createListMap(envelopeRecordVal));
+    if (dataFormat.equals(DataFormat.XML)) {
+      // XML format requires single key map at the root
+      envelopeRecord.set(Field.create(ImmutableMap.of("response", Field.createListMap(envelopeRecordVal))));
+    } else {
+      envelopeRecord.set(Field.createListMap(envelopeRecordVal));
+    }
     return envelopeRecord;
   }
 

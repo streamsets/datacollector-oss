@@ -22,7 +22,8 @@ public class ResponseDataFormatChooserValues extends BaseEnumChooserValues<DataF
 
   public ResponseDataFormatChooserValues() {
     super(
-        DataFormat.JSON
+        DataFormat.JSON,
+        DataFormat.XML
     );
   }
 

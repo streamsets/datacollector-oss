@@ -18,6 +18,7 @@ package com.streamsets.pipeline.lib.websocket;
 
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
@@ -103,7 +104,8 @@ public class WebSocketCommon {
       PushSource.Context context,
       DataParserFactory dataParserFactory,
       DataGeneratorFactory dataGeneratorFactory,
-      List<Record> sourceResponseRecords
+      List<Record> sourceResponseRecords,
+      DataFormat dataFormat
   ) throws IOException {
     int responseStatusCode = HttpServletResponse.SC_OK;
     Set<Integer> statusCodesFromResponse = new HashSet<>();
@@ -140,7 +142,8 @@ public class WebSocketCommon {
         successRecords,
         errorRecords,
         responseStatusCode,
-        errorMessage
+        errorMessage,
+        dataFormat
     );
 
     ByteArrayOutputStream byteBufferOutputStream = new ByteArrayOutputStream();
