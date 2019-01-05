@@ -20,12 +20,7 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.SDCClassLoader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.ContainerClassLoader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import sun.security.util.SecurityConstants;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -39,20 +34,8 @@ import java.util.Set;
  *
  * * Container class loader is unrestricted.
  * * SDC Configuration can specify exceptions to specific files (globally or for given stage libraries).
- *
- * There are sadly bugs in JVM when using custom security manager:
- *
- * https://bugs.openjdk.java.net/browse/JDK-8166366 (and family of repeating regressions):
- *
- * This manager is trying to bypass them all:
- *
- * * We're actively catching StackOverflowException and refreshing permissions in such scenario. This should
- *   re-initialize the proper protection domain and thus the subsequent call to super should be successful. We don't
- *   do this recursively to avoid introducing yet another problem. If even after the refresh of permissions we
- *   get StackOverflowException, well, that's it.
  */
 public class SdcSecurityManager extends SecurityManager {
-  Logger LOG = LoggerFactory.getLogger(SdcSecurityManager.class);
 
   public static final String PROPERTY_EXCEPTIONS = "security_manager.sdc_dirs.exceptions";
   public static final String PROPERTY_STAGE_EXCEPTIONS = "security_manager.sdc_dirs.exceptions.lib.";
@@ -125,62 +108,26 @@ public class SdcSecurityManager extends SecurityManager {
 
   @Override
   public void checkRead(String file) {
-    try {
-      checkPrivatePathsForRead(file);
-      super.checkRead(file);
-    } catch (StackOverflowError e) {
-      LOG.error("StackOverflowError in JVM's security manager for file: {}", file, e);
-      refreshPermissions();
-      super.checkRead(file);
-    }
+    checkPrivatePathsForRead(file);
+    super.checkRead(file);
   }
 
   @Override
   public void checkRead(String file, Object context) {
-    try {
-      checkPrivatePathsForRead(file);
-      super.checkRead(file, context);
-    } catch (StackOverflowError e) {
-      LOG.error("StackOverflowError in JVM's security manager for file: {}", file, e);
-      refreshPermissions();
-      super.checkRead(file, context);
-    }
+    checkPrivatePathsForRead(file);
+    super.checkRead(file, context);
   }
 
   @Override
   public void checkWrite(String file) {
-    try {
-      checkPrivatePathsForWrite(file);
-      super.checkWrite(file);
-    } catch (StackOverflowError e) {
-      LOG.error("StackOverflowError in JVM's security manager for file: {}", file, e);
-      refreshPermissions();
-      super.checkWrite(file);
-    }
+    checkPrivatePathsForWrite(file);
+    super.checkWrite(file);
   }
 
   @Override
   public void checkDelete(String file) {
-    try {
-      checkPrivatePathsForWrite(file);
-      super.checkDelete(file);
-    } catch (StackOverflowError e) {
-      LOG.error("StackOverflowError in JVM's security manager for file: {}", file, e);
-      refreshPermissions();
-      super.checkDelete(file);
-    }
-  }
-
-  /**
-   * This method refreshes permissions for this security manager - in case that JVM was
-   * kind enough and GC'ed them for us. The implementation is based on System.setSecurityManager
-   * that does something very similar.
-   */
-  private void refreshPermissions() {
-     AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
-       SdcSecurityManager.class.getProtectionDomain().implies(SecurityConstants.ALL_PERMISSION);
-       return null;
-     });
+    checkPrivatePathsForWrite(file);
+    super.checkDelete(file);
   }
 
   private void checkPrivatePathsForRead(String path) {
