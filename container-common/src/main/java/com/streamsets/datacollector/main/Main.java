@@ -37,6 +37,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
+  private final String PROPERTY_USE_SDC_SECURITY_MANAGER = "security_manager.sdc_manager.enable";
+  private final boolean DEFAULT_USE_SDC_SECURITY_MANAGER = false;
+
   private final ObjectGraph dagger;
   private final Task task;
   private final Callable<Boolean> taskStopCondition;
@@ -76,9 +79,11 @@ public class Main {
       log.info("-----------------------------------------------------------------");
       Configuration configuration = dagger.get(Configuration.class);
       if (System.getSecurityManager() != null) {
-        // Replace security manager with our own to protect some special folders that can never be accessed or altered
-        System.setSecurityManager(new SdcSecurityManager(runtimeInfo, configuration));
-        log.info("  Security Manager : ENABLED, policy file: {}", System.getProperty("java.security.policy"));
+        if(configuration.get(PROPERTY_USE_SDC_SECURITY_MANAGER, DEFAULT_USE_SDC_SECURITY_MANAGER)) {
+          System.setSecurityManager(new SdcSecurityManager(runtimeInfo, configuration));
+        }
+
+        log.info("  Security Manager : ENABLED, policy file: {}, implementation: {}", System.getProperty("java.security.policy"), System.getSecurityManager().getClass().getName());
       } else {
         log.warn("  Security Manager : DISABLED");
       }
