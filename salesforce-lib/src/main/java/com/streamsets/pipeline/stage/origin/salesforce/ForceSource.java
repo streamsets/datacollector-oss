@@ -586,7 +586,7 @@ public class ForceSource extends BaseSource {
           XMLEvent event = xmlEventReader.nextEvent();
           if (event.isStartElement() && event.asStartElement().getName().getLocalPart().equals(RECORDS)) {
             // SDC-9731 will refactor record creators so we don't need this downcast
-            String offset = ((BulkRecordCreator) recordCreator).createRecord(xmlEventReader, batchMaker);
+            String offset = ((BulkRecordCreator) recordCreator).createRecord(xmlEventReader, batchMaker, numRecords);
             nextSourceOffset = RECORD_ID_OFFSET_PREFIX + offset;
             ++numRecords;
           }
@@ -679,7 +679,7 @@ public class ForceSource extends BaseSource {
       }
       String offset = fixOffset(conf.offsetColumn, offsetField.getValue().toString());
       nextSourceOffset = RECORD_ID_OFFSET_PREFIX + offset;
-      final String sourceId = conf.soqlQuery + "::" + offset;
+      final String sourceId = StringUtils.substring(conf.soqlQuery.replaceAll("[\n\r]", " "), 0, 100) + "::rowCount:" + recordIndex + (StringUtils.isEmpty(conf.offsetColumn) ? "" : ":" + offset);
 
       Record rec = recordCreator.createRecord(sourceId, record);
 

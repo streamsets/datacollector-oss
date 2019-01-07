@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
@@ -51,7 +52,7 @@ public class BulkRecordCreator extends SobjectRecordCreator {
     dateFormat = new SimpleDateFormat(datePattern);
   }
 
-  public String createRecord(Object source, BatchMaker batchMaker) throws StageException {
+  public String createRecord(Object source, BatchMaker batchMaker, int recordIndex) throws StageException {
     XMLEventReader reader = (XMLEventReader) source;
     String nextSourceOffset;
 
@@ -72,7 +73,7 @@ public class BulkRecordCreator extends SobjectRecordCreator {
       }
       nextSourceOffset = fixOffset(conf.offsetColumn, newOffset);
 
-      final String sourceId = conf.soqlQuery + "::" + nextSourceOffset;
+      final String sourceId = StringUtils.substring(conf.soqlQuery.replaceAll("[\n\r]", " "), 0, 100) + "::rowCount:" + recordIndex + (StringUtils.isEmpty(conf.offsetColumn) ? "" : ":" + nextSourceOffset);
 
       Record record = context.createRecord(sourceId);
       record.set(field);
