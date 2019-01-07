@@ -33,17 +33,18 @@ import java.util.List;
  * A wrapper around {@link SFTPClient} that acts as if the root of the remote filesystem is at the specified root.
  * In other words, to the outside world it's similar as if you did a 'chroot'.  This is useful for being compatible with
  * {@link org.apache.commons.vfs2.provider.sftp.SftpFileSystemConfigBuilder} and consistent with
- * {@link org.apache.commons.vfs2.provider.ftp.FtpFileSystemConfigBuilder}.
+ * {@link org.apache.commons.vfs2.provider.ftp.FtpFileSystemConfigBuilder}.  It also adds an archive functionality.
  */
 class ChrootSFTPClient {
 
   private final String root;
+  private String archiveDir;
   private SFTPClient sftpClient;
   private final String pathSeparator;
 
   /**
    * Wraps the provided {@link SFTPClient} at the given root.  The given root can either be an absolute path or a path
-   * relative to the user's home directory.
+   * relative to the user's home directory.  If needing to use archiving, then use the other constructor.
    *
    * @param sftpClient The {@link SFTPClient} to wrap
    * @param root The root directory to use
@@ -51,15 +52,49 @@ class ChrootSFTPClient {
    * @throws IOException
    */
   public ChrootSFTPClient(SFTPClient sftpClient, String root, boolean rootRelativeToUserDir) throws IOException {
+    this(sftpClient, root, rootRelativeToUserDir, null, false);
+  }
+
+  /**
+   * Wraps the provided {@link SFTPClient} at the given root.  The given root can either be an absolute path or a path
+   * relative to the user's home directory.  The archive dir can also be either an absolute path or a path relative to
+   * the user's home directory.
+   *
+   * @param sftpClient The {@link SFTPClient} to wrap
+   * @param root The root directory to use
+   * @param rootRelativeToUserDir true if the given root is relative to the user's home dir, false if not
+   * @param archiveDir The archive directory to use
+   * @param archiveDirRelativeToUserDir true if the given archive dir is relative to the user's home dir, false if not
+   * @throws IOException
+   */
+  public ChrootSFTPClient(
+      SFTPClient sftpClient,
+      String root,
+      boolean rootRelativeToUserDir,
+      String archiveDir,
+      boolean archiveDirRelativeToUserDir
+  ) throws IOException {
     this.sftpClient = sftpClient;
     this.pathSeparator = sftpClient.getSFTPEngine().getPathHelper().getPathSeparator();
     if (rootRelativeToUserDir) {
       root = sftpClient.canonicalize(".") + (root.startsWith(pathSeparator) ? root : pathSeparator + root);
     }
+    if (archiveDir != null) {
+      if (archiveDirRelativeToUserDir) {
+        archiveDir =
+            sftpClient.canonicalize(".") + (archiveDir.startsWith(pathSeparator)
+                ? archiveDir
+                : pathSeparator + archiveDir);
+      }
+      if (archiveDir.endsWith(pathSeparator)) {
+        archiveDir = archiveDir.substring(0, archiveDir.length() - 1);
+      }
+    }
     if (sftpClient.statExistence(root) == null) {
       throw new SFTPException(root + ": does not exist");
     }
     this.root = root;
+    this.archiveDir = archiveDir;
   }
 
   public void setSFTPClient(SFTPClient sftpClient) {
@@ -71,6 +106,10 @@ class ChrootSFTPClient {
       path = path.substring(1);
     }
     return sftpClient.getSFTPEngine().getPathHelper().adjustForParent(root, path);
+  }
+
+  private String prependArchiveDir(String path) {
+    return archiveDir + (path.startsWith(pathSeparator) ? path : pathSeparator + path);
   }
 
   private String removeRoot(String path) {
@@ -115,6 +154,23 @@ class ChrootSFTPClient {
 
   public FileAttributes stat(String path) throws IOException {
     return sftpClient.stat(prependRoot(path));
+  }
+
+  public void delete(String path) throws IOException {
+    sftpClient.rm(prependRoot(path));
+  }
+
+  public String archive(String path) throws IOException {
+    if (archiveDir == null) {
+      throw new IOException("No archive directory defined - cannot archive");
+    }
+    String fromPath = prependRoot(path);
+    String toPath = prependArchiveDir(path);
+    // Create the toPath's parent dir(s) if they don't exist
+    String toDir = sftpClient.getSFTPEngine().getPathHelper().getComponents(toPath).getParent();
+    sftpClient.mkdirs(toDir);
+    sftpClient.rename(fromPath, toPath);
+    return toPath;
   }
 
   public void close() throws IOException {

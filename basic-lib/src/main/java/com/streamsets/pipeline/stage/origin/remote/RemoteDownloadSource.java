@@ -32,6 +32,7 @@ import com.streamsets.pipeline.api.lineage.LineageEvent;
 import com.streamsets.pipeline.api.lineage.LineageEventType;
 import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -90,6 +91,7 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
   private RemoteFile next = null;
   private ELEval rateLimitElEval;
   private ELVars rateLimitElVars;
+  private String archiveDir;
 
   //By default true so, between pipeline restarts we can always trigger event.
   private boolean canTriggerNoMoreDataEvent = true;
@@ -160,6 +162,20 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
               Groups.REMOTE.getLabel(), REMOTE_ADDRESS_CONF, Errors.REMOTE_01, conf.remoteAddress));
     }
 
+    if (conf.postProcessing == PostProcessingOptions.ARCHIVE) {
+      if (conf.archiveDir == null || conf.archiveDir.isEmpty()) {
+        issues.add(
+            getContext().createConfigIssue(
+                Groups.POST_PROCESSING.name(),
+                CONF_PREFIX + "archiveDir",
+                Errors.REMOTE_20
+            )
+        );
+      } else {
+        archiveDir = conf.archiveDir.endsWith("/") ? conf.archiveDir : conf.archiveDir + "/";
+      }
+    }
+
     if (issues.isEmpty()) {
       if (remoteURI.getScheme().equals(FTP_SCHEME)) {
         int port = remoteURI.getPort();
@@ -188,7 +204,7 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
 
   private void initAndConnect(List<ConfigIssue> issues) {
     try {
-      delegate.initAndConnect(issues, getContext(), remoteURI);
+      delegate.initAndConnect(issues, getContext(), remoteURI, archiveDir);
     } catch (IOException ex) {
       issues.add(
           getContext().createConfigIssue(
@@ -322,7 +338,7 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
           }
         }
       }
-      offset = addRecordsToBatch(batchSize, batchMaker, next);
+      offset = addRecordsToBatch(batchSize, batchMaker);
     } catch (IOException | DataParserException ex) {
       // Don't retry reading this file since there can be no records produced.
       offset = MINUS_ONE;
@@ -338,20 +354,20 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
     return offset;
   }
 
-  private String addRecordsToBatch(int maxBatchSize, BatchMaker batchMaker, RemoteFile remoteFile) throws IOException, StageException {
+  private String addRecordsToBatch(int maxBatchSize, BatchMaker batchMaker) throws IOException, StageException {
     String offset = NOTHING_READ;
     for (int i = 0; i < maxBatchSize; i++) {
       try {
         Record record = parser.parse();
         if (record != null) {
           record.getHeader().setAttribute(REMOTE_URI, remoteURI.toString());
-          record.getHeader().setAttribute(HeaderAttributeConstants.FILE, remoteFile.getFilePath());
+          record.getHeader().setAttribute(HeaderAttributeConstants.FILE, next.getFilePath());
           record.getHeader().setAttribute(HeaderAttributeConstants.FILE_NAME,
-              FilenameUtils.getName(remoteFile.getFilePath())
+              FilenameUtils.getName(next.getFilePath())
           );
           record.getHeader().setAttribute(
               HeaderAttributeConstants.LAST_MODIFIED_TIME,
-              String.valueOf(remoteFile.getLastModified())
+              String.valueOf(next.getLastModified())
           );
           record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, offset == null ? "0" : offset);
           batchMaker.addRecord(record);
@@ -376,6 +392,7 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
                 .with("record-count", perFileRecordCount)
                 .with("error-count", perFileErrorCount)
                 .createAndSend();
+            handlePostProcessing(next.getFilePath());
           } finally {
             parser = null;
             currentStream = null;
@@ -401,6 +418,33 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
       }
     }
     return offset;
+  }
+
+  private void handlePostProcessing(String filePath) throws IOException {
+    if (!getContext().isPreview()) {
+      try {
+        switch (conf.postProcessing) {
+          case ARCHIVE:
+            LOG.debug("Post Processing: Archiving file {}", filePath);
+            String toPath = delegate.archive(filePath);
+            LOG.info("Post Processing: Archived file {} to {}", filePath, toPath);
+            break;
+          case DELETE:
+            LOG.debug("Post Processing: Deleting file {}", filePath);
+            delegate.delete(filePath);
+            LOG.info("Post Processing: Deleted file {}", filePath);
+            break;
+          case NONE:
+            LOG.debug("Post Processing: None for file {}", filePath);
+            break;
+          default:
+            break;
+        }
+      } catch (IOException ioe) {
+        LOG.error("IOException during Post Processing: {}", ioe.getMessage(), ioe);
+        throw ioe;
+      }
+    }
   }
 
   private void moveFileToError(RemoteFile fileToMove) {

@@ -20,6 +20,8 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.PostProcessingOptions;
+import com.streamsets.pipeline.config.PostProcessingOptionsChooserValues;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
@@ -244,5 +246,43 @@ public class RemoteDownloadConfigBean {
       group = "REMOTE"
   )
   public String initialFileToProcess;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "NONE",
+      label = "File Post Processing",
+      description = "Action to take after processing a file",
+      displayPosition = 100,
+      group = "POST_PROCESSING"
+  )
+  @ValueChooserModel(PostProcessingOptionsChooserValues.class)
+  public PostProcessingOptions postProcessing;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Archive Directory",
+      description = "Directory to archive files after they have been processed",
+      displayPosition = 110,
+      group = "POST_PROCESSING",
+      dependsOn = "postProcessing",
+      triggeredByValue = "ARCHIVE"
+  )
+  public String archiveDir;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Path Relative to User Home Directory",
+      description = "If checked, the Archive Directory path is resolved relative to the logged in user's home " +
+          "directory, if a username is entered in the Credentials tab or in the URL.",
+      displayPosition = 120,
+      group = "POST_PROCESSING",
+      dependsOn = "postProcessing",
+      triggeredByValue = "ARCHIVE"
+  )
+  public boolean archiveDirUserDirIsRoot = true;
 
 }

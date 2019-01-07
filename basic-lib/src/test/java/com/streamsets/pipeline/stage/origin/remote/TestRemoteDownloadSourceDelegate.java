@@ -150,7 +150,7 @@ public class TestRemoteDownloadSourceDelegate {
 
       @Override
       protected void initAndConnectInternal(
-          List<Stage.ConfigIssue> issues, Source.Context context, URI remoteURI
+          List<Stage.ConfigIssue> issues, Source.Context context, URI remoteURI, String archiveDir
       ) throws IOException {
 
       }
@@ -175,6 +175,16 @@ public class TestRemoteDownloadSourceDelegate {
       @Override
       void close() throws IOException {
 
+      }
+
+      @Override
+      void delete(String remotePath) throws IOException {
+
+      }
+
+      @Override
+      String archive(String fromPath) throws IOException {
+        return null;
       }
     };
     return Mockito.spy(delegate);

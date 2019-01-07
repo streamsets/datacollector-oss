@@ -30,6 +30,7 @@ import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.io.fileref.FileRefTestUtil;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.sdk.DataCollectorServicesUtils;
@@ -54,6 +55,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.mockftpserver.core.command.StaticReplyCommandHandler;
+import org.mockftpserver.fake.filesystem.FileSystem;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -634,19 +636,7 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         .addOutputLane("lane")
         .build();
     runner.runInit();
-    List<Record> expected = getExpectedRecords();
-    Record record = RecordCreator.create();
-    record.set(Field.create(new HashMap<String, Field>()));
-    record.set("/name", Field.create("polarbear"));
-    record.set("/age", Field.create("6"));
-    record.set("/characterisitics", Field.create(Arrays.asList(
-        Field.create("cool"),
-        Field.create("cute"),
-        Field.create("huge"),
-        Field.create("round"),
-        Field.create("playful")
-    )));
-    expected.add(record);
+    List<Record> expected = getExpectedRecords(true);
     String offset = RemoteDownloadSource.NOTHING_READ;
     for (int i = 0; i < 3; i++) {
       StageRunner.Output op = runner.runProduce(offset, 1000);
@@ -854,19 +844,7 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         .addOutputLane("lane")
         .build();
     runner.runInit();
-    List<Record> expected = getExpectedRecords();
-    Record record = RecordCreator.create();
-    record.set(Field.create(new HashMap<String, Field>()));
-    record.set("/name", Field.create("polarbear"));
-    record.set("/age", Field.create("6"));
-    record.set("/characterisitics", Field.create(Arrays.asList(
-        Field.create("cool"),
-        Field.create("cute"),
-        Field.create("huge"),
-        Field.create("round"),
-        Field.create("playful")
-    )));
-    expected.add(record);
+    List<Record> expected = getExpectedRecords(true);
     String offset = RemoteDownloadSource.NOTHING_READ;
     StageRunner.Output op = runner.runProduce(offset, 1);
     offset = op.getNewOffset();
@@ -939,19 +917,7 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         .setOnRecordError(OnRecordError.TO_ERROR)
         .build();
     runner.runInit();
-    List<Record> expected = getExpectedRecords();
-    Record record = RecordCreator.create();
-    record.set(Field.create(new HashMap<String, Field>()));
-    record.set("/name", Field.create("polarbear"));
-    record.set("/age", Field.create("6"));
-    record.set("/characterisitics", Field.create(Arrays.asList(
-        Field.create("cool"),
-        Field.create("cute"),
-        Field.create("huge"),
-        Field.create("round"),
-        Field.create("playful")
-    )));
-    expected.add(record);
+    List<Record> expected = getExpectedRecords(true);
     StageRunner.Output op = runner.runProduce(RemoteDownloadSource.NOTHING_READ, 1000);
     List<Record> actual = op.getRecords().get("lane");
     Assert.assertEquals(1, actual.size());
@@ -1010,19 +976,7 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         .setOnRecordError(OnRecordError.TO_ERROR)
         .build();
     runner.runInit();
-    List<Record> expected = getExpectedRecords();
-    Record record = RecordCreator.create();
-    record.set(Field.create(new HashMap<String, Field>()));
-    record.set("/name", Field.create("polarbear"));
-    record.set("/age", Field.create("6"));
-    record.set("/characterisitics", Field.create(Arrays.asList(
-        Field.create("cool"),
-        Field.create("cute"),
-        Field.create("huge"),
-        Field.create("round"),
-        Field.create("playful")
-    )));
-    expected.add(record);
+    List<Record> expected = getExpectedRecords(true);
     Assert.assertEquals(0, archiveDir.listFiles().length);
     String offset = RemoteDownloadSource.NOTHING_READ;
     for (int i = 0; i < 3; i++) {
@@ -1148,6 +1102,10 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
   }
 
   private List<Record> getExpectedRecords() {
+    return getExpectedRecords(false);
+  }
+
+  private List<Record> getExpectedRecords(boolean withPolarBear) {
     List<Record> records = new ArrayList<>(2);
     Record record = RecordCreator.create();
     record.set(Field.create(new HashMap<String, Field>()));
@@ -1173,6 +1131,20 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         Field.create("hungry")
     )));
     records.add(record);
+    if (withPolarBear) {
+      record = RecordCreator.create();
+      record.set(Field.create(new HashMap<String, Field>()));
+      record.set("/name", Field.create("polarbear"));
+      record.set("/age", Field.create("6"));
+      record.set("/characterisitics", Field.create(Arrays.asList(
+          Field.create("cool"),
+          Field.create("cute"),
+          Field.create("huge"),
+          Field.create("round"),
+          Field.create("playful")
+      )));
+      records.add(record);
+    }
     return records;
   }
 
@@ -2307,6 +2279,182 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
     destroyAndValidate(runner);
   }
 
+  @Test
+  public void testProcessingArchiveInvalidDir() throws Exception {
+    for (String archiveDir : new String[]{null, ""}) {
+      RemoteDownloadSource origin = new RemoteDownloadSource(getBean(
+          scheme.name() + "://localhost:" + port + "/",
+          true,
+          TESTUSER,
+          TESTPASS,
+          null,
+          null,
+          null,
+          true,
+          DataFormat.JSON,
+          null,
+          true,
+          FilePatternMode.GLOB,
+          "*",
+          1000,
+          "",
+          null,
+          PostProcessingOptions.ARCHIVE,
+          archiveDir,
+          true
+      ));
+      SourceRunner runner = new SourceRunner.Builder(RemoteDownloadDSource.class, origin)
+          .addOutputLane("lane")
+          .build();
+      runInitWithConfigException(runner, Errors.REMOTE_20);
+      destroyAndValidate(runner);
+    }
+  }
+
+  @Test
+  public void testPostProcessingDelete() throws Exception {
+    testPostProcessing(false, false, false, true);
+  }
+
+  @Test
+  public void testPostProcessingDeleteUserDirIsRoot() throws Exception {
+    testPostProcessing(false, false, true, true);
+  }
+
+  @Test
+  public void testPostProcessingDeleteInPreview() throws Exception {
+    testPostProcessing(false, true, true, true);
+  }
+
+  @Test
+  public void testPostProcessingArchive() throws Exception {
+    testPostProcessing(true, false, false, false);
+  }
+
+  @Test
+  public void testPostProcessingArchiveUserDirIsRoot() throws Exception {
+    testPostProcessing(true, false, true, false);
+  }
+
+  @Test
+  public void testPostProcessingArchiveArchiveUserDirIsRoot() throws Exception {
+    testPostProcessing(true, false, false, true);
+  }
+
+  @Test
+  public void testPostProcessingArchiveUserDirIsRootArchiveUserDirIsRoot() throws Exception {
+    testPostProcessing(true, false, true, true);
+  }
+
+  @Test
+  public void testPostProcessingArchiveInPreview() throws Exception {
+    testPostProcessing(true, true, true, true);
+  }
+
+  private void testPostProcessing(
+      boolean archive, boolean isPreview, boolean userDirIsRoot, boolean archiveDirUserDirIsRoot
+  ) throws Exception {
+    String originPath =
+        currentThread().getContextClassLoader().getResource("remote-download-source/parseSameTimestamp").getPath();
+    File userDir = testFolder.newFolder("user-dir");
+    File dataDir = new File(userDir, "data-dir");
+    dataDir.mkdir();
+    List<File> files = new ArrayList<>();
+    for (File originDirFile : new File(originPath).listFiles()) {
+      File copied = new File(dataDir, originDirFile.getName());
+      Files.copy(originDirFile, copied);
+      if (originDirFile.getName().equals("panda.txt")) {
+        Assert.assertTrue(copied.setLastModified(18000000000L));
+      } else if (originDirFile.getName().equals("polarbear.txt")) {
+        Assert.assertTrue(copied.setLastModified(19000000000L));
+      } else if (originDirFile.getName().equals("sloth.txt")) {
+        Assert.assertTrue(copied.setLastModified(17000000000L));
+      }
+      files.add(copied);
+    }
+    File archiveDir = new File(userDir, "archive-dir");
+    setupServer(userDir.getAbsolutePath(), true);
+    if (scheme == Scheme.sftp) {
+      for (File file : files) {
+        Assert.assertTrue(file.exists());
+      }
+    } else if (scheme == Scheme.ftp) {
+      FileSystem fs = fakeFtpServer.getFileSystem();
+      for (File file : files) {
+        Assert.assertTrue(fs.exists(file.getAbsolutePath()));
+      }
+    }
+    String pathInUri = userDirIsRoot ? "" : userDir.getAbsolutePath();
+    RemoteDownloadSource origin =
+        new RemoteDownloadSource(getBean(
+            scheme.name() + "://localhost:" + port + "/" + pathInUri,
+            userDirIsRoot,
+            TESTUSER,
+            TESTPASS,
+            null,
+            null,
+            null,
+            true,
+            DataFormat.JSON,
+            null,
+            true,
+            FilePatternMode.GLOB,
+            "*",
+            1000,
+            "",
+            null,
+            archive ? PostProcessingOptions.ARCHIVE : PostProcessingOptions.DELETE,
+            archiveDirUserDirIsRoot ? archiveDir.getName() : archiveDir.getAbsolutePath(),
+            archiveDirUserDirIsRoot
+        ));
+    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadDSource.class, origin)
+        .addOutputLane("lane")
+        .setPreview(isPreview)
+        .build();
+    runner.runInit();
+    List<Record> expected = getExpectedRecords(true);
+    String offset = RemoteDownloadSource.NOTHING_READ;
+    for (int i = 0; i < 3; i++) {
+      StageRunner.Output op = runner.runProduce(offset, 1000);
+      offset = op.getNewOffset();
+      List<Record> actual = op.getRecords().get("lane");
+      Assert.assertEquals(1, actual.size());
+      Assert.assertEquals(expected.get(i).get(), actual.get(0).get());
+    }
+    // Check files were deleted (this is still the case for archiving because they were moved)
+    // On the other hand, if it's a preview, then they should still exist
+    if (scheme == Scheme.sftp) {
+      for (File file : files) {
+        Assert.assertEquals(isPreview, file.exists());
+      }
+    } else if (scheme == Scheme.ftp) {
+      FileSystem fs = fakeFtpServer.getFileSystem();
+      for (File file : files) {
+        Assert.assertEquals(isPreview, fs.exists(file.getAbsolutePath()));
+      }
+    }
+    if (archive) {
+      // Check archive files were created
+      // On the other hand, if it's a preview, then they should not have been created
+      File archiveDataDir = new File(archiveDir, dataDir.getName());
+      if (scheme == Scheme.sftp) {
+        Assert.assertEquals(!isPreview, archiveDir.exists());
+        Assert.assertEquals(!isPreview, archiveDataDir.exists());
+        for (File file : files) {
+          Assert.assertEquals(!isPreview, new File(archiveDataDir, file.getName()).exists());
+        }
+      } else if (scheme == Scheme.ftp) {
+        FileSystem fs = fakeFtpServer.getFileSystem();
+        Assert.assertEquals(!isPreview, fs.exists(archiveDir.getAbsolutePath()));
+        Assert.assertEquals(!isPreview, fs.exists(archiveDataDir.getAbsolutePath()));
+        for (File file : files) {
+          Assert.assertEquals(!isPreview, fs.exists(archiveDataDir.getAbsolutePath() + "/" + file.getName()));
+        }
+      }
+    }
+    destroyAndValidate(runner);
+  }
+
   private byte [] someSampleData() {
     String data =
         "{\"name\": \"sloth\",\"age\": \"5\",\"characterisitics\": [\"cute\", \"slooooow\", \"sloooooow\", \"sloooooooow\"]}\n"
@@ -2436,6 +2584,50 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
       String initialFile,
       String privateKeyPlainText
   ) {
+    return getBean(
+        remoteHost,
+        userDirIsRoot,
+        username,
+        password,
+        privateKey,
+        passphrase,
+        knownHostsFile,
+        noHostChecking,
+        dataFormat,
+        errorArchive,
+        processSubDirectories,
+        filePatternMode,
+        filePattern,
+        batchSize,
+        initialFile,
+        privateKeyPlainText,
+        PostProcessingOptions.NONE,
+        null,
+        true
+    );
+  }
+
+  private RemoteDownloadConfigBean getBean(
+      String remoteHost,
+      boolean userDirIsRoot,
+      String username,
+      String password,
+      String privateKey,
+      String passphrase,
+      String knownHostsFile,
+      boolean noHostChecking,
+      DataFormat dataFormat,
+      String errorArchive,
+      boolean processSubDirectories,
+      FilePatternMode filePatternMode,
+      String filePattern,
+      int batchSize,
+      String initialFile,
+      String privateKeyPlainText,
+      PostProcessingOptions postProcessing,
+      String archiveDir,
+      boolean archiveDirUserDirIsRoot
+  ) {
     RemoteDownloadConfigBean configBean = new RemoteDownloadConfigBean();
     configBean.remoteAddress = remoteHost;
     configBean.userDirIsRoot = userDirIsRoot;
@@ -2464,6 +2656,9 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
     } else {
       configBean.privateKeyProvider = PrivateKeyProvider.PLAIN_TEXT;
     }
+    configBean.postProcessing = postProcessing;
+    configBean.archiveDir = archiveDir;
+    configBean.archiveDirUserDirIsRoot = archiveDirUserDirIsRoot;
     return configBean;
   }
 

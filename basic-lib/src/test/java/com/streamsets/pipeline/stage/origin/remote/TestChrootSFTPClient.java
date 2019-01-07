@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.origin.remote;
 import com.google.common.io.Files;
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.sftp.FileMode;
+import net.schmizz.sshj.sftp.SFTPClient;
 import net.schmizz.sshj.sftp.SFTPException;
 import net.schmizz.sshj.transport.TransportException;
 import org.apache.commons.io.IOUtils;
@@ -25,9 +26,13 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 public class TestChrootSFTPClient extends SSHDUnitTest {
 
@@ -144,12 +149,7 @@ public class TestChrootSFTPClient extends SSHDUnitTest {
           dir.getName(),
           "/" + dir.getName(),
       }) {
-        try {
-          sftpClient.ls(p);
-          Assert.fail("Expected an SFTPException");
-        } catch (SFTPException e) {
-          Assert.assertEquals("No such file or directory", e.getMessage());
-        }
+        expectNotExist(() -> sftpClient.ls(p));
       }
     }
   }
@@ -157,7 +157,7 @@ public class TestChrootSFTPClient extends SSHDUnitTest {
   @Test
   public void testStat() throws Exception {
     File file = testFolder.newFile("file.txt");
-    final long modTime = 15000000L;
+    final long modTime = 15000000000L;
     file.setLastModified(modTime);
 
     path = testFolder.getRoot().getAbsolutePath();
@@ -193,12 +193,7 @@ public class TestChrootSFTPClient extends SSHDUnitTest {
           file.getName(),
           "/" + file.getName(),
       }) {
-        try {
-          sftpClient.stat(p);
-          Assert.fail("Expected an SFTPException");
-        } catch (SFTPException e) {
-          Assert.assertEquals("No such file or directory", e.getMessage());
-        }
+        expectNotExist(() -> sftpClient.stat(p));
       }
     }
   }
@@ -245,25 +240,304 @@ public class TestChrootSFTPClient extends SSHDUnitTest {
           file.getName(),
           "/" + file.getName(),
       }) {
+        expectNotExist(() -> sftpClient.open(p));
+      }
+    }
+  }
+
+  @Test
+  public void testDelete() throws Exception {
+    File file = testFolder.newFile("file.txt");
+
+    path = testFolder.getRoot().getAbsolutePath();
+    setupSSHD(path);
+    SSHClient sshClient = createSSHClient();
+
+    for (ChrootSFTPClient sftpClient : getClientsWithEquivalentRoots(sshClient)) {
+      // We can specify a file as either a relative path "file" or an absolute path "/file" and they should be
+      // equivalent
+      for (String p : new String[] {
+          file.getName(),
+          "/" + file.getName(),
+      }) {
+        file.createNewFile();
+        Assert.assertTrue(file.exists());
+        sftpClient.stat(p);
+
+        sftpClient.delete(p);
+        expectNotExist(() -> sftpClient.stat(p));
+      }
+    }
+  }
+
+  @Test
+  public void testDeleteNotExist() throws Exception {
+    File file = testFolder.newFile("file.txt");
+
+    path = testFolder.getRoot().getAbsolutePath();
+    setupSSHD(path);
+    SSHClient sshClient = createSSHClient();
+
+    for (ChrootSFTPClient sftpClient : getClientsWithEquivalentRoots(sshClient)) {
+      // We can specify a file as either a relative path "file" or an absolute path "/file" and they should be
+      // equivalent
+      for (String p : new String[] {
+          file.getName(),
+          "/" + file.getName(),
+      }) {
+        file.delete();
+        Assert.assertFalse(file.exists());
+        expectNotExist(() -> sftpClient.stat(p));
+
+        expectNotExist(() -> {sftpClient.delete(p); return null;});
+      }
+    }
+  }
+
+  @Test
+  public void testArchiveNoArchiveDir() throws Exception {
+    path = testFolder.getRoot().getAbsolutePath();
+    String dataPath = testFolder.newFolder("dataDir").getAbsolutePath();
+
+    File fromFile = new File(dataPath, "file.txt");
+
+    setupSSHD(path);
+    SSHClient sshClient = createSSHClient();
+
+    for (ChrootSFTPClient sftpClient : getClientsWithEquivalentRoots(sshClient, null)) {
+      // We can specify a file as either a relative path "file" or an absolute path "/file" and they should be
+      // equivalent
+      for (String fromPath : new String[] {
+          "dataDir/" + fromFile.getName(),
+          "/dataDir/" + fromFile.getName(),
+      }) {
+        String text = "hello";
+        Files.write(text.getBytes(Charset.forName("UTF-8")), fromFile);
+        Assert.assertEquals(text, Files.readFirstLine(fromFile, Charset.forName("UTF-8")));
+        sftpClient.stat(fromPath);
+
         try {
-          sftpClient.stat(p);
+          sftpClient.archive(fromPath);
+          Assert.fail("Expected an SFTPException");
+        } catch (IOException e) {
+          Assert.assertEquals("No archive directory defined - cannot archive", e.getMessage());
+        }
+
+        Assert.assertEquals(text, Files.readFirstLine(fromFile, Charset.forName("UTF-8")));
+        Assert.assertEquals(text, IOUtils.toString(sftpClient.open(fromPath)));
+        sftpClient.stat(fromPath);
+      }
+    }
+  }
+
+  @Test
+  public void testArchive() throws Exception {
+    testArchiveHelper(new ArchiveHelperCallable() {
+      @Override
+      public void call(
+          ChrootSFTPClient sftpClient, File fromFile, String fromPath, File toFile, String toPath
+      ) throws Exception {
+        String text = "hello";
+        Files.write(text.getBytes(Charset.forName("UTF-8")), fromFile);
+        Assert.assertEquals(text, Files.readFirstLine(fromFile, Charset.forName("UTF-8")));
+        sftpClient.stat(fromPath);
+
+        toFile.delete();
+        Assert.assertFalse(toFile.exists());
+        expectNotExist(() -> sftpClient.stat(toPath));
+        toFile.getParentFile().delete();
+        Assert.assertFalse(toFile.getParentFile().exists());
+        expectNotExist(() -> sftpClient.stat(getParentDir(toPath)));
+
+        String returnedToPath = sftpClient.archive(fromPath);
+        Assert.assertEquals(toFile.getAbsolutePath(), returnedToPath);
+
+        Assert.assertEquals(text, Files.readFirstLine(toFile, Charset.forName("UTF-8")));
+        Assert.assertEquals(text, IOUtils.toString(sftpClient.open(toPath)));
+        sftpClient.stat(toPath);
+
+        Assert.assertFalse(fromFile.exists());
+        expectNotExist(() -> sftpClient.stat(fromPath));
+      }
+    });
+  }
+
+  @Test
+  public void testArchiveTargetDirExist() throws Exception {
+    testArchiveHelper(new ArchiveHelperCallable() {
+      @Override
+      public void call(
+          ChrootSFTPClient sftpClient, File fromFile, String fromPath, File toFile, String toPath
+      ) throws Exception {
+        String text = "hello";
+        Files.write(text.getBytes(Charset.forName("UTF-8")), fromFile);
+        Assert.assertEquals(text, Files.readFirstLine(fromFile, Charset.forName("UTF-8")));
+        sftpClient.stat(fromPath);
+
+        toFile.delete();
+        Assert.assertFalse(toFile.exists());
+        expectNotExist(() -> sftpClient.stat(toPath));
+        toFile.getParentFile().mkdirs();
+        Assert.assertTrue(toFile.getParentFile().exists());
+        sftpClient.stat(getParentDir(toPath));
+
+        String returnedToPath = sftpClient.archive(fromPath);
+        Assert.assertEquals(toFile.getAbsolutePath(), returnedToPath);
+
+        Assert.assertEquals(text, Files.readFirstLine(toFile, Charset.forName("UTF-8")));
+        Assert.assertEquals(text, IOUtils.toString(sftpClient.open(toPath)));
+        sftpClient.stat(toPath);
+        Assert.assertTrue(toFile.getParentFile().exists());
+        sftpClient.stat(getParentDir(toPath));
+
+        Assert.assertFalse(fromFile.exists());
+        expectNotExist(() -> sftpClient.stat(fromPath));
+      }
+    });
+  }
+
+  @Test
+  public void testArchiveSourceNotExist() throws Exception {
+    testArchiveHelper(new ArchiveHelperCallable() {
+      @Override
+      public void call(
+          ChrootSFTPClient sftpClient, File fromFile, String fromPath, File toFile, String toPath
+      ) throws Exception {
+        fromFile.delete();
+        Assert.assertFalse(fromFile.exists());
+        expectNotExist(() -> sftpClient.stat(fromPath));
+
+        toFile.delete();
+        Assert.assertFalse(toFile.exists());
+        expectNotExist(() -> sftpClient.stat(toPath));
+
+        expectNotExist(() -> {sftpClient.archive(fromPath); return null;});
+
+        Assert.assertFalse(toFile.exists());
+        expectNotExist(() -> sftpClient.stat(toPath));
+
+        Assert.assertFalse(fromFile.exists());
+        expectNotExist(() -> sftpClient.stat(fromPath));
+      }
+    });
+  }
+
+  @Test
+  public void testArchiveTargetExist() throws Exception {
+    testArchiveHelper(new ArchiveHelperCallable() {
+      @Override
+      public void call(
+          ChrootSFTPClient sftpClient, File fromFile, String fromPath, File toFile, String toPath
+      ) throws Exception {
+        String fromText = "hello";
+        Files.write(fromText.getBytes(Charset.forName("UTF-8")), fromFile);
+        Assert.assertEquals(fromText, Files.readFirstLine(fromFile, Charset.forName("UTF-8")));
+        sftpClient.stat(fromPath);
+
+        toFile.getParentFile().mkdirs();
+        String toText = "goodbye";
+        Files.write(toText.getBytes(Charset.forName("UTF-8")), toFile);
+        Assert.assertEquals(toText, Files.readFirstLine(toFile, Charset.forName("UTF-8")));
+        sftpClient.stat(toPath);
+
+        try {
+          sftpClient.archive(fromPath);
           Assert.fail("Expected an SFTPException");
         } catch (SFTPException e) {
-          Assert.assertEquals("No such file or directory", e.getMessage());
+          Assert.assertEquals("File/Directory already exists", e.getMessage());
+        }
+
+        Assert.assertEquals(toText, Files.readFirstLine(toFile, Charset.forName("UTF-8")));
+        Assert.assertEquals(toText, IOUtils.toString(sftpClient.open(toPath)));
+        sftpClient.stat(toPath);
+
+        Assert.assertEquals(fromText, Files.readFirstLine(fromFile, Charset.forName("UTF-8")));
+        Assert.assertEquals(fromText, IOUtils.toString(sftpClient.open(fromPath)));
+        sftpClient.stat(fromPath);
+      }
+    });
+  }
+
+  private interface ArchiveHelperCallable {
+    void call(ChrootSFTPClient sftpClient, File fromFile, String fromPath, File toFile, String toPath)
+        throws Exception;
+  }
+
+  private void testArchiveHelper(ArchiveHelperCallable callable) throws Exception {
+    path = testFolder.getRoot().getAbsolutePath();
+    File dataPath = testFolder.newFolder("dataDir");
+    File archivePath = testFolder.newFolder("archiveDir");
+
+    File fromFile = new File(dataPath, "file.txt");
+
+    archivePath.delete();
+    setupSSHD(path);
+    SSHClient sshClient = createSSHClient();
+
+    for (ChrootSFTPClient sftpClient : getClientsWithEquivalentRoots(sshClient, archivePath.getAbsolutePath())) {
+      // We can specify a file as either a relative path "file" or an absolute path "/file" and they should be
+      // equivalent
+      for (String fromPath : new String[] {
+          "dataDir/" + fromFile.getName(),
+          "/dataDir/" + fromFile.getName(),
+      }) {
+        File toFile = new File(
+            archivePath,
+            dataPath.getName() + "/" + fromFile.getName());
+        for (String toPath : new String[] {
+            archivePath.getName() + "/" + dataPath.getName() + "/" + toFile.getName(),
+            "/" + archivePath.getName() + "/" + dataPath.getName() + "/" + toFile.getName()
+        }) {
+          callable.call(sftpClient, fromFile, fromPath, toFile, toPath);
         }
       }
     }
   }
 
-  private ChrootSFTPClient[] getClientsWithEquivalentRoots(SSHClient sshClient) throws Exception {
-    // We'll set path as the "root" in three equivalent ways
-    return new ChrootSFTPClient[] {
-        // Here, we specify it as an absolute path
-        new ChrootSFTPClient(sshClient.newSFTPClient(), path, false),
-        // Here, we specify it as a relative path to the user dir, which is path (see #setupSSHD)
-        new ChrootSFTPClient(sshClient.newSFTPClient(), "/", true),
-        // Here, we specify it as a relative path to the user dir, which is path (see #setupSSHD)
-        new ChrootSFTPClient(sshClient.newSFTPClient(), "", true),
-    };
+  private List<ChrootSFTPClient> getClientsWithEquivalentRoots(SSHClient sshClient) throws Exception {
+    return getClientsWithEquivalentRoots(sshClient, null);
+  }
+
+  private List<ChrootSFTPClient> getClientsWithEquivalentRoots(SSHClient sshClient, String archiveDir)
+      throws Exception {
+    SFTPClient rawSftpClient = sshClient.newSFTPClient();
+    // The following clients are all equivalent, just using different ways of declaring the paths
+    List<ChrootSFTPClient> clients = new ArrayList<>();
+    // root and archiveDir are both absolute paths
+    clients.add(new ChrootSFTPClient(rawSftpClient, path, false, archiveDir, false));
+    // root is relative to home dir, archiveDir is absolute
+    clients.add(new ChrootSFTPClient(rawSftpClient, "/", true, archiveDir, false));
+    // root is relative to home dir, archiveDir is absolute
+    clients.add(new ChrootSFTPClient(rawSftpClient, "", true, archiveDir, false));
+    if (archiveDir != null) {
+      String relArchiveDir = Paths.get(path).relativize(Paths.get(archiveDir)).toString();
+      // root is absolute, archiveDir is relative to home dir
+      clients.add(new ChrootSFTPClient(rawSftpClient, path, false, "/" + relArchiveDir, true));
+      // root and archiveDir are both relative to home dir
+      clients.add(new ChrootSFTPClient(rawSftpClient, "/", true, "/" + relArchiveDir, true));
+      // root and archiveDir are both relative to home dir
+      clients.add(new ChrootSFTPClient(rawSftpClient, "", true, "/" + relArchiveDir, true));
+      // root is absolute, archiveDir is relative to home dir
+      clients.add(new ChrootSFTPClient(rawSftpClient, path, false, relArchiveDir, true));
+      // root and archiveDir are both relative to home dir
+      clients.add(new ChrootSFTPClient(rawSftpClient, "/", true, relArchiveDir, true));
+      // root and archiveDir are both relative to home dir
+      clients.add(new ChrootSFTPClient(rawSftpClient, "", true, relArchiveDir, true));
+    }
+    return clients;
+  }
+
+  private void expectNotExist(Callable callable) throws Exception {
+    try {
+      callable.call();
+      Assert.fail("Expected an SFTPException");
+    } catch (SFTPException e) {
+      Assert.assertEquals("No such file or directory", e.getMessage());
+    }
+  }
+
+  private String getParentDir(String path) {
+    int index = path.lastIndexOf("/");
+    return path.substring(0, index);
   }
 }

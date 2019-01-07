@@ -24,6 +24,7 @@ public enum Groups implements Label {
   CREDENTIALS("Credentials"),
   ERROR("Error Handling"),
   DATA_FORMAT("Data Format"),
+  POST_PROCESSING("Post Processing"),
   ;
 
   private final String label;

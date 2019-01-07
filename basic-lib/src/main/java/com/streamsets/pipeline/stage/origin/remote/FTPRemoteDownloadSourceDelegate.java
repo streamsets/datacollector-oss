@@ -42,6 +42,7 @@ import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URI;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableSet;
@@ -52,7 +53,9 @@ class FTPRemoteDownloadSourceDelegate extends RemoteDownloadSourceDelegate {
   private static final Logger LOG = LoggerFactory.getLogger(FTPRemoteDownloadSourceDelegate.class);
 
   private URI remoteURI;
+  private URI archiveURI;
   private FileSystemOptions options;
+  private FileSystemOptions archiveOptions;
   private FileObject remoteDir;
   private Method getFtpClient;
   private boolean supportsMDTM;
@@ -61,8 +64,9 @@ class FTPRemoteDownloadSourceDelegate extends RemoteDownloadSourceDelegate {
     super(conf);
   }
 
-  protected void initAndConnectInternal(List<Stage.ConfigIssue> issues, Source.Context context, URI remoteURI) throws
-      IOException {
+  protected void initAndConnectInternal(
+      List<Stage.ConfigIssue> issues, Source.Context context, URI remoteURI, String archiveDir
+  ) throws IOException {
     options = new FileSystemOptions();
     this.remoteURI = remoteURI;
     if (conf.strictHostChecking) {
@@ -109,12 +113,19 @@ class FTPRemoteDownloadSourceDelegate extends RemoteDownloadSourceDelegate {
 
       setupModTime();
     }
+
+    if (archiveDir != null) {
+      archiveURI = UriBuilder.fromUri(remoteURI).replacePath(archiveDir).build();
+      archiveOptions = (FileSystemOptions) options.clone();
+      FtpFileSystemConfigBuilder.getInstance().setUserDirIsRoot(archiveOptions, conf.archiveDirUserDirIsRoot);
+    }
   }
 
+  @Override
   Offset createOffset(String file) throws IOException {
-    FileObject fileObject = remoteDir.resolveFile(file, NameScope.DESCENDENT);
+    FileObject fileObject = getChild(file);
     Offset offset = new Offset(
-        fileObject.getName().getPath(),
+        relativizeToRoot(fileObject.getName().getPath()),
         getModTime(fileObject),
         ZERO
     );
@@ -122,7 +133,7 @@ class FTPRemoteDownloadSourceDelegate extends RemoteDownloadSourceDelegate {
   }
 
   long populateMetadata(String remotePath, Map<String, Object> metadata) throws IOException {
-    FileObject fileObject = remoteDir.resolveFile(remotePath);
+    FileObject fileObject = getChild(remotePath);
     long size = fileObject.getContent().getSize();
     metadata.put(HeaderAttributeConstants.SIZE, size);
     metadata.put(HeaderAttributeConstants.LAST_MODIFIED_TIME, getModTime(fileObject));
@@ -131,6 +142,7 @@ class FTPRemoteDownloadSourceDelegate extends RemoteDownloadSourceDelegate {
     return size;
   }
 
+  @Override
   void queueFiles(FileQueueChecker fqc, NavigableSet<RemoteFile> fileQueue, FileFilter fileFilter) throws
       IOException, StageException {
     boolean done = false;
@@ -162,20 +174,21 @@ class FTPRemoteDownloadSourceDelegate extends RemoteDownloadSourceDelegate {
     }
 
     for (FileObject file : theFiles) {
-      LOG.debug("Checking {}", file.getName().getPath());
+      String path = relativizeToRoot(file.getName().getPath());
+      LOG.debug("Checking {}", path);
       if (file.getType() != FileType.FILE) {
-        LOG.trace("Skipping {} because it is not a file", file.getName().getPath());
+        LOG.trace("Skipping {} because it is not a file", path);
         continue;
       }
 
       //check if base name matches - not full path.
       Matcher matcher = fileFilter.getRegex().matcher(file.getName().getBaseName());
       if (!matcher.matches()) {
-        LOG.trace("Skipping {} because it does not match the regex", file.getName().getPath());
+        LOG.trace("Skipping {} because it does not match the regex", path);
         continue;
       }
 
-      RemoteFile tempFile = new FTPRemoteFile(file.getName().getPath(), getModTime(file), file);
+      RemoteFile tempFile = new FTPRemoteFile(path, getModTime(file), file);
       if (fqc.shouldQueue(tempFile)) {
         LOG.debug("Queuing file {} with modtime {}", tempFile.getFilePath(), tempFile.getLastModified());
         // If we are done with all files, the files with the final mtime might get re-ingested over and over.
@@ -183,6 +196,42 @@ class FTPRemoteDownloadSourceDelegate extends RemoteDownloadSourceDelegate {
         fileQueue.add(tempFile);
       }
     }
+  }
+
+  private String relativizeToRoot(String path) {
+    return "/" + Paths.get(remoteDir.getName().getPath()).relativize(Paths.get(path)).toString();
+  }
+
+  private FileObject getChild(String path) throws IOException {
+    // VFS doesn't properly resolve the child if we don't remove the leading slash, even though that's inconsistent
+    // with its other methods
+    if (path.startsWith("/")) {
+      path = path.substring(1);
+    }
+    return remoteDir.resolveFile(path, NameScope.DESCENDENT);
+  }
+
+  @Override
+  void delete(String remotePath) throws IOException {
+    FileObject fileObject = getChild(remotePath);
+    fileObject.delete();
+  }
+
+  @Override
+  String archive(String fromPath) throws IOException {
+    if (archiveURI == null) {
+      throw new IOException("No archive directory defined - cannot archive");
+    }
+
+    String toPath = archiveURI.toString() + (fromPath.startsWith("/") ? fromPath.substring(1) : fromPath);
+
+    FileObject toFile = VFS.getManager().resolveFile(toPath, archiveOptions);
+    toFile.refresh();
+    // Create the toPath's parent dir(s) if they don't exist
+    toFile.getParent().createFolder();
+    getChild(fromPath).moveTo(toFile);
+    toFile.close();
+    return toPath;
   }
 
   private void setupModTime() {
@@ -239,6 +288,7 @@ class FTPRemoteDownloadSourceDelegate extends RemoteDownloadSourceDelegate {
     return modTime;
   }
 
+  @Override
   void close() throws IOException {
     if (remoteDir != null) {
       remoteDir.close();

@@ -32,8 +32,8 @@ import java.util.NavigableSet;
  * {@link SFTPRemoteDownloadSourceDelegate} and {@link FTPRemoteDownloadSourceDelegate} to handle SFTP and FTP,
  * respectively.
  *
- * {@link #initAndConnect(List, Source.Context, URI)} should be called once and only once, before calling anything else.
- * {@link #close()} should be called when finished to clean up.
+ * {@link #initAndConnect(List, Source.Context, URI, String)} should be called once and only once, before calling
+ * anything else. {@link #close()} should be called when finished to clean up.
  */
 abstract class RemoteDownloadSourceDelegate {
   protected static final String CONF_PREFIX = "conf.";
@@ -80,15 +80,17 @@ abstract class RemoteDownloadSourceDelegate {
     return resolveCredential(conf.password, CONF_PREFIX + "password", issues, context);
   }
 
-  void initAndConnect(List<Stage.ConfigIssue> issues, Source.Context context, URI remoteURI) throws
-      IOException {
+  void initAndConnect(
+      List<Stage.ConfigIssue> issues, Source.Context context, URI remoteURI, String archiveDir
+  ) throws IOException {
     synchronized (this) {
-      initAndConnectInternal(issues, context, remoteURI);
+      initAndConnectInternal(issues, context, remoteURI, archiveDir);
     }
   }
 
-  protected abstract void initAndConnectInternal (List<Stage.ConfigIssue> issues, Source.Context context, URI remoteURI)
-      throws IOException;
+  protected abstract void initAndConnectInternal(
+      List<Stage.ConfigIssue> issues, Source.Context context, URI remoteURI, String archiveDir
+  ) throws IOException;
 
   abstract Offset createOffset(String file) throws IOException;
 
@@ -98,4 +100,8 @@ abstract class RemoteDownloadSourceDelegate {
       IOException, StageException;
 
   abstract void close() throws IOException;
+
+  abstract void delete(String remotePath) throws IOException;
+
+  abstract String archive(String fromPath) throws IOException;
 }

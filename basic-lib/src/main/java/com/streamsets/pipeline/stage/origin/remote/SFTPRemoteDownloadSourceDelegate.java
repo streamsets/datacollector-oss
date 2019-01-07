@@ -23,6 +23,7 @@ import net.schmizz.sshj.DefaultConfig;
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.sftp.FileAttributes;
 import net.schmizz.sshj.sftp.FileMode;
+import net.schmizz.sshj.sftp.SFTPClient;
 import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
 import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
 import net.schmizz.sshj.userauth.password.PasswordUtils;
@@ -57,8 +58,9 @@ class SFTPRemoteDownloadSourceDelegate extends RemoteDownloadSourceDelegate {
     }
   }
 
-  protected void initAndConnectInternal(List<Stage.ConfigIssue> issues, Source.Context context, URI remoteURI) throws
-      IOException {
+  protected void initAndConnectInternal(
+      List<Stage.ConfigIssue> issues, Source.Context context, URI remoteURI, String archiveDir
+  ) throws IOException {
     sshClientRebuilder = new SSHClientRebuilder();
     DefaultConfig sshConfig = new DefaultConfig();
     sshClient = new SSHClient(sshConfig);
@@ -189,12 +191,20 @@ class SFTPRemoteDownloadSourceDelegate extends RemoteDownloadSourceDelegate {
       if (remotePath.isEmpty()) {
         remotePath = "/";
       }
-      sftpClient = new ChrootSFTPClient(sshClient.newSFTPClient(), remotePath, conf.userDirIsRoot);
+      sftpClient = new ChrootSFTPClient(
+          sshClient.newSFTPClient(),
+          remotePath,
+          conf.userDirIsRoot,
+          archiveDir,
+          conf.archiveDirUserDirIsRoot
+      );
+
       // To ensure we have access, else we fail validation.
       sftpClient.ls();
     }
   }
 
+  @Override
   Offset createOffset(String file) throws IOException {
     FileAttributes attributes = sftpClient.stat(file);
     Offset offset =
@@ -206,6 +216,7 @@ class SFTPRemoteDownloadSourceDelegate extends RemoteDownloadSourceDelegate {
     return offset;
   }
 
+  @Override
   long populateMetadata(String remotePath, Map<String, Object> metadata) throws IOException {
     FileAttributes remoteAttributes = sftpClient.stat(remotePath);
     long size = remoteAttributes.getSize();
@@ -223,6 +234,7 @@ class SFTPRemoteDownloadSourceDelegate extends RemoteDownloadSourceDelegate {
     return fileNameMap.getContentTypeFor(name);
   }
 
+  @Override
   void queueFiles(FileQueueChecker fqc, NavigableSet<RemoteFile> fileQueue, FileFilter fileFilter) throws
       IOException, StageException {
     boolean done = false;
@@ -247,7 +259,7 @@ class SFTPRemoteDownloadSourceDelegate extends RemoteDownloadSourceDelegate {
     queueFiles(fqc, fileQueue, fileFilter, null);
   }
 
-  void queueFiles(FileQueueChecker fqc, NavigableSet<RemoteFile> fileQueue, FileFilter fileFilter, String remoteDirPath)
+  private void queueFiles(FileQueueChecker fqc, NavigableSet<RemoteFile> fileQueue, FileFilter fileFilter, String remoteDirPath)
       throws IOException {
     List<ChrootSFTPClient.SimplifiedRemoteResourceInfo> theFiles = (remoteDirPath == null)
       ? sftpClient.ls(fileFilter)
@@ -278,6 +290,7 @@ class SFTPRemoteDownloadSourceDelegate extends RemoteDownloadSourceDelegate {
     }
   }
 
+  @Override
   void close() throws IOException {
     try {
       if (sftpClient != null) {
@@ -288,6 +301,16 @@ class SFTPRemoteDownloadSourceDelegate extends RemoteDownloadSourceDelegate {
         sshClient.close();
       }
     }
+  }
+
+  @Override
+  void delete(String remotePath) throws IOException {
+    sftpClient.delete(remotePath);
+  }
+
+  @Override
+  String archive(String fromPath) throws IOException {
+    return sftpClient.archive(fromPath);
   }
 
   private static long convertSecsToMillis(long secs) {
