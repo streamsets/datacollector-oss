@@ -18,6 +18,7 @@ package com.streamsets.datacollector.runner.preview;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
+import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.runner.Pipeline;
@@ -109,9 +110,15 @@ public class PreviewPipelineBuilder {
 
   public PreviewPipeline build(UserContext userContext, PipelineRunner runner) throws PipelineRuntimeException {
     if (testOrigin) {
+      // Validate that the test origin can indeed be inserted & executed in this pipeline
+      StageConfiguration testOrigin = pipelineConf.getTestOriginStage();
+      StageDefinition testOriginDef = stageLib.getStage(testOrigin.getLibrary(), testOrigin.getStageName(), false);
+      if(!pipelineConf.getStages().get(0).getEventLanes().isEmpty() && !testOriginDef.isProducingEvents()) {
+        throw new PipelineRuntimeException(ContainerError.CONTAINER_0167, testOriginDef.getLabel());
+      }
+
       // Replace origin with test origin
       StageConfiguration origin = pipelineConf.getStages().remove(0);
-      StageConfiguration testOrigin = pipelineConf.getTestOriginStage();
       testOrigin.setOutputLanes(origin.getOutputLanes());
       testOrigin.setEventLanes(origin.getEventLanes());
       pipelineConf.getStages().add(0, pipelineConf.getTestOriginStage());

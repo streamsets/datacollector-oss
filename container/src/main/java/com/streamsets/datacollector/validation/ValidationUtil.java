@@ -253,7 +253,7 @@ public class ValidationUtil {
             );
             preview = false;
           }
-          if (!stageDef.isVariableOutputStreams()) {
+          if (!notOnMainCanvas && !stageDef.isVariableOutputStreams()) {
             // source stage must match the output stream defined in StageDef
             if (stageDef.getOutputStreams() != stageConf.getOutputLanes().size()) {
               issues.add(
@@ -265,7 +265,7 @@ public class ValidationUtil {
                   )
               );
             }
-          } else if (stageConf.getOutputLanes().isEmpty()) {
+          } else if (!notOnMainCanvas && stageConf.getOutputLanes().isEmpty()) {
             // source stage must have at least one output lane
             issues.add(issueCreator.create(stageConf.getInstanceName(), ValidationError.VALIDATION_0032));
           }
@@ -355,7 +355,7 @@ public class ValidationUtil {
       }
 
       // Validate proper event configuration
-      if(stageConf.getEventLanes().size() > 1) {
+      if(!notOnMainCanvas && stageConf.getEventLanes().size() > 1) {
         issues.add(
           issueCreator.create(
             stageConf.getInstanceName(),
@@ -364,7 +364,7 @@ public class ValidationUtil {
         );
         preview = false;
       }
-      if(!stageDef.isProducingEvents() && stageConf.getEventLanes().size() > 0) {
+      if(!notOnMainCanvas && !stageDef.isProducingEvents() && stageConf.getEventLanes().size() > 0) {
         issues.add(
           issueCreator.create(
             stageConf.getInstanceName(),
