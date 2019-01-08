@@ -212,35 +212,50 @@ public class RemoteDataCollector implements DataCollector {
       String rev,
       String description,
       SourceOffset offset,
-      PipelineConfiguration pipelineConfiguration,
+      final PipelineConfiguration pipelineConfiguration,
       RuleDefinitions ruleDefinitions,
       Acl acl,
       Map<String, Object> metadata
   ) throws PipelineException {
-    // Due to some reason, if pipeline folder doesn't exist but state file exists then remove the state file.
-    if (!pipelineStore.hasPipeline(name) && pipelineStateExists(name, rev)) {
-      LOG.warn("Deleting state file for pipeline {} as pipeline is deleted", name);
-      pipelineStateStore.delete(name, rev);
-    }
-    UUID uuid = pipelineStore.create(user, name, name, description, true, false, metadata).getUuid();
-    pipelineConfiguration.setUuid(uuid);
-    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(
-        stageLibrary,
-        name,
-        pipelineConfiguration
-    );
-    pipelineConfiguration = validator.validate();
-    pipelineStore.save(user, name, rev, description, pipelineConfiguration);
-    pipelineStore.storeRules(name, rev, ruleDefinitions, false);
-    if (acl != null) { // can be null for old dpm or when DPM jobs have no acl
-      aclStoreTask.saveAcl(name, acl);
-    }
-    LOG.info("Offset for remote pipeline '{}:{}' is {}", name, rev, offset);
-    if (offset != null) {
-      OffsetFileUtil.saveSourceOffset(runtimeInfo, name, rev, offset);
+    UUID uuid = null;
+    try {
+      uuid = GroupsInScope.executeIgnoreGroups(() -> {
+        // Due to some reason, if pipeline folder doesn't exist but state file exists then remove the state file.
+        if (!pipelineStore.hasPipeline(name) && pipelineStateExists(name, rev)) {
+          LOG.warn("Deleting state file for pipeline {} as pipeline is deleted", name);
+          pipelineStateStore.delete(name, rev);
+        }
+        UUID uuidRet = pipelineStore.create(user, name, name, description, true, false, metadata).getUuid();
+        pipelineConfiguration.setUuid(uuidRet);
+        PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary,
+            name,
+            pipelineConfiguration
+        );
+        PipelineConfiguration validatedPipelineConfig = validator.validate();
+        pipelineStore.save(user, name, rev, description, validatedPipelineConfig);
+        pipelineStore.storeRules(name, rev, ruleDefinitions, false);
+        if (acl != null) { // can be null for old dpm or when DPM jobs have no acl
+          aclStoreTask.saveAcl(name, acl);
+        }
+        LOG.info("Offset for remote pipeline '{}:{}' is {}", name, rev, offset);
+        if (offset != null) {
+          OffsetFileUtil.saveSourceOffset(runtimeInfo, name, rev, offset);
+        }
+        return uuidRet;
+      });
+    } catch (Exception ex) {
+      LOG.warn(Utils.format("Error while saving pipeline: {} is {}", name, ex), ex);
+      if (ex.getCause() != null) {
+        ExceptionUtils.throwUndeclared(ex.getCause());
+      } else {
+        ExceptionUtils.throwUndeclared(ex);
+      }
+    } finally {
+      MDC.clear();
     }
     return uuid.toString();
   }
+
 
   @Override
   public void savePipelineRules(String name, String rev, RuleDefinitions ruleDefinitions) throws PipelineException {
