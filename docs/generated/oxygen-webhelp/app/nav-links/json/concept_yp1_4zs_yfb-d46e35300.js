@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Configuring a gRPC Client Origin","href":"datacollector\/UserGuide\/Origins\/gRPCClient.html#task_dhb_d1t_yfb","attributes": {"data-id":"task_dhb_d1t_yfb",},"menu": {"hasChildren":false,},"tocID":"task_dhb_d1t_yfb-d46e35338","topics":[]}]});

@@ -2,7 +2,7 @@
 <!DOCTYPE html
   PUBLIC "" "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
-    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="Data Collector includes several environment variables that you can modify to customize the following areas: Data Collector directories User and group used to start Data Collector as a service Java ..." /><meta name="copyright" content="(C) Copyright 2018" /><meta name="DC.rights.owner" content="(C) Copyright 2018" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Data Collector Environment Configuration" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Configuration/Config_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Configuration/DCConfig.html#concept_pq5_xjq_kr" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Configuration/ExternalLibs.html#concept_pdv_qlw_ft" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_rng_qym_qr" /><title>Data Collector Environment Configuration</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_rng_qym_qr-d46e10835" />         
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="Data Collector includes several environment variables that you can modify to customize the following areas: Data Collector directories User and group used to start Data Collector as a service Java ..." /><meta name="copyright" content="(C) Copyright 2019" /><meta name="DC.rights.owner" content="(C) Copyright 2019" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Data Collector Environment Configuration" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Configuration/Config_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Configuration/DCConfig.html#concept_pq5_xjq_kr" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Configuration/ExternalLibs.html#concept_pdv_qlw_ft" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_rng_qym_qr" /><title>Data Collector Environment Configuration</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_rng_qym_qr-d46e10835" />         
         
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <!-- Latest compiled and minified Bootstrap CSS -->
@@ -122,39 +122,39 @@
                      </span></span></span></li>
          <li class="active"><span data-tocid="concept_rng_qym_qr-d46e10835" class="topicref" data-id="concept_rng_qym_qr" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr">Data Collector Environment Configuration</a></span></span><ul class="nav nav-list">
                <li><span data-tocid="concept_zhl_rb3_qcb-d46e10968" class="topicref" data-id="concept_zhl_rb3_qcb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modifying Environment Variables</a></span></span></li>
-               <li><span data-tocid="concept_mnx_j3r_3v-d46e10990" class="topicref" data-id="concept_mnx_j3r_3v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_mnx_j3r_3v">Data Collector Directories</a><span class="wh-tooltip">
+               <li><span data-tocid="concept_mnx_j3r_3v-d46e10990" class="topicref" data-id="concept_mnx_j3r_3v" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_mnx_j3r_3v">Data Collector Directories</a><span class="wh-tooltip">
                            
                            <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"><span class="ph">Data Collector</span>         includes environment variables that define the directories used to store configuration,         data, log, and resource
                               files.
                               
                            </p>
                            </span></span></span></li>
-               <li><span data-tocid="concept_htz_t1s_3v-d46e11069" class="topicref" data-id="concept_htz_t1s_3v" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_htz_t1s_3v">User and Group for Service Start</a><span class="wh-tooltip">
+               <li><span data-tocid="concept_htz_t1s_3v-d46e11027" class="topicref" data-id="concept_htz_t1s_3v" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_htz_t1s_3v">User and Group for Service Start</a><span class="wh-tooltip">
                            
                            <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">When you run <span class="ph">Data Collector</span> as a         service, <span class="ph">Data Collector</span> runs as the system user account and group defined in environment variables. The default         system user and group are
                               named sdc.
                               
                            </p>
                            </span></span></span></li>
-               <li><span data-tocid="concept_vrx_4fg_qr-d46e11130" class="topicref" data-id="concept_vrx_4fg_qr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_vrx_4fg_qr">Java Configuration Options</a></span></span></li>
-               <li><span data-tocid="concept_tm4_pbg_ht-d46e11463" class="topicref" data-id="concept_tm4_pbg_ht" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_tm4_pbg_ht">Java Security Manager</a><span class="wh-tooltip">
+               <li><span data-tocid="concept_vrx_4fg_qr-d46e11078" class="topicref" data-id="concept_vrx_4fg_qr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_vrx_4fg_qr">Java Configuration Options</a></span></span></li>
+               <li><span data-tocid="concept_tm4_pbg_ht-d46e11370" class="topicref" data-id="concept_tm4_pbg_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_tm4_pbg_ht">Security Manager</a><span class="wh-tooltip">
                            
-                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"><span class="ph">Data Collector</span>     includes a Java Security Manager that is enabled by default. 
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"><span class="ph">Data Collector</span>         includes a Java Security Manager that is enabled by default. For enhanced security, you can         enable the <span class="ph">Data Collector</span>         Security Manager which prevents stages from accessing files in protected <span class="ph">Data Collector</span>         directories.
                               
                            </p>
                            </span></span></span></li>
-               <li><span data-tocid="concept_hcb_4ks_3v-d46e11571" class="topicref" data-id="concept_hcb_4ks_3v" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_hcb_4ks_3v">Root Classloader</a><span class="wh-tooltip">
+               <li><span data-tocid="concept_hcb_4ks_3v-d46e11577" class="topicref" data-id="concept_hcb_4ks_3v" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_hcb_4ks_3v">Root Classloader</a><span class="wh-tooltip">
                            
                            <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can edit the SDC_ROOT_CLASSPATH environment variable to define the path to JAR         files to be added to the <span class="ph">Data Collector</span> root         classloader.
                               
                            </p>
                            </span></span></span></li>
-               <li><span data-tocid="concept_cy3_r44_z1b-d46e11690" class="topicref" data-id="concept_cy3_r44_z1b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_cy3_r44_z1b">Heap Dump Creation</a></span></span></li>
+               <li><span data-tocid="concept_cy3_r44_z1b-d46e11696" class="topicref" data-id="concept_cy3_r44_z1b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_cy3_r44_z1b">Heap Dump Creation</a></span></span></li>
             </ul>
          </li>
-         <li><span data-tocid="concept_pdv_qlw_ft-d46e11813" class="topicref" data-id="concept_pdv_qlw_ft" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/ExternalLibs.html#concept_pdv_qlw_ft">Install External Libraries </a></span></span></li>
-         <li><span data-tocid="concept_pmc_jk1_1x-d46e12188" class="topicref" data-id="concept_pmc_jk1_1x" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/CustomStageLibraries.html#concept_pmc_jk1_1x">Custom Stage Libraries</a></span></span></li>
-         <li><span data-tocid="concept_bt1_bpj_r1b-d46e12284" class="topicref" data-id="concept_bt1_bpj_r1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/CredentialStores.html#concept_bt1_bpj_r1b">Credential Stores</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_pdv_qlw_ft-d46e11819" class="topicref" data-id="concept_pdv_qlw_ft" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/ExternalLibs.html#concept_pdv_qlw_ft">Install External Libraries </a></span></span></li>
+         <li><span data-tocid="concept_pmc_jk1_1x-d46e12194" class="topicref" data-id="concept_pmc_jk1_1x" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/CustomStageLibraries.html#concept_pmc_jk1_1x">Custom Stage Libraries</a></span></span></li>
+         <li><span data-tocid="concept_bt1_bpj_r1b-d46e12290" class="topicref" data-id="concept_bt1_bpj_r1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/CredentialStores.html#concept_bt1_bpj_r1b">Credential Stores</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"><span class="ph">Data Collector</span>         pipeline stages communicate with external systems to read and write data. Many of these         external systems
                         require credentials - user names or passwords - to access the data. When         you configure pipeline stages for these external
@@ -162,15 +162,15 @@
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_bmq_gl1_mw-d46e14947" class="topicref" data-id="concept_bmq_gl1_mw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Vault-Overview.html#concept_bmq_gl1_mw">Accessing Hashicorp Vault Secrets with Vault Functions (Deprecated)</a></span></span></li>
-         <li><span data-tocid="concept_rg3_nxy_4cb-d46e15043" class="topicref" data-id="concept_rg3_nxy_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/PublishMetadata.html#concept_rg3_nxy_4cb">Working with Data Governance Tools</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_bmq_gl1_mw-d46e14953" class="topicref" data-id="concept_bmq_gl1_mw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Vault-Overview.html#concept_bmq_gl1_mw">Accessing Hashicorp Vault Secrets with Vault Functions (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_rg3_nxy_4cb-d46e15049" class="topicref" data-id="concept_rg3_nxy_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/PublishMetadata.html#concept_rg3_nxy_4cb">Working with Data Governance Tools</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can configure <span class="ph">Data Collector</span> to         integrate with data governance tools, giving you visibility into data movement - where the         data came from,
                         where it’s going to, and who is interacting with it.
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_jdj_4rg_1t-d46e16170" class="topicref" data-id="concept_jdj_4rg_1t" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/JMXMetrics-EnableExternalTools.html#concept_jdj_4rg_1t">Enabling External JMX Tools</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_jdj_4rg_1t-d46e16176" class="topicref" data-id="concept_jdj_4rg_1t" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/JMXMetrics-EnableExternalTools.html#concept_jdj_4rg_1t">Enabling External JMX Tools</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"><span class="ph">Data Collector</span>     uses JMX metrics to generate the graphical display of the status of a running pipeline. You can     provide the same
                         JMX metrics to external tools if desired.
@@ -179,62 +179,62 @@
                      </span></span></span></li>
       </ul>
    </li>
-   <li><span data-tocid="concept_ejk_f1f_5v-d46e16281" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
-   <li><span data-tocid="concept_qsw_cjy_bt-d46e22088" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
-   <li><span data-tocid="concept_qn1_wn4_kq-d46e23812" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
-   <li><span data-tocid="concept_hdr_gyw_41b-d46e26050" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e16287" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e21839" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e23563" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e26266" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e27865" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e69212" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
-   <li><span data-tocid="concept_agj_cfj_br-d46e84912" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
-   <li><span data-tocid="concept_umc_1lk_fx-d46e101473" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
-   <li><span data-tocid="concept_fyf_gkq_4bb-d46e107235" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
-   <li><span data-tocid="concept_ugp_kwf_xw-d46e109838" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
-   <li><span data-tocid="concept_xxd_f5r_kx-d46e113417" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e28081" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e69470" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e85170" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e101731" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e107493" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e110096" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e113675" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_fjj_zcf_2w-d46e117331" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
-   <li><span data-tocid="concept_kgt_pnr_4cb-d46e120157" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
-   <li><span data-tocid="concept_wwq_gxc_py-d46e120956" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e117589" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e120415" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e121214" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_gzw_tdm_p2b-d46e121538" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_wr1_ktz_bt-d46e121914" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_fpz_5r4_vs-d46e122396" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_jjk_23z_sq-d46e123861" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
-   <li><span data-tocid="concept_pgk_brx_rr-d46e124830" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_gzw_tdm_p2b-d46e121796" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e122172" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e122654" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e124119" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e125088" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_asx_fdz_sq-d46e127458" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_asx_fdz_sq-d46e127716" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_o3l_dtr_5q-d46e128715" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
-   <li><span data-tocid="concept_yms_ftm_sq-d46e130368" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e128973" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e130626" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_nls_w1r_ks-d46e134865" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
-   <li><span data-tocid="concept_sh3_frm_tq-d46e136078" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_nls_w1r_ks-d46e135123" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e136336" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_xbx_rs1_tq-d46e140570" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
-   <li><span data-tocid="concept_jn1_nzb_kv-d46e140625" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e140828" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e140883" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_pvm_yt3_wq-d46e140785" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
-   <li><span data-tocid="concept_vcj_1ws_js-d46e144486" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e141043" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e144744" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_chv_vmj_wr-d46e144709" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_chv_vmj_wr-d46e144967" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
@@ -257,7 +257,7 @@
 
         <li class="li">Java configuration options</li>
 
-        <li class="li">Java Security Manager that restricts the runtime permissions of user libraries</li>
+        <li class="li">Security Manager that restricts the runtime permissions of user libraries</li>
 
         <li class="li">Path to JAR files to be added to the root classloader</li>
 
@@ -400,20 +400,20 @@
         
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_mnx_j3r_3v__table_dzl_hyr_3v" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:35%" /><col style="width:65%" /></colgroup><thead class="thead" style="text-align:left;">
                     <tr>
-                        <th class="entry cellrowborder" id="d42844e495">Environment Variable</th>
+                        <th class="entry cellrowborder" id="d42917e495">Environment Variable</th>
 
-                        <th class="entry cellrowborder" id="d42844e498">Description</th>
+                        <th class="entry cellrowborder" id="d42917e498">Description</th>
 
                     </tr>
 
                 </thead>
 <tbody class="tbody">
                     <tr>
-                        <td class="entry cellrowborder" headers="d42844e495 ">SDC_CONF <a class="xref" href="DCConfig.html#concept_pq5_xjq_kr" title="You can edit the Data Collector configuration file, $SDC_CONF/sdc.properties, to configure properties such as the host name and port number and account information for email alerts.">
+                        <td class="entry cellrowborder" headers="d42917e495 ">SDC_CONF <a class="xref" href="DCConfig.html#concept_pq5_xjq_kr" title="You can edit the Data Collector configuration file, $SDC_CONF/sdc.properties, to configure properties such as the host name and port number and account information for email alerts.">
                                 <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                         </td>
 
-                        <td class="entry cellrowborder" headers="d42844e498 ">
+                        <td class="entry cellrowborder" headers="d42917e498 ">
                             <p class="p">Defines the configuration directory for the Data Collector
                                 configuration file, <code class="ph codeph">sdc.properties</code>, and related
                                 realm properties files and keystore files. Also includes the logj4
@@ -433,9 +433,9 @@
                     </tr>
 
                     <tr>
-                        <td class="entry cellrowborder" headers="d42844e495 ">SDC_DATA</td>
+                        <td class="entry cellrowborder" headers="d42917e495 ">SDC_DATA</td>
 
-                        <td class="entry cellrowborder" headers="d42844e498 ">
+                        <td class="entry cellrowborder" headers="d42917e498 ">
                             <p class="p">Defines the data directory for pipeline configuration and run
                                 details. </p>
 
@@ -453,9 +453,9 @@
                     </tr>
 
                     <tr>
-                        <td class="entry cellrowborder" headers="d42844e495 ">SDC_LOG</td>
+                        <td class="entry cellrowborder" headers="d42917e495 ">SDC_LOG</td>
 
-                        <td class="entry cellrowborder" headers="d42844e498 ">
+                        <td class="entry cellrowborder" headers="d42917e498 ">
                             <p class="p">Defines the log directory. </p>
 
                             <p class="p">Default values:</p>
@@ -472,11 +472,11 @@
                     </tr>
 
                     <tr>
-                        <td class="entry cellrowborder" headers="d42844e495 ">SDC_RESOURCES <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">
+                        <td class="entry cellrowborder" headers="d42917e495 ">SDC_RESOURCES <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">
                                 <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                         </td>
 
-                        <td class="entry cellrowborder" headers="d42844e498 ">Defines the directory for runtime resource files. <p class="p">Default
+                        <td class="entry cellrowborder" headers="d42917e498 ">Defines the directory for runtime resource files. <p class="p">Default
                                 values:</p>
 <ul class="ul">
                                 <li class="li">Manual start: <code class="ph codeph">$SDC_DIST/resources</code></li>
@@ -494,66 +494,9 @@
 
  </div>
 
-<article class="topic concept nested2" aria-labelledby="ariaid-title4" id="concept_oyw_xhy_cgb">
-    <h3 class="title topictitle3" id="ariaid-title4">Protected Directories</h3>
-
-    <div class="body conbody">
-        <div class="p">The
-            following <span class="ph">Data Collector</span>
-            directories are protected directories:<ul class="ul" id="concept_oyw_xhy_cgb__ul_fxc_fwy_cgb">
-                <li class="li"><code class="ph codeph">$SDC_CONF</code> - Stages cannot access files in the configuration
-                    directory.</li>
-
-                <li class="li"><code class="ph codeph">$SDC_DATA</code> - Stages cannot access files in the data
-                    directory.</li>
-
-                <li class="li"><code class="ph codeph">$SDC_RESOURCES</code> - Stages can read files in the resources
-                    directory, but cannot write to files in the directory.</li>
-
-            </ul>
-</div>
-
-        <p class="p">If needed, you can allow stages to access specific files in these protected directories
-            by modifying Security Manager exception properties in the <span class="ph">Data Collector</span>
-            configuration file, <span class="ph filepath">$SDC_CONF/sdc.properties</span>. However, use caution
-            when configuring exceptions to these protected directories.</p>
-
-        <div class="p">You can configure exceptions to protected directories as follows:<dl class="dl">
-                
-                    <dt class="dt dlterm">Exceptions for all stage libraries</dt>
-
-                    <dd class="dd">To allow all stage libraries access to files in protected directories,
-                        modify the <code class="ph codeph">security_manager.sdc_dirs.exceptions</code> property to
-                        define files that can be accessed. </dd>
-
-                
-                
-                    <dt class="dt dlterm">Exceptions for specific stage libraries</dt>
-
-                    <dd class="dd">To allow a specific stage library access to files in protected directories,
-                        add the following property and then define the files that the stage library
-                        can
-                        access:<pre class="pre codeblock"><code>security_manager.sdc_dirs.exceptions.&lt;stage_library_name&gt;=&lt;file_path&gt;</code></pre></dd>
-
-                    <dd class="dd ddexpand">For example, the default <span class="ph">Data Collector</span> configuration file includes an exception for the Java keystore credential
-                        store stage library defined as
-                        follows:<pre class="pre codeblock"><code>security_manager.sdc_dirs.exceptions.lib.streamsets-datacollector-jks-credentialstore-lib=$SDC_CONF/jks-credentialStore.pkcs12</code></pre></dd>
-
-                
-            </dl>
-</div>
-
-        <p class="p">When you configure a Security Manager exception property, use the appropriate directory
-            environment variable in the file path: <code class="ph codeph">$SDC_CONF</code>,
-                <code class="ph codeph">$SDC_DATA</code>, or <code class="ph codeph">$SDC_RESOURCES</code>. You can enter
-            multiple file paths separated by commas.</p>
-
-    </div>
-
 </article>
-</article>
-<article class="topic concept nested1" aria-labelledby="ariaid-title5" id="concept_htz_t1s_3v">
-    <h2 class="title topictitle2" id="ariaid-title5">User and Group for Service Start</h2>
+<article class="topic concept nested1" aria-labelledby="ariaid-title4" id="concept_htz_t1s_3v">
+    <h2 class="title topictitle2" id="ariaid-title4">User and Group for Service Start</h2>
 
     
     <div class="body conbody"><p class="shortdesc">When you run <span class="ph">Data Collector</span> as a
@@ -594,8 +537,8 @@
     </div>
 
 </article>
-<article class="topic concept nested1" aria-labelledby="ariaid-title6" id="concept_vrx_4fg_qr">
- <h2 class="title topictitle2" id="ariaid-title6">Java Configuration Options</h2>
+<article class="topic concept nested1" aria-labelledby="ariaid-title5" id="concept_vrx_4fg_qr">
+ <h2 class="title topictitle2" id="ariaid-title5">Java Configuration Options</h2>
 
  <div class="body conbody">
   <p class="p">You define Java configuration options used by <span class="ph">Data Collector</span> in
@@ -615,6 +558,9 @@
       the value of the version-specific environment variable and adds it to the SDC_JAVA_OPTS
       environment variable.</p>
 
+    <p class="p">When defining Java configuration options, avoid defining duplicate options. If you do define
+      duplicates, the last option passed to the JVM usually takes precedence.</p>
+
     <p class="p">For a Cloudera Manager installation, define Java configuration options by configuring the
       StreamSets service through Cloudera Manager.</p>
 
@@ -624,8 +570,8 @@
 
  </div>
 
-<article class="topic concept nested2" aria-labelledby="ariaid-title7" id="concept_mdc_shg_qr">
- <h3 class="title topictitle3" id="ariaid-title7">Java Heap Size</h3>
+<article class="topic concept nested2" aria-labelledby="ariaid-title6" id="concept_mdc_shg_qr">
+ <h3 class="title topictitle3" id="ariaid-title6">Java Heap Size</h3>
 
  
  <div class="body conbody"><p class="shortdesc">Increase or decrease the <span class="ph">Data Collector</span> Java heap
@@ -660,14 +606,10 @@
         <dd class="dd">
           <p class="p">Define the heap size in the SDC_JAVA_OPTS environment variable.</p>
 
-          <div class="p">For example, to double the heap size, change the following default settings in the
-            environment
-            variable:<pre class="pre codeblock"><code>export SDC_JAVA_OPTS="<span class="ph uicontrol">-Xmx1024m -Xms1024m</span> -server ${SDC_JAVA_OPTS}"</code></pre></div>
-
-          <p class="p">to increase the Xmx and Xms settings as follows:</p>
+          <p class="p">For example, to double the heap size, increase the Xmx and Xms settings as follows:</p>
 
           <div class="p">
-            <pre class="pre codeblock"><code>export SDC_JAVA_OPTS="<span class="ph uicontrol">-Xmx2048m -Xms2048m</span> -server ${SDC_JAVA_OPTS}"</code></pre></div>
+            <pre class="pre codeblock"><code>export SDC_JAVA_OPTS="${SDC_JAVA_OPTS} <span class="ph uicontrol">-Xmx2048m -Xms2048m</span> -server"</code></pre></div>
 
             <p class="p"><a class="xref" href="DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your installation
                   type.</p>
@@ -697,8 +639,8 @@
  </div>
 
 </article>
-<article class="topic concept nested2" aria-labelledby="ariaid-title8" id="concept_wk1_pyw_4x">
- <h3 class="title topictitle3" id="ariaid-title8">Remote Debugging</h3>
+<article class="topic concept nested2" aria-labelledby="ariaid-title7" id="concept_wk1_pyw_4x">
+ <h3 class="title topictitle3" id="ariaid-title7">Remote Debugging</h3>
 
  
  <div class="body conbody"><p class="shortdesc">You can enable remote debugging to debug a <span class="ph">Data Collector</span>
@@ -720,7 +662,7 @@
 
                         <div class="p">For example, to debug <span class="ph">Data Collector</span> on a remote machine using port number 2005, define SDC_JAVA_OPTS as
                             follows:
-                            <pre class="pre codeblock"><code>export SDC_JAVA_OPTS="-Xmx1024m  -Xms1024m <span class="ph uicontrol">-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=2005,suspend=n</span> -server ${SDC_JAVA_OPTS}"</code></pre></div>
+                            <pre class="pre codeblock"><code>export SDC_JAVA_OPTS="${SDC_JAVA_OPTS} <span class="ph uicontrol">-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=2005,suspend=n</span>"</code></pre></div>
 
                         <p class="p"><a class="xref" href="DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your installation
                   type.</p>
@@ -745,8 +687,8 @@
     </div>
 
 </article>
-<article class="topic concept nested2" aria-labelledby="ariaid-title9" id="concept_kqh_lj3_vx">
- <h3 class="title topictitle3" id="ariaid-title9">Garbage Collector</h3>
+<article class="topic concept nested2" aria-labelledby="ariaid-title8" id="concept_kqh_lj3_vx">
+ <h3 class="title topictitle3" id="ariaid-title8">Garbage Collector</h3>
 
  
  <div class="body conbody"><p class="shortdesc">You can define the Java garbage collector that <span class="ph">Data Collector</span> uses.
@@ -836,29 +778,120 @@
 
 </article>
 </article>
-<article class="topic concept nested1" aria-labelledby="ariaid-title10" id="concept_tm4_pbg_ht">
- <h2 class="title topictitle2" id="ariaid-title10">Java Security Manager</h2>
+<article class="topic concept nested1" aria-labelledby="ariaid-title9" id="concept_tm4_pbg_ht">
+ <h2 class="title topictitle2" id="ariaid-title9">Security Manager</h2>
 
  
  <div class="body conbody"><p class="shortdesc"><span class="ph">Data Collector</span>
-    includes a Java Security Manager that is enabled by default. </p>
+        includes a Java Security Manager that is enabled by default. For enhanced security, you can
+        enable the <span class="ph">Data Collector</span>
+        Security Manager which prevents stages from accessing files in protected <span class="ph">Data Collector</span>
+        directories.</p>
 
-  <p class="p">The Java Security Manager restricts the runtime
-            permissions of user libraries. This allows administrators to control what user libraries
-            do on production systems. For example, by default, user libraries cannot call out to
-            network resources and potentially cause denial of service attacked.</p>
+  <div class="p"><span class="ph">Data Collector</span> can
+            use one of the following security managers:<dl class="dl">
+                
+                    <dt class="dt dlterm">Java Security Manager</dt>
 
-  <p class="p">The security policy is defined in the <code class="ph codeph">$SDC_CONF/sdc-security.policy</code> file. The
-      file syntax is <a class="xref" href="http://docs.oracle.com/javase/7/docs/technotes/guides/security/PolicyFiles.html" target="_blank">java standard</a>. </p>
+                    <dd class="dd">
+                        <p class="p">By default, <span class="ph">Data Collector</span> uses the Java Security Manager. The Java Security Manager restricts
+                            the runtime permissions of user libraries. This allows administrators to
+                            control user libraries actions on production systems. For example, by
+                            default, user libraries cannot call out to network resources and
+                            potentially cause denial-of-service (DDoS) attacks.</p>
 
-   <p class="p">To disable the Java Security Manager, modify the SDC_SECURITY_MANAGER_ENABLED environment
-            variable. </p>
+                        <p class="p">The security policy is defined in the
+                                <code class="ph codeph">$SDC_CONF/sdc-security.policy</code> file. The file syntax
+                            is <a class="xref" href="http://docs.oracle.com/javase/7/docs/technotes/guides/security/PolicyFiles.html" target="_blank">java standard</a>. </p>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm"><span class="ph">Data Collector</span> Security Manager</dt>
+
+                    <dd class="dd">For enhanced security, enable the <span class="ph">Data Collector</span> Security Manager. The <span class="ph">Data Collector</span> Security Manager prevents stages from accessing files in <a class="xref" href="DCEnvironmentConfig.html#concept_oyw_xhy_cgb">protected Data Collector
+                            directories</a>, regardless of how the
+                            <code class="ph codeph">sdc-security.policy</code> file is defined.</dd>
+
+                    <dd class="dd ddexpand">To enable the <span class="ph">Data Collector</span> Security Manager, uncomment the
+                            <code class="ph codeph">security_manager.sdc_manager.enable</code> property in the
+                        Data Collector configuration file,
+                            <code class="ph codeph">$SDC_CONF/sdc.properties</code>.<div class="note note"><span class="notetitle">Note:</span> If you use an older JVM
+                            version, the <span class="ph">Data Collector</span> Security Manager might encounter some JVM known issues.</div>
+</dd>
+
+                
+            </dl>
+</div>
+
+        <p class="p">If needed, you can configure Data Collector to use neither security manager by setting
+            the SDC_SECURITY_MANAGER_ENABLED environment variable to false. </p>
 
      <p class="p"><a class="xref" href="DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your installation
                   type.</p>
 
  </div>
 
+<article class="topic concept nested2" aria-labelledby="ariaid-title10" id="concept_oyw_xhy_cgb">
+    <h3 class="title topictitle3" id="ariaid-title10">Protected Directories</h3>
+
+    <div class="body conbody">
+        <div class="p">When
+            the <span class="ph">Data Collector</span>
+            Security Manager is enabled, the following <span class="ph">Data Collector</span>
+            directories are protected directories:<ul class="ul" id="concept_oyw_xhy_cgb__ul_fxc_fwy_cgb">
+                <li class="li"><code class="ph codeph">$SDC_CONF</code> - Stages cannot access files in the configuration
+                    directory.</li>
+
+                <li class="li"><code class="ph codeph">$SDC_DATA</code> - Stages cannot access files in the data
+                    directory.</li>
+
+                <li class="li"><code class="ph codeph">$SDC_RESOURCES</code> - Stages can read files in the resources
+                    directory, but cannot write to files in the directory.</li>
+
+            </ul>
+</div>
+
+        <p class="p">If needed, you can allow stages to access specific files in these protected directories
+            by modifying <span class="ph">Data Collector</span>
+            Security Manager exception properties in the <span class="ph">Data Collector</span>
+            configuration file, <span class="ph filepath">$SDC_CONF/sdc.properties</span>. However, use caution
+            when configuring exceptions to these protected directories.</p>
+
+        <div class="p">You can configure exceptions to protected directories as follows:<dl class="dl">
+                
+                    <dt class="dt dlterm">Exceptions for all stage libraries</dt>
+
+                    <dd class="dd">To allow all stage libraries access to files in protected directories,
+                        modify the <code class="ph codeph">security_manager.sdc_dirs.exceptions</code> property to
+                        define files that can be accessed. </dd>
+
+                
+                
+                    <dt class="dt dlterm">Exceptions for specific stage libraries</dt>
+
+                    <dd class="dd">To allow a specific stage library access to files in protected directories,
+                        add the following property and then define the files that the stage library
+                        can
+                        access:<pre class="pre codeblock"><code>security_manager.sdc_dirs.exceptions.&lt;stage_library_name&gt;=&lt;file_path&gt;</code></pre></dd>
+
+                    <dd class="dd ddexpand">For example, the default <span class="ph">Data Collector</span> configuration file includes an exception for the Java keystore credential
+                        store stage library defined as
+                        follows:<pre class="pre codeblock"><code>security_manager.sdc_dirs.exceptions.lib.streamsets-datacollector-jks-credentialstore-lib=$SDC_CONF/jks-credentialStore.pkcs12</code></pre></dd>
+
+                
+            </dl>
+</div>
+
+        <p class="p">When you configure a Security Manager exception property, use the appropriate <a class="xref" href="DCEnvironmentConfig.html#concept_mnx_j3r_3v" title="Data Collector includes environment variables that define the directories used to store configuration, data, log, and resource files.">directory environment variable</a>
+            in the file path: <code class="ph codeph">$SDC_CONF</code>, <code class="ph codeph">$SDC_DATA</code>, or
+                <code class="ph codeph">$SDC_RESOURCES</code>. You can enter multiple file paths separated by
+            commas.</p>
+
+    </div>
+
+</article>
 </article>
 <article class="topic concept nested1" aria-labelledby="ariaid-title11" id="concept_hcb_4ks_3v">
  <h2 class="title topictitle2" id="ariaid-title11">Root Classloader</h2>
@@ -908,27 +941,27 @@
         <div class="p">You can configure the following heap dump environment variables:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_cy3_r44_z1b__table_rn4_tq4_z1b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d42844e1473">Heap Dump Environment Variable</th>
+                            <th class="entry cellrowborder" id="d42917e1557">Heap Dump Environment Variable</th>
 
-                            <th class="entry cellrowborder" id="d42844e1476">Description</th>
+                            <th class="entry cellrowborder" id="d42917e1560">Description</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d42844e1473 ">SDC_HEAPDUMP_ON_OOM </td>
+                            <td class="entry cellrowborder" headers="d42917e1557 ">SDC_HEAPDUMP_ON_OOM </td>
 
-                            <td class="entry cellrowborder" headers="d42844e1476 ">Specifies whether <span class="ph">Data Collector</span> generates a heap dump upon encountering an out of memory error.
+                            <td class="entry cellrowborder" headers="d42917e1560 ">Specifies whether <span class="ph">Data Collector</span> generates a heap dump upon encountering an out of memory error.
                                     <p class="p">Default is true.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d42844e1473 ">SDC_HEAPDUMP_PATH</td>
+                            <td class="entry cellrowborder" headers="d42917e1557 ">SDC_HEAPDUMP_PATH</td>
 
-                            <td class="entry cellrowborder" headers="d42844e1476 ">Specifies the file name and location to use for heap dump files.
+                            <td class="entry cellrowborder" headers="d42917e1560 ">Specifies the file name and location to use for heap dump files.
                                     <p class="p">By default, heap dumps are written to
                                         <code class="ph codeph">$SDC_LOG/sdc_heapdump_${timestamp}.hprof</code>.
                                     </p>
