@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum RawDataSourceGroups implements Label {
   RAW("Raw Data"),
+  EVENT("Event Data"),
   ;
 
   private final String label;

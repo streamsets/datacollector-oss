@@ -29,7 +29,7 @@ public class TestRawDataSource {
 
   @Test
   public void testStopAfterFirstBatch() throws StageException {
-    RawDataSource origin = new RawDataSource("{}", true);
+    RawDataSource origin = new RawDataSource("{}", "",  true);
 
     SourceRunner runner = new SourceRunner.Builder(RawDataDSource.class, origin)
         .addService(DataFormatParserService.class, new SdkJsonDataFormatParserService())
@@ -46,4 +46,25 @@ public class TestRawDataSource {
       runner.runDestroy();
     }
   }
+
+  @Test
+  public void testEventGeneration() throws StageException {
+    RawDataSource origin = new RawDataSource("{}", "{}",  true);
+
+    SourceRunner runner = new SourceRunner.Builder(RawDataDSource.class, origin)
+        .addService(DataFormatParserService.class, new SdkJsonDataFormatParserService())
+        .addOutputLane("a")
+        .build();
+
+    runner.runInit();
+
+    try {
+      StageRunner.Output output = runner.runProduce(null, 1);
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Assert.assertEquals(1, runner.getEventRecords().size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
 }

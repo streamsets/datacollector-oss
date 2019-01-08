@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.devtest.rawdata;
 
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -26,13 +27,16 @@ import java.util.List;
 
 public class RawDataSource extends BaseSource  {
   private final String rawData;
+  private final String eventData;
   private final boolean stopAfterFirstBatch;
 
   public RawDataSource(
       String rawData,
+      String eventData,
       boolean stopAfterFirstBatch
   ) {
     this.rawData = rawData;
+    this.eventData = eventData;
     this.stopAfterFirstBatch = stopAfterFirstBatch;
   }
 
@@ -45,6 +49,14 @@ public class RawDataSource extends BaseSource  {
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     for (Record record : ServicesUtil.parseAll(getContext(), getContext(), false, "rawData", rawData.getBytes())) {
       batchMaker.addRecord(record);
+    }
+
+    if(eventData != null && !eventData.isEmpty()) {
+      for (Record record : ServicesUtil.parseAll(getContext(), getContext(), false, "eventData", eventData.getBytes())) {
+        EventRecord event = getContext().createEventRecord("raw-data-event", 1, record.getHeader().getSourceId());
+        event.set(record.get());
+        getContext().toEvent(event);
+      }
     }
 
     if(stopAfterFirstBatch) {
