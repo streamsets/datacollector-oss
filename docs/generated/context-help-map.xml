@@ -56,10 +56,10 @@
                path="datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_rrq_v3k_kbb"/>
    <appContext helpID="concept_rr2_mbz_w1b"
                path="datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_rr2_mbz_w1b"/>
-   <appContext helpID="unique_274490190"
-               path="datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#unique_274490190"/>
-   <appContext helpID="unique_455991597"
-               path="datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#unique_455991597"/>
+   <appContext helpID="unique_1027070593"
+               path="datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#unique_1027070593"/>
+   <appContext helpID="unique_1901020256"
+               path="datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#unique_1901020256"/>
    <appContext helpID="concept_avm_x1y_h1b"
                path="datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_avm_x1y_h1b"/>
    <appContext helpID="concept_bsw_cky_11b"
@@ -126,8 +126,8 @@
                path="datacollector/UserGuide/Installation/CMInstall-Overview.html#task_hzt_dgn_25"/>
    <appContext helpID="task_opg_yrm_25"
                path="datacollector/UserGuide/Installation/CMInstall-Overview.html#task_opg_yrm_25"/>
-   <appContext helpID="unique_1817553294"
-               path="datacollector/UserGuide/Installation/CMInstall-Overview.html#unique_1817553294"/>
+   <appContext helpID="unique_552424461"
+               path="datacollector/UserGuide/Installation/CMInstall-Overview.html#unique_552424461"/>
    <appContext helpID="task_u1v_nkt_25"
                path="datacollector/UserGuide/Installation/CMInstall-Overview.html#task_u1v_nkt_25"/>
    <appContext helpID="task_zn4_qrn_25"
@@ -254,8 +254,6 @@
                path="datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_zhl_rb3_qcb"/>
    <appContext helpID="concept_mnx_j3r_3v"
                path="datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_mnx_j3r_3v"/>
-   <appContext helpID="concept_oyw_xhy_cgb"
-               path="datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_oyw_xhy_cgb"/>
    <appContext helpID="concept_htz_t1s_3v"
                path="datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_htz_t1s_3v"/>
    <appContext helpID="concept_vrx_4fg_qr"
@@ -268,6 +266,8 @@
                path="datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_kqh_lj3_vx"/>
    <appContext helpID="concept_tm4_pbg_ht"
                path="datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_tm4_pbg_ht"/>
+   <appContext helpID="concept_oyw_xhy_cgb"
+               path="datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_oyw_xhy_cgb"/>
    <appContext helpID="concept_hcb_4ks_3v"
                path="datacollector/UserGuide/Configuration/DCEnvironmentConfig.html#concept_hcb_4ks_3v"/>
    <appContext helpID="concept_cy3_r44_z1b"
@@ -446,8 +446,6 @@
                path="datacollector/UserGuide/Upgrade/PostUpgrade.html#concept_zll_vn5_zw"/>
    <appContext helpID="concept_dzn_cdy_1cb"
                path="datacollector/UserGuide/Upgrade/PostUpgrade.html#concept_dzn_cdy_1cb"/>
-   <appContext helpID="task_qrl_1zk_cgb"
-               path="datacollector/UserGuide/Upgrade/PostUpgrade.html#task_qrl_1zk_cgb"/>
    <appContext helpID="concept_clv_tzk_cgb"
                path="datacollector/UserGuide/Upgrade/PostUpgrade.html#concept_clv_tzk_cgb"/>
    <appContext helpID="concept_k53_vhk_cgb"
@@ -606,6 +604,12 @@
                path="datacollector/UserGuide/Pipeline_Configuration/RuntimeValues.html#task_zt3_sbt_kz"/>
    <appContext helpID="concept_v4k_gdt_kz"
                path="datacollector/UserGuide/Pipeline_Configuration/RuntimeValues.html#concept_v4k_gdt_kz"/>
+   <appContext helpID="concept_l2p_djq_2gb"
+               path="datacollector/UserGuide/Pipeline_Configuration/RuntimeValues.html#concept_l2p_djq_2gb"/>
+   <appContext helpID="concept_d4c_hs3_2gb"
+               path="datacollector/UserGuide/Pipeline_Configuration/RuntimeValues.html#concept_d4c_hs3_2gb"/>
+   <appContext helpID="concept_xvs_3jq_2gb"
+               path="datacollector/UserGuide/Pipeline_Configuration/RuntimeValues.html#concept_xvs_3jq_2gb"/>
    <appContext helpID="task_qgb_1kt_kz"
                path="datacollector/UserGuide/Pipeline_Configuration/RuntimeValues.html#task_qgb_1kt_kz"/>
    <appContext helpID="task_awv_tlm_lz"
@@ -1762,6 +1766,8 @@
                path="datacollector/UserGuide/Origins/WebSocketServer.html#task_mzv_cvc_3z"/>
    <appContext helpID="concept_agf_5jv_sbb"
                path="datacollector/UserGuide/Origins/WindowsLog.html#concept_agf_5jv_sbb"/>
+   <appContext helpID="concept_ewn_yvp_2gb"
+               path="datacollector/UserGuide/Origins/WindowsLog.html#concept_ewn_yvp_2gb"/>
    <appContext helpID="task_lmc_yjv_sbb"
                path="datacollector/UserGuide/Origins/WindowsLog.html#task_lmc_yjv_sbb"/>
    <appContext helpID="concept_yjl_nc5_jq"
@@ -3755,8 +3761,8 @@
                path="datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_m4g_qyk_2s"/>
    <appContext helpID="concept_a3w_z3m_js"
                path="datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_a3w_z3m_js"/>
-   <appContext helpID="unique_1607306435"
-               path="datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#unique_1607306435"/>
+   <appContext helpID="unique_2057694897"
+               path="datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#unique_2057694897"/>
    <appContext helpID="concept_rp1_ghd_zs"
                path="datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_rp1_ghd_zs"/>
    <appContext helpID="concept_mth_cjm_js"
@@ -3837,8 +3843,8 @@
                path="datacollector/UserGuide/Expression_Language/Functions.html#concept_gfs_w55_3cb"/>
    <appContext helpID="concept_kxj_nyl_5x"
                path="datacollector/UserGuide/Expression_Language/Functions.html#concept_kxj_nyl_5x"/>
-   <appContext helpID="unique_903999145"
-               path="datacollector/UserGuide/Expression_Language/Functions.html#unique_903999145"/>
+   <appContext helpID="unique_1885457973"
+               path="datacollector/UserGuide/Expression_Language/Functions.html#unique_1885457973"/>
    <appContext helpID="concept_m2m_s1f_lw"
                path="datacollector/UserGuide/Expression_Language/Functions.html#concept_m2m_s1f_lw"/>
    <appContext helpID="concept_dvg_nqn_wx"
