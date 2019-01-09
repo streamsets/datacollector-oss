@@ -150,7 +150,7 @@ public class BaseConverterConfig {
       triggeredByValue = {"ZONED_DATETIME", "STRING"}
   )
   @ValueChooserModel(ZonedDateTimeFormatChooserValues.class)
-  public ZonedDateTimeFormat zonedDateTimeFormat;
+  public ZonedDateTimeFormat zonedDateTimeFormat = ZonedDateTimeFormat.ISO_ZONED_DATE_TIME;
 
   @ConfigDef(
       required = true,

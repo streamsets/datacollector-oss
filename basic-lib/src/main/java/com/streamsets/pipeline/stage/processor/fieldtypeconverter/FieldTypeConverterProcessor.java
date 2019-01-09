@@ -218,21 +218,29 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
     }
 
     if (field.getType() == Field.Type.ZONED_DATETIME) {
-      if (!converterConfig.targetType.isOneOf(Field.Type.STRING, Field.Type.ZONED_DATETIME)) {
-        throw new OnRecordErrorException(Errors.CONVERTER_04, converterConfig.targetType);
-      }
-      if(field.getValue() == null) {
-        return Field.create(Field.Type.STRING, null);
-      } else {
-        return Field.create(converterConfig.getFormatter().format(field.getValueAsZonedDateTime()));
+      switch (converterConfig.targetType) {
+        case STRING:
+          if(field.getValue() == null) {
+            return Field.create(Field.Type.STRING, null);
+          } else {
+            return Field.create(converterConfig.getFormatter().format(field.getValueAsZonedDateTime()));
+          }
+        case ZONED_DATETIME:
+          return field;
+        default:
+          throw new OnRecordErrorException(Errors.CONVERTER_04, converterConfig.targetType);
       }
     }
 
     if(field.getType() == Field.Type.BYTE_ARRAY && converterConfig.targetType == Field.Type.STRING) {
       try {
+        if(field.getValue() == null) {
+          return Field.create(converterConfig.targetType, null);
+        }
+
         return Field.create(converterConfig.targetType, new String(field.getValueAsByteArray(), converterConfig.encoding));
       } catch (Exception e) {
-        throw new OnRecordErrorException(Errors.CONVERTER_01, converterConfig.encoding);
+        throw new OnRecordErrorException(Errors.CONVERTER_00, matchingField, field.getType(), field.getValue(), converterConfig.targetType, e);
       }
     }
 
@@ -247,6 +255,10 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
             Field.Type.DECIMAL
         )) {
       try {
+        if(field.getValue() == null) {
+          return Field.create(converterConfig.targetType, null);
+        }
+
         Field changedField = Field.create(converterConfig.targetType, field.getValue());
         BigDecimal newValue = adjustScaleIfNeededForDecimalConversion(
             changedField.getValueAsDecimal(),
@@ -260,6 +272,10 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
     }
 
     if(field.getType().isOneOf(Field.Type.BOOLEAN) && converterConfig.targetType.isOneOf(Field.Type.INTEGER, Field.Type.SHORT, Field.Type.LONG)) {
+      if(field.getValue() == null) {
+        return Field.create(converterConfig.targetType, null);
+      }
+
       return Field.create(converterConfig.targetType, field.getValueAsBoolean() ? 1 : 0);
     }
 
