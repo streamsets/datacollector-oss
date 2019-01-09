@@ -109,6 +109,8 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
   // Index of columns returned by DatabaseMetaData.getColumns. Defined in DatabaseMetaData class.
   private static final int COLUMN_NAME = 4;
   private static final int DATA_TYPE = 5;
+  private static final int MAX_BIG_DECIMAL_SCALE = 38;
+  private static final String MSSQL = "Microsoft";
 
   private final int defaultOpCode;
   private final UnsupportedOperationAction unsupportedAction;
@@ -596,7 +598,17 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
               statement.setObject(paramIdx, value, getColumnType(column));
               break;
             }
-            statement.setBigDecimal(paramIdx, (BigDecimal)value);
+            if (connection.getMetaData().getDriverName().contains(MSSQL) &&
+                ((BigDecimal) value).precision() > MAX_BIG_DECIMAL_SCALE) {
+              LOG.debug("Since {} is being used and the scale is {} or bigger, we will send the record as object",
+                  MSSQL,
+                  MAX_BIG_DECIMAL_SCALE
+              );
+              // MSSQL will fail while trying to insert BigDecimals with more than 38 decimals in a float column
+              statement.setObject(paramIdx, value, getColumnType(column));
+              break;
+            }
+            statement.setBigDecimal(paramIdx, (BigDecimal) value);
             break;
           case BYTE_ARRAY:
             if (!isColumnTypeBinary(columnType)) {
