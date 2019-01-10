@@ -19,10 +19,12 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.kafka.api.KafkaOriginGroups;
+import com.streamsets.pipeline.kafka.api.MessageAndOffset;
 import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetReset;
 import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.KafkaException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,8 +62,13 @@ public class MapRStreamsConsumer09 extends BaseKafkaConsumer09 {
   }
 
   @Override
+  MessageAndOffset getMessageAndOffset(ConsumerRecord message, boolean isEnabled) {
+    return new MessageAndOffset(message.value(), message.offset(), message.partition());
+  }
+
+  @Override
   protected void validateAutoOffsetReset(List<Stage.ConfigIssue> issues) throws StageException {
-    if(KafkaAutoOffsetReset.TIMESTAMP.equals(kafkaAutoOffsetReset)) {
+    if(KafkaAutoOffsetReset.TIMESTAMP.name().equals(kafkaAutoOffsetReset)) {
       issues.add(context.createConfigIssue(
           KafkaOriginGroups.KAFKA.name(),
           KAFKA_CONFIG_BEAN_PREFIX + KAFKA_AUTO_OFFSET_RESET,

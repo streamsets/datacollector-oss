@@ -32,9 +32,6 @@ import com.streamsets.pipeline.stage.origin.kafka.DelegatingKafkaSource;
 import com.streamsets.pipeline.stage.origin.kafka.KafkaConfigBean;
 import com.streamsets.pipeline.stage.origin.kafka.StandaloneKafkaSourceFactory;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @StageDef(
     version = 5,
     label = "MapR Streams Consumer",
@@ -102,8 +99,7 @@ public class MapRStreamsDSource extends DClusterSourceOffsetCommitter implements
     kafkaConfigBean.topic = maprstreamsSourceConfigBean.topic;
     kafkaConfigBean.maxWaitTime = maprstreamsSourceConfigBean.maxWaitTime;
 
-    Map<String,String> kafkaConsumerConfigs = new HashMap<>(maprstreamsSourceConfigBean.kafkaConsumerConfigs);
-    String autoOffsetReset = kafkaConsumerConfigs.remove("auto.offset.reset");
+    String autoOffsetReset = maprstreamsSourceConfigBean.kafkaConsumerConfigs.get("auto.offset.reset");
     if (autoOffsetReset != null) {
       switch (autoOffsetReset) {
         case "earliest":
@@ -116,13 +112,14 @@ public class MapRStreamsDSource extends DClusterSourceOffsetCommitter implements
           kafkaConfigBean.kafkaAutoOffsetReset = KafkaAutoOffsetReset.NONE;
           break;
         default:
-          kafkaConfigBean.kafkaAutoOffsetReset = KafkaAutoOffsetReset.EARLIEST;
+          kafkaConfigBean.kafkaAutoOffsetReset = KafkaAutoOffsetReset.LATEST;
       }
     } else {
-      kafkaConfigBean.kafkaAutoOffsetReset = KafkaAutoOffsetReset.EARLIEST;
+      kafkaConfigBean.kafkaAutoOffsetReset = KafkaAutoOffsetReset.LATEST;
     }
-    kafkaConfigBean.kafkaConsumerConfigs = kafkaConsumerConfigs;
+    kafkaConfigBean.kafkaConsumerConfigs = maprstreamsSourceConfigBean.kafkaConsumerConfigs;
     kafkaConfigBean.timestampToSearchOffsets = 0;
+    kafkaConfigBean.timestampsEnabled = false;
 
     return kafkaConfigBean;
   }
