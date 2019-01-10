@@ -319,9 +319,8 @@ angular
           'Install Additional Drivers',
           1
         );
-
         var installedLibraries = _.filter($scope.stageLibraries, function(stageLibrary) {
-          return stageLibrary.stageLibraryManifest.installed;
+          return stageLibrary.stageLibraryManifest && stageLibrary.stageLibraryManifest.installed;
         });
 
         var modalInstance = $modal.open({

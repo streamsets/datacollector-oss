@@ -44,7 +44,7 @@ angular
           }
 
           $scope.operationStatus = 'uploading';
-          api.pipelineAgent.installExtras($scope.libraryInfo.library.id, $scope.libraryInfo.uploadFile)
+          api.pipelineAgent.installExtras($scope.libraryInfo.library.stageLibraryManifest.stageLibId, $scope.libraryInfo.uploadFile)
             .then(
               function(res) {
                 $scope.operationStatus = 'complete';
@@ -66,7 +66,7 @@ angular
       });
 
       $scope.libraryInfo.library = _.find(installedLibraries, function (library) {
-        return library.id === 'streamsets-datacollector-jdbc-lib';
+        return library.stageLibraryManifest.stageLibId === 'streamsets-datacollector-jdbc-lib';
       });
 
       if (!$scope.libraryInfo.library && installedLibraries) {
@@ -75,8 +75,8 @@ angular
 
       $scope.installedLibraries = _.chain(installedLibraries)
         .filter(function(stageLibrary) {
-          return stageLibrary.library !== 'streamsets-datacollector-stats-lib';
+          return stageLibrary.stageLibraryManifest.stageLibId !== 'streamsets-datacollector-stats-lib';
         })
-        .sortBy('label')
+        .sortBy('stageLibLabel')
         .value();
     });
