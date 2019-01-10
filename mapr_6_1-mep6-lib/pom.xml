@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright 2017 StreamSets Inc.
+    Copyright 2019 StreamSets Inc.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -27,20 +27,19 @@
     <relativePath>../stage-lib-parent</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
-  <artifactId>streamsets-datacollector-mapr_5_2-lib</artifactId>
+  <artifactId>streamsets-datacollector-mapr_6_1-mep6-lib</artifactId>
   <version>3.8.0-SNAPSHOT</version>
-  <description>StreamSets Data Collector MapR 5.2.0 Lib</description>
-  <name>StreamSets Data Collector MapR 5.2.0 Lib</name>
+  <description>StreamSets Data Collector MapR 6.1.0 MEP 6 Lib</description>
+  <name>StreamSets Data Collector MapR 6.1.0 MEP 6 Lib</name>
   <packaging>jar</packaging>
 
   <properties>
     <avro.version>1.7.7</avro.version>
     <!-- Closed source artifacts should be provided dependency -->
-    <hadoop.version>2.7.0-mapr-1506</hadoop.version>
-    <hive.version>1.2.0-mapr-1508</hive.version>
-    <zookeeper.version>3.4.5-mapr-1503</zookeeper.version>
-    <spark.version>1.6.1-mapr-1607</spark.version>
-    <mapr.version>5.2.0-mapr</mapr.version>
+    <hadoop.version>2.7.0-mapr-1808</hadoop.version>
+    <hive.version>2.1.1-mapr-1710</hive.version>
+    <zookeeper.version>3.4.11-mapr-1808</zookeeper.version>
+    <spark.version>2.3.1-mapr-1808</spark.version>
  </properties>
 
   <dependencies>
@@ -114,13 +113,6 @@
       <artifactId>streamsets-datacollector-cluster-bootstrap-api</artifactId>
       <scope>provided</scope>
       <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.mapr.hadoop</groupId>
-      <artifactId>maprfs</artifactId>
-      <version>${mapr.version}</version>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>
@@ -214,70 +206,6 @@
 
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-mapr_json-5_2-protolib</artifactId>
-      <version>${project.version}</version>
-      <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>com.mapr.db</groupId>
-          <artifactId>maprdb</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.fasterxml.jackson.core</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-mapr_json-protolib</artifactId>
-      <version>${project.version}</version>
-      <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>com.mapr.db</groupId>
-          <artifactId>maprdb</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.fasterxml.jackson.core</groupId>
-          <artifactId>jackson-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.fasterxml.jackson.core</groupId>
-          <artifactId>jackson-annotations</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.fasterxml.jackson.core</groupId>
-          <artifactId>jackson-databind</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-maprfs-protolib</artifactId>
-      <version>${project.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-maprdb-protolib</artifactId>
-      <version>${project.version}</version>
-      <scope>compile</scope>
-      <exclusions>
-        <!-- We explicitly exclude packaging, so that we link the proper version during runtime -->
-        <exclusion>
-          <groupId>com.mapr.db</groupId>
-          <artifactId>maprdb-cdc</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.hbase</groupId>
-          <artifactId>hbase-client</artifactId>
-        </exclusion>
-       </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-maprstreams-source-protolib</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>
@@ -295,38 +223,6 @@
           <artifactId>jackson-databind</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-maprstreams-multisource-protolib</artifactId>
-      <version>${project.version}</version>
-      <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>com.fasterxml.jackson.core</groupId>
-          <artifactId>jackson-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.fasterxml.jackson.core</groupId>
-          <artifactId>jackson-annotations</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.fasterxml.jackson.core</groupId>
-          <artifactId>jackson-databind</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-kafka_multisource-0_9-protolib</artifactId>
-      <version>${project.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-maprstreams-target-protolib</artifactId>
-      <version>${project.version}</version>
-      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
@@ -350,7 +246,7 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-sdc-kafka-09-mapr52</artifactId>
+      <artifactId>streamsets-datacollector-sdc-kafka-11-mapr-61</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>
       <exclusions>
@@ -397,6 +293,7 @@
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-spark-api</artifactId>
+      <version>${project.version}</version>
       <scope>compile</scope>
       <exclusions>
         <exclusion>
@@ -445,7 +342,7 @@
 
     <dependency>
       <groupId>org.apache.spark</groupId>
-      <artifactId>spark-core_2.10</artifactId>
+      <artifactId>spark-core_2.11</artifactId>
       <version>${spark.version}</version>
       <exclusions>
         <exclusion>

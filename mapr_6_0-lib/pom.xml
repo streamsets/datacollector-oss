@@ -295,7 +295,13 @@
           <artifactId>jackson-databind</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>    
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-kafka_multisource-0_9-protolib</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
 
     <!-- include the LoginUgiProvider implementation for MapR with workaround -->
     <dependency>
@@ -304,7 +310,6 @@
       <version>${project.version}</version>
       <scope>compile</scope>
     </dependency>
-
   </dependencies>
 
   <build>
