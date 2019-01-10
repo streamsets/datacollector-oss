@@ -1586,6 +1586,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
 
   private void buildNetflowParser(DataParserFactoryBuilder builder) {
     builder
+        .setMaxDataLen(-1)
         .setConfig(NetflowDataParserFactory.OUTPUT_VALUES_MODE_KEY, netflowOutputValuesMode)
         .setConfig(NetflowDataParserFactory.MAX_TEMPLATE_CACHE_SIZE_KEY, maxTemplateCacheSize)
         .setConfig(NetflowDataParserFactory.TEMPLATE_CACHE_TIMEOUT_MS_KEY, templateCacheTimeoutMs);
