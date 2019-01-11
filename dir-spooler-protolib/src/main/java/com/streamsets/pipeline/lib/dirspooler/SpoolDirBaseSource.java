@@ -217,6 +217,9 @@ public abstract class SpoolDirBaseSource extends BasePushSource {
       List<ConfigIssue> issues,
       boolean addDirPresenceIssues
   ) {
+    if (SpoolDirUtil.isGlobPattern(dir)) {
+      dir = SpoolDirUtil.truncateGlobPatternDirectory(dir);
+    }
 
     WrappedFile fDir = fs.getFile(dir);
     List<ConfigIssue> issuesToBeAdded = new ArrayList<>();

@@ -293,8 +293,15 @@ public class DirectorySpooler {
 
   private void checkBaseDir(WrappedFile path) {
     Preconditions.checkState(path.isAbsolute(), Utils.formatL("Path '{}' is not an absolute path", path));
-    Preconditions.checkState(fs.exists(path), Utils.formatL("Path '{}' does not exist", path));
-    Preconditions.checkState(fs.isDirectory(path), Utils.formatL("Path '{}' is not a directory", path));
+
+    if (SpoolDirUtil.isGlobPattern(path.getAbsolutePath())) {
+      String absolutePath = SpoolDirUtil.truncateGlobPatternDirectory(path.getAbsolutePath());
+      Preconditions.checkState(fs.exists(fs.getFile(absolutePath)), Utils.formatL("Path '{}' does not exist", path));
+      Preconditions.checkState(fs.isDirectory(fs.getFile(absolutePath)), Utils.formatL("Path '{}' is not a directory", path));
+    } else {
+      Preconditions.checkState(fs.exists(path), Utils.formatL("Path '{}' does not exist", path));
+      Preconditions.checkState(fs.isDirectory(path), Utils.formatL("Path '{}' is not a directory", path));
+    }
   }
 
   public void init(String sourceFile) {

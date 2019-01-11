@@ -28,10 +28,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class SpoolDirUtil {
   private SpoolDirUtil() {}
   private final static Logger LOG = LoggerFactory.getLogger(SpoolDirUtil.class);
+
+  private static final String SLASH = "/";
+  private static final String ASTERISK = "*";
+  private static final String ESCAPED_ASTERISK = "\\*";
 
   /**
    * True if f1 is "newer" than f2.
@@ -98,5 +104,42 @@ public class SpoolDirUtil {
     }
 
     return parser;
+  }
+
+  /**
+   * Returns true if the directory string contains *
+   *
+   * @param directory String containing the path to the directory
+   * @return true if the directory contains *
+   */
+  public static boolean isGlobPattern(String directory) {
+    return directory.contains(ASTERISK);
+  }
+
+  /**
+   * Returns the absolute path from the root to the last base directory
+   * Meaning the path until the last / before the first *
+   *
+   * @param directory String containing the path to the directory
+   * @return the path truncated to the las complete directory
+   */
+  public static String truncateGlobPatternDirectory(String directory) {
+    String[] absolutePath = directory.split(ESCAPED_ASTERISK);
+    String truncatedString = absolutePath[0];
+
+    if (lastCharacterIsAsterisk(truncatedString) != SLASH.toCharArray()[0]) {
+      List<String> subDirectories = Arrays.asList(truncatedString.split(SLASH));
+      StringBuffer stringBuffer = new StringBuffer();
+      stringBuffer.append(String.join(SLASH, subDirectories.subList(0, subDirectories.size() - 1))).append(SLASH);
+      truncatedString = stringBuffer.toString();
+    }
+
+    LOG.debug(String.format("Checking existence of path: %s", truncatedString));
+    return truncatedString;
+  }
+
+  private static char lastCharacterIsAsterisk(String truncatedString) {
+    char[] charArray = truncatedString.toCharArray();
+    return charArray[charArray.length - 1];
   }
 }

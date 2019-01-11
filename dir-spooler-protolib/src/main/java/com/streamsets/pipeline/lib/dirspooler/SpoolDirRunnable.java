@@ -197,19 +197,15 @@ public class SpoolDirRunnable implements Runnable {
               pickFileFromSpooler = true;
             } else if (useLastModified) {
               WrappedFile fileObject = fs.getFile(spooler.getSpoolDir(), file);
-              //try {
                 if (SpoolDirUtil.compareFiles(fs, nextAvailFile, fileObject)) {
                   pickFileFromSpooler = true;
                 }
-              /*} catch (IOException ex) {
-
-              }*/
             } else if (nextAvailFile.getFileName().compareTo(file) > 0) {
               pickFileFromSpooler = true;
             }
 
             if (pickFileFromSpooler) {
-              file = currentFile.toString().replaceFirst(spooler.getSpoolDir() + FILE_SEPARATOR, "");
+              file = currentFile.getAbsolutePath();
               if (offsets.containsKey(file)) {
                 offset = offsets.get(file).getOffset();
               } else {
