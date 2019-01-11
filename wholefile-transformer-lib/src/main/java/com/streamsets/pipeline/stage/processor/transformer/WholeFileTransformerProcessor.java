@@ -156,8 +156,6 @@ public class WholeFileTransformerProcessor extends SingleLaneRecordProcessor {
       recordHeaderAttr.put(HeaderAttributeConstants.FILE_NAME, file.getFileName());
       recordHeaderAttr.put(HeaderAttributeConstants.SIZE, Files.size(file));
       recordHeaderAttr.put(HeaderAttributeConstants.LAST_MODIFIED_TIME, Files.getLastModifiedTime(file));
-      recordHeaderAttr.put(HeaderAttributeConstants.SIZE, 0);
-      recordHeaderAttr.put(HeaderAttributeConstants.LAST_MODIFIED_TIME, 0);
 
       return recordHeaderAttr;
     } catch (IOException e) {
