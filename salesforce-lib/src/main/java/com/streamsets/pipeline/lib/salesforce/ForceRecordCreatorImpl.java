@@ -18,8 +18,6 @@ package com.streamsets.pipeline.lib.salesforce;
 import com.streamsets.pipeline.api.StageException;
 
 abstract class ForceRecordCreatorImpl implements ForceRecordCreator {
-  static final String SOBJECT_TYPE_ATTRIBUTE = "salesforce.sobjectType";
-
   ForceRecordCreatorImpl() {}
 
   @Override
@@ -27,4 +25,7 @@ abstract class ForceRecordCreatorImpl implements ForceRecordCreator {
 
   @Override
   public void destroy() {}
+
+  @Override
+  public boolean isCountQuery() { return false; }
 }
