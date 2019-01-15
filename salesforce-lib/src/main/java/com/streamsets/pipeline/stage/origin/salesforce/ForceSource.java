@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.stage.origin.salesforce;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableMap;
 import com.sforce.async.AsyncApiException;
 import com.sforce.async.BatchInfo;
 import com.sforce.async.BatchInfoList;
@@ -35,7 +34,6 @@ import com.sforce.ws.ConnectorConfig;
 import com.sforce.ws.SessionRenewer;
 import com.sforce.ws.bind.XmlObject;
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
@@ -75,7 +73,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -102,8 +99,8 @@ public class ForceSource extends BaseSource {
   private static final String ID = "Id";
   private static final String START_ROW = "startRow";
   private static final String CONF_PREFIX = "conf";
+
   private static final String RECORDS = "records";
-  private static final String COUNT = "count";
 
   static final String READ_EVENTS_FROM_START = EVENT_ID_OFFSET_PREFIX + EVENT_ID_FROM_START;
   private static final BigDecimal MAX_OFFSET_INT = new BigDecimal(Integer.MAX_VALUE);
@@ -231,24 +228,6 @@ public class ForceSource extends BaseSource {
           }
         }
       }
-    }
-
-    if (!conf.disableValidation && StringUtils.isEmpty(conf.initialOffset)) {
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.FORCE.name(), ForceConfigBean.CONF_PREFIX + "initialOffset", Errors.FORCE_00,
-              "You must configure an Initial Offset"
-          )
-      );
-    }
-
-    if (!conf.disableValidation && StringUtils.isEmpty(conf.offsetColumn)) {
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.FORCE.name(), ForceConfigBean.CONF_PREFIX + "queryExistingData", Errors.FORCE_00,
-              "You must configure an Offset Column"
-          )
-      );
     }
 
     if (issues.isEmpty()) {
@@ -689,39 +668,22 @@ public class ForceSource extends BaseSource {
 
     LOG.info("Retrieved {} records", records.length);
 
-    if (recordCreator.isCountQuery()) {
-      // Special case for old-style COUNT() query
-      Record rec = getContext().createRecord(conf.soqlQuery);
-      LinkedHashMap<String, Field> map = new LinkedHashMap<>();
-      map.put(COUNT, Field.create(Field.Type.INTEGER, queryResult.getSize()));
-      rec.set(Field.createListMap(map));
-      rec.getHeader().setAttribute(ForceRecordCreator.SOBJECT_TYPE_ATTRIBUTE, sobjectType);
+    int endIndex = Math.min(recordIndex + maxBatchSize, records.length);
+
+    for ( ;recordIndex < endIndex; recordIndex++) {
+      SObject record = records[recordIndex];
+
+      XmlObject offsetField = getChildIgnoreCase(record, conf.offsetColumn);
+      if (offsetField == null || offsetField.getValue() == null) {
+        throw new StageException(Errors.FORCE_22, conf.offsetColumn);
+      }
+      String offset = fixOffset(conf.offsetColumn, offsetField.getValue().toString());
+      nextSourceOffset = RECORD_ID_OFFSET_PREFIX + offset;
+      final String sourceId = StringUtils.substring(conf.soqlQuery.replaceAll("[\n\r]", " "), 0, 100) + "::rowCount:" + recordIndex + (StringUtils.isEmpty(conf.offsetColumn) ? "" : ":" + offset);
+
+      Record rec = recordCreator.createRecord(sourceId, record);
 
       batchMaker.addRecord(rec);
-    } else {
-      int endIndex = Math.min(recordIndex + maxBatchSize, records.length);
-
-      for (; recordIndex < endIndex; recordIndex++) {
-        SObject record = records[recordIndex];
-
-        String offsetColumn = StringUtils.defaultIfEmpty(conf.offsetColumn, ID);
-        XmlObject offsetField = getChildIgnoreCase(record, offsetColumn);
-        String offset;
-        if (offsetField == null || offsetField.getValue() == null) {
-          if (!conf.disableValidation) {
-            throw new StageException(Errors.FORCE_22, offsetColumn);
-          }
-          // Aggregate query - set the offset to the record index, since we have no offset column
-          offset = String.valueOf(recordIndex);
-        } else {
-          offset = fixOffset(offsetColumn, offsetField.getValue().toString());
-          nextSourceOffset = RECORD_ID_OFFSET_PREFIX + offset;
-        }
-        final String sourceId = StringUtils.substring(conf.soqlQuery.replaceAll("[\n\r]", " "), 0, 100) + "::rowCount:" + recordIndex + (StringUtils.isEmpty(conf.offsetColumn) ? "" : ":" + offset);
-        Record rec = recordCreator.createRecord(sourceId, record);
-
-        batchMaker.addRecord(rec);
-      }
     }
 
     if (recordIndex == records.length) {

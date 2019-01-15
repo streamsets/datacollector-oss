@@ -155,7 +155,7 @@ public class ForceSourceConfigBean extends ForceInputConfigBean {
   public long queryInterval;
 
   @ConfigDef(
-      required = false,
+      required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "000000000000000",
       label = "Initial Offset",
@@ -170,7 +170,7 @@ public class ForceSourceConfigBean extends ForceInputConfigBean {
   public String initialOffset;
 
   @ConfigDef(
-      required = false,
+      required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "Id",
       label = "Offset Field",

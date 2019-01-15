@@ -19,13 +19,9 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 
 public interface ForceRecordCreator {
-  String SOBJECT_TYPE_ATTRIBUTE = "salesforce.sobjectType";
-
   void init() throws StageException;
 
   void destroy();
 
   Record createRecord(String sourceId, Object source) throws StageException;
-
-  boolean isCountQuery();
 }

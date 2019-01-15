@@ -50,6 +50,7 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
   private static final Logger LOG = LoggerFactory.getLogger(SobjectRecordCreator.class);
 
   private static final int MAX_METADATA_TYPES = 100;
+  private static final String UNEXPECTED_TYPE = "Unexpected type: ";
 
   private static final String WILDCARD_SELECT_QUERY = "^SELECT\\s*\\*\\s*FROM\\s*.*";
   private static final Pattern WILDCARD_SELECT_PATTERN = Pattern.compile(WILDCARD_SELECT_QUERY, Pattern.DOTALL);
@@ -73,9 +74,6 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
       "time",
       "url"
   );
-
-  protected static final String UNEXPECTED_TYPE = "Unexpected type: ";
-
   public static final List<String> DECIMAL_TYPES = Arrays.asList(
       "currency",
       "double",
@@ -93,7 +91,6 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
 
   private static final TimeZone TZ = TimeZone.getTimeZone("GMT");
   private static final String NAME = "Name";
-  private static final String COUNT = "count()";
 
   private final SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss");
   private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -103,7 +100,6 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
 
   Map<String, ObjectMetadata> metadataCache;
   final Stage.Context context;
-  private boolean countQuery = false;
 
   class ObjectMetadata {
     Map<String, Field> nameToField;
@@ -179,17 +175,10 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
     if (query != null) {
       SOQLParser.StatementContext statementContext = ForceUtils.getStatementContext(query);
 
-      // Old-style COUNT() query
-      countQuery = COUNT.equalsIgnoreCase(statementContext.fieldList(0).getText());
-
       for (SOQLParser.FieldListContext flc : statementContext.fieldList()) {
         getReferencesFromFieldList(partnerConnection, metadataCache, sobjectType, references, flc);
       }
     }
-  }
-
-  public boolean isCountQuery() {
-    return countQuery;
   }
 
   private void getReferencesFromFieldList(

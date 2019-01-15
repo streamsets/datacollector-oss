@@ -16,28 +16,23 @@
 package com.streamsets.pipeline.stage.processor.lookup;
 
 import com.google.common.cache.CacheLoader;
-import com.google.common.collect.ImmutableMap;
 import com.sforce.soap.partner.QueryResult;
-import com.sforce.soap.partner.fault.ApiFault;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.ConnectionException;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.lib.salesforce.DataType;
 import com.streamsets.pipeline.lib.salesforce.Errors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 class ForceLookupLoader extends CacheLoader<String, Optional<List<Map<String, Field>>>> {
   private static final Logger LOG = LoggerFactory.getLogger(ForceLookupLoader.class);
-  private static final String COUNT = "count";
 
   private final ForceLookupProcessor processor;
 
@@ -73,9 +68,8 @@ class ForceLookupLoader extends CacheLoader<String, Optional<List<Map<String, Fi
         return Optional.empty();
       }
     } catch (ConnectionException e) {
-      String message = (e instanceof ApiFault) ? ((ApiFault)e).getExceptionMessage() : e.getMessage();
-      LOG.error(Errors.FORCE_17.getMessage(), preparedQuery, message, e);
-      throw new OnRecordErrorException(Errors.FORCE_17, preparedQuery, message, e);
+      LOG.error(Errors.FORCE_17.getMessage(), preparedQuery, e);
+      throw new OnRecordErrorException(Errors.FORCE_17, preparedQuery, e.getMessage());
     }
 
     return Optional.of(lookupItems);
@@ -86,26 +80,10 @@ class ForceLookupLoader extends CacheLoader<String, Optional<List<Map<String, Fi
 
     LOG.info("Retrieved {} records", records.length);
 
-    if (processor.recordCreator.isCountQuery()) {
-      // Special case for old-style COUNT() query
-      DataType dataType = (processor.columnsToTypes != null)
-          ? processor.columnsToTypes.get(COUNT.toLowerCase())
-          : DataType.USE_SALESFORCE_TYPE;
-      if (dataType == null) {
-        dataType = DataType.USE_SALESFORCE_TYPE;
-      }
-      Field.Type fieldType = (dataType == DataType.USE_SALESFORCE_TYPE)
-          ? Field.Type.INTEGER
-          : Field.Type.valueOf(dataType.getLabel());
-      LinkedHashMap<String, Field> map = new LinkedHashMap<>();
-      map.put(COUNT, Field.create(fieldType, queryResult.getSize()));
-      lookupItems.add(map);
-    } else {
-      for (int i = 0; i < records.length; i++) {
-        lookupItems.add(processor.recordCreator.addFields(
-            records[i],
-            processor.columnsToTypes));
-      }
+    for (int i = 0; i < records.length; i++) {
+      lookupItems.add(processor.recordCreator.addFields(
+          records[i],
+          processor.columnsToTypes));
     }
   }
 }
