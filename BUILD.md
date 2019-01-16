@@ -93,7 +93,7 @@ In case you want to run a specific integration class (here the module basic-lib 
 
 From within the Data Collector directory, execute:
 
-`mvn package -Drelease -DskipTests`
+`mvn clean package -Drelease -DskipTests -P-rpm`
 
 The release tarball will be created at:
 
