@@ -169,6 +169,7 @@ public class AmazonS3Runnable implements Runnable {
 
     s3Object = getCurrentObject();
     if (s3Object != null) {
+      amazonS3Source.resetNoMoreDataEventBoolean();
       amazonS3Source.updateOffset(context.getRunnerId(), offset);
       try {
         if (parser == null) {
@@ -234,6 +235,7 @@ public class AmazonS3Runnable implements Runnable {
             if (record != null) {
               setHeaders(record, object);
               batchMaker.addRecord(record);
+              amazonS3Source.incrementNoMoreDataRecordCount();
               i++;
               offset.setOffset(parser.getOffset());
             } else {
@@ -243,12 +245,13 @@ public class AmazonS3Runnable implements Runnable {
                 object.close();
                 object = null;
               }
+              amazonS3Source.incrementNoMoreDataFileCount();
               offset.setOffset(S3Constants.MINUS_ONE);
               break;
             }
           } catch (ObjectLengthException ex) {
             errorRecordHandler.onError(Errors.S3_SPOOLDIR_02, s3Object.getKey(), offset.toString(), ex);
-
+            amazonS3Source.incrementNoMoreDataErrorCount();
             offset.setOffset(S3Constants.MINUS_ONE);
           }
         }
@@ -308,6 +311,8 @@ public class AmazonS3Runnable implements Runnable {
           }
         }
       }
+    } else {
+      amazonS3Source.sendNoMoreDataEvent(batchContext);
     }
     context.processBatch(batchContext);
     updateGauge(Status.BATCH_GENERATED, offset.toString());
