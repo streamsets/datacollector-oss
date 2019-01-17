@@ -164,7 +164,7 @@ public class HttpProcessorConfig {
       dependsOn = "httpMethod",
       elDefs = {RecordEL.class, VaultEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      triggeredByValue = { "POST", "PUT", "DELETE", "EXPRESSION" },
+      triggeredByValue = { "POST", "PUT", "DELETE", "PATCH", "EXPRESSION" },
       group = "HTTP"
   )
   public String requestBody = "";
@@ -179,7 +179,7 @@ public class HttpProcessorConfig {
       dependsOn = "httpMethod",
       elDefs = {RecordEL.class, VaultEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      triggeredByValue = { "POST", "PUT", "DELETE", "EXPRESSION" },
+      triggeredByValue = { "POST", "PUT", "DELETE", "PATCH", "EXPRESSION" },
       group = "HTTP"
   )
   public String defaultRequestContentType = HttpStageUtil.DEFAULT_CONTENT_TYPE;

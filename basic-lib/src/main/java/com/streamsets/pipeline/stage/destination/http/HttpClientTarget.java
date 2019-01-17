@@ -179,7 +179,7 @@ public class HttpClientTarget extends BaseTarget {
       HttpMethod method = httpClientCommon.getHttpMethod(conf.httpMethod, conf.methodExpression, record);
       rateLimiter.acquire();
       try {
-        if (method == HttpMethod.POST || method == HttpMethod.PUT) {
+        if (method == HttpMethod.POST || method == HttpMethod.PUT || method == HttpMethod.PATCH) {
           StreamingOutput streamingOutput = outputStream -> {
             try (DataGenerator dataGenerator = generatorFactory.getGenerator(outputStream)) {
               dataGenerator.write(record);
