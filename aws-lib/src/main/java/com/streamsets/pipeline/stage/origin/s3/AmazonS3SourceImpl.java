@@ -15,11 +15,11 @@
  */
 package com.streamsets.pipeline.stage.origin.s3;
 
+import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -28,13 +28,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements AmazonS3Source {
   private volatile Map<Integer, S3Offset> offsetsMap;
   private volatile Queue<S3Offset> orphanThreads;
   private volatile S3Offset latestOffset = new S3Offset(null, S3Constants.ZERO, null, S3Constants.ZERO);
+  private AtomicBoolean noMoreDataEventSent;
+
+  private AtomicLong noMoreDataRecordCount;
+  private AtomicLong noMoreDataErrorCount;
+  private AtomicLong noMoreDataFileCount;
 
   private PushSource.Context context;
 
@@ -42,6 +47,10 @@ public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements Amazon
     super(s3ConfigBean);
     offsetsMap = Collections.synchronizedMap(new LinkedHashMap<>());
     orphanThreads = new LinkedList<>();
+    noMoreDataEventSent = new AtomicBoolean(false);
+    noMoreDataRecordCount = new AtomicLong();
+    noMoreDataErrorCount = new AtomicLong();
+    noMoreDataFileCount = new AtomicLong();
   }
 
   @Override
@@ -187,5 +196,39 @@ public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements Amazon
   @Override
   public S3Offset getLatestOffset() {
     return latestOffset;
+  }
+
+  @Override
+  public long incrementNoMoreDataRecordCount() {
+    return noMoreDataRecordCount.incrementAndGet();
+  }
+
+  @Override
+  public long incrementNoMoreDataErrorCount() {
+    return noMoreDataErrorCount.incrementAndGet();
+  }
+
+  @Override
+  public long incrementNoMoreDataFileCount() {
+    return noMoreDataFileCount.incrementAndGet();
+  }
+
+  @Override
+  public void sendNoMoreDataEvent(BatchContext batchContext) {
+    if (!noMoreDataEventSent.getAndSet(true)) {
+      S3Events.NO_MORE_DATA.create(context, batchContext)
+                           .with("record-count", noMoreDataRecordCount.get())
+                           .with("error-count", noMoreDataErrorCount.get())
+                           .with("file-count", noMoreDataFileCount.get())
+                           .createAndSend();
+      noMoreDataRecordCount.set(0);
+      noMoreDataErrorCount.set(0);
+      noMoreDataFileCount.set(0);
+    }
+  }
+
+  @Override
+  public void resetNoMoreDataEventBoolean() {
+    noMoreDataEventSent.set(false);
   }
 }

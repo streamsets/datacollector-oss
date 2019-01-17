@@ -16,6 +16,7 @@
 
 package com.streamsets.pipeline.stage.origin.s3;
 
+import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageException;
 
@@ -62,4 +63,30 @@ public interface AmazonS3Source {
    * @return get latest offset saved
    */
   S3Offset getLatestOffset();
+
+  /**
+   * Increments the counter for records
+   */
+  long incrementNoMoreDataRecordCount();
+
+  /**
+   * Increments the counter for error records
+   */
+  long incrementNoMoreDataErrorCount();
+
+  /**
+   * Increments the counter for files
+   */
+  long incrementNoMoreDataFileCount();
+
+  /**
+   * Send the NO_MORE_DATA_EVENT
+   * @param batchContext batch context of the runner to create the event
+   */
+  void sendNoMoreDataEvent(BatchContext batchContext);
+
+  /**
+   * Reset the value of the AtomicBoolean
+   */
+  void resetNoMoreDataEventBoolean();
 }
