@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.stage.origin.s3;
 
 import com.google.common.base.Throwables;
-import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BasePushSource;
 import com.streamsets.pipeline.common.InterfaceAudience;
@@ -41,7 +40,7 @@ public abstract class AbstractAmazonS3Source extends BasePushSource {
   private final static Logger LOG = LoggerFactory.getLogger(AbstractAmazonS3Source.class);
 
   protected final S3ConfigBean s3ConfigBean;
-  protected S3Spooler spooler;
+  private S3Spooler spooler;
 
   private int numberOfThreads;
 
@@ -103,7 +102,7 @@ public abstract class AbstractAmazonS3Source extends BasePushSource {
 
     try {
       IntStream.range(0, numberOfThreads).forEach(threadNumber -> {
-        AmazonS3Runnable runnable = getAmazonS3Runnable(batchSize);
+        AmazonS3Runnable runnable = getAmazonS3Runnable(batchSize, threadNumber);
         completionService.submit(runnable, null);
       });
       for (int i = 0; i < getNumberOfThreads(); i++) {
@@ -137,12 +136,13 @@ public abstract class AbstractAmazonS3Source extends BasePushSource {
     });
   }
 
-  private AmazonS3Runnable getAmazonS3Runnable(int batchSize) {
+  private AmazonS3Runnable getAmazonS3Runnable(int batchSize, int threadNumber) {
     return new AmazonS3RunnableBuilder().s3ConfigBean(s3ConfigBean)
                                         .context(getContext())
                                         .batchSize(batchSize)
                                         .spooler(spooler)
                                         .amazonS3Source(amazonS3Source)
+                                        .threadNumber(threadNumber)
                                         .build();
   }
 }

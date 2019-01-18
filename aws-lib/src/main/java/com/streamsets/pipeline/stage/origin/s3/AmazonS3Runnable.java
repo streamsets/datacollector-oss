@@ -81,12 +81,13 @@ public class AmazonS3Runnable implements Runnable {
   public AmazonS3Runnable(
       PushSource.Context context,
       int batchSize,
+      int threadNumber,
       S3ConfigBean s3ConfigBean,
       S3Spooler spooler,
       AmazonS3Source amazonS3Source
   ) {
     this.context = context;
-    this.runnerId = context.getRunnerId();
+    this.runnerId = threadNumber;
     this.batchSize = batchSize;
     this.s3ConfigBean = s3ConfigBean;
     this.spooler = spooler;
@@ -105,13 +106,13 @@ public class AmazonS3Runnable implements Runnable {
       initGaugeIfNeeded();
       S3Offset offset;
       while (!context.isStopped()) {
-        offset = amazonS3Source.getOffset(context.getRunnerId());
+        offset = amazonS3Source.getOffset(runnerId);
         BatchContext batchContext = context.startBatch();
         this.errorRecordHandler = new DefaultErrorRecordHandler(context, batchContext);
         this.dataParser = context.getService(DataFormatParserService.class);
         dataParser.setStringBuilderPoolSize(s3ConfigBean.numberOfThreads);
         try {
-          amazonS3Source.updateOffset(context.getRunnerId(), produce(offset, batchSize, batchContext));
+          amazonS3Source.updateOffset(runnerId, produce(offset, batchSize, batchContext));
         } catch (BadSpoolObjectException ex) {
           LOG.error(Errors.S3_SPOOLDIR_01.getMessage(), ex.getObject(), ex.getPos(), ex.toString(), ex);
           context.reportError(Errors.S3_SPOOLDIR_01, ex.getObject(), ex.getPos(), ex.toString());
@@ -148,7 +149,7 @@ public class AmazonS3Runnable implements Runnable {
     //check if we have an object to produce records from. Otherwise get from spooler.
     if (needToFetchNextObjectFromSpooler(offset)) {
       updateGauge(Status.SPOOLING, null);
-      offset = fetchNextObjectFromSpooler(offset);
+      offset = fetchNextObjectFromSpooler(offset, batchContext);
       LOG.debug("Object '{}' with offset '{}' fetched from Spooler", offset.getKey(), offset.getOffset());
     } else {
       //check if the current object was modified between batches
@@ -163,14 +164,13 @@ public class AmazonS3Runnable implements Runnable {
         } catch (AmazonClientException e) {
           throw new StageException(Errors.S3_SPOOLDIR_24, e.toString(), e);
         }
-        offset = fetchNextObjectFromSpooler(offset);
+        offset = fetchNextObjectFromSpooler(offset, batchContext);
       }
     }
 
     s3Object = getCurrentObject();
     if (s3Object != null) {
-      amazonS3Source.resetNoMoreDataEventBoolean();
-      amazonS3Source.updateOffset(context.getRunnerId(), offset);
+      amazonS3Source.updateOffset(runnerId, offset);
       try {
         if (parser == null) {
           String recordId = s3ConfigBean.s3Config.bucket + s3ConfigBean.s3Config.delimiter + s3Object.getKey();
@@ -311,8 +311,6 @@ public class AmazonS3Runnable implements Runnable {
           }
         }
       }
-    } else {
-      amazonS3Source.sendNoMoreDataEvent(batchContext);
     }
     context.processBatch(batchContext);
     updateGauge(Status.BATCH_GENERATED, offset.toString());
@@ -367,10 +365,11 @@ public class AmazonS3Runnable implements Runnable {
     return
         // we don't have an object half way processed in the current agent execution
         getCurrentObject() == null ||
-            // we don't have an object half way processed from a previous agent execution via offset tracking
-            s3Offset.getKey() == null ||
-            // the current object has been fully processed
-            S3Constants.MINUS_ONE.equals(s3Offset.getOffset());
+        // we don't have an object half way processed from a previous agent execution via offset tracking
+        s3Offset.getKey() == null ||
+        s3Offset.getKey().equals(S3Constants.EMPTY) ||
+        // the current object has been fully processed
+        S3Constants.MINUS_ONE.equals(s3Offset.getOffset());
   }
 
   private S3ObjectSummary getCurrentObject() {
@@ -381,7 +380,7 @@ public class AmazonS3Runnable implements Runnable {
     this.currentObject = currentObject;
   }
 
-  private S3Offset fetchNextObjectFromSpooler(S3Offset s3Offset) throws StageException {
+  private S3Offset fetchNextObjectFromSpooler(S3Offset s3Offset, BatchContext batchContext) throws StageException {
     setCurrentObject(null);
     try {
       //The next object found in queue is mostly eligible since we process objects in chronological order.
@@ -398,7 +397,8 @@ public class AmazonS3Runnable implements Runnable {
         }
         nextAvailObj = spooler.poolForObject(amazonS3Source,
             s3ConfigBean.basicConfig.maxWaitTime,
-            TimeUnit.MILLISECONDS
+            TimeUnit.MILLISECONDS,
+            batchContext
         );
       } while (!isEligible(nextAvailObj, s3Offset));
 
@@ -414,17 +414,18 @@ public class AmazonS3Runnable implements Runnable {
         // object we take the object returned by the spooler as the new object and set the offset to zero.
         // if not, it means the spooler returned us the current object, we just keep processing it from the last
         // offset we processed (known via offset tracking)
-        if (s3Offset.getKey() == null || isLaterThan(nextAvailObj.getKey(),
-            nextAvailObj.getLastModified().getTime(),
-            s3Offset.getKey(),
-            Long.parseLong(s3Offset.getTimestamp())
-        )) {
+        if (s3Offset.getKey() == null ||
+            s3Offset.getKey().equals(S3Constants.EMPTY) ||
+            isLaterThan(nextAvailObj.getKey(),
+                nextAvailObj.getLastModified().getTime(),
+                s3Offset.getKey(),
+                Long.parseLong(s3Offset.getTimestamp())
+            )) {
           s3Offset = new S3Offset(getCurrentObject().getKey(),
               S3Constants.ZERO,
               getCurrentObject().getETag(),
               String.valueOf(getCurrentObject().getLastModified().getTime())
           );
-          amazonS3Source.addNewLatestOffset(s3Offset);
         }
       }
     } catch (InterruptedException ex) {
@@ -459,8 +460,8 @@ public class AmazonS3Runnable implements Runnable {
         return nextAvailObj == null || s3Offset == null || nextAvailObj.getLastModified().getTime() >= Long.parseLong(
             s3Offset.getTimestamp());
       case LEXICOGRAPHICAL:
-        return nextAvailObj == null || s3Offset == null || s3Offset.getKey() == null || nextAvailObj.getKey().compareTo(
-            s3Offset.getKey()) > 0;
+        return nextAvailObj == null || s3Offset == null || s3Offset.getKey() == null || s3Offset.getKey().equals(
+            S3Constants.EMPTY) || nextAvailObj.getKey().compareTo(s3Offset.getKey()) > 0;
       default:
         throw new IllegalArgumentException("Unknown ordering: " + objectOrdering.getLabel());
     }

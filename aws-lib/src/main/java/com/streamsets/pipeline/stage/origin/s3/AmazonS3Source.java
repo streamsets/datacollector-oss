@@ -38,24 +38,17 @@ public interface AmazonS3Source {
   /**
    * Update one entry from offsets map
    *
-   * @param key to be removed
+   * @param runnerId to be updated
    */
-  void updateOffset(Integer key, S3Offset value);
+  void updateOffset(Integer runnerId, S3Offset s3Offset);
 
   /**
    * Get offset associated to a given key
    *
-   * @param key to search for
+   * @param runnerId for which we are looking for
    * @return offset associated
    */
-  S3Offset getOffset(Integer key);
-
-  /**
-   * Update latest offset read by the system
-   *
-   * @param offset offset to be set
-   */
-  void addNewLatestOffset(S3Offset offset);
+  S3Offset getOffset(Integer runnerId);
 
   /**
    * Get latest offset saved
@@ -80,13 +73,8 @@ public interface AmazonS3Source {
   long incrementNoMoreDataFileCount();
 
   /**
-   * Send the NO_MORE_DATA_EVENT
+   * Send the NO_MORE_DATA_EVENT if all the threads have finished processing the ongoing event
    * @param batchContext batch context of the runner to create the event
    */
   void sendNoMoreDataEvent(BatchContext batchContext);
-
-  /**
-   * Reset the value of the AtomicBoolean
-   */
-  void resetNoMoreDataEventBoolean();
 }
