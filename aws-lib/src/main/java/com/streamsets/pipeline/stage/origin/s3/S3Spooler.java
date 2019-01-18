@@ -20,6 +20,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.codahale.metrics.Meter;
 import com.google.common.base.Preconditions;
+import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.PostProcessingOptions;
@@ -42,11 +43,13 @@ public class S3Spooler {
   private final AmazonS3 s3Client;
   private AntPathMatcher pathMatcher;
   private AtomicBoolean filling;
+  private volatile S3Offset lastElementAddedToQueue;
 
   public S3Spooler(PushSource.Context context, S3ConfigBean s3ConfigBean) {
     this.context = context;
     this.s3ConfigBean = s3ConfigBean;
     this.s3Client = s3ConfigBean.s3Config.getS3Client();
+    lastElementAddedToQueue = null;
   }
 
   private volatile S3ObjectSummary currentObject;
@@ -71,13 +74,21 @@ public class S3Spooler {
     }
   }
 
-  S3ObjectSummary findAndQueueObjects(S3Offset s3offset, boolean checkCurrent) throws AmazonClientException {
+  S3ObjectSummary findAndQueueObjects(
+      boolean checkCurrent, AmazonS3Source amazonS3Source, BatchContext batchContext
+  ) throws AmazonClientException {
+    S3Offset s3offset;
+    if (lastElementAddedToQueue != null) {
+      s3offset = lastElementAddedToQueue;
+    } else {
+      s3offset = amazonS3Source.getLatestOffset();
+    }
+
     List<S3ObjectSummary> s3ObjectSummaries;
     ObjectOrdering objectOrdering = s3ConfigBean.s3FileConfig.objectOrdering;
     switch (objectOrdering) {
       case TIMESTAMP:
-        s3ObjectSummaries = AmazonS3Util.listObjectsChronologically(
-            s3Client,
+        s3ObjectSummaries = AmazonS3Util.listObjectsChronologically(s3Client,
             s3ConfigBean,
             pathMatcher,
             s3offset,
@@ -85,8 +96,7 @@ public class S3Spooler {
         );
         break;
       case LEXICOGRAPHICAL:
-        s3ObjectSummaries = AmazonS3Util.listObjectsLexicographically(
-            s3Client,
+        s3ObjectSummaries = AmazonS3Util.listObjectsLexicographically(s3Client,
             s3ConfigBean,
             pathMatcher,
             s3offset,
@@ -101,6 +111,20 @@ public class S3Spooler {
     }
     spoolQueueMeter.mark(objectQueue.size());
     LOG.debug("Found '{}' files", objectQueue.size());
+    if (s3ObjectSummaries.isEmpty()) {
+      // Before sending the event we will check that all the threads have finished with their objects, if yes, we
+      // send the event as normal, if not we will skip and try to send it again if the queue is still empty when the
+      // next thread tries to fill the queue
+      amazonS3Source.sendNoMoreDataEvent(batchContext);
+    } else {
+      // If it is the last element save it to keep track of the last element added to the queue
+      S3ObjectSummary s3ObjectSummary = s3ObjectSummaries.get(s3ObjectSummaries.size() - 1);
+      lastElementAddedToQueue = new S3Offset(s3ObjectSummary.getKey(),
+          S3Constants.MINUS_ONE,
+          s3ObjectSummary.getETag(),
+          String.valueOf(s3ObjectSummary.getLastModified().getTime())
+      );
+    }
     return (s3ObjectSummaries.isEmpty()) ? null : s3ObjectSummaries.get(s3ObjectSummaries.size() - 1);
   }
 
@@ -118,13 +142,17 @@ public class S3Spooler {
     }
   }
 
-  public S3ObjectSummary poolForObject(AmazonS3Source amazonS3Source, long wait, TimeUnit timeUnit)
-      throws InterruptedException, AmazonClientException {
+  public S3ObjectSummary poolForObject(
+      AmazonS3Source amazonS3Source,
+      long wait,
+      TimeUnit timeUnit,
+      BatchContext batchContext
+  ) throws InterruptedException, AmazonClientException {
     Preconditions.checkArgument(wait >= 0, "wait must be zero or greater");
     Preconditions.checkNotNull(timeUnit, "timeUnit cannot be null");
 
     if (objectQueue.isEmpty() && filling.compareAndSet(false, true)) {
-      findAndQueueObjects(amazonS3Source.getLatestOffset(), false);
+      findAndQueueObjects(false, amazonS3Source, batchContext);
       filling.set(false);
     }
 

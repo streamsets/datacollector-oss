@@ -18,24 +18,23 @@ package com.streamsets.pipeline.stage.origin.s3;
 
 import com.streamsets.pipeline.api.PushSource;
 
-import java.util.Map;
-
 public class AmazonS3RunnableBuilder {
   private PushSource.Context context;
   private int batchSize;
   private S3ConfigBean s3ConfigBean;
   private S3Spooler spooler;
   private AmazonS3Source amazonS3Source;
+  private int threadNumber;
 
   public AmazonS3RunnableBuilder() {
   }
 
-  public AmazonS3RunnableBuilder context(PushSource.Context context){
+  public AmazonS3RunnableBuilder context(PushSource.Context context) {
     this.context = context;
     return this;
   }
 
-  public AmazonS3RunnableBuilder batchSize(int batchSize){
+  public AmazonS3RunnableBuilder batchSize(int batchSize) {
     this.batchSize = batchSize;
     return this;
   }
@@ -55,7 +54,12 @@ public class AmazonS3RunnableBuilder {
     return this;
   }
 
+  public AmazonS3RunnableBuilder threadNumber(int threadNumber) {
+    this.threadNumber = threadNumber;
+    return this;
+  }
+
   public AmazonS3Runnable build() {
-    return new AmazonS3Runnable(context, batchSize, s3ConfigBean, spooler, amazonS3Source);
+    return new AmazonS3Runnable(context, batchSize, threadNumber, s3ConfigBean, spooler, amazonS3Source);
   }
 }

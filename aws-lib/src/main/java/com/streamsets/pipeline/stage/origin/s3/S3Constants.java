@@ -23,6 +23,7 @@ import com.streamsets.pipeline.common.InterfaceStability;
 public class S3Constants {
   static final String MINUS_ONE = "-1";
   static final String ZERO = "0";
+  static final String EMPTY = "";
   static final String AMAZON_S3_THREAD_PREFIX = "Amazon S3 Runner - ";
   static final String AMAZON_S3_METRICS = "Amazon S3 Metrics for Thread - ";
 
