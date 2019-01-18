@@ -106,9 +106,15 @@ public class CDCJdbcRunnable extends JdbcBaseRunnable {
 
     Map<String, String> columnOffsets = new HashMap<>();
 
-    // Generate Offset includes __$start_lsn and __$seqval
+    // Generate Offset includes __$start_lsn, __$seqval, and __$operation
     columnOffsets.put(MSQueryUtil.CDC_START_LSN, rs.getString(MSQueryUtil.CDC_START_LSN));
     columnOffsets.put(MSQueryUtil.CDC_SEQVAL, rs.getString(MSQueryUtil.CDC_SEQVAL));
+
+    try {
+      columnOffsets.put(MSQueryUtil.CDC_OPERATION, rs.getString(MSQueryUtil.CDC_OPERATION));
+    } catch (Exception ex) {
+      LOG.trace("$__operation is not supported in this SQL Server");
+    }
 
     if (commonSourceConfigBean.txnWindow > 0) {
       columnOffsets.put(MSQueryUtil.CDC_TXN_WINDOW, Integer.toString(commonSourceConfigBean.txnWindow));
