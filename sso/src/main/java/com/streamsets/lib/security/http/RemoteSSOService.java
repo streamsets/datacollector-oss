@@ -203,7 +203,8 @@ public class RemoteSSOService extends AbstractSSOService {
             break;
           } else if (response.getStatus() == HttpURLConnection.HTTP_UNAVAILABLE) {
             LOG.warn("DPM Registration unavailable");
-          }  else if (response.getStatus() == HttpURLConnection.HTTP_FORBIDDEN) {
+          } else if (response.getStatus() == HttpURLConnection.HTTP_FORBIDDEN ||
+              response.getStatus() == HttpURLConnection.HTTP_BAD_REQUEST) {
             throw new RuntimeException(Utils.format(
                 "Failed registration for component ID '{}': {}",
                 componentId,
