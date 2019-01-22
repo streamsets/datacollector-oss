@@ -40,7 +40,7 @@
     <guava.version>20.0</guava.version>
     <h2.version>1.4.187</h2.version>
     <joda.version>2.8</joda.version>
-    <milo.version>0.1.5</milo.version>
+    <milo.version>0.2.4</milo.version>
     <xerces.version>2.11.0</xerces.version>
     <jetty.version>9.4.12.v20180830</jetty.version>
     <paho.version>1.0.2</paho.version>
