@@ -244,8 +244,7 @@ public class S3Spooler {
     //    uploads another object with the same name. We can avoid post processing it without producing records by
     //    comparing the timestamp on that object
 
-    if(s3Offset.getKey() != null &&
-      "-1".equals(s3Offset.getOffset())) {
+    if(s3Offset.getKey() != null && S3Constants.MINUS_ONE.equals(s3Offset.getOffset())) {
       //conditions 1, 2 are met. Check for 3 and 4.
       S3ObjectSummary objectSummary = AmazonS3Util.getObjectSummary(s3Client, s3ConfigBean.s3Config.bucket, s3Offset.getKey());
       if(objectSummary != null &&
@@ -254,7 +253,7 @@ public class S3Spooler {
           s3ConfigBean.postProcessingConfig.postProcessBucket, s3ConfigBean.postProcessingConfig.postProcessPrefix,
           s3ConfigBean.postProcessingConfig.archivingOption);
       }
+      currentObject = null;
     }
-    currentObject = null;
   }
 }
