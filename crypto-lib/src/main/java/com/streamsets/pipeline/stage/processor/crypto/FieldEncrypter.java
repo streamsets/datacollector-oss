@@ -274,9 +274,19 @@ public class FieldEncrypter {
    * @return {@link Field}
    */
   public Field createResultFieldDecrypt(CryptoResult<byte[], ?> result) {
+    Field.Type fieldType = Field.Type.valueOf(
+        result.getEncryptionContext().getOrDefault(SDC_FIELD_TYPE, Field.Type.BYTE_ARRAY.name())
+    );
+
+    // Field API prohibits STRING to BYTE_ARRAY conversion so this is a special case
+    if (fieldType == Field.Type.BYTE_ARRAY) {
+      return Field.create(result.getResult());
+    }
+
+    // Field API supports STRING to other primitive types.
     return Field.create(
-        Field.Type.valueOf(result.getEncryptionContext().getOrDefault(SDC_FIELD_TYPE, Field.Type.BYTE_ARRAY.name())),
-        new String(result.getResult(), Charsets.UTF_8)
+        fieldType,
+        new String(result.getResult())
     );
   }
 
