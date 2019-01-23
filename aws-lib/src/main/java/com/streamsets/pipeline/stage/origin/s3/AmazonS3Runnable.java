@@ -144,7 +144,6 @@ public class AmazonS3Runnable implements Runnable {
     if (offset != null) {
       spooler.postProcessOlderObjectIfNeeded(offset);
     }
-    setCurrentObject(null);
 
     //check if we have an object to produce records from. Otherwise get from spooler.
     if (needToFetchNextObjectFromSpooler(offset)) {
