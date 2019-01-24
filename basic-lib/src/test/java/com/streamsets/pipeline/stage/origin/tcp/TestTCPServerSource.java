@@ -462,6 +462,9 @@ public class TestTCPServerSource {
     // Wait until the connection is closed.
     channelFuture.channel().closeFuture().sync();
 
+    if (runner.getContext().getOnErrorRecord() != OnRecordError.STOP_PIPELINE) {
+      runner.setStop();
+    }
     // wait for the push source runner produce to complete
     runner.waitOnProduce();
 
@@ -570,6 +573,8 @@ public class TestTCPServerSource {
     config.maxMessageSize = 4096;
     config.ports = randomSinglePort();
     config.maxWaitTime = 1000;
+    config.recordProcessedAckMessage = "record processed";
+    config.batchCompletedAckMessage = "batch processed";
     return config;
   }
 
