@@ -45,14 +45,66 @@ import java.text.SimpleDateFormat;
 import java.time.Clock;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
 
   private static final Logger LOG = LoggerFactory.getLogger(TCPObjectToRecordHandler.class);
+
+  /*
+   * This runnable is scheduled to handle the timeout to force a batch.
+   * The runnable is synchronized with the TCPObjectToRecordHandler instance, same as the addRecord()
+   * To handle the case that the addRecord() is executing and runs the batch and the scheduler starts the runnable
+   * while the addRecord() is still running, we have the skip() method that will make the runnable to do a No-Op
+   * when it obtains the synchronized lock. The addRecord(), on running the batch will call skip() on the runnable.
+   */
+  private class TimeoutBatchRunnable implements Runnable {
+    private final ChannelHandlerContext context;
+    private volatile boolean skip;
+    private volatile boolean stopScheduling;
+
+    public TimeoutBatchRunnable(ChannelHandlerContext context) {
+      this.context = context;
+      skip = false;
+      stopScheduling = false;
+    }
+
+    public void skip() {
+      skip = true;
+    }
+
+    public boolean stoppedScheduling() {
+      return stopScheduling;
+    }
+
+    public void stopScheduling() {
+      this.stopScheduling = true;
+    }
+
+    @Override
+    public void run() {
+      synchronized (TCPObjectToRecordHandler.this) { // synchronizing with newBatch
+        // send batch if not yet sent by addRecord due to max batch size
+        if (!skip) {
+          newBatch(this.context, false);
+        } else {
+          LOG.debug("Skipping scheduled timeout newBatch() as it was run from addRecord due to max record limit");
+        }
+        // reschedule timeout
+        if (!timeoutBatchRunnable.stoppedScheduling()) {
+          // we are scheduling a new timeout run, we need the new runnable
+          timeoutBatchRunnable = scheduleTimeoutBatch(this.context, maxWaitTime);
+        }
+      }
+    }
+
+  }
 
   // can't figure out any cleaner way to detect peer reset via Netty
   public static final String RST_PACKET_MESSAGE = "Connection reset by peer";
@@ -72,12 +124,13 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
   private final String timeZoneId;
   private final Charset ackResponseCharset;
 
-  private int batchRecordCount = 0;
   private long totalRecordCount = 0;
   private long lastChannelStart = 0;
   private BatchContext batchContext = null;
   private ScheduledFuture<?> maxWaitTimeFlush;
-  private Record lastRecord;
+  private TimeoutBatchRunnable timeoutBatchRunnable;
+  private ArrayBlockingQueue<Record> recordsQueue;
+  private boolean firstBatch;
 
   public TCPObjectToRecordHandler(
       PushSource.Context context,
@@ -107,18 +160,21 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
     this.batchCompletedAckExpr = batchCompletedAckExpr;
     this.timeZoneId = timeZoneId;
     this.ackResponseCharset = ackResponseCharset;
+    this.recordsQueue = new ArrayBlockingQueue<>(3*this.maxBatchSize);
+    firstBatch = true;
   }
 
   @Override
   public void channelActive(ChannelHandlerContext ctx) throws Exception {
     // client connection opened
     super.channelActive(ctx);
+    firstBatch = true;
     lastChannelStart = getCurrentTime();
-    long delay = this.maxWaitTime;
-    restartMaxWaitTimeTask(ctx, delay);
-    batchRecordCount = 0;
+    recordsQueue.clear();
     totalRecordCount = 0;
     batchContext = context.startBatch();
+    long delay = this.maxWaitTime;
+    timeoutBatchRunnable = scheduleTimeoutBatch(ctx, delay);
     if (LOG.isDebugEnabled()) {
       LOG.debug(
           "Client at {} (established) connected to TCP server at {}",
@@ -128,18 +184,24 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
     }
   }
 
-  private void restartMaxWaitTimeTask(ChannelHandlerContext ctx, long delay) {
-    cancelMaxWaitTimeTask();
+  private TimeoutBatchRunnable scheduleTimeoutBatch(ChannelHandlerContext ctx, long delay) {
+    TimeoutBatchRunnable timeoutBatchRunnable = new TimeoutBatchRunnable(ctx);
     maxWaitTimeFlush = ctx.channel().eventLoop().schedule(
-        () -> this.newBatch(ctx),
+        timeoutBatchRunnable,
         Math.max(delay, 0),
         TimeUnit.MILLISECONDS
     );
+    return timeoutBatchRunnable;
   }
 
   private void cancelMaxWaitTimeTask() {
-    if (maxWaitTimeFlush != null && !maxWaitTimeFlush.isCancelled() && !maxWaitTimeFlush.cancel(false)) {
-      LOG.warn("Failed to cancel maxWaitTimeFlush task");
+    if (maxWaitTimeFlush != null) {
+      // we need to synchronize this as we want to make sure current timeoutBatchRunnable will run with the correct
+      // stopScheduling and skip values
+      synchronized (this) {
+        timeoutBatchRunnable.stopScheduling();
+        timeoutBatchRunnable.skip();
+      }
     }
   }
 
@@ -154,11 +216,16 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
           totalRecordCount
       );
     }
-    super.channelInactive(ctx);
     cancelMaxWaitTimeTask();
-    if (batchContext != null) {
-      context.processBatch(batchContext);
+    //firstBatch needed to send first record to error if there is an exception processing the first record
+    while(!recordsQueue.isEmpty() || firstBatch) {
+      newBatch(ctx, true);
+      firstBatch = false;
     }
+    // we null the runnable, just to avoid problems in case channel object is reused by netty for next clients
+    timeoutBatchRunnable = null;
+    maxWaitTimeFlush = null;
+    super.channelInactive(ctx);
   }
 
   @Override
@@ -169,8 +236,10 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
       addRecord(ctx, record);
     } else if (msg instanceof Record) {
       // we already have a Record (ex: from a DataFormatParserDecoder), so just add it
+      totalRecordCount++;
       addRecord(ctx, (Record)msg);
     } else {
+      ctx.writeAndFlush("Unexpected object received type");
       throw new IllegalStateException(String.format(
           "Unexpected object type (%s) found in Netty channel pipeline",
           msg.getClass().getName()
@@ -179,8 +248,7 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
   }
 
   private void addRecord(ChannelHandlerContext ctx, Record record) {
-    batchContext.getBatchMaker().addRecord(record);
-    lastRecord = record;
+    recordsQueue.add(record);
     evaluateElAndSendResponse(
         recordProcessedAckEval,
         recordProcessedAckVars,
@@ -188,31 +256,62 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
         ctx,
         ackResponseCharset,
         true,
-        "record processed"
+        "record processed",
+        record
     );
 
-    if (++batchRecordCount >= maxBatchSize) {
-      newBatch(ctx);
+    if (recordsQueue.size() >= maxBatchSize) {
+      boolean shouldSendBatch = false;
+      synchronized (this) {
+        // we are holding the synchronized block, so even if the runnable is being executed, it will be locked
+        // until this block finishes, as here we are checking if runnable should skip the sned batch
+        if (recordsQueue.size() >= maxBatchSize) {
+          shouldSendBatch = true;
+          timeoutBatchRunnable.skip();
+          timeoutBatchRunnable.stopScheduling();
+        }
+      }
+
+      if (shouldSendBatch) {
+        newBatch(ctx, false);
+        // cancel current timeout
+        maxWaitTimeFlush.cancel(false);
+        // reschedule timeout
+        timeoutBatchRunnable = scheduleTimeoutBatch(ctx, this.maxWaitTime);
+      }
     }
   }
 
-  private void newBatch(ChannelHandlerContext ctx) {
+  private void newBatch(ChannelHandlerContext ctx, boolean channelInactive) {
+    List<Record> recordsToProcess = new ArrayList<>(maxBatchSize);
+    Record lastRecord = null;
+
+    int batchSize = recordsQueue.drainTo(recordsToProcess, maxBatchSize);
+    if (!recordsToProcess.isEmpty()) {
+      lastRecord = recordsToProcess.get(recordsToProcess.size() -1);
+    }
+    for (Record record : recordsToProcess) {
+      batchContext.getBatchMaker().addRecord(record);
+    }
+
     context.processBatch(batchContext);
 
-    batchCompletedAckVars.addVariable("batchSize", batchRecordCount);
-    evaluateElAndSendResponse(
-        batchCompletedAckEval,
-        batchCompletedAckVars,
-        batchCompletedAckExpr,
-        ctx,
-        ackResponseCharset,
-        false,
-        "batch completed"
-    );
+    if (!channelInactive) {
+      batchCompletedAckVars.addVariable("batchSize", batchSize);
+      evaluateElAndSendResponse(
+          batchCompletedAckEval,
+          batchCompletedAckVars,
+          batchCompletedAckExpr,
+          ctx,
+          ackResponseCharset,
+          false,
+          "batch completed",
+          lastRecord
+      );
+
+    }
 
     batchContext = context.startBatch();
-    batchRecordCount = 0;
-    restartMaxWaitTimeTask(ctx, this.maxWaitTime);
   }
 
   private void evaluateElAndSendResponse(
@@ -222,7 +321,8 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
       ChannelHandlerContext ctx,
       Charset charset,
       boolean recordLevel,
-      String expressionDescription
+      String expressionDescription,
+      Record lastRecord
   ) {
     if (Strings.isNullOrEmpty(expression)) {
       return;
@@ -264,7 +364,7 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
             break;
           case TO_ERROR:
             Record errorRecord = lastRecord != null ? lastRecord : context.createRecord(generateRecordId());
-            batchContext.toError(errorRecord, exception);
+            batchContext.toError(errorRecord, Errors.TCP_36, expressionDescription, exception);
             break;
         }
       } else {
@@ -318,7 +418,8 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
     } else {
       context.reportError(Errors.TCP_07, exception.getClass().getName(), exception.getMessage(), exception);
     }
-    // Close the connection when an exception is raised.
+    // Close the connection when an exception is raised. Timeout Handler throws an exception which closes the channel
+    // here
     ctx.close();
   }
 

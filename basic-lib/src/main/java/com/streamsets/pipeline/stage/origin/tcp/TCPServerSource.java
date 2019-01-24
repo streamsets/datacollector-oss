@@ -93,6 +93,14 @@ public class TCPServerSource extends BasePushSource {
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = new ArrayList<>();
 
+    if (config.recordProcessedAckMessage == null || config.recordProcessedAckMessage.isEmpty()) {
+      issues.add(getContext().createConfigIssue(Groups.TCP.name(), "conf.recordProcessedAckMessage", Errors.TCP_11));
+    }
+
+    if (config.batchCompletedAckMessage == null || config.batchCompletedAckMessage.isEmpty()) {
+      issues.add(getContext().createConfigIssue(Groups.TCP.name(), "conf.batchCompletedAckMessage", Errors.TCP_12));
+    }
+
     if (config.enableEpoll && !Epoll.isAvailable()) {
       issues.add(getContext().createConfigIssue(Groups.TCP.name(), CONF_PREFIX + "enableEpoll", Errors.TCP_05));
     }
@@ -194,6 +202,14 @@ public class TCPServerSource extends BasePushSource {
                 buildByteBufToMessageDecoderChain(issues).toArray(new ChannelHandler[0])
             );
 
+            // Adding ReadTimeoutHandler before TCPObjectToRecordHandler as it is needed in order to handle
+            // ReadTimeoutException. See io.netty.handler.timeout.ReadTimeoutHandler.java for more information
+            if (config.readTimeout > 0) {
+              ch.pipeline().addLast(
+                  new ReadTimeoutHandler(config.readTimeout)
+              );
+            }
+
             ch.pipeline().addLast(
                 // next, handle MessageToRecord instances to build SDC records and errors
                 new TCPObjectToRecordHandler(
@@ -211,12 +227,6 @@ public class TCPServerSource extends BasePushSource {
                     Charset.forName(config.ackMessageCharset)
                 )
             );
-
-            if (config.readTimeout > 0) {
-              ch.pipeline().addLast(
-                new ReadTimeoutHandler(config.readTimeout)
-              );
-            }
           }
         }
     );
@@ -434,14 +444,6 @@ public class TCPServerSource extends BasePushSource {
         break;
       case DELIMITED_RECORDS:
         // SDC data format (text, json, etc.) separated by some configured sequence of bytes
-        config.dataFormatConfig.init(
-            getContext(),
-            config.dataFormat,
-            Groups.TCP.name(),
-            CONF_PREFIX + "dataFormatConfig",
-            config.maxMessageSize,
-            issues
-        );
         parserFactory = config.dataFormatConfig.getParserFactory();
 
         // first, a DelimiterBasedFrameDecoder to ensure we can capture a full message
@@ -454,14 +456,6 @@ public class TCPServerSource extends BasePushSource {
         // first, a DelimitedLengthFieldBasedFrameDecoder to ensure we can capture a full message
         decoderChain.add(buildDelimitedLengthFieldBasedFrameDecoder(lengthFieldCharset));
         // next, decode the length field framed message itself
-        config.dataFormatConfig.init(
-            getContext(),
-            config.dataFormat,
-            Groups.TCP.name(),
-            CONF_PREFIX + "dataFormatConfig",
-            config.maxMessageSize,
-            issues
-        );
         parserFactory = config.dataFormatConfig.getParserFactory();
         decoderChain.add(new DataFormatParserDecoder(parserFactory, getContext()));
         break;
@@ -532,8 +526,13 @@ public class TCPServerSource extends BasePushSource {
       }
     }
 
+    if (parserFactory != null) {
+      parserFactory.destroy();
+    }
+
     tcpServer = null;
     avroIpcServer = null;
+    parserFactory = null;
 
     super.destroy();
   }
