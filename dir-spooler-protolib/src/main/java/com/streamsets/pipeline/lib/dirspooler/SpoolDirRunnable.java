@@ -206,6 +206,11 @@ public class SpoolDirRunnable implements Runnable {
 
             if (pickFileFromSpooler) {
               file = currentFile.getAbsolutePath();
+              if (conf.processSubdirectories) {
+                // Since you are working from the specified path, all the paths MUST be relative to this base
+                // path that's why we are removing the first '/'
+                file = currentFile.toString().replaceFirst(spooler.getSpoolDir() + FILE_SEPARATOR, "");
+              }
               if (offsets.containsKey(file)) {
                 offset = offsets.get(file).getOffset();
               } else {
