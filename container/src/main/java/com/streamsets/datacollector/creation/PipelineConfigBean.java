@@ -451,7 +451,7 @@ public class PipelineConfigBean implements Stage {
       displayPosition = 220,
       group = "CLUSTER",
       dependsOn = "executionMode",
-      triggeredByValue = {"CLUSTER_YARN_STREAMING"}
+      triggeredByValue = {"CLUSTER_BATCH", "CLUSTER_YARN_STREAMING"}
   )
   public Map<String, String> sparkConfigs;
 
