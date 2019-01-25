@@ -15,6 +15,15 @@
  */
 package com.streamsets.pipeline;
 
+import java.io.IOException;
+import java.net.URL;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.LinkedList;
+import java.util.List;
+
 public class ClassLoaderUtil {
 
   static final String SERVICES_PREFIX = "/META-INF/services/";
@@ -56,4 +65,31 @@ public class ClassLoaderUtil {
     }
     return str.trim().split("\\s*,\\s*");
   }
+
+  public static URL[] getJarUrlsInDirectory(final String directory) {
+    final Path dirPath = Paths.get(directory);
+    if (!dirPath.toFile().exists()) {
+      throw new IllegalArgumentException(String.format("Path %s does not exist", directory));
+    } else if (!dirPath.toFile().isDirectory()) {
+      throw new IllegalArgumentException(String.format("Path %s is not a directory", directory));
+    } else {
+      final List<URL> jarURLs = new LinkedList<>();
+      try (final DirectoryStream<Path> stream = Files.newDirectoryStream(dirPath,
+          path -> path.toFile().isFile() && path.toString().toLowerCase().endsWith(".jar")
+      )) {
+        for (Path jar : stream) {
+          // can't use lambda because of MalformedURLException being thrown here
+          jarURLs.add(jar.toUri().toURL());
+        }
+      } catch (IOException e) {
+        throw new IllegalArgumentException(String.format(
+            "IOException attempting to traverse directory %s for jar files: %s",
+            directory,
+            e.getMessage()
+        ), e);
+      }
+      return jarURLs.toArray(new URL[jarURLs.size()]);
+    }
+  }
+
 }

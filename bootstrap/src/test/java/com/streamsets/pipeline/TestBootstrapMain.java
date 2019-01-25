@@ -18,6 +18,7 @@ package com.streamsets.pipeline;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Files;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -414,6 +415,35 @@ public class TestBootstrapMain {
     } finally {
       System.getProperties().remove("pipeline.bootstrap.debug");
     }
+  }
+
+  @Test
+  public void testMainInvocationWithCustomInitializer() throws Exception {
+    System.setProperty(BootstrapMain.CUSTOM_INIT_CLASS_SYS_PROP, TestBootstrapInitializer.class.getName());
+    // this just needs to be ANY directory, since the current classloader (which contains this class)
+    // will also contain the inner class; it will not be used to actually load the class by the bootstrap
+    System.setProperty(BootstrapMain.CUSTOM_INIT_LIB_DIR_SYS_PROP, System.getProperty("user.dir"));
+    try {
+      testMainInvocation();
+      Assert.assertTrue(TestBootstrapInitializer.invoked);
+    } finally {
+      System.clearProperty(BootstrapMain.CUSTOM_INIT_CLASS_SYS_PROP);
+    }
+  }
+
+  static class TestBootstrapInitializer implements BootstrapInitializer {
+    static boolean invoked = false;
+
+    @Override
+    public String[] initialize(String[] originalArgs) {
+      invoked = true;
+      return originalArgs;
+    }
+  }
+
+  @Before
+  public void resetInitializer() {
+    TestBootstrapInitializer.invoked = false;
   }
 
   @Test

@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.lang.instrument.Instrumentation;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.security.AccessControlException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -34,6 +35,8 @@ import java.util.Set;
 
 public class BootstrapMain {
   private static final String PIPELINE_BOOTSTRAP_DEBUG_SYS_PROP = "streamsets.bootstrap.debug";
+  public static final String CUSTOM_INIT_CLASS_SYS_PROP = "streamsets.bootstrap.customInitializer.class";
+  public static final String CUSTOM_INIT_LIB_DIR_SYS_PROP = "streamsets.bootstrap.customInitializer.libDir";
   public static final String PIPELINE_BOOTSTRAP_CLASSLOADER_SYS_PROP = "streamsets.classloader.debug";
   private static final String STREAMSETS_LIBRARIES_EXTRA_DIR_SYS_PROP = "STREAMSETS_LIBRARIES_EXTRA_DIR";
 
@@ -100,8 +103,45 @@ public class BootstrapMain {
     }
   }
 
-  @SuppressWarnings("unchecked")
   public static void main(String[] args) throws Exception {
+    final String customInitializerClass = System.getProperty(CUSTOM_INIT_CLASS_SYS_PROP);
+    if (customInitializerClass == null) {
+      // no custom initializer specified; call the bootstrap method immediately with same args
+      bootstrap(args);
+    } else {
+      final ClassLoader rootCL = Thread.currentThread().getContextClassLoader();
+
+      // prepare the classpath for the custom initializer
+      final String libDir = System.getProperty(CUSTOM_INIT_LIB_DIR_SYS_PROP);
+      if (libDir == null || libDir.trim().isEmpty()) {
+        throw new IllegalArgumentException(String.format(
+            "%s property was specified, but %s (required) was empty",
+            CUSTOM_INIT_CLASS_SYS_PROP,
+            CUSTOM_INIT_LIB_DIR_SYS_PROP
+        ));
+      }
+      // init logging
+      final URL[] jarsInInitResourcesDir = ClassLoaderUtil.getJarUrlsInDirectory(libDir);
+      // TODO: add debug output of these?
+      final ClassLoader initResourcesCL = new URLClassLoader(jarsInInitResourcesDir, rootCL);
+
+      try {
+        Thread.currentThread().setContextClassLoader(initResourcesCL);
+        final Class klass = initResourcesCL.loadClass(customInitializerClass);
+        final BootstrapInitializer initResources = (BootstrapInitializer) klass.newInstance();
+        // perform initialization and get new args
+        args = initResources.initialize(args);
+      } finally {
+        // restore original classloader
+        Thread.currentThread().setContextClassLoader(rootCL);
+      }
+      // call bootstrap method with (possibly modified) args
+      bootstrap(args);
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  public static void bootstrap(String[] args) throws Exception {
     try {
       System.getProperty("test.to.ensure.security.is.configured.correctly");
     } catch (AccessControlException e) {
