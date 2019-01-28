@@ -31,9 +31,11 @@ import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.net.MessageToRecord;
 import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.DecoderException;
+import io.netty.handler.timeout.ReadTimeoutException;
 import io.netty.util.concurrent.ScheduledFuture;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -94,7 +96,9 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
         if (!skip) {
           newBatch(this.context, false);
         } else {
-          LOG.debug("Skipping scheduled timeout newBatch() as it was run from addRecord due to max record limit");
+          LOG.debug(
+              "Skipping scheduled timeout newBatch(). It can be due to running it in addRecord as max batch size was " +
+                  "reached or channel innactive was called");
         }
         // reschedule timeout
         if (!timeoutBatchRunnable.stoppedScheduling()) {
@@ -239,7 +243,7 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
       totalRecordCount++;
       addRecord(ctx, (Record)msg);
     } else {
-      ctx.writeAndFlush("Unexpected object received type");
+      ctx.writeAndFlush("Unexpected object received type\n");
       throw new IllegalStateException(String.format(
           "Unexpected object type (%s) found in Netty channel pipeline",
           msg.getClass().getName()
@@ -376,51 +380,59 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
   @Override
   public void exceptionCaught(ChannelHandlerContext ctx, Throwable t) {
     Throwable exception = t;
-    if (exception instanceof DecoderException) {
-      // unwrap the Netty decoder exception
-      exception = exception.getCause();
-    }
-    if (exception instanceof IOException && StringUtils.contains(exception.getMessage(), RST_PACKET_MESSAGE)) {
-      // client disconnected forcibly
-      if (LOG.isDebugEnabled()) {
-        LOG.debug(
-            "Client at {} (established at {}) sent RST to server; disconnecting",
-            ctx.channel().remoteAddress().toString(),
-            new SimpleDateFormat(LOG_DATE_FORMAT_STR).format(new Date(lastChannelStart))
-        );
+
+    if (exception instanceof ReadTimeoutException) {
+      // ReadTimeoutException has to disconnect from the client
+      LOG.info("exceptionCaught in TCPObjectToRecordHandler", exception);
+      ctx.writeAndFlush("Closing connection due to read timeout\n").addListener(ChannelFutureListener.CLOSE);
+    } else {
+      ctx.writeAndFlush("Closing channel due to exception was thrown\n");
+      if (exception instanceof DecoderException) {
+        // unwrap the Netty decoder exception
+        exception = exception.getCause();
       }
+      if (exception instanceof IOException && StringUtils.contains(exception.getMessage(), RST_PACKET_MESSAGE)) {
+        // client disconnected forcibly
+        if (LOG.isDebugEnabled()) {
+          LOG.debug(
+              "Client at {} (established at {}) sent RST to server; disconnecting",
+              ctx.channel().remoteAddress().toString(),
+              new SimpleDateFormat(LOG_DATE_FORMAT_STR).format(new Date(lastChannelStart))
+          );
+        }
+        ctx.close();
+        return;
+      } else if (exception instanceof DataParserException) {
+        exception = new OnRecordErrorException(Errors.TCP_08, exception.getMessage(), exception);
+      }
+
+      LOG.error("exceptionCaught in TCPObjectToRecordHandler", exception);
+      if (exception instanceof OnRecordErrorException) {
+        OnRecordErrorException errorEx = (OnRecordErrorException) exception;
+        switch (context.getOnErrorRecord()) {
+          case DISCARD:
+            break;
+          case STOP_PIPELINE:
+            if (LOG.isErrorEnabled()) {
+              LOG.error(String.format(
+                  "OnRecordErrorException caught when parsing TCP data; failing pipeline %s as per stage configuration: %s",
+                  context.getPipelineId(),
+                  exception.getMessage()
+              ), exception);
+            }
+            stopPipelineHandler.stopPipeline(context.getPipelineId(), errorEx);
+            break;
+          case TO_ERROR:
+            batchContext.toError(context.createRecord(generateRecordId()), errorEx);
+            break;
+        }
+      } else {
+        context.reportError(Errors.TCP_07, exception.getClass().getName(), exception.getMessage(), exception);
+      }
+      // Close the connection when an exception is raised.
       ctx.close();
-      return;
-    } else if (exception instanceof DataParserException) {
-      exception = new OnRecordErrorException(Errors.TCP_08, exception.getMessage(), exception);
     }
 
-    LOG.error("exceptionCaught in TCPObjectToRecordHandler", exception);
-    if (exception instanceof OnRecordErrorException) {
-      OnRecordErrorException errorEx = (OnRecordErrorException) exception;
-      switch (context.getOnErrorRecord()) {
-        case DISCARD:
-          break;
-        case STOP_PIPELINE:
-          if (LOG.isErrorEnabled()) {
-            LOG.error(String.format(
-                "OnRecordErrorException caught when parsing TCP data; failing pipeline %s as per stage configuration: %s",
-                context.getPipelineId(),
-                exception.getMessage()
-            ), exception);
-          }
-          stopPipelineHandler.stopPipeline(context.getPipelineId(), errorEx);
-          break;
-        case TO_ERROR:
-          batchContext.toError(context.createRecord(generateRecordId()), errorEx);
-          break;
-      }
-    } else {
-      context.reportError(Errors.TCP_07, exception.getClass().getName(), exception.getMessage(), exception);
-    }
-    // Close the connection when an exception is raised. Timeout Handler throws an exception which closes the channel
-    // here
-    ctx.close();
   }
 
   private String generateRecordId() {
