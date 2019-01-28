@@ -716,7 +716,8 @@ public class PipelineStoreResource {
       @QueryParam("description") @DefaultValue("") String description,
       @QueryParam("autoGeneratePipelineId") @DefaultValue("false") boolean autoGeneratePipelineId,
       @QueryParam("draft") @DefaultValue("false") boolean draft,
-      @QueryParam("pipelineType") @DefaultValue("DATA_COLLECTOR") String pipelineType
+      @QueryParam("pipelineType") @DefaultValue("DATA_COLLECTOR") String pipelineType,
+      @QueryParam("pipelineLabel") @DefaultValue("") String pipelineLabel
   ) throws PipelineException, IOException {
     String pipelineId = pipelineTitle;
     if (autoGeneratePipelineId) {
@@ -821,6 +822,20 @@ public class PipelineStoreResource {
         stageLibrary.getPipelineRules().getPipelineRulesDefaultConfigs()
     );
     store.storeRules(pipelineId, "0", ruleDefinitions, draft);
+
+    if (!pipelineLabel.isEmpty()) {
+      Map<String, Object> metadata = pipelineConfig.getMetadata();
+
+      metadata = metadata == null ? new HashMap<>() : metadata;
+
+      Object objLabels = metadata.get("labels");
+      List<String> metaLabels = objLabels == null ? new ArrayList<>() : (List<String>) objLabels;
+      metaLabels.add(pipelineLabel);
+
+      metadata.put("labels", metaLabels);
+      store.saveMetadata(user, pipelineId, "0", metadata);
+    }
+
 
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(
         stageLibrary,

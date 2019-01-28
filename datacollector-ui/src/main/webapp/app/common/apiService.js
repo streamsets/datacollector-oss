@@ -581,7 +581,7 @@ angular.module('dataCollectorApp.common')
        * @param description
        * @param pipelineType
        */
-      createNewPipelineConfig: function(name, description, pipelineType) {
+      createNewPipelineConfig: function(name, description, pipelineType, pipelineLabel) {
         var url = apiBase + '/pipeline/' + encodeURIComponent(name);
         return $http({
           method: 'PUT',
@@ -589,7 +589,8 @@ angular.module('dataCollectorApp.common')
           params: {
             autoGeneratePipelineId: true,
             description: description,
-            pipelineType: pipelineType
+            pipelineType: pipelineType,
+            pipelineLabel: pipelineLabel
           }
         });
       },

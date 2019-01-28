@@ -31,6 +31,22 @@
                 ng-model="newConfig.description"></textarea>
     </div>
 
+
+    <div class="form-group">
+      <ui-select reset-search-input="false"
+                 ng-model="newConfig.pipelineLabel">
+        <ui-select-match placeholder="Select label or add new one..." class="ui-select-match">
+          <span>{{$select.selected || $select.search}}</span>
+        </ui-select-match>
+        <ui-select-choices class="ui-select-choices"
+                           refresh=refreshResults($select)
+                           refresh-delay=0 repeat="label in (pipelineLabels | filter:$select.search) track by label">
+          <span>{{label}}</span>
+        </ui-select-choices>
+      </ui-select>
+    </div>
+
+
     <div class="form-group">
       <div class="radio">
         <label><input type="radio" name="pipelineType" ng-model="newConfig.pipelineType" value="DATA_COLLECTOR">Data Collector Pipeline</label>

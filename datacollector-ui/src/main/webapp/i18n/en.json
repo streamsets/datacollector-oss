@@ -647,6 +647,7 @@
       "duplicatePipelineDefinition": "Duplicate Pipeline Definition",
       "emptyPipelineList": "No Pipeline to view.",
       "httpUrlPlaceholder": "Pipeline Definition HTTP URL",
+      "labelPlaceholder": "Pipeline Label",
       "newPipelineDefinition": "New Pipeline",
       "namePlaceholder": "Pipeline Definition Title",
       "nameRequiredValidation": "Please enter title of the pipeline.",
