@@ -599,7 +599,7 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
               break;
             }
             if (connection.getMetaData().getDriverName().contains(MSSQL) &&
-                ((BigDecimal) value).scale() > MAX_BIG_DECIMAL_SCALE) {
+                ((BigDecimal) value).scale() >= MAX_BIG_DECIMAL_SCALE) {
               LOG.debug("Since {} is being used and the scale is {} or bigger, we will send the record as object",
                   MSSQL,
                   MAX_BIG_DECIMAL_SCALE
