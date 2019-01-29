@@ -74,6 +74,15 @@ public class TextDataParserFactory extends DataParserFactory {
     return createParser(id, createReader(reader), offset);
   }
 
+  @Override
+  public void destroy() {
+    if (stringBuilderPool != null) {
+      stringBuilderPool.close();
+    }
+
+    super.destroy();
+  }
+
   private DataParser createParser(String id, OverrunReader reader, long offset) throws DataParserException {
     Utils.checkState(reader.getPos() == 0, Utils.formatL("reader must be in position '0', it is at '{}'",
       reader.getPos()));

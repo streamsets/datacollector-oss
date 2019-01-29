@@ -137,6 +137,19 @@ public class LogDataParserFactory extends DataParserFactory {
     return createParser(id, createReader(reader), offset);
   }
 
+  @Override
+  public void destroy() {
+    if (previousLineBuilderPool != null) {
+      previousLineBuilderPool.close();
+    }
+
+    if (currentLineBuilderPool != null) {
+      currentLineBuilderPool.close();
+    }
+
+    super.destroy();
+  }
+
   private DataParser createParser(String id, OverrunReader reader, long offset) throws DataParserException {
     Utils.checkState(reader.getPos() == 0, Utils.formatL("reader must be in position '0', it is at '{}'",
       reader.getPos()));

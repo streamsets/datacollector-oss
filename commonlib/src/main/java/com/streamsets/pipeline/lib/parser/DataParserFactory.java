@@ -118,4 +118,8 @@ public abstract class DataParserFactory extends DataFactory {
     );
   }
 
+  public void destroy() {
+    // Do nothing in the abstract class
+  }
+
 }
