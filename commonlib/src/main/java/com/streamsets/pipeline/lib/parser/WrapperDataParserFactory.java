@@ -80,6 +80,12 @@ public class WrapperDataParserFactory extends DataParserFactory {
     return new WrapperDataParser(factory.getParser(id, metadata, fileRef));
   }
 
+  @Override
+  public void destroy() {
+    factory.destroy();
+    super.destroy();
+  }
+
   @VisibleForTesting
   public DataParserFactory getFactory() {
     return factory;
