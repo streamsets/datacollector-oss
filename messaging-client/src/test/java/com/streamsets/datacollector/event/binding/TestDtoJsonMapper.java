@@ -270,5 +270,4 @@ public class TestDtoJsonMapper {
     assertTrue(pipelineStatusEvent.isClusterMode());
   }
 
-
 }

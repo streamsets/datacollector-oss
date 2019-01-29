@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2019 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.event.json;
 
-public interface EventJson {
+package com.streamsets.datacollector.event.json.customtypeid;
+
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.jsontype.impl.TypeIdResolverBase;
+
+public class CustomTypeIdResolver extends TypeIdResolverBase {
+  @Override
+  public String idFromValue(Object value) {
+    return null;
+  }
+
+  @Override
+  public String idFromValueAndType(Object value, Class<?> suggestedType) {
+    return null;
+  }
+
+  @Override
+  public JsonTypeInfo.Id getMechanism() {
+    return null;
+  }
 }

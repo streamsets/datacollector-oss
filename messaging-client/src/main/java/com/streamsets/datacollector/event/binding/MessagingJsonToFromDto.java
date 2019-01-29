@@ -15,13 +15,13 @@
  */
 package com.streamsets.datacollector.event.binding;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.event.dto.AckEvent;
 import com.streamsets.datacollector.event.dto.BlobDeleteEvent;
 import com.streamsets.datacollector.event.dto.BlobDeleteVersionEvent;
@@ -54,6 +54,7 @@ import com.streamsets.datacollector.event.json.BlobDeleteVersionEventJson;
 import com.streamsets.datacollector.event.json.BlobStoreEventJson;
 import com.streamsets.datacollector.event.json.ClientEventJson;
 import com.streamsets.datacollector.event.json.DisconnectedSsoCredentialsEventJson;
+import com.streamsets.datacollector.event.json.DynamicPreviewEventJson;
 import com.streamsets.datacollector.event.json.EventJson;
 import com.streamsets.datacollector.event.json.PingFrequencyAdjustmentEventJson;
 import com.streamsets.datacollector.event.json.PipelineDeleteEventJson;
@@ -73,12 +74,15 @@ import com.streamsets.datacollector.event.json.SDCProcessMetricsEventJson;
 import com.streamsets.datacollector.event.json.SaveConfigurationEventJson;
 import com.streamsets.datacollector.event.json.ServerEventJson;
 import com.streamsets.datacollector.event.json.SyncAclEventJson;
+import com.streamsets.datacollector.event.json.customdeserializer.DynamicPreviewEventDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 public class MessagingJsonToFromDto {
@@ -88,10 +92,19 @@ public class MessagingJsonToFromDto {
 
   private MessagingJsonToFromDto() {
     mapper = new ObjectMapper();
+    final SimpleModule module = new SimpleModule();
+    module.addDeserializer(DynamicPreviewEventJson.class, new DynamicPreviewEventDeserializer());
+    mapper.registerModule(module);
+
     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     mapper.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
     mapper.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);
+  }
+
+  @VisibleForTesting
+  ObjectMapper getObjectMapper() {
+    return mapper;
   }
 
   private static MessagingJsonToFromDto getInstance() {
@@ -116,108 +129,187 @@ public class MessagingJsonToFromDto {
     return asDto(eventJson, EventType.fromValue(eventTypeId));
   }
 
-  private interface EventJsonSupplier {
+  public interface EventJsonSupplier {
     EventJson supplyJson(Class<? extends EventJson> jsonClass) throws IOException;
   }
 
-  public Event toDtoHelper(EventType eventType, EventJsonSupplier eventJsonSupplierImpl) throws IOException {
+  public Map.Entry<Event, EventJson> getEventJsonAndDto(
+      EventType eventType,
+      EventJsonSupplier eventJsonSupplierImpl
+  ) throws IOException {
     final MessagingDtoJsonMapper inst = MessagingDtoJsonMapper.INSTANCE;
     switch (eventType) {
       case PING_FREQUENCY_ADJUSTMENT:
-        return inst.asPingFrequencyAdjustmentEventDto((PingFrequencyAdjustmentEventJson) eventJsonSupplierImpl.supplyJson(
-            PingFrequencyAdjustmentEventJson.class
-        ));
+        PingFrequencyAdjustmentEventJson pingFreqEvent =
+            (PingFrequencyAdjustmentEventJson) eventJsonSupplierImpl.supplyJson(PingFrequencyAdjustmentEventJson.class);
+        return new AbstractMap.SimpleImmutableEntry(
+            inst.asPingFrequencyAdjustmentEventDto(pingFreqEvent),
+            pingFreqEvent
+        );
       case SAVE_PIPELINE:
-        return inst.asPipelineSaveEventDto((PipelineSaveEventJson) eventJsonSupplierImpl.supplyJson(
+        PipelineSaveEventJson saveEvent = (PipelineSaveEventJson) eventJsonSupplierImpl.supplyJson(
             PipelineSaveEventJson.class
-        ));
+        );
+        return new AbstractMap.SimpleImmutableEntry(
+            inst.asPipelineSaveEventDto(saveEvent),
+            saveEvent
+        );
       case SAVE_RULES_PIPELINE:
-        return inst.asPipelineSaveRulesEventDto((PipelineSaveRulesEventJson) eventJsonSupplierImpl.supplyJson(
-            PipelineSaveRulesEventJson.class
-        ));
+        PipelineSaveRulesEventJson saveRulesEvent = (PipelineSaveRulesEventJson) eventJsonSupplierImpl
+            .supplyJson(PipelineSaveRulesEventJson.class);
+        return new AbstractMap.SimpleImmutableEntry(
+            inst.asPipelineSaveRulesEventDto(saveRulesEvent),
+            saveRulesEvent
+        );
       case STATUS_PIPELINE:
-        return inst.asPipelineStatusEventDto((PipelineStatusEventJson) eventJsonSupplierImpl.supplyJson(
+        PipelineStatusEventJson statusEvent = (PipelineStatusEventJson) eventJsonSupplierImpl.supplyJson(
             PipelineStatusEventJson.class
-        ));
+        );
+        return new AbstractMap.SimpleImmutableEntry(
+            inst.asPipelineStatusEventDto(statusEvent),
+            statusEvent
+        );
       case STATUS_MULTIPLE_PIPELINES:
-        return inst.asPipelineStatusEventsDto((PipelineStatusEventsJson) eventJsonSupplierImpl.supplyJson(
+        PipelineStatusEventsJson statusMultipleEvent = (PipelineStatusEventsJson) eventJsonSupplierImpl.supplyJson(
             PipelineStatusEventsJson.class
-        ));
+        );
+        return new AbstractMap.SimpleImmutableEntry(
+            inst.asPipelineStatusEventsDto(statusMultipleEvent),
+            statusMultipleEvent
+        );
       case ACK_EVENT:
-        return inst.asAckEventDto((AckEventJson) eventJsonSupplierImpl.supplyJson(
-            AckEventJson.class
-        ));
+        AckEventJson ackEvent = (AckEventJson) eventJsonSupplierImpl.supplyJson(AckEventJson.class);
+        return new AbstractMap.SimpleImmutableEntry(
+            inst.asAckEventDto(ackEvent),
+            ackEvent
+        );
       case SDC_INFO_EVENT:
-        return inst.asSDCInfoEventDto((SDCInfoEventJson) eventJsonSupplierImpl.supplyJson(
-            SDCInfoEventJson.class
-        ));
+        SDCInfoEventJson infoEvent = (SDCInfoEventJson) eventJsonSupplierImpl.supplyJson(SDCInfoEventJson.class);
+        return new AbstractMap.SimpleImmutableEntry(
+            inst.asSDCInfoEventDto(infoEvent),
+            infoEvent
+        );
       case SDC_PROCESS_METRICS_EVENT:
-        return inst.asSDCMetricsEventDto((SDCProcessMetricsEventJson) eventJsonSupplierImpl.supplyJson(
-            SDCProcessMetricsEventJson.class
-        ));
+        SDCProcessMetricsEventJson processMetricsEvent = (SDCProcessMetricsEventJson) eventJsonSupplierImpl
+            .supplyJson(SDCProcessMetricsEventJson.class);
+        return new AbstractMap.SimpleImmutableEntry(
+            inst.asSDCMetricsEventDto(processMetricsEvent),
+            processMetricsEvent
+        );
       case SYNC_ACL:
-        return inst.asSyncAclEventDto((SyncAclEventJson) eventJsonSupplierImpl.supplyJson(
-            SyncAclEventJson.class
-        ));
+        SyncAclEventJson syncAclEvent = (SyncAclEventJson) eventJsonSupplierImpl.supplyJson(SyncAclEventJson.class);
+        return new AbstractMap.SimpleImmutableEntry(
+            inst.asSyncAclEventDto(syncAclEvent),
+            syncAclEvent
+        );
       case STOP_DELETE_PIPELINE:
-        return inst.asPipelineStopAndDeleteEventDto((PipelineStopAndDeleteEventJson) eventJsonSupplierImpl.supplyJson(
-            PipelineStopAndDeleteEventJson.class
-        ));
+        PipelineStopAndDeleteEventJson stopAndDeleteEvent = (PipelineStopAndDeleteEventJson) eventJsonSupplierImpl
+            .supplyJson(PipelineStopAndDeleteEventJson.class);
+        return new AbstractMap.SimpleImmutableEntry(
+            inst.asPipelineStopAndDeleteEventDto(stopAndDeleteEvent),
+            stopAndDeleteEvent
+        );
       case START_PIPELINE:
-        return inst.asPipelineStartEventDto((PipelineStartEventJson) eventJsonSupplierImpl.supplyJson(
+        PipelineStartEventJson startEvent = (PipelineStartEventJson) eventJsonSupplierImpl.supplyJson(
             PipelineStartEventJson.class
-        ));
+        );
+        return new AbstractMap.SimpleImmutableEntry(
+            inst.asPipelineStartEventDto(startEvent),
+            startEvent
+        );
       case PREVIEW_PIPELINE:
-        return inst.asPipelinePreviewEventDto((PipelinePreviewEventJson) eventJsonSupplierImpl.supplyJson(
+        PipelinePreviewEventJson previewEvent = (PipelinePreviewEventJson) eventJsonSupplierImpl.supplyJson(
             PipelinePreviewEventJson.class
-        ));
+        );
+        return new AbstractMap.SimpleImmutableEntry(
+            inst.asPipelinePreviewEventDto(previewEvent),
+            previewEvent
+        );
       case STOP_PIPELINE:
-        return inst.asPipelineStopEventDto((PipelineStopEventJson) eventJsonSupplierImpl.supplyJson(
+        PipelineStopEventJson stopEvent = (PipelineStopEventJson) eventJsonSupplierImpl.supplyJson(
             PipelineStopEventJson.class
-        ));
+        );
+        return new AbstractMap.SimpleImmutableEntry(
+            inst.asPipelineStopEventDto(stopEvent),
+            stopEvent
+        );
       case VALIDATE_PIPELINE:
-        return inst.asPipelineValidateEventDto((PipelineValidateEventJson) eventJsonSupplierImpl.supplyJson(
+        PipelineValidateEventJson validateEvent = (PipelineValidateEventJson) eventJsonSupplierImpl.supplyJson(
             PipelineValidateEventJson.class
-        ));
+        );
+        return new AbstractMap.SimpleImmutableEntry(
+            inst.asPipelineValidateEventDto(validateEvent),
+            validateEvent
+        );
       case RESET_OFFSET_PIPELINE:
-        return inst.asPipelineResetEventDto((PipelineResetEventJson) eventJsonSupplierImpl.supplyJson(
+        PipelineResetEventJson resetOffsetEvent = (PipelineResetEventJson) eventJsonSupplierImpl.supplyJson(
             PipelineResetEventJson.class
-        ));
+        );
+        return new AbstractMap.SimpleImmutableEntry(
+            inst.asPipelineResetEventDto(resetOffsetEvent),
+            resetOffsetEvent
+        );
       case DELETE_HISTORY_PIPELINE:
-        return inst.asPipelineHistoryDeleteEventDto((PipelineHistoryDeleteEventJson) eventJsonSupplierImpl.supplyJson(
-            PipelineHistoryDeleteEventJson.class
-        ));
+        PipelineHistoryDeleteEventJson deleteHistoryEvent = (PipelineHistoryDeleteEventJson) eventJsonSupplierImpl
+            .supplyJson(PipelineHistoryDeleteEventJson.class);
+        return new AbstractMap.SimpleImmutableEntry(
+            inst.asPipelineHistoryDeleteEventDto(deleteHistoryEvent),
+            deleteHistoryEvent
+        );
       case DELETE_PIPELINE:
-        return inst.asPipelineDeleteEventDto((PipelineDeleteEventJson) eventJsonSupplierImpl.supplyJson(
+        PipelineDeleteEventJson deleteEvent = (PipelineDeleteEventJson) eventJsonSupplierImpl.supplyJson(
             PipelineDeleteEventJson.class
-        ));
+        );
+        return new AbstractMap.SimpleImmutableEntry(
+            inst.asPipelineDeleteEventDto(deleteEvent),
+            deleteEvent
+        );
       case BLOB_STORE:
-        return inst.asBlobStoreEventDto((BlobStoreEventJson) eventJsonSupplierImpl.supplyJson(
+        BlobStoreEventJson blobStoreEvent = (BlobStoreEventJson) eventJsonSupplierImpl.supplyJson(
             BlobStoreEventJson.class
-        ));
+        );
+        return new AbstractMap.SimpleImmutableEntry(
+            inst.asBlobStoreEventDto(blobStoreEvent),
+            blobStoreEvent
+        );
       case BLOB_DELETE:
-        return inst.asBlobDeleteEventDto((BlobDeleteEventJson) eventJsonSupplierImpl.supplyJson(
+        BlobDeleteEventJson blobDeleteEvent = (BlobDeleteEventJson) eventJsonSupplierImpl.supplyJson(
             BlobDeleteEventJson.class
-        ));
+        );
+        return new AbstractMap.SimpleImmutableEntry(
+            inst.asBlobDeleteEventDto(blobDeleteEvent),
+            blobDeleteEvent
+        );
       case BLOB_DELETE_VERSION:
-        return inst.asBlobDeleteVersionEventDto((BlobDeleteVersionEventJson) eventJsonSupplierImpl.supplyJson(
-            BlobDeleteVersionEventJson.class
-        ));
+        BlobDeleteVersionEventJson blobDeleteVersionEvent =
+            (BlobDeleteVersionEventJson) eventJsonSupplierImpl.supplyJson(BlobDeleteVersionEventJson.class);
+        return new AbstractMap.SimpleImmutableEntry(
+            inst.asBlobDeleteVersionEventDto(blobDeleteVersionEvent),
+            blobDeleteVersionEvent
+        );
       case SAVE_CONFIGURATION:
-        return inst.asSaveConfigurationEventDto((SaveConfigurationEventJson) eventJsonSupplierImpl.supplyJson(
-            SaveConfigurationEventJson.class
-        ));
+        SaveConfigurationEventJson saveConfigEvent = (SaveConfigurationEventJson) eventJsonSupplierImpl
+            .supplyJson(SaveConfigurationEventJson.class);
+        return new AbstractMap.SimpleImmutableEntry(
+            inst.asSaveConfigurationEventDto(saveConfigEvent),
+            saveConfigEvent
+        );
       case SSO_DISCONNECTED_MODE_CREDENTIALS:
-        return inst.asDisconectedSsoCredentialsDto((DisconnectedSsoCredentialsEventJson) eventJsonSupplierImpl.supplyJson(
-            DisconnectedSsoCredentialsEventJson.class
-        ));
+        DisconnectedSsoCredentialsEventJson ssoEvent =
+            (DisconnectedSsoCredentialsEventJson) eventJsonSupplierImpl.supplyJson(
+                DisconnectedSsoCredentialsEventJson.class
+            );
+        return new AbstractMap.SimpleImmutableEntry(
+            inst.asDisconectedSsoCredentialsDto(ssoEvent),
+            ssoEvent
+        );
       default:
         throw new IllegalStateException("Unrecognized event type: " + eventType);
     }
   }
 
   public Event asDto(EventJson eventJson, EventType eventType) throws IOException {
-    return toDtoHelper(eventType, cls -> eventJson);
+    return getEventJsonAndDto(eventType, cls -> eventJson).getKey();
   }
 
   public ClientEventJson toJson(ClientEvent clientEvent) throws JsonProcessingException {
@@ -316,7 +408,7 @@ public class MessagingJsonToFromDto {
       return null;
     }
     final String payload = serverEventJson.getPayload();
-    serverEvent.setEvent(toDtoHelper(eventType, cls -> deserialize(payload, cls)));
+    serverEvent.setEvent(getEventJsonAndDto(eventType, cls -> deserialize(payload, cls)).getKey());
     return serverEvent;
   }
 }
