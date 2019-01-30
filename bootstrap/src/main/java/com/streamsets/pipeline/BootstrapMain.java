@@ -283,6 +283,10 @@ public class BootstrapMain {
       System.out.println(String.format(DEBUG_MSG, "User stage libs", whiteListStr));
     }
 
+    if (streamsetsLibrariesExtraDir != null) {
+      System.setProperty(STREAMSETS_LIBRARIES_EXTRA_DIR_SYS_PROP, streamsetsLibrariesExtraDir);
+    }
+
     Map<String, List<URL>> streamsetsLibsUrls = getStageLibrariesClasspaths(streamsetsLibrariesDir,
         streamsetsLibrariesExtraDir, systemStageLibs, libsCommonLibDir);
     Map<String, List<URL>> userLibsUrls = getStageLibrariesClasspaths(userLibrariesDir, null, systemStageLibs,
@@ -514,7 +518,6 @@ public class BootstrapMain {
 
         // add extralibs if avail
         if (librariesExtraDir != null) {
-          System.setProperty(STREAMSETS_LIBRARIES_EXTRA_DIR_SYS_PROP, librariesExtraDir);
           File libExtraDir = new File(librariesExtraDir, libDir.getName());
           if (libExtraDir.exists()) {
             File extraJarsDir = new File(libExtraDir, STAGE_LIB_JARS_DIR);
