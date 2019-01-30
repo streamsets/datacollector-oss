@@ -989,11 +989,9 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     RepositoryManifestJson repositoryManifestJson = null;
     try (Response response = ClientBuilder.newClient().target(repoUrl).request().get()) {
       InputStream inputStream = response.readEntity(InputStream.class);
-      try {
-        repositoryManifestJson = ObjectMapperFactory.get().readValue(inputStream, RepositoryManifestJson.class);
-      } catch (Exception ex) {
-        LOG.error("Failed to read repository manifest json", ex);
-      }
+      repositoryManifestJson = ObjectMapperFactory.get().readValue(inputStream, RepositoryManifestJson.class);
+    } catch (Exception ex) {
+      LOG.error("Failed to read repository manifest json", ex);
     }
     return repositoryManifestJson;
   }
@@ -1002,11 +1000,9 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     StageLibraryManifestJson stageLibManifestJson = null;
     try (Response response = ClientBuilder.newClient().target(stageLibManifestUrl).request().get()) {
       InputStream inputStream = response.readEntity(InputStream.class);
-      try {
-        stageLibManifestJson = ObjectMapperFactory.get().readValue(inputStream, StageLibraryManifestJson.class);
-      } catch (Exception ex) {
-        LOG.error("Failed to read stage-lib-manifest.json", ex);
-      }
+      stageLibManifestJson = ObjectMapperFactory.get().readValue(inputStream, StageLibraryManifestJson.class);
+    }  catch (Exception ex) {
+      LOG.error("Failed to read stage-lib-manifest.json", ex);
     }
     return stageLibManifestJson;
   }
