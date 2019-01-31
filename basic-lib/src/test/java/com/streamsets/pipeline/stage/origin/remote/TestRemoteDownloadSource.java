@@ -44,7 +44,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.net.ftp.FTPCmd;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.sshd.common.FactoryManager;
 import org.apache.sshd.common.PropertyResolverUtils;
@@ -54,8 +53,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.mockftpserver.core.command.StaticReplyCommandHandler;
-import org.mockftpserver.fake.filesystem.FileSystem;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -1188,13 +1185,8 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
     }
 
     File eventualFile = new File(tempDir, "z" + originDirFile.getName());
-    if (scheme == Scheme.sftp) {
-      Files.copy(originDirFile, eventualFile);
-      eventualFile.setLastModified(lastModified);
-    } else if (scheme == Scheme.ftp) {
-      addFileToFakeFileSystem(eventualFile.getAbsolutePath(), FileUtils.readFileToByteArray(originDirFile),
-          lastModified);
-    }
+    Files.copy(originDirFile, eventualFile);
+    eventualFile.setLastModified(lastModified);
     op = runner.runProduce(offset, 1000);
     expected = getExpectedRecords();
     actual = op.getRecords().get("lane");
@@ -1665,12 +1657,8 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
       Assert.assertEquals(0, runner.getEventRecords().size());
 
       String events3Name = "/testEvents3.txt";
-      if (scheme == Scheme.sftp) {
-        Path filePath3 = Paths.get(path + events3Name);
-        java.nio.file.Files.write(filePath3, sampleText, StandardOpenOption.CREATE_NEW);
-      } else if (scheme == Scheme.ftp) {
-        addFileToFakeFileSystem(path + events3Name, sampleText, filePath2.toFile().lastModified() + 60);
-      }
+      Path filePath3 = Paths.get(path + events3Name);
+      java.nio.file.Files.write(filePath3, sampleText, StandardOpenOption.CREATE_NEW);
 
       runner.getEventRecords().clear();
       output = runner.runProduce(output.getNewOffset(), 10);
@@ -2128,21 +2116,20 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
       Assert.assertEquals(0, opened.get());
       Assert.assertEquals(0, closed.get());
     } else if (scheme == Scheme.ftp) {
-      Assert.assertEquals(0, fakeFtpServer.getSessions().size());
+      Assert.assertEquals(0, ftpServer.getServerContext().getFtpStatistics().getCurrentConnectionNumber());
     }
     runner.runInit();
     // Now we've made one connection
     if (scheme == Scheme.sftp) {
       Assert.assertEquals(1, opened.get());
     } else if (scheme == Scheme.ftp) {
-      Assert.assertEquals(1, fakeFtpServer.getSessions().size());
+      Assert.assertEquals(1, ftpServer.getServerContext().getFtpStatistics().getCurrentConnectionNumber());
     }
+    // Set timeout after being idle to be really quick (1ms)
     if (scheme == Scheme.sftp) {
-      // Set timeout after being idle to be really quick (1ms)
       PropertyResolverUtils.updateProperty(sshd, FactoryManager.IDLE_TIMEOUT, 1);
     } else if (scheme == Scheme.ftp) {
-      // Simulate timeout by closing the connection
-      fakeFtpServer.getSessions().iterator().next().close();
+      ftpServer.getServerContext().getListeners().get("default").getActiveSessions().iterator().next().setMaxIdleTime(1);
     }
     // Wait until that one connection has been closed
     if (scheme == Scheme.sftp) {
@@ -2150,11 +2137,11 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
       Assert.assertEquals(1, closed.get());
     } else if (scheme == Scheme.ftp) {
       await().atMost(10, TimeUnit.SECONDS).until(
-          () -> Assert.assertTrue(fakeFtpServer.getSessions().iterator().next().isClosed()));
-      Assert.assertTrue(fakeFtpServer.getSessions().iterator().next().isClosed());
+          () -> Assert.assertEquals(0, ftpServer.getServerContext().getFtpStatistics().getCurrentConnectionNumber()));
+      Assert.assertEquals(0, ftpServer.getServerContext().getFtpStatistics().getCurrentConnectionNumber());
     }
-    // Unset the timeout config
     if (scheme == Scheme.sftp) {
+      // Unset the timeout config for SFTP because it's global
       PropertyResolverUtils.updateProperty(sshd, FactoryManager.IDLE_TIMEOUT, FactoryManager.DEFAULT_IDLE_TIMEOUT);
     }
     runner.runProduce(RemoteDownloadSource.NOTHING_READ, 1000);
@@ -2162,7 +2149,8 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
     if (scheme == Scheme.sftp) {
       Assert.assertEquals(2, opened.get());
     } else if (scheme == Scheme.ftp) {
-      Assert.assertEquals(2, fakeFtpServer.getSessions().size());
+      Assert.assertEquals(1, ftpServer.getServerContext().getFtpStatistics().getCurrentConnectionNumber());
+      Assert.assertEquals(2, ftpServer.getServerContext().getFtpStatistics().getTotalConnectionNumber());
     }
     destroyAndValidate(runner);
   }
@@ -2190,12 +2178,14 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
 
     // Now, we'll configure the FTP Server to pretend like it doesn't support MDTM, which should lower the accuracy and
     // correctness of the timestamps
-    fakeFtpServer.setCommandHandler(FTPCmd.FEAT.getCommand(), new StaticReplyCommandHandler(211, ""));
+    supportMDTM = false;
 
     testMDTMHelper(
+        // Older dates are truncated to month
         DateUtils.truncate(new Date(17000000000L), Calendar.DAY_OF_MONTH).getTime(),
         DateUtils.truncate(new Date(18000000000L), Calendar.DAY_OF_MONTH).getTime(),
-        DateUtils.truncate(now, Calendar.DAY_OF_MONTH).getTime());
+        // Recent dates are truncated to minute
+        DateUtils.truncate(now, Calendar.MINUTE).getTime());
   }
 
   public void testMDTMHelper(long slothTime, long polarbearTime, long pandaTime) throws Exception {
@@ -2374,15 +2364,8 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
     }
     File archiveDir = new File(userDir, "archive-dir");
     setupServer(userDir.getAbsolutePath(), true);
-    if (scheme == Scheme.sftp) {
-      for (File file : files) {
-        Assert.assertTrue(file.exists());
-      }
-    } else if (scheme == Scheme.ftp) {
-      FileSystem fs = fakeFtpServer.getFileSystem();
-      for (File file : files) {
-        Assert.assertTrue(fs.exists(file.getAbsolutePath()));
-      }
+    for (File file : files) {
+      Assert.assertTrue(file.exists());
     }
     String pathInUri = userDirIsRoot ? "" : userDir.getAbsolutePath();
     RemoteDownloadSource origin =
@@ -2423,33 +2406,17 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
     }
     // Check files were deleted (this is still the case for archiving because they were moved)
     // On the other hand, if it's a preview, then they should still exist
-    if (scheme == Scheme.sftp) {
-      for (File file : files) {
-        Assert.assertEquals(isPreview, file.exists());
-      }
-    } else if (scheme == Scheme.ftp) {
-      FileSystem fs = fakeFtpServer.getFileSystem();
-      for (File file : files) {
-        Assert.assertEquals(isPreview, fs.exists(file.getAbsolutePath()));
-      }
+    for (File file : files) {
+      Assert.assertEquals(isPreview, file.exists());
     }
     if (archive) {
       // Check archive files were created
       // On the other hand, if it's a preview, then they should not have been created
       File archiveDataDir = new File(archiveDir, dataDir.getName());
-      if (scheme == Scheme.sftp) {
-        Assert.assertEquals(!isPreview, archiveDir.exists());
-        Assert.assertEquals(!isPreview, archiveDataDir.exists());
-        for (File file : files) {
-          Assert.assertEquals(!isPreview, new File(archiveDataDir, file.getName()).exists());
-        }
-      } else if (scheme == Scheme.ftp) {
-        FileSystem fs = fakeFtpServer.getFileSystem();
-        Assert.assertEquals(!isPreview, fs.exists(archiveDir.getAbsolutePath()));
-        Assert.assertEquals(!isPreview, fs.exists(archiveDataDir.getAbsolutePath()));
-        for (File file : files) {
-          Assert.assertEquals(!isPreview, fs.exists(archiveDataDir.getAbsolutePath() + "/" + file.getName()));
-        }
+      Assert.assertEquals(!isPreview, archiveDir.exists());
+      Assert.assertEquals(!isPreview, archiveDataDir.exists());
+      for (File file : files) {
+        Assert.assertEquals(!isPreview, new File(archiveDataDir, file.getName()).exists());
       }
     }
     destroyAndValidate(runner);

@@ -15,40 +15,35 @@
  */
 package com.streamsets.pipeline.stage.origin.remote;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.net.ftp.FTPClientConfig;
 import org.apache.commons.net.ftp.FTPCmd;
+import org.apache.ftpserver.FtpServerFactory;
+import org.apache.ftpserver.command.CommandFactoryFactory;
+import org.apache.ftpserver.command.impl.FEAT;
+import org.apache.ftpserver.filesystem.nativefs.NativeFileSystemFactory;
+import org.apache.ftpserver.ftplet.DefaultFtpReply;
+import org.apache.ftpserver.ftplet.FileSystemFactory;
+import org.apache.ftpserver.ftplet.FileSystemView;
+import org.apache.ftpserver.ftplet.FtpException;
+import org.apache.ftpserver.ftplet.FtpRequest;
+import org.apache.ftpserver.ftplet.User;
+import org.apache.ftpserver.ftplet.UserManager;
+import org.apache.ftpserver.impl.DefaultFtpServer;
+import org.apache.ftpserver.impl.FtpIoSession;
+import org.apache.ftpserver.impl.FtpServerContext;
+import org.apache.ftpserver.listener.ListenerFactory;
+import org.apache.ftpserver.usermanager.PropertiesUserManagerFactory;
+import org.apache.ftpserver.usermanager.impl.BaseUser;
+import org.apache.ftpserver.usermanager.impl.WritePermission;
 import org.junit.After;
 import org.junit.Before;
-import org.mockftpserver.core.command.Command;
-import org.mockftpserver.core.command.InvocationRecord;
-import org.mockftpserver.core.command.StaticReplyCommandHandler;
-import org.mockftpserver.core.session.Session;
-import org.mockftpserver.fake.FakeFtpServer;
-import org.mockftpserver.fake.UserAccount;
-import org.mockftpserver.fake.filesystem.DirectoryEntry;
-import org.mockftpserver.fake.filesystem.FileEntry;
-import org.mockftpserver.fake.filesystem.FileSystemEntry;
-import org.mockftpserver.fake.filesystem.UnixFakeFileSystem;
-import org.mockftpserver.stub.command.AbstractStubCommandHandler;
-import org.mockftpserver.stub.command.StatCommandHandler;
 
-import java.io.File;
-import java.net.Socket;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import java.io.IOException;
+import java.util.Collections;
 
 public abstract class FTPAndSSHDUnitTest extends SSHDUnitTest {
 
-  private final static SimpleDateFormat MDTM_DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmmss");
-  static {
-    MDTM_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
-  }
-
-  protected SessionTrackingFakeFtpServer fakeFtpServer;
+  protected DefaultFtpServer ftpServer;
+  protected boolean supportMDTM = true;
 
   @Before
   public void before() {
@@ -57,77 +52,62 @@ public abstract class FTPAndSSHDUnitTest extends SSHDUnitTest {
 
   @After
   public void after() throws Exception {
-    if (fakeFtpServer != null && fakeFtpServer.isStarted()) {
-      fakeFtpServer.stop();
+    if (ftpServer != null && !ftpServer.isStopped()) {
+      ftpServer.stop();
     }
     super.after();
   }
 
-  // Allows us access to the sessions in the FTP Server that are otherwise hidden
-  static class SessionTrackingFakeFtpServer extends FakeFtpServer {
-    private List<Session> sessions = new ArrayList<>();
-
-    @Override
-    protected Session createSession(Socket clientSocket) {
-      Session session = super.createSession(clientSocket);
-      sessions.add(session);
-      return session;
-    }
-
-    public List<Session> getSessions() {
-      return sessions;
-    }
-  }
-
   protected void setupFTPServer(String homeDir) throws Exception {
-    fakeFtpServer = new SessionTrackingFakeFtpServer();
-    fakeFtpServer.setServerControlPort(0);
-    fakeFtpServer.setSystemName(FTPClientConfig.SYST_UNIX);
-    fakeFtpServer.setFileSystem(new UnixFakeFileSystem());
-    UserAccount userAccount = new UserAccount(TESTUSER, TESTPASS, homeDir);
-    fakeFtpServer.addUserAccount(userAccount);
-    fakeFtpServer.start();
-    port = fakeFtpServer.getServerControlPort();
-    populateFakeFileSystemFromReal(new File(homeDir));
+    FtpServerFactory serverFactory = new FtpServerFactory();
+    ListenerFactory factory = new ListenerFactory();
+    factory.setPort(0);
+    serverFactory.addListener("default", factory.createListener());
 
-    // Add the missing FEAT and MDTM commands
-    fakeFtpServer.setCommandHandler(FTPCmd.FEAT.getCommand(), new StaticReplyCommandHandler(211, "MDTM"));
-    fakeFtpServer.setCommandHandler(FTPCmd.MDTM.getCommand(), new AbstractStubCommandHandler() {
+    PropertiesUserManagerFactory userManagerFactory = new PropertiesUserManagerFactory();
+    UserManager um = userManagerFactory.createUserManager();
+    BaseUser user = new BaseUser();
+    user.setName(TESTUSER);
+    user.setPassword(TESTPASS);
+    user.setHomeDirectory("/");
+    user.setAuthorities(Collections.singletonList(new WritePermission()));
+    um.save(user);
+    serverFactory.setUserManager(um);
+
+    // For whatever reason, they hardcode the root of the filesystem to be the user's home dir.  This prevents us from
+    // testing scenarios where userDirIsRoot is false because we can't get out of the user dir.  As a workaround, we set
+    // the user's home dir to root (see above) and then modify the FileSystemView to change the working directory to the
+    // user's home dir instead - this properly emulates the expected behavior.
+    FileSystemFactory fsf = new NativeFileSystemFactory() {
       @Override
-      protected void handleCommand(Command command, Session session, InvocationRecord invocationRecord) {
-        String pathname = command.getOptionalString(0);
-        if (!pathname.startsWith("/")) {
-          pathname = homeDir + "/" + pathname;
-        }
-        invocationRecord.set(StatCommandHandler.PATHNAME_KEY, pathname);
+      public FileSystemView createFileSystemView(User user) throws FtpException {
+        FileSystemView view = super.createFileSystemView(user);
+        view.changeWorkingDirectory(homeDir);
+        return view;
+      }
+    };
+    serverFactory.setFileSystem(fsf);
 
-        FileSystemEntry file = fakeFtpServer.getFileSystem().getEntry(pathname);
-        if (file == null) {
-          sendReply(session, 550, null, "No such file or directory.", null);
+    CommandFactoryFactory cff = new CommandFactoryFactory();
+    // Allow pretending to not support MDTM by overriding the FEAT command to return an empty String (i.e. supports no
+    // extra features) if supportMDTM is false
+    cff.addCommand(FTPCmd.FEAT.getCommand(), new FEAT() {
+      @Override
+      public void execute(
+          FtpIoSession session, FtpServerContext context, FtpRequest request
+      ) throws IOException, FtpException {
+        if (supportMDTM) {
+          super.execute(session, context, request);
         } else {
-          String time = MDTM_DATE_FORMAT.format(file.getLastModified());
-          sendReply(session, 213, null, time, null);
+          session.resetState();
+          session.write(new DefaultFtpReply(211, ""));
         }
       }
     });
-  }
+    serverFactory.setCommandFactory(cff.createCommandFactory());
 
-  private void populateFakeFileSystemFromReal(File absFile) throws Exception {
-    for (File f : absFile.listFiles()) {
-      if (f.isFile()) {
-        addFileToFakeFileSystem(f.getAbsolutePath(), FileUtils.readFileToByteArray(f), f.lastModified());
-      } else if (f.isDirectory()) {
-        DirectoryEntry entry = new DirectoryEntry(f.getAbsolutePath());
-        fakeFtpServer.getFileSystem().add(entry);
-        populateFakeFileSystemFromReal(f);
-      }
-    }
-  }
-
-  protected void addFileToFakeFileSystem(String path, byte[] contents, long lastModified) {
-    FileEntry entry = new FileEntry(path);
-    entry.setContents(contents);
-    entry.setLastModified(new Date(lastModified));
-    fakeFtpServer.getFileSystem().add(entry);
+    ftpServer = (DefaultFtpServer) serverFactory.createServer();
+    ftpServer.start();
+    port = ftpServer.getListener("default").getPort();
   }
 }
