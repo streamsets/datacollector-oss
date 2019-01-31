@@ -289,9 +289,8 @@ public class TCPServerSourceConfig {
   public String timeZoneID = "UTC";
 
   @ConfigDef(
-      required = true,
+      required = false,
       type = ConfigDef.Type.TEXT,
-      defaultValue = "Record processed",
       label = "Record Processed Ack Message",
       description = "Acknowledgement message to be sent back to the client upon each successfully processed record.",
       displayPosition = 250,
@@ -302,9 +301,8 @@ public class TCPServerSourceConfig {
   public String recordProcessedAckMessage;
 
   @ConfigDef(
-      required = true,
+      required = false,
       type = ConfigDef.Type.TEXT,
-      defaultValue = "Batch processed",
       label = "Batch Completed Ack Message",
       description = "Acknowledgement message to be sent back to the client upon each successfully completed batch." +
           " The record in the EL context is the last record processed in the batch.",
