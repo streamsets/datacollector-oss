@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableSet;
 import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -34,6 +35,7 @@ import java.util.UUID;
 
 public class TestConfiguration {
 
+  @Before
   @After
   public void cleanUp() {
     Configuration.setFileRefsBaseDir(null);
@@ -316,5 +318,124 @@ public class TestConfiguration {
     Assert.assertEquals("B", conf.get("b", null));
     Assert.assertEquals("C", conf.get("c", null));
     Assert.assertNull(conf.get(Configuration.CONFIG_INCLUDES, null));
+  }
+
+  private void testExecRefOk(boolean absolutePath) throws IOException {
+    File dir = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(dir.mkdirs());
+    Configuration.setFileRefsBaseDir(dir);
+
+    File script;
+    String scriptForConfig;
+    if (absolutePath) {
+      dir = new File("target", UUID.randomUUID().toString());
+      Assert.assertTrue(dir.mkdirs());
+      script = new File(dir, "script.sh").getAbsoluteFile();
+      scriptForConfig = script.getAbsolutePath();
+    } else {
+      script = new File(dir, "script.sh");
+      scriptForConfig = script.getName();
+    }
+
+    try (Writer writer = new FileWriter(script)) {
+      writer.write("#!/bin/bash\necho -n \"secret\"\necho \"error\" >&2");
+    }
+    script.setExecutable(true);
+
+    Configuration conf = new Configuration();
+    conf.set("a", "${exec(\""+ scriptForConfig +"\")}");
+    Assert.assertEquals("secret", conf.get("a", null));
+
+    try (Writer writer = new FileWriter(new File(dir, "config.properties"))) {
+      conf.save(writer);
+    }
+
+    conf = new Configuration();
+    try (Reader reader = new FileReader(new File(dir, "config.properties"))) {
+      conf.load(reader);
+    }
+
+    Assert.assertEquals("secret", conf.get("a", null));
+
+    try (Reader reader = new FileReader(new File(dir, "config.properties"))) {
+      StringWriter stringWriter = new StringWriter();
+      IOUtils.copy(reader, stringWriter);
+      Assert.assertTrue(stringWriter.toString().contains("a=${exec(\"" + scriptForConfig + "\")}"));
+    }
+  }
+
+  @Test
+  public void testExecRefRelativeOk() throws IOException {
+    testExecRefOk(false);
+  }
+
+  @Test
+  public void testExecRefAbsoluteOk() throws IOException {
+    testExecRefOk(true);
+  }
+
+  @Test(expected = Configuration.ConfigurationException.class)
+  public void testExecRefScriptNotFoundError() {
+    File dir = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(dir.mkdirs());
+    Configuration.setFileRefsBaseDir(dir);
+
+    Configuration conf = new Configuration();
+    conf.set("a", "${exec(\"non-existent.sh\")}");
+    conf.get("a", null);
+  }
+
+  @Test(expected = Configuration.ConfigurationException.class)
+  public void testExecRefScriptNotExecutableError() throws Exception {
+    File dir = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(dir.mkdirs());
+    Configuration.setFileRefsBaseDir(dir);
+
+    File script = new File(dir, "script.sh");
+
+    try (Writer writer = new FileWriter(script)) {
+      writer.write("#!/bin/bash\necho -n \"secret\"\necho \"error\" >&2");
+    }
+
+    Configuration conf = new Configuration();
+    conf.set("a", "${exec(\"script.sh\")}");
+    conf.get("a", null);
+  }
+
+  @Test(expected = Configuration.ConfigurationException.class)
+  public void testExecRefScriptOverflowError() throws Exception {
+    File dir = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(dir.mkdirs());
+    Configuration.setFileRefsBaseDir(dir);
+
+    File script = new File(dir, "script.sh");
+
+    try (Writer writer = new FileWriter(script)) {
+      writer.write("#!/bin/bash\nwhile true; do echo -n \"secret\"; done");
+    }
+    script.setExecutable(true);
+
+    Configuration conf = new Configuration();
+    conf.set("a", "${exec(\"script.sh\")}");
+    conf.get("a", null);
+  }
+
+
+  @Test(expected = Configuration.ConfigurationException.class)
+  public void testExecRefScriptNonZeroExitError() throws Exception {
+    File dir = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(dir.mkdirs());
+    Configuration.setFileRefsBaseDir(dir);
+
+    File script = new File(dir, "script.sh");
+
+    try (Writer writer = new FileWriter(script)) {
+      writer.write("#!/bin/bash\nexit 1");
+    }
+    script.setExecutable(true);
+
+    Configuration conf = new Configuration();
+    conf.set("a", "${exec(\"script.sh\")}");
+    conf.get("a", null);
   }
 }

@@ -20,9 +20,12 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Paths;
@@ -123,6 +126,21 @@ public class Configuration implements com.streamsets.pipeline.api.Configuration 
 
   }
 
+  static class ConfigurationException extends RuntimeException {
+
+    public ConfigurationException(String message) {
+      super(message);
+    }
+
+    public ConfigurationException(Throwable cause) {
+      super(cause);
+    }
+
+    public ConfigurationException(String message, Throwable cause) {
+      super(message, cause);
+    }
+
+  }
 
   public static class FileRef extends Ref {
     @Deprecated
@@ -172,7 +190,98 @@ public class Configuration implements com.streamsets.pipeline.api.Configuration 
         }
         return sb.toString();
       } catch (IOException ex) {
-        throw new RuntimeException(ex);
+        throw new ConfigurationException(ex);
+      }
+    }
+
+  }
+
+  private static final int EXECUTABLE_MAX_OUTPUT_SIZE = 10 * 1000; // 10KB
+
+  public static class ExecRef extends Ref {
+    @Deprecated
+    public static final String DELIMITER = null;
+    public static final String PREFIX = "${exec(";
+    public static final String SUFFIX = ")}";
+
+    public ExecRef(String unresolvedValue) {
+      super(unresolvedValue);
+      Preconditions.checkState(fileRefsBaseDir != null, "fileRefsBaseDir has not been set");
+    }
+
+    public static boolean isValueMyRef(String value) {
+      return isValueMyRef(PREFIX, SUFFIX, value);
+    }
+
+    @Override
+    public String getPrefix() {
+      return PREFIX;
+    }
+
+    @Override
+    public String getSuffix() {
+      return SUFFIX;
+    }
+
+    @Override
+    public String getDelimiter() {
+      return DELIMITER;
+    }
+
+    @Override
+    public String getValue() {
+      File script;
+      String configFileName = getUnresolvedValueWithoutDelimiter();
+      if (Paths.get(configFileName).isAbsolute()) {
+        script = new File(configFileName);
+      } else {
+        script = new File(fileRefsBaseDir, configFileName);
+      }
+      if (script.exists()) {
+        if (script.canExecute()) {
+          StringBuilder sb = new StringBuilder();
+          try {
+            Process p = new ProcessBuilder(script.getAbsolutePath()).start();
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
+              int counter = 0;
+              int ch = reader.read();
+              while (ch > -1) {
+                sb.append((char) ch);
+                counter++;
+                if (counter > EXECUTABLE_MAX_OUTPUT_SIZE) {
+                  throw new ConfigurationException(Utils.format(
+                      "Executable '{}' output exceeded limit '{}' characters",
+                      script,
+                      EXECUTABLE_MAX_OUTPUT_SIZE
+                  ));
+                }
+                ch = reader.read();
+              }
+            }
+            try (InputStream is = p.getErrorStream()) {
+              while (is.read() > -1) {
+                ;
+              }
+            }
+            int exit = p.waitFor();
+            if (exit != 0) {
+              throw new ConfigurationException(Utils.format("Executable '{}' exit code '{}'", script, exit));
+            }
+          } catch (InterruptedException ex) {
+            throw new ConfigurationException(Utils.format("Executable '{}' interrupted: {}", script, ex), ex);
+          } catch (IOException ex) {
+            throw new ConfigurationException(Utils.format(
+                "Executable '{}' error reading script output: {}",
+                script,
+                ex
+            ), ex);
+          }
+          return sb.toString();
+        } else {
+          throw new ConfigurationException(Utils.format("Executable '{}' is not an executable", script));
+        }
+      } else {
+        throw new ConfigurationException(Utils.format("Executable '{}' not found", script));
       }
     }
 
@@ -217,6 +326,8 @@ public class Configuration implements com.streamsets.pipeline.api.Configuration 
       ref = new FileRef(value);
     } else if (EnvRef.isValueMyRef(value)) {
       ref = new EnvRef(value);
+    } else if (ExecRef.isValueMyRef(value)) {
+      ref = new ExecRef(value);
     } else {
       ref = new StringRef(value);
     }
