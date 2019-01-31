@@ -93,14 +93,6 @@ public class TCPServerSource extends BasePushSource {
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = new ArrayList<>();
 
-    if (config.recordProcessedAckMessage == null || config.recordProcessedAckMessage.isEmpty()) {
-      issues.add(getContext().createConfigIssue(Groups.TCP.name(), "conf.recordProcessedAckMessage", Errors.TCP_11));
-    }
-
-    if (config.batchCompletedAckMessage == null || config.batchCompletedAckMessage.isEmpty()) {
-      issues.add(getContext().createConfigIssue(Groups.TCP.name(), "conf.batchCompletedAckMessage", Errors.TCP_12));
-    }
-
     if (config.enableEpoll && !Epoll.isAvailable()) {
       issues.add(getContext().createConfigIssue(Groups.TCP.name(), CONF_PREFIX + "enableEpoll", Errors.TCP_05));
     }

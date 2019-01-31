@@ -32,8 +32,6 @@ public enum Errors implements ErrorCode {
   TCP_08("DataParserException thrown in Netty channel pipeline from DataFormatParserDecoder: {}"),
   TCP_09("No addresses available for TCP server to listen on"),
   TCP_10("Unrecognized charset: {}"),
-  TCP_11("Record Processed Ack Message cannot be empty"),
-  TCP_12("Batch Completed Ack Message cannot be empty"),
   TCP_20("Unknown Syslog message framing mode: {}"),
   TCP_30("Invalid expression \"{}\" for record processed ack message: {}"),
   TCP_31("Invalid expression \"{}\" for batch completed ack message: {}"),
