@@ -318,10 +318,11 @@ public class TCPServerSourceConfig {
       type = ConfigDef.Type.NUMBER,
       defaultValue = "300",
       label = "Read Timeout (seconds)",
-      description = "Period of time a connection can be idle. After that time, the connection is closed. Values <= 0 " +
-          "means no idle timeout applied",
+      description = "Period of time a connection can be idle. After that time, the connection is closed",
       displayPosition = 300,
-      group = "TCP"
+      group = "TCP",
+      min = 1,
+      max = 3600
   )
   public int readTimeout;
 }
