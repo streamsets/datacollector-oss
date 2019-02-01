@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2019 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,39 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.remote;
+package com.streamsets.pipeline.stage.destination.remote;
 
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
-import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.base.configurablestage.DSource;
+import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 
 @StageDef(
-    version = 4,
+    version = 1,
     label = "SFTP/FTP Client",
-    description = "Uses an SFTP/FTP client to read data from a URL.",
+    description = "Uses an SFTP/FTP client to send data to a URL.",
     icon = "sftp-client.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     resetOffset = true,
     producesEvents = true,
-    upgrader = RemoteDownloadSourceUpgrader.class,
-    onlineHelpRefUrl ="index.html?contextID=task_lfx_fzd_5v"
+    onlineHelpRefUrl ="index.html?contextID=task_jgs_4fw_pgb"
 )
-@HideConfigs(value = {"conf.dataFormatConfig.verifyChecksum", "conf.remoteConfig.createPathIfNotExists"})
+@HideConfigs(value = {"conf.dataFormatConfig.includeChecksumInTheEvents"})
 @GenerateResourceBundle
 @ConfigGroups(Groups.class)
-public class RemoteDownloadDSource extends DSource {
+public class RemoteUploadDTarget extends DTarget {
 
   @ConfigDefBean
-  public RemoteDownloadConfigBean conf;
+  public RemoteUploadConfigBean conf;
 
   @Override
-  protected Source createSource() {
-    return new RemoteDownloadSource(conf);
+  protected Target createTarget() {
+    return new RemoteUploadTarget(conf);
   }
 }

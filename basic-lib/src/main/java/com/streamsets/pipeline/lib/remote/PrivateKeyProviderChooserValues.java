@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.remote;
+package com.streamsets.pipeline.lib.remote;
 
-import com.streamsets.pipeline.lib.remote.RemoteFile;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-interface FileQueueChecker {
+public class PrivateKeyProviderChooserValues extends BaseEnumChooserValues<PrivateKeyProvider> {
 
-  boolean shouldQueue(RemoteFile remoteFile);
+  public PrivateKeyProviderChooserValues() {
+    super(PrivateKeyProvider.class);
+  }
 }

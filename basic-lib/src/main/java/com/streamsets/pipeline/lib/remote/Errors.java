@@ -13,22 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.remote;
+package com.streamsets.pipeline.lib.remote;
 
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
-  REMOTE_DOWNLOAD_01("Failed to process file '{}' at position '{}': {}"),
-  REMOTE_DOWNLOAD_02("Failed to read data from file '{}' at position '{}' due to: {}"),
-  REMOTE_DOWNLOAD_03("Failed to read data due to: {}"),
-
-  REMOTE_DOWNLOAD_04("File Pattern cannot be empty"),
-  REMOTE_DOWNLOAD_05("Invalid {} file pattern '{}': {}"),
-  REMOTE_DOWNLOAD_06("Initial file '{}' is invalid: {}"),
-  REMOTE_DOWNLOAD_07("Archive directory cannot be empty"),
-  REMOTE_DOWNLOAD_08("Problem setting archive directory: {}"),
+  REMOTE_01("Given URI is invalid {}"),
+  REMOTE_02("URI: '{}' is invalid. Must begin with 'ftp://' or 'sftp://'"),
+  REMOTE_03("known_hosts file: {} does not exist or is not accessible"),
+  REMOTE_04("Strict Host Checking is enabled and known_hosts file not specified"),
+  REMOTE_05("Private Key file: {} does not exist or is not accessible"),
+  REMOTE_06("Private Key authentication is supported only with SFTP"),
+  REMOTE_07("Strict Host Checking is supported only with SFTP"),
+  REMOTE_08("Can't resolve credential: {}"),
+  REMOTE_09("Error accessing remote directory: {}"),
+  REMOTE_10("Unable to load Private Key: {}"),
+  REMOTE_11("Unable to connect to remote host '{}' with given credentials. " +
+      "Please verify if the host is reachable, and the credentials are valid. Message: {}"),
   ;
 
   private final String msg;

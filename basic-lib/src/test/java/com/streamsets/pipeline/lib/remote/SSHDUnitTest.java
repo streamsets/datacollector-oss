@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.remote;
+package com.streamsets.pipeline.lib.remote;
 
 import com.github.fommil.ssh.SshRsaCrypto;
 import com.google.common.base.Preconditions;
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.common.Buffer;
+import net.schmizz.sshj.common.SecurityUtils;
 import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
 import org.apache.commons.io.IOUtils;
 import org.apache.sshd.common.NamedFactory;
@@ -149,6 +150,10 @@ public abstract class SSHDUnitTest {
     byte[] key = new Buffer.PlainBuffer().putPublicKey(sshdHostKeyPair.getPublic()).getCompactData();
     String entry = host + " ssh-rsa " + Base64.getEncoder().encodeToString(key);
     return entry.getBytes(Charset.forName("UTF-8"));
+  }
+
+  protected String getPublicKeyFingerprint() {
+    return SecurityUtils.getFingerprint(sshdHostKeyPair.getPublic());
   }
 
   private static class PasswdAuth implements PasswordAuthenticator {

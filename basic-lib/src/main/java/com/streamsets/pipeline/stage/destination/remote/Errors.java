@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2019 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.remote;
+package com.streamsets.pipeline.stage.destination.remote;
 
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
-  REMOTE_DOWNLOAD_01("Failed to process file '{}' at position '{}': {}"),
-  REMOTE_DOWNLOAD_02("Failed to read data from file '{}' at position '{}' due to: {}"),
-  REMOTE_DOWNLOAD_03("Failed to read data due to: {}"),
+  REMOTE_UPLOAD_01("Unable to connect to remote host: {} with given credentials. " +
+      "Please verify if the host is reachable, and the credentials are valid. Message: {}"),
 
-  REMOTE_DOWNLOAD_04("File Pattern cannot be empty"),
-  REMOTE_DOWNLOAD_05("Invalid {} file pattern '{}': {}"),
-  REMOTE_DOWNLOAD_06("Initial file '{}' is invalid: {}"),
-  REMOTE_DOWNLOAD_07("Archive directory cannot be empty"),
-  REMOTE_DOWNLOAD_08("Problem setting archive directory: {}"),
+  REMOTE_UPLOAD_02("File path '{}' already exists"),
+  REMOTE_UPLOAD_03("Error happened when writing to file '{}'. Reason: {}"),
+
+  REMOTE_UPLOAD_04("Data Format '{}' is not supported"),
   ;
 
   private final String msg;

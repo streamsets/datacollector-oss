@@ -37,6 +37,10 @@ import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.RecoverableDataParserException;
+import com.streamsets.pipeline.lib.remote.FTPRemoteConnector;
+import com.streamsets.pipeline.lib.remote.RemoteConnector;
+import com.streamsets.pipeline.lib.remote.RemoteFile;
+import com.streamsets.pipeline.lib.remote.SFTPRemoteConnector;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
@@ -47,7 +51,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.core.UriBuilder;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -72,10 +75,7 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
 
   private static final Logger LOG = LoggerFactory.getLogger(RemoteDownloadSource.class);
   private static final String CONF_PREFIX = "conf.";
-  private static final String REMOTE_ADDRESS_CONF = CONF_PREFIX + "remoteAddress";
   private static final String MINUS_ONE = "-1";
-  private static final String FTP_SCHEME = "ftp";
-  private static final String SFTP_SCHEME = "sftp";
 
   static final String NOTHING_READ = "null";
 
@@ -150,17 +150,11 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
         getContext(),
         conf.dataFormat,
         Groups.REMOTE.getLabel(),
-        DATA_FORMAT_CONFIG_PREFIX,
+        CONF_PREFIX + DATA_FORMAT_CONFIG_PREFIX,
         issues
     );
 
-    try {
-      this.remoteURI = new URI(conf.remoteAddress);
-    } catch (Exception ex) {
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.REMOTE.getLabel(), REMOTE_ADDRESS_CONF, Errors.REMOTE_01, conf.remoteAddress));
-    }
+    this.remoteURI = RemoteConnector.getURI(conf.remoteConfig, issues, getContext(), Groups.REMOTE);
 
     if (conf.postProcessing == PostProcessingOptions.ARCHIVE) {
       if (conf.archiveDir == null || conf.archiveDir.isEmpty()) {
@@ -168,7 +162,7 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
             getContext().createConfigIssue(
                 Groups.POST_PROCESSING.name(),
                 CONF_PREFIX + "archiveDir",
-                Errors.REMOTE_20
+                Errors.REMOTE_DOWNLOAD_07
             )
         );
       } else {
@@ -176,54 +170,27 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
       }
     }
 
+    validateFilePattern(issues);
+    rateLimitElEval = FileRefUtil.createElEvalForRateLimit(getContext());
+    rateLimitElVars = getContext().createELVars();
+
     if (issues.isEmpty()) {
-      if (remoteURI.getScheme().equals(FTP_SCHEME)) {
-        int port = remoteURI.getPort();
-        if (port == -1) {
-          port = 21;
-        }
+      if (FTPRemoteConnector.SCHEME.equals(remoteURI.getScheme())) {
         delegate = new FTPRemoteDownloadSourceDelegate(conf);
-        remoteURI = UriBuilder.fromUri(remoteURI).port(port).build();
-        initAndConnect(issues);
-      } else if (remoteURI.getScheme().equals(SFTP_SCHEME)) {
-        int port = remoteURI.getPort();
-        if (port == -1) {
-          port = 22;
-        }
-        remoteURI = UriBuilder.fromUri(remoteURI).port(port).build();
+        delegate.initAndConnect(issues, getContext(), remoteURI, archiveDir);
+      } else if (SFTPRemoteConnector.SCHEME.equals(remoteURI.getScheme())) {
         delegate = new SFTPRemoteDownloadSourceDelegate(conf);
-        initAndConnect(issues);
-      } else {
-        issues.add(
-            getContext().createConfigIssue(
-                Groups.REMOTE.getLabel(), REMOTE_ADDRESS_CONF, Errors.REMOTE_15, conf.remoteAddress));
+        delegate.initAndConnect(issues, getContext(), remoteURI, archiveDir);
       }
     }
     return issues;
-  }
-
-  private void initAndConnect(List<ConfigIssue> issues) {
-    try {
-      delegate.initAndConnect(issues, getContext(), remoteURI, archiveDir);
-    } catch (IOException ex) {
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.REMOTE.getLabel(), REMOTE_ADDRESS_CONF, Errors.REMOTE_08, conf.remoteAddress, ex.getMessage()
-      ));
-      LOG.error("Error trying to login to remote host", ex);
-    }
-    validateFilePattern(issues);
-    if (issues.isEmpty()) {
-      rateLimitElEval = FileRefUtil.createElEvalForRateLimit(getContext());
-      rateLimitElVars = getContext().createELVars();
-    }
   }
 
   private void validateFilePattern(List<ConfigIssue> issues) {
     if (conf.filePattern == null || conf.filePattern.trim().isEmpty()) {
       issues.add(
           getContext().createConfigIssue(
-              Groups.REMOTE.getLabel(), CONF_PREFIX + "filePattern", Errors.REMOTE_13, conf.filePattern));
+              Groups.REMOTE.getLabel(), CONF_PREFIX + "filePattern", Errors.REMOTE_DOWNLOAD_04, conf.filePattern));
     } else {
       try {
         fileFilter = new FileFilter(conf.filePatternMode, conf.filePattern);
@@ -232,7 +199,7 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
             getContext().createConfigIssue(
                 Groups.REMOTE.getLabel(),
                 CONF_PREFIX + "filePattern",
-                Errors.REMOTE_14,
+                Errors.REMOTE_DOWNLOAD_05,
                 conf.filePatternMode,
                 conf.filePattern,
                 ex.toString(),
@@ -256,7 +223,7 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
           try {
             currentOffset = delegate.createOffset(conf.initialFileToProcess);
           } catch (IOException e) {
-            throw new StageException(Errors.REMOTE_16, conf.initialFileToProcess, e.toString(), e);
+            throw new StageException(Errors.REMOTE_DOWNLOAD_06, conf.initialFileToProcess, e.toString(), e);
           }
         }
 
@@ -412,7 +379,7 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
         //Even though we had an error in the data, we still saw some data
         canTriggerNoMoreDataEvent = true;
       } catch (ObjectLengthException ex) {
-        errorRecordHandler.onError(Errors.REMOTE_02, currentOffset.fileName, offset, ex);
+        errorRecordHandler.onError(Errors.REMOTE_DOWNLOAD_01, currentOffset.fileName, offset, ex);
         //Even though we couldn't process data from the file, we still saw some data
         canTriggerNoMoreDataEvent = true;
       }
@@ -526,9 +493,9 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
           break;
         case STOP_PIPELINE:
           if (currentOffset != null) {
-            throw new StageException(Errors.REMOTE_04, currentOffset.fileName, exOffset, ex);
+            throw new StageException(Errors.REMOTE_DOWNLOAD_02, currentOffset.fileName, exOffset, ex);
           } else {
-            throw new StageException(Errors.REMOTE_05, ex);
+            throw new StageException(Errors.REMOTE_DOWNLOAD_03, ex);
           }
         default:
           throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
@@ -625,7 +592,7 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
     event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.FTP.name());
     event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, conf.filePattern);
     Map<String, String> props = new HashMap<>();
-    props.put("Resource URL", conf.remoteAddress);
+    props.put("Resource URL", conf.remoteConfig.remoteAddress);
     event.setProperties(props);
     getContext().publishLineageEvent(event);
   }

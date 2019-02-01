@@ -18,7 +18,7 @@ package com.streamsets.pipeline.stage.origin.remote;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.lib.remote.RemoteFile;
 
 import java.io.IOException;
 import java.net.URI;
@@ -35,73 +35,23 @@ import java.util.NavigableSet;
  * {@link #initAndConnect(List, Source.Context, URI, String)} should be called once and only once, before calling
  * anything else. {@link #close()} should be called when finished to clean up.
  */
-abstract class RemoteDownloadSourceDelegate {
-  protected static final String CONF_PREFIX = "conf.";
-  protected static final String ZERO = "0";
-  protected static final int MAX_RETRIES = 2;
-
-  protected RemoteDownloadConfigBean conf;
-
-  protected RemoteDownloadSourceDelegate(RemoteDownloadConfigBean conf) {
-    this.conf = conf;
-  }
-
-  protected String resolveCredential(CredentialValue credentialValue, String config, List<Stage.ConfigIssue> issues,
-      Source.Context context) {
-    try {
-      return credentialValue.get();
-    } catch (StageException e) {
-      issues.add(context.createConfigIssue(
-          Groups.CREDENTIALS.getLabel(),
-          config,
-          Errors.REMOTE_17,
-          e.toString()
-      ));
-    }
-    return null;
-  }
-
-  protected String resolveUsername(URI remoteURI, List<Stage.ConfigIssue> issues, Source.Context context) {
-    String userInfo = remoteURI.getUserInfo();
-    if (userInfo != null) {
-      if (userInfo.contains(":")) {
-        return userInfo.substring(0, userInfo.indexOf(":"));
-      }
-      return userInfo;
-    }
-    return resolveCredential(conf.username, CONF_PREFIX + "username", issues, context);
-  }
-
-  protected String resolvePassword(URI remoteURI, List<Stage.ConfigIssue> issues, Source.Context context) {
-    String userInfo = remoteURI.getUserInfo();
-    if (userInfo != null && userInfo.contains(":")) {
-      return userInfo.substring(userInfo.indexOf(":") + 1);
-    }
-    return resolveCredential(conf.password, CONF_PREFIX + "password", issues, context);
-  }
+public interface RemoteDownloadSourceDelegate {
+  static final String ZERO = "0";
 
   void initAndConnect(
       List<Stage.ConfigIssue> issues, Source.Context context, URI remoteURI, String archiveDir
-  ) throws IOException {
-    synchronized (this) {
-      initAndConnectInternal(issues, context, remoteURI, archiveDir);
-    }
-  }
+  );
 
-  protected abstract void initAndConnectInternal(
-      List<Stage.ConfigIssue> issues, Source.Context context, URI remoteURI, String archiveDir
-  ) throws IOException;
+  Offset createOffset(String file) throws IOException;
 
-  abstract Offset createOffset(String file) throws IOException;
+  long populateMetadata(String remotePath, Map<String, Object> metadata) throws IOException;
 
-  abstract long populateMetadata(String remotePath, Map<String, Object> metadata) throws IOException;
-
-  abstract void queueFiles(FileQueueChecker fqc, NavigableSet<RemoteFile> fileQueue, FileFilter fileFilter) throws
+  void queueFiles(FileQueueChecker fqc, NavigableSet<RemoteFile> fileQueue, FileFilter fileFilter) throws
       IOException, StageException;
 
-  abstract void close() throws IOException;
+  void close() throws IOException;
 
-  abstract void delete(String remotePath) throws IOException;
+  void delete(String remotePath) throws IOException;
 
-  abstract String archive(String fromPath) throws IOException;
+  String archive(String fromPath) throws IOException;
 }

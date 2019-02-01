@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.origin.remote;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
@@ -32,6 +33,8 @@ import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.io.fileref.FileRefTestUtil;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
+import com.streamsets.pipeline.lib.remote.Authentication;
+import com.streamsets.pipeline.lib.remote.FTPAndSSHDUnitTest;
 import com.streamsets.pipeline.sdk.DataCollectorServicesUtils;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.SourceRunner;
@@ -59,7 +62,6 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -110,12 +112,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         new RemoteDownloadSource(getBean(
             scheme.name() + "://localhost:" + port + "/",
             true,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            null,
-            true,
             DataFormat.JSON,
             null,
             false,
@@ -143,12 +139,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         new RemoteDownloadSource(getBean(
             scheme.name() + "://localhost:" + port + "/",
             true,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            null,
-            true,
             DataFormat.JSON,
             null,
             false,
@@ -169,91 +159,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
     destroyAndValidate(runner);
   }
 
-
-  private void destroyAndValidate(SourceRunner runner) throws Exception {
-    runner.runDestroy();
-    if (scheme == Scheme.sftp) {
-      await().atMost(10, TimeUnit.SECONDS).untilTrue(closedAll);
-    }
-  }
-
-  @Test
-  public void testWrongPass() throws Exception {
-    path = "remote-download-source/parseNoError";
-    setupServer(path, false);
-    RemoteDownloadSource origin =
-        new RemoteDownloadSource(getBean(
-            scheme.name() + "://localhost:" + port + "/",
-            true,
-            TESTUSER,
-            "wrongpass",
-            null,
-            null,
-            null,
-            true,
-            DataFormat.JSON,
-            null,
-            false,
-            "*"
-        ));
-    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadDSource.class, origin)
-        .addOutputLane("lane")
-        .build();
-    StageException e = runInitWithConfigException(runner, Errors.REMOTE_08);
-    if (scheme == Scheme.sftp) {
-      Assert.assertTrue(
-          "Expected exception message to contain \"Exhausted available authentication methods\" but did not: "
-          + e.getMessage(), e.getMessage().contains("Exhausted available authentication methods"));
-    }
-    destroyAndValidate(runner);
-  }
-
-  @Test
-  public void testInvalidURL() throws Exception {
-    RemoteDownloadSource origin =
-        new RemoteDownloadSource(getBean(
-            // wrong scheme
-            "http://localhost:" + port + "/",
-            true,
-            TESTUSER,
-            "wrongpass",
-            null,
-            null,
-            null,
-            true,
-            DataFormat.JSON,
-            null,
-            false,
-            "*"
-        ));
-    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadDSource.class, origin)
-        .addOutputLane("lane")
-        .build();
-    runInitWithConfigException(runner, Errors.REMOTE_15);
-
-    origin =
-        new RemoteDownloadSource(getBean(
-            // Invalid URI
-            "?!?!$A*( W",
-            true,
-            TESTUSER,
-            "wrongpass",
-            null,
-            null,
-            null,
-            true,
-            DataFormat.JSON,
-            null,
-            false,
-            "*"
-        ));
-    runner = new SourceRunner.Builder(RemoteDownloadDSource.class, origin)
-        .addOutputLane("lane")
-        .build();
-    runInitWithConfigException(runner, Errors.REMOTE_01);
-    destroyAndValidate(runner);
-  }
-
   @Test
   public void testInvalidFilePatternGlob() throws Exception {
     testInvalidFilePattern(FilePatternMode.GLOB);
@@ -270,12 +175,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
     RemoteDownloadSource origin = new RemoteDownloadSource(getBean(
         scheme.name() + "://localhost:" + port + "/",
         true,
-        TESTUSER,
-        TESTPASS,
-        null,
-        null,
-        null,
-        true,
         DataFormat.JSON,
         null,
         false,
@@ -285,17 +184,11 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         ""
     ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadDSource.class, origin).addOutputLane("lane").build();
-    runInitWithConfigException(runner, Errors.REMOTE_13);
+    runInitWithConfigException(runner, Errors.REMOTE_DOWNLOAD_04);
     destroyAndValidate(runner);
 
     origin = new RemoteDownloadSource(getBean(
         scheme.name() + "://localhost:" + port + "/",
-        true,
-        TESTUSER,
-        TESTPASS,
-        null,
-        null,
-        null,
         true,
         DataFormat.JSON,
         null,
@@ -306,294 +199,7 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         ""
     ));
     runner = new SourceRunner.Builder(RemoteDownloadDSource.class, origin).addOutputLane("lane").build();
-    runInitWithConfigException(runner, Errors.REMOTE_14);
-    destroyAndValidate(runner);
-  }
-
-  @Test
-  public void testPrivateKey() throws Exception {
-    path = "remote-download-source/parseNoError";
-    setupServer(path, false);
-    File privateKeyFile =
-        new File(currentThread().getContextClassLoader().
-            getResource("remote-download-source/id_rsa_test").getPath());
-    RemoteDownloadSource origin = new RemoteDownloadSource(getBean(
-        scheme.name() + "://localhost:" + port + "/",
-        true,
-        TESTUSER,
-        null,
-        privateKeyFile.toString(),
-        "streamsets",
-        null,
-        true,
-        DataFormat.JSON,
-        null,
-        false,
-        "*"
-    ));
-    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadDSource.class, origin)
-        .addOutputLane("lane")
-        .build();
-    if (scheme == Scheme.sftp) {
-      runner.runInit();
-      StageRunner.Output op = runner.runProduce(RemoteDownloadSource.NOTHING_READ, 1000);
-      List<Record> expected = getExpectedRecords();
-      List<Record> actual = op.getRecords().get("lane");
-      Assert.assertEquals(expected.size(), actual.size());
-      for (int i = 0; i < 2; i++) {
-        Assert.assertEquals(expected.get(i).get(), actual.get(i).get());
-      }
-    } else if (scheme == Scheme.ftp) {
-      runInitWithConfigException(runner, Errors.REMOTE_11);
-    }
-    destroyAndValidate(runner);
-  }
-
-  @Test
-  public void testPrivateKeyPlainText() throws Exception {
-    Assume.assumeTrue(scheme == Scheme.sftp);
-    path = "remote-download-source/parseNoError";
-    setupServer(path, false);
-    File privateKeyFile = new File(currentThread().getContextClassLoader().
-        getResource("remote-download-source/id_rsa_test").getPath());
-    String privateKeyPlainText = Files.toString(privateKeyFile, Charset.forName("UTF-8"));
-    RemoteDownloadSource origin = new RemoteDownloadSource(getBean(
-        scheme.name() + "://localhost:" + port + "/",
-        true,
-        TESTUSER,
-        null,
-        null,
-        "streamsets",
-        null,
-        true,
-        DataFormat.JSON,
-        null,
-        false,
-        FilePatternMode.GLOB,
-        "*",
-        1000,
-        "",
-        privateKeyPlainText
-    ));
-    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadDSource.class, origin)
-        .addOutputLane("lane")
-        .build();
-    runner.runInit();
-    StageRunner.Output op = runner.runProduce(RemoteDownloadSource.NOTHING_READ, 1000);
-    List<Record> expected = getExpectedRecords();
-    List<Record> actual = op.getRecords().get("lane");
-    Assert.assertEquals(expected.size(), actual.size());
-    for (int i = 0; i < 2; i++) {
-      Assert.assertEquals(expected.get(i).get(), actual.get(i).get());
-    }
-    destroyAndValidate(runner);
-  }
-
-  @Test
-  public void testPrivateKeyNoPassphrase() throws Exception {
-    Assume.assumeTrue(scheme == Scheme.sftp);
-    path = "remote-download-source/parseNoError";
-    setupServer(path, false);
-    File privateKeyFile = new File(currentThread().getContextClassLoader().
-        getResource("remote-download-source/id_rsa_test_unencrypted").getPath());
-    RemoteDownloadSource origin = new RemoteDownloadSource(getBean(
-        scheme.name() + "://localhost:" + port + "/",
-        true,
-        TESTUSER,
-        null,
-        privateKeyFile.toString(),
-        null,
-        null,
-        true,
-        DataFormat.JSON,
-        null,
-        false,
-        "*"
-    ));
-    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadDSource.class, origin)
-        .addOutputLane("lane")
-        .build();
-    runner.runInit();
-    StageRunner.Output op = runner.runProduce(RemoteDownloadSource.NOTHING_READ, 1000);
-    List<Record> expected = getExpectedRecords();
-    List<Record> actual = op.getRecords().get("lane");
-    Assert.assertEquals(expected.size(), actual.size());
-    for (int i = 0; i < 2; i++) {
-      Assert.assertEquals(expected.get(i).get(), actual.get(i).get());
-    }
-    destroyAndValidate(runner);
-  }
-
-  @Test
-  public void testPrivateKeyPlainTextNoPassphrase() throws Exception {
-    Assume.assumeTrue(scheme == Scheme.sftp);
-    path = "remote-download-source/parseNoError";
-    setupServer(path, false);
-    File privateKeyFile = new File(currentThread().getContextClassLoader().
-        getResource("remote-download-source/id_rsa_test_unencrypted").getPath());
-    String privateKeyPlainText = Files.toString(privateKeyFile, Charset.forName("UTF-8"));
-    RemoteDownloadSource origin = new RemoteDownloadSource(getBean(
-        scheme.name() + "://localhost:" + port + "/",
-        true,
-        TESTUSER,
-        null,
-        null,
-        null,
-        null,
-        true,
-        DataFormat.JSON,
-        null,
-        false,
-        FilePatternMode.GLOB,
-        "*",
-        1000,
-        "",
-        privateKeyPlainText
-    ));
-    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadDSource.class, origin)
-        .addOutputLane("lane")
-        .build();
-    runner.runInit();
-    StageRunner.Output op = runner.runProduce(RemoteDownloadSource.NOTHING_READ, 1000);
-    List<Record> expected = getExpectedRecords();
-    List<Record> actual = op.getRecords().get("lane");
-    Assert.assertEquals(expected.size(), actual.size());
-    for (int i = 0; i < 2; i++) {
-      Assert.assertEquals(expected.get(i).get(), actual.get(i).get());
-    }
-    destroyAndValidate(runner);
-  }
-
-  @Test
-  public void testPrivateKeyWrongPassphrase() throws Exception {
-    Assume.assumeTrue(scheme == Scheme.sftp);
-    path = "remote-download-source/parseNoError";
-    setupServer(path, false);
-    File privateKeyFile =
-        new File(currentThread().getContextClassLoader().
-            getResource("remote-download-source/id_rsa_test").getPath());
-    RemoteDownloadSource origin =
-        new RemoteDownloadSource(getBean(
-            "sftp://localhost:" + port + "/",
-            true,
-            TESTUSER,
-            null,
-            privateKeyFile.toString(),
-            "randomrandom",
-            null,
-            true,
-            DataFormat.JSON,
-            null,
-            false,
-            "*"
-        ));
-    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadDSource.class, origin)
-        .addOutputLane("lane")
-        .build();
-    runInitWithConfigException(runner, Errors.REMOTE_19);
-    destroyAndValidate(runner);
-  }
-
-  @Test
-  public void testPrivateKeyPlainTextWrongPassphrase() throws Exception {
-    Assume.assumeTrue(scheme == Scheme.sftp);
-    path = "remote-download-source/parseNoError";
-    setupServer(path, false);
-    File privateKeyFile =
-        new File(currentThread().getContextClassLoader().
-            getResource("remote-download-source/id_rsa_test").getPath());
-    String privateKeyPlainText = Files.toString(privateKeyFile, Charset.forName("UTF-8"));
-    RemoteDownloadSource origin =
-        new RemoteDownloadSource(getBean(
-            "sftp://localhost:" + port + "/",
-            true,
-            TESTUSER,
-            null,
-            null,
-            "randomrandom",
-            null,
-            true,
-            DataFormat.JSON,
-            null,
-            false,
-            FilePatternMode.GLOB,
-            "*",
-            1000,
-            "",
-            privateKeyPlainText
-        ));
-    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadDSource.class, origin)
-        .addOutputLane("lane")
-        .build();
-    runInitWithConfigException(runner, Errors.REMOTE_19);
-    destroyAndValidate(runner);
-  }
-
-  @Test
-  public void testPrivateKeyInvalid() throws Exception {
-    Assume.assumeTrue(scheme == Scheme.sftp);
-    path = "remote-download-source/parseNoError";
-    setupServer(path, false);
-    File privateKeyFile = testFolder.newFile("randomkey_rsa");
-    Files.write("blah blah".getBytes(Charset.forName("UTF-8")), privateKeyFile);
-    privateKeyFile.deleteOnExit();
-    RemoteDownloadSource origin =
-        new RemoteDownloadSource(getBean(
-            "sftp://localhost:" + port + "/",
-            true,
-            TESTUSER,
-            null,
-            privateKeyFile.toString(),
-            "streamsets",
-            null,
-            true,
-            DataFormat.JSON,
-            null,
-            false,
-            "*"
-        ));
-    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadDSource.class, origin)
-        .addOutputLane("lane")
-        .build();
-    StageException e = runInitWithConfigException(runner, Errors.REMOTE_08);
-    Assert.assertTrue(
-        "Expected exception message to contain \"No provider available for Unknown key file\" but did not: "
-            + e.getMessage(), e.getMessage().contains("No provider available for Unknown key file"));
-    destroyAndValidate(runner);
-  }
-
-  @Test
-  public void testPrivateKeyPlainTextInvalid() throws Exception {
-    Assume.assumeTrue(scheme == Scheme.sftp);
-    path = "remote-download-source/parseNoError";
-    setupServer(path, false);
-    String privateKeyPlainText = "blah blah";
-    RemoteDownloadSource origin =
-        new RemoteDownloadSource(getBean(
-            "sftp://localhost:" + port + "/",
-            true,
-            TESTUSER,
-            null,
-            null,
-            "streamsets",
-            null,
-            true,
-            DataFormat.JSON,
-            null,
-            false,
-            FilePatternMode.GLOB,
-            "*",
-            1000,
-            "",
-            privateKeyPlainText
-        ));
-    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadDSource.class, origin)
-        .addOutputLane("lane")
-        .build();
-    StageException e = runInitWithConfigException(runner, Errors.REMOTE_08);
-    Assert.assertTrue(
-        "Expected exception message to contain \"No provider available for Unknown key file\" but did not: "
-            + e.getMessage(), e.getMessage().contains("No provider available for Unknown key file"));
+    runInitWithConfigException(runner, Errors.REMOTE_DOWNLOAD_05);
     destroyAndValidate(runner);
   }
 
@@ -616,12 +222,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
     RemoteDownloadSource origin =
         new RemoteDownloadSource(getBean(
             scheme.name() + "://localhost:" + port + "/",
-            true,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            null,
             true,
             DataFormat.JSON,
             null,
@@ -665,12 +265,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         new RemoteDownloadSource(getBean(
             scheme.name() + "://localhost:" + port + "/",
             true,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            null,
-            true,
             DataFormat.JSON,
             null,
             false,
@@ -704,12 +298,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         new RemoteDownloadSource(getBean(
             scheme.name() + "://localhost:" + port + "/",
             true,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            null,
-            true,
             DataFormat.JSON,
             null,
             false,
@@ -726,7 +314,7 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
       runner.runProduce(null, 1000);
       Assert.fail("Expected a StageException");
     } catch (StageException e) {
-      Assert.assertEquals(Errors.REMOTE_16, e.getErrorCode());
+      Assert.assertEquals(Errors.REMOTE_DOWNLOAD_06, e.getErrorCode());
       if (scheme == Scheme.sftp) {
         Assert.assertTrue(e.getCause() instanceof SFTPException);
         SFTPException cause = (SFTPException) e.getCause();
@@ -750,12 +338,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         new RemoteDownloadSource(getBean(
             scheme.name() + "://localhost:" + port + "/",
             true,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            null,
-            true,
             DataFormat.JSON,
             null,
             false,
@@ -778,12 +360,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
     origin =
         new RemoteDownloadSource(getBean(
             scheme.name() + "://localhost:" + port + "/",
-            true,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            null,
             true,
             DataFormat.JSON,
             null,
@@ -825,12 +401,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         new RemoteDownloadSource(getBean(
             scheme.name() + "://localhost:" + port + "/",
             true,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            null,
-            true,
             DataFormat.JSON,
             null,
             false,
@@ -853,12 +423,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
     origin =
         new RemoteDownloadSource(getBean(
             scheme.name() + "://localhost:" + port + "/",
-            true,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            null,
             true,
             DataFormat.JSON,
             null,
@@ -896,12 +460,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
     RemoteDownloadSource origin =
         new RemoteDownloadSource(getBean(
             scheme.name() + "://localhost:" + port + "/",
-            true,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            null,
             true,
             DataFormat.JSON,
             archiveDir.toString(),
@@ -956,12 +514,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         new RemoteDownloadSource(getBean(
             scheme.name() + "://localhost:" + port + "/",
             true,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            null,
-            true,
             DataFormat.JSON,
             archiveDir.toString(),
             false,
@@ -1007,12 +559,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         new RemoteDownloadSource(getBean(
             scheme.name() + "://localhost:" + port + "/",
             true,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            null,
-            true,
             DataFormat.JSON,
             null,
             false,
@@ -1049,12 +595,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
     RemoteDownloadSource origin =
         new RemoteDownloadSource(getBean(
             scheme.name() + "://localhost:" + port + "/",
-            true,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            null,
             true,
             DataFormat.JSON,
             null,
@@ -1158,12 +698,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         new RemoteDownloadSource(getBean(
             scheme.name() + "://localhost:" + port + "/",
             true,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            null,
-            true,
             DataFormat.JSON,
             null,
             false,
@@ -1213,12 +747,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
     RemoteDownloadSource origin =
         new RemoteDownloadSource(getBean(
             scheme.name() + "://localhost:" + port + "/",
-            true,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            null,
             true,
             DataFormat.WHOLE_FILE,
             null,
@@ -1270,7 +798,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
     }
   }
 
-
   @Test
   public void testWholeFileMultipleInputStreams() throws Exception {
     path = testFolder.getRoot().getAbsolutePath() + "/remote-download-source/testWholeFileMultipleInputStreams";
@@ -1288,12 +815,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
     RemoteDownloadSource origin =
         new RemoteDownloadSource(getBean(
             scheme.name() + "://localhost:" + port + "/",
-            true,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            null,
             true,
             DataFormat.WHOLE_FILE,
             null,
@@ -1341,12 +862,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
   ) throws Exception {
     RemoteDownloadConfigBean configBean = getBean(
         scheme.name() + "://localhost:" + port + "/",
-        true,
-        TESTUSER,
-        TESTPASS,
-        null,
-        null,
-        null,
         true,
         DataFormat.TEXT,
         null,
@@ -1490,12 +1005,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         new RemoteDownloadSource(getBean(
             scheme.name() + "://localhost:" + port + "/",
             true,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            null,
-            true,
             DataFormat.TEXT,
             null,
             //Process subdirectories
@@ -1543,12 +1052,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         new RemoteDownloadSource(getBean(
             scheme.name() + "://localhost:" + port + "/",
             true,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            null,
-            true,
             DataFormat.TEXT,
             null,
             false,
@@ -1576,13 +1079,22 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
     Assert.assertEquals(expectedRecordCount, totalRecordsRead);
   }
 
+  @Test
+  public void testEventsUserDirIsRoot() throws Exception {
+    testEvents(true);
+  }
 
   @Test
   public void testEvents() throws Exception {
+    testEvents(false);
+  }
+
+  private void testEvents(boolean userDirIsRoot) throws Exception {
     path = testFolder.getRoot().getAbsolutePath() + "/remote-download-source/testEvents";
-    Assert.assertTrue(new File(path).mkdirs());
-    Path filePath1 = Paths.get(path + "/testEvents1.txt");
-    Path filePath2 = Paths.get(path + "/testEvents2.txt");
+    Path dir = Paths.get(path + "/dir");
+    Assert.assertTrue(dir.toFile().mkdirs());
+    Path filePath1 = Paths.get(dir + "/testEvents1.txt");
+    Path filePath2 = Paths.get(dir + "/testEvents2.txt");
 
     byte[] sampleText = "This is sample text".getBytes();
     java.nio.file.Files.write(filePath1, sampleText, StandardOpenOption.CREATE_NEW);
@@ -1590,19 +1102,14 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
 
     setupServer(path, true);
 
+    String pathInUri = userDirIsRoot ? "" : path;
     RemoteDownloadSource origin =
         new RemoteDownloadSource(getBean(
-            scheme.name() + "://localhost:" + port + "/",
-            true,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            null,
-            true,
+            scheme.name() + "://localhost:" + port + "/" + pathInUri,
+            userDirIsRoot,
             DataFormat.TEXT,
             null,
-            false,
+            true,
             "*"
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadDSource.class, origin)
@@ -1620,8 +1127,14 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
 
       Assert.assertEquals("new-file", newFileEvent.getHeader().getAttribute("sdc.event.type"));
       Assert.assertEquals("finished-file", finishedFileEvent.getHeader().getAttribute("sdc.event.type"));
-      Assert.assertEquals("/" + filePath1.getFileName().toString(), newFileEvent.get("/filepath").getValueAsString());
-      Assert.assertEquals("/" + filePath1.getFileName().toString(), finishedFileEvent.get("/filepath").getValueAsString());
+      Assert.assertEquals(
+          "/" + dir.getFileName() + "/" + filePath1.getFileName().toString(),
+          newFileEvent.get("/filepath").getValueAsString()
+      );
+      Assert.assertEquals(
+          "/" + dir.getFileName() + "/" + filePath1.getFileName().toString(),
+          finishedFileEvent.get("/filepath").getValueAsString()
+      );
       Assert.assertEquals(1, finishedFileEvent.get("/record-count").getValueAsLong());
 
       runner.getEventRecords().clear();
@@ -1635,8 +1148,14 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
 
       Assert.assertEquals("new-file", newFileEvent.getHeader().getAttribute("sdc.event.type"));
       Assert.assertEquals("finished-file", finishedFileEvent.getHeader().getAttribute("sdc.event.type"));
-      Assert.assertEquals("/" + filePath2.getFileName().toString(), newFileEvent.get("/filepath").getValueAsString());
-      Assert.assertEquals("/" + filePath2.getFileName().toString(), finishedFileEvent.get("/filepath").getValueAsString());
+      Assert.assertEquals(
+          "/" + dir.getFileName() + "/" + filePath2.getFileName().toString(),
+          newFileEvent.get("/filepath").getValueAsString()
+      );
+      Assert.assertEquals(
+          "/" + dir.getFileName() + "/" + filePath2.getFileName().toString(),
+          finishedFileEvent.get("/filepath").getValueAsString()
+      );
       Assert.assertEquals(1, finishedFileEvent.get("/record-count").getValueAsLong());
 
       runner.getEventRecords().clear();
@@ -1706,12 +1225,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         new RemoteDownloadSource(getBean(
             scheme.name() + "://localhost:" + port + "/",
             true,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            null,
-            true,
             DataFormat.TEXT,
             null,
             false,
@@ -1770,12 +1283,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         new RemoteDownloadSource(getBean(
             scheme.name() + "://localhost:" + port + "/",
             true,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            null,
-            true,
             DataFormat.TEXT,
             null,
             false,
@@ -1823,12 +1330,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
     RemoteDownloadSource origin =
         new RemoteDownloadSource(getBean(
             scheme.name() + "://localhost:" + port + "/",
-            true,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            null,
             true,
             DataFormat.JSON,
             null,
@@ -1897,12 +1398,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         new RemoteDownloadSource(getBean(
             scheme.name() + "://localhost:" + port + "/",
             true,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            null,
-            true,
             DataFormat.JSON,
             null,
             true,
@@ -1946,12 +1441,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         new RemoteDownloadSource(getBean(
             scheme.name() + "://localhost:" + port + "/",
             true,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            null,
-            true,
             DataFormat.JSON,
             null,
             false,
@@ -1978,116 +1467,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
   }
 
   @Test
-  public void testStrictHostChecking() throws Exception {
-    path = "remote-download-source/parseNoError";
-    setupServer(path, false);
-
-    Path knownHostsPath = Paths.get(testFolder.getRoot().getAbsolutePath() +
-        "/remote-download-source/testStrictHostChecking/hosts");
-    Assert.assertTrue(knownHostsPath.getParent().toFile().mkdirs());
-
-    java.nio.file.Files.write(
-        knownHostsPath,
-        scheme == Scheme.sftp ? getHostsFileEntry() : "dummy".getBytes(),
-        StandardOpenOption.CREATE_NEW
-    );
-
-    RemoteDownloadSource origin =
-        new RemoteDownloadSource(getBean(
-            scheme.name() + "://localhost:" + port + "/",
-            true,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            knownHostsPath.toString(),
-            false,
-            DataFormat.JSON,
-            null,
-            false,
-            "*"
-        ));
-    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadDSource.class, origin)
-        .addOutputLane("lane")
-        .build();
-    if (scheme == Scheme.sftp) {
-      runner.runInit();
-      runner.runProduce(RemoteDownloadSource.NOTHING_READ, 1000);
-    } else if (scheme == Scheme.ftp) {
-      runInitWithConfigException(runner, Errors.REMOTE_12);
-    }
-    destroyAndValidate(runner);
-  }
-
-  @Test
-  public void testStrictHostCheckingOtherHost() throws Exception {
-    Assume.assumeTrue(scheme == Scheme.sftp);
-    path = "remote-download-source/parseNoError";
-    setupServer(path, false);
-
-    Path knownHostsPath = Paths.get(testFolder.getRoot().getAbsolutePath() +
-        "/remote-download-source/testStrictHostChecking/hosts");
-    Assert.assertTrue(knownHostsPath.getParent().toFile().mkdirs());
-
-    java.nio.file.Files.write(
-        knownHostsPath,
-        getHostsFileEntry("other-host"),
-        StandardOpenOption.CREATE_NEW
-    );
-
-    RemoteDownloadSource origin =
-        new RemoteDownloadSource(getBean(
-            scheme.name() + "://localhost:" + port + "/",
-            true,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            knownHostsPath.toString(),
-            false,
-            DataFormat.JSON,
-            null,
-            false,
-            "*"
-        ));
-    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadDSource.class, origin)
-        .addOutputLane("lane")
-        .build();
-    StageException e = runInitWithConfigException(runner, Errors.REMOTE_08);
-    Assert.assertTrue("Expected exception message to contain \"Could not verify `ssh-rsa` host key\" but did not: "
-        + e.getMessage(), e.getMessage().contains("Could not verify `ssh-rsa` host key"));
-    destroyAndValidate(runner);
-  }
-
-  @Test
-  public void testStrictHostCheckingNoHostsFile() throws Exception {
-    Assume.assumeTrue(scheme == Scheme.sftp);
-    path = "remote-download-source/parseNoError";
-    setupServer(path, false);
-
-    RemoteDownloadSource origin =
-        new RemoteDownloadSource(getBean(
-            scheme.name() + "://localhost:" + port + "/",
-            true,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            null, // no hosts file
-            false,
-            DataFormat.JSON,
-            null,
-            false,
-            "*"
-        ));
-    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadDSource.class, origin)
-        .addOutputLane("lane")
-        .build();
-    runInitWithConfigException(runner, Errors.REMOTE_07);
-    destroyAndValidate(runner);
-  }
-
-  @Test
   public void testConnectionRetry() throws Exception {
     path = "remote-download-source/parseNoError";
     setupServer(path, false);
@@ -2095,12 +1474,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
     RemoteDownloadSource origin =
         new RemoteDownloadSource(getBean(
             scheme.name() + "://localhost:" + port + "/",
-            true,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            null,
             true,
             DataFormat.JSON,
             null,
@@ -2143,13 +1516,19 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
       // Unset the timeout config for SFTP because it's global
       PropertyResolverUtils.updateProperty(sshd, FactoryManager.IDLE_TIMEOUT, FactoryManager.DEFAULT_IDLE_TIMEOUT);
     }
-    runner.runProduce(RemoteDownloadSource.NOTHING_READ, 1000);
+    StageRunner.Output op = runner.runProduce(RemoteDownloadSource.NOTHING_READ, 1000);
     // Now we've opened a new connection
     if (scheme == Scheme.sftp) {
       Assert.assertEquals(2, opened.get());
     } else if (scheme == Scheme.ftp) {
       Assert.assertEquals(1, ftpServer.getServerContext().getFtpStatistics().getCurrentConnectionNumber());
       Assert.assertEquals(2, ftpServer.getServerContext().getFtpStatistics().getTotalConnectionNumber());
+    }
+    List<Record> expected = getExpectedRecords();
+    List<Record> actual = op.getRecords().get("lane");
+    Assert.assertEquals(expected.size(), actual.size());
+    for (int i = 0; i < 2; i++) {
+      Assert.assertEquals(expected.get(i).get(), actual.get(i).get());
     }
     destroyAndValidate(runner);
   }
@@ -2191,12 +1570,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
     RemoteDownloadSource origin =
         new RemoteDownloadSource(getBean(
             scheme.name() + "://localhost:" + port + "/",
-            true,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            null,
             true,
             DataFormat.JSON,
             null,
@@ -2243,12 +1616,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         new RemoteDownloadSource(getBean(
             scheme.name() + "://localhost:" + port + "/" + pathInUri,
             userDirisRoot,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            null,
-            true,
             DataFormat.JSON,
             null,
             false,
@@ -2274,19 +1641,12 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
       RemoteDownloadSource origin = new RemoteDownloadSource(getBean(
           scheme.name() + "://localhost:" + port + "/",
           true,
-          TESTUSER,
-          TESTPASS,
-          null,
-          null,
-          null,
-          true,
           DataFormat.JSON,
           null,
           true,
           FilePatternMode.GLOB,
           "*",
           1000,
-          "",
           null,
           PostProcessingOptions.ARCHIVE,
           archiveDir,
@@ -2295,7 +1655,7 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
       SourceRunner runner = new SourceRunner.Builder(RemoteDownloadDSource.class, origin)
           .addOutputLane("lane")
           .build();
-      runInitWithConfigException(runner, Errors.REMOTE_20);
+      runInitWithConfigException(runner, Errors.REMOTE_DOWNLOAD_07);
       destroyAndValidate(runner);
     }
   }
@@ -2371,19 +1731,12 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         new RemoteDownloadSource(getBean(
             scheme.name() + "://localhost:" + port + "/" + pathInUri,
             userDirIsRoot,
-            TESTUSER,
-            TESTPASS,
-            null,
-            null,
-            null,
-            true,
             DataFormat.JSON,
             null,
             true,
             FilePatternMode.GLOB,
             "*",
             1000,
-            "",
             null,
             archive ? PostProcessingOptions.ARCHIVE : PostProcessingOptions.DELETE,
             archiveDirUserDirIsRoot ? archiveDir.getName() : archiveDir.getAbsolutePath(),
@@ -2421,6 +1774,13 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
     destroyAndValidate(runner);
   }
 
+  private void destroyAndValidate(SourceRunner runner) throws Exception {
+    runner.runDestroy();
+    if (scheme == Scheme.sftp) {
+      await().atMost(10, TimeUnit.SECONDS).untilTrue(closedAll);
+    }
+  }
+
   private byte [] someSampleData() {
     String data =
         "{\"name\": \"sloth\",\"age\": \"5\",\"characterisitics\": [\"cute\", \"slooooow\", \"sloooooow\", \"sloooooooow\"]}\n"
@@ -2431,12 +1791,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
   private RemoteDownloadConfigBean getBean(
       String remoteHost,
       boolean userDirIsRoot,
-      String username,
-      String password,
-      String privateKey,
-      String passphrase,
-      String knownHostsFile,
-      boolean noHostChecking,
       DataFormat dataFormat,
       String errorArchive,
       boolean processSubDirectories,
@@ -2445,12 +1799,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
     return getBean(
         remoteHost,
         userDirIsRoot,
-        username,
-        password,
-        privateKey,
-        passphrase,
-        knownHostsFile,
-        noHostChecking,
         dataFormat,
         errorArchive,
         processSubDirectories,
@@ -2464,12 +1812,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
   private RemoteDownloadConfigBean getBean(
     String remoteHost,
     boolean userDirIsRoot,
-    String username,
-    String password,
-    String privateKey,
-    String passphrase,
-    String knownHostsFile,
-    boolean noHostChecking,
     DataFormat dataFormat,
     String errorArchive,
     boolean processSubDirectories,
@@ -2479,12 +1821,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
     return getBean(
       remoteHost,
       userDirIsRoot,
-      username,
-      password,
-      privateKey,
-      passphrase,
-      knownHostsFile,
-      noHostChecking,
       dataFormat,
       errorArchive,
       processSubDirectories,
@@ -2498,12 +1834,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
   private RemoteDownloadConfigBean getBean(
       String remoteHost,
       boolean userDirIsRoot,
-      String username,
-      String password,
-      String privateKey,
-      String passphrase,
-      String knownHostsFile,
-      boolean noHostChecking,
       DataFormat dataFormat,
       String errorArchive,
       boolean processSubDirectories,
@@ -2515,12 +1845,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
     return getBean(
         remoteHost,
         userDirIsRoot,
-        username,
-        password,
-        privateKey,
-        passphrase,
-        knownHostsFile,
-        noHostChecking,
         dataFormat,
         errorArchive,
         processSubDirectories,
@@ -2528,45 +1852,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         filePattern,
         batchSize,
         initialFile,
-        null
-    );
-  }
-
-  private RemoteDownloadConfigBean getBean(
-      String remoteHost,
-      boolean userDirIsRoot,
-      String username,
-      String password,
-      String privateKey,
-      String passphrase,
-      String knownHostsFile,
-      boolean noHostChecking,
-      DataFormat dataFormat,
-      String errorArchive,
-      boolean processSubDirectories,
-      FilePatternMode filePatternMode,
-      String filePattern,
-      int batchSize,
-      String initialFile,
-      String privateKeyPlainText
-  ) {
-    return getBean(
-        remoteHost,
-        userDirIsRoot,
-        username,
-        password,
-        privateKey,
-        passphrase,
-        knownHostsFile,
-        noHostChecking,
-        dataFormat,
-        errorArchive,
-        processSubDirectories,
-        filePatternMode,
-        filePattern,
-        batchSize,
-        initialFile,
-        privateKeyPlainText,
         PostProcessingOptions.NONE,
         null,
         true
@@ -2576,12 +1861,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
   private RemoteDownloadConfigBean getBean(
       String remoteHost,
       boolean userDirIsRoot,
-      String username,
-      String password,
-      String privateKey,
-      String passphrase,
-      String knownHostsFile,
-      boolean noHostChecking,
       DataFormat dataFormat,
       String errorArchive,
       boolean processSubDirectories,
@@ -2589,21 +1868,17 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
       String filePattern,
       int batchSize,
       String initialFile,
-      String privateKeyPlainText,
       PostProcessingOptions postProcessing,
       String archiveDir,
       boolean archiveDirUserDirIsRoot
   ) {
     RemoteDownloadConfigBean configBean = new RemoteDownloadConfigBean();
-    configBean.remoteAddress = remoteHost;
-    configBean.userDirIsRoot = userDirIsRoot;
-    configBean.username = () -> username;
-    configBean.password = () -> password;
-    configBean.privateKey = privateKey;
-    configBean.privateKeyPlainText = () -> privateKeyPlainText;
-    configBean.privateKeyPassphrase = () -> passphrase;
-    configBean.knownHosts = knownHostsFile;
-    configBean.strictHostChecking = !noHostChecking;
+    configBean.remoteConfig.remoteAddress = remoteHost;
+    configBean.remoteConfig.userDirIsRoot = userDirIsRoot;
+    configBean.remoteConfig.username = () -> TESTUSER;
+    configBean.remoteConfig.auth = Authentication.PASSWORD;
+    configBean.remoteConfig.password = () -> TESTPASS;
+    configBean.remoteConfig.strictHostChecking = false;
     configBean.dataFormat = dataFormat;
     configBean.errorArchiveDir = errorArchive;
     configBean.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
@@ -2612,23 +1887,13 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
     configBean.filePattern = filePattern;
     configBean.basic.maxBatchSize = batchSize;
     configBean.initialFileToProcess = initialFile;
-    if (password != null) {
-      configBean.auth = Authentication.PASSWORD;
-    } else {
-      configBean.auth = Authentication.PRIVATE_KEY;
-    }
-    if (privateKeyPlainText == null) {
-      configBean.privateKeyProvider = PrivateKeyProvider.FILE;
-    } else {
-      configBean.privateKeyProvider = PrivateKeyProvider.PLAIN_TEXT;
-    }
     configBean.postProcessing = postProcessing;
     configBean.archiveDir = archiveDir;
     configBean.archiveDirUserDirIsRoot = archiveDirUserDirIsRoot;
     return configBean;
   }
 
-  private StageException runInitWithConfigException(SourceRunner runner, Errors... expected) {
+  private StageException runInitWithConfigException(SourceRunner runner, ErrorCode... expected) {
     try {
       runner.runInit();
       Assert.fail("Expected a StageException");
@@ -2639,9 +1904,9 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
     return null;
   }
 
-  private void assertExceptionMessageContainsOnlyRemoteError(Exception e, Errors... expected) {
+  private void assertExceptionMessageContainsOnlyRemoteError(Exception e, ErrorCode... expected) {
     String msg = e.getMessage();
-    for (Errors errror : expected) {
+    for (ErrorCode errror : expected) {
       Assert.assertTrue("Expected exception to contain " + errror.getCode() + " but did not: " + msg,
           msg.contains(errror.getCode()));
     }

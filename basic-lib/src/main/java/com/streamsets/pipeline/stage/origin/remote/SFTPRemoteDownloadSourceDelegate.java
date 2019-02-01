@@ -18,19 +18,16 @@ package com.streamsets.pipeline.stage.origin.remote;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.remote.ChrootSFTPClient;
+import com.streamsets.pipeline.lib.remote.RemoteFile;
+import com.streamsets.pipeline.lib.remote.SFTPRemoteConnector;
+import com.streamsets.pipeline.lib.remote.SFTPRemoteFile;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
-import net.schmizz.sshj.DefaultConfig;
-import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.sftp.FileAttributes;
 import net.schmizz.sshj.sftp.FileMode;
-import net.schmizz.sshj.sftp.SFTPClient;
-import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
-import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
-import net.schmizz.sshj.userauth.password.PasswordUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.FileNameMap;
 import java.net.URI;
@@ -40,176 +37,51 @@ import java.util.List;
 import java.util.Map;
 import java.util.NavigableSet;
 
-class SFTPRemoteDownloadSourceDelegate extends RemoteDownloadSourceDelegate {
+class SFTPRemoteDownloadSourceDelegate extends SFTPRemoteConnector implements RemoteDownloadSourceDelegate {
 
   private static final Logger LOG = LoggerFactory.getLogger(SFTPRemoteDownloadSourceDelegate.class);
 
-  private final File knownHostsFile;
-  private SSHClient sshClient;
-  private ChrootSFTPClient sftpClient;
-  private SSHClientRebuilder sshClientRebuilder;
+  private RemoteDownloadConfigBean conf;
 
   SFTPRemoteDownloadSourceDelegate(RemoteDownloadConfigBean conf) {
-    super(conf);
-    if (conf.knownHosts != null && !conf.knownHosts.isEmpty()) {
-      this.knownHostsFile = new File(conf.knownHosts);
-    } else {
-      this.knownHostsFile = null;
-    }
+    super(conf.remoteConfig);
+    this.conf = conf;
   }
 
-  protected void initAndConnectInternal(
+  @Override
+  public void initAndConnect(
       List<Stage.ConfigIssue> issues, Source.Context context, URI remoteURI, String archiveDir
-  ) throws IOException {
-    sshClientRebuilder = new SSHClientRebuilder();
-    DefaultConfig sshConfig = new DefaultConfig();
-    sshClient = new SSHClient(sshConfig);
-    sshClientRebuilder.setConfig(sshConfig);
+  ) {
+    super.initAndConnect(
+        issues,
+        context,
+        remoteURI,
+        Groups.REMOTE,
+        Groups.CREDENTIALS
+    );
 
-    if (conf.strictHostChecking) {
-      if (knownHostsFile != null) {
-        if (knownHostsFile.exists() && knownHostsFile.isFile() && knownHostsFile.canRead()) {
-          try {
-            sshClient.loadKnownHosts(knownHostsFile);
-            sshClientRebuilder.setKnownHosts(knownHostsFile);
-          } catch (IOException ex) {
-            issues.add(
-                context.createConfigIssue(Groups.CREDENTIALS.getLabel(),
-                CONF_PREFIX + "knownHosts",
-                Errors.REMOTE_06,
-                knownHostsFile
-            ));
-          }
-        } else {
-          issues.add(
-              context.createConfigIssue(Groups.CREDENTIALS.getLabel(),
-              CONF_PREFIX + "knownHosts",
-              Errors.REMOTE_06,
-              knownHostsFile
-          ));
-        }
-      } else {
-        issues.add(
-            context.createConfigIssue(Groups.CREDENTIALS.getLabel(),
-            CONF_PREFIX + "strictHostChecking",
-            Errors.REMOTE_07
-        ));
-      }
-    } else {
-      // Strict host checking off
-      sshClient.addHostKeyVerifier(new PromiscuousVerifier());
-    }
-
-    String username = resolveUsername(remoteURI, issues, context);
-    sshClientRebuilder.setUsername(username);
-    KeyProvider keyProvider = null;
-    String password = null;
-    switch (conf.auth) {
-      case PRIVATE_KEY:
-        String privateKeyPassphrase = resolveCredential(
-            conf.privateKeyPassphrase,
-            CONF_PREFIX + "privateKeyPassphrase",
-            issues,
-            context
-        );
-        switch (conf.privateKeyProvider) {
-          case FILE:
-            File privateKeyFile = new File(conf.privateKey);
-            sshClientRebuilder.setKeyLocation(privateKeyFile.getAbsolutePath());
-            if (!privateKeyFile.exists() || !privateKeyFile.isFile() || !privateKeyFile.canRead()) {
-              issues.add(context.createConfigIssue(
-                  Groups.CREDENTIALS.getLabel(),
-                  CONF_PREFIX + "privateKey",
-                  Errors.REMOTE_10,
-                  conf.privateKey
-              ));
-            }
-            if (privateKeyPassphrase != null && !privateKeyPassphrase.isEmpty()) {
-              keyProvider = sshClient.loadKeys(privateKeyFile.getAbsolutePath(), privateKeyPassphrase);
-              sshClientRebuilder.setKeyPassphrase(privateKeyPassphrase);
-            } else {
-              keyProvider = sshClient.loadKeys(privateKeyFile.getAbsolutePath());
-            }
-            break;
-          case PLAIN_TEXT:
-            String privateKeyPlainText = resolveCredential(
-                conf.privateKeyPlainText,
-                CONF_PREFIX + "privateKeyPlainText",
-                issues,
-                context
-            );
-            sshClientRebuilder.setKeyPlainText(privateKeyPlainText);
-            if (privateKeyPassphrase != null && !privateKeyPassphrase.isEmpty()) {
-              keyProvider = sshClient.loadKeys(
-                  privateKeyPlainText,
-                  null,
-                  PasswordUtils.createOneOff(privateKeyPassphrase.toCharArray()));
-              sshClientRebuilder.setKeyPassphrase(privateKeyPassphrase);
-            } else {
-              keyProvider = sshClient.loadKeys(privateKeyPlainText, null, null);
-            }
-            break;
-          default:
-            break;
-        }
-        try {
-          // Verify we can get the private key
-          keyProvider.getPrivate();
-        } catch (IOException e) {
-          issues.add(context.createConfigIssue(
-              Groups.CREDENTIALS.getLabel(),
-              CONF_PREFIX + "privateKey",
-              Errors.REMOTE_19,
-              e.getMessage()
-          ));
-        }
-        break;
-      case PASSWORD:
-        password = resolvePassword(remoteURI, issues, context);
-        sshClientRebuilder.setPassword(password);
-        break;
-      default:
-        break;
-    }
-
-    // Only actually try to connect and authenticate if there were no issues
     if (issues.isEmpty()) {
-      LOG.info("Connecting to {}", remoteURI.toString());
-      sshClient.connect(remoteURI.getHost(), remoteURI.getPort());
-      sshClientRebuilder.setHostPort(remoteURI.getHost(), remoteURI.getPort());
-      switch (conf.auth) {
-        case PRIVATE_KEY:
-          sshClient.authPublickey(username, keyProvider);
-          break;
-        case PASSWORD:
-          sshClient.authPassword(username, password);
-          break;
-        default:
-          break;
+      if (archiveDir != null) {
+        try {
+          sftpClient.setArchiveDir(archiveDir, conf.archiveDirUserDirIsRoot);
+        } catch (IOException ioe) {
+          issues.add(context.createConfigIssue(
+              Groups.POST_PROCESSING.name(),
+              CONF_PREFIX + "archiveDir",
+              Errors.REMOTE_DOWNLOAD_08,
+              ioe.getMessage(),
+              ioe
+          ));
+        }
       }
-      String remotePath = remoteURI.getPath().trim();
-      if (remotePath.isEmpty()) {
-        remotePath = "/";
-      }
-      sftpClient = new ChrootSFTPClient(
-          sshClient.newSFTPClient(),
-          remotePath,
-          conf.userDirIsRoot,
-          archiveDir,
-          conf.archiveDirUserDirIsRoot
-      );
-
-      // To ensure we have access, else we fail validation.
-      sftpClient.ls();
     }
   }
 
   @Override
-  Offset createOffset(String file) throws IOException {
+  public Offset createOffset(String file) throws IOException {
     FileAttributes attributes = sftpClient.stat(file);
     Offset offset =
-        // For backwards compatibility/consistency we need to add a leading /
-        new Offset(file.startsWith("/") ? file : "/" + file,
+        new Offset(slashify(file),
         convertSecsToMillis(attributes.getMtime()),
         ZERO
     );
@@ -217,7 +89,7 @@ class SFTPRemoteDownloadSourceDelegate extends RemoteDownloadSourceDelegate {
   }
 
   @Override
-  long populateMetadata(String remotePath, Map<String, Object> metadata) throws IOException {
+  public long populateMetadata(String remotePath, Map<String, Object> metadata) throws IOException {
     FileAttributes remoteAttributes = sftpClient.stat(remotePath);
     long size = remoteAttributes.getSize();
     metadata.put(HeaderAttributeConstants.SIZE, size);
@@ -235,27 +107,9 @@ class SFTPRemoteDownloadSourceDelegate extends RemoteDownloadSourceDelegate {
   }
 
   @Override
-  void queueFiles(FileQueueChecker fqc, NavigableSet<RemoteFile> fileQueue, FileFilter fileFilter) throws
+  public void queueFiles(FileQueueChecker fqc, NavigableSet<RemoteFile> fileQueue, FileFilter fileFilter) throws
       IOException, StageException {
-    boolean done = false;
-    int retryCounter = 0;
-    while (!done && retryCounter < MAX_RETRIES) {
-      try {
-        sftpClient.ls();
-        done = true;
-      } catch (IOException ioe) {
-        // ls can fail due to session is down, a timeout, etc; so try getting a new connection
-        if (retryCounter < MAX_RETRIES - 1) {
-          LOG.info("Got IOException when trying to ls remote directory. '{}'", ioe.getMessage(), ioe);
-          LOG.warn("Retrying connection to remote directory");
-          sshClient = sshClientRebuilder.build();
-          sftpClient.setSFTPClient(sshClient.newSFTPClient());
-        } else {
-          throw new StageException(Errors.REMOTE_18, ioe.getMessage(), ioe);
-        }
-      }
-      retryCounter++;
-    }
+    verifyAndReconnect();
     queueFiles(fqc, fileQueue, fileFilter, null);
   }
 
@@ -278,7 +132,7 @@ class SFTPRemoteDownloadSourceDelegate extends RemoteDownloadSourceDelegate {
       }
 
       RemoteFile tempFile = new SFTPRemoteFile(
-          remoteFileInfo.getPath(),
+          slashify(remoteFileInfo.getPath()),
           convertSecsToMillis(remoteFileInfo.getModifiedTime()),
           sftpClient);
       if (fqc.shouldQueue(tempFile)) {
@@ -291,25 +145,12 @@ class SFTPRemoteDownloadSourceDelegate extends RemoteDownloadSourceDelegate {
   }
 
   @Override
-  void close() throws IOException {
-    try {
-      if (sftpClient != null) {
-        sftpClient.close();
-      }
-    } finally {
-      if (sshClient != null) {
-        sshClient.close();
-      }
-    }
-  }
-
-  @Override
-  void delete(String remotePath) throws IOException {
+  public void delete(String remotePath) throws IOException {
     sftpClient.delete(remotePath);
   }
 
   @Override
-  String archive(String fromPath) throws IOException {
+  public String archive(String fromPath) throws IOException {
     return sftpClient.archive(fromPath);
   }
 

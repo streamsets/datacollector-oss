@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.remote;
+package com.streamsets.pipeline.lib.remote;
 
 import com.google.common.io.Files;
 import net.schmizz.sshj.SSHClient;
@@ -28,6 +28,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -46,27 +47,51 @@ public class TestChrootSFTPClient extends SSHDUnitTest {
 
     try {
       // absolute path
-      new ChrootSFTPClient(sshClient.newSFTPClient(), path + "/blah", false);
+      new ChrootSFTPClient(sshClient.newSFTPClient(), path + "/blah", false, false);
       Assert.fail("Expected an SFTPException");
     } catch (SFTPException e) {
-      Assert.assertEquals(path + "/blah" + ": does not exist", e.getMessage());
+      Assert.assertEquals(path + "/blah" + " does not exist", e.getMessage());
     }
+    Assert.assertFalse(new File(path + "/blah").exists());
 
     try {
       // relative path
-      new ChrootSFTPClient(sshClient.newSFTPClient(), "/blah", true);
+      new ChrootSFTPClient(sshClient.newSFTPClient(), "/blah", true, false);
       Assert.fail("Expected an SFTPException");
     } catch (SFTPException e) {
-      Assert.assertEquals(path + "/blah" + ": does not exist", e.getMessage());
+      Assert.assertEquals(path + "/blah" + " does not exist", e.getMessage());
     }
+    Assert.assertFalse(new File(path + "/blah").exists());
 
     try {
       // relative path
-      new ChrootSFTPClient(sshClient.newSFTPClient(), "blah", true);
+      new ChrootSFTPClient(sshClient.newSFTPClient(), "blah", true, false);
       Assert.fail("Expected an SFTPException");
     } catch (SFTPException e) {
-      Assert.assertEquals(path + "/blah" + ": does not exist", e.getMessage());
+      Assert.assertEquals(path + "/blah" + " does not exist", e.getMessage());
     }
+    Assert.assertFalse(new File(path + "/blah").exists());
+  }
+
+  @Test
+  public void testRootNotExistAndMake() throws Exception {
+    path = testFolder.getRoot().getAbsolutePath();
+    setupSSHD(path);
+    SSHClient sshClient = createSSHClient();
+
+    Assert.assertFalse(new File(path + "/blah").exists());
+
+    // absolute path
+    new ChrootSFTPClient(sshClient.newSFTPClient(), path + "/blah", false, true);
+    Assert.assertTrue(new File(path + "/blah").exists());
+
+    // relative path
+    new ChrootSFTPClient(sshClient.newSFTPClient(), "/blah", true, true);
+    Assert.assertTrue(new File(path + "/blah").exists());
+
+    // relative path
+    new ChrootSFTPClient(sshClient.newSFTPClient(), "blah", true, true);
+    Assert.assertTrue(new File(path + "/blah").exists());
   }
 
   @Test
@@ -74,7 +99,7 @@ public class TestChrootSFTPClient extends SSHDUnitTest {
     path = testFolder.getRoot().getAbsolutePath();
     setupSSHD(path);
     SSHClient sshClient = createSSHClient();
-    ChrootSFTPClient sftpClient = new ChrootSFTPClient(sshClient.newSFTPClient(), path, false);
+    ChrootSFTPClient sftpClient = new ChrootSFTPClient(sshClient.newSFTPClient(), path, false, false);
 
     sftpClient.ls();
     // Close the SSH client so it's no longer usable and the SFTP client will get an exception
@@ -199,7 +224,49 @@ public class TestChrootSFTPClient extends SSHDUnitTest {
   }
 
   @Test
-  public void testOpen() throws Exception {
+  public void testExists() throws Exception {
+    File file = testFolder.newFile("file.txt");
+
+    path = testFolder.getRoot().getAbsolutePath();
+    setupSSHD(path);
+    SSHClient sshClient = createSSHClient();
+
+    for (ChrootSFTPClient sftpClient : getClientsWithEquivalentRoots(sshClient)) {
+      // We can specify a file as either a relative path "file" or an absolute path "/file" and they should be
+      // equivalent
+      for (String p : new String[] {
+          file.getName(),
+          "/" + file.getName(),
+      }) {
+        Assert.assertTrue(sftpClient.exists(p));
+      }
+    }
+  }
+
+  @Test
+  public void testExistsNotExist() throws Exception {
+    File file = testFolder.newFile("file.txt");
+    file.delete();
+    Assert.assertFalse(file.exists());
+
+    path = testFolder.getRoot().getAbsolutePath();
+    setupSSHD(path);
+    SSHClient sshClient = createSSHClient();
+
+    for (ChrootSFTPClient sftpClient : getClientsWithEquivalentRoots(sshClient)) {
+      // We can specify a file as either a relative path "file" or an absolute path "/file" and they should be
+      // equivalent
+      for (String p : new String[]{
+          file.getName(),
+          "/" + file.getName(),
+      }) {
+        Assert.assertFalse(sftpClient.exists(p));
+      }
+    }
+  }
+
+  @Test
+  public void testOpenForReading() throws Exception {
     File file = testFolder.newFile("file.txt");
     String text = "hello";
     Files.write(text.getBytes(Charset.forName("UTF-8")), file);
@@ -216,15 +283,16 @@ public class TestChrootSFTPClient extends SSHDUnitTest {
           file.getName(),
           "/" + file.getName(),
       }) {
-        InputStream is = sftpClient.open(p);
+        InputStream is = sftpClient.openForReading(p);
         Assert.assertNotNull(is);
         Assert.assertEquals(text, IOUtils.toString(is, Charset.forName("UTF-8")));
+        is.close();
       }
     }
   }
 
   @Test
-  public void testOpenNotExist() throws Exception {
+  public void testOpenForReadingNotExist() throws Exception {
     File file = testFolder.newFile("file.txt");
     file.delete();
     Assert.assertFalse(file.exists());
@@ -240,7 +308,66 @@ public class TestChrootSFTPClient extends SSHDUnitTest {
           file.getName(),
           "/" + file.getName(),
       }) {
-        expectNotExist(() -> sftpClient.open(p));
+        expectNotExist(() -> sftpClient.openForReading(p));
+      }
+    }
+  }
+
+  @Test
+  public void testOpenForWriting() throws Exception {
+    String text = "hello";
+    File file = testFolder.newFile("file.txt");
+
+    path = testFolder.getRoot().getAbsolutePath();
+    setupSSHD(path);
+    SSHClient sshClient = createSSHClient();
+
+    for (ChrootSFTPClient sftpClient : getClientsWithEquivalentRoots(sshClient)) {
+      // We can specify a file as either a relative path "file" or an absolute path "/file" and they should be
+      // equivalent
+      for (String p : new String[] {
+          file.getName(),
+          "/" + file.getName(),
+      }) {
+        file.delete();
+        Assert.assertFalse(file.exists());
+
+        OutputStream os = sftpClient.openForWriting(p);
+        Assert.assertNotNull(os);
+        IOUtils.write(text, os, Charset.forName("UTF-8"));
+        os.close();
+
+        Assert.assertEquals(text, Files.readFirstLine(file, Charset.forName("UTF-8")));
+      }
+    }
+  }
+
+  @Test
+  public void testOpenForWritingExists() throws Exception {
+    String text = "hello";
+    String oldText = "goodbye";
+    File file = testFolder.newFile("file.txt");
+
+    path = testFolder.getRoot().getAbsolutePath();
+    setupSSHD(path);
+    SSHClient sshClient = createSSHClient();
+
+    for (ChrootSFTPClient sftpClient : getClientsWithEquivalentRoots(sshClient)) {
+      // We can specify a file as either a relative path "file" or an absolute path "/file" and they should be
+      // equivalent
+      for (String p : new String[] {
+          file.getName(),
+          "/" + file.getName(),
+      }) {
+        Files.write(oldText.getBytes(Charset.forName("UTF-8")), file);
+        Assert.assertEquals(oldText, Files.readFirstLine(file, Charset.forName("UTF-8")));
+
+        OutputStream os = sftpClient.openForWriting(p);
+        Assert.assertNotNull(os);
+        IOUtils.write(text, os, Charset.forName("UTF-8"));
+        os.close();
+
+        Assert.assertEquals(text, Files.readFirstLine(file, Charset.forName("UTF-8")));
       }
     }
   }
@@ -324,7 +451,7 @@ public class TestChrootSFTPClient extends SSHDUnitTest {
         }
 
         Assert.assertEquals(text, Files.readFirstLine(fromFile, Charset.forName("UTF-8")));
-        Assert.assertEquals(text, IOUtils.toString(sftpClient.open(fromPath)));
+        Assert.assertEquals(text, IOUtils.toString(sftpClient.openForReading(fromPath)));
         sftpClient.stat(fromPath);
       }
     }
@@ -353,7 +480,7 @@ public class TestChrootSFTPClient extends SSHDUnitTest {
         Assert.assertEquals(toFile.getAbsolutePath(), returnedToPath);
 
         Assert.assertEquals(text, Files.readFirstLine(toFile, Charset.forName("UTF-8")));
-        Assert.assertEquals(text, IOUtils.toString(sftpClient.open(toPath)));
+        Assert.assertEquals(text, IOUtils.toString(sftpClient.openForReading(toPath)));
         sftpClient.stat(toPath);
 
         Assert.assertFalse(fromFile.exists());
@@ -385,7 +512,7 @@ public class TestChrootSFTPClient extends SSHDUnitTest {
         Assert.assertEquals(toFile.getAbsolutePath(), returnedToPath);
 
         Assert.assertEquals(text, Files.readFirstLine(toFile, Charset.forName("UTF-8")));
-        Assert.assertEquals(text, IOUtils.toString(sftpClient.open(toPath)));
+        Assert.assertEquals(text, IOUtils.toString(sftpClient.openForReading(toPath)));
         sftpClient.stat(toPath);
         Assert.assertTrue(toFile.getParentFile().exists());
         sftpClient.stat(getParentDir(toPath));
@@ -448,11 +575,11 @@ public class TestChrootSFTPClient extends SSHDUnitTest {
         }
 
         Assert.assertEquals(toText, Files.readFirstLine(toFile, Charset.forName("UTF-8")));
-        Assert.assertEquals(toText, IOUtils.toString(sftpClient.open(toPath)));
+        Assert.assertEquals(toText, IOUtils.toString(sftpClient.openForReading(toPath)));
         sftpClient.stat(toPath);
 
         Assert.assertEquals(fromText, Files.readFirstLine(fromFile, Charset.forName("UTF-8")));
-        Assert.assertEquals(fromText, IOUtils.toString(sftpClient.open(fromPath)));
+        Assert.assertEquals(fromText, IOUtils.toString(sftpClient.openForReading(fromPath)));
         sftpClient.stat(fromPath);
       }
     });
@@ -504,27 +631,39 @@ public class TestChrootSFTPClient extends SSHDUnitTest {
     // The following clients are all equivalent, just using different ways of declaring the paths
     List<ChrootSFTPClient> clients = new ArrayList<>();
     // root and archiveDir are both absolute paths
-    clients.add(new ChrootSFTPClient(rawSftpClient, path, false, archiveDir, false));
+    clients.add(createChrootSFTPClient(rawSftpClient, path, false, archiveDir, false));
     // root is relative to home dir, archiveDir is absolute
-    clients.add(new ChrootSFTPClient(rawSftpClient, "/", true, archiveDir, false));
+    clients.add(createChrootSFTPClient(rawSftpClient, "/", true, archiveDir, false));
     // root is relative to home dir, archiveDir is absolute
-    clients.add(new ChrootSFTPClient(rawSftpClient, "", true, archiveDir, false));
+    clients.add(createChrootSFTPClient(rawSftpClient, "", true, archiveDir, false));
     if (archiveDir != null) {
       String relArchiveDir = Paths.get(path).relativize(Paths.get(archiveDir)).toString();
       // root is absolute, archiveDir is relative to home dir
-      clients.add(new ChrootSFTPClient(rawSftpClient, path, false, "/" + relArchiveDir, true));
+      clients.add(createChrootSFTPClient(rawSftpClient, path, false, "/" + relArchiveDir, true));
       // root and archiveDir are both relative to home dir
-      clients.add(new ChrootSFTPClient(rawSftpClient, "/", true, "/" + relArchiveDir, true));
+      clients.add(createChrootSFTPClient(rawSftpClient, "/", true, "/" + relArchiveDir, true));
       // root and archiveDir are both relative to home dir
-      clients.add(new ChrootSFTPClient(rawSftpClient, "", true, "/" + relArchiveDir, true));
+      clients.add(createChrootSFTPClient(rawSftpClient, "", true, "/" + relArchiveDir, true));
       // root is absolute, archiveDir is relative to home dir
-      clients.add(new ChrootSFTPClient(rawSftpClient, path, false, relArchiveDir, true));
+      clients.add(createChrootSFTPClient(rawSftpClient, path, false, relArchiveDir, true));
       // root and archiveDir are both relative to home dir
-      clients.add(new ChrootSFTPClient(rawSftpClient, "/", true, relArchiveDir, true));
+      clients.add(createChrootSFTPClient(rawSftpClient, "/", true, relArchiveDir, true));
       // root and archiveDir are both relative to home dir
-      clients.add(new ChrootSFTPClient(rawSftpClient, "", true, relArchiveDir, true));
+      clients.add(createChrootSFTPClient(rawSftpClient, "", true, relArchiveDir, true));
     }
     return clients;
+  }
+
+    public ChrootSFTPClient createChrootSFTPClient(
+        SFTPClient sftpClient,
+        String root,
+        boolean rootRelativeToUserDir,
+        String archiveDir,
+        boolean archiveDirRelativeToUserDir
+    ) throws IOException {
+      ChrootSFTPClient client = new ChrootSFTPClient(sftpClient, root, rootRelativeToUserDir, false);
+      client.setArchiveDir(archiveDir, archiveDirRelativeToUserDir);
+      return client;
   }
 
   private void expectNotExist(Callable callable) throws Exception {

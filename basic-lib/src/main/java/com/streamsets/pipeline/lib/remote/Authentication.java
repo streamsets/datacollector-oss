@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 StreamSets Inc.
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.remote;
+package com.streamsets.pipeline.lib.remote;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 
-public class PrivateKeyProviderChooserValues extends BaseEnumChooserValues<PrivateKeyProvider> {
+@GenerateResourceBundle
+public enum Authentication implements Label {
+  NONE("None"),
+  PASSWORD("Password"),
+  PRIVATE_KEY("Private Key")
+  ;
 
-  public PrivateKeyProviderChooserValues() {
-    super(PrivateKeyProvider.class);
+  private final String label;
+
+  Authentication(String label) {
+    this.label = label;
+  }
+
+  @Override
+  public String getLabel() {
+    return label;
   }
 }

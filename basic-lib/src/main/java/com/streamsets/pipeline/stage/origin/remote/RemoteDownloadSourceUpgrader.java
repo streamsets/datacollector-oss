@@ -22,11 +22,14 @@ import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RemoteDownloadSourceUpgrader implements StageUpgrader {
   private static final String CONF = "conf";
+  private static final String REMOTE_CONFIG = "remoteConfig";
   private static final Joiner joiner = Joiner.on(".");
+
   @Override
   public List<Config> upgrade(String library, String stageName, String stageInstance,
                               int fromVersion, int toVersion, List<Config> configs) throws StageException {
@@ -39,11 +42,49 @@ public class RemoteDownloadSourceUpgrader implements StageUpgrader {
         // fall through
       case 2:
         upgradeV2ToV3(configs);
+        if (toVersion == 3) {
+          break;
+        }
+        // fall through
+      case 3:
+        upgradeV3ToV4(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
     return configs;
+  }
+
+  private void upgradeV3ToV4(List<Config> configs) {
+    // A bunch of the configs were moved from "conf.*" to "conf.remoteConfig.*"
+    List<Config> configsToRemove = new ArrayList<>();
+    List<Config> configsToAdd = new ArrayList<>();
+    for (Config config : configs) {
+      switch (config.getName()) {
+        case "conf.remoteAddress":
+        case "conf.auth":
+        case "conf.username":
+        case "conf.password":
+        case "conf.privateKeyProvider":
+        case "conf.privateKey":
+        case "conf.privateKeyPlainText":
+        case "conf.privateKeyPassphrase":
+        case "conf.userDirIsRoot":
+        case "conf.strictHostChecking":
+        case "conf.knownHosts":
+          configsToAdd.add(new Config(
+              joiner.join(CONF, REMOTE_CONFIG, config.getName().substring(5)),
+              config.getValue()
+          ));
+          configsToRemove.add(config);
+          break;
+        default:
+          // no op
+      }
+    }
+    configs.addAll(configsToAdd);
+    configs.removeAll(configsToRemove);
+
   }
 
   private static void upgradeV2ToV3(List<Config> configs) {

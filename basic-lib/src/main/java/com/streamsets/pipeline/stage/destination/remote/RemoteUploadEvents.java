@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 StreamSets Inc.
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.remote;
+package com.streamsets.pipeline.stage.destination.remote;
 
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
+import com.streamsets.pipeline.lib.event.EventCreator;
+import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 
-import java.io.InputStream;
+public final class RemoteUploadEvents {
 
-class FTPRemoteFile extends RemoteFile {
-  private final FileObject fileObject;
+  /**
+   * Fired when the file transfer is complete.
+   */
+  public static EventCreator FILE_TRANSFER_COMPLETE_EVENT = FileRefUtil.FILE_TRANSFER_COMPLETE_EVENT;
 
-  FTPRemoteFile(String filePath, long lastModified, FileObject fileObject) {
-    super(filePath, lastModified);
-    this.fileObject = fileObject;
-  }
-
-  @Override
-  InputStream createInputStream() throws FileSystemException {
-    return fileObject.getContent().getInputStream();
+  private RemoteUploadEvents() {
+    // Instantiation is prohibited
   }
 }

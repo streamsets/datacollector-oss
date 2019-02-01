@@ -18,20 +18,19 @@ package com.streamsets.pipeline.stage.origin.remote;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.remote.FTPRemoteConnector;
+import com.streamsets.pipeline.lib.remote.FTPRemoteFile;
+import com.streamsets.pipeline.lib.remote.RemoteFile;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPCmd;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystem;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemOptions;
 import org.apache.commons.vfs2.FileType;
-import org.apache.commons.vfs2.NameScope;
 import org.apache.commons.vfs2.VFS;
-import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
-import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
 import org.apache.commons.vfs2.provider.ftp.FtpClient;
 import org.apache.commons.vfs2.provider.ftp.FtpFileSystem;
 import org.apache.commons.vfs2.provider.ftp.FtpFileSystemConfigBuilder;
@@ -42,88 +41,46 @@ import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URI;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableSet;
 import java.util.regex.Matcher;
 
-class FTPRemoteDownloadSourceDelegate extends RemoteDownloadSourceDelegate {
+class FTPRemoteDownloadSourceDelegate extends FTPRemoteConnector implements RemoteDownloadSourceDelegate {
 
   private static final Logger LOG = LoggerFactory.getLogger(FTPRemoteDownloadSourceDelegate.class);
 
-  private URI remoteURI;
+  private RemoteDownloadConfigBean conf;
   private URI archiveURI;
-  private FileSystemOptions options;
   private FileSystemOptions archiveOptions;
-  private FileObject remoteDir;
   private Method getFtpClient;
   private boolean supportsMDTM;
 
   FTPRemoteDownloadSourceDelegate(RemoteDownloadConfigBean conf) {
-    super(conf);
+    super(conf.remoteConfig);
+    this.conf = conf;
   }
 
-  protected void initAndConnectInternal(
+  @Override
+  public void initAndConnect(
       List<Stage.ConfigIssue> issues, Source.Context context, URI remoteURI, String archiveDir
-  ) throws IOException {
-    options = new FileSystemOptions();
-    this.remoteURI = remoteURI;
-    if (conf.strictHostChecking) {
-      issues.add(
-          context.createConfigIssue(Groups.CREDENTIALS.getLabel(),
-          CONF_PREFIX + "strictHostChecking",
-          Errors.REMOTE_12
-      ));
-    }
-    switch (conf.auth) {
-      case PRIVATE_KEY:
-        issues.add(
-            context.createConfigIssue(Groups.CREDENTIALS.getLabel(),
-            CONF_PREFIX + "privateKey",
-            Errors.REMOTE_11
-        ));
-        break;
-      case PASSWORD:
-        String username = resolveUsername(remoteURI, issues, context);
-        String password = resolvePassword(remoteURI, issues, context);
-        if (remoteURI.getUserInfo() != null) {
-          remoteURI = UriBuilder.fromUri(remoteURI).userInfo(null).build();
-        }
-        StaticUserAuthenticator authenticator = new StaticUserAuthenticator(remoteURI.getHost(), username, password);
-        DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, authenticator);
-        break;
-      case NONE:
-        break;
-      default:
-        break;
-    }
-    FtpFileSystemConfigBuilder.getInstance().setPassiveMode(options, true);
-    FtpFileSystemConfigBuilder.getInstance().setUserDirIsRoot(options, conf.userDirIsRoot);
+  ) {
+    super.initAndConnect(issues, context, remoteURI, Groups.REMOTE, Groups.CREDENTIALS);
 
-    // Only actually try to connect and authenticate if there were no issues
     if (issues.isEmpty()) {
-      LOG.info("Connecting to {}", remoteURI.toString());
-      // To ensure we can connect, else we fail validation.
-      remoteDir = VFS.getManager().resolveFile(remoteURI.toString(), options);
-      // Ensure we can assess the remote directory...
-      remoteDir.refresh();
-      // throw away the results.
-      remoteDir.getChildren();
-
       setupModTime();
-    }
 
-    if (archiveDir != null) {
-      archiveURI = UriBuilder.fromUri(remoteURI).replacePath(archiveDir).build();
-      archiveOptions = (FileSystemOptions) options.clone();
-      FtpFileSystemConfigBuilder.getInstance().setUserDirIsRoot(archiveOptions, conf.archiveDirUserDirIsRoot);
+      if (archiveDir != null) {
+        archiveURI = UriBuilder.fromUri(remoteURI).replacePath(archiveDir).build();
+        archiveOptions = (FileSystemOptions) options.clone();
+        FtpFileSystemConfigBuilder.getInstance().setUserDirIsRoot(archiveOptions, conf.archiveDirUserDirIsRoot);
+      }
     }
   }
 
   @Override
-  Offset createOffset(String file) throws IOException {
-    FileObject fileObject = getChild(file);
+  public Offset createOffset(String file) throws IOException {
+    FileObject fileObject = resolveChild(file);
     Offset offset = new Offset(
         relativizeToRoot(fileObject.getName().getPath()),
         getModTime(fileObject),
@@ -132,8 +89,9 @@ class FTPRemoteDownloadSourceDelegate extends RemoteDownloadSourceDelegate {
     return offset;
   }
 
-  long populateMetadata(String remotePath, Map<String, Object> metadata) throws IOException {
-    FileObject fileObject = getChild(remotePath);
+  @Override
+  public long populateMetadata(String remotePath, Map<String, Object> metadata) throws IOException {
+    FileObject fileObject = resolveChild(remotePath);
     long size = fileObject.getContent().getSize();
     metadata.put(HeaderAttributeConstants.SIZE, size);
     metadata.put(HeaderAttributeConstants.LAST_MODIFIED_TIME, getModTime(fileObject));
@@ -143,30 +101,9 @@ class FTPRemoteDownloadSourceDelegate extends RemoteDownloadSourceDelegate {
   }
 
   @Override
-  void queueFiles(FileQueueChecker fqc, NavigableSet<RemoteFile> fileQueue, FileFilter fileFilter) throws
+  public void queueFiles(FileQueueChecker fqc, NavigableSet<RemoteFile> fileQueue, FileFilter fileFilter) throws
       IOException, StageException {
-    boolean done = false;
-    int retryCounter = 0;
-    while (!done && retryCounter < MAX_RETRIES) {
-      try {
-        remoteDir.refresh();
-        // A call to getChildren() and then refresh() is needed in order to properly refresh if files were updated
-        // A possible bug in VFS?
-        remoteDir.getChildren();
-        remoteDir.refresh();
-        done = true;
-      } catch (FileSystemException fse) {
-        // Refresh can fail due to session is down, a timeout, etc; so try getting a new connection
-        if (retryCounter < MAX_RETRIES - 1) {
-          LOG.info("Got FileSystemException when trying to refresh remote directory. '{}'", fse.getMessage(), fse);
-          LOG.warn("Retrying connection to remote directory");
-          remoteDir = VFS.getManager().resolveFile(remoteURI.toString(), options);
-        } else {
-          throw new StageException(Errors.REMOTE_18, fse.getMessage(), fse);
-        }
-      }
-      retryCounter++;
-    }
+    verifyAndReconnect();
 
     FileObject[] theFiles = remoteDir.getChildren();
     if (conf.processSubDirectories) {
@@ -198,27 +135,13 @@ class FTPRemoteDownloadSourceDelegate extends RemoteDownloadSourceDelegate {
     }
   }
 
-  private String relativizeToRoot(String path) {
-    return "/" + Paths.get(remoteDir.getName().getPath()).relativize(Paths.get(path)).toString();
-  }
-
-  private FileObject getChild(String path) throws IOException {
-    // VFS doesn't properly resolve the child if we don't remove the leading slash, even though that's inconsistent
-    // with its other methods
-    if (path.startsWith("/")) {
-      path = path.substring(1);
-    }
-    return remoteDir.resolveFile(path, NameScope.DESCENDENT);
-  }
-
-  @Override
-  void delete(String remotePath) throws IOException {
-    FileObject fileObject = getChild(remotePath);
+  public void delete(String remotePath) throws IOException {
+    FileObject fileObject = resolveChild(remotePath);
     fileObject.delete();
   }
 
   @Override
-  String archive(String fromPath) throws IOException {
+  public String archive(String fromPath) throws IOException {
     if (archiveURI == null) {
       throw new IOException("No archive directory defined - cannot archive");
     }
@@ -229,7 +152,7 @@ class FTPRemoteDownloadSourceDelegate extends RemoteDownloadSourceDelegate {
     toFile.refresh();
     // Create the toPath's parent dir(s) if they don't exist
     toFile.getParent().createFolder();
-    getChild(fromPath).moveTo(toFile);
+    resolveChild(fromPath).moveTo(toFile);
     toFile.close();
     return toPath;
   }
@@ -269,7 +192,7 @@ class FTPRemoteDownloadSourceDelegate extends RemoteDownloadSourceDelegate {
         ftpClient = ftpFileSystem.getClient();
         FTPClient rawFtpClient = (FTPClient) getFtpClient.invoke(ftpClient);
         String path = fileObject.getName().getPath();
-        if (conf.userDirIsRoot && path.startsWith("/")) {
+        if (conf.remoteConfig.userDirIsRoot && path.startsWith("/")) {
           // Remove the leading slash to turn it into a proper relative path
           path = path.substring(1);
         }
@@ -286,14 +209,5 @@ class FTPRemoteDownloadSourceDelegate extends RemoteDownloadSourceDelegate {
       }
     }
     return modTime;
-  }
-
-  @Override
-  void close() throws IOException {
-    if (remoteDir != null) {
-      remoteDir.close();
-      FileSystem fs = remoteDir.getFileSystem();
-      remoteDir.getFileSystem().getFileSystemManager().closeFileSystem(fs);
-    }
   }
 }

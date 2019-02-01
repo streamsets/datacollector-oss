@@ -40,12 +40,26 @@ public final class FileRefTestUtil {
       boolean createMetrics,
       String checksum,
       HashingUtil.HashType checksumAlgorithm
-  ) throws IOException {
+  ) {
+    return getLocalFileRefWithCustomFile(
+        new File(getSourceFilePath(testDir)),
+        createMetrics,
+        checksum,
+        checksumAlgorithm
+    );
+  }
+
+  public static FileRef getLocalFileRefWithCustomFile(
+      File file,
+      boolean createMetrics,
+      String checksum,
+      HashingUtil.HashType checksumAlgorithm
+  ) {
     AbstractSpoolerFileRef.Builder builder = new LocalFileRef.Builder()
-        .filePath(getSourceFilePath(testDir))
+        .filePath(file.getAbsolutePath())
         //To force multiple reads from the file.
         .bufferSize(TEXT.getBytes().length / 2)
-        .totalSizeInBytes(Files.size(Paths.get(getSourceFilePath(testDir))));
+        .totalSizeInBytes(file.length());
     if (checksum != null) {
       builder.verifyChecksum(true)
           .checksum(checksum)
@@ -73,11 +87,15 @@ public final class FileRefTestUtil {
   }
 
   public static Map<String, Object> getFileMetadata(File testDir) throws IOException {
+    return getFileMetadataWithCustomFile(new File(getSourceFilePath(testDir)));
+  }
+
+  public static Map<String, Object> getFileMetadataWithCustomFile(File file) throws IOException {
     String attributesToRead =
-        Paths.get(getSourceFilePath(testDir)).getFileSystem().supportedFileAttributeViews().contains("posix")? "posix:*" : "*";
-    Map<String, Object> metadata = new HashMap<>(Files.readAttributes(Paths.get(getSourceFilePath(testDir)), attributesToRead));
-    metadata.put("filename", Paths.get(getSourceFilePath(testDir)).getFileName().toString());
-    metadata.put("file", getSourceFilePath(testDir));
+        file.toPath().getFileSystem().supportedFileAttributeViews().contains("posix")? "posix:*" : "*";
+    Map<String, Object> metadata = new HashMap<>(Files.readAttributes(file.toPath(), attributesToRead));
+    metadata.put("filename", file.getName());
+    metadata.put("file", file.getAbsolutePath());
     return metadata;
   }
 

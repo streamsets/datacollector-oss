@@ -13,21 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.remote;
+package com.streamsets.pipeline.lib.remote;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
-class SFTPRemoteFile extends RemoteFile {
+public class SFTPRemoteFile extends RemoteFile {
   private final ChrootSFTPClient sftpClient;
 
-  SFTPRemoteFile(String filePath, long lastModified, ChrootSFTPClient sftpClient) {
+  public SFTPRemoteFile(String filePath, long lastModified, ChrootSFTPClient sftpClient) {
     super(filePath, lastModified);
     this.sftpClient = sftpClient;
   }
 
   @Override
-  InputStream createInputStream() throws IOException {
-    return sftpClient.open(getFilePath());
+  public boolean exists() throws IOException {
+    return sftpClient.exists(getFilePath());
+  }
+
+  @Override
+  public InputStream createInputStream() throws IOException {
+    return sftpClient.openForReading(getFilePath());
+  }
+
+  @Override
+  public OutputStream createOutputStream() throws IOException {
+    return sftpClient.openForWriting(getFilePath());
   }
 }

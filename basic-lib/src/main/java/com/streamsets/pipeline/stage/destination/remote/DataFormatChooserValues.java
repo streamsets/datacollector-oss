@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2019 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.remote;
+package com.streamsets.pipeline.stage.destination.remote;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.config.DataFormat;
 
-@GenerateResourceBundle
-public enum Authentication implements Label {
-  NONE("None"),
-  PASSWORD("Password"),
-  PRIVATE_KEY("Private Key")
-  ;
+public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
 
-  private final String label;
-
-  Authentication(String label) {
-    this.label = label;
+  public DataFormatChooserValues() {
+    super(
+      DataFormat.WHOLE_FILE
+    );
   }
 
-  @Override
-  public String getLabel() {
-    return label;
-  }
 }

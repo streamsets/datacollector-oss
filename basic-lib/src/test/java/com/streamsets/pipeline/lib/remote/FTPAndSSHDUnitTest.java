@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.remote;
+package com.streamsets.pipeline.lib.remote;
 
 import org.apache.commons.net.ftp.FTPCmd;
 import org.apache.ftpserver.FtpServerFactory;

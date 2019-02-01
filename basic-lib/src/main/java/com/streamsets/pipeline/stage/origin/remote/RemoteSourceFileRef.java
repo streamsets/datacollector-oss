@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.origin.remote;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.io.fileref.AbstractFileRef;
+import com.streamsets.pipeline.lib.remote.RemoteFile;
 
 import java.io.IOException;
 import java.io.InputStream;

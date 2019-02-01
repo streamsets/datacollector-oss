@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.remote;
+package com.streamsets.pipeline.lib.remote;
 
 import net.schmizz.sshj.Config;
 import net.schmizz.sshj.SSHClient;
@@ -26,7 +26,7 @@ import java.io.IOException;
 
 /**
  * Stores the basic configs for creating an {@link SSHClient} to allow the creation of duplicate clients. Should be
- * used by {@link SFTPRemoteDownloadSourceDelegate}, which does all of the init error checking and handling.
+ * used by {@link SFTPRemoteConnector}, which does all of the init error checking and handling.
  */
 class SSHClientRebuilder {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2019 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.remote;
+package com.streamsets.pipeline.stage.destination.remote;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 
-public class AuthenticationChooserValues extends BaseEnumChooserValues<Authentication> {
+@GenerateResourceBundle
+public enum Groups implements Label {
+  REMOTE("SFTP/FTP"),
+  CREDENTIALS("Credentials"),
+  DATA_FORMAT("Data Format"),
+  ;
 
-  public AuthenticationChooserValues() {
-    super(Authentication.class);
+  private final String label;
+
+  private Groups(String label) {
+    this.label = label;
+  }
+
+  @Override
+  public String getLabel() {
+    return this.label;
   }
 }

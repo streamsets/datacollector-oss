@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 StreamSets Inc.
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.remote;
+package com.streamsets.pipeline.lib.remote;
 
-import com.streamsets.pipeline.lib.remote.RemoteFile;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-interface FileQueueChecker {
+public class AuthenticationChooserValues extends BaseEnumChooserValues<Authentication> {
 
-  boolean shouldQueue(RemoteFile remoteFile);
+  public AuthenticationChooserValues() {
+    super(Authentication.class);
+  }
 }

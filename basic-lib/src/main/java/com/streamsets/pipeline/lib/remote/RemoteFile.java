@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.remote;
+package com.streamsets.pipeline.lib.remote;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
- * Holder for necessary info about a remote file, as well as a way to create an {@link InputStream}.
- * Subclasses can determine how the {@link InputStream} is created based on what the remote source is.
+ * Holder for necessary info about a remote file, as well as a way to create an {@link InputStream} and an
+ * {@link OutputStream}. Subclasses should implement the abstract methods based on what the remote source is.
  */
-abstract class RemoteFile {
+public abstract class RemoteFile {
   private final String filePath;
   private final long lastModified;
 
@@ -31,13 +32,17 @@ abstract class RemoteFile {
     this.lastModified = lastModified;
   }
 
-  String getFilePath() {
+  public String getFilePath() {
     return filePath;
   }
 
-  long getLastModified() {
+  public long getLastModified() {
     return lastModified;
   }
 
-  abstract InputStream createInputStream() throws IOException;
+  public abstract boolean exists() throws IOException;
+
+  public abstract InputStream createInputStream() throws IOException;
+
+  public abstract OutputStream createOutputStream() throws IOException;
 }
