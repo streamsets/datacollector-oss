@@ -21,6 +21,8 @@ import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.iq80.snappy.SnappyFramedInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +33,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPInputStream;
@@ -60,6 +64,27 @@ public class HttpReceiverServlet extends HttpServlet {
     return receiver;
   }
 
+  // From https://stackoverflow.com/a/31928740/33905
+  @VisibleForTesting
+  protected static Map<String, String[]> getQueryParameters(HttpServletRequest request) {
+    Map<String, String[]> queryParameters = new HashMap<>();
+    String queryString = request.getQueryString();
+
+    if (StringUtils.isEmpty(queryString)) {
+      return queryParameters;
+    }
+
+    String[] parameters = queryString.split("&");
+
+    for (String parameter : parameters) {
+      String[] keyValuePair = parameter.split("=");
+      String[] values = queryParameters.get(keyValuePair[0]);
+      values = ArrayUtils.add(values, keyValuePair.length == 1 ? "" : keyValuePair[1]); //length is one if no value is available.
+      queryParameters.put(keyValuePair[0], values);
+    }
+    return queryParameters;
+  }
+
   @VisibleForTesting
   protected boolean validateAppId(HttpServletRequest req, HttpServletResponse res)
       throws ServletException, IOException {
@@ -74,7 +99,7 @@ public class HttpReceiverServlet extends HttpServlet {
     String reqAppId = req.getHeader(HttpConstants.X_SDC_APPLICATION_ID_HEADER);
 
     if (reqAppId == null && receiver.isAppIdViaQueryParamAllowed()) {
-      reqAppId = req.getParameter(HttpConstants.SDC_APPLICATION_ID_QUERY_PARAM);
+      reqAppId = getQueryParameters(req).get(HttpConstants.SDC_APPLICATION_ID_QUERY_PARAM)[0];
     }
 
     if (reqAppId == null) {

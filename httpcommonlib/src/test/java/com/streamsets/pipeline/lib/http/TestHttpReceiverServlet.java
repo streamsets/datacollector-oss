@@ -30,10 +30,36 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 public class TestHttpReceiverServlet {
+
+  @Test
+  public void testGetQueryParameters() throws Exception {
+    HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
+
+    // Just one parameter
+    Mockito.when(req.getQueryString()).thenReturn(HttpConstants.X_SDC_APPLICATION_ID_HEADER + "=bob");
+    Map<String, String[]> params = HttpReceiverServlet.getQueryParameters(req);
+    Assert.assertEquals(params.get(HttpConstants.X_SDC_APPLICATION_ID_HEADER)[0], "bob");
+
+    // Multiple parameters
+    Mockito.when(req.getQueryString()).thenReturn("param1=jim&" + HttpConstants.X_SDC_APPLICATION_ID_HEADER + "=bob&param3=bill");
+    params = HttpReceiverServlet.getQueryParameters(req);
+    Assert.assertEquals(params.get(HttpConstants.X_SDC_APPLICATION_ID_HEADER)[0], "bob");
+
+    // No parameters
+    Mockito.when(req.getQueryString()).thenReturn("");
+    params = HttpReceiverServlet.getQueryParameters(req);
+    Assert.assertEquals(params.get(HttpConstants.X_SDC_APPLICATION_ID_HEADER), null);
+
+    // Missing requested parameter
+    Mockito.when(req.getQueryString()).thenReturn("param1=jim&param2=mary");
+    params = HttpReceiverServlet.getQueryParameters(req);
+    Assert.assertEquals(params.get(HttpConstants.X_SDC_APPLICATION_ID_HEADER), null);
+  }
 
   @Test
   public void testValidateAppId() throws Exception {
