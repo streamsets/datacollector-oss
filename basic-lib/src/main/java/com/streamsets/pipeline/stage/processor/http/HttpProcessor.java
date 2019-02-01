@@ -261,10 +261,11 @@ public class HttpProcessor extends SingleLaneProcessor {
       if (response.hasEntity()) {
         responseBody = response.readEntity(InputStream.class);
       }
+      int responseStatus = response.getStatus();
       if (conf.client.useOAuth2 && response.getStatus() == 403 && !failOn403) {
         HttpStageUtil.getNewOAuth2Token(conf.client.oauth2, httpClientCommon.getClient());
         return null;
-      } else if (response.getStatus() < 200 || response.getStatus() >= 300) {
+      } else if (responseStatus < 200 || responseStatus >= 300) {
         resolvedRecords.remove(record);
         throw new OnRecordErrorException(
             record,
@@ -278,7 +279,7 @@ public class HttpProcessor extends SingleLaneProcessor {
       if (parsedResponse != null) {
         record.set(conf.outputField, parsedResponse.get());
         addResponseHeaders(record, response);
-      } else if (responseBody == null) {
+      } else if (responseBody == null && responseStatus != 204) {
         throw new OnRecordErrorException(record, Errors.HTTP_34);
       }
       return record;
