@@ -118,6 +118,22 @@ public class SchemaGeneratorConfig {
   public boolean avroDefaultNullable;
 
   @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "[]",
+    label = "Default Values for Types",
+    description = "Enables to configure different default value for each type.",
+    group = "AVRO",
+    dependencies = {
+      @Dependency(configName = "schemaType", triggeredByValues = "AVRO"),
+      @Dependency(configName = "avroNullableFields", triggeredByValues = "false")
+    },
+    displayPosition = 40
+  )
+  @ListBeanModel
+  public List<AvroDefaultConfig> avroDefaultTypes = new ArrayList<>();
+
+  @ConfigDef(
     required = true,
     type = ConfigDef.Type.BOOLEAN,
     defaultValue = "false",
@@ -127,24 +143,9 @@ public class SchemaGeneratorConfig {
     dependencies = {
       @Dependency(configName = "schemaType", triggeredByValues = "AVRO")
     },
-    displayPosition = 40
-  )
-  public boolean avroExpandTypes;
-
-  @ConfigDef(
-    required = false,
-    type = ConfigDef.Type.MODEL,
-    defaultValue = "[]",
-    label = "Default Values for Types",
-    description = "Enables to configure different default value for each type.",
-    group = "AVRO",
-    dependencies = {
-      @Dependency(configName = "schemaType", triggeredByValues = "AVRO")
-    },
     displayPosition = 50
   )
-  @ListBeanModel
-  public List<AvroDefaultConfig> avroDefaultTypes = new ArrayList<>();
+  public boolean avroExpandTypes;
 
   // Specific type configs
 

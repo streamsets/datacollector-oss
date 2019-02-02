@@ -296,12 +296,12 @@ public class AvroSchemaGenerator extends SchemaGenerator {
    * Returns default value for given field or null if no default value should be used.
    */
   private JsonNode getDefaultValue(Schema schema) {
-    if(defaultValuesForTypes.containsKey(schema.getType())) {
-      return defaultValuesForTypes.get(schema.getType());
-    }
-
     if(getConfig().avroNullableFields && getConfig().avroDefaultNullable) {
       return NullNode.getInstance();
+    }
+
+    if(defaultValuesForTypes.containsKey(schema.getType())) {
+      return defaultValuesForTypes.get(schema.getType());
     }
 
     return null;
