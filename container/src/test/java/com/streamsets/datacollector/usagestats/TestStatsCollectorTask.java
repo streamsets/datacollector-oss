@@ -35,10 +35,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
@@ -502,6 +502,158 @@ public class TestStatsCollectorTask {
         Mockito.any(List.class),
         Mockito.eq(BundleType.STATS)
     );
+    task.stop();
+  }
+
+  @Test
+  public void testRunnableReportStatsException() throws Exception {
+    File testDir = createTestDir();
+
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    Mockito.when(runtimeInfo.getId()).thenReturn("id");
+    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+
+    Configuration config = new Configuration();
+
+    SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
+    ScheduledFuture future = Mockito.mock(ScheduledFuture.class);
+    Mockito.doReturn(future).when(scheduler).scheduleAtFixedRate(
+        Mockito.any(),
+        Mockito.anyLong(),
+        Mockito.anyLong(),
+        Mockito.any()
+    );
+
+    SupportBundleManager supportBundleManager = Mockito.mock(SupportBundleManager.class);
+    Mockito.doThrow(new UnknownHostException("foo"))
+        .when(supportBundleManager)
+        .uploadNewBundleFromInstances(Mockito.any(), Mockito.any());
+
+    StatsCollectorTask task = new StatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, supportBundleManager);
+
+    try (OutputStream os = new FileOutputStream(task.getOptFile())) {
+      ObjectMapperFactory.get().writeValue(os, ImmutableMap.of(task.STATS_ACTIVE_KEY, true));
+    }
+
+    try (OutputStream os = new FileOutputStream(task.getStatsFile())) {
+      StatsInfo statsInfo = new StatsInfo();
+      statsInfo.getActiveStats().setDataCollectorVersion("v0");
+      ObjectMapperFactory.get().writeValue(os, statsInfo);
+    }
+
+    task = Mockito.spy(task);
+
+    // one time
+    task.init();
+    Assert.assertTrue(task.isOpted());
+    Assert.assertTrue(task.isActive());
+    Assert.assertEquals(1, task.getStatsInfo().getCollectedStats().size());
+    Mockito.verify(scheduler, Mockito.times(1)).scheduleAtFixedRate(
+        Mockito.any(),
+        Mockito.eq(60L),
+        Mockito.eq(60L),
+        Mockito.eq(TimeUnit.SECONDS)
+    );
+
+    // two times
+    task.getRunnable().run();
+    Assert.assertTrue(task.isOpted());
+    Assert.assertTrue(task.isActive());
+
+    // Stop throwing an exception (the issue was fixed somehow)
+    Mockito.doNothing().when(supportBundleManager).uploadNewBundleFromInstances(Mockito.any(), Mockito.any());
+
+    // count resets because it works now
+    task.getRunnable().run();
+    Assert.assertTrue(task.isOpted());
+    Assert.assertTrue(task.isActive());
+    Assert.assertEquals(0, task.getStatsInfo().getCollectedStats().size());
+
+    // Resume throwing an exception
+    Mockito.doThrow(new UnknownHostException("foo"))
+        .when(supportBundleManager)
+        .uploadNewBundleFromInstances(Mockito.any(), Mockito.any());
+    task.getStatsInfo().getCollectedStats().add(new StatsBean());
+
+    // It will retry 5 times, once a minute, before backing off for 1 day.  After 1 day, it will retry the 5 times again
+    // and if it continues to fail, it will back off for 2 days.  After that, 4 days.  Finally, it will give up and
+    // switch off.  Here, we run through all of this, but it manages to temporarily succeed after on the 4th try of the
+    // 3rd day (which resets all the retries and back offs).
+    int doOnceOnly = 0;
+    for (int k = 0; k < 4; k++) {
+      System.out.println("AAA k = " + k);
+
+      // one through five times
+      for (int i = 0; i < 5; i++) {
+        System.out.println("AAA k = " + k + " i = " + i);
+        if (doOnceOnly == 0 && k == 2 && i == 3) {
+          // Stop throwing an exception (the issue was fixed somehow)
+          Mockito.doNothing().when(supportBundleManager).uploadNewBundleFromInstances(Mockito.any(), Mockito.any());
+
+          // count resets because it works now
+          task.getRunnable().run();
+          Assert.assertTrue(task.isOpted());
+          Assert.assertTrue(task.isActive());
+          Assert.assertEquals(0, task.getStatsInfo().getCollectedStats().size());
+
+          // Resume throwing an exception
+          Mockito.doThrow(new UnknownHostException("foo"))
+              .when(supportBundleManager)
+              .uploadNewBundleFromInstances(Mockito.any(), Mockito.any());
+          task.getStatsInfo().getCollectedStats().add(new StatsBean());
+
+          k = 0;
+          i = -1;
+          doOnceOnly = 1;
+        } else {
+          task.getRunnable().run();
+          Assert.assertTrue(task.isOpted());
+          Assert.assertTrue(task.isActive());
+          Assert.assertEquals(1, task.getStatsInfo().getCollectedStats().size());
+        }
+      }
+
+      // six times - we now try to back off
+      task.getRunnable().run();
+      Assert.assertTrue(task.isOpted());
+      // Keep backing off while it's less than 3
+      if (k < 3) {
+        Assert.assertTrue(task.isActive());
+        Assert.assertEquals(1, task.getStatsInfo().getCollectedStats().size());
+        int expectedTimes = k <= 1 ? doOnceOnly + 1 : 1;
+        Mockito.verify(scheduler, Mockito.times(expectedTimes)).scheduleAtFixedRate(
+            Mockito.any(),
+            Mockito.eq(60L * 60L * 24L * (int)Math.pow(2, k)),
+            Mockito.eq(60L),
+            Mockito.eq(TimeUnit.SECONDS)
+        );
+      // Otherwise, we'll just give up: switch it off
+      } else {
+        Assert.assertFalse(task.isActive());
+        Assert.assertEquals(0, task.getStatsInfo().getCollectedStats().size());
+        Mockito.verify(scheduler, Mockito.times(0)).scheduleAtFixedRate(
+            Mockito.any(),
+            Mockito.eq(60L * 60L * 24L * (int)Math.pow(2, k)),
+            Mockito.eq(60L),
+            Mockito.eq(TimeUnit.SECONDS)
+        );
+        Mockito.verify(scheduler, Mockito.times(2)).scheduleAtFixedRate(
+            Mockito.any(),
+            Mockito.eq(60L),
+            Mockito.eq(60L),
+            Mockito.eq(TimeUnit.SECONDS)
+        );
+      }
+    }
+
+    Mockito.verify(supportBundleManager, Mockito.times(43)).uploadNewBundleFromInstances(
+        Mockito.any(List.class),
+        Mockito.eq(BundleType.STATS)
+    );
+
     task.stop();
   }
 

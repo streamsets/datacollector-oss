@@ -51,6 +51,9 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
   static final String ROLL_FREQUENCY_CONFIG = "stats.rollFrequency.days";
 
   private static final int ROLL_FREQUENCY_DEFAULT = 7;
+  private static final int REPORT_STATS_FAILED_COUNT_LIMIT = 5;
+  private static final int REPORT_PERIOD = 60;
+  private static final int EXTENDED_REPORT_STATS_FAILED_COUNT_LIMIT = 3;
 
   static final String OPT_FILE = "opt-stats.json";
 
@@ -71,6 +74,8 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
   private long lastReport;
   private ScheduledFuture future;
   private volatile StatsInfo statsInfo;
+  private int reportStatsFailedCount;
+  private int extendedReportStatsFailedCount;
 
   public StatsCollectorTask(
       BuildInfo buildInfo,
@@ -87,6 +92,8 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
     this.bundleManager = bundleManager;
     optFile = new File(runtimeInfo.getDataDir(), OPT_FILE);
     statsFile = new File(runtimeInfo.getDataDir(), STATS_FILE);
+    reportStatsFailedCount = 0;
+    extendedReportStatsFailedCount = 0;
   }
 
   @VisibleForTesting
@@ -157,7 +164,7 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
         } catch (IOException ex) {
           opted = false;
           active = false;
-          LOG.warn("Stats collection opt-in error, switching off and re-opting. Error: {}", ex);
+          LOG.warn("Stats collection opt-in error, switching off and re-opting. Error: {}", ex.getMessage(), ex);
         }
       }
       if (active) {
@@ -178,7 +185,7 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
           } catch (IOException ex) {
             opted = false;
             active = false;
-            LOG.warn("Stats collection data is invalid, switching off and re-opting. Error: {}", ex);
+            LOG.warn("Stats collection data is invalid, switching off and re-opting. Error: {}", ex.getMessage(), ex);
           }
         }
       }
@@ -190,7 +197,11 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
             }
           }
         } catch (Exception ex) {
-          LOG.error("Could not delete opt-in status file. Stats Collection is disabled. Error: {}", ex);
+          LOG.error(
+              "Could not delete opt-in status file. Stats Collection is disabled. Error: {}",
+              ex.getMessage(),
+              ex
+          );
         }
       }
       if (!active) {
@@ -201,7 +212,11 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
             }
           }
         } catch (Exception ex) {
-          LOG.error("Could not delete stats collected data file. Stats Collection is disabled. Error: {}", ex);
+          LOG.error(
+              "Could not delete stats collected data file. Stats Collection is disabled. Error: {}",
+              ex.getMessage(),
+              ex
+          );
         }
       }
     }
@@ -211,7 +226,7 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
     // when disabled all persistency/reporting done by the Runnable is a No Op.
     getStatsInfo().startSystem();
     getRunnable().run();
-    future = executorService.scheduleAtFixedRate(getRunnable(), 60, 60, TimeUnit.SECONDS);
+    future = executorService.scheduleAtFixedRate(getRunnable(), REPORT_PERIOD, REPORT_PERIOD, TimeUnit.SECONDS);
   }
 
   Runnable getRunnable() {
@@ -224,7 +239,38 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
           LOG.debug("Reporting");
           if (reportStats(getStatsInfo().getCollectedStats())) {
             LOG.debug("Reported");
+            reportStatsFailedCount = 0;
+            extendedReportStatsFailedCount = 0;
             getStatsInfo().getCollectedStats().clear();
+          } else {
+            reportStatsFailedCount++;
+            LOG.debug("Reporting has failed {} time(s) in a row", reportStatsFailedCount);
+            if (reportStatsFailedCount > REPORT_STATS_FAILED_COUNT_LIMIT) {
+              reportStatsFailedCount = 0;
+              extendedReportStatsFailedCount++;
+              if (extendedReportStatsFailedCount > EXTENDED_REPORT_STATS_FAILED_COUNT_LIMIT) {
+                LOG.warn("Reporting has failed too many times and will be switched off", reportStatsFailedCount);
+                extendedReportStatsFailedCount = 0;
+                future.cancel(false);
+                future = executorService.scheduleAtFixedRate(
+                    getRunnable(),
+                    REPORT_PERIOD,
+                    REPORT_PERIOD,
+                    TimeUnit.SECONDS
+                );
+                setActive(false);
+              } else {
+                int delay = (int)Math.pow(2, extendedReportStatsFailedCount - 1);
+                LOG.warn("Reporting will back off for {} day(s)", delay);
+                future.cancel(false);
+                future = executorService.scheduleAtFixedRate(
+                    getRunnable(),
+                    delay * 60 * 60 * 24,
+                    REPORT_PERIOD,
+                    TimeUnit.SECONDS
+                );
+              }
+            }
           }
         }
         saveStats();
@@ -240,7 +286,7 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
       );
       return true;
     } catch (IOException ex) {
-      LOG.warn("Reporting failed. Error: {}", ex);
+      LOG.warn("Reporting failed. Error: {}", ex.getMessage(), ex);
       return false;
     }
   }
@@ -256,7 +302,7 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
     } catch (IOException ex) {
       opted = false;
       active = false;
-      LOG.warn("Could not save stats collection, Disabling and re-opting. Error: {}", ex);
+      LOG.warn("Could not save stats collection, Disabling and re-opting. Error: {}", ex.getMessage(), ex);
     } finally {
       ds.release();
     }
@@ -296,7 +342,7 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
       } catch (IOException ex) {
         this.active = false;
         opted = false;
-        LOG.warn("Could not change stats collection state, Disabling and re-opting. Error: {}", ex);
+        LOG.warn("Could not change stats collection state, Disabling and re-opting. Error: {}", ex.getMessage(), ex);
       }
       getStatsInfo().reset();
       saveStats();
