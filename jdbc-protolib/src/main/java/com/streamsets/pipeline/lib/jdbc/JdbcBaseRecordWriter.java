@@ -598,13 +598,13 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
               statement.setObject(paramIdx, value, getColumnType(column));
               break;
             }
-            if (connection.getMetaData().getDriverName().contains(MSSQL) &&
-                ((BigDecimal) value).scale() >= MAX_BIG_DECIMAL_SCALE) {
+            if (connection.getMetaData().getDriverName().contains(MSSQL)) {
               LOG.debug("Since {} is being used and the scale is {} or bigger, we will send the record as object",
                   MSSQL,
                   MAX_BIG_DECIMAL_SCALE
               );
-              // MSSQL will fail while trying to insert BigDecimals with more than 38 decimals in a float column
+              // Microsoft SQL Server JDBC Driver doesn't implement setBigDecimal() properly, it's better to always
+              // use setObject which have reasonable behavior.
               statement.setObject(paramIdx, value, getColumnType(column));
               break;
             }
