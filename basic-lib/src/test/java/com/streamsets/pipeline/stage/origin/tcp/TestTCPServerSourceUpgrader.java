@@ -47,4 +47,56 @@ public class TestTCPServerSourceUpgrader {
     UpgraderTestUtils.assertAllExist(configs, "conf.readTimeout");
   }
 
+  @Test
+  public void testV3ToV4() throws Exception {
+    List<Config> configs = new LinkedList<>();
+    TCPServerSourceUpgrader upgrader = new TCPServerSourceUpgrader();
+
+    // test empty configs since version 2
+    upgrader.upgrade("lib", "stage", "stageInst", 2, 4, configs);
+    Assert.assertEquals(configs.size(), 1);
+    UpgraderTestUtils.assertAllExist(configs, "conf.readTimeout");
+    UpgraderTestUtils.assertExists(configs, "conf.readTimeout", 300);
+
+    // test good value near max permitted value
+    configs.clear();
+    configs.add(new Config("conf.readTimeout", 3599));
+    upgrader.upgrade("lib", "stage", "stageInst", 3, 4, configs);
+    Assert.assertEquals(configs.size(), 1);
+    UpgraderTestUtils.assertAllExist(configs, "conf.readTimeout");
+    UpgraderTestUtils.assertExists(configs, "conf.readTimeout", 3599);
+
+    // test good value being min permitted value
+    configs.clear();
+    configs.add(new Config("conf.readTimeout", 1));
+    upgrader.upgrade("lib", "stage", "stageInst", 3, 4, configs);
+    Assert.assertEquals(configs.size(), 1);
+    UpgraderTestUtils.assertAllExist(configs, "conf.readTimeout");
+    UpgraderTestUtils.assertExists(configs, "conf.readTimeout", 1);
+
+    // test incorrect value 0
+    configs.clear();
+    configs.add(new Config("conf.readTimeout", 0));
+    upgrader.upgrade("lib", "stage", "stageInst", 3, 4, configs);
+    Assert.assertEquals(configs.size(), 1);
+    UpgraderTestUtils.assertAllExist(configs, "conf.readTimeout");
+    UpgraderTestUtils.assertExists(configs, "conf.readTimeout", 3600);
+
+    // test incorrect negative value
+    configs.clear();
+    configs.add(new Config("conf.readTimeout", -1));
+    upgrader.upgrade("lib", "stage", "stageInst", 3, 4, configs);
+    Assert.assertEquals(configs.size(), 1);
+    UpgraderTestUtils.assertAllExist(configs, "conf.readTimeout");
+    UpgraderTestUtils.assertExists(configs, "conf.readTimeout", 3600);
+
+    // test incorrect value bigger than max value
+    configs.clear();
+    configs.add(new Config("conf.readTimeout", 3800));
+    upgrader.upgrade("lib", "stage", "stageInst", 3, 4, configs);
+    Assert.assertEquals(configs.size(), 1);
+    UpgraderTestUtils.assertAllExist(configs, "conf.readTimeout");
+    UpgraderTestUtils.assertExists(configs, "conf.readTimeout", 3600);
+  }
+
 }
