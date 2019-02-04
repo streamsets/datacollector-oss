@@ -109,7 +109,6 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
   // Index of columns returned by DatabaseMetaData.getColumns. Defined in DatabaseMetaData class.
   private static final int COLUMN_NAME = 4;
   private static final int DATA_TYPE = 5;
-  private static final int MAX_BIG_DECIMAL_SCALE = 38;
   private static final String MSSQL = "Microsoft";
 
   private final int defaultOpCode;
@@ -599,9 +598,9 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
               break;
             }
             if (connection.getMetaData().getDriverName().contains(MSSQL)) {
-              LOG.debug("Since {} is being used and the scale is {} or bigger, we will send the record as object",
-                  MSSQL,
-                  MAX_BIG_DECIMAL_SCALE
+              LOG.debug(
+                  "Since {} is being used we will send the record as object",
+                  connection.getMetaData().getDriverName()
               );
               // Microsoft SQL Server JDBC Driver doesn't implement setBigDecimal() properly, it's better to always
               // use setObject which have reasonable behavior.
