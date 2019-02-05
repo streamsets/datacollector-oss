@@ -37,6 +37,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import java.text.SimpleDateFormat;
 import java.time.Clock;
 import java.time.Duration;
 import java.util.Arrays;
@@ -207,9 +208,9 @@ public class TestBigQueryDelegate {
     assertEquals(2.0d, map.get("d").getValueAsDouble(), 1e-15);
     assertEquals(true, map.get("e").getValueAsBoolean());
     assertEquals(new Date(1351700038292L), map.get("f").getValueAsDatetime());
-    assertEquals(new Date(1351700038292L), map.get("g").getValueAsDatetime());
-    assertEquals(new Date(1351700038292L), map.get("h").getValueAsDatetime());
-    assertEquals(new Date(1351700038292L), map.get("i").getValueAsDate());
+    assertEquals((new SimpleDateFormat("HH:mm:ss.SSS")).parse("08:39:01.123"), map.get("g").getValueAsDatetime());
+    assertEquals((new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")).parse("2019-02-05T23:59:59.123"), map.get("h").getValueAsDatetime());
+    assertEquals((new SimpleDateFormat("yyy-MM-dd")).parse("2019-02-05"), map.get("i").getValueAsDate());
     Map<String, com.streamsets.pipeline.api.Field> j = map.get("j").getValueAsListMap();
     assertEquals("nested string", j.get("x").getValueAsString());
     Map<String, com.streamsets.pipeline.api.Field> y = j.get("y").getValueAsListMap();
@@ -251,9 +252,9 @@ public class TestBigQueryDelegate {
         .add(createFieldValue(2.0d))
         .add(createFieldValue(true))
         .add(createFieldValue(1351700038292387L))
-        .add(createFieldValue(1351700038292387L))
-        .add(createFieldValue(1351700038292387L))
-        .add(createFieldValue(1351700038292387L))
+        .add(createFieldValue("08:39:01.123"))
+        .add(createFieldValue("2019-02-05T23:59:59.123"))
+        .add(createFieldValue("2019-02-05"))
         .add(createFieldValue(
             ImmutableList.of(
                 createFieldValue("nested string"),
@@ -272,6 +273,14 @@ public class TestBigQueryDelegate {
 
     if (value instanceof Long) {
       when(fieldValue.getTimestampValue()).thenReturn((long) value);
+    }
+    if (value instanceof byte[]) {
+      when(fieldValue.getBytesValue()).thenReturn((byte[]) value);
+    }
+
+
+    if (! (attribute.equals(FieldValue.Attribute.RECORD) || attribute.equals(FieldValue.Attribute.REPEATED))) {
+      when(fieldValue.getStringValue()).thenReturn(value.toString());
     }
 
     if (attribute.equals(FieldValue.Attribute.RECORD)) {
