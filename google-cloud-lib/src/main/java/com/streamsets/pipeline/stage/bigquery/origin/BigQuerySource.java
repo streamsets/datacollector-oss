@@ -117,7 +117,7 @@ public class BigQuerySource extends BaseSource {
     int count = 0;
 
     // process one page (batch)
-    for (FieldValueList row : result.iterateAll()) {
+    for (FieldValueList row : result.getValues()) {
       sourceOffset = Utils.format("projectId:{}::rowNum:{}", conf.credentials.projectId, count);
       Record r = getContext().createRecord(sourceOffset);
 
