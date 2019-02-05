@@ -38,6 +38,8 @@ public class RemoteSSOService extends AbstractSSOService {
   public static final String SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG = CONFIG_PREFIX + "appAuthToken";
   public static final String SECURITY_SERVICE_COMPONENT_ID_CONFIG = CONFIG_PREFIX + "componentId";
   public static final String SECURITY_SERVICE_CONNECTION_TIMEOUT_CONFIG = CONFIG_PREFIX + "connectionTimeout.millis";
+  public static final String SECURITY_SERVICE_REMOTE_SSO_DISABLED_CONFIG = CONFIG_PREFIX + "remoteSso.disabled";
+  public static final boolean SECURITY_SERVICE_REMOTE_SSO_DISABLED_DEFAULT = false;
   public static final String DPM_DEPLOYMENT_ID = "dpm.remote.deployment.id";
   public static final boolean DPM_USER_ALIAS_NAME_ENABLED_DEFAULT = false;
   public static final String DPM_USER_ALIAS_NAME_ENABLED = CONFIG_PREFIX + "alias.name.enabled";

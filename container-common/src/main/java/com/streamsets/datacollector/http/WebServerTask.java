@@ -415,7 +415,15 @@ public abstract class WebServerTask extends AbstractTask implements Registration
     String auth = conf.get(AUTHENTICATION_KEY, AUTHENTICATION_DEFAULT);
     boolean isDPMEnabled = runtimeInfo.isDPMEnabled();
     if (isDPMEnabled) {
-      securityHandler = configureSSO(appConf, appHandler, appContext);
+      if (runtimeInfo.isRemoteSsoDisabled()) {
+        if (LOG.isInfoEnabled()) {
+          LOG.info("Remote SSO disabled via {} property", RemoteSSOService.SECURITY_SERVICE_REMOTE_SSO_DISABLED_CONFIG);
+        }
+        // TODO: add handling for token based authentication
+        securityHandler = null;
+      } else {
+        securityHandler = configureSSO(appConf, appHandler, appContext);
+      }
     } else {
       switch (auth) {
         case "none":

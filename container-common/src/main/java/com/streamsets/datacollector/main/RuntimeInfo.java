@@ -64,6 +64,7 @@ public abstract class RuntimeInfo {
 
   private boolean DPMEnabled;
   private boolean aclEnabled;
+  private boolean remoteSsoDisabled;
   private String deploymentId;
 
   private final static String USER_ROLE = "user";
@@ -300,6 +301,14 @@ public abstract class RuntimeInfo {
     this.aclEnabled = aclEnabled;
   }
 
+  public boolean isRemoteSsoDisabled() {
+    return remoteSsoDisabled;
+  }
+
+  public void setRemoteSsoDisabled(boolean remoteSsoDisabled) {
+    this.remoteSsoDisabled = remoteSsoDisabled;
+  }
+
   public static void loadOrReloadConfigs(RuntimeInfo runtimeInfo, Configuration conf) {
     // Load main SDC configuration as specified by the SDC admin
     File configFile = new File(runtimeInfo.getConfigDir(), "sdc.properties");
@@ -311,6 +320,11 @@ public abstract class RuntimeInfo {
         runtimeInfo.setAppAuthToken(appAuthToken);
         boolean isDPMEnabled = conf.get(RemoteSSOService.DPM_ENABLED, RemoteSSOService.DPM_ENABLED_DEFAULT);
         runtimeInfo.setDPMEnabled(isDPMEnabled);
+        boolean skipSsoService = conf.get(
+            RemoteSSOService.SECURITY_SERVICE_REMOTE_SSO_DISABLED_CONFIG,
+            RemoteSSOService.SECURITY_SERVICE_REMOTE_SSO_DISABLED_DEFAULT
+        );
+        runtimeInfo.setRemoteSsoDisabled(skipSsoService);
         String deploymentId = conf.get(RemoteSSOService.DPM_DEPLOYMENT_ID, null);
         runtimeInfo.setDeploymentId(deploymentId);
         boolean aclEnabled = conf.get(PIPELINE_ACCESS_CONTROL_ENABLED, PIPELINE_ACCESS_CONTROL_ENABLED_DEFAULT);

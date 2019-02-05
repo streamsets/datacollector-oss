@@ -41,7 +41,10 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.empty;
 
 public class TestWebServerTask {
 
@@ -213,6 +216,33 @@ public class TestWebServerTask {
     assertEquals(attr, runtimeInfo.getAttribute(WebServerTask.SSO_SERVICES_ATTR));
     assertEquals(2, ((List)attr).size());
 
+  }
+
+  @Test
+  public void testSSOServiceDisabled() throws Exception {
+    RuntimeInfo runtimeInfo =
+        new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), Collections.emptyList()) {
+          @Override
+          public String getConfigDir() {
+            return new File("target").getAbsolutePath();
+          }
+        };
+    runtimeInfo.setDPMEnabled(true);
+    runtimeInfo.setRemoteSsoDisabled(true);
+    Assert.assertNull(runtimeInfo.getAttribute(WebServerTask.SSO_SERVICES_ATTR));
+
+    Configuration conf = new Configuration();
+
+    WebServerTask webServerTask = createWebServerTask(runtimeInfo, conf, Collections.<WebAppProvider>emptySet());
+    try {
+      webServerTask.initTask();
+    } finally {
+      webServerTask.stopTask();
+    }
+
+    final List<Object> attr = runtimeInfo.getAttribute(WebServerTask.SSO_SERVICES_ATTR);
+    assertThat(attr, notNullValue());
+    assertThat(attr, empty());
   }
 
   @Test
