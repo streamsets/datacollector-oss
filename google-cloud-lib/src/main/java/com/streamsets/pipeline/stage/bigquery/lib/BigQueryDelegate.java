@@ -35,7 +35,12 @@ import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+
 import com.streamsets.pipeline.lib.util.ThreadUtil;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +54,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -69,9 +75,10 @@ public class BigQueryDelegate {
       .put(StandardSQLTypeName.BYTES, Field.Type.BYTE_ARRAY)
       .put(StandardSQLTypeName.INT64, Field.Type.LONG)
       .put(StandardSQLTypeName.FLOAT64, Field.Type.DOUBLE)
+      .put(StandardSQLTypeName.NUMERIC, Field.Type.DECIMAL)
       .put(StandardSQLTypeName.BOOL, Field.Type.BOOLEAN)
       .put(StandardSQLTypeName.TIMESTAMP, Field.Type.DATETIME)
-      .put(StandardSQLTypeName.TIME, Field.Type.DATETIME)
+      .put(StandardSQLTypeName.TIME, Field.Type.TIME)
       .put(StandardSQLTypeName.DATETIME, Field.Type.DATETIME)
       .put(StandardSQLTypeName.DATE, Field.Type.DATE)
       .put(StandardSQLTypeName.STRUCT, Field.Type.LIST_MAP)
@@ -84,14 +91,32 @@ public class BigQueryDelegate {
       .put(LegacySQLTypeName.BYTES, Field.Type.BYTE_ARRAY)
       .put(LegacySQLTypeName.INTEGER, Field.Type.LONG)
       .put(LegacySQLTypeName.FLOAT, Field.Type.DOUBLE)
+      .put(LegacySQLTypeName.NUMERIC, Field.Type.DECIMAL)
       .put(LegacySQLTypeName.BOOLEAN, Field.Type.BOOLEAN)
       .put(LegacySQLTypeName.TIMESTAMP, Field.Type.DATETIME)
-      .put(LegacySQLTypeName.TIME, Field.Type.DATETIME)
+      .put(LegacySQLTypeName.TIME, Field.Type.TIME)
       .put(LegacySQLTypeName.DATETIME, Field.Type.DATETIME)
       .put(LegacySQLTypeName.DATE, Field.Type.DATE)
       .put(LegacySQLTypeName.RECORD, Field.Type.LIST_MAP)
       .build();
 
+  private final Map<StandardSQLTypeName, SimpleDateFormat> StandardSQLTypeDateFormatter =
+          ImmutableMap.of(
+                  StandardSQLTypeName.DATE, new SimpleDateFormat("yyy-MM-dd"),
+                  StandardSQLTypeName.DATETIME, new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS"),
+                  StandardSQLTypeName.TIMESTAMP, new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS"),
+                  StandardSQLTypeName.TIME, new SimpleDateFormat("HH:mm:ss.SSS")
+          );
+
+  private final Map<LegacySQLTypeName, SimpleDateFormat> LegacySQLTypeDateFormatter =
+          ImmutableMap.of(
+                  LegacySQLTypeName.DATE, new SimpleDateFormat("yyy-MM-dd"),
+                  LegacySQLTypeName.DATETIME, new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS"),
+                  LegacySQLTypeName.TIMESTAMP, new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS"),
+                  LegacySQLTypeName.TIME, new SimpleDateFormat("HH:mm:ss.SSS")
+          );
+
+  private static final Pattern stripMicrosec = Pattern.compile("(\\.\\d{3})(\\d+)");
 
   private final Map<FieldValue.Attribute, BiFunction<com.google.cloud.bigquery.Field, FieldValue, Field>> transforms =
       ImmutableMap.of(
@@ -105,6 +130,7 @@ public class BigQueryDelegate {
   private final Clock clock;
 
   private Function<com.google.cloud.bigquery.Field, Field.Type> asRecordFieldTypeFunction;
+  private Function<com.google.cloud.bigquery.Field, SimpleDateFormat> dateTimeFormatter;
 
   /**
    * Constructs a new {@link BigQueryDelegate} for a specific project and set of credentials.
@@ -121,8 +147,10 @@ public class BigQueryDelegate {
 
     if (useLegacySql) {
       asRecordFieldTypeFunction = field -> LEGACY_SQL_TYPES.get(field.getType());
+      dateTimeFormatter = field -> LegacySQLTypeDateFormatter.get(field.getType());
     } else {
       asRecordFieldTypeFunction = field -> STANDARD_SQL_TYPES.get(field.getType().getStandardType());
+      dateTimeFormatter = field -> StandardSQLTypeDateFormatter.get(field.getType().getStandardType());
     }
   }
 
@@ -289,11 +317,36 @@ public class BigQueryDelegate {
 
   public Field fromPrimitiveField(com.google.cloud.bigquery.Field field, FieldValue value) {
     Field.Type type = asRecordFieldType(field);
-    if (TEMPORAL_TYPES.contains(type)) {
-      return Field.create(type, value.getTimestampValue() / 1000L); // micro to milli
+    Field f;
+    if (value.isNull()) {
+      f = Field.create(type, null);
+    } else if (TEMPORAL_TYPES.contains(type)) {
+      if (field.getType().getStandardType() == StandardSQLTypeName.TIMESTAMP) {
+        // in general only TIMESTAMP should be a Unix epoch value.  However, to be certain will test for getTimeStampValue() and process as as string format if that fails
+        f = Field.create(type, value.getTimestampValue() / 1000L); // micro to milli
+      } else {
+        // not a timestamp value.  Assume it's a date string format
+        // Other BigQuery temporal types come as string representations.
+        try {
+          String dval = value.getStringValue();
+          if (dval != null) {
+            dval = stripMicrosec.matcher(dval).replaceAll("$1"); // strip out microseconds, for milli precision
+          }
+          f = Field.create(type, dateTimeFormatter.apply(field).parse(dval));
+        } catch (ParseException ex) {
+          // In case of failed date/time parsing, simply allow the value to proceed as a string
+          LOG.error(String.format("Unable to convert BigQuery field type %s to field type %s", field.getType().toString(), type.toString()), ex);
+          f = Field.create(Field.Type.STRING, value.getStringValue()); // allow it to proceed with a null value
+          f.setAttribute("bq.parseException", String.format("%s using format %s", ex.getMessage(), dateTimeFormatter.apply(field).toPattern()) );
+        }
+      }
+      if (f != null) f.setAttribute("bq.fullValue", value.getStringValue()); // add the parse error as a field header
+    } else if (type == Field.Type.BYTE_ARRAY) {
+      f = Field.create(type, value.getBytesValue());
     } else {
-      return Field.create(type, value.getValue());
+      f = Field.create(type, value.getValue());
     }
+    return f;
   }
 
   public static BigQuery getBigquery(Credentials credentials, String projectId) {
