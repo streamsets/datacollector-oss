@@ -36,6 +36,10 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +66,7 @@ public class BigQueryDelegate {
       Field.Type.DATE,
       Field.Type.TIME
   );
+  private static final DateFormat DF = new SimpleDateFormat("yyy-MM-dd");
 
   private static final Map<StandardSQLTypeName, Field.Type> STANDARD_SQL_TYPES = ImmutableMap
       .<StandardSQLTypeName, Field.Type>builder()
@@ -289,11 +294,24 @@ public class BigQueryDelegate {
 
   public Field fromPrimitiveField(com.google.cloud.bigquery.Field field, FieldValue value) {
     Field.Type type = asRecordFieldType(field);
-    if (TEMPORAL_TYPES.contains(type)) {
-      return Field.create(type, value.getTimestampValue() / 1000L); // micro to milli
+    Field f;
+    if (TEMPORAL_TYPES.contains(type) && ! value.isNull()) {
+      if (type == Field.Type.DATE) {
+        // A google DATE is not a timestamp type value.  Have to process it differently
+        try {
+          f = Field.createDate(DF.parse(value.getStringValue()));
+        }
+        catch (ParseException e) {
+          LOG.error("Unable to convert DATE field with contents {}", value.getStringValue());
+          f = Field.create(type, null); // allow it to proceed with a null value
+        }
+      } else {
+        f = Field.create(type, value.getTimestampValue() / 1000L); // micro to milli
+      }
     } else {
-      return Field.create(type, value.getValue());
+      f = Field.create(type, value.getValue());
     }
+    return f;
   }
 
   public static BigQuery getBigquery(Credentials credentials, String projectId) {
