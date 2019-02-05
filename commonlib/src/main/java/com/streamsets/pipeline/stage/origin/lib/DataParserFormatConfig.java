@@ -49,8 +49,6 @@ import com.streamsets.pipeline.config.OriginAvroSchemaLookupModeChooserValues;
 import com.streamsets.pipeline.config.OriginAvroSchemaSource;
 import com.streamsets.pipeline.config.OriginAvroSchemaSourceChooserValues;
 import com.streamsets.pipeline.lib.el.DataUnitsEL;
-import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
@@ -101,7 +99,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
   private static final String DEFAULT_LOG4J_CUSTOM_FORMAT = "%r [%t] %-5p %c %x - %m%n";
 
   private LogDataFormatValidator logDataFormatValidator;
-  private DataParserFactory parserFactory;
+  protected DataParserFactory parserFactory;
 
   /* Compression always shown immediately after Data Format */
 
@@ -1061,6 +1059,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
   )
   public boolean verifyChecksum = false;
 
+  // EXCEL
   @ConfigDef(
           required = true,
           type = ConfigDef.Type.MODEL,
@@ -1453,30 +1452,9 @@ public class DataParserFormatConfig implements DataFormatConfig {
       boolean multiLines,
       List<Stage.ConfigIssue> issues
   ) {
-    boolean valid = true;
-    DataParserFactoryBuilder builder = new DataParserFactoryBuilder(context, dataFormat.getParserFormat());
-    Charset fileCharset;
 
-    try {
-      fileCharset = Charset.forName(charset);
-    } catch (UnsupportedCharsetException ignored) { // NOSONAR
-      // setting it to a valid one so the parser factory can be configured and tested for more errors
-      fileCharset = StandardCharsets.UTF_8;
-      issues.add(
-          context.createConfigIssue(
-              stageGroup,
-              configPrefix + "charset",
-              DataFormatErrors.DATA_FORMAT_05,
-              charset
-          )
-      );
-      valid = false;
-    }
-    builder.setCharset(fileCharset);
-    builder.setOverRunLimit(overrunLimit);
-    builder.setRemoveCtrlChars(removeCtrlChars);
-    builder.setCompression(compression);
-    builder.setFilePatternInArchive(filePatternInArchive);
+    DataParserFactoryBuilder builder = new DataParserFactoryBuilder(context, dataFormat.getParserFormat());
+    boolean valid = isValid(context, stageGroup, configPrefix, overrunLimit, issues, builder);
 
     switch (dataFormat) {
       case TEXT:
@@ -1535,6 +1513,38 @@ public class DataParserFormatConfig implements DataFormatConfig {
       issues.add(context.createConfigIssue(null, null, DataFormatErrors.DATA_FORMAT_06, ex.toString(), ex));
       valid = false;
     }
+    return valid;
+  }
+
+  protected boolean isValid(
+      ProtoConfigurableEntity.Context context,
+      String stageGroup,
+      String configPrefix,
+      int overrunLimit,
+      List<Stage.ConfigIssue> issues,
+      DataParserFactoryBuilder builder
+  ) {
+    boolean valid = true;
+    Charset fileCharset;
+
+    try {
+      fileCharset = Charset.forName(charset);
+    } catch (UnsupportedCharsetException ignored) { // NOSONAR
+      // setting it to a valid one so the parser factory can be configured and tested for more errors
+      fileCharset = StandardCharsets.UTF_8;
+      issues.add(context.createConfigIssue(
+          stageGroup,
+          configPrefix + "charset",
+          DataFormatErrors.DATA_FORMAT_05,
+          charset)
+      );
+      valid = false;
+    }
+    builder.setCharset(fileCharset);
+    builder.setOverRunLimit(overrunLimit);
+    builder.setRemoveCtrlChars(removeCtrlChars);
+    builder.setCompression(compression);
+    builder.setFilePatternInArchive(filePatternInArchive);
     return valid;
   }
 

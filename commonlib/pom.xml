@@ -202,6 +202,11 @@
       <version>${poi.version}</version>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.nifi</groupId>
+      <artifactId>nifi-flowfile-packager</artifactId>
+      <version>1.9.2</version>
+    </dependency>
 
     <!-- Test Dependencies -->
     <dependency>

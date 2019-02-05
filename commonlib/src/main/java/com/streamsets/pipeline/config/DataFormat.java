@@ -36,6 +36,7 @@ public enum DataFormat implements Label {
   SYSLOG("Syslog", DataParserFormat.SYSLOG, null),
   NETFLOW("Netflow", DataParserFormat.NETFLOW, null),
   EXCEL("Excel", DataParserFormat.EXCEL, null),
+  FLOWFILE("Nifi FlowFile", DataParserFormat.FLOWFILE, null),
   ;
 
   private final String label;

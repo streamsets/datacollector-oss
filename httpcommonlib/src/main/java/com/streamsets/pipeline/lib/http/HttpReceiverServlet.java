@@ -51,6 +51,12 @@ public class HttpReceiverServlet extends HttpServlet {
   private final Timer requestTimer;
   private volatile boolean shuttingDown;
 
+  // In case of FlowFile data format, we need to put certain header as the OK response
+  // NiFi HTTP destination will check the header and fail if it doesn't see this header
+  private static final String NIFI_TRANSACTION_HEADER = "x-nifi-transaction-id";
+  // Even if the actual FlowFile is version 1 or 2, passing v3 seems valid
+  private static final String NIFI_RESPONSE = "application/flowfile-v3";
+
   public HttpReceiverServlet(Stage.Context context, HttpReceiver receiver, BlockingQueue<Exception> errorQueue) {
     this.receiver = receiver;
     this.errorQueue = errorQueue;
@@ -120,6 +126,9 @@ public class HttpReceiverServlet extends HttpServlet {
       LOG.debug("Validation from '{}', OK", req.getRemoteAddr());
       res.setHeader(HttpConstants.X_SDC_PING_HEADER, HttpConstants.X_SDC_PING_VALUE);
       res.setStatus(HttpServletResponse.SC_OK);
+      if (res.getHeaderNames().contains(NIFI_TRANSACTION_HEADER)) {
+        res.setHeader("Accept", NIFI_RESPONSE);
+      }
     }
   }
 

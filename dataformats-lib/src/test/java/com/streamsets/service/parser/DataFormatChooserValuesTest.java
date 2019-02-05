@@ -30,8 +30,8 @@ public class DataFormatChooserValuesTest {
     List<String> values = new DataFormatChooserValues().getValues();
 
     for(DataFormat format: DataFormat.values()) {
-      // Skip formats for which we don't have parser
-      if(format.getParserFormat() == null) {
+      // Skip formats for which we don't have parser. FlowFile is not a visible option so not listed in the chooser
+      if(format.getParserFormat() == null || format == DataFormat.FLOWFILE) {
         return;
       }
       assertTrue("Missing: " + format, values.contains(format.name()));
