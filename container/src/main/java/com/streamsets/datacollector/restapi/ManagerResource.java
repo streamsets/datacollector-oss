@@ -104,7 +104,7 @@ public class ManagerResource {
     this.store = store;
 
     UserJson currentUser;
-    if (runtimeInfo.isDPMEnabled()) {
+    if (runtimeInfo.isDPMEnabled() && !runtimeInfo.isRemoteSsoDisabled()) {
       currentUser = new UserJson((SSOPrincipal)principal);
     } else {
       currentUser = userGroupManager.getUser(principal);
