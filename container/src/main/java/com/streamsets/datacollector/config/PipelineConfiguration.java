@@ -29,7 +29,6 @@ import java.util.UUID;
 public class PipelineConfiguration extends PipelineFragmentConfiguration {
   private StageConfiguration errorStage;
   private StageConfiguration statsAggregatorStage;
-  private MemoryLimitConfiguration memoryLimitConfiguration;
   private List<StageConfiguration> startEventStages;
   private List<StageConfiguration> stopEventStages;
 
@@ -102,7 +101,6 @@ public class PipelineConfiguration extends PipelineFragmentConfiguration {
     );
     this.errorStage = errorStage;
     this.statsAggregatorStage = statsAggregatorStage;
-    memoryLimitConfiguration = new MemoryLimitConfiguration();
     this.startEventStages = startEventStages != null ? startEventStages : Collections.emptyList();
     this.stopEventStages = stopEventStages != null ? stopEventStages : Collections.emptyList();
   }
@@ -121,15 +119,6 @@ public class PipelineConfiguration extends PipelineFragmentConfiguration {
 
   public StageConfiguration getStatsAggregatorStage() {
     return statsAggregatorStage;
-  }
-
-  public MemoryLimitConfiguration getMemoryLimitConfiguration() {
-    return memoryLimitConfiguration;
-  }
-
-  @JsonIgnore
-  public void setMemoryLimitConfiguration(MemoryLimitConfiguration memoryLimitConfiguration) {
-    this.memoryLimitConfiguration = memoryLimitConfiguration;
   }
 
   public List<StageConfiguration> getStartEventStages() {

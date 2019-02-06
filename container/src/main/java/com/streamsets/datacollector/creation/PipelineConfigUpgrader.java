@@ -70,6 +70,9 @@ public class PipelineConfigUpgrader implements StageUpgrader {
         // fall through
       case 10:
         upgradeV10ToV11(configs);
+        // fall through
+      case 11:
+        upgradeV11ToV12(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", context.getFromVersion()));
@@ -241,6 +244,14 @@ public class PipelineConfigUpgrader implements StageUpgrader {
         }
       }
     }
+  }
+
+  private void upgradeV11ToV12(List<Config> configs) {
+    List<Config> memoryLimits = configs.stream()
+      .filter(config -> config.getName().startsWith("memoryLimit"))
+      .collect(Collectors.toList());
+
+    configs.removeAll(memoryLimits);
   }
 
 }

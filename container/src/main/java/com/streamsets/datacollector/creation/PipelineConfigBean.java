@@ -23,8 +23,6 @@ import com.streamsets.datacollector.config.ErrorRecordPolicyChooserValues;
 import com.streamsets.datacollector.config.ExecutionModeChooserValues;
 import com.streamsets.datacollector.config.LogLevel;
 import com.streamsets.datacollector.config.LogLevelChooserValues;
-import com.streamsets.datacollector.config.MemoryLimitExceeded;
-import com.streamsets.datacollector.config.MemoryLimitExceededChooserValues;
 import com.streamsets.datacollector.config.PipelineGroups;
 import com.streamsets.datacollector.config.PipelineLifecycleStageChooserValues;
 import com.streamsets.datacollector.config.PipelineState;
@@ -62,7 +60,7 @@ import java.util.Map;
 @ConfigGroups(PipelineGroups.class)
 public class PipelineConfigBean implements Stage {
 
-  public static final int VERSION = 11;
+  public static final int VERSION = 12;
 
   public static final String DEFAULT_STATS_AGGREGATOR_LIBRARY_NAME = "streamsets-datacollector-basic-lib";
 
@@ -183,35 +181,6 @@ public class PipelineConfigBean implements Stage {
       displayPosition = 30
   )
   public int retryAttempts;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.NUMBER,
-      label = "Max Pipeline Memory (MB)",
-      defaultValue = "${jvm:maxMemoryMB() * 0.85}",
-      description = "Maximum amount of memory the pipeline can use. Configure in relationship to the SDC Java heap " +
-          "size. The default is 85% of heap and a value of 0 disables the limit.",
-      displayPosition = 60,
-      min = 0,
-      dependsOn = "executionMode",
-      triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING"}
-  )
-  public long memoryLimit;
-
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      defaultValue="LOG",
-      label = "On Memory Exceeded",
-      description = "Behavior when the pipeline exceeds the memory limit. Tip: Configure an alert to indicate when the " +
-          "memory use approaches the limit." ,
-      displayPosition = 70,
-      dependsOn = "executionMode",
-      triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING"}
-  )
-  @ValueChooserModel(MemoryLimitExceededChooserValues.class)
-  public MemoryLimitExceeded memoryLimitExceeded;
 
   @ConfigDef(
       required = false,
