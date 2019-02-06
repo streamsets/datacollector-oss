@@ -17,7 +17,6 @@ package com.streamsets.datacollector.execution.runner.common;
 
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
-import com.streamsets.datacollector.config.MemoryLimitConfiguration;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.PipelineStatus;
@@ -196,7 +195,6 @@ public class TestErrorRecord {
         null
     );
     runner.setDeliveryGuarantee(DeliveryGuarantee.AT_LEAST_ONCE);
-    runner.setMemoryLimitConfiguration(new MemoryLimitConfiguration());
     runner.setObserveRequests(new ArrayBlockingQueue<>(100, true /*FIFO*/));
     runner.setOffsetTracker(new TestUtil.SourceOffsetTrackerImpl(Collections.singletonMap(Source.POLL_SOURCE_OFFSET_KEY, "1")));
     ProductionPipeline pipeline = new ProductionPipelineBuilder(

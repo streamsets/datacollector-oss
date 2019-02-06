@@ -34,7 +34,6 @@ import com.streamsets.datacollector.execution.runner.common.PipelineStopReason;
 import com.streamsets.datacollector.lineage.LineageEventImpl;
 import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
-import com.streamsets.datacollector.memory.MemoryUsageCollectorResourceBundle;
 import com.streamsets.datacollector.record.EventRecordImpl;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
 import com.streamsets.datacollector.runner.production.StatsAggregationHandler;
@@ -95,7 +94,6 @@ public class Pipeline {
   private final ResourceControlledScheduledExecutor scheduledExecutorService;
   private volatile boolean running;
   private boolean shouldStopOnStageError = false;
-  private final MemoryUsageCollectorResourceBundle memoryUsageCollectorResourceBundle;
   private final ResourceControlledScheduledExecutor scheduledExecutor;
   private final List<Stage.Info> stageInfos;
   private final UserContext userContext;
@@ -123,7 +121,6 @@ public class Pipeline {
       PipelineRunner runner,
       ResourceControlledScheduledExecutor scheduledExecutorService,
       StatsAggregationHandler statsAggregationHandler,
-      MemoryUsageCollectorResourceBundle memoryUsageCollectorResourceBundle,
       ResourceControlledScheduledExecutor scheduledExecutor,
       List<Stage.Info> stageInfos,
       UserContext userContext,
@@ -151,7 +148,6 @@ public class Pipeline {
     this.running = false;
     this.statsAggregationHandler = statsAggregationHandler;
     this.shouldStopOnStageError = calculateShouldStopOnStageError();
-    this.memoryUsageCollectorResourceBundle = memoryUsageCollectorResourceBundle;
     this.scheduledExecutor = scheduledExecutor;
     this.stageInfos = stageInfos;
     this.runnerSharedMaps = runnerSharedMaps;
@@ -373,7 +369,6 @@ public class Pipeline {
               runnerId,
               beans,
               observer,
-              memoryUsageCollectorResourceBundle,
               scheduledExecutor,
               runnerSharedMaps,
               startTime,
@@ -573,8 +568,6 @@ public class Pipeline {
     private Observer observer;
     private final ResourceControlledScheduledExecutor scheduledExecutor =
         new ResourceControlledScheduledExecutor(0.01f); // consume 1% of a cpu calculating stage memory consumption
-    private final MemoryUsageCollectorResourceBundle memoryUsageCollectorResourceBundle =
-        new MemoryUsageCollectorResourceBundle();
     private List<Issue> errors;
 
     public Builder(
@@ -679,7 +672,6 @@ public class Pipeline {
           0,
           pipelineBean.getPipelineStageBeans(),
           observer,
-          memoryUsageCollectorResourceBundle,
           scheduledExecutor,
           runnerSharedMaps,
           startTime,
@@ -809,7 +801,6 @@ public class Pipeline {
             runner,
             scheduledExecutor,
             statsAggregationHandler,
-            memoryUsageCollectorResourceBundle,
             scheduledExecutor,
             stageInfos,
             userContext,
@@ -840,13 +831,10 @@ public class Pipeline {
       return new SourcePipe(
         pipelineName,
         rev,
-        configuration,
         originRuntime,
         laneResolver.getStageInputLanes(0),
         laneResolver.getStageOutputLanes(0),
         laneResolver.getStageEventLanes(0),
-        scheduledExecutor,
-        memoryUsageCollectorResourceBundle,
         statsCollector,
         runner.getMetricRegistryJson()
       );
@@ -868,7 +856,6 @@ public class Pipeline {
     int runnerId,
     PipelineStageBeans beans,
     Observer observer,
-    MemoryUsageCollectorResourceBundle memoryUsageCollectorResourceBundle,
     ResourceControlledScheduledExecutor scheduledExecutor,
     List<Map<String, Object>> sharedRunnerMaps,
     long startTime,
@@ -914,12 +901,9 @@ public class Pipeline {
       createPipes(
         pipelineName,
         rev,
-        configuration,
         stages,
         runner,
-        observer,
-        memoryUsageCollectorResourceBundle,
-        scheduledExecutor
+        observer
       )
     );
   }
@@ -941,12 +925,9 @@ public class Pipeline {
   private static List<Pipe> createPipes(
     String pipelineName,
     String rev,
-    Configuration configuration,
     List<StageRuntime> stages,
     PipelineRunner runner,
-    Observer observer,
-    MemoryUsageCollectorResourceBundle memoryUsageCollectorResourceBundle,
-    ResourceControlledScheduledExecutor scheduledExecutor
+    Observer observer
   ) throws PipelineRuntimeException {
     LaneResolver laneResolver = new LaneResolver(stages);
     ImmutableList.Builder<Pipe> pipesBuilder = ImmutableList.builder();
@@ -965,9 +946,15 @@ public class Pipeline {
           pipesBuilder.add(pipe);
           break;
         case PROCESSOR:
-          pipe = new StagePipe(pipelineName, rev, configuration, stage, laneResolver.getStageInputLanes(idx),
-                               laneResolver.getStageOutputLanes(idx), laneResolver.getStageEventLanes(idx), scheduledExecutor,
-            memoryUsageCollectorResourceBundle, runner.getMetricRegistryJson());
+          pipe = new StagePipe(
+            pipelineName,
+            rev,
+            stage,
+            laneResolver.getStageInputLanes(idx),
+            laneResolver.getStageOutputLanes(idx),
+            laneResolver.getStageEventLanes(idx),
+            runner.getMetricRegistryJson()
+          );
           pipesBuilder.add(pipe);
           pipe = new ObserverPipe(stage, laneResolver.getObserverInputLanes(idx),
                                   laneResolver.getObserverOutputLanes(idx), observer);
@@ -978,8 +965,15 @@ public class Pipeline {
           break;
         case EXECUTOR:
         case TARGET:
-          pipe = new StagePipe(pipelineName, rev, configuration, stage, laneResolver.getStageInputLanes(idx),
-            laneResolver.getStageOutputLanes(idx), laneResolver.getStageEventLanes(idx), scheduledExecutor, memoryUsageCollectorResourceBundle, runner.getMetricRegistryJson());
+          pipe = new StagePipe(
+            pipelineName,
+            rev,
+            stage,
+            laneResolver.getStageInputLanes(idx),
+            laneResolver.getStageOutputLanes(idx),
+            laneResolver.getStageEventLanes(idx),
+            runner.getMetricRegistryJson()
+          );
           pipesBuilder.add(pipe);
 
           // In case that this target is generating events, we need to add additional observer/multiplexer pipe
@@ -1065,7 +1059,6 @@ public class Pipeline {
         pipelineRunner.isPreview(),
         userContext,
         pipelineRunner.getMetrics(),
-        pipelineConfiguration.getMemoryLimitConfiguration().getMemoryLimit(),
         getExecutionMode(pipelineConfiguration),
         getDeliveryGuarantee(pipelineConfiguration),
         pipelineRunner.getRuntimeInfo(),
@@ -1097,7 +1090,6 @@ public class Pipeline {
         pipelineRunner.isPreview(),
         userContext,
         pipelineRunner.getMetrics(),
-        pipelineConfiguration.getMemoryLimitConfiguration().getMemoryLimit(),
         getExecutionMode(pipelineConfiguration),
         getDeliveryGuarantee(pipelineConfiguration),
         pipelineRunner.getRuntimeInfo(),
@@ -1142,7 +1134,6 @@ public class Pipeline {
         stageRuntime.getConfiguration().getOutputLanes(),
         stageRuntime.getConstants(),
         stageRuntime.getInfo(),
-        pipelineConfiguration.getMemoryLimitConfiguration().getMemoryLimit(),
         getExecutionMode(pipelineConfiguration),
         getDeliveryGuarantee(pipelineConfiguration),
         pipelineRunner.getRuntimeInfo(),

@@ -60,7 +60,6 @@ public class InterceptorContext implements Interceptor.Context {
   private final Stage.UserContext userContext;
   private final boolean isPreview;
   private final MetricRegistry metrics;
-  private final long pipelineMaxMemory;
   private final ExecutionMode executionMode;
   private final DeliveryGuarantee deliveryGuarantee;
   private final RuntimeInfo runtimeInfo;
@@ -115,7 +114,6 @@ public class InterceptorContext implements Interceptor.Context {
     boolean isPreview,
     Stage.UserContext userContext,
     MetricRegistry metrics,
-    long pipelineMaxMemory,
     ExecutionMode executionMode,
     DeliveryGuarantee deliveryGuarantee,
     RuntimeInfo runtimeInfo,
@@ -137,7 +135,6 @@ public class InterceptorContext implements Interceptor.Context {
     this.rev = rev;
     this.userContext = userContext;
     this.metrics = metrics;
-    this.pipelineMaxMemory = pipelineMaxMemory;
     this.executionMode = executionMode;
     this.deliveryGuarantee = deliveryGuarantee;
     this.runtimeInfo = runtimeInfo;
@@ -271,7 +268,6 @@ public class InterceptorContext implements Interceptor.Context {
           rev,
           userContext,
           metrics,
-          pipelineMaxMemory,
           executionMode,
           deliveryGuarantee,
           runtimeInfo,

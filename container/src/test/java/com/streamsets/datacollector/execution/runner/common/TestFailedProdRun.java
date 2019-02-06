@@ -27,7 +27,6 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
-import com.streamsets.datacollector.config.MemoryLimitConfiguration;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.execution.snapshot.file.FileSnapshotStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -83,7 +82,6 @@ public class TestFailedProdRun {
     Configuration conf = new Configuration();
     ProductionPipelineRunner runner = new ProductionPipelineRunner(PIPELINE_NAME, REVISION, null, conf, runtimeInfo,
       new MetricRegistry(), Mockito.mock(FileSnapshotStore.class), null);
-    runner.setMemoryLimitConfiguration(new MemoryLimitConfiguration());
     runner.setObserveRequests(productionObserveRequests);
     runner.setOffsetTracker(tracker);
     PipelineConfiguration pipelineConfiguration = MockStages.createPipelineConfigurationSourceProcessorTarget();
@@ -146,7 +144,6 @@ public class TestFailedProdRun {
     Configuration conf = new Configuration();
     ProductionPipelineRunner runner = new ProductionPipelineRunner(PIPELINE_NAME, REVISION, null, conf, runtimeInfo, new MetricRegistry(), Mockito.mock(FileSnapshotStore.class),
       null);
-    runner.setMemoryLimitConfiguration(new MemoryLimitConfiguration());
     runner.setObserveRequests(productionObserveRequests);
     runner.setOffsetTracker(tracker);
     PipelineConfiguration pipelineConfiguration = MockStages.createPipelineConfigurationSourceProcessorTarget();

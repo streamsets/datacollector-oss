@@ -226,17 +226,6 @@ public class BootstrapCluster {
       throw new IllegalStateException("Could not find classloader for " + lookupLib);
     }
     try {
-      Instrumentation instrumentation = BootstrapMain.getInstrumentation();
-      if (instrumentation != null) {
-        Method memoryUsageCollectorInitialize = Class.forName("com.streamsets.datacollector.memory.MemoryUsageCollector",
-          true, containerCL).getMethod("initialize", Instrumentation.class);
-        memoryUsageCollectorInitialize.invoke(null, instrumentation);
-      }
-    } catch (Exception ex) {
-      String msg = "Error trying to initialize MemoryUsageCollector: " + ex;
-      throw new IllegalStateException(msg, ex);
-    }
-    try {
       Class<?> runtimeModuleClz = Class.forName("com.streamsets.datacollector.main.SlaveRuntimeModule", true,
           containerCL);
       Method setStageLibraryClassLoadersMethod = runtimeModuleClz.getMethod("setStageLibraryClassLoaders", List.class);

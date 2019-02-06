@@ -158,11 +158,6 @@ public class PipelineStoreResource {
   private static final String BATCH_TIME_METRIC_ID = "RuntimeStatsGauge.gauge";
   private static final String BATCH_TIME_CONDITION = "${value() > 200}";
 
-  private static final String MEMORY_LIMIt_ID = "memoryLimitAlertID";
-  private static final String MEMORY_LIMIt_TEXT = "Memory limit for pipeline exceeded";
-  private static final String MEMORY_LIMIt_METRIC_ID = "pipeline.memoryConsumed.counter";
-  private static final String MEMORY_LIMIt_CONDITION = "${value() > (jvm:maxMemoryMB() * 0.65)}";
-
   private static final String DPM_PIPELINE_ID = "dpm.pipeline.id";
 
   private static final String DATA_COLLECTOR_EDGE = "DATA_COLLECTOR_EDGE";
@@ -807,9 +802,6 @@ public class PipelineStoreResource {
 
     metricsRuleDefinitions.add(new MetricsRuleDefinition(BATCH_TIME_ID, BATCH_TIME_TEXT, BATCH_TIME_METRIC_ID,
         MetricType.GAUGE, MetricElement.CURRENT_BATCH_AGE, BATCH_TIME_CONDITION, false, false, timestamp));
-
-    metricsRuleDefinitions.add(new MetricsRuleDefinition(MEMORY_LIMIt_ID, MEMORY_LIMIt_TEXT, MEMORY_LIMIt_METRIC_ID,
-        MetricType.COUNTER, MetricElement.COUNTER_COUNT, MEMORY_LIMIt_CONDITION, false, false, timestamp));
 
     RuleDefinitions ruleDefinitions = new RuleDefinitions(
         PipelineStoreTask.RULE_DEFINITIONS_SCHEMA_VERSION,

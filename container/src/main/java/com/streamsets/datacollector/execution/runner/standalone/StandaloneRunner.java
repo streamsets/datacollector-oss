@@ -25,8 +25,6 @@ import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.alerts.AlertsUtil;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
-import com.streamsets.datacollector.config.MemoryLimitConfiguration;
-import com.streamsets.datacollector.config.MemoryLimitExceeded;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinition;
 import com.streamsets.datacollector.config.RuleDefinitions;
@@ -670,25 +668,6 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     }
   }
 
-  public static MemoryLimitConfiguration getMemoryLimitConfiguration(PipelineConfigBean pipelineConfiguration)
-      throws PipelineRuntimeException {
-    //Default memory limit configuration
-    MemoryLimitConfiguration memoryLimitConfiguration = new MemoryLimitConfiguration();
-    MemoryLimitExceeded memoryLimitExceeded = pipelineConfiguration.memoryLimitExceeded;
-    long memoryLimit = pipelineConfiguration.memoryLimit;
-    if (memoryLimit > JvmEL.jvmMaxMemoryMB() * Constants.MAX_HEAP_MEMORY_LIMIT_CONFIGURATION) {
-      throw new PipelineRuntimeException(ValidationError.VALIDATION_0063,
-          memoryLimit,
-          "above the maximum",
-          JvmEL.jvmMaxMemoryMB() * Constants.MAX_HEAP_MEMORY_LIMIT_CONFIGURATION
-      );
-    }
-    if (memoryLimitExceeded != null && memoryLimit > 0) {
-      memoryLimitConfiguration = new MemoryLimitConfiguration(memoryLimitExceeded, memoryLimit);
-    }
-    return memoryLimitConfiguration;
-  }
-
   @Override
   public void prepareForStart(StartPipelineContext context) throws PipelineStoreException, PipelineRunnerException {
     PipelineState fromState = getState();
@@ -765,8 +744,6 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         JobEL.setConstantsInContext(pipelineConfigBean.constants);
         maxRetries = pipelineConfigBean.retryAttempts;
 
-        MemoryLimitConfiguration memoryLimitConfiguration = getMemoryLimitConfiguration(pipelineConfigBean);
-
         BlockingQueue<Object> productionObserveRequests =
             new ArrayBlockingQueue<>(getConfiguration().get(Constants.OBSERVER_QUEUE_SIZE_KEY,
                 Constants.OBSERVER_QUEUE_SIZE_DEFAULT), true /* FIFO */);
@@ -839,7 +816,6 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         runner.setObserveRequests(productionObserveRequests);
         runner.setStatsAggregatorRequests(statsQueue);
         runner.setDeliveryGuarantee(pipelineConfigBean.deliveryGuarantee);
-        runner.setMemoryLimitConfiguration(memoryLimitConfiguration);
 
         prodPipeline = builder.build(
           runningUser,

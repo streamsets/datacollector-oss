@@ -19,7 +19,6 @@ import com.codahale.metrics.MetricRegistry;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.ConfigDefinition;
-import com.streamsets.datacollector.config.MemoryLimitConfiguration;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.lineage.LineageEventImpl;
 import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
@@ -75,7 +74,6 @@ public class StageContext extends ProtoContext implements
   private ProcessedSink processedSink;
   private SourceResponseSink sourceResponseSink;
   private long lastBatchTime;
-  private final long pipelineMaxMemory;
   private final ExecutionMode executionMode;
   private final DeliveryGuarantee deliveryGuarantee;
   private final String sdcId;
@@ -164,7 +162,6 @@ public class StageContext extends ProtoContext implements
     this.onRecordError = onRecordError;
     errorSink = new ErrorSink();
     eventSink = new EventSink();
-    this.pipelineMaxMemory = new MemoryLimitConfiguration().getMemoryLimit();
     this.executionMode = executionMode;
     this.deliveryGuarantee = deliveryGuarantee;
     reportErrorDelegate = errorSink;
@@ -197,7 +194,6 @@ public class StageContext extends ProtoContext implements
       List<String> outputLanes,
       Map<String, Object> constants,
       Stage.Info stageInfo,
-      long pipelineMaxMemory,
       ExecutionMode executionMode,
       DeliveryGuarantee deliveryGuarantee,
       RuntimeInfo runtimeInfo,
@@ -233,7 +229,6 @@ public class StageContext extends ProtoContext implements
     this.stageInfo = stageInfo;
     this.outputLanes = ImmutableList.copyOf(outputLanes);
     this.onRecordError = onRecordError;
-    this.pipelineMaxMemory = pipelineMaxMemory;
     this.executionMode = executionMode;
     this.deliveryGuarantee = deliveryGuarantee;
     this.runtimeInfo = runtimeInfo;
@@ -296,8 +291,9 @@ public class StageContext extends ProtoContext implements
   }
 
   @Override
+  @Deprecated
   public long getPipelineMaxMemory() {
-    return pipelineMaxMemory;
+    return -1;
   }
 
   @Override

@@ -65,7 +65,6 @@ public class InterceptorContextTest {
       false,
       Mockito.mock(UserContext.class),
       Mockito.mock(MetricRegistry.class),
-      0,
       ExecutionMode.STANDALONE,
       DeliveryGuarantee.AT_LEAST_ONCE,
       Mockito.mock(RuntimeInfo.class),

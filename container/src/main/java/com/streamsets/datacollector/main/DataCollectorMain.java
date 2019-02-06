@@ -15,7 +15,6 @@
  */
 package com.streamsets.datacollector.main;
 
-import com.streamsets.datacollector.memory.MemoryUsageCollector;
 import com.streamsets.datacollector.restapi.WebServerAgentCondition;
 
 import java.lang.instrument.Instrumentation;
@@ -39,7 +38,6 @@ public class DataCollectorMain extends Main {
       List<? extends ClassLoader> moduleCLs,
       Instrumentation instrumentation
   ) {
-    MemoryUsageCollector.initialize(instrumentation);
     RuntimeModule.setStageLibraryClassLoaders(moduleCLs);
   }
 

@@ -17,8 +17,6 @@ package com.streamsets.datacollector.execution.runner.common;
 
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
-import com.streamsets.datacollector.config.MemoryLimitConfiguration;
-import com.streamsets.datacollector.config.MemoryLimitExceeded;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.execution.PipelineStatus;
@@ -30,7 +28,6 @@ import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
-import com.streamsets.datacollector.memory.TestMemoryUsageCollector;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.runner.PipeBatch;
@@ -99,7 +96,6 @@ public class TestProductionPipeline {
   private static final String REVISION = "0";
   private static final String SNAPSHOT_NAME = "snapshot";
   private MetricRegistry runtimeInfoMetrics;
-  private MemoryLimitConfiguration memoryLimit;
   private RuntimeInfo runtimeInfo;
   private ProductionPipelineRunner lastCreatedRunner;
 
@@ -118,7 +114,6 @@ public class TestProductionPipeline {
     File f = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR));
     FileUtils.deleteDirectory(f);
     TestUtil.captureMockStages();
-    TestMemoryUsageCollector.initalizeMemoryUtility();
   }
 
   @AfterClass
@@ -132,7 +127,6 @@ public class TestProductionPipeline {
     runtimeInfo = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, runtimeInfoMetrics,
                                   Arrays.asList(getClass().getClassLoader()));
     runtimeInfo.init();
-    memoryLimit = new MemoryLimitConfiguration();
     MetricsConfigurator.registerJmxMetrics(runtimeInfoMetrics);
 
     MockStages.setSourceCapture(null);
@@ -282,31 +276,6 @@ public class TestProductionPipeline {
   }
 
   @Test
-  public void testMemoryLimit() throws Exception {
-    memoryLimit = new MemoryLimitConfiguration(MemoryLimitExceeded.STOP_PIPELINE, 1);
-    SourceOffsetTrackerCapture capture = new SourceOffsetTrackerCapture() {
-      @Override
-      public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-        try {
-          Thread.sleep(10000); // sleep enough time to get
-        } catch (InterruptedException e) {}
-        return super.produce(lastSourceOffset, maxBatchSize, batchMaker);
-      }
-    };
-    MockStages.setSourceCapture(capture);
-    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, PipelineType.DEFAULT);
-    //Need sleep because the file system could truncate the time to the last second.
-    pipeline.registerStatusListener(new MyStateListener());
-    Thread.sleep(15000);
-    try {
-      pipeline.run();
-      Assert.fail("Expected PipelineRuntimeException");
-    } catch (PipelineRuntimeException e) {
-      Assert.assertEquals(ContainerError.CONTAINER_0011, e.getErrorCode());
-    }
-  }
-
-  @Test
   public void testNoRerunOnJVMError() throws Exception {
     SourceOffsetTrackerCapture capture = new SourceOffsetTrackerCapture() {
       @Override
@@ -410,7 +379,6 @@ public class TestProductionPipeline {
             System.currentTimeMillis(), false, 0, false));
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /* FIFO */);
     Configuration config = new Configuration();
-    config.set("monitor.memory", true);
     ProductionPipelineRunner runner = new ProductionPipelineRunner(
       PIPELINE_NAME,
       REVISION,
@@ -422,7 +390,6 @@ public class TestProductionPipeline {
       null
     );
     runner.setObserveRequests(productionObserveRequests);
-    runner.setMemoryLimitConfiguration(memoryLimit);
     runner.setDeliveryGuarantee(deliveryGuarantee);
     if (rateLimit > 0) {
       runner.setRateLimit(rateLimit);
@@ -865,7 +832,6 @@ public class TestProductionPipeline {
         null
     );
     runner.setObserveRequests(productionObserveRequests);
-    runner.setMemoryLimitConfiguration(memoryLimit);
     runner.setDeliveryGuarantee(DeliveryGuarantee.AT_LEAST_ONCE);
     runner.setStatsAggregatorRequests(new ArrayBlockingQueue<>(1));
     runner.setOffsetTracker(tracker);

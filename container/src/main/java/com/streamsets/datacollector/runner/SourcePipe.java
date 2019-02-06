@@ -15,15 +15,12 @@
  */
 package com.streamsets.datacollector.runner;
 
-import com.streamsets.datacollector.memory.MemoryUsageCollectorResourceBundle;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
 import com.streamsets.datacollector.runner.production.ReportErrorDelegate;
 import com.streamsets.datacollector.usagestats.StatsCollector;
-import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -37,26 +34,20 @@ public class SourcePipe extends StagePipe implements ReportErrorDelegate {
   public SourcePipe(
     String name,
     String rev,
-    Configuration configuration,
     StageRuntime stage,
     List<String> inputLanes,
     List<String> outputLanes,
     List<String> eventLanes,
-    ResourceControlledScheduledExecutor scheduledExecutorService,
-    MemoryUsageCollectorResourceBundle memoryUsageCollectorResourceBundle,
     StatsCollector statsCollector,
     MetricRegistryJson metricRegistryJson
   ) {
     super(
       name,
       rev,
-      configuration,
       stage,
       inputLanes,
       outputLanes,
       eventLanes,
-      scheduledExecutorService,
-      memoryUsageCollectorResourceBundle,
       metricRegistryJson
     );
     this.statsCollector = statsCollector;

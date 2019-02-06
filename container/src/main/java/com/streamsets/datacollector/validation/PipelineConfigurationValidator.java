@@ -76,7 +76,6 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
     }
     canPreview &= checkIfPipelineIsEmpty();
     canPreview &= loadAndValidatePipelineConfig();
-    canPreview &= validatePipelineMemoryConfiguration();
     canPreview &= validateStageConfiguration();
     canPreview &= validatePipelineLanes();
     canPreview &= validateEventAndDataLanesDoNotCross();
@@ -250,25 +249,6 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
     }
     issues.addAll(errors);
     return errors.isEmpty();
-  }
-
-  private boolean validatePipelineMemoryConfiguration() {
-    boolean canPreview = true;
-    if (pipelineBean != null) {
-      PipelineConfigBean config = pipelineBean.getConfig();
-      if (config.memoryLimit > JvmEL.jvmMaxMemoryMB() * Constants.MAX_HEAP_MEMORY_LIMIT_CONFIGURATION) {
-        issues.add(
-            IssueCreator.getPipeline().create(
-                "",
-                "memoryLimit",
-                ValidationError.VALIDATION_0063,
-                config.memoryLimit,
-                JvmEL.jvmMaxMemoryMB() * Constants.MAX_HEAP_MEMORY_LIMIT_CONFIGURATION)
-        );
-        canPreview = false;
-      }
-    }
-    return canPreview;
   }
 
   @VisibleForTesting

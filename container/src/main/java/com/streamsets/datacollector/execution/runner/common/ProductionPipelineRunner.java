@@ -29,8 +29,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.RateLimiter;
 import com.streamsets.datacollector.bundles.SupportBundleManager;
-import com.streamsets.datacollector.config.MemoryLimitConfiguration;
-import com.streamsets.datacollector.config.MemoryLimitExceeded;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.el.JobEL;
@@ -41,7 +39,6 @@ import com.streamsets.datacollector.execution.metrics.MetricsEventRunnable;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
-import com.streamsets.datacollector.restapi.bean.CounterJson;
 import com.streamsets.datacollector.restapi.bean.HistogramJson;
 import com.streamsets.datacollector.restapi.bean.MeterJson;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
@@ -147,7 +144,6 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   private final Counter batchOutputRecordsCounter;
   private final Counter batchErrorRecordsCounter;
   private final Counter batchErrorMessagesCounter;
-  private final Counter memoryConsumedCounter;
   private final Histogram runnersHistogram;
   private MetricRegistryJson metricRegistryJson;
   private Long rateLimit;
@@ -177,8 +173,6 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   private Observer observer;
   private BlockingQueue<Record> statsAggregatorRequests;
   private final List<BatchListener> batchListenerList = new CopyOnWriteArrayList<>();
-  private MemoryLimitConfiguration memoryLimitConfiguration;
-  private long lastMemoryLimitNotification;
   private ThreadHealthReporter threadHealthReporter;
   private final List<List<StageOutput>> capturedBatches = new ArrayList<>();
   private PipeContext pipeContext = null;
@@ -240,8 +234,6 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       revision);
     batchErrorMessagesCounter = MetricsConfigurator.createCounter(metrics, "pipeline.batchErrorMessages", pipelineName,
       revision);
-    memoryConsumedCounter = MetricsConfigurator.createCounter(metrics, "pipeline.memoryConsumed", pipelineName,
-      revision);
     runnersHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.runners", pipelineName, revision);
   }
 
@@ -280,8 +272,6 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     MeterJson batchErrorMessagesRecords = metricRegistryJson.getMeters().get("pipeline.batchErrorMessages" + MetricsConfigurator.METER_SUFFIX);
     batchErrorMessagesMeter.mark(batchErrorMessagesRecords.getCount());
     batchErrorMessagesCounter.inc(batchErrorMessagesRecords.getCount());
-    CounterJson memoryConsumer = metricRegistryJson.getCounters().get("pipeline.memoryConsumed" + MetricsConfigurator.COUNTER_SUFFIX);
-    memoryConsumedCounter.inc(memoryConsumer.getCount());
     HistogramJson runnersJson = metricRegistryJson.getHistograms().get("pipeline.runners" + MetricsConfigurator.HISTOGRAM_M5_SUFFIX);
     runnersHistogram.update(runnersJson.getCount());
   }
@@ -293,10 +283,6 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
 
   public void setDeliveryGuarantee(DeliveryGuarantee deliveryGuarantee) {
     this.deliveryGuarantee = deliveryGuarantee;
-  }
-
-  public void setMemoryLimitConfiguration(MemoryLimitConfiguration memoryLimitConfiguration) {
-    this.memoryLimitConfiguration = memoryLimitConfiguration;
   }
 
   public void setRateLimit(Long rateLimit) {
@@ -823,7 +809,6 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     }
     pipe.process(pipeBatch);
     if (pipe instanceof StagePipe) {
-      memoryConsumedByStage.put(pipe.getStage().getInfo().getInstanceName(), ((StagePipe)pipe).getMemoryConsumed());
       if (isStatsAggregationEnabled()) {
         stageBatchMetrics.put(pipe.getStage().getInfo().getInstanceName(), ((StagePipe) pipe).getBatchMetrics());
       }
@@ -870,7 +855,6 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
 
     });
 
-    enforceMemoryLimit(memoryConsumedByStage);
     badRecordsHandler.handle(entityName, newOffset, pipeBatch.getErrorSink(), pipeBatch.getSourceResponseSink());
     if(!pipeBatch.isIdleBatch()) {
       if (deliveryGuarantee == DeliveryGuarantee.AT_LEAST_ONCE) {
@@ -1022,46 +1006,6 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     return counter;
   }
 
-  private void enforceMemoryLimit(Map<String, Long> memoryConsumedByStage) throws PipelineRuntimeException {
-    long totalMemoryConsumed = 0;
-    for(Map.Entry<String, Long> entry : memoryConsumedByStage.entrySet()) {
-      totalMemoryConsumed += entry.getValue();
-    }
-    memoryConsumedCounter.inc(totalMemoryConsumed - memoryConsumedCounter.getCount());
-    long memoryLimit = memoryLimitConfiguration.getMemoryLimit();
-    if (memoryLimit > 0 && totalMemoryConsumed > memoryLimit) {
-      String largestConsumer = "unknown";
-      long largestConsumed = 0;
-      Map<String, String> humanReadableMemoryConsumptionByStage = new HashMap<>();
-      for(Map.Entry<String, Long> entry : memoryConsumedByStage.entrySet()) {
-        if (entry.getValue() > largestConsumed) {
-          largestConsumed = entry.getValue();
-          largestConsumer = entry.getKey();
-        }
-        humanReadableMemoryConsumptionByStage.put(entry.getKey(), entry.getValue() + " MB");
-      }
-      humanReadableMemoryConsumptionByStage.remove(largestConsumer);
-      PipelineRuntimeException ex = new PipelineRuntimeException(ContainerError.CONTAINER_0011, totalMemoryConsumed,
-        memoryLimit, largestConsumer, largestConsumed, humanReadableMemoryConsumptionByStage);
-      String msg = "Pipeline memory limit exceeded: " + ex;
-      long elapsedTimeSinceLastTriggerMins = TimeUnit.MILLISECONDS.
-        toMinutes(System.currentTimeMillis() - lastMemoryLimitNotification);
-      lastMemoryLimitNotification = System.currentTimeMillis();
-      if (elapsedTimeSinceLastTriggerMins < 60) {
-        if (LOG.isDebugEnabled()) {
-          LOG.debug("Memory limit has been triggered, will take {} in {} mins",
-            memoryLimitConfiguration.getMemoryLimitExceeded(), (60 - elapsedTimeSinceLastTriggerMins));
-        }
-      } else if (memoryLimitConfiguration.getMemoryLimitExceeded() == MemoryLimitExceeded.LOG) {
-        LOG.error(msg, ex);
-      } else if (memoryLimitConfiguration.getMemoryLimitExceeded() == MemoryLimitExceeded.ALERT) {
-        LOG.error(msg, ex);
-        sendPipelineErrorNotificationRequest(ex);
-      } else if (memoryLimitConfiguration.getMemoryLimitExceeded() == MemoryLimitExceeded.STOP_PIPELINE) {
-        throw ex;
-      }
-    }
-  }
   private void sendPipelineErrorNotificationRequest(Throwable throwable) {
     boolean offered = false;
     try {

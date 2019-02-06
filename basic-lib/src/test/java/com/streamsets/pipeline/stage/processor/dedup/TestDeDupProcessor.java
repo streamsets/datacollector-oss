@@ -85,17 +85,6 @@ public class TestDeDupProcessor {
     runner.runInit();
   }
 
-  @Test(expected = StageException.class)
-  public void testValidateConfigs5() throws Exception {
-    Processor processor = new DeDupProcessor((int) ( getDefaultMemoryLimitMiB() * 1000 * 1000 / 85 + 1), 0,
-        SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
-    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupDProcessor.class, processor)
-        .addOutputLane("unique")
-        .addOutputLane("duplicate")
-        .build();
-    runner.runInit();
-  }
-
   @Test
   public void testValidateConfigs6() throws Exception {
 
