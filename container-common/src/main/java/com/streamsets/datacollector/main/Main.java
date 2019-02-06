@@ -109,6 +109,11 @@ public class Main {
         log.info("  Unlimited cryptography check: algorithm RC5 not found." );
       }
       log.info("-----------------------------------------------------------------");
+
+      if(configuration.get("monitor.memory", false)) {
+        log.warn("Memory monitoring (monitor.memory=true) is no longer supported.");
+      }
+
       log.info("Starting ...");
 
       final Logger finalLog = log;
