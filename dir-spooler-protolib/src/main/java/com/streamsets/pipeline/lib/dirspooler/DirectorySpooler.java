@@ -272,7 +272,6 @@ public class DirectorySpooler {
   }
 
   private volatile WrappedFile currentFile;
-  private volatile WrappedFile lastQueuedFile;
 
   private WrappedFile spoolDirPath;
   private WrappedFile archiveDirPath;
@@ -512,7 +511,6 @@ public class DirectorySpooler {
 
     if (!filesSet.contains(file)) {
       filesQueue.add(file);
-      this.lastQueuedFile = fs.compare(file, this.lastQueuedFile, this.useLastModified) > 0 ? file : this.lastQueuedFile;
       filesSet.add(file);
       spoolQueueMeter.mark(filesQueue.size());
     } else {
@@ -642,7 +640,7 @@ public class DirectorySpooler {
       try {
         List<WrappedFile> matchingFile = new ArrayList<>();
 
-        fs.addFiles(dir, this.lastQueuedFile, matchingFile, includeStartingFile, useLastModified);
+        fs.addFiles(dir, this.currentFile, matchingFile, includeStartingFile, useLastModified);
 
         if (matchingFile.size() > 0) {
           try {
@@ -653,11 +651,15 @@ public class DirectorySpooler {
               if (!running) {
                 return null;
               }
-              if (fs.isDirectory(file)) {
-                continue;
+
+              if (fs.compare(file, this.currentFile, useLastModified) > 0) {
+                if (!fs.isDirectory(file)) {
+                  LOG.trace("Found file '{}'", file);
+                  addFileToQueue(file, checkCurrent);
+                }
+              } else {
+                LOG.trace("Discarding file {} because it is already older than currentFile", file.getAbsolutePath());
               }
-              LOG.trace("Found file '{}'", file);
-              addFileToQueue(file, checkCurrent);
             }
           } finally {
             closeLock.writeLock().unlock();

@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class HdfsFile implements WrappedFile {
   public static final String PERMISSIONS = "permissions";
@@ -107,24 +108,19 @@ public class HdfsFile implements WrappedFile {
   }
 
   @Override
-  public int hashCode() {
-    return getAbsolutePath().hashCode();
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    HdfsFile hdfsFile = (HdfsFile) o;
+    return Objects.equals(filePath, hdfsFile.filePath);
   }
 
   @Override
-  public boolean equals(Object o) {
-    if (o == null) {
-      return false;
-    }
-
-    if (o == this) {
-      return true;
-    }
-
-    if (!(o instanceof HdfsFile)) {
-      return false;
-    }
-
-    return getAbsolutePath().equals(new Path(((HdfsFile) o).getAbsolutePath()));
+  public int hashCode() {
+    return Objects.hash(filePath);
   }
 }
