@@ -231,8 +231,7 @@ public final class MSQueryUtil {
       where_clause = String.format(WHERE_CLAUSE, condition);
 
     } else {
-      declare_from_lsn = String.format("DECLARE @start_lsn binary(10) " +
-              "= sys.fn_cdc_map_time_to_lsn('smallest greater than or equal', sys.fn_cdc_map_lsn_to_time(0x%s)); ",
+      declare_from_lsn = String.format("DECLARE @start_lsn binary(10) = 0x%s; ",
           offsetMap.get(CDC_START_LSN));
 
       String condition1 = String.format(
