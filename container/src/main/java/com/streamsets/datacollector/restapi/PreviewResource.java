@@ -15,6 +15,8 @@
  */
 package com.streamsets.datacollector.restapi;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.PipelineConfiguration;
@@ -29,6 +31,7 @@ import com.streamsets.datacollector.event.handler.EventHandlerTask;
 import com.streamsets.datacollector.event.handler.remote.RemoteDataCollectorResult;
 import com.streamsets.datacollector.event.json.DynamicPreviewEventJson;
 import com.streamsets.datacollector.event.json.EventJson;
+import com.streamsets.datacollector.event.json.customdeserializer.DynamicPreviewEventDeserializer;
 import com.streamsets.datacollector.execution.AclManager;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PreviewOutput;
@@ -402,6 +405,14 @@ public class PreviewResource {
     }
   }
 
+  private static final ObjectMapper DYNAMIC_PREVIEW_REQUEST_OBJECT_MAPPER;
+  static {
+    DYNAMIC_PREVIEW_REQUEST_OBJECT_MAPPER = new ObjectMapper();
+    final SimpleModule module = new SimpleModule();
+    module.addDeserializer(DynamicPreviewEventJson.class, new DynamicPreviewEventDeserializer());
+    DYNAMIC_PREVIEW_REQUEST_OBJECT_MAPPER.registerModule(module);
+  }
+
   private DynamicPreviewEventJson getDynamicPreviewEvent(
       String schBaseUrl,
       String requestPath,
@@ -409,8 +420,9 @@ public class PreviewResource {
       String componentId,
       DynamicPreviewRequestJson requestJson
   ) throws IOException {
+
     final RestClient dynamicPreviewAppClient = RestClient.builder(schBaseUrl).json(true).appAuthToken(appAuthToken)
-        .componentId(componentId).csrf(true).build(requestPath);
+        .componentId(componentId).csrf(true).jsonMapper(DYNAMIC_PREVIEW_REQUEST_OBJECT_MAPPER).build(requestPath);
 
     final RestClient.Response response = dynamicPreviewAppClient.post(requestJson);
     if (response.haveData() && response.successful()) {
