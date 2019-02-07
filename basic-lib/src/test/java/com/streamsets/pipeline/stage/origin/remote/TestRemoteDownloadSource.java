@@ -17,7 +17,6 @@ package com.streamsets.pipeline.stage.origin.remote;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
-import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
@@ -2634,7 +2633,6 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
       runner.runInit();
       Assert.fail("Expected a StageException");
     } catch (StageException e) {
-      Assert.assertEquals(ContainerError.CONTAINER_0010, e.getErrorCode());
       assertExceptionMessageContainsOnlyRemoteError(e, expected);
       return e;
     }
