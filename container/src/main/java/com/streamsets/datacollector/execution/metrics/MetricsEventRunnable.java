@@ -343,7 +343,7 @@ public class MetricsEventRunnable implements Runnable {
       PipelineConfiguration pipelineConfiguration,
       String metricsJSONStr
   ) throws IOException {
-    if (stopwatch == null || stopwatch.elapsed(TimeUnit.MILLISECONDS) > waitTimeBetweenUpdates) {
+    if (stopwatch == null || stopwatch.elapsed(TimeUnit.MILLISECONDS) > waitTimeBetweenUpdates || isPipelineStopped) {
       SDCMetricsJson sdcMetricsJson = new SDCMetricsJson();
       sdcMetricsJson.setTimestamp(System.currentTimeMillis());
       sdcMetricsJson.setAggregated(false);
