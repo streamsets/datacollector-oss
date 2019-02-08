@@ -532,12 +532,15 @@ public class TCPServerSource extends BasePushSource {
   @Override
   public void produce(Map<String, String> lastOffsets, int maxBatchSize) throws StageException {
     while (!getContext().isStopped()) {
-      stopPipelines();
+      stopPipelinesIfError();
       ThreadUtil.sleep(PRODUCE_LOOP_INTERVAL_MS);
     }
+
+    tcpServer.close();
   }
 
-  private void stopPipelines() throws StageException {
+
+  public void stopPipelinesIfError() throws StageException {
     for (Map.Entry<String, StageException> pipelineIdToError : pipelineIdsToFail.entrySet()) {
       final String pipelineId = pipelineIdToError.getKey();
       if (!pipelineId.equals(getContext().getPipelineId())) {

@@ -70,6 +70,18 @@ public abstract class BaseNettyServer {
 
   protected abstract AbstractBootstrap bootstrap(boolean enableEpoll);
 
+  public void close() {
+    LOG.info("Closing server channels");
+    for (ChannelFuture channelFuture : channelFutures) {
+      if (channelFuture != null) {
+        channelFuture.channel().disconnect().awaitUninterruptibly();
+        channelFuture.channel().close().awaitUninterruptibly();
+      }
+    }
+
+    shutdownGroups();
+  }
+
   public void destroy() {
     LOG.info("Destroying server on address(es) {}", addresses);
     for (ChannelFuture channelFuture : channelFutures) {
@@ -78,18 +90,7 @@ public abstract class BaseNettyServer {
       }
     }
     try {
-      for (EventLoopGroup group : groups) {
-        if (group != null && !group.isShutdown() && !group.isShuttingDown()) {
-          try {
-            group.shutdownGracefully().get();
-          } catch (InterruptedException ex) {
-            LOG.error("InterruptedException thrown while shutting down: " + ex, ex);
-            Thread.currentThread().interrupt();
-          } catch (Exception ex) {
-            LOG.error("Unexpected error shutting down: " + ex, ex);
-          }
-        }
-      }
+      shutdownGroups();
     } finally {
       channelFutures.clear();
     }
@@ -100,6 +101,21 @@ public abstract class BaseNettyServer {
     Utils.checkState(!groups.isEmpty(), "Event group cannot be null");
     for (ChannelFuture channelFuture : channelFutures) {
       channelFuture.channel().closeFuture();
+    }
+  }
+
+  private void shutdownGroups() {
+    for (EventLoopGroup group : groups) {
+      if (group != null && !group.isShutdown() && !group.isShuttingDown()) {
+        try {
+          group.shutdownGracefully().get();
+        } catch (InterruptedException ex) {
+          LOG.error("InterruptedException thrown while shutting down: " + ex, ex);
+          Thread.currentThread().interrupt();
+        } catch (Exception ex) {
+          LOG.error("Unexpected error shutting down: " + ex, ex);
+        }
+      }
     }
   }
 
