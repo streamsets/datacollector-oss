@@ -106,6 +106,13 @@ public class JdbcUtil {
   private static final String PK_TABLE_NAME = "PKTABLE_NAME";
 
   public static final String TABLE_NAME = "tableNameTemplate";
+  public static final String SCHEMA_NAME = "schema";
+
+  /**
+   * List of RDBMs that do not differentiate between databases and schemas.
+   * Use lower-case for any new value.
+   */
+  private static final String[] RDBMS_WITHOUT_SCHEMAS = {"mysql", "mariadb", "memsql", "teradata"};
 
   /**
    * Parameterized SQL statements to the database.
@@ -217,6 +224,33 @@ public class JdbcUtil {
   }
 
   /**
+   * Wrapper for {@link Connection#getCatalog()} to solve problems with RDBMs for which catalog and schema are the same
+   * thing. For these RDBMs, it returns the schema name when it is not-null and not-empty; otherwise, it returns the
+   * value of java.sql.Connection.getCatalog(). For other RDBMs, it returns always the value of
+   * java.sql.Connection.getCatalog().
+   *
+   * @param connection An open JDBC connection
+   * @param schema The schema name we want to use
+   * @return The current catalog or the schema name passed as argument
+   * @throws SQLException
+   */
+  private String getCatalog(Connection connection, String schema) throws SQLException {
+    if (Strings.isNullOrEmpty(schema)) {
+      return connection.getCatalog();
+    }
+
+    String name = connection.getMetaData().getDatabaseProductName().toLowerCase();
+
+    for (String d : RDBMS_WITHOUT_SCHEMAS) {
+      if (name.contains(d)) {
+        return schema;
+      }
+    }
+
+    return connection.getCatalog();
+  }
+
+  /**
    * Wrapper for {@link java.sql.DatabaseMetaData#getColumns(String, String, String, String)} that detects
    * the format of the supplied tableName.
    *
@@ -228,7 +262,8 @@ public class JdbcUtil {
    */
   public ResultSet getColumnMetadata(Connection connection, String schema, String tableName) throws SQLException {
     DatabaseMetaData metadata = connection.getMetaData();
-    return metadata.getColumns(connection.getCatalog(), schema, tableName, null); // Get all columns for this table
+    // Get all columns for this table
+    return metadata.getColumns(getCatalog(connection, schema), schema, tableName, null);
   }
 
   /**
@@ -247,7 +282,7 @@ public class JdbcUtil {
       String tableName
   ) throws SQLException {
     return connection.getMetaData().getTables(
-        connection.getCatalog(),
+        getCatalog(connection, schema),
         schema,
         tableName,
         METADATA_TABLE_VIEW_TYPE
@@ -266,7 +301,7 @@ public class JdbcUtil {
    */
   public ResultSet getTableMetadata(Connection connection, String schema, String tableName) throws SQLException {
     DatabaseMetaData metadata = connection.getMetaData();
-    return metadata.getTables(connection.getCatalog(), schema, tableName, METADATA_TABLE_TYPE);
+    return metadata.getTables(getCatalog(connection, schema), schema, tableName, METADATA_TABLE_TYPE);
   }
 
   /**
@@ -282,7 +317,7 @@ public class JdbcUtil {
     String table = tableName;
     DatabaseMetaData metadata = connection.getMetaData();
     List<String> keys = new ArrayList<>();
-    try (ResultSet result = metadata.getPrimaryKeys(connection.getCatalog(), schema, table)) {
+    try (ResultSet result = metadata.getPrimaryKeys(getCatalog(connection, schema), schema, table)) {
       while (result.next()) {
         keys.add(result.getString(COLUMN_NAME));
       }
@@ -360,7 +395,7 @@ public class JdbcUtil {
   public Set<String> getReferredTables(Connection connection, String schema, String tableName) throws SQLException {
     DatabaseMetaData metadata = connection.getMetaData();
 
-    ResultSet result = metadata.getImportedKeys(connection.getCatalog(), schema, tableName);
+    ResultSet result = metadata.getImportedKeys(getCatalog(connection, schema), schema, tableName);
     Set<String> referredTables = new HashSet<>();
     while (result.next()) {
       referredTables.add(result.getString(PK_TABLE_NAME));
@@ -752,7 +787,8 @@ public class JdbcUtil {
   }
 
   public HikariDataSource createDataSourceForWrite(
-      HikariPoolConfigBean hikariConfigBean, String schema,
+      HikariPoolConfigBean hikariConfigBean,
+      String schemaNameTemplate,
       String tableNameTemplate,
       boolean caseSensitive,
       List<Stage.ConfigIssue> issues,
@@ -761,16 +797,16 @@ public class JdbcUtil {
   ) throws SQLException, StageException {
     HikariDataSource dataSource = new HikariDataSource(createDataSourceConfig(hikariConfigBean, false, false));
 
-    // Can only validate schema if the user specified a single table.
-    if (tableNameTemplate != null && !tableNameTemplate.contains(EL_PREFIX)) {
+    // Can only validate schema+table configuration when the user specified plain constant values
+    if (isPlainString(schemaNameTemplate) && isPlainString(tableNameTemplate)) {
       try (
         Connection connection = dataSource.getConnection();
-        ResultSet res = getTableMetadata(connection, schema, tableNameTemplate);
+        ResultSet res = getTableMetadata(connection, schemaNameTemplate, tableNameTemplate);
       ) {
         if (!res.next()) {
           issues.add(context.createConfigIssue(Groups.JDBC.name(), TABLE_NAME, JdbcErrors.JDBC_16, tableNameTemplate));
         } else {
-          try(ResultSet columns = getColumnMetadata(connection, schema, tableNameTemplate)) {
+          try(ResultSet columns = getColumnMetadata(connection, schemaNameTemplate, tableNameTemplate)) {
             Set<String> columnNames = new HashSet<>();
             while (columns.next()) {
               columnNames.add(columns.getString(4));
@@ -821,6 +857,32 @@ public class JdbcUtil {
   }
 
   /**
+   * Write records to potentially different schemas and tables using EL expressions, and handle errors.
+   *
+   * @param batch batch of SDC records
+   * @param schemaTableClassifier classifier to group records according to the schema and table names, resolving the
+   *     EL expressions involved.
+   * @param recordWriters JDBC record writer cache
+   * @param errorRecordHandler error record handler
+   * @param perRecord indicate record or batch update
+   * @throws StageException
+   */
+  public void write(
+      Batch batch,
+      SchemaTableClassifier schemaTableClassifier,
+      LoadingCache<SchemaAndTable, JdbcRecordWriter> recordWriters,
+      ErrorRecordHandler errorRecordHandler,
+      boolean perRecord
+  ) throws StageException {
+    Multimap<SchemaAndTable, Record> partitions = schemaTableClassifier.classify(batch);
+
+    for (SchemaAndTable key : partitions.keySet()) {
+      Iterator<Record> recordIterator = partitions.get(key).iterator();
+      write(recordIterator, key, recordWriters, errorRecordHandler, perRecord);
+    }
+  }
+
+  /**
    * Write records to the evaluated tables and handle errors.
    *
    * @param batch batch of SDC records
@@ -854,25 +916,25 @@ public class JdbcUtil {
   }
 
   /**
-   * Write records to the given table and handle errors.
+   * Write records to a JDBC destination using the recordWriter specified by key, and handle errors
    *
    * @param recordIterator iterator of SDC records
-   * @param tableName table name
+   * @param key key to select the recordWriter
    * @param recordWriters JDBC record writer cache
    * @param errorRecordHandler error record handler
    * @param perRecord indicate record or batch update
    * @throws StageException
    */
-  public void write(
+  public <T> void write(
       Iterator<Record> recordIterator,
-      String tableName,
-      LoadingCache<String, JdbcRecordWriter> recordWriters,
+      T key,
+      LoadingCache<T, JdbcRecordWriter> recordWriters,
       ErrorRecordHandler errorRecordHandler,
       boolean perRecord
   ) throws StageException {
     final JdbcRecordWriter jdbcRecordWriter;
     try {
-      jdbcRecordWriter = recordWriters.getUnchecked(tableName);
+      jdbcRecordWriter = recordWriters.getUnchecked(key);
     } catch (UncheckedExecutionException ex) {
       final Throwable throwable = ex.getCause();
       final ErrorCode errorCode;
@@ -1064,6 +1126,13 @@ public class JdbcUtil {
    */
   public boolean isElString(String value) {
     return value != null && value.startsWith("${");
+  }
+
+  /**
+   * @return true if the value is a not null string with no EL embedded
+   */
+  public boolean isPlainString(String value) {
+    return value != null && !value.contains(EL_PREFIX);
   }
 
   public void logDatabaseAndDriverInfo(ConnectionManager connectionManager) throws SQLException {

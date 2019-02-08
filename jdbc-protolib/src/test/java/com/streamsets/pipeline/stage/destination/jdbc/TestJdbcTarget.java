@@ -26,7 +26,6 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.jdbc.*;
 import com.streamsets.pipeline.lib.operation.ChangeLogFormat;
-import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
@@ -40,7 +39,6 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import java.sql.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -86,44 +84,59 @@ public class TestJdbcTarget {
 
   @Before
   public void setUp() throws SQLException {
-    // Create a table in H2 and put some data in it for querying.
     connection = DriverManager.getConnection(h2ConnectionString, username, password);
+    createSchemaAndTables("TEST");
+    createSchemaAndTables("TEST_EXTRA");
+  }
+
+  @After
+  public void tearDown() throws SQLException {
+    dropSchemaAndTables("TEST");
+    dropSchemaAndTables("TEST_EXTRA");
+
+    // Last open connection terminates H2
+    connection.close();
+  }
+
+  private void createSchemaAndTables(String schemaName) throws SQLException {
     try (Statement statement = connection.createStatement()) {
-      // Setup table
-      statement.addBatch("CREATE SCHEMA IF NOT EXISTS TEST;");
+      statement.addBatch("CREATE SCHEMA IF NOT EXISTS " + schemaName + ";");
       statement.addBatch(
-          "CREATE TABLE IF NOT EXISTS TEST.TEST_TABLE " +
-          "(P_ID INT NOT NULL, FIRST_NAME VARCHAR(255), LAST_NAME VARCHAR(255), TS TIMESTAMP, UNIQUE(P_ID), " +
-          "PRIMARY KEY(P_ID));"
-      );
-      statement.addBatch(
-          "CREATE TABLE IF NOT EXISTS TEST.TABLE_ONE " +
+          "CREATE TABLE IF NOT EXISTS " + schemaName + ".TEST_TABLE " +
               "(P_ID INT NOT NULL, FIRST_NAME VARCHAR(255), LAST_NAME VARCHAR(255), TS TIMESTAMP, UNIQUE(P_ID), " +
               "PRIMARY KEY(P_ID));"
       );
       statement.addBatch(
-          "CREATE TABLE IF NOT EXISTS TEST.TABLE_TWO " +
+          "CREATE TABLE IF NOT EXISTS " + schemaName + ".TABLE_ONE " +
               "(P_ID INT NOT NULL, FIRST_NAME VARCHAR(255), LAST_NAME VARCHAR(255), TS TIMESTAMP, UNIQUE(P_ID), " +
               "PRIMARY KEY(P_ID));"
       );
       statement.addBatch(
-          "CREATE TABLE IF NOT EXISTS TEST.TABLE_THREE " +
+          "CREATE TABLE IF NOT EXISTS " + schemaName + ".TABLE_TWO " +
               "(P_ID INT NOT NULL, FIRST_NAME VARCHAR(255), LAST_NAME VARCHAR(255), TS TIMESTAMP, UNIQUE(P_ID), " +
               "PRIMARY KEY(P_ID));"
       );
       statement.addBatch(
-        "CREATE TABLE IF NOT EXISTS TEST.DATETIMES (P_ID INT NOT NULL, T TIME, D DATE, DT DATETIME, PRIMARY KEY(P_ID)) "
-      );
-      statement.addBatch(
-        "CREATE TABLE IF NOT EXISTS TEST.NOT_NULLS (P_ID INT NOT NULL, NAME VARCHAR(255) NOT NULL, SURNAME VARCHAR(255) NOT NULL, PRIMARY KEY(P_ID)) "
-      );
-      statement.addBatch(
-          "CREATE TABLE IF NOT EXISTS \"TEST\".\"test_table@\"" +
+          "CREATE TABLE IF NOT EXISTS " + schemaName + ".TABLE_THREE " +
               "(P_ID INT NOT NULL, FIRST_NAME VARCHAR(255), LAST_NAME VARCHAR(255), TS TIMESTAMP, UNIQUE(P_ID), " +
               "PRIMARY KEY(P_ID));"
       );
       statement.addBatch(
-          "CREATE TABLE IF NOT EXISTS TEST.ARRAY_TABLE (P_ID INT NOT NULL, A1 ARRAY, A2 ARRAY, PRIMARY KEY(P_ID)) "
+          "CREATE TABLE IF NOT EXISTS " + schemaName + ".DATETIMES (P_ID INT NOT NULL, T TIME, D DATE, " +
+              "DT DATETIME, PRIMARY KEY(P_ID)) "
+      );
+      statement.addBatch(
+          "CREATE TABLE IF NOT EXISTS " + schemaName + ".NOT_NULLS (P_ID INT NOT NULL, " +
+              "NAME VARCHAR(255) NOT NULL, SURNAME VARCHAR(255) NOT NULL, PRIMARY KEY(P_ID)) "
+      );
+      statement.addBatch(
+          "CREATE TABLE IF NOT EXISTS \"" + schemaName + "\".\"test_table@\"" +
+              "(P_ID INT NOT NULL, FIRST_NAME VARCHAR(255), LAST_NAME VARCHAR(255), TS TIMESTAMP, UNIQUE(P_ID), " +
+              "PRIMARY KEY(P_ID));"
+      );
+      statement.addBatch(
+          "CREATE TABLE IF NOT EXISTS " + schemaName + ".ARRAY_TABLE (P_ID INT NOT NULL, A1 ARRAY, A2 ARRAY, " +
+              "PRIMARY KEY(P_ID)) "
       );
       statement.addBatch("CREATE USER IF NOT EXISTS " + unprivUser + " PASSWORD '" + unprivPassword + "';");
       statement.addBatch("GRANT SELECT ON TEST.TEST_TABLE TO " + unprivUser + ";");
@@ -132,22 +145,19 @@ public class TestJdbcTarget {
     }
   }
 
-  @After
-  public void tearDown() throws SQLException {
+  private void dropSchemaAndTables(String schemaName) throws SQLException {
     try (Statement statement = connection.createStatement()) {
-      // Setup table
-      statement.execute("DROP TABLE IF EXISTS TEST.TEST_TABLE;");
-      statement.execute("DROP TABLE IF EXISTS TEST.TABLE_ONE;");
-      statement.execute("DROP TABLE IF EXISTS TEST.TABLE_TWO;");
-      statement.execute("DROP TABLE IF EXISTS TEST.TABLE_THREE;");
-      statement.execute("DROP TABLE IF EXISTS TEST.DATETIMES;");
-      statement.execute("DROP TABLE IF EXISTS TEST.NOT_NULLS;");
-      statement.execute("DROP TABLE IF EXISTS TEST.ARRAY_TABLE;");
-      statement.execute("DROP TABLE IF EXISTS \"TEST\".\"test_table@\";");
+      statement.addBatch("DROP TABLE IF EXISTS " + schemaName + ".TEST_TABLE;");
+      statement.addBatch("DROP TABLE IF EXISTS " + schemaName + ".TABLE_ONE;");
+      statement.addBatch("DROP TABLE IF EXISTS " + schemaName + ".TABLE_TWO;");
+      statement.addBatch("DROP TABLE IF EXISTS " + schemaName + ".TABLE_THREE;");
+      statement.addBatch("DROP TABLE IF EXISTS " + schemaName + ".DATETIMES;");
+      statement.addBatch("DROP TABLE IF EXISTS " + schemaName + "NOT_NULLS;");
+      statement.addBatch("DROP TABLE IF EXISTS " + schemaName + "ARRAY_TABLE;");
+      statement.addBatch("DROP TABLE IF EXISTS \"" + schemaName + "\".\"test_table@\";");
+      statement.addBatch("DROP SCHEMA " + schemaName + ";");
+      statement.executeBatch();
     }
-
-    // Last open connection terminates H2
-    connection.close();
   }
 
   private HikariPoolConfigBean createConfigBean(String connectionString, String username, String password) {
@@ -692,6 +702,142 @@ public class TestJdbcTarget {
   }
 
   @Test
+  public void testMultipleSchemasAndTables() throws Exception {
+    List<JdbcFieldColumnParamMapping> fieldMappings = ImmutableList.of(
+        new JdbcFieldColumnParamMapping("[0]", "P_ID"),
+        new JdbcFieldColumnParamMapping("[1]", "FIRST_NAME"),
+        new JdbcFieldColumnParamMapping("[2]", "LAST_NAME"),
+        new JdbcFieldColumnParamMapping("[3]", "TS")
+    );
+
+    Target target = new JdbcTarget(
+        "${record:attribute('schemaName')}",
+        "${record:attribute('tableName')}",
+        fieldMappings,
+        caseSensitive,
+        false,
+        false,
+        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
+        PreparedStatementCache.UNLIMITED_CACHE,
+        ChangeLogFormat.NONE,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
+        createConfigBean(h2ConnectionString, username, password)
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
+
+    List<Record> records = ImmutableList.of(
+        generateRecord(1, "Adam", "Kunicki", "TEST", "TABLE_ONE"),
+        generateRecord(3, "John", "Smith", "TEST", "TABLE_THREE"),
+        generateRecord(2, "Jane", "Doe", "TEST_EXTRA", "TABLE_ONE"),
+        generateRecord(4, "John", "Snow", "TEST_EXTRA", "TABLE_TWO")
+    );
+
+    targetRunner.runInit();
+    targetRunner.runWrite(records);
+
+    connection = DriverManager.getConnection(h2ConnectionString, username, password);
+    try (Statement statement = connection.createStatement()) {
+      ResultSet rs = statement.executeQuery("SELECT * FROM TEST.TABLE_ONE");
+      rs.next();
+      assertEquals(1, rs.getInt("P_ID"));
+      assertEquals("Adam", rs.getString("FIRST_NAME"));
+      assertEquals("Kunicki", rs.getString("LAST_NAME"));
+      assertEquals(rs.next(), false);
+    }
+
+    try (Statement statement = connection.createStatement()) {
+      ResultSet rs = statement.executeQuery("SELECT * FROM TEST.TABLE_THREE");
+      rs.next();
+      assertEquals(3, rs.getInt("P_ID"));
+      assertEquals("John", rs.getString("FIRST_NAME"));
+      assertEquals("Smith", rs.getString("LAST_NAME"));
+      assertEquals(false, rs.next());
+    }
+
+    try (Statement statement = connection.createStatement()) {
+      ResultSet rs = statement.executeQuery("SELECT * FROM TEST_EXTRA.TABLE_ONE");
+      rs.next();
+      assertEquals(2, rs.getInt("P_ID"));
+      assertEquals("Jane", rs.getString("FIRST_NAME"));
+      assertEquals("Doe", rs.getString("LAST_NAME"));
+      assertEquals(false, rs.next());
+    }
+
+    try (Statement statement = connection.createStatement()) {
+      ResultSet rs = statement.executeQuery("SELECT * FROM TEST_EXTRA.TABLE_TWO");
+      rs.next();
+      assertEquals(4, rs.getInt("P_ID"));
+      assertEquals("John", rs.getString("FIRST_NAME"));
+      assertEquals("Snow", rs.getString("LAST_NAME"));
+      assertEquals(false, rs.next());
+    }
+  }
+
+  @Test
+  public void testMultipleSchemas() throws Exception {
+    List<JdbcFieldColumnParamMapping> fieldMappings = ImmutableList.of(
+        new JdbcFieldColumnParamMapping("[0]", "P_ID"),
+        new JdbcFieldColumnParamMapping("[1]", "FIRST_NAME"),
+        new JdbcFieldColumnParamMapping("[2]", "LAST_NAME"),
+        new JdbcFieldColumnParamMapping("[3]", "TS")
+    );
+
+    Target target = new JdbcTarget(
+        "${record:attribute('schemaName')}",
+        tableName,
+        fieldMappings,
+        caseSensitive,
+        false,
+        false,
+        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
+        PreparedStatementCache.UNLIMITED_CACHE,
+        ChangeLogFormat.NONE,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
+        createConfigBean(h2ConnectionString, username, password)
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
+
+    List<Record> records = ImmutableList.of(
+        generateRecord(1, "Adam", "Kunicki", "TEST", tableName),
+        generateRecord(3, "John", "Smith", "TEST", tableName),
+        generateRecord(2, "Jane", "Doe", "TEST_EXTRA", tableName),
+        generateRecord(4, "John", "Snow", "TEST_EXTRA", tableName)
+    );
+
+    targetRunner.runInit();
+    targetRunner.runWrite(records);
+
+    connection = DriverManager.getConnection(h2ConnectionString, username, password);
+    try (Statement statement = connection.createStatement()) {
+      ResultSet rs = statement.executeQuery(String.format("SELECT * FROM %s.%s", "TEST", tableName));
+      rs.next();
+      assertEquals(1, rs.getInt("P_ID"));
+      assertEquals("Adam", rs.getString("FIRST_NAME"));
+      assertEquals("Kunicki", rs.getString("LAST_NAME"));
+      rs.next();
+      assertEquals(3, rs.getInt("P_ID"));
+      assertEquals("John", rs.getString("FIRST_NAME"));
+      assertEquals("Smith", rs.getString("LAST_NAME"));
+      assertEquals(false, rs.next());
+    }
+
+    try (Statement statement = connection.createStatement()) {
+      ResultSet rs = statement.executeQuery(String.format("SELECT * FROM %s.%s", "TEST_EXTRA", tableName));
+      rs.next();
+      assertEquals(2, rs.getInt("P_ID"));
+      assertEquals("Jane", rs.getString("FIRST_NAME"));
+      assertEquals("Doe", rs.getString("LAST_NAME"));
+      rs.next();
+      assertEquals(4, rs.getInt("P_ID"));
+      assertEquals("John", rs.getString("FIRST_NAME"));
+      assertEquals("Snow", rs.getString("LAST_NAME"));
+      assertEquals(false, rs.next());
+    }
+  }
+
+  @Test
   public void testMultipleTables() throws Exception {
     List<JdbcFieldColumnParamMapping> fieldMappings = ImmutableList.of(
         new JdbcFieldColumnParamMapping("[0]", "P_ID"),
@@ -727,21 +873,34 @@ public class TestJdbcTarget {
 
     connection = DriverManager.getConnection(h2ConnectionString, username, password);
     try (Statement statement = connection.createStatement()) {
-      ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM TEST.TABLE_ONE");
+      ResultSet rs = statement.executeQuery("SELECT * FROM TEST.TABLE_ONE");
       rs.next();
-      assertEquals(1, rs.getInt(1));
+      assertEquals(1, rs.getInt("P_ID"));
+      assertEquals("Adam", rs.getString("FIRST_NAME"));
+      assertEquals("Kunicki", rs.getString("LAST_NAME"));
+      assertEquals(false, rs.next());
     }
 
     try (Statement statement = connection.createStatement()) {
-      ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM TEST.TABLE_TWO");
+      ResultSet rs = statement.executeQuery("SELECT * FROM TEST.TABLE_TWO");
       rs.next();
-      assertEquals(2, rs.getInt(1));
+      assertEquals(2, rs.getInt("P_ID"));
+      assertEquals("John", rs.getString("FIRST_NAME"));
+      assertEquals("Smith", rs.getString("LAST_NAME"));
+      rs.next();
+      assertEquals(3, rs.getInt("P_ID"));
+      assertEquals("Jane", rs.getString("FIRST_NAME"));
+      assertEquals("Doe", rs.getString("LAST_NAME"));
+      assertEquals(false, rs.next());
     }
 
     try (Statement statement = connection.createStatement()) {
-      ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM TEST.TABLE_THREE");
+      ResultSet rs = statement.executeQuery("SELECT * FROM TEST.TABLE_THREE");
       rs.next();
-      assertEquals(1, rs.getInt(1));
+      assertEquals(4, rs.getInt("P_ID"));
+      assertEquals("Jane", rs.getString("FIRST_NAME"));
+      assertEquals("Doe", rs.getString("LAST_NAME"));
+      assertEquals(false, rs.next());
     }
   }
 
@@ -782,6 +941,20 @@ public class TestJdbcTarget {
       rs.next();
       assertEquals(1, rs.getInt(1));
     }
+  }
+
+  private Record generateRecord(int id, String first, String last, String schemaName, String tableName) {
+    Record record = RecordCreator.create();
+    List<Field> fields = new ArrayList<>();
+    fields.add(Field.create(id));
+    fields.add(Field.create(first));
+    fields.add(Field.create(last));
+    fields.add(Field.createDatetime(new Instant().toDate()));
+    record.set(Field.create(fields));
+    record.getHeader().setAttribute("schemaName", schemaName);
+    record.getHeader().setAttribute("tableName", tableName);
+
+    return record;
   }
 
   private Record generateRecord(int id, String first, String last, String tableName) {

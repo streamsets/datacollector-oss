@@ -58,7 +58,10 @@ public class JdbcDTarget extends DTarget {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
+      elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
       label = "Schema Name",
+      description = "You can use an expression with time and record functions to specify multiple schema names.",
       displayPosition = 20,
       group = "JDBC"
   )

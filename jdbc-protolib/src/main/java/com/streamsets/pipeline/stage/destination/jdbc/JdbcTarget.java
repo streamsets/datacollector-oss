@@ -35,6 +35,8 @@ import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnParamMapping;
 import com.streamsets.pipeline.lib.jdbc.JdbcRecordReaderWriterFactory;
 import com.streamsets.pipeline.lib.jdbc.JdbcRecordWriter;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
+import com.streamsets.pipeline.lib.jdbc.SchemaAndTable;
+import com.streamsets.pipeline.lib.jdbc.SchemaTableClassifier;
 import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.operation.ChangeLogFormat;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
@@ -62,10 +64,12 @@ public class JdbcTarget extends BaseTarget {
   private final int maxPrepStmtParameters;
   private final int maxPrepStmtCache;
 
-  private final String schema;
+  private final String schemaNameTemplate;
   private final String tableNameTemplate;
+  private SchemaTableClassifier schemaTableClassifier = null;
   private final List<JdbcFieldColumnParamMapping> customMappings;
   private final boolean caseSensitive;
+  private final boolean dynamicSchemaName;
   private final boolean dynamicTableName;
 
   private final ChangeLogFormat changeLogFormat;
@@ -74,8 +78,6 @@ public class JdbcTarget extends BaseTarget {
 
   private ErrorRecordHandler errorRecordHandler;
   private HikariDataSource dataSource = null;
-  private ELEval tableNameEval = null;
-  private ELVars tableNameVars = null;
 
   private final int defaultOpCode;
   private final UnsupportedOperationAction unsupportedAction;
@@ -83,14 +85,14 @@ public class JdbcTarget extends BaseTarget {
 
   private final JdbcUtil jdbcUtil;
 
-  class RecordWriterLoader extends CacheLoader<String, JdbcRecordWriter> {
+  class RecordWriterLoader extends CacheLoader<SchemaAndTable, JdbcRecordWriter> {
     @Override
-    public JdbcRecordWriter load(String tableName) throws Exception {
+    public JdbcRecordWriter load(SchemaAndTable key) throws Exception {
       return JdbcRecordReaderWriterFactory.createJdbcRecordWriter(
           hikariConfigBean.getConnectionString(),
           dataSource,
-          schema,
-          tableName,
+          key.getSchemaName(),
+          key.getTableName(),
           customMappings,
           rollbackOnError,
           useMultiRowOp,
@@ -105,10 +107,10 @@ public class JdbcTarget extends BaseTarget {
     }
   }
 
-  private final LoadingCache<String, JdbcRecordWriter> recordWriters;
+  private final LoadingCache<SchemaAndTable, JdbcRecordWriter> recordWriters;
 
   public JdbcTarget(
-      final String schema,
+      final String schemaNameTemplate,
       final String tableNameTemplate,
       final List<JdbcFieldColumnParamMapping> customMappings,
       final boolean caseSensitive,
@@ -122,7 +124,7 @@ public class JdbcTarget extends BaseTarget {
       final HikariPoolConfigBean hikariConfigBean
   ) {
     this(
-        schema,
+        schemaNameTemplate,
         tableNameTemplate,
         customMappings,
         caseSensitive,
@@ -139,7 +141,7 @@ public class JdbcTarget extends BaseTarget {
   }
 
   public JdbcTarget(
-      final String schema,
+      final String schemaNameTemplate,
       final String tableNameTemplate,
       final List<JdbcFieldColumnParamMapping> customMappings,
       final boolean caseSensitive,
@@ -154,7 +156,7 @@ public class JdbcTarget extends BaseTarget {
       HikariPoolConfigBean hikariConfigBean
   ) {
     this.jdbcUtil = UtilsProvider.getJdbcUtil();
-    this.schema = schema;
+    this.schemaNameTemplate = schemaNameTemplate;
     this.tableNameTemplate = tableNameTemplate;
     this.customMappings = customMappings;
     this.caseSensitive = caseSensitive;
@@ -168,11 +170,12 @@ public class JdbcTarget extends BaseTarget {
     this.duplicateKeyAction = duplicateKeyAction;
     this.hikariConfigBean = hikariConfigBean;
     this.dynamicTableName = jdbcUtil.isElString(tableNameTemplate);
+    this.dynamicSchemaName = jdbcUtil.isElString(schemaNameTemplate);
 
     CacheBuilder cacheBuilder = CacheBuilder.newBuilder()
         .maximumSize(500)
         .expireAfterAccess(1, TimeUnit.HOURS)
-        .removalListener((RemovalListener<String, JdbcRecordWriter>) removal -> {
+        .removalListener((RemovalListener<SchemaAndTable, JdbcRecordWriter>) removal -> {
           removal.getValue().deinit();
         });
 
@@ -188,40 +191,46 @@ public class JdbcTarget extends BaseTarget {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
-    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
-
     Target.Context context = getContext();
-
     issues = hikariConfigBean.validateConfigs(context, issues);
+    errorRecordHandler = new DefaultErrorRecordHandler(context);
 
-    if (dynamicTableName) {
-      tableNameVars = getContext().createELVars();
-      tableNameEval = context.createELEval(JdbcUtil.TABLE_NAME);
-      ELUtils.validateExpression(
-          tableNameTemplate,
-          getContext(),
-          Groups.JDBC.getLabel(),
-          JdbcUtil.TABLE_NAME,
-          JdbcErrors.JDBC_26,
-          issues
-      );
+    if (dynamicSchemaName || dynamicTableName) {
+      schemaTableClassifier = new SchemaTableClassifier(schemaNameTemplate, tableNameTemplate, context);
     }
+
+    ELUtils.validateExpression(
+        schemaNameTemplate,
+        context,
+        Groups.JDBC.getLabel(),
+        JdbcUtil.SCHEMA_NAME,
+        JdbcErrors.JDBC_103,
+        issues
+    );
+
+    ELUtils.validateExpression(
+        tableNameTemplate,
+        context,
+        Groups.JDBC.getLabel(),
+        JdbcUtil.TABLE_NAME,
+        JdbcErrors.JDBC_26,
+        issues
+    );
 
     if (issues.isEmpty() && null == dataSource) {
       try {
-        String tableName = tableNameTemplate;
-
         dataSource = jdbcUtil.createDataSourceForWrite(
-            hikariConfigBean, schema,
-            tableName,
+            hikariConfigBean,
+            schemaNameTemplate,
+            tableNameTemplate,
             caseSensitive,
             issues,
             customMappings,
-            getContext()
+            context
         );
       } catch (RuntimeException | SQLException | StageException e) {
         LOG.debug("Could not connect to data source", e);
-        issues.add(getContext().createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, e.toString()));
+        issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, e.toString()));
       }
     }
 
@@ -245,18 +254,18 @@ public class JdbcTarget extends BaseTarget {
     }
     // jdbc target always commit batch execution
     final boolean perRecord = false;
-    if (dynamicTableName) {
+
+    if (dynamicSchemaName || dynamicTableName)  {
       jdbcUtil.write(
           batch,
-          tableNameEval,
-          tableNameVars,
-          tableNameTemplate,
+          schemaTableClassifier,
           recordWriters,
           errorRecordHandler,
           perRecord
       );
     } else {
-      jdbcUtil.write(batch.getRecords(), tableNameTemplate, recordWriters, errorRecordHandler, perRecord);
+      SchemaAndTable key = new SchemaAndTable(schemaNameTemplate, tableNameTemplate);
+      jdbcUtil.write(batch.getRecords(), key, recordWriters, errorRecordHandler, perRecord);
     }
   }
 }

@@ -118,6 +118,8 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_101("Invalid partition size for table {}: {}"),
   JDBC_102("Invalid max number of partitions ({}) for table {}; this must be negative (for default behavior) or" +
       " greater than 1 to ensure progress"),
+  JDBC_103("Invalid schema name template expression '{}': {}"),
+
   JDBC_200("Tables are not change tracking enabled: {}"),
   JDBC_201("Invalid Change Tracking Current Version: {}"),
   JDBC_202("Error while getting min valid version: {}"),
@@ -143,7 +145,6 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_406("Timeout on stopping replication slot: {}"), //Postgres
   JDBC_407("Error querying replication slot: {}"), //Postgres
   JDBC_408("Invalid parameter value: {}") //Postgres
-
   ;
 
   private final String msg;
