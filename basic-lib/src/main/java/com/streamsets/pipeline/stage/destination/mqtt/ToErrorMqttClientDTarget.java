@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.DataFormat;
 
 @StageDef(
-    version = 2,
+    version = 4,
     label = "Write to MQTT",
     description = "Writes error records to MQTT broker",
     icon = "mqtt.png",

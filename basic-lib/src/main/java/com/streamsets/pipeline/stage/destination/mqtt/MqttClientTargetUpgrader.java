@@ -25,19 +25,25 @@ import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgradeUtil;
 import java.util.List;
 
 public class MqttClientTargetUpgrader implements StageUpgrader {
-    @Override
-    public List<Config> upgrade(List<Config> configs, Context context) throws
-        StageException {
-      switch(context.getFromVersion()) {
+  @Override
+  public List<Config> upgrade(
+      String library,
+      String stageName,
+      String stageInstance,
+      int fromVersion,
+      int toVersion,
+      List<Config> configs
+  ) throws StageException {
+      switch(fromVersion) {
         case 1:
           TlsConfigBeanUpgradeUtil.upgradeHttpSslConfigBeanToTlsConfigBean(configs, "commonConf.");
-          if (context.getToVersion() == 2) {
+          if (toVersion == 2) {
             break;
           }
           // fall through
         case 2:
           MqttClientSourceUpgrader.addCleanSessionFlag(configs);
-          if (context.getToVersion() == 3) {
+          if (toVersion == 3) {
             break;
           }
           // fall through
@@ -45,7 +51,7 @@ public class MqttClientTargetUpgrader implements StageUpgrader {
           upgradeV3ToV4(configs);
           break;
         default:
-          throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", context.getFromVersion()));
+          throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
       }
       return configs;
     }
