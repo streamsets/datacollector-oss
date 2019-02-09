@@ -107,7 +107,7 @@ public class TestWebSocketServerPushSource {
       // check response from WebSocket Server
       Assert.assertNotNull(socket.receivedMessage);
       Assert.assertEquals(
-          "{\"httpStatusCode\":200,\"data\":[{\"field1\":\"value\"}],\"error\":[],\"errorMessage\":null}",
+          "{\"httpStatusCode\":200,\"data\":[{\"field1\":\"value\"}],\"error\":[]}",
           socket.receivedMessage
       );
     } finally {
