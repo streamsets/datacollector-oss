@@ -119,8 +119,10 @@ angular
         );
 
         var installedLibraries = [{
-          id: $scope.detailPaneConfigDefn.library,
-          label: $scope.detailPaneConfigDefn.libraryLabel
+          stageLibraryManifest: {
+            stageLibId: $scope.detailPaneConfigDefn.library,
+            stageLibLabel: $scope.detailPaneConfigDefn.libraryLabel
+          }
         }];
 
         var modalInstance = $modal.open({
