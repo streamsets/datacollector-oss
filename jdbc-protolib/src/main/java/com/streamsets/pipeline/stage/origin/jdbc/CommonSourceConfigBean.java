@@ -152,7 +152,7 @@ public final class CommonSourceConfigBean {
       displayPosition = 173,
       group = "JDBC",
       elDefs = TimeEL.class,
-      defaultValue = "${1 * HOURS}"
+      defaultValue = "-1"
   )
   public int txnWindow;
 
