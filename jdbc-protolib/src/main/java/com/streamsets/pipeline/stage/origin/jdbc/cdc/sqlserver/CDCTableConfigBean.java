@@ -45,7 +45,7 @@ public class CDCTableConfigBean {
       required = false,
       type = ConfigDef.Type.STRING,
       label = "Initial Offset",
-      description = "Use -1 to process all data or use the last-saved offset",
+      description = "Use the last-saved offset or leave it empty to process all data",
       displayPosition =  50,
       group = "TABLE"
   )
