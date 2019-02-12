@@ -201,7 +201,8 @@ public class JdbcMetadataProcessor extends RecordProcessor {
               StringUtils.join(columnDiff.keySet(), ",")
           );
           schemaWriter.alterTable(schema, tableName, columnDiff);
-          tableCache.put(Pair.of(schema, tableName), recordStructure);
+          tableStructure.putAll(columnDiff);
+          tableCache.put(Pair.of(schema, tableName), tableStructure);
         }
       }
 
