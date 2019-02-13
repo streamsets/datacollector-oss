@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
 
 @StageDef(
     version=2,
-    label="Aggregator",
+    label="Windowing Aggregator",
     description = "Aggregates data that arrives within a window of time",
     icon="aggregation.png",
     producesEvents = true,
