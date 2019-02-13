@@ -23,12 +23,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-stage-lib-parent</artifactId>
-    <version>3.7.2</version>
+    <version>for-sch-3.9</version>
     <relativePath>../stage-lib-parent</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-bigtable-lib</artifactId>
-  <version>3.7.2</version>
+  <version>for-sch-3.9</version>
   <description>StreamSets Data Collector Google Cloud Bigtable Lib</description>
   <name>StreamSets Data Collector Google Cloud Bigtable Lib</name>
   <packaging>jar</packaging>

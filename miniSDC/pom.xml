@@ -23,12 +23,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root</artifactId>
-    <version>3.7.2</version>
+    <version>for-sch-3.9</version>
     <relativePath>../root</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-miniSDC</artifactId>
-  <version>3.7.2</version>
+  <version>for-sch-3.9</version>
   <description>StreamSets Data Collector Mini SDC</description>
   <name>StreamSets Data Collector Mini SDC</name>
   <packaging>jar</packaging>
