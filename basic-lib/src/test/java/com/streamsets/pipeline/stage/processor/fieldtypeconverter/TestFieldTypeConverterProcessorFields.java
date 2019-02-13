@@ -47,6 +47,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -57,6 +58,9 @@ import java.util.Set;
 import java.util.TimeZone;
 
 import static com.streamsets.pipeline.stage.processor.fieldtypeconverter.Errors.CONVERTER_04;
+
+import static com.streamsets.testing.Matchers.mapFieldWithEntry;
+import static org.junit.Assert.assertThat;
 
 public class TestFieldTypeConverterProcessorFields {
 
@@ -2167,4 +2171,46 @@ public class TestFieldTypeConverterProcessorFields {
     }
   }
 
+  @Test
+  public void testStringToDecimalWithoutPrecisionLoss() throws Exception {
+    final FieldTypeConverterConfig converter1 = new FieldTypeConverterConfig();
+
+    converter1.fields = ImmutableList.of("/field1", "/field2");
+    converter1.targetType = Field.Type.DECIMAL;
+    converter1.dataLocale = "en_US";
+    converter1.scale = -1;
+    converter1.decimalScaleRoundingStrategy = DecimalScaleRoundingStrategy.ROUND_UNNECESSARY;
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration(
+            "fieldTypeConverterConfigs",
+            Collections.singletonList(converter1)
+        )
+        .addOutputLane("a").build();
+    runner.runInit();
+    try {
+      final Map<String, Field> fieldMap = new HashMap<>();
+
+      // decimals with large scale/precision
+      final String field1Value = "1234567890.1234567890";
+      final String field2Value = "12345678987654321.12345678987654321";
+      fieldMap.put("field1", Field.create(field1Value));
+      fieldMap.put("field2", Field.create(field2Value));
+
+      final Record record = RecordCreator.create();
+      record.set(Field.create(fieldMap));
+
+      final StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+
+      final Record outputRecord = output.getRecords().get("a").get(0);
+      final Field outputRecordField = outputRecord.get();
+      assertThat(outputRecordField, mapFieldWithEntry("field1", new BigDecimal(field1Value)));
+      assertThat(outputRecordField, mapFieldWithEntry("field2", new BigDecimal(field2Value)));
+    } finally {
+      runner.runDestroy();
+    }
+  }
 }

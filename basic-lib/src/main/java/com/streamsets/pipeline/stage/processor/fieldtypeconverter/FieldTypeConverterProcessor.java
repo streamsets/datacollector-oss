@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -328,7 +329,10 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
       case ZONED_DATETIME:
         return Field.createZonedDateTime(ZonedDateTime.parse(stringValue, dateTimeFormatter));
       case DECIMAL:
-        Number decimal = NumberFormat.getInstance(dataLocale).parse(stringValue);
+        NumberFormat decimalFormat = NumberFormat.getInstance(dataLocale);
+        DecimalFormat df = (DecimalFormat) decimalFormat;
+        df.setParseBigDecimal(true);
+        Number decimal = df.parse(stringValue);
         BigDecimal bigDecimal = adjustScaleIfNeededForDecimalConversion(new BigDecimal(decimal.toString()), scale, decimalScaleRoundingStrategy);
         Field decimalField = Field.create(Field.Type.DECIMAL, bigDecimal);
         decimalField.setAttribute(HeaderAttributeConstants.ATTR_PRECISION, String.valueOf(bigDecimal.precision()));
