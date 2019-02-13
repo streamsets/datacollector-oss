@@ -47,6 +47,9 @@ public class DelimitedCharDataParser extends AbstractDataParser {
   private final String readerId;
   private final DelimitedDataParser parser;
   private final DelimitedDataParserSettings settings;
+  // Instance wise counter of extra columns that will remember how many columns have been every added in case
+  // that user checked 'Allow extra columns'
+  private int extraColumnCounter = 1;
 
   private List<Field> headers;
   private boolean eof;
@@ -127,9 +130,8 @@ public class DelimitedCharDataParser extends AbstractDataParser {
     if(headers != null && settings.allowExtraColumns()) {
       int numColumns = columns.length;
       int numHeaders = headers.size();
-      int n = 1;
       while (numHeaders < numColumns) {
-        headers.add(Field.create(String.format("%s%02d", settings.getExtraColumnPrefix(), n++)));
+        headers.add(Field.create(String.format("%s%02d", settings.getExtraColumnPrefix(), extraColumnCounter++)));
         ++numHeaders;
       }
     }

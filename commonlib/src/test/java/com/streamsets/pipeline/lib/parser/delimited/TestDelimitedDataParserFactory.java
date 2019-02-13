@@ -34,58 +34,6 @@ import java.util.Collections;
 
 public class TestDelimitedDataParserFactory {
 
-  private Stage.Context getContext() {
-    return ContextInfoCreator.createSourceContext("i", false, OnRecordError.TO_ERROR, Collections.emptyList());
-  }
-
-  /*@Test
-  public void testGetParserString() throws Exception {
-
-    DataParserFactoryBuilder dataFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.DELIMITED);
-    DataFactory dataFactory = dataFactoryBuilder
-      .setMaxDataLen(1000)
-      .setMode(CsvMode.CSV)
-      .build();
-
-    Assert.assertTrue(dataFactory instanceof DelimitedCharDataParserFactory);
-    CharDataParserFactory charDataParserFactory = (CharDataParserFactory) dataFactory;
-
-    DataParser parser = charDataParserFactory.getParser("id", "[\"Hello\"]\n");
-    Assert.assertEquals(0, parser.getOffset());
-    Record record = parser.parse();
-    Assert.assertTrue(record.has(""));
-    Assert.assertEquals(9, parser.getOffset());
-    parser.close();
-  }
-
-  @Test
-  public void testGetParserReader() throws Exception {
-    Map<String, Object> configs = new HashMap<>(JsonCharDataParserFactory.CONFIGS);
-    CharDataParserFactory factory = new JsonCharDataParserFactory(getContext(), 10,
-                                                                  Mode.MULTIPLE_OBJECTS, configs);
-    OverrunReader reader = new OverrunReader(new StringReader("[\"Hello\"]\n"), 1000, true);
-    DataParser parser = factory.getParser("id", reader, 0);
-    Assert.assertEquals(0, parser.getOffset());
-    Record record = parser.parse();
-    Assert.assertTrue(record.has(""));
-    Assert.assertEquals(9, parser.getOffset());
-    parser.close();
-  }
-
-  @Test
-  public void testGetParserReaderWithOffset() throws Exception {
-    Map<String, Object> configs = new HashMap<>(JsonCharDataParserFactory.CONFIGS);
-    CharDataParserFactory factory = new JsonCharDataParserFactory(getContext(), 10,
-                                                                  Mode.ARRAY_OBJECTS, configs);
-    OverrunReader reader = new OverrunReader(new StringReader("[[\"Hello\"],[\"Bye\"]]\n"), 1000, true);
-    DataParser parser = factory.getParser("id", reader, 10);
-    Assert.assertEquals(10, parser.getOffset());
-    Record record = parser.parse();
-    Assert.assertTrue(record.has(""));
-    Assert.assertEquals(12, parser.getOffset());
-    parser.close();
-  }*/
-
   @Test
   public void testCustomWithDefault() throws Exception {
     Stage.Context context = ContextInfoCreator.createSourceContext("", false, OnRecordError.DISCARD,
@@ -125,4 +73,44 @@ public class TestDelimitedDataParserFactory {
     parser.close();
   }
 
+  @Test
+  public void testAllowExtraColumns() throws Exception {
+    Stage.Context context = ContextInfoCreator.createSourceContext("", false, OnRecordError.DISCARD, Collections.emptyList());
+    DataParserFactoryBuilder builder = new DataParserFactoryBuilder(context, DataParserFormat.DELIMITED);
+    DataParserFactory factory = builder
+      .setMaxDataLen(100)
+      .setMode(CsvMode.CSV)
+      .setMode(CsvHeader.WITH_HEADER)
+      .setMode(CsvRecordType.LIST_MAP)
+      .setConfig(DelimitedDataConstants.DELIMITER_CONFIG, '^')
+      .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, '!')
+      .setConfig(DelimitedDataConstants.QUOTE_CONFIG, '\'')
+      .setConfig(DelimitedDataConstants.ALLOW_EXTRA_COLUMNS, true)
+      .build();
+    DataParser parser = factory.getParser("id", "a,b,c\n" +
+      "1,2,3,4\n" +
+      "1,2,3,4,5\n"
+    );
+    // First line
+    Record record = parser.parse();
+    Assert.assertNotNull(record);
+    Assert.assertEquals("1", record.get().getValueAsMap().get("a").getValueAsString());
+    Assert.assertEquals("2", record.get().getValueAsMap().get("b").getValueAsString());
+    Assert.assertEquals("3", record.get().getValueAsMap().get("c").getValueAsString());
+    Assert.assertEquals("4", record.get().getValueAsMap().get("_extra_01").getValueAsString());
+
+    // Second line
+    record = parser.parse();
+    Assert.assertNotNull(record);
+    Assert.assertEquals("1", record.get().getValueAsMap().get("a").getValueAsString());
+    Assert.assertEquals("2", record.get().getValueAsMap().get("b").getValueAsString());
+    Assert.assertEquals("3", record.get().getValueAsMap().get("c").getValueAsString());
+    Assert.assertEquals("4", record.get().getValueAsMap().get("_extra_01").getValueAsString());
+    Assert.assertEquals("5", record.get().getValueAsMap().get("_extra_02").getValueAsString());
+
+    // EOF
+    record = parser.parse();
+    Assert.assertNull(record);
+    parser.close();
+  }
 }
