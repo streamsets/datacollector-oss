@@ -152,6 +152,7 @@ public class DependencyParserExhaustiveTest {
       {"nzjdbc3.jar", new Dependency("nzjdbc3", "")},
       {"ojdbc6.jar", new Dependency("ojdbc", "6")},
       {"ojdbc8.jar", new Dependency("ojdbc", "8")},
+      {"org.apache.servicemix.bundles.cglib-3.2.4_1.jar", new Dependency("org.apache.servicemix.bundles.cglib", "3.2.4_1")},
       {"parquet-avro-1.8.1.jar", new Dependency("parquet", "1.8.1")},
       {"parquet-format-2.3.0-incubating.jar", new Dependency("parquet", "2.3.0-incubating")},
       {"pentaho-aggdesigner-algorithm-5.1.5-jhyde.jar", new Dependency("pentaho-aggdesigner-algorithm", "5.1.5-jhyde")},
