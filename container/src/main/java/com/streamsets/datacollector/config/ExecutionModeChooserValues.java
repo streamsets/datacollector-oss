@@ -27,7 +27,9 @@ public class ExecutionModeChooserValues extends BaseEnumChooserValues<ExecutionM
         ExecutionMode.CLUSTER_YARN_STREAMING,
         ExecutionMode.CLUSTER_MESOS_STREAMING,
         ExecutionMode.EDGE,
-        ExecutionMode.EMR_BATCH
+        ExecutionMode.EMR_BATCH,
+        ExecutionMode.BATCH,
+        ExecutionMode.STREAMING
     );
   }
 }

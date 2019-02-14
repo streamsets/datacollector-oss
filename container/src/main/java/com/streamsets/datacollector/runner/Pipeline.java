@@ -680,31 +680,34 @@ public class Pipeline {
         ));
 
         // Error stage handling
-        errorStage = createAndInitializeStageRuntime(
-          stageLib,
-          pipelineConf,
-          pipelineBean,
-          pipelineBean.getErrorStage(),
-          runner,
-          stageInfos,
-          false,
-          pipelineName,
-          rev,
-          userContext,
-          configuration,
-          0,
-          new ConcurrentHashMap<>(),
-          startTime,
-          blobStore,
-          lineagePublisherTask,
-          true
-        );
-        BadRecordsHandler badRecordsHandler = new BadRecordsHandler(
-          pipelineBean.getConfig().errorRecordPolicy,
-          runner.getRuntimeInfo(),
-          errorStage,
-          pipelineName
-        );
+        BadRecordsHandler badRecordsHandler = null;
+        if (pipelineBean.getErrorStage() != null) {
+          errorStage = createAndInitializeStageRuntime(
+              stageLib,
+              pipelineConf,
+              pipelineBean,
+              pipelineBean.getErrorStage(),
+              runner,
+              stageInfos,
+              false,
+              pipelineName,
+              rev,
+              userContext,
+              configuration,
+              0,
+              new ConcurrentHashMap<>(),
+              startTime,
+              blobStore,
+              lineagePublisherTask,
+              true
+          );
+          badRecordsHandler = new BadRecordsHandler(
+              pipelineBean.getConfig().errorRecordPolicy,
+              runner.getRuntimeInfo(),
+              errorStage,
+              pipelineName
+          );
+        }
 
         // And finally Stats aggregation
         StatsAggregationHandler statsAggregationHandler = null;

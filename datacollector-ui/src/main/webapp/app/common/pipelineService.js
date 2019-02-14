@@ -62,6 +62,20 @@ angular.module('dataCollectorApp.common')
 
             // Definitions
             self.pipelineConfigDefinition = definitions.pipeline[0];
+
+            // remove not used execution modes
+            angular.forEach(self.pipelineConfigDefinition.configDefinitions, function (configDefinition) {
+              if (configDefinition.name === 'executionMode') {
+                configDefinition.model.values = _.filter(configDefinition.model.values, function (value) {
+                  return value !== 'BATCH' && value !== 'STREAMING';
+                });
+
+                configDefinition.model.labels = _.filter(configDefinition.model.labels, function (value) {
+                  return value !== 'Batch' && value !== 'Streaming';
+                });
+              }
+            });
+
             self.pipelineRulesConfigDefinition = definitions.pipelineRules[0];
             self.stageDefinitions = definitions.stages;
             self.serviceDefinitions = definitions.services;

@@ -47,8 +47,11 @@ angular.module('dataCollectorApp.common')
       angular.forEach(batchData, function (stageOutput) {
         if(stageOutput.instanceName === stageInstance.instanceName) {
           angular.forEach(stageOutput.output, function(outputs, laneName) {
-            angular.forEach(outputs, function(output) {
+            angular.forEach(outputs, function(output, index) {
               output.laneName = laneName;
+              if (index < 2) {
+                output.expand = true;
+              }
               stagePreviewData.output.push(output);
               if (output.header && !output.header.previousTrackingId) {
                 stagePreviewData.newRecords.push(output);

@@ -1283,6 +1283,10 @@ public class BeanHelper {
         return ExecutionModeJson.EDGE;
       case EMR_BATCH:
         return ExecutionModeJson.EMR_BATCH;
+      case BATCH:
+        return ExecutionModeJson.BATCH;
+      case STREAMING:
+        return ExecutionModeJson.STREAMING;
       default:
         throw new IllegalArgumentException("Unrecognized execution mode: " + executionMode);
     }
@@ -1310,6 +1314,10 @@ public class BeanHelper {
         return ExecutionMode.EDGE;
       case EMR_BATCH:
         return ExecutionMode.EMR_BATCH;
+      case BATCH:
+        return ExecutionMode.BATCH;
+      case STREAMING:
+        return ExecutionMode.STREAMING;
       default:
         throw new IllegalArgumentException("Unrecognized execution mode: " + executionModeJson);
     }

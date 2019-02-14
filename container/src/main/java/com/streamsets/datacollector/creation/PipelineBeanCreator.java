@@ -238,7 +238,8 @@ public abstract class PipelineBeanCreator {
             interceptorContextBuilder,
             errors
         );
-      } else {
+      } else if (!(pipelineConfigBean.executionMode.equals(ExecutionMode.BATCH) ||
+          pipelineConfigBean.executionMode.equals(ExecutionMode.STREAMING))) {
         errors.add(IssueCreator.getPipeline().create(
             PipelineGroups.BAD_RECORDS.name(),
             "badRecordsHandling",

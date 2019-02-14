@@ -161,7 +161,7 @@ public class PipelineStoreResource {
   private static final String DPM_PIPELINE_ID = "dpm.pipeline.id";
 
   private static final String DATA_COLLECTOR_EDGE = "DATA_COLLECTOR_EDGE";
-  private static final String CLUSTER_MODE = "CLUSTER";
+  private static final String STREAMING_MODE = "STREAMING";
   private static final String MICROSERVICE = "MICROSERVICE";
 
   private static final String SYSTEM_ALL_PIPELINES = "system:allPipelines";
@@ -738,10 +738,10 @@ public class PipelineStoreResource {
             pipelineConfig
         );
       }
-    } else if (pipelineType.equals(CLUSTER_MODE)) {
+    } else if (pipelineType.equals(STREAMING_MODE)) {
       List<Config> newConfigs = createWithNewConfig(
           pipelineConfig.getConfiguration(),
-          new Config("executionMode", ExecutionMode.CLUSTER_YARN_STREAMING.name())
+          new Config("executionMode", ExecutionMode.STREAMING.name())
       );
       pipelineConfig.setConfiguration(newConfigs);
       if (!draft) {

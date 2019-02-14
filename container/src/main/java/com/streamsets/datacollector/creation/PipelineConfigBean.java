@@ -116,7 +116,9 @@ public class PipelineConfigBean implements Stage {
       type = ConfigDef.Type.MODEL,
       defaultValue="AT_LEAST_ONCE",
       label = "Delivery Guarantee",
-      displayPosition = 20
+      displayPosition = 20,
+      dependsOn = "executionMode",
+      triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING", "EDGE"}
   )
   @ValueChooserModel(DeliveryGuaranteeChooserValues.class)
   public DeliveryGuarantee deliveryGuarantee;
@@ -127,7 +129,9 @@ public class PipelineConfigBean implements Stage {
       label = "Test Origin",
       description = "Stage used for testing in preview mode.",
       defaultValue = RAW_DATA_ORIGIN,
-      displayPosition = 21
+      displayPosition = 21,
+      dependsOn = "executionMode",
+      triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING", "EDGE"}
   )
   @ValueChooserModel(PipelineTestStageChooserValues.class)
   public String testOriginStage;
@@ -225,7 +229,9 @@ public class PipelineConfigBean implements Stage {
       type = ConfigDef.Type.MODEL,
       label = "Error Records",
       displayPosition = 90,
-      group = "BAD_RECORDS"
+      group = "BAD_RECORDS",
+      dependsOn = "executionMode",
+      triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING", "EDGE"}
   )
   @ValueChooserModel(ErrorHandlingChooserValues.class)
   public String badRecordsHandling;
@@ -237,7 +243,9 @@ public class PipelineConfigBean implements Stage {
       label = "Error Record Policy",
       description = "Determines which variation of the record is sent to error.",
       displayPosition = 93,
-      group = "BAD_RECORDS"
+      group = "BAD_RECORDS",
+      dependsOn = "executionMode",
+      triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING", "EDGE"}
   )
   @ValueChooserModel(ErrorRecordPolicyChooserValues.class)
   public ErrorRecordPolicy errorRecordPolicy = ErrorRecordPolicy.ORIGINAL_RECORD;
@@ -248,7 +256,9 @@ public class PipelineConfigBean implements Stage {
       label = "Statistics Aggregator",
       defaultValue = STATS_DPM_DIRECTLY_TARGET,
       displayPosition = 95,
-      group = "STATS"
+      group = "STATS",
+      dependsOn = "executionMode",
+      triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING", "EDGE"}
   )
   @ValueChooserModel(StatsTargetChooserValues.class)
   public String statsAggregatorStage = STATS_DPM_DIRECTLY_TARGET;
@@ -420,7 +430,7 @@ public class PipelineConfigBean implements Stage {
       displayPosition = 220,
       group = "CLUSTER",
       dependsOn = "executionMode",
-      triggeredByValue = {"CLUSTER_BATCH", "CLUSTER_YARN_STREAMING"}
+      triggeredByValue = {"CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "BATCH", "STREAMING"}
   )
   public Map<String, String> sparkConfigs;
 
