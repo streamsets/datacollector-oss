@@ -208,7 +208,7 @@ function sch_enable {
   sch_verify_config
 
   # Finally enable SCH
-  touch $DM_TOKEN_FILE
+  touch $DPM_TOKEN_FILE
   exec $SDC_DIST/bin/streamsets sch register -l $DPM_BASE_URL -u $DPM_USER -p $DPM_PASSWORD --token-file-path $DPM_TOKEN_FILE --skip-config-update
 }
 
