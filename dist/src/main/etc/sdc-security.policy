@@ -15,26 +15,26 @@
 // StreamSets Data Collector Policy File
 
 // StreamSets code base:
-grant codebase "file://${sdc.dist.dir}/libexec/bootstrap-libs/-" {
+grant codebase "file://${sdc.bootstrapLib.dir}/-" {
   permission java.security.AllPermission;
 };
-grant codebase "file://${sdc.dist.dir}/root-lib/*" {
+grant codebase "file://${sdc.rootLib.dir}/*" {
   permission java.security.AllPermission;
 };
-grant codebase "file://${sdc.dist.dir}/api-lib/*" {
+grant codebase "file://${sdc.apiLib.dir}/*" {
   permission java.security.AllPermission;
 };
-grant codebase "file://${sdc.dist.dir}/container-lib/*" {
+grant codebase "file://${sdc.containerLib.dir}/*" {
   permission java.security.AllPermission;
 };
-grant codebase "file://${sdc.dist.dir}/streamsets-libs-extras/-" {
+grant codebase "file://${sdc.librariesExtras.dir}/-" {
   permission java.security.AllPermission;
 };
 // StreamSets stage libraries code base:
-grant codebase "file://${sdc.dist.dir}/streamsets-libs/-" {
+grant codebase "file://${sdc.libraries.dir}/-" {
   permission java.security.AllPermission;
 };
-grant codebase "file://${sdc.dist.dir}/user-libs/streamsets-datacollector-dev-lib/-" {
+grant codebase "file://${sdc.userLibs.dir}/streamsets-datacollector-dev-lib/-" {
   permission java.security.AllPermission;
 };
 // Groovy will parse files in a different context, so we need to grant it additional privileges
@@ -46,7 +46,7 @@ grant codebase "file:/groovy/script" {
 //   http://docs.oracle.com/javase/7/docs/technotes/guides/security/permissions.html
 
 // User stage libraries code base:
-grant codebase "file://${sdc.dist.dir}/user-libs/-" {
+grant codebase "file://${sdc.userLibs.dir}/-" {
   permission java.util.PropertyPermission "*", "read";
   permission java.lang.RuntimePermission "accessDeclaredMembers";
   permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
@@ -54,6 +54,6 @@ grant codebase "file://${sdc.dist.dir}/user-libs/-" {
 };
 
 // For JARs to be available to all stage libraries
-grant codebase "file://${sdc.dist.dir}/libs-common-lib/-" {
+grant codebase "file://${sdc.libsCommon.dir}/-" {
   permission java.security.AllPermission;
 };

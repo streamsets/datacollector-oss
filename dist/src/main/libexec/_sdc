@@ -98,7 +98,8 @@ SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.conf.dir=${SDC_CONF}"
 SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.data.dir=${SDC_DATA}"
 SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.log.dir=${SDC_LOG}"
 
-BOOTSTRAP_JAR="${SDC_DIST}/libexec/bootstrap-libs/main/streamsets-datacollector-bootstrap-${project.version}.jar"
+BOOTSTRAP_LIB_DIR=${BOOTSTRAP_LIB_DIR:=${SDC_DIST}/libexec/bootstrap-libs}
+BOOTSTRAP_JAR=${BOOTSTRAP_JAR:=${BOOTSTRAP_LIB_DIR}/main/streamsets-datacollector-bootstrap-${project.version}.jar}
 
 SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -javaagent:${BOOTSTRAP_JAR}"
 
@@ -109,17 +110,30 @@ then
   BOOTSTRAP_CLASSPATH="${BOOTSTRAP_CLASSPATH}:${SDC_ROOT_CLASSPATH}"
 fi
 
-API_CLASSPATH=${API_CLASSPATH:="${SDC_DIST}/api-lib/"'*.jar'}
+ROOT_LIB_DIR=${ROOT_LIB_DIR:=${SDC_DIST}/root-lib}
+API_LIB_DIR=${API_LIB_DIR:=${SDC_DIST}/api-lib}
+API_CLASSPATH=${API_CLASSPATH:="${API_LIB_DIR}/"'*.jar'}
 
-CONTAINER_CLASSPATH=${CONTAINER_CLASSPATH:="${SDC_CONF}:${SDC_DIST}/container-lib/"'*.jar'}
+CONTAINER_LIB_DIR=${CONTAINER_LIB_DIR:=${SDC_DIST}/container-lib}
+CONTAINER_CLASSPATH=${CONTAINER_CLASSPATH:="${SDC_CONF}:${CONTAINER_LIB_DIR}/"'*.jar'}
 
-LIBS_COMMON_LIB_DIR=${LIBS_COMMON_LIB_DIR:="${SDC_DIST}/libs-common-lib/"}
+LIBS_COMMON_LIB_DIR=${LIBS_COMMON_LIB_DIR:="${SDC_DIST}/libs-common-lib"}
 
 STREAMSETS_LIBRARIES_DIR="${STREAMSETS_LIBRARIES_DIR:=${SDC_DIST}/streamsets-libs}"
 
-STREAMSETS_LIBRARIES_EXTRA_DIR="${STREAMSETS_LIBRARIES_EXTRA_DIR:=${SDC_DIST}/streamsets-libs-extras/}"
+STREAMSETS_LIBRARIES_EXTRA_DIR="${STREAMSETS_LIBRARIES_EXTRA_DIR:=${SDC_DIST}/streamsets-libs-extras}"
 
-USER_LIBRARIES_DIR="${USER_LIBRARIES_DIR:=${SDC_DIST}/user-libs/}"
+USER_LIBRARIES_DIR="${USER_LIBRARIES_DIR:=${SDC_DIST}/user-libs}"
+
+# add system properties for configurable directories
+SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.libraries.dir=${STREAMSETS_LIBRARIES_DIR} \
+    -Dsdc.librariesExtras.dir=${STREAMSETS_LIBRARIES_EXTRA_DIR} \
+    -Dsdc.rootLib.dir=${ROOT_LIB_DIR} \
+    -Dsdc.bootstrapLib.dir=${BOOTSTRAP_LIB_DIR} \
+    -Dsdc.apiLib.dir=${API_LIB_DIR} \
+    -Dsdc.containerLib.dir=${CONTAINER_LIB_DIR} \
+    -Dsdc.libsCommon.dir=${LIBS_COMMON_LIB_DIR} \
+    -Dsdc.userLibs.dir=${USER_LIBRARIES_DIR}"
 
 if [ -z "$JAVA_HOME" ]
 then
