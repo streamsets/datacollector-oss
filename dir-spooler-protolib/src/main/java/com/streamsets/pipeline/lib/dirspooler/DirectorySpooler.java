@@ -272,6 +272,7 @@ public class DirectorySpooler {
   }
 
   private volatile WrappedFile currentFile;
+  private WrappedFile initialFile;
 
   private WrappedFile spoolDirPath;
   private WrappedFile archiveDirPath;
@@ -318,6 +319,7 @@ public class DirectorySpooler {
           // if filename only or not full path - add the full path to the filename
           this.currentFile = fs.getFile(spoolDirPath.toString(), sourceFile);
         }
+        this.initialFile = this.currentFile;
       }
 
       if (!waitForPathAppearance) {
@@ -652,7 +654,8 @@ public class DirectorySpooler {
                 return null;
               }
 
-              if (fs.compare(file, this.currentFile, useLastModified) > 0) {
+              if (this.currentFile == null || fs.compare(this.currentFile, this.initialFile, useLastModified) == 0
+                  || fs.compare(file, this.currentFile, useLastModified) > 0) {
                 if (!fs.isDirectory(file)) {
                   LOG.trace("Found file '{}'", file);
                   addFileToQueue(file, checkCurrent);
