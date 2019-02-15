@@ -357,7 +357,13 @@
           <configuration>
             <forkCount>1</forkCount>
             <reuseForks>true</reuseForks>
-            <forkedProcessTimeoutInSeconds>600</forkedProcessTimeoutInSeconds>
+            <forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds>   <!-- 30 min -->
+            <!--
+                Some machines don't have enough randomness, and so SecureRandom will block for minutes at a time,
+                significantly slowing some of the tests (SFTP-related ones in particular).  This is a workaround to use
+                a faster random source that won't block.
+            -->
+            <argLine>-Djava.security.egd=file:/dev/./urandom</argLine>
           </configuration>
         </plugin>
         <plugin>
