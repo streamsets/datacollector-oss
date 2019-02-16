@@ -27,21 +27,22 @@ public class CallbackInfoJson {
 
   @JsonCreator
   public CallbackInfoJson(
-                          @JsonProperty("user") String user,
-                          @JsonProperty("name") String name,
-                          @JsonProperty("rev") String rev,
-                          @JsonProperty("sdcClusterToken") String sdcClusterToken,
-                          @JsonProperty("sdcSlaveToken") String sdcSlaveToken,
-                          @JsonProperty("sdcURL") String sdcURL,
-                          @JsonProperty("adminToken") String adminToken,
-                          @JsonProperty("creatorToken") String creatorToken,
-                          @JsonProperty("managerToken") String managerToken,
-                          @JsonProperty("guestToken") String guestToken,
-                          @JsonProperty("callbackObjectType") CallbackObjectType callbackObjectType,
-                          @JsonProperty("callbackObject") String callbackObject,
-                          @JsonProperty("slaveSdcId") String slaveSdcId) {
+      @JsonProperty("user") String user,
+      @JsonProperty("name") String name,
+      @JsonProperty("rev") String rev,
+      @JsonProperty("sdcClusterToken") String sdcClusterToken,
+      @JsonProperty("sdcSlaveToken") String sdcSlaveToken,
+      @JsonProperty("sdcURL") String sdcURL,
+      @JsonProperty("adminToken") String adminToken,
+      @JsonProperty("creatorToken") String creatorToken,
+      @JsonProperty("managerToken") String managerToken,
+      @JsonProperty("guestToken") String guestToken,
+      @JsonProperty("callbackObjectType") CallbackObjectType callbackObjectType,
+      @JsonProperty("callbackObject") String callbackObject,
+      @JsonProperty("slaveSdcId") String slaveSdcId
+  ) {
     this.callbackInfo = new CallbackInfo(user, name, rev, sdcClusterToken, sdcSlaveToken, sdcURL,
-      adminToken, creatorToken, managerToken, guestToken, callbackObjectType, callbackObject, slaveSdcId);
+        adminToken, creatorToken, managerToken, guestToken, callbackObjectType, callbackObject, slaveSdcId);
   }
 
 

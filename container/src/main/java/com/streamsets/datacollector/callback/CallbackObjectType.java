@@ -18,5 +18,7 @@ package com.streamsets.datacollector.callback;
 public enum CallbackObjectType {
   METRICS,
   ERROR,
+  STATE,
+  OFFSET,
   ;
 }
