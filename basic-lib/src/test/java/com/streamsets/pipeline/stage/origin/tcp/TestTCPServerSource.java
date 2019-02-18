@@ -242,16 +242,16 @@ public class TestTCPServerSource {
         TEN_DELIMITED_RECORDS.getBytes(charset),
         true
     );
+    final Channel channel = channelFuture.channel();
+    TCPServerSourceClientHandler clientHandler = channel.pipeline().get(TCPServerSourceClientHandler.class);
 
     runner.runProduce(new HashMap<>(), batchSize, output -> {
       records.addAll(output.getRecords().get(outputLane));
       runner.setStop();
     });
-    runner.waitOnProduce();
 
     // Wait until the connection is closed.
-    final Channel channel = channelFuture.channel();
-    TCPServerSourceClientHandler clientHandler = channel.pipeline().get(TCPServerSourceClientHandler.class);
+    runner.waitOnProduce();
 
     final List<String> responses = new LinkedList<>();
     for (int i = 0; i < batchSize + 1; i++) {
@@ -492,6 +492,7 @@ public class TestTCPServerSource {
     Bootstrap bootstrap = new Bootstrap();
     bootstrap.group(workerGroup);
     bootstrap.channel(NioSocketChannel.class);
+    bootstrap.remoteAddress(new InetSocketAddress("localhost", Integer.parseInt(configBean.ports.get(0))));
     bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
     bootstrap.handler(new ChannelInitializer() {
       @Override
@@ -501,7 +502,7 @@ public class TestTCPServerSource {
     });
 
     // Start the client.
-    channelFuture = bootstrap.connect("localhost", Integer.parseInt(configBean.ports.get(0))).sync();
+    channelFuture = bootstrap.connect().sync();
 
     return channelFuture;
   }

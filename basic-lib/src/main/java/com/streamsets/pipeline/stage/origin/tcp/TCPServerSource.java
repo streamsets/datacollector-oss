@@ -536,7 +536,9 @@ public class TCPServerSource extends BasePushSource {
       ThreadUtil.sleep(PRODUCE_LOOP_INTERVAL_MS);
     }
 
-    tcpServer.close();
+    if (tcpServer != null) {
+      tcpServer.close();
+    }
   }
 
 
