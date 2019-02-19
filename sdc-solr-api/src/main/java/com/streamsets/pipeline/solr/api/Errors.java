@@ -27,6 +27,11 @@ public enum Errors implements ErrorCode {
   SOLR_04("Could not write record '{}': {}"),
   SOLR_05("Could not index '{}' records: {}"),
   SOLR_06("Record is missing mapped fields: {}"),
+  SOLR_07("Record is missing required fields:{}"),
+  SOLR_08("Record is missing optional fields:{}"),
+  SOLR_09("Record Field type in '{}' is not correct. It must be MAP or LIST_MAP but it is '{}'"),
+  SOLR_10("Record does not contain any value in path: {}"),
+  SOLR_11("Fields path cannot be empty")
   ;
   private final String msg;
 

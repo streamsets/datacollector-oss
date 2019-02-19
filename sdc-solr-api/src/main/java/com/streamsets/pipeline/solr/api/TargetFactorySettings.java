@@ -26,6 +26,7 @@ public class TargetFactorySettings {
   private final boolean waitSearcher;
   private final boolean softCommit;
   private boolean ignoreOptionalFields;
+  private boolean fieldsAlreadyMappedInRecord;
 
   public TargetFactorySettings (
       String instanceType,
@@ -37,7 +38,8 @@ public class TargetFactorySettings {
       boolean waitFlush,
       boolean waitSearcher,
       boolean softCommit,
-      boolean ignoreOptionalFields
+      boolean ignoreOptionalFields,
+      boolean fieldsAlreadyMappedInRecord
   ) {
     this.instanceType = instanceType;
     this.solrURI = solrURI;
@@ -49,6 +51,7 @@ public class TargetFactorySettings {
     this.waitSearcher = waitSearcher;
     this.softCommit = softCommit;
     this.ignoreOptionalFields = ignoreOptionalFields;
+    this.fieldsAlreadyMappedInRecord = fieldsAlreadyMappedInRecord;
   }
 
   public String getInstanceType() {
@@ -89,5 +92,9 @@ public class TargetFactorySettings {
 
   public boolean getIgnoreOptionalFields() {
     return ignoreOptionalFields;
+  }
+
+  public boolean getFieldsAlreadyMappedInRecord() {
+    return fieldsAlreadyMappedInRecord;
   }
 }

@@ -42,7 +42,8 @@ public class Solr06TargetFactory extends SdcSolrTargetFactory {
         settings.isWaitFlush(),
         settings.isWaitSearcher(),
         settings.isSoftCommit(),
-        settings.getIgnoreOptionalFields()
+        settings.getIgnoreOptionalFields(),
+        settings.getFieldsAlreadyMappedInRecord()
     );
   }
 

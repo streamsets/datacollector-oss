@@ -38,4 +38,6 @@ public interface SdcSolrTarget {
 
   public List<String> getRequiredFieldNamesMap();
 
+  public List<String> getOptionalFieldNamesMap();
+
 }

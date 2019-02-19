@@ -37,6 +37,8 @@
     <solr.version>4.4.0</solr.version>
     <solr.test.jetty.version>8.1.10.v20130312</solr.test.jetty.version>
     <commons-logging.version>1.1</commons-logging.version>
+    <apache-commons-lang3.verison>3.7</apache-commons-lang3.verison>
+    <guava.version>18.0</guava.version>
   </properties>
 
   <dependencies>
@@ -151,6 +153,19 @@
       <artifactId>solr-solrj</artifactId>
       <version>${solr.version}</version>
       <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${apache-commons-lang3.verison}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>${guava.version}</version>
+      <scope>compile</scope>
     </dependency>
 
     <dependency>

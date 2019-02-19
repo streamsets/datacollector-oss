@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.destination.solr;
 
+import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
@@ -30,7 +31,7 @@ import java.util.List;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 3,
+    version = 4,
     label = "Solr",
     description = "Upload data to an Apache Solr",
     icon = "solr.png",
@@ -107,15 +108,44 @@ public class SolrDTarget extends DTarget {
 
   @ConfigDef(
     required = true,
-    type = ConfigDef.Type.MODEL,
-    defaultValue="",
-    label = "Fields",
-    description = "Selected fields are mapped to columns of the same name. These should match your schema",
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "false",
+    label = "Map Fields Automatically",
+      description = "Maps record fields to Solr columns with matching names. Records must contain matching fields for" +
+          " each required column in the schema",
     displayPosition = 50,
     group = "SOLR"
   )
+  public boolean fieldsAlreadyMappedInRecord;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    defaultValue="",
+    label = "Fields",
+    description = "Map record fields to Solr columns. Map fields to all required columns",
+    displayPosition = 50,
+    group = "SOLR",
+    dependencies = {
+        @Dependency(configName = "fieldsAlreadyMappedInRecord", triggeredByValues = "false")
+    }
+  )
   @ListBeanModel
   public List<SolrFieldMappingConfig> fieldNamesMap;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    defaultValue = "/",
+    label = "Field Path for Data",
+    displayPosition = 55,
+    description = "Field path that contains the data to write to Solr",
+    group = "SOLR",
+    dependencies = {
+        @Dependency(configName = "fieldsAlreadyMappedInRecord", triggeredByValues = "true")
+    }
+  )
+  public String recordSolrFieldsPath;
 
   @ConfigDef(
       required = true,
@@ -201,6 +231,8 @@ public class SolrDTarget extends DTarget {
         solrURI,
         zookeeperConnect,
         indexingMode,
+        fieldsAlreadyMappedInRecord,
+        recordSolrFieldsPath,
         fieldNamesMap,
         defaultCollection,
         kerberosAuth,

@@ -42,6 +42,12 @@ public class SolrDTargetUpgrader implements StageUpgrader {
         // fall through
       case 2:
         upgradeV2ToV3(configs);
+        if (toVersion == 3) {
+          break;
+        }
+        // fall through
+      case 3:
+        upgradeV3ToV4(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -70,5 +76,10 @@ public class SolrDTargetUpgrader implements StageUpgrader {
     configs.add(new Config("waitSearcher", true));
     configs.add(new Config("softCommit", false));
     configs.add(new Config("ignoreOptionalFields", false));
+  }
+
+  private static void upgradeV3ToV4(List<Config> configs) {
+    configs.add(new Config("fieldsAlreadyMappedInRecord", false));
+    configs.add(new Config("recordSolrFieldsPath", "/"));
   }
 }

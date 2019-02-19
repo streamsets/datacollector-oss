@@ -55,7 +55,9 @@ public class SolrTarget07 implements SdcSolrTarget {
   private final boolean waitFlush;
   private final boolean waitSearcher;
   private final boolean softCommit;
+  private final boolean fieldsAlreadyMappedInRecord;
   private List<String> requiredFieldNamesMap;
+  private List<String> optionalFieldNamesMap;
 
   public SolrTarget07(
       String instanceType,
@@ -67,7 +69,8 @@ public class SolrTarget07 implements SdcSolrTarget {
       boolean waitFlush,
       boolean waitSearcher,
       boolean softCommit,
-      boolean ignoreOptionalFields
+      boolean ignoreOptionalFields,
+      boolean fieldsAlreadyMappedInRecord
   ) {
     this.instanceType = instanceType;
     this.solrURI = solrURI;
@@ -79,7 +82,9 @@ public class SolrTarget07 implements SdcSolrTarget {
     this.waitSearcher = waitSearcher;
     this.softCommit = softCommit;
     this.ignoreOptionalFields = ignoreOptionalFields;
+    this.fieldsAlreadyMappedInRecord = fieldsAlreadyMappedInRecord;
     this.requiredFieldNamesMap = new ArrayList<>();
+    this.optionalFieldNamesMap = new ArrayList<>();
   }
 
   @Override
@@ -88,8 +93,11 @@ public class SolrTarget07 implements SdcSolrTarget {
     if (!skipValidation) {
       solrClient.ping();
     }
-    if (ignoreOptionalFields) {
+    if (ignoreOptionalFields || fieldsAlreadyMappedInRecord) {
       getRequiredFieldNames();
+    }
+    if (fieldsAlreadyMappedInRecord && !ignoreOptionalFields) {
+      getOptionalFieldNames();
     }
   }
 
@@ -105,6 +113,22 @@ public class SolrTarget07 implements SdcSolrTarget {
     List<Map<String, Object>> fields = schemaRepresentation.getFields();
     for (Map<String, Object> field : fields) {
       if (field.containsKey(REQUIRED) && field.get(REQUIRED).equals(true)) {
+        requiredFieldNamesMap.add(field.get(NAME).toString());
+      }
+    }
+  }
+
+  public List<String> getOptionalFieldNamesMap() {
+    return optionalFieldNamesMap;
+  }
+
+  private void getOptionalFieldNames() throws SolrServerException, IOException {
+    SchemaRequest schemaRequest = new SchemaRequest();
+    SchemaResponse schemaResponse = schemaRequest.process(solrClient);
+    SchemaRepresentation schemaRepresentation = schemaResponse.getSchemaRepresentation();
+    List<Map<String, Object>> fields = schemaRepresentation.getFields();
+    for (Map<String, Object> field : fields) {
+      if (field.containsKey(REQUIRED) && field.get(REQUIRED).equals(false)) {
         requiredFieldNamesMap.add(field.get(NAME).toString());
       }
     }

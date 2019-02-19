@@ -32,6 +32,7 @@ import com.streamsets.pipeline.solr.api.TargetFactorySettings;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +52,8 @@ public class SolrTarget extends BaseTarget {
   private final String zookeeperConnect;
   private final String defaultCollection;
   private final ProcessingMode indexingMode;
+  private final boolean fieldsAlreadyMappedInRecord;
+  private final String recordSolrFieldsPath;
   private final List<SolrFieldMappingConfig> fieldNamesMap;
   private final boolean kerberosAuth;
   private final MissingFieldAction missingFieldAction;
@@ -63,12 +66,15 @@ public class SolrTarget extends BaseTarget {
   private ErrorRecordHandler errorRecordHandler;
   private SdcSolrTarget sdcSolrTarget;
   private List<String> requiredFieldNamesMap;
+  private List<String> optionalFieldNamesMap;
 
   public SolrTarget(
       final InstanceTypeOptions instanceType,
       final String solrURI,
       final String zookeeperConnect,
       final ProcessingMode indexingMode,
+      final boolean fieldsAlreadyMappedInRecord,
+      final String recordSolrFieldsPath,
       final List<SolrFieldMappingConfig> fieldNamesMap,
       String defaultCollection,
       boolean kerberosAuth,
@@ -84,6 +90,8 @@ public class SolrTarget extends BaseTarget {
     this.zookeeperConnect = zookeeperConnect;
     this.defaultCollection = defaultCollection;
     this.indexingMode = indexingMode;
+    this.fieldsAlreadyMappedInRecord = fieldsAlreadyMappedInRecord;
+    this.recordSolrFieldsPath = recordSolrFieldsPath;
     this.fieldNamesMap = fieldNamesMap;
     this.kerberosAuth = kerberosAuth;
     this.missingFieldAction = missingFieldAction;
@@ -101,6 +109,10 @@ public class SolrTarget extends BaseTarget {
 
     boolean solrInstanceInfo = true;
 
+    if (StringUtils.isBlank(recordSolrFieldsPath)) {
+      issues.add(getContext().createConfigIssue(Groups.SOLR.name(), "recordSolrFieldsPath", Errors.SOLR_11));
+    }
+
     if(SolrInstanceType.SINGLE_NODE.equals(instanceType.getInstanceType()) && (solrURI == null || solrURI.isEmpty())) {
       solrInstanceInfo = false;
       issues.add(getContext().createConfigIssue(Groups.SOLR.name(), "solrURI", Errors.SOLR_00));
@@ -110,7 +122,7 @@ public class SolrTarget extends BaseTarget {
       issues.add(getContext().createConfigIssue(Groups.SOLR.name(), "zookeeperConnect", Errors.SOLR_01));
     }
 
-    if (fieldNamesMap == null || fieldNamesMap.isEmpty()) {
+    if (fieldNamesMap == null || fieldNamesMap.isEmpty() && !fieldsAlreadyMappedInRecord) {
       issues.add(getContext().createConfigIssue(Groups.SOLR.name(), "fieldNamesMap", Errors.SOLR_02));
     }
 
@@ -125,12 +137,16 @@ public class SolrTarget extends BaseTarget {
           waitFlush,
           waitSearcher,
           softCommit,
-          ignoreOptionalFields
+          ignoreOptionalFields,
+          fieldsAlreadyMappedInRecord
       );
       sdcSolrTarget = SdcSolrTargetFactory.create(settings).create();
       try {
         sdcSolrTarget.init();
         this.requiredFieldNamesMap = sdcSolrTarget.getRequiredFieldNamesMap();
+        if (fieldsAlreadyMappedInRecord && !ignoreOptionalFields) {
+          this.optionalFieldNamesMap = sdcSolrTarget.getOptionalFieldNamesMap();
+        }
       } catch (Exception ex) {
         String configName = "solrURI";
         if(InstanceTypeOptions.SOLR_CLOUD.equals(instanceType.getInstanceType())) {
@@ -155,49 +171,94 @@ public class SolrTarget extends BaseTarget {
       atLeastOne = true;
       Record record = it.next();
       Map<String, Object> fieldMap = new HashMap();
-      try {
-        Set<String> missingFields = new HashSet<>();
-        for (SolrFieldMappingConfig fieldMapping : fieldNamesMap) {
-          Field field = record.get(fieldMapping.field);
-          if (field == null) {
-            if (ignoreOptionalFields) {
-              if (requiredFieldNamesMap != null && requiredFieldNamesMap.contains(fieldMapping.field)) {
-                missingFields.add(fieldMapping.field);
+      boolean correctRecord = true;
+      if (fieldsAlreadyMappedInRecord) {
+        try {
+          Field recordSolrFields = record.get(recordSolrFieldsPath);
+          if (recordSolrFields == null) {
+            correctRecord = false;
+            handleError(record, Errors.SOLR_10, recordSolrFieldsPath);
+          }
+
+          Field.Type recordSolrFieldType = recordSolrFields.getType();
+          Map<String, Field> recordFieldMap = null;
+
+          if (recordSolrFieldType == Field.Type.MAP) {
+            recordFieldMap = recordSolrFields.getValueAsMap();
+          } else if (recordSolrFieldType == Field.Type.LIST_MAP) {
+            recordFieldMap = recordSolrFields.getValueAsListMap();
+          } else {
+            correctRecord = false;
+            handleError(record, Errors.SOLR_09, recordSolrFieldsPath, recordSolrFields.getType().name());
+          }
+
+          if (correctRecord) {
+            // for each record field check if it's in the solr required fields list and save it for later
+            if (requiredFieldNamesMap != null && !requiredFieldNamesMap.isEmpty()) {
+              correctRecord = checkRecordContainsSolrFields(
+                  recordFieldMap,
+                  record,
+                  requiredFieldNamesMap,
+                  Errors.SOLR_07
+              );
+            }
+
+            // check record contain optional fields if needed
+            if (!ignoreOptionalFields) {
+              if (optionalFieldNamesMap != null && !optionalFieldNamesMap.isEmpty()) {
+                correctRecord = checkRecordContainsSolrFields(
+                    recordFieldMap,
+                    record,
+                    optionalFieldNamesMap,
+                    Errors.SOLR_08
+                );
               }
             }
-          } else {
-            fieldMap.put(
-                fieldMapping.solrFieldName,
-                JsonUtil.fieldToJsonObject(record, field)
-            );
-          }
-        }
 
-        if (!missingFields.isEmpty()) {
-          String errorParams = Joiner.on(",").join(missingFields);
-          switch (missingFieldAction) {
-            case DISCARD:
-              LOG.debug(Errors.SOLR_06.getMessage(), errorParams);
-              break;
-            case STOP_PIPELINE:
-              throw new StageException(Errors.SOLR_06, errorParams);
-            case TO_ERROR:
-              throw new OnRecordErrorException(record, Errors.SOLR_06, errorParams);
-            default: //unknown operation
-              LOG.debug("Sending record to error due to unknown operation {}", missingFieldAction);
-              throw new OnRecordErrorException(record, Errors.SOLR_06, errorParams);
+            if (correctRecord) {
+              // add fields to fieldMap to later add document to Solr
+              for (Map.Entry<String, Field> recordFieldMapEntry : recordFieldMap.entrySet()) {
+                fieldMap.put(
+                    recordFieldMapEntry.getKey(),
+                    JsonUtil.fieldToJsonObject(record, recordFieldMapEntry.getValue())
+                );
+              }
+            }
           }
+
+          if (!correctRecord) {
+            record = null;
+          }
+        } catch (OnRecordErrorException ex) {
+          sendOnRecordErrorExceptionToHandler(record, Errors.SOLR_07, ex);
           record = null;
         }
-      } catch (OnRecordErrorException ex) {
-        errorRecordHandler.onError(new OnRecordErrorException(
-            record,
-            Errors.SOLR_06,
-            record.getHeader().getSourceId(),
-            ex.toString(),
-            ex
-        ));
-        record = null;
+
+      } else {
+        try {
+          Set<String> missingFields = new HashSet<>();
+          for (SolrFieldMappingConfig fieldMapping : fieldNamesMap) {
+            Field field = record.get(fieldMapping.field);
+            if (field == null) {
+              if (ignoreOptionalFields) {
+                if (requiredFieldNamesMap != null && requiredFieldNamesMap.contains(fieldMapping.field)) {
+                  missingFields.add(fieldMapping.field);
+                }
+              }
+            } else {
+              fieldMap.put(fieldMapping.solrFieldName, JsonUtil.fieldToJsonObject(record, field));
+            }
+          }
+
+          if (!missingFields.isEmpty()) {
+            String errorParams = Joiner.on(",").join(missingFields);
+            handleError(record, Errors.SOLR_06, errorParams);
+            record = null;
+          }
+        } catch (OnRecordErrorException ex) {
+          sendOnRecordErrorExceptionToHandler(record, Errors.SOLR_06, ex);
+          record = null;
+        }
       }
 
       if (record != null) {
@@ -209,12 +270,7 @@ public class SolrTarget extends BaseTarget {
             sdcSolrTarget.add(fieldMap);
           }
         } catch (StageException ex) {
-          errorRecordHandler.onError(new OnRecordErrorException(record,
-              Errors.SOLR_04,
-              record.getHeader().getSourceId(),
-              ex.toString(),
-              ex
-          ));
+          sendOnRecordErrorExceptionToHandler(record, Errors.SOLR_04, ex);
         }
       }
     }
@@ -245,5 +301,103 @@ public class SolrTarget extends BaseTarget {
       }
     }
     super.destroy();
+  }
+
+  /**
+   * Checks whether the record contains solr fields in solrFieldsMap or not.
+   *
+   * @param recordFieldMap Fields contained in the reocrd
+   * @param record The whole record
+   * @param solrFieldsMap Solr fields that will be searched in record fields
+   * @param errorToThrow error to use if missing Solr fields are detected
+   * @return true if record contains all solr fields in solrFieldsMap otherwise false
+   * @throws StageException Exception thrown by handleError method call
+   */
+  private boolean checkRecordContainsSolrFields(
+      Map<String, Field> recordFieldMap,
+      Record record,
+      List<String> solrFieldsMap,
+      Errors errorToThrow
+  ) throws StageException {
+    // for (Map.Entry<String, Field> recordFieldMapEntry : recordFieldMap.entrySet())
+    List<String> fieldsFound = new ArrayList<>();
+
+    recordFieldMap.keySet().forEach(recordFieldKey -> {
+      if (solrFieldsMap.contains(recordFieldKey)) {
+        fieldsFound.add(recordFieldKey);
+      }
+    });
+
+    // if record does not contain solr fields then process error accordingly
+    if (solrFieldsMap.size() != fieldsFound.size()) {
+      Set<String> missingFields = new HashSet<>();
+      solrFieldsMap.forEach(requiredField -> {
+        if (!fieldsFound.contains(requiredField)) {
+          missingFields.add(requiredField);
+        }
+      });
+
+      handleError(record, errorToThrow, Joiner.on(",").join(missingFields));
+
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Handles an error that occurred when processing a record. The error can either be logged or thrown in an exception.
+   *
+   * @param record The record which was being processed
+   * @param errorTemplate The error template to be thrown if required
+   * @param errorMessage The error specific message
+   * @throws StageException Exception thrown if missingFieldAction indicates to stop the pipeline or send the record
+   * to error. If missingFieldAction value is unknown an exception is also thrown
+   */
+  private void handleError(Record record, Errors errorTemplate, String errorMessage) throws StageException {
+    handleError(record, errorTemplate, new String[] {errorMessage});
+  }
+
+  /**
+   * Handles an error that occurred when processing a record. The error can either be logged or thrown in an exception.
+   *
+   * @param record The record which was being processed
+   * @param errorTemplate The error template to be thrown if required
+   * @param errorArguments The error specific arguments
+   * @throws StageException Exception thrown if missingFieldAction indicates to stop the pipeline or send the record
+   * to error. If missingFieldAction value is unknown an exception is also thrown
+   */
+  private void handleError(Record record, Errors errorTemplate, String ... errorArguments) throws StageException {
+    switch (missingFieldAction) {
+      case DISCARD:
+        LOG.debug(errorTemplate.getMessage(), errorArguments);
+        break;
+      case STOP_PIPELINE:
+        throw new StageException(errorTemplate, errorArguments);
+      case TO_ERROR:
+        throw new OnRecordErrorException(record, errorTemplate, errorArguments);
+      default: //unknown operation
+        LOG.debug("Sending record to error due to unknown operation {}", missingFieldAction);
+        throw new OnRecordErrorException(record, errorTemplate, errorArguments);
+    }
+  }
+
+  /**
+   * Send exception ex to errorRecordHandler in order to let the handler process it.
+   *
+   * @param record The record which was being processed when the exception was thrown
+   * @param error The error template
+   * @param ex The exception that was thrown
+   * @throws StageException Exception thrown by the errorRecordHandler when handling the exception ex
+   */
+  private void sendOnRecordErrorExceptionToHandler(Record record, Errors error, StageException ex)
+      throws StageException {
+    errorRecordHandler.onError(new OnRecordErrorException(
+        record,
+        error,
+        record.getHeader().getSourceId(),
+        ex.toString(),
+        ex
+    ));
   }
 }
