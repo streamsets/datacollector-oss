@@ -17,8 +17,8 @@ package com.streamsets.pipeline.stage.destination.solr;
 
 
 import com.esotericsoftware.minlog.Log;
+import com.google.common.base.Joiner;
 import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -37,9 +37,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class SolrTarget extends BaseTarget {
   private final static Logger LOG = LoggerFactory.getLogger(SolrTarget.class);
@@ -154,25 +156,14 @@ public class SolrTarget extends BaseTarget {
       Record record = it.next();
       Map<String, Object> fieldMap = new HashMap();
       try {
+        Set<String> missingFields = new HashSet<>();
         for (SolrFieldMappingConfig fieldMapping : fieldNamesMap) {
           Field field = record.get(fieldMapping.field);
           if (field == null) {
             if (ignoreOptionalFields) {
-              if (requiredFieldNamesMap == null || !requiredFieldNamesMap.contains(fieldMapping.field)) {
-                continue;
+              if (requiredFieldNamesMap != null && requiredFieldNamesMap.contains(fieldMapping.field)) {
+                missingFields.add(fieldMapping.field);
               }
-            }
-            switch (missingFieldAction) {
-              case DISCARD:
-                LOG.debug(Errors.SOLR_06.getMessage(), fieldMapping.field);
-                break;
-              case STOP_PIPELINE:
-                throw new StageException(Errors.SOLR_06, fieldMapping.field);
-              case TO_ERROR:
-                throw new OnRecordErrorException(record, Errors.SOLR_06, fieldMapping.field);
-              default: //unknown operation
-                LOG.debug("Sending record to error due to unknown operation {}", missingFieldAction);
-                throw new OnRecordErrorException(record, Errors.SOLR_06, fieldMapping.field);
             }
           } else {
             fieldMap.put(
@@ -180,6 +171,23 @@ public class SolrTarget extends BaseTarget {
                 JsonUtil.fieldToJsonObject(record, field)
             );
           }
+        }
+
+        if (!missingFields.isEmpty()) {
+          String errorParams = Joiner.on(",").join(missingFields);
+          switch (missingFieldAction) {
+            case DISCARD:
+              LOG.debug(Errors.SOLR_06.getMessage(), errorParams);
+              break;
+            case STOP_PIPELINE:
+              throw new StageException(Errors.SOLR_06, errorParams);
+            case TO_ERROR:
+              throw new OnRecordErrorException(record, Errors.SOLR_06, errorParams);
+            default: //unknown operation
+              LOG.debug("Sending record to error due to unknown operation {}", missingFieldAction);
+              throw new OnRecordErrorException(record, Errors.SOLR_06, errorParams);
+          }
+          record = null;
         }
       } catch (OnRecordErrorException ex) {
         errorRecordHandler.onError(new OnRecordErrorException(

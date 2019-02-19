@@ -26,7 +26,7 @@ public enum Errors implements ErrorCode {
   SOLR_03("Could not connect to the Solr instance: {}"),
   SOLR_04("Could not write record '{}': {}"),
   SOLR_05("Could not index '{}' records: {}"),
-  SOLR_06("Record is missing mapped field {}"),
+  SOLR_06("Record is missing mapped fields: {}"),
   ;
   private final String msg;
 
