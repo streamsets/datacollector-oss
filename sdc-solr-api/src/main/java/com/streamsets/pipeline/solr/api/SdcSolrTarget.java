@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface SdcSolrTarget {
+  public final static String NAME = "name";
   public final static String REQUIRED = "required";
 
   public void init() throws Exception;

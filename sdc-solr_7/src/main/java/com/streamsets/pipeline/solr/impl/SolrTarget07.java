@@ -104,8 +104,8 @@ public class SolrTarget07 implements SdcSolrTarget {
     SchemaRepresentation schemaRepresentation = schemaResponse.getSchemaRepresentation();
     List<Map<String, Object>> fields = schemaRepresentation.getFields();
     for (Map<String, Object> field : fields) {
-      if (field.containsKey(REQUIRED) && field.get(REQUIRED) == "true") {
-        requiredFieldNamesMap.add(field.get(REQUIRED).toString());
+      if (field.containsKey(REQUIRED) && field.get(REQUIRED).equals(true)) {
+        requiredFieldNamesMap.add(field.get(NAME).toString());
       }
     }
   }
