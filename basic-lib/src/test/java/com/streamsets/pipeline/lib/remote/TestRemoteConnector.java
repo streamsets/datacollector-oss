@@ -37,26 +37,60 @@ public class TestRemoteConnector {
 
   @Test
   public void testGetURI() throws Exception {
-    testGetURI("sftp://host:42", null);
-    testGetURI("ftp://host:1001", null);
-    testGetURI("sftp://host", 22);
-    testGetURI("ftp://host", 21);
+    // basic case
+    testGetURI("sftp", null, "host", 42, 42);
+    testGetURI("ftp", null, "host", 1001, 1001);
+
+    // adds default ports
+    testGetURI("sftp", null, "host", null, 22);
+    testGetURI("ftp", null, "host", null, 21);
+
+    // various user info
+    String[] userInfos = new String[]{
+        "user",
+        "user:pass",
+        "user@email.com",
+        "user@email.com:pass",
+        "user:p@ss",
+        "user@email.com:p@ss",
+        "@",
+        "@:@",
+        "@@:@@",
+    };
+    for (String userInfo : userInfos) {
+      testGetURI("sftp", userInfo, "host", 42, 42);
+    }
   }
 
-  private void testGetURI(String address, Integer addExpectedPort) throws Exception {
+  private void testGetURI(
+      String scheme,
+      String userInfo,
+      String host,
+      Integer port,
+      int expectedPort
+  ) throws Exception {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
     RemoteConfigBean conf = new RemoteConfigBean();
-    conf.remoteAddress = address;
+    conf.remoteAddress =
+        scheme + "://" +
+        (userInfo == null ? "" : userInfo + "@") +
+        host +
+        (port == null ? "" : ":" + port);
     URI uri = RemoteConnector.getURI(conf, issues, null, null);
-    Assert.assertEquals(new URI(address + (addExpectedPort == null ? "" : ":" + addExpectedPort)), uri);
+    URI expectedURI = new URI(scheme, userInfo, host, expectedPort, null, null, null);
+    Assert.assertEquals(expectedURI, uri);
+    Assert.assertEquals(scheme, uri.getScheme());
+    Assert.assertEquals(host, uri.getHost());
+    Assert.assertEquals(userInfo, uri.getUserInfo());
+    Assert.assertEquals(expectedPort, uri.getPort());
     assertNumIssues(issues, 0);
   }
 
   @Test
   public void testGetURIInvalid() throws Exception {
-    testGetURIInvalid("sftp://?!?!$A*( W", Errors.REMOTE_01);   // Invalid characters in URI
-    testGetURIInvalid("http://host:80", Errors.REMOTE_02);      // wrong scheme
-    testGetURIInvalid("host:80", Errors.REMOTE_02);             // no scheme
+    testGetURIInvalid("sftp://?!?!$A*( W:80", Errors.REMOTE_01);  // Invalid characters in URI
+    testGetURIInvalid("http://host:80", Errors.REMOTE_02);        // wrong scheme
+    testGetURIInvalid("host:80", Errors.REMOTE_02);               // no scheme
   }
 
   public void testGetURIInvalid(String address, Errors exepctedError) throws Exception {

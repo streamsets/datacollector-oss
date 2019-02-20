@@ -48,9 +48,31 @@ public abstract class RemoteConnector {
       Label group
   ) {
     String uriString = config.remoteAddress;
+
+    // This code handles the case where the username or password, if given in the URI, contains an '@' character.  We
+    // need to percent-encode it (i.e. "%40") or else the URI parsing will appear to succeed but be done incorrectly
+    // because '@' is also used as the delimiter for userinfo and host.  This code basically just replaces all but
+    // the last '@' with "%40".
+    StringBuilder sb = new StringBuilder();
+    boolean doneFirstAt = false;
+    for (int i = uriString.length() - 1; i >= 0; i--) {
+      char c = uriString.charAt(i);
+      if (c == '@') {
+        if (doneFirstAt) {
+          sb.insert(0, "%40");
+        } else {
+          sb.insert(0, '@');
+          doneFirstAt = true;
+        }
+      } else {
+        sb.insert(0, c);
+      }
+    }
+    uriString = sb.toString();
+
     URI uri;
     try {
-      uri = new URI(config.remoteAddress);
+      uri = new URI(uriString);
       if (FTPRemoteConnector.SCHEME.equals(uri.getScheme())) {
         if (uri.getPort() == -1) {
           uri = UriBuilder.fromUri(uri).port(FTPRemoteConnector.DEFAULT_PORT).build();
