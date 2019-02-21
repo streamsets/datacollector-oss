@@ -41,6 +41,8 @@ import java.util.List;
  */
 public class ChrootSFTPClient {
 
+  private static final int MAX_UNCONFIRMED_READ_WRITES = 64;
+
   private final String root;
   private String archiveDir;
   private SFTPClient sftpClient;
@@ -125,7 +127,7 @@ public class ChrootSFTPClient {
   }
 
   public InputStream openForReading(String path) throws IOException {
-    return sftpClient.open(prependRoot(path)).new RemoteFileInputStream();
+    return sftpClient.open(prependRoot(path)).new ReadAheadRemoteFileInputStream(MAX_UNCONFIRMED_READ_WRITES);
   }
 
   public OutputStream openForWriting(String path) throws IOException {
@@ -137,7 +139,7 @@ public class ChrootSFTPClient {
         toPath,
         EnumSet.of(OpenMode.WRITE, OpenMode.CREAT, OpenMode.TRUNC),
         FileAttributes.EMPTY
-    ).new RemoteFileOutputStream();
+    ).new RemoteFileOutputStream(0, MAX_UNCONFIRMED_READ_WRITES);
   }
 
   public FileAttributes stat(String path) throws IOException {

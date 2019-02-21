@@ -21,6 +21,9 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import net.schmizz.sshj.DefaultConfig;
 import net.schmizz.sshj.SSHClient;
+import net.schmizz.sshj.transport.compression.DelayedZlibCompression;
+import net.schmizz.sshj.transport.compression.NoneCompression;
+import net.schmizz.sshj.transport.compression.ZlibCompression;
 import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
 import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
 import net.schmizz.sshj.userauth.password.PasswordUtils;
@@ -31,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -69,6 +73,10 @@ public abstract class SFTPRemoteConnector extends RemoteConnector {
 
     sshClientRebuilder = new SSHClientRebuilder();
     DefaultConfig sshConfig = new DefaultConfig();
+    sshConfig.setCompressionFactories(Arrays.asList(
+        new DelayedZlibCompression.Factory(),
+        new ZlibCompression.Factory(),
+        new NoneCompression.Factory()));
     sshClient = new SSHClient(sshConfig);
     sshClientRebuilder.setConfig(sshConfig);
 
