@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
@@ -366,7 +367,7 @@ public class TestSpoolDirSourceOnErrorHandling {
     }
   }
 
-  //@Test(expected = StageException.class)
+  @Test
   public void testOnErrorPipelineIOEx() throws Exception {
     SpoolDirSource source = createSourceIOEx();
     PushSourceRunner runner = new PushSourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane")
@@ -376,6 +377,9 @@ public class TestSpoolDirSourceOnErrorHandling {
       runner.runProduce(ImmutableMap.of(Source.POLL_SOURCE_OFFSET_KEY, "file-0.json::0"), 10, output -> {
 
       });
+    } catch (Exception e){
+      Assert.assertTrue(e instanceof StageException);
+
     } finally {
       runner.runDestroy();
     }

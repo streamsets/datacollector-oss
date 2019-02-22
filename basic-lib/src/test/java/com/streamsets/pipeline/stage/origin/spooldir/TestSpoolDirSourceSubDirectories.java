@@ -171,7 +171,7 @@ public class TestSpoolDirSourceSubDirectories {
       });
       runner2.waitOnProduce();
 
-      TestOffsetUtil.compare(offset, runner2.getOffsets());
+      TestOffsetUtil.compare(offset, runner2.getOffsets(), false);
     } finally {
       runner.runDestroy();
     }
@@ -195,7 +195,7 @@ public class TestSpoolDirSourceSubDirectories {
       });
       runner.waitOnProduce();
 
-      TestOffsetUtil.compare("dir1/file-0.log::0", runner.getOffsets());
+      TestOffsetUtil.compare("dir1/file-0.log::0", runner.getOffsets(), false);
       //Assert.assertTrue(source.produceCalled);
     } finally {
       runner.runDestroy();
@@ -216,7 +216,7 @@ public class TestSpoolDirSourceSubDirectories {
       });
       runner.waitOnProduce();
 
-      TestOffsetUtil.compare(offset, runner.getOffsets());
+      TestOffsetUtil.compare(offset, runner.getOffsets(), false);
       //Assert.assertFalse(source.produceCalled);
     } finally {
       runner.runDestroy();
@@ -249,7 +249,7 @@ public class TestSpoolDirSourceSubDirectories {
       });
       runner.waitOnProduce();
 
-      TestOffsetUtil.compare("dir1/file-0.log::0", runner.getOffsets());
+      TestOffsetUtil.compare("dir1/file-0.log::0", runner.getOffsets(), false);
       //Assert.assertTrue(source.produceCalled);
     } finally {
       runner.runDestroy();
@@ -275,7 +275,7 @@ public class TestSpoolDirSourceSubDirectories {
       });
       runner.waitOnProduce();
 
-      TestOffsetUtil.compare(offset, runner.getOffsets());
+      TestOffsetUtil.compare(offset, runner.getOffsets(), false);
       //Assert.assertTrue(source.produceCalled);
     } finally {
       runner.runDestroy();
@@ -316,7 +316,7 @@ public class TestSpoolDirSourceSubDirectories {
       runner.waitOnProduce();
 
       Assert.assertEquals(2, batchCount.get());
-      TestOffsetUtil.compare("dir1/file-0.log::-1", runner.getOffsets());
+      TestOffsetUtil.compare("dir1/file-0.log::-1", runner.getOffsets(), false);
 
       //Produce will not be called as this file-0.log will not be eligible for produce
       //Assert.assertFalse(source.produceCalled);
@@ -381,7 +381,7 @@ public class TestSpoolDirSourceSubDirectories {
       runner.waitOnProduce();
 
       Assert.assertEquals(2, batchCount.get());
-      TestOffsetUtil.compare("dir1/file-0.log::-1", runner.getOffsets());
+      TestOffsetUtil.compare("dir1/file-0.log::-1", runner.getOffsets(), false);
       Assert.assertTrue(!Files.exists(file.toPath()));
     } finally {
       runner.runDestroy();

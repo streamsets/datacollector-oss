@@ -46,8 +46,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.channels.ClosedByInterruptException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringJoiner;
 import java.util.concurrent.TimeUnit;
 
 
@@ -150,7 +153,8 @@ public class SpoolDirRunnable implements Runnable {
     // if lastSourceOffset is NULL (beginning of source) it returns NULL
     String file = lastSourceOffset.getRawFile();
     String lastSourceFile = file;
-    String fullPath = (file != null) ? spooler.getSpoolDir() + FILE_SEPARATOR + file : null;
+    String fullPath = processFullPath(file);
+
     // if lastSourceOffset is NULL (beginning of source) it returns 0
     String offset = lastSourceOffset.getOffset();
 
@@ -200,7 +204,7 @@ public class SpoolDirRunnable implements Runnable {
                 if (SpoolDirUtil.compareFiles(fs, nextAvailFile, fileObject)) {
                   pickFileFromSpooler = true;
                 }
-            } else if (nextAvailFile.getFileName().compareTo(file) > 0) {
+            } else if (processFullPath(nextAvailFile.getAbsolutePath()).compareTo(processFullPath(file)) > 0) {
               pickFileFromSpooler = true;
             }
 
@@ -312,6 +316,18 @@ public class SpoolDirRunnable implements Runnable {
 
     updateGauge(Status.BATCH_GENERATED, offset);
     return newOffset;
+  }
+
+  private String processFullPath(String file) {
+    if (file != null) {
+      Path filePath = Paths.get(file);
+      if (!filePath.isAbsolute()) {
+        return new StringJoiner(FILE_SEPARATOR).add(spooler.getSpoolDir()).add(file).toString();
+      } else {
+        return file;
+      }
+    }
+    return null;
   }
 
   /**
