@@ -443,6 +443,54 @@ public class TestFieldMapperProcessorByName {
     }
   }
 
+  @Test
+  public void changeNamesWithLists() throws StageException {
+    final FieldMapperProcessorConfig config = new FieldMapperProcessorConfig();
+    config.operateOn = OperateOn.FIELD_NAMES;
+    // replace dots, carets, and slashes in field names with underscore
+    config.mappingExpression = "${str:replaceAll(f:name(), '[A-Z]', '_')}";
+    config.structureChangeAllowed = true;
+
+    final ProcessorRunner runner = new ProcessorRunner.Builder(
+        FieldMapperDProcessor.class,
+        new FieldMapperProcessor(config)
+    ).addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      final MapFieldBuilder builder = MapFieldBuilder.builder();
+      builder.startListMap("outputs").end().startListMap("inputs")
+          .add("Foo", 1)
+          .add("Bar", 2)
+          .startList("BazList")
+          .add("listItem1")
+          .add("listItem2")
+          .add("listItem3")
+          .end() // end BazList
+          .end(); // end inputs
+
+      final Record record = RecordCreator.create("s", "s:1");
+      record.set(builder.build());
+
+      final StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      final Record outputRecord = output.getRecords().get("a").get(0);
+      final Field outputs = assertInputsAndReturnOutputs(outputRecord, false);
+      assertTrue(outputs.getValueAsMap().isEmpty());
+      final Field inputs = outputRecord.get("/inputs");
+      assertThat(inputs, notNullValue());
+      assertThat(inputs.getType(), IS_A_MAP);
+      assertThat(inputs, Matchers.mapFieldWithEntry("_oo", 1));
+      assertThat(inputs, Matchers.mapFieldWithEntry("_ar", 2));
+      final Field bazList = inputs.getValueAsMap().get("_az_ist");
+      assertThat(bazList, notNullValue());
+      assertThat(bazList.getType(), equalTo(Field.Type.LIST));
+      assertThat(bazList, Matchers.listFieldWithValues("listItem1", "listItem2", "listItem3"));
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
   private final String firstSuspiciousName = "^LULZ.";
   private final String secondSuspiciousName = "; DROP TABLE";
 

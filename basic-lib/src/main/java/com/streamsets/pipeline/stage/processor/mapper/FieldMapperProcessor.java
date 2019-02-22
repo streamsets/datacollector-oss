@@ -165,6 +165,13 @@ public class FieldMapperProcessor extends SingleLaneRecordProcessor {
       if (checkSkipFieldAndSetContextVar(fieldPath, fieldName, field, false)) {
         return;
       }
+      if (fieldMapperConfig.operateOn == OperateOn.FIELD_NAMES && fv.getParentField() != null
+          && fv.getParentField().getType() == Field.Type.LIST) {
+        // we are operating on field names, and the parent is a list, which means this field is an item in the list
+        // don't attempt to rename this field, since it's nonsensical (the list field itself will be handled on its own
+        // visit)
+        return;
+      }
 
       try {
         final String newName = mapperExpressionEval.eval(
