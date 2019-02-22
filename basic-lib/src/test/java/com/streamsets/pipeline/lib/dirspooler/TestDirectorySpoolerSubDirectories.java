@@ -240,12 +240,12 @@ public class TestDirectorySpoolerSubDirectories {
     File dir2 = new File(spoolDir, "/dir2");
     Assert.assertTrue(dir1.mkdirs());
     Assert.assertTrue(dir2.mkdirs());
-    File logFile3 = new File(dir1, "x3.log").getAbsoluteFile();
-    new FileWriter(logFile3).close();
-    File logFile1 = new File(dir2, "x1.log").getAbsoluteFile();
+    File logFile1 = new File(dir1, "x1.log").getAbsoluteFile();
     new FileWriter(logFile1).close();
-    File logFile2 = new File(dir2, "x2.log").getAbsoluteFile();
+    File logFile2 = new File(dir1, "x2.log").getAbsoluteFile();
     new FileWriter(logFile2).close();
+    File logFile3 = new File(dir2, "x3.log").getAbsoluteFile();
+    new FileWriter(logFile3).close();
 
     DirectorySpooler.Builder builder = initializeAndGetBuilder()
         .setMaxSpoolFiles(3)
@@ -259,7 +259,7 @@ public class TestDirectorySpoolerSubDirectories {
     Assert.assertTrue(logFile2.exists());
     Assert.assertTrue(logFile3.exists());
 
-    spooler.init("dir2/x2.log");
+    spooler.init(logFile2.getParentFile().getName() + "/" + logFile2.getName());
     Assert.assertEquals(2, countFilesInTree(spoolDir));
     Assert.assertFalse(logFile1.exists());
     Assert.assertTrue(logFile2.exists());
