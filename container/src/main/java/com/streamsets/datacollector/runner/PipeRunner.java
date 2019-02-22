@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.runner;
 
 import com.codahale.metrics.MetricRegistry;
+import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.util.PipelineException;
@@ -25,6 +26,8 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.lib.log.LogConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import java.util.List;
@@ -35,6 +38,8 @@ import java.util.Optional;
  * Pipe Runner that wraps one source-less instance of the pipeline.
  */
 public class PipeRunner {
+
+  private static final Logger LOG = LoggerFactory.getLogger(PipeRunner.class);
 
   public static final String METRIC_BATCH_COUNT = "batchCount";
   public static final String METRIC_OFFSET_KEY = "offsetKey";
@@ -130,13 +135,13 @@ public class PipeRunner {
         String instanceName = p.getStage().getInfo().getInstanceName();
         this.runtimeMetricGauge.put(METRIC_CURRENT_STAGE, instanceName);
         MDC.put(LogConstants.STAGE, instanceName);
-        if(p instanceof StagePipe) {
+        if (p instanceof StagePipe) {
           this.runtimeMetricGauge.put(METRIC_STAGE_START_TIME, System.currentTimeMillis());
         }
 
-        // Process pipe
-        consumer.accept(p);
+        acceptConsumer(consumer, p);
       }
+
 
       // We've successfully finished batch
       this.runtimeMetricGauge.computeIfPresent(METRIC_BATCH_COUNT, (key, value) -> ((long)value) + 1);
@@ -167,7 +172,7 @@ public class PipeRunner {
       try {
         for(Pipe p : pipes) {
           MDC.put(LogConstants.STAGE, p.getStage().getInfo().getInstanceName());
-          consumer.accept(p);
+          acceptConsumer(consumer, p);
         }
       } finally {
         MDC.put(LogConstants.RUNNER, "");
@@ -205,5 +210,21 @@ public class PipeRunner {
     }
 
     return false;
+  }
+
+  /**
+   * Accept given consumer and proper log context of any exception.
+   */
+  private void acceptConsumer(ThrowingConsumer<Pipe> consumer, Pipe p) throws PipelineRuntimeException, StageException {
+    try {
+      // Process pipe
+      consumer.accept(p);
+    } catch (Throwable t) {
+      String instanceName = p.getStage().getInfo().getInstanceName();
+      LOG.error("Failed executing stage '{}': {}", instanceName, t.toString(), t);
+      Throwables.propagateIfInstanceOf(t, PipelineRuntimeException.class);
+      Throwables.propagateIfInstanceOf(t, StageException.class);
+      Throwables.propagate(t);
+    }
   }
 }
