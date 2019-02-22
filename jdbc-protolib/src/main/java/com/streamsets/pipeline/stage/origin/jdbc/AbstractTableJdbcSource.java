@@ -86,6 +86,7 @@ public abstract class AbstractTableJdbcSource extends BasePushSource {
   //can keep track of different closeables from different threads
   private final Collection<Cache<TableRuntimeContext, TableReadContext>> toBeInvalidatedThreadCaches;
   private ScheduledExecutorService executorServiceForTableSpooler;
+  private ScheduledExecutorService executorServiceForNoMoreDataDelay;
 
   private HikariDataSource hikariDataSource;
   private ConnectionManager connectionManager;
@@ -384,7 +385,10 @@ public abstract class AbstractTableJdbcSource extends BasePushSource {
         if (shouldGenerate) {
           final int delay = commonSourceConfigBean.noMoreDataEventDelay;
           if (delay > 0) {
-            Executors.newSingleThreadScheduledExecutor().schedule(new Runnable() {
+            if (executorServiceForNoMoreDataDelay == null) {
+              executorServiceForNoMoreDataDelay = Executors.newSingleThreadScheduledExecutor();
+            }
+            executorServiceForNoMoreDataDelay.schedule(new Runnable() {
               @Override
               public void run() {
                 jdbcUtil.generateNoMoreDataEvent(getContext());
@@ -479,6 +483,19 @@ public abstract class AbstractTableJdbcSource extends BasePushSource {
           executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
         } catch (InterruptedException e) {
           LOG.warn("Shutdown interrupted");
+          interrupted.set(true);
+        }
+      }
+    });
+
+    Optional.ofNullable(executorServiceForNoMoreDataDelay).ifPresent(executor -> {
+      if (!executor.isTerminated()) {
+        LOG.info("Shutting down no more data delay executor service");
+        executor.shutdown();
+        try {
+          executorServiceForNoMoreDataDelay.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        } catch (InterruptedException e) {
+          LOG.warn("Shutdown Data Delay Executor interrupted");
           interrupted.set(true);
         }
       }
