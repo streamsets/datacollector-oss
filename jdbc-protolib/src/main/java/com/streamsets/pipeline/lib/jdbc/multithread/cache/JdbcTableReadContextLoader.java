@@ -90,10 +90,6 @@ public class JdbcTableReadContextLoader extends CacheLoader<TableRuntimeContext,
             nonIncremental
         );
 
-    //Clear the initial offset after the  query is build so we will not use the initial offset from the next
-    //time the table is used.
-    tableRuntimeContext.getSourceTableContext().clearStartOffset();
-
     return tableReadContext;
   }
 }

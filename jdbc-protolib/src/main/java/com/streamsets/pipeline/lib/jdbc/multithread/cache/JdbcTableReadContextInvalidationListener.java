@@ -36,7 +36,7 @@ public class JdbcTableReadContextInvalidationListener implements RemovalListener
     Optional.ofNullable(tableReadContextRemovalNotification.getKey()).ifPresent(tableContext -> {
       LOG.debug("Closing statement and result set for : {}", tableContext.getQualifiedName());
       Optional.ofNullable(tableReadContextRemovalNotification.getValue()).ifPresent(readContext -> {
-        readContext.setNumberOfBatches(0);
+        readContext.resetProcessingMetrics();
         //Destroy and close statement/result set.
         readContext.destroy();
       });

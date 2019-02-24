@@ -383,16 +383,22 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
       BatchContext batchContext
   ) {
     AtomicBoolean shouldEvict = new AtomicBoolean(resultSetEndReached);
+    // If we read at least one record, it's safe to drop the starting offsets, otherwise they have to re-used
+    if(recordCount > 0) {
+      tableRuntimeContext.getSourceTableContext().clearStartOffset();
+    }
+
     //Only process batch if there are records or events
     if (recordCount > 0 || eventCount > 0) {
       TableReadContext tableReadContext = tableReadContextCache.getIfPresent(tableRuntimeContext);
       Optional.ofNullable(tableReadContext)
           .ifPresent(readContext -> {
-            readContext.setNumberOfBatches(readContext.getNumberOfBatches() + 1);
+            readContext.addProcessingMetrics(1, recordCount);
             LOG.debug(
-                "Table {} read {} number of batches from the fetched result set",
+                "Table {} read batches={} and records={}",
                 tableRuntimeContext.getQualifiedName(),
-                readContext.getNumberOfBatches()
+                readContext.getNumberOfBatches(),
+                readContext.getNumberOfRecords()
             );
             calculateEvictTableFlag(shouldEvict, tableReadContext);
           });
