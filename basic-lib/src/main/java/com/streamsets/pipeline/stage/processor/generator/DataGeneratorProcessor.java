@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
 import com.streamsets.pipeline.api.service.dataformats.DataGenerator;
+import com.streamsets.pipeline.api.service.dataformats.DataGeneratorException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -56,7 +57,7 @@ public class DataGeneratorProcessor extends SingleLaneRecordProcessor {
           throw new IllegalArgumentException("Unknown OutputType: " + config.outputType);
       }
       batchMaker.addRecord(record);
-    } catch (IOException e) {
+    } catch (IOException|DataGeneratorException e) {
       throw new OnRecordErrorException(record, Errors.GENERATOR_001, e.toString(), e);
     }
   }

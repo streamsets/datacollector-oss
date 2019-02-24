@@ -61,8 +61,7 @@ public class ShimUtil {
   ) {
    return new DataGeneratorException(
       original.getErrorCode(),
-      original.getParams(),
-      original.getCause()
+      original.getParams()
     );
   }
 

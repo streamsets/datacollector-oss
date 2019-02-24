@@ -380,7 +380,8 @@ public class AvroTypeUtil {
             if (schema.getType() != Schema.Type.BYTES) {
               throw new IllegalStateException("Unexpected physical type for logical decimal type: " + schema.getType());
             }
-            return ByteBuffer.wrap(field.getValueAsDecimal().unscaledValue().toByteArray());
+            int scale = schema.getJsonProp(LOGICAL_TYPE_ATTR_SCALE).asInt();
+            return ByteBuffer.wrap(field.getValueAsDecimal().setScale(scale).unscaledValue().toByteArray());
           case LOGICAL_TYPE_DATE:
             if (schema.getType() != Schema.Type.INT) {
               throw new IllegalStateException("Unexpected physical type for logical date type: " + schema.getType());
@@ -416,6 +417,16 @@ public class AvroTypeUtil {
             Errors.AVRO_GENERATOR_05,
             "logical type: " + logicalType,
             field.getType()
+        );
+      } catch (ArithmeticException ex) {
+        // Thrown when BigDecimal.setScale() requires rounding
+          throw new DataGeneratorException(
+            Errors.AVRO_GENERATOR_06,
+            field.getValue() != null ? field.getValue().toString() : "null",
+            field.getType(),
+            schema.toString(),
+            ex.toString(),
+            ex
         );
       }
     }
