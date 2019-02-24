@@ -65,8 +65,8 @@ public class GrpcClientConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      label = "Mode",
-      description = "gRPC mode",
+      label = "Method Type",
+      description = "Type of service method that the origin calls",
       defaultValue = "UNARY_RPC",
       displayPosition = 30,
       group = "GRPC"
@@ -120,17 +120,6 @@ public class GrpcClientConfigBean {
       group = "GRPC"
   )
   public Map<String, String> addlHeaders = new HashMap<>();
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.MAP,
-      label = "RPC Headers",
-      description = "These headers will also be included in reflection requests to a server.",
-      evaluation = ConfigDef.Evaluation.EXPLICIT,
-      displayPosition = 55,
-      group = "GRPC"
-  )
-  public Map<String, String> rpcHeaders = new HashMap<>();
 
   @ConfigDef(
       required = true,
