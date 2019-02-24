@@ -49,15 +49,15 @@ final class DefaultFileHelper extends FileHelper {
   private String getUniqueDateWithIncrementalFileName(String keyPrefix) {
     fileCount++;
     StringBuilder fileName = new StringBuilder();
-    fileName = fileName.append(keyPrefix).append(fileCount);
+    fileName.append(keyPrefix).append(fileCount);
 
     if (!StringUtils.isNullOrEmpty(s3TargetConfigBean.fileNameSuffix)) {
       fileName.append(DOT);
-      fileName = fileName.append(s3TargetConfigBean.fileNameSuffix);
+      fileName.append(s3TargetConfigBean.fileNameSuffix);
     }
 
     if (s3TargetConfigBean.compress) {
-      fileName = fileName.append(GZIP_EXTENSION);
+      fileName.append(GZIP_EXTENSION);
     }
     return fileName.toString();
   }

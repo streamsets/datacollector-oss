@@ -17,8 +17,8 @@ package com.streamsets.pipeline.stage.destination.s3;
 
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.configurablestage.DTarget;
@@ -27,20 +27,31 @@ import com.streamsets.pipeline.api.service.ServiceDependency;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
 
 @StageDef(
-  version = 11,
-  label = "Amazon S3",
-  description = "Writes to Amazon S3",
-  icon = "s3.png",
-  privateClassLoader = true,
-  upgrader = AmazonS3TargetUpgrader.class,
-  producesEvents = true,
-  onlineHelpRefUrl ="index.html?contextID=task_pxb_j3r_rt",
-  services = @ServiceDependency(
-    service = DataFormatGeneratorService.class,
-    configuration = {
-      @ServiceConfiguration(name = "displayFormats", value = "AVRO,BINARY,DELIMITED,JSON,PROTOBUF,SDC_JSON,TEXT,WHOLE_FILE")
-    }
-  )
+    version = 11,
+    label = "Amazon S3",
+    description = "Writes to Amazon S3",
+    icon = "s3.png",
+    privateClassLoader = true,
+    upgrader = AmazonS3TargetUpgrader.class,
+    producesEvents = true,
+    onlineHelpRefUrl ="index.html?contextID=task_pxb_j3r_rt",
+    execution = {
+        ExecutionMode.STANDALONE,
+        ExecutionMode.CLUSTER_BATCH,
+        ExecutionMode.CLUSTER_YARN_STREAMING,
+        ExecutionMode.CLUSTER_MESOS_STREAMING,
+        ExecutionMode.EDGE,
+        ExecutionMode.EMR_BATCH
+    },
+    services = @ServiceDependency(
+        service = DataFormatGeneratorService.class,
+        configuration = {
+            @ServiceConfiguration(
+                name = "displayFormats",
+                value = "AVRO,BINARY,DELIMITED,JSON,PROTOBUF,SDC_JSON,TEXT,WHOLE_FILE"
+            )
+        }
+    )
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

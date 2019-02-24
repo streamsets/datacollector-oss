@@ -46,7 +46,12 @@ final class WholeFileHelper extends FileHelper {
   private static final String SIZE = "size";
   private static final Logger LOGGER = LoggerFactory.getLogger(WholeFileHelper.class);
 
-  WholeFileHelper(Target.Context context, S3TargetConfigBean s3TargetConfigBean, TransferManager transferManager, List<Stage.ConfigIssue> configIssues) {
+  WholeFileHelper(
+      Target.Context context,
+      S3TargetConfigBean s3TargetConfigBean,
+      TransferManager transferManager,
+      List<Stage.ConfigIssue> configIssues
+  ) {
     super(context, s3TargetConfigBean, transferManager);
     generatorService = context.getService(DataFormatGeneratorService.class);
     //init adds the config issues
