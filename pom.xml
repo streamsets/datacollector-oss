@@ -522,6 +522,7 @@
         <hdp_2_6_2-hive1-lib>hdp_2_6_2-hive1-lib</hdp_2_6_2-hive1-lib>
         <hdp_2_6-hive2-lib>hdp_2_6-hive2-lib</hdp_2_6-hive2-lib>
         <hdp_2_6-flume-lib>hdp_2_6-flume-lib</hdp_2_6-flume-lib>
+        <hdp_3_1-lib>hdp_3_1-lib</hdp_3_1-lib>
         <jython_2_7-lib>jython_2_7-lib</jython_2_7-lib>
         <kinetica_6_0-lib>kinetica_6_0-lib</kinetica_6_0-lib>
         <kinetica_6_1-lib>kinetica_6_1-lib</kinetica_6_1-lib>
@@ -606,6 +607,7 @@
         <module>hdp_2_6_2-hive1-lib</module>
         <module>hdp_2_6-hive2-lib</module>
         <module>hdp_2_6-flume-lib</module>
+        <module>hdp_3_1-lib</module>
         <module>jython_2_7-lib</module>
         <module>mapr_5_0-lib</module>
         <module>mapr_5_1-lib</module>
@@ -655,6 +657,7 @@
         <hdp_2_6_2-hive1-lib>hdp_2_6_2-hive1-lib</hdp_2_6_2-hive1-lib>
         <hdp_2_6-hive2-lib>hdp_2_6-hive2-lib</hdp_2_6-hive2-lib>
         <hdp_2_6-flume-lib>hdp_2_6-flume-lib</hdp_2_6-flume-lib>
+        <hdp_3_1-lib>hdp_3_1-lib</hdp_3_1-lib>
         <jython_2_7-lib>jython_2_7-lib</jython_2_7-lib>
         <kinetica_6_2-lib>kinetica_6_2-lib</kinetica_6_2-lib>
         <mapr_6_1-lib>mapr_6_1-lib</mapr_6_1-lib>
@@ -691,6 +694,7 @@
         <module>hdp_2_6_2-hive1-lib</module>
         <module>hdp_2_6-hive2-lib</module>
         <module>hdp_2_6-flume-lib</module>
+        <module>hdp_3_1-lib</module>
         <module>jython_2_7-lib</module>
         <module>mapr_6_1-lib</module>
         <module>mapr_6_1-mep6-lib</module>
