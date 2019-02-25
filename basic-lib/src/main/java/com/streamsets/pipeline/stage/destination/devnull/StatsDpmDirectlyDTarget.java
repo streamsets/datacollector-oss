@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.StatsAggregatorStage;
 
 @StageDef(
     version = 1,
-    label = "Write to Control Hub directly",
+    label = "Write Directly to Control Hub - statistics are not aggregated across Data Collectors",
     description = "Writes pipeline statistics to Control Hub directly without any aggregation",
     icon="",
     execution = {
