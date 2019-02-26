@@ -241,7 +241,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
         }
       }
     } catch (SQLException e) {
-      handleSqlException(e);
+      handleSqlException(e, removed, errorRecords);
     }
 
     // Process the rest of the records that are removed from queue but haven't processed yet
@@ -272,7 +272,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
         }
         processBatch(removed, errorRecords, statement, connection);
       } catch (SQLException e) {
-        handleSqlException(e);
+        handleSqlException(e, removed, errorRecords);
       }
     }
   }
@@ -299,6 +299,31 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
     if (getGeneratedColumnMappings() != null) {
       writeGeneratedColumns(statement, queue.iterator(), errorRecords);
     }
+  }
+
+  /**
+   * Handle SQLException in a smart way, detecting if the exception is data oriented or not.
+   *
+   * https://en.wikipedia.org/wiki/SQLSTATE
+   *
+   * We consider data oriented exceptions SQL states that starts with 22* and 23*
+   */
+  private void handleSqlException(
+    SQLException exception,
+    List<Record> inputRecords,
+    List<OnRecordErrorException> errors
+  ) throws StageException {
+    if(exception.getSQLState().startsWith("22") || exception.getSQLState().startsWith("23")) {
+      String formattedError = jdbcUtil.formatSqlException(exception);
+      LOG.error(JdbcErrors.JDBC_89.getMessage(), formattedError);
+
+      for(Record inputRecord : inputRecords) {
+        errors.add(new OnRecordErrorException(inputRecord, JdbcErrors.JDBC_89, formattedError));
+      }
+      return;
+    }
+
+    super.handleSqlException(exception);
   }
 
   @VisibleForTesting

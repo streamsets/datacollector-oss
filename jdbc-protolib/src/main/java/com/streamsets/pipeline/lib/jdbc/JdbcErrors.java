@@ -112,6 +112,7 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_86("Redo log files for the current session window are no longer available"),
   JDBC_87("Interrupted while waiting to read data"),
   JDBC_88("'{}' is not a valid decimal number"),
+  JDBC_89("Error while processing batch of records together: {}"),
 
   JDBC_100("Could not enable partitioning for table {}: {}"),
   JDBC_101("Invalid partition size for table {}: {}"),
