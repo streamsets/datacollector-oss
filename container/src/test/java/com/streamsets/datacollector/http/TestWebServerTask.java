@@ -24,6 +24,7 @@ import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.RemoteSSOService;
+import org.awaitility.Duration;
 import org.eclipse.jetty.server.ForwardedRequestCustomizer;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.Server;
@@ -33,12 +34,19 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.Response;
 import java.io.File;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
 
+import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
@@ -307,6 +315,37 @@ public class TestWebServerTask {
 
   }
 
+  @Test
+  public void testTraceHttpDisabled() throws Exception {
+    RuntimeInfo runtimeInfo =
+        new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), Collections.emptyList()) {
+          @Override
+          public String getConfigDir() {
+            return new File("target").getAbsolutePath();
+          }
+        };
+
+    Configuration conf = new Configuration();
+
+    StartFlag flag = new StartFlag();
+    WebServerTask webServerTask = createWebServerTask(runtimeInfo, conf, Collections.<WebAppProvider>emptySet());
+    webServerTask.addToPostStart(flag::setStarted);
+
+    try {
+      webServerTask.initTask();
+      webServerTask.runTask();
+      await().atMost(Duration.TEN_SECONDS).until(flag.hasStarted());
+      String url = webServerTask.getHttpUrl();
+      Response response = ClientBuilder.newClient()
+          .target(url)
+          .request()
+          .trace();
+      Assert.assertEquals(HttpURLConnection.HTTP_BAD_METHOD, response.getStatus());
+    } finally {
+      webServerTask.stopTask();
+    }
+  }
+
   private boolean hasForwardedRequestCustomizer(HttpConfiguration conf) {
     boolean hasForwardedRequestCustomizer = false;
     for (HttpConfiguration.Customizer customizer : conf.getCustomizers()) {
@@ -316,6 +355,21 @@ public class TestWebServerTask {
       }
     }
     return hasForwardedRequestCustomizer;
+  }
+
+  private class StartFlag {
+    private boolean started = false;
+    protected void setStarted() {
+      started = true;
+    }
+    protected Callable<Boolean> hasStarted() {
+      return new Callable<Boolean>() {
+        @Override
+        public Boolean call() throws Exception {
+          return started;
+        }
+      };
+    }
   }
 
 }

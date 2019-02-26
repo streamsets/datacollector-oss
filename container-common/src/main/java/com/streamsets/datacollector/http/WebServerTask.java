@@ -38,6 +38,7 @@ import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.lib.security.http.SSOService;
 import com.streamsets.lib.security.http.SSOUtils;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.lib.security.http.LimitedMethodServer;
 import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
 import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.http2.HTTP2Cipher;
@@ -622,7 +623,7 @@ public abstract class WebServerTask extends AbstractTask implements Registration
     QueuedThreadPool qtp = new QueuedThreadPool(conf.get(HTTP_MAX_THREADS, HTTP_MAX_THREADS_DEFAULT));
     qtp.setName(serverName);
     qtp.setDaemon(true);
-    Server server = new Server(qtp);
+    Server server = new LimitedMethodServer(qtp);
 
     httpConf = configureForwardRequestCustomizer(httpConf);
 
@@ -740,7 +741,7 @@ public abstract class WebServerTask extends AbstractTask implements Registration
     QueuedThreadPool qtp = new QueuedThreadPool(25);
     qtp.setName(serverName + "Redirector");
     qtp.setDaemon(true);
-    Server server = new Server(qtp);
+    Server server = new LimitedMethodServer(qtp);
     InetSocketAddress addr = new InetSocketAddress(hostname, unsecurePort);
     ServerConnector connector = new ServerConnector(server);
     connector.setHost(addr.getHostName());

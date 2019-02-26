@@ -189,7 +189,7 @@ public class TestHttpAccessControl {
 
     HttpURLConnection conn = (HttpURLConnection) new URL(serverUrl).openConnection();
     conn.setRequestMethod("TRACE");
-    Assert.assertEquals(403, conn.getResponseCode());
+    Assert.assertEquals(405, conn.getResponseCode());
   }
 
   /**
