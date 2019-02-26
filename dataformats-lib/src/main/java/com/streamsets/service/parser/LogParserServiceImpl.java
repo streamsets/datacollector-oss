@@ -1,0 +1,148 @@
+/*
+ * Copyright 2019 StreamSets Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.streamsets.service.parser;
+
+import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.ConfigIssue;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.base.BaseService;
+import com.streamsets.pipeline.api.service.ServiceDef;
+import com.streamsets.pipeline.api.service.dataformats.DataParser;
+import com.streamsets.pipeline.api.service.dataformats.DataParserException;
+import com.streamsets.pipeline.api.service.dataformats.log.LogParserService;
+import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
+import com.streamsets.service.lib.ShimUtil;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.util.LinkedList;
+import java.util.List;
+
+@ServiceDef(
+    provides = LogParserService.class,
+    version = 1,
+    upgrader = ParserUpgrader.class,
+    label = "Log Parser Service"
+)
+@ConfigGroups(Groups.class)
+public class LogParserServiceImpl extends BaseService implements LogParserService {
+
+  @ConfigDefBean
+  public LogParserServiceConfig logParserServiceConfig;
+
+  private DataFormat dataFormat;
+  private DataParserFormatConfig dataFormatConfig;
+
+  @Override
+  public List<ConfigIssue> init() {
+
+    dataFormat = DataFormat.LOG;
+
+    // Convert srvice config to DataParserFormatConfig
+    convertConfig();
+
+    // Intentionally erasing the generic type as the init() method current works with Stage.ConfigIssue. This will
+    // be changed once we convert all stages to use the service concept.
+    List issues = new LinkedList();
+    dataFormatConfig.init(
+        getContext(),
+        dataFormat,
+        "DATA_FORMAT",
+        "dataFormatConfig.",
+        issues
+    );
+
+    return issues;
+  }
+
+  @Override
+  public void destroy() {
+    dataFormatConfig = null;
+    dataFormat = null;
+    super.destroy();
+  }
+
+  @Override
+  public DataParser getLogParser(String id, Reader reader, long offset) throws DataParserException {
+    try {
+      return new DataParserWrapper(dataFormatConfig.getParserFactory().getParser(id, reader, offset));
+    } catch (com.streamsets.pipeline.lib.parser.DataParserException e) {
+      throw ShimUtil.convert(e);
+    }
+  }
+
+  private void convertConfig() {
+    dataFormatConfig = new DataParserFormatConfig();
+    dataFormatConfig.logMode = logParserServiceConfig.getLogMode();
+    dataFormatConfig.logMaxObjectLen = logParserServiceConfig.getLogMaxObjectLen();
+    dataFormatConfig.retainOriginalLine = logParserServiceConfig.isRetainOriginalLine();
+    dataFormatConfig.customLogFormat = logParserServiceConfig.getCustomLogFormat();
+    dataFormatConfig.regex = logParserServiceConfig.getRegex();
+    dataFormatConfig.fieldPathsToGroupName = logParserServiceConfig.getFieldPathsToGroupName();
+    dataFormatConfig.grokPatternDefinition = logParserServiceConfig.getGrokPatternDefinition();
+    dataFormatConfig.grokPattern = logParserServiceConfig.getGrokPattern();
+    dataFormatConfig.onParseError = logParserServiceConfig.getOnParseError();
+    dataFormatConfig.maxStackTraceLines = logParserServiceConfig.getMaxStackTraceLines();
+    dataFormatConfig.enableLog4jCustomLogFormat = logParserServiceConfig.isEnableLog4jCustomLogFormat();
+    dataFormatConfig.log4jCustomLogFormat = logParserServiceConfig.getLog4jCustomLogFormat();
+    dataFormatConfig.charset = logParserServiceConfig.getCharset();
+    dataFormatConfig.removeCtrlChars = logParserServiceConfig.isRemoveCtrlChars();
+  }
+
+  /**
+   * Temporary wrapper to change DataGeneratorException from the *.lib.* to *.api.* as it's expected in the
+   * service world. This will be removed once all stages gets migrated off the older code to services.
+   */
+  class DataParserWrapper implements DataParser {
+
+    private com.streamsets.pipeline.lib.parser.DataParser parser;
+    DataParserWrapper(com.streamsets.pipeline.lib.parser.DataParser parser) {
+      this.parser = parser;
+    }
+
+    @Override
+    public Record parse() throws IOException, DataParserException {
+      try {
+        return parser.parse();
+      } catch (com.streamsets.pipeline.lib.parser.DataParserException e) {
+        throw ShimUtil.convert(e);
+      }
+    }
+
+    @Override
+    public String getOffset() throws DataParserException, IOException {
+      try {
+        return parser.getOffset();
+      } catch (com.streamsets.pipeline.lib.parser.DataParserException e) {
+        throw ShimUtil.convert(e);
+      }
+    }
+
+    @Override
+    public void setTruncated() {
+      parser.setTruncated();
+    }
+
+    @Override
+    public void close() throws IOException {
+      parser.close();
+    }
+  }
+
+}

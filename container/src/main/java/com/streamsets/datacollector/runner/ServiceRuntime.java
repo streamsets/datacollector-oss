@@ -33,6 +33,7 @@ import com.streamsets.pipeline.api.service.dataformats.DataParser;
 import com.streamsets.pipeline.api.service.dataformats.DataParserException;
 import com.streamsets.pipeline.api.service.dataformats.WholeFileChecksumAlgorithm;
 import com.streamsets.pipeline.api.service.dataformats.WholeFileExistsAction;
+import com.streamsets.pipeline.api.service.dataformats.log.LogParserService;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,12 +49,13 @@ import java.util.Set;
  * object rather then Service instance itself because we need to wrap each method execution to change active class
  * loader and execute the code in privileged mode to apply the proper permissions.
  */
-public class ServiceRuntime implements DataFormatGeneratorService, DataFormatParserService {
+public class ServiceRuntime implements DataFormatGeneratorService, DataFormatParserService, LogParserService {
 
   // Static list with all supported services
   private static Set<Class> SUPPORTED_SERVICES = ImmutableSet.of(
     DataFormatGeneratorService.class,
-    DataFormatParserService.class
+    DataFormatParserService.class,
+    LogParserService.class
   );
 
   /**
@@ -254,6 +256,20 @@ public class ServiceRuntime implements DataFormatGeneratorService, DataFormatPar
       cl,
       DataParserException.class,
       () -> new DataParserServiceWrapper(cl, ((DataFormatParserService)serviceBean.getService()).getParser(id, metadata, fileRef))
+    );
+  }
+
+  @Override
+  public DataParser getLogParser(String id, Reader reader, long offset) throws DataParserException {
+    ClassLoader cl = serviceBean.getDefinition().getStageClassLoader();
+
+    return LambdaUtil.privilegedWithClassLoader(
+        cl,
+        DataParserException.class,
+        () -> new DataParserServiceWrapper(
+            cl,
+            ((LogParserService) serviceBean.getService()).getLogParser(id, reader, offset)
+        )
     );
   }
 }
