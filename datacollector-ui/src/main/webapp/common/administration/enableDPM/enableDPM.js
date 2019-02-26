@@ -81,6 +81,9 @@ angular
                 id: 'streamsets-datacollector-stats-lib',
                 label: 'Statistics'
               }];
+            },
+            withStageLibVersion:function () {
+              return false;
             }
           }
         });

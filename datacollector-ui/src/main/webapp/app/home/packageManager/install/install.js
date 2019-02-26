@@ -20,7 +20,7 @@
 angular
   .module('dataCollectorApp.home')
   .controller('InstallModalInstanceController',
-      function ($scope, $rootScope, $modalInstance, libraryList, api, pipelineConstant) {
+      function ($scope, $rootScope, $modalInstance, libraryList, withStageLibVersion, api, pipelineConstant) {
     angular.extend($scope, {
       common: {
         errors: []
@@ -47,10 +47,14 @@ angular
 
         var stageLibIdList = [];
         angular.forEach(librariesToInstall, function (lib) {
-          stageLibIdList.push(lib.stageLibraryManifest.stageLibId);
+          var id = lib.stageLibraryManifest.stageLibId;
+          if (withStageLibVersion) {
+            id += ":" + lib.stagelibVersion;
+          }
+          stageLibIdList.push(id);
         });
 
-        api.pipelineAgent.installLibraries(stageLibIdList)
+        api.pipelineAgent.installLibraries(stageLibIdList, withStageLibVersion)
             .then(function () {
               library.installed = true;
               $scope.operationStatusMap[library.stageLibraryManifest.stageLibId] = 'installed';

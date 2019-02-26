@@ -220,6 +220,7 @@ public class StageLibraryResource {
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
   public Response installLibraries(
+      @QueryParam("withStageLibVersion") boolean withStageLibVersion,
       List<String> libraryIdList
   ) throws IOException {
     String runtimeDir = runtimeInfo.getRuntimeDir();
@@ -229,9 +230,16 @@ public class StageLibraryResource {
     List<RepositoryManifestJson> repoManifestList = stageLibrary.getRepositoryManifestList();
     repoManifestList.forEach(repositoryManifestJson -> {
       List<String> libraryFilePathList = repositoryManifestJson.getStageLibraries().stream()
-          .filter(stageLibrariesJson ->
-              stageLibrariesJson.getStageLibraryManifest() != null &&
-                  libraryIdList.contains(stageLibrariesJson.getStageLibraryManifest().getStageLibId()))
+          .filter(stageLibrariesJson -> {
+            if (stageLibrariesJson.getStageLibraryManifest() != null) {
+              String key = stageLibrariesJson.getStageLibraryManifest().getStageLibId();
+              if (withStageLibVersion) {
+                key += ":" + stageLibrariesJson.getStagelibVersion();
+              }
+              return libraryIdList.contains(key);
+            }
+            return false;
+          })
           .map(stageLibrariesJson -> stageLibrariesJson.getStageLibraryManifest().getStageLibFile())
           .collect(Collectors.toList());
       libraryUrlList.addAll(libraryFilePathList);

@@ -57,7 +57,11 @@
            class="glyphicon glyphicon-unchecked fa-12x"></i>
 
         <div class="stage-library-name">
-          <span>{{stageLibrary.stageLibraryManifest.stageLibLabel}}</span>
+          <span>{{stageLibrary.stageLibraryManifest.stageLibLabel}} </span>
+          <span class="stage-library-version"
+                ng-if="stageLibrary.stageLibraryManifest.stageLibLicense === 'StreamSetsEnterprise1.0'">
+            {{stageLibrary.stagelibVersion}}
+          </span>
         </div>
 
         <div class="stage-library-id" ng-if="showLibraryId">
@@ -109,7 +113,6 @@
         <a class="btn btn-default"
            ng-click="onShowMoreClick($event);">{{'global.form.showMore' | translate}}</a>
       </li>
-
 
       <div class="stage-libraries-loading">
         <div class="pipeline-home-loading" show-loading="fetching"></div>

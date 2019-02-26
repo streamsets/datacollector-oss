@@ -478,6 +478,9 @@ angular
         resolve: {
           libraryList: function () {
             return libraryList;
+          },
+          withStageLibVersion:function () {
+            return true;
           }
         }
       });
