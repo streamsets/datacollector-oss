@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.http;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.lib.security.http.LimitedMethodServer;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
@@ -88,7 +89,7 @@ public abstract class AbstractHttpReceiverServer {
         new QueuedThreadPool(maxThreads, minThreads, 60000, new ArrayBlockingQueue<Runnable>(maxThreads));
     threadPool.setName("http-receiver-server:" + context.getPipelineInfo().get(0).getInstanceName());
     threadPool.setDaemon(true);
-    Server server = new Server(threadPool);
+    Server server = new LimitedMethodServer(threadPool);
 
     ServerConnector connector;
     if (configs.isTlsEnabled()) {

@@ -151,6 +151,15 @@ public class TestHttpServerPushSource {
       Assert.assertEquals(1, records.size());
       Assert.assertEquals("Hello", records.get(0).get("/text").getValue());
 
+      // for security reasons, the track http method should be disallowed
+      url = "http://localhost:" + httpConfigs.getPort() +
+          "?" + HttpConstants.SDC_APPLICATION_ID_QUERY_PARAM + "=id";
+      response = ClientBuilder.newClient()
+          .target(url)
+          .request()
+          .trace();
+      Assert.assertEquals(HttpURLConnection.HTTP_BAD_METHOD, response.getStatus());
+
       // Passing wrong App ID in query param should return 403 response
       url = "http://localhost:" + httpConfigs.getPort() +
           "?" + HttpConstants.SDC_APPLICATION_ID_QUERY_PARAM + "=wrongid";
