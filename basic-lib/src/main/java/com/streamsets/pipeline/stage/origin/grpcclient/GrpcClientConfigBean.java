@@ -104,11 +104,11 @@ public class GrpcClientConfigBean {
       description = "The maximum idle time in seconds, after which a keepalive probe is sent. " +
           "If the connection remains idle and no keepalive response is received for this same period then the " +
           "connection is closed and the operation fails.",
-      defaultValue = "0",
+      defaultValue = "10",
       displayPosition = 45,
       group = "GRPC"
   )
-  public long keepaliveTime = 0;
+  public long keepaliveTime = 10;
 
   @ConfigDef(
       required = false,
