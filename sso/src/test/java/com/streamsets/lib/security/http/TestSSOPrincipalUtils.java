@@ -24,22 +24,28 @@ import javax.servlet.http.HttpServletRequest;
 public class TestSSOPrincipalUtils {
 
   @Test
-  public void testGetClientIpAddress() {
-    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+  public void getGetClientIpAddress() {
+    HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
 
-    Assert.assertEquals(SSOPrincipalUtils.UNKNOWN_IP, SSOPrincipalUtils.getClientIpAddress(request));
+    // no X-Forwarded-For header, no remote address expect unknown IP
+    Assert.assertEquals(SSOPrincipalUtils.UNKNOWN_IP, SSOPrincipalUtils.getClientIpAddress(req));
 
-    Mockito.when(request.getRemoteAddr()).thenReturn("");
-    Assert.assertEquals(SSOPrincipalUtils.UNKNOWN_IP, SSOPrincipalUtils.getClientIpAddress(request));
+    // no X-Forwarded-For header, remote address use remote address
+    Mockito.when(req.getRemoteAddr()).thenReturn("remoteAddr");
+    Assert.assertEquals("remoteAddr", SSOPrincipalUtils.getClientIpAddress(req));
 
-    Mockito.when(request.getRemoteAddr()).thenReturn("getRemoteAddr");
-    Assert.assertEquals("getRemoteAddr", SSOPrincipalUtils.getClientIpAddress(request));
+    // X-Forwarded-For header unknown, remote address, return remote address
+    // not sure when this would ever occur though, as "unknown" is not a standardized value for X-Forwarded-For
+    Mockito.when(req.getHeader(Mockito.eq(SSOPrincipalUtils.CLIENT_IP_HEADER))).thenReturn(SSOPrincipalUtils.UNKNOWN_IP);
+    Assert.assertEquals("remoteAddr", SSOPrincipalUtils.getClientIpAddress(req));
 
-    Mockito.when(request.getHeader(Mockito.eq(SSOPrincipalUtils.CLIENT_IP_HEADER))).thenReturn("");
-    Assert.assertEquals("getRemoteAddr", SSOPrincipalUtils.getClientIpAddress(request));
+    // X-Forwarded-For header with single address, remote address
+    Mockito.when(req.getHeader(Mockito.eq(SSOPrincipalUtils.CLIENT_IP_HEADER))).thenReturn("clientIpAddr");
+    Assert.assertEquals("clientIpAddr", SSOPrincipalUtils.getClientIpAddress(req));
 
-    Mockito.when(request.getHeader(Mockito.eq(SSOPrincipalUtils.CLIENT_IP_HEADER))).thenReturn("clientIpAddr");
-    Assert.assertEquals("clientIpAddr", SSOPrincipalUtils.getClientIpAddress(request));
+    // X-Forwarded-For header with multiple addresses, remote address
+    Mockito.when(req.getHeader(Mockito.eq(SSOPrincipalUtils.CLIENT_IP_HEADER))).thenReturn("clientIpAddr, proxy1,proxy2");
+    Assert.assertEquals("clientIpAddr", SSOPrincipalUtils.getClientIpAddress(req));
   }
 
   @Test

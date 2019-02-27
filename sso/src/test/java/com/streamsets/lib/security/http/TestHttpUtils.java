@@ -25,26 +25,6 @@ import javax.servlet.http.HttpServletRequest;
 public class TestHttpUtils {
 
   @Test
-  public void getGetClientIpAddress() {
-    HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
-
-    // no CLIENT-IP header, no remote address
-    Assert.assertNull(HttpUtils.getClientIpAddress(req));
-
-    // no CLIENT-IP header, remote address
-    Mockito.when(req.getRemoteAddr()).thenReturn("remoteAddr");
-    Assert.assertEquals("remoteAddr", HttpUtils.getClientIpAddress(req));
-
-    // CLIENT-IP header unknown, remote address
-    Mockito.when(req.getHeader(Mockito.eq(HttpUtils.CLIENT_IP_HEADER))).thenReturn(HttpUtils.UNKNOWN_IP);
-    Assert.assertEquals("remoteAddr", HttpUtils.getClientIpAddress(req));
-
-    // CLIENT-IP header, remote address
-    Mockito.when(req.getHeader(Mockito.eq(HttpUtils.CLIENT_IP_HEADER))).thenReturn("foo");
-    Assert.assertEquals("foo", HttpUtils.getClientIpAddress(req));
-  }
-
-  @Test
   public void testGetLoginCookie() {
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
 

@@ -66,7 +66,7 @@ public class AuthenticationResourceHandler {
     SSOPrincipal principal = authentication.validateUserCredentials(
         login.getUserName(),
         login.getPassword(),
-        HttpUtils.getClientIpAddress(req)
+        SSOPrincipalUtils.getClientIpAddress(req)
     );
     if (principal == null) {
       response = Response.status(Response.Status.FORBIDDEN).entity(AUTHENTICATION_FAILED).build();

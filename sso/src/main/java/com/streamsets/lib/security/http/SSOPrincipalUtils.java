@@ -15,21 +15,32 @@
  */
 package com.streamsets.lib.security.http;
 
+import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
+
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 public class SSOPrincipalUtils {
+  private static final Splitter xffSplitter = Splitter.on(",").omitEmptyStrings().trimResults();
 
-  static final String CLIENT_IP_HEADER = "CLIENT-IP";
+  static final String CLIENT_IP_HEADER = "X-Forwarded-For";
   static final String UNKNOWN_IP = "unknown";
 
   public static String getClientIpAddress(HttpServletRequest request) {
-    String ip = request.getHeader(CLIENT_IP_HEADER);
-    if (ip == null || ip.length() == 0 || UNKNOWN_IP.equalsIgnoreCase(ip)) {
+    String xff = request.getHeader(CLIENT_IP_HEADER);
+
+    List<String> ipList = xffSplitter.splitToList(Strings.nullToEmpty(xff));
+
+    String ip;
+    if (ipList.size() == 0 || UNKNOWN_IP.equalsIgnoreCase(ipList.get(0))) {
       ip = request.getRemoteAddr();
-      if (ip == null || ip.length() == 0) {
+      if (Strings.isNullOrEmpty(ip)) {
         ip = UNKNOWN_IP;
       }
+    } else {
+      ip = ipList.get(0);
     }
     return ip;
   }

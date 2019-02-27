@@ -20,17 +20,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 public class HttpUtils {
-  static final String CLIENT_IP_HEADER = "CLIENT-IP";
-  static final String UNKNOWN_IP = "unknown";
-
-  public static String getClientIpAddress(HttpServletRequest request) {
-    String ip = request.getHeader(CLIENT_IP_HEADER);
-    if (ip == null || ip.length() == 0 || UNKNOWN_IP.equalsIgnoreCase(ip)) {
-      ip = request.getRemoteAddr();
-    }
-    return ip;
-  }
-
   public static String getLoginCookieName() {
     return SSOConstants.AUTHENTICATION_COOKIE_PREFIX + "LOGIN";
   }
