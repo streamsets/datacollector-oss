@@ -38,7 +38,7 @@ public class FieldFlattenerConfig {
 
   @ConfigDef(
     required = true,
-    type = ConfigDef.Type.LIST,
+    type = ConfigDef.Type.MODEL,
     label = "Fields",
     dependsOn = "flattenType",
     description = "List of fields to be flattened",
@@ -46,6 +46,7 @@ public class FieldFlattenerConfig {
     group = "FLATTEN",
     triggeredByValue = { "SPECIFIC_FIELDS" }
   )
+  @FieldSelectorModel
   public List<String> fields = new LinkedList<>();
 
   @ConfigDef(
