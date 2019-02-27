@@ -821,12 +821,14 @@ angular
       var groupDefn = $scope.detailPaneConfigDefn ? $scope.detailPaneConfigDefn.configGroupDefinition : undefined;
 
       // set flag for value or param (used for checkbox and lists)
-      $scope.detailPaneConfig.configuration.forEach(c => {
-        $scope.fieldHash[c.name] = c;
-        if(c.value && typeof c.value === 'string' && c.value.startsWith('${')){
-          $scope.fieldParamHash[c.name] = true;
-        }
-      });
+      if ($scope.detailPaneConfig.configuration) {
+        $scope.detailPaneConfig.configuration.forEach(c => {
+          $scope.fieldHash[c.name] = c;
+          if(c.value && typeof c.value === 'string' && c.value.startsWith('${')){
+            $scope.fieldParamHash[c.name] = true;
+          }
+        });
+      }
 
       if (groupDefn && groupDefn.groupNameToLabelMapList) {
         $scope.showGroups = (groupDefn.groupNameToLabelMapList.length > 0);

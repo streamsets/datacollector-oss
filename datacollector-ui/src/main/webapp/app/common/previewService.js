@@ -410,12 +410,16 @@ angular.module('dataCollectorApp.common')
               }
             })
             .catch(function(response) {
-              defer.reject();
+              if (defer) {
+                defer.reject();
+              }
               $scope.common.errors = [response.data];
             });
         },
         function() {
-          defer.reject();
+          if (defer) {
+            defer.reject();
+          }
           console.log( "Timer rejected!" );
         }
       );
