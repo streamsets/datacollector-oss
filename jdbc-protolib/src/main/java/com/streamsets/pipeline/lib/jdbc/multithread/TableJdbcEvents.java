@@ -16,6 +16,7 @@
 
 package com.streamsets.pipeline.lib.jdbc.multithread;
 
+import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.lib.event.EventCreator;
 
@@ -42,25 +43,24 @@ public abstract class TableJdbcEvents {
 
   public static void createTableFinishedEvent(
       PushSource.Context context,
+      BatchContext batchContext,
       TableRuntimeContext tableRuntimeContext
   ) {
-    TABLE_FINISHED.create(context, context.startBatch()).with(
-        SCHEMA_FIELD,
-        tableRuntimeContext.getSourceTableContext().getSchema()
-    ).with(
-        TABLE_FIELD,
-        tableRuntimeContext.getSourceTableContext().getTableName()
-    ).createAndSend();
+    TABLE_FINISHED.create(context, batchContext)
+      .with(SCHEMA_FIELD,  tableRuntimeContext.getSourceTableContext().getSchema())
+      .with(TABLE_FIELD, tableRuntimeContext.getSourceTableContext().getTableName())
+      .createAndSend();
   }
 
   public static void createSchemaFinishedEvent(
       PushSource.Context context,
+      BatchContext batchContext,
       TableRuntimeContext tableRuntimeContext,
       List<String> allTables
   ) {
-    SCHEMA_FINISHED.create(context, context.startBatch()).with(
-        SCHEMA_FIELD,
-        tableRuntimeContext.getSourceTableContext().getSchema()
-    ).withStringList(TABLES_FIELD, allTables).createAndSend();
+    SCHEMA_FINISHED.create(context, batchContext)
+      .with(SCHEMA_FIELD, tableRuntimeContext.getSourceTableContext().getSchema())
+      .withStringList(TABLES_FIELD, allTables)
+      .createAndSend();
   }
 }

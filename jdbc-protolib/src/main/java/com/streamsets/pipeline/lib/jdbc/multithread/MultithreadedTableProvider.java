@@ -723,8 +723,16 @@ public final class MultithreadedTableProvider {
       AtomicBoolean schemaFinished,
       List<String> schemaFinishedTables
   ) {
-
     final TableContext sourceContext = tableRuntimeContext.getSourceTableContext();
+
+    // When we see a table with data, we mark isNoMoreDataEventGeneratedAlready to false
+    // so we can generate event again if we don't see data from all tables.
+    if(recordCount > 0) {
+      isNoMoreDataEventGeneratedAlready = false;
+      tablesWithNoMoreData.remove(tableRuntimeContext.getSourceTableContext());
+      remainingSchemasToTableContexts.put(sourceContext.getSchema(), sourceContext);
+      completedSchemasToTableContexts.remove(sourceContext.getSchema(), sourceContext);
+    }
 
     // we need to account for the activeRuntimeContexts here
     // if there are still other active contexts in process, then this should do "nothing"
@@ -771,12 +779,8 @@ public final class MultithreadedTableProvider {
           }
         }
       }
-    } else {
-      //When we see a table with data, we mark isNoMoreDataEventGeneratedAlready to false
-      //so we can generate event again if we don't see data from all tables.
-      isNoMoreDataEventGeneratedAlready = false;
-      tablesWithNoMoreData.remove(tableRuntimeContext.getSourceTableContext());
     }
+
     if (LOG.isTraceEnabled()) {
       LOG.trace(
           "Just released table {}; Number of Tables With No More Data {}",
@@ -797,8 +801,6 @@ public final class MultithreadedTableProvider {
         !isNoMoreDataEventGeneratedAlready &&
             tablesWithNoMoreData.size() == tableContextMap.size());
     if (noMoreData) {
-      tablesWithNoMoreData.clear();
-      initializeRemainingSchemasToTableContexts();
       isNoMoreDataEventGeneratedAlready = true;
     }
     return noMoreData;

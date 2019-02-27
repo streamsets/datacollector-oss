@@ -300,11 +300,11 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
           );
 
           if (tableFinished.get()) {
-            TableJdbcEvents.createTableFinishedEvent(context, tableRuntimeContext);
+            TableJdbcEvents.createTableFinishedEvent(context, batchContext, tableRuntimeContext);
             eventCount++;
           }
           if (schemaFinished.get()) {
-            TableJdbcEvents.createSchemaFinishedEvent(context, tableRuntimeContext, schemaFinishedTables);
+            TableJdbcEvents.createSchemaFinishedEvent(context, batchContext, tableRuntimeContext, schemaFinishedTables);
             eventCount++;
           }
         } finally {
