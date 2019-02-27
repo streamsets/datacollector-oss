@@ -53,6 +53,9 @@ public class WebSocketServerPushSourceUpgrader implements StageUpgrader {
         // fall through
       case 10:
         upgradeV10ToV11(configs);
+        // fall through
+      case 11:
+        upgradeV11ToV12(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -67,4 +70,7 @@ public class WebSocketServerPushSourceUpgrader implements StageUpgrader {
     configs.add(new Config("responseConfig.dataGeneratorFormatConfig.jsonMode", "MULTIPLE_OBJECTS"));
   }
 
+  private void upgradeV11ToV12(List<Config> configs) {
+    configs.add(new Config("responseConfig.sendRawResponse", false));
+  }
 }

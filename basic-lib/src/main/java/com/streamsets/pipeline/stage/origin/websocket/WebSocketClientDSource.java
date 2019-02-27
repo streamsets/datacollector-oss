@@ -27,7 +27,7 @@ import com.streamsets.pipeline.lib.microservice.ResponseConfigBean;
 import com.streamsets.pipeline.lib.websocket.WebSocketOriginGroups;
 
 @StageDef(
-    version = 3,
+    version = 4,
     label = "WebSocket Client",
     description = "Uses a WebSocket client to read from a resource URL",
     icon = "websockets.png",
@@ -42,8 +42,7 @@ import com.streamsets.pipeline.lib.websocket.WebSocketOriginGroups;
     "conf.tlsConfig.keyStoreFilePath",
     "conf.tlsConfig.keyStoreType",
     "conf.tlsConfig.keyStorePassword",
-    "conf.tlsConfig.keyStoreAlgorithm",
-    "responseConfig.dataGeneratorFormatConfig.jsonMode"
+    "conf.tlsConfig.keyStoreAlgorithm"
 })
 @ConfigGroups(WebSocketOriginGroups.class)
 @GenerateResourceBundle

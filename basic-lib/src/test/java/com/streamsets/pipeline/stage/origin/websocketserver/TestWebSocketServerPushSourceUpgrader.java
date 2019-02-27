@@ -15,8 +15,14 @@
  */
 package com.streamsets.pipeline.stage.origin.websocketserver;
 
+import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
 import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgraderTestUtil;
+import com.streamsets.testing.pipeline.stage.TestUpgraderContext;
 import org.junit.Test;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class TestWebSocketServerPushSourceUpgrader {
 
@@ -26,6 +32,32 @@ public class TestWebSocketServerPushSourceUpgrader {
         "webSocketConfigs.",
         new WebSocketServerPushSourceUpgrader(),
         10
+    );
+  }
+
+  @Test
+  public void testV10ToV11() throws Exception {
+    List<Config> configs = new LinkedList<>();
+    WebSocketServerPushSourceUpgrader upgrader = new WebSocketServerPushSourceUpgrader();
+    TestUpgraderContext context = new TestUpgraderContext("l", "s", "i", 10, 11);
+    upgrader.upgrade(configs, context);
+    UpgraderTestUtils.assertAllExist(
+        configs,
+        "responseConfig.dataFormat",
+        "responseConfig.dataGeneratorFormatConfig.charset",
+        "responseConfig.dataGeneratorFormatConfig.jsonMode"
+    );
+  }
+
+  @Test
+  public void testV11ToV12() throws Exception {
+    List<Config> configs = new LinkedList<>();
+    WebSocketServerPushSourceUpgrader upgrader = new WebSocketServerPushSourceUpgrader();
+    TestUpgraderContext context = new TestUpgraderContext("l", "s", "i", 11, 12);
+    upgrader.upgrade(configs, context);
+    UpgraderTestUtils.assertAllExist(
+        configs,
+        "responseConfig.sendRawResponse"
     );
   }
 }

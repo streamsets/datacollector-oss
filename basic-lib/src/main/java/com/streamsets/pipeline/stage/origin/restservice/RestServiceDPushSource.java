@@ -34,7 +34,7 @@ import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "REST Service",
     description = "Listens for requests on an HTTP endpoint and send response back",
     icon="api.png",
@@ -47,8 +47,7 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
 @ConfigGroups(Groups.class)
 @HideConfigs(value = {
     "dataFormatConfig.verifyChecksum",
-    "dataFormatConfig.avroSchemaSource",
-    "responseConfig.dataGeneratorFormatConfig.jsonMode"
+    "dataFormatConfig.avroSchemaSource"
 })
 @GenerateResourceBundle
 public class RestServiceDPushSource extends DPushSource {

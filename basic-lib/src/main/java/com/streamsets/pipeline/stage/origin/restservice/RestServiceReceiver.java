@@ -120,21 +120,31 @@ public class RestServiceReceiver extends PushHttpReceiver {
       responseStatusCode = 207;
     }
 
-    Record responseEnvelopeRecord = HttpStageUtil.createEnvelopeRecord(
-        getContext(),
-        getParserFactory(),
-        successRecords,
-        errorRecords,
-        responseStatusCode,
-        errorMessage,
-        responseConfig.dataFormat
-    );
+    List<Record> responseRecords = new ArrayList<>();
+
+    if (responseConfig.sendRawResponse) {
+      responseRecords.addAll(successRecords);
+      responseRecords.addAll(errorRecords);
+    } else {
+      Record responseEnvelopeRecord = HttpStageUtil.createEnvelopeRecord(
+          getContext(),
+          getParserFactory(),
+          successRecords,
+          errorRecords,
+          responseStatusCode,
+          errorMessage,
+          responseConfig.dataFormat
+      );
+      responseRecords.add(responseEnvelopeRecord);
+    }
+
     resp.setStatus(responseStatusCode);
     resp.setContentType(HttpStageUtil.getContentType(responseConfig.dataFormat));
-
     try (DataGenerator dataGenerator = getGeneratorFactory().getGenerator(resp.getOutputStream())) {
-      dataGenerator.write(responseEnvelopeRecord);
-      dataGenerator.flush();
+      for (Record record : responseRecords) {
+        dataGenerator.write(record);
+        dataGenerator.flush();
+      }
     } catch (DataGeneratorException e) {
       throw new IOException(e);
     }

@@ -31,6 +31,9 @@ public class RestServicePushSourceUpgrader implements StageUpgrader {
     switch(context.getFromVersion()) {
       case 1:
         upgradeV1ToV2(configs);
+        // fall through
+      case 2:
+        upgradeV2ToV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", context.getFromVersion()));
@@ -46,6 +49,10 @@ public class RestServicePushSourceUpgrader implements StageUpgrader {
         new Config("httpConfigs.tlsConfigBean.trustStoreAlgorithm", TlsConfigBean.DEFAULT_KEY_MANAGER_ALGORITHM)
     );
     configs.add(new Config("httpConfigs.needClientAuth", false));
+  }
+
+  private void upgradeV2ToV3(List<Config> configs) {
+    configs.add(new Config("responseConfig.sendRawResponse", false));
   }
 
 }

@@ -18,10 +18,10 @@ package com.streamsets.pipeline.lib.websocket;
 
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
+import com.streamsets.pipeline.lib.microservice.ResponseConfigBean;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 import com.streamsets.pipeline.stage.origin.restservice.RestServiceReceiver;
@@ -105,7 +105,7 @@ public class WebSocketCommon {
       DataParserFactory dataParserFactory,
       DataGeneratorFactory dataGeneratorFactory,
       List<Record> sourceResponseRecords,
-      DataFormat dataFormat
+      ResponseConfigBean responseConfig
   ) throws IOException {
     int responseStatusCode = HttpServletResponse.SC_OK;
     Set<Integer> statusCodesFromResponse = new HashSet<>();
@@ -136,20 +136,30 @@ public class WebSocketCommon {
       responseStatusCode = 207;
     }
 
-    Record responseEnvelopeRecord = HttpStageUtil.createEnvelopeRecord(
-        context,
-        dataParserFactory,
-        successRecords,
-        errorRecords,
-        responseStatusCode,
-        errorMessage,
-        dataFormat
-    );
+    List<Record> responseRecords = new ArrayList<>();
+
+    if (responseConfig.sendRawResponse) {
+      responseRecords.addAll(successRecords);
+      responseRecords.addAll(errorRecords);
+    } else {
+      Record responseEnvelopeRecord = HttpStageUtil.createEnvelopeRecord(
+          context,
+          dataParserFactory,
+          successRecords,
+          errorRecords,
+          responseStatusCode,
+          errorMessage,
+          responseConfig.dataFormat
+      );
+      responseRecords.add(responseEnvelopeRecord);
+    }
 
     ByteArrayOutputStream byteBufferOutputStream = new ByteArrayOutputStream();
     try (DataGenerator dataGenerator = dataGeneratorFactory.getGenerator(byteBufferOutputStream)) {
-      dataGenerator.write(responseEnvelopeRecord);
-      dataGenerator.flush();
+      for (Record record : responseRecords) {
+        dataGenerator.write(record);
+        dataGenerator.flush();
+      }
       wsSession.getRemote().sendString(byteBufferOutputStream.toString());
     } catch (DataGeneratorException e) {
       throw new IOException(e);

@@ -24,6 +24,17 @@ import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 public class ResponseConfigBean {
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Send Raw Response",
+      description = "Send raw response back to the originating client without an envelope",
+      displayPosition = 210,
+      group = "#0"
+  )
+  public boolean sendRawResponse;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Data Format",

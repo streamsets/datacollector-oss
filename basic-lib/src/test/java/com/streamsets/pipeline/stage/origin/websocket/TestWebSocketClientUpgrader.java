@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 StreamSets Inc.
+ * Copyright 2019 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.restservice;
+package com.streamsets.pipeline.stage.origin.websocket;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
@@ -23,34 +23,31 @@ import org.junit.Test;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TestRestServicePushSourceUpgrader {
+public class TestWebSocketClientUpgrader {
 
   @Test
-  public void testV1ToV2() throws Exception {
+  public void testV10ToV11() throws Exception {
     List<Config> configs = new LinkedList<>();
-    RestServicePushSourceUpgrader upgrader = new RestServicePushSourceUpgrader();
-    TestUpgraderContext context = new TestUpgraderContext("l", "s", "i", 1, 2);
+    WebSocketClientSourceUpgrader upgrader = new WebSocketClientSourceUpgrader();
+    TestUpgraderContext context = new TestUpgraderContext("l", "s", "i", 2, 3);
     upgrader.upgrade(configs, context);
     UpgraderTestUtils.assertAllExist(
         configs,
-        "httpConfigs.tlsConfigBean.trustStoreFilePath",
-        "httpConfigs.tlsConfigBean.trustStoreType",
-        "httpConfigs.tlsConfigBean.trustStorePassword",
-        "httpConfigs.tlsConfigBean.trustStoreAlgorithm",
-        "httpConfigs.needClientAuth"
+        "responseConfig.dataFormat",
+        "responseConfig.dataGeneratorFormatConfig.charset",
+        "responseConfig.dataGeneratorFormatConfig.jsonMode"
     );
   }
 
   @Test
-  public void testV2ToV3() throws Exception {
+  public void testV11ToV12() throws Exception {
     List<Config> configs = new LinkedList<>();
-    RestServicePushSourceUpgrader upgrader = new RestServicePushSourceUpgrader();
-    TestUpgraderContext context = new TestUpgraderContext("l", "s", "i", 2, 3);
+    WebSocketClientSourceUpgrader upgrader = new WebSocketClientSourceUpgrader();
+    TestUpgraderContext context = new TestUpgraderContext("l", "s", "i", 3, 4);
     upgrader.upgrade(configs, context);
     UpgraderTestUtils.assertAllExist(
         configs,
         "responseConfig.sendRawResponse"
     );
   }
-
 }

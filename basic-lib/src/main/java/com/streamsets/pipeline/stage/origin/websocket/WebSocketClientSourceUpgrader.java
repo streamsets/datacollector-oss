@@ -36,6 +36,12 @@ public class WebSocketClientSourceUpgrader implements StageUpgrader {
         // fall through
       case 2:
         upgradeV2ToV3(configs);
+        if (context.getToVersion() == 3) {
+          break;
+        }
+        // fall through
+      case 3:
+        upgradeV3ToV4(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", context.getFromVersion()));
@@ -53,6 +59,10 @@ public class WebSocketClientSourceUpgrader implements StageUpgrader {
     configs.add(new Config("responseConfig.dataFormat", DataFormat.JSON.toString()));
     configs.add(new Config("responseConfig.dataGeneratorFormatConfig.charset", "UTF-8"));
     configs.add(new Config("responseConfig.dataGeneratorFormatConfig.jsonMode", "MULTIPLE_OBJECTS"));
+  }
+
+  private void upgradeV3ToV4(List<Config> configs) {
+    configs.add(new Config("responseConfig.sendRawResponse", false));
   }
 
 }
