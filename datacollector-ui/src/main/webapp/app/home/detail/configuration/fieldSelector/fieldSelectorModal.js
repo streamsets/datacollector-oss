@@ -56,6 +56,7 @@ angular
           $scope.showLoading = false;
           if(_.isArray(inputRecords) && inputRecords.length) {
             $scope.recordObject = inputRecords[0];
+            $scope.recordObject.expand = true;
           } else {
             $scope.noPreviewRecord = true;
           }
