@@ -48,6 +48,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -176,7 +177,7 @@ public class DataFormatParser {
             dataFormatConfig.customLogFormat,
             dataFormatConfig.regex,
             dataFormatConfig.grokPatternDefinition,
-            dataFormatConfig.grokPattern,
+            Arrays.asList(dataFormatConfig.grokPattern),
             dataFormatConfig.enableLog4jCustomLogFormat,
             dataFormatConfig.log4jCustomLogFormat,
             dataFormatConfig.onParseError,

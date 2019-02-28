@@ -31,6 +31,7 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class TestGrokParser {
@@ -142,7 +143,7 @@ public class TestGrokParser {
       .setMode(LogMode.GROK)
       .setOverRunLimit(1000)
       .setConfig(LogDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true)
-      .setConfig(LogDataParserFactory.GROK_PATTERN_KEY, REGEX)
+      .setConfig(LogDataParserFactory.GROK_PATTERN_KEY, Arrays.asList(REGEX))
       .setConfig(LogDataParserFactory.GROK_PATTERN_DEFINITION_KEY, REGEX_DEFINITION)
       .build();
 

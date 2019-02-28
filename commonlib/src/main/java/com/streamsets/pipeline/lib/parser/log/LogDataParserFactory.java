@@ -34,6 +34,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +55,7 @@ public class LogDataParserFactory extends DataParserFactory {
     "^(\\S+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\d+)";
   public static final String REGEX_FIELD_PATH_TO_GROUP_KEY = KEY_PREFIX + "regex.fieldPath.to.group.name";
   static final Map<String, Integer> REGEX_FIELD_PATH_TO_GROUP_DEFAULT = new HashMap<>();
-  public static final String GROK_PATTERN_KEY = KEY_PREFIX + "grok.pattern";
+  public static final String GROK_PATTERN_KEY = KEY_PREFIX + "grok.patterns";
   static final String GROK_PATTERN_DEFAULT = "%{COMMONAPACHELOG}";
   public static final String GROK_PATTERN_DEFINITION_KEY = KEY_PREFIX + "grok.pattern.definition";
   static final String GROK_PATTERN_DEFINITION_DEFAULT = "";
@@ -77,7 +79,7 @@ public class LogDataParserFactory extends DataParserFactory {
     configs.put(REGEX_KEY, REGEX_DEFAULT);
     configs.put(REGEX_FIELD_PATH_TO_GROUP_KEY, REGEX_FIELD_PATH_TO_GROUP_DEFAULT);
     configs.put(GROK_PATTERN_DEFINITION_KEY, GROK_PATTERN_DEFINITION_DEFAULT);
-    configs.put(GROK_PATTERN_KEY, GROK_PATTERN_DEFAULT);
+    configs.put(GROK_PATTERN_KEY, Arrays.asList(GROK_PATTERN_DEFAULT));
     configs.put(LOG4J_FORMAT_KEY, LOG4J_FORMAT_DEFAULT);
     configs.put(ON_PARSE_ERROR_KEY, ON_PARSE_ERROR_DEFAULT);
     configs.put(LOG4J_TRIM_STACK_TRACES_TO_LENGTH_KEY, LOG4J_TRIM_STACK_TRACES_TO_LENGTH_DEFAULT);
@@ -98,7 +100,7 @@ public class LogDataParserFactory extends DataParserFactory {
   private final String regex;
   private final Map<String, Integer> fieldPathToGroup;
   private final String grokPatternDefinition;
-  private final String grokPattern;
+  private final List<String> grokPatternList;
   private final List<String> grokDictionaries;
   private final String log4jCustomLogFormat;
   private final OnParseError onParseError;
@@ -117,7 +119,7 @@ public class LogDataParserFactory extends DataParserFactory {
     this.regex = settings.getConfig(REGEX_KEY);
     this.fieldPathToGroup = settings.getConfig(REGEX_FIELD_PATH_TO_GROUP_KEY);
     this.grokPatternDefinition = settings.getConfig(GROK_PATTERN_DEFINITION_KEY);
-    this.grokPattern = settings.getConfig(GROK_PATTERN_KEY);
+    this.grokPatternList = settings.getConfig(GROK_PATTERN_KEY);
     this.grokDictionaries = Collections.emptyList();
     this.log4jCustomLogFormat = settings.getConfig(LOG4J_FORMAT_KEY);
     this.onParseError = settings.getConfig(ON_PARSE_ERROR_KEY);
@@ -157,19 +159,19 @@ public class LogDataParserFactory extends DataParserFactory {
       switch (logMode) {
         case COMMON_LOG_FORMAT:
           return new GrokParser(context, id, reader, offset, maxObjectLen, retainOriginalText,
-            getMaxStackTraceLines(), createGrok(Constants.GROK_COMMON_APACHE_LOG_FORMAT,
+            getMaxStackTraceLines(), createGroks(Arrays.asList(Constants.GROK_COMMON_APACHE_LOG_FORMAT),
             Collections.<String>emptyList()), "Common Log Format", currentLineBuilderPool, previousLineBuilderPool);
         case COMBINED_LOG_FORMAT:
           return new GrokParser(context, id, reader, offset, maxObjectLen, retainOriginalText,
-            getMaxStackTraceLines(), createGrok(Constants.GROK_COMBINED_APACHE_LOG_FORMAT,
+            getMaxStackTraceLines(), createGroks(Arrays.asList(Constants.GROK_COMBINED_APACHE_LOG_FORMAT),
             Collections.<String>emptyList()), "Combined Log Format", currentLineBuilderPool, previousLineBuilderPool);
         case APACHE_CUSTOM_LOG_FORMAT:
           return new GrokParser(context, id, reader, offset, maxObjectLen, retainOriginalText,
-            getMaxStackTraceLines(), createGrok(ApacheCustomLogHelper.translateApacheLayoutToGrok(customLogFormat),
+            getMaxStackTraceLines(), createGroks(Arrays.asList(ApacheCustomLogHelper.translateApacheLayoutToGrok(customLogFormat)),
             Collections.<String>emptyList()), "Apache Access Log Format", currentLineBuilderPool, previousLineBuilderPool);
         case APACHE_ERROR_LOG_FORMAT:
           return new GrokParser(context, id, reader, offset, maxObjectLen, retainOriginalText,
-            getMaxStackTraceLines(), createGrok(Constants.GROK_APACHE_ERROR_LOG_FORMAT,
+            getMaxStackTraceLines(), createGroks(Arrays.asList(Constants.GROK_APACHE_ERROR_LOG_FORMAT),
             ImmutableList.of(Constants.GROK_APACHE_ERROR_LOG_PATTERNS_FILE_NAME)), "Apache Error Log Format",
             currentLineBuilderPool, previousLineBuilderPool);
         case REGEX:
@@ -177,11 +179,11 @@ public class LogDataParserFactory extends DataParserFactory {
             createPattern(regex), fieldPathToGroup, currentLineBuilderPool, previousLineBuilderPool);
         case GROK:
           return new GrokParser(context, id, reader, offset, maxObjectLen, retainOriginalText,
-            getMaxStackTraceLines(), createGrok(grokPattern, grokDictionaries), "Grok Format",
+            getMaxStackTraceLines(), createGroks(grokPatternList, grokDictionaries), "Grok Format",
             currentLineBuilderPool, previousLineBuilderPool);
         case LOG4J:
           return new GrokParser(context, id, reader, offset, maxObjectLen, retainOriginalText,
-            getMaxStackTraceLines(), createGrok(Log4jHelper.translateLog4jLayoutToGrok(log4jCustomLogFormat),
+            getMaxStackTraceLines(), createGroks(Arrays.asList(Log4jHelper.translateLog4jLayoutToGrok(log4jCustomLogFormat)),
             ImmutableList.of(Constants.GROK_LOG4J_LOG_PATTERNS_FILE_NAME)),
             "Log4j Log Format", currentLineBuilderPool, previousLineBuilderPool);
         case CEF:
@@ -215,10 +217,23 @@ public class LogDataParserFactory extends DataParserFactory {
   }
 
   @VisibleForTesting
-  private Grok createGrok(String grokPattern, List<String> dictionaries) {
-    if(regexToPatternMap.containsKey(grokPattern)) {
-      return (Grok) regexToPatternMap.get(grokPattern);
+  private List<Grok> createGroks(List<String> grokPatternList, List<String> dictionaries) {
+    List<Grok> grokList = new ArrayList<>();
+    List<String> grokPatternsToProcess = new ArrayList<>();
+
+    grokPatternList.forEach(grokPatternItem -> {
+      if(regexToPatternMap.containsKey(grokPatternItem)) {
+        grokList.add((Grok) regexToPatternMap.get(grokPatternItem));
+      } else {
+        grokPatternsToProcess.add(grokPatternItem);
+      }
+    });
+
+    // directly return if all groks where previously built and stored in regexToPatternMap
+    if (grokPatternsToProcess.isEmpty()) {
+      return grokList;
     }
+
     GrokDictionary grokDictionary = new GrokDictionary();
     //Add grok patterns and Java patterns by default
     try(
@@ -240,9 +255,14 @@ public class LogDataParserFactory extends DataParserFactory {
     }
     // Resolve all expressions loaded
     grokDictionary.bind();
-    Grok grok = grokDictionary.compileExpression(grokPattern);
-    regexToPatternMap.put(grokPattern, grok);
-    return grok;
+
+    grokPatternsToProcess.forEach(grokPatternItem -> {
+      Grok grok = grokDictionary.compileExpression(grokPatternItem);
+      regexToPatternMap.put(grokPatternItem, grok);
+      grokList.add(grok);
+    });
+
+    return grokList;
   }
 
   @VisibleForTesting

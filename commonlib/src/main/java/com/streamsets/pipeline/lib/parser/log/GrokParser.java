@@ -24,11 +24,12 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class GrokParser extends LogCharDataParser {
 
-  private final Grok compiledPattern;
+  private final List<Grok> compiledPatterns;
   private final String formatName;
 
   public GrokParser(
@@ -39,28 +40,36 @@ public class GrokParser extends LogCharDataParser {
       int maxObjectLen,
       boolean retainOriginalText,
       int maxStackTraceLines,
-      Grok compiledPattern,
+      List<Grok> compiledPattern,
       String formatName,
       GenericObjectPool<StringBuilder> currentLineBuilderPool,
       GenericObjectPool<StringBuilder> previousLineBuilderPool
   ) throws IOException {
     super(context, readerId, reader, readerOffset, maxObjectLen, retainOriginalText, maxStackTraceLines, currentLineBuilderPool, previousLineBuilderPool);
-    this.compiledPattern = compiledPattern;
+    this.compiledPatterns = compiledPattern;
     this.formatName = formatName;
   }
 
   @Override
   public Map<String, Field> parseLogLine(StringBuilder logLine) throws DataParserException {
-    Map<String, String> namedGroupToValuesMap = compiledPattern.extractNamedGroups(logLine.toString());
-    if(namedGroupToValuesMap == null) {
-      //Did not match
-      handleNoMatch(logLine.toString());
+    Map<String, String> namedGroupToValuesMap;
+
+    for (Grok compiledPattern : compiledPatterns) {
+      namedGroupToValuesMap = compiledPattern.extractNamedGroups(logLine.toString());
+
+      if (namedGroupToValuesMap != null) {
+        Map<String, Field> map = new LinkedHashMap<>();
+        for(Map.Entry<String, String> e : namedGroupToValuesMap.entrySet()) {
+          map.put(e.getKey(), Field.create(e.getValue()));
+        }
+        return map;
+      }
     }
-    Map<String, Field> map = new LinkedHashMap<>();
-    for(Map.Entry<String, String> e : namedGroupToValuesMap.entrySet()) {
-      map.put(e.getKey(), Field.create(e.getValue()));
-    }
-    return map;
+
+    //Did not match
+    handleNoMatch(logLine.toString());
+
+    return null;
   }
 
   protected void handleNoMatch(String logLine) throws DataParserException {

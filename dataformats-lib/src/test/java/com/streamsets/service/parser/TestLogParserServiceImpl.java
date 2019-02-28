@@ -39,6 +39,7 @@ import org.mockito.stubbing.Answer;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,7 @@ import java.util.Map;
 @RunWith(MockitoJUnitRunner.class)
 public class TestLogParserServiceImpl {
 
+  private static final String DEFAULT_GROK_PATTERN = "%{COMMONAPACHELOG}";
   private final static String COMMON_LOG_FORMAT_LINE = "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326";
   private final static String APACHE_ERROR_LOG_FORMAT_LINE = "[Wed Oct 11 14:32:52 2000] [error] [client 127.0.0.1] client denied " +
       "by server configuration1: /export/home/live/ap/htdocs/test1";
@@ -221,7 +223,7 @@ public class TestLogParserServiceImpl {
     logParserService.logParserServiceConfig.regex = null;
     logParserService.logParserServiceConfig.fieldPathsToGroupName = null;
     logParserService.logParserServiceConfig.grokPatternDefinition = null;
-    logParserService.logParserServiceConfig.grokPattern = null;
+    logParserService.logParserServiceConfig.grokPatternList = Arrays.asList(DEFAULT_GROK_PATTERN);
     logParserService.logParserServiceConfig.enableLog4jCustomLogFormat = false;
     logParserService.logParserServiceConfig.log4jCustomLogFormat = null;
 
@@ -440,7 +442,7 @@ public class TestLogParserServiceImpl {
     LogParserServiceImpl logParserServiceImpl = getDataParserService();
     logParserServiceImpl.logParserServiceConfig.logMode = LogMode.GROK;
     logParserServiceImpl.logParserServiceConfig.grokPatternDefinition = GROK_PATTERN_DEFINITION;
-    logParserServiceImpl.logParserServiceConfig.grokPattern = GROK_PATTERN;
+    logParserServiceImpl.logParserServiceConfig.grokPatternList = Arrays.asList(GROK_PATTERN);
 
     logParserService.init();
 

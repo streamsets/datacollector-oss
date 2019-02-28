@@ -23,10 +23,14 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.service.dataformats.log.LogParserService;
 import com.streamsets.pipeline.config.OnParseError;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class LogParserUpgrader implements StageUpgrader {
+
+  private static final String DEFAULT_GROK_PATTERN = "%{COMMONAPACHELOG}";
 
   @Override
   public List<Config> upgrade(
@@ -49,7 +53,7 @@ public class LogParserUpgrader implements StageUpgrader {
 
   private void upgradeV1ToV2(List<Config> configs, Context context) {
     // Take DataFormatParser configs
-    List<Config> dataFormatParserConfigs = configs.stream()
+    List<Config> logParserConfigs = configs.stream()
                                                   .filter(config -> !(
                                                       "fieldPathToParse".equals(config.getName()) ||
                                                           "parsedFieldPath".equals(config.getName()) ||
@@ -65,32 +69,50 @@ public class LogParserUpgrader implements StageUpgrader {
                                                   .collect(Collectors.toList());
 
     // Add required configs if not yet added
-    if (dataFormatParserConfigs.stream().noneMatch(config -> "logParserServiceConfig.logMaxObjectLen".equals(config
+    if (logParserConfigs.stream().noneMatch(config -> "logParserServiceConfig.logMaxObjectLen".equals(config
         .getName()))) {
-      dataFormatParserConfigs.add(new Config("logParserServiceConfig.logMaxObjectLen", 1024));
+      logParserConfigs.add(new Config("logParserServiceConfig.logMaxObjectLen", 1024));
     }
 
-    if (dataFormatParserConfigs.stream().noneMatch(config -> "logParserServiceConfig.retainOriginalLine".equals(config
+    if (logParserConfigs.stream().noneMatch(config -> "logParserServiceConfig.retainOriginalLine".equals(config
         .getName()))) {
-      dataFormatParserConfigs.add(new Config("logParserServiceConfig.retainOriginalLine", false));
+      logParserConfigs.add(new Config("logParserServiceConfig.retainOriginalLine", false));
     }
 
-    if (dataFormatParserConfigs.stream().noneMatch(config -> "logParserServiceConfig.onParseError".equals(config
+    if (logParserConfigs.stream().noneMatch(config -> "logParserServiceConfig.onParseError".equals(config
         .getName()))) {
-      dataFormatParserConfigs.add(new Config("logParserServiceConfig.onParseError", OnParseError.ERROR));
+      logParserConfigs.add(new Config("logParserServiceConfig.onParseError", OnParseError.ERROR));
     }
 
-    if (dataFormatParserConfigs.stream().noneMatch(config -> "logParserServiceConfig.maxStackTraceLines".equals(config
+    if (logParserConfigs.stream().noneMatch(config -> "logParserServiceConfig.maxStackTraceLines".equals(config
         .getName()))) {
-      dataFormatParserConfigs.add(new Config("logParserServiceConfig.maxStackTraceLines", 50));
+      logParserConfigs.add(new Config("logParserServiceConfig.maxStackTraceLines", 50));
     }
 
-    if (dataFormatParserConfigs.stream().noneMatch(config -> "logParserServiceConfig.charset".equals(config
+    if (logParserConfigs.stream().noneMatch(config -> "logParserServiceConfig.charset".equals(config
         .getName()))) {
-      dataFormatParserConfigs.add(new Config("logParserServiceConfig.charset", "UTF-8"));
+      logParserConfigs.add(new Config("logParserServiceConfig.charset", "UTF-8"));
     }
 
+    // search grok pattern string
+    Optional<Config> grokPatternConfig = logParserConfigs.stream().filter(config -> {
+      return config.getName().contains("grokPattern") && !config.getName().contains("grokPatternDefinition");
+    }).findFirst();
 
+    // remove grok pattern string
+    logParserConfigs.removeIf(config -> {
+      return config.getName().contains("grokPattern") && !config.getName().contains("grokPatternDefinition");
+    });
+
+    // add new grok pattern list config to configs list
+    if (grokPatternConfig.isPresent()) {
+      logParserConfigs.add(new Config(
+          "logParserServiceConfig.grokPatternList",
+          Arrays.asList((String) (grokPatternConfig.get().getValue()))
+      ));
+    } else {
+      logParserConfigs.add(new Config("logParserServiceConfig.grokPatternList", Arrays.asList(DEFAULT_GROK_PATTERN)));
+    }
 
     // Remove old DataFormatParser configs from LogParser configs
     configs.removeIf(config -> {
@@ -111,7 +133,7 @@ public class LogParserUpgrader implements StageUpgrader {
     });
 
     // Add the LogParserService with its corresponding configs
-    context.registerService(LogParserService.class, dataFormatParserConfigs);
+    context.registerService(LogParserService.class, logParserConfigs);
   }
 
 }
