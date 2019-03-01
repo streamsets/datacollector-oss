@@ -92,6 +92,7 @@
     <rootProject>true</rootProject>
     <datacollector-api.version>3.9.0-SNAPSHOT</datacollector-api.version>
     <datacollector-spark-api.version>3.9.0-SNAPSHOT</datacollector-spark-api.version>
+    <thycotic-credentialstore-lib>thycotic-credentialstore-lib</thycotic-credentialstore-lib>
   </properties>
 
   <!-- StreamSets Data Collector API being used -->
@@ -260,6 +261,7 @@
     <module>wholefile-transformer-lib</module>
     <module>windows-lib</module>
     <module>pulsar-protolib</module>
+    <module>thycotic-credentialstore-lib</module>
   </modules>
 
   <build>
