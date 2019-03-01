@@ -303,17 +303,13 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
 
   /**
    * Handle SQLException in a smart way, detecting if the exception is data oriented or not.
-   *
-   * https://en.wikipedia.org/wiki/SQLSTATE
-   *
-   * We consider data oriented exceptions SQL states that starts with 22* and 23*
    */
   private void handleSqlException(
     SQLException exception,
     List<Record> inputRecords,
     List<OnRecordErrorException> errors
   ) throws StageException {
-    if(exception.getSQLState().startsWith("22") || exception.getSQLState().startsWith("23")) {
+    if(jdbcUtil.isDataError(getConnectionString(), exception)) {
       String formattedError = jdbcUtil.formatSqlException(exception);
       LOG.error(JdbcErrors.JDBC_89.getMessage(), formattedError);
 
