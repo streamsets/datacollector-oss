@@ -34,6 +34,8 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -55,6 +57,7 @@ import java.util.UUID;
     TableJdbcRunnable.class
 })
 public class ExtraOffsetConditionIT extends BaseTableJdbcSourceIT {
+  private static final Logger LOG = LoggerFactory.getLogger(ExtraOffsetConditionIT.class);
   private static final int BATCHES = 5;
   private static final String RANDOM_STRING_COLUMN = "random_string";
 
@@ -340,6 +343,7 @@ public class ExtraOffsetConditionIT extends BaseTableJdbcSourceIT {
         .build();
     Map<String, String> offsets = Collections.emptyMap();
     for (int i = 0; i < BATCHES; i++) {
+      LOG.info("Starting iteration {} out of {}", i, BATCHES);
       PushSourceRunner runner = new PushSourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
           .addOutputLane("a").build();
       runner.runInit();

@@ -379,6 +379,9 @@ public abstract class AbstractTableJdbcSource extends BasePushSource {
         );
       }
 
+      // Flag to keep track if the no-more-data is already submitted and pending
+      AtomicBoolean noMoreDataAwaitingExecution = new AtomicBoolean(false);
+
       while (!getContext().isStopped()) {
         checkWorkerStatus(completionService);
         final boolean shouldGenerate = tableOrderProvider.shouldGenerateNoMoreDataEvent();
@@ -388,12 +391,21 @@ public abstract class AbstractTableJdbcSource extends BasePushSource {
             if (executorServiceForNoMoreDataDelay == null) {
               executorServiceForNoMoreDataDelay = Executors.newSingleThreadScheduledExecutor();
             }
-            executorServiceForNoMoreDataDelay.schedule(new Runnable() {
-              @Override
-              public void run() {
-                jdbcUtil.generateNoMoreDataEvent(getContext());
-              }
-            }, delay, TimeUnit.SECONDS);
+
+            if(noMoreDataAwaitingExecution.get()) {
+              LOG.debug("Event no-more-data already scheduled to be generated, ignoring request");
+            } else {
+              LOG.debug("Scheduling no-more-data event with {} seconds delay", delay);
+              executorServiceForNoMoreDataDelay.schedule(() -> {
+                try {
+                  LOG.debug("Generating and processing no-more-data event");
+                  jdbcUtil.generateNoMoreDataEvent(getContext());
+                } finally {
+                  LOG.debug("Event no-more-data successfully generated and processed");
+                  noMoreDataAwaitingExecution.set(false);
+                }
+              }, delay, TimeUnit.SECONDS);
+            }
           } else {
             jdbcUtil.generateNoMoreDataEvent(getContext());
           }
@@ -485,6 +497,8 @@ public abstract class AbstractTableJdbcSource extends BasePushSource {
           LOG.warn("Shutdown interrupted");
           interrupted.set(true);
         }
+
+        executorService = null;
       }
     });
 
@@ -499,6 +513,8 @@ public abstract class AbstractTableJdbcSource extends BasePushSource {
           interrupted.set(true);
         }
       }
+
+      executorServiceForNoMoreDataDelay = null;
     });
     return interrupted.get();
   }
