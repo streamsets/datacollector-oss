@@ -61,20 +61,6 @@ public class PreparedStatementCache {
     }
   }
 
-  class PreparedStatementRemovalListener implements RemovalListener<SortedMap<String, String>, PreparedStatement> {
-    @Override
-    public void onRemoval(RemovalNotification<SortedMap<String, String>, PreparedStatement> removal) {
-      PreparedStatement stmt = removal.getValue();
-      try {
-        if (stmt != null){
-          stmt.close();
-        }
-      } catch (SQLException ex) {
-        LOG.error("Error while closing PreparedStatement evicted from cache. {}", ex);
-      }
-    }
-  }
-
   PreparedStatementCache(Connection connection,
                          String tableName,
                          List<JdbcFieldColumnMapping> generatedColumnMappings,
@@ -96,8 +82,7 @@ public class PreparedStatementCache {
       cacheBuilder.maximumSize(maxCacheSize);
     }
 
-    cacheMap = cacheBuilder.removalListener(new PreparedStatementRemovalListener())
-        .build(new PreparedStatementLoader());
+    cacheMap = cacheBuilder.build(new PreparedStatementLoader());
   }
 
   PreparedStatement get(final SortedMap<String, String> columns) throws StageException {
