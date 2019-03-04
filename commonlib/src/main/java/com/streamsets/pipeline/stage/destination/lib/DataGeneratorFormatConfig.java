@@ -440,7 +440,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
     type = ConfigDef.Type.MODEL,
     defaultValue = "/",
     label = "Binary Field Path",
-    description = "Field to write data to Kafka",
+    description = "Output field to contain the binary data",
     displayPosition = 420,
     group = "#0",
     dependsOn = "dataFormat^",
