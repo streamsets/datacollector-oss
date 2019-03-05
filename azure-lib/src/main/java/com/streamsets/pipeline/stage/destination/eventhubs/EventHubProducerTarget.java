@@ -93,6 +93,7 @@ public class EventHubProducerTarget extends BaseTarget {
         try (DataGenerator dataGenerator = generatorFactory.getGenerator(byteBufferOutputStream)) {
           dataGenerator.write(record);
           dataGenerator.flush();
+          dataGenerator.close();
           eventDataList.add(EventData.create(byteBufferOutputStream.toByteArray()));
         } catch(Exception ex) {
           LOG.error(Errors.EVENT_HUB_00.getMessage(), ex.toString(), ex);
