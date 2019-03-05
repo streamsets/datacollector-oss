@@ -376,7 +376,7 @@ public class AvroTypeUtil {
             if (schema.getType() != Schema.Type.BYTES) {
               throw new IllegalStateException("Unexpected physical type for logical decimal type: " + schema.getType());
             }
-            int scale = schema.getJsonProp(LOGICAL_TYPE_ATTR_SCALE).asInt();
+            int scale = schema.getJsonProp(LOGICAL_TYPE_ATTR_SCALE).getIntValue();
             return ByteBuffer.wrap(field.getValueAsDecimal().setScale(scale).unscaledValue().toByteArray());
           case LOGICAL_TYPE_DATE:
             if (schema.getType() != Schema.Type.INT) {
