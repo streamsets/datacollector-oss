@@ -22,13 +22,13 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root-lib</artifactId>
-    <version>3.8.0-SNAPSHOT</version>
+    <version>3.9.0-SNAPSHOT</version>
     <relativePath>../root-lib</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>streamsets-datacollector-jdbc-protolib</artifactId>
-  <version>3.8.0-SNAPSHOT</version>
+  <version>3.9.0-SNAPSHOT</version>
   <description>StreamSets Data Collector JDBC ProtoLib</description>
   <name>StreamSets Data Collector JDBC ProtoLib</name>
   <packaging>jar</packaging>
