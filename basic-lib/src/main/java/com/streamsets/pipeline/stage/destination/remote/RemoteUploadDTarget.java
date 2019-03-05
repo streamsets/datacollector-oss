@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 
+/*
 @StageDef(
     version = 1,
     label = "SFTP/FTP Client",
@@ -38,6 +39,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 @HideConfigs(value = {"conf.dataFormatConfig.includeChecksumInTheEvents"})
 @GenerateResourceBundle
 @ConfigGroups(Groups.class)
+*/
 public class RemoteUploadDTarget extends DTarget {
 
   @ConfigDefBean

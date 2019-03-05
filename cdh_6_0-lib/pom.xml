@@ -43,8 +43,10 @@
         <hbase.version>2.0.0-cdh6.0.1</hbase.version>
         <hive.version>2.1.1-cdh6.0.1</hive.version>
         <kudu.version>1.6.0-cdh6.0.1</kudu.version>
+        <!--
         <solr.version>7.0.0-cdh6.0.1</solr.version>
         <solr.test.jetty.version>9.3.20.v20170531</solr.test.jetty.version>
+        -->
         <spark.version>2.2.0-cdh6.0.1</spark.version>
         <kafka.version>1.0.1-cdh6.0.1</kafka.version>
 
@@ -732,6 +734,7 @@
         </dependency>
 
         <!-- Solr related -->
+        <!--
         <dependency>
             <groupId>org.apache.solr</groupId>
             <artifactId>solr-solrj</artifactId>
@@ -823,7 +826,8 @@
             <type>test-jar</type>
             <version>${project.version}</version>
             <scope>test</scope>
-        </dependency>
+          </dependency>
+        -->
 
         <dependency>
             <groupId>com.streamsets</groupId>
