@@ -581,10 +581,12 @@ angular
       getValueChooserOptions: function(instance, definition) {
         var list = [];
         var filter = $scope.getConfig(definition.model.filteringConfig, instance);
+        var edgeSupportedDataFormats = ['DELIMITED', 'JSON', 'SDC_JSON', 'TEXT', 'WHOLE_FILE', 'BINARY'];
+        var isEdgeExecutionMode = $scope.executionMode === 'EDGE';
 
         angular.forEach(definition.model.values, function(value, index) {
-
-          if(filter && filter.indexOf(value) < 0) {
+          if ((filter && filter.indexOf(value) < 0) ||
+            (definition.name.indexOf('.dataFormat') > 0 && isEdgeExecutionMode && edgeDataFormats.indexOf(value) < 0)) {
             return;
           }
 
