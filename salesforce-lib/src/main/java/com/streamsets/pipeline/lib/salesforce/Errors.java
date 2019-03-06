@@ -62,6 +62,7 @@ public enum Errors implements ErrorCode {
   FORCE_38("No type on XML Record"),
   FORCE_39("Unexpected end of XML Stream"),
   FORCE_40("CDC record is missing ChangeEventHeader"),
+  FORCE_41("Unexpected event type in XML Stream: {}"),
   ;
   private final String msg;
 
