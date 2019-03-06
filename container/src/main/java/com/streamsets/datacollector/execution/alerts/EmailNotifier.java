@@ -88,6 +88,7 @@ public class EmailNotifier implements StateEventListener {
     //should not be active in slave mode
     if(toState.getExecutionMode() != ExecutionMode.SLAVE && pipelineId.equals(toState.getPipelineId())) {
       if (pipelineStates != null && pipelineStates.contains(toState.getStatus().name())) {
+        LOG.debug("Generating email notification for state {}", toState.getStatus().name());
         //pipeline switched to a terminal state. Send email
         String emailBody = null;
         String subject = null;
@@ -95,6 +96,8 @@ public class EmailNotifier implements StateEventListener {
         try {
           switch (toState.getStatus()) {
             case START_ERROR:
+            case RUNNING_ERROR:
+            case STOP_ERROR:
             case RUN_ERROR:
               url = Resources.getResource(EmailConstants.NOTIFY_ERROR_EMAIL_TEMPLATE);
               emailBody = Resources.toString(url, Charsets.UTF_8);
@@ -145,7 +148,7 @@ public class EmailNotifier implements StateEventListener {
         try {
           emailSender.send(emails, subject, emailBody);
         } catch (EmailException e) {
-          LOG.error("Error sending email : '{}'", e.toString(), e);
+          LOG.error("Error sending email on status change {}: '{}'", toState.getStatus().name(), e.toString(), e);
         }
       }
     }
