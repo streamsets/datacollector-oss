@@ -333,21 +333,21 @@ public class HBaseLookupProcessor extends BaseProcessor {
           Errors.HBASE_41.getMessage(),
           record,
           key.getKey(),
-          Bytes.toString(key.getValue().getCf()) + ":" + Bytes.toString(key.getValue().getQualifier()),
-          key.getValue().getTimestamp()
+          key.getValue().getQualifiedName(),
+          key.getValue().getTimestamp().orElse(HBaseColumn.NO_TIMESTAMP)
       );
     } else {
       LOG.error(
           Errors.HBASE_41.getMessage(),
           record,
           key.getKey(),
-          Bytes.toString(key.getValue().getCf()) + ":" + Bytes.toString(key.getValue().getQualifier()),
-          key.getValue().getTimestamp()
+          key.getValue().getQualifiedName(),
+          key.getValue().getTimestamp().orElse(HBaseColumn.NO_TIMESTAMP)
       );
       errorRecordHandler.onError(new OnRecordErrorException(record, Errors.HBASE_41, record,
           key.getKey(),
-          Bytes.toString(key.getValue().getCf()) + ":" + Bytes.toString(key.getValue().getQualifier()),
-          key.getValue().getTimestamp()));
+          key.getValue().getQualifiedName(),
+          key.getValue().getTimestamp().orElse(HBaseColumn.NO_TIMESTAMP)));
     }
   }
 
@@ -367,8 +367,8 @@ public class HBaseLookupProcessor extends BaseProcessor {
               "No key on Record '{}' with key:'{}', column:'{}', timestamp:'{}'",
               record,
               key.getKey(),
-              Bytes.toString(key.getValue().getCf()) + ":" + Bytes.toString(key.getValue().getQualifier()),
-              key.getValue().getTimestamp()
+              key.getValue().getQualifiedName(),
+              key.getValue().getTimestamp().orElse(HBaseColumn.NO_TIMESTAMP)
           );
         }
       }
@@ -402,8 +402,8 @@ public class HBaseLookupProcessor extends BaseProcessor {
           "No value found on Record '{}' with key:'{}', column:'{}', timestamp:'{}'",
           record,
           key.getKey(),
-          Bytes.toString(key.getValue().getCf()) + ":" + Bytes.toString(key.getValue().getQualifier()),
-          key.getValue().getTimestamp()
+          key.getValue().getQualifiedName(),
+          key.getValue().getTimestamp().orElse(HBaseColumn.NO_TIMESTAMP)
       );
       return;
     }

@@ -57,15 +57,13 @@ public class HBaseConnectionHelper0_98 extends AbstractHBaseConnectionHelper {
 
   @Override
   public HBaseColumn getColumn(String column) {
+    HBaseColumn result = new HBaseColumn();
     byte[][] parts = KeyValue.parseColumn(Bytes.toBytes(column));
-    byte[] cf;
-    byte[] qualifier;
+
     if (parts.length == 2) {
-      cf = parts[0];
-      qualifier = parts[1];
-      return new HBaseColumn(cf, qualifier);
-    } else {
-      return null;
+      result.setCf(parts[0]);
+      result.setQualifier(parts[1]);
     }
+    return result;
   }
 }

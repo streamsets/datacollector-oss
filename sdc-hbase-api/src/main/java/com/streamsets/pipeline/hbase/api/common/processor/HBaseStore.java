@@ -38,6 +38,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
 
+
+/**
+ * HBaseStore class for caching values from a HBase table.
+ *
+ * Queries to the given table are performed via a HBaseProcessor, which is provided by the user to the HBaseStore
+ * constructor. Values are retrieved through Pair<String, HBaseColumn> objects, where:
+ *
+ * - the left element is a RowId identifying the desired table row.
+ * - the right element contains the column and timestamp information to identify the cell value(s) to retrieve. Both,
+ *   column and timestamp are optional. When no timestamp is provided the most recent value is retrieved. If column is
+ *   not provided, all the row columns are retrieved.
+ *
+ * Results are returned as an Optional<String>, which can be a single value, a JSON with several String values (when
+ * multiple values are retrieved) or can be absent (when the query produces no result).
+ */
 public class HBaseStore extends CacheLoader<Pair<String, HBaseColumn>, Optional<String>> {
   private static final Logger LOG = LoggerFactory.getLogger(HBaseStore.class);
 
@@ -63,7 +78,8 @@ public class HBaseStore extends CacheLoader<Pair<String, HBaseColumn>, Optional<
   }
 
   @Override
-  public Map<Pair<String, HBaseColumn>, Optional<String>> loadAll(Iterable<? extends Pair<String, HBaseColumn>> keys) throws Exception {
+  public Map<Pair<String, HBaseColumn>, Optional<String>> loadAll(Iterable<? extends Pair<String, HBaseColumn>> keys)
+      throws Exception {
     ArrayList<Pair<String, HBaseColumn>> keyList = Lists.newArrayList(keys);
     List<Optional<String>> values = get(keyList);
 
@@ -78,42 +94,45 @@ public class HBaseStore extends CacheLoader<Pair<String, HBaseColumn>, Optional<
   }
 
   public Optional<String> get(Pair<String, HBaseColumn> key) throws Exception {
-    if(key.getKey().isEmpty()) {
+    if (key.getKey().isEmpty()) {
       return Optional.absent();
     }
     Get g = new Get(Bytes.toBytes(key.getKey()));
-    if(key.getValue().getCf() != null && key.getValue().getQualifier() != null) {
-      g.addColumn(key.getValue().getCf(), key.getValue().getQualifier());
-    }
-    if(key.getValue().getTimestamp() > 0) {
-      g.setTimeStamp(key.getValue().getTimestamp());
-    }
-    Result result = hBaseProcessor.get(g);
+    HBaseColumn hBaseColumn = key.getValue();
 
-    String value = getValue(key.getValue(), result);
+    if (hBaseColumn.getCf().isPresent() && hBaseColumn.getQualifier().isPresent()) {
+      g.addColumn(hBaseColumn.getCf().get(), hBaseColumn.getQualifier().get());
+    }
+    if (hBaseColumn.getTimestamp().isPresent()) {
+      g.setTimeStamp(hBaseColumn.getTimestamp().getAsLong());
+    }
+
+    Result result = hBaseProcessor.get(g);
+    String value = getValue(hBaseColumn, result);
     return Optional.fromNullable(value);
   }
 
   public List<Optional<String>> get(List<Pair<String, HBaseColumn>> keys) throws Exception {
     ArrayList<Optional<String>> values = new ArrayList<>();
     List<Get> gets = new ArrayList<>();
-    for(Pair<String, HBaseColumn> key : keys) {
-      Get g = new Get(Bytes.toBytes(key.getKey()));
 
+    for (Pair<String, HBaseColumn> key : keys) {
+      Get g = new Get(Bytes.toBytes(key.getKey()));
       HBaseColumn hBaseColumn = key.getValue();
-      if(hBaseColumn.getCf() != null && hBaseColumn.getQualifier() != null) {
-        g.addColumn(hBaseColumn.getCf(), hBaseColumn.getQualifier());
+
+      if (hBaseColumn.getCf().isPresent() && hBaseColumn.getQualifier().isPresent()) {
+        g.addColumn(hBaseColumn.getCf().get(), hBaseColumn.getQualifier().get());
       }
-      if(hBaseColumn.getTimestamp() > 0) {
-        g.setTimeStamp(hBaseColumn.getTimestamp());
+      if (hBaseColumn.getTimestamp().isPresent()) {
+        g.setTimeStamp(hBaseColumn.getTimestamp().getAsLong());
       }
+
       gets.add(g);
     }
 
     Result[] results = hBaseProcessor.get(gets);
-
     int index = 0;
-    for(Pair<String, HBaseColumn> key : keys) {
+    for (Pair<String, HBaseColumn> key : keys) {
       Result result = results[index];
       HBaseColumn hBaseColumn = key.getValue();
 
@@ -126,10 +145,10 @@ public class HBaseStore extends CacheLoader<Pair<String, HBaseColumn>, Optional<
 
   private String getValue(HBaseColumn hBaseColumn, Result result) {
     String value = null;
-    if(result.isEmpty()) {
+    if (result.isEmpty()) {
       return value;
     }
-    if(hBaseColumn.getCf() == null || hBaseColumn.getQualifier() == null) {
+    if (!hBaseColumn.getCf().isPresent() || !hBaseColumn.getQualifier().isPresent()) {
       Map<String, String> columnMap = new HashMap<>();
       // parse column family, column, timestamp, and value
       for (Map.Entry<byte[], NavigableMap<byte[], NavigableMap<Long, byte[]>>> entry : result.getMap().entrySet()) {
@@ -145,7 +164,7 @@ public class HBaseStore extends CacheLoader<Pair<String, HBaseColumn>, Optional<
       JSONObject json = new JSONObject(columnMap);
       value = json.toString();
     } else {
-      value = Bytes.toString(result.getValue(hBaseColumn.getCf(), hBaseColumn.getQualifier()));
+      value = Bytes.toString(result.getValue(hBaseColumn.getCf().get(), hBaseColumn.getQualifier().get()));
     }
     return value;
   }

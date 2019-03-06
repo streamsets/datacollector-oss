@@ -15,39 +15,51 @@
  */
 package com.streamsets.pipeline.hbase.api.common.producer;
 
+import com.google.common.base.Optional;
+import org.apache.hadoop.hbase.util.Bytes;
+
 import java.util.Arrays;
+import java.util.OptionalLong;
 
 public class HBaseColumn{
-  private byte[] cf;
-  private byte[] qualifier;
-  private long timestamp;
+  private Optional<byte[]> cf;
+  private Optional<byte[]> qualifier;
+  private OptionalLong timestamp;
+
+  public static final long NO_TIMESTAMP = -1;
 
   public HBaseColumn() {
-    this.cf = null;
-    this.qualifier = null;
-    this.timestamp = -1;
+    cf = Optional.absent();
+    qualifier = Optional.absent();
+    timestamp = OptionalLong.empty();
   }
 
-  public HBaseColumn(byte[] cf, byte[] qualifier) {
-    this.cf = cf;
-    this.qualifier = qualifier;
-    this.timestamp = -1;
+  public void setCf(byte[] cf) {
+    this.cf = Optional.of(cf);
   }
 
-  public byte[] getCf() {
+  public Optional<byte[]> getCf() {
     return cf;
   }
 
-  public byte[] getQualifier() {
+  public void setQualifier(byte[] qualifier) {
+    this.qualifier = Optional.of(qualifier);
+  }
+
+  public Optional<byte[]> getQualifier() {
     return qualifier;
   }
 
-  public long getTimestamp() {
+  public OptionalLong getTimestamp() {
     return timestamp;
   }
 
   public void setTimestamp(long timestamp) {
-    this.timestamp = timestamp;
+    this.timestamp = OptionalLong.of(timestamp);
+  }
+
+  public String getQualifiedName() {
+    return Bytes.toString(cf.or(new byte[0])) + ":" + Bytes.toString(qualifier.or(new byte[0]));
   }
 
   @Override
@@ -55,7 +67,9 @@ public class HBaseColumn{
     boolean result = false;
     if (other instanceof HBaseColumn) {
       HBaseColumn that = (HBaseColumn) other;
-      result = Arrays.equals(this.cf, that.getCf()) && Arrays.equals(this.qualifier, that.getQualifier()) && this.timestamp == that.getTimestamp();
+      result = Arrays.equals(that.cf.orNull(), cf.orNull()) &&
+          Arrays.equals(that.qualifier.orNull(), qualifier.orNull()) &&
+          that.getTimestamp().orElse(NO_TIMESTAMP) == timestamp.orElse(NO_TIMESTAMP);
     }
     return result;
   }
@@ -63,9 +77,9 @@ public class HBaseColumn{
   @Override
   public int hashCode() {
     int result = 17;
-    result = 31 * result + Arrays.hashCode(this.cf);
-    result = 31 * result + Arrays.hashCode(this.qualifier);
-    result = 31 * result + Long.valueOf(timestamp).hashCode();
+    result = 31 * result + Arrays.hashCode(cf.orNull());
+    result = 31 * result + Arrays.hashCode(qualifier.orNull());
+    result = 31 * result + Long.valueOf(timestamp.orElse(NO_TIMESTAMP)).hashCode();
     return result;
   }
 }
