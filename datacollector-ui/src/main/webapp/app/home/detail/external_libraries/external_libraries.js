@@ -35,6 +35,8 @@ angular
         sortReverse: false,
         searchInput: ''
       },
+      selectedStageLibraryList: [],
+      selectedStageLibraryMap: {},
 
       /**
        * On Select All check box select

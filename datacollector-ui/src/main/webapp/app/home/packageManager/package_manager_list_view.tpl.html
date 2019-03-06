@@ -45,14 +45,14 @@
       </li>
 
       <li class="list-group-item"
-          ng-class="{'active-info': selectedStageLibraryMap[stageLibrary.stageLibraryManifest.stageLibId]}"
+          ng-class="{'active-info': selectedStageLibraryMap[getStageLibraryKey(stageLibrary)]}"
           ng-repeat="stageLibrary in filteredStageLibraries | orderBy: customStageLibrarySortFunction: header.sortReverse | limitTo: limit">
 
-        <i ng-if="selectedStageLibraryMap[stageLibrary.stageLibraryManifest.stageLibId]"
+        <i ng-if="selectedStageLibraryMap[getStageLibraryKey(stageLibrary)]"
            ng-click="unSelectStageLibrary(stageLibrary)"
            class="glyphicon glyphicon-check fa-12x"></i>
 
-        <i ng-if="!selectedStageLibraryMap[stageLibrary.stageLibraryManifest.stageLibId]"
+        <i ng-if="!selectedStageLibraryMap[getStageLibraryKey(stageLibrary)]"
            ng-click="selectStageLibrary(stageLibrary)"
            class="glyphicon glyphicon-unchecked fa-12x"></i>
 
