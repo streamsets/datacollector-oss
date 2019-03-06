@@ -81,7 +81,8 @@ public class JdbcLoadRecordWriter extends JdbcBaseRecordWriter {
       List<JdbcFieldColumnParamMapping> customMappings,
       DuplicateKeyAction duplicateKeyAction,
       JdbcRecordReader recordReader,
-      boolean caseSensitive
+      boolean caseSensitive,
+      List<String> customDataSqlStateCodes
   ) throws StageException {
     super(
         connectionString,
@@ -94,7 +95,8 @@ public class JdbcLoadRecordWriter extends JdbcBaseRecordWriter {
         UnsupportedOperationAction.SEND_TO_ERROR,
         recordReader,
         null,
-        caseSensitive
+        caseSensitive,
+        customDataSqlStateCodes
     );
     this.duplicateKeyAction = duplicateKeyAction;
     String threadName = "JDBC LOAD DATA Stream " + getTableName();

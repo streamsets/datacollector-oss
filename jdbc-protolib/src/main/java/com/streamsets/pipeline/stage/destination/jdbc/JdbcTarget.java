@@ -23,8 +23,6 @@ import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.BaseTarget;
-import com.streamsets.pipeline.api.el.ELEval;
-import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.cache.CacheCleaner;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.jdbc.DuplicateKeyAction;
@@ -71,6 +69,7 @@ public class JdbcTarget extends BaseTarget {
   private final boolean caseSensitive;
   private final boolean dynamicSchemaName;
   private final boolean dynamicTableName;
+  private final List<String> customDataSqlStateCodes;
 
   private final ChangeLogFormat changeLogFormat;
   private final HikariPoolConfigBean hikariConfigBean;
@@ -102,7 +101,8 @@ public class JdbcTarget extends BaseTarget {
           unsupportedAction,
           duplicateKeyAction,
           JdbcRecordReaderWriterFactory.createRecordReader(changeLogFormat),
-          caseSensitive
+          caseSensitive,
+          customDataSqlStateCodes
       );
     }
   }
@@ -121,7 +121,8 @@ public class JdbcTarget extends BaseTarget {
       final ChangeLogFormat changeLogFormat,
       final JDBCOperationType defaultOperation,
       final UnsupportedOperationAction unsupportedAction,
-      final HikariPoolConfigBean hikariConfigBean
+      final HikariPoolConfigBean hikariConfigBean,
+      final List<String> customDataSqlStateCodes
   ) {
     this(
         schemaNameTemplate,
@@ -136,7 +137,8 @@ public class JdbcTarget extends BaseTarget {
         defaultOperation.getCode(),
         unsupportedAction,
         null, // no support for duplicate-key errors
-        hikariConfigBean
+        hikariConfigBean,
+        customDataSqlStateCodes
     );
   }
 
@@ -153,7 +155,8 @@ public class JdbcTarget extends BaseTarget {
       final int defaultOpCode,
       UnsupportedOperationAction unsupportedAction,
       DuplicateKeyAction duplicateKeyAction,
-      HikariPoolConfigBean hikariConfigBean
+      HikariPoolConfigBean hikariConfigBean,
+      final List<String> customDataSqlStateCodes
   ) {
     this.jdbcUtil = UtilsProvider.getJdbcUtil();
     this.schemaNameTemplate = schemaNameTemplate;
@@ -171,6 +174,7 @@ public class JdbcTarget extends BaseTarget {
     this.hikariConfigBean = hikariConfigBean;
     this.dynamicTableName = jdbcUtil.isElString(tableNameTemplate);
     this.dynamicSchemaName = jdbcUtil.isElString(schemaNameTemplate);
+    this.customDataSqlStateCodes = customDataSqlStateCodes;
 
     CacheBuilder cacheBuilder = CacheBuilder.newBuilder()
         .maximumSize(500)

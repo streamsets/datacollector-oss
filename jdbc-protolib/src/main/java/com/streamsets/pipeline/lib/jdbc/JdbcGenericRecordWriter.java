@@ -71,10 +71,23 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
       UnsupportedOperationAction unsupportedAction,
       List<JdbcFieldColumnMapping> generatedColumnMappings,
       JdbcRecordReader recordReader,
-      boolean caseSensitive
+      boolean caseSensitive,
+      List<String> customDataSqlStateCodes
   ) throws StageException {
-    super(connectionString, dataSource, schema, tableName, rollbackOnError,
-        customMappings, defaultOpCode, unsupportedAction, recordReader, generatedColumnMappings, caseSensitive);
+    super(
+        connectionString,
+        dataSource,
+        schema,
+        tableName,
+        rollbackOnError,
+        customMappings,
+        defaultOpCode,
+        unsupportedAction,
+        recordReader,
+        generatedColumnMappings,
+        caseSensitive,
+        customDataSqlStateCodes
+    );
     this.maxPrepStmtCache = maxStmtCache;
     this.caseSensitive = caseSensitive;
   }
@@ -236,7 +249,7 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
   private void handleBatchUpdateException(
       Collection<Record> failedRecords, SQLException e, List<OnRecordErrorException> errorRecords
   ) throws StageException {
-    if (jdbcUtil.isDataError(getConnectionString(), e)) {
+    if (jdbcUtil.isDataError(getCustomDataSqlStateCodes(), getConnectionString(), e)) {
       String formattedError = JdbcErrors.JDBC_79.getMessage();
       LOG.error(formattedError);
       LOG.debug(formattedError, e);
