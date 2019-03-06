@@ -91,6 +91,7 @@ public class BulkRecordCreator extends SobjectRecordCreator {
   private Field pullMap(XMLEventReader reader) throws StageException, XMLStreamException {
     LinkedHashMap<String, Field> map = new LinkedHashMap<>();
     String type = null;
+    String fieldValue = null;
 
     while (reader.hasNext()) {
       XMLEvent event = reader.nextEvent();
@@ -109,37 +110,57 @@ public class BulkRecordCreator extends SobjectRecordCreator {
             map.put(fieldName, pullMap(reader));
           } else {
             event = reader.nextEvent();
-            if (event.isCharacters()) {
-              // Element is a field value
-              String fieldValue = event.asCharacters().getData();
-              if (type == null) {
-                throw new StageException(Errors.FORCE_38);
-              }
-              com.sforce.soap.partner.Field sfdcField = getFieldMetadata(type, fieldName);
+            fieldValue = null;
+            switch (event.getEventType()) {
+              case XMLEvent.START_ELEMENT:
+                // Element is a nested list of records
+                // Advance over <done>, <queryLocator> to record list
+                while (!(event.isStartElement() && event.asStartElement().getName().getLocalPart().equals(RECORDS))) {
+                  event = reader.nextEvent();
+                }
 
-              Field field = createField(fieldValue, sfdcField);
-              if (conf.createSalesforceNsHeaders) {
-                setHeadersOnField(field, getFieldMetadata(type, fieldName));
-              }
+                // Read record list
+                List<Field> recordList = new ArrayList<>();
+                while (event.isStartElement() && event.asStartElement().getName().getLocalPart().equals(RECORDS)) {
+                  recordList.add(pullMap(reader));
+                  event = reader.nextEvent();
+                }
+                map.put(fieldName, Field.create(recordList));
+                break;
+              case XMLEvent.CHARACTERS:
+                // Element is a field value
+                fieldValue = event.asCharacters().getData();
+                // Consume closing tag
+                reader.nextEvent();
+                // Intentional fall through to next case!
+              case XMLEvent.END_ELEMENT:
+                // Create the SDC field
+                if (type == null) {
+                  throw new StageException(Errors.FORCE_38);
+                }
+                // Is this a relationship to another object?
+                com.sforce.soap.partner.Field sfdcField = metadataCache.get(type).getFieldFromRelationship(fieldName);
+                if (sfdcField != null) {
+                  // See if we already added fields from the related record
+                  if (map.get(fieldName) != null) {
+                    // We already created this node - don't overwrite it!
+                    sfdcField = null;
+                  }
+                } else {
+                  sfdcField = getFieldMetadata(type, fieldName);
+                }
 
-              map.put(fieldName, field);
+                if (sfdcField != null) {
+                  Field field = createField(fieldValue, sfdcField);
+                  if (conf.createSalesforceNsHeaders) {
+                    setHeadersOnField(field, getFieldMetadata(type, fieldName));
+                  }
 
-              // Consume closing tag
-              reader.nextEvent();
-            } else if (event.isStartElement()) {
-              // Element is a nested list of records
-              // Advance over <done>, <queryLocator> to record list
-              while (!(event.isStartElement() && event.asStartElement().getName().getLocalPart().equals(RECORDS))) {
-                event = reader.nextEvent();
-              }
-
-              // Read record list
-              List<Field> recordList = new ArrayList<>();
-              while (event.isStartElement() && event.asStartElement().getName().getLocalPart().equals(RECORDS)) {
-                recordList.add(pullMap(reader));
-                event = reader.nextEvent();
-              }
-              map.put(fieldName, Field.create(recordList));
+                  map.put(fieldName, field);
+                }
+                break;
+              default:
+                throw new StageException(Errors.FORCE_41, event.getEventType());
             }
           }
         }
