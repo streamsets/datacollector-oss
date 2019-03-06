@@ -139,6 +139,10 @@ angular
         }
       },
 
+      getStageLibraryKey: function(stageLibrary) {
+        return getStageLibraryKey(stageLibrary);
+      },
+
       /**
        * On Select All check box select
        */
@@ -150,8 +154,9 @@ angular
           list = $scope.stageLibrariesExtras;
         }
         angular.forEach(list, function(stageLibrary) {
-          $scope.selectedStageLibraryList.push(stageLibrary.stageLibraryManifest.stageLibId);
-          $scope.selectedStageLibraryMap[stageLibrary.stageLibraryManifest.stageLibId] = true;
+          var id = getStageLibraryKey(stageLibrary);
+          $scope.selectedStageLibraryList.push(id);
+          $scope.selectedStageLibraryMap[id] = true;
         });
         $scope.allSelected = true;
       },
@@ -171,8 +176,9 @@ angular
        * @param stageLibrary
        */
       selectStageLibrary: function(stageLibrary) {
-        $scope.selectedStageLibraryMap[stageLibrary.stageLibraryManifest.stageLibId] = true;
-        $scope.selectedStageLibraryList.push(stageLibrary.stageLibraryManifest.stageLibId);
+        var id = getStageLibraryKey(stageLibrary);
+        $scope.selectedStageLibraryMap[id] = true;
+        $scope.selectedStageLibraryList.push(id);
       },
 
       /**
@@ -180,8 +186,9 @@ angular
        * @param stageLibrary
        */
       unSelectStageLibrary: function(stageLibrary) {
-        $scope.selectedStageLibraryMap[stageLibrary.stageLibraryManifest.stageLibId] = false;
-        var index = $scope.selectedStageLibraryList.indexOf(stageLibrary.stageLibraryManifest.stageLibId);
+        var id = getStageLibraryKey(stageLibrary);
+        $scope.selectedStageLibraryMap[id] = false;
+        var index = $scope.selectedStageLibraryList.indexOf(id);
         if (index !== -1) {
           $scope.selectedStageLibraryList.splice(index, 1);
         }
@@ -239,7 +246,7 @@ angular
         );
 
         installStageLibraries(_.filter($scope.filteredStageLibraries, function(lib) {
-          return !lib.stageLibraryManifest.installed && $scope.selectedStageLibraryList.indexOf(lib.stageLibraryManifest.stageLibId) !== -1;
+          return !lib.stageLibraryManifest.installed && $scope.selectedStageLibraryList.indexOf(getStageLibraryKey(lib)) !== -1;
         }));
       },
 
@@ -259,7 +266,7 @@ angular
         );
 
         uninstallStageLibraries(_.filter($scope.filteredStageLibraries, function(lib) {
-          return lib.stageLibraryManifest.installed && $scope.selectedStageLibraryList.indexOf(lib.stageLibraryManifest.stageLibId) !== -1;
+          return lib.stageLibraryManifest.installed && $scope.selectedStageLibraryList.indexOf(getStageLibraryKey(lib)) !== -1;
         }));
       },
 
@@ -275,7 +282,7 @@ angular
       hasSelectedLibrary: function(toInstall) {
         return !_.any($scope.filteredStageLibraries, function(lib) {
           var condition = toInstall ? !lib.stageLibraryManifest.installed : lib.stageLibraryManifest.installed;
-          return condition && $scope.selectedStageLibraryList.indexOf(lib.stageLibraryManifest.stageLibId) !== -1;
+          return condition && $scope.selectedStageLibraryList.indexOf(getStageLibraryKey(lib)) !== -1;
         });
       },
 
@@ -351,7 +358,7 @@ angular
         );
 
         var selectedList = _.filter($scope.stageLibrariesExtras, function(lib) {
-          return  $scope.selectedStageLibraryList.indexOf(lib.id) !== -1;
+          return $scope.selectedStageLibraryList.indexOf(getStageLibraryKey(lib)) !== -1;
         });
 
         var modalInstance = $modal.open({
@@ -530,5 +537,13 @@ angular
         getLibraries($scope.header.customRepoUrl, false);
       }, function () {
       });
+    };
+
+    var getStageLibraryKey = function(stageLibrary) {
+      if (stageLibrary.stageLibraryManifest) {
+        return stageLibrary.stageLibraryManifest.stageLibId + ':' + stageLibrary.stagelibVersion;
+      } else {
+        return stageLibrary.id;
+      }
     };
   });

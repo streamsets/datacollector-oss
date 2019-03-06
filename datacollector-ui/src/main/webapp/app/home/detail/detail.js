@@ -399,11 +399,11 @@ angular
                 stageLibraryManifest: {
                   stageLibId: libraryId,
                   stageLibLabel: libraryId
-                },
-                withStageLibVersion: function () {
-                  return false; // TODO: Change to true when we update stage instance with StageLibVersion
-                },
+                }
               }];
+            },
+            withStageLibVersion: function () {
+              return false; // TODO: Change to true when we update stage instance with StageLibVersion
             }
           }
         });
