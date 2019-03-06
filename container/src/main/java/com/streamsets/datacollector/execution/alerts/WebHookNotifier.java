@@ -182,7 +182,7 @@ public class WebHookNotifier implements StateEventListener {
                 );
               }
             } catch (Exception e) {
-              LOG.error("Error calling Webhook URL : {}", e.toString(), e);
+              LOG.error("Error calling Webhook URL '{}' on state {}: {}", webhookConfig.webhookUrl, toState.getStatus().name(), e.toString(), e);
             } finally {
               if (response != null) {
                 response.close();
