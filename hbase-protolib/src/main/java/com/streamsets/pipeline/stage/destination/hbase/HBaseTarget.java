@@ -165,14 +165,14 @@ public class HBaseTarget extends BaseTarget {
     if (issues.isEmpty() && hTableDescriptor != null) {
       for (HBaseFieldMappingConfig column : hbaseFieldColumnMapping) {
         HBaseColumn hbaseColumn = hbaseConnectionHelper.getColumn(column.columnName);
-        if (hbaseColumn == null) {
+        if (!hbaseColumn.getCf().isPresent() || !hbaseColumn.getQualifier().isPresent()) {
           issues.add(getContext().createConfigIssue(Groups.HBASE.name(),
               HBASE_FIELD_COLUMN_MAPPING,
               Errors.HBASE_28,
               column.columnName,
               KeyValue.COLUMN_FAMILY_DELIMITER
           ));
-        } else if (hTableDescriptor.getFamily(hbaseColumn.getCf()) == null) {
+        } else if (hTableDescriptor.getFamily(hbaseColumn.getCf().get()) == null) {
           issues.add(getContext().createConfigIssue(Groups.HBASE.name(),
               HBASE_FIELD_COLUMN_MAPPING,
               Errors.HBASE_32,

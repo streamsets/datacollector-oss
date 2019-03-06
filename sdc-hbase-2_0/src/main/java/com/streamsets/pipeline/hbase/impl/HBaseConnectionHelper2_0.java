@@ -60,12 +60,15 @@ public class HBaseConnectionHelper2_0 extends AbstractHBaseConnectionHelper {
 
   @Override
   public HBaseColumn getColumn(String column) {
+    HBaseColumn result = new HBaseColumn();
+
     if (column.contains(FAMILY_DELIMITER)) {
       String[] parts = column.split(FAMILY_DELIMITER);
       if (parts.length == 2) {
-        return new HBaseColumn(Bytes.toBytes(parts[0]), Bytes.toBytes(parts[1]));
+        result.setCf(Bytes.toBytes(parts[0]));
+        result.setQualifier(Bytes.toBytes(parts[1]));
       }
     }
-    return null;
+    return result;
   }
 }

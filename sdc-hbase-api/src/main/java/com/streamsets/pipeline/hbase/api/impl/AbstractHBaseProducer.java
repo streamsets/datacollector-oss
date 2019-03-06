@@ -312,7 +312,7 @@ public abstract class AbstractHBaseProducer implements HBaseProducer {
     for (Map.Entry<String, ColumnInfo> mapEntry : columnMappings.entrySet()) {
       HBaseColumn hbaseColumn = mapEntry.getValue().hbaseColumn;
       byte[] value = getBytesForValue(record, mapEntry.getKey(), mapEntry.getValue().storageType, ignoreMissingField);
-      addCell(p, hbaseColumn.getCf(), hbaseColumn.getQualifier(), recordTime, value);
+      addCell(p, hbaseColumn.getCf().get(), hbaseColumn.getQualifier().get(), recordTime, value);
     }
   }
 
@@ -335,9 +335,9 @@ public abstract class AbstractHBaseProducer implements HBaseProducer {
           fieldPathColumn = fieldPath.substring(1);
         }
         HBaseColumn hbaseColumn = hbaseConnectionHelper.getColumn(fieldPathColumn.replace("'", ""));
-        if (hbaseColumn != null) {
+        if (hbaseColumn.getCf().isPresent() && hbaseColumn.getQualifier().isPresent()) {
           byte[] value = getBytesForValue(record, fieldPath, null, ignoreMissingField);
-          addCell(p, hbaseColumn.getCf(), hbaseColumn.getQualifier(), recordTime, value);
+          addCell(p, hbaseColumn.getCf().get(), hbaseColumn.getQualifier().get(), recordTime, value);
         } else if (ignoreInvalidColumn) {
           String errorMessage = Utils.format(Errors.HBASE_28.getMessage(),
               fieldPathColumn,
