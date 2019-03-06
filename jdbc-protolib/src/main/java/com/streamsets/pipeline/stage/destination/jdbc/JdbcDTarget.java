@@ -37,6 +37,7 @@ import com.streamsets.pipeline.lib.operation.ChangeLogFormatChooserValues;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationActionChooserValues;
 
+import java.util.Collections;
 import java.util.List;
 
 @GenerateResourceBundle
@@ -195,6 +196,16 @@ public class JdbcDTarget extends DTarget {
   @ConfigDefBean()
   public HikariPoolConfigBean hikariConfigBean;
 
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.LIST,
+      label = "Data SQLSTATE Codes",
+      description = "SQLSTATE codes to treat as data errors. Records that trigger these codes are treated as error records.",
+      displayPosition = 1000,
+      group = "ADVANCED"
+  )
+  public List<String> customDataSqlStateCodes = Collections.emptyList();
+
   @Override
   protected Target createTarget() {
     return new JdbcTarget(
@@ -208,7 +219,8 @@ public class JdbcDTarget extends DTarget {
         changeLogFormat,
         defaultOperation,
         unsupportedAction,
-        hikariConfigBean
+        hikariConfigBean,
+        customDataSqlStateCodes
     );
   }
 }

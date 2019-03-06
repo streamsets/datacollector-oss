@@ -19,6 +19,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.streamsets.pipeline.api.Batch;
@@ -167,6 +168,13 @@ public class JdbcUtil {
   );
 
   /**
+   * Oracle specific SQL States: https://docs.oracle.com/cd/E15817_01/appdev.111/b31228/appd.htm
+   */
+  private static final Set<String> ORACLE_DATA_SQLSTATES = ImmutableSet.of(
+    "72000"
+  );
+
+  /**
    * MySQL does not use standard SQL States for some errors
    * handle those as a special case. See MySQL doc:
    * Server Error Codes and Messages
@@ -182,11 +190,15 @@ public class JdbcUtil {
     return METADATA_TABLE_VIEW_TYPE;
   }
 
-  public boolean isDataError(String connectionString, SQLException ex) {
+  public boolean isDataError(List<String> customDataSqlCodes, String connectionString, SQLException ex) {
     String sqlState = Strings.nullToEmpty(ex.getSQLState());
     String errorCode = String.valueOf(ex.getErrorCode());
-    if (sqlState.equals(MYSQL_GENERAL_ERROR) && connectionString.contains(":mysql")) {
+    if(customDataSqlCodes.contains(sqlState)) {
+      return true;
+    } else if (sqlState.equals(MYSQL_GENERAL_ERROR) && connectionString.contains(":mysql")) {
       return MYSQL_DATA_ERROR_ERROR_CODES.containsKey(errorCode);
+    } else if (connectionString.contains(":oracle:") && ORACLE_DATA_SQLSTATES.contains(sqlState)) {
+      return true;
     } else if (sqlState.length() >= 2 && STANDARD_DATA_ERROR_SQLSTATES.containsKey(sqlState.substring(0, 2))) {
       return true;
     }

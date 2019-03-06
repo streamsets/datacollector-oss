@@ -121,7 +121,8 @@ public class TestJdbcMultiRowRecordWriter {
         UnsupportedOperationAction.DISCARD,
         null,
         new JdbcRecordReader(),
-        false
+        false,
+        Collections.emptyList()
     );
     List<Record> batch = generateRecords(10);
     writer.writeBatch(batch.iterator());
@@ -150,7 +151,8 @@ public class TestJdbcMultiRowRecordWriter {
         UnsupportedOperationAction.SEND_TO_ERROR,
         null,
         new JdbcRecordReader(),
-        false
+        false,
+        Collections.emptyList()
     );
     List<Record> batch = generateRecords(10);
     batch.get(0).getHeader().setAttribute(OperationType.SDC_OPERATION_TYPE, "-5");
@@ -183,7 +185,8 @@ public class TestJdbcMultiRowRecordWriter {
         UnsupportedOperationAction.DISCARD,
         null,
         new JdbcRecordReader(),
-        caseSensitive
+        caseSensitive,
+        Collections.emptyList()
     );
     List<Record> batch = generateRecords(10);
 
@@ -207,7 +210,8 @@ public class TestJdbcMultiRowRecordWriter {
         UnsupportedOperationAction.DISCARD,
         null,
         new JdbcRecordReader(),
-        caseSensitive
+        caseSensitive,
+        Collections.emptyList()
     );
 
     Collection<Record> records = generateRecords(10);
@@ -241,7 +245,8 @@ public class TestJdbcMultiRowRecordWriter {
         UnsupportedOperationAction.DISCARD,
         null,
         new JdbcRecordReader(),
-        caseSensitive
+        caseSensitive,
+        Collections.emptyList()
     );
 
     Collection<Record> records = generateRecords(1);
@@ -280,7 +285,8 @@ public class TestJdbcMultiRowRecordWriter {
         UnsupportedOperationAction.DISCARD,
         null,
         new JdbcRecordReader(),
-        caseSensitive
+        caseSensitive,
+        Collections.emptyList()
     );
     // Test Insert query
 
@@ -332,7 +338,8 @@ public class TestJdbcMultiRowRecordWriter {
         UnsupportedOperationAction.DISCARD,
         null,
         new JdbcRecordReader(),
-        true
+        true,
+        Collections.emptyList()
     );
 
     // Test Insert query
@@ -399,7 +406,8 @@ public class TestJdbcMultiRowRecordWriter {
         UnsupportedOperationAction.USE_DEFAULT,
         null,
         new JdbcRecordReader(),
-        caseSensitive
+        caseSensitive,
+        Collections.emptyList()
     );
     List<Record> batch = ImmutableList.of(insertRecord, updateRecord);
     writer.writeBatch(batch.iterator());
@@ -429,7 +437,8 @@ public class TestJdbcMultiRowRecordWriter {
         UnsupportedOperationAction.DISCARD,
         null,
         new JdbcRecordReader(),
-        false
+        false,
+        Collections.emptyList()
     );
     List<Record> batch = Collections.singletonList(RecordCreator.create());
     List<OnRecordErrorException> errors = writer.writeBatch(batch.iterator());

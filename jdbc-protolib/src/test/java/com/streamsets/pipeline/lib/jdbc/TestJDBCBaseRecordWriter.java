@@ -41,6 +41,7 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -134,7 +135,8 @@ public class TestJDBCBaseRecordWriter {
         UnsupportedOperationAction.DISCARD,
         null,
         new JdbcRecordReader(),
-        caseSensitive
+        caseSensitive,
+        Collections.emptyList()
     );
 
     try {
@@ -162,7 +164,8 @@ public class TestJDBCBaseRecordWriter {
         UnsupportedOperationAction.DISCARD,
         null,
         new JdbcRecordReader(),
-        caseSensitive
+        caseSensitive,
+        Collections.emptyList()
     );
 
     try {
@@ -202,7 +205,8 @@ public class TestJDBCBaseRecordWriter {
         UnsupportedOperationAction.DISCARD,
         generatedColumnMapping,
         new JdbcRecordReader(),
-        caseSensitive
+        caseSensitive,
+        Collections.emptyList()
     );
     Record record = RecordCreator.create();
     Map<String, Field> fields = new HashMap<>();
@@ -277,7 +281,8 @@ public class TestJDBCBaseRecordWriter {
         UnsupportedOperationAction.DISCARD,
         generatedColumnMapping,
         new JdbcRecordReader(),
-        caseSensitive
+        caseSensitive,
+        Collections.emptyList()
     );
     Record record = RecordCreator.create();
     Map<String, Field> fields = new HashMap<>();
@@ -362,7 +367,8 @@ public class TestJDBCBaseRecordWriter {
         UnsupportedOperationAction.DISCARD,
         null,
         new JdbcRecordReader(),
-        false
+        false,
+        Collections.emptyList()
     );
 
     /* isColumnTypeNumeric() - true assertions */

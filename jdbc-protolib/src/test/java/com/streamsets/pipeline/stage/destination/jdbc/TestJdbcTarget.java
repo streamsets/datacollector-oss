@@ -191,7 +191,8 @@ public class TestJdbcTarget {
         ChangeLogFormat.NONE,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        Collections.emptyList()
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
 
@@ -222,7 +223,8 @@ public class TestJdbcTarget {
         ChangeLogFormat.NONE,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        Collections.emptyList()
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
 
@@ -267,7 +269,8 @@ public class TestJdbcTarget {
         ChangeLogFormat.NONE,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        Collections.emptyList()
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
 
@@ -313,7 +316,8 @@ public class TestJdbcTarget {
         ChangeLogFormat.NONE,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        Collections.emptyList()
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target)
         .setOnRecordError(OnRecordError.TO_ERROR)
@@ -379,7 +383,8 @@ public class TestJdbcTarget {
         ChangeLogFormat.NONE,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        Collections.emptyList()
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target)
         .setOnRecordError(OnRecordError.TO_ERROR)
@@ -444,7 +449,8 @@ public class TestJdbcTarget {
         ChangeLogFormat.NONE,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        Collections.emptyList()
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target)
         .setOnRecordError(OnRecordError.TO_ERROR)
@@ -512,7 +518,8 @@ public class TestJdbcTarget {
         ChangeLogFormat.NONE,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        Collections.emptyList()
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target)
         .setOnRecordError(OnRecordError.TO_ERROR)
@@ -574,7 +581,8 @@ public class TestJdbcTarget {
         ChangeLogFormat.NONE,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
-        createConfigBean(h2ConnectionString, unprivUser, unprivPassword)
+        createConfigBean(h2ConnectionString, unprivUser, unprivPassword),
+        Collections.emptyList()
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
 
@@ -635,7 +643,8 @@ public class TestJdbcTarget {
         ChangeLogFormat.NONE,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
-        createConfigBean("bad connection string", username, password)
+        createConfigBean("bad connection string", username, password),
+        Collections.emptyList()
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
 
@@ -664,7 +673,8 @@ public class TestJdbcTarget {
         ChangeLogFormat.NONE,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
-        createConfigBean(h2ConnectionString, "foo", "bar")
+        createConfigBean(h2ConnectionString, "foo", "bar"),
+        Collections.emptyList()
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
 
@@ -693,7 +703,8 @@ public class TestJdbcTarget {
         ChangeLogFormat.NONE,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        Collections.emptyList()
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
 
@@ -722,7 +733,8 @@ public class TestJdbcTarget {
         ChangeLogFormat.NONE,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        Collections.emptyList()
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
 
@@ -795,7 +807,8 @@ public class TestJdbcTarget {
         ChangeLogFormat.NONE,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        Collections.emptyList()
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
 
@@ -858,7 +871,8 @@ public class TestJdbcTarget {
         ChangeLogFormat.NONE,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        Collections.emptyList()
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
 
@@ -925,7 +939,8 @@ public class TestJdbcTarget {
         ChangeLogFormat.NONE,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        Collections.emptyList()
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
 
@@ -993,7 +1008,8 @@ public class TestJdbcTarget {
         ChangeLogFormat.NONE,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        Collections.emptyList()
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
 
@@ -1039,7 +1055,8 @@ public class TestJdbcTarget {
         ChangeLogFormat.NONE,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        Collections.emptyList()
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target)
       .setOnRecordError(OnRecordError.TO_ERROR)
@@ -1082,7 +1099,8 @@ public class TestJdbcTarget {
         ChangeLogFormat.NONE,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        Collections.emptyList()
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
 
@@ -1150,7 +1168,8 @@ public class TestJdbcTarget {
         ChangeLogFormat.NONE,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        Collections.emptyList()
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
 
@@ -1191,7 +1210,8 @@ public class TestJdbcTarget {
         ChangeLogFormat.NONE,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        Collections.emptyList()
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target)
       .setOnRecordError(OnRecordError.TO_ERROR)
@@ -1242,7 +1262,8 @@ public class TestJdbcTarget {
         ChangeLogFormat.NONE,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        Collections.emptyList()
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target)
         .setOnRecordError(OnRecordError.TO_ERROR)

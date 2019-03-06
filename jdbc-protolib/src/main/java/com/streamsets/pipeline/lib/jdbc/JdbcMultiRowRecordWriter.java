@@ -81,10 +81,23 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       UnsupportedOperationAction unsupportedAction,
       List<JdbcFieldColumnMapping> generatedColumnMappings,
       JdbcRecordReader recordReader,
-      boolean caseSensitive
+      boolean caseSensitive,
+      List<String> customDataSqlStateCodes
   ) throws StageException {
-    super(connectionString, dataSource, schema, tableName, rollbackOnError, customMappings,
-        defaultOpCode, unsupportedAction, recordReader, generatedColumnMappings, caseSensitive);
+    super(
+        connectionString,
+        dataSource,
+        schema,
+        tableName,
+        rollbackOnError,
+        customMappings,
+        defaultOpCode,
+        unsupportedAction,
+        recordReader,
+        generatedColumnMappings,
+        caseSensitive,
+        customDataSqlStateCodes
+    );
     this.maxPrepStmtParameters = maxPrepStmtParameters == UNLIMITED_PARAMETERS ? Integer.MAX_VALUE :
         maxPrepStmtParameters;
     this.caseSensitive = caseSensitive;
@@ -309,7 +322,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
     List<Record> inputRecords,
     List<OnRecordErrorException> errors
   ) throws StageException {
-    if(jdbcUtil.isDataError(getConnectionString(), exception)) {
+    if(jdbcUtil.isDataError(getCustomDataSqlStateCodes(), getConnectionString(), exception)) {
       String formattedError = jdbcUtil.formatSqlException(exception);
       LOG.error(JdbcErrors.JDBC_89.getMessage(), formattedError);
 
