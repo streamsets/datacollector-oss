@@ -70,7 +70,7 @@
               ng-class="{'disabled': selectedPipelineList.length === 0}"
               ng-if="isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])">
             <a href="#" dropdown-toggle
-               ng-click="selectedPipelineList.length === 0 || exportSelectedPipelines(false)">
+               ng-click="selectedPipelineList.length === 0 || exportSelectedPipelines(false, false)">
               <i class="glyphicon glyphicon-export"></i>
               <span>{{'global.form.export' | translate}}</span>
             </a>
@@ -80,9 +80,19 @@
               ng-class="{'disabled': selectedPipelineList.length === 0}"
               ng-if="isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])">
             <a href="#" dropdown-toggle
-               ng-click="selectedPipelineList.length === 0 || exportSelectedPipelines(true)">
+               ng-click="selectedPipelineList.length === 0 || exportSelectedPipelines(true, false)">
               <i class="glyphicon glyphicon-export"></i>
               <span>{{'global.form.exportWithLibraryDefinitions' | translate}}</span>
+            </a>
+          </li>
+
+          <li role="presentation"
+              ng-class="{'disabled': selectedPipelineList.length === 0}"
+              ng-if="isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])">
+            <a href="#" dropdown-toggle
+               ng-click="selectedPipelineList.length === 0 || exportSelectedPipelines(true, true)">
+              <i class="glyphicon glyphicon-export"></i>
+              <span>{{'global.form.exportWithPlainTextCredentials' | translate}}</span>
             </a>
           </li>
 

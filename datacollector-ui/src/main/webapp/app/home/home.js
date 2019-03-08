@@ -374,15 +374,15 @@ angular
       /**
        * Export link command handler
        */
-      exportPipelineConfig: function(pipelineInfo, includeDefinitions, $event) {
+      exportPipelineConfig: function(pipelineInfo, includeDefinitions, includePlainTextCredentials, $event) {
         $event.stopPropagation();
-        api.pipelineAgent.exportPipelineConfig(pipelineInfo.pipelineId, includeDefinitions);
+        api.pipelineAgent.exportPipelineConfig(pipelineInfo.pipelineId, includeDefinitions, includePlainTextCredentials);
       },
 
       /**
        * Export link command handler
        */
-      exportSelectedPipelines: function(includeDefinitions) {
+      exportSelectedPipelines: function(includeDefinitions, includePlainTextCredentials) {
         var selectedPipelineList = $scope.selectedPipelineList;
         if (includeDefinitions) {
           // Export for Control Hub supports only for valid pipelines
@@ -399,7 +399,7 @@ angular
           }
           $rootScope.common.errors = [];
         }
-        api.pipelineAgent.exportSelectedPipelines(selectedPipelineList, includeDefinitions);
+        api.pipelineAgent.exportSelectedPipelines(selectedPipelineList, includeDefinitions, includePlainTextCredentials);
       },
 
       publishPipelinesToEdge: function($event) {

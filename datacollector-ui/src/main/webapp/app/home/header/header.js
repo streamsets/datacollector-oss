@@ -395,9 +395,9 @@ angular
       /**
        * Export link command handler
        */
-      exportPipelineConfig: function(pipelineInfo, includeDefinitions, $event) {
+      exportPipelineConfig: function(pipelineInfo, includeDefinitions, includePlainTextCredentials, $event) {
         $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Export Pipeline', 1);
-        api.pipelineAgent.exportPipelineConfig(pipelineInfo.pipelineId, includeDefinitions);
+        api.pipelineAgent.exportPipelineConfig(pipelineInfo.pipelineId, includeDefinitions, includePlainTextCredentials);
       },
 
       publishPipeline: function (pipelineInfo, $event) {

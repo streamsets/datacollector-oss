@@ -694,13 +694,21 @@ angular.module('dataCollectorApp.common')
        *
        * @param name
        * @param includeLibraryDefinitions
+       * @param includePlainTextCredentials
        */
-      exportPipelineConfig: function(name, includeLibraryDefinitions) {
-        var url = apiBase + '/pipeline/' + name + '/export?attachment=true';
+      exportPipelineConfig: function(name, includeLibraryDefinitions, includePlainTextCredentials) {
+        var url = apiBase + '/pipeline/' + name + '/export?attachment=true&includePlainTextCredentials=' +
+          !!includePlainTextCredentials;
         if (includeLibraryDefinitions) {
           url += '&includeLibraryDefinitions=true';
         }
         window.open(url, '_blank', '');
+        if (!includePlainTextCredentials) {
+          $rootScope.common.infoList = [{
+            message: 'Exporting the pipeline stripped of all plain text credentials. ' +
+              'To include credentials in the export, use Export with Plain Text Credentials.'
+          }];
+        }
       },
 
       /**
@@ -708,12 +716,13 @@ angular.module('dataCollectorApp.common')
        *
        * @param pipelineIds
        * @param includeLibraryDefinitions
+       * @param includePlainTextCredentials
        */
-      exportSelectedPipelines: function(pipelineIds, includeLibraryDefinitions) {
+      exportSelectedPipelines: function(pipelineIds, includeLibraryDefinitions, includePlainTextCredentials) {
 
-        var url = apiBase + '/pipelines/export';
+        var url = apiBase + '/pipelines/export?includePlainTextCredentials=' + !!includePlainTextCredentials;
         if (includeLibraryDefinitions) {
-          url += '?includeLibraryDefinitions=true';
+          url += '&includeLibraryDefinitions=true';
         }
 
         var xhr = new XMLHttpRequest();
@@ -759,6 +768,12 @@ angular.module('dataCollectorApp.common')
         xhr.setRequestHeader('Content-type', 'application/json');
         xhr.setRequestHeader('X-Requested-By', 'Data Collector');
         xhr.send(JSON.stringify(pipelineIds));
+        if (!includePlainTextCredentials) {
+          $rootScope.common.infoList = [{
+            message: 'Exporting the pipeline stripped of all plain text credentials. ' +
+              'To include credentials in the export, use Export with Plain Text Credentials.'
+          }];
+        }
       },
 
       /**

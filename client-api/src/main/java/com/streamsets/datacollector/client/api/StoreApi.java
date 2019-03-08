@@ -548,13 +548,15 @@ public class StoreApi {
    * @param rev
    * @param attachment
    * @param includeLibraryDefinitions
+   * @param includePlainTextCredentials
    * @return PipelineEnvelopeJson
    */
   public PipelineEnvelopeJson exportPipeline (
       String pipelineId,
       String rev,
       Boolean attachment,
-      Boolean includeLibraryDefinitions
+      Boolean includeLibraryDefinitions,
+      Boolean includePlainTextCredentials
   ) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
@@ -577,6 +579,7 @@ public class StoreApi {
     queryParams.addAll(apiClient.parameterToPairs("", "rev", rev));
     queryParams.addAll(apiClient.parameterToPairs("", "attachment", attachment));
     queryParams.addAll(apiClient.parameterToPairs("", "includeLibraryDefinitions", includeLibraryDefinitions));
+    queryParams.addAll(apiClient.parameterToPairs("", "includePlainTextCredentials", includePlainTextCredentials));
 
     final String[] accepts = {
         "application/json"
