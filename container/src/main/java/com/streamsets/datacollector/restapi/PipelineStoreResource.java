@@ -71,6 +71,7 @@ import com.streamsets.datacollector.store.impl.AclPipelineStoreTask;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.EdgeUtil;
+import com.streamsets.datacollector.util.PipelineConfigurationUtil;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.DetachedStageValidator;
 import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
@@ -176,7 +177,7 @@ public class PipelineStoreResource {
   private static final String SYSTEM_ERROR_PIPELINES = "system:errorPipelines";
   private static final String SHARED_WITH_ME_PIPELINES = "system:sharedWithMePipelines";
 
-  public static final String SAMPLE_MICROSERVICE_PIPELINE = "sampleMicroservicePipeline.json";
+  private static final String SAMPLE_MICROSERVICE_PIPELINE = "sampleMicroservicePipeline.json";
 
   private static final String PIPELINE_IDS = "pipelineIds";
 
@@ -617,6 +618,7 @@ public class PipelineStoreResource {
   public Response exportPipelines(
       List<String> pipelineIds,
       @QueryParam("includeLibraryDefinitions") @DefaultValue("false") boolean includeLibraryDefinitions,
+      @QueryParam("includePlainTextCredentials") @DefaultValue("true") boolean includePlainTextCredentials,
       @Context SecurityContext context
   ) {
     RestAPIUtils.injectPipelineInMDC("*");
@@ -632,7 +634,8 @@ public class PipelineStoreResource {
               pipelineConfig,
               ruleDefinitions,
               serviceDefinitions,
-              includeLibraryDefinitions
+              includeLibraryDefinitions,
+              includePlainTextCredentials
           );
           pipelineZip.putNextEntry(new ZipEntry(pipelineConfig.getPipelineId() + ".json"));
           pipelineZip.write(ObjectMapperFactory.get().writeValueAsString(pipelineEnvelope).getBytes());
@@ -838,7 +841,13 @@ public class PipelineStoreResource {
 
     if (draft) {
       return Response.created(UriBuilder.fromUri(uri).path(pipelineId).build())
-          .entity(getPipelineEnvelope(pipelineConfig, ruleDefinitions, stageLibrary.getServiceDefinitions(), false))
+          .entity(getPipelineEnvelope(
+              pipelineConfig,
+              ruleDefinitions,
+              stageLibrary.getServiceDefinitions(),
+              false,
+              true
+          ))
           .build();
     } else {
       return Response.created(UriBuilder.fromUri(uri).path(pipelineId).build()).entity(
@@ -1089,7 +1098,8 @@ public class PipelineStoreResource {
       @PathParam("pipelineId") String name,
       @QueryParam("rev") @DefaultValue("0") String rev,
       @QueryParam("attachment") @DefaultValue("false") Boolean attachment,
-      @QueryParam("includeLibraryDefinitions") @DefaultValue("false") boolean includeLibraryDefinitions
+      @QueryParam("includeLibraryDefinitions") @DefaultValue("false") boolean includeLibraryDefinitions,
+      @QueryParam("includePlainTextCredentials") @DefaultValue("true") boolean includePlainTextCredentials
   ) throws PipelineException {
     PipelineInfo pipelineInfo = store.getInfo(name);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
@@ -1102,7 +1112,8 @@ public class PipelineStoreResource {
         pipelineConfig,
         ruleDefinitions,
         stageLibrary.getServiceDefinitions(),
-        includeLibraryDefinitions
+        includeLibraryDefinitions,
+        includePlainTextCredentials
     );
 
     if (attachment) {
@@ -1147,8 +1158,12 @@ public class PipelineStoreResource {
       PipelineConfiguration pipelineConfig,
       RuleDefinitions ruleDefinitions,
       List<ServiceDefinition> serviceDefinitions,
-      boolean includeLibraryDefinitions
+      boolean includeLibraryDefinitions,
+      boolean includePlainTextCredentials
   ) {
+    if (!includePlainTextCredentials) {
+      PipelineConfigurationUtil.stripPipelineConfigPlainCredentials(pipelineConfig, stageLibrary);
+    }
     PipelineEnvelopeJson pipelineEnvelope = new PipelineEnvelopeJson();
     pipelineEnvelope.setPipelineConfig(BeanHelper.wrapPipelineConfiguration(pipelineConfig));
     pipelineEnvelope.setPipelineRules(BeanHelper.wrapRuleDefinitions(ruleDefinitions));
@@ -1361,13 +1376,11 @@ public class PipelineStoreResource {
   }
 
   private PipelineEnvelopeJson getPipelineEnvelopeFromFromUrl(String pipelineHttpUrl) throws IOException {
-    Response response = null;
     PipelineEnvelopeJson pipelineEnvelope = null;
-    try {
-      response = ClientBuilder.newClient()
-          .target(pipelineHttpUrl)
-          .request()
-          .get();
+    try (Response response = ClientBuilder.newClient()
+        .target(pipelineHttpUrl)
+        .request()
+        .get()) {
       if (response.getStatus() != Response.Status.OK.getStatusCode()) {
         throw new RuntimeException(Utils.format("Failed to fetch pipeline from URL '{}' status code '{}': {}",
             pipelineHttpUrl,
@@ -1399,10 +1412,6 @@ public class PipelineStoreResource {
             stageLibrary.getPipelineRules().getPipelineRulesDefaultConfigs()
         );
         pipelineEnvelope.setPipelineRules(BeanHelper.wrapRuleDefinitions(ruleDefinitions));
-      }
-    } finally {
-      if (response != null) {
-        response.close();
       }
     }
     return pipelineEnvelope;
@@ -1480,7 +1489,8 @@ public class PipelineStoreResource {
         pipelineConfig,
         ruleDefinitions,
         stageLibrary.getServiceDefinitions(),
-        includeLibraryDefinitions
+        includeLibraryDefinitions,
+        true
     );
   }
 

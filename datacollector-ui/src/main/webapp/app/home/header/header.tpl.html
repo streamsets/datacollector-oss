@@ -55,16 +55,23 @@
           </li>
 
           <li role="presentation">
-            <a href="#" dropdown-toggle ng-click="exportPipelineConfig(activeConfigInfo, false, $event)">
+            <a href="#" dropdown-toggle ng-click="exportPipelineConfig(activeConfigInfo, false, false, $event)">
               <i class="glyphicon glyphicon-export"></i>
               <span>{{'global.form.export' | translate}}</span>
             </a>
           </li>
 
           <li role="presentation" ng-if="activeConfigInfo.valid">
-            <a href="#" dropdown-toggle ng-click="exportPipelineConfig(activeConfigInfo, true, $event)">
+            <a href="#" dropdown-toggle ng-click="exportPipelineConfig(activeConfigInfo, true, false, $event)">
               <i class="glyphicon glyphicon-export"></i>
               <span>{{'global.form.exportWithLibraryDefinitions' | translate}}</span>
+            </a>
+          </li>
+
+          <li role="presentation" ng-if="activeConfigInfo.valid">
+            <a href="#" dropdown-toggle ng-click="exportPipelineConfig(activeConfigInfo, true, true, $event)">
+              <i class="glyphicon glyphicon-export"></i>
+              <span>{{'global.form.exportWithPlainTextCredentials' | translate}}</span>
             </a>
           </li>
 

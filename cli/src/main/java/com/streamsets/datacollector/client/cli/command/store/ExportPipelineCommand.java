@@ -49,6 +49,12 @@ public class ExportPipelineCommand extends BaseCommand {
   public boolean includeLibraryDefinitions;
 
   @Option(
+      name = {"-p", "--includePlainTextCredentials"},
+      description = "Include Plain Text Credentials"
+  )
+  public boolean includePlainTextCredentials = true;
+
+  @Option(
     name = {"-f", "--file"},
     description = "Export file name",
     required = true
@@ -69,7 +75,9 @@ public class ExportPipelineCommand extends BaseCommand {
           pipelineId,
           pipelineRev,
           false,
-          includeLibraryDefinitions);
+          includeLibraryDefinitions,
+          includePlainTextCredentials
+      );
       mapper.writeValue(new File(fileName), pipelineEnvelopeJson);
       System.out.println("Successfully exported pipeline '" + pipelineId + "' to file - " + fileName );
     } catch (Exception ex) {

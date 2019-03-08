@@ -91,6 +91,7 @@
       "execute": "Execute",
       "executor": "Executor",
       "export": "Export",
+      "exportWithPlainTextCredentials": "Export with Plain Text Credentials",
       "exportWithLibraryDefinitions": "Export for Control Hub",
       "fieldName": "Field Name",
       "fieldName.placeholder": "New Field Name",
