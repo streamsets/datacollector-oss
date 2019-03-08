@@ -171,8 +171,8 @@ public class AvroTypeUtil {
           if(schema.getType() != Schema.Type.BYTES) {
             throw new IllegalStateException("Unexpected physical type for logical decimal type: " + schema.getType());
           }
-          int scale = schema.getJsonProp(LOGICAL_TYPE_ATTR_SCALE).asInt();
-          int precision = schema.getJsonProp(LOGICAL_TYPE_ATTR_PRECISION).asInt();
+          int scale = schema.getJsonProp(LOGICAL_TYPE_ATTR_SCALE).getIntValue();
+          int precision = schema.getJsonProp(LOGICAL_TYPE_ATTR_PRECISION).getIntValue();
           if (value instanceof ByteBuffer) {
             byte[] decimalBytes = ((ByteBuffer)value).array();
             value = bigDecimalFromBytes(decimalBytes, scale);
