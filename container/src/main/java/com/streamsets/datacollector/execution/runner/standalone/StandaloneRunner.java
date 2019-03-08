@@ -916,7 +916,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         pipelineRunnable.run();
       }
     } catch (Exception e) {
-      validateAndSetStateTransition(context.getUser(), PipelineStatus.START_ERROR, e.toString(), null);
+      LOG.error("Can't start and get snapshot for pipeline {}: {}", getName(), e.toString(), e);
       throw e;
     }
   }
