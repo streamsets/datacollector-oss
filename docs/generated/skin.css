@@ -18,52 +18,53 @@ body {
 h1 {
 	font-family: 'Lato', Helvetica, Arial, Lucida, sans-serif;
 	font-size: 36px;
-	line-height: 56px;
+	line-height: 30px;
 	font-weight: 300;
-	margin-bottom: 15px;
+	margin-top: 45px ;
+	margin-bottom: 0px;
 	color: #003399;
 }
 h2 {
 	font-family: 'Lato', Helvetica, Arial, Lucida, sans-serif;
 	/* DO font-size: 28px;*/
-    line-height: 48px;
 	font-weight: 300;
-	margin-top: 20px ;
-	margin-bottom: 10px;
+	/* margin-top: 40px ; Moving margin props to h2.title*/
 	color: #003399;
 }
 /* DO added for parts */
 h2.title{
     font-size:28px;
-    margin-top:45px;
+    line-height: 28px;
+    margin-top:40px;
+    margin-bottom: 5px;
 }
 h3 {
 	font-family: 'Lato', Helvetica, Arial, Lucida, sans-serif !important;
 	/* DO font-size: 22px !important;*/
-    line-height: 32px;
+          line-height: 22px;
 	font-weight: 400 ;
-	margin-top: 25px ;
-	margin-bottom: 12px ;
+	margin-top: 35px ;
+	margin-bottom: 5px ;
 	color: #003399;
 }
 /* DO added for parts */
 h3.title{
     font-size:22px;
-    margin-top:45px;
+    margin-top:35px;
 }
 h4 {
 	font-family: 'Lato', Helvetica, Arial, Lucida, sans-serif !important;
 	/* DO font-size: 18px !important;*/
-	line-height: 24px;
+	line-height: 18px;
 	font-weight: 400 ;
-	margin-top: 25px ;
-	margin-bottom: 12px;
+	margin-top: 30px ;
+	margin-bottom: 5px;
 	color: #003399;
 }
 /* DO added for parts */
 h4.title{
     font-size:18px;
-    margin-top:45px;
+    margin-top:30px;
 }
 
 h5 {
@@ -81,7 +82,7 @@ h5.title {
     font-size: 16px;
     font-weight: 600;
     text-decoration:none;
-    margin-top: 45px;
+    margin-top: 25px;
 }
 h6 {
 	font-family: /* DO 'Montserrat', */ 'Lato', Helvetica, Arial, Lucida, sans-serif !important;
@@ -90,7 +91,7 @@ h6 {
 	/* DO font-weight: 600 !important;
 	text-transform: uppercase;
 	letter-spacing: 1px;*/
-	margin-bottom: 2px;
+	margin-bottom: 5px;
 	color: #003399;
 }
 /* DO added for parts */
@@ -99,7 +100,7 @@ h6.topictitle6 {
     font-weight: 800;
     text-decoration:none;
     letter-spacing: 1px;
-    margin-top:45px;
+    margin-top:25px;
 }
 
 /* lc removing stupid link from help 5/30 */
@@ -514,7 +515,7 @@ span.topic {
 ------------------------------------------------------- */
 .simpletable {
 	border: none;
-	display: block;
+	display: block; 
 	margin: 15px 0;
 	clear: both;
 	float: none;
