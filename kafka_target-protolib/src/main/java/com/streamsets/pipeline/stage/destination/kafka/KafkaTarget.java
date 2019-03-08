@@ -26,14 +26,12 @@ import com.streamsets.pipeline.api.lineage.LineageEventType;
 import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducer;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
-import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.lib.kafka.exception.KafkaConnectionException;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.destination.lib.ResponseType;
 import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
-import org.apache.commons.collections.IteratorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,9 +57,6 @@ public class KafkaTarget extends BaseTarget {
   private ErrorRecordHandler errorRecordHandler;
   private Set<String> accessedTopic;
 
-  private DataGeneratorFactory generatorFactory;
-  private ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
-
   public KafkaTarget(KafkaTargetConfig conf, ToOriginResponseConfig responseConf) {
     this.conf = conf;
     this.responseConf = responseConf;
@@ -76,7 +71,6 @@ public class KafkaTarget extends BaseTarget {
     kafkaProducer = conf.getKafkaProducer();
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     accessedTopic = new HashSet<>();
-    generatorFactory = conf.dataGeneratorFormatConfig.getDataGeneratorFactory();
     return issues;
   }
 
@@ -156,17 +150,18 @@ public class KafkaTarget extends BaseTarget {
           for (Map.Entry<Object, List<Record>> entry : perPartition.entrySet()) {
             Object partition = entry.getKey();
             List<Record> list = entry.getValue();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream(1024 * list.size());
             Record currentRecord = null;
             try {
-              baos.reset();
-              DataGenerator gen = generatorFactory.getGenerator(baos);
+              DataGenerator generator = conf.dataGeneratorFormatConfig.getDataGeneratorFactory()
+                .getGenerator(baos);
               for (Record record : list) {
                 currentRecord = record;
-                gen.write(record);
+                generator.write(record);
                 count++;
               }
               currentRecord = null;
-              gen.close();
+              generator.close();
               byte[] bytes = baos.toByteArray();
               kafkaProducer.enqueueMessage(entryTopic, bytes, partition);
             } catch (StageException ex) {
@@ -228,8 +223,10 @@ public class KafkaTarget extends BaseTarget {
   private void writeOneMessagePerRecord(Batch batch, List<Record> responseRecords) throws StageException {
     long count = 0;
     Iterator<Record> records = batch.getRecords();
+    List<Record> recordList = new ArrayList<>();
     while (records.hasNext()) {
       Record record = records.next();
+      recordList.add(record);
       try {
         String topic = conf.getTopic(record);
         Object partitionKey = conf.getPartitionKey(record, topic);
@@ -261,30 +258,27 @@ public class KafkaTarget extends BaseTarget {
         );
       }
     }
-
-    if (this.responseConf.sendResponseToOrigin) {
-      try {
-        responseRecords.addAll(kafkaProducer.write(getContext()));
-      } catch (StageException ex) {
-        if (ex.getErrorCode().getCode().equals(KafkaErrors.KAFKA_69.name())) {
-          List<Record> recordList = IteratorUtils.toList(records);
-          List<Integer> failedRecordIndices = (List<Integer>) ex.getParams()[0];
-          List<Exception> failedRecordExceptions = (List<Exception>) ex.getParams()[1];
-          for (int i = 0; i < failedRecordIndices.size(); i++) {
-            Record record = recordList.get(failedRecordIndices.get(i));
-            Exception error = failedRecordExceptions.get(i);
-            errorRecordHandler.onError(
-                new OnRecordErrorException(record,
-                    KafkaErrors.KAFKA_51,
-                    record.getHeader().getSourceId(),
-                    error.toString(),
-                    error
-                )
-            );
-          }
-        } else {
-          throw ex;
+    try {
+      responseRecords.addAll(kafkaProducer.write(getContext()));
+    } catch (StageException ex) {
+      if (ex.getErrorCode().getCode().equals(KafkaErrors.KAFKA_69.name())) {
+        List<Integer> failedRecordIndices = (List<Integer>) ex.getParams()[0];
+        List<Exception> failedRecordExceptions = (List<Exception>) ex.getParams()[1];
+        for (int i = 0; i < failedRecordIndices.size(); i++) {
+          Record record = recordList.get(failedRecordIndices.get(i));
+          Exception error = failedRecordExceptions.get(i);
+          errorRecordHandler.onError(
+              new OnRecordErrorException(
+                  record,
+                  KafkaErrors.KAFKA_51,
+                  record.getHeader().getSourceId(),
+                  error.toString(),
+                  error
+              )
+          );
         }
+      } else {
+        throw ex;
       }
     }
     recordCounter += count;
@@ -292,10 +286,10 @@ public class KafkaTarget extends BaseTarget {
   }
 
   private Object serializeRecord(Record record) throws StageException, IOException {
-    baos.reset();
-    DataGenerator gen = generatorFactory.getGenerator(baos);
-    gen.write(record);
-    gen.close();
+    ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
+    DataGenerator generator = conf.dataGeneratorFormatConfig.getDataGeneratorFactory().getGenerator(baos);
+    generator.write(record);
+    generator.close();
     return baos.toByteArray();
   }
 
