@@ -98,6 +98,7 @@ public class IotHubProducerTarget extends BaseTarget implements IotHubEventCallb
         try (DataGenerator dataGenerator = generatorFactory.getGenerator(byteBufferOutputStream)) {
           dataGenerator.write(record);
           dataGenerator.flush();
+          dataGenerator.close();
           Message message = new Message(byteBufferOutputStream.toByteArray());
           iotHubClient.sendEventAsync(message, this, new MessageContext(record, countDownLatch));
         } catch(Exception ex) {
