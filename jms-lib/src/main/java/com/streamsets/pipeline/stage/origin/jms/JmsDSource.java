@@ -33,7 +33,7 @@ import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.MessageConfig;
 
 @StageDef(
-    version = 6,
+    version = 7,
     label = "JMS Consumer",
     description = "Reads data from a JMS source.",
     icon = "jms.png",

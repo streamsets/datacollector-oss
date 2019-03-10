@@ -56,6 +56,12 @@ public class JmsSourceUpgrader implements StageUpgrader {
       // fall through
       case 5:
         upgradeV5ToV6(configs, context);
+        if (context.getToVersion() == 6) {
+          break;
+        }
+        // fall through
+      case 6:
+        upgradeV6ToV7(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", context.getFromVersion()));
@@ -102,5 +108,12 @@ public class JmsSourceUpgrader implements StageUpgrader {
 
     // And finally register new service
     context.registerService(DataFormatParserService.class, dataFormatConfigs);
+  }
+
+  private static void upgradeV6ToV7(List<Config> configs) {
+    configs.add(new Config("jmsConfig.useClientID", false));
+    configs.add(new Config("jmsConfig.clientID", null));
+    configs.add(new Config("jmsConfig.durableSubscription", false));
+    configs.add(new Config("jmsConfig.durableSubscriptionName", null));
   }
 }

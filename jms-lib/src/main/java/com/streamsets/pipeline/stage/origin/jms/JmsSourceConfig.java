@@ -38,4 +38,25 @@ public class JmsSourceConfig extends BaseJmsConfig {
     group = "JMS"
   )
   public String messageSelector;
+
+  @ConfigDef(
+          required = true,
+          type = ConfigDef.Type.BOOLEAN,
+          label = "Durable Subscription",
+          description = "Create a durable subscriber",
+          displayPosition = 80,
+          group = "JMS"
+  )
+  public Boolean durableSubscription = false;
+
+  @ConfigDef(
+          required = true,
+          type = ConfigDef.Type.STRING,
+          label = "Durable Subscription Name",
+          displayPosition = 90,
+          group = "JMS",
+          dependsOn = "durableSubscription",
+          triggeredByValue = "true"
+  )
+  public String durableSubscriptionName;
 }

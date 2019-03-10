@@ -76,7 +76,9 @@ public class JmsSource extends BaseSource implements OffsetCommitter {
         contextProperties.setProperty("db_url", jmsConfig.providerURL); // workaround for SDC-2068
       }
       contextProperties.putAll(jmsConfig.contextProperties);
-
+      if (jmsConfig.clientID != null) {
+        contextProperties.setProperty("clientID", jmsConfig.clientID);
+      }
       initialContext = initialContextFactory.create(contextProperties);
     } catch (NamingException ex) {
       LOG.info(Utils.format(

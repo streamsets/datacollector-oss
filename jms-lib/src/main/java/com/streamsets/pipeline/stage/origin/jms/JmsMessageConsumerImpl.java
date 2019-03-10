@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
+import javax.jms.Topic;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
@@ -135,11 +136,23 @@ public class JmsMessageConsumerImpl implements JmsMessageConsumer {
     if (issues.isEmpty()) {
       try {
         String messageSelector = jmsConfig.messageSelector;
+        Boolean durableSubscription = jmsConfig.durableSubscription;
+        String durableSubscriptionName = jmsConfig.durableSubscriptionName;
         if (messageSelector == null) {
           messageSelector = "";
         }
         messageSelector = messageSelector.trim();
-        messageConsumer = session.createConsumer(destination, messageSelector.isEmpty() ? null: messageSelector);
+        if (durableSubscriptionName == null) {
+          durableSubscriptionName = "";
+        }
+        durableSubscriptionName = durableSubscriptionName.trim();
+
+        // added durable topic consumer support based on durable flag in stage config
+        if (durableSubscription) {
+          messageConsumer = session.createDurableSubscriber((Topic) destination, durableSubscriptionName, messageSelector.isEmpty() ? null: messageSelector, false);
+        } else {
+          messageConsumer = session.createConsumer(destination, messageSelector.isEmpty() ? null : messageSelector);
+        }
       } catch (JMSException ex) {
         issues.add(context.createConfigIssue(JmsGroups.JMS.name(), "jmsConfig.connectionFactory", JmsErrors.JMS_11,
           ex.toString()));

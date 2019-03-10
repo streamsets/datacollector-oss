@@ -65,6 +65,28 @@ public class BaseJmsConfig {
   public DestinationType destinationType = DestinationType.UNKNOWN; // NOTE: same as above
 
   @ConfigDef(
+          required = true,
+          type = ConfigDef.Type.BOOLEAN,
+          label = "Use ClientID",
+          description = "Check to specify a clientID for this JMS connection. e.g. Required for Durable Topic Subscriptions",
+          displayPosition = 75,
+          group = "JMS"
+  )
+  public Boolean useClientID = false;
+  
+  @ConfigDef(
+          required = true,
+          type = ConfigDef.Type.STRING,
+          label = "Client ID",
+          description = "If specified, must be a unique string used by a single JMS connection instance. Required for Durable Topic Subscriptions",
+          displayPosition = 77,
+          group = "JMS",
+          dependsOn = "useClientID",
+          triggeredByValue = "true"
+  )
+  public String clientID = null;
+
+  @ConfigDef(
       required = false,
       type = ConfigDef.Type.MAP,
       defaultValue = "",
