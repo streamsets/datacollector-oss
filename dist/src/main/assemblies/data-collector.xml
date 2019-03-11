@@ -587,6 +587,12 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+    <!-- thycotic-credentialstore-lib -->
+    <fileSet>
+      <directory>${basedir}/../thycotic-credentialstore-lib/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
   </fileSets>
 
   <dependencySets>
