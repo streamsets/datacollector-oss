@@ -60,6 +60,7 @@ public enum Errors implements ErrorCode {
   HIVE_38("Unexpected authorization method {}, expected {}"),
   HIVE_39("Cannot evaluate expression '{}' for record '{}': {}"),
   HIVE_40("Column '{}' is used for partition column and at the same time appears in input data"),
+  HIVE_41("Incorrect field type '{}', cannot convert field value of that type to date for specific time zone"),
   ;
   private final String msg;
 

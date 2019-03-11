@@ -39,6 +39,7 @@ public class HiveMetadataProcessorBuilder {
   private HMPDataFormat dataFormat;
   private String commentEL;
   private Map<String, String> metadataHeaderAttributeConfig;
+  private boolean convertTimesToString;
 
   public HiveMetadataProcessorBuilder() {
     database = "default";
@@ -55,6 +56,7 @@ public class HiveMetadataProcessorBuilder {
     dataFormat = HMPDataFormat.AVRO;
     commentEL = "${field:field()}";
     metadataHeaderAttributeConfig = Collections.emptyMap();
+    convertTimesToString = false;
   }
 
   public HiveMetadataProcessorBuilder database(String database) {
@@ -130,6 +132,11 @@ public class HiveMetadataProcessorBuilder {
     return this;
   }
 
+  public HiveMetadataProcessorBuilder ConvertTimesToString(boolean convertTimesToString) {
+    this.convertTimesToString = convertTimesToString;
+    return this;
+  }
+
   public HiveMetadataProcessor build() {
     return new HiveMetadataProcessor(
       database,
@@ -142,6 +149,7 @@ public class HiveMetadataProcessorBuilder {
       timeDriver,
       decimalDefaultsConfig,
       timeZone,
+      convertTimesToString,
       dataFormat,
       commentEL,
       metadataHeaderAttributeConfig

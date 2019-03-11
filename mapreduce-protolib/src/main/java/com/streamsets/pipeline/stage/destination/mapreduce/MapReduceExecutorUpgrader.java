@@ -37,6 +37,12 @@ public class MapReduceExecutorUpgrader implements StageUpgrader {
     switch (fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+        if (toVersion == 2) {
+          break;
+        }
+        // fall through
+      case 2:
+        upgradeV2ToV3(configs);
         break;
       default:
         throw new IllegalStateException(String.format("Unexpected fromVersion %d", fromVersion));
@@ -57,5 +63,9 @@ public class MapReduceExecutorUpgrader implements StageUpgrader {
         "jobConfig.avroParquetConfig.overwriteTmpFile",
         "jobConfig.avroConversionCommonConfig.overwriteTmpFile"
     );
+  }
+
+  private void upgradeV2ToV3(List<Config> configs) {
+    configs.add(new Config("jobConfig.avroParquetConfig.timeZoneID", "UTC"));
   }
 }

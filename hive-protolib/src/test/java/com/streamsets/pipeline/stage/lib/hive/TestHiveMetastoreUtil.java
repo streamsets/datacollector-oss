@@ -36,6 +36,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class TestHiveMetastoreUtil {
 
@@ -91,7 +92,9 @@ public class TestHiveMetastoreUtil {
         "",
         "",
         "${field:field()}",
-        variables
+        variables,
+        false,
+        TimeZone.getDefault()
       );
     } catch (StageException e){
       Assert.fail("convertRecordToHMSType threw StageException:" + e.getMessage());
@@ -109,7 +112,18 @@ public class TestHiveMetastoreUtil {
     Record record = RecordCreator.create();
     record.set(Field.create(Field.Type.LIST, Collections.emptyList()));
 
-    HiveMetastoreUtil.convertRecordToHMSType(record, eval, eval, eval, "", "", "",  variables);
+    HiveMetastoreUtil.convertRecordToHMSType(
+        record,
+        eval,
+        eval,
+        eval,
+        "",
+        "",
+        "",
+        variables,
+        false,
+        TimeZone.getDefault()
+    );
   }
 
   @Test
@@ -149,7 +163,9 @@ public class TestHiveMetastoreUtil {
           String.valueOf(decimalVal.scale()),
           String.valueOf(decimalVal.precision()),
           "${field:field()}",
-          variables
+          variables,
+          false,
+          TimeZone.getDefault()
       );
     } catch (StageException e){
       Assert.fail("convertRecordToHMSType threw StageException:" + e.getMessage());

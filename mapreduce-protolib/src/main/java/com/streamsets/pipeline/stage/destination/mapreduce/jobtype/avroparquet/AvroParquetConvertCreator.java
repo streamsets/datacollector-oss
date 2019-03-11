@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroparquet;
 
+import com.streamsets.pipeline.lib.util.AvroParquetWriterBuilder190Int96;
 import com.streamsets.pipeline.lib.util.AvroToParquetConverterUtil;
 import com.streamsets.pipeline.stage.destination.mapreduce.MapreduceUtils;
 import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroconvert.AvroConversionBaseCreator;
@@ -25,6 +26,7 @@ import org.apache.hadoop.mapreduce.InputFormat;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.parquet.SemanticVersion;
 import org.apache.parquet.avro.AvroParquetWriter;
+import org.apache.parquet.avro.AvroSchemaConverter190Int96;
 import org.apache.parquet.bytes.BytesInput;
 import org.apache.parquet.column.ParquetProperties;
 import org.apache.parquet.format.CompressionCodec;
@@ -38,6 +40,8 @@ public class AvroParquetConvertCreator extends AvroConversionBaseCreator {
         SemanticVersion.class,
         ParquetWriter.class,
         AvroParquetWriter.class,
+        AvroParquetWriterBuilder190Int96.class,
+        AvroSchemaConverter190Int96.class,
         FsInput.class,
         CompressionCodec.class,
         ParquetProperties.class,

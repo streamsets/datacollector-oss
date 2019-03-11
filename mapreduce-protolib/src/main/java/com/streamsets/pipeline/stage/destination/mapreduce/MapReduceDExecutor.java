@@ -26,7 +26,7 @@ import com.streamsets.pipeline.stage.destination.mapreduce.config.JobConfig;
 import com.streamsets.pipeline.stage.destination.mapreduce.config.MapReduceConfig;
 
 @StageDef(
-    version = 2,
+    version = 3,
     upgrader = MapReduceExecutorUpgrader.class,
     label = "MapReduce",
     description = "Starts a MapReduce job",

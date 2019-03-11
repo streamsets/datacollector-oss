@@ -27,6 +27,7 @@ public class HiveMetadataProcessorUpgrader implements StageUpgrader {
   private static final String DATA_FORMAT = "dataFormat";
   private static final String DATA_FORMAT_AVRO = HMPDataFormat.AVRO.name();
   private static final String COMMENT_EXPRESSION = "commentExpression";
+  private static final String CONVERT_TIMES_TO_STRING = "convertTimesToString";
 
   @Override
   public List<Config> upgrade(
@@ -35,6 +36,12 @@ public class HiveMetadataProcessorUpgrader implements StageUpgrader {
     switch (fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+        if (toVersion == 2) {
+          break;
+        }
+        // fall through
+      case 2:
+        upgradeV2ToV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -49,5 +56,9 @@ public class HiveMetadataProcessorUpgrader implements StageUpgrader {
     configsToAdd.add(new Config(COMMENT_EXPRESSION, ""));
 
     configs.addAll(configsToAdd);
+  }
+
+  private void upgradeV2ToV3(List<Config> configs) {
+    configs.add(new Config(CONVERT_TIMES_TO_STRING, true));
   }
 }

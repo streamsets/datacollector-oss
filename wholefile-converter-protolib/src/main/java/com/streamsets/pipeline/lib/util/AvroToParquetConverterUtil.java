@@ -43,21 +43,7 @@ public class AvroToParquetConverterUtil {
 
     // Detect Parquet version to see if it supports logical types
     LOG.info("Detected Parquet version: " + Version.FULL_VERSION);
-
-    // Parquet Avro pre-1.9 doesn't work with logical types, so in that case we use custom Builder that injects our own
-    // avro schema -> parquet schema generator class (which is a copy of the one that was provided in PARQUET-358).
-    ParquetWriter.Builder builder = null;
-    try {
-      SemanticVersion parquetVersion = SemanticVersion.parse(Version.VERSION_NUMBER);
-      if(parquetVersion.major > 1 || (parquetVersion.major == 1 && parquetVersion.minor >= 9)) {
-        builder = AvroParquetWriter.builder(tempFile).withSchema(avroSchema);
-      } else {
-        builder = new AvroParquetWriterBuilder(tempFile).withSchema(avroSchema);
-      }
-    } catch (SemanticVersion.SemanticVersionParseException e) {
-      LOG.warn("Can't parse parquet version string: " + Version.VERSION_NUMBER, e);
-      builder = new AvroParquetWriterBuilder(tempFile).withSchema(avroSchema);
-    }
+    ParquetWriter.Builder builder = getParquetWriterBuilder(tempFile, avroSchema, conf);
 
     // Generic arguments from the Job
     if(propertyDefined(conf, AvroParquetConstants.COMPRESSION_CODEC_NAME)) {
@@ -86,6 +72,38 @@ public class AvroToParquetConverterUtil {
       builder.withMaxPaddingSize(size);
     }
 
+    return builder;
+  }
+
+  private static ParquetWriter.Builder getParquetWriterBuilder(Path tempFile, Schema avroSchema, Configuration conf) {
+    // Parquet Avro pre-1.9 doesn't work with logical types, so in that case we use custom Builder that injects our own
+    // avro schema -> parquet schema generator class (which is a copy of the one that was provided in PARQUET-358).
+    // Additionally, Parquet Avro 1.9.x does not support converting from Avro timestamps (logical types TIMESTAMP_MILLIS
+    // and TIMESTAMP_MICROS) and so we have to extend Parquet Avro classes to support timestamps conversion.
+    ParquetWriter.Builder builder = null;
+    try {
+      SemanticVersion parquetVersion = SemanticVersion.parse(Version.VERSION_NUMBER);
+      if(parquetVersion.major > 1 || (parquetVersion.major == 1 && parquetVersion.minor >= 9)) {
+        if (parquetVersion.major == 1 && parquetVersion.minor >= 9) {
+          LOG.debug("Creating AvroParquetWriterBuilder190Int96");
+          if (propertyDefined(conf, AvroParquetConstants.TIMEZONE)) {
+            String timeZoneId = conf.get(AvroParquetConstants.TIMEZONE);
+            builder = new AvroParquetWriterBuilder190Int96(tempFile, timeZoneId).withSchema(avroSchema);
+          } else {
+            builder = new AvroParquetWriterBuilder190Int96(tempFile).withSchema(avroSchema);
+          }
+        } else {
+          LOG.debug("Creating AvroParquetWriter.builder");
+          builder = AvroParquetWriter.builder(tempFile).withSchema(avroSchema);
+        }
+      } else {
+        LOG.debug("Creating AvroParquetWriterBuilder");
+        builder = new AvroParquetWriterBuilder(tempFile).withSchema(avroSchema);
+      }
+    } catch (SemanticVersion.SemanticVersionParseException e) {
+      LOG.warn("Can't parse parquet version string: " + Version.VERSION_NUMBER, e);
+      builder = new AvroParquetWriterBuilder(tempFile).withSchema(avroSchema);
+    }
     return builder;
   }
 

@@ -46,4 +46,9 @@ public class AvroParquetConstants {
    * Prefix that will be used for temporary file that is just being converted.
    */
   public final static String TMP_PREFIX = ".avro_to_parquet_tmp_conversion_";
+
+  /**
+   * Timezone that will be used when converting timestamps in AvroWriteSupportInt96
+   */
+  public final static String TIMEZONE = AvroParquetConstants.class.getCanonicalName() + ".data_timezone";
 }

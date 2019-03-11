@@ -153,6 +153,7 @@ public class MapReduceExecutor extends BaseExecutor {
             jobConfiguration.setInt(AvroParquetConstants.DICTIONARY_PAGE_SIZE, jobConfig.avroParquetConfig.dictionaryPageSize);
             jobConfiguration.setInt(AvroParquetConstants.MAX_PADDING_SIZE, jobConfig.avroParquetConfig.maxPaddingSize);
             jobConfiguration.setBoolean(AvroConversionCommonConstants.OVERWRITE_TMP_FILE, jobConfig.avroConversionCommonConfig.overwriteTmpFile);
+            jobConfiguration.set(AvroParquetConstants.TIMEZONE, jobConfig.avroParquetConfig.timeZoneID);
             break;
           case AVRO_ORC:
             jobConfiguration.set(AvroConversionCommonConstants.INPUT_FILE, eval.evaluateToString("inputFile", jobConfig.avroConversionCommonConfig.inputFile, true));

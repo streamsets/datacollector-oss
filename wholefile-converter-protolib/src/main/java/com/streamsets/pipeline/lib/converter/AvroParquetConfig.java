@@ -16,6 +16,8 @@
 package com.streamsets.pipeline.lib.converter;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.config.TimeZoneChooserValues;
 
 public class AvroParquetConfig {
 
@@ -83,5 +85,19 @@ public class AvroParquetConfig {
     triggeredByValue = "AVRO_PARQUET"
   )
   public int maxPaddingSize = -1;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "UTC",
+      label = "Data Time Zone",
+      description = "Time zone to use for a record.",
+      displayPosition = 80,
+      group = "AVRO_PARQUET",
+      dependsOn = "jobType^",
+      triggeredByValue = "AVRO_PARQUET"
+  )
+  @ValueChooserModel(TimeZoneChooserValues.class)
+  public String timeZoneID;
 
 }

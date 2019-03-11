@@ -55,12 +55,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.UUID;
 
 public final class HiveMetastoreUtil {
@@ -651,6 +654,23 @@ public final class HiveMetastoreUtil {
     }
   }
 
+  private static Date getDateForTimeZone(TimeZone timeZone, Field field) throws HiveStageCheckedException {
+    Date fieldValue;
+    switch (field.getType()) {
+      case DATETIME:
+        fieldValue = field.getValueAsDate();
+        break;
+      case TIME:
+        fieldValue = field.getValueAsTime();
+        break;
+      default:
+        throw new HiveStageCheckedException(Errors.HIVE_41, field.getType().name());
+    }
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(fieldValue);
+    calendar.setTimeZone(timeZone);
+    return calendar.getTime();
+  }
 
   /**
    * Convert a Record to LinkedHashMap. This is for comparing the structure of incoming Record with cache.
@@ -669,7 +689,9 @@ public final class HiveMetastoreUtil {
       String scaleExpression,
       String precisionExpression,
       String commentExpression,
-      ELVars variables
+      ELVars variables,
+      boolean convertTimesToString,
+      TimeZone timeZone
   ) throws HiveStageCheckedException, ELEvalException {
     if(!record.get().getType().isOneOf(Field.Type.MAP, Field.Type.LIST_MAP)) {
       throw new HiveStageCheckedException(Errors.HIVE_33, record.getHeader().getSourceId(), record.get().getType().toString());
@@ -690,10 +712,28 @@ public final class HiveMetastoreUtil {
           currField = Field.create(currField.getValueAsString());
           break;
         case DATETIME:
-          currField = Field.create(Field.Type.STRING, currField.getValue() == null ? null : datetimeFormat.get().format(currField.getValueAsDate()));
+          if (convertTimesToString) {
+            currField = Field.create(
+                Field.Type.STRING,
+                currField.getValue() == null ? null : datetimeFormat.get().format(currField.getValueAsDate())
+            );
+          } else {
+            currField = Field.create(
+                Field.Type.DATETIME,
+                currField.getValue() == null ? null : getDateForTimeZone(timeZone, currField));
+          }
           break;
         case TIME:
-          currField = Field.create(Field.Type.STRING, currField.getValue() == null ? null : timeFormat.get().format(currField.getValueAsTime()));
+          if (convertTimesToString) {
+            currField = Field.create(
+                Field.Type.STRING,
+                currField.getValue() == null ? null : timeFormat.get().format(currField.getValueAsTime())
+            );
+          } else {
+            currField = Field.create(
+                Field.Type.TIME,
+                currField.getValue() == null ? null : getDateForTimeZone(timeZone, currField));
+          }
           break;
         default:
           break;

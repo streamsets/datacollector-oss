@@ -90,6 +90,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
   private final String timeDriver;
   private final DecimalDefaultsConfig decimalDefaultsConfig;
   private final TimeZone timeZone;
+  private final boolean convertTimesToString;
   private final HMPDataFormat dataFormat;
   private final String commentExpression;
   private final Map<String, String> metadataHeaderAttributeConfigs;
@@ -159,6 +160,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       String timeDriver,
       DecimalDefaultsConfig decimalDefaultsConfig,
       TimeZone timezone,
+      boolean convertTimesToString,
       HMPDataFormat dataFormat,
       String commentExpression,
       Map<String, String> metadataHeaderAttributeConfigs
@@ -176,6 +178,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
     this.decimalDefaultsConfig = decimalDefaultsConfig;
     partitionTypeInfo = new LinkedHashMap<>();
     this.timeZone = timezone;
+    this.convertTimesToString = convertTimesToString;
     this.dataFormat = dataFormat;
     this.commentExpression = commentExpression;
     this.metadataHeaderAttributeConfigs = metadataHeaderAttributeConfigs;
@@ -414,7 +417,9 @@ public class HiveMetadataProcessor extends RecordProcessor {
           decimalDefaultsConfig.scaleExpression,
           decimalDefaultsConfig.precisionExpression,
           commentExpression,
-          variables
+          variables,
+          convertTimesToString,
+          (TimeZone) timeZone.clone()
       );
 
       if (recordStructure.isEmpty()) {  // If record has no data to process, No-op

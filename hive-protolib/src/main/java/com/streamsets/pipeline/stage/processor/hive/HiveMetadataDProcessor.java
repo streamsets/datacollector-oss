@@ -178,6 +178,17 @@ public class HiveMetadataDProcessor extends DProcessor {
   public String timeZoneID;
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Convert Timestamps to String",
+      description = "Set this option to convert DATETIME and TIME record fields to String",
+      displayPosition = 115,
+      group = "ADVANCED"
+  )
+  public boolean convertTimesToString;
+
+  @ConfigDef(
       required = false,
       defaultValue = "{}",
       type = ConfigDef.Type.MAP,
@@ -214,6 +225,7 @@ public class HiveMetadataDProcessor extends DProcessor {
       timeDriver,
       decimalDefaultsConfig,
       TimeZone.getTimeZone(ZoneId.of(timeZoneID)),
+      convertTimesToString,
       dataFormat,
       commentExpression,
       metadataHeaderAttributeConfigs

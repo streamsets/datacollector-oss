@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.lib.hive;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.generator.avro.AvroSchemaGenerator;
+import com.streamsets.pipeline.lib.util.AvroTypeUtil;
 import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.DecimalHiveTypeSupport.DecimalTypeInfo;
@@ -30,12 +31,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class AvroHiveSchemaGenerator extends AvroSchemaGenerator<Map<String, HiveTypeInfo>> {
-
-  private static final String LOGICAL_TYPE_PROP = "logicalType";
-  private static final String DATE_TYPE = "date";
-  private static final String DECIMAL_TYPE = "decimal";
-  private static final String PRECISION = "precision";
-  private static final String SCALE = "scale";
 
   public AvroHiveSchemaGenerator(final String name){
     super(name);
@@ -90,18 +85,28 @@ public class AvroHiveSchemaGenerator extends AvroSchemaGenerator<Map<String, Hiv
       case BINARY:
         return Schema.create(Schema.Type.BYTES);
 
+      case TIMESTAMP:
+        Schema timestampSchema = Schema.create(Schema.Type.LONG);
+        timestampSchema.addProp(AvroTypeUtil.LOGICAL_TYPE, AvroTypeUtil.LOGICAL_TYPE_TIMESTAMP_MILLIS);
+        return timestampSchema;
+
+      case TIME:
+        Schema timeSchema = Schema.create(Schema.Type.INT);
+        timeSchema.addProp(AvroTypeUtil.LOGICAL_TYPE, AvroTypeUtil.LOGICAL_TYPE_TIME_MILLIS);
+        return timeSchema;
+
       case DATE:
         Schema dateSchema = Schema.create(Schema.Type.INT);
-        dateSchema.addProp(LOGICAL_TYPE_PROP, DATE_TYPE);
+        dateSchema.addProp(AvroTypeUtil.LOGICAL_TYPE, AvroTypeUtil.LOGICAL_TYPE_DATE);
         return dateSchema;
 
       case DECIMAL:
         Utils.checkArgument(node.getValue() instanceof DecimalTypeInfo, "Invalid type used in HiveTypeInfo");
         DecimalTypeInfo decimalTypeInfo = (DecimalTypeInfo)node.getValue();
         Schema schema = Schema.create(Schema.Type.BYTES);
-        schema.addProp(LOGICAL_TYPE_PROP, DECIMAL_TYPE);
-        schema.addProp(PRECISION, getJsonNode(decimalTypeInfo.getPrecision()));
-        schema.addProp(SCALE, getJsonNode(decimalTypeInfo.getScale()));
+        schema.addProp(AvroTypeUtil.LOGICAL_TYPE, AvroTypeUtil.LOGICAL_TYPE_DECIMAL);
+        schema.addProp(AvroTypeUtil.LOGICAL_TYPE_ATTR_PRECISION, getJsonNode(decimalTypeInfo.getPrecision()));
+        schema.addProp(AvroTypeUtil.LOGICAL_TYPE_ATTR_SCALE, getJsonNode(decimalTypeInfo.getScale()));
         return schema;
 
       default:
