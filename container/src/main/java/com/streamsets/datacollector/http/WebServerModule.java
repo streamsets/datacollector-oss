@@ -159,7 +159,13 @@ public class WebServerModule {
       public void init(ServletContextHandler context) {
         FilterHolder filter = new FilterHolder(new HeaderFilter());
         filter.setInitParameter("headerConfig", "set X-Frame-Options: DENY");
-        context.addFilter(filter, "/*", EnumSet.of(DispatcherType.REQUEST));
+        context.addFilter(filter, "/*", EnumSet.of(
+            DispatcherType.FORWARD,
+            DispatcherType.REQUEST,
+            DispatcherType.INCLUDE,
+            DispatcherType.ASYNC,
+            DispatcherType.ERROR
+        ));
       }
     };
   }
