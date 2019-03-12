@@ -135,6 +135,7 @@ public class RemoteUploadTarget extends BaseTarget {
           DataGenerator generator = dataGeneratorFactory.getGenerator(os);
           generator.write(record);
         }
+        file.commitOutputStream();
         LOG.debug("Finished writing '{}'", file.getFilePath());
         sendCompleteEvent(record, file);
       } catch (IOException ioe) {

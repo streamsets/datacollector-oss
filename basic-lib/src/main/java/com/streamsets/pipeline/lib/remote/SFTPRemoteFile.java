@@ -18,9 +18,13 @@ package com.streamsets.pipeline.lib.remote;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class SFTPRemoteFile extends RemoteFile {
+
   private final ChrootSFTPClient sftpClient;
+  private String tempFilePath;
 
   public SFTPRemoteFile(String filePath, long lastModified, ChrootSFTPClient sftpClient) {
     super(filePath, lastModified);
@@ -39,6 +43,16 @@ public class SFTPRemoteFile extends RemoteFile {
 
   @Override
   public OutputStream createOutputStream() throws IOException {
-    return sftpClient.openForWriting(getFilePath());
+    Path p = Paths.get(getFilePath());
+    tempFilePath = p.resolveSibling(TMP_FILE_PREFIX + p.getFileName().toString()).toString();
+    return sftpClient.openForWriting(tempFilePath);
+  }
+
+  @Override
+  public void commitOutputStream() throws IOException {
+    if (tempFilePath == null) {
+      throw new IOException("Cannot commit " + getFilePath() + " - it must be written first");
+    }
+    sftpClient.rename(tempFilePath, getFilePath());
   }
 }

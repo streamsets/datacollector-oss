@@ -263,6 +263,7 @@ public class TestRemoteUploadTarget extends FTPAndSSHDUnitTest {
     Assert.assertFalse(sourceFile.exists());
 
     File targetFile = new File(testFolder.getRoot(), "target.txt");
+    File tempTargetFile = new File(testFolder.getRoot(), "_tmp_target.txt");
 
     path = testFolder.getRoot().getAbsolutePath();
     setupServer(path, true);
@@ -278,8 +279,9 @@ public class TestRemoteUploadTarget extends FTPAndSSHDUnitTest {
     runner.runInit();
     runner.runWrite(Collections.singletonList(record));
 
-    Assert.assertTrue(targetFile.exists());
-    Assert.assertEquals(0, targetFile.length());
+    Assert.assertFalse(targetFile.exists());
+    Assert.assertTrue(tempTargetFile.exists());
+    Assert.assertEquals(0, tempTargetFile.length());
     destroyAndValidate(runner);
   }
 

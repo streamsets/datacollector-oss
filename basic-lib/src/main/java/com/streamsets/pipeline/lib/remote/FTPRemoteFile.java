@@ -23,9 +23,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class FTPRemoteFile extends RemoteFile {
-  private final FileObject fileObject;
 
-  public FTPRemoteFile(String filePath, long lastModified, FileObject fileObject) {
+  private final FileObject fileObject;
+  private FileObject tempFileObject;
+
+  public FTPRemoteFile(String filePath, long lastModified, FileObject fileObject) throws IOException {
     super(filePath, lastModified);
     this.fileObject = fileObject;
   }
@@ -42,6 +44,15 @@ public class FTPRemoteFile extends RemoteFile {
 
   @Override
   public OutputStream createOutputStream() throws IOException {
-    return fileObject.getContent().getOutputStream();
+    tempFileObject = fileObject.getParent().resolveFile(TMP_FILE_PREFIX + fileObject.getName().getBaseName());
+    return tempFileObject.getContent().getOutputStream();
+  }
+
+  @Override
+  public void commitOutputStream() throws IOException {
+    if (tempFileObject == null) {
+      throw new IOException("Cannot commit " + getFilePath() + " - it must be written first");
+    }
+    tempFileObject.moveTo(fileObject);
   }
 }

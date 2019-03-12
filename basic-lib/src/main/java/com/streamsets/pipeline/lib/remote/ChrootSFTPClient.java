@@ -174,11 +174,25 @@ public class ChrootSFTPClient {
     }
     String fromPath = prependRoot(path);
     String toPath = prependArchiveDir(path);
+    renameInternal(fromPath, toPath, false);
+    return toPath;
+  }
+
+  public void rename(String fromPath, String toPath) throws IOException {
+    fromPath = prependRoot(fromPath);
+    toPath = prependRoot(toPath);
+    renameInternal(fromPath, toPath, true);
+  }
+
+  private void renameInternal(String fromPath, String toPath, boolean deleteExists) throws IOException {
     // Create the toPath's parent dir(s) if they don't exist
     String toDir = sftpClient.getSFTPEngine().getPathHelper().getComponents(toPath).getParent();
     sftpClient.mkdirs(toDir);
+    // Delete the target if it already exists
+    if (deleteExists && sftpClient.statExistence(toPath) != null) {
+      sftpClient.rm(toPath);
+    }
     sftpClient.rename(fromPath, toPath);
-    return toPath;
   }
 
   public void close() throws IOException {

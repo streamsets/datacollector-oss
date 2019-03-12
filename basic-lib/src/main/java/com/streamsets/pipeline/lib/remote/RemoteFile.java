@@ -24,6 +24,9 @@ import java.io.OutputStream;
  * {@link OutputStream}. Subclasses should implement the abstract methods based on what the remote source is.
  */
 public abstract class RemoteFile {
+
+  protected String TMP_FILE_PREFIX = "_tmp_";
+
   private final String filePath;
   private final long lastModified;
 
@@ -45,4 +48,6 @@ public abstract class RemoteFile {
   public abstract InputStream createInputStream() throws IOException;
 
   public abstract OutputStream createOutputStream() throws IOException;
+
+  public abstract void commitOutputStream() throws IOException;
 }
