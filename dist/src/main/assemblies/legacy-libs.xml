@@ -67,6 +67,14 @@
       <directory>${basedir}/../${cdh_5_9-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/</outputDirectory>
     </fileSet>
+     <fileSet>
+      <directory>${basedir}/../${cdh_5_10-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${basedir}/../${cdh_5_11-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/</outputDirectory>
+    </fileSet>
 
     <!-- HDP Libs -->
     <fileSet>
