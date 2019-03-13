@@ -341,7 +341,9 @@ public class KinesisSource extends BasePushSource {
         getContext(),
         parserFactory,
         Math.min(conf.maxBatchSize, maxBatchSize),
-        error
+        error,
+        conf.throttleWaitTime,
+        conf.throttleMaxRetries
     );
 
     // Create the KCL worker with the StreamSets record processor factory

@@ -28,21 +28,28 @@ public class StreamSetsRecordProcessorFactory implements IRecordProcessorFactory
   private final int maxBatchSize;
   private final BlockingQueue<Throwable> error;
 
+  private final int throttleWaitTime;
+  private final int throttleMaxRetries;
+
   StreamSetsRecordProcessorFactory(
       PushSource.Context context,
       DataParserFactory parserFactory,
       int maxBatchSize,
-      BlockingQueue<Throwable> error
+      BlockingQueue<Throwable> error,
+      int throttleWaitTime,
+      int throttleMaxRetries
   ) {
     this.context = context;
     this.parserFactory = parserFactory;
     this.maxBatchSize = maxBatchSize;
     this.error = error;
+    this.throttleWaitTime = throttleWaitTime;
+    this.throttleMaxRetries = throttleMaxRetries;
   }
 
   @Override
   public IRecordProcessor createProcessor() {
-    return new StreamSetsRecordProcessor(context, parserFactory, maxBatchSize, error);
+    return new StreamSetsRecordProcessor(context, parserFactory, maxBatchSize, error, throttleWaitTime, throttleMaxRetries);
   }
 
 }

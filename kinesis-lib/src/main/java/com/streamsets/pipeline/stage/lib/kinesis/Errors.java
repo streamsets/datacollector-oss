@@ -37,6 +37,8 @@ public enum Errors implements ErrorCode {
   KINESIS_13("Lease table '{}' already exists"),
   KINESIS_14("Provisioned throughput capacity exceeded when creating lease table '{}'"),
   KINESIS_15("Error while creating lease table: '{}'"),
+  KINESIS_16("Throttle limit exceeded, ThrottleException caught while checkpointing offset"),
+  KINESIS_17("Unknown error occurred while processing records, some data might not have been read: {}"),
   ;
   private final String msg;
 
