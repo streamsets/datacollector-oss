@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.origin.kinesis;
 
 import com.amazonaws.services.kinesis.clientlibrary.exceptions.InvalidStateException;
 import com.amazonaws.services.kinesis.clientlibrary.exceptions.ShutdownException;
+import com.amazonaws.services.kinesis.clientlibrary.exceptions.ThrottlingException;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorCheckpointer;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.v2.IRecordProcessor;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.ShutdownReason;
@@ -42,6 +43,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 
 public class StreamSetsRecordProcessor implements IRecordProcessor {
@@ -51,6 +53,8 @@ public class StreamSetsRecordProcessor implements IRecordProcessor {
   private final DataParserFactory parserFactory;
   private final int maxBatchSize;
   private final BlockingQueue<Throwable> error;
+  private final int throttleWaitTime;
+  private final int throttleMaxRetries;
 
   private String shardId;
   private BatchContext batchContext;
@@ -61,12 +65,16 @@ public class StreamSetsRecordProcessor implements IRecordProcessor {
       PushSource.Context context,
       DataParserFactory parserFactory,
       int maxBatchSize,
-      BlockingQueue<Throwable> error
+      BlockingQueue<Throwable> error,
+      int throttleWaitTime,
+      int throttleMaxRetries
   ) {
     this.context = context;
     this.parserFactory = parserFactory;
     this.maxBatchSize = maxBatchSize;
     this.error = error;
+    this.throttleWaitTime = throttleWaitTime;
+    this.throttleMaxRetries = throttleMaxRetries;
   }
 
   /**
@@ -94,11 +102,11 @@ public class StreamSetsRecordProcessor implements IRecordProcessor {
   public void processRecords(ProcessRecordsInput processRecordsInput) {
     LOG.debug("RecordProcessor processRecords called");
 
-    IRecordProcessorCheckpointer checkpointer = processRecordsInput.getCheckpointer();
-
-    startBatch();
-    Optional<Record> lastProcessedRecord = Optional.empty();
-    int recordCount = 0;
+    try {
+      IRecordProcessorCheckpointer checkpointer = processRecordsInput.getCheckpointer();
+      startBatch();
+      Optional<Record> lastProcessedRecord = Optional.empty();
+      int recordCount = 0;
       for (Record kRecord : processRecordsInput.getRecords()) {
         try {
           KinesisUtil.processKinesisRecord(shardId, kRecord, parserFactory).forEach(batchMaker::addRecord);
@@ -135,7 +143,11 @@ public class StreamSetsRecordProcessor implements IRecordProcessor {
           }
         }
       }
-    lastProcessedRecord.ifPresent(r -> finishBatch(checkpointer, r));
+      lastProcessedRecord.ifPresent(r -> finishBatch(checkpointer, r));
+    } catch (Exception e) {
+      LOG.error("Unknown error while processing records: {}", e.toString(), e);
+      context.reportError(Errors.KINESIS_17, e.toString());
+    }
   }
 
   private void finishBatch(IRecordProcessorCheckpointer checkpointer, Record checkpointRecord) {
@@ -144,12 +156,43 @@ public class StreamSetsRecordProcessor implements IRecordProcessor {
         throw Throwables.propagate(new StageException(Errors.KINESIS_04));
       }
       // Checkpoint iff batch processing succeeded
-      checkpointer.checkpoint(checkpointRecord);
+      try {
+        LOG.debug("Checkpointing batch at record: {}", checkpointRecord.toString());
+        checkpointer.checkpoint(checkpointRecord);
+      } catch (ThrottlingException e) {
+        LOG.debug("Received ThrottlingException when checkpointing at batch {}", checkpointRecord.toString());
+        context.reportError(Errors.KINESIS_16);
+        retryCheckpoint(checkpointer, checkpointRecord);
+      }
+
       if (LOG.isDebugEnabled()) {
         LOG.debug("Checkpointed batch at record {}", checkpointRecord.toString());
       }
-    } catch (InvalidStateException | ShutdownException e) {
+    } catch (InvalidStateException | ShutdownException | InterruptedException e) {
       LOG.error("Error checkpointing batch: {}", e.toString(), e);
+    }
+  }
+
+  private void retryCheckpoint(IRecordProcessorCheckpointer checkpointer, Record checkpointRecord) throws InvalidStateException, ShutdownException, InterruptedException {
+    if (throttleMaxRetries > 0) {
+      LOG.debug("Retry checkpointing batch at record: {}", checkpointRecord.toString());
+      int retryCount = 0;
+      boolean success = false;
+
+      while (retryCount < throttleMaxRetries && !success) {
+        Thread.sleep(throttleWaitTime);
+        try {
+          checkpointer.checkpoint(checkpointRecord);
+          success = true;
+        } catch (ThrottlingException te) {}
+        retryCount++;
+      }
+
+      if (success) {
+        LOG.debug("Successfully checkpointed at record {}, after {} retries.", checkpointRecord.toString(), retryCount);
+      } else {
+        LOG.debug("Could not checkpoint batch at record {} after {} retries.", checkpointRecord.toString(), retryCount);
+      }
     }
   }
 

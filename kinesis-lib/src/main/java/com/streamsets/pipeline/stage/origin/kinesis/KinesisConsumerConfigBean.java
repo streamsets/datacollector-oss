@@ -119,6 +119,32 @@ public class KinesisConsumerConfigBean extends KinesisConfigBean {
   )
   public int maxRecordProcessors;
 
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "0",
+      label = "Throttle Wait Time",
+      description = "Milliseconds to wait after Kinesis throttles the read before attempting to checkpoint again",
+      displayPosition = 5050,
+      group = "ADVANCED",
+      min = 0,
+      max = Integer.MAX_VALUE
+  )
+  public int throttleWaitTime;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "0",
+      label = "Throttle Max Retries",
+      description = "Maximum number of times to retry checkpointing after Kinesis throttles the read",
+      displayPosition = 5060,
+      group = "ADVANCED",
+      min = 0,
+      max = Integer.MAX_VALUE
+  )
+  public int throttleMaxRetries;
+
   @ConfigDefBean(groups = "LEASE_TABLE")
   public LeaseTableConfig leaseTable = new LeaseTableConfig();
 }
