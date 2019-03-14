@@ -32,12 +32,18 @@ import java.util.Set;
 public final class ConnectionManager {
   private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionManager.class);
 
+  private final DatabaseVendor vendor;
   private final HikariDataSource hikariDataSource;
   private final ThreadLocal<Connection> threadLocalConnection;
   private final Set<Connection> connectionsToCloseDuringDestroy;
   private final JdbcUtil jdbcUtil;
 
   public ConnectionManager(HikariDataSource hikariDataSource) {
+    this(DatabaseVendor.UNKNOWN, hikariDataSource);
+  }
+
+  public ConnectionManager(DatabaseVendor vendor, HikariDataSource hikariDataSource) {
+    this.vendor = vendor;
     this.hikariDataSource = hikariDataSource;
     this.connectionsToCloseDuringDestroy = new HashSet<>();
     this.threadLocalConnection = new ThreadLocal<>();
@@ -87,5 +93,9 @@ public final class ConnectionManager {
   public synchronized void closeAll() {
     LOGGER.debug("Closing all connections");
     connectionsToCloseDuringDestroy.forEach(jdbcUtil::closeQuietly);
+  }
+
+  public DatabaseVendor getVendor() {
+    return vendor;
   }
 }

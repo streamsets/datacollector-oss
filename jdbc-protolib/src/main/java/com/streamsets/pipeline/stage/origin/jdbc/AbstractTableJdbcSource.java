@@ -148,7 +148,7 @@ public abstract class AbstractTableJdbcSource extends BasePushSource {
     }
     if (issues.isEmpty()) {
       try {
-        connectionManager = new ConnectionManager(hikariDataSource);
+        connectionManager = new ConnectionManager(hikariConfigBean.getVendor(), hikariDataSource);
 
         getTables(getContext(), issues, connectionManager);
 

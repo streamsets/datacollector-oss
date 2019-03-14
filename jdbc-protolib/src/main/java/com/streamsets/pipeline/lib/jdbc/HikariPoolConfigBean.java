@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.jdbc.multithread.DatabaseVendor;
 import com.streamsets.pipeline.stage.destination.jdbc.Groups;
 
 import java.util.ArrayList;
@@ -348,5 +349,13 @@ public class HikariPoolConfigBean {
 
   public String getConnectionString() {
     return connectionString;
+  }
+
+  public DatabaseVendor getVendor() {
+    if(connectionString.startsWith("jdbc:oracle:")) {
+      return DatabaseVendor.ORACLE;
+    }
+
+    return DatabaseVendor.UNKNOWN;
   }
 }

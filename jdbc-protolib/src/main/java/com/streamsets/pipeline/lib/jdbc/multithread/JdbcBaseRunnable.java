@@ -527,6 +527,8 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
     }
   }
 
-
+  protected DatabaseVendor getVendor() {
+    return connectionManager.getVendor();
+  }
 
 }
