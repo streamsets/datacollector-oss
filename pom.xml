@@ -19,7 +19,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector</artifactId>
-  <version>3.8.0</version>
+  <version>3.8.1-SNAPSHOT</version>
   <description>StreamSets Data Collector</description>
   <name>StreamSets Data Collector</name>
   <packaging>pom</packaging>
@@ -90,8 +90,8 @@
     <wholefile-transformer-lib>wholefile-transformer-lib</wholefile-transformer-lib>
     <windows-lib>windows-lib</windows-lib>
     <rootProject>true</rootProject>
-    <datacollector-api.version>3.8.0</datacollector-api.version>
-    <datacollector-spark-api.version>3.8.0</datacollector-spark-api.version>
+    <datacollector-api.version>3.8.1-SNAPSHOT</datacollector-api.version>
+    <datacollector-spark-api.version>3.8.1-SNAPSHOT</datacollector-spark-api.version>
   </properties>
 
   <!-- StreamSets Data Collector API being used -->
