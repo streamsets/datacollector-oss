@@ -36,6 +36,7 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.event.CommonEvents;
 import com.streamsets.pipeline.lib.jdbc.multithread.ConnectionManager;
+import com.streamsets.pipeline.lib.jdbc.multithread.DatabaseVendor;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
@@ -518,7 +519,8 @@ public class JdbcUtil {
       maxBlobSize,
       DataType.USE_COLUMN_TYPE,
       unknownTypeAction,
-      false
+      false,
+      DatabaseVendor.UNKNOWN
     );
   }
 
@@ -530,13 +532,30 @@ public class JdbcUtil {
       int maxBlobSize,
       DataType userSpecifiedType,
       UnknownTypeAction unknownTypeAction,
-      boolean timestampToString
+      boolean timestampToString,
+      DatabaseVendor vendor
   ) throws SQLException, IOException, StageException {
       Field field;
       if (userSpecifiedType != DataType.USE_COLUMN_TYPE) {
         // If user specifies the data type, overwrite the column type returned by database.
         field = Field.create(Field.Type.valueOf(userSpecifiedType.getLabel()), rs.getObject(columnIndex));
       } else {
+        // Firstly resolve some vendor specific types - we are careful in case that someone will be clashing
+        if(vendor == DatabaseVendor.ORACLE) {
+          switch (md.getColumnType(columnIndex)) {
+            case 100: // BINARY_FLOAT
+              return Field.create(Field.Type.FLOAT, rs.getFloat(columnIndex));
+            case 101: // BINARY_DOUBLE
+              return Field.create(Field.Type.DOUBLE, rs.getDouble(columnIndex));
+            case -101: // TIMESTAMP WITH TIMEZONE
+            case -102: // TIMESTAMP WITH LOCAL TIMEZONE
+              OffsetDateTime offsetDateTime = rs.getObject(columnIndex, OffsetDateTime.class);
+              return Field.create(Field.Type.ZONED_DATETIME, offsetDateTime.toZonedDateTime());
+            case Types.SQLXML:
+              return Field.create(Field.Type.STRING, rs.getSQLXML(columnIndex).getString());
+          }
+        }
+
         // All types as of JDBC 2.0 are here:
         // https://docs.oracle.com/javase/8/docs/api/constant-values.html#java.sql.Types.ARRAY
         // Good source of recommended mappings is here:
@@ -671,7 +690,8 @@ public class JdbcUtil {
         errorRecordHandler,
         unknownTypeAction,
         null,
-        false
+        false,
+        DatabaseVendor.UNKNOWN
     );
   }
 
@@ -679,7 +699,8 @@ public class JdbcUtil {
       ResultSet rs,
       CommonSourceConfigBean commonSourceBean,
       ErrorRecordHandler errorRecordHandler,
-      UnknownTypeAction unknownTypeAction
+      UnknownTypeAction unknownTypeAction,
+      DatabaseVendor vendor
   ) throws SQLException, StageException {
     return resultSetToFields(
         rs,
@@ -689,7 +710,8 @@ public class JdbcUtil {
         errorRecordHandler,
         unknownTypeAction,
         null,
-        commonSourceBean.convertTimestampToString
+        commonSourceBean.convertTimestampToString,
+        vendor
     );
   }
 
@@ -708,7 +730,8 @@ public class JdbcUtil {
         errorRecordHandler,
         unknownTypeAction,
         recordHeader,
-        commonSourceBean.convertTimestampToString
+        commonSourceBean.convertTimestampToString,
+        DatabaseVendor.UNKNOWN
     );
   }
 
@@ -720,7 +743,8 @@ public class JdbcUtil {
       ErrorRecordHandler errorRecordHandler,
       UnknownTypeAction unknownTypeAction,
       Set<String> recordHeader,
-      boolean timestampToString
+      boolean timestampToString,
+      DatabaseVendor vendor
   ) throws SQLException, StageException {
     ResultSetMetaData md = rs.getMetaData();
     LinkedHashMap<String, Field> fields = new LinkedHashMap<>(md.getColumnCount());
@@ -737,7 +761,8 @@ public class JdbcUtil {
               maxBlobSize,
               dataType == null ? DataType.USE_COLUMN_TYPE : dataType,
               unknownTypeAction,
-              timestampToString
+              timestampToString,
+              vendor
           );
           fields.put(md.getColumnLabel(i), field);
         }

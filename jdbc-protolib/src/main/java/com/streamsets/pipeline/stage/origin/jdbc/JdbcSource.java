@@ -551,7 +551,7 @@ public class JdbcSource extends BaseSource {
         commonSourceConfigBean,
         errorRecordHandler,
         unknownTypeAction,
-        null
+        (Set)null
     );
 
     if (fields.size() != numColumns) {

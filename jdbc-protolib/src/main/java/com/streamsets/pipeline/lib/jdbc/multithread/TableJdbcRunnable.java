@@ -22,7 +22,6 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
@@ -77,7 +76,8 @@ public final class TableJdbcRunnable extends JdbcBaseRunnable {
         rs,
         commonSourceConfigBean,
         errorRecordHandler,
-        tableJdbcConfigBean.unknownTypeAction
+        tableJdbcConfigBean.unknownTypeAction,
+        getVendor()
     );
 
     // TODO: change offset format here for incremental mode (finished=true if result set end reached)
