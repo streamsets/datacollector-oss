@@ -45,11 +45,23 @@ public class PostgresWalRecord {
     this.lsn = lsn;
   }
 
+  public DecoderValues getDecoder() {
+    return decoder;
+  }
+
   public PostgresWalRecord(ByteBuffer buffer, LogSequenceNumber lsn, DecoderValues decoder) {
     this.buffer = buffer;
     this.lsn = lsn;
     this.field = null; //converter throws exception best handled in getter
     this.decoder = decoder;
+  }
+
+  public PostgresWalRecord(PostgresWalRecord record, Field changes) {
+    this.buffer = record.getBuffer();
+    this.lsn = record.getLsn();
+    this.field = record.getField();
+    this.setChanges(changes);
+    this.decoder = record.getDecoder();
   }
 
   private String bufferToString() {
@@ -116,6 +128,11 @@ public class PostgresWalRecord {
     //Will return a 0...n length Field.LIST
     Field entry  = getEntryFromField("change");
     return entry.getValueAsList();
+  }
+
+  private void setChanges(Field entry) {
+    Map<String, Field> valueAsMap = field.getValueAsMap();
+    valueAsMap.replace("change", entry);
   }
 
   public static String getTypeFromChangeMap(Map<String, Field> change) {

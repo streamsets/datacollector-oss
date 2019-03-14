@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -26,15 +25,11 @@ import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
-import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.DateTimeColumnHandler;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
-import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaAndTable;
-import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaTableConfigBean;
 import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -47,11 +42,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Queue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.postgresql.replication.LogSequenceNumber;
 import org.slf4j.Logger;
@@ -79,7 +71,6 @@ public class PostgresCDCSource extends BaseSource {
   private final HikariPoolConfigBean hikariConfigBean;
   private volatile boolean generationStarted = false;
   private volatile boolean runnerCreated = false;
-  private ErrorRecordHandler errorRecordHandler;
   private boolean containerized = false;
   private HikariDataSource dataSource = null;
   private Connection connection = null;
@@ -122,7 +113,7 @@ public class PostgresCDCSource extends BaseSource {
     return offset;
   }
 
-  public void setOffset(String offset) {
+  private void setOffset(String offset) {
     this.offset = offset;
   }
 
@@ -132,7 +123,7 @@ public class PostgresCDCSource extends BaseSource {
     List<ConfigIssue> issues = super.init();
 
     // default record handler
-    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
+    ErrorRecordHandler errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
     // Validate the HikarConfig driverClassName
     if (!hikariConfigBean.driverClassName.isEmpty()) {
@@ -322,11 +313,11 @@ public class PostgresCDCSource extends BaseSource {
     return Optional.ofNullable(issues);
   }
 
-  public void createRunner() {
+  private void createRunner() {
     postgresWalRunner = new PostgresWalRunner(this);
   }
 
-  public PostgresWalRunner getRunner() {
+  private PostgresWalRunner getRunner() {
     return postgresWalRunner;
   }
 
@@ -334,7 +325,7 @@ public class PostgresCDCSource extends BaseSource {
     return walReceiver;
   }
 
-  public void startGeneration() {
+  private void startGeneration() {
     scheduledExecutor = new SafeScheduledExecutorService(1, "postgresCDC");
     scheduledExecutor.scheduleAtFixedRate(getRunner(), configBean.pollInterval, configBean.pollInterval,
         TimeUnit.MILLISECONDS);
