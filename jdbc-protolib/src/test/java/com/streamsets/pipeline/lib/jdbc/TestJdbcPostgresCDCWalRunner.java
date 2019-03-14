@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.lib.jdbc;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -31,14 +30,10 @@ import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PostgresChangeType
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PostgresWalRecord;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PostgresWalRunner;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.StartValues;
-import com.zaxxer.hikari.HikariDataSource;
 import java.nio.ByteBuffer;
-import java.sql.Connection;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.time.zone.ZoneRules;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -123,8 +118,6 @@ public class TestJdbcPostgresCDCWalRunner {
 
   @Test
   public void testPassesTableFilter() {
-
-
     /* Set up valid schemasAndTables that have already been pre-filtered
         in walReceiver. This List will be returned from mock class
      */
@@ -141,8 +134,15 @@ public class TestJdbcPostgresCDCWalRunner {
       put("table", Field.create("table1"));
     }};
 
+    final Map<String, Field> change2 = new HashMap<String, Field> () {{
+      put("kind", Field.create("update"));
+      put("schema", Field.create("public"));
+      put("table", Field.create("not_a_valid_table"));
+    }};
+
     List<Field> changes = new ArrayList<Field>() {{
       add(Field.create(change1));
+      add(Field.create(change2));
     }};
 
     TestPgMockCDCRecord testPgMockCDCRecord = new TestPgMockCDCRecord("511", "0/0",
@@ -156,25 +156,14 @@ public class TestJdbcPostgresCDCWalRunner {
 
     when(walReceiverMock.getSchemasAndTables()).thenReturn(schemasAndTables);
     when(walRecordMock.getChanges()).thenReturn(testPgMockCDCRecord.getCDCRecordChanges());
+    when(walRecordMock.getBuffer()).thenReturn(ByteBuffer.wrap(new String("test").getBytes()));
+    when(walRecordMock.getLsn()).thenReturn(LogSequenceNumber.valueOf("0/0"));
+    when(walRecordMock.getDecoder()).thenReturn(DecoderValues.WAL2JSON);
+    when(walRecordMock.getField()).thenReturn(Field.create(testPgMockCDCRecord.getCDCRecord()));
 
-    Assert.assertTrue(pgRunner.passesFilter(walRecordMock));
-
-    final Map<String, Field> change2 = new HashMap<String, Field> () {{
-      put("kind", Field.create("update"));
-      put("schema", Field.create("public"));
-      put("table", Field.create("table_no_match"));
-    }};
-
-    changes = new ArrayList<Field>() {{
-      add(Field.create(change2));
-    }};
-
-    testPgMockCDCRecord = new TestPgMockCDCRecord("511", "0/0",
-        "2018-07-09 10:16:23.815-07", changes);
-    when(walRecordMock.getChanges()).thenReturn(testPgMockCDCRecord.getCDCRecordChanges());
-
-    Assert.assertFalse(pgRunner.passesFilter(walRecordMock));
-
+    PostgresWalRecord filteredRecord = pgRunner.filter(walRecordMock);
+    Assert.assertEquals(walRecordMock.getChanges().size(), 2);
+    Assert.assertEquals(filteredRecord.getChanges().size(), 1);
   }
 
   @Test
@@ -207,8 +196,15 @@ public class TestJdbcPostgresCDCWalRunner {
     when(pgSourceMock.getConfigBean()).thenReturn(configBean);
     when(walReceiverMock.getSchemasAndTables()).thenReturn(schemasAndTables);
     when(walRecordMock.getChanges()).thenReturn(testPgMockCDCRecord.getCDCRecordChanges());
+    when(walRecordMock.getBuffer()).thenReturn(ByteBuffer.wrap(new String("test").getBytes()));
+    when(walRecordMock.getLsn()).thenReturn(LogSequenceNumber.valueOf("0/0"));
+    when(walRecordMock.getXid()).thenReturn("511");
+    when(walRecordMock.getDecoder()).thenReturn(DecoderValues.WAL2JSON);
+    when(walRecordMock.getField()).thenReturn(Field.create(testPgMockCDCRecord.getCDCRecord()));
 
-    Assert.assertTrue(pgRunner.passesFilter(walRecordMock));
+    PostgresWalRecord filteredRecord = pgRunner.filter(walRecordMock);
+    Assert.assertEquals(walRecordMock.getChanges().size(), 1);
+    Assert.assertEquals(filteredRecord.getChanges().size(), 1);
 
     /* TEST - testing recordDate > filterDate so should pass */
 
@@ -217,7 +213,10 @@ public class TestJdbcPostgresCDCWalRunner {
     when(walReceiverMock.getSchemasAndTables()).thenReturn(schemasAndTables);
     when(walRecordMock.getChanges()).thenReturn(testPgMockCDCRecord.getCDCRecordChanges());
     when(walRecordMock.getTimestamp()).thenReturn(testPgMockCDCRecord.getTimeStamp());
-
+    when(walRecordMock.getLsn()).thenReturn(LogSequenceNumber.valueOf("0/0"));
+    when(walRecordMock.getXid()).thenReturn("511");
+    when(walRecordMock.getDecoder()).thenReturn(DecoderValues.WAL2JSON);
+    when(walRecordMock.getField()).thenReturn(Field.create(testPgMockCDCRecord.getCDCRecord()));
 
     configBean.startValue = StartValues.DATE;
     when(pgSourceMock.getConfigBean()).thenReturn(configBean);
@@ -225,7 +224,9 @@ public class TestJdbcPostgresCDCWalRunner {
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
     when(pgSourceMock.getZoneId()).thenReturn(zoneId);
 
-    Assert.assertTrue(pgRunner.passesFilter(walRecordMock));
+    filteredRecord = pgRunner.filter(walRecordMock);
+    Assert.assertEquals(walRecordMock.getChanges().size(), 1);
+    Assert.assertEquals(filteredRecord.getChanges().size(), 1);
 
     /* TEST - testing recordDate < filterDate so should fail */
 
@@ -233,14 +234,18 @@ public class TestJdbcPostgresCDCWalRunner {
     when(pgSourceMock.getWalReceiver()).thenReturn(walReceiverMock);
     when(walReceiverMock.getSchemasAndTables()).thenReturn(schemasAndTables);
     when(walRecordMock.getChanges()).thenReturn(testPgMockCDCRecord.getCDCRecordChanges());
+    when(walRecordMock.getLsn()).thenReturn(LogSequenceNumber.valueOf("0/0"));
+    when(walRecordMock.getXid()).thenReturn("511");
+    when(walRecordMock.getDecoder()).thenReturn(DecoderValues.WAL2JSON);
+    when(walRecordMock.getField()).thenReturn(Field.create(testPgMockCDCRecord.getCDCRecord()));
 
     configBean.startValue = StartValues.DATE;
     when(pgSourceMock.getConfigBean()).thenReturn(configBean);
     when(pgSourceMock.getStartDate()).thenReturn(LocalDateTime.parse("2020-01-01 01:00:00",
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
-    Assert.assertFalse(pgRunner.passesFilter(walRecordMock));
-
+    filteredRecord = pgRunner.filter(walRecordMock);
+    Assert.assertNull(filteredRecord);
   }
 
   @Test
@@ -292,9 +297,15 @@ public class TestJdbcPostgresCDCWalRunner {
 
     when(walReceiverMock.getSchemasAndTables()).thenReturn(schemasAndTables);
     when(walRecordMock.getChanges()).thenReturn(testPgMockCDCRecord.getCDCRecordChanges());
+    when(walRecordMock.getBuffer()).thenReturn(ByteBuffer.wrap(new String("test").getBytes()));
+    when(walRecordMock.getLsn()).thenReturn(LogSequenceNumber.valueOf("0/0"));
+    when(walRecordMock.getXid()).thenReturn("511");
+    when(walRecordMock.getDecoder()).thenReturn(DecoderValues.WAL2JSON);
+    when(walRecordMock.getField()).thenReturn(Field.create(testPgMockCDCRecord.getCDCRecord()));
 
-    Assert.assertTrue(pgRunner.passesFilter(walRecordMock));
-
+    PostgresWalRecord filteredRecord = pgRunner.filter(walRecordMock);
+    Assert.assertEquals(walRecordMock.getChanges().size(), 3);
+    Assert.assertEquals(filteredRecord.getChanges().size(), 3);
 
     /* Test when filter is DELETE, INSERT:
     Change containing DELETE, INSERT AND UPDATE should FAIL filter */
@@ -316,8 +327,12 @@ public class TestJdbcPostgresCDCWalRunner {
     when(walReceiverMock.getSchemasAndTables()).thenReturn(schemasAndTables);
     when(walRecordMock.getChanges()).thenReturn(testPgMockCDCRecord.getCDCRecordChanges());
 
-    Assert.assertFalse(pgRunner.passesFilter(walRecordMock));
 
+    filteredRecord = pgRunner.filter(walRecordMock);
+    Assert.assertEquals(filteredRecord.getLsn(), walRecordMock.getLsn());
+    Assert.assertEquals(filteredRecord.getXid(), walRecordMock.getXid());
+    Assert.assertEquals(walRecordMock.getChanges().size(), 3);
+    Assert.assertEquals(filteredRecord.getChanges().size(), 2);
 
     /* Test when filter is DELETE, INSERT:
     Change containing DELETE, INSERT should PASS filter */
@@ -339,7 +354,11 @@ public class TestJdbcPostgresCDCWalRunner {
     when(walReceiverMock.getSchemasAndTables()).thenReturn(schemasAndTables);
     when(walRecordMock.getChanges()).thenReturn(testPgMockCDCRecord.getCDCRecordChanges());
 
-    Assert.assertTrue(pgRunner.passesFilter(walRecordMock));
+    filteredRecord = pgRunner.filter(walRecordMock);
+    Assert.assertEquals(filteredRecord.getLsn(), walRecordMock.getLsn());
+    Assert.assertEquals(filteredRecord.getXid(), walRecordMock.getXid());
+    Assert.assertEquals(walRecordMock.getChanges().size(), 2);
+    Assert.assertEquals(filteredRecord.getChanges().size(), 2);
   }
 
 

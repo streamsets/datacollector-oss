@@ -25,7 +25,6 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import org.postgresql.replication.LogSequenceNumber;
 import org.postgresql.replication.PGReplicationStream;
 import org.slf4j.Logger;
@@ -65,9 +64,10 @@ public class PostgresWalRunner implements Runnable {
             postgresCDCSource.getConfigBean().decoderValue
         );
 
-        if (passesFilter(postgresWalRecord)) {
-          postgresCDCSource.getQueue().add(postgresWalRecord);
-          LOG.debug("CDC: {} ", postgresWalRecord.toString());
+        PostgresWalRecord filteredRecord = filter(postgresWalRecord);
+        if (filteredRecord != null) {
+          postgresCDCSource.getQueue().add(filteredRecord);
+          LOG.debug("CDC: {} ", filteredRecord.toString());
         } else {
           LOG.debug("Filtered out CDC: {} ", postgresWalRecord.toString());
         }
@@ -82,12 +82,12 @@ public class PostgresWalRunner implements Runnable {
 
   }
 
-  private boolean passesStartValueFilter(PostgresWalRecord postgresWalRecord) {
+  private PostgresWalRecord passesStartValueFilter(PostgresWalRecord postgresWalRecord) {
     // If the startValue parameter isn't a date, we can ignore this filter since
     // LSN filtering is done via the Replication connection in PostgresWalReceiver
     if ( ! postgresCDCSource.getConfigBean().startValue.equals(StartValues.DATE)) {
       hasStartFilter = false;
-      return true;
+      return postgresWalRecord;
     }
 
     /*
@@ -127,13 +127,12 @@ public class PostgresWalRunner implements Runnable {
         startZoneOffset).toZonedDateTime();
     //Compare to configured startDate. If its less than start, then ignore
     if (zonedDateTime.compareTo(startDate) < 0 ) {
-      return false;
+      return null;
     }
-
-    return true;
+    return postgresWalRecord;
   }
 
-  private boolean passesOperationFilter(PostgresWalRecord postgresWalRecord) {
+  private PostgresWalRecord passesOperationFilter(PostgresWalRecord postgresWalRecord) {
     List<PostgresChangeTypeValues> configuredChangeTypes = postgresCDCSource
         .getConfigBean()
         .postgresChangeTypes;
@@ -143,78 +142,71 @@ public class PostgresWalRunner implements Runnable {
       changeTypes.add(configuredChangeType.getLabel());
     }
 
-    // This means that all legal operations are requested.
-    if (changeTypes.size() == PostgresChangeTypeValues.values().length) {
-      hasOperationFilter = false;
-      return true;
-    }
-
     List<Field> changes = postgresWalRecord.getChanges();
+    List<Field> filteredChanges = new ArrayList<Field>();
 
-
-    /*
-      Please note carefully. Due to the nature of Postgres CDC, many types are contained
-      in the one record. INSERT, UPDATE, DELETE all can be present in the one CDC record.
-      If the user configures a filter such that only INSERT, UPDATE are wanted (and by
-      inference DELETE is NOT then if ANY change part contains DELETE, then we filter out
-      the whole CDC. To just rip out the DELETE part, it is recommended to use FieldPivot
-     */
     for (Field change: changes) {
       String changeType = PostgresWalRecord.getTypeFromChangeMap(change.getValueAsMap());
-      if (! changeTypes.contains(changeType)) {
-        return false;
+      if (changeTypes.contains(changeType)) {
+        filteredChanges.add(change);
       }
     }
-    return true;
+
+    if (filteredChanges == null || filteredChanges.isEmpty()) {
+      return null;
+    }
+    return new PostgresWalRecord(postgresWalRecord, Field.create(filteredChanges));
   }
 
-  private boolean passesTableFilter(PostgresWalRecord postgresWalRecord) {
+  private PostgresWalRecord passesTableFilter(PostgresWalRecord postgresWalRecord) {
     //The list if valid schemas and tables
     List<SchemaAndTable> schemasAndTables =
         postgresCDCSource.getWalReceiver().getSchemasAndTables();
 
     if (schemasAndTables == null || schemasAndTables.isEmpty()) {
       hasTableFilter = false;
-      return true;
+      return postgresWalRecord;
     }
 
-    //Changes are structured as a Map with key:"change" that returns a list of all changes
+
     List<Field> changes = postgresWalRecord.getChanges();
-    // Inside each element in the change list is a map with keys "schema" and "table"
-    // that have the values for the the schema and table for the change.
+    List<Field> filteredChanges = new ArrayList<Field>();
+
     for (Field change : changes) {
       String table = PostgresWalRecord.getTableFromChangeMap(change.getValueAsMap());
       String schema = PostgresWalRecord.getSchemaFromChangeMap(change.getValueAsMap());
       SchemaAndTable changeSchemaAndTable = new SchemaAndTable(schema, table);
       // If the change's schema/table pair is not in the valid range, we filter out (return false)
-      if (!schemasAndTables.contains(changeSchemaAndTable)) {
-        return false;
+      if (schemasAndTables.contains(changeSchemaAndTable)) {
+        filteredChanges.add(change);
       }
     }
-    return true;
+    if (filteredChanges == null || filteredChanges.isEmpty()) {
+      return null;
+    }
+    return new PostgresWalRecord(postgresWalRecord, Field.create(filteredChanges));
   }
 
-  public boolean passesFilter(PostgresWalRecord postgresWalRecord) {
+  public PostgresWalRecord filter(PostgresWalRecord postgresWalRecord) {
 
     if (( ! hasTableFilter) &&
         ( ! hasStartFilter) &&
         ( ! hasOperationFilter)) {
-      return true;
+      return postgresWalRecord;
     }
 
-    if (hasTableFilter && ( ! passesTableFilter(postgresWalRecord))) {
-      return false;
+    if (postgresWalRecord != null && hasTableFilter) {
+      postgresWalRecord = passesTableFilter(postgresWalRecord);
     }
 
-    if (hasStartFilter && ( ! passesStartValueFilter(postgresWalRecord))) {
-      return false;
+    if (postgresWalRecord != null && hasStartFilter) {
+      postgresWalRecord = passesStartValueFilter(postgresWalRecord);
     }
 
-    if (hasOperationFilter && ( ! passesOperationFilter(postgresWalRecord))) {
-      return false;
+    if (postgresWalRecord != null && hasOperationFilter) {
+      postgresWalRecord = passesOperationFilter(postgresWalRecord);
     }
 
-    return true;
+    return postgresWalRecord;
   }
-
 }
