@@ -310,7 +310,7 @@ public class SpoolDirRunnable implements Runnable {
 
       // if this is the end of the file, do post processing
       if (currentFile != null && newOffset.getOffset().equals(MINUS_ONE)) {
-        spooler.doPostProcessing(fs.getFile(conf.spoolDir, newOffset.getFile()));
+        spooler.doPostProcessing(fs.getFile(newOffset.getFile()));
       }
     }
 
