@@ -91,7 +91,7 @@ angular
             }
             break;
           case 'body':
-            values.body = values.body || value;
+            values.body = values.body || value || 'null';
             break;
         }
       }
