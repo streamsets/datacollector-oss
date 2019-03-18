@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.origin.sqs;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSAsync;
 import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder;
@@ -112,8 +113,16 @@ public class SqsConsumer extends BasePushSource {
       return issues;
     }
 
-    AmazonSQS validationClient = AmazonSQSClientBuilder.standard().withRegion(conf.region.getId())
-        .withClientConfiguration(clientConfiguration).withCredentials(credentials).build();
+    AmazonSQSClientBuilder builder = AmazonSQSClientBuilder.standard()
+        .withClientConfiguration(clientConfiguration)
+        .withCredentials(credentials);
+    if(conf.region == AwsRegion.OTHER) {
+      builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(conf.endpoint, null));
+    } else {
+      builder.withRegion(conf.region.getId());
+    }
+
+    AmazonSQS validationClient = builder.build();
 
     for (int i = 0; i < conf.queuePrefixes.size(); i++) {
       final String queueNamePrefix = conf.queuePrefixes.get(i);
@@ -146,9 +155,14 @@ public class SqsConsumer extends BasePushSource {
 
   private AmazonSQSAsync buildAsyncClient() {
     final AmazonSQSAsyncClientBuilder builder = AmazonSQSAsyncClientBuilder.standard();
-    builder.setRegion(conf.region.getId());
+    if(conf.region == AwsRegion.OTHER) {
+      builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(conf.endpoint, null));
+    } else {
+      builder.withRegion(conf.region.getId());
+    }
     builder.setCredentials(credentials);
     builder.setClientConfiguration(clientConfiguration);
+
     return builder.build();
   }
 
