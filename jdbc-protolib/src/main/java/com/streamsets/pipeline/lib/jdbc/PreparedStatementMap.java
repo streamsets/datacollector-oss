@@ -40,7 +40,7 @@ final class PreparedStatementMap {
       int maxPrepStmtCache,
       boolean caseSensitive
   ) {
-    // For UPDATE will always have cache size of 1, this is fairly cheap workaround for ESC-251 (proper solution is too
+    // For UPDATE will always have cache size of 0 (disabled), this is fairly cheap workaround for ESC-251 (proper solution is too
     // intrusive).
     for (JDBCOperationType type: JDBCOperationType.values()) {
       cache.put(type.code, new PreparedStatementCache(
@@ -49,7 +49,7 @@ final class PreparedStatementMap {
           generatedColumnMappings,
           primaryKeyColumns,
           type.code,
-          type == JDBCOperationType.UPDATE ? 1 : maxPrepStmtCache,
+          type == JDBCOperationType.UPDATE ? 0 : maxPrepStmtCache,
           caseSensitive)
       );
     }
