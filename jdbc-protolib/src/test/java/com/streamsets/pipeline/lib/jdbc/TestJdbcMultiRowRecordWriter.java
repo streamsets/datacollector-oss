@@ -401,7 +401,7 @@ public class TestJdbcMultiRowRecordWriter {
         "TEST_TABLE",
         false, //rollback
         new LinkedList<JdbcFieldColumnParamMapping>(),
-        PreparedStatementCache.UNLIMITED_CACHE,
+        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
         JDBCOperationType.INSERT.getCode(),
         UnsupportedOperationAction.USE_DEFAULT,
         null,

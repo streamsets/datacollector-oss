@@ -60,7 +60,6 @@ public class JdbcTarget extends BaseTarget {
   private final boolean rollbackOnError;
   private final boolean useMultiRowOp;
   private final int maxPrepStmtParameters;
-  private final int maxPrepStmtCache;
 
   private final String schemaNameTemplate;
   private final String tableNameTemplate;
@@ -96,7 +95,6 @@ public class JdbcTarget extends BaseTarget {
           rollbackOnError,
           useMultiRowOp,
           maxPrepStmtParameters,
-          maxPrepStmtCache,
           defaultOpCode,
           unsupportedAction,
           duplicateKeyAction,
@@ -117,7 +115,6 @@ public class JdbcTarget extends BaseTarget {
       final boolean rollbackOnError,
       final boolean useMultiRowOp,
       int maxPrepStmtParameters,
-      int maxPrepStmtCache,
       final ChangeLogFormat changeLogFormat,
       final JDBCOperationType defaultOperation,
       final UnsupportedOperationAction unsupportedAction,
@@ -132,7 +129,6 @@ public class JdbcTarget extends BaseTarget {
         rollbackOnError,
         useMultiRowOp,
         maxPrepStmtParameters,
-        maxPrepStmtCache,
         changeLogFormat,
         defaultOperation.getCode(),
         unsupportedAction,
@@ -150,7 +146,6 @@ public class JdbcTarget extends BaseTarget {
       final boolean rollbackOnError,
       final boolean useMultiRowOp,
       int maxPrepStmtParameters,
-      int maxPrepStmtCache,
       final ChangeLogFormat changeLogFormat,
       final int defaultOpCode,
       UnsupportedOperationAction unsupportedAction,
@@ -166,7 +161,6 @@ public class JdbcTarget extends BaseTarget {
     this.rollbackOnError = rollbackOnError;
     this.useMultiRowOp = useMultiRowOp;
     this.maxPrepStmtParameters = maxPrepStmtParameters;
-    this.maxPrepStmtCache = maxPrepStmtCache;
     this.changeLogFormat = changeLogFormat;
     this.defaultOpCode = defaultOpCode;
     this.unsupportedAction = unsupportedAction;

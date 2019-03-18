@@ -42,7 +42,7 @@ import java.util.List;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 6,
+    version = 7,
     label = "JDBC Producer",
     description = "Insert, update, and delete data to a JDBC destination.",
     upgrader = JdbcTargetUpgrader.class,
@@ -168,20 +168,6 @@ public class JdbcDTarget extends DTarget {
   public int maxPrepStmtParameters;
 
   @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.NUMBER,
-      defaultValue = "-1",
-      label = "Max Cache Size Per Batch (Entries)",
-      description = "Maximum number of prepared statement stored in cache. Cache is used only when " +
-          "'Use Multi-Row Operation' checkbox is unchecked. Use -1 for unlimited number of entries.",
-      dependsOn = "useMultiRowInsert",
-      triggeredByValue = "false",
-      displayPosition = 60,
-      group = "JDBC"
-  )
-  public int maxPrepStmtCache;
-
-  @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
@@ -215,7 +201,6 @@ public class JdbcDTarget extends DTarget {
         rollbackOnError,
         useMultiRowInsert,
         maxPrepStmtParameters,
-        maxPrepStmtCache,
         changeLogFormat,
         defaultOperation,
         unsupportedAction,

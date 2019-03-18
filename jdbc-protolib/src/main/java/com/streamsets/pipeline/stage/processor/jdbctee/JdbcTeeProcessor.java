@@ -61,7 +61,6 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
   private final boolean rollbackOnError;
   private final boolean useMultiRowOp;
   private final int maxPrepStmtParameters;
-  private final int maxPrepStmtCache;
 
   private final String schema;
   private final String tableNameTemplate;
@@ -94,7 +93,6 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
       boolean rollbackOnError,
       boolean useMultiRowOp,
       int maxPrepStmtParameters,
-      int maxPrepStmtCache,
       ChangeLogFormat changeLogFormat,
       HikariPoolConfigBean hikariConfigBean,
       JDBCOperationType defaultOp,
@@ -109,7 +107,6 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
     this.rollbackOnError = rollbackOnError;
     this.useMultiRowOp = useMultiRowOp;
     this.maxPrepStmtParameters = maxPrepStmtParameters;
-    this.maxPrepStmtCache = maxPrepStmtCache;
     this.changeLogFormat = changeLogFormat;
     this.hikariConfigBean = hikariConfigBean;
     this.defaultOperation = defaultOp;
@@ -142,7 +139,6 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
           rollbackOnError,
           useMultiRowOp,
           maxPrepStmtParameters,
-          maxPrepStmtCache,
           defaultOperation.getCode(),
           unsupportedAction,
           JdbcRecordReaderWriterFactory.createRecordReader(changeLogFormat),

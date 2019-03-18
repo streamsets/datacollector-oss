@@ -130,7 +130,6 @@ public class TestJDBCBaseRecordWriter {
         "TEST_TABLE",
         false, //rollback
         new LinkedList<JdbcFieldColumnParamMapping>(),
-        PreparedStatementCache.UNLIMITED_CACHE,
         JDBCOperationType.INSERT.getCode(),
         UnsupportedOperationAction.DISCARD,
         null,
@@ -159,7 +158,6 @@ public class TestJDBCBaseRecordWriter {
         "COMPOSITE_KEY",
         false, //rollback
         new LinkedList<JdbcFieldColumnParamMapping>(),
-        PreparedStatementCache.UNLIMITED_CACHE,
         JDBCOperationType.INSERT.getCode(),
         UnsupportedOperationAction.DISCARD,
         null,
@@ -200,7 +198,6 @@ public class TestJDBCBaseRecordWriter {
         "TEST_TABLE",
         false, //rollback
         columnMapping,
-        PreparedStatementCache.UNLIMITED_CACHE,
         JDBCOperationType.INSERT.getCode(),
         UnsupportedOperationAction.DISCARD,
         generatedColumnMapping,
@@ -276,7 +273,6 @@ public class TestJDBCBaseRecordWriter {
         "TEST_TABLE2",
         false, //rollback
         columnMapping,
-        PreparedStatementCache.UNLIMITED_CACHE,
         JDBCOperationType.INSERT.getCode(),
         UnsupportedOperationAction.DISCARD,
         generatedColumnMapping,
@@ -362,7 +358,6 @@ public class TestJDBCBaseRecordWriter {
         "TEST_TABLE",
         false, //rollback
         new LinkedList<JdbcFieldColumnParamMapping>(),
-        PreparedStatementCache.UNLIMITED_CACHE,
         JDBCOperationType.INSERT.getCode(),
         UnsupportedOperationAction.DISCARD,
         null,

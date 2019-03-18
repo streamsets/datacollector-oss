@@ -55,6 +55,12 @@ public class JdbcTargetUpgrader extends JdbcBaseUpgrader{
         // fall through
       case 5:
         upgradeV5toV6(configs);
+        if(toVersion == 6) {
+          break;
+        }
+        // fall through
+      case 6:
+        upgradeV6toV7(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -129,5 +135,19 @@ public class JdbcTargetUpgrader extends JdbcBaseUpgrader{
     configs.add(new Config("defaultOperation", "INSERT"));
     configs.add(new Config("unsupportedAction", "DISCARD"));
     configs.add(new Config("maxPrepStmtCache", -1));
+  }
+
+  private void upgradeV6toV7(List<Config> configs) {
+    Config maxPrepStmtCache = null;
+    for (Config config : configs) {
+      if (config.getName().equals("maxPrepStmtCache")) {
+        maxPrepStmtCache = config;
+        break;
+      }
+    }
+
+    if(maxPrepStmtCache != null) {
+      configs.remove(maxPrepStmtCache);
+    }
   }
 }

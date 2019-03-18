@@ -117,7 +117,6 @@ public class TestGenericRecordWriter {
         "TEST_TABLE",
         false, //rollback set to false
         new LinkedList<JdbcFieldColumnParamMapping>(),
-        PreparedStatementCache.UNLIMITED_CACHE,
         JDBCOperationType.INSERT.getCode(),
         UnsupportedOperationAction.USE_DEFAULT,
         null,
@@ -167,7 +166,6 @@ public class TestGenericRecordWriter {
         "TEST_TABLE",
         false, //rollback
         new LinkedList<JdbcFieldColumnParamMapping>(),
-        PreparedStatementCache.UNLIMITED_CACHE,
         JDBCOperationType.INSERT.getCode(),
         UnsupportedOperationAction.USE_DEFAULT,
         null,
@@ -218,7 +216,6 @@ public class TestGenericRecordWriter {
         "TEST_TABLE",
         false, //rollback false
         new LinkedList<JdbcFieldColumnParamMapping>(),
-        PreparedStatementCache.UNLIMITED_CACHE,
         JDBCOperationType.INSERT.getCode(),
         UnsupportedOperationAction.USE_DEFAULT,
         null,
@@ -270,7 +267,6 @@ public class TestGenericRecordWriter {
         "COMPOSITE_KEY",
         false,
         new LinkedList<JdbcFieldColumnParamMapping>(),
-        PreparedStatementCache.UNLIMITED_CACHE,
         JDBCOperationType.INSERT.getCode(),
         UnsupportedOperationAction.USE_DEFAULT,
         null,
@@ -324,7 +320,6 @@ public class TestGenericRecordWriter {
         "COMPOSITE_KEY",
         false,
         new LinkedList<JdbcFieldColumnParamMapping>(),
-        PreparedStatementCache.UNLIMITED_CACHE,
         JDBCOperationType.INSERT.getCode(),
         UnsupportedOperationAction.USE_DEFAULT,
         null,
@@ -363,7 +358,6 @@ public class TestGenericRecordWriter {
         "TEST_TABLE",
         false, //rollback
         columnMapping,
-        PreparedStatementCache.UNLIMITED_CACHE,
         JDBCOperationType.INSERT.getCode(),
         UnsupportedOperationAction.DISCARD,
         null,
@@ -408,7 +402,6 @@ public class TestGenericRecordWriter {
         "TEST_TABLE",
         false, //rollback set to false
         new LinkedList<>(),
-        PreparedStatementCache.UNLIMITED_CACHE,
         JDBCOperationType.INSERT.getCode(),
         UnsupportedOperationAction.USE_DEFAULT,
         null,

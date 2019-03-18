@@ -16,6 +16,11 @@
 package com.streamsets.pipeline.lib.jdbc;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Charsets;
+import com.google.common.hash.Funnel;
+import com.google.common.hash.HashCode;
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hashing;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
@@ -29,22 +34,28 @@ import java.sql.BatchUpdateException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_14;
+import static com.streamsets.pipeline.lib.operation.OperationType.DELETE_CODE;
+import static com.streamsets.pipeline.lib.operation.OperationType.INSERT_CODE;
 
 public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
   private static final Logger LOG = LoggerFactory.getLogger(JdbcGenericRecordWriter.class);
-  private final int maxPrepStmtCache;
   private final boolean caseSensitive;
+
+  private static final HashFunction columnHashFunction = Hashing.goodFastHash(64);
+  private static final Funnel<Map<String, String>> stringMapFunnel = (map, into) -> {
+    for (Map.Entry<String, String> entry : map.entrySet()) {
+      into.putString(entry.getKey(), Charsets.UTF_8).putString(entry.getValue(), Charsets.UTF_8);
+    }
+  };
 
   /**
    * Class constructor
@@ -66,7 +77,6 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
       String tableName,
       boolean rollbackOnError,
       List<JdbcFieldColumnParamMapping> customMappings,
-      int maxStmtCache,
       int defaultOpCode,
       UnsupportedOperationAction unsupportedAction,
       List<JdbcFieldColumnMapping> generatedColumnMappings,
@@ -88,111 +98,146 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
         caseSensitive,
         customDataSqlStateCodes
     );
-    this.maxPrepStmtCache = maxStmtCache;
     this.caseSensitive = caseSensitive;
   }
 
   @Override
   public List<OnRecordErrorException> writePerRecord(Iterator<Record> recordIterator) throws StageException {
-    final boolean perRecord = true;
-    return write(recordIterator, perRecord);
+    return write(recordIterator, true);
   }
 
   @Override
   public List<OnRecordErrorException> writeBatch(Iterator<Record> recordIterator) throws StageException {
-    final boolean perRecord = false;
-    return write(recordIterator, perRecord);
+    return write(recordIterator, false);
   }
 
-  /**
-   * write the batch of the records if it is not perRecord
-   * otherwise, execute one statement per record
-   * @param recordIterator
-   * @param perRecord
-   * @return List<OnRecordErrorException>
-   * @throws StageException
-   */
-  private List<OnRecordErrorException> write(Iterator<Record> recordIterator, boolean perRecord) throws StageException {
+  public List<OnRecordErrorException> write(Iterator<Record> recordIterator, boolean perRecord) throws StageException {
     List<OnRecordErrorException> errorRecords = new LinkedList<>();
-    PreparedStatementMap statementsForBatch = null;
-    // Map that keeps list of records that has been used for each statement -- for error handling
-    Map<PreparedStatement, List<Record>> statementsToRecords  = new LinkedHashMap<>();
-    try (Connection connection = getDataSource().getConnection()) {
-      statementsForBatch = new PreparedStatementMap(
-          connection,
-          getTableName(),
-          getGeneratedColumnMappings(),
-          getPrimaryKeyColumns(),
-          maxPrepStmtCache,
-          caseSensitive
-      );
+
+    try (Connection connection = getDataSource().getConnection()){
+      int prevOpCode = -1;
+      HashCode prevColumnHash = null;
+      LinkedList<Record> queue = new LinkedList<>();
 
       while (recordIterator.hasNext()) {
         Record record = recordIterator.next();
-        // First, find the operation code
         int opCode = getOperationCode(record, errorRecords);
-        if (opCode <= 0) {
+
+        // Need to consider the number of columns in query. If different, process saved records in queue.
+        HashCode columnHash = getColumnHash(record, opCode);
+
+        boolean opCodeValid = opCode > 0;
+        boolean opCodeUnchanged = opCode == prevOpCode;
+        boolean supportedOpCode = opCode == DELETE_CODE || opCode == INSERT_CODE && columnHash.equals(prevColumnHash);
+        boolean canEnqueue = opCodeValid && opCodeUnchanged && supportedOpCode;
+
+        if (canEnqueue) {
+          queue.add(record);
+        }
+
+        if (!opCodeValid || canEnqueue) {
           continue;
         }
-        // columnName to parameter mapping. Ex. parameter is default "?".
-        SortedMap<String, String> columnsToParameters = recordReader.getColumnsToParameters(
-            record,
-            opCode,
-            getColumnsToParameters(),
-            opCode == OperationType.UPDATE_CODE ? getColumnsToFieldNoPK() : getColumnsToFields()
-        );
 
-        if (columnsToParameters.isEmpty()) {
-          // no parameters found for configured columns
-          if (LOG.isWarnEnabled()) {
-            LOG.warn("No parameters found for record with ID {}; skipping", record.getHeader().getSourceId());
-          }
-          continue;
+        // Process enqueued records.
+        processQueue(queue, errorRecords, connection, prevOpCode, perRecord);
+
+        if (!queue.isEmpty()) {
+          throw new IllegalStateException("Queue processed, but was not empty upon completion.");
         }
 
-        PreparedStatement statement;
-        try {
-          statement = statementsForBatch.getPreparedStatement(opCode, columnsToParameters);
-          statementsToRecords.computeIfAbsent(statement, (key) -> new ArrayList<>()).add(record);
-
-          setParameters(opCode, columnsToParameters, record, connection, statement);
-
-          if (LOG.isDebugEnabled()) {
-            LOG.debug("Bound Query: {}", statement.toString());
-          }
-
-          if (!perRecord) {
-            statement.addBatch();
-          } else {
-            statement.executeUpdate();
-
-            if (getGeneratedColumnMappings() != null) {
-              writeGeneratedColumns(statement, Arrays.asList(record).iterator(), errorRecords);
-            }
-          }
-        } catch (SQLException ex) { // These don't trigger a rollback
-          errorRecords.add(new OnRecordErrorException(record, JDBC_14, ex));
-        } catch (OnRecordErrorException ex) {
-          errorRecords.add(ex);
-        }
+        queue.add(record);
+        prevOpCode = opCode;
+        prevColumnHash = columnHash;
       }
 
-      if (!perRecord) {
-        for (Map.Entry<PreparedStatement, List<Record>> entry : statementsToRecords.entrySet()) {
-          PreparedStatement statement = entry.getKey();
-          List<Record> statementRecords = entry.getValue();
-          try {
-            statement.executeBatch();
-          } catch(SQLException e){
-            if (getRollbackOnError()) {
-              connection.rollback();
-            }
-            handleBatchUpdateException(statementRecords, e, errorRecords);
-          }
+
+      // Check if any records are left in queue unprocessed
+      processQueue(queue, errorRecords, connection, prevOpCode, perRecord);
+      connection.commit();
+    } catch (SQLException e) {
+      handleSqlException(e);
+    }
+
+    return errorRecords;
+  }
+
+  private void processQueue(
+      LinkedList<Record> queue,
+      List<OnRecordErrorException> errorRecords,
+      Connection connection,
+      int opCode,
+      boolean perRecord
+  ) throws StageException {
+    if (queue.isEmpty()) {
+      return;
+    }
+
+    PreparedStatement statement = null;
+
+    for(Record record : queue) {
+      if (opCode <= 0) {
+        continue;
+      }
+
+      // columnName to parameter mapping. Ex. parameter is default "?".
+      SortedMap<String, String> columnsToParameters = recordReader.getColumnsToParameters(
+          record,
+          opCode,
+          getColumnsToParameters(),
+          opCode == OperationType.UPDATE_CODE ? getColumnsToFieldNoPK() : getColumnsToFields()
+      );
+
+      if (columnsToParameters.isEmpty()) {
+        // no parameters found for configured columns
+        if (LOG.isWarnEnabled()) {
+          LOG.warn("No parameters found for record with ID {}; skipping", record.getHeader().getSourceId());
+        }
+        continue;
+      }
+
+      try {
+        // Generate new statement only if the old one is null (could happen in processing records row-by-row)
+        if(statement == null) {
+          statement = jdbcUtil.getPreparedStatement(
+              getGeneratedColumnMappings(),
+              generateQuery(opCode, columnsToParameters),
+              connection
+          );
+        }
+
+        setParameters(opCode, columnsToParameters, record, connection, statement);
+
+        if (!perRecord) {
+          statement.addBatch();
+        } else {
+          statement.executeUpdate();
 
           if (getGeneratedColumnMappings() != null) {
-            writeGeneratedColumns(statement, statementRecords.iterator(), errorRecords);
+            writeGeneratedColumns(statement, Arrays.asList(record).iterator(), errorRecords);
           }
+          statement = null;
+        }
+      } catch (SQLException ex) { // These don't trigger a rollback
+        errorRecords.add(new OnRecordErrorException(record, JDBC_14, ex));
+      } catch (OnRecordErrorException ex) {
+        errorRecords.add(ex);
+      }
+    }
+
+    try {
+      if (!perRecord && statement != null) {
+        try {
+          statement.executeBatch();
+        } catch(SQLException e){
+          if (getRollbackOnError()) {
+            connection.rollback();
+          }
+          handleBatchUpdateException(queue, e, errorRecords);
+        }
+
+        if (getGeneratedColumnMappings() != null) {
+          writeGeneratedColumns(statement, queue.iterator(), errorRecords);
         }
       }
 
@@ -200,7 +245,8 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
     } catch (SQLException e) {
       handleSqlException(e);
     }
-    return errorRecords;
+
+    queue.clear();
   }
 
   /**
@@ -273,5 +319,26 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
     } else {
       handleSqlException(e);
     }
+  }
+
+  private HashCode getColumnHash(Record record, int op) {
+    Map<String, String> parameters = getColumnsToParameters();
+    SortedMap<String, String> columnsToParameters = recordReader.getColumnsToParameters(record, op, parameters, getColumnsToFields());
+    return columnHashFunction.newHasher().putObject(columnsToParameters, stringMapFunnel).hash();
+  }
+
+  private String generateQuery(
+      int opCode,
+      final SortedMap<String, String> columns
+  ) throws OnRecordErrorException {
+    List<String> primaryKeyParams = new LinkedList<>();
+    for (String key: getPrimaryKeyColumns()) {
+      primaryKeyParams.add(columns.get(key));
+    }
+
+    final int recordSize = 1;
+    String query = jdbcUtil.generateQuery(opCode, getTableName(), getPrimaryKeyColumns(), primaryKeyParams, columns, recordSize, caseSensitive, false);
+    LOG.debug("Generated query:" + query);
+    return query;
   }
 }

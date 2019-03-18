@@ -30,7 +30,12 @@ public class JdbcTeeUpgrader extends JdbcBaseUpgrader{
     switch(fromVersion) {
       case 1:
         upgradeV1toV2(configs);
+        if (toVersion == 2) {
+          break;
+        }
         // fall through
+      case 2:
+        upgradeV2toV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -59,4 +64,17 @@ public class JdbcTeeUpgrader extends JdbcBaseUpgrader{
     configs.add(new Config("maxPrepStmtCache", -1));
   }
 
+  private void upgradeV2toV3(List<Config> configs) {
+    Config maxPrepStmtCache = null;
+    for (Config config : configs) {
+      if (config.getName().equals("maxPrepStmtCache")) {
+        maxPrepStmtCache = config;
+        break;
+      }
+    }
+
+    if(maxPrepStmtCache != null) {
+      configs.remove(maxPrepStmtCache);
+    }
+  }
 }

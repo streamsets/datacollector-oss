@@ -41,7 +41,7 @@ import com.streamsets.pipeline.stage.destination.jdbc.Groups;
 import java.util.List;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "JDBC Tee",
     description = "Write records to JDBC and enrich records with generated columns",
     upgrader = JdbcTeeUpgrader.class,
@@ -176,20 +176,6 @@ public class JdbcTeeDProcessor extends DProcessor {
   public int maxPrepStmtParameters = -1;
 
   @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.NUMBER,
-      defaultValue = "-1",
-      label = "Max Cache Size Per Batch (Entries)",
-      description = "The maximum number of prepared statement stored in cache. Cache is used only when " +
-          "'Use Multi-Row Operation' checkbox is unchecked. Use -1 for unlimited number of entries.",
-      dependsOn = "useMultiRowOp",
-      triggeredByValue = "false",
-      displayPosition = 60,
-      group = "JDBC"
-  )
-  public int maxPrepStmtCache = -1;
-
-  @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
@@ -214,7 +200,6 @@ public class JdbcTeeDProcessor extends DProcessor {
         rollbackOnError,
         useMultiRowOp,
         maxPrepStmtParameters,
-        maxPrepStmtCache,
         changeLogFormat,
         hikariConfigBean,
         defaultOperation,
