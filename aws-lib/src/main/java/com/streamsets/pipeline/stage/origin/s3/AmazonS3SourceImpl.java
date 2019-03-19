@@ -59,8 +59,10 @@ public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements Amazon
     int threadCount = 0;
 
     if (lastSourceOffset.containsKey(Source.POLL_SOURCE_OFFSET_KEY)) {
-      //This code will be executed only the first time after moving from singlethread to multithread
+      // This code will be executed only the first time after moving from singlethread to multithread
       offsetsMap.put(threadCount, S3Offset.fromString(lastSourceOffset.get(Source.POLL_SOURCE_OFFSET_KEY)));
+      // Properly finish the upgrade by removing the original POLL_SOURCE key out
+      context.commitOffset(Source.POLL_SOURCE_OFFSET_KEY, null);
     } else {
       createInitialOffsetsMap(lastSourceOffset);
     }
