@@ -180,7 +180,7 @@ public class JdbcLoadRecordWriter extends JdbcBaseRecordWriter {
     } catch (SQLException e) {
       handleSqlException(e);
     } catch (Exception e) {
-      throw new StageException(JdbcErrors.JDBC_14, e.getMessage(), e);
+      throw new StageException(JdbcErrors.JDBC_58, e.getMessage(), e);
     }
     return errorRecords;
   }

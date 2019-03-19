@@ -35,7 +35,7 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_10("'{}' is less than the minimum value of '{}'"),
   JDBC_11("Minimum Idle Connections ({}) must be less than or equal to Maximum Pool Size ({})"),
   JDBC_13("Failed to convert CLOB to string: {}"),
-  JDBC_14("Error processing batch.\n{}"),
+  JDBC_14("Error processing batch: [SQLState:{}][ErrorCode:{}] {}\n{}"),
   JDBC_15("Invalid JDBC Namespace prefix, should end with '.'"),
   JDBC_16("Table '{}' does not exist or PDB is incorrect. Make sure the correct PDB was specified"),
   JDBC_17("Failed to lookup primary keys for table '{}' : {}"),
@@ -81,6 +81,7 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_55("The default value of '{}' must be in the format '" + JdbcLookupProcessor.DATE_FORMAT + "': {}"),
   JDBC_56("The default value of '{}' must be in the format '" + JdbcLookupProcessor.DATETIME_FORMAT + "': {}"),
   JDBC_57("Unsupported Multi-Row Operation to SQL Server"),
+  JDBC_58("Error processing batch: {}"),
 
   JDBC_60("Cannot Serialize Offset: {}"),
   JDBC_61("Cannot Deserialize Offset: {}"),

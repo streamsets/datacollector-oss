@@ -219,7 +219,15 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
           statement = null;
         }
       } catch (SQLException ex) { // These don't trigger a rollback
-        errorRecords.add(new OnRecordErrorException(record, JDBC_14, ex));
+        errorRecords.add(new OnRecordErrorException(
+            record,
+            JDBC_14,
+            ex.getSQLState(),
+            ex.getErrorCode(),
+            ex.getMessage(),
+            jdbcUtil.formatSqlException(ex),
+            ex
+        ));
       } catch (OnRecordErrorException ex) {
         errorRecords.add(ex);
       }
@@ -307,13 +315,29 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
         int i = 0;
         for (Record record : failedRecords) {
           if (i >= bue.getUpdateCounts().length || bue.getUpdateCounts()[i] == PreparedStatement.EXECUTE_FAILED) {
-            errorRecords.add(new OnRecordErrorException(record, JDBC_14, formattedError));
+            errorRecords.add(new OnRecordErrorException(
+                record,
+                JDBC_14,
+                e.getSQLState(),
+                e.getErrorCode(),
+                e.getMessage(),
+                jdbcUtil.formatSqlException(e),
+                e
+            ));
           }
           i++;
         }
       } else {
         for (Record record : failedRecords) {
-          errorRecords.add(new OnRecordErrorException(record, JDBC_14, formattedError));
+          errorRecords.add(new OnRecordErrorException(
+              record,
+              JDBC_14,
+              e.getSQLState(),
+              e.getErrorCode(),
+              e.getMessage(),
+              jdbcUtil.formatSqlException(e),
+              e
+          ));
         }
       }
     } else {

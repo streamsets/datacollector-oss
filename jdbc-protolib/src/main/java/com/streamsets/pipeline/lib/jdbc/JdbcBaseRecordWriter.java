@@ -694,7 +694,7 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
   void handleSqlException(SQLException e) throws StageException {
     String formattedError = jdbcUtil.formatSqlException(e);
     LOG.error(formattedError, e);
-    throw new StageException(JdbcErrors.JDBC_14, formattedError);
+    throw new StageException(JdbcErrors.JDBC_14, e.getSQLState(), e.getErrorCode(), e.getMessage(), formattedError, e);
   }
 
   /**
