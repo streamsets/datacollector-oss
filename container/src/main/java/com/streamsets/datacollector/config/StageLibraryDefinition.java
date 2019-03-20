@@ -36,6 +36,7 @@ public class StageLibraryDefinition {
   private String name;
   private String label;
   private Map<String, List<ExecutionMode>> stagesExecutionMode;
+  private String version;
 
   private final List<Class> elDefs;
   private final List<ElFunctionDefinition> elFunctionDefinitions;
@@ -83,6 +84,15 @@ public class StageLibraryDefinition {
 
   public ClassLoader getClassLoader() {
     return classLoader;
+  }
+
+  public String getVersion() {
+    return version;
+  }
+
+  // Ideally this should be immutable and in constructor, but this has been added later
+  public void setVersion(String version) {
+    this.version = version;
   }
 
   public String getName() {
