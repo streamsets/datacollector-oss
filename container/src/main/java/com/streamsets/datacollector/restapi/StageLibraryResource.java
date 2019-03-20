@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.restapi;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Strings;
 import com.streamsets.datacollector.classpath.ClasspathValidatorResult;
 import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
@@ -34,9 +35,11 @@ import com.streamsets.datacollector.restapi.bean.RepositoryManifestJson;
 import com.streamsets.datacollector.restapi.bean.StageDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.StageLibrariesJson;
 import com.streamsets.datacollector.restapi.bean.StageLibraryExtrasJson;
+import com.streamsets.datacollector.restapi.bean.StageLibraryManifestJson;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.datacollector.util.ContainerError;
+import com.streamsets.datacollector.util.Version;
 import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.impl.Utils;
 import io.swagger.annotations.Api;
@@ -113,12 +116,14 @@ public class StageLibraryResource {
   private final StageLibraryTask stageLibrary;
   private final BuildInfo buildInfo;
   private final RuntimeInfo runtimeInfo;
+  private final Version sdcVersion;
 
   @Inject
   public StageLibraryResource(StageLibraryTask stageLibrary, BuildInfo buildInfo, RuntimeInfo runtimeInfo) {
     this.stageLibrary = stageLibrary;
     this.buildInfo = buildInfo;
     this.runtimeInfo = runtimeInfo;
+    this.sdcVersion = new Version(buildInfo.getVersion());
   }
 
   @GET
@@ -248,7 +253,35 @@ public class StageLibraryResource {
           }
 
           if (libraryIdList.contains(lookupKey)) {
-            libraryUrlList.put(key, stageLibrariesJson.getStageLibraryManifest().getStageLibFile());
+            StageLibraryManifestJson manifest = stageLibrariesJson.getStageLibraryManifest();
+
+            // Validate minimal required SDC version
+            String minSdcVersionString = manifest.getStageLibMinSdcVersion();
+            if(!Strings.isNullOrEmpty(minSdcVersionString)) {
+              Version minSdcVersion = null;
+              try {
+                minSdcVersion = new Version(minSdcVersionString);
+              } catch (Exception e) {
+                LOG.error("Stage library {} version {} min SDC version '{}' is not a valid SDC version",
+                    key,
+                    stageLibrariesJson.getStagelibVersion(),
+                    minSdcVersionString,
+                    e
+                );
+              }
+
+              if(minSdcVersion != null && !sdcVersion.isGreaterOrEqualTo(minSdcVersion)) {
+                throw new RuntimeException(Utils.format(
+                    "Stage library {} version {} requires SDC version at least {} (current version is {})",
+                    key,
+                    stageLibrariesJson.getStagelibVersion(),
+                    minSdcVersionString,
+                    buildInfo.getVersion()
+                ));
+              }
+            }
+
+            libraryUrlList.put(key, manifest.getStageLibFile());
           }
         }
       }
