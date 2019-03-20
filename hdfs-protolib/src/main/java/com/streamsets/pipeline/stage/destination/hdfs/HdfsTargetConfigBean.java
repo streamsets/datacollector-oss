@@ -243,6 +243,7 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
     group = "OUTPUT_FILES",
     dependsOn = "fileType",
     triggeredByValue = "SEQUENCE_FILE",
+    evaluation = ConfigDef.Evaluation.EXPLICIT,
     elDefs = {RecordEL.class, DataUtilEL.class}
   )
   public String keyEl;
