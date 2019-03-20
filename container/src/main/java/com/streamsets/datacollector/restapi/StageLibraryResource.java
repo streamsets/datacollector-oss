@@ -19,6 +19,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.classpath.ClasspathValidatorResult;
 import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
+import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.definition.ConcreteELDefinitionExtractor;
 import com.streamsets.datacollector.el.RuntimeEL;
 import com.streamsets.datacollector.execution.alerts.DataRuleEvaluator;
@@ -31,6 +32,7 @@ import com.streamsets.datacollector.restapi.bean.PipelineFragmentDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.PipelineRulesDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.RepositoryManifestJson;
 import com.streamsets.datacollector.restapi.bean.StageDefinitionJson;
+import com.streamsets.datacollector.restapi.bean.StageLibrariesJson;
 import com.streamsets.datacollector.restapi.bean.StageLibraryExtrasJson;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.AuthzRole;
@@ -48,6 +50,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
@@ -70,8 +74,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Path("/v1")
@@ -79,6 +86,8 @@ import java.util.stream.Collectors;
 @DenyAll
 @RequiresCredentialsDeployed
 public class StageLibraryResource {
+
+  private static final Logger LOG = LoggerFactory.getLogger(StageLibraryResource.class);
 
   private static final String DEFAULT_ICON_FILE = "PipelineDefinition-bundle.properties";
   private static final String PNG_MEDIA_TYPE = "image/png";
@@ -226,32 +235,41 @@ public class StageLibraryResource {
     String runtimeDir = runtimeInfo.getRuntimeDir();
     String version = buildInfo.getVersion();
 
-    List<String> libraryUrlList= new ArrayList<>();
+    // Find Stage Lib location to each stage library that we should install
+    Map<String, String> libraryUrlList= new HashMap<>();
     List<RepositoryManifestJson> repoManifestList = stageLibrary.getRepositoryManifestList();
     repoManifestList.forEach(repositoryManifestJson -> {
-      List<String> libraryFilePathList = repositoryManifestJson.getStageLibraries().stream()
-          .filter(stageLibrariesJson -> {
-            if (stageLibrariesJson.getStageLibraryManifest() != null) {
-              String key = stageLibrariesJson.getStageLibraryManifest().getStageLibId();
-              if (withStageLibVersion) {
-                key += ":" + stageLibrariesJson.getStagelibVersion();
-              }
-              return libraryIdList.contains(key);
-            }
-            return false;
-          })
-          .map(stageLibrariesJson -> stageLibrariesJson.getStageLibraryManifest().getStageLibFile())
-          .collect(Collectors.toList());
-      libraryUrlList.addAll(libraryFilePathList);
+      for (StageLibrariesJson stageLibrariesJson : repositoryManifestJson.getStageLibraries()) {
+        if (stageLibrariesJson.getStageLibraryManifest() != null) {
+          String key = stageLibrariesJson.getStageLibraryManifest().getStageLibId();
+          String lookupKey = key;
+          if (withStageLibVersion) {
+            lookupKey += ":" + stageLibrariesJson.getStagelibVersion();
+          }
+
+          if (libraryIdList.contains(lookupKey)) {
+            libraryUrlList.put(key, stageLibrariesJson.getStageLibraryManifest().getStageLibFile());
+          }
+        }
+      }
     });
 
+    // The sizes should fit
     if (libraryUrlList.size() != libraryIdList.size()) {
-      throw new RuntimeException(
-          Utils.format("Unable to find to stage library {} in configured repository list", libraryIdList)
-      );
+      Set<String> missingStageLibs = new HashSet<>(libraryIdList);
+      missingStageLibs.removeAll(libraryUrlList.keySet());
+
+      throw new RuntimeException(Utils.format(
+          "Unable to find to find following stage libraries in repository list: {}",
+          String.join(", ", missingStageLibs)
+      ));
     }
 
-    for (String libraryUrl : libraryUrlList) {
+    for (Map.Entry<String, String>  libraryEntry : libraryUrlList.entrySet()) {
+      String libraryId = libraryEntry.getKey();
+      String libraryUrl = libraryEntry.getValue();
+      LOG.info("Installing stage library {} from {}", libraryId, libraryUrl);
+
       try (Response response = ClientBuilder.newClient()
           .target(libraryUrl)
           .request()
@@ -269,6 +287,18 @@ public class StageLibraryResource {
         TarArchiveEntry entry = myTarFile.getNextTarEntry();
 
         String directory = null;
+
+        // We currently don't support re-installing libraries, they have to be explicitly uninstalled first
+        Optional<StageLibraryDefinition> installedLibrary = stageLibrary.getLoadedStageLibraries().stream()
+            .filter(lib -> libraryId.equals(lib.getName()))
+            .findFirst();
+        if(installedLibrary.isPresent()) {
+          throw new RuntimeException(Utils.format(
+              "Stage library {} already installed on version {}",
+              libraryId,
+              installedLibrary.get().getVersion()
+          ));
+        }
 
         while (entry != null) {
           if (entry.isDirectory()) {
