@@ -523,7 +523,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
           // Load stages from the stage library
           StageLibraryDefinition libDef = StageLibraryDefinitionExtractor.get().extract(cl);
-          LOG.debug("Loading stages and plugins from library '{}'", libDef.getName());
+          libDef.setVersion(getPropertyFromLibraryProperties(cl, "version", ""));
+          LOG.debug("Loading stages and plugins from library '{}' on version {}", libDef.getName(), libDef.getVersion());
           stageLibraries.add(libDef);
           libs++;
 
@@ -921,7 +922,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
       Map<String, Boolean> installedLibrariesMap = new HashMap<>();
       for(StageLibraryDefinition libDef : getLoadedStageLibraries()) {
-        installedLibrariesMap.put(libDef.getName(), true);
+        installedLibrariesMap.put(libDef.getName() + "::" + libDef.getVersion(), true);
         installedLibraries.add(new StageLibraryManifestJson(
             libDef.getName(),
             libDef.getLabel(),
@@ -946,7 +947,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
             StageLibraryManifestJson stageLibraryManifestJson = getStageLibraryManifestJson(stageLibManifestUrl);
             if (stageLibraryManifestJson != null) {
               stageLibraryManifestJson.setInstalled(
-                  installedLibrariesMap.containsKey(stageLibraryManifestJson.getStageLibId())
+                  installedLibrariesMap.containsKey(stageLibraryManifestJson.getStageLibId() + "::" + stageLibrariesJson.getStagelibVersion())
               );
               stageLibraryManifestJson.setStageLibFile(repoUrl + stageLibraryManifestJson.getStageLibFile());
               stageLibrariesJson.setStageLibraryManifest(stageLibraryManifestJson);
