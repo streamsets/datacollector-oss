@@ -187,7 +187,10 @@ public class MapReduceExecutor extends BaseExecutor {
     return mapReduceConfig.getUGI().doAs((PrivilegedExceptionAction<Job>) () -> {
       // Create new mapreduce job object
       Callable<Job> jobCreator = ReflectionUtils.newInstance(jobConfig.getJobCreator(), configuration);
+
       Job job = jobCreator.call();
+
+      job.setJobName(jobConfig.jobName);
 
       // In trace mode, dump all the configuration that we're using for the job
       if(LOG.isTraceEnabled()) {
