@@ -132,7 +132,7 @@ public class RemoteConfigBean {
       required = false,
       type = ConfigDef.Type.CREDENTIAL,
       label = "Private Key Passphrase",
-      description = "Passphrase to use to open the private key file.",
+      description = "Passphrase to use to decrypt the private key.",
       displayPosition = 40,
       group = "#1",
       dependsOn = "auth",
