@@ -927,13 +927,12 @@ public abstract class BaseClusterProvider implements ClusterProvider {
   ) throws IOException {
     String type = StageLibraryUtils.getLibraryType(cl);
     String name = StageLibraryUtils.getLibraryName(cl);
+
+    // We have StreamSets build-in libraries that have set type and then user libs that can live in "random" directories
     if (ClusterModeConstants.STREAMSETS_LIBS.equals(type)) {
       streamsetsLibsCl.put(name, findJars(name, (URLClassLoader) cl, mainClass));
-      // sdc-user-libs for Navigator and Atlas, and the customer's custom stages, too.
-    } else if (ClusterModeConstants.USER_LIBS.equals(type) || ClusterModeConstants.SDC_USER_LIBS.equals(type)) {
-      userLibsCL.put(name, findJars(name, (URLClassLoader) cl, mainClass));
     } else {
-      throw new IllegalStateException(Utils.format("Error unknown stage library type: '{}'", type));
+      userLibsCL.put(name, findJars(name, (URLClassLoader) cl, mainClass));
     }
   }
 
