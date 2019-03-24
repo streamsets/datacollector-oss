@@ -300,7 +300,7 @@ public class AvroSchemaGenerator extends SchemaGenerator {
       return NullNode.getInstance();
     }
 
-    if(defaultValuesForTypes.containsKey(schema.getType())) {
+    if(!getConfig().avroNullableFields && defaultValuesForTypes.containsKey(schema.getType())) {
       return defaultValuesForTypes.get(schema.getType());
     }
 
