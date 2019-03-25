@@ -21,6 +21,10 @@ package com.streamsets.pipeline.lib.jdbc.multithread;
 public enum DatabaseVendor {
   // Oracle
   ORACLE,
+
+  // Microsoft SQL Server
+  SQL_SERVER,
+
   // Not a specific vendor in use
   UNKNOWN,
 }

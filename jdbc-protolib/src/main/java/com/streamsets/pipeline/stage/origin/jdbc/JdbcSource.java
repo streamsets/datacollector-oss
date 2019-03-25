@@ -551,7 +551,8 @@ public class JdbcSource extends BaseSource {
         commonSourceConfigBean,
         errorRecordHandler,
         unknownTypeAction,
-        (Set)null
+        null,
+        hikariConfigBean.getVendor()
     );
 
     if (fields.size() != numColumns) {
