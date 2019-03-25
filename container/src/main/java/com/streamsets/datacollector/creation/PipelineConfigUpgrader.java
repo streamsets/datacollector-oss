@@ -73,6 +73,9 @@ public class PipelineConfigUpgrader implements StageUpgrader {
         // fall through
       case 11:
         upgradeV11ToV12(configs);
+        // fall through
+      case 12:
+        upgradeV12ToV13(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", context.getFromVersion()));
@@ -252,6 +255,25 @@ public class PipelineConfigUpgrader implements StageUpgrader {
       .collect(Collectors.toList());
 
     configs.removeAll(memoryLimits);
+  }
+
+  private void upgradeV12ToV13(List<Config> configs) {
+    addClusterConfigs(configs);
+    addDatabricksConfigs(configs);
+  }
+
+  private void addClusterConfigs(List<Config> configs) {
+    configs.add(new Config("clusterConfig.clusterType", "LOCAL"));
+    configs.add(new Config("clusterConfig.sparkMasterUrl", "local[*]"));
+    configs.add(new Config("clusterConfig.deployMode", "CLIENT"));
+  }
+
+  private void addDatabricksConfigs(List<Config> configs) {
+    configs.add(new Config("databricksConfig.baseUrl", null));
+    configs.add(new Config("databricksConfig.credentialType", null));
+    configs.add(new Config("databricksConfig.username", null));
+    configs.add(new Config("databricksConfig.password", null));
+    configs.add(new Config("databricksConfig.token", null));
   }
 
 }

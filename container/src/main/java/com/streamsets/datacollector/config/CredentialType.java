@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2019 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,15 @@ package com.streamsets.datacollector.config;
 
 import com.streamsets.pipeline.api.Label;
 
-public enum PipelineGroups implements Label {
-  CLUSTER("Cluster"),
-  PARAMETERS("Parameters"),
-  NOTIFICATIONS("Notifications"),
-  BAD_RECORDS("Error Records"),
-  STATS("Statistics"),
-  EMR("EMR"),
+public enum CredentialType implements Label {
+
+  PASSWORD("Username/Password"),
+  TOKEN("Token"),
   ;
 
   private final String label;
 
-  PipelineGroups(String label) {
+  CredentialType(String label) {
     this.label = label;
   }
 

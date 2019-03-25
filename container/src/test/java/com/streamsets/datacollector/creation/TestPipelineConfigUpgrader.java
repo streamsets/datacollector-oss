@@ -26,7 +26,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class TestPipelineConfigUpgrader {
@@ -147,5 +146,32 @@ public class TestPipelineConfigUpgrader {
     Assert.assertTrue(emrConfigList.contains(AmazonEMRConfig.VISIBLE_TO_ALL_USERS));
     Assert.assertTrue(emrConfigList.contains(AmazonEMRConfig.LOGGING_ENABLED));
   }
+
+  @Test
+  public void testPipelineConfigUpgradeV12ToV13() throws StageException {
+    PipelineConfigUpgrader pipelineConfigUpgrader = new PipelineConfigUpgrader();
+    TestUpgraderContext context = new TestUpgraderContext("x", "y", "z", 12, 13);
+
+    List<Config> upgrade = pipelineConfigUpgrader.upgrade(new ArrayList<>(), context);
+
+    Assert.assertEquals("clusterConfig.clusterType", upgrade.get(0).getName());
+    Assert.assertEquals("LOCAL", upgrade.get(0).getValue());
+    Assert.assertEquals("clusterConfig.sparkMasterUrl", upgrade.get(1).getName());
+    Assert.assertEquals("local[*]", upgrade.get(1).getValue());
+    Assert.assertEquals("clusterConfig.deployMode", upgrade.get(2).getName());
+    Assert.assertEquals("CLIENT", upgrade.get(2).getValue());
+
+    Assert.assertEquals("databricksConfig.baseUrl", upgrade.get(3).getName());
+    Assert.assertNull(upgrade.get(3).getValue());
+    Assert.assertEquals("databricksConfig.credentialType", upgrade.get(4).getName());
+    Assert.assertNull(upgrade.get(4).getValue());
+    Assert.assertEquals("databricksConfig.username", upgrade.get(5).getName());
+    Assert.assertNull(upgrade.get(5).getValue());
+    Assert.assertEquals("databricksConfig.password", upgrade.get(6).getName());
+    Assert.assertNull(upgrade.get(6).getValue());
+    Assert.assertEquals("databricksConfig.token", upgrade.get(7).getName());
+    Assert.assertNull(upgrade.get(7).getValue());
+  }
+
 
 }

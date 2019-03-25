@@ -16,6 +16,8 @@
 package com.streamsets.datacollector.creation;
 
 import com.streamsets.datacollector.config.AmazonEMRConfig;
+import com.streamsets.datacollector.config.ClusterConfig;
+import com.streamsets.datacollector.config.DatabricksConfig;
 import com.streamsets.datacollector.config.DeliveryGuaranteeChooserValues;
 import com.streamsets.datacollector.config.ErrorHandlingChooserValues;
 import com.streamsets.datacollector.config.ErrorRecordPolicy;
@@ -60,7 +62,7 @@ import java.util.Map;
 @ConfigGroups(PipelineGroups.class)
 public class PipelineConfigBean implements Stage {
 
-  public static final int VERSION = 12;
+  public static final int VERSION = 13;
 
   public static final String DEFAULT_STATS_AGGREGATOR_LIBRARY_NAME = "streamsets-datacollector-basic-lib";
 
@@ -336,7 +338,7 @@ public class PipelineConfigBean implements Stage {
       displayPosition = 140,
       group = "CLUSTER",
       dependsOn = "executionMode",
-      triggeredByValue = {"EMR_BATCH"}
+      triggeredByValue = {"EMR_BATCH", "BATCH", "STREAMING"}
   )
   @ValueChooserModel(LogLevelChooserValues.class)
   public LogLevel logLevel;
@@ -433,6 +435,12 @@ public class PipelineConfigBean implements Stage {
       triggeredByValue = {"CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "BATCH", "STREAMING"}
   )
   public Map<String, String> sparkConfigs;
+
+  @ConfigDefBean
+  public ClusterConfig clusterConfig;
+
+  @ConfigDefBean
+  public DatabricksConfig databricksConfig;
 
   @ConfigDefBean
   public AmazonEMRConfig amazonEMRConfig;

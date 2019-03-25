@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2019 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +15,32 @@
  */
 package com.streamsets.datacollector.config;
 
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
-public enum PipelineGroups implements Label {
-  CLUSTER("Cluster"),
-  PARAMETERS("Parameters"),
-  NOTIFICATIONS("Notifications"),
-  BAD_RECORDS("Error Records"),
-  STATS("Statistics"),
-  EMR("EMR"),
+/**
+ * Enum for representing possible Deploy Mode
+ */
+@GenerateResourceBundle
+public enum SparkDeployMode implements Label {
+  CLIENT("Client", "client"),
+  CLUSTER("Cluster", "cluster"),
   ;
 
   private final String label;
+  private final String value;
 
-  PipelineGroups(String label) {
+  SparkDeployMode(String label, String value) {
     this.label = label;
+    this.value = value;
   }
 
   @Override
   public String getLabel() {
     return label;
+  }
+
+  public String getValue() {
+    return value;
   }
 }
