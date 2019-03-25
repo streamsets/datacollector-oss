@@ -105,7 +105,8 @@ public final class CTJdbcRunnable extends JdbcBaseRunnable {
         commonSourceConfigBean,
         errorRecordHandler,
         tableJdbcConfigBean.unknownTypeAction,
-        recordHeader
+        recordHeader,
+        DatabaseVendor.SQL_SERVER
     );
 
     Map<String, String> columnOffsets = new HashMap<>();

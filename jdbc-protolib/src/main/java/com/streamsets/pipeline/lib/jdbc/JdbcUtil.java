@@ -720,7 +720,8 @@ public class JdbcUtil {
       CommonSourceConfigBean commonSourceBean,
       ErrorRecordHandler errorRecordHandler,
       UnknownTypeAction unknownTypeAction,
-      Set<String> recordHeader
+      Set<String> recordHeader,
+      DatabaseVendor vendor
   ) throws SQLException, StageException {
     return resultSetToFields(
         rs,
@@ -731,7 +732,7 @@ public class JdbcUtil {
         unknownTypeAction,
         recordHeader,
         commonSourceBean.convertTimestampToString,
-        DatabaseVendor.UNKNOWN
+        vendor
     );
   }
 
