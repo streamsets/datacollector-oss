@@ -74,7 +74,14 @@ public interface AmazonS3Source {
 
   /**
    * Send the NO_MORE_DATA_EVENT if all the threads have finished processing the ongoing event
+   *
    * @param batchContext batch context of the runner to create the event
+   * @return true if the event has been sent
    */
-  void sendNoMoreDataEvent(BatchContext batchContext);
+  boolean sendNoMoreDataEvent(BatchContext batchContext);
+
+  /**
+   * When a refill occurs the no-more-data event needs can be sent again
+   */
+  void restartNoMoreDataEvent();
 }

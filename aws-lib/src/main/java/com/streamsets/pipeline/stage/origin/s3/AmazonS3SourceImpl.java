@@ -195,7 +195,8 @@ public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements Amazon
   }
 
   @Override
-  public void sendNoMoreDataEvent(BatchContext batchContext) {
+  public boolean sendNoMoreDataEvent(BatchContext batchContext) {
+    boolean eventSent = false;
     if (allFilesAreFinished() && !noMoreDataEventSent.getAndSet(true)) {
       S3Events.NO_MORE_DATA.create(context, batchContext)
                            .with("record-count", noMoreDataRecordCount.get())
@@ -205,8 +206,16 @@ public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements Amazon
       noMoreDataRecordCount.set(0);
       noMoreDataErrorCount.set(0);
       noMoreDataFileCount.set(0);
+      eventSent = true;
     }
+    return eventSent;
   }
+
+  @Override
+  public void restartNoMoreDataEvent() {
+    noMoreDataEventSent.set(false);
+  }
+
 
   @VisibleForTesting
   boolean allFilesAreFinished() {

@@ -44,12 +44,14 @@ public class S3Spooler {
   private AntPathMatcher pathMatcher;
   private AtomicBoolean filling;
   private volatile S3Offset lastElementAddedToQueue;
+  private volatile boolean newDataAfterEventSent;
 
   public S3Spooler(PushSource.Context context, S3ConfigBean s3ConfigBean) {
     this.context = context;
     this.s3ConfigBean = s3ConfigBean;
     this.s3Client = s3ConfigBean.s3Config.getS3Client();
     lastElementAddedToQueue = null;
+    newDataAfterEventSent = true;
   }
 
   private volatile S3ObjectSummary currentObject;
@@ -74,8 +76,8 @@ public class S3Spooler {
     }
   }
 
-  S3ObjectSummary findAndQueueObjects(
-      boolean checkCurrent, AmazonS3Source amazonS3Source, BatchContext batchContext
+  private void findAndQueueObjects(
+      AmazonS3Source amazonS3Source, BatchContext batchContext
   ) throws AmazonClientException {
     S3Offset s3offset;
     if (lastElementAddedToQueue != null) {
@@ -107,15 +109,18 @@ public class S3Spooler {
         throw new IllegalArgumentException("Unknown ordering: " + objectOrdering.getLabel());
     }
     for (S3ObjectSummary objectSummary : s3ObjectSummaries) {
-      addObjectToQueue(objectSummary, checkCurrent);
+      addObjectToQueue(objectSummary);
     }
     spoolQueueMeter.mark(objectQueue.size());
     LOG.debug("Found '{}' files", objectQueue.size());
     if (s3ObjectSummaries.isEmpty()) {
       // Before sending the event we will check that all the threads have finished with their objects, if yes, we
       // send the event as normal, if not we will skip and try to send it again if the queue is still empty when the
-      // next thread tries to fill the queue
-      amazonS3Source.sendNoMoreDataEvent(batchContext);
+      // next thread tries to fill the queue. If the event is sent we will set the newDataAfterEventSent to false to
+      // indicate that we should not send new events until we get more new data
+      if (newDataAfterEventSent) {
+        newDataAfterEventSent = !amazonS3Source.sendNoMoreDataEvent(batchContext);
+      }
     } else {
       // If it is the last element save it to keep track of the last element added to the queue
       S3ObjectSummary s3ObjectSummary = s3ObjectSummaries.get(s3ObjectSummaries.size() - 1);
@@ -124,16 +129,18 @@ public class S3Spooler {
           s3ObjectSummary.getETag(),
           String.valueOf(s3ObjectSummary.getLastModified().getTime())
       );
+
+      //  If we previously sent a no-more-data event and we have new objects now, let's reset the event to be able to
+      //  send it again.
+      if (!newDataAfterEventSent) {
+        amazonS3Source.restartNoMoreDataEvent();
+        newDataAfterEventSent = true;
+      }
     }
-    return (s3ObjectSummaries.isEmpty()) ? null : s3ObjectSummaries.get(s3ObjectSummaries.size() - 1);
   }
 
-  void addObjectToQueue(S3ObjectSummary objectSummary, boolean checkCurrent) {
+  private void addObjectToQueue(S3ObjectSummary objectSummary) {
     Preconditions.checkNotNull(objectSummary, "file cannot be null");
-    if (checkCurrent) {
-      Preconditions.checkState(currentObject == null ||
-        currentObject.getLastModified().compareTo(objectSummary.getLastModified()) < 0);
-    }
     if (!objectQueue.contains(objectSummary)) {
       objectQueue.add(objectSummary);
       spoolQueueMeter.mark(objectQueue.size());
@@ -152,7 +159,7 @@ public class S3Spooler {
     Preconditions.checkNotNull(timeUnit, "timeUnit cannot be null");
 
     if (objectQueue.isEmpty() && filling.compareAndSet(false, true)) {
-      findAndQueueObjects(false, amazonS3Source, batchContext);
+      findAndQueueObjects(amazonS3Source, batchContext);
       filling.set(false);
     }
 
