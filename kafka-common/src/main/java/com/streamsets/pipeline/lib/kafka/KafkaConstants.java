@@ -25,5 +25,6 @@ public class KafkaConstants {
   // Constants specific for new consumer/producer library
   public static final String AUTO_OFFSET_RESET_CONFIG = "auto.offset.reset";
   public static final String AUTO_OFFSET_RESET_PREVIEW_VALUE = "earliest";
+  public static final String AUTO_COMMIT_OFFEST = "enable.auto.commit";
 
 }

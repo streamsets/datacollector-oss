@@ -173,5 +173,8 @@ public class Kafka0_10ConsumerLoader extends KafkaConsumerLoader {
     public void close() {
       delegate.close();
     }
+
+    @Override
+    public void commitSync() { delegate.commitSync(); }
   }
 }

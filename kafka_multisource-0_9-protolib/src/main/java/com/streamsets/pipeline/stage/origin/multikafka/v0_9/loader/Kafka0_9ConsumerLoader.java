@@ -82,5 +82,8 @@ public class Kafka0_9ConsumerLoader extends KafkaConsumerLoader {
     public void close() {
       delegate.close();
     }
+
+    @Override
+    public void commitSync() { delegate.commitSync(); }
   }
 }
