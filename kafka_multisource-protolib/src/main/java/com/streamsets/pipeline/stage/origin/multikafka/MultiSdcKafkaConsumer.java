@@ -33,4 +33,6 @@ public interface MultiSdcKafkaConsumer<K, V> {
   public void unsubscribe();
 
   public void close();
+
+  public void commitSync();
 }
