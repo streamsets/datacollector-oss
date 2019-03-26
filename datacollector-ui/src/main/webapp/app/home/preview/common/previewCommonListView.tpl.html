@@ -28,7 +28,7 @@
       <td>
         <div ui-codemirror
              class="codemirror-editor"
-             ng-if="rawDataConfigIndex"
+             ng-if="rawDataConfigIndex !== undefined"
              ng-model="detailPaneConfig.configuration[rawDataConfigIndex].value"
              ui-refresh="refreshCodemirror"
              ui-codemirror-opts="rawDataCodemirrorOptions">

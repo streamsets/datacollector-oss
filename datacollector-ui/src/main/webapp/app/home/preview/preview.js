@@ -337,8 +337,8 @@ angular
         return;
       }
 
-      var stageInstances = $scope.stageInstances,
-        batchData = $scope.previewData.batchesOutput[0];
+      var stageInstances = $scope.stageInstances;
+      var batchData = $scope.previewData.batchesOutput[0];
 
       $scope.stagePreviewData = previewService.getPreviewDataForStage(batchData, stageInstance);
 
@@ -382,7 +382,6 @@ angular
         $scope.rawDataConfigIndex = undefined;
       }
     };
-
 
     /**
      * Preview Pipeline.
