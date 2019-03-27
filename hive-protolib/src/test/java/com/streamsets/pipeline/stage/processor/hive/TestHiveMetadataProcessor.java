@@ -383,6 +383,7 @@ public class TestHiveMetadataProcessor {
           tableName,
           sampleValues,
           location,
+          true,
           SAMPLE_HEADERS
       );
     } catch (StageException e) {

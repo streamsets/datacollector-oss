@@ -567,7 +567,11 @@ public class HiveMetadataProcessor extends RecordProcessor {
           if (metadataHeadersToAddExist) {
             partitionMetadataHeaderAttributeMap = generateResolvedHeaderAttributeMap(metadataHeaderAttributeConfigs, variables);
           }
-          handleNewPartition(partitionValMap, pCache, dbName, tableName, targetPath, batchMaker, qualifiedName, diff, partitionMetadataHeaderAttributeMap);
+          // Create new partition metadata record. 'targetPath' contains a custom location only when table is external.
+          // We want to use custom partition locations only for external tables since Hive 3.1 raises an error when
+          // specifying the location for partitions of managed tables.
+          handleNewPartition(partitionValMap, pCache, dbName, tableName, targetPath, externalTable, batchMaker,
+              qualifiedName, diff, partitionMetadataHeaderAttributeMap);
         }
       }
 
@@ -705,12 +709,12 @@ public class HiveMetadataProcessor extends RecordProcessor {
   }
 
   /**
-   * Generate a record for new partition. It creates a new Record
-   * and fill in metadata.
+   * Generate a record for new partition. It creates a new Record and fill in metadata.
    * @param database database name
    * @param tableName table name
    * @param partitionList New partition to be created
-   * @param location Direcotry path
+   * @param location Directory path in Hadoop filesystem for the new partition.
+   * @param customLocation Whether the {@code location} is a custom path or the default path defined by Hive.
    * @return New metadata record
    * @throws StageException
    */
@@ -720,6 +724,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       String tableName,
       LinkedHashMap<String, String> partitionList,
       String location,
+      boolean customLocation,
       Map<String, String> metadataHeaderAttributes) throws StageException {
 
     //creating a record with uuid as postfix so multiple SDCs won't generate the record with same id.
@@ -729,6 +734,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
         tableName,
         partitionList,
         location,
+        customLocation,
         dataFormat
     );
     metadataRecord.set(metadataField);
@@ -746,13 +752,15 @@ public class HiveMetadataProcessor extends RecordProcessor {
       String database,
       String tableName,
       String location,
+      boolean customLocation,
       BatchMaker batchMaker,
       String qualifiedName,
       Map<PartitionInfoCacheSupport.PartitionValues, String> diff,
       Map<String, String> metadataHeaderAttributes
   ) throws StageException {
 
-    Record r = generateNewPartitionRecord(database, tableName, partitionValMap, location, metadataHeaderAttributes);
+    Record r = generateNewPartitionRecord(database, tableName, partitionValMap, location, customLocation,
+        metadataHeaderAttributes);
     batchMaker.addRecord(r, hmsLane);
     if (pCache != null) {
       pCache.updateState(diff);

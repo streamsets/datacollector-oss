@@ -259,11 +259,13 @@ public final class HiveQueryExecutor {
     buildPartitionNameValuePair(sb, partitionColumnValMap, partitionTypeMap);
     sb.append(HiveMetastoreUtil.CLOSE_BRACKET);
     sb.append(HiveMetastoreUtil.SPACE);
-    sb.append(LOCATION);
-    sb.append(HiveMetastoreUtil.SPACE);
-    sb.append(HiveMetastoreUtil.SINGLE_QUOTE);
-    sb.append(partitionPath);
-    sb.append(HiveMetastoreUtil.SINGLE_QUOTE);
+    if (partitionPath != null) {
+      sb.append(LOCATION);
+      sb.append(HiveMetastoreUtil.SPACE);
+      sb.append(HiveMetastoreUtil.SINGLE_QUOTE);
+      sb.append(partitionPath);
+      sb.append(HiveMetastoreUtil.SINGLE_QUOTE);
+    }
     return sb.toString();
   }
 
@@ -376,6 +378,14 @@ public final class HiveQueryExecutor {
     execute(sql);
   }
 
+  /**
+   * Add a new partition to the given table, with optional custom location.
+   * @param qualifiedTableName Table name in the form `database`.`table`.
+   * @param partitionNameValueMap Map between partition column names and their values.
+   * @param partitionTypeMap Map between partition column names and their types.
+   * @param partitionPath Location in the Hadoop filesystem where the partition will be created. If null, the default
+   *                      location will be used.
+   */
   public void executeAlterTableAddPartitionQuery(
       String qualifiedTableName,
       LinkedHashMap<String, String> partitionNameValueMap,
