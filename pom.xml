@@ -373,6 +373,8 @@
         <version>3.1.2</version>
         <inherited>false</inherited>
         <configuration>
+          <!-- We don't have any .NET code -->
+          <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
           <!-- skip non-bundled jars -->
           <skipProvidedScope>true</skipProvidedScope>
           <skipRuntimeScope>true</skipRuntimeScope>
