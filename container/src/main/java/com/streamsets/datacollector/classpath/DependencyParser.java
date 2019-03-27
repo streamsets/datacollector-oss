@@ -43,7 +43,7 @@ public class DependencyParser {
   /**
    * Various version suffixes that we support.
    */
-  private static String VERSION_SUFFIXES = "-b[0-9]+|-M[0-9]+|-m[0-9]|_[0-9]|-pre[0-9]+|\\.RELEASE|-incubating|-beta|-indy|-SNAPSHOT|\\.GA|-GA|\\.hwx|\\.cloudera\\.?[0-9]|-jhyde|a|-cubrid|\\.Fork[0-9]+|m|-jre|-spark[0-9]\\.[0-9]+";
+  private static String VERSION_SUFFIXES = "-b[0-9]+|-M[0-9]+|-m[0-9]|_[0-9]|-pre[0-9]+|\\.RELEASE|-incubating|-beta|-indy|-SNAPSHOT|\\.GA|-GA|\\.hwx|\\.cloudera\\.?[0-9]|-jhyde|a|-cubrid|\\.Fork[0-9]+|m|-jre|-spark[0-9]\\.[0-9]+|-patched";
 
   /**
    * Various supported version specifications
@@ -136,6 +136,7 @@ public class DependencyParser {
     SPECIAL_CASES.put("sqljdbc4.jar", new Dependency("sqljdbc4", ""));
     SPECIAL_CASES.put("tdgssconfig.jar", new Dependency("tdgssconfig", ""));
     SPECIAL_CASES.put("terajdbc4.jar", new Dependency("terajdbc4", ""));
+    SPECIAL_CASES.put("xdb6.jar", new Dependency("xdb6", ""));
   }
 
   /**

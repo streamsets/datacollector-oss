@@ -178,6 +178,8 @@ public class DependencyParserExhaustiveTest {
       {"twill-api-0.6.0-incubating.jar", new Dependency("twill", "0.6.0-incubating")},
       {"uncommons-maths-1.2.2a.jar", new Dependency("uncommons-maths", "1.2.2a")},
       {"websocket-api-9.4.2.v20170220.jar", new Dependency("websocket", "9.4.2.v20170220")},
+      {"xdb6.jar", new Dependency("xdb6", "")},
+      {"xmlparserv2-11.1.1.2.0-patched.jar", new Dependency("xmlparserv2", "11.1.1.2.0-patched")},
       {"zookeeper-3.4.10.jar", new Dependency("zookeeper", "3.4.10")},
       {"zookeeper-3.4.5-cdh5.10.1.jar", new Dependency("zookeeper", "3.4.5-cdh5.10.1")},
       {"zookeeper-3.4.6.2.4.2.0-258-tests.jar", new Dependency("zookeeper", "3.4.6.2.4.2.0-258")},
