@@ -74,7 +74,8 @@ public class DependencyParser {
    */
   private static String[] PATTERN_PREFIXES = new String[] {
     // Libraries that ships multiple jars with different name, but all versions must match
-    "(antlr).*",
+    "(antlr)-.*",
+    "(antlr4)-.*",
     "(asm).*",
     "(atlas).*",
     "(avatica).*",

@@ -46,7 +46,7 @@ public class DependencyParserExhaustiveTest {
       {"annotations-java5-15.0.jar", new Dependency("annotations-java5", "15.0")},
       {"antlr-2.7.7.jar", new Dependency("antlr", "2.7.7")},
       {"antlr-runtime-3.4.jar", new Dependency("antlr", "3.4")},
-      {"antlr4-runtime-4.5.3.jar", new Dependency("antlr", "4.5.3")},
+      {"antlr4-runtime-4.5.3.jar", new Dependency("antlr4", "4.5.3")},
       {"aopalliance-repackaged-2.5.0-b32.jar", new Dependency("aopalliance-repackaged", "2.5.0-b32")},
       {"apacheds-i18n-2.0.0-M15.jar", new Dependency("apacheds-i18n", "2.0.0-M15")},
       {"apacheds-kerberos-codec-2.0.0-M15.jar", new Dependency("apacheds-kerberos-codec", "2.0.0-M15")},
