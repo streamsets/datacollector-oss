@@ -31,7 +31,6 @@ import org.apache.solr.client.solrj.response.schema.SchemaResponse;
 import org.apache.solr.common.SolrInputDocument;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -134,7 +133,7 @@ public class SolrTarget07 implements SdcSolrTarget {
     }
   }
 
-  private SolrClient getSolrClient() throws MalformedURLException {
+  private SolrClient getSolrClient() {
     if (kerberosAuth) {
       // set kerberos before create SolrClient
       addSecurityProperties();
@@ -150,7 +149,7 @@ public class SolrTarget07 implements SdcSolrTarget {
   }
 
   private void addSecurityProperties() {
-    HttpClientUtil.setHttpClientBuilder(new SdcKrb5HttpClientConfigurer());
+    HttpClientUtil.setHttpClientBuilder(SdcSolrHttpClientBuilder.create());
   }
 
   @Override
