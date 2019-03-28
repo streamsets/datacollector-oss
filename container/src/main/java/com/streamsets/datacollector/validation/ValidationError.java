@@ -42,7 +42,7 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0013("{} cannot have output streams '{}'"),
   VALIDATION_0014("{} must have input streams"),
   VALIDATION_0015("Stage must have '{}' output stream(s) but has '{}'"),
-  VALIDATION_0016("Invalid stage name. Names can include the following characters '{}'"),
+  VALIDATION_0016("Invalid stage name '{}'. Names can include the following characters '{}'"),
   VALIDATION_0017("Invalid input stream names '{}'. Streams can include the following characters '{}'"),
   VALIDATION_0018("Invalid output stream names '{}'. Streams can include the following characters '{}'"),
 
