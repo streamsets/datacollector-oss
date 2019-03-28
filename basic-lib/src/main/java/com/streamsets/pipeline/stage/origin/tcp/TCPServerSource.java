@@ -93,6 +93,8 @@ public class TCPServerSource extends BasePushSource {
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = new ArrayList<>();
 
+    config.dataFormatConfig.stringBuilderPoolSize = config.numThreads;
+
     if (config.enableEpoll && !Epoll.isAvailable()) {
       issues.add(getContext().createConfigIssue(Groups.TCP.name(), CONF_PREFIX + "enableEpoll", Errors.TCP_05));
     }
