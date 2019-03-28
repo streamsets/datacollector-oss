@@ -97,6 +97,7 @@ public class TCPServerSourceConfig {
       description = "Number of receiver threads for each port. It should be based on the CPU cores expected to be" +
           " dedicated to the pipeline",
       defaultValue = "1",
+      min = 1,
       group = "TCP",
       displayPosition = 20
   )
