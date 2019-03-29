@@ -68,7 +68,7 @@ public class ClusterConfig {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.MODEL,
+      type = ConfigDef.Type.STRING,
       label = "Hadoop User Name",
       description = "Name of the Hadoop user that StreamSets impersonates",
       group = "CLUSTER",
@@ -77,7 +77,6 @@ public class ClusterConfig {
       dependsOn = "clusterType",
       triggeredByValue = "YARN"
   )
-  @ValueChooserModel(SparkDeployModeChooserValues.class)
   public String hadoopUserName;
 
   @ConfigDef(
