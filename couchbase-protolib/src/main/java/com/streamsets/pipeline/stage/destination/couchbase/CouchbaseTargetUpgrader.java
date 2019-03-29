@@ -55,7 +55,7 @@ public class CouchbaseTargetUpgrader implements StageUpgrader {
           configsToRemove.add(config);
           break;
         case "config.version":
-          if(config.getValue() == "VERSION4") {
+          if(config.getValue().equals("VERSION4")) {
             configsToAdd.add(new Config("config.credentials.version", "BUCKET"));
           } else {
             configsToAdd.add(new Config("config.credentials.version", "USER"));
