@@ -25,7 +25,7 @@ public class ClusterConfig {
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Cluster Manager Type",
-      description = "Cluster Manager Type",
+      description = "Type of cluster manager used by the Spark cluster",
       group = "CLUSTER",
       defaultValue = "LOCAL",
       displayPosition = 101,
@@ -68,12 +68,26 @@ public class ClusterConfig {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Hadoop User Name",
+      description = "Name of the Hadoop user that StreamSets impersonates",
+      group = "CLUSTER",
+      defaultValue = "hdfs",
+      displayPosition = 104,
+      dependsOn = "clusterType",
+      triggeredByValue = "YARN"
+  )
+  @ValueChooserModel(SparkDeployModeChooserValues.class)
+  public String hadoopUserName;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.STRING,
       label = "Application Name",
       description = "Name of the launched Spark application",
       group = "CLUSTER",
       defaultValue = "${pipeline:title()}",
-      displayPosition = 104,
+      displayPosition = 105,
       dependencies = {
           @Dependency(
               configName = "^executionMode",

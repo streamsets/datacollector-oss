@@ -266,6 +266,7 @@ public class PipelineConfigUpgrader implements StageUpgrader {
     configs.add(new Config("clusterConfig.clusterType", "LOCAL"));
     configs.add(new Config("clusterConfig.sparkMasterUrl", "local[*]"));
     configs.add(new Config("clusterConfig.deployMode", "CLIENT"));
+    configs.add(new Config("clusterConfig.hadoopUserName", "hdfs"));
   }
 
   private void addDatabricksConfigs(List<Config> configs) {
