@@ -868,7 +868,7 @@ angular.module('dataCollectorApp.common')
      * @returns {*}
      */
     this.getStageInstanceName = function(stage, pipelineConfig, options) {
-      var stageName = stage.label.replace(/ /g, '').replace(/\//g, '');
+      var stageName = stage.label.replace(/[^0-9A-Za-z_]/g, '');
 
       if (options.errorStage) {
         return stageName + '_ErrorStage';
