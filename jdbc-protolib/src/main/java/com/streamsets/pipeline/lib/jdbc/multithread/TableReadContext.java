@@ -65,7 +65,7 @@ public final class TableReadContext {
     ps = connection.prepareStatement(query);
     ps.setFetchSize(fetchSize);
     setPreparedStParameters(paramValuesToSet);
-    LOGGER.info("Executing Query :{}", query);
+    LOGGER.debug("Executing Query :{}", query);
     LOGGER.debug("Parameter Types And Values {}", paramValuesToSet);
     rs = ps.executeQuery();
     resetProcessingMetrics();
