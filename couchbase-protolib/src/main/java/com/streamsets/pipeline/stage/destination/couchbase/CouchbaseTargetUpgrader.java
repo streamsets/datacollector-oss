@@ -75,7 +75,7 @@ public class CouchbaseTargetUpgrader implements StageUpgrader {
           configsToRemove.add(config);
           break;
         case "config.documentKey":
-          configsToAdd.add(new Config("config.documentKeyEL", config.getValue()));
+          configsToAdd.add(new Config("config.documentKeyEL", "${record:value('/" + config.getValue() + "')}"));
           configsToRemove.add(config);
           break;
         default:
