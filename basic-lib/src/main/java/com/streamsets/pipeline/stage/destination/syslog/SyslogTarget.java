@@ -42,7 +42,6 @@ public class SyslogTarget extends RecordTarget {
 
   private final SyslogTargetConfig config;
 
-  private ELEval messageTextElEval;
   private ELEval hostnameElEval;
   private ELEval appNameElEval;
   private ELEval timestampElEval;
@@ -74,12 +73,9 @@ public class SyslogTarget extends RecordTarget {
 
     elVars = getContext().createELVars();
 
-    if(config.serialize) {
-      generatorService = getContext().getService(DataFormatGeneratorService.class);
-      baos = new ByteArrayOutputStream();
-    }
+    generatorService = getContext().getService(DataFormatGeneratorService.class);
+    baos = new ByteArrayOutputStream();
 
-    messageTextElEval = getContext().createELEval("messageTextEL");
     hostnameElEval = getContext().createELEval("hostnameEL");
     appNameElEval = getContext().createELEval("appNameEL");
     timestampElEval = getContext().createELEval("timestampEL");
@@ -127,16 +123,12 @@ public class SyslogTarget extends RecordTarget {
       String messageId = resolveEL(messageIdElEval, elVars, config.messageIdEL, String.class);
       String processId = resolveEL(processIdElEval, elVars, config.processIdEL, String.class);
 
-      if(config.serialize) {
-        baos.reset();
-        DataGenerator generator = generatorService.getGenerator(baos);
-        generator.write(record);
-        generator.close();
+      baos.reset();
+      DataGenerator generator = generatorService.getGenerator(baos);
+      generator.write(record);
+      generator.close();
 
-        messageVal = new String(baos.toByteArray());
-      } else {
-        messageVal = resolveEL(messageTextElEval, elVars, config.messageTextEL, String.class);
-      }
+      messageVal = new String(baos.toByteArray());
 
       Facility facility = Facility.fromNumericalCode(Integer.parseInt(facilityStr));
       Severity severity = Severity.fromNumericalCode(Integer.parseInt(severityStr));

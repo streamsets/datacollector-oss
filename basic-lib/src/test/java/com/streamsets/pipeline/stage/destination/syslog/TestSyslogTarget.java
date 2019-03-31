@@ -38,8 +38,6 @@ public class TestSyslogTarget {
     dtarget.config.serverPort = 514;
     dtarget.config.messageFormat = MessageFormat.RFC_5424;
     dtarget.config.protocol = "UDP";
-    dtarget.config.serialize = false;
-    dtarget.config.messageTextEL = "${record:value('/message')}";
     dtarget.config.hostnameEL = "${record:value('/hostname')}";
     dtarget.config.appNameEL = "${record:value('/application')}";
     dtarget.config.timestampEL = "${time:now()}";
@@ -61,7 +59,7 @@ public class TestSyslogTarget {
 
     Record record = RecordCreator.create();
     Map<String, Field> fields = new HashMap<>();
-    fields.put("message", Field.create("myTestMessage"));
+    fields.put("text", Field.create("myTestMessage"));
     fields.put("hostname", Field.create("localhost"));
     fields.put("application", Field.create("myTestApp"));
     fields.put("facility", Field.create("1"));

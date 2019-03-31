@@ -113,32 +113,6 @@ public class SyslogTargetConfig {
 
   @ConfigDef(
       required = true,
-      label = "Use non-text message format",
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      description = "Automatically serialize the record to a non-text data format.  Use the Data Format tab to " +
-          "specify the format.",
-      displayPosition = 10,
-      group = "MESSAGE"
-  )
-  public boolean serialize = false;
-
-  @ConfigDef(
-      required = true,
-      label = "Message Text",
-      type = ConfigDef.Type.STRING,
-      description = "Expression to get the message text",
-      displayPosition = 15,
-      group = "MESSAGE",
-      elDefs = {RecordEL.class, TimeNowEL.class},
-      evaluation = ConfigDef.Evaluation.EXPLICIT,
-      dependsOn = "serialize",
-      triggeredByValue = "false"
-  )
-  public String messageTextEL;
-
-  @ConfigDef(
-      required = true,
       label = "Timestamp",
       type = ConfigDef.Type.STRING,
       defaultValue = "${time:now()}",

@@ -26,18 +26,18 @@ import com.streamsets.pipeline.api.service.ServiceDependency;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Syslog",
     description = "Writes data to syslog",
     icon = "syslog.png",
     recordsByRef = true,
     onlineHelpRefUrl = "index.html?contextID=task_bbc_pt5_w2b",
+    upgrader = SyslogTargetUpgrader.class,
     services = @ServiceDependency(
         service = DataFormatGeneratorService.class,
         configuration = {
             @ServiceConfiguration(name = "displayFormats",
-                value = "AVRO,BINARY,DELIMITED,JSON,PROTOBUF,SDC_JSON,TEXT,XML"),
-            @ServiceConfiguration(name = "dataFormat", value = "TEXT")
+                value = "AVRO,BINARY,DELIMITED,JSON,PROTOBUF,SDC_JSON,TEXT,XML")
     }
   )
 )
