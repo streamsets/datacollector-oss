@@ -261,6 +261,10 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
     <fileSet>
+      <directory>${basedir}/../${cdh_5_16-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+    <fileSet>
       <directory>${basedir}/../${cdh_6_0-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
