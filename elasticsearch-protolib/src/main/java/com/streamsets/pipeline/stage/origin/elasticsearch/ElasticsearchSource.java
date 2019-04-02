@@ -26,6 +26,7 @@ import com.google.gson.JsonParser;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BasePushSource;
 import com.streamsets.pipeline.config.JsonMode;
@@ -165,9 +166,17 @@ public class ElasticsearchSource extends BasePushSource {
 
   @NotNull
   private Map<String, ElasticsearchSourceOffset> prepareOffsets(Map<String, String> lastOffsets) throws StageException {
+    // Remove poll origin offset if it's there - Control Hub could inject it at the begging
+    if(lastOffsets.containsKey(Source.POLL_SOURCE_OFFSET_KEY)) {
+      getContext().commitOffset(Source.POLL_SOURCE_OFFSET_KEY, null);
+    }
+
     Map<String, ElasticsearchSourceOffset> latestOffsets = lastOffsets.entrySet()
         .stream()
         .filter(Objects::nonNull)
+        // This origin never supported single threaded offsets, so any remaining ones are remnants from offset file
+        // upgrader and we simply ignore them.
+        .filter(entry -> !entry.getKey().equals(Source.POLL_SOURCE_OFFSET_KEY))
         .collect(Collectors.toMap(
             Map.Entry::getKey,
             e -> GSON.fromJson(e.getValue(), ElasticsearchSourceOffset.class)
