@@ -99,6 +99,9 @@ public class StageDefinitionJson   {
   private String onlineHelpRefUrl = null;
   private Boolean sendsResponse = null;
   private Boolean beta = null;
+  private Integer inputStreams = null;
+  private String inputStreamLabelProviderClass = null;
+  private List<String> inputStreamLabels = null;
 
   /**
    **/
@@ -472,5 +475,38 @@ public class StageDefinitionJson   {
   }
   public void setBeta(Boolean beta) {
     this.beta = beta;
+  }
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("inputStreams")
+  public Integer getInputStreams() {
+    return inputStreams;
+  }
+  public void setInputStreams(Integer inputStreams) {
+    this.inputStreams = inputStreams;
+  }
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("inputStreamLabelProviderClass")
+  public String getInputStreamLabelProviderClass() {
+    return inputStreamLabelProviderClass;
+  }
+  public void setInputStreamLabelProviderClass(String inputStreamLabelProviderClass) {
+    this.inputStreamLabelProviderClass = inputStreamLabelProviderClass;
+  }
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("inputStreamLabels")
+  public List<String> getInputStreamLabels() {
+    return inputStreamLabels;
+  }
+  public void setInputStreamLabels(List<String> inputStreamLabels) {
+    this.inputStreamLabels = inputStreamLabels;
   }
 }

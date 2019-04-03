@@ -76,6 +76,9 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
   private final StageDef stageDef;
   private final boolean sendsResponse;
   private final boolean beta;
+  private final int inputStreams;
+  private final String inputStreamLabelProviderClass;
+  private List<String> inputStreamLabels;
 
   // localized version
   private StageDefinition(
@@ -112,7 +115,10 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
       List<ServiceDependencyDefinition> services,
       List<HideStage.Type> hideStage,
       boolean sendsResponse,
-      boolean beta
+      boolean beta,
+      int inputStreams,
+      String inputStreamLabelProviderClass,
+      List<String> inputStreamLabels
   ) {
     this.stageDef = stageDef;
     this.libraryDefinition = libraryDefinition;
@@ -162,6 +168,9 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     this.hideStage = Collections.unmodifiableList(hideStage);
     this.sendsResponse = sendsResponse;
     this.beta = beta;
+    this.inputStreams = inputStreams;
+    this.inputStreamLabelProviderClass = inputStreamLabelProviderClass;
+    this.inputStreamLabels = inputStreamLabels;
   }
 
   @SuppressWarnings("unchecked")
@@ -206,6 +215,9 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     hideStage = def.hideStage;
     sendsResponse = def.sendsResponse;
     beta = def.beta;
+    inputStreams = def.inputStreams;
+    inputStreamLabelProviderClass = def.inputStreamLabelProviderClass;
+    inputStreamLabels = def.inputStreamLabels;
   }
 
   public StageDefinition(
@@ -241,7 +253,9 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
       List<ServiceDependencyDefinition> services,
       List<HideStage.Type> hideStage,
       boolean sendsResponse,
-      boolean beta
+      boolean beta,
+      int inputStreams,
+      String inputStreamLabelProviderClass
   ) {
     this.stageDef = stageDef;
     this.libraryDefinition = libraryDefinition;
@@ -290,6 +304,8 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     this.hideStage = Collections.unmodifiableList(hideStage);
     this.sendsResponse = sendsResponse;
     this.beta = beta;
+    this.inputStreams = inputStreams;
+    this.inputStreamLabelProviderClass = inputStreamLabelProviderClass;
   }
 
   public List<ExecutionMode> getLibraryExecutionModes() {
@@ -537,9 +553,15 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     ConfigGroupDefinition groupDefs = localizeConfigGroupDefinition(classLoader, getConfigGroupDefinition());
 
     // output stream labels
-    List<String> streamLabels = getOutputStreamLabels();
+    List<String> outputStreamLabels = getOutputStreamLabels();
     if (!isVariableOutputStreams() && getOutputStreams() > 0) {
-      streamLabels = getLocalizedOutputStreamLabels(classLoader);
+      outputStreamLabels = getStreamLabels(classLoader, getOutputStreamLabelProviderClass(), true);
+    }
+
+    // input stream labels
+    List<String> inputStreamLabels = getInputStreamLabels();
+    if (getInputStreams() > 0) {
+      inputStreamLabels = getStreamLabels(classLoader, getInputStreamLabelProviderClass(), true);
     }
 
     return new StageDefinition(
@@ -562,7 +584,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
         groupDefs,
         isVariableOutputStreams(),
         getOutputStreams(),
-        streamLabels,
+        outputStreamLabels,
         executionModes,
         recordsByRef,
         upgrader,
@@ -576,15 +598,18 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
         services,
         hideStage,
         sendsResponse,
-        beta
+        beta,
+        inputStreams,
+        inputStreamLabelProviderClass,
+        inputStreamLabels
     );
   }
 
-  private List<String> _getOutputStreamLabels(ClassLoader classLoader, boolean localized) {
+  private List<String> getStreamLabels(ClassLoader classLoader, String streamsLabelProviderClass, boolean localized) {
     List<String> list = new ArrayList<>();
     if (getOutputStreamLabelProviderClass() != null) {
       try {
-        String rbName = (localized) ? getOutputStreamLabelProviderClass() + "-bundle" : null;
+        String rbName = (localized) ? streamsLabelProviderClass + "-bundle" : null;
         Class klass = classLoader.loadClass(getOutputStreamLabelProviderClass());
         boolean isLabel = Label.class.isAssignableFrom(klass);
         for (Object e : klass.getEnumConstants()) {
@@ -600,10 +625,6 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
       }
     }
     return list;
-  }
-
-  private List<String> getLocalizedOutputStreamLabels(ClassLoader classLoader) {
-    return _getOutputStreamLabels(classLoader, true);
   }
 
   public String getOnlineHelpRefUrl() {
@@ -636,6 +657,18 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
 
   public boolean isBeta() {
     return beta;
+  }
+
+  public int getInputStreams() {
+    return inputStreams;
+  }
+
+  public String getInputStreamLabelProviderClass() {
+    return inputStreamLabelProviderClass;
+  }
+
+  public List<String> getInputStreamLabels() {
+    return inputStreamLabels;
   }
 }
 

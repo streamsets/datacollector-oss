@@ -212,7 +212,9 @@ public class StageDefinitionBuilder {
       services,
       hideStage,
       false,
-        false
+      false,
+      -1,
+      null
     );
   }
 

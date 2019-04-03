@@ -161,4 +161,16 @@ public class StageDefinitionJson {
   public boolean isBeta() {
     return stageDefinition.isBeta();
   }
+
+  public int getInputStreams() {
+    return stageDefinition.getInputStreams();
+  }
+
+  public String getInputStreamLabelProviderClass() {
+    return stageDefinition.getInputStreamLabelProviderClass();
+  }
+
+  public List<String> getInputStreamLabels() {
+    return stageDefinition.getInputStreamLabels();
+  }
 }

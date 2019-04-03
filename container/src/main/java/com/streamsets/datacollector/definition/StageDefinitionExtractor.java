@@ -220,6 +220,8 @@ public abstract class StageDefinitionExtractor {
         boolean variableOutputStreams = StageDef.VariableOutputStreams.class.isAssignableFrom(sDef.outputStreams());
         int outputStreams = (variableOutputStreams || type.isOneOf(StageType.TARGET, StageType.EXECUTOR) )
             ? 0 : sDef.outputStreams().getEnumConstants().length;
+        int inputStreams = sDef.numberOfInputStreams();
+        String inputStreamLabelProviderClass = sDef.outputStreams().getName();
         List<ExecutionMode> executionModes = ImmutableList.copyOf(sDef.execution());
         List<ExecutionMode> executionModesLibraryOverride = libraryDef.getStageExecutionModesOverride(klass);
         if (executionModesLibraryOverride != null) {
@@ -321,7 +323,9 @@ public abstract class StageDefinitionExtractor {
             services,
             hideStage,
             sDef.sendsResponse(),
-            sDef.beta()
+            sDef.beta(),
+            inputStreams,
+            inputStreamLabelProviderClass
         );
       } catch (Exception e) {
         throw new IllegalStateException("Exception while extracting stage definition for " + getStageName(klass), e);
