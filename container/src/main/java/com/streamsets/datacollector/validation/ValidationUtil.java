@@ -239,6 +239,23 @@ public class ValidationUtil {
         }
       }
 
+      // Special validation for stage exposed limit of input lanes
+      // -1: Means that framework is fully in control on how many input lanes should be present
+      //  0: Means that the stage supports unlimited number of input lanes
+      // >0: Means that stage needs exactly that amount of lanes which we will validate here
+      if(stageDef.getInputStreams() > 0) {
+        if(stageDef.getInputStreams() != stageConf.getInputLanes().size()) {
+           issues.add(
+              issueCreator.create(
+                  stageConf.getInstanceName(),
+                  ValidationError.VALIDATION_0094,
+                  stageDef.getInputStreams(),
+                  stageConf.getInputLanes().size()
+              )
+          );
+        }
+      }
+
       // Validate proper input/output lane configuration
       switch (stageDef.getType()) {
         case SOURCE:
