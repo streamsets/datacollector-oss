@@ -62,6 +62,8 @@ public class DependencyParser {
     "-([0-9.]+-mapr)",
     // Time based (like '3.0.0.v201112011016')
     "-([0-9.]+\\.v[0-9.]+)",
+    // With commit id at the end (like '1.2.0-3f79e055')
+    "-([0-9.]+-[a-f0-9]{6,8})",
     // PostgreSQL JDBC driver numbering scheme
     "-([0-9.]+-[0-9]+)\\.jdbc[0-9]",
 
