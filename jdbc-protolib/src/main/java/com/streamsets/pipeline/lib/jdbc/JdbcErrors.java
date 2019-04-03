@@ -145,7 +145,8 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_405("Error while generating records: {}"),
   JDBC_406("Timeout on stopping replication slot: {}"), //Postgres
   JDBC_407("Error querying replication slot: {}"), //Postgres
-  JDBC_408("Invalid parameter value: {}") //Postgres
+  JDBC_408("Invalid parameter value: {}"), //Postgres
+  JDBC_409("Offset column can't contain NULL: {}"),
   ;
 
   private final String msg;

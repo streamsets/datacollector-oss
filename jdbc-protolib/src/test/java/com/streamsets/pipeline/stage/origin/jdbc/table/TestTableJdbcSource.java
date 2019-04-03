@@ -295,7 +295,7 @@ public class TestTableJdbcSource {
       String partitionSize,
       LinkedHashMap<String, Field> fields,
       Map<String, String> nextPartitionOffsetsToCalculate
-  ) {
+  ) throws StageException {
     nextPartitionOffsetsToCalculate.clear();
     final LinkedHashMap<String, Integer> offsetColumnToType = new LinkedHashMap<>();
     offsetColumnToType.put(offsetCol, offsetColType);

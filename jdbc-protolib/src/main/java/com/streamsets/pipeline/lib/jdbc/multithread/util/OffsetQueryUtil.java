@@ -347,7 +347,7 @@ public final class OffsetQueryUtil {
    * @param fields The current record fields
    * @return Offset in the form of (<column1>=<value1>::<column2>=<value2>::<column3>=<value3>)
    */
-  public static String getOffsetFormatFromColumns(TableRuntimeContext tableContext, Map<String, Field> fields) {
+  public static String getOffsetFormatFromColumns(TableRuntimeContext tableContext, Map<String, Field> fields) throws StageException {
     return getOffsetFormat(getOffsetsFromColumns(tableContext, fields));
   }
 
@@ -359,11 +359,16 @@ public final class OffsetQueryUtil {
     return OFFSET_COLUMN_JOINER.join(offsetColumnFormat);
   }
 
-  public static Map<String, String> getOffsetsFromColumns(TableRuntimeContext tableContext, Map<String, Field> fields) {
+  public static Map<String, String> getOffsetsFromColumns(TableRuntimeContext tableContext, Map<String, Field> fields) throws StageException {
     final Map<String, String> offsets = new HashMap<>();
     for (String offsetColumn : tableContext.getSourceTableContext().getOffsetColumns()) {
       Field field = fields.get(offsetColumn);
       String value;
+
+      if(field.getValue() == null) {
+        throw new StageException(JdbcErrors.JDBC_408, offsetColumn);
+      }
+
       if (field.getType().isOneOf(Field.Type.DATE, Field.Type.TIME)) {
         //For DATE/TIME fields store the long in string format and convert back to date when using offset
         //in query
