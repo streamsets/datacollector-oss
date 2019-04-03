@@ -88,6 +88,7 @@ public class DependencyParserExhaustiveTest {
       {"derby-10.10.2.0.jar", new Dependency("derby", "10.10.2.0")},
       {"dropwizard-metrics-hadoop-metrics2-reporter-0.1.2.jar", new Dependency("dropwizard-metrics-hadoop-metrics2-reporter", "0.1.2")},
       {"elsa-3.0.0-M5.jar", new Dependency("elsa", "3.0.0-M5")},
+      {"flatbuffers-1.2.0-3f79e055.jar", new Dependency("flatbuffers", "1.2.0-3f79e055")},
       {"flume-ng-sdk-1.5.2.2.4.2.0-258.jar", new Dependency("flume-ng-sdk", "1.5.2.2.4.2.0-258")},
       {"flume-ng-sdk-1.6.0-cdh5.11.2.jar", new Dependency("flume-ng-sdk", "1.6.0-cdh5.11.2")},
       {"geronimo-annotation_1.0_spec-1.1.1.jar", new Dependency("geronimo", "1.1.1")},
