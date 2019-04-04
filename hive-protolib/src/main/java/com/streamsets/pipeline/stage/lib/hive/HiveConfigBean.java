@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -167,6 +168,14 @@ public class HiveConfigBean {
   public Connection getHiveConnection() throws StageException {
     if(!HiveMetastoreUtil.isHiveConnectionValid(hiveConnection, loginUgi)) {
       LOG.info("Connection to Hive become stale, reconnecting.");
+      if(hiveConnection != null) {
+        try {
+          hiveConnection.close();
+          LOG.info("Closed stale connection");
+        } catch(SQLException ex) {
+          LOG.info("Error closing stale connection {}", ex.getMessage(), ex);
+        }
+      }
       hiveConnection = HiveMetastoreUtil.getHiveConnection(hiveJDBCUrl, loginUgi, driverProperties);
     }
     return hiveConnection;
