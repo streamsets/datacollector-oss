@@ -175,9 +175,14 @@ public class S3Accessor implements Closeable {
 
   //visible for testing
   AWSCredentialsProvider createCredentialsProvider() throws StageException {
-    return new AWSStaticCredentialsProvider(new BasicAWSCredentials(credentialConfigs.getAccessKey().get(),
-        credentialConfigs.getSecretKey().get()
-    ));
+    String accessKey = credentialConfigs.getAccessKey().get();
+    String secretKey = credentialConfigs.getSecretKey().get();
+    if (accessKey != null && !accessKey.isEmpty() && secretKey != null && !secretKey.isEmpty()) {
+      return new AWSStaticCredentialsProvider(new BasicAWSCredentials(credentialConfigs.getAccessKey().get(),
+          credentialConfigs.getSecretKey().get()
+      ));
+    }
+    return null;
   }
 
   //visible for testing
@@ -206,11 +211,18 @@ public class S3Accessor implements Closeable {
 
   //visible for testing
   AmazonS3Client createS3Client() throws StageException {
-    AmazonS3ClientBuilder builder = createAmazonS3ClientBuilder().withCredentials(getCredentialsProvider())
-                                                                 .withClientConfiguration(createClientConfiguration())
+
+    AmazonS3ClientBuilder builder = createAmazonS3ClientBuilder().withClientConfiguration(createClientConfiguration())
                                                                  .withChunkedEncodingDisabled(connectionConfigs
                                                                      .isChunkedEncodingEnabled())
                                                                  .withPathStyleAccessEnabled(true);
+    AWSCredentialsProvider awsCredentialsProvider = getCredentialsProvider();
+    // If we don't call build.withCredentials(...) then we will not overwrite the default credentials provider
+    // already set in the builder when doing AmazonS3ClientBuilder.standard() so only calling build.withCredentials(...)
+    // if our own provider exists
+    if (awsCredentialsProvider != null) {
+      builder.withCredentials(awsCredentialsProvider);
+    }
 
     String region = (connectionConfigs.getRegion() == null || connectionConfigs.getRegion().isEmpty())
                     ? null

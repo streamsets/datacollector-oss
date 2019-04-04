@@ -18,8 +18,10 @@ package com.streamsets.pipeline.lib.aws.s3;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.client.builder.ExecutorFactory;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -307,15 +309,16 @@ public class TestS3Accessor {
 
   @Test
   public void testCreateS3Client() throws Exception {
+    // null credentials
     CredentialsConfigs credentialsConfigs = new CredentialsConfigs() {
       @Override
       public CredentialValue getAccessKey() {
-        return () -> "access";
+        return () -> null;
       }
 
       @Override
       public CredentialValue getSecretKey() {
-        return () -> "secret";
+        return () -> "";
       }
     };
 
@@ -389,6 +392,40 @@ public class TestS3Accessor {
 
     S3Accessor accessor = new S3Accessor(credentialsConfigs, connectionConfigs, null, null);
     AmazonS3Client s3Client = null;
+    try {
+      accessor = Mockito.spy(accessor);
+      AWSCredentialsProvider provider = accessor.createCredentialsProvider();
+      Mockito.doReturn(provider).when(accessor).getCredentialsProvider();
+
+      s3Client = accessor.createS3Client();
+
+      Mockito.verify(accessor, Mockito.times(1)).getCredentialsProvider();
+      Mockito.verify(accessor, Mockito.times(1)).createAmazonS3ClientBuilder();
+      Mockito.verify(accessor, Mockito.times(1)).createClientConfiguration();
+
+      Assert.assertEquals(Region.US_West, s3Client.getRegion());
+      Assert.assertNull(accessor.getCredentialsProvider());
+    } finally {
+      if (s3Client != null) {
+        s3Client.shutdown();
+      }
+    }
+
+    // not null credentials
+    credentialsConfigs = new CredentialsConfigs() {
+      @Override
+      public CredentialValue getAccessKey() {
+        return () -> "access";
+      }
+
+      @Override
+      public CredentialValue getSecretKey() {
+        return () -> "secret";
+      }
+    };
+
+    accessor = new S3Accessor(credentialsConfigs, connectionConfigs, null, null);
+    s3Client = null;
     try {
       accessor = Mockito.spy(accessor);
       AWSCredentialsProvider provider = accessor.createCredentialsProvider();
