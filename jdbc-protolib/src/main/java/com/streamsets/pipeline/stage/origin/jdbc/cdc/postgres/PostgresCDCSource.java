@@ -354,6 +354,10 @@ public class PostgresCDCSource extends BaseSource {
         LOG.error(JdbcErrors.JDBC_406.getMessage(), configBean.slot);
       }
     }
-
+    try {
+      getWalReceiver().closeConnection();
+    } catch (SQLException ex) {
+      LOG.error("Error while closing connection: {}", ex.toString(), ex);
+    }
   }
 }

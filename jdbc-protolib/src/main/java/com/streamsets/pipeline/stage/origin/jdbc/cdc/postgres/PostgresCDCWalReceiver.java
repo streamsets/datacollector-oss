@@ -312,6 +312,12 @@ public class PostgresCDCWalReceiver {
     connection = getConnection(this.uri, this.properties);
   }
 
+  public void closeConnection() throws SQLException {
+    if (connection != null) {
+      connection.close();
+    }
+  }
+
   public PostgresCDCWalReceiver(
       PostgresCDCConfigBean configBean,
       HikariPoolConfigBean hikariConfigBean,
