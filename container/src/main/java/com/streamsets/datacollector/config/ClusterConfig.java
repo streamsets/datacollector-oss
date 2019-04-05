@@ -96,4 +96,42 @@ public class ClusterConfig {
   )
   public String sparkAppName;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Use Kerberos for YARN",
+      description = "Uses a Kerberos principal and key tab to launch the Spark application for the pipeline",
+      group = "CLUSTER",
+      defaultValue = "false",
+      displayPosition = 1000,
+      dependsOn = "clusterType",
+      triggeredByValue = "YARN"
+  )
+  public boolean yarnKerberosEnabled;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "YARN Kerberos Principal",
+      description = "Name of the Kerberos principal used to launch the Spark application for the pipeline",
+      group = "CLUSTER",
+      defaultValue = "name@DOMAIN",
+      displayPosition = 1100,
+      dependsOn = "yarnKerberosEnabled",
+      triggeredByValue = "true"
+  )
+  public String yarnKerberosPrincipal;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "YARN Kerberos Keytab",
+      description = "Absolute path to the Kerberos keytab used to launch the Spark application for the pipeline",
+      group = "CLUSTER",
+      defaultValue = "",
+      displayPosition = 1200,
+      dependsOn = "yarnKerberosEnabled",
+      triggeredByValue = "true"
+  )
+  public String yarnKerberosKeytab;
 }
