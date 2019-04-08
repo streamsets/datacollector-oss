@@ -160,4 +160,15 @@ public final class TableReadContext {
     }
     return resultSet;
   }
+
+  public void closeResultSet() {
+    try {
+      if (rs != null && !rs.isClosed()) {
+        rs.close();
+      }
+    } catch (SQLException e) {
+      LOGGER.warn("Exception thrown while trying to close result set, continuing");
+    }
+
+  }
 }

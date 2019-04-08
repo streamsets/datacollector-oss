@@ -308,6 +308,9 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
             eventCount++;
           }
         } finally {
+          if (resultSetEndReached) {
+            tableReadContext.closeResultSet();
+          }
           handlePostBatchAsNeeded(resultSetEndReached, recordCount, eventCount, batchContext);
         }
       } catch (SQLException | ExecutionException | StageException | InterruptedException e) {

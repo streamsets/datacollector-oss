@@ -253,7 +253,7 @@ public final class MultithreadedTableProvider {
 
         LOG.info(
             "Table {} has switched from non-partitioned to partitioned; using last stored offsets as the starting" +
-                " offsets for the new partition",
+                " offsets for the new partition {}",
             sourceTableContext.getQualifiedName(),
             newPartitionSequence
         );
@@ -399,8 +399,12 @@ public final class MultithreadedTableProvider {
               batchTableStrategy.getLabel()
           );
         }
+
+        // poll() should never return null since it is actually returning 'first' as we want to move it from the head
+        // of the queue, that's why we are calling offer, to basically remove it from the head but keep it in the queue
         TableRuntimeContext toMove = sharedAvailableTablesQueue.poll();
         sharedAvailableTablesQueue.offer(toMove);
+        // Get the new head of the queue
         first = sharedAvailableTablesQueue.peek();
       }
     }
