@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.event.CommonEvents;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.mongodb.Errors;
@@ -142,6 +143,7 @@ public class MongoDBSource extends AbstractMongoDBSource {
         try {
           fields = MongoDBUtil.createFieldFromDocument(doc);
         } catch (IOException e) {
+          LOG.debug(Utils.format(Errors.MONGODB_10.name(), e.toString()), e);
           errorRecordHandler.onError(Errors.MONGODB_10, e.toString(), e);
           ++errorRecordsSinceLastNMREvent;
           continue;
