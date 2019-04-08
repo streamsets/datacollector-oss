@@ -115,6 +115,7 @@ public class DependencyParserExhaustiveTest {
       {"hive-jdbc-1.2.0-mapr-1707-standalone.jar", new Dependency("hive", "1.2.0-mapr-1707-standalone")},
       {"hk2-api-2.5.0-b32.jar", new Dependency("hk2-api", "2.5.0-b32")},
       {"jackson-annotations-2.4.0.jar", new Dependency("jackson", "2.4.0")},
+      {"jackson-mapper-asl-1.8.10-cloudera.1.jar", new Dependency("jackson", "1.8.10-cloudera.1")},
       {"javassist-3.18.1-GA.jar", new Dependency("javassist", "3.18.1-GA")},
       {"javassist-3.12.1.GA.jar", new Dependency("javassist", "3.12.1.GA")},
       {"javax.jdo-3.2.0-m3.jar", new Dependency("javax.jdo", "3.2.0-m3")},
