@@ -195,32 +195,27 @@ public class PostgresCDCWalReceiver {
   public void dropReplicationSlot(String slotName)
       throws StageException
   {
-    try {
+    try (Connection localConnection = DriverManager.getConnection(
+            hikariConfigBean.getConnectionString(),
+            hikariConfigBean.username.get(),
+            hikariConfigBean.password.get()
+    )) {
       if (isReplicationSlotActive(slotName)) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(
+        try (PreparedStatement preparedStatement = localConnection.prepareStatement(
             "select pg_terminate_backend(active_pid) from pg_replication_slots "
                 + "where active = true and slot_name = ?")) {
           preparedStatement.setString(1, slotName);
           preparedStatement.execute();
         }
-
         waitStopReplicationSlot(slotName);
       }
 
-      try (Connection localConnection = DriverManager.getConnection(
-          hikariConfigBean.getConnectionString(),
-          hikariConfigBean.username.get(),
-          hikariConfigBean.password.get()
-      )) {
-
-        try (PreparedStatement preparedStatement = localConnection
+      try (PreparedStatement preparedStatement = localConnection
             .prepareStatement("select pg_drop_replication_slot(slot_name) "
                 + "from pg_replication_slots where slot_name = ?")) {
           preparedStatement.setString(1, slotName);
           preparedStatement.execute();
-        }
       }
-
     } catch (SQLException e) {
       throw new StageException(JDBC_407, slotName);
     }
