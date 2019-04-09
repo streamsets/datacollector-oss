@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2019 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,33 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.datalake;
+
+package com.streamsets.pipeline.stage.destination.datalake.gen2;
 
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 
 @StageDef(
     version = 1,
-    label = "Azure Data Lake Storage Gen1",
-    description = "Writes data to Azure Data Lake Storage Gen1",
-    icon = "data-lake-store-gen1.png",
+    label = "Azure Data Lake Storage Gen2",
+    description = "Writes data to Azure Data Lake Storage Gen2",
+    icon = "data-lake-store-gen2.png",
     producesEvents = true,
-    onlineHelpRefUrl ="index.html?contextID=task_jfl_nf4_zx"
+    onlineHelpRefUrl ="index.html?contextID=task_vk2_j45_rhb",
+    beta = true
 )
-
-@ConfigGroups(value = Groups.class)
+@ConfigGroups(DataLakeGen2TargetGroups.class)
+@HideConfigs(value = {
+    "dataLakeGen2TargetConfig.hdfsUri",
+    "dataLakeGen2TargetConfig.hdfsUser",
+    "dataLakeGen2TargetConfig.hdfsKerberos",
+    "dataLakeGen2TargetConfig.hdfsConfDir",
+    "dataLakeGen2TargetConfig.hdfsConfigs",
+    "dataLakeGen2TargetConfig.hdfsConfigs"
+})
 @GenerateResourceBundle
-public class DataLakeDTarget extends DTarget {
+public class DataLakeGen2DTarget extends DTarget {
 
-  @ConfigDefBean(groups = {"DATALAKE", "DATA_FORMAT"})
-  public DataLakeConfigBean dataLakeConfig;
+  @ConfigDefBean
+  public DataLakeGen2TargetConfigBean dataLakeGen2TargetConfig;
 
   @Override
   protected Target createTarget() {
-    return new DataLakeTarget(dataLakeConfig);
+    return new DataLakeGen2Target(dataLakeGen2TargetConfig);
   }
 }
