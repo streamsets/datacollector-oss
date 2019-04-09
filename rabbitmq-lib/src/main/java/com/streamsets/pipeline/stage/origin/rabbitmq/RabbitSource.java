@@ -200,6 +200,7 @@ public class RabbitSource extends BaseSource implements OffsetCommitter {
 
   private void startConsuming() throws IOException {
     consumer = new StreamSetsMessageConsumer(this.rabbitCxnManager.getChannel(), messages);
+    this.rabbitCxnManager.getChannel().basicQos(conf.basicConfig.maxBatchSize,true);
     if (conf.consumerTag == null || conf.consumerTag.isEmpty()) {
       this.rabbitCxnManager.getChannel().basicConsume(conf.queue.name, false, consumer);
     } else {
