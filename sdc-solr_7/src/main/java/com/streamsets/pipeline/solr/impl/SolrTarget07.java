@@ -54,7 +54,6 @@ public class SolrTarget07 implements SdcSolrTarget {
   private final boolean waitFlush;
   private final boolean waitSearcher;
   private final boolean softCommit;
-  private final boolean fieldsAlreadyMappedInRecord;
   private List<String> requiredFieldNamesMap;
   private List<String> optionalFieldNamesMap;
 
@@ -68,8 +67,7 @@ public class SolrTarget07 implements SdcSolrTarget {
       boolean waitFlush,
       boolean waitSearcher,
       boolean softCommit,
-      boolean ignoreOptionalFields,
-      boolean fieldsAlreadyMappedInRecord
+      boolean ignoreOptionalFields
   ) {
     this.instanceType = instanceType;
     this.solrURI = solrURI;
@@ -81,7 +79,6 @@ public class SolrTarget07 implements SdcSolrTarget {
     this.waitSearcher = waitSearcher;
     this.softCommit = softCommit;
     this.ignoreOptionalFields = ignoreOptionalFields;
-    this.fieldsAlreadyMappedInRecord = fieldsAlreadyMappedInRecord;
     this.requiredFieldNamesMap = new ArrayList<>();
     this.optionalFieldNamesMap = new ArrayList<>();
   }
@@ -92,10 +89,8 @@ public class SolrTarget07 implements SdcSolrTarget {
     if (!skipValidation) {
       solrClient.ping();
     }
-    if (ignoreOptionalFields || fieldsAlreadyMappedInRecord) {
-      getRequiredFieldNames();
-    }
-    if (fieldsAlreadyMappedInRecord && !ignoreOptionalFields) {
+    getRequiredFieldNames();
+    if (!ignoreOptionalFields) {
       getOptionalFieldNames();
     }
   }
@@ -127,7 +122,7 @@ public class SolrTarget07 implements SdcSolrTarget {
     SchemaRepresentation schemaRepresentation = schemaResponse.getSchemaRepresentation();
     List<Map<String, Object>> fields = schemaRepresentation.getFields();
     for (Map<String, Object> field : fields) {
-      if (field.containsKey(REQUIRED) && field.get(REQUIRED).equals(false)) {
+      if (!field.containsKey(REQUIRED) || field.get(REQUIRED).equals(false)) {
         requiredFieldNamesMap.add(field.get(NAME).toString());
       }
     }
