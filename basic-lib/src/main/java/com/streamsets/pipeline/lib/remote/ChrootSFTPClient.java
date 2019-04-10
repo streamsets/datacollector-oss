@@ -47,6 +47,7 @@ public class ChrootSFTPClient {
   private String archiveDir;
   private SFTPClient sftpClient;
   private final String pathSeparator;
+  private final boolean disableReadAheadStream;
 
   /**
    * Wraps the provided {@link SFTPClient} at the given root.  The given root can either be an absolute path or a path
@@ -56,9 +57,22 @@ public class ChrootSFTPClient {
    * @param root The root directory to use
    * @param rootRelativeToUserDir true if the given root is relative to the user's home dir, false if not
    * @param makeRoot will create the root dir if true and it doesn't already exist
+   * @param disableReadAheadStream disables the use of
+   *   the {@link net.schmizz.sshj.sftp.RemoteFile.ReadAheadRemoteFileInputStream} class when opening files for reading,
+   *   since there appears to be an issue with that class, and large files, when using on conjunction with S3 at least
+   *   (see https://github.com/hierynomus/sshj/issues/505).  If this is set to true, then the
+   *   {@link net.schmizz.sshj.sftp.RemoteFile.RemoteFileInputStream} will be opened instead, which is far less
+   *   performant, but does not seem to trigger the problem.
+   *
    * @throws IOException
    */
-  public ChrootSFTPClient(SFTPClient sftpClient, String root, boolean rootRelativeToUserDir, boolean makeRoot) throws
+  public ChrootSFTPClient(
+      SFTPClient sftpClient,
+      String root,
+      boolean rootRelativeToUserDir,
+      boolean makeRoot,
+      boolean disableReadAheadStream
+  ) throws
       IOException {
     this.sftpClient = sftpClient;
     this.pathSeparator = sftpClient.getSFTPEngine().getPathHelper().getPathSeparator();
@@ -73,6 +87,7 @@ public class ChrootSFTPClient {
       }
     }
     this.root = root;
+    this.disableReadAheadStream = disableReadAheadStream;
   }
 
   public void setSFTPClient(SFTPClient sftpClient) {
@@ -127,7 +142,11 @@ public class ChrootSFTPClient {
   }
 
   public InputStream openForReading(String path) throws IOException {
-    return sftpClient.open(prependRoot(path)).new ReadAheadRemoteFileInputStream(MAX_UNCONFIRMED_READ_WRITES);
+    if (disableReadAheadStream) {
+      return sftpClient.open(prependRoot(path)).new RemoteFileInputStream();
+    } else {
+      return sftpClient.open(prependRoot(path)).new ReadAheadRemoteFileInputStream(MAX_UNCONFIRMED_READ_WRITES);
+    }
   }
 
   public OutputStream openForWriting(String path) throws IOException {
