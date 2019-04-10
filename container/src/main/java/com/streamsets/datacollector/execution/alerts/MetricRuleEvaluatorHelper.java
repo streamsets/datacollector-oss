@@ -355,8 +355,13 @@ public class MetricRuleEvaluatorHelper {
 
       // Get current value
       long value = (long) runnerMetrics.getOrDefault(runnerMetricName, 0L);
-      long runTime = currentTime - value;
 
+      // Zero means that the runner is not in use at all and thus calculating running time makes no sense
+      if(value == 0) {
+        continue;
+      }
+
+      long runTime = currentTime - value;
       if(maxTime < runTime) {
         maxTime = runTime;
       }
