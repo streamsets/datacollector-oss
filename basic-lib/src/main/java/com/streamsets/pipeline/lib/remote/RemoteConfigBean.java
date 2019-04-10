@@ -163,4 +163,17 @@ public class RemoteConfigBean {
       triggeredByValue = "true"
   )
   public String knownHosts;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Disable Read Ahead Stream",
+      description = "If checked, disable the read-ahead streaming functionality of the SSH client.  Disable if" +
+          " experiencing problems with larger files (ex: in whole file).  Note that this will also result in" +
+          " significantly reducing performance.",
+      displayPosition = 100,
+      group = "#0"
+  )
+  public boolean disableReadAheadStream;
 }

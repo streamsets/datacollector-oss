@@ -18,6 +18,7 @@ package com.streamsets.pipeline.lib.remote;
 import com.google.common.io.Files;
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.sftp.FileMode;
+import net.schmizz.sshj.sftp.RemoteFile;
 import net.schmizz.sshj.sftp.SFTPClient;
 import net.schmizz.sshj.sftp.SFTPException;
 import net.schmizz.sshj.transport.TransportException;
@@ -35,6 +36,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 public class TestChrootSFTPClient extends SSHDUnitTest {
 
   @Test
@@ -47,7 +50,7 @@ public class TestChrootSFTPClient extends SSHDUnitTest {
 
     try {
       // absolute path
-      new ChrootSFTPClient(sshClient.newSFTPClient(), path + "/blah", false, false);
+      new ChrootSFTPClient(sshClient.newSFTPClient(), path + "/blah", false, false, false);
       Assert.fail("Expected an SFTPException");
     } catch (SFTPException e) {
       Assert.assertEquals(path + "/blah" + " does not exist", e.getMessage());
@@ -56,7 +59,7 @@ public class TestChrootSFTPClient extends SSHDUnitTest {
 
     try {
       // relative path
-      new ChrootSFTPClient(sshClient.newSFTPClient(), "/blah", true, false);
+      new ChrootSFTPClient(sshClient.newSFTPClient(), "/blah", true, false, false);
       Assert.fail("Expected an SFTPException");
     } catch (SFTPException e) {
       Assert.assertEquals(path + "/blah" + " does not exist", e.getMessage());
@@ -65,7 +68,7 @@ public class TestChrootSFTPClient extends SSHDUnitTest {
 
     try {
       // relative path
-      new ChrootSFTPClient(sshClient.newSFTPClient(), "blah", true, false);
+      new ChrootSFTPClient(sshClient.newSFTPClient(), "blah", true, false, false);
       Assert.fail("Expected an SFTPException");
     } catch (SFTPException e) {
       Assert.assertEquals(path + "/blah" + " does not exist", e.getMessage());
@@ -82,15 +85,15 @@ public class TestChrootSFTPClient extends SSHDUnitTest {
     Assert.assertFalse(new File(path + "/blah").exists());
 
     // absolute path
-    new ChrootSFTPClient(sshClient.newSFTPClient(), path + "/blah", false, true);
+    new ChrootSFTPClient(sshClient.newSFTPClient(), path + "/blah", false, true, false);
     Assert.assertTrue(new File(path + "/blah").exists());
 
     // relative path
-    new ChrootSFTPClient(sshClient.newSFTPClient(), "/blah", true, true);
+    new ChrootSFTPClient(sshClient.newSFTPClient(), "/blah", true, true, false);
     Assert.assertTrue(new File(path + "/blah").exists());
 
     // relative path
-    new ChrootSFTPClient(sshClient.newSFTPClient(), "blah", true, true);
+    new ChrootSFTPClient(sshClient.newSFTPClient(), "blah", true, true, false);
     Assert.assertTrue(new File(path + "/blah").exists());
   }
 
@@ -99,7 +102,7 @@ public class TestChrootSFTPClient extends SSHDUnitTest {
     path = testFolder.getRoot().getAbsolutePath();
     setupSSHD(path);
     SSHClient sshClient = createSSHClient();
-    ChrootSFTPClient sftpClient = new ChrootSFTPClient(sshClient.newSFTPClient(), path, false, false);
+    ChrootSFTPClient sftpClient = new ChrootSFTPClient(sshClient.newSFTPClient(), path, false, false, false);
 
     sftpClient.ls();
     // Close the SSH client so it's no longer usable and the SFTP client will get an exception
@@ -284,10 +287,40 @@ public class TestChrootSFTPClient extends SSHDUnitTest {
           "/" + file.getName(),
       }) {
         InputStream is = sftpClient.openForReading(p);
+        Assert.assertThat(is, instanceOf(RemoteFile.ReadAheadRemoteFileInputStream.class));
         Assert.assertNotNull(is);
         Assert.assertEquals(text, IOUtils.toString(is, Charset.forName("UTF-8")));
         is.close();
       }
+    }
+  }
+
+  @Test
+  public void testOpenForReadingReadAheadInputStreamDisabled() throws Exception {
+    File file = testFolder.newFile("file.txt");
+    String text = "hello";
+    Files.write(text.getBytes(Charset.forName("UTF-8")), file);
+    Assert.assertEquals(text, Files.readFirstLine(file, Charset.forName("UTF-8")));
+
+    path = testFolder.getRoot().getAbsolutePath();
+    setupSSHD(path);
+    SSHClient sshClient = createSSHClient();
+    final SFTPClient sftpClient = sshClient.newSFTPClient();
+    final ChrootSFTPClient chrootSFTPClient = createChrootSFTPClient(
+        sftpClient,
+        path,
+        false,
+        null,
+        false,
+        true
+    );
+    final InputStream is = chrootSFTPClient.openForReading(file.getName());
+    try {
+      Assert.assertThat(is, instanceOf(RemoteFile.RemoteFileInputStream.class));
+      Assert.assertNotNull(is);
+      Assert.assertEquals(text, IOUtils.toString(is, Charset.forName("UTF-8")));
+    } finally {
+      is.close();
     }
   }
 
@@ -654,16 +687,27 @@ public class TestChrootSFTPClient extends SSHDUnitTest {
     return clients;
   }
 
-    public ChrootSFTPClient createChrootSFTPClient(
-        SFTPClient sftpClient,
-        String root,
-        boolean rootRelativeToUserDir,
-        String archiveDir,
-        boolean archiveDirRelativeToUserDir
-    ) throws IOException {
-      ChrootSFTPClient client = new ChrootSFTPClient(sftpClient, root, rootRelativeToUserDir, false);
-      client.setArchiveDir(archiveDir, archiveDirRelativeToUserDir);
-      return client;
+  public ChrootSFTPClient createChrootSFTPClient(
+      SFTPClient sftpClient,
+      String root,
+      boolean rootRelativeToUserDir,
+      String archiveDir,
+      boolean archiveDirRelativeToUserDir
+  ) throws IOException {
+    return createChrootSFTPClient(sftpClient, root, rootRelativeToUserDir, archiveDir, archiveDirRelativeToUserDir, false);
+  }
+
+  public ChrootSFTPClient createChrootSFTPClient(
+      SFTPClient sftpClient,
+      String root,
+      boolean rootRelativeToUserDir,
+      String archiveDir,
+      boolean archiveDirRelativeToUserDir,
+      boolean disableReadAheadStream
+  ) throws IOException {
+    ChrootSFTPClient client = new ChrootSFTPClient(sftpClient, root, rootRelativeToUserDir, false, disableReadAheadStream);
+    client.setArchiveDir(archiveDir, archiveDirRelativeToUserDir);
+    return client;
   }
 
   private void expectNotExist(Callable callable) throws Exception {

@@ -222,7 +222,8 @@ public abstract class SFTPRemoteConnector extends RemoteConnector {
             sshClient.newSFTPClient(),
             remotePath,
             remoteConfig.userDirIsRoot,
-            remoteConfig.createPathIfNotExists
+            remoteConfig.createPathIfNotExists,
+            remoteConfig.disableReadAheadStream
         );
         sftpClient.ls();
       } catch (IOException e) {
