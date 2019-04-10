@@ -55,7 +55,6 @@ public class SolrTarget04 implements SdcSolrTarget {
   private final boolean waitSearcher;
   private final boolean softCommit;
   private final boolean ignoreOptionalFields;
-  private final boolean fieldsAlreadyMappedInRecord;
   private List<String> requiredFieldNamesMap;
   private List<String> optionalFieldNamesMap;
 
@@ -69,8 +68,7 @@ public class SolrTarget04 implements SdcSolrTarget {
       boolean waitFlush,
       boolean waitSearcher,
       boolean softCommit,
-      boolean ignoreOptionalFields,
-      boolean fieldsAlreadyMappedInRecord
+      boolean ignoreOptionalFields
   ) {
     this.instanceType = instanceType;
     this.solrURI = solrURI;
@@ -82,7 +80,6 @@ public class SolrTarget04 implements SdcSolrTarget {
     this.waitSearcher = waitSearcher;
     this.softCommit = softCommit;
     this.ignoreOptionalFields = ignoreOptionalFields;
-    this.fieldsAlreadyMappedInRecord = fieldsAlreadyMappedInRecord;
     this.requiredFieldNamesMap = new ArrayList<>();
     this.optionalFieldNamesMap = new ArrayList<>();
   }
@@ -92,10 +89,8 @@ public class SolrTarget04 implements SdcSolrTarget {
     if (!skipValidation) {
       solrClient.ping();
     }
-    if (ignoreOptionalFields || fieldsAlreadyMappedInRecord) {
-      getRequiredFieldNames();
-    }
-    if (fieldsAlreadyMappedInRecord && !ignoreOptionalFields) {
+    getRequiredFieldNames();
+    if (!ignoreOptionalFields) {
       getOptionalFieldNames();
     }
   }
@@ -128,7 +123,7 @@ public class SolrTarget04 implements SdcSolrTarget {
     ArrayList<SimpleOrderedMap> fields = (ArrayList<SimpleOrderedMap>) simpleOrderedMap.get("fields");
 
     for (SimpleOrderedMap field : fields) {
-      if (field.get(REQUIRED) != null && field.get(REQUIRED).equals(false)) {
+      if (field.get(REQUIRED) == null || field.get(REQUIRED).equals(false)) {
         optionalFieldNamesMap.add(field.get(NAME).toString());
       }
     }
