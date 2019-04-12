@@ -35,7 +35,10 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
     producesEvents = true,
     onlineHelpRefUrl ="index.html?contextID=task_jgs_4fw_pgb"
 )
-@HideConfigs(value = {"conf.dataFormatConfig.includeChecksumInTheEvents"})
+@HideConfigs(value = {
+    "conf.dataFormatConfig.includeChecksumInTheEvents",
+    "conf.remoteConfig.disableReadAheadStream"
+})
 @GenerateResourceBundle
 @ConfigGroups(Groups.class)
 public class RemoteUploadDTarget extends DTarget {
