@@ -21,6 +21,7 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.epoll.EpollChannelOption;
 import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -68,6 +69,8 @@ public class TCPConsumingServer extends BaseNettyServer {
       b.group(bossGroup, workerGroup)
           .channel(EpollServerSocketChannel.class)
           .childHandler(this.channelInitializer)
+          .option(EpollChannelOption.SO_REUSEADDR, true)
+          .option(EpollChannelOption.SO_REUSEPORT, true)
           .option(ChannelOption.SO_BACKLOG, SOCKET_MAX_INBOUND_CONNECTION_QUEUE_DEPTH)
           .childOption(ChannelOption.SO_KEEPALIVE, SOCKET_KEEPALIVE);
       return b;
