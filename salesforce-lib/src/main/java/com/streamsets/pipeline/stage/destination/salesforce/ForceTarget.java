@@ -86,6 +86,8 @@ public class ForceTarget extends BaseTarget {
   private class ForceSessionRenewer implements SessionRenewer {
     @Override
     public SessionRenewalHeader renewSession(ConnectorConfig config) throws ConnectionException {
+      LOG.info("Renewing Salesforce session");
+
       try {
         partnerConnection = Connector.newConnection(ForceUtils.getPartnerConfig(conf, new ForceSessionRenewer()));
       } catch (StageException e) {

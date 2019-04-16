@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.stage.origin.salesforce;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableMap;
 import com.sforce.async.AsyncApiException;
 import com.sforce.async.BatchInfo;
 import com.sforce.async.BatchInfoList;
@@ -400,7 +399,12 @@ public class ForceSource extends BaseSource {
 
     if (job != null) {
       try {
-        bulkConnection.abortJob(job.getId());
+        try {
+          bulkConnection.abortJob(job.getId());
+        } catch (AsyncApiException e) {
+          ForceUtils.renewSession(bulkConnection, e);
+          bulkConnection.abortJob(job.getId());
+        }
         job = null;
       } catch (AsyncApiException e) {
         LOG.error("Exception while aborting job", e);
@@ -527,8 +531,15 @@ public class ForceSource extends BaseSource {
         if (destroyed.get()) {
           throw new StageException(getContext().isPreview() ? Errors.FORCE_25 : Errors.FORCE_26);
         }
-        BatchInfo b = bulkConnection.createBatchFromStream(job,
-                new ByteArrayInputStream(preparedQuery.getBytes(StandardCharsets.UTF_8)));
+        BatchInfo b;
+        try {
+          b = bulkConnection.createBatchFromStream(job,
+              new ByteArrayInputStream(preparedQuery.getBytes(StandardCharsets.UTF_8)));
+        } catch (AsyncApiException e) {
+          ForceUtils.renewSession(bulkConnection, e);
+          b = bulkConnection.createBatchFromStream(job,
+              new ByteArrayInputStream(preparedQuery.getBytes(StandardCharsets.UTF_8)));
+        }
         LOG.info("Created Bulk API batch {}", b.getId());
         processedBatches = new HashSet<>();
       } catch (AsyncApiException e) {
@@ -546,7 +557,12 @@ public class ForceSource extends BaseSource {
 
       try {
         // PK Chunking gives us multiple batches - process them in turn
-        batchList = bulkConnection.getBatchInfoList(job.getId());
+        try {
+          batchList = bulkConnection.getBatchInfoList(job.getId());
+        } catch (AsyncApiException e) {
+          ForceUtils.renewSession(bulkConnection, e);
+          batchList = bulkConnection.getBatchInfoList(job.getId());
+        }
         for (BatchInfo batchInfo : batchList.getBatchInfo()) {
           if (batchInfo.getState() == BatchStateEnum.Failed) {
             LOG.error("Batch {} failed: {}", batchInfo.getId(), batchInfo.getStateMessage());
@@ -560,7 +576,12 @@ public class ForceSource extends BaseSource {
             } else if (batchInfo.getState() == BatchStateEnum.Completed) {
               LOG.info("Batch {} completed", batchInfo.getId());
               batch = batchInfo;
-              queryResultList = bulkConnection.getQueryResultList(job.getId(), batch.getId());
+              try {
+                queryResultList = bulkConnection.getQueryResultList(job.getId(), batch.getId());
+              } catch (AsyncApiException e) {
+                ForceUtils.renewSession(bulkConnection, e);
+                queryResultList = bulkConnection.getQueryResultList(job.getId(), batch.getId());
+              }
               LOG.info("Query results: {}", queryResultList.getResult());
               resultIndex = 0;
               break;
@@ -592,7 +613,12 @@ public class ForceSource extends BaseSource {
       resultIndex++;
 
       try {
-        xmlEventReader = xmlInputFactory.createXMLEventReader(bulkConnection.getQueryResultStream(job.getId(), batch.getId(), resultId));
+        try {
+          xmlEventReader = xmlInputFactory.createXMLEventReader(bulkConnection.getQueryResultStream(job.getId(), batch.getId(), resultId));
+        } catch (AsyncApiException e) {
+          ForceUtils.renewSession(bulkConnection, e);
+          xmlEventReader = xmlInputFactory.createXMLEventReader(bulkConnection.getQueryResultStream(job.getId(), batch.getId(), resultId));
+        }
       } catch (AsyncApiException e) {
         throw new StageException(Errors.FORCE_05, e);
       } catch (XMLStreamException e) {
@@ -627,7 +653,12 @@ public class ForceSource extends BaseSource {
           if (processedBatches.size() == batchList.getBatchInfo().length) {
             // And we're done with the job
             try {
-              bulkConnection.closeJob(job.getId());
+              try {
+                bulkConnection.closeJob(job.getId());
+              } catch (AsyncApiException e) {
+                ForceUtils.renewSession(bulkConnection, e);
+                bulkConnection.closeJob(job.getId());
+              }
               lastQueryCompletedTime = System.currentTimeMillis();
               LOG.info("Query completed at: {}", lastQueryCompletedTime);
             } catch (AsyncApiException e) {
@@ -965,7 +996,12 @@ public class ForceSource extends BaseSource {
       }
       connection.addHeader(SFORCE_ENABLE_PKCHUNKING, headerValue);
     }
-    job = connection.createJob(job);
+    try {
+      job = connection.createJob(job);
+    } catch (AsyncApiException e) {
+      ForceUtils.renewSession(bulkConnection, e);
+      job = connection.createJob(job);
+    }
     return job;
   }
 }

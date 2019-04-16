@@ -190,7 +190,12 @@ public class ForceBulkWriter extends ForceWriter {
       job.setExternalIdFieldName(externalIdField);
     }
     job.setContentType(ContentType.CSV);
-    job = bulkConnection.createJob(job);
+    try {
+      job = bulkConnection.createJob(job);
+    } catch (AsyncApiException e) {
+      ForceUtils.renewSession(bulkConnection, e);
+      job = bulkConnection.createJob(job);
+    }
     LOG.info("Created Bulk API job {}", job.getId());
     return job;
   }
@@ -290,9 +295,19 @@ public class ForceBulkWriter extends ForceWriter {
   }
 
   private void createBatch(byte[] bytes, int count, List<BatchInfo> batchInfos, JobInfo jobInfo)
-      throws IOException, AsyncApiException {
-    BatchInfo batchInfo =
-        bulkConnection.createBatchFromStream(jobInfo, new ByteArrayInputStream(bytes, 0, count));
+      throws AsyncApiException {
+    try {
+      createBatchInternal(bytes, count, batchInfos, jobInfo);
+    } catch (AsyncApiException e) {
+      ForceUtils.renewSession(bulkConnection, e);
+      createBatchInternal(bytes, count, batchInfos, jobInfo);
+    }
+  }
+
+  private void createBatchInternal(byte[] bytes, int count, List<BatchInfo> batchInfos, JobInfo jobInfo) throws
+      AsyncApiException {
+    BatchInfo batchInfo;
+    batchInfo = bulkConnection.createBatchFromStream(jobInfo, new ByteArrayInputStream(bytes, 0, count));
     LOG.info("Wrote Bulk API batch: {}", batchInfo);
     batchInfos.add(batchInfo);
   }
@@ -302,7 +317,12 @@ public class ForceBulkWriter extends ForceWriter {
     JobInfo job = new JobInfo();
     job.setId(jobId);
     job.setState(JobStateEnum.Closed);
-    bulkConnection.updateJob(job);
+    try {
+      bulkConnection.updateJob(job);
+    } catch (AsyncApiException e) {
+      ForceUtils.renewSession(bulkConnection, e);
+      bulkConnection.updateJob(job);
+    }
   }
 
   private void awaitCompletion(JobBatches jb)
@@ -318,8 +338,13 @@ public class ForceBulkWriter extends ForceWriter {
       } catch (InterruptedException e) {}
       LOG.info("Awaiting Bulk API results... {}", incomplete.size());
       sleepTime = 1000L;
-      BatchInfo[] statusList =
-          bulkConnection.getBatchInfoList(jb.job.getId()).getBatchInfo();
+      BatchInfo[] statusList = null;
+      try {
+        statusList = bulkConnection.getBatchInfoList(jb.job.getId()).getBatchInfo();
+      } catch (AsyncApiException e) {
+        ForceUtils.renewSession(bulkConnection, e);
+        statusList = bulkConnection.getBatchInfoList(jb.job.getId()).getBatchInfo();
+      }
       for (BatchInfo b : statusList) {
         if (b.getState() == BatchStateEnum.Completed
             || b.getState() == BatchStateEnum.Failed) {
@@ -337,8 +362,13 @@ public class ForceBulkWriter extends ForceWriter {
     Record[] recordArray = jb.records.toArray(new Record[0]);
     int recordIndex = 0;
     for (BatchInfo b : jb.batchInfoList) {
-      CSVReader rdr =
-          new CSVReader(bulkConnection.getBatchResultStream(jb.job.getId(), b.getId()));
+      CSVReader rdr = null;
+      try {
+        rdr = new CSVReader(bulkConnection.getBatchResultStream(jb.job.getId(), b.getId()));
+      } catch (AsyncApiException e) {
+        ForceUtils.renewSession(bulkConnection, e);
+        rdr = new CSVReader(bulkConnection.getBatchResultStream(jb.job.getId(), b.getId()));
+      }
       List<String> resultHeader = rdr.nextRecord();
       int resultCols = resultHeader.size();
 

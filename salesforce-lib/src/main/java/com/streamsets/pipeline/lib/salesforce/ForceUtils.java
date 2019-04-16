@@ -16,7 +16,9 @@
 package com.streamsets.pipeline.lib.salesforce;
 
 import com.sforce.async.AsyncApiException;
+import com.sforce.async.AsyncExceptionCode;
 import com.sforce.async.BulkConnection;
+import com.sforce.soap.partner.SessionHeader_element;
 import com.sforce.soap.partner.fault.ApiFault;
 import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
@@ -232,5 +234,19 @@ public class ForceUtils {
       sslContextFactory.setKeyStorePassword(conf.mutualAuth.getUnderlyingConfig().keyStorePassword.get());
     }
     return sslContextFactory;
+  }
+
+  public static void renewSession(BulkConnection connection, AsyncApiException e) throws AsyncApiException {
+    if (AsyncExceptionCode.InvalidSessionId.equals(e.getExceptionCode())) {
+      ConnectorConfig config = connection.getConfig();
+      try {
+        SessionRenewer.SessionRenewalHeader sessionHeader = config.getSessionRenewer().renewSession(config);
+        config.setSessionId(((SessionHeader_element)sessionHeader.headerElement).getSessionId());
+      } catch (ConnectionException e1) {
+        // Can't renew the session - log an error and throw the original AsyncApiException
+        LOG.error("Exception renewing session", e1);
+        throw e;
+      }
+    }
   }
 }
