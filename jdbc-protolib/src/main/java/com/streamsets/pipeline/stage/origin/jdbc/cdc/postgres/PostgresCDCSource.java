@@ -276,7 +276,7 @@ public class PostgresCDCSource extends BaseSource {
       case DATE:
         //Validate startDate
         zoneId = ZoneId.of(configBean.dbTimeZone);
-        dateTimeColumnHandler = new DateTimeColumnHandler(zoneId);
+        dateTimeColumnHandler = new DateTimeColumnHandler(zoneId, configBean.convertTimestampToString);
         try {
           startDate = LocalDateTime.parse(
               configBean.startDate, DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss")
