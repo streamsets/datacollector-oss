@@ -177,6 +177,17 @@ public class PostgresCDCConfigBean {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Convert Timestamp To String",
+      description = "Rather then representing timestamps as Data Collector DATETIME type, use String.",
+      displayPosition = 120,
+      group = "CDC"
+  )
+  public boolean convertTimestampToString;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Query Timeout",
       description = "Time to wait before timing out a WAL query and returning the batch.",

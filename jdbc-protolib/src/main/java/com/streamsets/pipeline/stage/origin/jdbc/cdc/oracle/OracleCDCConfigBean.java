@@ -163,6 +163,17 @@ public class OracleCDCConfigBean {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Convert Timestamp To String",
+      description = "Rather then representing timestamps as Data Collector DATETIME type, use String.",
+      displayPosition = 125,
+      group = "CDC"
+  )
+  public boolean convertTimestampToString;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Maximum Transaction Length",
       description = "Time window to look for changes within a transaction before commit (in seconds)",

@@ -17,6 +17,7 @@ package com.streamsets.pipeline.lib.jdbc.parser.sql;
 
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -61,18 +62,21 @@ public class DateTimeColumnHandler {
   public static final String TIMESTAMP_SESSION_FORMAT = "'YYYY-MM-DD HH24:MI:SS.FF'";
 
   private final ZoneId zoneId;
+  private final boolean timestampAsString;
 
-  public DateTimeColumnHandler(ZoneId zoneId) {
-    this(zoneId, DEFAULT_DATETIME_FORMAT, DEFAULT_LOCAL_DATETIME_FORMAT, DEFAULT_ZONED_DATETIME_FORMAT);
+  public DateTimeColumnHandler(ZoneId zoneId, boolean timestampAsString) {
+    this(zoneId, timestampAsString, DEFAULT_DATETIME_FORMAT, DEFAULT_LOCAL_DATETIME_FORMAT, DEFAULT_ZONED_DATETIME_FORMAT);
   }
 
   public DateTimeColumnHandler(
       ZoneId zoneId,
+      boolean timestampAsString,
       String dateFormat,
       String localDateTimeFormat,
       String zonedDatetimeFormat
   ) {
     this.zoneId = zoneId;
+    this.timestampAsString = timestampAsString;
     dateFormatter =
         new DateTimeFormatterBuilder()
             .parseLenient()
@@ -119,7 +123,13 @@ public class DateTimeColumnHandler {
     } else {
       Optional<String> ts = matchDateTimeString(toTimestampPattern.matcher(columnValue));
       if (ts.isPresent()) {
-        return Field.create(type, Timestamp.valueOf(ts.get()));
+        if (timestampAsString) {
+          return Field.create(Field.Type.STRING, ts.get());
+        }
+        Timestamp timestamp = Timestamp.valueOf(ts.get());
+        Field field = Field.create(type, timestamp);
+        JdbcUtil.setNanosecondsinAttribute(timestamp.getNanos(), field);
+        return field;
       }
       // We did not find TO_TIMESTAMP, so try TO_DATE
       Optional<String> dt = matchDateTimeString(toDatePattern.matcher(columnValue));
@@ -134,6 +144,10 @@ public class DateTimeColumnHandler {
     }
     Matcher m = toTimeStampTzPatternTz.matcher(columnValue);
     if (m.find()) {
+      if (timestampAsString) {
+        return Field.create(Field.Type.STRING, m.group(1));
+      }
+      // Zoned Timestamp can maintain fractional seconds precision
       return Field.createZonedDateTime(ZonedDateTime.parse(m.group(1), zonedDtFormatter));
     }
     return Field.createZonedDateTime(null);
@@ -145,6 +159,10 @@ public class DateTimeColumnHandler {
     }
     Matcher m = toTimeStampTzPatternLocalTz.matcher(columnValue);
     if (m.find()) {
+      if (timestampAsString) {
+        return Field.create(Field.Type.STRING, m.group(1));
+      }
+      // Zoned Timestamp can maintain fractional seconds precision
       return Field.createZonedDateTime(ZonedDateTime.of(LocalDateTime.parse(m.group(1), localDtFormatter), zoneId));
     }
     return Field.createZonedDateTime(null);

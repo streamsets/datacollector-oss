@@ -1204,7 +1204,7 @@ public class OracleCDCSource extends BaseSource {
       );
     }
     zoneId = ZoneId.of(configBean.dbTimeZone);
-    dateTimeColumnHandler = new DateTimeColumnHandler(zoneId);
+    dateTimeColumnHandler = new DateTimeColumnHandler(zoneId, configBean.convertTimestampToString);
     String commitScnField;
     BigDecimal scn = null;
     try {

@@ -133,6 +133,7 @@ public class SqlParserProcessor extends SingleLaneProcessor {
     dateTimeColumnHandler =
         new DateTimeColumnHandler(
             ZoneId.of(configBean.dbTimeZone),
+            false,
             configBean.dateFormat,
             configBean.localDatetimeFormat,
             configBean.zonedDatetimeFormat
@@ -149,7 +150,10 @@ public class SqlParserProcessor extends SingleLaneProcessor {
   }
 
   private Optional<Record> process(Record record) throws StageException {
-    String sql = record.get(configBean.sqlField).getValueAsString();
+    String sql = null;
+    if (record.has(configBean.sqlField)) {
+      sql = record.get(configBean.sqlField).getValueAsString();
+    }
     if (StringUtils.isEmpty(sql)) {
       errorRecordHandler.onError(new OnRecordErrorException(record, JdbcErrors.JDBC_401, record, configBean.sqlField));
     }

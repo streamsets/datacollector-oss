@@ -550,6 +550,15 @@ public class JdbcUtil {
             case -101: // TIMESTAMP WITH TIMEZONE
             case -102: // TIMESTAMP WITH LOCAL TIMEZONE
               OffsetDateTime offsetDateTime = rs.getObject(columnIndex, OffsetDateTime.class);
+              if (offsetDateTime == null) {
+                return timestampToString ?
+                    Field.create(Field.Type.STRING, null) :
+                    Field.create(Field.Type.ZONED_DATETIME, null);
+              }
+              if (timestampToString) {
+                return Field.create(Field.Type.STRING, offsetDateTime.toZonedDateTime().toString());
+              }
+              // Zoned Datetime can handle high precision
               return Field.create(Field.Type.ZONED_DATETIME, offsetDateTime.toZonedDateTime());
             case Types.SQLXML:
               return Field.create(Field.Type.STRING, rs.getSQLXML(columnIndex).getString());
@@ -619,15 +628,12 @@ public class JdbcUtil {
             break;
           case Types.TIMESTAMP:
             final Timestamp timestamp = rs.getTimestamp(columnIndex);
-            if(timestampToString) {
+            if (timestampToString) {
               field = Field.create(Field.Type.STRING, timestamp == null ? null : timestamp.toString());
             } else {
               field = Field.create(Field.Type.DATETIME, timestamp);
               if (timestamp != null) {
-                final long actualNanos = timestamp.getNanos() % NANOS_TO_MILLIS_ADJUSTMENT;
-                if (actualNanos > 0) {
-                  field.setAttribute(FIELD_ATTRIBUTE_NANOSECONDS, String.valueOf(actualNanos));
-                }
+                setNanosecondsinAttribute(timestamp.getNanos(), field);
               }
             }
             break;
@@ -672,6 +678,13 @@ public class JdbcUtil {
       }
 
       return field;
+  }
+
+  public static void setNanosecondsinAttribute(int nanoseconds, Field field) {
+    final long actualNanos = nanoseconds % NANOS_TO_MILLIS_ADJUSTMENT;
+    if (actualNanos > 0) {
+      field.setAttribute(FIELD_ATTRIBUTE_NANOSECONDS, String.valueOf(actualNanos));
+    }
   }
 
   public LinkedHashMap<String, Field> resultSetToFields(
