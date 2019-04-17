@@ -255,11 +255,9 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   }
 
   private boolean cleanUp(String name) {
+    LogUtil.resetRollingFileAppender(name, "0", STATE);
     boolean deleted = PipelineDirectoryUtil.deleteAll(getPipelineDir(name).toFile());
     deleted &= PipelineDirectoryUtil.deletePipelineDir(runtimeInfo, name);
-    if(deleted) {
-      LogUtil.resetRollingFileAppender(name, "0", STATE);
-    }
     return deleted;
   }
 
