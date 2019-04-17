@@ -39,6 +39,7 @@ import org.apache.sshd.common.PropertyResolverUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -56,6 +57,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.awaitility.Awaitility.await;
 
+@Ignore
 @RunWith(Parameterized.class)
 public class TestRemoteUploadTarget extends FTPAndSSHDUnitTest {
 
