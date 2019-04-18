@@ -67,7 +67,7 @@ public class ClusterConfig {
   public SparkDeployMode deployMode;
 
   @ConfigDef(
-      required = true,
+      required = false,
       type = ConfigDef.Type.STRING,
       label = "Hadoop User Name",
       description = "Name of the Hadoop user that StreamSets impersonates",
@@ -112,28 +112,29 @@ public class ClusterConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Use Kerberos for YARN",
-      description = "Uses a Kerberos principal and key tab to launch the Spark application for the pipeline",
+      label = "Use YARN Kerberos Keytab",
+      description = "Indicates that the Spark application should use a principal and keytab for Kerberos authentication",
       group = "CLUSTER",
-      defaultValue = "false",
+      defaultValue = "NONE",
       displayPosition = 1000,
       dependsOn = "clusterType",
       triggeredByValue = "YARN"
   )
-  public boolean yarnKerberosEnabled;
+  public boolean useYarnKerberosKeytab;
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
-      label = "YARN Kerberos Principal",
-      description = "Name of the Kerberos principal used to launch the Spark application for the pipeline",
+      type = ConfigDef.Type.MODEL,
+      label = "Keytab Source",
+      description = "Source for the Kerberos keytab used to launch the Spark application",
       group = "CLUSTER",
-      defaultValue = "name@DOMAIN",
-      displayPosition = 1100,
-      dependsOn = "yarnKerberosEnabled",
+      defaultValue = "PROPERTIES_FILE",
+      displayPosition = 1050,
+      dependsOn = "useYarnKerberosKeytab",
       triggeredByValue = "true"
   )
-  public String yarnKerberosPrincipal;
+  @ValueChooserModel(SparkDeployModeChooserValues.class)
+  public KeytabSource yarnKerberosKeytabSource;
 
   @ConfigDef(
       required = true,
@@ -141,10 +142,24 @@ public class ClusterConfig {
       label = "YARN Kerberos Keytab",
       description = "Absolute path to the Kerberos keytab used to launch the Spark application for the pipeline",
       group = "CLUSTER",
-      defaultValue = "",
-      displayPosition = 1200,
-      dependsOn = "yarnKerberosEnabled",
-      triggeredByValue = "true"
+      displayPosition = 1100,
+      dependsOn = "yarnKerberosKeytabSource",
+      triggeredByValue = "PIPELINE"
   )
   public String yarnKerberosKeytab;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "YARN Kerberos Principal",
+      description = "Name of the Kerberos principal used to launch the Spark application for the pipeline.  Must be" +
+          " present in the keytab specified above.",
+      group = "CLUSTER",
+      defaultValue = "name@DOMAIN",
+      displayPosition = 1200,
+      dependsOn = "yarnKerberosKeytabSource",
+      triggeredByValue = "PIPELINE"
+  )
+  public String yarnKerberosPrincipal;
+
 }

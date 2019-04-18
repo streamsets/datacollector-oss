@@ -114,6 +114,13 @@ public enum ValidationError implements ErrorCode {
 
   // Service related validations
   VALIDATION_0200("Invalid services declaration, expected definition for '{}', but got '{}'"),
+
+  // cluster config validations
+  VALIDATION_0301("Cannot specify keytab if Kerberos is disabled via the {} configuration property"),
+  VALIDATION_0302("Keytab path must be absolute; specified path {} was relative{}"),
+  VALIDATION_0303("No file was found at {}; please double check the keytab path{}"),
+  VALIDATION_0304("{} was not a regular file; please double check the keytab path{}"),
+  VALIDATION_0305("Impersonation is required by {} configuration property, so an explicit user may not be specified."),
   ;
 
   private final String msg;

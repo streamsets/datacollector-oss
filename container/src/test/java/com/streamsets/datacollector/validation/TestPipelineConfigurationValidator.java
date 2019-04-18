@@ -18,12 +18,18 @@ package com.streamsets.datacollector.validation;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.streamsets.datacollector.config.KeytabSource;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.configupgrade.PipelineConfigurationUpgrader;
+import com.streamsets.datacollector.execution.runner.common.Constants;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.MockStages;
+import com.streamsets.datacollector.security.HadoopConfigConstants;
+import com.streamsets.datacollector.security.SecurityConfiguration;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
@@ -33,8 +39,15 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
+
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertThat;
 
 public class TestPipelineConfigurationValidator {
 
@@ -440,4 +453,190 @@ public class TestPipelineConfigurationValidator {
     Assert.assertEquals(1, issues.size());
     Assert.assertEquals(ValidationError.VALIDATION_0037.name(), issues.get(0).getErrorCode());
   }
+
+  @Test
+  public void testYarnKerbEnabledButDisabledInSDC() {
+    PipelineConfigurationValidator validator = createClusterPropertiesValidator(
+        false,
+        conf -> {
+          conf.addConfiguration(new Config("executionMode", "BATCH"));
+          conf.addConfiguration(new Config("clusterConfig.clusterType", "YARN"));
+          conf.addConfiguration(new Config("clusterConfig.useYarnKerberosKeytab", true));
+          conf.addConfiguration(new Config("clusterConfig.yarnKerberosKeytab", "/path/to/a/keytab"));
+          return null;
+        }
+    );
+    final PipelineConfiguration conf = validator.validate();
+    Assert.assertTrue(conf.getIssues().hasIssues());
+    List<Issue> issues = conf.getIssues().getIssues();
+    Assert.assertThat(issues, hasSize(1));
+    Assert.assertEquals(ValidationError.VALIDATION_0301.name(), issues.get(0).getErrorCode());
+  }
+
+  @Test
+  public void testYarnKeytabRelativePath() {
+    PipelineConfigurationValidator validator = createClusterPropertiesValidator(
+        true,
+        conf -> {
+          conf.addConfiguration(new Config("executionMode", "BATCH"));
+          conf.addConfiguration(new Config("clusterConfig.yarnKerberosKeytabSource", KeytabSource.PIPELINE));
+          conf.addConfiguration(new Config("clusterConfig.clusterType", "YARN"));
+          conf.addConfiguration(new Config("clusterConfig.useYarnKerberosKeytab", true));
+          conf.addConfiguration(new Config("clusterConfig.yarnKerberosKeytab", "somewhere.keytab"));
+          return null;
+        }
+    );
+    final PipelineConfiguration conf = validator.validate();
+    Assert.assertTrue(conf.getIssues().hasIssues());
+    List<Issue> issues = conf.getIssues().getIssues();
+    Assert.assertThat(issues, hasSize(1));
+    Assert.assertEquals(ValidationError.VALIDATION_0302.name(), issues.get(0).getErrorCode());
+  }
+
+  @Test
+  public void testYarnKeytabNotExists() {
+    PipelineConfigurationValidator validator = createClusterPropertiesValidator(
+        true,
+        conf -> {
+          conf.addConfiguration(new Config("executionMode", "BATCH"));
+          conf.addConfiguration(new Config("clusterConfig.clusterType", "YARN"));
+          conf.addConfiguration(new Config("clusterConfig.useYarnKerberosKeytab", true));
+          conf.addConfiguration(new Config("clusterConfig.yarnKerberosKeytabSource", KeytabSource.PIPELINE));
+          conf.addConfiguration(new Config("clusterConfig.yarnKerberosKeytab", "/definitely/not/a/real/path.keytab"));
+          return null;
+        }
+    );
+    final PipelineConfiguration conf = validator.validate();
+    Assert.assertTrue(conf.getIssues().hasIssues());
+    List<Issue> issues = conf.getIssues().getIssues();
+    Assert.assertThat(issues, hasSize(1));
+    Assert.assertEquals(ValidationError.VALIDATION_0303.name(), issues.get(0).getErrorCode());
+  }
+
+  @Test
+  public void testYarnKeytabNotRegularFile() {
+    PipelineConfigurationValidator validator = createClusterPropertiesValidator(
+        true,
+        conf -> {
+          conf.addConfiguration(new Config("executionMode", "BATCH"));
+          conf.addConfiguration(new Config("clusterConfig.clusterType", "YARN"));
+          conf.addConfiguration(new Config("clusterConfig.useYarnKerberosKeytab", true));
+          conf.addConfiguration(new Config("clusterConfig.yarnKerberosKeytabSource", KeytabSource.PIPELINE));
+          conf.addConfiguration(new Config("clusterConfig.yarnKerberosKeytab", System.getProperty("java.io.tmpdir")));
+          return null;
+        }
+    );
+    final PipelineConfiguration conf = validator.validate();
+    Assert.assertTrue(conf.getIssues().hasIssues());
+    List<Issue> issues = conf.getIssues().getIssues();
+    Assert.assertThat(issues, hasSize(1));
+    Assert.assertEquals(ValidationError.VALIDATION_0304.name(), issues.get(0).getErrorCode());
+  }
+
+  @Test
+  public void testImpersonationRequired() {
+    PipelineConfigurationValidator validator = createClusterPropertiesValidator(
+        false,
+        conf -> {
+          conf.addConfiguration(new Config("executionMode", "BATCH"));
+          conf.addConfiguration(new Config("clusterConfig.clusterType", "YARN"));
+          conf.addConfiguration(new Config("clusterConfig.useYarnKerberosKeytab", false));
+          conf.addConfiguration(new Config("clusterConfig.yarnKerberosKeytabSource", KeytabSource.PIPELINE));
+          conf.addConfiguration(new Config("clusterConfig.hadoopUserName", "someone"));
+          return null;
+        },
+        conf -> {
+          conf.set(HadoopConfigConstants.IMPERSONATION_ALWAYS_CURRENT_USER, true);
+          return null;
+        }
+    );
+    final PipelineConfiguration conf = validator.validate();
+    Assert.assertTrue(conf.getIssues().hasIssues());
+    List<Issue> issues = conf.getIssues().getIssues();
+    Assert.assertThat(issues, hasSize(1));
+    Assert.assertEquals(ValidationError.VALIDATION_0305.name(), issues.get(0).getErrorCode());
+  }
+
+  // this one will simply throw a RuntimeException, since that's what the SecurityContext constructor does if
+  // the keytab property points to a non-existent file; should be fine for our purposes since this will result in the
+  // container not even starting via the bootstrap process, but we can still validate it here
+  @Test(expected = RuntimeException.class)
+  public void testNonExistentKeytabFromProperty() {
+    PipelineConfigurationValidator validator = createClusterPropertiesValidator(
+        true,
+        conf -> {
+          conf.addConfiguration(new Config("executionMode", "BATCH"));
+          conf.addConfiguration(new Config("clusterConfig.clusterType", "YARN"));
+          conf.addConfiguration(new Config("clusterConfig.useYarnKerberosKeytab", true));
+          conf.addConfiguration(new Config("clusterConfig.yarnKerberosKeytabSource", KeytabSource.PROPERTIES_FILE));
+          return null;
+        },
+        conf -> {
+          conf.set(SecurityConfiguration.KERBEROS_KEYTAB_KEY, "/definitely/not/a/real.keytab");
+          return null;
+        }
+    );
+    final PipelineConfiguration conf = validator.validate();
+  }
+
+  @Test()
+  public void testInvalidKeytabFromProperty() {
+    PipelineConfigurationValidator validator = createClusterPropertiesValidator(
+        true,
+        conf -> {
+          conf.addConfiguration(new Config("executionMode", "BATCH"));
+          conf.addConfiguration(new Config("clusterConfig.clusterType", "YARN"));
+          conf.addConfiguration(new Config("clusterConfig.useYarnKerberosKeytab", true));
+          conf.addConfiguration(new Config("clusterConfig.yarnKerberosKeytabSource", KeytabSource.PROPERTIES_FILE));
+          return null;
+        },
+        conf -> {
+          conf.set(SecurityConfiguration.KERBEROS_KEYTAB_KEY, System.getProperty("java.io.tmpdir"));
+          return null;
+        }
+    );
+    final PipelineConfiguration conf = validator.validate();
+    Assert.assertTrue(conf.getIssues().hasIssues());
+    List<Issue> issues = conf.getIssues().getIssues();
+    Assert.assertThat(issues, hasSize(1));
+    final Issue issue = issues.get(0);
+    Assert.assertEquals(ValidationError.VALIDATION_0304.name(), issue.getErrorCode());
+    // error message should mention the configuration property
+    assertThat(issue.getMessage(), containsString(SecurityConfiguration.KERBEROS_KEYTAB_KEY));
+  }
+
+  private static PipelineConfigurationValidator createClusterPropertiesValidator(
+      boolean sdcKerbEnabled,
+      Function<PipelineConfiguration, Void> updatePipelineConfigs
+  ) {
+    return createClusterPropertiesValidator(sdcKerbEnabled, updatePipelineConfigs, null);
+  }
+
+  private static PipelineConfigurationValidator createClusterPropertiesValidator(
+      boolean sdcKerbEnabled,
+      Function<PipelineConfiguration, Void> updatePipelineConfigs,
+      Function<Configuration, Void> updateSdcConfigs
+  ) {
+    final StageLibraryTask lib = MockStages.createStageLibrary();
+    final Configuration dataCollectorConfig = new Configuration();
+    dataCollectorConfig.set(SecurityConfiguration.KERBEROS_ENABLED_KEY, sdcKerbEnabled);
+
+    if (sdcKerbEnabled) {
+      dataCollectorConfig.set(SecurityConfiguration.KERBEROS_PRINCIPAL_KEY, "dummy@REALM");
+      try {
+        final File dummyKeytabFile = File.createTempFile("dummy_", "keytab");
+        dataCollectorConfig.set(SecurityConfiguration.KERBEROS_KEYTAB_KEY, dummyKeytabFile.getAbsolutePath());
+      } catch (IOException e) {
+        throw new RuntimeException("Failed to create temp dummy keytab file for test", e);
+      }
+    }
+
+    if (updateSdcConfigs != null) {
+      updateSdcConfigs.apply(dataCollectorConfig);
+    }
+    final PipelineConfiguration conf = MockStages.createPipelineConfigurationSourceTarget();
+    updatePipelineConfigs.apply(conf);
+    return new PipelineConfigurationValidator(lib, "name", conf, dataCollectorConfig, Mockito.mock(RuntimeInfo.class));
+  }
+
 }

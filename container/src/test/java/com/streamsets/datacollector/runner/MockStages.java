@@ -811,14 +811,28 @@ public class MockStages {
 
         StageDefinition tDef = new StageDefinitionBuilder(cl, MTarget.class, "targetName")
           .withConfig(stageReqField)
-          .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
+          .withExecutionModes(
+              ExecutionMode.CLUSTER_YARN_STREAMING,
+              ExecutionMode.STANDALONE,
+              ExecutionMode.CLUSTER_BATCH,
+              ExecutionMode.CLUSTER_MESOS_STREAMING,
+              ExecutionMode.BATCH,
+              ExecutionMode.STREAMING
+          )
           .build();
 
         StageDefinition tEventDef = new StageDefinitionBuilder(cl, MExecutor.class, "executorName")
           .withConfig(stageReqField)
           .withProducingEvents(true)
           .withPipelineLifecycleStage(true)
-          .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
+          .withExecutionModes(
+              ExecutionMode.CLUSTER_YARN_STREAMING,
+              ExecutionMode.STANDALONE,
+              ExecutionMode.CLUSTER_BATCH,
+              ExecutionMode.CLUSTER_MESOS_STREAMING,
+              ExecutionMode.BATCH,
+              ExecutionMode.STREAMING
+          )
           .build();
 
         StageDefinition teDef = new StageDefinitionBuilder(cl, MTarget.class, "targetNameEvent")
@@ -874,13 +888,27 @@ public class MockStages {
           .withErrorStage(true)
           .withPreconditions(false)
           .withConfig(errorTargetConf)
-          .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
+          .withExecutionModes(
+              ExecutionMode.CLUSTER_YARN_STREAMING,
+              ExecutionMode.STANDALONE,
+              ExecutionMode.CLUSTER_BATCH,
+              ExecutionMode.CLUSTER_MESOS_STREAMING,
+              ExecutionMode.BATCH,
+              ExecutionMode.STREAMING
+          )
           .build();
 
         StageDefinition statsDef = new StageDefinitionBuilder(cl, StatsTarget.class, "statsAggregator")
           .withPreconditions(false)
           .withStatsAggregatorStage(true)
-          .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
+          .withExecutionModes(
+              ExecutionMode.CLUSTER_YARN_STREAMING,
+              ExecutionMode.STANDALONE,
+              ExecutionMode.CLUSTER_BATCH,
+              ExecutionMode.CLUSTER_MESOS_STREAMING,
+              ExecutionMode.BATCH,
+              ExecutionMode.STREAMING
+          )
           .build();
 
         ConfigDefinition depConfDef = new ConfigDefinition(
@@ -905,11 +933,22 @@ public class MockStages {
           .build();
 
         StageDefinition clusterStageDef = new StageDefinitionBuilder(cl, ClusterMSource.class, "clusterSource")
-          .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
+          .withExecutionModes(
+              ExecutionMode.CLUSTER_YARN_STREAMING,
+              ExecutionMode.CLUSTER_BATCH,
+              ExecutionMode.CLUSTER_MESOS_STREAMING,
+              ExecutionMode.BATCH,
+              ExecutionMode.STREAMING
+          )
           .build();
 
         StageDefinition clusterLibraryStageDef = new StageDefinitionBuilder(cl, ClusterMSource.class, "clusterLibrarySource")
-          .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.CLUSTER_BATCH)
+          .withExecutionModes(
+              ExecutionMode.CLUSTER_YARN_STREAMING,
+              ExecutionMode.CLUSTER_BATCH,
+              ExecutionMode.BATCH,
+              ExecutionMode.STREAMING
+          )
           .build();
 
         StageDefinition commonLibraryTargetDef = new StageDefinitionBuilder(cl, MTarget.class, "commonLibraryTarget")
@@ -1064,7 +1103,14 @@ public class MockStages {
         .withErrorStage(true)
         .withPreconditions(false)
         .withConfig(errorTargetConf)
-        .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
+        .withExecutionModes(
+            ExecutionMode.CLUSTER_YARN_STREAMING,
+            ExecutionMode.STANDALONE,
+            ExecutionMode.CLUSTER_BATCH,
+            ExecutionMode.CLUSTER_MESOS_STREAMING,
+            ExecutionMode.BATCH,
+            ExecutionMode.STREAMING
+        )
         .build();
     }
 
@@ -1072,7 +1118,13 @@ public class MockStages {
       return new StageDefinitionBuilder(cl, StatsTarget.class, "statsAggregator")
           .withPreconditions(false)
           .withStatsAggregatorStage(true)
-          .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH)
+          .withExecutionModes(
+              ExecutionMode.CLUSTER_YARN_STREAMING,
+              ExecutionMode.STANDALONE,
+              ExecutionMode.CLUSTER_BATCH,
+              ExecutionMode.BATCH,
+              ExecutionMode.STREAMING
+          )
           .build();
     }
 
@@ -2002,13 +2054,35 @@ public class MockStages {
   }
 
   private static PipelineConfiguration pipeline(List<StageConfiguration> stages) {
-    return pipeline(stages, Collections.emptyList(), Collections.emptyList());
+    return pipeline(
+        stages,
+        Collections.emptyList(),
+        Collections.emptyList(),
+        getErrorStageConfig(),
+        getStatsAggregatorStageConfig()
+    );
+  }
+
+  private static PipelineConfiguration pipeline(
+      List<StageConfiguration> stages,
+      List<StageConfiguration> startStages,
+      List<StageConfiguration> stopStages
+  ) {
+    return pipeline(
+        stages,
+        startStages,
+        stopStages,
+        getErrorStageConfig(),
+        getStatsAggregatorStageConfig()
+    );
   }
 
   private static PipelineConfiguration pipeline(
     List<StageConfiguration> stages,
     List<StageConfiguration> startStages,
-    List<StageConfiguration> stopStages
+    List<StageConfiguration> stopStages,
+    StageConfiguration errorStageConfig,
+    StageConfiguration statsAggregatorStageConfig
   ) {
     return new PipelineConfiguration(
         PipelineStoreTask.SCHEMA_VERSION,
@@ -2020,8 +2094,8 @@ public class MockStages {
         createPipelineConfigs(),
         null,
         stages,
-        getErrorStageConfig(),
-        getStatsAggregatorStageConfig(),
+        errorStageConfig,
+        statsAggregatorStageConfig,
         startStages,
         stopStages
     );

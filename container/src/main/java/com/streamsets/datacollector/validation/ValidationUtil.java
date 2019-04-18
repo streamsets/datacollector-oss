@@ -16,23 +16,33 @@
 package com.streamsets.datacollector.validation;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.streamsets.datacollector.config.ConfigDefinition;
+import com.streamsets.datacollector.config.PipelineGroups;
 import com.streamsets.datacollector.config.ServiceConfiguration;
 import com.streamsets.datacollector.config.ServiceDefinition;
+import com.streamsets.datacollector.config.SparkClusterType;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.UserConfigurable;
+import com.streamsets.datacollector.creation.PipelineBean;
+import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.creation.StageConfigBean;
 import com.streamsets.datacollector.definition.ConcreteELDefinitionExtractor;
 import com.streamsets.datacollector.el.ELEvaluator;
 import com.streamsets.datacollector.el.ELVariables;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.record.PathElement;
 import com.streamsets.datacollector.record.RecordImpl;
+import com.streamsets.datacollector.security.HadoopConfigConstants;
+import com.streamsets.datacollector.security.SecurityConfiguration;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageType;
 import com.streamsets.pipeline.api.el.ELEval;
@@ -43,8 +53,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -951,5 +965,119 @@ public class ValidationUtil {
   }
 
   private ValidationUtil() {
+  }
+
+  public static void validateClusterConfigs(
+      PipelineBean pipelineBean,
+      Configuration dataCollectorConfiguration,
+      RuntimeInfo runtimeInfo,
+      IssueCreator issueCreator,
+      List<Issue> errors
+  ) {
+    Preconditions.checkNotNull(
+        dataCollectorConfiguration,
+        "dataCollectorConfiguration must be provided to ValidationUtil constructor when validating cluster configs"
+    );
+    Preconditions.checkNotNull(
+        runtimeInfo,
+        "runtimeInfo must be provided to ValidationUtil constructor when validating cluster configs"
+    );
+    final PipelineConfigBean config = pipelineBean.getConfig();
+    final ExecutionMode executionMode = config.executionMode;
+    if (EnumSet.of(ExecutionMode.BATCH, ExecutionMode.STREAMING).contains(executionMode)) {
+      final SparkClusterType clusterType = config.clusterConfig.clusterType;
+      if (clusterType != null) {
+        switch (clusterType) {
+          case YARN:
+            final SecurityConfiguration securityConfiguration = new SecurityConfiguration(
+                runtimeInfo,
+                dataCollectorConfiguration
+            );
+            validateYarnClusterConfigs(dataCollectorConfiguration, securityConfiguration, issueCreator, errors, config);
+            break;
+          default:
+            //nothing to validate for now
+            break;
+        }
+      }
+    }
+  }
+
+  private static void validateYarnClusterConfigs(
+      Configuration dataCollectorConfiguration,
+      SecurityConfiguration securityConfig,
+      IssueCreator issueCreator,
+      List<Issue> errors,
+      PipelineConfigBean config
+  ) {
+    final boolean kerbConfigEnabled = securityConfig.isKerberosEnabled();
+    final boolean keytabEnabled = config.clusterConfig.useYarnKerberosKeytab;
+    if (kerbConfigEnabled) {
+      if (keytabEnabled) {
+        String keytabPathStr = null;
+        String errorMsgSuffix = null;
+        switch (config.clusterConfig.yarnKerberosKeytabSource) {
+          case PIPELINE:
+            keytabPathStr = config.clusterConfig.yarnKerberosKeytab;
+            // no suffix needed, since the validation error will show up directly next to the UI config
+            errorMsgSuffix = "";
+            break;
+          case PROPERTIES_FILE:
+            keytabPathStr = securityConfig.getKerberosKeytab();
+            errorMsgSuffix = " via the " + SecurityConfiguration.KERBEROS_KEYTAB_KEY + " configuration property";
+            break;
+        }
+        final Path keytabPath = Paths.get(keytabPathStr);
+        if (!keytabPath.isAbsolute()) {
+          errors.add(issueCreator.create(
+              PipelineGroups.CLUSTER.name(),
+              "clusterConfig.yarnKerberosKeytab",
+              ValidationError.VALIDATION_0302,
+              keytabPath.toString(),
+              errorMsgSuffix
+          ));
+        } else if (!Files.exists(keytabPath)) {
+          errors.add(issueCreator.create(
+              PipelineGroups.CLUSTER.name(),
+              "clusterConfig.yarnKerberosKeytab",
+              ValidationError.VALIDATION_0303,
+              keytabPath.toString(),
+              errorMsgSuffix
+          ));
+        } else if (!Files.isRegularFile(keytabPath)) {
+          errors.add(issueCreator.create(
+              PipelineGroups.CLUSTER.name(),
+              "clusterConfig.yarnKerberosKeytab",
+              ValidationError.VALIDATION_0304,
+              keytabPath.toString(),
+              errorMsgSuffix
+          ));
+        }
+        // TODO: actually check that the keytab file is valid and contains the principal?
+      }
+    } else {
+      // Kerberos is disabled via configuration
+      if (keytabEnabled) {
+        // make sure keytab option is not selected, since Kerberos is disabled
+        errors.add(issueCreator.create(
+            PipelineGroups.CLUSTER.name(),
+            "clusterConfig.useYarnKerberosKeytab",
+            ValidationError.VALIDATION_0301,
+            SecurityConfiguration.KERBEROS_ENABLED_KEY
+        ));
+      }
+      final boolean alwaysImpersonate = dataCollectorConfiguration.get(
+          HadoopConfigConstants.IMPERSONATION_ALWAYS_CURRENT_USER,
+          false
+      );
+      if (alwaysImpersonate && StringUtils.isNotBlank(config.clusterConfig.hadoopUserName)) {
+        errors.add(issueCreator.create(
+            PipelineGroups.CLUSTER.name(),
+            "clusterConfig.hadoopUserName",
+            ValidationError.VALIDATION_0305,
+            HadoopConfigConstants.IMPERSONATION_ALWAYS_CURRENT_USER
+        ));
+      }
+    }
   }
 }
