@@ -63,6 +63,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.SQLXML;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
@@ -544,9 +545,11 @@ public class JdbcUtil {
         if(vendor == DatabaseVendor.ORACLE) {
           switch (md.getColumnType(columnIndex)) {
             case 100: // BINARY_FLOAT
-              return Field.create(Field.Type.FLOAT, rs.getFloat(columnIndex));
+              float floatValue = rs.getFloat(columnIndex);
+              return Field.create(Field.Type.FLOAT, rs.wasNull() ? null : floatValue);
             case 101: // BINARY_DOUBLE
-              return Field.create(Field.Type.DOUBLE, rs.getDouble(columnIndex));
+              double doubleValue = rs.getDouble(columnIndex);
+              return Field.create(Field.Type.DOUBLE, rs.wasNull() ? null : doubleValue);
             case -101: // TIMESTAMP WITH TIMEZONE
             case -102: // TIMESTAMP WITH LOCAL TIMEZONE
               OffsetDateTime offsetDateTime = rs.getObject(columnIndex, OffsetDateTime.class);
@@ -561,7 +564,8 @@ public class JdbcUtil {
               // Zoned Datetime can handle high precision
               return Field.create(Field.Type.ZONED_DATETIME, offsetDateTime.toZonedDateTime());
             case Types.SQLXML:
-              return Field.create(Field.Type.STRING, rs.getSQLXML(columnIndex).getString());
+              SQLXML xml = rs.getSQLXML(columnIndex);
+              return Field.create(Field.Type.STRING, xml == null ? null : xml.getString());
           }
         }
 
