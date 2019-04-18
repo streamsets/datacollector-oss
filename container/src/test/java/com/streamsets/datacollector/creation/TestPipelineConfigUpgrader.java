@@ -162,17 +162,19 @@ public class TestPipelineConfigUpgrader {
     Assert.assertEquals("CLIENT", upgrade.get(2).getValue());
     Assert.assertEquals("clusterConfig.hadoopUserName", upgrade.get(3).getName());
     Assert.assertEquals("hdfs", upgrade.get(3).getValue());
+    Assert.assertEquals("clusterConfig.stagingDir", upgrade.get(4).getName());
+    Assert.assertEquals("/streamsets", upgrade.get(4).getValue());
 
-    Assert.assertEquals("databricksConfig.baseUrl", upgrade.get(4).getName());
-    Assert.assertNull(upgrade.get(4).getValue());
-    Assert.assertEquals("databricksConfig.credentialType", upgrade.get(5).getName());
+    Assert.assertEquals("databricksConfig.baseUrl", upgrade.get(5).getName());
     Assert.assertNull(upgrade.get(5).getValue());
-    Assert.assertEquals("databricksConfig.username", upgrade.get(6).getName());
+    Assert.assertEquals("databricksConfig.credentialType", upgrade.get(6).getName());
     Assert.assertNull(upgrade.get(6).getValue());
-    Assert.assertEquals("databricksConfig.password", upgrade.get(7).getName());
+    Assert.assertEquals("databricksConfig.username", upgrade.get(7).getName());
     Assert.assertNull(upgrade.get(7).getValue());
-    Assert.assertEquals("databricksConfig.token", upgrade.get(8).getName());
+    Assert.assertEquals("databricksConfig.password", upgrade.get(8).getName());
     Assert.assertNull(upgrade.get(8).getValue());
+    Assert.assertEquals("databricksConfig.token", upgrade.get(9).getName());
+    Assert.assertNull(upgrade.get(9).getValue());
   }
 
 

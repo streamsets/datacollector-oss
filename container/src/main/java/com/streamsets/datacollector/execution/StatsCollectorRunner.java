@@ -228,8 +228,8 @@ public class StatsCollectorRunner implements Runner {
   }
 
   @Override
-  public void updateSlaveCallbackInfo(CallbackInfo callbackInfo) {
-    runner.updateSlaveCallbackInfo(callbackInfo);
+  public Map<String, Object> updateSlaveCallbackInfo(CallbackInfo callbackInfo) {
+    return runner.updateSlaveCallbackInfo(callbackInfo);
   }
 
   @Override

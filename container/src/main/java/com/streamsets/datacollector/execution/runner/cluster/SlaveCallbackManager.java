@@ -75,7 +75,7 @@ public class SlaveCallbackManager {
     return callbackInfoSet;
   }
 
-  public void updateSlaveCallbackInfo(CallbackInfo callbackInfo) {
+  public Map<String, Object> updateSlaveCallbackInfo(CallbackInfo callbackInfo) {
     String sdcToken = Strings.nullToEmpty(this.clusterToken);
     if (sdcToken.equals(callbackInfo.getSdcClusterToken()) &&
       !RuntimeInfo.UNDEF.equals(callbackInfo.getSdcURL())) {
@@ -89,6 +89,7 @@ public class SlaveCallbackManager {
     } else {
       LOG.warn("SDC Cluster token not matched");
     }
+    return null;
   }
 
   public void clearSlaveList() {

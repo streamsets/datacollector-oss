@@ -98,6 +98,19 @@ public class ClusterConfig {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Staging Directory",
+      description = "Staging directory path for copying StreamSets resources",
+      group = "CLUSTER",
+      defaultValue = "/streamsets",
+      displayPosition = 106,
+      dependsOn = "clusterType",
+      triggeredByValue = "DATABRICKS"
+  )
+  public String stagingDir;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Use Kerberos for YARN",
       description = "Uses a Kerberos principal and key tab to launch the Spark application for the pipeline",

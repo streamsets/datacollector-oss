@@ -266,8 +266,8 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
-  public void updateSlaveCallbackInfo(com.streamsets.datacollector.callback.CallbackInfo callbackInfo) {
-    runner.updateSlaveCallbackInfo(callbackInfo);
+  public Map<String, Object> updateSlaveCallbackInfo(com.streamsets.datacollector.callback.CallbackInfo callbackInfo) {
+    return runner.updateSlaveCallbackInfo(callbackInfo);
   }
 
   @Override

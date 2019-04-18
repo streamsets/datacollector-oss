@@ -35,6 +35,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 @Path("/v1/cluster")
 @DenyAll
@@ -49,14 +50,13 @@ public class PublicClusterResource {
     this.runtimeInfo = runtimeInfo;
   }
 
-  void updateSlaveCallbackInfo(CallbackInfoJson callbackInfoJson) throws PipelineException {
+  Map<String, Object> updateSlaveCallbackInfo(CallbackInfoJson callbackInfoJson) throws PipelineException {
     Runner runner = manager.getRunner(callbackInfoJson.getName(), callbackInfoJson.getRev());
     if (!runner.getState().getStatus().isActive()) {
       throw new RuntimeException(Utils.format("Pipeline '{}::{}' is not active, but is '{}'",
           callbackInfoJson.getName(), callbackInfoJson.getRev(), runner.getState().getStatus()));
     }
-    runner.updateSlaveCallbackInfo(callbackInfoJson.getCallbackInfo());
-
+    return runner.updateSlaveCallbackInfo(callbackInfoJson.getCallbackInfo());
   }
 
   @Deprecated
@@ -73,14 +73,14 @@ public class PublicClusterResource {
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
   public Response callbackWithResponse(CallbackInfoJson callbackInfoJson) throws PipelineException, IOException {
-    updateSlaveCallbackInfo(callbackInfoJson);
+    Map<String, Object> response = updateSlaveCallbackInfo(callbackInfoJson);
     File storeFile = new File(runtimeInfo.getDataDir(), DisconnectedSSOManager.DISCONNECTED_SSO_AUTHENTICATION_FILE);
     if (runtimeInfo.isDPMEnabled()) {
       DisconnectedSecurityInfo disconnectedSecurityInfo = DisconnectedSecurityInfo.fromJsonFile(storeFile);
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(MessagingDtoJsonMapper.INSTANCE.toJson(
           disconnectedSecurityInfo)).build();
     } else {
-      return Response.ok().build();
+      return Response.ok(response).build();
     }
 
   }

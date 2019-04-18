@@ -187,7 +187,7 @@ public interface Runner {
 
   void close();
 
-  void updateSlaveCallbackInfo(CallbackInfo callbackInfo);
+  Map<String, Object> updateSlaveCallbackInfo(CallbackInfo callbackInfo);
 
   Map getUpdateInfo();
 

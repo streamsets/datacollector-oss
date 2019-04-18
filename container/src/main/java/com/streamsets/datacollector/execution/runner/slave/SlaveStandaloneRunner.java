@@ -258,8 +258,8 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
   }
 
   @Override
-  public void updateSlaveCallbackInfo(com.streamsets.datacollector.callback.CallbackInfo callbackInfo) {
-    standaloneRunner.updateSlaveCallbackInfo(callbackInfo);
+  public Map<String, Object> updateSlaveCallbackInfo(com.streamsets.datacollector.callback.CallbackInfo callbackInfo) {
+    return standaloneRunner.updateSlaveCallbackInfo(callbackInfo);
   }
 
   @Override

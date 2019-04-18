@@ -203,8 +203,8 @@ public class TestRunner {
     }
 
     @Override
-    public void updateSlaveCallbackInfo(CallbackInfo callbackInfo) {
-
+    public Map<String, Object> updateSlaveCallbackInfo(CallbackInfo callbackInfo) {
+      return null;
     }
 
     @Override
@@ -398,8 +398,8 @@ public class TestRunner {
     }
 
     @Override
-    public void updateSlaveCallbackInfo(CallbackInfo callbackInfo) {
-
+    public Map<String, Object> updateSlaveCallbackInfo(CallbackInfo callbackInfo) {
+      return null;
     }
 
     @Override

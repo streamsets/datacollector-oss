@@ -729,8 +729,8 @@ public class ClusterRunner extends AbstractRunner {
   }
 
   @Override
-  public void updateSlaveCallbackInfo(CallbackInfo callbackInfo) {
-    slaveCallbackManager.updateSlaveCallbackInfo(callbackInfo);
+  public Map<String, Object> updateSlaveCallbackInfo(CallbackInfo callbackInfo) {
+    return slaveCallbackManager.updateSlaveCallbackInfo(callbackInfo);
   }
 
   @VisibleForTesting

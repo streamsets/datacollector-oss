@@ -488,9 +488,8 @@ public class TestRemoteDataCollector {
     }
 
     @Override
-    public void updateSlaveCallbackInfo(CallbackInfo callbackInfo) {
-      // TODO Auto-generated method stub
-
+    public Map<String, Object> updateSlaveCallbackInfo(CallbackInfo callbackInfo) {
+      return null;
     }
 
     @Override
