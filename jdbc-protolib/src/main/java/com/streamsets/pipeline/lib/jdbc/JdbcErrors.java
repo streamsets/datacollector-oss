@@ -34,7 +34,6 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_09("Invalid operation '{}' for change log type {}"),
   JDBC_10("'{}' is less than the minimum value of '{}'"),
   JDBC_11("Minimum Idle Connections ({}) must be less than or equal to Maximum Pool Size ({})"),
-  JDBC_13("Failed to convert CLOB to string: {}"),
   JDBC_14("Error processing batch: [SQLState:{}][ErrorCode:{}] {}\n{}"),
   JDBC_15("Invalid JDBC Namespace prefix, should end with '.'"),
   JDBC_16("Table '{}' does not exist or PDB is incorrect. Make sure the correct PDB was specified"),

@@ -784,9 +784,7 @@ public class JdbcUtil {
           );
           fields.put(md.getColumnLabel(i), field);
         }
-      } catch (SQLException e) {
-        errorRecordHandler.onError(JdbcErrors.JDBC_13, e.getMessage(), e);
-      } catch (IOException e) {
+      } catch (IOException|SQLException e) {
         errorRecordHandler.onError(JdbcErrors.JDBC_03, md.getColumnName(i), rs.getObject(i), e);
       }
     }
