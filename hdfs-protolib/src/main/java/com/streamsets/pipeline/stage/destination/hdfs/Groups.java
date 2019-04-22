@@ -20,7 +20,7 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum Groups implements Label {
-  HADOOP_FS("Hadoop FS"),
+  HADOOP_FS("Connection"),
   OUTPUT_FILES("Output Files"),
   LATE_RECORDS("Late Records"),
   DATA_FORMAT("Data Format"),

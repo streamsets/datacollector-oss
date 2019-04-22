@@ -267,7 +267,7 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
     type = ConfigDef.Type.STRING,
     defaultValue = "${1 * HOURS}",
     label = "Late Record Time Limit (secs)",
-    description = "Time limit (in seconds) for a record to be written to the corresponding HDFS directory, if the " +
+    description = "Time limit (in seconds) for a record to be written to the corresponding directory, if the " +
       "limit is exceeded the record will be written to the current late records file. " +
       "If a number is used it is considered seconds, it can be multiplied by 'MINUTES' or 'HOURS', ie: " +
       "'${30 * MINUTES}'",
@@ -345,8 +345,8 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
     required = true,
     type = ConfigDef.Type.BOOLEAN,
     defaultValue = "true",
-    label = "Validate HDFS Permissions",
-    description = "When checked, HDFS destination will create test file in configured target directory to verify access privileges.",
+    label = "Validate Permissions",
+    description = "When checked, the destination creates a test file in configured target directory to verify access privileges.",
     displayPosition = 230,
     group = "OUTPUT_FILES"
   )
@@ -656,7 +656,7 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
           }
         });
       } catch (Exception ex) {
-        LOG.error("Exception while initializing HDFS bean configuration", ex);
+        LOG.error("Exception while initializing bean configuration", ex);
         issues.add(context.createConfigIssue(null, null, Errors.HADOOPFS_23, ex.toString(), ex));
       }
       toHdfsRecordsCounter = context.createCounter("toHdfsRecords");
@@ -723,7 +723,7 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
         });
       }
     } catch (Exception ex) {
-      LOG.warn("Error while closing HDFS FileSystem URI='{}': {}", hdfsUri, ex.toString(), ex);
+      LOG.warn("Error while closing FileSystem URI='{}': {}", hdfsUri, ex.toString(), ex);
     }
   }
 
