@@ -82,14 +82,14 @@ fi
 
 # Verify correct JVM vendor
 JAVA_VENDOR=`$JAVA -XshowSettings:properties -version 2>&1 | grep -e 'java.vm.name' | sed -e 's/\(.*\)= \(.*\)/\2/'`
-if [[ ! "$JAVA_VENDOR" =~ "Java HotSpot(TM)" ]]
+if [[ ! "$JAVA_VENDOR" =~ "Java HotSpot(TM)" ]] && [[ ! "$JAVA_VENDOR" =~ "OpenJDK" ]]
 then
-  echo "WARN: Detected non-Oracle JDK: $JAVA_VENDOR"
+  echo "WARN: Detected unsupported JDK vendor: $JAVA_VENDOR"
 
   # And unless unsupported JDK is explicitly enabled, die
   if [[ "${SDC_ALLOW_UNSUPPORTED_JDK}" != "true" ]]
   then
-  echo "ERROR: Please install Oracle JDK or explicitly allow unsupported JDKs via SDC_ALLOW_UNSUPPORTED_JDK=true"
+  echo "ERROR: Please install supported JDK or explicitly allow unsupported JDKs via SDC_ALLOW_UNSUPPORTED_JDK=true"
     exit 1
   fi
 fi
