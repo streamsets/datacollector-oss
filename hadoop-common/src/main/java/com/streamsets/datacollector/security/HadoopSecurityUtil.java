@@ -40,48 +40,102 @@ public class HadoopSecurityUtil {
   }
 
   /**
+   *
    * Return UGI object that should be used for any remote operation.
    *
    * This object will be impersonate according to the configuration. This method is meant to be called once during
    * initialization and it's expected that caller will cache the result for a lifetime of the stage execution.
+   *
+   * Delegates to an overload method,
+   * {@link #getProxyUser(String, Stage.Context, UserGroupInformation, List, String, String)}
+   *
+   * @param user Hadoop user (HDFS User, HBase user, generally the to-be-impersonated user in component's configuration)
+   * @param context Stage context object
+   * @param loginUser login UGI (exx: the "sdc" user)
+   * @param issues issues list for reporting errors
+   * @param configGroup group where "HDFS User" is present
+   * @param configName config name of "HDFS User"
+   * @return
    */
   public static UserGroupInformation getProxyUser(
-    String user,                    // Hadoop user (HDFS User, HBase user, generally the to-be-impersonated user in component's configuration)
-    Stage.Context context,          // Stage context object
-    UserGroupInformation loginUser, // Login UGI (sdc user)
-    List<Stage.ConfigIssue> issues, // Reports errors
-    String configGroup,             // Group where "HDFS User" is present
-    String configName               // Config name of "HDFS User"
+    String user,
+    Stage.Context context,
+    UserGroupInformation loginUser,
+    List<Stage.ConfigIssue> issues,
+    String configGroup,
+    String configName
   ) {
+    final String currentUser = getCurrentUser(context);
+    try {
+      return getProxyUser(user, currentUser, context.getConfiguration(),loginUser);
+    } catch (IllegalImpersonationException e) {
+      LOG.error(
+          "{} when {} attempted to impersonate {} (login user: {}): {}",
+          e.getClass().getSimpleName(),
+          currentUser,
+          user,
+          loginUser.getUserName(),
+          e.getMessage(),
+          e
+      );
+      issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOP_00001));
+      return null;
+    }
+  }
+
+  private static String getCurrentUser(Stage.Context context) {
+    if (context != null && context.getUserContext() != null) {
+      return context.getUserContext().getAliasName();
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   *
+   * Returns a {@link UserGroupInformation} suitable for running a Hadoop operation as (the proxy-user)
+   *
+   * @param requestedUser the user that is explicitly being requested, to run as
+   * @param currentUser the current user, which is context-dependent
+   * @param configuration the SDC configuration
+   * @param loginUser the login user (i.e. the ID which stared the container SDC process)
+   * @return a {@link UserGroupInformation} representing the proxy user suitable for performing this action
+   * @throws IllegalImpersonationException if the requestedUser cannot be impersonated
+   */
+  public static UserGroupInformation getProxyUser(
+      String requestedUser,
+      String currentUser,
+      com.streamsets.pipeline.api.Configuration configuration,
+      UserGroupInformation loginUser
+  ) throws IllegalImpersonationException {
     // Should we always impersonate current user?
-    boolean alwaysImpersonate = context.getConfiguration().get(
-      HadoopConfigConstants.IMPERSONATION_ALWAYS_CURRENT_USER,
-      false
+    boolean alwaysImpersonate = configuration.get(
+        HadoopConfigConstants.IMPERSONATION_ALWAYS_CURRENT_USER,
+        false
     );
 
     // If so, propagate current user to "user" (the one to be impersonated)
     if(alwaysImpersonate) {
-      if(!StringUtils.isEmpty(user)) {
-        issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOP_00001));
+      if(!StringUtils.isEmpty(requestedUser)) {
+        throw new IllegalImpersonationException(currentUser, requestedUser);
       }
-      user = context.getUserContext().getAliasName();
+      requestedUser = currentUser;
     }
 
     // If impersonated user is empty, simply return login UGI (no impersonation performed)
-    if(StringUtils.isEmpty(user)) {
+    if(StringUtils.isEmpty(requestedUser)) {
       return loginUser;
     }
 
     // Optionally lower case the user name
-    boolean lowerCase = context.getConfiguration().get(
-      HadoopConfigConstants.LOWERCASE_USER,
-      false
+    boolean lowerCase = configuration.get(
+        HadoopConfigConstants.LOWERCASE_USER,
+        false
     );
     if(lowerCase) {
-      user = user.toLowerCase();
+      requestedUser = requestedUser.toLowerCase();
     }
-    return UserGroupInformation.createProxyUser(user, loginUser);
+    return UserGroupInformation.createProxyUser(requestedUser, loginUser);
   }
-
 
 }
