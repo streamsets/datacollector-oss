@@ -358,7 +358,7 @@ public class TestMultithreadedTableProvider {
         table1,
         true,
         true,
-        true,
+        false,
         false,
         offsetCol,
         partitionSize,
@@ -378,10 +378,6 @@ public class TestMultithreadedTableProvider {
 
     part1 = provider.nextTable(threadNumber);
 
-    Map<String, String> expectedStartOffsets = part1Offsets;
-    Map<String, String> expectedMaxOffsets = new HashMap<>();
-    expectedMaxOffsets.put(offsetCol, part1.generateNextPartitionOffset(offsetCol, switchPartitionOnAtOffset));
-
     validatePartition(
         part1,
         1,
@@ -393,8 +389,8 @@ public class TestMultithreadedTableProvider {
         offsetCol,
         partitionSize,
         true,
-        expectedStartOffsets,
-        expectedMaxOffsets
+        null,
+        null
     );
 
   }

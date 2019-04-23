@@ -555,20 +555,6 @@ public class TableRuntimeContext {
     } else if (!firstRecordedOffsets.equals(nextOffsets)) {
       firstRecordedOffsetsPassed = true;
     }
-
-    if (firstRecordedOffsetsPassed && startingPartitionOffsets.isEmpty()) {
-      for (Map.Entry<String, String> entry : firstRecordedOffsets.entrySet()) {
-        final String column = entry.getKey();
-        final String offset = entry.getValue();
-        if (!startingPartitionOffsets.containsKey(column)) {
-          startingPartitionOffsets.put(column, offset);
-          if (partitioned) {
-            final String max = generateNextPartitionOffset(column, offset);
-            maxPartitionOffsets.put(column, max);
-          }
-        }
-      }
-    }
   }
 
   public boolean isAnyOffsetsRecorded() {
