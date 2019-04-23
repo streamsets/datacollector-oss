@@ -286,6 +286,10 @@ public final class MultithreadedTableProvider {
 
       if (excludeTables != null && excludeTables.contains(tableContext)) {
         LOG.debug("Not adding table {} to table provider since it was excluded", qualifiedTableName);
+        // Since the table is ignored, we have to set the no-more-data like events as if the table was already transferred
+        tablesWithNoMoreData.add(tableContext);
+        remainingSchemasToTableContexts.remove(tableContext.getSchema(), tableContext);
+        completedSchemasToTableContexts.put(tableContext.getSchema(), tableContext);
         continue;
       }
       Collection<TableRuntimeContext> partitions = null;
