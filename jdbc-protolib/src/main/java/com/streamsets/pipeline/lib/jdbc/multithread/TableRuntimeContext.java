@@ -405,6 +405,8 @@ public class TableRuntimeContext {
         if (partition != null) {
           newCommitOffsets.put(partition.getOffsetKey(), offsetValue);
           returnMap.put(tableContext, partition);
+        } else {
+          newCommitOffsets.put(offsetKey, offsetValue);
         }
       }
     }
