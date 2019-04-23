@@ -19,6 +19,7 @@ import net.schmizz.sshj.sftp.FileAttributes;
 import net.schmizz.sshj.sftp.FileMode;
 import net.schmizz.sshj.sftp.OpenMode;
 import net.schmizz.sshj.sftp.RemoteDirectory;
+import net.schmizz.sshj.sftp.RemoteFile;
 import net.schmizz.sshj.sftp.RemoteResourceFilter;
 import net.schmizz.sshj.sftp.RemoteResourceInfo;
 import net.schmizz.sshj.sftp.SFTPClient;
@@ -40,8 +41,6 @@ import java.util.List;
  * handles massaging some paths.
  */
 public class ChrootSFTPClient {
-
-  private static final int MAX_UNCONFIRMED_READ_WRITES = 64;
 
   private final String root;
   private String archiveDir;
@@ -142,10 +141,11 @@ public class ChrootSFTPClient {
   }
 
   public InputStream openForReading(String path) throws IOException {
+    RemoteFile remoteFile = sftpClient.open(prependRoot(path));
     if (disableReadAheadStream) {
-      return sftpClient.open(prependRoot(path)).new RemoteFileInputStream();
+      return SFTPStreamFactory.createInputStream(remoteFile);
     } else {
-      return sftpClient.open(prependRoot(path)).new ReadAheadRemoteFileInputStream(MAX_UNCONFIRMED_READ_WRITES);
+      return SFTPStreamFactory.createReadAheadInputStream(remoteFile);
     }
   }
 
@@ -154,11 +154,12 @@ public class ChrootSFTPClient {
     // Create the toPath's parent dir(s) if they don't exist
     String toDir = sftpClient.getSFTPEngine().getPathHelper().getComponents(toPath).getParent();
     sftpClient.mkdirs(toDir);
-    return sftpClient.open(
+    RemoteFile remoteFile = sftpClient.open(
         toPath,
         EnumSet.of(OpenMode.WRITE, OpenMode.CREAT, OpenMode.TRUNC),
         FileAttributes.EMPTY
-    ).new RemoteFileOutputStream(0, MAX_UNCONFIRMED_READ_WRITES);
+    );
+    return SFTPStreamFactory.createOutputStream(remoteFile);
   }
 
   public FileAttributes stat(String path) throws IOException {

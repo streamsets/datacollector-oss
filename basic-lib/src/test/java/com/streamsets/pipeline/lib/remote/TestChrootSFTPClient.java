@@ -288,6 +288,7 @@ public class TestChrootSFTPClient extends SSHDUnitTest {
       }) {
         InputStream is = sftpClient.openForReading(p);
         Assert.assertThat(is, instanceOf(RemoteFile.ReadAheadRemoteFileInputStream.class));
+        Assert.assertTrue(is.getClass().getName().startsWith(SFTPStreamFactory.class.getCanonicalName()));
         Assert.assertNotNull(is);
         Assert.assertEquals(text, IOUtils.toString(is, Charset.forName("UTF-8")));
         is.close();
@@ -317,6 +318,7 @@ public class TestChrootSFTPClient extends SSHDUnitTest {
     final InputStream is = chrootSFTPClient.openForReading(file.getName());
     try {
       Assert.assertThat(is, instanceOf(RemoteFile.RemoteFileInputStream.class));
+      Assert.assertTrue(is.getClass().getName().startsWith(SFTPStreamFactory.class.getCanonicalName()));
       Assert.assertNotNull(is);
       Assert.assertEquals(text, IOUtils.toString(is, Charset.forName("UTF-8")));
     } finally {
@@ -366,6 +368,7 @@ public class TestChrootSFTPClient extends SSHDUnitTest {
         Assert.assertFalse(file.exists());
 
         OutputStream os = sftpClient.openForWriting(p);
+        Assert.assertTrue(os.getClass().getName().startsWith(SFTPStreamFactory.class.getCanonicalName()));
         Assert.assertNotNull(os);
         IOUtils.write(text, os, Charset.forName("UTF-8"));
         os.close();
