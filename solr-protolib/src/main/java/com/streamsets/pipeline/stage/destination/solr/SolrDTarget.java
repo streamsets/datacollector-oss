@@ -109,7 +109,7 @@ public class SolrDTarget extends DTarget {
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.BOOLEAN,
-    defaultValue = "false",
+    defaultValue = "true",
     label = "Map Fields Automatically",
       description = "Maps record fields to Solr columns with matching names. Records must contain matching fields for" +
           " each required column in the schema",
@@ -161,7 +161,7 @@ public class SolrDTarget extends DTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
+      defaultValue = "true",
       label = "Ignore Optional Fields",
       displayPosition = 59,
       group = "SOLR"
