@@ -15,6 +15,8 @@
  */
 package com.streamsets.datacollector.callback;
 
+import java.util.Objects;
+
 public class CallbackInfo implements Comparable<CallbackInfo> {
   private final String sdcClusterToken;
   private final String sdcSlaveToken;
@@ -126,6 +128,11 @@ public class CallbackInfo implements Comparable<CallbackInfo> {
   @Override
   public boolean equals(Object o) {
     return compareTo((CallbackInfo)o) == 0;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(sdcURL.toLowerCase());
   }
 
 }

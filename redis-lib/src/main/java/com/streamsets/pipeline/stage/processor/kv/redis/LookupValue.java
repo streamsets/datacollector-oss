@@ -17,6 +17,8 @@ package com.streamsets.pipeline.stage.processor.kv.redis;
 
 import com.streamsets.pipeline.lib.redis.DataType;
 
+import java.util.Objects;
+
 public class LookupValue{
   private DataType type;
   private Object value;
@@ -42,5 +44,10 @@ public class LookupValue{
       result = (this.type.equals(that.getType()) && ((this.value == null && that.getValue() == null) || this.value.equals(that.getValue())));
     }
     return result;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(type, value);
   }
 }

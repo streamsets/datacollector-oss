@@ -35,6 +35,7 @@ import org.apache.kafka.common.TopicPartition;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -259,7 +260,8 @@ public class TestMultiKafkaSource {
 
   // If the main thread gets interrupted, then the origin (rightfully so) won't wait on all the
   // other threads that might be running. Which will subsequently intefere with other tests.
-//  @Test(expected = InterruptedException.class)
+  @Test(expected = InterruptedException.class)
+  @Ignore
   public void testInterrupt() throws StageException, InterruptedException, ExecutionException {
     MultiKafkaBeanConfig conf = getConfig();
     conf.numberOfThreads = 10;

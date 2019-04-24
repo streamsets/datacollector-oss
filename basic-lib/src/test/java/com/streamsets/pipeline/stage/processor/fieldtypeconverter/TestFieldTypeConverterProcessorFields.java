@@ -1175,7 +1175,7 @@ public class TestFieldTypeConverterProcessorFields {
     config3.targetType = Field.Type.STRING;
     config3.dataLocale = "en";
     config3.zonedDateTimeFormat = ZonedDateTimeFormat.OTHER;
-    config3.otherZonedDateTimeFormat = "YYYY-MM-ddX";
+    config3.otherZonedDateTimeFormat = "yyyy-MM-ddX";
 
     FieldTypeConverterConfig config4 =
         new FieldTypeConverterConfig();
@@ -1183,7 +1183,7 @@ public class TestFieldTypeConverterProcessorFields {
     config4.targetType = Field.Type.STRING;
     config4.dataLocale = "en";
     config4.zonedDateTimeFormat = ZonedDateTimeFormat.OTHER;
-    config4.otherZonedDateTimeFormat = "YYYY-MM-dd'T'HH:mm:ssX[VV]";
+    config4.otherZonedDateTimeFormat = "yyyy-MM-dd'T'HH:mm:ssX[VV]";
 
     FieldTypeConverterConfig config5 =
         new FieldTypeConverterConfig();
@@ -1191,7 +1191,7 @@ public class TestFieldTypeConverterProcessorFields {
     config5.targetType = Field.Type.STRING;
     config5.dataLocale = "en";
     config5.zonedDateTimeFormat = ZonedDateTimeFormat.OTHER;
-    config5.otherZonedDateTimeFormat = "YYYY-MM-dd'T'HH:mm:ssX[VV]";
+    config5.otherZonedDateTimeFormat = "yyyy-MM-dd'T'HH:mm:ssX[VV]";
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
                                  .addConfiguration("convertBy", ConvertBy.BY_FIELD)
                                  .addConfiguration("fieldTypeConverterConfigs",
@@ -1215,9 +1215,9 @@ public class TestFieldTypeConverterProcessorFields {
           output.get("/zdt-1").getValueAsString());
       Assert.assertEquals(current.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
           output.get("/zdt-2").getValueAsString());
-      Assert.assertEquals(current.format(DateTimeFormatter.ofPattern("YYYY-MM-ddX")),
+      Assert.assertEquals(current.format(DateTimeFormatter.ofPattern("yyyy-MM-ddX")),
           output.get("/zdt-3").getValueAsString());
-      Assert.assertEquals(current.format(DateTimeFormatter.ofPattern("YYYY-MM-dd'T'HH:mm:ssX[VV]")),
+      Assert.assertEquals(current.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX[VV]")),
           output.get("/zdt-4").getValueAsString());
       Assert.assertEquals(null, output.get("/zdt-5").getValueAsString());
     } finally {

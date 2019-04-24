@@ -29,6 +29,7 @@ import com.streamsets.pipeline.lib.util.SdcRecordConstants;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -121,7 +122,8 @@ public class TestSdcRecordDataGenerator {
   }
 
   // https://issues.streamsets.com/browse/SDC-4126
-  // @Test
+  @Test
+  @Ignore
   public void testGenerateWithSampler() throws Exception {
     ByteArrayOutputStream writer = new ByteArrayOutputStream();
     DataGenerator gen = new SdcRecordDataGenerator(

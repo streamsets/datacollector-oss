@@ -1014,7 +1014,7 @@ public class TestJdbcTarget {
       ResultSet rs = statement.executeQuery("SELECT * FROM TEST.DATETIMES WHERE P_ID = 1");
       assertTrue(rs.next());
       assertEquals(new SimpleDateFormat("HH:mm:ss").format(d), rs.getTime(2).toString());
-      assertEquals(new SimpleDateFormat("YYY-MM-dd").format(d), rs.getDate(3).toString());
+      assertEquals(new SimpleDateFormat("yyyy-MM-dd").format(d), rs.getDate(3).toString());
       assertEquals(d, rs.getTimestamp(4));
       assertFalse(rs.next());
     }

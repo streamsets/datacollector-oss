@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.lib.salesforce.SubscriptionType;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -49,6 +50,7 @@ public class TestWaveAnalyticsUpgrader {
     Assert.assertEquals(true, config.getValue());
   }
 
+  @Ignore
   public void testUpgradeV1toV2AppendTimestampTrue() throws StageException {
     List<Config> configs = new ArrayList<>();
     StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
@@ -66,6 +68,7 @@ public class TestWaveAnalyticsUpgrader {
     Assert.assertEquals(true, config.getValue());
   }
 
+  @Ignore
   public void testUpgradeV1toV2AppendTimestampFalse() throws StageException {
     List<Config> configs = new ArrayList<>();
     StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
