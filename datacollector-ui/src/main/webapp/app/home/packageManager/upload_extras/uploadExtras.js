@@ -77,6 +77,8 @@ angular
         .filter(function(stageLibrary) {
           return stageLibrary.stageLibraryManifest.stageLibId !== 'streamsets-datacollector-stats-lib';
         })
-        .sortBy('stageLibLabel')
+        .sortBy(function(stageLibrary) {
+          return stageLibrary.stageLibraryManifest.stageLibLabel;
+        })
         .value();
     });
