@@ -55,6 +55,7 @@ import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.SdcConfiguration;
+import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.restapi.bean.RepositoryManifestJson;
 import com.streamsets.datacollector.restapi.bean.StageInfoJson;
 import com.streamsets.datacollector.restapi.bean.StageLibrariesJson;
@@ -99,6 +100,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLibraryTask {
@@ -131,6 +133,9 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private static final String CONFIG_PACKAGE_MANAGER_REPOSITORY_LINKS = "package.manager.repository.links";
   private static final String REPOSITORY_MANIFEST_JSON_PATH = "repository.manifest.json";
   private static final String ADDITIONAL = "additional";
+  private static final String PRIVATE_POOL_ACTIVE = "active";
+  private static final String PRIVATE_POOL_IDLE = "idle";
+  private static final String PRIVATE_POOL_MAX = "max";
 
   private static final Logger LOG = LoggerFactory.getLogger(ClassLoaderStageLibraryTask.class);
 
@@ -154,6 +159,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private Map<String, StageLibraryDelegateDefinitition> delegateMap;
   private ObjectMapper json;
   private KeyedObjectPool<String, ClassLoader> privateClassLoaderPool;
+  private Map<String, Object> gaugeMap;
 
   private List<RepositoryManifestJson> repositoryManifestList = null;
 
@@ -311,8 +317,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     // initializing the pool of private stage classloaders
     GenericKeyedObjectPoolConfig poolConfig = new GenericKeyedObjectPoolConfig();
     poolConfig.setJmxEnabled(false);
-    poolConfig.setMaxTotal(configuration.get(MAX_PRIVATE_STAGE_CLASS_LOADERS_KEY,
-                                             MAX_PRIVATE_STAGE_CLASS_LOADERS_DEFAULT));
+    int maxPrivateClassloaders = configuration.get(MAX_PRIVATE_STAGE_CLASS_LOADERS_KEY, MAX_PRIVATE_STAGE_CLASS_LOADERS_DEFAULT);
+    poolConfig.setMaxTotal(maxPrivateClassloaders);
     poolConfig.setMinEvictableIdleTimeMillis(-1);
     poolConfig.setNumTestsPerEvictionRun(0);
     poolConfig.setMaxIdlePerKey(-1);
@@ -321,6 +327,17 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     poolConfig.setBlockWhenExhausted(false);
     poolConfig.setMaxWaitMillis(0);
     privateClassLoaderPool = new GenericKeyedObjectPool<>(new ClassLoaderFactory(stageClassLoaders), poolConfig);
+
+    // Monitoring of use of the private class loaders
+    this.gaugeMap = MetricsConfigurator.createFrameworkGauge(
+      runtimeInfo.getMetrics(),
+      "classloader.private",
+      "runtime",
+      null
+    ).getValue();
+    this.gaugeMap.put(PRIVATE_POOL_ACTIVE, new AtomicInteger(0));
+    this.gaugeMap.put(PRIVATE_POOL_IDLE, new AtomicInteger(0));
+    this.gaugeMap.put(PRIVATE_POOL_MAX, maxPrivateClassloaders);
   }
 
   /**
@@ -855,6 +872,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
               key, stageDefinition.getName(), privateClassLoaderPool.getNumActive(), ex.toString());
           LOG.warn(msg, ex);
           throw new RuntimeException(msg, ex);
+        } finally {
+          updatePrivateClassLoaderPoolMetrics();
         }
       }
     }
@@ -876,6 +895,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
             LOG.warn("Could not return a private ClassLoader for '{}', active private ClassLoaders='{}'",
                 key, privateClassLoaderPool.getNumActive());
             throw new RuntimeException(ex);
+          } finally {
+            updatePrivateClassLoaderPoolMetrics();
           }
         }
       }
@@ -1006,6 +1027,11 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       LOG.error("Failed to read stage-lib-manifest.json", ex);
     }
     return stageLibManifestJson;
+  }
+
+  private void updatePrivateClassLoaderPoolMetrics() {
+    ((AtomicInteger)this.gaugeMap.get(PRIVATE_POOL_ACTIVE)).set(privateClassLoaderPool.getNumActive());
+    ((AtomicInteger)this.gaugeMap.get(PRIVATE_POOL_IDLE)).set(privateClassLoaderPool.getNumIdle());
   }
 
 }

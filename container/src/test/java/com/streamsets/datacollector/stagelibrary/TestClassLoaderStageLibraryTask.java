@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.stagelibrary;
 
+import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.config.ConfigDefinition;
@@ -95,6 +96,7 @@ public class TestClassLoaderStageLibraryTask {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getConfigDir()).thenReturn(configDir.getAbsolutePath());
     Mockito.when(runtimeInfo.getStageLibraryClassLoaders()).thenReturn((List) ImmutableList.of(cl));
+    Mockito.when(runtimeInfo.getMetrics()).thenReturn(new MetricRegistry());
 
     ClassLoaderStageLibraryTask library = new ClassLoaderStageLibraryTask(runtimeInfo, new DataCollectorBuildInfo(), new Configuration());
     library.initTask();

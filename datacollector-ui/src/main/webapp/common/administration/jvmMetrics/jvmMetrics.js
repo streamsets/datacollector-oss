@@ -660,6 +660,34 @@ angular
         ]
       },
       {
+        name: 'privateClassloaderPool',
+        label: 'Private Classloader Pool',
+        xAxisTickFormat: $scope.dateFormat(),
+        values: [
+          {
+            name: 'metrics:name=sdc.pipeline.classloader.private.runtime.gauge',
+            property: 'Value/idle',
+            key: 'Idle',
+            values: [],
+            area: true
+          },
+          {
+            name: 'metrics:name=sdc.pipeline.classloader.private.runtime.gauge',
+            property: 'Value/max',
+            key: 'Max',
+            values: [],
+            area: false
+          },
+          {
+            name: 'metrics:name=sdc.pipeline.classloader.private.runtime.gauge',
+            property: 'Value/active',
+            key: 'Active',
+            values: [],
+            area: false
+          }
+        ]
+      },
+      {
         name: 'managerRunnerCache',
         label: 'Cache: Pipeline Runner',
         xAxisTickFormat: $scope.dateFormat(),
