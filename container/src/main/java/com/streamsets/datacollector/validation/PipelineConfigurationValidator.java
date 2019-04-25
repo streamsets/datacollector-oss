@@ -17,6 +17,7 @@ package com.streamsets.datacollector.validation;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Sets;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.PipelineGroups;
@@ -33,12 +34,18 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ExecutionMode;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.ListUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @SuppressWarnings("Duplicates")
 public class PipelineConfigurationValidator extends PipelineFragmentConfigurationValidator {
@@ -71,6 +78,10 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
       canPreview &= sortStages(true);
     }
     canPreview &= checkIfPipelineIsEmpty();
+    // We want to run this check if and only if the sort stages is successful and the pipeline is not empty
+    if(canPreview) {
+      canPreview &= checkForDisconnectedDataFlows();
+    }
     canPreview &= loadAndValidatePipelineConfig();
     canPreview &= validateStageConfiguration();
     canPreview &= validatePipelineLanes();
@@ -104,6 +115,57 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
 
     pipelineConfiguration.setValidation(this);
     return pipelineConfiguration;
+  }
+
+  private boolean checkForDisconnectedDataFlows() {
+    // All pipeline's stages that we have not visited yet
+    List<StageConfiguration> stages = new LinkedList<>(pipelineConfiguration.getStages());
+
+    // Starting point is the first stage
+    StageConfiguration firstStage = stages.remove(0);
+
+    Set<String> activeLanes = new HashSet<>();
+    activeLanes.addAll(firstStage.getInputLanes());
+    activeLanes.addAll(firstStage.getOutputAndEventLanes());
+    Set<String> processedLanes = new HashSet<>(activeLanes);
+
+    while(!activeLanes.isEmpty()) {
+      Set<String> newActiveLanes = new HashSet<>();
+      List<StageConfiguration> toBeRemoved = new LinkedList<>();
+
+      for(StageConfiguration stageConf : stages) {
+        // All stage's lanes
+        Set<String> lanes = Stream.of(stageConf.getInputLanes(), stageConf.getOutputAndEventLanes())
+            .flatMap(Collection::stream)
+            .collect(Collectors.toSet());
+
+        // This stage is not reachable
+        if(Sets.intersection(activeLanes, lanes).isEmpty()) {
+          continue;
+        }
+
+        // We have visited this stage
+        toBeRemoved.add(stageConf);
+
+        // Let's add the non-processed lanes to our iteration
+        Set<String> newLanes = Sets.difference(lanes, processedLanes).immutableCopy();
+        processedLanes.addAll(newLanes);
+        newActiveLanes.addAll(newLanes);
+      }
+
+      stages.removeAll(toBeRemoved);
+      activeLanes = newActiveLanes;
+    }
+
+    if(!stages.isEmpty()) {
+      issues.add(IssueCreator.getPipeline().create(
+        ValidationError.VALIDATION_0002,
+        stages.stream().map(StageConfiguration::getInstanceName).collect(Collectors.toList())
+      ));
+      return false;
+    }
+
+    return true;
   }
 
   protected void resolveLibraryAliases() {
