@@ -197,7 +197,7 @@ public class PipelineConfigBean implements Stage {
       displayPosition = 75,
       group = "NOTIFICATIONS",
       dependsOn = "executionMode",
-      triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING"}
+      triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING", "BATCH", "STREAMING"}
   )
   @MultiValueChooserModel(PipelineStateChooserValues.class)
   public List<PipelineState> notifyOnStates;
@@ -211,7 +211,7 @@ public class PipelineConfigBean implements Stage {
       displayPosition = 76,
       group = "NOTIFICATIONS",
       dependsOn = "executionMode",
-      triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING"}
+      triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING", "BATCH", "STREAMING"}
   )
   public List<String> emailIDs;
 
@@ -418,7 +418,7 @@ public class PipelineConfigBean implements Stage {
       displayPosition = 210,
       group = "NOTIFICATIONS",
       dependsOn = "executionMode",
-      triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING"}
+      triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING", "BATCH", "STREAMING"}
   )
   @ListBeanModel
   public List<PipelineWebhookConfig> webhookConfigs = Collections.emptyList();
