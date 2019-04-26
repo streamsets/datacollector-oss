@@ -245,6 +245,11 @@ public class StageContext extends ProtoContext implements
     pipelineFinisherDelegate.setFinished();
   }
 
+  @Override
+  public void finishPipeline(boolean resetOffsets) {
+    throw new UnsupportedOperationException();
+  }
+
   public void setPipelineFinisherDelegate(PipelineFinisherDelegate runner) {
     pipelineFinisherDelegate = runner;
   }
