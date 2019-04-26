@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2018 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,28 +15,20 @@
  */
 package com.streamsets.pipeline.stage.executor.finishpipeline;
 
-import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.api.base.BaseExecutor;
-import com.streamsets.pipeline.stage.executor.finishpipeline.config.PipelineFinisherConfig;
+import com.streamsets.pipeline.api.Label;
 
-import java.util.List;
+public enum Groups implements Label {
+  FINISHER("Finisher"),
+  ;
 
-public class PipelineFinisherExecutor extends BaseExecutor {
+  private final String label;
 
-  private final PipelineFinisherConfig config;
-
-  PipelineFinisherExecutor(PipelineFinisherConfig config) {
-    this.config = config;
+  Groups(String label) {
+    this.label = label;
   }
 
   @Override
-  public List<ConfigIssue> init() {
-    return super.init();
+  public String getLabel() {
+    return label;
   }
-
-  @Override
-  public void write(Batch batch) {
-    getContext().finishPipeline(config.resetOffset);
-  }
-
 }

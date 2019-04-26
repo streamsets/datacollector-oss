@@ -15,11 +15,14 @@
  */
 package com.streamsets.pipeline.stage.executor.finishpipeline;
 
+import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Executor;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageBehaviorFlags;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DExecutor;
+import com.streamsets.pipeline.stage.executor.finishpipeline.config.PipelineFinisherConfig;
 
 @GenerateResourceBundle
 @StageDef(
@@ -30,12 +33,14 @@ import com.streamsets.pipeline.api.base.configurablestage.DExecutor;
     flags = StageBehaviorFlags.PASSTHROUGH,
     onlineHelpRefUrl ="index.html?contextID=task_lrm_pws_3z"
 )
-
+@ConfigGroups(Groups.class)
 public class PipelineFinisherDExecutor extends DExecutor {
+
+  @ConfigDefBean public PipelineFinisherConfig config = new PipelineFinisherConfig();
 
   @Override
   protected Executor createExecutor() {
-    return new PipelineFinisherExecutor();
+    return new PipelineFinisherExecutor(config);
   }
 
 }
