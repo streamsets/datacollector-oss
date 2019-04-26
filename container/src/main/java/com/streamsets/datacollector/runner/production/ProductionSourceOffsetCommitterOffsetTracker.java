@@ -91,4 +91,9 @@ public class ProductionSourceOffsetCommitterOffsetTracker implements SourceOffse
     return offsetFile.lastModified();
   }
 
+  @Override
+  public void resetOffset() {
+    LOG.warn("Ignored request to reset offset.");
+  }
+
 }

@@ -473,9 +473,8 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
   }
 
   @Override
-  public void setFinished() {
-    LOG.info("PreviewPipelineRunner:  setFinished() was called. ");
-
+  public void setFinished(boolean resetOffset) {
+    LOG.info("PreviewPipelineRunner: setFinished({}) was called and ignored.", resetOffset);
   }
 
 }

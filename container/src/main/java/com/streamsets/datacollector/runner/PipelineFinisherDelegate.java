@@ -19,5 +19,5 @@ public interface PipelineFinisherDelegate {
   /** Used when a Stage (PipelineFinisherExecutor, for example)
    * wants to transition a pipeline to "Finished" state.
    * */
-  void setFinished();
+  void setFinished(boolean resetOffset);
 }

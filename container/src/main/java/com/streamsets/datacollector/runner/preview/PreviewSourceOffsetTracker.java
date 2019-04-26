@@ -62,4 +62,8 @@ public class PreviewSourceOffsetTracker implements SourceOffsetTracker {
     return 0;
   }
 
+  @Override
+  public void resetOffset() {
+  }
+
 }

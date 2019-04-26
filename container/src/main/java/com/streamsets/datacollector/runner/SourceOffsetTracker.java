@@ -52,4 +52,10 @@ public interface SourceOffsetTracker {
    */
   public long getLastBatchTime();
 
+
+  /**
+   * Reset offsets.
+   */
+  public void resetOffset();
+
 }

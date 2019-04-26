@@ -158,6 +158,8 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   private volatile boolean running = false;
   /*indicates if the next batch of data should be captured, only the next batch*/
   private volatile int batchesToCapture = 0;
+  /* Indicates if we should reset offset at the end of the execution. */
+  private volatile boolean resetOffset = false;
   /*indicates the snapshot name to be captured*/
   private volatile String snapshotName;
   /*indicates the batch size to be captured*/
@@ -396,6 +398,10 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       Throwables.propagateIfInstanceOf(throwable, PipelineRuntimeException.class);
       Throwables.propagate(throwable);
     }
+
+    if(resetOffset) {
+      offsetTracker.resetOffset();
+    }
   }
 
   private void runPushSource() throws StageException, PipelineRuntimeException {
@@ -525,8 +531,9 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   }
 
   @Override
-  public void setFinished() {
+  public void setFinished(boolean resetOffset) {
     finished = true;
+    this.resetOffset = resetOffset;
     ((StageContext)originPipe.getStage().getContext()).setStop(true);
   }
 

@@ -93,7 +93,8 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
     return OffsetFileUtil.saveIfEmpty(runtimeInfo, pipelineName, rev);
   }
 
-  public void resetOffset(String pipelineName, String rev) {
+  @Override
+  public void resetOffset() {
     OffsetFileUtil.resetOffsets(runtimeInfo, pipelineName, rev);
   }
 

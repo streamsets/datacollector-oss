@@ -417,7 +417,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
       throw new PipelineRunnerException(ContainerError.CONTAINER_0104, getName());
     }
     ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(getName(), getRev(), getRuntimeInfo());
-    offsetTracker.resetOffset(getName(), getRev());
+    offsetTracker.resetOffset();
   }
 
   public SourceOffset getCommittedOffsets() throws PipelineException {

@@ -160,6 +160,10 @@ public class TestUtil {
     public long getLastBatchTime() {
       return lastBatchTime;
     }
+
+    @Override
+    public void resetOffset() {
+    }
   }
 
 
