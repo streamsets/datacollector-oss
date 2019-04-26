@@ -40,7 +40,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
 
 public class TestMetricsAggregation {
@@ -52,18 +52,18 @@ public class TestMetricsAggregation {
   public void setup() throws Exception {
     ClassLoader classLoader = getClass().getClassLoader();
 
-    callbackInfoCollection = new HashSet<>();
+    callbackInfoCollection = new LinkedList<>();
 
-    callbackInfoCollection.add(new CallbackInfo(null, null, null, null, "worker1", null, null, null, null, null,
+    callbackInfoCollection.add(new CallbackInfo(null, null, null, null, "worker1", "", null, null, null, null,
         CallbackObjectType.METRICS, readFile(classLoader.getResource("metrics/metrics1.json").getFile()), null));
 
-    callbackInfoCollection.add(new CallbackInfo(null, null, null, null, "worker2", null, null, null, null, null,
+    callbackInfoCollection.add(new CallbackInfo(null, null, null, null, "worker2", "", null, null, null, null,
         CallbackObjectType.METRICS, readFile(classLoader.getResource("metrics/metrics2.json").getFile()), null));
 
-    callbackInfoCollection.add(new CallbackInfo(null, null, null, null, "worker3", null, null, null, null, null,
+    callbackInfoCollection.add(new CallbackInfo(null, null, null, null, "worker3", "", null, null, null, null,
         CallbackObjectType.METRICS, readFile(classLoader.getResource("metrics/metrics3.json").getFile()), null));
 
-    callbackInfoCollection.add(new CallbackInfo(null, null, null, null, "worker4", null, null, null, null, null,
+    callbackInfoCollection.add(new CallbackInfo(null, null, null, null, "worker4", "", null, null, null, null,
         CallbackObjectType.METRICS, readFile(classLoader.getResource("metrics/metrics4.json").getFile()), null));
 
     slaveCallbackManager = Mockito.mock(SlaveCallbackManager.class);
