@@ -590,7 +590,7 @@ angular
             return;
           }
 
-          if (definition.name.indexOf('dataFormat') !== -1 && isEdgeExecutionMode) {
+          if (definition.name.endsWith('dataFormat') && isEdgeExecutionMode) {
             if (isSourceInstance($scope.detailPaneConfig) && edgeOriginDataFormats.indexOf(value) < 0) {
               return;
             } else if (isTargetInstance($scope.detailPaneConfig) && edgeDestinationDataFormats.indexOf(value) < 0) {
