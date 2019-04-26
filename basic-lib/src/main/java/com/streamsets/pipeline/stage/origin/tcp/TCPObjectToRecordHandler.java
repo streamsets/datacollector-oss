@@ -383,7 +383,10 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
 
     if (exception instanceof ReadTimeoutException) {
       // ReadTimeoutException has to disconnect from the client
-      LOG.info("exceptionCaught in TCPObjectToRecordHandler", exception);
+      LOG.debug(
+          "ReadTimeoutException caught in TCPObjectToRecordHandler. Closing connection due to read timeout. ",
+          exception
+      );
       ctx.writeAndFlush("Closing connection due to read timeout\n").addListener(ChannelFutureListener.CLOSE);
     } else {
       ctx.writeAndFlush("Closing channel due to exception was thrown\n");
