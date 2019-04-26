@@ -128,12 +128,20 @@ public class SecurityContext {
     return Math.max(1, renewTime - System.currentTimeMillis());
   }
 
-  private synchronized void relogin() {
+  private synchronized void relogin(int allowedRetries) {
     LOG.info("Attempting re-login");
     // do not logout old context, it may be in use
     try {
       loginContext = createLoginContext();
     } catch (Exception ex) {
+      if(allowedRetries > 0) {
+        if (!SecurityContext.this.sleep(THIRTY_SECONDS_MS)) {
+          LOG.info("Interrupted, propagating original exception up");
+        } else {
+          relogin(allowedRetries - 1);
+          return;
+        }
+      }
       throw new RuntimeException(Utils.format("Could not get Kerberos credentials: {}", ex.toString()), ex);
     }
   }
@@ -198,7 +206,7 @@ public class SecurityContext {
                 }
                 LOG.debug("Triggering relogin");
                 Set<KerberosTicket> oldTickets = getSubject().getPrivateCredentials(KerberosTicket.class);
-                relogin();
+                relogin(3);
                 // Remove all old private credentials, since we only need the new one we just added
                 getSubject().getPrivateCredentials().removeAll(oldTickets);
               } catch (Exception exception) {
