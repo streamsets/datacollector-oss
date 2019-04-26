@@ -28,7 +28,7 @@ public class SpoolBaseSourceBuilder {
     conf = new SpoolDirConfigBean();
     conf.batchSize = 10;
     conf.overrunLimit = 100;
-    conf.poolingTimeoutSecs = 1;
+    conf.poolingTimeoutSecs = 10;
     conf.maxSpoolFiles = 10;
     conf.pathMatcherMode = PathMatcherMode.GLOB;
     conf.retentionTimeMins = 10;
