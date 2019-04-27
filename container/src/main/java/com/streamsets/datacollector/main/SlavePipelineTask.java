@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.main;
 
+import com.streamsets.datacollector.antennadoctor.AntennaDoctor;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.bundles.SupportBundleManager;
 import com.streamsets.datacollector.credential.CredentialStoresTask;
@@ -41,7 +42,8 @@ public class SlavePipelineTask extends PipelineTask {
     SupportBundleManager supportBundleManager,
     BlobStoreTask blobStoreTask,
     CredentialStoresTask credentialStoresTask,
-    StatsCollector statsCollector
+    StatsCollector statsCollector,
+    AntennaDoctor antennaDoctor
   ) {
     super(
       library,
@@ -53,7 +55,8 @@ public class SlavePipelineTask extends PipelineTask {
       supportBundleManager,
       blobStoreTask,
       credentialStoresTask,
-      statsCollector
+      statsCollector,
+      antennaDoctor
     );
   }
 }

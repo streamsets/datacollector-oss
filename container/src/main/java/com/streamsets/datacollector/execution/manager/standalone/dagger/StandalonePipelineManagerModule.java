@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.execution.manager.standalone.dagger;
 
+import com.streamsets.datacollector.antennadoctor.AntennaDoctorModule;
 import com.streamsets.datacollector.blobstore.BlobStoreModule;
 import com.streamsets.datacollector.bundles.SupportBundleModule;
 import com.streamsets.datacollector.execution.executor.ExecutorModule;
@@ -44,6 +45,7 @@ import dagger.Module;
     PreviewerProviderModule.class,
     StandaloneAndClusterRunnerProviderModule.class,
     CacheSnapshotStoreModule.class,
+    AntennaDoctorModule.class,
     SupportBundleModule.class,
     BlobStoreModule.class,
     LineageModule.class,
