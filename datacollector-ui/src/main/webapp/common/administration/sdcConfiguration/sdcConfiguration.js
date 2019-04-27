@@ -36,6 +36,7 @@ angular
     );
   }])
   .controller('SDCConfigurationController', function ($scope, $rootScope, $q, Analytics, configuration, _) {
+    $rootScope.common.title = "Data Collector Configuration";
     angular.extend($scope, {
       initDefer: undefined,
       configKeys: [],

@@ -56,6 +56,8 @@ angular
       $rootScope.common.errors = [];
     }
 
+    $rootScope.common.setToDefaultTitle();
+
     var pipelinesLimit = 30;
 
     var PIPELINE_ACTIVE_STATUSES = [

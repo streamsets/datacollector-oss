@@ -1057,7 +1057,7 @@ angular
       configDirty = false;
       configSaveInProgress = true;
       $rootScope.common.saveOperationInProgress++;
-
+      $rootScope.common.title = config.title;
 
       if (!$scope.isPipelineRunning) {
         api.pipelineAgent.savePipelineConfig($scope.activeConfigInfo.pipelineId, config)
@@ -1142,6 +1142,7 @@ angular
       var stageErrorCounts = {};
       var pipelineMetrics = $rootScope.common.pipelineMetrics;
       var pipelineStatus = $rootScope.common.pipelineStatusMap[routeParamPipelineName];
+      $rootScope.common.title = pipelineConfig.title;
 
       if (!manualUpdate) {
         ignoreUpdate = true;

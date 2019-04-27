@@ -56,6 +56,12 @@ angular
     var logWebSocketMessages = [];
     var lastMessageFiltered = false;
 
+    if (pipelineTitleParam) {
+      $rootScope.common.title = pipelineTitleParam + " | logs";
+    } else {
+      $rootScope.common.title = "Data Collector logs";
+    }
+
     configuration.init().then(function() {
       if (configuration.isAnalyticsEnabled()) {
         Analytics.trackPage('/collector/logs');

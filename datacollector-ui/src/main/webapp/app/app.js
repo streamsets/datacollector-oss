@@ -51,7 +51,7 @@ angular.module('dataCollectorApp')
 
     uiSelectConfig.theme = 'bootstrap';
 
-    //Reload the page when the server is down.
+    // Reload the page when the server is down.
     $httpProvider.interceptors.push(function($q, $rootScope) {
       return {
         response: function(response) {
@@ -144,6 +144,7 @@ angular.module('dataCollectorApp')
 
     $rootScope.common = $rootScope.common || {
       title : defaultTitle,
+      defaultTitle: defaultTitle,
       userName: 'Account',
       authenticationType: 'none',
       apiVersion: api.apiVersion,
@@ -169,6 +170,10 @@ angular.module('dataCollectorApp')
       serverTimeDifference: 0,
       remoteServerInfo: {
         registrationStatus: false
+      },
+
+      setToDefaultTitle: function() {
+        $rootScope.common.title = defaultTitle;
       },
 
       /**

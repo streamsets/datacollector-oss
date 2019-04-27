@@ -38,61 +38,63 @@ angular
   .controller('JVMMetricsController', function (
     $scope, $rootScope, $timeout, api, configuration, Analytics, visibilityBroadcaster, $modal
   ) {
-    var jvmMetricsTimer,
-      destroyed = false,
-      dateFormat = function(d) {
-        return d3.time.format('%H:%M:%S')(new Date(d));
-      },
-      sizeFormat = function(d) {
-        var mbValue = d / 1000000;
-        return mbValue.toFixed(1) + ' MB';
-      },
-      cpuPercentageFormat = function(d){
-        var mbValue = d * 1000/ 10.0;
-        return mbValue.toFixed(1) + ' %';
-      },
-      formatValue = function(d, chart) {
-        if(chart.yAxisTickFormat) {
-          return chart.yAxisTickFormat(d);
-        } else {
-          return d;
-        }
-      },
-      defaultChartOptions = {
-        chart: {
-          type: 'lineChart', //'multiBarChart', //'lineChart'
-          height: 250,
-          showLabels: true,
-          showControls: false,
-          duration: 0,
-          x:function(d){
-            return (new Date(d[0])).getTime();
-          },
-          y: function(d) {
-            return d[1];
-          },
-          showLegend: true,
-          xAxis: {
-            tickFormat: dateFormat
-          },
-          yAxis: {
-            //tickFormat: sizeFormat
-          },
-          margin: {
-            left: 60,
-            top: 20,
-            bottom: 30,
-            right: 30
-          },
-          useInteractiveGuideline: true
-        }
-      };
+    var jvmMetricsTimer;
+    var destroyed = false;
+    var dateFormat = function (d) {
+      return d3.time.format('%H:%M:%S')(new Date(d));
+    };
+    var sizeFormat = function (d) {
+      var mbValue = d / 1000000;
+      return mbValue.toFixed(1) + ' MB';
+    };
+    var cpuPercentageFormat = function (d) {
+      var mbValue = d * 1000 / 10.0;
+      return mbValue.toFixed(1) + ' %';
+    };
+    var formatValue = function (d, chart) {
+      if (chart.yAxisTickFormat) {
+        return chart.yAxisTickFormat(d);
+      } else {
+        return d;
+      }
+    };
+    var defaultChartOptions = {
+      chart: {
+        type: 'lineChart', //'multiBarChart', //'lineChart'
+        height: 250,
+        showLabels: true,
+        showControls: false,
+        duration: 0,
+        x: function (d) {
+          return (new Date(d[0])).getTime();
+        },
+        y: function (d) {
+          return d[1];
+        },
+        showLegend: true,
+        xAxis: {
+          tickFormat: dateFormat
+        },
+        yAxis: {
+          //tickFormat: sizeFormat
+        },
+        margin: {
+          left: 60,
+          top: 20,
+          bottom: 30,
+          right: 30
+        },
+        useInteractiveGuideline: true
+      }
+    };
 
     configuration.init().then(function() {
       if(configuration.isAnalyticsEnabled()) {
         Analytics.trackPage('/collector/jvmMetrics');
       }
     });
+
+    $rootScope.common.title = "Data Collector Metrics";
 
     angular.extend($scope, {
       metrics: {},

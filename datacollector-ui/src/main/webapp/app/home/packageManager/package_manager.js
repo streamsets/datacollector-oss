@@ -41,6 +41,7 @@ angular
     $location.search('auth_token', null);
     $location.search('auth_user', null);
     $rootScope.common.errors = [];
+    $rootScope.common.title = "Package Manager";
 
     var mlRegex = new RegExp('(TensorFlow)|(Databricks ML)|(PMML)|(MLeap)', 'i');
     var pipelinesLimit = 60;
