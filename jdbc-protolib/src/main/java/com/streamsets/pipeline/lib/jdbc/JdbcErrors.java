@@ -25,7 +25,7 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_00("Cannot connect to specified database: {}"),
   JDBC_01("Failed to evaluate expression: '{}'"),
   JDBC_02("Exception executing query: '{}' - '{}'"),
-  JDBC_03("Failed to parse column '{}' to field with value {}."),
+  JDBC_03("Failed to parse column '{}' (of type {}) to field with value {}."),
   JDBC_04("No results for query: '{}'"),
   JDBC_05("Unsupported data type in record: {}"),
   JDBC_06("Failed to initialize connection pool: {}"),
@@ -146,6 +146,7 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_407("Error querying replication slot: {}"), //Postgres
   JDBC_408("Invalid parameter value: {}"), //Postgres
   JDBC_409("Offset column can't contain NULL: {}"),
+  JDBC_410("Failed to parse column '{}' to field with value {}."),
   ;
 
   private final String msg;

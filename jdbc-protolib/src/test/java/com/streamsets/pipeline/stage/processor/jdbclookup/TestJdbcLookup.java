@@ -520,7 +520,7 @@ public class TestJdbcLookup {
     List<Stage.ConfigIssue> issues = processorRunner.runValidateConfigs();
     Assert.assertEquals(1, issues.size());
     String issue = issues.get(0).toString();
-    Assert.assertTrue(issue, issue.contains("JDBC_03 - Failed to parse column 'P_ID' to field with value HUNDRED.'"));
+    Assert.assertTrue(issue, issue.contains("JDBC_410 - Failed to parse column 'P_ID' to field with value HUNDRED.'"));
   }
 
   @Test

@@ -427,16 +427,16 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
           );
 
           if (field == null) {
-            LOG.error(JdbcErrors.JDBC_03.getMessage(), md.getColumnName(i), resultSet.getObject(i));
+            LOG.error(JdbcErrors.JDBC_03.getMessage(), md.getColumnName(i), md.getColumnType(i), resultSet.getObject(i));
             errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_03,
-                md.getColumnName(i), resultSet.getObject(i)));
+                md.getColumnName(i), md.getColumnType(i), resultSet.getObject(i)));
           }
 
           record.set(generatedColumnMappings.get(i - 1).field, field);
         } catch (IOException|StageException e) {
-          LOG.error(JdbcErrors.JDBC_03.getMessage(), md.getColumnName(i), resultSet.getObject(i), e);
+          LOG.error(JdbcErrors.JDBC_03.getMessage(), md.getColumnName(i), md.getColumnType(i), resultSet.getObject(i), e);
           errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_03,
-              md.getColumnName(i), resultSet.getObject(i)));
+              md.getColumnName(i), md.getColumnType(i), resultSet.getObject(i)));
         }
       }
     }

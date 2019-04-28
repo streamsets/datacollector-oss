@@ -242,7 +242,7 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
           issues.add(context.createConfigIssue(
             Groups.JDBC.name(),
             COLUMN_MAPPINGS,
-            JdbcErrors.JDBC_03,
+            JdbcErrors.JDBC_410,
             column,
             defaultValue,
             e
