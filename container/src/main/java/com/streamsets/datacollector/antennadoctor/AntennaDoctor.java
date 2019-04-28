@@ -15,12 +15,18 @@
  */
 package com.streamsets.datacollector.antennadoctor;
 
+import com.streamsets.datacollector.antennadoctor.bean.AntennaDoctorRuleBean;
+import com.streamsets.datacollector.antennadoctor.storage.AntennaDoctorStorage;
 import com.streamsets.datacollector.task.AbstractTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class AntennaDoctor extends AbstractTask implements AntennaDoctorTask {
+import java.util.List;
+
+public class AntennaDoctor extends AbstractTask implements AntennaDoctorTask, AntennaDoctorStorage.NewRulesDelegate {
   private static final Logger LOG = LoggerFactory.getLogger(AntennaDoctor.class);
+
+  private AntennaDoctorStorage storage;
 
   public AntennaDoctor() {
     super("Antenna Doctor");
@@ -30,11 +36,19 @@ public class AntennaDoctor extends AbstractTask implements AntennaDoctorTask {
   protected void initTask() {
     LOG.info("Initializing Antenna Doctor");
     super.initTask();
+
+    this.storage = new AntennaDoctorStorage(this);
+    this.storage.init();
   }
 
   @Override
   protected void stopTask() {
     LOG.info("Stopping Antenna Doctor");
     super.stopTask();
+  }
+
+  @Override
+  public void loadNewRules(List<AntennaDoctorRuleBean> rules) {
+    LOG.info("Loaded {} rules", rules.size());
   }
 }
