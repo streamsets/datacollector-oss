@@ -20,7 +20,7 @@
 angular
   .module('dataCollectorApp.home')
 
-  .controller('BadRecordsController', function ($scope, $rootScope, _, api, pipelineConstant, $filter, $timeout) {
+  .controller('BadRecordsController', function ($scope, $rootScope, _, api, pipelineConstant, $filter, $timeout, $modal) {
 
     var formatValue = function(d){
       return $filter('abbreviateNumber')(d);
@@ -135,6 +135,30 @@ angular
         var currentSelection = $scope.detailPaneConfig;
         updateErrorMessagesData(currentSelection);
 
+      },
+
+      /**
+       * Display stack trace in modal dialog.
+       *
+       * @param errorMessage
+       */
+      showStackTrace: function (errorMessage) {
+        $modal.open({
+          templateUrl: 'errorModalContent.html',
+          controller: 'ErrorModalInstanceController',
+          size: 'lg',
+          backdrop: true,
+          resolve: {
+            errorObj: function () {
+              return {
+                RemoteException: {
+                  localizedMessage: errorMessage.localized,
+                  stackTrace: errorMessage.errorStackTrace
+                }
+              };
+            }
+          }
+        });
       },
 
       getYAxisLabel: function() {
