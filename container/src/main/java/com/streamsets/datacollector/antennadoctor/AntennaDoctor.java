@@ -24,6 +24,7 @@ import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.task.AbstractTask;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.AntennaDoctorMessage;
 import com.streamsets.pipeline.api.ErrorCode;
 import org.slf4j.Logger;
@@ -63,12 +64,14 @@ public class AntennaDoctor extends AbstractTask implements AntennaDoctorTask, An
   public AntennaDoctor(
       RuntimeInfo runtimeInfo,
       BuildInfo buildInfo,
+      Configuration configuration,
       StageLibraryTask stageLibraryTask
   ) {
     super("Antenna Doctor");
     this.context = new AntennaDoctorContext(
       runtimeInfo,
       buildInfo,
+      configuration,
       stageLibraryTask
     );
     INSTANCE = this;
@@ -79,6 +82,11 @@ public class AntennaDoctor extends AbstractTask implements AntennaDoctorTask, An
     LOG.info("Initializing Antenna Doctor");
     super.initTask();
 
+    if(!context.getConfiguration().get(AntennaDoctorConstants.CONF_ENABLE, AntennaDoctorConstants.DEFAULT_ENABLE)) {
+      LOG.info("Antenna Doctor is disabled");
+      return;
+    }
+
     this.storage = new AntennaDoctorStorage(this);
     this.storage.init();
   }
@@ -87,7 +95,10 @@ public class AntennaDoctor extends AbstractTask implements AntennaDoctorTask, An
   protected void stopTask() {
     LOG.info("Stopping Antenna Doctor");
     INSTANCE = null;
-    storage.stop();
+    if(storage != null) {
+      storage.stop();
+      storage = null;
+    }
     super.stopTask();
   }
 

@@ -18,6 +18,7 @@ package com.streamsets.datacollector.antennadoctor;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.util.Configuration;
 import dagger.Module;
 import dagger.Provides;
 
@@ -35,8 +36,9 @@ public class AntennaDoctorModule {
   public AntennaDoctor provideAntennaDoctor(
       RuntimeInfo runtimeInfo,
       BuildInfo buildInfo,
+      Configuration configuration,
       StageLibraryTask stageLibraryTask
   ) {
-    return new AntennaDoctor(runtimeInfo, buildInfo, stageLibraryTask);
+    return new AntennaDoctor(runtimeInfo, buildInfo, configuration, stageLibraryTask);
   }
 }

@@ -19,6 +19,7 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.util.Configuration;
 
 public class AntennaDoctorPipelineContext extends AntennaDoctorContext {
   private final PipelineConfiguration pipelineConfiguration;
@@ -27,11 +28,13 @@ public class AntennaDoctorPipelineContext extends AntennaDoctorContext {
     PipelineConfiguration pipelineConfiguration,
     RuntimeInfo runtimeInfo,
     BuildInfo buildInfo,
+    Configuration configuration,
     StageLibraryTask stageLibraryTask
   ) {
     super(
       runtimeInfo,
       buildInfo,
+      configuration,
       stageLibraryTask
     );
     this.pipelineConfiguration = pipelineConfiguration;
