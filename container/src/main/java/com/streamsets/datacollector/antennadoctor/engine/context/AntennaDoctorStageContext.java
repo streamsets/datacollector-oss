@@ -43,4 +43,12 @@ public class AntennaDoctorStageContext extends AntennaDoctorPipelineContext {
     this.stageConfiguration = stageConfiguration;
     this.stageDefinition = stageDefinition;
   }
+
+  public StageDefinition getStageDefinition() {
+    return stageDefinition;
+  }
+
+  public StageConfiguration getStageConfiguration() {
+    return stageConfiguration;
+  }
 }

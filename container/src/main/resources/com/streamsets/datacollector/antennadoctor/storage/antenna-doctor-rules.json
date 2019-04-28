@@ -11,14 +11,14 @@
     ],
     "entity": "STAGE",
     "conditions": [
-      "context:errorCode() == 'JDBC_03'",
+      "issue:errorCode() == 'JDBC_03'",
       "stageDef:type() == 'SOURCE'",
       "str:contains(stageConf:config('hikariConfigBean.connectionString'), 'jdbc:oracle:thin')",
-      "stageDef:searchClasspath('ojdbc[6|7].jar') != ''"
+      "collection:size(collection:filterByRegExp(stageDef:classpath(),'ojdbc[6|7].jar')) > 0"
     ],
     "message": {
       "summary": "Old JDBC Driver is likely the culprit",
-      "description": "Very old version of JDBC driver has been detected on classpath (file '${file:fileName(stageDef:searchClasspath('ojdbc[6|7].jar'))}'). Try to upgrade to latest version that you can download from Oracle website. The driver has been loaded from location '${stageDef:searchClasspath('ojdbc[6|7].jar')}'"
+      "description": "BLA BLA BLA"
     }
   }]
 }

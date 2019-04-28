@@ -15,11 +15,12 @@
  */
 package com.streamsets.datacollector.antennadoctor.engine;
 
-import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.antennadoctor.bean.AntennaDoctorMessageBean;
 import com.streamsets.datacollector.antennadoctor.bean.AntennaDoctorRuleBean;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Stripped down variant of AntennaDoctorRuleBean that doesn't contain information that is no longer relevant
@@ -34,7 +35,8 @@ public class RuntimeRule {
   public RuntimeRule(AntennaDoctorRuleBean ruleBean) {
     this.uuid = ruleBean.getUuid();
     this.entity = ruleBean.getEntity();
-    this.conditions = ImmutableList.copyOf(ruleBean.getConditions());
+    this.conditions = ruleBean.getConditions().stream().map(c -> "${" + c + "}").collect(Collectors.toList());
+    this.conditions = Collections.unmodifiableList(this.conditions);
     this.message = ruleBean.getMessage();
   }
 

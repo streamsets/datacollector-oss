@@ -36,4 +36,8 @@ public class AntennaDoctorPipelineContext extends AntennaDoctorContext {
     );
     this.pipelineConfiguration = pipelineConfiguration;
   }
+
+  public PipelineConfiguration getPipelineConfiguration() {
+    return pipelineConfiguration;
+  }
 }
