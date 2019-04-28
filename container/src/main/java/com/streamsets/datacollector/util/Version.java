@@ -21,8 +21,7 @@ import java.util.Arrays;
  * Software version class that is able to parse version string and then compare various version(s) together.
  *
  * This class will work any arbitrary number of "dots" in the version, albeit the semantic is following StreamSets
- * end of Live policy that defines the version as W.X.Y.Z where W – Major Version, X – Minor Version, Y – Revision,
- * Z – Patch/BugFix.
+ * end of Live policy that defines the version as W.X.Y where W – Major Version, X – Minor Version, Y – Patch/BugFix.
  *
  * If incomplete version is given, this class will always assume that the missing version parts are "0". E.g. "1.1" is
  * equivalent with "1.1.0" and "1.1.0.0", ... .
@@ -43,31 +42,24 @@ public class Version {
   }
 
   /**
-   * From W.X.Y.Z return W.
+   * From W.X.Y return W.
    */
   public int getMajor() {
     return getVersionPosition(0);
   }
 
   /**
-   * From W.X.Y.Z return X.
+   * From W.X.Y return X.
    */
   public int getMinor() {
     return getVersionPosition(1);
   }
 
   /**
-   * From W.X.Y.Z return Y.
-   */
-  public int getRevision() {
-    return getVersionPosition(2);
-  }
-
-  /**
-   * From W.X.Y.Z return Z.
+   * From W.X.Y return Y.
    */
   public int getBugfix() {
-    return getVersionPosition(3);
+    return getVersionPosition(2);
   }
 
   /**
@@ -99,6 +91,20 @@ public class Version {
   }
 
   /**
+   * Return if and only if this > other.
+   */
+  public boolean isGreaterThan(String other) {
+    return isGreaterThan(new Version(other));
+  }
+
+  /**
+   * Return if and only if this > other.
+   */
+  public boolean isGreaterThan(Version other) {
+    return compare(other) > 0;
+  }
+
+  /**
    * Return if and only if this <= other.
    */
   public boolean isLessOrEqualTo(String other) {
@@ -110,6 +116,20 @@ public class Version {
    */
   public boolean isLessOrEqualTo(Version other) {
     return compare(other) <= 0;
+  }
+
+  /**
+   * Return if and only if this < other.
+   */
+  public boolean isLessThan(String other) {
+    return isLessThan(new Version(other));
+  }
+
+  /**
+   * Return if and only if this < other.
+   */
+  public boolean isLessThan(Version other) {
+    return compare(other) < 0;
   }
 
   /**

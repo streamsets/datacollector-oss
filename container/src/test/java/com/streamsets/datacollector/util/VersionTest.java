@@ -34,13 +34,12 @@ public class VersionTest {
     version = new Version("1.2-SNAPSHOT");
     assertEquals(1, version.getMajor());
     assertEquals(2, version.getMinor());
-    assertEquals(0, version.getRevision());
+    assertEquals(0, version.getBugfix());
 
-    version = new Version("1.2.3.4-RC1");
+    version = new Version("1.2.3-RC1");
     assertEquals(1, version.getMajor());
     assertEquals(2, version.getMinor());
-    assertEquals(3, version.getRevision());
-    assertEquals(4, version.getBugfix());
+    assertEquals(3, version.getBugfix());
   }
 
   @Test
@@ -74,6 +73,23 @@ public class VersionTest {
   }
 
   @Test
+  public void isGreaterThen() {
+    // Equal
+    assertFalse(new Version("1.1").isGreaterThan("1.1.0"));
+    assertFalse(new Version("1.1").isGreaterThan("1.1"));
+    assertFalse(new Version("1.1.0").isGreaterThan("1.1"));
+
+    // Greater
+    assertTrue(new Version("1.1").isGreaterThan("1.0"));
+    assertTrue(new Version("1.1").isGreaterThan("1.0.0.0.0.0.0.1"));
+    assertTrue(new Version("1.1").isGreaterThan("0.9"));
+
+    // Negative cases
+    assertFalse(new Version("1.1").isGreaterThan("1.1.0.0.0.0.1"));
+    assertFalse(new Version("1.1").isGreaterThan("2"));
+  }
+
+  @Test
   public void isLessOrEqualToA() {
     // Equal
     assertTrue(new Version("1.1.0").isLessOrEqualTo("1.1"));
@@ -89,5 +105,23 @@ public class VersionTest {
     assertFalse(new Version("1.1").isLessOrEqualTo("1.0"));
     assertFalse(new Version("1.1").isLessOrEqualTo("1.0.0.0.0.0.0.1"));
     assertFalse(new Version("1.1").isLessOrEqualTo("0.9"));
+  }
+
+  @Test
+  public void isLessThen() {
+    // Equal
+    assertFalse(new Version("1.1.0").isLessThan("1.1"));
+    assertFalse(new Version("1.1").isLessThan("1.1"));
+    assertFalse(new Version("1.1").isLessThan("1.1.0"));
+
+    // Lesser
+    assertTrue(new Version("1.1").isLessThan("1.2"));
+    assertTrue(new Version("1.1").isLessThan("1.1.0.0.0.1"));
+    assertTrue(new Version("1.1").isLessThan("2"));
+
+    // Negative cases
+    assertFalse(new Version("1.1").isLessThan("1.0"));
+    assertFalse(new Version("1.1").isLessThan("1.0.0.0.0.0.0.1"));
+    assertFalse(new Version("1.1").isLessThan("0.9"));
   }
 }
