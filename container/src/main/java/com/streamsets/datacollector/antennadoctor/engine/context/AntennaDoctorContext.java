@@ -13,28 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.antennadoctor;
+package com.streamsets.datacollector.antennadoctor.engine.context;
 
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
-import dagger.Module;
-import dagger.Provides;
 
-import javax.inject.Singleton;
+public class AntennaDoctorContext {
+  private final RuntimeInfo runtimeInfo;
+  private final BuildInfo buildInfo;
 
-@Module(
-  injects = AntennaDoctor.class,
-  library = true,
-  complete = false
-)
-public class AntennaDoctorModule {
+  public AntennaDoctorContext(RuntimeInfo runtimeInfo, BuildInfo buildInfo) {
+    this.runtimeInfo = runtimeInfo;
+    this.buildInfo = buildInfo;
+  }
 
-  @Provides
-  @Singleton
-  public AntennaDoctor provideAntennaDoctor(
-      RuntimeInfo runtimeInfo,
-      BuildInfo buildInfo
-  ) {
-    return new AntennaDoctor(runtimeInfo, buildInfo);
+  public RuntimeInfo getRuntimeInfo() {
+    return runtimeInfo;
+  }
+
+  public BuildInfo getBuildInfo() {
+    return buildInfo;
   }
 }

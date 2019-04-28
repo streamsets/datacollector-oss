@@ -16,7 +16,11 @@
 package com.streamsets.datacollector.antennadoctor;
 
 import com.streamsets.datacollector.antennadoctor.bean.AntennaDoctorRuleBean;
+import com.streamsets.datacollector.antennadoctor.engine.AntennaDoctorEngine;
+import com.streamsets.datacollector.antennadoctor.engine.context.AntennaDoctorContext;
 import com.streamsets.datacollector.antennadoctor.storage.AntennaDoctorStorage;
+import com.streamsets.datacollector.main.BuildInfo;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.task.AbstractTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,10 +30,32 @@ import java.util.List;
 public class AntennaDoctor extends AbstractTask implements AntennaDoctorTask, AntennaDoctorStorage.NewRulesDelegate {
   private static final Logger LOG = LoggerFactory.getLogger(AntennaDoctor.class);
 
+  /**
+   * Main storage that is initialized during init phase.
+   */
   private AntennaDoctorStorage storage;
 
-  public AntennaDoctor() {
+  /**
+   * Main engine used to classify issues.
+   *
+   * Replaced on each rule reload.
+   */
+  private AntennaDoctorEngine engine;
+
+  /**
+   * Context that is relevant for the engine.
+   */
+  private final AntennaDoctorContext context;
+
+  public AntennaDoctor(
+      RuntimeInfo runtimeInfo,
+      BuildInfo buildInfo
+  ) {
     super("Antenna Doctor");
+    this.context = new AntennaDoctorContext(
+      runtimeInfo,
+      buildInfo
+    );
   }
 
   @Override
@@ -49,6 +75,6 @@ public class AntennaDoctor extends AbstractTask implements AntennaDoctorTask, An
 
   @Override
   public void loadNewRules(List<AntennaDoctorRuleBean> rules) {
-    LOG.info("Loaded {} rules", rules.size());
+    this.engine = new AntennaDoctorEngine(context, rules);
   }
 }
