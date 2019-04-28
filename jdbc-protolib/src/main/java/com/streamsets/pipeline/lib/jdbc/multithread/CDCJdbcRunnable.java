@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.jdbc.MSOperationCode;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.MSQueryUtil;
@@ -149,7 +150,13 @@ public class CDCJdbcRunnable extends JdbcBaseRunnable {
       }
     }
 
-    batchContext.getBatchMaker().addRecord(record);
+    int columns = rs.getMetaData().getColumnCount();
+    if (fields.size() != columns) {
+      errorRecordHandler.onError(JdbcErrors.JDBC_35, fields.size(), columns);
+      return; // Don't output this record.
+    } else {
+      batchContext.getBatchMaker().addRecord(record);
+    }
 
     offsets.put(tableRuntimeContext.getOffsetKey(), offsetFormat);
   }

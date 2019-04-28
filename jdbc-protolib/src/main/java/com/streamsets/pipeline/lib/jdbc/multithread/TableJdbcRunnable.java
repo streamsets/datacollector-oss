@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
@@ -105,7 +106,13 @@ public final class TableJdbcRunnable extends JdbcBaseRunnable {
     record.getHeader().setAttribute(PARTITION_ATTRIBUTE, tableRuntimeContext.getDescription());
     record.getHeader().setAttribute(THREAD_NUMBER_ATTRIBUTE, String.valueOf(threadNumber));
 
-    batchContext.getBatchMaker().addRecord(record);
+    int columns = rs.getMetaData().getColumnCount();
+    if (fields.size() != columns) {
+      errorRecordHandler.onError(JdbcErrors.JDBC_35, fields.size(), columns);
+      return; // Don't output this record.
+    } else {
+      batchContext.getBatchMaker().addRecord(record);
+    }
 
     if (offsetValue != null) {
       offsets.put(tableRuntimeContext.getOffsetKey(), offsetValue);
