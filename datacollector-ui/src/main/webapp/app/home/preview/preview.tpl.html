@@ -214,11 +214,19 @@
               <td>{{errorMessage.timestamp | date:'medium'}}</td>
               <td ng-bind="errorMessage.errorCode"> </td>
               <td>
+               <i class="fa fa-info-circle help-icon"
+                   ng-class="fa-info-circle"
+                   ng-if="errorMessage.antennaDoctorMessages && errorMessage.antennaDoctorMessages.length > 0"
+                   tooltip-placement="right"
+                   tooltip-append-to-body="false"
+                   tooltip="{{errorMessage.antennaDoctorMessages[0].summary}}"
+                   tooltip-trigger="mouseenter">
+                </i> 
                 <span ng-bind="errorMessage.localized"></span>
                 <a class="view-stack-trace"
                    ng-if="errorMessage.errorStackTrace"
                    ng-click="showStackTrace(errorMessage)">
-                  ( <span translate="home.graphPane.viewStackTrace">View Stack Trace</span>... )
+                  ( <span translate="home.graphPane.viewStackTrace">View Details</span>... )
                 </a>
               </td>
             </tr>

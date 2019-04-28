@@ -309,6 +309,7 @@ angular
             errorObj: function () {
               return {
                 RemoteException: {
+                  antennaDoctorMessages: errorMessage.antennaDoctorMessages,
                   localizedMessage: errorMessage.localized,
                   stackTrace: errorMessage.errorStackTrace
                 }

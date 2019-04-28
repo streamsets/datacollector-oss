@@ -8,7 +8,11 @@
   </div>
   <div class="modal-body error-modal-body">
     <h4 ng-bind="errorObject.RemoteException.localizedMessage"></h4>
-    <pre class="alert-danger" ng-bind="errorObject.RemoteException.stackTrace"></pre>
+    <div ng-if="errorObject.RemoteException.antennaDoctorMessages && errorObject.RemoteException.antennaDoctorMessages.length > 0">
+      <h5><b>Antenna Doctor:</b> {{errorObject.RemoteException.antennaDoctorMessages[0].summary}}</h5>
+      <span ng-bind-html="errorObject.RemoteException.antennaDoctorMessages[0].description"></span>
+    </div>
+    <pre ng-if="errorObject.RemoteException.stackTrace" class="alert-danger" ng-bind="errorObject.RemoteException.stackTrace"></pre>
   </div>
   <div class="modal-footer">
     <button type="reset" class="btn btn-default" ng-click="close()" translate="global.form.close">

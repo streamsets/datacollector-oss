@@ -52,6 +52,7 @@ import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineRevInfo;
+import com.streamsets.pipeline.api.AntennaDoctorMessage;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.HideStage;
@@ -1389,5 +1390,9 @@ public class BeanHelper {
     return hideStage.stream()
       .map(HideStage.Type::name)
       .collect(Collectors.toList());
+  }
+
+  public static List<AntennaDoctorMessageJson> wrapAntennaDoctorMessages(List<AntennaDoctorMessage> messages) {
+    return messages.stream().map(AntennaDoctorMessageJson::new).collect(Collectors.toList());
   }
 }

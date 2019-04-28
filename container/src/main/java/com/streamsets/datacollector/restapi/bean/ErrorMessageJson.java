@@ -18,6 +18,8 @@ package com.streamsets.datacollector.restapi.bean;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.util.List;
+
 public class ErrorMessageJson {
 
   private final com.streamsets.pipeline.api.impl.ErrorMessage errorMessage;
@@ -45,6 +47,10 @@ public class ErrorMessageJson {
 
   public String getErrorStackTrace() {
     return errorMessage.getErrorStackTrace();
+  }
+
+  public List<AntennaDoctorMessageJson> getAntennaDoctorMessages() {
+    return BeanHelper.wrapAntennaDoctorMessages(errorMessage.getAntennaDoctorMessages());
   }
 
   @JsonIgnore

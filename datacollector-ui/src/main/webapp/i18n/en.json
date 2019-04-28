@@ -389,7 +389,7 @@
       "selectProcessorToAddInBetween": "Select Processor to add in between the selected stream...",
       "selectTarget": "Select Destination to connect...",
       "startErrorMessage": "Pipeline definition '{{name}}' is running.",
-      "viewStackTrace": "View Stack Trace"
+      "viewStackTrace": "View Details"
     },
     "detailPane": {
       "alerts": "Alerts",
