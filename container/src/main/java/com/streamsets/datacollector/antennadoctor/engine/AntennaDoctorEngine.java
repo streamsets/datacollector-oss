@@ -18,15 +18,19 @@ package com.streamsets.datacollector.antennadoctor.engine;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.antennadoctor.bean.AntennaDoctorRuleBean;
 import com.streamsets.datacollector.antennadoctor.engine.context.AntennaDoctorContext;
+import com.streamsets.datacollector.antennadoctor.engine.context.AntennaDoctorStageContext;
 import com.streamsets.datacollector.antennadoctor.engine.el.AntennaDoctorELDefinitionExtractor;
 import com.streamsets.datacollector.antennadoctor.engine.el.SdcEL;
 import com.streamsets.datacollector.el.ELEvaluator;
 import com.streamsets.datacollector.util.Version;
+import com.streamsets.pipeline.api.AntennaDoctorMessage;
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -91,5 +95,17 @@ public class AntennaDoctorEngine {
 
     this.rules = builder.build();
     LOG.info("Loaded new Antenna Doctor engine with {} rules", this.rules.size());
+  }
+
+  public List<AntennaDoctorMessage> onStage(AntennaDoctorStageContext context, Exception exception) {
+    return Collections.emptyList();
+  }
+
+  public List<AntennaDoctorMessage> onStage(AntennaDoctorStageContext context, ErrorCode errorCode, Object... args) {
+    return Collections.emptyList();
+  }
+
+  public List<AntennaDoctorMessage> onStage(AntennaDoctorStageContext context, String errorMessage) {
+    return Collections.emptyList();
   }
 }

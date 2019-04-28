@@ -81,7 +81,7 @@ public class BatchContextImpl implements BatchContext {
   public void toError(Record record, String errorMessage) {
     Preconditions.checkNotNull(record, "record cannot be null");
     Preconditions.checkNotNull(errorMessage, "errorMessage cannot be null");
-    toError(record, new ErrorMessage(ContainerError.CONTAINER_0002, errorMessage));
+    toError(record, new ErrorMessage(ContainerError.CONTAINER_0001, errorMessage));
   }
 
   @Override

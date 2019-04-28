@@ -16,7 +16,12 @@
 package com.streamsets.datacollector.antennadoctor;
 
 import com.streamsets.datacollector.antennadoctor.engine.context.AntennaDoctorContext;
+import com.streamsets.datacollector.antennadoctor.engine.context.AntennaDoctorStageContext;
 import com.streamsets.datacollector.task.Task;
+import com.streamsets.pipeline.api.AntennaDoctorMessage;
+import com.streamsets.pipeline.api.ErrorCode;
+
+import java.util.List;
 
 /**
  * Antenna Doctor is a rule-based engine for self-served help when something goes unexpectedly
@@ -27,4 +32,9 @@ public interface AntennaDoctorTask extends Task {
    * Return context for the Antenna Doctor execution.
    */
   public AntennaDoctorContext getContext();
+
+  // Stage related methods
+  public List<AntennaDoctorMessage> onStage(AntennaDoctorStageContext context, Exception exception);
+  public List<AntennaDoctorMessage> onStage(AntennaDoctorStageContext context, ErrorCode errorCode, Object... args);
+  public List<AntennaDoctorMessage> onStage(AntennaDoctorStageContext context, String errorMessage);
 }

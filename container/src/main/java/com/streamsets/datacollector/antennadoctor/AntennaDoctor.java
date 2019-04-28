@@ -18,14 +18,18 @@ package com.streamsets.datacollector.antennadoctor;
 import com.streamsets.datacollector.antennadoctor.bean.AntennaDoctorRuleBean;
 import com.streamsets.datacollector.antennadoctor.engine.AntennaDoctorEngine;
 import com.streamsets.datacollector.antennadoctor.engine.context.AntennaDoctorContext;
+import com.streamsets.datacollector.antennadoctor.engine.context.AntennaDoctorStageContext;
 import com.streamsets.datacollector.antennadoctor.storage.AntennaDoctorStorage;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.task.AbstractTask;
+import com.streamsets.pipeline.api.AntennaDoctorMessage;
+import com.streamsets.pipeline.api.ErrorCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.List;
 
 public class AntennaDoctor extends AbstractTask implements AntennaDoctorTask, AntennaDoctorStorage.NewRulesDelegate {
@@ -94,5 +98,35 @@ public class AntennaDoctor extends AbstractTask implements AntennaDoctorTask, An
   @Override
   public AntennaDoctorContext getContext() {
     return context;
+  }
+
+  @Override
+  public List<AntennaDoctorMessage> onStage(AntennaDoctorStageContext context, Exception exception) {
+    AntennaDoctorEngine engine = this.engine;
+    if(engine != null) {
+      return engine.onStage(context, exception);
+    }
+
+    return Collections.emptyList();
+  }
+
+  @Override
+  public List<AntennaDoctorMessage> onStage(AntennaDoctorStageContext context, ErrorCode errorCode, Object... args) {
+    AntennaDoctorEngine engine = this.engine;
+    if(engine != null) {
+      return engine.onStage(context, errorCode, args);
+    }
+
+    return Collections.emptyList();
+  }
+
+  @Override
+  public List<AntennaDoctorMessage> onStage(AntennaDoctorStageContext context, String errorMessage) {
+    AntennaDoctorEngine engine = this.engine;
+    if(engine != null) {
+      return engine.onStage(context, errorMessage);
+    }
+
+    return Collections.emptyList();
   }
 }
