@@ -21,6 +21,7 @@ import com.streamsets.datacollector.antennadoctor.engine.context.AntennaDoctorCo
 import com.streamsets.datacollector.antennadoctor.storage.AntennaDoctorStorage;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.task.AbstractTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,12 +50,14 @@ public class AntennaDoctor extends AbstractTask implements AntennaDoctorTask, An
 
   public AntennaDoctor(
       RuntimeInfo runtimeInfo,
-      BuildInfo buildInfo
+      BuildInfo buildInfo,
+      StageLibraryTask stageLibraryTask
   ) {
     super("Antenna Doctor");
     this.context = new AntennaDoctorContext(
       runtimeInfo,
-      buildInfo
+      buildInfo,
+      stageLibraryTask
     );
   }
 

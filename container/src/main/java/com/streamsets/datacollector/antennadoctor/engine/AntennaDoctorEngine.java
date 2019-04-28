@@ -18,7 +18,12 @@ package com.streamsets.datacollector.antennadoctor.engine;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.antennadoctor.bean.AntennaDoctorRuleBean;
 import com.streamsets.datacollector.antennadoctor.engine.context.AntennaDoctorContext;
+import com.streamsets.datacollector.antennadoctor.engine.el.AntennaDoctorELDefinitionExtractor;
+import com.streamsets.datacollector.antennadoctor.engine.el.SdcEL;
+import com.streamsets.datacollector.el.ELEvaluator;
 import com.streamsets.datacollector.util.Version;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELVars;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +42,7 @@ public class AntennaDoctorEngine {
 
   public AntennaDoctorEngine(AntennaDoctorContext context,List<AntennaDoctorRuleBean> rules) {
     ImmutableList.Builder<RuntimeRule> builder = ImmutableList.builder();
+    ELEval preconditionEval = new ELEvaluator(null, AntennaDoctorELDefinitionExtractor.get(), SdcEL.class);
 
     for(AntennaDoctorRuleBean ruleBean : rules) {
       LOG.trace("Loading rule {}", ruleBean.getUuid());
@@ -59,6 +65,22 @@ public class AntennaDoctorEngine {
 
         if(!sdcVersion.isLessThan(maxSdcVersion)) {
           LOG.trace("Max SDC version check ({} > {}) failed, skipping rule {}", maxSdcVersion.toString(), sdcVersion.toString(), ruleBean.getUuid());
+          continue;
+        }
+      }
+
+      // Evaluate dynamic preconditions
+      ELVars vars = preconditionEval.createVariables();
+      SdcEL.setVars(vars, context);
+      for(String precondition: ruleBean.getPreconditions()) {
+        try {
+          LOG.trace("Evaluating precondition: {}", precondition);
+          if (!preconditionEval.eval(vars, "${" + precondition + "}", Boolean.class)) {
+            LOG.trace("Precondition {} failed, skipping rule {}", precondition, ruleBean.getUuid());
+            continue;
+          }
+        } catch (Throwable e ) {
+          LOG.error("Precondition {} failed, skipping rule {}: {}", precondition, ruleBean.getUuid(), e.toString(), e);
           continue;
         }
       }

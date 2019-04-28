@@ -17,14 +17,21 @@ package com.streamsets.datacollector.antennadoctor.engine.context;
 
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 
 public class AntennaDoctorContext {
   private final RuntimeInfo runtimeInfo;
   private final BuildInfo buildInfo;
+  private final StageLibraryTask stageLibraryTask;
 
-  public AntennaDoctorContext(RuntimeInfo runtimeInfo, BuildInfo buildInfo) {
+  public AntennaDoctorContext(
+      RuntimeInfo runtimeInfo,
+      BuildInfo buildInfo,
+      StageLibraryTask stageLibraryTask
+  ) {
     this.runtimeInfo = runtimeInfo;
     this.buildInfo = buildInfo;
+    this.stageLibraryTask = stageLibraryTask;
   }
 
   public RuntimeInfo getRuntimeInfo() {
@@ -33,5 +40,9 @@ public class AntennaDoctorContext {
 
   public BuildInfo getBuildInfo() {
     return buildInfo;
+  }
+
+  public StageLibraryTask getStageLibraryTask() {
+    return stageLibraryTask;
   }
 }
