@@ -71,10 +71,12 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextDelegate, ReportErrorDelegate {
 
@@ -92,6 +94,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
   private final String name;
   private final String rev;
   private final Timer processingTimer;
+  private final Map<String, List<ErrorMessage>> reportedErrors;
 
   // Exception thrown while executing the pipeline
   private volatile Throwable exceptionFromExecution = null;
@@ -128,6 +131,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
     this.metrics = new MetricRegistry();
     processingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing", name, rev);
     batchesOutput = Collections.synchronizedList(new ArrayList<>());
+    this.reportedErrors = new HashMap<>();
   }
 
   @Override
@@ -367,8 +371,35 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
 
     List<StageOutput> stageOutputs = pipeBatch.getSnapshotsOfAllStagesOutput();
     if(ValidationUtil.isSnapshotOutputUsable(stageOutputs)) {
-      batchesOutput.add(pipeBatch.getSnapshotsOfAllStagesOutput());
+      batchesOutput.add(addReportedErrorsIfNeeded(pipeBatch.getSnapshotsOfAllStagesOutput()));
       batchesProcessed.incrementAndGet();
+    }
+  }
+
+  /**
+   * Preview only returns data associated with batches, however errors are reported outside of batch context for
+   * multi-threaded pipelines. Thus we 'emulate' the behavior by simply adding into the current batch all 'so-far'
+   * reported errors.
+   */
+  private List<StageOutput> addReportedErrorsIfNeeded(List<StageOutput> snapshotsOfAllStagesOutput) {
+    synchronized (this.reportedErrors) {
+      if(reportedErrors.isEmpty()) {
+        return snapshotsOfAllStagesOutput;
+      }
+
+      try {
+        return snapshotsOfAllStagesOutput.stream()
+          .map(so -> new StageOutput(
+            so.getInstanceName(),
+            so.getOutput(),
+            so.getErrorRecords(),
+            reportedErrors.get(so.getInstanceName()),
+            so.getEventRecords()
+          ))
+          .collect(Collectors.toList());
+      } finally {
+        reportedErrors.clear();
+      }
     }
   }
 
@@ -436,6 +467,9 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
 
   @Override
   public void reportError(String stage, ErrorMessage errorMessage) {
+    synchronized(this.reportedErrors) {
+      this.reportedErrors.computeIfAbsent(stage, x -> new LinkedList<>()).add(errorMessage);
+    }
   }
 
   @Override
