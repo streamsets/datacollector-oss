@@ -16,7 +16,6 @@
 package com.streamsets.datacollector.execution.dagger;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
-import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.Previewer;
@@ -47,9 +46,6 @@ import org.mockito.Mockito;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -115,6 +111,8 @@ public class TestPipelineManagerModule {
     Assert.assertEquals(PipelineStatus.EDITED, runner.getState().getStatus());
     Assert.assertEquals(pc.getInfo().getPipelineId(), runner.getName());
     Assert.assertEquals("0", runner.getRev());
+
+    taskWrapper.stop();
   }
 
   @Test
@@ -159,5 +157,7 @@ public class TestPipelineManagerModule {
     Assert.assertEquals(PipelineStatus.EDITED, asyncRunner.getState().getStatus());
     Assert.assertEquals("p1", asyncRunner.getName());
     Assert.assertEquals("0", asyncRunner.getRev());
+
+    taskWrapper.stop();
   }
 }

@@ -22,45 +22,25 @@ import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 
-public class AntennaDoctorContext {
-  private final RuntimeInfo runtimeInfo;
-  private final BuildInfo buildInfo;
-  private final StageLibraryTask stageLibraryTask;
+public class AntennaDoctorStageContext extends AntennaDoctorPipelineContext {
+  private final StageDefinition stageDefinition;
+  private final StageConfiguration stageConfiguration;
 
-  public AntennaDoctorContext(
+  public AntennaDoctorStageContext(
+      StageDefinition stageDefinition,
+      StageConfiguration stageConfiguration,
+      PipelineConfiguration pipelineConfiguration,
       RuntimeInfo runtimeInfo,
       BuildInfo buildInfo,
       StageLibraryTask stageLibraryTask
   ) {
-    this.runtimeInfo = runtimeInfo;
-    this.buildInfo = buildInfo;
-    this.stageLibraryTask = stageLibraryTask;
-  }
-
-  public RuntimeInfo getRuntimeInfo() {
-    return runtimeInfo;
-  }
-
-  public BuildInfo getBuildInfo() {
-    return buildInfo;
-  }
-
-  public StageLibraryTask getStageLibraryTask() {
-    return stageLibraryTask;
-  }
-
-  public AntennaDoctorStageContext forStage(
-      StageDefinition stageDefinition,
-      StageConfiguration stageConfiguration,
-      PipelineConfiguration pipelineConfiguration
-  ) {
-    return new AntennaDoctorStageContext(
-        stageDefinition,
-        stageConfiguration,
-        pipelineConfiguration,
-        runtimeInfo,
-        buildInfo,
-        stageLibraryTask
+    super(
+      pipelineConfiguration,
+      runtimeInfo,
+      buildInfo,
+      stageLibraryTask
     );
+    this.stageConfiguration = stageConfiguration;
+    this.stageDefinition = stageDefinition;
   }
 }

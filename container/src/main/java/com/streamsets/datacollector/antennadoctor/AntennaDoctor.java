@@ -32,6 +32,14 @@ public class AntennaDoctor extends AbstractTask implements AntennaDoctorTask, An
   private static final Logger LOG = LoggerFactory.getLogger(AntennaDoctor.class);
 
   /**
+   * Static instance so that it's easy to retrieve the Doctor across the code base.
+   */
+  private static AntennaDoctor INSTANCE = null;
+  public static AntennaDoctor getInstance() {
+    return INSTANCE;
+  }
+
+  /**
    * Main storage that is initialized during init phase.
    */
   private AntennaDoctorStorage storage;
@@ -59,6 +67,7 @@ public class AntennaDoctor extends AbstractTask implements AntennaDoctorTask, An
       buildInfo,
       stageLibraryTask
     );
+    INSTANCE = this;
   }
 
   @Override
@@ -74,10 +83,16 @@ public class AntennaDoctor extends AbstractTask implements AntennaDoctorTask, An
   protected void stopTask() {
     LOG.info("Stopping Antenna Doctor");
     super.stopTask();
+    INSTANCE = null;
   }
 
   @Override
   public void loadNewRules(List<AntennaDoctorRuleBean> rules) {
     this.engine = new AntennaDoctorEngine(context, rules);
+  }
+
+  @Override
+  public AntennaDoctorContext getContext() {
+    return context;
   }
 }

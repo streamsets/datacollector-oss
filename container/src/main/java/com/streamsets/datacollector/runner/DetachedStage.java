@@ -206,7 +206,9 @@ public abstract class DetachedStage {
       startTime,
       lineagePublisherDelegator,
       Collections.emptyMap(),
-      false
+      false,
+      null,
+      null
     );
 
     return DetachedStageRuntime.create(stageBean, stageInfo, context, klass);

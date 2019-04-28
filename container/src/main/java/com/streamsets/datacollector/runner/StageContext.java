@@ -18,6 +18,8 @@ package com.streamsets.datacollector.runner;
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.antennadoctor.AntennaDoctor;
+import com.streamsets.datacollector.antennadoctor.engine.context.AntennaDoctorStageContext;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.lineage.LineageEventImpl;
@@ -88,6 +90,8 @@ public class StageContext extends ProtoContext implements
   private RuntimeInfo runtimeInfo;
   private final Map services;
   private final boolean isErrorStage;
+  private final AntennaDoctor antennaDoctor;
+  private final AntennaDoctorStageContext antennaDoctorContext;
 
   //for SDK
   public StageContext(
@@ -175,6 +179,10 @@ public class StageContext extends ProtoContext implements
     // sample all records while testing
     this.startTime = System.currentTimeMillis();
     this.lineagePublisherDelegator = lineagePublisherDelegator;
+
+    // No Antenna doctor in SDK
+    this.antennaDoctor = null;
+    this.antennaDoctorContext = null;
   }
 
   public StageContext(
@@ -203,7 +211,9 @@ public class StageContext extends ProtoContext implements
       long startTime,
       LineagePublisherDelegator lineagePublisherDelegator,
       Map<Class, ServiceRuntime> services,
-      boolean isErrorStage
+      boolean isErrorStage,
+      AntennaDoctor antennaDoctor,
+      AntennaDoctorStageContext antennaDoctorContext
   ) {
     super(
       configuration,
@@ -238,6 +248,8 @@ public class StageContext extends ProtoContext implements
     this.lineagePublisherDelegator = lineagePublisherDelegator;
     this.services = services;
     this.isErrorStage = isErrorStage;
+    this.antennaDoctor = antennaDoctor;
+    this.antennaDoctorContext = antennaDoctorContext;
   }
 
   @Override

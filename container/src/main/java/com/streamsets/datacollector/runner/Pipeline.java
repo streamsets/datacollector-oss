@@ -19,6 +19,8 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.antennadoctor.AntennaDoctor;
+import com.streamsets.datacollector.antennadoctor.engine.context.AntennaDoctorStageContext;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.creation.InterceptorBean;
@@ -1118,6 +1120,16 @@ public class Pipeline {
       stageInfos.add(stageRuntime.getInfo());
     }
 
+    AntennaDoctor antennaDoctor = AntennaDoctor.getInstance();
+    AntennaDoctorStageContext antennaDoctorContext = null;
+    if(antennaDoctor != null) {
+      antennaDoctorContext = antennaDoctor.getContext().forStage(
+          stageRuntime.getDefinition(),
+          stageRuntime.getConfiguration(),
+          pipelineConfiguration
+      );
+    }
+
     // And finally create StageContext
     stageRuntime.setContext(
       new StageContext(
@@ -1146,7 +1158,9 @@ public class Pipeline {
         startTime,
         new LineagePublisherDelegator.TaskDelegator(lineagePublisherTask),
         services,
-        isErrorStage
+        isErrorStage,
+        antennaDoctor,
+        antennaDoctorContext
       )
     );
 

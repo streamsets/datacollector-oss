@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.antennadoctor;
 
+import com.streamsets.datacollector.antennadoctor.engine.context.AntennaDoctorContext;
 import com.streamsets.datacollector.task.Task;
 
 /**
@@ -22,4 +23,8 @@ import com.streamsets.datacollector.task.Task;
  * wrong in the product or pipeline execution.
  */
 public interface AntennaDoctorTask extends Task {
+  /**
+   * Return context for the Antenna Doctor execution.
+   */
+  public AntennaDoctorContext getContext();
 }
