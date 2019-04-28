@@ -14,11 +14,14 @@
       "issue:errorCode() == 'JDBC_03'",
       "stageDef:type() == 'SOURCE'",
       "str:contains(stageConf:config('hikariConfigBean.connectionString'), 'jdbc:oracle:thin')",
-      "collection:size(collection:filterByRegExp(stageDef:classpath(),'ojdbc[6|7].jar')) > 0"
+      "collection:size(issue:args()) > 2 && (issue:args()[1] == -101 || issue:args()[1] == -102)",
+      "var:set('jars', collection:filterByRegExp(stageDef:classpath(),'ojdbc[6|7].jar'))",
+      "collection:size(var:get('jars')) > 0",
+      "var:set('jar', collection:get(var:get('jars'), 0))"
     ],
     "message": {
-      "summary": "Old JDBC Driver is likely the culprit",
-      "description": "BLA BLA BLA"
+      "summary": "Try upgrading Oracle JDBC Driver.",
+      "description": "Detected old Oracle JDBC driver on the classpath (file '${file:fileName(var:get('jar'))}'). Old versions of the Oracle JDBC are known to not work always properly when dealing with TIMESTAMP WITH TIMEZONE and TIMESTAMP WITH LOCAL TIMEZONE data types. Try upgrading to latest version of the JDBC driver. The driver is loaded from ${var:get('jar')}."
     }
   }]
 }

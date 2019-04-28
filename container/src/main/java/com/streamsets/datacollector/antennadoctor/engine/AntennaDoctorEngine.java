@@ -24,6 +24,7 @@ import com.streamsets.datacollector.antennadoctor.engine.el.SdcEL;
 import com.streamsets.datacollector.antennadoctor.engine.el.StageConfigurationEL;
 import com.streamsets.datacollector.antennadoctor.engine.el.StageDefinitionEL;
 import com.streamsets.datacollector.antennadoctor.engine.el.StageIssueEL;
+import com.streamsets.datacollector.antennadoctor.engine.el.VarEL;
 import com.streamsets.datacollector.el.ELEvaluator;
 import com.streamsets.datacollector.util.Version;
 import com.streamsets.pipeline.api.AntennaDoctorMessage;
@@ -84,6 +85,7 @@ public class AntennaDoctorEngine {
       // Evaluate dynamic preconditions
       ELVars vars = preconditionEval.createVariables();
       SdcEL.setVars(vars, context);
+      VarEL.resetVars(vars);
       for(String precondition: ruleBean.getPreconditions()) {
         try {
           LOG.trace("Evaluating precondition: {}", precondition);
@@ -143,6 +145,8 @@ public class AntennaDoctorEngine {
       if(rule.getEntity() != AntennaDoctorRuleBean.Entity.STAGE) {
         continue;
       }
+
+      VarEL.resetVars(vars);
 
       // Firstly evaluate conditions
       boolean matched = true;

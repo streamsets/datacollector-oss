@@ -28,7 +28,8 @@ public class AntennaDoctorELDefinitionExtractor extends ELDefinitionExtractor {
       FileEL.class,
       MathEL.class,
       StringEL.class,
-      CollectionEL.class
+      CollectionEL.class,
+      VarEL.class
   };
 
   private static final ELDefinitionExtractor EXTRACTOR = new AntennaDoctorELDefinitionExtractor(DEFAULT_ELS);
