@@ -86,8 +86,9 @@ public class AntennaDoctor extends AbstractTask implements AntennaDoctorTask, An
   @Override
   protected void stopTask() {
     LOG.info("Stopping Antenna Doctor");
-    super.stopTask();
     INSTANCE = null;
+    storage.stop();
+    super.stopTask();
   }
 
   @Override
