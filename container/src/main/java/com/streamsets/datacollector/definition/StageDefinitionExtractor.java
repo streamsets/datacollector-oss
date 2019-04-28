@@ -221,7 +221,7 @@ public abstract class StageDefinitionExtractor {
         int outputStreams = (variableOutputStreams || type.isOneOf(StageType.TARGET, StageType.EXECUTOR) )
             ? 0 : sDef.outputStreams().getEnumConstants().length;
         int inputStreams = sDef.numberOfInputStreams();
-        String inputStreamLabelProviderClass = sDef.outputStreams().getName();
+        String inputStreamLabelProviderClass = sDef.inputStreams().getName();
         List<ExecutionMode> executionModes = ImmutableList.copyOf(sDef.execution());
         List<ExecutionMode> executionModesLibraryOverride = libraryDef.getStageExecutionModesOverride(klass);
         if (executionModesLibraryOverride != null) {

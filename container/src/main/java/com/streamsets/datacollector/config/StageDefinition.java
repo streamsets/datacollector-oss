@@ -607,10 +607,10 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
 
   private List<String> getStreamLabels(ClassLoader classLoader, String streamsLabelProviderClass, boolean localized) {
     List<String> list = new ArrayList<>();
-    if (getOutputStreamLabelProviderClass() != null) {
+    if (streamsLabelProviderClass != null) {
       try {
         String rbName = (localized) ? streamsLabelProviderClass + "-bundle" : null;
-        Class klass = classLoader.loadClass(getOutputStreamLabelProviderClass());
+        Class klass = classLoader.loadClass(streamsLabelProviderClass);
         boolean isLabel = Label.class.isAssignableFrom(klass);
         for (Object e : klass.getEnumConstants()) {
 
