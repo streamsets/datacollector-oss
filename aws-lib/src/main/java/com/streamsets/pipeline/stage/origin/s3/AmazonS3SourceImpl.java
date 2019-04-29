@@ -120,17 +120,31 @@ public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements Amazon
       }
 
       S3Offset offset = getOffsetFromGivenKey(s3Offset.getKey());
+
+      int offsetVal;
+      int s3offsetVal;
+      if(offset.getOffset().contains("::")){
+        //Then is an EXCEL offset
+        offsetVal = Integer.valueOf(offset.getOffset().split("::")[1]);
+        s3offsetVal = Integer.valueOf(s3Offset.getOffset().split("::")[1]);
+      }else{
+        offsetVal = Integer.valueOf(offset.getOffset());
+        s3offsetVal = Integer.valueOf(s3Offset.getOffset());
+      }
+
+
       if (!offset.getOffset().equals(S3Constants.MINUS_ONE)) {
         if (s3Offset.getOffset().equals(S3Constants.MINUS_ONE)) {
           offsetsMap.put(runnerId, s3Offset);
           context.commitOffset(String.valueOf(runnerId), s3Offset.toString());
-        } else if (Integer.valueOf(s3Offset.getOffset()) > Integer.valueOf(offset.getOffset())) {
+        } else if (s3offsetVal > offsetVal) {
           offsetsMap.put(runnerId, s3Offset);
           context.commitOffset(String.valueOf(runnerId), s3Offset.toString());
         }
       }
     }
   }
+
 
   @VisibleForTesting
   S3Offset getOffsetFromGivenKey(String key) {
