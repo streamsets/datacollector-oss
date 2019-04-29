@@ -66,6 +66,10 @@ public class MongoDBProcessor extends SingleLaneRecordProcessor {
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
     configBean.mongoConfig.init(getContext(), issues, configBean.readPreference.getReadPreference(), null);
+    if (!issues.isEmpty()){
+      return issues;
+    }
+
     // since no issue was found in validation, the followings must not be null at this point.
     Utils.checkNotNull(configBean.mongoConfig.getMongoDatabase(), "MongoDatabase");
     mongoClient = Utils.checkNotNull(configBean.mongoConfig.getMongoClient(), "MongoClient");
