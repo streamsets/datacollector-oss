@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.pipeline.stage.common.mongodb.MongoDBConfig;
 import org.bson.BsonTimestamp;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -64,14 +65,13 @@ public class MongoDBSourceIT {
 
   private static final List<Document> documents = new ArrayList<>(TEST_COLLECTION_SIZE);
   private static final UUID uuidValue = UUID.randomUUID();
-  private static final int MONGO_PORT = 27017;
   private static int timestamp;
 
   private static final String TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss";
   private static final SimpleDateFormat dateFormatter = new SimpleDateFormat(TIMESTAMP_FORMAT);
 
   @ClassRule
-  public static GenericContainer mongoContainer = new GenericContainer("mongo:3.0").withExposedPorts(MONGO_PORT);
+  public static GenericContainer mongoContainer = new GenericContainer("mongo:3.0").withExposedPorts(MongoDBConfig.MONGO_DEFAULT_PORT);
 
   private static int mongoContainerMappedPort = 0;
   private static String mongoContainerIp = null;
@@ -81,7 +81,7 @@ public class MongoDBSourceIT {
     for (int i = 0; i < TEST_COLLECTION_SIZE; i++) {
       documents.add(new Document("value", "document " + i));
     }
-    mongoContainerMappedPort = mongoContainer.getMappedPort(MONGO_PORT);
+    mongoContainerMappedPort = mongoContainer.getMappedPort(MongoDBConfig.MONGO_DEFAULT_PORT);
     mongoContainerIp = mongoContainer.getContainerIpAddress();
 
     MongoClient mongo = new MongoClient(mongoContainerIp, mongoContainerMappedPort);

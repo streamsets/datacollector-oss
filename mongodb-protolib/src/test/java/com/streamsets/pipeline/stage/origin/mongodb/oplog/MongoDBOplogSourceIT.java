@@ -33,6 +33,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.pipeline.stage.common.mongodb.MongoDBConfig;
 import com.streamsets.pipeline.stage.origin.mongodb.MongoDBSource;
 import com.streamsets.pipeline.stage.common.mongodb.MongoDBUtil;
 import org.apache.commons.lang3.tuple.Pair;
@@ -65,14 +66,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class MongoDBOplogSourceIT {
   private static final Logger LOG = LoggerFactory.getLogger(MongoDBOplogSourceIT.class);
   private static final String OPLOG_COLLECTION = "oplog.rs";
-  private static final int MONGO_PORT = 27017;
   private static final String LANE = "lane";
 
   private static final String DATABASE = "TEST_DB";
 
   @ClassRule
   public static GenericContainer mongoContainer = new GenericContainer("mongo:2.6")
-      .withExposedPorts(MONGO_PORT);
+      .withExposedPorts(MongoDBConfig.MONGO_DEFAULT_PORT);
 
   @Rule public TestName name = new TestName();
 
@@ -88,7 +88,7 @@ public class MongoDBOplogSourceIT {
   @BeforeClass
   public static void setUpClass() throws Exception {
     LOG.info("Initializing");
-    mongoContainerMappedPort = mongoContainer.getMappedPort(MONGO_PORT); //30000
+    mongoContainerMappedPort = mongoContainer.getMappedPort(MongoDBConfig.MONGO_DEFAULT_PORT);
     mongoContainerIp = mongoContainer.getContainerIpAddress();//192.168.99.101
     mongoClient = new MongoClient(mongoContainerIp, mongoContainerMappedPort);
   }

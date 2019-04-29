@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
+import com.streamsets.pipeline.stage.common.mongodb.MongoDBConfig;
 import org.bson.Document;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -42,7 +43,6 @@ import org.junit.Assert;
 public class MongoDBLookupProcessorIT {
 
   private static MongoClient mongo = null;
-  private static final int MONGO_PORT = 27017;
 
   private static final String DATABASE_NAME = "testDatabase1";
   private static final String TEST_COLLECTION = "testCollection";
@@ -50,11 +50,11 @@ public class MongoDBLookupProcessorIT {
   private MongoDBProcessorBuilder builder;
 
   @ClassRule
-  public static GenericContainer mongoContainer = new GenericContainer("mongo:3.0").withExposedPorts(MONGO_PORT);
+  public static GenericContainer mongoContainer = new GenericContainer("mongo:3.0").withExposedPorts(MongoDBConfig.MONGO_DEFAULT_PORT);
 
   @BeforeClass
   public static void setUpClass() throws Exception {
-    mongo = new MongoClient(mongoContainer.getContainerIpAddress(), mongoContainer.getMappedPort(MONGO_PORT));
+    mongo = new MongoClient(mongoContainer.getContainerIpAddress(), mongoContainer.getMappedPort(MongoDBConfig.MONGO_DEFAULT_PORT));
   }
 
   @AfterClass
@@ -79,7 +79,7 @@ public class MongoDBLookupProcessorIT {
             .append("location", "Palo Alto")
     );
     builder = new MongoDBProcessorBuilder();
-    builder.connectionString("mongodb://" + mongoContainer.getContainerIpAddress() + ":" + mongoContainer.getMappedPort(MONGO_PORT));
+    builder.connectionString("mongodb://" + mongoContainer.getContainerIpAddress() + ":" + mongoContainer.getMappedPort(MongoDBConfig.MONGO_DEFAULT_PORT));
     builder.database(DATABASE_NAME);
     builder.collection(TEST_COLLECTION);
   }

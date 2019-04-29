@@ -57,14 +57,13 @@ public class MongoDBTargetIT {
 
   private static MongoCollection<Document> testWriteCollection = null;
   private static MongoClient mongo = null;
-  private static final int MONGO_PORT = 27017;
 
   @ClassRule
-  public static GenericContainer mongoContainer = new GenericContainer("mongo:3.0").withExposedPorts(MONGO_PORT);
+  public static GenericContainer mongoContainer = new GenericContainer("mongo:3.0").withExposedPorts(MongoDBConfig.MONGO_DEFAULT_PORT);
 
   @BeforeClass
   public static void setUpClass() throws Exception {
-    mongo = new MongoClient(mongoContainer.getContainerIpAddress(), mongoContainer.getMappedPort(MONGO_PORT));
+    mongo = new MongoClient(mongoContainer.getContainerIpAddress(), mongoContainer.getMappedPort(MongoDBConfig.MONGO_DEFAULT_PORT));
   }
 
   @AfterClass
@@ -94,7 +93,7 @@ public class MongoDBTargetIT {
     MongoTargetConfigBean mongoTargetConfigBean = new MongoTargetConfigBean();
     mongoTargetConfigBean.mongoConfig = new MongoDBConfig();
     mongoTargetConfigBean.mongoConfig.connectionString =
-        "mongodb://" + mongoContainer.getContainerIpAddress() + ":" + mongoContainer.getMappedPort(MONGO_PORT);
+        "mongodb://" + mongoContainer.getContainerIpAddress() + ":" + mongoContainer.getMappedPort(MongoDBConfig.MONGO_DEFAULT_PORT);
     mongoTargetConfigBean.mongoConfig.collection = TEST_WRITE_COLLECTION;
     mongoTargetConfigBean.mongoConfig.database = DATABASE_NAME;
     mongoTargetConfigBean.mongoConfig.authenticationType = AuthenticationType.NONE;
@@ -159,7 +158,7 @@ public class MongoDBTargetIT {
     MongoTargetConfigBean mongoTargetConfigBean = new MongoTargetConfigBean();
     mongoTargetConfigBean.mongoConfig = new MongoDBConfig();
     mongoTargetConfigBean.mongoConfig.connectionString =
-        "mongodb://" + mongoContainer.getContainerIpAddress() + ":" + mongoContainer.getMappedPort(MONGO_PORT);
+        "mongodb://" + mongoContainer.getContainerIpAddress() + ":" + mongoContainer.getMappedPort(MongoDBConfig.MONGO_DEFAULT_PORT);
     mongoTargetConfigBean.mongoConfig.collection = TEST_WRITE_COLLECTION;
     mongoTargetConfigBean.mongoConfig.database = DATABASE_NAME;
     mongoTargetConfigBean.mongoConfig.authenticationType = AuthenticationType.NONE;
@@ -200,7 +199,7 @@ public class MongoDBTargetIT {
     MongoTargetConfigBean mongoTargetConfigBean = new MongoTargetConfigBean();
     mongoTargetConfigBean.mongoConfig = new MongoDBConfig();
     mongoTargetConfigBean.mongoConfig.connectionString =
-        "mongodb://" + mongoContainer.getContainerIpAddress() + ":" + mongoContainer.getMappedPort(MONGO_PORT);
+        "mongodb://" + mongoContainer.getContainerIpAddress() + ":" + mongoContainer.getMappedPort(MongoDBConfig.MONGO_DEFAULT_PORT);
     mongoTargetConfigBean.mongoConfig.collection = TEST_WRITE_COLLECTION;
     mongoTargetConfigBean.mongoConfig.database = DATABASE_NAME;
     mongoTargetConfigBean.mongoConfig.authenticationType = AuthenticationType.NONE;
@@ -228,7 +227,7 @@ public class MongoDBTargetIT {
     mongoTargetConfigBean.mongoConfig = new MongoDBConfig();
     // wrong port
     mongoTargetConfigBean.mongoConfig.connectionString =
-        "mongodb://" + mongoContainer.getContainerIpAddress() + ":" + mongoContainer.getMappedPort(MONGO_PORT);
+        "mongodb://" + mongoContainer.getContainerIpAddress() + ":" + mongoContainer.getMappedPort(MongoDBConfig.MONGO_DEFAULT_PORT);
     mongoTargetConfigBean.mongoConfig.collection = UNIQUE_KEY_EXCEPTION_COLLECTION;
     mongoTargetConfigBean.mongoConfig.database = DATABASE_NAME;
     mongoTargetConfigBean.mongoConfig.authenticationType = AuthenticationType.NONE;
@@ -263,7 +262,7 @@ public class MongoDBTargetIT {
     MongoTargetConfigBean mongoTargetConfigBean = new MongoTargetConfigBean();
     mongoTargetConfigBean.mongoConfig = new MongoDBConfig();
     mongoTargetConfigBean.mongoConfig.connectionString =
-        "mongodb://" + mongoContainer.getContainerIpAddress() + ":" + mongoContainer.getMappedPort(MONGO_PORT);
+        "mongodb://" + mongoContainer.getContainerIpAddress() + ":" + mongoContainer.getMappedPort(MongoDBConfig.MONGO_DEFAULT_PORT);
     mongoTargetConfigBean.mongoConfig.collection = TEST_WRITE_COLLECTION;
     mongoTargetConfigBean.mongoConfig.database = DATABASE_NAME;
     mongoTargetConfigBean.mongoConfig.authenticationType = AuthenticationType.NONE;

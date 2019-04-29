@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
+import com.streamsets.pipeline.stage.common.mongodb.MongoDBConfig;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -32,7 +33,7 @@ public class TestMongoDBOplogSource {
 
   private void testInvalidConfiguration(int initialTs, int initialOrdinal, String collection) throws Exception {
     MongoDBOplogSource source = new MongoDBOplogSourceBuilder()
-        .connectionString("mongodb://localhost:27017")
+        .connectionString("mongodb://localhost:" + MongoDBConfig.MONGO_DEFAULT_PORT)
         .initialTs(initialTs)
         .initialOrdinal(initialOrdinal)
         .collection("oplog.rs")

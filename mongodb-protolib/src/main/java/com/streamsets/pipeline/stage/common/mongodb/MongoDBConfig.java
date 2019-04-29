@@ -43,6 +43,8 @@ public class MongoDBConfig {
   public static final String CONFIG_PREFIX = "configBean.";
   public static final String MONGO_CONFIG_PREFIX = CONFIG_PREFIX + "mongoConfig.";
 
+  public static final int MONGO_DEFAULT_PORT = 27017;
+
   private MongoClient mongoClient;
   private MongoDatabase mongoDatabase;
   private MongoCollection mongoCollection;
@@ -552,7 +554,7 @@ public class MongoDBConfig {
     // if something is wrong when we try to open it.
     for (String host : hosts) {
       String[] hostport = host.split(":");
-      if (hostport.length != 2) {
+      if (hostport.length < 1 || hostport.length > 2) {
         issues.add(context.createConfigIssue(
             Groups.MONGODB.name(),
             MONGO_CONFIG_PREFIX + "connectionString",
@@ -562,7 +564,8 @@ public class MongoDBConfig {
       } else {
         try {
           InetAddress.getByName(hostport[0]);
-          servers.add(new ServerAddress(hostport[0], Integer.parseInt(hostport[1])));
+          int port = (hostport.length == 1) ? MONGO_DEFAULT_PORT : Integer.parseInt(hostport[1]);
+          servers.add(new ServerAddress(hostport[0], port));
         } catch (UnknownHostException e) {
           issues.add(context.createConfigIssue(
               Groups.MONGODB.name(),
