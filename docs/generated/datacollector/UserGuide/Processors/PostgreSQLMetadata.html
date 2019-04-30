@@ -1,0 +1,859 @@
+
+<!DOCTYPE html
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="Supported pipeline types: Data Collector The PostgreSQL Metadata processor determines the PostgreSQL table where each record should be written, compares the record structure against the table ..." /><meta name="copyright" content="(C) Copyright 2019" /><meta name="DC.rights.owner" content="(C) Copyright 2019" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="PostgreSQL Metadata" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Processors/Processors_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Processors/PMML.html#concept_r3s_3fv_gfb" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Processors/RDeduplicator.html#concept_z3m_v52_zq" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_lcp_ssh_qcb" /><title>PostgreSQL Metadata</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_lcp_ssh_qcb-d46e91593" />         
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018042310" />
+        
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+        
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018042310" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+        
+        
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+        
+        
+        
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+                    
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+                    
+                </div>
+                
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+                
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+                
+                
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+        
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref" data-id="concept_yjl_nc5_jq"><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li class="active"><span class="topicref" data-id="concept_lcp_ssh_qcb"><span class="title"><a href="../../../datacollector/UserGuide/Processors/PostgreSQLMetadata.html#concept_lcp_ssh_qcb">PostgreSQL Metadata</a></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+  
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Processors/PMML.html#concept_r3s_3fv_gfb" title="PMML Evaluator"></a></span>  
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Processors/RDeduplicator.html#concept_z3m_v52_zq" title="Record Deduplicator"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+                    
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e804" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e6523" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e8794" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e18525" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e24888" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e26612" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e29325" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e31439" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e80243" class="topicref" data-id="concept_yjl_nc5_jq" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_hpr_twm_jq-d46e80265" class="topicref" data-id="concept_hpr_twm_jq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_overview.html#concept_hpr_twm_jq">Processors</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ujj_spy_kv-d46e80289" class="topicref" data-id="concept_ujj_spy_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Base64Decoder.html#concept_ujj_spy_kv">Base64 Field Decoder</a></span></span></li>
+         <li><span data-tocid="concept_wtr_mpy_kv-d46e80343" class="topicref" data-id="concept_wtr_mpy_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Base64Encoder.html#concept_wtr_mpy_kv">Base64 Field Encoder</a></span></span></li>
+         <li><span data-tocid="concept_hw1_gq4_3fb-d46e80397" class="topicref" data-id="concept_hw1_gq4_3fb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/DataGenerator.html#concept_hw1_gq4_3fb">Data Generator</a></span></span></li>
+         <li><span data-tocid="concept_xw3_4xk_r1b-d46e80548" class="topicref" data-id="concept_xw3_4xk_r1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/DataParser.html#concept_xw3_4xk_r1b">Data Parser</a></span></span></li>
+         <li><span data-tocid="concept_nlz_k3v_gfb-d46e80644" class="topicref" data-id="concept_nlz_k3v_gfb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/DatabricksML.html#concept_nlz_k3v_gfb">Databricks ML Evaluator</a></span></span></li>
+         <li><span data-tocid="concept_ez5_pvf_wbb-d46e80860" class="topicref" data-id="concept_ez5_pvf_wbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Delay.html#concept_ez5_pvf_wbb">Delay</a></span></span></li>
+         <li><span data-tocid="concept_zs3_vfk_hfb-d46e80914" class="topicref" data-id="concept_zs3_vfk_hfb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/EncryptDecrypt.html#concept_zs3_vfk_hfb">Encrypt and Decrypt Fields</a></span></span></li>
+         <li><span data-tocid="concept_zm2_pp3_wq-d46e81494" class="topicref" data-id="concept_zm2_pp3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Expression.html#concept_zm2_pp3_wq">Expression Evaluator</a></span></span></li>
+         <li><span data-tocid="concept_njn_3kk_fx-d46e81704" class="topicref" data-id="concept_njn_3kk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldFlattener.html#concept_njn_3kk_fx">Field Flattener</a></span></span></li>
+         <li><span data-tocid="concept_ivv_c3k_wq-d46e81853" class="topicref" data-id="concept_ivv_c3k_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldHasher.html#concept_ivv_c3k_wq">Field Hasher</a></span></span></li>
+         <li><span data-tocid="concept_q5y_tdq_xgb-d46e82069" class="topicref" data-id="concept_q5y_tdq_xgb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldMapper.html#concept_q5y_tdq_xgb">Field Mapper</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_hjc_t4k_wq-d46e82365" class="topicref" data-id="concept_hjc_t4k_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldMasker.html#concept_hjc_t4k_wq">Field Masker</a></span></span></li>
+         <li><span data-tocid="concept_pgm_tsl_gt-d46e82464" class="topicref" data-id="concept_pgm_tsl_gt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldMerger.html#concept_pgm_tsl_gt">Field Merger</a></span></span></li>
+         <li><span data-tocid="concept_krp_5fv_vy-d46e82518" class="topicref" data-id="concept_krp_5fv_vy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldOrder.html#concept_krp_5fv_vy">Field Order</a></span></span></li>
+         <li><span data-tocid="concept_ekg_313_qw-d46e82617" class="topicref" data-id="concept_ekg_313_qw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/ListPivoter.html#concept_ekg_313_qw">Field Pivoter</a></span></span></li>
+         <li><span data-tocid="concept_jdd_blr_wq-d46e82716" class="topicref" data-id="concept_jdd_blr_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldRemover.html#concept_jdd_blr_wq">Field Remover</a></span></span></li>
+         <li><span data-tocid="concept_vyv_zsg_ht-d46e82770" class="topicref" data-id="concept_vyv_zsg_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldRenamer.html#concept_vyv_zsg_ht">Field Renamer</a></span></span></li>
+         <li><span data-tocid="concept_rw4_2d3_4cb-d46e82875" class="topicref" data-id="concept_rw4_2d3_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldReplacer.html#concept_rw4_2d3_4cb">Field Replacer</a></span></span></li>
+         <li><span data-tocid="concept_vlj_vph_yq-d46e83091" class="topicref" data-id="concept_vlj_vph_yq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldSplitter.html#concept_vlj_vph_yq">Field Splitter</a></span></span></li>
+         <li><span data-tocid="concept_is3_zkp_wq-d46e83301" class="topicref" data-id="concept_is3_zkp_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldTypeConverter.html#concept_is3_zkp_wq">Field Type Converter</a></span></span></li>
+         <li><span data-tocid="concept_o3b_t1k_yx-d46e83456" class="topicref" data-id="concept_o3b_t1k_yx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldZip.html#concept_o3b_t1k_yx">Field Zip</a></span></span></li>
+         <li><span data-tocid="concept_fch_fc3_ms-d46e83666" class="topicref" data-id="concept_fch_fc3_ms" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/GeoIP.html#concept_fch_fc3_ms">Geo IP</a></span></span></li>
+         <li><span data-tocid="concept_ldh_sct_gv-d46e83948" class="topicref" data-id="concept_ldh_sct_gv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Groovy.html#concept_ldh_sct_gv">Groovy Evaluator</a></span></span></li>
+         <li><span data-tocid="concept_mnj_zhq_bw-d46e84888" class="topicref" data-id="concept_mnj_zhq_bw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HBaseLookup.html#concept_mnj_zhq_bw">HBase Lookup</a></span></span></li>
+         <li><span data-tocid="concept_rz5_nft_zv-d46e85269" class="topicref" data-id="concept_rz5_nft_zv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HiveMetadata.html#concept_rz5_nft_zv">Hive Metadata</a></span></span></li>
+         <li><span data-tocid="concept_ghx_ypr_fw-d46e86351" class="topicref" data-id="concept_ghx_ypr_fw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HTTPClient.html#concept_ghx_ypr_fw">HTTP Client</a></span></span></li>
+         <li><span data-tocid="concept_ghx_ypr_fw-d46e87614" class="topicref" data-id="concept_ghx_ypr_fw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HTTPRouter.html#concept_ghx_ypr_fw">HTTP Router</a></span></span></li>
+         <li><span data-tocid="concept_n2p_jgf_lr-d46e87670" class="topicref" data-id="concept_n2p_jgf_lr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JavaScript.html#concept_n2p_jgf_lr">JavaScript Evaluator</a></span></span></li>
+         <li><span data-tocid="concept_ysc_ccy_hw-d46e88477" class="topicref" data-id="concept_ysc_ccy_hw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JDBCLookup.html#concept_ysc_ccy_hw">JDBC Lookup</a></span></span></li>
+         <li><span data-tocid="concept_qbx_lcy_hw-d46e88945" class="topicref" data-id="concept_qbx_lcy_hw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JDBCTee.html#concept_qbx_lcy_hw">JDBC Tee</a></span></span></li>
+         <li><span data-tocid="concept_jmg_hw1_h1b-d46e89230" class="topicref" data-id="concept_jmg_hw1_h1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JSONGenerator.html#concept_jmg_hw1_h1b">JSON Generator</a></span></span></li>
+         <li><span data-tocid="concept_bs1_4t3_yq-d46e89287" class="topicref" data-id="concept_bs1_4t3_yq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JSONParser.html#concept_bs1_4t3_yq">JSON Parser</a></span></span></li>
+         <li><span data-tocid="concept_a1h_lkf_lr-d46e89344" class="topicref" data-id="concept_a1h_lkf_lr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Jython.html#concept_a1h_lkf_lr">Jython Evaluator</a></span></span></li>
+         <li><span data-tocid="concept_a1x_3wl_p1b-d46e90151" class="topicref" data-id="concept_a1x_3wl_p1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/KuduLookup.html#concept_a1x_3wl_p1b">Kudu Lookup</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ulm_qdq_fs-d46e90518" class="topicref" data-id="concept_ulm_qdq_fs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/LogParser.html#concept_ulm_qdq_fs">Log Parser</a></span></span></li>
+         <li><span data-tocid="concept_wnr_wlv_gfb-d46e90617" class="topicref" data-id="concept_wnr_wlv_gfb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/MLeap.html#concept_wnr_wlv_gfb">MLeap Evaluator</a></span></span></li>
+         <li><span data-tocid="concept_rrp_t4w_2fb-d46e90833" class="topicref" data-id="concept_rrp_t4w_2fb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/MongoDBLookup.html#concept_rrp_t4w_2fb">MongoDB Lookup</a></span></span></li>
+         <li><span data-tocid="concept_r3s_3fv_gfb-d46e91300" class="topicref" data-id="concept_r3s_3fv_gfb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/PMML.html#concept_r3s_3fv_gfb">PMML Evaluator</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li class="active"><span data-tocid="concept_lcp_ssh_qcb-d46e91593" class="topicref" data-id="concept_lcp_ssh_qcb" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/PostgreSQLMetadata.html#concept_lcp_ssh_qcb">PostgreSQL Metadata</a></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_mj2_vgl_fhb-d46e91665" class="topicref" data-id="concept_mj2_vgl_fhb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/PostgreSQLMetadata.html#concept_mj2_vgl_fhb">Database Versions</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_qpz_cdx_qcb-d46e91689" class="topicref" data-id="concept_qpz_cdx_qcb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/PostgreSQLMetadata.html#concept_qpz_cdx_qcb">Schema and Table Names</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">When you configure the schemas and tables where records should be written, you can         use the actual schema and table
+                              names or expressions that resolve to the schemas and tables         to use.
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_fyr_gdx_qcb-d46e91724" class="topicref" data-id="concept_fyr_gdx_qcb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/PostgreSQLMetadata.html#concept_fyr_gdx_qcb">Decimal Precision and Scale Field Attributes</a></span></span></li>
+               <li><span data-tocid="concept_bfj_vcx_qcb-d46e91766" class="topicref" data-id="concept_bfj_vcx_qcb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/PostgreSQLMetadata.html#concept_bfj_vcx_qcb">Caching Information</a></span></span></li>
+               <li><span data-tocid="task_lpv_zsh_qcb-d46e91818" class="topicref" data-id="task_lpv_zsh_qcb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/PostgreSQLMetadata.html#task_lpv_zsh_qcb">Configuring a PostgreSQL Metadata Processor</a></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_z3m_v52_zq-d46e91880" class="topicref" data-id="concept_z3m_v52_zq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/RDeduplicator.html#concept_z3m_v52_zq">Record Deduplicator</a></span></span></li>
+         <li><span data-tocid="concept_ng3_lpr_pv-d46e91979" class="topicref" data-id="concept_ng3_lpr_pv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/RedisLookup.html#concept_ng3_lpr_pv">Redis Lookup</a></span></span></li>
+         <li><span data-tocid="concept_k23_3rk_yx-d46e92136" class="topicref" data-id="concept_k23_3rk_yx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/SalesforceLookup.html#concept_k23_3rk_yx">Salesforce Lookup</a></span></span></li>
+         <li><span data-tocid="concept_rfz_ks3_x1b-d46e92507" class="topicref" data-id="concept_rfz_ks3_x1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/SchemaGenerator.html#concept_rfz_ks3_x1b">Schema Generator</a></span></span></li>
+         <li><span data-tocid="concept_cpx_1lm_zx-d46e92717" class="topicref" data-id="concept_cpx_1lm_zx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Spark.html#concept_cpx_1lm_zx">Spark Evaluator</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_zh2_kfj_tdb-d46e93097" class="topicref" data-id="concept_zh2_kfj_tdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/SQLParser.html#concept_zh2_kfj_tdb">SQL Parser</a></span></span></li>
+         <li><span data-tocid="concept_aqz_t4r_pv-d46e93658" class="topicref" data-id="concept_aqz_t4r_pv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/StaticLookup.html#concept_aqz_t4r_pv">Static Lookup</a></span></span></li>
+         <li><span data-tocid="concept_tqv_t5r_wq-d46e93715" class="topicref" data-id="concept_tqv_t5r_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/StreamSelector.html#concept_tqv_t5r_wq">Stream Selector</a></span></span></li>
+         <li><span data-tocid="concept_otg_csh_z2b-d46e93869" class="topicref" data-id="concept_otg_csh_z2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/TensorFlow.html#concept_otg_csh_z2b">TensorFlow Evaluator</a></span></span></li>
+         <li><span data-tocid="concept_o5k_dmf_zq-d46e94341" class="topicref" data-id="concept_o5k_dmf_zq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/ValueReplacer.html#concept_o5k_dmf_zq">Value Replacer (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_nwg_rx4_l2b-d46e94623" class="topicref" data-id="concept_nwg_rx4_l2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/WholeFileTransformer.html#concept_nwg_rx4_l2b">Whole File Transformer</a></span></span></li>
+         <li><span data-tocid="concept_ofb_svm_5bb-d46e95452" class="topicref" data-id="concept_ofb_svm_5bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Aggregator.html#concept_ofb_svm_5bb">Windowing Aggregator</a></span></span></li>
+         <li><span data-tocid="concept_ck4_255_sv-d46e96249" class="topicref" data-id="concept_ck4_255_sv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/XMLFlattener.html#concept_ck4_255_sv">XML Flattener</a></span></span></li>
+         <li><span data-tocid="concept_dtt_q5q_k5-d46e96348" class="topicref" data-id="concept_dtt_q5q_k5" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/XMLParser.html#concept_dtt_q5q_k5">XML Parser</a></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e96406" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e115562" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e121379" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e123982" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e127551" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e131465" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e134291" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e135090" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_gzw_tdm_p2b-d46e135672" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e136048" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e136530" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e137995" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e138964" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e141592" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e142849" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e144502" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e149306" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e150519" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e155318" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e155373" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e155595" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e159296" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e159519" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+                    
+                    
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_lcp_ssh_qcb">
+    <h1 class="title topictitle1" id="ariaid-title1">PostgreSQL Metadata</h1>
+
+    <div class="body conbody">
+        <div class="p"><div class="simpletable-container"><table cellpadding="4" cellspacing="0" summary="" id="concept_lcp_ssh_qcb__simpletable_k44_gfm_rgb" border="0" class="simpletable"><col style="width:100%" /><thead></thead><tbody><tr class="strow">
+                <td style="vertical-align:top;" class="stentry"><a class="xref" href="../Pipeline_Configuration/ProductIcons_Doc.html#concept_mjg_ly5_pgb" title="In Data Collector, you can configure pipelines that are run by Data Collector and pipelines that are run by Data Collector Edge.">Supported pipeline types:</a><ul class="ul" id="concept_lcp_ssh_qcb__d28e103">
+                        <li class="li">
+                            <p class="p"><img class="image" id="concept_lcp_ssh_qcb__d28e108" src="../../../reusable-content/shared-graphics/icon-SDC.png" height="21" width="21" /> Data Collector</p>
+
+                        </li>
+
+                    </ul>
+</td>
+
+            </tr>
+</tbody></table>
+</div>The <span class="ph">PostgreSQL Metadata processor</span> determines the PostgreSQL table where each record should be written, compares the
+            record structure against the table structure, then creates or alters the table as
+            needed. </div>
+
+        <p class="p">Use the <span class="ph">PostgreSQL Metadata processor</span> as part of the <a class="xref" href="../JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_ljq_knr_4cb"><span class="ph">Drift Synchronization Solution for PostgreSQL</span></a>. <span class="ph">Since this is a beta release of <span class="ph">Drift Synchronization Solution for PostgreSQL</span>, use the <span class="ph">PostgreSQL Metadata processor</span> for
+                        development or testing only. Do not use the processor in production
+                        pipelines.</span></p>
+
+        <p class="p">When processing data, the <span class="ph">PostgreSQL Metadata processor</span> uses a table name
+                  expression to determine the name of the target table to use for each record. If
+                  the target table is not in the processor's cache, the processor queries the
+                  database for table information and caches the results. When the target table is in
+                  the cache, the processor compares the record structure against cached table
+                  structure. </p>
+
+        <p class="p">When a record includes fields that do not exist in the
+                  table, the <span class="ph">PostgreSQL Metadata processor</span> alters
+                  the table as needed, then updates the table information in the cache. When a
+                  record should be written to a table that does not exist, the processor creates the
+                  table based on the fields in the record.</p>
+
+        <p class="p">Like other database-related stages, when you configure the <span class="ph">PostgreSQL Metadata processor</span>, you can specify custom JDBC properties, enter connection credentials, and configure
+            advanced properties such as an initial query and timeouts.</p>
+
+        <p class="p">For more information about the <span class="ph">Drift Synchronization Solution for PostgreSQL</span> and a case study, see <a class="xref" href="../JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_ljq_knr_4cb"><span class="ph">Drift Synchronization Solution for PostgreSQL</span></a>. </p>
+
+        <p class="p"><span class="ph">Support for additional databases is planned for future
+                        releases. To state a preference, leave a comment on <a class="xref" href="https://issues.streamsets.com/browse/SDC-8051" target="_blank">this issue</a>.</span></p>
+
+    </div>
+
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_mj2_vgl_fhb">
+    <h2 class="title topictitle2" id="ariaid-title2">Database Versions</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc"></p>
+
+        <div class="p"><span class="ph">StreamSets</span>
+            has tested the <span class="ph">PostgreSQL Metadata processor</span> with the following database versions:<ul class="ul" id="concept_mj2_vgl_fhb__ul_nyn_lhl_fhb">
+                                                  <li class="li">PostgreSQL 9.4.18</li>
+
+                                                  <li class="li">PostgreSQL 9.6.2</li>
+
+                                                  <li class="li">PostgreSQL 9.6.9</li>
+
+                                                  <li class="li">PostgreSQL 10.4</li>
+
+                                                </ul>
+</div>
+
+        <p class="p"><span class="ph">When connecting to a PostgreSQL database, you do not need
+                        to install a JDBC driver. <span class="ph">Data Collector</span> includes the
+                        JDBC driver required for PostgreSQL.</span></p>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title3" id="concept_qpz_cdx_qcb">
+    <h2 class="title topictitle2" id="ariaid-title3">Schema and Table Names</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc">When you configure the schemas and tables where records should be written, you can
+        use the actual schema and table names or expressions that resolve to the schemas and tables
+        to use.</p>
+
+        <p class="p">Use names when all data can be written to the same
+            schema or table. Use expressions to use information in the record to determine the
+            schema or table to write to. </p>
+
+        <p class="p">For example, the <span class="ph">JDBC Multitable Consumer origin writes the
+                        originating table name in the <code class="ph codeph">jdbc.tables</code> record header
+                        attribute.</span>
+            <span class="ph">If you want to write records to tables of the
+                        same name, you can use <code class="ph codeph">${record:attribute('jdbc.tables')}</code>
+                        for the table name property.</span></p>
+
+        <p class="p">Similarly, the <span class="ph">JDBC Query Consumer writes the originating table name
+                        in a <code class="ph codeph">&lt;user-defined prefix&gt;.tables</code> record header
+                        attribute when the origin is configured to create record header
+                        attributes.</span>
+            <span class="ph">So if you want to write records to tables of the
+                        same name, you can use <code class="ph codeph">${record:attribute('&lt;user defined
+                              prefix&gt;.tables')}</code> for the table name property.</span>
+        </p>
+
+        <div class="p">Tips for schema and table name expressions:<ul class="ul" id="concept_qpz_cdx_qcb__ul_r1t_rbs_rcb">
+                <li class="li">
+                    <p class="p">If all records are to be written to a single schema or table, you can enter
+                        the schema or table name instead of an expression. </p>
+
+                </li>
+
+                <li class="li">
+                    <p class="p">If the schema or table name can be extrapolated from record data or header
+                        attributes, you can use an expression that evaluates to the schema or table
+                        name. </p>
+
+                </li>
+
+                <li class="li">When necessary, you can use an Expression Evaluator earlier in the pipeline to
+                    perform calculations and write the results to a new field or a header attribute.
+                    Then, configure the <span class="ph">PostgreSQL Metadata processor</span> to use that information.</li>
+
+            </ul>
+</div>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title4" id="concept_fyr_gdx_qcb">
+    <h2 class="title topictitle2" id="ariaid-title4">Decimal Precision and Scale Field Attributes</h2>
+
+    <div class="body conbody">
+        <p class="p">Use the Decimal Precision Attribute and
+            Decimal Scale Attribute properties to specify the precision and scale for the Decimal
+            columns that the <span class="ph">PostgreSQL Metadata processor</span> creates.</p>
+
+        <p class="p">While other data types have hard coded definitions that the processor uses to create
+            columns in database tables, Decimal columns require a specified precision and scale. </p>
+
+        <p class="p">When
+                                    processing data from the JDBC Query Consumer or JDBC Multitable
+                                    Consumer origins, use the default attribute names, "precision"
+                                    and "scale". Both <span class="ph" id="concept_fyr_gdx_qcb__d65e6833">origins
+                                          store the precision and scale of Decimal columns in
+                                          "precision" and "scale" field attributes for each Decimal
+                                          field.</span></p>
+
+        <p class="p"><span class="ph">When processing data from other origins, you can use the
+                                          Expression Evaluator processor earlier in the pipeline to
+                                          create precision and scale field attributes for Decimal
+                                          fields. </span></p>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title5" id="concept_bfj_vcx_qcb">
+    <h2 class="title topictitle2" id="ariaid-title5">Caching Information</h2>
+
+    <div class="body conbody">
+        <p class="p">When processing records, the <span class="ph">PostgreSQL Metadata processor</span> queries the database for the necessary table information and caches the results.
+            After creating or altering a table, it updates the table information in the cache. The
+            processor uses the cache for record comparison when possible, to avoid unnecessary
+            queries.</p>
+
+        <div class="p">
+            <div class="note important"><span class="importanttitle">Important:</span> <span class="ph">Do not alter any table that might be used by the
+                        pipeline while the pipeline runs. Since the <span class="ph">PostgreSQL Metadata processor</span> caches
+                        information about table structures and creates and alters tables, the
+                        processor must have accurate information about the tables.</span></div>
+
+        </div>
+
+    </div>
+
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title6" id="task_lpv_zsh_qcb">
+    <h2 class="title topictitle2" id="ariaid-title6">Configuring a PostgreSQL Metadata Processor</h2>
+
+    <div class="body taskbody">
+        <section class="section context">
+            <p class="p">Configure a <span class="ph">PostgreSQL Metadata processor</span> as part of the <a class="xref" href="../JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_ljq_knr_4cb"><span class="ph">Drift Synchronization Solution for PostgreSQL</span></a>. </p>
+
+            <p class="p"><span class="ph">Since this is a beta release of <span class="ph">Drift Synchronization Solution for PostgreSQL</span>, use the <span class="ph">PostgreSQL Metadata processor</span> for
+                        development or testing only. Do not use the processor in production
+                        pipelines.</span></p>
+
+        </section>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lpv_zsh_qcb__d154e5727" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d537481e469">General Property</th>
+
+                                    <th class="entry cellrowborder" id="d537481e472">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr id="task_lpv_zsh_qcb__d154e5749">
+                                    <td class="entry cellrowborder" headers="d537481e469 ">Name</td>
+
+                                    <td class="entry cellrowborder" headers="d537481e472 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr id="task_lpv_zsh_qcb__d154e5758">
+                                    <td class="entry cellrowborder" headers="d537481e469 ">Description</td>
+
+                                    <td class="entry cellrowborder" headers="d537481e472 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr id="task_lpv_zsh_qcb__d154e5767">
+                                    <td class="entry cellrowborder" headers="d537481e469 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">Required Fields</a></td>
+
+                                    <td class="entry cellrowborder" headers="d537481e472 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
+</td>
+
+                                </tr>
+
+                                <tr id="task_lpv_zsh_qcb__d154e5781">
+                                    <td class="entry cellrowborder" headers="d537481e469 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">Preconditions</a></td>
+
+                                    <td class="entry cellrowborder" headers="d537481e472 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
+
+                                </tr>
+
+                                <tr id="task_lpv_zsh_qcb__d154e5796">
+                                    <td class="entry cellrowborder" headers="d537481e469 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
+
+                                    <td class="entry cellrowborder" headers="d537481e472 ">Error record handling for the stage: <ul class="ul" id="task_lpv_zsh_qcb__d154e5804">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">JDBC</span> tab, configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lpv_zsh_qcb__table_lcm_yyq_tw" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:66.66666666666666%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d537481e577">JDBC Property</th>
+
+                                    <th class="entry cellrowborder" id="d537481e580">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d537481e577 ">JDBC Connection String</td>
+
+                                    <td class="entry cellrowborder" headers="d537481e580 ">Connection string to use to connect to the database. Use
+                                        the following
+                                        format:<pre class="pre codeblock"><code>jdbc:postgresql://&lt;host&gt;:&lt;port&gt;/&lt;database&gt;</code></pre></td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d537481e577 ">Use Credentials</td>
+
+                                    <td class="entry cellrowborder" headers="d537481e580 "><span class="ph">Enables entering credentials on the Credentials
+                  tab. Use when you do not include credentials in the JDBC connection
+                string.</span><p class="p"><span class="ph">The user account used for the connection
+                        credentials <span class="ph" id="task_lpv_zsh_qcb__d65e6766">must have both the Create Table and
+                              Alter Table permissions on the database.</span></span></p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d537481e577 ">Schema <a class="xref" href="PostgreSQLMetadata.html#concept_qpz_cdx_qcb" title="When you configure the schemas and tables where records should be written, you can use the actual schema and table names or expressions that resolve to the schemas and tables to use.">
+                                            <img class="image" id="task_lpv_zsh_qcb__image_pjr_w1s_rcb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d537481e580 ">Name of the schema to use. You can enter an expression
+                                        that evaluates to the schema name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d537481e577 ">Table Name <a class="xref" href="PostgreSQLMetadata.html#concept_qpz_cdx_qcb" title="When you configure the schemas and tables where records should be written, you can use the actual schema and table names or expressions that resolve to the schemas and tables to use.">
+                                            <img class="image" id="task_lpv_zsh_qcb__image_r14_w1s_rcb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d537481e580 ">
+                                        <p class="p">Name of the database table to use. </p>
+
+                                        <div class="p">Enter one of the following:<ul class="ul" id="task_lpv_zsh_qcb__ul_ncv_cm4_1w">
+                                                <li class="li">Name of an existing database table. </li>
+
+                                                <li class="li">An expression that evaluates to the table name.
+                                                  For example, to use the table name in a
+                                                  "tableName" record header attribute, enter the
+                                                  following
+                                                  expression:<pre class="pre codeblock"><code>${record:attribute('tableName')}</code></pre></li>
+
+                                            </ul>
+</div>
+
+                                        <p class="p">The processor creates the table if the table does not
+                                            exist and updates the table when needed.</p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d537481e577 ">Decimal Scale Attribute <a class="xref" href="PostgreSQLMetadata.html#concept_fyr_gdx_qcb">
+                                            <img class="image" id="task_lpv_zsh_qcb__image_m6p_rfp_vv" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d537481e580 ">The field attribute that contains the scale for Decimal
+                                        fields. <p class="p">Use the default for data generated by the JDBC
+                                            Query Consumer or the JDBC Multitable Consumer
+                                            origins.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d537481e577 ">Decimal Precision Attribute <a class="xref" href="PostgreSQLMetadata.html#concept_fyr_gdx_qcb">
+                                            <img class="image" id="task_lpv_zsh_qcb__image_c3x_55r_rcb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry cellrowborder" headers="d537481e580 ">The field attribute that contains the precision for
+                                        Decimal fields. <p class="p">Use the default for data generated by the
+                                            JDBC Query Consumer or the JDBC Multitable Consumer
+                                            origins.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+              <td class="entry cellrowborder" headers="d537481e577 ">Additional JDBC Configuration Properties</td>
+
+              <td class="entry cellrowborder" headers="d537481e580 ">Additional JDBC configuration properties to use. To add properties, click
+                  <span class="ph uicontrol">Add</span> and define the JDBC property name and value. <p class="p">Use the
+                  property names and values as expected by JDBC. </p>
+</td>
+
+            </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd" id="task_lpv_zsh_qcb__d154e4307">To enter JDBC credentials separately from the JDBC
+                    connection string, on the <span class="ph uicontrol">Credentials</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lpv_zsh_qcb__d154e4315" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr id="task_lpv_zsh_qcb__d154e4325">
+                                    <th class="entry cellrowborder" id="d537481e736">Credentials Property</th>
+
+                                    <th class="entry cellrowborder" id="d537481e739">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" id="task_lpv_zsh_qcb__d154e4339" headers="d537481e736 ">Username</td>
+
+                                    <td class="entry cellrowborder" headers="d537481e739 "><span class="ph" id="task_lpv_zsh_qcb__d154e4343">User name for the
+                                            JDBC connection.</span></td>
+
+                                </tr>
+
+                                <tr id="task_lpv_zsh_qcb__d154e4347">
+                                    <td class="entry cellrowborder" headers="d537481e736 ">Password</td>
+
+                                    <td class="entry cellrowborder" headers="d537481e739 ">Password for the JDBC account.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_lpv_zsh_qcb__d65e5744">To
+                        secure sensitive information such as user names and passwords, you can use
+                              <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">When using JDBC versions older than 4.0, on the <span class="ph uicontrol">Legacy
+                        Drivers</span> tab, optionally configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lpv_zsh_qcb__d154e4372" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d537481e814">Legacy Drivers Property</th>
+
+                                    <th class="entry cellrowborder" id="d537481e817">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d537481e814 ">JDBC Class Driver Name</td>
+
+                                    <td class="entry cellrowborder" headers="d537481e817 ">Class name for the JDBC driver. Required for JDBC
+                                        versions older than version 4.0.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d537481e814 ">Connection Health Test Query</td>
+
+                                    <td class="entry cellrowborder" headers="d537481e817 ">Optional query to test the health of a connection.
+                                        Recommended only when the JDBC version is older than 4.0.
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand" id="task_lpv_zsh_qcb__JDBC-Advanced">
+                <span class="ph cmd">On the <span class="keyword wintitle">Advanced</span> tab, optionally configure advanced
+                    properties.</span>
+                <div class="itemgroup info">The defaults for these properties should work in most cases:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lpv_zsh_qcb__table_wnj_hf3_p5" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d537481e869">Advanced Property</th>
+
+                                    <th class="entry cellrowborder" id="d537481e872">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+              <td class="entry cellrowborder" headers="d537481e869 ">Maximum Pool Size </td>
+
+              <td class="entry cellrowborder" headers="d537481e872 ">Maximum number of connections to create. <p class="p">Default is 1. The recommended value
+                  is 1.</p>
+</td>
+
+            </tr>
+
+                                <tr>
+              <td class="entry cellrowborder" headers="d537481e869 ">Minimum Idle Connections</td>
+
+              <td class="entry cellrowborder" headers="d537481e872 ">Minimum number of connections to create and maintain. To define a fixed
+                connection pool, set to the same value as Maximum Pool Size. <p class="p">Default is 1.
+                </p>
+</td>
+
+            </tr>
+
+                                <tr>
+              <td class="entry cellrowborder" headers="d537481e869 ">Connection Timeout</td>
+
+              <td class="entry cellrowborder" headers="d537481e872 ">Maximum time to wait for a connection. Use a time constant in an expression to
+                define the time increment. <div class="p">Default is 30 seconds, defined as follows:
+                  <pre class="pre codeblock"><code>${30 * SECONDS}</code></pre></div>
+</td>
+
+            </tr>
+
+                                <tr>
+              <td class="entry cellrowborder" headers="d537481e869 ">Idle Timeout</td>
+
+              <td class="entry cellrowborder" headers="d537481e872 ">Maximum time to allow a connection to idle. Use a time constant in an
+                expression to define the time increment. <p class="p">Use 0 to avoid removing any idle
+                  connections.</p>
+<div class="p">Default is 10 minutes, defined as follows:
+                  <pre class="pre codeblock"><code>${10 * MINUTES}</code></pre></div>
+</td>
+
+            </tr>
+
+                                <tr>
+              <td class="entry cellrowborder" headers="d537481e869 ">Max Connection Lifetime</td>
+
+              <td class="entry cellrowborder" headers="d537481e872 ">Maximum lifetime for a connection. Use a time constant in an expression to
+                define the time increment. <p class="p">Use 0 to set no maximum lifetime.</p>
+<div class="p">Default is 30
+                  minutes, defined as follows: <pre class="pre codeblock"><code>${30 * MINUTES}</code></pre></div>
+</td>
+
+            </tr>
+
+                                <tr>
+              <td class="entry cellrowborder" headers="d537481e869 ">Transaction Isolation</td>
+
+              <td class="entry cellrowborder" headers="d537481e872 ">Transaction isolation level used to connect to the database. <p class="p">Default is the
+                  default transaction isolation level set for the database. You can override the
+                  database default by setting the level to any of the following:</p>
+<ul class="ul" id="task_lpv_zsh_qcb__d155e3157">
+                  <li class="li">Read committed </li>
+
+                  <li class="li">Read uncommitted </li>
+
+                  <li class="li">Repeatable read</li>
+
+                  <li class="li">Serializable</li>
+
+                </ul>
+</td>
+
+            </tr>
+
+                                <tr>
+              <td class="entry cellrowborder" id="task_lpv_zsh_qcb__d155e3175" headers="d537481e869 ">Init Query</td>
+
+              <td class="entry cellrowborder" headers="d537481e872 "><span class="ph" id="task_lpv_zsh_qcb__d155e3179">SQL query to perform immediately after the stage
+                  connects to the database. Use to set up the database session as needed.
+                  </span><p class="p">For example, the following query sets the time zone for the session for a
+                  MySQL database: <code class="ph codeph">SET time_zone = timezone;</code></p>
+</td>
+
+            </tr>
+
+                            </tbody>
+</table>
+</div>
+</div>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+</article>
+</article></main></div>
+                        
+                        
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script>
+  </div>
+</nav>
+
+        
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+        
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+        
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
+</html>
