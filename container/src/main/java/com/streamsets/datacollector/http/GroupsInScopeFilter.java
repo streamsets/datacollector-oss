@@ -39,7 +39,7 @@ import java.util.Set;
 /**
  * Filter that sets the groups of the current user in the scope the HTTP request.
  */
-class GroupsInScopeFilter implements Filter {
+public class GroupsInScopeFilter implements Filter {
   private UserGroupManager userGroupManager;
 
   protected UserGroupManager getUserGroupManager() {

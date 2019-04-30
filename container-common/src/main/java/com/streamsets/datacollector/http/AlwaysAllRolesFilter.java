@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.IOException;
 import java.security.Principal;
 
-class AlwaysAllRolesFilter implements Filter {
+public class AlwaysAllRolesFilter implements Filter {
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {
   }
