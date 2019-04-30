@@ -113,6 +113,30 @@ public class TableContextUtil {
     return columnNameToType;
   }
 
+  /**
+   * Our own implementation of JDBCType.valueOf() that won't throw an exception in case of unknown type.
+   *
+   * @param jdbcType
+   * @return
+   */
+  public static String nameForType(DatabaseVendor vendor, int jdbcType) {
+    for( JDBCType sqlType : JDBCType.class.getEnumConstants()) {
+      if(jdbcType == sqlType.getVendorTypeNumber())
+        return sqlType.name();
+    }
+
+    switch (vendor) {
+      case ORACLE:
+        switch (jdbcType) {
+          case -101: return "TIMESTAMP WITH TIME ZONE";
+          case -102: return "TIMESTAMP WITH LOCAL TIME ZONE";
+        }
+        break;
+    }
+
+    return "Unknown";
+  }
+
   private void checkForUnsupportedOffsetColumns(
       LinkedHashMap<String, Integer> offsetColumnToType
   ) throws StageException {
@@ -152,6 +176,7 @@ public class TableContextUtil {
   }
 
   private TableContext createTableContext(
+      DatabaseVendor vendor,
       PushSource.Context context,
       List<Stage.ConfigIssue> issues,
       Connection connection,
@@ -255,6 +280,7 @@ public class TableContextUtil {
     offsetColumnToType.keySet().forEach(c -> offsetAdjustments.put(c, tableConfigBean.partitionSize));
 
     return new TableContext(
+        vendor,
         schemaName,
         tableName,
         offsetColumnToType,
@@ -366,6 +392,7 @@ public class TableContextUtil {
    * @throws StageException if partition configuration is not correct.
    */
   public Map<String, TableContext> listTablesForConfig(
+      DatabaseVendor vendor,
       PushSource.Context context,
       List<Stage.ConfigIssue> issues,
       Connection connection,
@@ -389,6 +416,7 @@ public class TableContextUtil {
             (schemaExclusion == null || !schemaExclusion.matcher(schemaName).matches())
         ) {
           TableContext tableContext = createTableContext(
+              vendor,
               context,
               issues,
               connection,
@@ -411,6 +439,7 @@ public class TableContextUtil {
   }
 
   public static String getPartitionSizeValidationError(
+      DatabaseVendor vendor,
       int colType,
       String column,
       String partitionSize
@@ -423,6 +452,7 @@ public class TableContextUtil {
           int intVal = Integer.parseInt(partitionSize);
           if (intVal <= 0) {
             return createPartitionSizeValidationError(
+                vendor,
                 column,
                 partitionSize,
                 colType,
@@ -430,7 +460,7 @@ public class TableContextUtil {
             );
           }
         } catch (NumberFormatException e) {
-          return createPartitionSizeValidationError(column, partitionSize, colType, e.getMessage());
+          return createPartitionSizeValidationError(vendor, column, partitionSize, colType, e.getMessage());
         }
         break;
       case Types.BIGINT:
@@ -442,6 +472,7 @@ public class TableContextUtil {
           long longVal = Long.parseLong(partitionSize);
           if (longVal <= 0) {
             return createPartitionSizeValidationError(
+                vendor,
                 column,
                 partitionSize,
                 colType,
@@ -449,7 +480,7 @@ public class TableContextUtil {
             );
           }
         } catch (NumberFormatException e) {
-          return createPartitionSizeValidationError(column, partitionSize, colType, e.getMessage());
+          return createPartitionSizeValidationError(vendor, column, partitionSize, colType, e.getMessage());
         }
         break;
       case Types.FLOAT:
@@ -458,6 +489,7 @@ public class TableContextUtil {
           float floatVal = Float.parseFloat(partitionSize);
           if (floatVal <= 0) {
             return createPartitionSizeValidationError(
+                vendor,
                 column,
                 partitionSize,
                 colType,
@@ -465,7 +497,7 @@ public class TableContextUtil {
             );
           }
         } catch (NumberFormatException e) {
-          return createPartitionSizeValidationError(column, partitionSize, colType, e.getMessage());
+          return createPartitionSizeValidationError(vendor, column, partitionSize, colType, e.getMessage());
         }
         break;
       case Types.DOUBLE:
@@ -473,6 +505,7 @@ public class TableContextUtil {
           double doubleVal = Double.parseDouble(partitionSize);
           if (doubleVal <= 0) {
             return createPartitionSizeValidationError(
+                vendor,
                 column,
                 partitionSize,
                 colType,
@@ -480,7 +513,7 @@ public class TableContextUtil {
             );
           }
         } catch (NumberFormatException e) {
-          return createPartitionSizeValidationError(column, partitionSize, colType, e.getMessage());
+          return createPartitionSizeValidationError(vendor, column, partitionSize, colType, e.getMessage());
         }
         break;
       case Types.NUMERIC:
@@ -489,6 +522,7 @@ public class TableContextUtil {
           BigDecimal decimalValue = new BigDecimal(partitionSize);
           if (decimalValue.signum() < 1) {
             return createPartitionSizeValidationError(
+                vendor,
                 column,
                 partitionSize,
                 colType,
@@ -496,7 +530,7 @@ public class TableContextUtil {
             );
           }
         } catch (NumberFormatException e) {
-          return createPartitionSizeValidationError(column, partitionSize, colType, e.getMessage());
+          return createPartitionSizeValidationError(vendor, column, partitionSize, colType, e.getMessage());
         }
         break;
     }
@@ -504,6 +538,7 @@ public class TableContextUtil {
   }
 
   private static String createPartitionSizeValidationError(
+      DatabaseVendor vendor,
       String colName,
       String partitionSize,
       int sqlType,
@@ -513,7 +548,7 @@ public class TableContextUtil {
         "Partition size of %s is invalid for offset column %s (type %s): %s",
         partitionSize,
         colName,
-        JDBCType.valueOf(sqlType).getName(),
+        nameForType(vendor, sqlType),
         errorMsg
     );
   }
@@ -733,6 +768,7 @@ public class TableContextUtil {
     final String extraOffsetColumnConditions = "";
 
     return new TableContext(
+        DatabaseVendor.SQL_SERVER,
         schemaName,
         tableName,
         offsetColumnToType,
@@ -771,6 +807,7 @@ public class TableContextUtil {
     final String extraOffsetColumnConditions = "";
 
     TableContext tableContext = new TableContext(
+        DatabaseVendor.SQL_SERVER,
         schemaName,
         tableName,
         offsetColumnToType,

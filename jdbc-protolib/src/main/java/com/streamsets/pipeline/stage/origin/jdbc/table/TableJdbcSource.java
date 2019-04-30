@@ -107,6 +107,7 @@ public class TableJdbcSource extends AbstractTableJdbcSource {
       //No duplicates even though a table matches multiple configurations, we will add it only once.
       allTableContexts.putAll(
           tableContextUtil.listTablesForConfig(
+          hikariConfigBean.getVendor(),
           getContext(),
           issues,
           connectionManager.getConnection(),

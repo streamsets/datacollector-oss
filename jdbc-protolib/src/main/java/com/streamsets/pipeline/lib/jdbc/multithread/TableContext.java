@@ -33,6 +33,7 @@ public class TableContext {
 
   private static final Logger LOG = LoggerFactory.getLogger(TableContext.class);
 
+  private final DatabaseVendor vendor;
   private final String schema;
   private final String tableName;
   private final LinkedHashMap<String, Integer> offsetColumnToType = new LinkedHashMap<>();
@@ -49,6 +50,7 @@ public class TableContext {
   private long offset;
 
   public TableContext(
+      DatabaseVendor vendor,
       String schema,
       String tableName,
       LinkedHashMap<String, Integer> offsetColumnToType,
@@ -62,6 +64,7 @@ public class TableContext {
       long offset
   ) {
     this(
+        vendor,
         schema,
         tableName,
         offsetColumnToType,
@@ -77,6 +80,7 @@ public class TableContext {
   }
 
   public TableContext(
+      DatabaseVendor vendor,
       String schema,
       String tableName,
       LinkedHashMap<String, Integer> offsetColumnToType,
@@ -88,6 +92,7 @@ public class TableContext {
       int maxNumActivePartitions,
       String extraOffsetColumnConditions
   ) {
+    this.vendor = vendor;
     this.schema = schema;
     this.tableName = tableName;
     if (offsetColumnToType != null) {
@@ -178,6 +183,10 @@ public class TableContext {
     return extraOffsetColumnConditions;
   }
 
+  public DatabaseVendor getVendor() {
+    return vendor;
+  }
+
   public long getOffset() {
     return offset;
   }
@@ -212,7 +221,7 @@ public class TableContext {
             "Table %s is not partitionable because %s column (type %s) is not partitionable",
             tableName,
             offsetColToType.getKey(),
-            JDBCType.valueOf(type).getName()
+            TableContextUtil.nameForType(sourceTableContext.getVendor(), type)
         ));
       }
 
@@ -222,7 +231,7 @@ public class TableContext {
                 " pipeline start time; only tables with with at least one row can be partitioned",
             tableName,
             offsetColToType.getKey(),
-            JDBCType.valueOf(type).getName()
+            TableContextUtil.nameForType(sourceTableContext.getVendor(), type)
         ));
       }
     }

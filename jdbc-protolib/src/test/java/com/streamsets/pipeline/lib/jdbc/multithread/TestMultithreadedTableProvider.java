@@ -978,6 +978,7 @@ public class TestMultithreadedTableProvider {
       int partitionSize = RandomTestUtils.nextInt(1, 1000000);
 
       TableContext table = new TableContext(
+          DatabaseVendor.UNKNOWN,
           schemaName,
           tableName,
           Maps.newLinkedHashMap(Collections.singletonMap(offsetColName, type)),
@@ -1114,6 +1115,7 @@ public class TestMultithreadedTableProvider {
     String extraOffsetColumnConditions = null;
 
     return new TableContext(
+        DatabaseVendor.UNKNOWN,
         schema,
         tableName,
         offsetColumnToType,
@@ -1154,6 +1156,7 @@ public class TestMultithreadedTableProvider {
     String extraOffsetColumnConditions = null;
 
     return new TableContext(
+        DatabaseVendor.UNKNOWN,
         schema,
         tableName,
         offsetColumnToType,

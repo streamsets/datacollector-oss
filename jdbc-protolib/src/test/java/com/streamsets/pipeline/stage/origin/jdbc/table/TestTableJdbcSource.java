@@ -30,6 +30,7 @@ import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.jdbc.UnknownTypeAction;
 import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.jdbc.multithread.BatchTableStrategy;
+import com.streamsets.pipeline.lib.jdbc.multithread.DatabaseVendor;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableRuntimeContext;
@@ -306,6 +307,7 @@ public class TestTableJdbcSource {
     final Map<String, String> offsetColumnToMinValues = Collections.emptyMap();
 
     final TableContext tableContext = new TableContext(
+        DatabaseVendor.UNKNOWN,
         "",
         tableName,
         offsetColumnToType,

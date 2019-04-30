@@ -160,6 +160,7 @@ public class TestTableOrderProvider {
 
   private static TableContext getTableContext(String tableName) {
     return new TableContext(
+        DatabaseVendor.UNKNOWN,
         null,
         tableName,
         new LinkedHashMap<>(ImmutableMap.of("prim_key", Types.INTEGER)),

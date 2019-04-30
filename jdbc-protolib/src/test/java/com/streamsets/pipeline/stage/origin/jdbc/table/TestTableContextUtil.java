@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
+import com.streamsets.pipeline.lib.jdbc.multithread.DatabaseVendor;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
 import org.junit.Test;
 
@@ -43,7 +44,7 @@ public class TestTableContextUtil {
 
   private static void assertPartitionSize(int sqlType, String partitionSize, boolean valid) {
     assertThat(
-        TableContextUtil.getPartitionSizeValidationError(sqlType, "col", partitionSize),
+        TableContextUtil.getPartitionSizeValidationError(DatabaseVendor.UNKNOWN, sqlType, "col", partitionSize),
         valid ? nullValue() : notNullValue()
     );
   }

@@ -265,6 +265,7 @@ public abstract class AbstractTableJdbcSource extends BasePushSource {
         }
 
         final String validationError = tableContextUtil.getPartitionSizeValidationError(
+            hikariConfigBean.getVendor(),
             entry.getValue(),
             entry.getKey(),
             partitionSize

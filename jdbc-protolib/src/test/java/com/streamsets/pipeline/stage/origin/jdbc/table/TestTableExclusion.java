@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
+import com.streamsets.pipeline.lib.jdbc.multithread.DatabaseVendor;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
@@ -124,6 +125,7 @@ public class TestTableExclusion {
       TableJdbcELEvalContext tableJdbcELEvalContext
   ) throws SQLException, StageException {
     return tableContextUtil.listTablesForConfig(
+        DatabaseVendor.UNKNOWN,
         createTestContext(),
         new LinkedList<Stage.ConfigIssue>(),
         connection,
@@ -142,6 +144,7 @@ public class TestTableExclusion {
     Assert.assertEquals(
         TABLE_NAMES.size(),
         tableContextUtil.listTablesForConfig(
+            DatabaseVendor.UNKNOWN,
             createTestContext(),
             new LinkedList<Stage.ConfigIssue>(),
             connection,
