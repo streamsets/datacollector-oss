@@ -133,7 +133,7 @@ public class ClusterConfig {
       dependsOn = "useYarnKerberosKeytab",
       triggeredByValue = "true"
   )
-  @ValueChooserModel(SparkDeployModeChooserValues.class)
+  @ValueChooserModel(KeytabSourceChooserValues.class)
   public KeytabSource yarnKerberosKeytabSource;
 
   @ConfigDef(
