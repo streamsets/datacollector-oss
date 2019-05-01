@@ -4,12 +4,11 @@
   "lastIncrementalVersion": null,
   "rules": [{
     "uuid": "7d800180-6ea2-4bb5-b31d-c664bfb67d5d",
-    "minSdcVersion": "3.9.0",
-    "maxSdcVersion": null,
+    "entity": "STAGE",
     "preconditions": [
+      "version:isGreaterOrEqualTo('3.9.0')",
       "collection:contains(sdc:stagelibNames(), 'streamsets-datacollector-jdbc-lib')"
     ],
-    "entity": "STAGE",
     "conditions": [
       "issue:errorCode() == 'JDBC_03'",
       "stageDef:type() == 'SOURCE'",

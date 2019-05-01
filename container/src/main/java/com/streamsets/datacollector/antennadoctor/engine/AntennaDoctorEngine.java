@@ -25,6 +25,7 @@ import com.streamsets.datacollector.antennadoctor.engine.el.StageConfigurationEL
 import com.streamsets.datacollector.antennadoctor.engine.el.StageDefinitionEL;
 import com.streamsets.datacollector.antennadoctor.engine.el.StageIssueEL;
 import com.streamsets.datacollector.antennadoctor.engine.el.VarEL;
+import com.streamsets.datacollector.antennadoctor.engine.el.VersionEL;
 import com.streamsets.datacollector.el.ELEvaluator;
 import com.streamsets.datacollector.util.Version;
 import com.streamsets.pipeline.api.AntennaDoctorMessage;
@@ -55,37 +56,30 @@ public class AntennaDoctorEngine {
 
   public AntennaDoctorEngine(AntennaDoctorContext context,List<AntennaDoctorRuleBean> rules) {
     ImmutableList.Builder<RuntimeRule> builder = ImmutableList.builder();
-    ELEval preconditionEval = new ELEvaluator(null, AntennaDoctorELDefinitionExtractor.get(), SdcEL.class);
+
+    // Evaluation for precondition, we guarantee that we execute the list in order and if any older checks fail
+    // we never execute the later ones. E.g. one can do dependency by checking version in first precondition and
+    // using that version specific EL later on.
+    ELEval preconditionEval = new ELEvaluator(
+      null,
+      AntennaDoctorELDefinitionExtractor.get(),
+      SdcEL.class,
+      VersionEL.class
+    );
 
     for(AntennaDoctorRuleBean ruleBean : rules) {
       LOG.trace("Loading rule {}", ruleBean.getUuid());
 
-      // Validate min SDC version
-      if(ruleBean.getMinSdcVersion() != null) {
-        Version minSdcVersion = new Version(ruleBean.getMinSdcVersion());
-        Version sdcVersion = new Version(context.getBuildInfo().getVersion());
-
-        if(!sdcVersion.isGreaterOrEqualTo(minSdcVersion)) {
-          LOG.trace("Min SDC version check ({} <= {}) failed, skipping rule {}", minSdcVersion.toString(), sdcVersion.toString(), ruleBean.getUuid());
-          continue;
-        }
+      // We're running in SDC and currently only in STAGE 'mode', other modes will be added later
+      if(ruleBean.getEntity() != AntennaDoctorRuleBean.Entity.STAGE) {
+        continue;
       }
 
-      // And similar check to max SDC version (albeit this check is open interval)
-      if(ruleBean.getMaxSdcVersion() != null) {
-        Version maxSdcVersion = new Version(ruleBean.getMaxSdcVersion());
-        Version sdcVersion = new Version(context.getBuildInfo().getVersion());
-
-        if(!sdcVersion.isLessThan(maxSdcVersion)) {
-          LOG.trace("Max SDC version check ({} > {}) failed, skipping rule {}", maxSdcVersion.toString(), sdcVersion.toString(), ruleBean.getUuid());
-          continue;
-        }
-      }
-
-      // Evaluate dynamic preconditions
+      // Evaluate preconditions
       ELVars vars = preconditionEval.createVariables();
       SdcEL.setVars(vars, context);
       VarEL.resetVars(vars);
+      VersionEL.setVars(vars, context.getBuildInfo());
       for(String precondition: ruleBean.getPreconditions()) {
         try {
           LOG.trace("Evaluating precondition: {}", precondition);

@@ -26,7 +26,7 @@ public class AntennaDoctorRuleBean {
    * Entity to which the rule is associated with (e.g. stage, pipeline, sdc, ...).
    */
   public enum Entity {
-    STAGE,
+    STAGE, // Stage assumes that it's always running in SDC and thus with it's context
   }
 
   /**
@@ -35,20 +35,6 @@ public class AntennaDoctorRuleBean {
    * We are using the uuid for metric collection as well as CRUD for incremental update.
    */
   private String uuid;
-
-  /**
-   * Minimal SDC version for this rule.
-   *
-   * Lower version of SDC that can still use this rule (e.g. we ensure that minSdcVersion <= current version).
-   */
-  private String minSdcVersion;
-
-  /**
-   * Maximal SDC version for this rule.
-   *
-   * Upper open limit of SDC version (e.g. we ensure that current version < maxSdcVersion).
-   */
-  private String maxSdcVersion;
 
   /**
    * List of conditions that must be true on SDC-level in order for this rule to be applicable.
@@ -85,22 +71,6 @@ public class AntennaDoctorRuleBean {
 
   public void setUuid(String uuid) {
     this.uuid = uuid;
-  }
-
-  public String getMinSdcVersion() {
-    return minSdcVersion;
-  }
-
-  public void setMinSdcVersion(String minSdcVersion) {
-    this.minSdcVersion = minSdcVersion;
-  }
-
-  public String getMaxSdcVersion() {
-    return maxSdcVersion;
-  }
-
-  public void setMaxSdcVersion(String maxSdcVersion) {
-    this.maxSdcVersion = maxSdcVersion;
   }
 
   public List<String> getPreconditions() {
