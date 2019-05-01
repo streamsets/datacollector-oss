@@ -27,16 +27,19 @@ import java.util.stream.Collectors;
  * to the runtime engine (to save memory consumption).
  */
 public class RuntimeRule {
-  private String uuid;
-  private AntennaDoctorRuleBean.Entity entity;
-  private List<String> conditions;
-  private AntennaDoctorMessageBean message;
+  private final String uuid;
+  private final AntennaDoctorRuleBean.Entity entity;
+  private final List<String> conditions;
+  private final AntennaDoctorMessageBean message;
 
   public RuntimeRule(AntennaDoctorRuleBean ruleBean) {
     this.uuid = ruleBean.getUuid();
     this.entity = ruleBean.getEntity();
-    this.conditions = ruleBean.getConditions().stream().map(c -> "${" + c + "}").collect(Collectors.toList());
-    this.conditions = Collections.unmodifiableList(this.conditions);
+    this.conditions = Collections.unmodifiableList(
+      ruleBean.getConditions().stream()
+        .map(c -> "${" + c + "}")
+        .collect(Collectors.toList())
+    );
     this.message = ruleBean.getMessage();
   }
 
