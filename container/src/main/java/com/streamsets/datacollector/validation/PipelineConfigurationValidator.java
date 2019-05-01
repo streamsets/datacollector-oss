@@ -36,7 +36,6 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ExecutionMode;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.ListUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,10 +94,6 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
       canPreview &= sortStages(true);
     }
     canPreview &= checkIfPipelineIsEmpty();
-    // We want to run this check if and only if the sort stages is successful and the pipeline is not empty
-    if(canPreview) {
-      canPreview &= checkForDisconnectedDataFlows();
-    }
     canPreview &= loadAndValidatePipelineConfig();
     canPreview &= validateStageConfiguration();
     canPreview &= validatePipelineLanes();
@@ -109,6 +104,11 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
     canPreview &= validatePipelineLifecycleEvents();
     canPreview &= validateStagesExecutionMode(pipelineConfiguration);
     canPreview &= validateCommitTriggerStage(pipelineConfiguration);
+
+    if (!issues.hasIssues()) {
+      // if every thing is good, check for disconnected data flows to support partial preview
+      canPreview &= checkForDisconnectedDataFlows();
+    }
 
     upgradeBadRecordsHandlingStage(pipelineConfiguration);
     upgradeStatsAggregatorStage(pipelineConfiguration);
