@@ -33,6 +33,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.event.CommonEvents;
 import com.streamsets.pipeline.lib.jdbc.multithread.ConnectionManager;
@@ -71,6 +72,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -340,6 +342,7 @@ public class JdbcUtil {
   }
 
   public Map<String, String> getMinimumOffsetValues(
+      DatabaseVendor vendor,
       Connection connection,
       String schema,
       String tableName,
@@ -361,29 +364,50 @@ public class JdbcUtil {
         if (rs.next()) {
           String minValue = null;
           final int colType = rs.getMetaData().getColumnType(MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
-          switch (colType) {
-            case Types.DATE:
-              java.sql.Date date = rs.getDate(MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
-              if (date != null) {
-                minValue = String.valueOf(date.toInstant().toEpochMilli());
+
+          switch (vendor) {
+            case ORACLE:
+              if(TableContextUtil.VENDOR_PARTITIONABLE_TYPES.get(DatabaseVendor.ORACLE).contains(colType)) {
+                switch (colType) {
+                  case TableContextUtil.TYPE_ORACLE_TIMESTAMP_WITH_LOCAL_TIME_ZONE:
+                  case TableContextUtil.TYPE_ORACLE_TIMESTAMP_WITH_TIME_ZONE:
+                    OffsetDateTime offsetDateTime = rs.getObject(MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX, OffsetDateTime.class);
+                    if(offsetDateTime != null) {
+                      minValue = offsetDateTime.toZonedDateTime().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+                    }
+                    break;
+                  default:
+                    throw new IllegalStateException(Utils.format("Unexpected type: {}", colType));
+
+                }
               }
-              break;
-            case Types.TIME:
-              java.sql.Time time = rs.getTime(MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
-              if (time != null) {
-                minValue = String.valueOf(time.toInstant().toEpochMilli());
-              }
-              break;
-            case Types.TIMESTAMP:
-              Timestamp timestamp = rs.getTimestamp(MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
-              if (timestamp != null) {
-                final Instant instant = timestamp.toInstant();
-                minValue = String.valueOf(instant.toEpochMilli());
-              }
-              break;
-            default:
-              minValue = rs.getString(MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
-              break;
+          }
+
+          if(minValue == null) {
+            switch (colType) {
+              case Types.DATE:
+                java.sql.Date date = rs.getDate(MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
+                if (date != null) {
+                  minValue = String.valueOf(date.toInstant().toEpochMilli());
+                }
+                break;
+              case Types.TIME:
+                java.sql.Time time = rs.getTime(MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
+                if (time != null) {
+                  minValue = String.valueOf(time.toInstant().toEpochMilli());
+                }
+                break;
+              case Types.TIMESTAMP:
+                Timestamp timestamp = rs.getTimestamp(MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
+                if (timestamp != null) {
+                  final Instant instant = timestamp.toInstant();
+                  minValue = String.valueOf(instant.toEpochMilli());
+                }
+                break;
+              default:
+                minValue = rs.getString(MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
+                break;
+            }
           }
           if (minValue != null) {
             minOffsetValues.put(offsetColumn, minValue);

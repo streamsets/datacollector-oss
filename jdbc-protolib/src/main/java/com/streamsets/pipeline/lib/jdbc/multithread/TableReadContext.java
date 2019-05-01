@@ -31,11 +31,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public final class TableReadContext {
   private static final Logger LOGGER = LoggerFactory.getLogger(TableReadContext.class);
 
+  private final DatabaseVendor vendor;
   private final PreparedStatement ps;
   private final String query;
   private final ResultSet rs;
@@ -45,21 +48,24 @@ public final class TableReadContext {
   private final JdbcUtil jdbcUtil;
 
   public TableReadContext(
+      DatabaseVendor vendor,
       Connection connection,
       String query,
       List<Pair<Integer, String>> paramValuesToSet,
       int fetchSize
   ) throws SQLException, StageException {
-    this(connection, query, paramValuesToSet, fetchSize, false);
+    this(vendor, connection, query, paramValuesToSet, fetchSize, false);
   }
 
   public TableReadContext(
+      DatabaseVendor vendor,
       Connection connection,
       String query,
       List<Pair<Integer, String>> paramValuesToSet,
       int fetchSize,
       boolean neverEvict
   ) throws SQLException, StageException {
+    this.vendor = vendor;
     jdbcUtil = UtilsProvider.getJdbcUtil();
     this.query = query;
     ps = connection.prepareStatement(query);
@@ -74,18 +80,19 @@ public final class TableReadContext {
 
   private void setPreparedStParameters(List<Pair<Integer, String>> paramValuesToSet) throws SQLException, StageException {
     for (int paramIdx = 1; paramIdx <= paramValuesToSet.size(); paramIdx++) {
-      setParamVal(ps, paramIdx, paramValuesToSet.get(paramIdx-1).getLeft(), paramValuesToSet.get(paramIdx-1).getRight());
+      setParamVal(vendor, ps, paramIdx, paramValuesToSet.get(paramIdx-1).getLeft(), paramValuesToSet.get(paramIdx-1).getRight());
     }
   }
 
   private static void setParamVal(
+      DatabaseVendor vendor,
       PreparedStatement ps,
       int paramIdx,
       int sqlType,
       String paramVal
   ) throws SQLException, StageException {
     Utils.checkState(
-        OffsetQueryUtil.SQL_TYPE_TO_FIELD_TYPE.containsKey(sqlType),
+        TableContext.isPartitionableType(vendor, sqlType),
         Utils.format("Unsupported Partition Offset Type: {}", sqlType)
     );
     //All Date/Time Types are stored as long offsets
@@ -111,6 +118,21 @@ public final class TableReadContext {
         );
         break;
       default:
+        // Oracle must be special
+        switch (vendor) {
+          case ORACLE:
+            if(TableContextUtil.VENDOR_PARTITIONABLE_TYPES.get(DatabaseVendor.ORACLE).contains(sqlType)) {
+              switch (sqlType) {
+                case TableContextUtil.TYPE_ORACLE_TIMESTAMP_WITH_TIME_ZONE:
+                case TableContextUtil.TYPE_ORACLE_TIMESTAMP_WITH_LOCAL_TIME_ZONE:
+                  // We insert the timestamp as String
+                  ps.setObject(paramIdx, paramVal == null ? null : ZonedDateTime.parse(paramVal, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+                  return;
+                default:
+                  throw new IllegalStateException(Utils.format("Unsupported type for ORACLE database: {}", sqlType));
+              }
+            }
+        }
         ps.setObject(
             paramIdx,
             Field.create(OffsetQueryUtil.SQL_TYPE_TO_FIELD_TYPE.get(sqlType), paramVal).getValue()

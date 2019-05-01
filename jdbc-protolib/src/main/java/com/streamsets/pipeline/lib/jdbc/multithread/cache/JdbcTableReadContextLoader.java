@@ -83,7 +83,9 @@ public class JdbcTableReadContextLoader extends CacheLoader<TableRuntimeContext,
       connectionManager.closeConnection();
     }
 
-    return new TableReadContext(connectionManager.getConnection(),
+    return new TableReadContext(
+        connectionManager.getVendor(),
+        connectionManager.getConnection(),
         queryAndParamValToSet.getLeft(),
         queryAndParamValToSet.getRight(),
         fetchSize,

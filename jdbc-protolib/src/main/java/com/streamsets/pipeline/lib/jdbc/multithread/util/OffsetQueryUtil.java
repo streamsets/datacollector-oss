@@ -36,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Types;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -341,16 +342,6 @@ public final class OffsetQueryUtil {
     return offsetColumnsToOffsetMap;
   }
 
-  /**
-   * Joins the map of column to values to a string offset in the form of (<column1>=<value1>::<column2>=<value2>::<column3>=<value3>)
-   * @param tableContext Context for the current table.
-   * @param fields The current record fields
-   * @return Offset in the form of (<column1>=<value1>::<column2>=<value2>::<column3>=<value3>)
-   */
-  public static String getOffsetFormatFromColumns(TableRuntimeContext tableContext, Map<String, Field> fields) throws StageException {
-    return getOffsetFormat(getOffsetsFromColumns(tableContext, fields));
-  }
-
   public static String getOffsetFormat(Map<String, ?> columnsToOffsets) {
     List<String> offsetColumnFormat = new ArrayList<>();
     if (columnsToOffsets != null) {
@@ -383,6 +374,8 @@ public final class OffsetQueryUtil {
           nanos = 0;
         }
         value = TableContextUtil.getOffsetValueForTimestampParts(field.getValueAsDatetime().getTime(), nanos);
+      } else if(field.getType() == Field.Type.ZONED_DATETIME) {
+        value = field.getValueAsZonedDateTime().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
       } else {
         value = field.getValueAsString();
       }

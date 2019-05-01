@@ -191,6 +191,18 @@ public class TableContext {
     return offset;
   }
 
+  /**
+   * Private helper method to figure out if given sqlType is partitionable for given vendor.
+   */
+  public static boolean isPartitionableType(DatabaseVendor vendor, int sqlType) {
+    Set<Integer> vendorTypes = TableContextUtil.VENDOR_PARTITIONABLE_TYPES.getOrDefault(vendor, Collections.emptySet());
+    if(vendorTypes.contains(sqlType)) {
+      return true;
+    }
+
+    return TableContextUtil.PARTITIONABLE_TYPES.contains(sqlType);
+  }
+
   private static boolean isPartitionable(TableContext sourceTableContext) {
     return isPartitionable(sourceTableContext, null);
   }
@@ -216,7 +228,7 @@ public class TableContext {
 
     for (Map.Entry<String, Integer> offsetColToType : sourceTableContext.getOffsetColumnToType().entrySet()) {
       final int type = offsetColToType.getValue();
-      if (!TableContextUtil.PARTITIONABLE_TYPES.contains(type)) {
+      if (!isPartitionableType(sourceTableContext.getVendor(), type)) {
         reasons.add(String.format(
             "Table %s is not partitionable because %s column (type %s) is not partitionable",
             tableName,
@@ -271,10 +283,6 @@ public class TableContext {
   @Override
   public String toString() {
     return String.format("TableContext{schema='%s', tableName='%s'}", schema, tableName);
-  }
-
-  public void setOffsetColumnToStartOffset(Map<String, String> offsetColumnToStartOffset) {
-    this.offsetColumnToStartOffset = offsetColumnToStartOffset;
   }
 
   public void setColumnToType(Map<String, Integer> columnToType) {

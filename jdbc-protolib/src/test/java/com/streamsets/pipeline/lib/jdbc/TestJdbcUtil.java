@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.jdbc;
 
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.lib.jdbc.multithread.DatabaseVendor;
 import com.streamsets.pipeline.stage.origin.jdbc.table.QuoteChar;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -208,6 +209,7 @@ public class TestJdbcUtil {
     Connection connection = dataSource.getConnection();
 
     Map<String, String> emptyTableMin = jdbcUtil.getMinimumOffsetValues(
+        DatabaseVendor.UNKNOWN,
         connection,
         schema,
         emptyTableName,
@@ -217,6 +219,7 @@ public class TestJdbcUtil {
     assertThat(emptyTableMin.size(), equalTo(0));
 
     Map<String, String> typedTableMin = jdbcUtil.getMinimumOffsetValues(
+        DatabaseVendor.UNKNOWN,
         connection,
         schema,
         dataTypesTestTable,

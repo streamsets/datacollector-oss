@@ -17,6 +17,7 @@ package com.streamsets.pipeline.lib.jdbc.multithread;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.Field;
@@ -50,6 +51,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -70,6 +73,9 @@ public class TableContextUtil {
   public static final String GENERIC_PARTITION_SIZE_GT_ZERO_MSG = "partition size must be greater than zero";
   public static final String SQL_SERVER_CDC_TABLE_SUFFIX = "_CT";
 
+  public static final int TYPE_ORACLE_TIMESTAMP_WITH_TIME_ZONE = -101;
+  public static final int TYPE_ORACLE_TIMESTAMP_WITH_LOCAL_TIME_ZONE = -102;
+
   public static final String OFFSET_VALUE_NANO_SEPARATOR = "<n>";
 
   public static final Set<Integer> PARTITIONABLE_TYPES = ImmutableSet.<Integer>builder()
@@ -85,6 +91,13 @@ public class TableContextUtil {
     .add(Types.DOUBLE)
     .add(Types.DECIMAL)
     .add(Types.NUMERIC)
+    .build();
+
+  public static final Map<DatabaseVendor, Set<Integer>> VENDOR_PARTITIONABLE_TYPES = ImmutableMap.<DatabaseVendor, Set<Integer>>builder()
+    .put(DatabaseVendor.ORACLE, ImmutableSet.of(
+      TYPE_ORACLE_TIMESTAMP_WITH_TIME_ZONE,
+      TYPE_ORACLE_TIMESTAMP_WITH_LOCAL_TIME_ZONE
+    ))
     .build();
 
   private JdbcUtil jdbcUtil;
@@ -128,8 +141,8 @@ public class TableContextUtil {
     switch (vendor) {
       case ORACLE:
         switch (jdbcType) {
-          case -101: return "TIMESTAMP WITH TIME ZONE";
-          case -102: return "TIMESTAMP WITH LOCAL TIME ZONE";
+          case TYPE_ORACLE_TIMESTAMP_WITH_TIME_ZONE: return "TIMESTAMP WITH TIME ZONE";
+          case TYPE_ORACLE_TIMESTAMP_WITH_LOCAL_TIME_ZONE: return "TIMESTAMP WITH LOCAL TIME ZONE";
         }
         break;
     }
@@ -234,6 +247,7 @@ public class TableContextUtil {
     Map<String, String> offsetColumnMinValues = new HashMap<>();
     if (tableConfigBean.partitioningMode != PartitioningMode.DISABLED) {
       offsetColumnMinValues.putAll(jdbcUtil.getMinimumOffsetValues(
+          vendor,
           connection,
           schemaName,
           tableName,
@@ -559,7 +573,24 @@ public class TableContextUtil {
       String offset
   ) {
     final String partitionSize = tableContext.getOffsetColumnToPartitionOffsetAdjustments().get(column);
-    switch (tableContext.getOffsetColumnToType().get(column)) {
+    final int offsetColumnType = tableContext.getOffsetColumnToType().get(column);
+
+    switch (tableContext.getVendor()) {
+      case ORACLE:
+        if(TableContextUtil.VENDOR_PARTITIONABLE_TYPES.get(DatabaseVendor.ORACLE).contains(offsetColumnType)) {
+          switch (offsetColumnType) {
+            case TableContextUtil.TYPE_ORACLE_TIMESTAMP_WITH_LOCAL_TIME_ZONE:
+            case TableContextUtil.TYPE_ORACLE_TIMESTAMP_WITH_TIME_ZONE:
+              return ZonedDateTime.parse(offset, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+                .plusSeconds(Integer.parseInt(partitionSize))
+                .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+            default:
+              throw new IllegalStateException(Utils.format("Unsupported type: {}", offsetColumnType));
+          }
+        }
+    }
+
+    switch (offsetColumnType) {
       case Types.TINYINT:
       case Types.SMALLINT:
       case Types.INTEGER:

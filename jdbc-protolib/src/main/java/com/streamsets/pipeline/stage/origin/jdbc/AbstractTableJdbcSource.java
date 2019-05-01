@@ -347,8 +347,6 @@ public abstract class AbstractTableJdbcSource extends BasePushSource {
 
       ExecutorCompletionService<Future> completionService = new ExecutorCompletionService<>(executorService);
 
-      final RateLimiter queryRateLimiter = commonSourceConfigBean.creatQueryRateLimiter();
-
       List<Future> allFutures = new LinkedList<>();
       IntStream.range(0, numberOfThreads).forEach(threadNumber -> {
         JdbcBaseRunnable runnable = new JdbcRunnableBuilder()

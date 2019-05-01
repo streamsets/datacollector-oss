@@ -17,6 +17,7 @@ package com.streamsets.pipeline.lib.jdbc.multithread.cache;
 
 import com.google.common.cache.CacheLoader;
 import com.streamsets.pipeline.lib.jdbc.multithread.ConnectionManager;
+import com.streamsets.pipeline.lib.jdbc.multithread.DatabaseVendor;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableReadContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableRuntimeContext;
@@ -87,6 +88,7 @@ public class SQLServerCDCContextLoader extends CacheLoader<TableRuntimeContext, 
 
     TableReadContext tableReadContext =
         new TableReadContext(
+            DatabaseVendor.SQL_SERVER,
             connectionManager.getConnection(),
             query,
             new ArrayList<>(),
