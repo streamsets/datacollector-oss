@@ -101,6 +101,14 @@
     </dependency>
 
     <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-jython-protolib</artifactId>
+      <version>${project.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
       <groupId>org.python</groupId>
       <artifactId>jython-standalone</artifactId>
       <version>${jython.version}</version>
@@ -111,38 +119,6 @@
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>add-test-source</id>
-            <phase>generate-test-sources</phase>
-            <goals>
-              <goal>add-test-source</goal>
-            </goals>
-            <configuration>
-              <sources>
-                <source>${basedir}/../jython-protolib/src/test/java</source>
-              </sources>
-            </configuration>
-          </execution>
-          <execution>
-            <id>add-test-resources</id>
-            <phase>generate-test-resources</phase>
-            <goals>
-              <goal>add-test-resource</goal>
-            </goals>
-            <configuration>
-              <resources>
-                <resource>
-                  <directory>${basedir}/../jython-protolib/src/test/resources</directory>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
