@@ -72,7 +72,7 @@ public class ClusterConfig {
       label = "Hadoop User Name",
       description = "Name of the Hadoop user that StreamSets impersonates",
       group = "CLUSTER",
-      defaultValue = "hdfs",
+      defaultValue = "",
       displayPosition = 104,
       dependsOn = "clusterType",
       triggeredByValue = "YARN"
