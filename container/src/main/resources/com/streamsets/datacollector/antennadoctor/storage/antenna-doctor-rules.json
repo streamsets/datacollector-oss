@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "baseVersion": "20190424171900",
-  "lastIncrementalVersion": null,
+  "updates": [],
   "rules": [{
     "uuid": "7d800180-6ea2-4bb5-b31d-c664bfb67d5d",
     "entity": "STAGE",

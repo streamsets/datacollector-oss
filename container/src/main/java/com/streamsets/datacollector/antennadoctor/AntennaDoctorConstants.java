@@ -30,9 +30,33 @@ public final class AntennaDoctorConstants {
   public final static boolean DEFAULT_OVERRIDE_ENABLE = false;
 
   /**
+   * sdc.properties config to enable downloading updates to the knowledge base.
+   */
+  public final static String CONF_UPDATE_ENABLE = "antennadoctor.update.enable";
+  public final static boolean DEFAULT_UPDATE_ENABLE = true;
+
+  /**
+   * sdc.properties config for initial delay (in minutes) of when to ask for updates after SDC start.
+   */
+  public final static String CONF_UPDATE_DELAY = "antennadoctor.update.delay";
+  public final static int DEFAULT_UPDATE_DELAY = 5;
+
+  /**
+   * sdc.properties config for period between asking for updates (in minutes).
+   */
+  public final static String CONF_UPDATE_PERIOD = "antennadoctor.update.period";
+  public final static int DEFAULT_UPDATE_PERIOD = 12*60;
+
+  /**
+   * sdc.properties config to enable downloading updates to the knowledge base.
+   */
+  public final static String CONF_UPDATE_URL = "antennadoctor.update.url";
+  public final static String DEFAULT_UPDATE_URL = "http://somewhere.streamsets.com/"; // TBD
+
+  /**
    * Name of the resource file that have built-in database
    */
-  public final static String RESOURCE_DATABASE = "antenna-doctor-rules.json";
+  public final static String FILE_DATABASE = "antenna-doctor-rules.json";
 
   /**
    * Directory inside data dir that holds files from Antenna Doctor.
@@ -43,4 +67,14 @@ public final class AntennaDoctorConstants {
    * Name of file that we will scan for in case user enabled overrides.
    */
   public final static String FILE_OVERRIDE = "antenna-doctor-override.json";
+
+  /**
+   * Manifest file for the repository.
+   */
+  public final static String URL_MANIFEST = "/manifest.json";
+
+  /**
+   * URL end point for downloading given versioned files.
+   */
+  public final static String URL_VERSION_END = ".json.gz";
 }

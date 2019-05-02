@@ -18,16 +18,18 @@ package com.streamsets.datacollector.antennadoctor.bean;
 import java.util.List;
 
 /**
- * Main storage bean for Antenna Doctor regardless whether this is stored copy inside jar classpath or expanded
- * copy in the data directory. This file is meant to contain all active rules regardless whether they are applicable
- * to this release and runtime of data collector.
+ * Antenna Doctor uses remote repository in order to be able to download updated knowledge base.
+ *
+ * Repository structure is 'simple':
+ *
+ * * manifest.json: This bean. Unzipped.
+ * * base-YYYYMMDDHHMMSS.json.zip: AntennaDoctorStorageBean with base file.
+ * * update-YYYYMMDDHHMMSS.json.zip: AntennaDoctorUpdateBean
  */
-public class AntennaDoctorStorageBean {
+public class AntennaDoctorRepositoryManifestBean {
 
   /**
-   * Version of schema of this file.
-   *
-   * Primarily used to determine version of the structure so that we can perform upgrades if/when necessary.
+   * Schema version of the manifest file.
    */
   private int schemaVersion;
 
@@ -39,22 +41,9 @@ public class AntennaDoctorStorageBean {
   private String baseVersion;
 
   /**
-   * Updates that were already applied to this base version.
+   * Ordered list of versions that should be applied on top of the base version.
    */
   private List<String> updates;
-
-  /**
-   * All rules for the Antenna Doctor engine.
-   */
-  private List<AntennaDoctorRuleBean> rules;
-
-  public int getSchemaVersion() {
-    return schemaVersion;
-  }
-
-  public void setSchemaVersion(int schemaVersion) {
-    this.schemaVersion = schemaVersion;
-  }
 
   public String getBaseVersion() {
     return baseVersion;
@@ -70,13 +59,5 @@ public class AntennaDoctorStorageBean {
 
   public void setUpdates(List<String> updates) {
     this.updates = updates;
-  }
-
-  public List<AntennaDoctorRuleBean> getRules() {
-    return rules;
-  }
-
-  public void setRules(List<AntennaDoctorRuleBean> rules) {
-    this.rules = rules;
   }
 }

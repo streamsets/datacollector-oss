@@ -17,16 +17,22 @@ package com.streamsets.datacollector.antennadoctor.storage;
 
 import com.google.common.io.Resources;
 import com.streamsets.datacollector.antennadoctor.AntennaDoctorConstants;
+import com.streamsets.datacollector.antennadoctor.bean.AntennaDoctorRepositoryManifestBean;
+import com.streamsets.datacollector.antennadoctor.bean.AntennaDoctorRepositoryUpdateBean;
 import com.streamsets.datacollector.antennadoctor.bean.AntennaDoctorRuleBean;
 import com.streamsets.datacollector.antennadoctor.bean.AntennaDoctorStorageBean;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -37,12 +43,15 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -78,6 +87,11 @@ public class AntennaDoctorStorage extends AbstractTask {
   private OverrideFileRunnable overrideRunnable;
   private Future overrideFuture;
 
+  // Remote repo handling
+  private ScheduledExecutorService updateService;
+  private UpdateRunnable updateRunnable;
+  private ScheduledFuture updateFuture;
+
   public AntennaDoctorStorage(
     Configuration configuration,
     String dataDir,
@@ -91,17 +105,38 @@ public class AntennaDoctorStorage extends AbstractTask {
 
   @Override
   protected void initTask() {
-    // Make sure that we have our own directory to operate in
+    LOG.info("Repository location: {}", repositoryDirectory);
+
     try {
-      LOG.info("Repository location: {}", repositoryDirectory);
-      Files.createDirectories(repositoryDirectory);
+      // Make sure that we have our own directory to operate in
+      if(!Files.exists(repositoryDirectory)) {
+        Files.createDirectories(repositoryDirectory);
+      }
+
+      Path store = repositoryDirectory.resolve(AntennaDoctorConstants.FILE_DATABASE);
+      if(!Files.exists(store)) {
+        try(OutputStream stream = Files.newOutputStream(store)) {
+          Resources.copy(Resources.getResource(AntennaDoctorStorage.class, AntennaDoctorConstants.FILE_DATABASE), stream);
+        }
+      }
     } catch (IOException e) {
       LOG.error("Cant initialize repository: {}", e.getMessage(), e);
       return;
     }
 
-    delegate.loadNewRules(getBuiltInRules());
+    // Remote repo handling
+    if(configuration.get(AntennaDoctorConstants.CONF_UPDATE_ENABLE, AntennaDoctorConstants.DEFAULT_UPDATE_ENABLE)) {
+      this.updateService = Executors.newSingleThreadScheduledExecutor();
+      this.updateRunnable = new UpdateRunnable();
+      this.updateFuture = this.updateService.scheduleAtFixedRate(
+        updateRunnable,
+        configuration.get(AntennaDoctorConstants.CONF_UPDATE_DELAY, AntennaDoctorConstants.DEFAULT_UPDATE_DELAY),
+        configuration.get(AntennaDoctorConstants.CONF_UPDATE_PERIOD, AntennaDoctorConstants.DEFAULT_UPDATE_PERIOD),
+        TimeUnit.MINUTES
+      );
+    }
 
+    boolean loadedRules = false;
     // Schedule override runnable if allowed in configuration
     if(configuration.get(AntennaDoctorConstants.CONF_OVERRIDE_ENABLE, AntennaDoctorConstants.DEFAULT_OVERRIDE_ENABLE)) {
       LOG.info("Enabling polling of {} to override the rule database", AntennaDoctorConstants.FILE_OVERRIDE);
@@ -112,7 +147,13 @@ public class AntennaDoctorStorage extends AbstractTask {
       // Also load all the changes from the override file
       if(Files.exists(repositoryDirectory.resolve(AntennaDoctorConstants.FILE_OVERRIDE))) {
         reloadOverrideFile();
+        loadedRules = true;
       }
+    }
+
+    // If the rules weren't loaded yet, let's do that
+    if(!loadedRules) {
+      delegate.loadNewRules(loadRules());
     }
   }
 
@@ -126,20 +167,41 @@ public class AntennaDoctorStorage extends AbstractTask {
       overrideFuture.cancel(true);
       try {
         overrideFuture.get();
-      } catch (InterruptedException|ExecutionException e) {
-        LOG.error("Error when stopping override file thread", e);
+      } catch (Throwable e) {
+        LOG.debug("Error when stopping override file thread", e);
       }
     }
 
     if(overrideService != null) {
-      overrideService.shutdownNow();
+      try {
+        overrideService.shutdownNow();
+      } catch (Throwable e) {
+        LOG.debug("Error when stopping override file service", e);
+      }
+    }
+
+    if(updateFuture != null) {
+      updateFuture.cancel(true);
+      try {
+        updateFuture.get();
+      } catch (Throwable e) {
+        LOG.debug("Error when stopping update thread", e);
+      }
+    }
+
+    if(updateService != null) {
+      try {
+        updateService.shutdownNow();
+      } catch (Throwable e) {
+        LOG.debug("Error when stopping update service", e);
+      }
     }
   }
 
-  private List<AntennaDoctorRuleBean> getBuiltInRules() {
-    try {
+  private List<AntennaDoctorRuleBean> loadRules() {
+    try(InputStream inputStream = Files.newInputStream(repositoryDirectory.resolve(AntennaDoctorConstants.FILE_DATABASE))) {
       AntennaDoctorStorageBean storageBean = ObjectMapperFactory.get().readValue(
-        Resources.getResource(AntennaDoctorStorage.class, AntennaDoctorConstants.RESOURCE_DATABASE),
+        inputStream,
         AntennaDoctorStorageBean.class
       );
       return storageBean.getRules();
@@ -153,7 +215,7 @@ public class AntennaDoctorStorage extends AbstractTask {
     LOG.info("Reloading override file {}", AntennaDoctorConstants.FILE_OVERRIDE);
     try(InputStream stream = Files.newInputStream(repositoryDirectory.resolve(AntennaDoctorConstants.FILE_OVERRIDE))) {
       AntennaDoctorStorageBean storageBean = ObjectMapperFactory.get().readValue(stream, AntennaDoctorStorageBean.class);
-      delegate.loadNewRules(mergeRuleBeans(getBuiltInRules(), storageBean.getRules()));
+      delegate.loadNewRules(mergeRuleBeans(loadRules(), storageBean.getRules()));
     } catch (Throwable e) {
       LOG.error("Can't load override file: {}", e.getMessage(), e);
     }
@@ -215,6 +277,101 @@ public class AntennaDoctorStorage extends AbstractTask {
         LOG.error("Issue when stopping the override scan thread", e);
       } finally {
         LOG.info("Stopping scanner thread for changes to {} file", AntennaDoctorConstants.FILE_OVERRIDE);
+      }
+    }
+  }
+
+  private class UpdateRunnable implements Runnable {
+    @Override
+    public void run() {
+      String repoURL = configuration.get(AntennaDoctorConstants.CONF_UPDATE_URL, AntennaDoctorConstants.DEFAULT_UPDATE_URL);
+      boolean changedApplied = false;
+      try {
+        LOG.info("Downloading updates from: {}", repoURL);
+
+        // Download repo manifest first
+        AntennaDoctorRepositoryManifestBean manifestBean;
+        try(Response response = ClientBuilder.newClient()
+          .target(repoURL + AntennaDoctorConstants.URL_MANIFEST)
+          .request()
+          .get()) {
+
+          manifestBean = ObjectMapperFactory.get().readValue(
+            response.readEntity(InputStream.class),
+            AntennaDoctorRepositoryManifestBean.class
+          );
+        }
+        LOG.info("Base version in remote server is {}", manifestBean.getBaseVersion());
+
+        AntennaDoctorStorageBean currentStore;
+        try(InputStream stream = Files.newInputStream(repositoryDirectory.resolve(AntennaDoctorConstants.FILE_DATABASE))) {
+          currentStore = ObjectMapperFactory.get().readValue(stream, AntennaDoctorStorageBean.class);
+        }
+
+        if(!currentStore.getBaseVersion().equals(manifestBean.getBaseVersion())) {
+          LOG.info("Current base version ({}) is different then remote repo base version ({}), downloading remote version", currentStore.getBaseVersion(), manifestBean.getBaseVersion());
+          try(Response response = ClientBuilder.newClient()
+            .target(repoURL + "/" + manifestBean.getBaseVersion() + AntennaDoctorConstants.URL_VERSION_END)
+            .request()
+            .get()) {
+
+            // And override current store
+            try(InputStream gzipStream = new GzipCompressorInputStream(response.readEntity(InputStream.class))) {
+              currentStore = ObjectMapperFactory.get().readValue(
+                gzipStream,
+                AntennaDoctorStorageBean.class
+              );
+            }
+
+            currentStore.setBaseVersion(manifestBean.getBaseVersion());;
+            currentStore.setUpdates(new LinkedList<>());
+            changedApplied = true;
+          }
+        }
+
+        // Now let's apply updates
+        for(String update: manifestBean.getUpdates()) {
+          if(currentStore.getUpdates().contains(update)) {
+            LOG.debug("Update {} already applied", update);
+            continue;
+          }
+
+          LOG.debug("Downloading update {} ", update);
+          // Download the update bean
+          AntennaDoctorRepositoryUpdateBean updateBean;
+          try(Response response = ClientBuilder.newClient()
+            .target(repoURL + "/" + update + AntennaDoctorConstants.URL_VERSION_END)
+            .request()
+            .get()) {
+
+            // And override current store
+            try (InputStream gzipStream = new GzipCompressorInputStream(response.readEntity(InputStream.class))) {
+              updateBean = ObjectMapperFactory.get().readValue(
+                gzipStream,
+                AntennaDoctorRepositoryUpdateBean.class
+              );
+            }
+          }
+
+          currentStore.setRules(mergeRuleBeans(currentStore.getRules(), updateBean.getUpdates()));
+          // TODO: Apply deletes
+          currentStore.getUpdates().add(update);
+
+          LOG.debug("Update {} successfully applied", update);
+          changedApplied = true;
+        }
+
+        if(changedApplied) {
+          // And finally write the updated repo file down
+          try (OutputStream outputStream = Files.newOutputStream(repositoryDirectory.resolve(AntennaDoctorConstants.FILE_DATABASE))) {
+            ObjectMapperFactory.get().writeValue(outputStream, currentStore);
+          }
+
+          delegate.loadNewRules(currentStore.getRules());
+        }
+
+      } catch (Throwable e) {
+        LOG.error("Failed to retrieve updates: {}", e.getMessage(), e);
       }
     }
   }
