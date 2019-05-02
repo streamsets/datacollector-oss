@@ -165,6 +165,10 @@ public class AvroToOrcRecordConverter {
 
   public static void addToVector(TypeDescription type, ColumnVector colVector, Schema avroSchema, Object value, int vectorPos) {
 
+    final int currentVecLength = colVector.isNull.length;
+    if (vectorPos >= currentVecLength) {
+      colVector.ensureSize(2 * currentVecLength, true);
+    }
     if (value == null) {
       colVector.isNull[vectorPos] = true;
       colVector.noNulls = false;
