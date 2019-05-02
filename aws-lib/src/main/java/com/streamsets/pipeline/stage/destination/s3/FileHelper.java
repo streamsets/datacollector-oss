@@ -72,11 +72,9 @@ abstract class FileHelper {
               Headers.SERVER_SIDE_ENCRYPTION_AWS_KMS_KEYID,
               s3TargetConfigBean.sseConfig.kmsKeyId.get()
           );
-          if (!s3TargetConfigBean.sseConfig.encryptionContext.isEmpty()) {
-            metadata.setHeader(
-                "x-amz-server-side-encryption-context",
-                s3TargetConfigBean.sseConfig.resolveEncryptionContext()
-            );
+          String encryptionContext = s3TargetConfigBean.sseConfig.resolveAndEncodeEncryptionContext();
+          if (encryptionContext != null) {
+            metadata.setHeader("x-amz-server-side-encryption-context", encryptionContext);
           }
           break;
         case CUSTOMER:

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2019 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,36 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.s3;
+package com.streamsets.pipeline.lib.aws;
 
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
-
-  S3_01("Bucket name is empty for record {}"),
-  S3_02("Bucket '{}' does not exist"),
-  S3_03("Invalid partition template expression '{}': {}"),
-  S3_04("Invalid time basis expression '{}': {}"),
-  S3_05("File Name Prefix cannot be empty"),
-  S3_06("File Name Suffix contains '/' or starts with '.'"),
-
-  S3_10("A problem occurred while generating JSON for the security context"),
-
-  S3_20("Cannot connect to Amazon S3, reason : {}"),
-  S3_21("Unable to write object to Amazon S3, reason : {}"),
-
-  S3_30("Unsupported data format '{}'"),
-  S3_31("Field cannot be empty"),
-  S3_32("Error serializing record '{}': {}"),
-
-  S3_40("Internal Error {}"),
-
-  S3_50("Compression Option not supported for Whole file Data format"),
-  S3_51("Object Key {} already exists"),
-  S3_52("Cannot Write Record : {}"),
-
+  AWS_01("A problem occurred while generating JSON for the security context"),
   ;
 
   private final String msg;
@@ -59,5 +37,4 @@ public enum Errors implements ErrorCode {
   public String getMessage() {
     return msg;
   }
-
 }

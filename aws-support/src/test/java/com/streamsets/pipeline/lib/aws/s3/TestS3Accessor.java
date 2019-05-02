@@ -39,6 +39,8 @@ import org.mockito.Mockito;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -820,7 +822,11 @@ public class TestS3Accessor {
 
       @Override
       public Map<String, CredentialValue> getEncryptionContext() {
-        return ImmutableMap.of("x", () -> "X");
+        return ImmutableMap.of(
+            "x", () -> "X",
+            "", () -> "empty-key",
+            "y", () -> "Y"
+        );
       }
 
       @Override
@@ -844,9 +850,77 @@ public class TestS3Accessor {
     Assert.assertNotNull(metadata);
     Assert.assertEquals(SSEAlgorithm.KMS.getAlgorithm(), metadata.getSSEAlgorithm());
     Assert.assertEquals("kms", metadata.getRawMetadataValue(Headers.SERVER_SIDE_ENCRYPTION_AWS_KMS_KEYID));
-    Assert.assertEquals(ImmutableMap.of("x", "X"), metadata.getRawMetadataValue
-        ("x-amz-server-side-encryption-context"));
+    Object encryptionContext = metadata.getRawMetadataValue("x-amz-server-side-encryption-context");
+    Assert.assertNotNull(encryptionContext);
+    String json = new String(Base64.getDecoder().decode(String.valueOf(encryptionContext)), StandardCharsets.UTF_8);
+    Assert.assertEquals("{\"x\":\"X\",\"y\":\"Y\"}", json);
+  }
 
+  @Test
+  public void testEncryptionContextEmpty() throws Exception {
+    SseConfigs configs = new SseConfigs() {
+      @Override
+      public SseOption getEncryption() {
+        return SseOption.KMS;
+      }
+
+      @Override
+      public Map<String, CredentialValue> getEncryptionContext() {
+        return Collections.emptyMap();
+      }
+
+      @Override
+      public CredentialValue getKmsKeyId() {
+        return () -> "kms";
+      }
+
+      @Override
+      public CredentialValue getCustomerKey() {
+        return null;
+      }
+
+      @Override
+      public CredentialValue getCustomerKeyMd5() {
+        return null;
+      }
+    };
+
+    S3Accessor accessor = new S3Accessor(null, null, null, configs);
+    ObjectMetadata metadata = accessor.createEncryptionMetadataBuilder().build();
+    Assert.assertNotNull(metadata);
+    Assert.assertNull(metadata.getRawMetadataValue("x-amz-server-side-encryption-context"));
+
+    configs = new SseConfigs() {
+      @Override
+      public SseOption getEncryption() {
+        return SseOption.KMS;
+      }
+
+      @Override
+      public Map<String, CredentialValue> getEncryptionContext() {
+        return ImmutableMap.of("", () -> "empty-key");
+      }
+
+      @Override
+      public CredentialValue getKmsKeyId() {
+        return () -> "kms";
+      }
+
+      @Override
+      public CredentialValue getCustomerKey() {
+        return null;
+      }
+
+      @Override
+      public CredentialValue getCustomerKeyMd5() {
+        return null;
+      }
+    };
+
+    accessor = new S3Accessor(null, null, null, configs);
+    metadata = accessor.createEncryptionMetadataBuilder().build();
+    Assert.assertNotNull(metadata);
+    Assert.assertNull(metadata.getRawMetadataValue("x-amz-server-side-encryption-context"));
   }
 
   @Test

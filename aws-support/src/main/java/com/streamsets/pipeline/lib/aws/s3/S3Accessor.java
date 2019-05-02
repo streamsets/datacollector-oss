@@ -33,17 +33,23 @@ import com.amazonaws.services.s3.model.SSEAlgorithm;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
 import com.amazonaws.services.s3.transfer.Upload;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.aws.AwsRegion;
+import com.streamsets.pipeline.lib.aws.Errors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
 import java.io.InputStream;
-import java.util.concurrent.Callable;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 
 public class S3Accessor implements Closeable {
   private static final Logger LOG = LoggerFactory.getLogger(S3Accessor.class);
@@ -269,20 +275,6 @@ public class S3Accessor implements Closeable {
     ObjectMetadata build() throws StageException;
   }
 
-  private static class Caller {
-    public static <T> T call(Callable<T> callable) {
-      try {
-        return callable.call();
-      } catch (Exception ex) {
-        throw Caller.<RuntimeException>uncheck(ex);
-      }
-    }
-
-    private static <E extends Exception> E uncheck(Throwable e) throws E {
-      return (E)e;
-    }
-  }
-
   public EncryptionMetadataBuilder createEncryptionMetadataBuilder() {
     return () -> {
       ObjectMetadata metadata = null;
@@ -299,10 +291,27 @@ public class S3Accessor implements Closeable {
             metadata = new ObjectMetadata();
             metadata.setSSEAlgorithm(SSEAlgorithm.KMS.getAlgorithm());
             metadata.setHeader(Headers.SERVER_SIDE_ENCRYPTION_AWS_KMS_KEYID, sseConfigs.getKmsKeyId().get());
-            metadata.setHeader("x-amz-server-side-encryption-context",
-                sseConfigs.getEncryptionContext().entrySet().stream().collect(
-                    Collectors.toMap(e -> e.getKey(), e -> Caller.call(() -> e.getValue().get())))
-            );
+            Map<String, CredentialValue> encryptionContext = sseConfigs.getEncryptionContext();
+            if (encryptionContext != null && !encryptionContext.isEmpty()) {
+              Map<String, String> plainEncryptionContext = new HashMap<>();
+              for (Map.Entry<String, CredentialValue> entry : encryptionContext.entrySet()) {
+                // Don't include items with empty keys
+                if (entry.getKey() != null && !entry.getKey().isEmpty()) {
+                  plainEncryptionContext.put(entry.getKey(), entry.getValue().get());
+                }
+              }
+              // Don't bother if all of the items had empty keys
+              if (!plainEncryptionContext.isEmpty()) {
+                try {
+                  // This needs to be Bas64-encoded JSON
+                  String json = new ObjectMapper().writeValueAsString(plainEncryptionContext);
+                  String bas64Json = Base64.getEncoder().encodeToString(json.getBytes(StandardCharsets.UTF_8));
+                  metadata.setHeader("x-amz-server-side-encryption-context", bas64Json);
+                } catch (JsonProcessingException e) {
+                  throw new StageException(Errors.AWS_01, e);
+                }
+              }
+            }
             break;
           case CUSTOMER:
             metadata = new ObjectMetadata();
