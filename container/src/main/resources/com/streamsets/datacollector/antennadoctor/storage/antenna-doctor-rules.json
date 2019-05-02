@@ -19,8 +19,8 @@
       "var:set('jar', collection:get(var:get('jars'), 0))"
     ],
     "message": {
-      "summary": "Try upgrading Oracle JDBC Driver.",
-      "description": "Detected old Oracle JDBC driver on the classpath (file '${file:fileName(var:get('jar'))}'). Old versions of the Oracle JDBC are known to not work always properly when dealing with TIMESTAMP WITH TIMEZONE and TIMESTAMP WITH LOCAL TIMEZONE data types. Try upgrading to latest version of the JDBC driver. The driver is loaded from ${var:get('jar')}."
+      "summary": "Try upgrading Oracle JDBC Driver. Used driver '${file:fileName(var:get('jar'))}' is old and no longer actively supported by Oracle.",
+      "description": "Detected old Oracle JDBC driver on the classpath (file <i>'${file:fileName(var:get('jar'))}'</i>).<br /> Old versions of the Oracle JDBC are known to not work always properly when dealing with TIMESTAMP WITH TIMEZONE and TIMESTAMP WITH LOCAL TIMEZONE data types. Try upgrading to latest version of the JDBC driver. <br /><br />The driver is loaded from <i>${var:get('jar')}</i>."
     }
   }]
 }

@@ -18,7 +18,7 @@ package com.streamsets.datacollector.restapi.bean;
 import com.streamsets.pipeline.api.AntennaDoctorMessage;
 
 public class AntennaDoctorMessageJson {
-  private AntennaDoctorMessage antennaDoctorMessage;
+  private final AntennaDoctorMessage antennaDoctorMessage;
 
   public AntennaDoctorMessageJson(AntennaDoctorMessage message) {
     this.antennaDoctorMessage = message;
