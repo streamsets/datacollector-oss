@@ -186,15 +186,6 @@ public class AntennaDoctorStorage extends AbstractTask {
   }
 
   /**
-   * Merge two rule lists together, newer ids wins in case of duplicates.
-   */
-  private static List<AntennaDoctorRuleBean> mergeRuleBeans(List<AntennaDoctorRuleBean> older, List<AntennaDoctorRuleBean> newer) {
-    Map<String, AntennaDoctorRuleBean> ruleMap = older.stream().collect(Collectors.toMap(AntennaDoctorRuleBean::getUuid, i -> i));
-    newer.forEach(r -> ruleMap.put(r.getUuid(), r));
-    return new ArrayList<>(ruleMap.values());
-  }
-
-  /**
    * Override runnable that scans the underlying repository for our OVERRIDE file and there is a new or updated rule set reloads the database.
    */
   private class OverrideFileRunnable implements Runnable {
@@ -293,6 +284,9 @@ public class AntennaDoctorStorage extends AbstractTask {
           }
         }
 
+        // Rule map for easier application of updates
+        Map<String, AntennaDoctorRuleBean> ruleMap = currentStore.getRules().stream().collect(Collectors.toMap(AntennaDoctorRuleBean::getUuid, i -> i));
+
         // Now let's apply updates
         for(String update: manifestBean.getUpdates()) {
           if(currentStore.getUpdates().contains(update)) {
@@ -317,8 +311,8 @@ public class AntennaDoctorStorage extends AbstractTask {
             }
           }
 
-          currentStore.setRules(mergeRuleBeans(currentStore.getRules(), updateBean.getUpdates()));
-          // TODO: Apply deletes
+          updateBean.getUpdates().forEach(r -> ruleMap.put(r.getUuid(), r));
+          updateBean.getDeletes().forEach(ruleMap::remove);
           currentStore.getUpdates().add(update);
 
           LOG.debug("Update {} successfully applied", update);
@@ -326,6 +320,9 @@ public class AntennaDoctorStorage extends AbstractTask {
         }
 
         if(changedApplied) {
+          // Materialize rule list
+          currentStore.setRules(new ArrayList<>(ruleMap.values()));
+
           // And finally write the updated repo file down
           try (OutputStream outputStream = Files.newOutputStream(repositoryDirectory.resolve(AntennaDoctorConstants.FILE_DATABASE))) {
             ObjectMapperFactory.get().writeValue(outputStream, currentStore);
