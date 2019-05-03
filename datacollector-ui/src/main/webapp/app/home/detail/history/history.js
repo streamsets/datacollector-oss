@@ -96,7 +96,31 @@ angular
         }, function () {
 
         });
+      },
+
+      /**
+       * Create modal window and display the details for exception.
+       */
+      showStackTrace: function(history) {
+        $modal.open({
+          templateUrl: 'errorModalContent.html',
+          controller: 'ErrorModalInstanceController',
+          size: 'lg',
+          backdrop: true,
+          resolve: {
+            errorObj: function () {
+              return {
+                RemoteException: {
+                  antennaDoctorMessages: history.attributes['ANTENNA_DOCTOR_MESSAGES'],
+                  localizedMessage: history.attributes['ERROR_MESSAGE'],
+                  stackTrace: history.attributes['ERROR_STACKTRACE']
+                }
+              };
+            }
+          }
+        });
       }
+
     });
 
     var updateHistory = function(pipelineName) {

@@ -22,7 +22,22 @@
       <td>{{history.timeStamp | date:'medium'}}</td>
       <td>{{history.user}}</td>
       <td ng-bind="history.status"></td>
-      <td ng-bind="history.message"></td>
+      <td>
+        <i class="fa fa-info-circle help-icon"
+                     ng-class="fa-info-circle"
+                     ng-if="history.attributes['ANTENNA_DOCTOR_MESSAGES'] && history.attributes['ANTENNA_DOCTOR_MESSAGES'].length > 0"
+                     tooltip-placement="right"
+                     tooltip-append-to-body="false"
+                     tooltip="{{history.attributes['ANTENNA_DOCTOR_MESSAGES'][0].summary}}"
+                     tooltip-trigger="mouseenter">
+         </i>
+        {{history.message}}
+        <a class="view-stack-trace"
+            ng-if="history.attributes['ERROR_STACKTRACE']"
+            ng-click="showStackTrace(history)">
+            ( <span translate="home.graphPane.viewStackTrace">View Details</span>... )
+        </a>
+      </td>
       <td>
         <span ng-if="history.attributes && history.attributes['RUNTIME_PARAMETERS']">{{history.attributes['RUNTIME_PARAMETERS'] | json}}</span>
       </td>
