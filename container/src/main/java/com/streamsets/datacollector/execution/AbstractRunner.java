@@ -15,10 +15,8 @@
  */
 package com.streamsets.datacollector.execution;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.config.PipelineConfiguration;
@@ -64,6 +62,9 @@ public abstract  class AbstractRunner implements Runner {
 
   public static final String RUNTIME_PARAMETERS_ATTR = "RUNTIME_PARAMETERS";
   public static final String INTERCEPTOR_CONFIGS_ATTR = "INTERCEPTOR_CONFIGS";
+  public static final String ANTENNA_DOCTOR_MESSAGES_ATTR = "ANTENNA_DOCTOR_MESSAGES";
+  public static final String ERROR_STACKTRACE_ATTR = "ERROR_STACKTRACE";
+  public static final String ERROR_MESSAGE_ATTR = "ERROR_MESSAGE";
 
   private final String name;
   private final String rev;
@@ -184,6 +185,17 @@ public abstract  class AbstractRunner implements Runner {
       throw new PipelineStoreException(ContainerError.CONTAINER_0214, e);
     }
     attributes.put(INTERCEPTOR_CONFIGS_ATTR, interceptors);
+    return attributes;
+  }
+
+  /**
+   * Variant of createStateAttributes that will remove attributes that should not be carried over from past executions.
+   */
+  public Map<String, Object> createNewStateAttributes() throws PipelineStoreException {
+    Map<String, Object> attributes = createStateAttributes();
+    attributes.remove(ANTENNA_DOCTOR_MESSAGES_ATTR);
+    attributes.remove(ERROR_STACKTRACE_ATTR);
+    attributes.remove(ERROR_MESSAGE_ATTR);
     return attributes;
   }
 

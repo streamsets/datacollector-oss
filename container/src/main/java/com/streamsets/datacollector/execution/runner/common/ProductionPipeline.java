@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.execution.runner.common;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.execution.AbstractRunner;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.StateListener;
 import com.streamsets.datacollector.main.RuntimeModule;
@@ -116,7 +117,17 @@ public class ProductionPipeline {
             if (!wasStopped()) {
               runningErrorMsg = e.toString();
               LOG.warn("Error while running: {}", runningErrorMsg, e);
-              stateChanged(PipelineStatus.RUNNING_ERROR, runningErrorMsg, null);
+
+              // Make sure that the whole error is serialized in the status file
+              Map<String, Object> extraAttributes = new HashMap<>();
+              if(e instanceof StageException) {
+                extraAttributes.put(AbstractRunner.ANTENNA_DOCTOR_MESSAGES_ATTR, ((StageException) e).getAntennaDoctorMessages());
+                runningErrorMsg = e.getMessage();
+              }
+              extraAttributes.put(AbstractRunner.ERROR_MESSAGE_ATTR, e.getMessage());
+              extraAttributes.put(AbstractRunner.ERROR_STACKTRACE_ATTR, ErrorMessage.toStackTrace(e));
+
+              stateChanged(PipelineStatus.RUNNING_ERROR, runningErrorMsg, extraAttributes);
               errorWhileRunning = true;
               isRecoverable = isRecoverableThrowable(e);
             }

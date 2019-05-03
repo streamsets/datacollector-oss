@@ -1029,7 +1029,7 @@ public class ClusterRunner extends AbstractRunner {
           blobStoreResources
       );
       // set state of running before adding callback which modified attributes
-      Map<String, Object> attributes = createStateAttributes();
+      Map<String, Object> attributes = createNewStateAttributes();
       attributes.putAll(getAttributes());
       attributes.put(APPLICATION_STATE, applicationState.getMap());
       attributes.put(APPLICATION_STATE_START_TIME, System.currentTimeMillis());
