@@ -17,6 +17,8 @@ package com.streamsets.datacollector.runner;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
+import com.streamsets.datacollector.antennadoctor.AntennaDoctor;
+import com.streamsets.datacollector.antennadoctor.engine.context.AntennaDoctorStageContext;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.creation.PipelineBean;
@@ -55,6 +57,8 @@ public class StageRuntime implements PushSourceContextDelegate {
   private final Collection<ServiceRuntime> services;
   private final List<InterceptorRuntime> preInterceptors;
   private final List<InterceptorRuntime> postInterceptors;
+  private final AntennaDoctor antennaDoctor;
+  private final AntennaDoctorStageContext antennaDoctorContext;
   private StageContext context;
   private volatile long runnerThread;
 
@@ -80,7 +84,9 @@ public class StageRuntime implements PushSourceContextDelegate {
     final StageBean stageBean,
     Collection<ServiceRuntime> services,
     List<InterceptorRuntime> preInterceptors,
-    List<InterceptorRuntime> postInterceptors
+    List<InterceptorRuntime> postInterceptors,
+    AntennaDoctor antennaDoctor,
+    AntennaDoctorStageContext antennaDoctorContext
   ) {
     this.pipelineBean = pipelineBean;
     this.def = stageBean.getDefinition();
@@ -90,6 +96,8 @@ public class StageRuntime implements PushSourceContextDelegate {
     this.services = services;
     this.preInterceptors = preInterceptors;
     this.postInterceptors = postInterceptors;
+    this.antennaDoctor = antennaDoctor;
+    this.antennaDoctorContext = antennaDoctorContext;
     info = new Stage.Info() {
       @Override
       public String getName() {
@@ -235,6 +243,10 @@ public class StageRuntime implements PushSourceContextDelegate {
         return (def.getRecordsByRef() && !context.isPreview()) ? CreateByRef.call(callable) : callable.call();
       } catch (Exception ex) {
         if (ex instanceof StageException) {
+          if(antennaDoctor != null) {
+            StageException e = (StageException) ex;
+            e.setAntennaDoctorMessages(antennaDoctor.onStage(antennaDoctorContext, e.getErrorCode(), e.getParams()));
+          }
           throw (StageException) ex;
         } else if (ex instanceof RuntimeException) {
           throw (RuntimeException) ex;

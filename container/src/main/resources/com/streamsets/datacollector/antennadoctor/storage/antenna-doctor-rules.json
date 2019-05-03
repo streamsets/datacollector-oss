@@ -22,5 +22,25 @@
       "summary": "Try upgrading Oracle JDBC Driver. Used driver '${file:fileName(var:get('jar'))}' is old and no longer actively supported by Oracle.",
       "description": "Detected old Oracle JDBC driver on the classpath (file <i>'${file:fileName(var:get('jar'))}'</i>).<br /> Old versions of the Oracle JDBC are known to not work always properly when dealing with TIMESTAMP WITH TIMEZONE and TIMESTAMP WITH LOCAL TIMEZONE data types. Try upgrading to latest version of the JDBC driver. <br /><br />The driver is loaded from <i>${var:get('jar')}</i>."
     }
+  },{
+    "uuid": "cf929f62-ba4d-4017-9191-d7b03ac0769e",
+    "entity": "STAGE",
+    "preconditions": [
+      "version:isGreaterOrEqualTo('3.9.0')",
+      "collection:contains(sdc:stagelibNames(), 'streamsets-datacollector-jdbc-lib')"
+    ],
+    "conditions": [
+      "issue:errorCode() == 'JDBC_75'",
+      "stageDef:type() == 'SOURCE'",
+      "str:contains(stageConf:config('hikariConfigBean.connectionString'), 'jdbc:oracle:thin')",
+      "collection:size(issue:args()) > 1 && str:contains(issue:args()[0], 'java.lang.NoClassDefFoundError: oracle/xdb/XMLType')",
+      "var:set('jars', collection:filterByRegExp(stageDef:classpath(),'xdb6.jar|xmlparsev-'))",
+      "collection:size(var:get('jars')) < 2",
+      "var:set('jdbcJar', collection:filterByRegExp(stageDef:classpath(),'ojdbc[0-9]+.jar')[0])"
+    ],
+    "message": {
+      "summary": "Oracle JDBC driver requires additional jar files to read XMLTYPE.",
+      "description": "SDC is using <i>'${file:fileName(var:get('jdbcJar'))}'</i> JDBC Driver from Oracle. This jar file doesn't ship with all necessary dependencies that are required when reading tables with XMLTYPE column. Additional jar files called xdb6 and xmlparsev needs to be installed separately.<br /><br /> You need to download and install both additional jar files either through package manager or directly into <i>${file:parentPath(var:get('jdbcJar'))}</i>."
+    }
   }]
 }

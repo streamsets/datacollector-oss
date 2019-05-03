@@ -1106,13 +1106,25 @@ public class Pipeline {
       postInterceptors.add(interceptorRuntime);
     }
 
+    AntennaDoctor antennaDoctor = AntennaDoctor.getInstance();
+    AntennaDoctorStageContext antennaDoctorContext = null;
+    if(antennaDoctor != null) {
+      antennaDoctorContext = antennaDoctor.getContext().forStage(
+          stageBean.getDefinition(),
+          stageBean.getConfiguration(),
+          pipelineConfiguration
+      );
+    }
+
     // Create StageRuntime itself
     StageRuntime stageRuntime = new StageRuntime(
       pipelineBean,
       stageBean,
       services.values(),
       preInterceptors,
-      postInterceptors
+      postInterceptors,
+      antennaDoctor,
+      antennaDoctorContext
     );
 
     // Add it to Info array
@@ -1120,15 +1132,6 @@ public class Pipeline {
       stageInfos.add(stageRuntime.getInfo());
     }
 
-    AntennaDoctor antennaDoctor = AntennaDoctor.getInstance();
-    AntennaDoctorStageContext antennaDoctorContext = null;
-    if(antennaDoctor != null) {
-      antennaDoctorContext = antennaDoctor.getContext().forStage(
-          stageRuntime.getDefinition(),
-          stageRuntime.getConfiguration(),
-          pipelineConfiguration
-      );
-    }
 
     // And finally create StageContext
     stageRuntime.setContext(

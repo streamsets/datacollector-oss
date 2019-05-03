@@ -80,7 +80,9 @@ public class TestStageRuntime {
       stageBean,
       Collections.singletonList(serviceRuntime),
       Collections.singletonList(preInterceptor),
-      Collections.singletonList(postInterceptor)
+      Collections.singletonList(postInterceptor),
+      null,
+      null
     );
     runtime.setContext(context);
   }
