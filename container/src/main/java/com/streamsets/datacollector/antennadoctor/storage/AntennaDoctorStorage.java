@@ -46,12 +46,10 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -82,15 +80,11 @@ public class AntennaDoctorStorage extends AbstractTask {
 
   private final Configuration configuration;
 
-  // Override file handling (if enabled in configuration)
-  private ExecutorService overrideService;
+  // Various threads that we might be running
+  private ExecutorService executorService;
   private OverrideFileRunnable overrideRunnable;
-  private Future overrideFuture;
-
-  // Remote repo handling
-  private ScheduledExecutorService updateService;
   private UpdateRunnable updateRunnable;
-  private ScheduledFuture updateFuture;
+  private Future future;
 
   public AntennaDoctorStorage(
     Configuration configuration,
@@ -124,37 +118,32 @@ public class AntennaDoctorStorage extends AbstractTask {
       return;
     }
 
-    // Remote repo handling
-    if(configuration.get(AntennaDoctorConstants.CONF_UPDATE_ENABLE, AntennaDoctorConstants.DEFAULT_UPDATE_ENABLE)) {
-      this.updateService = Executors.newSingleThreadScheduledExecutor();
-      this.updateRunnable = new UpdateRunnable();
-      this.updateFuture = this.updateService.scheduleAtFixedRate(
-        updateRunnable,
-        configuration.get(AntennaDoctorConstants.CONF_UPDATE_DELAY, AntennaDoctorConstants.DEFAULT_UPDATE_DELAY),
-        configuration.get(AntennaDoctorConstants.CONF_UPDATE_PERIOD, AntennaDoctorConstants.DEFAULT_UPDATE_PERIOD),
-        TimeUnit.MINUTES
-      );
-    }
-
-    boolean loadedRules = false;
     // Schedule override runnable if allowed in configuration
     if(configuration.get(AntennaDoctorConstants.CONF_OVERRIDE_ENABLE, AntennaDoctorConstants.DEFAULT_OVERRIDE_ENABLE)) {
       LOG.info("Enabling polling of {} to override the rule database", AntennaDoctorConstants.FILE_OVERRIDE);
-      this.overrideService = Executors.newSingleThreadExecutor();
+      this.executorService = Executors.newSingleThreadExecutor();
       this.overrideRunnable = new OverrideFileRunnable();
-      this.overrideFuture = overrideService.submit(this.overrideRunnable);
+      this.future = executorService.submit(this.overrideRunnable);
+    }
 
-      // Also load all the changes from the override file
-      if(Files.exists(repositoryDirectory.resolve(AntennaDoctorConstants.FILE_OVERRIDE))) {
-        reloadOverrideFile();
-        loadedRules = true;
+    // Remote repo handling
+    if(configuration.get(AntennaDoctorConstants.CONF_UPDATE_ENABLE, AntennaDoctorConstants.DEFAULT_UPDATE_ENABLE)) {
+      if(overrideRunnable != null) {
+        LOG.info("Using override, not starting update thread.");
+      } else {
+        this.executorService = Executors.newSingleThreadScheduledExecutor();
+        this.updateRunnable = new UpdateRunnable();
+        this.future = ((ScheduledExecutorService)executorService).scheduleAtFixedRate(
+          updateRunnable,
+          configuration.get(AntennaDoctorConstants.CONF_UPDATE_DELAY, AntennaDoctorConstants.DEFAULT_UPDATE_DELAY),
+          configuration.get(AntennaDoctorConstants.CONF_UPDATE_PERIOD, AntennaDoctorConstants.DEFAULT_UPDATE_PERIOD),
+          TimeUnit.MINUTES
+        );
       }
     }
 
-    // If the rules weren't loaded yet, let's do that
-    if(!loadedRules) {
-      delegate.loadNewRules(loadRules());
-    }
+    // And finally load rules
+    delegate.loadNewRules(loadRules());
   }
 
   @Override
@@ -163,61 +152,36 @@ public class AntennaDoctorStorage extends AbstractTask {
       overrideRunnable.isStopped = true;
     }
 
-    if(overrideFuture != null) {
-      overrideFuture.cancel(true);
+    if(future != null) {
       try {
-        overrideFuture.get();
+        future.cancel(true);
+        future.get();
       } catch (Throwable e) {
         LOG.debug("Error when stopping override file thread", e);
       }
     }
 
-    if(overrideService != null) {
+    if(executorService != null) {
       try {
-        overrideService.shutdownNow();
+        executorService.shutdownNow();
       } catch (Throwable e) {
         LOG.debug("Error when stopping override file service", e);
-      }
-    }
-
-    if(updateFuture != null) {
-      updateFuture.cancel(true);
-      try {
-        updateFuture.get();
-      } catch (Throwable e) {
-        LOG.debug("Error when stopping update thread", e);
-      }
-    }
-
-    if(updateService != null) {
-      try {
-        updateService.shutdownNow();
-      } catch (Throwable e) {
-        LOG.debug("Error when stopping update service", e);
       }
     }
   }
 
   private List<AntennaDoctorRuleBean> loadRules() {
-    try(InputStream inputStream = Files.newInputStream(repositoryDirectory.resolve(AntennaDoctorConstants.FILE_DATABASE))) {
+    Path database = repositoryDirectory.resolve(overrideRunnable == null ? AntennaDoctorConstants.FILE_DATABASE : AntennaDoctorConstants.FILE_OVERRIDE);
+
+    try(InputStream inputStream = Files.newInputStream(database)) {
       AntennaDoctorStorageBean storageBean = ObjectMapperFactory.get().readValue(
         inputStream,
         AntennaDoctorStorageBean.class
       );
       return storageBean.getRules();
     } catch (Throwable e) {
-      LOG.error("Can't load default rule list from the distribution.", e);
+      LOG.error("Can't load knowledge base from {}: ", database.getFileName().toString(), e);
       return Collections.emptyList();
-    }
-  }
-
-  private void reloadOverrideFile() {
-    LOG.info("Reloading override file {}", AntennaDoctorConstants.FILE_OVERRIDE);
-    try(InputStream stream = Files.newInputStream(repositoryDirectory.resolve(AntennaDoctorConstants.FILE_OVERRIDE))) {
-      AntennaDoctorStorageBean storageBean = ObjectMapperFactory.get().readValue(stream, AntennaDoctorStorageBean.class);
-      delegate.loadNewRules(mergeRuleBeans(loadRules(), storageBean.getRules()));
-    } catch (Throwable e) {
-      LOG.error("Can't load override file: {}", e.getMessage(), e);
     }
   }
 
@@ -265,7 +229,7 @@ public class AntennaDoctorStorage extends AbstractTask {
               }
 
               if (ev.context().toString().equals(AntennaDoctorConstants.FILE_OVERRIDE)) {
-                reloadOverrideFile();
+                loadRules();
               }
             }
           } finally {
