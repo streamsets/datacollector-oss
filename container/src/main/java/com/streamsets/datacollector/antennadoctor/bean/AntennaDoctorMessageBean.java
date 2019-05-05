@@ -15,6 +15,8 @@
  */
 package com.streamsets.datacollector.antennadoctor.bean;
 
+import java.util.List;
+
 /**
  * Message bean that should be displayed to user if the associated rule matches.
  */
@@ -31,8 +33,12 @@ public class AntennaDoctorMessageBean {
    * Longer description of the issue with suggestion of a remedy.
    *
    * Will always be displayed in larger space widget. Can contain rich formatting using HTML.
+   *
+   * We define the description as list of strings, albeit internally we concatenate it using new line characters. This is
+   * so that manual edit of the policy file is easier - one can have multiple lines separately since JSON does not support
+   * multi-line strings.
    */
-  private String description;
+  private List<String> description;
 
   public String getSummary() {
     return summary;
@@ -42,11 +48,11 @@ public class AntennaDoctorMessageBean {
     this.summary = summary;
   }
 
-  public String getDescription() {
+  public List<String> getDescription() {
     return description;
   }
 
-  public void setDescription(String description) {
+  public void setDescription(List<String> description) {
     this.description = description;
   }
 }

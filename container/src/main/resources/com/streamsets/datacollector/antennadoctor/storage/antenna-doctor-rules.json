@@ -20,7 +20,11 @@
     ],
     "message": {
       "summary": "Try upgrading Oracle JDBC Driver. Used driver '${file:fileName(var:get('jar'))}' is old and no longer actively supported by Oracle.",
-      "description": "Detected old Oracle JDBC driver on the classpath (file <i>'${file:fileName(var:get('jar'))}'</i>).<br /> Old versions of the Oracle JDBC are known to not work always properly when dealing with TIMESTAMP WITH TIMEZONE and TIMESTAMP WITH LOCAL TIMEZONE data types. Try upgrading to latest version of the JDBC driver. <br /><br />The driver is loaded from <i>${var:get('jar')}</i>."
+      "description": [
+        "Detected old Oracle JDBC driver on the classpath (file <i>'${file:fileName(var:get('jar'))}'</i>).<br />",
+        "Old versions of the Oracle JDBC are known to not work always properly when dealing with TIMESTAMP WITH TIMEZONE and TIMESTAMP WITH LOCAL TIMEZONE data types. Try upgrading to latest version of the JDBC driver. <br /><br />",
+        "The driver is loaded from <i>${var:get('jar')}</i>."
+      ]
     }
   },{
     "uuid": "cf929f62-ba4d-4017-9191-d7b03ac0769e",
@@ -40,7 +44,10 @@
     ],
     "message": {
       "summary": "Oracle JDBC driver requires additional jar files to read XMLTYPE.",
-      "description": "SDC is using <i>'${file:fileName(var:get('jdbcJar'))}'</i> JDBC Driver from Oracle. This jar file doesn't ship with all necessary dependencies that are required when reading tables with XMLTYPE column. Additional jar files called xdb6 and xmlparsev needs to be installed separately.<br /><br /> You need to download and install both additional jar files either through package manager or directly into <i>${file:parentPath(var:get('jdbcJar'))}</i>."
+      "description": [
+        "SDC is using <i>'${file:fileName(var:get('jdbcJar'))}'</i> JDBC Driver from Oracle. This jar file doesn't ship with all necessary dependencies that are required when reading tables with XMLTYPE column. Additional jar files called xdb6 and xmlparsev needs to be installed separately.<br /><br />",
+        "You need to download and install both additional jar files either through package manager or directly into <i>${file:parentPath(var:get('jdbcJar'))}</i>."
+      ]
     }
   }]
 }

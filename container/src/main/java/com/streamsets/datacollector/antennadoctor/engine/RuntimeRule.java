@@ -15,7 +15,6 @@
  */
 package com.streamsets.datacollector.antennadoctor.engine;
 
-import com.streamsets.datacollector.antennadoctor.bean.AntennaDoctorMessageBean;
 import com.streamsets.datacollector.antennadoctor.bean.AntennaDoctorRuleBean;
 
 import java.util.Collections;
@@ -30,7 +29,8 @@ public class RuntimeRule {
   private final String uuid;
   private final AntennaDoctorRuleBean.Entity entity;
   private final List<String> conditions;
-  private final AntennaDoctorMessageBean message;
+  private final String summary;
+  private final String description;
 
   public RuntimeRule(AntennaDoctorRuleBean ruleBean) {
     this.uuid = ruleBean.getUuid();
@@ -40,7 +40,8 @@ public class RuntimeRule {
         .map(c -> "${" + c + "}")
         .collect(Collectors.toList())
     );
-    this.message = ruleBean.getMessage();
+    this.summary = ruleBean.getMessage().getSummary();
+    this.description = String.join("\n", ruleBean.getMessage().getDescription());
   }
 
   public String getUuid() {
@@ -55,7 +56,11 @@ public class RuntimeRule {
     return conditions;
   }
 
-  public AntennaDoctorMessageBean getMessage() {
-    return message;
+  public String getSummary() {
+    return summary;
+  }
+
+  public String getDescription() {
+    return description;
   }
 }

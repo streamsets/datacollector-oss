@@ -162,8 +162,8 @@ public class AntennaDoctorEngine {
       if (matched) {
         LOG.trace("Rule {} matched!", rule.getUuid());
         try {
-          String summary = stageEval.eval(vars, rule.getMessage().getSummary(), String.class);
-          String description = stageEval.eval(vars, rule.getMessage().getDescription(), String.class);
+          String summary = stageEval.eval(vars, rule.getSummary(), String.class);
+          String description = stageEval.eval(vars, rule.getDescription(), String.class);
 
           builder.add(new AntennaDoctorMessage(summary, description));
         } catch (ELEvalException e) {
