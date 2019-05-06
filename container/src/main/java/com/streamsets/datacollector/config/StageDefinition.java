@@ -17,6 +17,7 @@ package com.streamsets.datacollector.config;
 
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.creation.StageConfigBean;
+import com.streamsets.pipeline.SDCClassLoader;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.HideStage;
@@ -28,12 +29,15 @@ import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.LocalizableMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Captures the configuration options for a {@link com.streamsets.pipeline.api.Stage}.
@@ -669,6 +673,11 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
 
   public List<String> getInputStreamLabels() {
     return inputStreamLabels;
+  }
+
+  public List<String> getClassPath() {
+    SDCClassLoader classLoader = (SDCClassLoader)getStageClassLoader();
+    return Arrays.stream(classLoader.getURLs()).map(URL::getFile).collect(Collectors.toList());
   }
 }
 

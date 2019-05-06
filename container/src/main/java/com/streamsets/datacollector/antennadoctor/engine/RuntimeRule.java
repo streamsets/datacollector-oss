@@ -19,7 +19,6 @@ import com.streamsets.datacollector.antennadoctor.bean.AntennaDoctorRuleBean;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Stripped down variant of AntennaDoctorRuleBean that doesn't contain information that is no longer relevant
@@ -35,11 +34,7 @@ public class RuntimeRule {
   public RuntimeRule(AntennaDoctorRuleBean ruleBean) {
     this.uuid = ruleBean.getUuid();
     this.entity = ruleBean.getEntity();
-    this.conditions = Collections.unmodifiableList(
-      ruleBean.getConditions().stream()
-        .map(c -> "${" + c + "}")
-        .collect(Collectors.toList())
-    );
+    this.conditions = Collections.unmodifiableList(ruleBean.getConditions());
     this.summary = ruleBean.getMessage().getSummary();
     this.description = String.join("\n", ruleBean.getMessage().getDescription());
   }

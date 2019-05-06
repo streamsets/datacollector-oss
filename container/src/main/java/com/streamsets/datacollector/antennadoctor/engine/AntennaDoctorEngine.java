@@ -19,24 +19,26 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.antennadoctor.bean.AntennaDoctorRuleBean;
 import com.streamsets.datacollector.antennadoctor.engine.context.AntennaDoctorContext;
 import com.streamsets.datacollector.antennadoctor.engine.context.AntennaDoctorStageContext;
-import com.streamsets.datacollector.antennadoctor.engine.el.AntennaDoctorELDefinitionExtractor;
-import com.streamsets.datacollector.antennadoctor.engine.el.SdcEL;
-import com.streamsets.datacollector.antennadoctor.engine.el.StageConfigurationEL;
-import com.streamsets.datacollector.antennadoctor.engine.el.StageDefinitionEL;
-import com.streamsets.datacollector.antennadoctor.engine.el.StageIssueEL;
-import com.streamsets.datacollector.antennadoctor.engine.el.VarEL;
-import com.streamsets.datacollector.antennadoctor.engine.el.VersionEL;
-import com.streamsets.datacollector.el.ELEvaluator;
+import com.streamsets.datacollector.antennadoctor.engine.jexl.SdcJexl;
+import com.streamsets.datacollector.antennadoctor.engine.jexl.StageIssueJexl;
 import com.streamsets.datacollector.util.Version;
 import com.streamsets.pipeline.api.AntennaDoctorMessage;
 import com.streamsets.pipeline.api.ErrorCode;
-import com.streamsets.pipeline.api.el.ELEval;
-import com.streamsets.pipeline.api.el.ELEvalException;
-import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.lib.el.CollectionEL;
+import com.streamsets.pipeline.lib.el.FileEL;
+import org.apache.commons.jexl3.JexlBuilder;
+import org.apache.commons.jexl3.JexlContext;
+import org.apache.commons.jexl3.JexlEngine;
+import org.apache.commons.jexl3.JexlException;
+import org.apache.commons.jexl3.JxltEngine;
+import org.apache.commons.jexl3.MapContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Main computing engine for Antenna Doctor.
@@ -50,23 +52,39 @@ public class AntennaDoctorEngine {
   private final List<RuntimeRule> rules;
 
   /**
-   * Evaluation engine for stages issues.
+   * Main evaluation engine.
    */
-  private final ELEval stageEval;
+  private final JexlEngine engine;
 
-  public AntennaDoctorEngine(AntennaDoctorContext context,List<AntennaDoctorRuleBean> rules) {
+  /**
+   * Templating engine for messages.
+   */
+  private final JxltEngine templateEngine;
+
+  public AntennaDoctorEngine(AntennaDoctorContext context, List<AntennaDoctorRuleBean> rules) {
     ImmutableList.Builder<RuntimeRule> builder = ImmutableList.builder();
 
-    // Evaluation for precondition, we guarantee that we execute the list in order and if any older checks fail
-    // we never execute the later ones. E.g. one can do dependency by checking version in first precondition and
-    // using that version specific EL later on.
-    ELEval preconditionEval = new ELEvaluator(
-      null,
-      AntennaDoctorELDefinitionExtractor.get(),
-      SdcEL.class,
-      VersionEL.class
-    );
+    Map<String, Object> namespaces = new HashMap<>();
+    namespaces.put("collection", CollectionEL.class);
+    namespaces.put("file", FileEL.class);
 
+
+    // Main engine used to evaluate all expressions and templates
+    engine = new JexlBuilder()
+      .cache(512)
+      .strict(true)
+      .silent(false)
+      .debug(true)
+      .namespaces(namespaces)
+      .create();
+    templateEngine = engine.createJxltEngine();
+
+    // Context for preconditions
+    JexlContext jexlContext = new MapContext();
+    jexlContext.set("version", new Version(context.getBuildInfo().getVersion()));
+    jexlContext.set("sdc", new SdcJexl(context));
+
+    // Evaluate each rule to see if it's applicable to this runtime (version, stage libs, ...)
     for(AntennaDoctorRuleBean ruleBean : rules) {
       LOG.trace("Loading rule {}", ruleBean.getUuid());
 
@@ -75,15 +93,13 @@ public class AntennaDoctorEngine {
         continue;
       }
 
-      // Evaluate preconditions
-      ELVars vars = preconditionEval.createVariables();
-      SdcEL.setVars(vars, context);
-      VarEL.resetVars(vars);
-      VersionEL.setVars(vars, context.getBuildInfo());
+      // Reset the variables that the rule is keeping
+      jexlContext.set("context", new HashMap<>());
+
       for(String precondition: ruleBean.getPreconditions()) {
         try {
           LOG.trace("Evaluating precondition: {}", precondition);
-          if (!preconditionEval.eval(vars, "${" + precondition + "}", Boolean.class)) {
+          if(!evaluateCondition(precondition, jexlContext)) {
             LOG.trace("Precondition {} failed, skipping rule {}", precondition, ruleBean.getUuid());
             continue;
           }
@@ -99,39 +115,30 @@ public class AntennaDoctorEngine {
 
     this.rules = builder.build();
     LOG.info("Loaded new Antenna Doctor engine with {} rules", this.rules.size());
-
-    this.stageEval = new ELEvaluator(
-        null,
-        AntennaDoctorELDefinitionExtractor.get(),
-        StageConfigurationEL.class,
-        StageDefinitionEL.class,
-        StageIssueEL.class
-    );
-
   }
 
   public List<AntennaDoctorMessage> onStage(AntennaDoctorStageContext context, Exception exception) {
-    ELVars vars = stageEval.createVariables();
-    StageIssueEL.setVars(vars, exception);
-    return onStage(context, vars);
+    JexlContext jexlContext = new MapContext();
+    jexlContext.set("issue", new StageIssueJexl(exception));
+    return onStage(context, jexlContext);
   }
 
   public List<AntennaDoctorMessage> onStage(AntennaDoctorStageContext context, ErrorCode errorCode, Object... args) {
-    ELVars vars = stageEval.createVariables();
-    StageIssueEL.setVars(vars, errorCode, args);
-    return onStage(context, vars);
+    JexlContext jexlContext = new MapContext();
+    jexlContext.set("issue", new StageIssueJexl(errorCode, args));
+    return onStage(context, jexlContext);
   }
 
   public List<AntennaDoctorMessage> onStage(AntennaDoctorStageContext context, String errorMessage) {
-    ELVars vars = stageEval.createVariables();
-    StageIssueEL.setVars(vars, errorMessage);
-    return onStage(context, vars);
+    JexlContext jexlContext = new MapContext();
+    jexlContext.set("issue", new StageIssueJexl(errorMessage));
+    return onStage(context, jexlContext);
   }
 
-  private List<AntennaDoctorMessage> onStage(AntennaDoctorStageContext context, ELVars vars) {
+  private List<AntennaDoctorMessage> onStage(AntennaDoctorStageContext context, JexlContext jexlContext) {
     ImmutableList.Builder<AntennaDoctorMessage> builder = ImmutableList.builder();
-    StageConfigurationEL.setVars(vars, context.getStageConfiguration());
-    StageDefinitionEL.setVars(vars, context.getStageDefinition());
+    jexlContext.set("stageDef", context.getStageDefinition());
+    jexlContext.set("stageConf", context.getStageConfiguration());
 
     // Iterate over rules and try to match them
     for(RuntimeRule rule : this.rules) {
@@ -140,18 +147,19 @@ public class AntennaDoctorEngine {
         continue;
       }
 
-      VarEL.resetVars(vars);
+      // Reset the variables that the rule is keeping
+      jexlContext.set("context", new HashMap<>());
 
       // Firstly evaluate conditions
       boolean matched = true;
       for (String condition : rule.getConditions()) {
         LOG.trace("Evaluating rule {} condition {}", rule.getUuid(), condition);
         try {
-          if (!stageEval.eval(vars, condition, Boolean.class)) {
+          if(!evaluateCondition(condition, jexlContext)) {
             matched = false;
             break;
           }
-        } catch (ELEvalException e) {
+        } catch (JexlException e) {
           matched = false;
           LOG.error("Failed to evaluate rule {} condition {}: {}", rule.getUuid(), condition, e.toString(), e);
           break;
@@ -162,11 +170,17 @@ public class AntennaDoctorEngine {
       if (matched) {
         LOG.trace("Rule {} matched!", rule.getUuid());
         try {
-          String summary = stageEval.eval(vars, rule.getSummary(), String.class);
-          String description = stageEval.eval(vars, rule.getDescription(), String.class);
+          StringWriter summaryWriter = new StringWriter();
+          StringWriter descriptionWriter = new StringWriter();
 
-          builder.add(new AntennaDoctorMessage(summary, description));
-        } catch (ELEvalException e) {
+          LOG.trace("Evaluating summary for rule {}: {}", rule.getUuid(), rule.getSummary());
+          templateEngine.createTemplate(rule.getSummary()).evaluate(jexlContext, summaryWriter);
+
+          LOG.trace("Evaluating description for rule {}: {}", rule.getUuid(), rule.getDescription());
+          templateEngine.createTemplate(rule.getDescription()).evaluate(jexlContext, descriptionWriter);
+
+          builder.add(new AntennaDoctorMessage(summaryWriter.toString(), descriptionWriter.toString()));
+        } catch (JexlException e) {
           LOG.error("Failed to evaluate message for rule {}: {}", rule.getUuid(), e.toString(), e);
         }
       } else {
@@ -175,5 +189,16 @@ public class AntennaDoctorEngine {
     }
 
     return builder.build();
+  }
+
+  private boolean evaluateCondition(String condition, JexlContext context) {
+    Object output = engine.createExpression(condition).evaluate(context);
+
+    if(output != null && Boolean.class.isAssignableFrom(output.getClass())) {
+      return (boolean)output;
+    }
+
+    // We consider any non-boolean value as true (continue)
+    return true;
   }
 }

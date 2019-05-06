@@ -6,47 +6,53 @@
     "uuid": "7d800180-6ea2-4bb5-b31d-c664bfb67d5d",
     "entity": "STAGE",
     "preconditions": [
-      "version:isGreaterOrEqualTo('3.9.0')",
-      "collection:contains(sdc:stagelibNames(), 'streamsets-datacollector-jdbc-lib')"
+      "version.isGreaterOrEqualTo('3.9.0')",
+      "sdc.stagelibNames().contains('streamsets-datacollector-jdbc-lib')"
     ],
     "conditions": [
-      "issue:errorCode() == 'JDBC_03'",
-      "stageDef:type() == 'SOURCE'",
-      "str:contains(stageConf:config('hikariConfigBean.connectionString'), 'jdbc:oracle:thin')",
-      "collection:size(issue:args()) > 2 && (issue:args()[1] == -101 || issue:args()[1] == -102)",
-      "var:set('jars', collection:filterByRegExp(stageDef:classpath(),'ojdbc[6|7].jar'))",
-      "collection:size(var:get('jars')) > 0",
-      "var:set('jar', collection:get(var:get('jars'), 0))"
+      "issue.errorCode() == 'JDBC_03'",
+      "stageDef.getType() == 'SOURCE'",
+      "stageConf.getConfig('hikariConfigBean.connectionString').getValue().contains('jdbc:oracle:thin')",
+      "issue.args().get(1) == -101 || issue.args().get(1) == -102",
+      "context['jar'] = collection:filterByRegExp(stageDef.getClassPath(), 'ojdbc[6|7].jar')",
+      "context['jar'].size() > 0",
+      "context['fileName'] = file:fileName(context['jar'][0])"
     ],
     "message": {
-      "summary": "Try upgrading Oracle JDBC Driver. Used driver '${file:fileName(var:get('jar'))}' is old and no longer actively supported by Oracle.",
+      "summary": "Try upgrading Oracle JDBC Driver. Loaded driver '${context['fileName']}' is old and no longer actively supported by Oracle.",
       "description": [
-        "Detected old Oracle JDBC driver on the classpath (file <i>'${file:fileName(var:get('jar'))}'</i>).<br />",
-        "Old versions of the Oracle JDBC are known to not work always properly when dealing with TIMESTAMP WITH TIMEZONE and TIMESTAMP WITH LOCAL TIMEZONE data types. Try upgrading to latest version of the JDBC driver. <br /><br />",
-        "The driver is loaded from <i>${var:get('jar')}</i>."
+        "The column <b>${issue.args().get(0)}</b> is of type <i>TIMESTAMP WITH ${issue.args().get(1) == -102 ? 'LOCAL' : ''} TIME ZONE</i> that older versions of Oracle JDBC driver are known to have problems with.<br /><br />",
+        "Please upgrade to the latest Oracle JDBC driver by replacing the old driver loaded from the following location:<br /><br /> <i>${context['jar'][0]}</i>."
       ]
     }
   },{
     "uuid": "cf929f62-ba4d-4017-9191-d7b03ac0769e",
     "entity": "STAGE",
     "preconditions": [
-      "version:isGreaterOrEqualTo('3.9.0')",
-      "collection:contains(sdc:stagelibNames(), 'streamsets-datacollector-jdbc-lib')"
+      "version.isGreaterOrEqualTo('3.9.0')",
+      "sdc.stagelibNames().contains('streamsets-datacollector-jdbc-lib')"
     ],
     "conditions": [
-      "issue:errorCode() == 'JDBC_75'",
-      "stageDef:type() == 'SOURCE'",
-      "str:contains(stageConf:config('hikariConfigBean.connectionString'), 'jdbc:oracle:thin')",
-      "collection:size(issue:args()) > 1 && str:contains(issue:args()[0], 'java.lang.NoClassDefFoundError: oracle/xdb/XMLType')",
-      "var:set('jars', collection:filterByRegExp(stageDef:classpath(),'xdb6.jar|xmlparsev-'))",
-      "collection:size(var:get('jars')) < 2",
-      "var:set('jdbcJar', collection:filterByRegExp(stageDef:classpath(),'ojdbc[0-9]+.jar')[0])"
+      "issue.errorCode() == 'JDBC_75'",
+      "stageDef.getType() == 'SOURCE'",
+      "stageConf.getConfig('hikariConfigBean.connectionString').getValue().contains('jdbc:oracle:thin')",
+      "issue.args().size() > 1 && issue.args().get(0).contains('java.lang.NoClassDefFoundError: oracle/xdb/XMLType')",
+      "context['jars'] = collection:filterByRegExp(stageDef.getClassPath(),'xdb6.jar|xmlparsev-')",
+      "context['jars'].size() < 2",
+      "context['jdbcJar'] = collection:filterByRegExp(stageDef.getClassPath(),'ojdbc[0-9]+.jar')[0]"
     ],
     "message": {
-      "summary": "Oracle JDBC driver requires additional jar files to read XMLTYPE.",
+      "summary": "Oracle JDBC driver requires additional jar files to read the type XMLTYPE.",
       "description": [
-        "SDC is using <i>'${file:fileName(var:get('jdbcJar'))}'</i> JDBC Driver from Oracle. This jar file doesn't ship with all necessary dependencies that are required when reading tables with XMLTYPE column. Additional jar files called xdb6 and xmlparsev needs to be installed separately.<br /><br />",
-        "You need to download and install both additional jar files either through package manager or directly into <i>${file:parentPath(var:get('jdbcJar'))}</i>."
+        "SDC is using JDBC Driver loaded from file <i>'${file:fileName(context['jdbcJar'])}'</i>. This jar file on it's own doesn't contain all necessary dependencies that are required when reading tables with <i>XMLTYPE</i> column. <br /><br />",
+        "Additional jar files called <i>xdb6</i> and <i>xmlparsev</i> needs to be installed separately. ",
+        "$$ if(context['jars'].size() == 0) {",
+          "This installation is missing both of those files.",
+        "$$ } else {",
+          "This installation contains only ${file:fileName(context['jars'][0])}.",
+        "$$ }",
+        "<br /><br />",
+        "You need to download and install both additional jar files either through package manager or directly into <i>${file:parentPath(context['jdbcJar'])}</i>."
       ]
     }
   }]
