@@ -150,13 +150,7 @@ public class CDCJdbcRunnable extends JdbcBaseRunnable {
       }
     }
 
-    int columns = rs.getMetaData().getColumnCount();
-    if (fields.size() != columns) {
-      errorRecordHandler.onError(JdbcErrors.JDBC_35, fields.size(), columns);
-      return; // Don't output this record.
-    } else {
-      batchContext.getBatchMaker().addRecord(record);
-    }
+    batchContext.getBatchMaker().addRecord(record);
 
     offsets.put(tableRuntimeContext.getOffsetKey(), offsetFormat);
   }

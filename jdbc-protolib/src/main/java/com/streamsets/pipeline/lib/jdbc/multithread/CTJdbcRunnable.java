@@ -146,13 +146,7 @@ public final class CTJdbcRunnable extends JdbcBaseRunnable {
       record.getHeader().setAttribute(JDBC_NAMESPACE_HEADER + fieldName, rs.getString(fieldName) != null ? rs.getString(fieldName) : "NULL" );
     }
 
-    int columns = rs.getMetaData().getColumnCount();
-    if (fields.size() != columns) {
-      errorRecordHandler.onError(JdbcErrors.JDBC_35, fields.size(), columns);
-      return; // Don't output this record.
-    } else {
-      batchContext.getBatchMaker().addRecord(record);
-    }
+    batchContext.getBatchMaker().addRecord(record);
 
     offsets.put(tableRuntimeContext.getOffsetKey(), offsetFormat);
   }
