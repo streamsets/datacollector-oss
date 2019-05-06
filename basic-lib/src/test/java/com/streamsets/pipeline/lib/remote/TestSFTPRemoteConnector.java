@@ -356,7 +356,7 @@ public class TestSFTPRemoteConnector extends RemoteConnectorTestBase {
 
     List<Stage.ConfigIssue> issues = initAndCheckIssue(
         connector,
-        "SFTP/FTP",
+        "SFTP/FTP/FTPS",
         "conf.remoteConfig.remoteAddress",
         Errors.REMOTE_11,
         "sftp://localhost:" + port + "/",

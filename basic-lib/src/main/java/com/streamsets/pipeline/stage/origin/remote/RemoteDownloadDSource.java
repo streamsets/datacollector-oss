@@ -26,8 +26,8 @@ import com.streamsets.pipeline.api.base.configurablestage.DSource;
 
 @StageDef(
     version = 4,
-    label = "SFTP/FTP Client",
-    description = "Uses an SFTP/FTP client to read data from a URL.",
+    label = "SFTP/FTP/FTPS Client",
+    description = "Uses an SFTP/FTP/FTPS client to read data from a URL.",
     icon = "sftp-client.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,

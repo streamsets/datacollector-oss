@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2019 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.remote;
+package com.streamsets.pipeline.lib.remote;
 
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
+import org.apache.commons.vfs2.provider.ftps.FtpsDataChannelProtectionLevel;
 
 @GenerateResourceBundle
-public enum Groups implements Label {
-  REMOTE("SFTP/FTP/FTPS"),
-  CREDENTIALS("Credentials"),
-  ERROR("Error Handling"),
-  DATA_FORMAT("Data Format"),
-  POST_PROCESSING("Post Processing"),
+public enum FTPSDataChannelProtectionLevel implements Label {
+  // There's actually 4 levels, but nobody seems to actually use the other two, and even the RFC says not to use them
+  // https://tools.ietf.org/html/rfc4217#page-10
+  CLEAR("Clear", FtpsDataChannelProtectionLevel.C),
+  PRIVATE("Private", FtpsDataChannelProtectionLevel.P),
   ;
 
   private final String label;
+  private final FtpsDataChannelProtectionLevel level;
 
-  private Groups(String label) {
+  FTPSDataChannelProtectionLevel(String label, FtpsDataChannelProtectionLevel level) {
     this.label = label;
+    this.level = level;
   }
 
   @Override
   public String getLabel() {
-    return this.label;
+    return label;
+  }
+
+  public FtpsDataChannelProtectionLevel getLevel() {
+    return level;
   }
 }

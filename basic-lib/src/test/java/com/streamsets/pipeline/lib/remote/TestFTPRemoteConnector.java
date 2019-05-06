@@ -49,7 +49,7 @@ public class TestFTPRemoteConnector extends RemoteConnectorTestBase {
   @Test
   public void testPrivateKey() throws Exception {
     FTPRemoteConnectorForTest connector = new FTPRemoteConnectorForTest(getBean(
-        "ftp://localhost:" + port + "/",
+        getScheme() + "://localhost:" + port + "/",
         true,
         false,
         TESTUSER,
@@ -75,7 +75,7 @@ public class TestFTPRemoteConnector extends RemoteConnectorTestBase {
   @Test
   public void testStrictHostChecking() throws Exception {
     FTPRemoteConnectorForTest connector = new FTPRemoteConnectorForTest(getBean(
-        "ftp://localhost:" + port + "/",
+        getScheme() + "://localhost:" + port + "/",
         true,
         false,
         TESTUSER,
@@ -105,7 +105,7 @@ public class TestFTPRemoteConnector extends RemoteConnectorTestBase {
 
   @Override
   protected String getTestDirDoesntExistMessage(File dir) {
-    return "Could not list the contents of \"ftp://localhost:" + port + "/" + dir.getName()
+    return "Could not list the contents of \"" + getScheme() + "://localhost:" + port + "/" + dir.getName()
         + "\" because it is not a folder.";
   }
 

@@ -31,6 +31,7 @@ import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemOptions;
 import org.apache.commons.vfs2.FileType;
 import org.apache.commons.vfs2.VFS;
+import org.apache.commons.vfs2.provider.ftp.FTPClientWrapper;
 import org.apache.commons.vfs2.provider.ftp.FtpClient;
 import org.apache.commons.vfs2.provider.ftp.FtpFileSystem;
 import org.apache.commons.vfs2.provider.ftp.FtpFileSystemConfigBuilder;
@@ -168,7 +169,7 @@ class FTPRemoteDownloadSourceDelegate extends FTPRemoteConnector implements Remo
     FtpFileSystem ftpFileSystem = (FtpFileSystem) remoteDir.getFileSystem();
     try {
       ftpClient = ftpFileSystem.getClient();
-      getFtpClient = ftpClient.getClass().getDeclaredMethod("getFtpClient");
+      getFtpClient = FTPClientWrapper.class.getDeclaredMethod("getFtpClient");
       getFtpClient.setAccessible(true);
       FTPClient rawFtpClient = (FTPClient) getFtpClient.invoke(ftpClient);
       rawFtpClient.features();

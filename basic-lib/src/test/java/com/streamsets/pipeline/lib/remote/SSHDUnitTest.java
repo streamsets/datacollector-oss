@@ -188,11 +188,16 @@ public abstract class SSHDUnitTest {
     }
   }
 
+  protected KeyPair generateKeyPair() throws Exception {
+    KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+    keyGen.initialize(2048);
+    return keyGen.generateKeyPair();
+  }
+
   private class HostKeyProvider implements KeyPairProvider {
 
     HostKeyProvider() throws Exception {
-      KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-      sshdHostKeyPair = keyGen.generateKeyPair();
+      sshdHostKeyPair = generateKeyPair();
     }
 
     @Override

@@ -102,7 +102,7 @@ public abstract class RemoteConnectorTestBase extends FTPAndSSHDUnitTest {
 
     List<Stage.ConfigIssue> issues = initAndCheckIssue(
         connector,
-        "SFTP/FTP",
+        "SFTP/FTP/FTPS",
         "conf.remoteConfig.remoteAddress",
         Errors.REMOTE_11,
         getScheme() + "://localhost:" + port + "/",
@@ -158,7 +158,7 @@ public abstract class RemoteConnectorTestBase extends FTPAndSSHDUnitTest {
 
     List<Stage.ConfigIssue> issues = initAndCheckIssue(
         connector,
-        "SFTP/FTP",
+        "SFTP/FTP/FTPS",
         "conf.remoteConfig.remoteAddress",
         Errors.REMOTE_11,
         getScheme() + "://localhost:" + port + "/dir",
@@ -298,7 +298,7 @@ public abstract class RemoteConnectorTestBase extends FTPAndSSHDUnitTest {
   ) {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
     Label remoteGroup = Mockito.mock(Label.class);
-    Mockito.when(remoteGroup.getLabel()).thenReturn("SFTP/FTP");
+    Mockito.when(remoteGroup.getLabel()).thenReturn("SFTP/FTP/FTPS");
     Label credGroup = Mockito.mock(Label.class);
     Mockito.when(credGroup.getLabel()).thenReturn("CREDENTIALS");
     connector.initAndConnect(
@@ -320,7 +320,7 @@ public abstract class RemoteConnectorTestBase extends FTPAndSSHDUnitTest {
   ) {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
     Label remoteGroup = Mockito.mock(Label.class);
-    Mockito.when(remoteGroup.getLabel()).thenReturn("SFTP/FTP");
+    Mockito.when(remoteGroup.getLabel()).thenReturn("SFTP/FTP/FTPS");
     Label credGroup = Mockito.mock(Label.class);
     Mockito.when(credGroup.getLabel()).thenReturn("CREDENTIALS");
     connector.initAndConnect(

@@ -45,7 +45,7 @@ import java.util.List;
 public abstract class SFTPRemoteConnector extends RemoteConnector {
 
   private static final Logger LOG = LoggerFactory.getLogger(SFTPRemoteConnector.class);
-  public static final String SCHEME = "sftp";
+  private static final String SFTP_SCHEME = "sftp";
   public static final int DEFAULT_PORT = 22;
 
   protected File knownHostsFile;
@@ -55,6 +55,10 @@ public abstract class SFTPRemoteConnector extends RemoteConnector {
 
   protected SFTPRemoteConnector(RemoteConfigBean remoteConfig) {
     super(remoteConfig);
+  }
+
+  public static boolean handlesScheme(String scheme) {
+    return SFTP_SCHEME.equals(scheme);
   }
 
   @Override

@@ -23,7 +23,7 @@ public enum Errors implements ErrorCode {
   REMOTE_01("Given URI is invalid {}"),
   REMOTE_02("URI: '{}' is invalid. Must begin with 'ftp://' or 'sftp://'"),
   REMOTE_03("known_hosts file: {} does not exist or is not accessible"),
-  REMOTE_04("Strict Host Checking is enabled and known_hosts file not specified"),
+  REMOTE_04("Strict Host Checking is enabled but known_hosts file not specified"),
   REMOTE_05("Private Key file: {} does not exist or is not accessible"),
   REMOTE_06("Private Key authentication is supported only with SFTP"),
   REMOTE_07("Strict Host Checking is supported only with SFTP"),
@@ -31,7 +31,12 @@ public enum Errors implements ErrorCode {
   REMOTE_09("Error accessing remote directory: {}"),
   REMOTE_10("Unable to load Private Key: {}"),
   REMOTE_11("Unable to connect to remote host '{}' with given credentials. " +
-      "Please verify if the host is reachable, and the credentials are valid. Message: {}"),
+      "Please verify if the host is reachable, and the credentials and other configuration are valid. " +
+      "The logs may have more details. Message: {}"),
+  REMOTE_12("Use Client Certificate for FTPS is enabled but FTPS Client Certificate Keystore File is not specified"),
+  REMOTE_13("FTPS Truststore Provider is File but FTPS Truststore File is not specified"),
+  REMOTE_14("Error attempting to load {}store from {}: {}"),
+  REMOTE_15("Error attempting to create {}manager: {}"),
   ;
 
   private final String msg;

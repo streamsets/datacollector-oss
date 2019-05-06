@@ -19,6 +19,10 @@ import com.streamsets.pipeline.api.ConfigIssueContext;
 import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.lib.tls.KeyStoreType;
+import org.apache.commons.net.util.KeyManagerUtils;
+import org.apache.commons.net.util.TrustManagerUtils;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystem;
 import org.apache.commons.vfs2.FileSystemException;
@@ -28,13 +32,18 @@ import org.apache.commons.vfs2.VFS;
 import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
 import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
 import org.apache.commons.vfs2.provider.ftp.FtpFileSystemConfigBuilder;
+import org.apache.commons.vfs2.provider.ftps.FtpsFileSystemConfigBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.UriBuilder;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Paths;
+import java.security.GeneralSecurityException;
+import java.security.KeyStore;
 import java.util.List;
 
 /**
@@ -45,7 +54,8 @@ import java.util.List;
 public abstract class FTPRemoteConnector extends RemoteConnector {
 
   private static final Logger LOG = LoggerFactory.getLogger(FTPRemoteConnector.class);
-  public static final String SCHEME = "ftp";
+  private static final String FTP_SCHEME = "ftp";
+  private static final String FTPS_SCHEME = "ftps";
   public static final int DEFAULT_PORT = 21;
 
   protected FileSystemOptions options;
@@ -54,6 +64,10 @@ public abstract class FTPRemoteConnector extends RemoteConnector {
 
   protected FTPRemoteConnector(RemoteConfigBean remoteConfig) {
     super(remoteConfig);
+  }
+
+  public static boolean handlesScheme(String scheme) {
+    return FTP_SCHEME.equals(scheme) || FTPS_SCHEME.equals(scheme);
   }
 
   @Override
@@ -93,8 +107,71 @@ public abstract class FTPRemoteConnector extends RemoteConnector {
       default:
         break;
     }
-    FtpFileSystemConfigBuilder.getInstance().setPassiveMode(options, true);
-    FtpFileSystemConfigBuilder.getInstance().setUserDirIsRoot(options, remoteConfig.userDirIsRoot);
+
+    FtpFileSystemConfigBuilder configBuilder = FtpFileSystemConfigBuilder.getInstance();
+    if (remoteURI.getScheme().equals(FTPS_SCHEME)) {
+      configBuilder = FtpsFileSystemConfigBuilder.getInstance();
+      FtpsFileSystemConfigBuilder.getInstance().setFtpsMode(options, remoteConfig.ftpsMode.getMode());
+      FtpsFileSystemConfigBuilder.getInstance().setDataChannelProtectionLevel(
+          options,
+          remoteConfig.ftpsDataChannelProtectionLevel.getLevel()
+      );
+      if (remoteConfig.useFTPSClientCert) {
+        setFtpsUserKeyManagerOrTrustManager(
+            remoteConfig.ftpsClientCertKeystoreFile,
+            CONF_PREFIX + "ftpsClientCertKeystoreFile",
+            remoteConfig.ftpsClientCertKeystorePassword,
+            CONF_PREFIX + "ftpsClientCertKeystorePassword",
+            remoteConfig.ftpsClientCertKeystoreType,
+            true,
+            issues,
+            context,
+            credGroup
+        );
+      }
+      switch (remoteConfig.ftpsTrustStoreProvider) {
+        case FILE:
+          setFtpsUserKeyManagerOrTrustManager(
+              remoteConfig.ftpsTruststoreFile,
+              CONF_PREFIX + "ftpsTruststoreFile",
+              remoteConfig.ftpsTruststorePassword,
+              CONF_PREFIX + "ftpsTruststorePassword",
+              remoteConfig.ftpsTruststoreType,
+              false,
+              issues,
+              context,
+              credGroup
+          );
+          break;
+        case JVM_DEFAULT:
+          try {
+            FtpsFileSystemConfigBuilder.getInstance().setTrustManager(options,
+                TrustManagerUtils.getDefaultTrustManager(null)
+            );
+          } catch (GeneralSecurityException e) {
+            issues.add(context.createConfigIssue(
+                credGroup.getLabel(),
+                CONF_PREFIX + "ftpsTruststoreFile",
+                Errors.REMOTE_14,
+                "trust",
+                "JVM",
+                e.getMessage(),
+                e
+            ));
+          }
+          break;
+        case ALLOW_ALL:
+          // fall through
+        default:
+          FtpsFileSystemConfigBuilder.getInstance().setTrustManager(
+              options,
+              TrustManagerUtils.getAcceptAllTrustManager()
+          );
+          break;
+      }
+    }
+    configBuilder.setPassiveMode(options, true);
+    configBuilder.setUserDirIsRoot(options, remoteConfig.userDirIsRoot);
 
     // Only actually try to connect and authenticate if there were no issues
     if (issues.isEmpty()) {
@@ -171,5 +248,82 @@ public abstract class FTPRemoteConnector extends RemoteConnector {
       path = path.substring(1);
     }
     return remoteDir.resolveFile(path, NameScope.DESCENDENT);
+  }
+
+  private void setFtpsUserKeyManagerOrTrustManager(
+      String file,
+      String fileConfigName,
+      CredentialValue password,
+      String passwordConfigName,
+      KeyStoreType keyStoreType,
+      boolean isKeystore, // or truststore
+      List<Stage.ConfigIssue> issues,
+      ConfigIssueContext context,
+      Label group
+  ) {
+    if (file != null && !file.isEmpty()) {
+      File keystoreFile = new File(file);
+      String keystorePassword = resolveCredential(
+          password,
+          passwordConfigName,
+          issues,
+          context,
+          group
+      );
+      try {
+        KeyStore keystore = loadKeystore(
+            keystoreFile,
+            keyStoreType.getJavaValue(),
+            keystorePassword
+        );
+          try {
+            if (isKeystore) {
+              FtpsFileSystemConfigBuilder.getInstance().setKeyManager(
+                  options,
+                  KeyManagerUtils.createClientKeyManager(keystore, null, keystorePassword)
+              );
+            } else {
+              FtpsFileSystemConfigBuilder.getInstance().setTrustManager(
+                  options,
+                  TrustManagerUtils.getDefaultTrustManager(keystore)
+              );
+            }
+          } catch (GeneralSecurityException e) {
+            issues.add(context.createConfigIssue(group.getLabel(),
+                fileConfigName,
+                Errors.REMOTE_15,
+                isKeystore ? "key" : "trust",
+                e.getMessage(),
+                e
+            ));
+          }
+      } catch (IOException | GeneralSecurityException e) {
+        issues.add(context.createConfigIssue(
+            group.getLabel(),
+            fileConfigName,
+            Errors.REMOTE_14,
+            isKeystore ? "key" : "trust",
+            keystoreFile.getAbsolutePath(),
+            e.getMessage(),
+            e
+        ));
+      }
+    } else {
+      if (isKeystore) {
+        issues.add(context.createConfigIssue(group.getLabel(), fileConfigName, Errors.REMOTE_12));
+      } else {
+        issues.add(context.createConfigIssue(group.getLabel(), fileConfigName, Errors.REMOTE_13));
+      }
+    }
+  }
+
+  private KeyStore loadKeystore(File file, String type, String password)
+      throws IOException, GeneralSecurityException {
+    KeyStore keystore = KeyStore.getInstance(type);
+    char[] passwordArr = password != null ? password.toCharArray() : null;
+    try (FileInputStream fin = new FileInputStream(file)) {
+      keystore.load(fin, passwordArr);
+    }
+    return keystore;
   }
 }

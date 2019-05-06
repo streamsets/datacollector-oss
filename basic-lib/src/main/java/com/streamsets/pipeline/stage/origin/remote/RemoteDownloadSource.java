@@ -175,10 +175,10 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
     rateLimitElVars = getContext().createELVars();
 
     if (issues.isEmpty()) {
-      if (FTPRemoteConnector.SCHEME.equals(remoteURI.getScheme())) {
+      if (FTPRemoteConnector.handlesScheme(remoteURI.getScheme())) {
         delegate = new FTPRemoteDownloadSourceDelegate(conf);
         delegate.initAndConnect(issues, getContext(), remoteURI, archiveDir);
-      } else if (SFTPRemoteConnector.SCHEME.equals(remoteURI.getScheme())) {
+      } else if (SFTPRemoteConnector.handlesScheme(remoteURI.getScheme())) {
         delegate = new SFTPRemoteDownloadSourceDelegate(conf);
         delegate.initAndConnect(issues, getContext(), remoteURI, archiveDir);
       }

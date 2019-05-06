@@ -26,8 +26,8 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 
 @StageDef(
     version = 1,
-    label = "SFTP/FTP Client",
-    description = "Uses an SFTP/FTP client to send data to a URL.",
+    label = "SFTP/FTP/FTPS Client",
+    description = "Uses an SFTP/FTP/FTPS client to send data to a URL.",
     icon = "sftp-client.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,

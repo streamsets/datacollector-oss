@@ -35,6 +35,7 @@ import com.streamsets.pipeline.lib.io.fileref.FileRefTestUtil;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.remote.Authentication;
 import com.streamsets.pipeline.lib.remote.FTPAndSSHDUnitTest;
+import com.streamsets.pipeline.lib.tls.KeyStoreType;
 import com.streamsets.pipeline.sdk.DataCollectorServicesUtils;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.SourceRunner;
@@ -85,7 +86,7 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
   private final Random RANDOM = new Random();
 
   private enum Scheme {
-    sftp, ftp
+    sftp, ftp, ftps
   }
 
   @Parameterized.Parameters(name = "{0}")
@@ -1535,7 +1536,7 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
 
   @Test
   public void testMDTM() throws Exception {
-    Assume.assumeTrue(scheme == Scheme.ftp);
+    Assume.assumeTrue(scheme == Scheme.ftp || scheme == Scheme.ftps);
     path = "remote-download-source/parseSameTimestamp";
     File dir = new File(currentThread().getContextClassLoader().getResource(path).getPath());
     File[] files = dir.listFiles();
@@ -1927,10 +1928,18 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
       URL url = currentThread().getContextClassLoader().getResource(homeDir);
       homeDir = url.getPath();
     }
-    if (scheme == Scheme.sftp) {
-      setupSSHD(homeDir);
-    } else if (scheme == Scheme.ftp) {
-      setupFTPServer(homeDir);
+    switch (scheme) {
+      case sftp:
+        setupSSHD(homeDir);
+        break;
+      case ftp:
+        setupFTPServer(homeDir);
+        break;
+      case ftps:
+        setupFTPSServer(homeDir, KeyStoreType.JKS, null, false);
+        break;
+      default:
+        Assert.fail("Missing Server setup for scheme " + scheme);
     }
   }
 }
