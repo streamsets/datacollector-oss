@@ -36,7 +36,9 @@ public class PipelineFinisherExecutor extends BaseExecutor {
 
   @Override
   public void write(Batch batch) {
-    getContext().finishPipeline(config.resetOffset);
+    if(batch.getRecords().hasNext()) {
+      getContext().finishPipeline(config.resetOffset);
+    }
   }
 
 }
