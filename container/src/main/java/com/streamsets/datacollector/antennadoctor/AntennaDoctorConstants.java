@@ -51,7 +51,7 @@ public final class AntennaDoctorConstants {
    * sdc.properties config to enable downloading updates to the knowledge base.
    */
   public final static String CONF_UPDATE_URL = "antennadoctor.update.url";
-  public final static String DEFAULT_UPDATE_URL = "http://somewhere.streamsets.com/"; // TBD
+  public final static String DEFAULT_UPDATE_URL = "https://antenna.streamsets.com";
 
   /**
    * Name of the resource file that have built-in database
