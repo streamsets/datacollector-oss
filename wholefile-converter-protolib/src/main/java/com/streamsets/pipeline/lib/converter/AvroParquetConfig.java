@@ -98,6 +98,6 @@ public class AvroParquetConfig {
       triggeredByValue = "AVRO_PARQUET"
   )
   @ValueChooserModel(TimeZoneChooserValues.class)
-  public String timeZoneID;
+  public String timeZoneID = "UTC";
 
 }
