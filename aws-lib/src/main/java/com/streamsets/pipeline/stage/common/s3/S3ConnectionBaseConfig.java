@@ -61,7 +61,7 @@ public abstract class S3ConnectionBaseConfig {
   public AwsRegion region;
 
   @ConfigDef(
-      required = false,
+      required = true,
       type = ConfigDef.Type.STRING,
       label = "Endpoint",
       description = "",
