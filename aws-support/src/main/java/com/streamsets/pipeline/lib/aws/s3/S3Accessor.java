@@ -181,14 +181,25 @@ public class S3Accessor implements Closeable {
 
   //visible for testing
   AWSCredentialsProvider createCredentialsProvider() throws StageException {
-    String accessKey = credentialConfigs.getAccessKey().get();
-    String secretKey = credentialConfigs.getSecretKey().get();
-    if (accessKey != null && !accessKey.isEmpty() && secretKey != null && !secretKey.isEmpty()) {
-      return new AWSStaticCredentialsProvider(new BasicAWSCredentials(credentialConfigs.getAccessKey().get(),
-          credentialConfigs.getSecretKey().get()
-      ));
+    AWSCredentialsProvider awsCredentialsProvider = null;
+    CredentialValue accessKey = credentialConfigs.getAccessKey();
+    CredentialValue secretKey = credentialConfigs.getSecretKey();
+
+    if (accessKey != null && secretKey != null) {
+      String accessKeyString = accessKey.get();
+      String secretKeyString = secretKey.get();
+
+      if (accessKeyString != null &&
+          !accessKeyString.isEmpty() &&
+          secretKeyString != null &&
+          !secretKeyString.isEmpty()) {
+        awsCredentialsProvider = new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKeyString,
+            secretKeyString
+        ));
+      }
     }
-    return null;
+
+    return awsCredentialsProvider;
   }
 
   //visible for testing
