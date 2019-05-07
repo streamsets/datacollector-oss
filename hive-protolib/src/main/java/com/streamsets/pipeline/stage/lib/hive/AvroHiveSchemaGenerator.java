@@ -90,11 +90,6 @@ public class AvroHiveSchemaGenerator extends AvroSchemaGenerator<Map<String, Hiv
         timestampSchema.addProp(AvroTypeUtil.LOGICAL_TYPE, AvroTypeUtil.LOGICAL_TYPE_TIMESTAMP_MILLIS);
         return timestampSchema;
 
-      case TIME:
-        Schema timeSchema = Schema.create(Schema.Type.INT);
-        timeSchema.addProp(AvroTypeUtil.LOGICAL_TYPE, AvroTypeUtil.LOGICAL_TYPE_TIME_MILLIS);
-        return timeSchema;
-
       case DATE:
         Schema dateSchema = Schema.create(Schema.Type.INT);
         dateSchema.addProp(AvroTypeUtil.LOGICAL_TYPE, AvroTypeUtil.LOGICAL_TYPE_DATE);

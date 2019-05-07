@@ -660,9 +660,6 @@ public final class HiveMetastoreUtil {
       case DATETIME:
         fieldValue = field.getValueAsDate();
         break;
-      case TIME:
-        fieldValue = field.getValueAsTime();
-        break;
       default:
         throw new HiveStageCheckedException(Errors.HIVE_41, field.getType().name());
     }
@@ -724,16 +721,10 @@ public final class HiveMetastoreUtil {
           }
           break;
         case TIME:
-          if (convertTimesToString) {
-            currField = Field.create(
-                Field.Type.STRING,
-                currField.getValue() == null ? null : timeFormat.get().format(currField.getValueAsTime())
-            );
-          } else {
-            currField = Field.create(
-                Field.Type.TIME,
-                currField.getValue() == null ? null : getDateForTimeZone(timeZone, currField));
-          }
+          currField = Field.create(
+              Field.Type.STRING,
+              currField.getValue() == null ? null : timeFormat.get().format(currField.getValueAsTime())
+          );
           break;
         default:
           break;
