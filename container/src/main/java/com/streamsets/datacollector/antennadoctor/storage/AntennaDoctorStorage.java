@@ -172,6 +172,7 @@ public class AntennaDoctorStorage extends AbstractTask {
 
   private List<AntennaDoctorRuleBean> loadRules() {
     Path database = repositoryDirectory.resolve(overrideRunnable == null ? AntennaDoctorConstants.FILE_DATABASE : AntennaDoctorConstants.FILE_OVERRIDE);
+    LOG.trace("Loading rules from: {}", database);
 
     try(InputStream inputStream = Files.newInputStream(database)) {
       AntennaDoctorStorageBean storageBean = ObjectMapperFactory.get().readValue(
@@ -220,7 +221,7 @@ public class AntennaDoctorStorage extends AbstractTask {
               }
 
               if (ev.context().toString().equals(AntennaDoctorConstants.FILE_OVERRIDE)) {
-                loadRules();
+                delegate.loadNewRules(loadRules());
               }
             }
           } finally {
