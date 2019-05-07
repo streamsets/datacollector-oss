@@ -36,6 +36,8 @@ public class TestAvroToOrcSchemaConverter {
     TypeDescription orcSchema = AvroToOrcSchemaConverter.getOrcSchema(avroSchema1);
 
     assertThat(orcSchema.getCategory(), equalTo(TypeDescription.Category.STRUCT));
-    assertThat(orcSchema.toString(), equalTo("struct<first:int,second:string,third:double>"));
+    assertThat(orcSchema.toString(), equalTo(
+        "struct<first:int,second:string,third:double,fourth:string,fifth:uniontype<int,string>,sixth:uniontype<string,bigint>>"
+    ));
   }
 }

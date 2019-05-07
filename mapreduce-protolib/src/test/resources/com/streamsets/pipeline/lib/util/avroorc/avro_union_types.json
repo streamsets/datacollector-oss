@@ -1,0 +1,20 @@
+{
+  "type": "record",
+  "name": "variousUnionTypes",
+  "namespace": "com.streamsets",
+  "fields": [
+    {
+      "name": "nullableInteger",
+      "type": [{"type": "null"}, {"type": "int"}]
+    }, {
+      "name": "integerOrString",
+      "type": [{"type": "int"}, {"type": "string"}]
+    }, {
+      "name": "nullableStringOrInteger",
+      "type": [{"type": "null"}, {"type": "string"}, {"type": "int"}]
+    }, {
+      "name": "justLong",
+      "type": [{"type": "long"}]
+    }
+  ]
+}

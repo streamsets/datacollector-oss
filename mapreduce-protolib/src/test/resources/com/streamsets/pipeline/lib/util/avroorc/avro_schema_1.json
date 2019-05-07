@@ -7,14 +7,21 @@
       "name": "first",
       "type": "int",
       "default": -1
-    },
-    {
+    }, {
       "name": "second",
       "type": "string"
-    },
-    {
+    }, {
       "name": "third",
       "type": "double"
+    }, {
+      "name": "fourth",
+      "type": [{"type": "null"}, {"type": "string"}]
+    }, {
+      "name": "fifth",
+      "type": [{"type": "int"}, {"type": "string"}]
+    }, {
+      "name": "sixth",
+      "type": [{"type": "null"}, {"type": "string"}, {"type": "long"}]
     }
   ]
 }

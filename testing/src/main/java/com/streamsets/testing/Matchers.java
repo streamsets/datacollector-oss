@@ -27,6 +27,7 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -91,6 +92,24 @@ public class Matchers {
     };
   }
 
+  public static Matcher<Field> intFieldWithNullValue() {
+    return new FieldMatcher(Field.Type.INTEGER, null) {
+      @Override
+      protected Object getValueFromField(Field field) {
+        return field.getValue();
+      }
+    };
+  }
+
+  public static Matcher<Field> stringFieldWithNullValue() {
+    return new FieldMatcher(Field.Type.STRING, null) {
+      @Override
+      protected Object getValueFromField(Field field) {
+        return field.getValue();
+      }
+    };
+  }
+
   public static Matcher<Field> fieldWithValue(final float value) {
     return new FieldMatcher(Field.Type.FLOAT, value) {
       @Override
@@ -145,6 +164,15 @@ public class Matchers {
     };
   }
 
+  public static Matcher<Field> fieldWithValue(final Object value) {
+    return new FieldMatcher(getTypeFromObject(value), value) {
+      @Override
+      protected Object getValueFromField(Field field) {
+        return field.getValue();
+      }
+    };
+  }
+
   public static Matcher<Field> mapFieldWithEntry(final String nestedFieldName, final int value) {
     return new MapFieldWithEntryMatcher(nestedFieldName, value, Field::getValueAsInteger);
   }
@@ -195,7 +223,12 @@ Expected :Field of type MAP or LIST_MAP with field entry named values having val
       if (item instanceof Field) {
         Field field = (Field) item;
         if (field.getType() == type) {
-          return value.equals(getValueFromField(field));
+          final Object valueFromField = getValueFromField(field);
+          if (value == null) {
+            return valueFromField == null;
+          } else {
+            return value.equals(valueFromField);
+          }
         }
       }
       return false;
@@ -278,5 +311,54 @@ Expected :Field of type MAP or LIST_MAP with field entry named values having val
   @Factory
   public static Matcher<String> containsIgnoringCase(final String subString) {
     return new CaseInsensitiveSubstringMatcher(subString);
+  }
+
+  /**
+   * Returns the {@link Field.Type} corresponding to the given value's class
+   *
+   * This is copy-pasted from FieldUtils class, which lives in the stagesupport module
+   *
+   * Due to module circular dependencies, we cannot depend on it from here easily
+   *
+   * TODO: remove this once SDC-11502 is done
+   *
+   * @param value the value
+   * @return the {@link Field.Type} for the given value param
+   */
+  public static Field.Type getTypeFromObject(Object value) {
+    if(value instanceof Double) {
+      return Field.Type.DOUBLE;
+    } else if(value instanceof Long) {
+      return Field.Type.LONG;
+    } else if(value instanceof BigDecimal) {
+      return Field.Type.DECIMAL;
+    } else if(value instanceof Date) {
+      //This can only happen in ${time:now()}
+      return Field.Type.DATETIME;
+      //For all the timeEL, we currently return String so we are safe.
+    } else if(value instanceof Short) {
+      return Field.Type.SHORT;
+    } else if(value instanceof Boolean) {
+      return Field.Type.BOOLEAN;
+    } else if(value instanceof Byte) {
+      return Field.Type.BYTE;
+    } else if(value instanceof byte[]) {
+      return Field.Type.BYTE_ARRAY;
+    } else if(value instanceof Character) {
+      return Field.Type.CHAR;
+    } else if(value instanceof Float) {
+      return Field.Type.FLOAT;
+    } else if(value instanceof Integer) {
+      return Field.Type.INTEGER;
+    } else if(value instanceof String) {
+      return Field.Type.STRING;
+    } else if(value instanceof LinkedHashMap) {
+      return Field.Type.LIST_MAP;
+    } else if(value instanceof Map) {
+      return Field.Type.MAP;
+    } else if(value instanceof List) {
+      return Field.Type.LIST;
+    }
+    return Field.Type.STRING;
   }
 }

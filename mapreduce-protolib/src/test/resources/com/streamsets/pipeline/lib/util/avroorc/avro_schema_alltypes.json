@@ -86,6 +86,10 @@
     {
       "name": "listField",
       "type": {"type": "array", "items": "string"}
+    },
+    {
+      "name": "enumField",
+      "type": {"type" : "enum", "name": "ThisThatOrTheOther", "symbols": ["FIRST", "SECOND", "THIRD"]}
     }
 
   ]

@@ -20,8 +20,16 @@ import com.streamsets.pipeline.lib.util.AvroTypeUtil;
 import org.apache.avro.Schema;
 import org.apache.orc.TypeDescription;
 import org.codehaus.jackson.JsonNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class AvroToOrcSchemaConverter {
+  private static final Logger LOG = LoggerFactory.getLogger(AvroToOrcSchemaConverter.class);
 
   public static TypeDescription getOrcSchema(Schema avroSchema) {
 
@@ -114,14 +122,26 @@ public class AvroToOrcSchemaConverter {
             getOrcSchema(avroSchema.getValueType())
         );
       case UNION:
-        final TypeDescription union = TypeDescription.createUnion();
-        for (Schema childSchema : avroSchema.getTypes()) {
-          TypeDescription unionChild = getOrcSchema(childSchema);
-          if (unionChild != null) {
-            union.addUnionChild(unionChild);
+        final List<Schema> nonNullMembers = avroSchema.getTypes().stream().filter(
+            schema -> !Schema.Type.NULL.equals(schema.getType())
+        ).collect(Collectors.toList());
+
+        if (nonNullMembers.isEmpty()) {
+          // no non-null union members; represent as an ORC empty union
+          return TypeDescription.createUnion();
+        } else if (nonNullMembers.size() == 1) {
+          // a single non-null union member
+          // this is how Avro represents "nullable" types; as a union of the NULL type with another
+          // since ORC already supports nullability of all types, just use the child type directly
+          return getOrcSchema(nonNullMembers.get(0));
+        } else {
+          // more than one non-null type; represent as an actual ORC union of them
+          final TypeDescription union = TypeDescription.createUnion();
+          for (final Schema childSchema : nonNullMembers) {
+            union.addUnionChild(getOrcSchema(childSchema));
           }
+          return union;
         }
-        return union;
       case STRING:
         return TypeDescription.createString();
       case FLOAT:
