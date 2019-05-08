@@ -18,6 +18,7 @@ package com.streamsets.pipeline.lib.el;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
@@ -173,5 +174,29 @@ public class TestTimeNowEL {
 
     Assert.assertEquals(-7*HOUR, TimeNowEL.timeZoneOffset(july,"PST")); // Daylight saving time
     Assert.assertEquals(-8*HOUR, TimeNowEL.timeZoneOffset(february,"PST"));
+  }
+
+  @Test
+  public void testExtractNanosecondsFromString() {
+    String timestampNanosWithoutMillis = "105000";
+    String timestampWithoutNanosStr = "2005-02-08 14:00:00.100";
+    String timestamp = "2005-02-08 14:00:00.100105000";
+
+    Timestamp timestampWithoutNanos = Timestamp.valueOf(timestampWithoutNanosStr);
+
+    String parsedTimestamp = TimeNowEL.extractNanosecondsFromString(timestamp);
+    String[] timestampParts = parsedTimestamp.split(TimeNowEL.OFFSET_VALUE_NANO_SEPARATOR);
+
+    Assert.assertEquals(2, timestampParts.length);
+    Assert.assertEquals(timestampNanosWithoutMillis, timestampParts[1]);
+    Assert.assertEquals(timestampWithoutNanos.getTime(), Long.valueOf(timestampParts[0]).longValue());
+
+    timestamp = "2005-02-08 14:00:00.100";
+
+    parsedTimestamp = TimeNowEL.extractNanosecondsFromString(timestamp);
+    timestampParts = parsedTimestamp.split(TimeNowEL.OFFSET_VALUE_NANO_SEPARATOR);
+
+    Assert.assertEquals(1, timestampParts.length);
+    Assert.assertEquals(timestampWithoutNanos.getTime(), Long.valueOf(timestampParts[0]).longValue());
   }
 }

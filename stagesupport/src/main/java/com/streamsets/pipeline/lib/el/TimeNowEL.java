@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -35,6 +36,9 @@ public class TimeNowEL {
 
   public static final String TIME_CONTEXT_VAR = "time";
   public static final String TIME_NOW_CONTEXT_VAR = "time_now";
+
+  public static final int NANOS_TO_MILLIS_ADJUSTMENT = 1_000_000;
+  public static final String OFFSET_VALUE_NANO_SEPARATOR = "<n>";
 
   private TimeNowEL() {}
 
@@ -178,6 +182,27 @@ public class TimeNowEL {
     }
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.US);
     return simpleDateFormat.parse(dateTimeString);
+  }
+
+  @ElFunction(prefix = TIME_CONTEXT_VAR,
+      name = "extractNanosecondsFromString",
+      description = "Formats a String date up to nanoseconds precision into a String of this format if nanoseconds > 0: " +
+          "millis_from_epoch<n>nanoseconds, otherwise it returns millis_from_epoch")
+  public static String extractNanosecondsFromString(
+      @ElParam("dateTimeString") String dateTimeString) {
+    if (isEmpty(dateTimeString)) {
+      LOG.error(Utils.format("Invalid parameter - Date String is null/empty"));
+      return "";
+    }
+
+    Timestamp sqlTimestamp = Timestamp.valueOf(dateTimeString);
+    int nanosWithoutMillis = sqlTimestamp.getNanos() % NANOS_TO_MILLIS_ADJUSTMENT;
+    String nanosWithoutMillisStr = nanosWithoutMillis > 0 ? String.valueOf(nanosWithoutMillis) : "";
+    if(!nanosWithoutMillisStr.isEmpty()) {
+      return String.format("%d%s%s", sqlTimestamp.getTime(), OFFSET_VALUE_NANO_SEPARATOR, nanosWithoutMillisStr);
+    } else {
+      return String.format("%d", sqlTimestamp.getTime());
+    }
   }
 
   @ElFunction(prefix = TIME_CONTEXT_VAR, name = "extractStringFromDateTZ", description = "Format a Date into a " +
