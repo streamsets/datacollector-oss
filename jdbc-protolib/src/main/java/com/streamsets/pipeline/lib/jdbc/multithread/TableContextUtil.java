@@ -77,6 +77,7 @@ public class TableContextUtil {
   public static final int TYPE_ORACLE_TIMESTAMP_WITH_LOCAL_TIME_ZONE = -102;
 
   public static final String OFFSET_VALUE_NANO_SEPARATOR = "<n>";
+  public static final String TIMESTAMP_NANOS_PATTERN = "^[0-9]+" + OFFSET_VALUE_NANO_SEPARATOR + "[0-9]+$";
 
   public static final Set<Integer> PARTITIONABLE_TYPES = ImmutableSet.<Integer>builder()
     .add(Types.TINYINT)
@@ -370,7 +371,14 @@ public class TableContextUtil {
       String initialOffsetValue = offsetColumnToStartOffset.get(offsetColumn);
       try {
         if (jdbcUtil.isSqlTypeOneOf(offsetSqlType, Types.DATE, Types.TIME, Types.TIMESTAMP)) {
-          Long.valueOf(initialOffsetValue); //NOSONAR
+          if (jdbcUtil.isSqlTypeOneOf(offsetSqlType, Types.TIMESTAMP)) {
+            if (!isTimestampWithNanosFormat(initialOffsetValue)) {
+              Long.valueOf(initialOffsetValue);
+            }
+          } else {
+            Long.valueOf(initialOffsetValue);
+          }
+
         } else {
           //Use native field conversion strategy to conver string to specify type and get value
           Field.create(OffsetQueryUtil.SQL_TYPE_TO_FIELD_TYPE.get(offsetSqlType), initialOffsetValue).getValue();
@@ -636,6 +644,17 @@ public class TableContextUtil {
     final int nanosAdjusted = nanos % JdbcUtil.NANOS_TO_MILLIS_ADJUSTMENT;
     String nanosStr = nanosAdjusted > 0 ? String.valueOf(nanosAdjusted) : "";
     return String.format("%d%s%s", millis, OFFSET_VALUE_NANO_SEPARATOR, nanosStr);
+  }
+
+  /**
+   * Checks if timestamp string format is {@code epochMillis<n>nanoseconds}.
+   *
+   * @param offsetValue The timestamp string
+   * @return true if {@param offsetValue} format is {@code epochMillis<n>nanoseconds}, false otherwise.
+   */
+  public static boolean isTimestampWithNanosFormat(String offsetValue) {
+    Pattern timestampNanosStrPattern = Pattern.compile(TIMESTAMP_NANOS_PATTERN);
+    return timestampNanosStrPattern.matcher(offsetValue).matches();
   }
 
   public static Timestamp getTimestampForOffsetValue(String offsetValue) {
