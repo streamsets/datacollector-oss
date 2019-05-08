@@ -13,17 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.apache.parquet.avro;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.sql.Date;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.temporal.JulianFields;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
@@ -32,9 +28,6 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
-import com.google.common.primitives.Longs;
-import org.apache.avro.Conversion;
-import org.apache.avro.LogicalType;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericFixed;
@@ -46,22 +39,12 @@ import org.apache.parquet.io.api.Binary;
 import org.apache.parquet.io.api.RecordConsumer;
 import org.apache.parquet.schema.GroupType;
 import org.apache.parquet.schema.MessageType;
-import org.apache.parquet.schema.OriginalType;
 import org.apache.parquet.schema.PrimitiveType;
 import org.apache.parquet.schema.Type;
 import org.apache.hadoop.util.ReflectionUtils;
 import org.apache.parquet.Preconditions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-/**
- * Avro implementation of {@link WriteSupport} for generic, specific, and
- * reflect models. Use {@link AvroParquetWriter} or
- * {@link AvroParquetOutputFormat} rather than using this class directly.
- */
-public class AvroWriteSupportInt96<T> extends WriteSupport<T> {
-
-  private static final Logger LOG = LoggerFactory.getLogger(AvroWriteSupportInt96.class);
+public class AvroWriteSupportInt96Avro17<T> extends WriteSupport<T> {
 
   public static final String AVRO_DATA_SUPPLIER = "parquet.avro.write.data.supplier";
 
@@ -87,43 +70,29 @@ public class AvroWriteSupportInt96<T> extends WriteSupport<T> {
   private RecordConsumer recordConsumer;
   private MessageType rootSchema;
   private Schema rootAvroSchema;
-  private LogicalType rootLogicalType;
-  private Conversion<?> rootConversion;
   private GenericData model;
-  private ListWriter listWriter;
+  private AvroWriteSupportInt96Avro17.ListWriter listWriter;
   private String timeZoneId;
-
-  public AvroWriteSupportInt96() {
-  }
 
   /**
    * @deprecated use {@link AvroWriteSupport(MessageType, Schema, Configuration)}
    */
   @Deprecated
-  public AvroWriteSupportInt96(MessageType schema, Schema avroSchema) {
-    this.rootSchema = schema;
-    this.rootAvroSchema = avroSchema;
-    this.rootLogicalType = rootAvroSchema.getLogicalType();
-    this.model = null;
+  public AvroWriteSupportInt96Avro17(MessageType schema, Schema avroSchema) {
+    this(schema, avroSchema, null);
   }
 
-  public AvroWriteSupportInt96(MessageType schema, Schema avroSchema,
+  public AvroWriteSupportInt96Avro17(MessageType schema, Schema avroSchema,
       GenericData model) {
     this(schema, avroSchema, model, null);
   }
 
-  public AvroWriteSupportInt96(MessageType schema, Schema avroSchema,
+  public AvroWriteSupportInt96Avro17(MessageType schema, Schema avroSchema,
       GenericData model, String timeZoneId) {
     this.rootSchema = schema;
     this.rootAvroSchema = avroSchema;
-    this.rootLogicalType = rootAvroSchema.getLogicalType();
     this.model = model;
     this.timeZoneId = timeZoneId;
-  }
-
-  @Override
-  public String getName() {
-    return "avro";
   }
 
   /**
@@ -147,9 +116,9 @@ public class AvroWriteSupportInt96<T> extends WriteSupport<T> {
     boolean writeOldListStructure = configuration.getBoolean(
         WRITE_OLD_LIST_STRUCTURE, WRITE_OLD_LIST_STRUCTURE_DEFAULT);
     if (writeOldListStructure) {
-      this.listWriter = new TwoLevelListWriter();
+      this.listWriter = new AvroWriteSupportInt96Avro17.TwoLevelListWriter();
     } else {
-      this.listWriter = new ThreeLevelListWriter();
+      this.listWriter = new AvroWriteSupportInt96Avro17.ThreeLevelListWriter();
     }
 
     Map<String, String> extraMetaData = new HashMap<String, String>();
@@ -165,25 +134,16 @@ public class AvroWriteSupportInt96<T> extends WriteSupport<T> {
   // overloaded version for backward compatibility
   @SuppressWarnings("unchecked")
   public void write(IndexedRecord record) {
-    write((T) record);
+    recordConsumer.startMessage();
+    writeRecordFields(rootSchema, rootAvroSchema, record);
+    recordConsumer.endMessage();
   }
 
   @Override
   public void write(T record) {
-    if (rootLogicalType != null) {
-      Conversion<?> conversion = model.getConversionByClass(
-          record.getClass(), rootLogicalType);
-
-      recordConsumer.startMessage();
-      writeRecordFields(rootSchema, rootAvroSchema,
-          convert(rootAvroSchema, rootLogicalType, conversion, record));
-      recordConsumer.endMessage();
-
-    } else {
-      recordConsumer.startMessage();
-      writeRecordFields(rootSchema, rootAvroSchema, record);
-      recordConsumer.endMessage();
-    }
+    recordConsumer.startMessage();
+    writeRecordFields(rootSchema, rootAvroSchema, record);
+    recordConsumer.endMessage();
   }
 
   private void writeRecord(GroupType schema, Schema avroSchema,
@@ -264,8 +224,6 @@ public class AvroWriteSupportInt96<T> extends WriteSupport<T> {
       }
     }
 
-    // TODO: what if the value is null?
-
     // Sparsely populated method of encoding unions, each member has its own
     // set of columns.
     String memberName = "member" + parquetIndex;
@@ -277,142 +235,75 @@ public class AvroWriteSupportInt96<T> extends WriteSupport<T> {
     recordConsumer.endGroup();
   }
 
-  /**
-   * Calls an appropriate write method based on the value.
-   * Value MUST not be null.
-   *
-   * @param type the Parquet type
-   * @param avroSchema the Avro schema
-   * @param value a non-null value to write
-   */
+  @SuppressWarnings("unchecked")
   private void writeValue(Type type, Schema avroSchema, Object value) {
     Schema nonNullAvroSchema = AvroSchemaConverter.getNonNull(avroSchema);
-    LogicalType logicalType = nonNullAvroSchema.getLogicalType();
-    if (logicalType != null) {
-      Conversion<?> conversion = model.getConversionByClass(
-          value.getClass(), logicalType);
-      writeValueWithoutConversion(type, nonNullAvroSchema,
-          convert(nonNullAvroSchema, logicalType, conversion, value));
-    } else {
-      writeValueWithoutConversion(type, nonNullAvroSchema, value);
-    }
-  }
+    Schema.Type avroType = nonNullAvroSchema.getType();
+    if (avroType.equals(Schema.Type.BOOLEAN)) {
+      recordConsumer.addBoolean((Boolean) value);
+    } else if (avroType.equals(Schema.Type.INT)) {
+      if (value instanceof Character) {
+        recordConsumer.addInteger((Character) value);
+      } else {
+        recordConsumer.addInteger(((Number) value).intValue());
+      }
+    } else if (avroType.equals(Schema.Type.LONG)) {
+      if (type.asPrimitiveType().getPrimitiveTypeName().equals(PrimitiveType.PrimitiveTypeName.INT96)) {
+        final long NANOS_PER_HOUR = TimeUnit.HOURS.toNanos(1);
+        final long NANOS_PER_MINUTE = TimeUnit.MINUTES.toNanos(1);
+        final long NANOS_PER_SECOND = TimeUnit.SECONDS.toNanos(1);
 
-  private <D> Object convert(Schema schema, LogicalType logicalType,
-      Conversion<D> conversion, Object datum) {
-    if (conversion == null) {
-      return datum;
-    }
-    Class<D> fromClass = conversion.getConvertedType();
-    switch (schema.getType()) {
-      case RECORD:  return conversion.toRecord(fromClass.cast(datum), schema, logicalType);
-      case ENUM:    return conversion.toEnumSymbol(fromClass.cast(datum), schema, logicalType);
-      case ARRAY:   return conversion.toArray(fromClass.cast(datum), schema, logicalType);
-      case MAP:     return conversion.toMap(fromClass.cast(datum), schema, logicalType);
-      case FIXED:   return conversion.toFixed(fromClass.cast(datum), schema, logicalType);
-      case STRING:  return conversion.toCharSequence(fromClass.cast(datum), schema, logicalType);
-      case BYTES:   return conversion.toBytes(fromClass.cast(datum), schema, logicalType);
-      case INT:     return conversion.toInt(fromClass.cast(datum), schema, logicalType);
-      case LONG:    return conversion.toLong(fromClass.cast(datum), schema, logicalType);
-      case FLOAT:   return conversion.toFloat(fromClass.cast(datum), schema, logicalType);
-      case DOUBLE:  return conversion.toDouble(fromClass.cast(datum), schema, logicalType);
-      case BOOLEAN: return conversion.toBoolean(fromClass.cast(datum), schema, logicalType);
-      default: break;
-    }
-    return datum;
-  }
-
-  /**
-   * Calls an appropriate write method based on the value.
-   * Value must not be null and the schema must not be nullable.
-   *
-   * @param type a Parquet type
-   * @param avroSchema a non-nullable Avro schema
-   * @param value a non-null value to write
-   */
-  @SuppressWarnings("unchecked")
-  private void writeValueWithoutConversion(Type type, Schema avroSchema, Object value) {
-    switch (avroSchema.getType()) {
-      case BOOLEAN:
-        recordConsumer.addBoolean((Boolean) value);
-        break;
-      case INT:
-        if (value instanceof Character) {
-          recordConsumer.addInteger((Character) value);
+        long timestamp = ((Number) value).longValue();
+        Calendar calendar;
+        if (timeZoneId != null && ! timeZoneId.isEmpty()) {
+          calendar = Calendar.getInstance(TimeZone.getTimeZone(timeZoneId));
         } else {
-          recordConsumer.addInteger(((Number) value).intValue());
+          calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         }
-        break;
-      case LONG:
-        if (type.asPrimitiveType().getPrimitiveTypeName().equals(PrimitiveType.PrimitiveTypeName.INT96)) {
-          final long NANOS_PER_HOUR = TimeUnit.HOURS.toNanos(1);
-          final long NANOS_PER_MINUTE = TimeUnit.MINUTES.toNanos(1);
-          final long NANOS_PER_SECOND = TimeUnit.SECONDS.toNanos(1);
+        calendar.setTime(new Date(timestamp));
 
-          long timestamp = ((Number) value).longValue();
-          Calendar calendar;
-          if (timeZoneId != null && ! timeZoneId.isEmpty()) {
-            calendar = Calendar.getInstance(TimeZone.getTimeZone(timeZoneId));
-          } else {
-            calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-          }
-          calendar.setTime(new Date(timestamp));
+        // Calculate Julian days and nanoseconds in the day
+        LocalDate dt = LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DAY_OF_MONTH));
+        int julianDays = (int) JulianFields.JULIAN_DAY.getFrom(dt);
+        long nanos = (calendar.get(Calendar.HOUR_OF_DAY) * NANOS_PER_HOUR)
+            + (calendar.get(Calendar.MINUTE) * NANOS_PER_MINUTE)
+            + (calendar.get(Calendar.SECOND) * NANOS_PER_SECOND);
 
-          // Calculate Julian days and nanoseconds in the day
-          LocalDate dt = LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DAY_OF_MONTH));
-          int julianDays = (int) JulianFields.JULIAN_DAY.getFrom(dt);
-          long nanos = (calendar.get(Calendar.HOUR_OF_DAY) * NANOS_PER_HOUR)
-              + (calendar.get(Calendar.MINUTE) * NANOS_PER_MINUTE)
-              + (calendar.get(Calendar.SECOND) * NANOS_PER_SECOND);
+        // Write INT96 timestamp
+        byte[] timestampBuffer = new byte[12];
+        ByteBuffer buf = ByteBuffer.wrap(timestampBuffer);
+        buf.order(ByteOrder.LITTLE_ENDIAN).putLong(nanos).putInt(julianDays);
 
-          // Write INT96 timestamp
-          byte[] timestampBuffer = new byte[12];
-          ByteBuffer buf = ByteBuffer.wrap(timestampBuffer);
-          buf.order(ByteOrder.LITTLE_ENDIAN).putLong(nanos).putInt(julianDays);
-
-          // This is the properly encoded INT96 timestamp
-          Binary timestampBinary = Binary.fromReusedByteArray(timestampBuffer);
-          recordConsumer.addBinary(timestampBinary);
-        } else {
-          recordConsumer.addLong(((Number) value).longValue());
-        }
-        break;
-      case FLOAT:
-        recordConsumer.addFloat(((Number) value).floatValue());
-        break;
-      case DOUBLE:
-        recordConsumer.addDouble(((Number) value).doubleValue());
-        break;
-      case FIXED:
-        recordConsumer.addBinary(Binary.fromReusedByteArray(((GenericFixed) value).bytes()));
-        break;
-      case BYTES:
-        if (value instanceof byte[]) {
-          recordConsumer.addBinary(Binary.fromReusedByteArray((byte[]) value));
-        } else {
-          recordConsumer.addBinary(Binary.fromReusedByteBuffer((ByteBuffer) value));
-        }
-        break;
-      case STRING:
-        recordConsumer.addBinary(fromAvroString(value));
-        break;
-      case RECORD:
-        writeRecord(type.asGroupType(), avroSchema, value);
-        break;
-      case ENUM:
-        recordConsumer.addBinary(Binary.fromString(value.toString()));
-        break;
-      case ARRAY:
-        listWriter.writeList(type.asGroupType(), avroSchema, value);
-        break;
-      case MAP:
-        writeMap(type.asGroupType(), avroSchema, (Map<CharSequence, ?>) value);
-        break;
-      case UNION:
-        writeUnion(type.asGroupType(), avroSchema, value);
-        break;
-      default:
-        break;
+        // This is the properly encoded INT96 timestamp
+        Binary timestampBinary = Binary.fromReusedByteArray(timestampBuffer);
+        recordConsumer.addBinary(timestampBinary);
+      } else {
+        recordConsumer.addLong(((Number) value).longValue());
+      }
+    } else if (avroType.equals(Schema.Type.FLOAT)) {
+      recordConsumer.addFloat(((Number) value).floatValue());
+    } else if (avroType.equals(Schema.Type.DOUBLE)) {
+      recordConsumer.addDouble(((Number) value).doubleValue());
+    } else if (avroType.equals(Schema.Type.BYTES)) {
+      if (value instanceof byte[]) {
+        recordConsumer.addBinary(Binary.fromReusedByteArray((byte[]) value));
+      } else {
+        recordConsumer.addBinary(Binary.fromReusedByteBuffer((ByteBuffer) value));
+      }
+    } else if (avroType.equals(Schema.Type.STRING)) {
+      recordConsumer.addBinary(fromAvroString(value));
+    } else if (avroType.equals(Schema.Type.RECORD)) {
+      writeRecord(type.asGroupType(), nonNullAvroSchema, value);
+    } else if (avroType.equals(Schema.Type.ENUM)) {
+      recordConsumer.addBinary(Binary.fromString(value.toString()));
+    } else if (avroType.equals(Schema.Type.ARRAY)) {
+      listWriter.writeList(type.asGroupType(), nonNullAvroSchema, value);
+    } else if (avroType.equals(Schema.Type.MAP)) {
+      writeMap(type.asGroupType(), nonNullAvroSchema, (Map<CharSequence, ?>) value);
+    } else if (avroType.equals(Schema.Type.UNION)) {
+      writeUnion(type.asGroupType(), nonNullAvroSchema, value);
+    } else if (avroType.equals(Schema.Type.FIXED)) {
+      recordConsumer.addBinary(Binary.fromReusedByteArray(((GenericFixed) value).bytes()));
     }
   }
 
@@ -421,7 +312,7 @@ public class AvroWriteSupportInt96<T> extends WriteSupport<T> {
       Utf8 utf8 = (Utf8) value;
       return Binary.fromReusedByteArray(utf8.getBytes(), 0, utf8.getByteLength());
     }
-    return Binary.fromCharSequence((CharSequence) value);
+    return Binary.fromString(value.toString());
   }
 
   private static GenericData getDataModel(Configuration conf) {
@@ -589,30 +480,14 @@ public class AvroWriteSupportInt96<T> extends WriteSupport<T> {
   /**
    * For backward-compatibility. This preserves how lists were written in 1.x.
    */
-  private class TwoLevelListWriter extends ListWriter {
+  private class TwoLevelListWriter extends AvroWriteSupportInt96Avro17.ListWriter {
+
     @Override
-    public void writeCollection(GroupType schema, Schema avroSchema,
-        Collection<?> array) {
-      if (array.size() > 0) {
+    protected void writeCollection(GroupType type, Schema schema, Collection collection) {
+      if (collection.size() > 0) {
         recordConsumer.startField(OLD_LIST_REPEATED_NAME, 0);
-        try {
-          for (Object elt : array) {
-            writeValue(schema.getType(0), avroSchema.getElementType(), elt);
-          }
-        } catch (NullPointerException e) {
-          // find the null element and throw a better error message
-          int i = 0;
-          for (Object elt : array) {
-            if (elt == null) {
-              throw new NullPointerException(
-                  "Array contains a null element at " + i + "\n" +
-                      "Set parquet.avro.write-old-list-structure=false to turn " +
-                      "on support for arrays with null elements.");
-            }
-            i += 1;
-          }
-          // no element was null, throw the original exception
-          throw e;
+        for (Object elt : collection) {
+          writeValue(type.getType(0), schema.getElementType(), elt);
         }
         recordConsumer.endField(OLD_LIST_REPEATED_NAME, 0);
       }
@@ -623,22 +498,8 @@ public class AvroWriteSupportInt96<T> extends WriteSupport<T> {
         Object[] array) {
       if (array.length > 0) {
         recordConsumer.startField(OLD_LIST_REPEATED_NAME, 0);
-        try {
-          for (Object element : array) {
-            writeValue(type.getType(0), schema.getElementType(), element);
-          }
-        } catch (NullPointerException e) {
-          // find the null element and throw a better error message
-          for (int i = 0; i < array.length; i += 1) {
-            if (array[i] == null) {
-              throw new NullPointerException(
-                  "Array contains a null element at " + i + "\n" +
-                      "Set parquet.avro.write-old-list-structure=false to turn " +
-                      "on support for arrays with null elements.");
-            }
-          }
-          // no element was null, throw the original exception
-          throw e;
+        for (Object element : array) {
+          writeValue(type.getType(0), schema.getElementType(), element);
         }
         recordConsumer.endField(OLD_LIST_REPEATED_NAME, 0);
       }
@@ -655,9 +516,9 @@ public class AvroWriteSupportInt96<T> extends WriteSupport<T> {
     }
   }
 
-  private class ThreeLevelListWriter extends ListWriter {
+  private class ThreeLevelListWriter extends AvroWriteSupportInt96Avro17.ListWriter {
     @Override
-    protected void writeCollection(GroupType type, Schema schema, Collection<?> collection) {
+    protected void writeCollection(GroupType type, Schema schema, Collection collection) {
       if (collection.size() > 0) {
         recordConsumer.startField(LIST_REPEATED_NAME, 0);
         GroupType repeatedType = type.getType(0).asGroupType();

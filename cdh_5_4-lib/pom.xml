@@ -44,9 +44,20 @@
     <avro.version>1.7.7</avro.version>
     <jackson.version>2.2.3</jackson.version>
     <netty.version>4.0.23.Final</netty.version>
+    <parquet.version>1.8.1</parquet.version>
   </properties>
 
   <dependencies>
+    <!-- Parquet dependency must be here. Otherwise tests are run with incorrect parquet version taken from
+        MapReduce Protolib-->
+
+    <dependency>
+      <groupId>org.apache.parquet</groupId>
+      <artifactId>parquet-avro</artifactId>
+      <version>${parquet.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
     <!--Dependency for Solr Unit Tests to override SDC Jetty Artifacts -->
     <dependency>
       <groupId>org.eclipse.jetty</groupId>

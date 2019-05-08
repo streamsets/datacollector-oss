@@ -43,9 +43,19 @@
     <avro.version>1.7.7</avro.version>
     <h2.version>1.4.187</h2.version>
     <httpclient.version>4.5.1</httpclient.version>
+    <parquet.version>1.8.1</parquet.version>
   </properties>
 
   <dependencies>
+    <!-- Parquet test dependency must be here. Otherwise tests are run with incorrect parquet version taken from
+            MapReduce Protolib-->
+    <dependency>
+      <groupId>org.apache.parquet</groupId>
+      <artifactId>parquet-avro</artifactId>
+      <version>${parquet.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-api</artifactId>
@@ -364,6 +374,7 @@
       <version>4.0.23.Final</version>
       <scope>test</scope>
     </dependency>
+
   </dependencies>
 
   <build>

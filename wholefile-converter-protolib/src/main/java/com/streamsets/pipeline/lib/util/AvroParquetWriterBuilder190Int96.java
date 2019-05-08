@@ -20,9 +20,10 @@ import org.apache.avro.generic.GenericData;
 import org.apache.avro.specific.SpecificData;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.apache.parquet.avro.AvroSchemaConverter190Int96;
-import org.apache.parquet.avro.AvroWriteSupport;
-import org.apache.parquet.avro.AvroWriteSupportInt96;
+import org.apache.parquet.avro.AvroSchemaConverter190Int96Avro17;
+import org.apache.parquet.avro.AvroSchemaConverter190Int96Avro18;
+import org.apache.parquet.avro.AvroWriteSupportInt96Avro17;
+import org.apache.parquet.avro.AvroWriteSupportInt96Avro18;
 import org.apache.parquet.hadoop.ParquetWriter;
 import org.apache.parquet.hadoop.api.WriteSupport;
 import org.slf4j.Logger;
@@ -62,12 +63,24 @@ public class AvroParquetWriterBuilder190Int96 <T> extends ParquetWriter.Builder<
   }
 
   protected WriteSupport<T> getWriteSupport(Configuration conf) {
-    LOG.debug("Returning write support with converter = AvroSchemaConverter190Int96");
-    return new AvroWriteSupportInt96<>(
-        (new AvroSchemaConverter190Int96(conf)).convert(this.schema),
-        this.schema,
-        this.model,
-        this.timeZoneId
-    );
+    AvroLogicalTypeSupport avroLogicalTypeSupport = AvroLogicalTypeSupport.getAvroLogicalTypeSupport();
+    if (avroLogicalTypeSupport.isLogicalTypeSupported()) {
+      LOG.debug("Returning write support with converter = AvroSchemaConverter190Int96Avro18");
+      return new AvroWriteSupportInt96Avro18<>(
+          (new AvroSchemaConverter190Int96Avro18(conf)).convert(this.schema),
+          this.schema,
+          this.model,
+          this.timeZoneId
+      );
+    } else {
+      LOG.debug("Returning write support with converter = AvroSchemaConverter190Int96Avro17");
+      return new AvroWriteSupportInt96Avro17<>(
+          (new AvroSchemaConverter190Int96Avro17(conf)).convert(this.schema),
+          this.schema,
+          this.model,
+          this.timeZoneId
+      );
+    }
   }
+
 }

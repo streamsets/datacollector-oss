@@ -81,6 +81,10 @@
     </dependency>
 
     <!-- Compile Dependencies -->
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-commonlib</artifactId>
+    </dependency>
 
     <!-- Provided Dependencies -->
     <dependency>

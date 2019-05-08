@@ -15,8 +15,8 @@
  */
 package org.apache.parquet.avro;
 
-import org.apache.avro.LogicalType;
-import org.apache.avro.LogicalTypes;
+import com.google.common.collect.ImmutableMap;
+import com.streamsets.pipeline.lib.util.AvroTypeUtil;
 import org.apache.avro.Schema;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.parquet.schema.ConversionPatterns;
@@ -33,14 +33,13 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static org.apache.avro.JsonProperties.NULL_VALUE;
 import static org.apache.parquet.avro.AvroWriteSupport.WRITE_OLD_LIST_STRUCTURE;
 import static org.apache.parquet.avro.AvroWriteSupport.WRITE_OLD_LIST_STRUCTURE_DEFAULT;
 import static org.apache.parquet.schema.OriginalType.DECIMAL;
 import static org.apache.parquet.schema.OriginalType.ENUM;
-import static org.apache.parquet.schema.OriginalType.TIMESTAMP_MICROS;
-import static org.apache.parquet.schema.OriginalType.TIMESTAMP_MILLIS;
 import static org.apache.parquet.schema.OriginalType.UTF8;
 import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.BINARY;
 import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.BOOLEAN;
@@ -52,10 +51,9 @@ import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.INT64;
 import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.INT96;
 import static org.apache.parquet.schema.Type.Repetition.REPEATED;
 
-public class AvroSchemaConverter190Int96 {
+public class AvroSchemaConverter190Int96Avro17 {
 
-  private static final Logger LOG = LoggerFactory.getLogger(AvroSchemaConverter190Int96.class);
-
+  private static final Logger LOG = LoggerFactory.getLogger(AvroSchemaConverter190Int96Avro17.class);
 
   public static final String ADD_LIST_ELEMENT_RECORDS =
       "parquet.avro.add-list-element-records";
@@ -64,23 +62,7 @@ public class AvroSchemaConverter190Int96 {
   private final boolean assumeRepeatedIsListElement;
   private final boolean writeOldListStructure;
 
-  public AvroSchemaConverter190Int96() {
-    this.assumeRepeatedIsListElement = ADD_LIST_ELEMENT_RECORDS_DEFAULT;
-    this.writeOldListStructure = WRITE_OLD_LIST_STRUCTURE_DEFAULT;
-  }
-
-  /**
-   * Constructor used by {@link AvroRecordConverter#isElementType}, which always
-   * uses the 2-level list conversion.
-   *
-   * @param assumeRepeatedIsListElement whether to assume 2-level lists
-   */
-  AvroSchemaConverter190Int96(boolean assumeRepeatedIsListElement) {
-    this.assumeRepeatedIsListElement = assumeRepeatedIsListElement;
-    this.writeOldListStructure = WRITE_OLD_LIST_STRUCTURE_DEFAULT;
-  }
-
-  public AvroSchemaConverter190Int96(Configuration conf) {
+  public AvroSchemaConverter190Int96Avro17(Configuration conf) {
     this.assumeRepeatedIsListElement = conf.getBoolean(
         ADD_LIST_ELEMENT_RECORDS, ADD_LIST_ELEMENT_RECORDS_DEFAULT);
     this.writeOldListStructure = conf.getBoolean(
@@ -139,10 +121,16 @@ public class AvroSchemaConverter190Int96 {
   @SuppressWarnings("deprecation")
   private Type convertField(String fieldName, Schema schema, Type.Repetition repetition) {
     LOG.debug("Converting field: {}", fieldName);
+
+    return convertFieldWithoutUsingLogicalType(fieldName, schema, repetition);
+  }
+
+  private Type convertFieldWithoutUsingLogicalType(String fieldName, Schema schema, Type.Repetition repetition) {
+    LOG.debug("Converting field: {} without using LogicalType", fieldName);
     Types.PrimitiveBuilder<PrimitiveType> builder;
     Schema.Type type = schema.getType();
 
-    LogicalType logicalType = schema.getLogicalType();
+    String logicalType = schema.getProp(AvroTypeUtil.LOGICAL_TYPE);
 
     if (type.equals(Schema.Type.BOOLEAN)) {
       builder = Types.primitive(BOOLEAN, repetition);
@@ -150,10 +138,10 @@ public class AvroSchemaConverter190Int96 {
       builder = Types.primitive(INT32, repetition);
     } else if (type.equals(Schema.Type.LONG)) {
       // Special case handling timestamp until int96 fully supported or logical types correctly supported
-      if (logicalType instanceof LogicalTypes.TimestampMillis || logicalType instanceof LogicalTypes.TimestampMicros) {
+      if (AvroTypeUtil.LOGICAL_TYPE_TIMESTAMP_MILLIS.equals(logicalType) ||
+          AvroTypeUtil.LOGICAL_TYPE_TIMESTAMP_MICROS.equals(logicalType)) {
         LOG.debug("Logical type is a timestamp millis or micros");
         builder = Types.primitive(INT96, repetition);
-        return builder.named(fieldName);
       } else {
         builder = Types.primitive(INT64, repetition);
       }
@@ -193,14 +181,15 @@ public class AvroSchemaConverter190Int96 {
     // schema translation can only be done for known logical types because this
     // creates an equivalence
 
-    if (logicalType != null) {
-      if (logicalType instanceof LogicalTypes.Decimal) {
-        builder = builder.as(DECIMAL)
-                         .precision(((LogicalTypes.Decimal) logicalType).getPrecision())
-                         .scale(((LogicalTypes.Decimal) logicalType).getScale());
+    if (logicalType != null &&
+        !(AvroTypeUtil.LOGICAL_TYPE_TIMESTAMP_MILLIS.equals(logicalType) || AvroTypeUtil.LOGICAL_TYPE_TIMESTAMP_MICROS.equals(logicalType))) {
+      if (AvroTypeUtil.LOGICAL_TYPE_DECIMAL.equals(logicalType)) {
+        builder = (Types.PrimitiveBuilder<PrimitiveType>) builder.as(DECIMAL)
+           .precision(schema.getJsonProp(AvroTypeUtil.LOGICAL_TYPE_ATTR_PRECISION).getIntValue())
+           .scale(schema.getJsonProp(AvroTypeUtil.LOGICAL_TYPE_ATTR_SCALE).getIntValue());
 
       } else {
-        OriginalType annotation = convertLogicalType(logicalType);
+        OriginalType annotation = convertLogicalTypeStr(logicalType);
         if (annotation != null) {
           builder.as(annotation);
         }
@@ -319,13 +308,8 @@ public class AvroSchemaConverter190Int96 {
             }
           });
 
-      LogicalType logicalType = convertOriginalType(
-          annotation, asPrimitive.getDecimalMetadata());
-      if (logicalType != null && (annotation != DECIMAL ||
-          parquetPrimitiveTypeName == BINARY ||
-          parquetPrimitiveTypeName == FIXED_LEN_BYTE_ARRAY)) {
-        schema = logicalType.addToSchema(schema);
-      }
+
+      schema = addLogicalTypeStrToSchema(schema, annotation, asPrimitive, parquetPrimitiveTypeName);
 
       return schema;
 
@@ -391,42 +375,64 @@ public class AvroSchemaConverter190Int96 {
     }
   }
 
-  private OriginalType convertLogicalType(LogicalType logicalType) {
+  private Schema addLogicalTypeStrToSchema(
+      Schema schema,
+      OriginalType annotation,
+      PrimitiveType asPrimitive,
+      PrimitiveType.PrimitiveTypeName parquetPrimitiveTypeName
+  ) {
+    Map<String, String> logicalType = convertOriginalTypeToMap(annotation, asPrimitive.getDecimalMetadata());
+    if (logicalType != null && (annotation != DECIMAL ||
+        parquetPrimitiveTypeName == BINARY ||
+        parquetPrimitiveTypeName == FIXED_LEN_BYTE_ARRAY)) {
+      for(Map.Entry<String, String> entry : logicalType.entrySet()) {
+        schema.addProp(entry.getKey(), entry.getValue());
+      }
+    }
+
+    return schema;
+  }
+
+  private OriginalType convertLogicalTypeStr(String logicalType) {
     if (logicalType == null) {
       return null;
-    } else if (logicalType instanceof LogicalTypes.Decimal) {
+    } else if (AvroTypeUtil.LOGICAL_TYPE_DECIMAL.equals(logicalType)) {
       return OriginalType.DECIMAL;
-    } else if (logicalType instanceof LogicalTypes.Date) {
+    } else if (AvroTypeUtil.LOGICAL_TYPE_DATE.equals(logicalType)) {
       return OriginalType.DATE;
-    } else if (logicalType instanceof LogicalTypes.TimeMillis) {
+    } else if (AvroTypeUtil.LOGICAL_TYPE_TIME_MILLIS.equals(logicalType)) {
       return OriginalType.TIME_MILLIS;
-    } else if (logicalType instanceof LogicalTypes.TimeMicros) {
-      return OriginalType.TIME_MICROS;
-    } else if (logicalType instanceof LogicalTypes.TimestampMillis) {
+//    } else if (AvroTypeUtil.LOGICAL_TYPE_TIME_MICROS.equals(logicalType)) {
+//      return OriginalType.TIME_MICROS;
+    } else if (AvroTypeUtil.LOGICAL_TYPE_TIMESTAMP_MILLIS.equals(logicalType)) {
       return OriginalType.TIMESTAMP_MILLIS;
-    } else if (logicalType instanceof LogicalTypes.TimestampMicros) {
-      return OriginalType.TIMESTAMP_MICROS;
+//    } else if (AvroTypeUtil.LOGICAL_TYPE_TIMESTAMP_MICROS.equals(logicalType)) {
+//      return OriginalType.TIMESTAMP_MICROS;
     }
     return null;
   }
 
-  private LogicalType convertOriginalType(OriginalType annotation, DecimalMetadata meta) {
+  private Map<String, String> convertOriginalTypeToMap(OriginalType annotation, DecimalMetadata meta) {
     if (annotation == null) {
       return null;
     }
     switch (annotation) {
       case DECIMAL:
-        return LogicalTypes.decimal(meta.getPrecision(), meta.getScale());
+        return ImmutableMap.of(
+            AvroTypeUtil.LOGICAL_TYPE, AvroTypeUtil.LOGICAL_TYPE_DECIMAL,
+            AvroTypeUtil.LOGICAL_TYPE_ATTR_PRECISION, Integer.toString(meta.getPrecision()),
+            AvroTypeUtil.LOGICAL_TYPE_ATTR_SCALE, Integer.toString(meta.getScale())
+        );
       case DATE:
-        return LogicalTypes.date();
+        return ImmutableMap.of(AvroTypeUtil.LOGICAL_TYPE, AvroTypeUtil.LOGICAL_TYPE_DATE);
       case TIME_MILLIS:
-        return LogicalTypes.timeMillis();
-      case TIME_MICROS:
-        return LogicalTypes.timeMicros();
+        return ImmutableMap.of(AvroTypeUtil.LOGICAL_TYPE, AvroTypeUtil.LOGICAL_TYPE_TIME_MILLIS);
+//      case TIME_MICROS:
+//        return ImmutableMap.of(AvroTypeUtil.LOGICAL_TYPE, AvroTypeUtil.LOGICAL_TYPE_TIME_MICROS);
       case TIMESTAMP_MILLIS:
-        return LogicalTypes.timestampMillis();
-      case TIMESTAMP_MICROS:
-        return LogicalTypes.timestampMicros();
+        return ImmutableMap.of(AvroTypeUtil.LOGICAL_TYPE, AvroTypeUtil.LOGICAL_TYPE_TIMESTAMP_MILLIS);
+//      case TIMESTAMP_MICROS:
+//        return ImmutableMap.of(AvroTypeUtil.LOGICAL_TYPE, AvroTypeUtil.LOGICAL_TYPE_TIMESTAMP_MICROS);
       default:
         return null;
     }

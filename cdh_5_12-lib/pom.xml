@@ -45,9 +45,20 @@
         <spark.version>2.1.0.cloudera1</spark.version>
         <jackson.version>2.8.9</jackson.version>
         <netty.version>4.0.29.Final</netty.version>
+        <parquet.version>1.8.1</parquet.version>
     </properties>
 
     <dependencies>
+        <!-- Parquet dependency must be here. Otherwise tests are run with incorrect parquet version taken from
+        MapReduce Protolib-->
+
+        <dependency>
+            <groupId>org.apache.parquet</groupId>
+            <artifactId>parquet-avro</artifactId>
+            <version>${parquet.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-aws</artifactId>

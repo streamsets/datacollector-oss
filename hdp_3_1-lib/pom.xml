@@ -46,9 +46,19 @@
     <thrift.version>0.9.3</thrift.version>
     <protobuf.version>2.5.0</protobuf.version>
     <aws.java.sdk.version>1.11.134</aws.java.sdk.version>
+    <parquet.version>1.8.1</parquet.version>
   </properties>
 
   <dependencies>
+    <!-- Parquet test dependency must be here. Otherwise tests are run with incorrect parquet version taken from
+            MapReduce Protolib-->
+    <dependency>
+      <groupId>org.apache.parquet</groupId>
+      <artifactId>parquet-avro</artifactId>
+      <version>${parquet.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
     <!-- HDP's hadoop-aws brings in its own aws-sdk-core which has incompatible jackson dependencies. So instead
     manually add the sdk-bundle (which has relocated package names) -->
     <dependency>
@@ -494,6 +504,7 @@
       <artifactId>streamsets-testing</artifactId>
       <scope>test</scope>
     </dependency>
+
   </dependencies>
 
   <build>
