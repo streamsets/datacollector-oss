@@ -56,7 +56,7 @@ public abstract class HdfsBaseConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
-      label = "Write User",
+      label = "Impersonation User",
       description = "If set, Data Collector writes to the underlying Hadoop file system as this user. The Data Collector user must be configured as a proxy user in the file system",
       displayPosition = 20,
       group = "HADOOP_FS"
