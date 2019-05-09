@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 
 public abstract class ErrorCodeException extends Exception {
+  private final transient Object[] params;
 
   private static Throwable getCause(Object... params) {
     Throwable throwable = null;
@@ -33,6 +34,7 @@ public abstract class ErrorCodeException extends Exception {
 
   // last parameter can be an exception cause
   public ErrorCodeException(ErrorCode errorCode, Object... params) {
+    this.params = params;
     this.errorCode = errorCode;
     errorMessage = new ErrorMessage(errorCode, params);
 
@@ -60,4 +62,7 @@ public abstract class ErrorCodeException extends Exception {
     return errorMessage.getLocalized();
   }
 
+  public Object[] getParams() {
+    return params;
+  }
 }
