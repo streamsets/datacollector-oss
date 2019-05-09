@@ -122,7 +122,7 @@ public class AntennaDoctorEngine {
     jexlContext.set("issue", new StageIssueJexl(exception));
     jexlContext.set("stageDef", context.getStageDefinition());
     jexlContext.set("stageConf", context.getStageConfiguration());
-    return evaluate(AntennaDoctorRuleBean.Entity.STAGE, jexlContext);
+    return evaluate(context, AntennaDoctorRuleBean.Entity.STAGE, jexlContext);
   }
 
   public List<AntennaDoctorMessage> onStage(AntennaDoctorStageContext context, ErrorCode errorCode, Object... args) {
@@ -130,7 +130,7 @@ public class AntennaDoctorEngine {
     jexlContext.set("issue", new StageIssueJexl(errorCode, args));
     jexlContext.set("stageDef", context.getStageDefinition());
     jexlContext.set("stageConf", context.getStageConfiguration());
-    return evaluate(AntennaDoctorRuleBean.Entity.STAGE, jexlContext);
+    return evaluate(context, AntennaDoctorRuleBean.Entity.STAGE, jexlContext);
   }
 
   public List<AntennaDoctorMessage> onStage(AntennaDoctorStageContext context, String errorMessage) {
@@ -138,22 +138,29 @@ public class AntennaDoctorEngine {
     jexlContext.set("issue", new StageIssueJexl(errorMessage));
     jexlContext.set("stageDef", context.getStageDefinition());
     jexlContext.set("stageConf", context.getStageConfiguration());
-    return evaluate(AntennaDoctorRuleBean.Entity.STAGE, jexlContext);
+    return evaluate(context, AntennaDoctorRuleBean.Entity.STAGE, jexlContext);
   }
 
   public List<AntennaDoctorMessage> onRest(AntennaDoctorContext context, ErrorCode errorCode, Object... args) {
     JexlContext jexlContext = new MapContext();
     jexlContext.set("issue", new StageIssueJexl(errorCode, args));
-    return evaluate(AntennaDoctorRuleBean.Entity.REST, jexlContext);
+    return evaluate(context, AntennaDoctorRuleBean.Entity.REST, jexlContext);
   }
 
   public List<AntennaDoctorMessage> onRest(AntennaDoctorContext context, Exception exception) {
     JexlContext jexlContext = new MapContext();
     jexlContext.set("issue", new StageIssueJexl(exception));
-    return evaluate(AntennaDoctorRuleBean.Entity.REST, jexlContext);
+    return evaluate(context, AntennaDoctorRuleBean.Entity.REST, jexlContext);
   }
 
-  private List<AntennaDoctorMessage> evaluate(AntennaDoctorRuleBean.Entity entity, JexlContext jexlContext) {
+  private List<AntennaDoctorMessage> evaluate(
+    AntennaDoctorContext context,
+    AntennaDoctorRuleBean.Entity entity,
+    JexlContext jexlContext
+  ) {
+    // All our expressions have the sdc object available
+    jexlContext.set("sdc", new SdcJexl(context));
+
     ImmutableList.Builder<AntennaDoctorMessage> builder = ImmutableList.builder();
 
     // Iterate over rules and try to match them
