@@ -179,6 +179,17 @@ public class AntennaDoctorStorage extends AbstractTask {
         inputStream,
         AntennaDoctorStorageBean.class
       );
+
+      // Version protection
+      if(storageBean.getSchemaVersion() != AntennaDoctorStorageBean.CURRENT_SCHEMA_VERSION) {
+        LOG.error(
+            "Ignoring the knowledge base file since it has incompatible schema version ({} versus expected {})",
+            storageBean.getSchemaVersion(),
+            AntennaDoctorStorageBean.CURRENT_SCHEMA_VERSION
+        );
+        return Collections.emptyList();
+      }
+
       return storageBean.getRules();
     } catch (Throwable e) {
       LOG.error("Can't load knowledge base from {}: ", database.getFileName().toString(), e);
@@ -256,6 +267,15 @@ public class AntennaDoctorStorage extends AbstractTask {
             response.readEntity(InputStream.class),
             AntennaDoctorRepositoryManifestBean.class
           );
+
+          if(manifestBean.getSchemaVersion() != AntennaDoctorRepositoryManifestBean.CURRENT_SCHEMA_VERSION) {
+            LOG.error(
+                "Ignoring remote knowledge base repository as it has incompatible schema version ({} versus expected {})",
+                manifestBean.getSchemaVersion(),
+                AntennaDoctorRepositoryManifestBean.CURRENT_SCHEMA_VERSION
+            );
+            return;
+          }
         }
         LOG.info("Base version in remote server is {}", manifestBean.getBaseVersion());
 

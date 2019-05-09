@@ -29,6 +29,11 @@ import java.util.List;
 public class AntennaDoctorRepositoryManifestBean {
 
   /**
+   * Current version (of the code) for the schema version.
+   */
+  public final static int CURRENT_SCHEMA_VERSION = 1;
+
+  /**
    * Schema version of the manifest file.
    */
   private int schemaVersion;
@@ -44,6 +49,14 @@ public class AntennaDoctorRepositoryManifestBean {
    * Ordered list of versions that should be applied on top of the base version.
    */
   private List<String> updates;
+
+  public int getSchemaVersion() {
+    return schemaVersion;
+  }
+
+  public void setSchemaVersion(int schemaVersion) {
+    this.schemaVersion = schemaVersion;
+  }
 
   public String getBaseVersion() {
     return baseVersion;

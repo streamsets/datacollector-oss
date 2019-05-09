@@ -25,6 +25,11 @@ import java.util.List;
 public class AntennaDoctorStorageBean {
 
   /**
+   * Current version (of the code) for the schema version.
+   */
+  public final static int CURRENT_SCHEMA_VERSION = 1;
+
+  /**
    * Version of schema of this file.
    *
    * Primarily used to determine version of the structure so that we can perform upgrades if/when necessary.
