@@ -45,6 +45,11 @@ public class AntennaDoctor extends AbstractTask implements AntennaDoctorTask, An
   }
 
   /**
+   * Name of the product in which Antenna Doctor is loaded.
+   */
+  private final String productName;
+
+  /**
    * Main storage that is initialized during init phase.
    */
   private AntennaDoctorStorage storage;
@@ -62,12 +67,14 @@ public class AntennaDoctor extends AbstractTask implements AntennaDoctorTask, An
   private final AntennaDoctorContext context;
 
   public AntennaDoctor(
+      String productName,
       RuntimeInfo runtimeInfo,
       BuildInfo buildInfo,
       Configuration configuration,
       StageLibraryTask stageLibraryTask
   ) {
-    super("Antenna Doctor");
+    super("Antenna Doctor for " + productName);
+    this.productName = productName;
     this.context = new AntennaDoctorContext(
       runtimeInfo,
       buildInfo,
@@ -88,6 +95,7 @@ public class AntennaDoctor extends AbstractTask implements AntennaDoctorTask, An
     }
 
     this.storage = new AntennaDoctorStorage(
+      productName,
       context.getConfiguration(),
       context.getRuntimeInfo().getDataDir(),
       this

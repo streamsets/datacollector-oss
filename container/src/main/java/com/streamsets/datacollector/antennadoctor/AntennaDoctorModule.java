@@ -39,6 +39,6 @@ public class AntennaDoctorModule {
       Configuration configuration,
       StageLibraryTask stageLibraryTask
   ) {
-    return new AntennaDoctor(runtimeInfo, buildInfo, configuration, stageLibraryTask);
+    return new AntennaDoctor("datacollector", runtimeInfo, buildInfo, configuration, stageLibraryTask);
   }
 }

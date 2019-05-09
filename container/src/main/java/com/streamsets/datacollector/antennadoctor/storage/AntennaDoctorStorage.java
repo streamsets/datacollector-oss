@@ -77,7 +77,7 @@ public class AntennaDoctorStorage extends AbstractTask {
    * Repository where we will store all our files.
    */
   private final Path repositoryDirectory;
-
+  private final String productName;
   private final Configuration configuration;
 
   // Various threads that we might be running
@@ -87,11 +87,13 @@ public class AntennaDoctorStorage extends AbstractTask {
   private Future future;
 
   public AntennaDoctorStorage(
+    String productName,
     Configuration configuration,
     String dataDir,
     NewRulesDelegate delegate
   ) {
     super("Antenna Doctor Storage");
+    this.productName = productName;
     this.configuration = configuration;
     this.delegate = delegate;
     this.repositoryDirectory = Paths.get(dataDir, AntennaDoctorConstants.DIR_REPOSITORY);
@@ -251,7 +253,14 @@ public class AntennaDoctorStorage extends AbstractTask {
   private class UpdateRunnable implements Runnable {
     @Override
     public void run() {
-      String repoURL = configuration.get(AntennaDoctorConstants.CONF_UPDATE_URL, AntennaDoctorConstants.DEFAULT_UPDATE_URL);
+      String repoURL = configuration.get(AntennaDoctorConstants.CONF_UPDATE_URL, AntennaDoctorConstants.DEFAULT_UPDATE_URL) +
+        "/" +
+        productName +
+        "/" +
+        AntennaDoctorRepositoryManifestBean.CURRENT_SCHEMA_VERSION +
+        "/"
+      ;
+
       boolean changedApplied = false;
       try {
         LOG.info("Downloading updates from: {}", repoURL);
