@@ -145,4 +145,24 @@ public class AntennaDoctor extends AbstractTask implements AntennaDoctorTask, An
 
     return Collections.emptyList();
   }
+
+  @Override
+  public List<AntennaDoctorMessage> onRest(ErrorCode errorCode, Object... args) {
+    AntennaDoctorEngine engine = this.engine;
+    if(engine != null) {
+      return engine.onRest(getContext(), errorCode, args);
+    }
+
+    return Collections.emptyList();
+  }
+
+  @Override
+  public List<AntennaDoctorMessage> onRest(Exception exception) {
+    AntennaDoctorEngine engine = this.engine;
+    if(engine != null) {
+      return engine.onRest(getContext(), exception);
+    }
+
+    return Collections.emptyList();
+  }
 }

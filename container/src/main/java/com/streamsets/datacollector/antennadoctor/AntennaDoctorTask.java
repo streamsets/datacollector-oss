@@ -37,4 +37,8 @@ public interface AntennaDoctorTask extends Task {
   public List<AntennaDoctorMessage> onStage(AntennaDoctorStageContext context, Exception exception);
   public List<AntennaDoctorMessage> onStage(AntennaDoctorStageContext context, ErrorCode errorCode, Object... args);
   public List<AntennaDoctorMessage> onStage(AntennaDoctorStageContext context, String errorMessage);
+
+  // Rest related methods - no explicit context as the SDC is used
+  public List<AntennaDoctorMessage> onRest(ErrorCode errorCode, Object... args);
+  public List<AntennaDoctorMessage> onRest(Exception exception);
 }

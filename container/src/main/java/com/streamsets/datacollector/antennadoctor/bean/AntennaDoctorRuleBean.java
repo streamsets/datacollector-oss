@@ -26,7 +26,20 @@ public class AntennaDoctorRuleBean {
    * Entity to which the rule is associated with (e.g. stage, pipeline, sdc, ...).
    */
   public enum Entity {
+    REST, // Error that is propagated all the way up to REST interface
     STAGE, // Stage assumes that it's always running in SDC and thus with it's context
+    ;
+
+    public boolean isOneOf(Entity ...entities) {
+      if(entities == null) {
+        return false;
+      }
+
+      for(Entity t : entities) {
+        if(this == t) return true;
+      }
+      return false;
+    }
   }
 
   /**

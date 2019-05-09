@@ -89,7 +89,7 @@ public class AntennaDoctorEngine {
       LOG.trace("Loading rule {}", ruleBean.getUuid());
 
       // We're running in SDC and currently only in STAGE 'mode', other modes will be added later
-      if(ruleBean.getEntity() != AntennaDoctorRuleBean.Entity.STAGE) {
+      if(ruleBean.getEntity() == null || !ruleBean.getEntity().isOneOf(AntennaDoctorRuleBean.Entity.STAGE, AntennaDoctorRuleBean.Entity.REST)) {
         continue;
       }
 
@@ -120,30 +120,46 @@ public class AntennaDoctorEngine {
   public List<AntennaDoctorMessage> onStage(AntennaDoctorStageContext context, Exception exception) {
     JexlContext jexlContext = new MapContext();
     jexlContext.set("issue", new StageIssueJexl(exception));
-    return onStage(context, jexlContext);
+    jexlContext.set("stageDef", context.getStageDefinition());
+    jexlContext.set("stageConf", context.getStageConfiguration());
+    return evaluate(AntennaDoctorRuleBean.Entity.STAGE, jexlContext);
   }
 
   public List<AntennaDoctorMessage> onStage(AntennaDoctorStageContext context, ErrorCode errorCode, Object... args) {
     JexlContext jexlContext = new MapContext();
     jexlContext.set("issue", new StageIssueJexl(errorCode, args));
-    return onStage(context, jexlContext);
+    jexlContext.set("stageDef", context.getStageDefinition());
+    jexlContext.set("stageConf", context.getStageConfiguration());
+    return evaluate(AntennaDoctorRuleBean.Entity.STAGE, jexlContext);
   }
 
   public List<AntennaDoctorMessage> onStage(AntennaDoctorStageContext context, String errorMessage) {
     JexlContext jexlContext = new MapContext();
     jexlContext.set("issue", new StageIssueJexl(errorMessage));
-    return onStage(context, jexlContext);
-  }
-
-  private List<AntennaDoctorMessage> onStage(AntennaDoctorStageContext context, JexlContext jexlContext) {
-    ImmutableList.Builder<AntennaDoctorMessage> builder = ImmutableList.builder();
     jexlContext.set("stageDef", context.getStageDefinition());
     jexlContext.set("stageConf", context.getStageConfiguration());
+    return evaluate(AntennaDoctorRuleBean.Entity.STAGE, jexlContext);
+  }
+
+  public List<AntennaDoctorMessage> onRest(AntennaDoctorContext context, ErrorCode errorCode, Object... args) {
+    JexlContext jexlContext = new MapContext();
+    jexlContext.set("issue", new StageIssueJexl(errorCode, args));
+    return evaluate(AntennaDoctorRuleBean.Entity.REST, jexlContext);
+  }
+
+  public List<AntennaDoctorMessage> onRest(AntennaDoctorContext context, Exception exception) {
+    JexlContext jexlContext = new MapContext();
+    jexlContext.set("issue", new StageIssueJexl(exception));
+    return evaluate(AntennaDoctorRuleBean.Entity.REST, jexlContext);
+  }
+
+  private List<AntennaDoctorMessage> evaluate(AntennaDoctorRuleBean.Entity entity, JexlContext jexlContext) {
+    ImmutableList.Builder<AntennaDoctorMessage> builder = ImmutableList.builder();
 
     // Iterate over rules and try to match them
     for(RuntimeRule rule : this.rules) {
       // Static check to execute only relevant rules
-      if(rule.getEntity() != AntennaDoctorRuleBean.Entity.STAGE) {
+      if(rule.getEntity() != entity) {
         continue;
       }
 
