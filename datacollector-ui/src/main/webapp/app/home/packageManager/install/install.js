@@ -20,7 +20,7 @@
 angular
   .module('dataCollectorApp.home')
   .controller('InstallModalInstanceController',
-      function ($scope, $rootScope, $modalInstance, libraryList, withStageLibVersion, api, pipelineConstant) {
+      function ($scope, $rootScope, $modalInstance, libraryList, withStageLibVersion, api, pipelineConstant, $modal) {
     angular.extend($scope, {
       common: {
         errors: []
@@ -110,7 +110,23 @@ angular
 
       showError: function(library) {
         var err = $scope.errorMap[library.stageLibraryManifest.stageLibId];
-        $scope.common.errors = [err];
+
+        // If we know how to properly display the error
+        if(err.RemoteException) {
+          $modal.open({
+            templateUrl: 'errorModalContent.html',
+            controller: 'ErrorModalInstanceController',
+            size: 'lg',
+            backdrop: true,
+            resolve: {
+              errorObj: function () {
+                return err;
+              }
+            }
+          });
+        } else {
+          $scope.common.errors = [err];
+        }
       },
 
       hasError: function(library) {
