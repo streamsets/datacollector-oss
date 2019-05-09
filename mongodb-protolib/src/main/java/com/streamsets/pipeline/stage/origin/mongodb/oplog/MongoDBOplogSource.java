@@ -134,7 +134,7 @@ public class MongoDBOplogSource extends AbstractMongoDBSource {
   }
 
   private boolean shouldInitOffset(String lastOffset) {
-    return lastOffsetTsSeconds == -1 && lastOffsetTsOrdinal == -1 && !StringUtils.isEmpty(lastOffset);
+    return !StringUtils.isEmpty(lastOffset);
   }
 
   private void initStateIfNeeded(String lastOffset, int batchSize) {
