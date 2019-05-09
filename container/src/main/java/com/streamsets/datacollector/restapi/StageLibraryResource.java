@@ -39,6 +39,7 @@ import com.streamsets.datacollector.restapi.bean.StageLibraryManifestJson;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.datacollector.util.ContainerError;
+import com.streamsets.datacollector.util.RestException;
 import com.streamsets.datacollector.util.Version;
 import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -236,14 +237,14 @@ public class StageLibraryResource {
   public Response installLibraries(
       @QueryParam("withStageLibVersion") boolean withStageLibVersion,
       List<String> libraryIdList
-  ) throws IOException {
+  ) throws IOException, RestException {
     String runtimeDir = runtimeInfo.getRuntimeDir();
     String version = buildInfo.getVersion();
 
     // Find Stage Lib location to each stage library that we should install
     Map<String, String> libraryUrlList= new HashMap<>();
     List<RepositoryManifestJson> repoManifestList = stageLibrary.getRepositoryManifestList();
-    repoManifestList.forEach(repositoryManifestJson -> {
+    for(RepositoryManifestJson repositoryManifestJson: repoManifestList) {
       for (StageLibrariesJson stageLibrariesJson : repositoryManifestJson.getStageLibraries()) {
         if (stageLibrariesJson.getStageLibraryManifest() != null) {
           String key = stageLibrariesJson.getStageLibraryManifest().getStageLibId();
@@ -271,13 +272,12 @@ public class StageLibraryResource {
               }
 
               if(minSdcVersion != null && !sdcVersion.isGreaterOrEqualTo(minSdcVersion)) {
-                throw new RuntimeException(Utils.format(
-                    "Stage library {} version {} requires SDC version at least {} (current version is {})",
+                throw new RestException(RestErrors.REST_1000,
                     key,
                     stageLibrariesJson.getStagelibVersion(),
                     minSdcVersionString,
                     buildInfo.getVersion()
-                ));
+                );
               }
             }
 
@@ -285,17 +285,14 @@ public class StageLibraryResource {
           }
         }
       }
-    });
+    }
 
     // The sizes should fit
     if (libraryUrlList.size() != libraryIdList.size()) {
       Set<String> missingStageLibs = new HashSet<>(libraryIdList);
       missingStageLibs.removeAll(libraryUrlList.keySet());
 
-      throw new RuntimeException(Utils.format(
-          "Unable to find to find following stage libraries in repository list: {}",
-          String.join(", ", missingStageLibs)
-      ));
+      throw new RestException(RestErrors.REST_1001, String.join(", ", missingStageLibs));
     }
 
     for (Map.Entry<String, String>  libraryEntry : libraryUrlList.entrySet()) {
@@ -326,11 +323,7 @@ public class StageLibraryResource {
             .filter(lib -> libraryId.equals(lib.getName()))
             .findFirst();
         if(installedLibrary.isPresent()) {
-          throw new RuntimeException(Utils.format(
-              "Stage library {} already installed on version {}",
-              libraryId,
-              installedLibrary.get().getVersion()
-          ));
+          throw new RestException(RestErrors.REST_1002, libraryId, installedLibrary.get().getVersion());
         }
 
         while (entry != null) {
@@ -351,7 +344,7 @@ public class StageLibraryResource {
           File parent = curFile.getParentFile();
           if (!parent.exists() && !parent.mkdirs()) {
             // Failed to create directory
-            throw new RuntimeException(Utils.format("Failed to create directory: {}", parent.getPath()));
+            throw new RestException(RestErrors.REST_1003, parent.getPath());
           }
           OutputStream out = new FileOutputStream(curFile);
           IOUtils.copy(myTarFile, out);
@@ -373,11 +366,11 @@ public class StageLibraryResource {
   @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
   public Response uninstallLibraries(
       List<String> libraryList
-  ) throws IOException {
+  ) throws IOException, RestException {
     String runtimeDir = runtimeInfo.getRuntimeDir();
     for (String libraryId : libraryList) {
       if (!libraryId.matches("[a-zA-Z0-9_-]+")) {
-        throw new RuntimeException(Utils.format(ContainerError.CONTAINER_01301.getMessage(), libraryId));
+        throw new RestException(RestErrors.REST_1005, libraryId);
       }
 
       File libraryDirectory = new File(runtimeDir + STREAMSETS_LIBS_PATH + libraryId);
@@ -396,10 +389,10 @@ public class StageLibraryResource {
   @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
   public Response getExtras(
       @QueryParam("libraryId") String libraryId
-  ) {
+  ) throws RestException {
     String libsExtraDir = runtimeInfo.getLibsExtraDir();
     if (StringUtils.isEmpty(libsExtraDir)) {
-      throw new RuntimeException(ContainerError.CONTAINER_01300.getMessage());
+      throw new RestException(RestErrors.REST_1004);
     }
 
     List<StageLibraryExtrasJson> extrasList = new ArrayList<>();
@@ -446,10 +439,10 @@ public class StageLibraryResource {
       @PathParam("library") String library,
       @FormDataParam("file") InputStream uploadedInputStream,
       @FormDataParam("file") FormDataContentDisposition fileDetail
-  ) throws IOException {
+  ) throws IOException, RestException {
     String libsExtraDir = runtimeInfo.getLibsExtraDir();
     if (StringUtils.isEmpty(libsExtraDir)) {
-      throw new RuntimeException(ContainerError.CONTAINER_01300.getMessage());
+      throw new RestException(RestErrors.REST_1004);
     }
 
     File additionalLibraryFile = new File(
@@ -459,7 +452,7 @@ public class StageLibraryResource {
     File parent = additionalLibraryFile.getParentFile();
     if (!parent.exists()) {
       if (!parent.mkdirs()) {
-        throw new RuntimeException(Utils.format("Failed to create directory: {}", parent.getName()));
+        throw new RestException(RestErrors.REST_1003, parent.getName());
       }
     }
     saveFile(uploadedInputStream, additionalLibraryFile);
@@ -479,10 +472,10 @@ public class StageLibraryResource {
   @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
   public Response deleteExtras(
       List<StageLibraryExtrasJson> extrasList
-  ) throws IOException {
+  ) throws IOException, RestException {
     String libsExtraDir = runtimeInfo.getLibsExtraDir();
     if (StringUtils.isEmpty(libsExtraDir)) {
-      throw new RuntimeException(ContainerError.CONTAINER_01300.getMessage());
+      throw new RestException(RestErrors.REST_1004);
     }
     for (StageLibraryExtrasJson extrasJson : extrasList) {
       File additionalLibraryFile = new File(libsExtraDir + "/"	+

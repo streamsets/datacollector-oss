@@ -162,9 +162,6 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_01200("{} '{}' doesn't have permissions {} on pipeline {}"),
   CONTAINER_01201("Only owner of the pipeline {} or admin is allowed to updated the ACL information"),
 
-  // misc
-  CONTAINER_01300("Environment variable 'STREAMSETS_LIBRARIES_EXTRA_DIR' is not set"),
-  CONTAINER_01301("Invalid library name '{}'"),
 
   //LineageEvent problems:
   CONTAINER_01401("Cannot create framework-level event '{}' in a stage"),
