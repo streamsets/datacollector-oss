@@ -17,6 +17,9 @@ package com.streamsets.datacollector.antennadoctor.engine.jexl;
 
 import com.streamsets.datacollector.antennadoctor.engine.context.AntennaDoctorContext;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
+import com.streamsets.datacollector.main.BuildInfo;
+import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.util.Configuration;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +29,18 @@ public class SdcJexl {
 
   public SdcJexl(AntennaDoctorContext context) {
     this.context = context;
+  }
+
+  public BuildInfo getBuildInfo() {
+    return context.getBuildInfo();
+  }
+
+  public RuntimeInfo getRuntimeInfo() {
+    return context.getRuntimeInfo();
+  }
+
+  public Configuration getConfiguration() {
+    return context.getConfiguration();
   }
 
   public List<String> stagelibNames() {

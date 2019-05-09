@@ -39,8 +39,8 @@
     "message": {
       "summary": "Legacy library ${issue.args().get(0)} must be installed manually.",
       "description": [
-        "Stage library <i>${issue.args().get(0)}</i> has now been moved to legacy libs.<br /><br />",
-        "Legacy libraries must be installed manually (blurb from where to download and instructions)."
+        "Stage library <i>${issue.args().get(0)}</i> has now been moved to <a href='https://streamsets.com/documentation/datacollector/latest/help/datacollector/UserGuide/Installation/AddtionalStageLibs.html#concept_fw3_zt3_tbb'>legacy stage libraries</a> and can't be installed automatically.<br /><br />",
+        "Legacy stage libraries must be <a href='https://archives.streamsets.com/datacollector/${sdc.getBuildInfo().getVersion()}/legacy/index.html'>manually downloaded</a> and installed via <a href='https://streamsets.com/documentation/datacollector/latest/help/datacollector/UserGuide/Configuration/CustomStageLibraries.html#concept_pmc_jk1_1x'>Custom Stage Library</a> mechanism."
       ]
     }
   },{
