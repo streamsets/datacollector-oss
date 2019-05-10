@@ -96,6 +96,7 @@ public class AntennaDoctor extends AbstractTask implements AntennaDoctorTask, An
 
     this.storage = new AntennaDoctorStorage(
       productName,
+      context.getBuildInfo(),
       context.getConfiguration(),
       context.getRuntimeInfo().getDataDir(),
       this

@@ -22,6 +22,7 @@ import com.streamsets.datacollector.antennadoctor.bean.AntennaDoctorRepositoryUp
 import com.streamsets.datacollector.antennadoctor.bean.AntennaDoctorRuleBean;
 import com.streamsets.datacollector.antennadoctor.bean.AntennaDoctorStorageBean;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
@@ -77,6 +78,7 @@ public class AntennaDoctorStorage extends AbstractTask {
    * Repository where we will store all our files.
    */
   private final Path repositoryDirectory;
+  private final BuildInfo buildInfo;
   private final String productName;
   private final Configuration configuration;
 
@@ -88,12 +90,14 @@ public class AntennaDoctorStorage extends AbstractTask {
 
   public AntennaDoctorStorage(
     String productName,
+    BuildInfo buildInfo,
     Configuration configuration,
     String dataDir,
     NewRulesDelegate delegate
   ) {
     super("Antenna Doctor Storage");
     this.productName = productName;
+    this.buildInfo = buildInfo;
     this.configuration = configuration;
     this.delegate = delegate;
     this.repositoryDirectory = Paths.get(dataDir, AntennaDoctorConstants.DIR_REPOSITORY);
@@ -269,6 +273,7 @@ public class AntennaDoctorStorage extends AbstractTask {
         AntennaDoctorRepositoryManifestBean manifestBean;
         try(Response response = ClientBuilder.newClient()
           .target(repoURL + AntennaDoctorConstants.URL_MANIFEST)
+          .queryParam("version", buildInfo.getVersion())
           .request()
           .get()) {
 
@@ -286,7 +291,7 @@ public class AntennaDoctorStorage extends AbstractTask {
             return;
           }
         }
-        LOG.info("Base version in remote server is {}", manifestBean.getBaseVersion());
+        LOG.debug("Base version in remote server is {}", manifestBean.getBaseVersion());
 
         AntennaDoctorStorageBean currentStore;
         try(InputStream stream = Files.newInputStream(repositoryDirectory.resolve(AntennaDoctorConstants.FILE_DATABASE))) {
@@ -312,6 +317,8 @@ public class AntennaDoctorStorage extends AbstractTask {
             currentStore.setUpdates(new LinkedList<>());
             changedApplied = true;
           }
+        } else {
+          LOG.debug("Current version {} matches server version", currentStore.getBaseVersion());
         }
 
         // Rule map for easier application of updates
@@ -350,6 +357,7 @@ public class AntennaDoctorStorage extends AbstractTask {
         }
 
         if(changedApplied) {
+          LOG.info("Applied new changes");
           // Materialize rule list
           currentStore.setRules(new ArrayList<>(ruleMap.values()));
 
@@ -359,8 +367,9 @@ public class AntennaDoctorStorage extends AbstractTask {
           }
 
           delegate.loadNewRules(currentStore.getRules());
+        } else {
+          LOG.info("No new changes");
         }
-
       } catch (Throwable e) {
         LOG.error("Failed to retrieve updates: {}", e.getMessage(), e);
       }
