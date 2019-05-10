@@ -38,10 +38,14 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Clock;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import static com.streamsets.testing.Matchers.dateFieldWithValue;
+import static com.streamsets.testing.Matchers.listFieldWithValues;
+import static com.streamsets.testing.Matchers.zonedDateTimeUTCFieldWithValue;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static com.streamsets.testing.Matchers.fieldWithValue;
 import static org.junit.Assert.assertThat;
@@ -115,7 +119,7 @@ public class TestAvroToOrcRecordConverter {
     avroRecord.put("first", 1);
     avroRecord.put("somedate", 17535);
 
-    Map<String, Object> subRecord = new HashMap<>();
+    GenericData.Record subRecord = new GenericData.Record(schema.getField("second").schema());
     subRecord.put("sub1", new Utf8("value1"));
     subRecord.put("sub2", 42);
 
@@ -140,7 +144,8 @@ public class TestAvroToOrcRecordConverter {
 
     final TypeDescription orcSchema = AvroToOrcSchemaConverter.getOrcSchema(schema);
 
-    final Writer orcWriter = AvroToOrcRecordConverter.createOrcWriter(new Properties(),
+    final Writer orcWriter = AvroToOrcRecordConverter.createOrcWriter(
+        new Properties(),
         new Configuration(),
         outputFilePath,
         orcSchema
@@ -184,6 +189,65 @@ public class TestAvroToOrcRecordConverter {
               .put("nullableStringOrInteger", Matchers.stringFieldWithNullValue())
               .build()
       );
+    }
+  }
+
+  @Test
+  public void complexConversion() throws IOException {
+
+    final Path outputFilePath = new Path(createTempFile());
+
+    final AvroToOrcRecordConverter converter = new AvroToOrcRecordConverter(
+        1000,
+        new Properties(),
+        new Configuration()
+    );
+
+    converter.convert(
+        new SeekableFileInput(new File(TestAvroToOrcRecordConverter.class.getResource("complex.avro").getFile())),
+        new Path(outputFilePath.toString())
+    );
+
+    try (OrcToSdcRecordConverter sdcRecordConverter = new OrcToSdcRecordConverter(outputFilePath)) {
+      final Record record1 = RecordCreator.create();
+      boolean populated = sdcRecordConverter.populateRecord(record1);
+      assertThat(populated, equalTo(true));
+
+      assertThat(record1.get("/intField"), fieldWithValue(42));
+      assertThat(record1.get("/recordField/nestedStringField"), fieldWithValue("foo"));
+      assertThat(record1.get("/recordField/nestedFloatField"), fieldWithValue(98.6f));
+      assertThat(record1.get("/recordField/nestedStringOrLong"), fieldWithValue("I'm a string!"));
+      assertThat(record1.get("/dateField"), dateFieldWithValue(new Date(1468800000l)));
+      assertThat(record1.get("/timeMillisField"), fieldWithValue(400));
+      assertThat(record1.get("/timeMicrosField"), fieldWithValue(8000l));
+      assertThat(record1.get("/timestampMillisField"), zonedDateTimeUTCFieldWithValue(788553l, 45000000l));
+      assertThat(record1.get("/timestampMicrosField"), zonedDateTimeUTCFieldWithValue(34l, 456630000l));
+      assertThat(record1.get("/decimalField"), fieldWithValue(new BigDecimal("1889.33")));
+      assertThat(record1.get("/unionField"), fieldWithValue(new byte[]{1, 2, 3, 4, 5, 6, 7, 8}));
+      assertThat(record1.get("/mapOfDoublesField/first"), fieldWithValue(100.5d));
+      assertThat(record1.get("/mapOfDoublesField/second"), fieldWithValue(202.1d));
+      assertThat(record1.get("/listOfStringsField"), listFieldWithValues("firstListItem", "secondListItem"));
+      assertThat(record1.get("/enumField"), fieldWithValue("THAT"));
+
+      final Record record2 = RecordCreator.create();
+      populated = sdcRecordConverter.populateRecord(record2);
+      assertThat(populated, equalTo(true));
+
+      assertThat(record2.get("/intField"), fieldWithValue(-783));
+      assertThat(record2.get("/recordField/nestedStringField"), fieldWithValue("bar"));
+      assertThat(record2.get("/recordField/nestedFloatField"), fieldWithValue(-15.3f));
+      assertThat(record2.get("/recordField/nestedStringOrLong"), fieldWithValue(678l));
+      assertThat(record2.get("/dateField"), dateFieldWithValue(new Date(1209600000l)));
+      assertThat(record2.get("/timeMillisField"), fieldWithValue(993));
+      assertThat(record2.get("/timeMicrosField"), fieldWithValue(12300l));
+      assertThat(record2.get("/timestampMillisField"), zonedDateTimeUTCFieldWithValue(177708l, 109000000l));
+      assertThat(record2.get("/timestampMicrosField"), zonedDateTimeUTCFieldWithValue(1192l, 408542000l));
+      assertThat(record2.get("/decimalField"), fieldWithValue(new BigDecimal("-1981.3342")));
+      assertThat(record2.get("/unionField"), fieldWithValue(new byte[]{1, 1, 2, 3, 5, 8, 13, 21}));
+      assertThat(record2.get("/mapOfDoublesField/otherFirst"), fieldWithValue(-33.09d));
+      assertThat(record2.get("/mapOfDoublesField/whatever"), fieldWithValue(18933.40d));
+      assertThat(record2.get("/listOfStringsField"), listFieldWithValues("otherList1", "otherList2", "otherList3"));
+      assertThat(record2.get("/enumField"), fieldWithValue("THE_OTHER"));
     }
   }
 

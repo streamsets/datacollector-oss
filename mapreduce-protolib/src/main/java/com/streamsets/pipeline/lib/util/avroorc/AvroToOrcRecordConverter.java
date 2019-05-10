@@ -21,6 +21,7 @@ import org.apache.avro.Schema;
 import org.apache.avro.file.DataFileReader;
 import org.apache.avro.file.FileReader;
 import org.apache.avro.file.SeekableInput;
+import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericDatumReader;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.io.DatumReader;
@@ -221,6 +222,8 @@ public class AvroToOrcRecordConverter {
         } else if (value instanceof Utf8) {
           final Utf8 utf8 = (Utf8) value;
           bytes = utf8.getBytes();
+        } else if (value instanceof GenericData.EnumSymbol) {
+          bytes = ((GenericData.EnumSymbol) value).toString().getBytes(StandardCharsets.UTF_8);
         } else {
           throw new IllegalStateException(String.format(
               "Unrecognized type for Avro %s field value, which has type %s, value %s",
@@ -298,7 +301,9 @@ public class AvroToOrcRecordConverter {
         BytesColumnVector binaryColVec = (BytesColumnVector) colVector;
 
         byte[] binaryBytes;
-        if (value instanceof ByteBuffer) {
+        if (value instanceof GenericData.Fixed) {
+          binaryBytes = ((GenericData.Fixed)value).bytes();
+        }  else if (value instanceof ByteBuffer) {
           final ByteBuffer byteBuffer = (ByteBuffer) value;
           binaryBytes = new byte[byteBuffer.remaining()];
           byteBuffer.get(binaryBytes);
@@ -390,11 +395,11 @@ public class AvroToOrcRecordConverter {
       case STRUCT:
         StructColumnVector structColVec = (StructColumnVector) colVector;
 
-        Map<String, ?> map = (Map<String, ?>) value;
+        GenericData.Record record = (GenericData.Record) value;
 
         for (int i = 0; i < type.getFieldNames().size(); i++) {
           String fieldName = type.getFieldNames().get(i);
-          Object fieldValue = map.get(fieldName);
+          Object fieldValue = record.get(fieldName);
           TypeDescription fieldType = type.getChildren().get(i);
 
           addToVector(fieldType, structColVec.fields[i], avroSchema.getField(fieldName).schema(), fieldValue, vectorPos);
@@ -474,7 +479,7 @@ public class AvroToOrcRecordConverter {
           matches = value instanceof Timestamp;
           break;
         case BINARY:
-          matches = value instanceof byte[];
+          matches = value instanceof byte[] || value instanceof GenericData.Fixed;
           break;
         case DECIMAL:
           matches = value instanceof BigDecimal;

@@ -24,6 +24,8 @@ import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Date;
@@ -88,6 +90,36 @@ public class Matchers {
       @Override
       protected Object getValueFromField(Field field) {
         return field.getValueAsInteger();
+      }
+    };
+  }
+
+  public static Matcher<Field> dateFieldWithValue(final Date date) {
+    return new FieldMatcher(Field.Type.DATE, date) {
+      @Override
+      protected Object getValueFromField(Field field) {
+        return field.getValueAsDate();
+      }
+    };
+  }
+
+  public static Matcher<Field> dateTimeFieldWithValue(final Date dateTime) {
+    return new FieldMatcher(Field.Type.DATETIME, dateTime) {
+      @Override
+      protected Object getValueFromField(Field field) {
+        return field.getValueAsDatetime();
+      }
+    };
+  }
+
+  public static Matcher<Field> zonedDateTimeUTCFieldWithValue(final long epochSeconds, final long micros) {
+    return new FieldMatcher(Field.Type.ZONED_DATETIME, ZonedDateTime.ofInstant(
+        Instant.ofEpochSecond(epochSeconds, micros),
+        ZoneId.of("Z")
+    )) {
+      @Override
+      protected Object getValueFromField(Field field) {
+        return field.getValueAsZonedDateTime();
       }
     };
   }
@@ -164,6 +196,20 @@ public class Matchers {
     };
   }
 
+  public static Matcher<Field> fieldWithValue(final byte[] value) {
+    return new FieldMatcher(Field.Type.BYTE_ARRAY, value) {
+      @Override
+      protected Object getValueFromField(Field field) {
+        return field.getValueAsByteArray();
+      }
+
+      @Override
+      protected int getValueArrayLengthFromField(Field field) {
+        return field.getValueAsByteArray().length;
+      }
+    };
+  }
+
   public static Matcher<Field> fieldWithValue(final Object value) {
     return new FieldMatcher(getTypeFromObject(value), value) {
       @Override
@@ -226,6 +272,15 @@ Expected :Field of type MAP or LIST_MAP with field entry named values having val
           final Object valueFromField = getValueFromField(field);
           if (value == null) {
             return valueFromField == null;
+          } else if (value.getClass().isArray()) {
+            // arrays are a pain...
+            if (byte.class.equals(value.getClass().getComponentType())) {
+              return Arrays.equals((byte[]) value, (byte[]) valueFromField);
+            } else {
+              throw new IllegalStateException(
+                  "Incomparable array type: " + value.getClass().getComponentType().toString()
+              );
+            }
           } else {
             return value.equals(valueFromField);
           }
@@ -240,6 +295,9 @@ Expected :Field of type MAP or LIST_MAP with field entry named values having val
     }
 
     protected abstract Object getValueFromField(Field field);
+    protected int getValueArrayLengthFromField(Field field) {
+      return -1;
+    }
   }
 
   private static class MapFieldWithEntryMatcher<VT> extends BaseMatcher<Field> {

@@ -203,13 +203,11 @@ public class OrcToSdcRecordConverter implements AutoCloseable {
         if (listColVec.isNull[rowNum]) {
           record.set(fieldPath, Field.create(Field.Type.LIST, null));
         } else {
-          for (int i = 0; i < listColVec.childCount; i++) {
-            final int offset = (int) listColVec.offsets[i];
-            final int length = (int) listColVec.lengths[i];
+          final int offset = (int) listColVec.offsets[rowNum];
+          final int length = (int) listColVec.lengths[rowNum];
 
-            for (int j = offset; j < offset + length; j++) {
-              populateRecordFromRow(record, fieldPath + "[" + j + "]", schema.getChildren().get(0), listColVec.child, j);
-            }
+          for (int i = 0, j = offset; j < offset + length; i++, j++) {
+            populateRecordFromRow(record, fieldPath + "[" + i + "]", schema.getChildren().get(0), listColVec.child, j);
           }
         }
         break;
@@ -227,10 +225,11 @@ public class OrcToSdcRecordConverter implements AutoCloseable {
         if (binaryColVec.isNull[rowNum]) {
           record.set(fieldPath, Field.create(Field.Type.BYTE_ARRAY, null));
         } else {
+          final int start = binaryColVec.start[rowNum];
           final byte[] binaryData = Arrays.copyOfRange(
               binaryColVec.vector[rowNum],
-              binaryColVec.start[rowNum],
-              binaryColVec.length[rowNum]
+              start,
+              start + binaryColVec.length[rowNum]
           );
           record.set(fieldPath, Field.create(binaryData));
         }
