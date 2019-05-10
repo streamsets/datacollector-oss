@@ -654,7 +654,8 @@ public class DirectorySpooler {
                 return null;
               }
 
-              if (this.currentFile == null || fs.compare(this.currentFile, this.initialFile, useLastModified) == 0
+              if (this.currentFile == null
+                  || (this.initialFile != null && fs.compare(this.currentFile, this.initialFile, useLastModified) == 0)
                   || fs.compare(file, this.currentFile, useLastModified) > 0) {
                 if (!fs.isDirectory(file)) {
                   LOG.trace("Found file '{}'", file);
