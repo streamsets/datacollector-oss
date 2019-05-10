@@ -292,7 +292,6 @@
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-spark-api</artifactId>
-      <version>${project.version}</version>
       <scope>compile</scope>
       <exclusions>
         <exclusion>
