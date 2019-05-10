@@ -92,7 +92,7 @@ public final class TableReadContext {
       String paramVal
   ) throws SQLException, StageException {
     Utils.checkState(
-        TableContext.isPartitionableType(vendor, sqlType),
+        OffsetQueryUtil.SQL_TYPE_TO_FIELD_TYPE.containsKey(sqlType),
         Utils.format("Unsupported Partition Offset Type: {}", sqlType)
     );
     //All Date/Time Types are stored as long offsets
