@@ -20,45 +20,53 @@ import com.streamsets.pipeline.api.StageException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
+
 
 public class TestDateTimeColumnHandler {
   private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
   @Test
-  public void testTimestampWithFieldAttribute() {
+  public void testOracleDate() throws StageException {
     DateTimeColumnHandler handler = new DateTimeColumnHandler(ZoneId.of("GMT"), false);
-    try {
-      Field field = handler.getDateTimeStampField(
-          "dt",
-          "TO_TIMESTAMP('2018-04-10 02:15:10.654321')",
-          0 ,
-          "TIMESTAMP"
-      );
-      Assert.assertEquals(Field.Type.DATETIME, field.getType());
-      Assert.assertEquals("2018-04-10 02:15:10", dateFormat.format(field.getValueAsDatetime()));
-      Assert.assertEquals("321000", field.getAttribute("nanoSeconds"));
-    } catch (StageException ex) {
-      Assert.fail("StageException should not be thrown");
-    }
+
+    // A TIME data type in Oracle is indeed a timestamp. The difference with respect to Oracle TIMESTAMP is that
+    // TIME does not store fractional seconds.
+    Field field = handler.getDateTimeStampField(
+        "dt",
+        "TO_DATE('10-04-2018 02:15:10', 'DD-MM-YYYY HH24:MI:SS')",
+        Types.TIMESTAMP
+    );
+    Assert.assertEquals(Field.Type.DATETIME, field.getType());
+    Assert.assertEquals("Tue Apr 10 02:15:10 UTC 2018", field.getValueAsDatetime().toString());
   }
 
   @Test
-  public void testTimestampWithFieldAsString() {
+  public void testTimestampWithFieldAttribute() throws StageException {
+    DateTimeColumnHandler handler = new DateTimeColumnHandler(ZoneId.of("GMT"), false);
+    Field field = handler.getDateTimeStampField(
+        "dt",
+        "TO_TIMESTAMP('2018-04-10 02:15:10.654321')",
+        Types.TIMESTAMP
+    );
+    Assert.assertEquals(Field.Type.DATETIME, field.getType());
+    Assert.assertEquals("2018-04-10 02:15:10", dateFormat.format(field.getValueAsDatetime()));
+    Assert.assertEquals("321000", field.getAttribute("nanoSeconds"));
+  }
+
+  @Test
+  public void testTimestampWithFieldAsString() throws StageException {
     DateTimeColumnHandler handler = new DateTimeColumnHandler(ZoneId.of("GMT"), true);
-    try {
-      Field field = handler.getDateTimeStampField(
-          "dt",
-          "TO_TIMESTAMP('2018-04-10 02:15:10.654321')",
-          0 ,
-          "TIMESTAMP"
-      );
-      Assert.assertEquals(Field.Type.STRING, field.getType());
-      Assert.assertEquals("2018-04-10 02:15:10.654321", field.getValueAsString());
-    } catch (StageException ex) {
-      Assert.fail("StageException should not be thrown");
-    }
+
+    Field field = handler.getDateTimeStampField(
+        "dt",
+        "TO_TIMESTAMP('2018-04-10 02:15:10.654321')",
+        Types.TIMESTAMP
+    );
+    Assert.assertEquals(Field.Type.STRING, field.getType());
+    Assert.assertEquals("2018-04-10 02:15:10.654321", field.getValueAsString());
   }
 
   @Test

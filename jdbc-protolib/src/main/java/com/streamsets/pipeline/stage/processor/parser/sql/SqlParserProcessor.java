@@ -247,7 +247,7 @@ public class SqlParserProcessor extends SingleLaneProcessor {
       } else {
         try {
           Field f =
-              ParseUtil.generateField(table, columnName, col.getValue(), type, dateTimeColumnHandler, dateTimeColumns);
+              ParseUtil.generateField(columnName, col.getValue(), type, dateTimeColumnHandler);
           fields.put(columnName, f);
           if (decimalColumns.containsKey(table) && decimalColumns.get(table).containsKey(columnName)) {
             int precision = decimalColumns.get(table).get(columnName).precision;

@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -47,9 +48,6 @@ public class DateTimeColumnHandler {
   public final DateTimeFormatter dateFormatter;
   private final DateTimeFormatter localDtFormatter;
   private final DateTimeFormatter zonedDtFormatter;
-  private static final String DATE = "DATE";
-  private static final String TIME = "TIME";
-  private static final String TIMESTAMP = "TIMESTAMP";
 
   public static final String DT_SESSION_FORMAT = "'DD-MM-YYYY HH24:MI:SS'";
   // Oracle cannot return offset and zone id together -
@@ -96,24 +94,23 @@ public class DateTimeColumnHandler {
   }
 
   /**
-   * This method returns an {@linkplain Field} that represents a DATE, TIME or TIMESTAMP. It is possible for user to upgrade
-   * a field from DATE to TIMESTAMP, and if we read the table schema on startup after this upgrade, we would assume the field
-   * should be returned as DATETIME field. But it is possible that the first change we read was made before the upgrade from
-   * DATE to TIMESTAMP. So we check whether the returned SQL has TO_TIMESTAMP - if it does we return it as DATETIME, else we
-   * return it as DATE.
+   * This method returns a {@linkplain Field} that represents a DATE, TIME or DATETIME. The value of the returned
+   * {@linkplain Field} is parsed from the {@param columnValue}.
+   *
+   * @param column Name of the corresponding column in the database.
+   * @param columnValue String containing the TO_TIMESTAMP or TO_DATE function invocation to be parsed.
+   * @param columnType java.sql type of the column in the database (DATE, TIME or TIMESTAMP).
+   *
+   * @return A {@linkplain Field} of type DATE, TIME or DATETIME, depending on the {@code columnType} value.
+   *
    */
-  public Field getDateTimeStampField(
-      String column,
-      String columnValue,
-      int columnType,
-      String actualType
-  ) throws StageException {
+  public Field getDateTimeStampField(String column, String columnValue, int columnType) throws StageException {
     Field.Type type;
-    if (DATE.equalsIgnoreCase(actualType)) {
+    if (columnType == Types.DATE) {
       type = Field.Type.DATE;
-    } else if (TIME.equalsIgnoreCase(actualType)) {
+    } else if (columnType == Types.TIME) {
       type = Field.Type.TIME;
-    } else if (TIMESTAMP.equalsIgnoreCase(actualType)) {
+    } else if (columnType == Types.TIMESTAMP) {
       type = Field.Type.DATETIME;
     } else {
       throw new StageException(JDBC_37, columnType, column);
@@ -133,8 +130,7 @@ public class DateTimeColumnHandler {
       }
       // We did not find TO_TIMESTAMP, so try TO_DATE
       Optional<String> dt = matchDateTimeString(toDatePattern.matcher(columnValue));
-      return Field.create(Field.Type.DATE,
-          dt.map(s -> Date.from(getDate(s).atZone(zoneId).toInstant())).orElse(null));
+      return Field.create(type, dt.map(s -> Date.from(getDate(s).atZone(zoneId).toInstant())).orElse(null));
     }
   }
 

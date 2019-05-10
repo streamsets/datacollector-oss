@@ -1747,12 +1747,10 @@ public class OracleCDCSource extends BaseSource {
     int columnType = tableSchema.get(column);
 
     return ParseUtil.generateField(
-        schemaAndTable,
         column,
         columnValue,
         columnType,
-        dateTimeColumnHandler,
-        dateTimeColumns
+        dateTimeColumnHandler
     );
   }
 

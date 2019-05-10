@@ -105,12 +105,10 @@ public final class ParseUtil {
   }
 
   public static Field generateField(
-      SchemaAndTable schemaAndTable,
       String column,
       String columnValue,
       int columnType,
-      DateTimeColumnHandler dateTimeColumnHandler,
-      Map<SchemaAndTable, Map<String, String>> dateTimeColumns
+      DateTimeColumnHandler dateTimeColumnHandler
   ) throws StageException {
     Field field;
     // All types as of JDBC 2.0 are here:
@@ -159,10 +157,7 @@ public final class ParseUtil {
       case Types.DATE:
       case Types.TIME:
       case Types.TIMESTAMP:
-        // For whatever reason, Oracle returns all the date/time/timestamp fields as the same type, so additional
-        // logic is required to accurately parse the type
-        String actualType = dateTimeColumns.get(schemaAndTable).get(column);
-        field = dateTimeColumnHandler.getDateTimeStampField(column, columnValue, columnType, actualType);
+        field = dateTimeColumnHandler.getDateTimeStampField(column, columnValue, columnType);
         break;
       case Types.TIMESTAMP_WITH_TIMEZONE:
       case TIMESTAMP_TZ_TYPE:
