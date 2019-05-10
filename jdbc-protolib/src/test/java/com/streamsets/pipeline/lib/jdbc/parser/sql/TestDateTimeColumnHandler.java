@@ -19,9 +19,12 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 
 public class TestDateTimeColumnHandler {
+  private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
   @Test
   public void testTimestampWithFieldAttribute() {
@@ -34,7 +37,7 @@ public class TestDateTimeColumnHandler {
           "TIMESTAMP"
       );
       Assert.assertEquals(Field.Type.DATETIME, field.getType());
-      Assert.assertEquals("Tue Apr 10 02:15:10 UTC 2018", field.getValueAsDatetime().toString());
+      Assert.assertEquals("2018-04-10 02:15:10", dateFormat.format(field.getValueAsDatetime()));
       Assert.assertEquals("321000", field.getAttribute("nanoSeconds"));
     } catch (StageException ex) {
       Assert.fail("StageException should not be thrown");
