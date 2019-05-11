@@ -387,9 +387,27 @@ angular
 
       getStageInfoList: function(stageDefList) {
         var stageInfoList = [];
+        var originList = [];
+        var processorList = [];
+        var destinationList = [];
+        var others = [];
         angular.forEach(stageDefList, function (stageInfo) {
-          stageInfoList.push(stageInfo);
+          if (!stageInfo.errorStage && !stageInfo.statsAggregatorStage) {
+            if (stageInfo.type === 'SOURCE') {
+              originList.push(stageInfo);
+            } else if (stageInfo.type === 'PROCESSOR') {
+              processorList.push(stageInfo);
+            } else if (stageInfo.type === 'TARGET') {
+              destinationList.push(stageInfo);
+            } else {
+              others.push(stageInfo);
+            }
+          }
         });
+        stageInfoList.push.apply(stageInfoList, originList);
+        stageInfoList.push.apply(stageInfoList, processorList);
+        stageInfoList.push.apply(stageInfoList, destinationList);
+        stageInfoList.push.apply(stageInfoList, others);
         return stageInfoList;
       }
 
