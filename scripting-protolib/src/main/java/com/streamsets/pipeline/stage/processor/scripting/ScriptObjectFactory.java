@@ -26,9 +26,11 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -172,8 +174,16 @@ public class ScriptObjectFactory {
   }
 
   protected void updateRecordHeader(Map<String, String> header, Record record) {
+    // Transfer new or updated headers
     for (Map.Entry<String, String> entry: header.entrySet()) {
       record.getHeader().setAttribute(entry.getKey(), entry.getValue());
+    }
+
+    // Remove removed headers
+    Set<String> removedHeaders = new HashSet<>(record.getHeader().getAttributeNames());
+    removedHeaders.removeAll(header.keySet());
+    for(String removedHeader : removedHeaders) {
+      record.getHeader().deleteAttribute(removedHeader);
     }
   }
 

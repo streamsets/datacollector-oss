@@ -438,6 +438,7 @@ public class TestJythonProcessor {
     String value = "value1";
     String script = "for record in records:\n" +
         "  record.attributes['" + headerKey + "'] = '" + value + "'\n" +
+        "  record.attributes.remove('remove')\n" +
         "  output.write(record)";
 
     Processor processor = new JythonProcessor(

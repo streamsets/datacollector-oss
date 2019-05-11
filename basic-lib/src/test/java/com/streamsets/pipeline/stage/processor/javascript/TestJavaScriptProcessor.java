@@ -531,6 +531,7 @@ public class TestJavaScriptProcessor {
     String value = "value1";
     String script = "for (var i = 0; i < records.length; i++) {\n" +
         "  records[i].attributes['" + headerKey + "'] = '" + value + "'\n" +
+        "  records[i].attributes.remove('remove')\n" +
         "  output.write(records[i])\n" +
         "}";
 

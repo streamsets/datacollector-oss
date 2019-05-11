@@ -762,6 +762,9 @@ public class ScriptingProcessorTestUtil {
 
     runner.runInit();
 
+    // This header should be always removed
+    record.getHeader().setAttribute("remove", "please remove me");
+
     StageRunner.Output output;
     try {
       List<Record> input = Collections.singletonList(record);

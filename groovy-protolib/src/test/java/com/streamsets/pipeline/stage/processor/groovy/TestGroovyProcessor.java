@@ -316,6 +316,7 @@ public class TestGroovyProcessor {
 
     String script = "for (record in records) {\n" +
         "  record.attributes['" + headerKey + "'] = '" + value + "'\n" +
+        "  record.attributes.remove('remove')\n" +
         "  output.write(record)\n" +
         "}";
 
