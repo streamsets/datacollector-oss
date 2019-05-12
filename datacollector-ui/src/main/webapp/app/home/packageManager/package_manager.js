@@ -404,14 +404,22 @@ angular
             }
           }
         });
-        stageInfoList.push.apply(stageInfoList, originList);
-        stageInfoList.push.apply(stageInfoList, processorList);
-        stageInfoList.push.apply(stageInfoList, destinationList);
-        stageInfoList.push.apply(stageInfoList, others);
+        stageInfoList.push.apply(stageInfoList, originList.sort(sortStageInfo));
+        stageInfoList.push.apply(stageInfoList, processorList.sort(sortStageInfo));
+        stageInfoList.push.apply(stageInfoList, destinationList.sort(sortStageInfo));
+        stageInfoList.push.apply(stageInfoList, others.sort(sortStageInfo));
         return stageInfoList;
       }
 
     });
+
+    var sortStageInfo = function(a, b) {
+      if (a.label.toLowerCase() > b.label.toLowerCase()) {
+        return 1;
+      } else {
+        return -1;
+      }
+    };
 
     $q.all([
       configuration.init()
