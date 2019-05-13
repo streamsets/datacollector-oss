@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class ScriptRecord {
-  final Record record;
+  public final Record sdcRecord;
   public Object value;
   public final String stageCreator;
   public final String sourceId;
@@ -41,7 +41,7 @@ public class ScriptRecord {
   public final String errorJobId;
 
   ScriptRecord(Record record, Object scriptObject) {
-    this.record = record;
+    this.sdcRecord = record;
     this.stageCreator = record.getHeader().getStageCreator();
     this.sourceId = record.getHeader().getSourceId();
     this.stagesPath = record.getHeader().getStagesPath();

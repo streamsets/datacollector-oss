@@ -137,6 +137,9 @@ public class JavaScriptDProcessor extends DProcessor {
       "    // Check if the field is NULL_INTEGER. If so, assign a value \n" +
       "    // if(sdcFunctions.getFieldNull(records[i], '/null_int') == NULL_INTEGER)\n" +
       "    //    records[i].value.null_int = 123\n" +
+      "    \n" +
+      "    // Direct access to the underlying Data Collector Record. Use for read-only operations.\n" +
+      "    // fieldAttr = records[i].sdcRecord.get('/value').getAttribute('attr')  \n" +
       "\n" +
       "    // Create a new record with map field \n" +
       "    // var newRecord = sdcFunctions.createRecord(records[i].sourceId + ':newRecordId');\n" +

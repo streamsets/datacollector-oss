@@ -545,6 +545,21 @@ public class TestJavaScriptProcessor {
   }
 
   @Test
+  public void testAccessSdcRecord() throws Exception {
+    String script = "for (var i = 0; i < records.length; i++) {\n" +
+        "  records[i].attributes['attr'] = records[i].sdcRecord.get('/value').getAttribute('attr')\n" +
+        "  output.write(records[i])\n" +
+        "}";
+
+    Processor processor = new JavaScriptProcessor(
+        ProcessingMode.RECORD,
+        script
+    );
+
+    ScriptingProcessorTestUtil.verifyAccessToSdcRecord(JavaScriptDProcessor.class, processor);
+  }
+
+  @Test
   public void testInitDestroy() throws Exception {
     String initScript = "state['initValue'] = 'init';";
     String script = "for (var i = 0; i < records.length; i++) {\n" +

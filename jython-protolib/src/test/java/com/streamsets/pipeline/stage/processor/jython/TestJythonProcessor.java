@@ -451,6 +451,21 @@ public class TestJythonProcessor {
   }
 
   @Test
+  public void testAccessSdcRecord() throws Exception {
+    String script = "for record in records:\n" +
+        "  record.attributes['attr'] = record.sdcRecord.get('/value').getAttribute('attr')\n" +
+        "  output.write(record)";
+
+    Processor processor = new JythonProcessor(
+        ProcessingMode.RECORD,
+        script
+    );
+
+    Record record = RecordCreator.create();
+    ScriptingProcessorTestUtil.verifyRecordHeaderAttribute(JythonDProcessor.class, processor, record);
+  }
+
+  @Test
   public void testInitDestroy() throws Exception {
     String initScript = "state['initValue'] = 'init'";
     String script = "for record in records:\n" +

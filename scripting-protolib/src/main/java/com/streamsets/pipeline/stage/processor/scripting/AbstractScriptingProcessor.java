@@ -97,9 +97,9 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     }
 
     public void toEvent(ScriptRecord event) throws StageException {
-      if(!(event.record instanceof EventRecord)) {
-        log.error("Can't send normal record to event stream: {}", event.record);
-        throw new StageException(Errors.SCRIPTING_07, event.record.getHeader().getSourceId());
+      if(!(event.sdcRecord instanceof EventRecord)) {
+        log.error("Can't send normal record to event stream: {}", event.sdcRecord);
+        throw new StageException(Errors.SCRIPTING_07, event.sdcRecord.getHeader().getSourceId());
       }
 
       getContext().toEvent((EventRecord)getScriptObjectFactory().getRecord(event));

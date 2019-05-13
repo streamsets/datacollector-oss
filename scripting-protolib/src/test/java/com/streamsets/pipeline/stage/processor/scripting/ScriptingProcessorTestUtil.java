@@ -751,6 +751,37 @@ public class ScriptingProcessorTestUtil {
     assertEquals("record_value", records.get(1).get("/record_value").getValueAsString());
   }
 
+  public static <C extends Processor> void verifyAccessToSdcRecord(
+      Class<C> clazz,
+      Processor processor
+  ) throws StageException {
+    ProcessorRunner runner = new ProcessorRunner.Builder(clazz, processor)
+        .addOutputLane("lane")
+        .build();
+
+    Record record = RecordCreator.create();
+    Map<String, Field> map = new HashMap<>();
+    Field value = Field.create("value");
+    value.setAttribute("attr", "is-here");
+    map.put("value", value);
+    record.set(Field.create(map));
+
+    runner.runInit();
+    StageRunner.Output output;
+    try{
+      output = runner.runProcess(Collections.singletonList(record));
+    } finally {
+      runner.runDestroy();
+    }
+    List<Record> records = output.getRecords().get("lane");
+    assertEquals(1, records.size());
+
+    Record outputRecord = records.get(0);
+
+    // Header attribute
+    assertEquals("is-here", outputRecord.getHeader().getAttribute("attr"));
+  }
+
   public static <C extends Processor> void verifyRecordHeaderAttribute(
       Class<C> clazz,
       Processor processor,

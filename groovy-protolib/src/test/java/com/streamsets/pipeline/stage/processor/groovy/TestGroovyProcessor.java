@@ -330,6 +330,21 @@ public class TestGroovyProcessor {
   }
 
   @Test
+  public void testAccessSdcRecord() throws Exception {
+    String script = "for (record in records) {\n" +
+        "  record.attributes['attr'] = record.sdcRecord.get('/value').getAttribute('attr')\n" +
+        "  output.write(record)\n" +
+        "}";
+
+    Processor processor = new GroovyProcessor(
+        ProcessingMode.RECORD,
+        script
+    );
+
+    ScriptingProcessorTestUtil.verifyAccessToSdcRecord(GroovyDProcessor.class, processor);
+  }
+
+  @Test
   public void testInitDestroy() throws Exception {
     String initScript = "state['initValue'] = 'init'";
     String script = "for (record in records) {\n" +

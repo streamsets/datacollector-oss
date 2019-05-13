@@ -54,7 +54,7 @@ public class ScriptObjectFactory {
 
   @SuppressWarnings("unchecked")
   public Record getRecord(ScriptRecord scriptRecord) {
-    Record record = scriptRecord.record;
+    Record record = scriptRecord.sdcRecord;
     Field field = scriptToField(scriptRecord.value, record, "");
     record.set(field);
     // Update Record Header Attributes
