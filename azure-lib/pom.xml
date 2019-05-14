@@ -34,10 +34,11 @@
   <packaging>jar</packaging>
 
   <properties>
-    <azure.version>2.1.5</azure.version>
+    <azure.version>2.3.4</azure.version>
     <azure-eventhubs.version>1.0.1</azure-eventhubs.version>
     <azure-eventhubs-eph.version>1.0.0</azure-eventhubs-eph.version>
     <azure-iot-device-client.version>1.3.32</azure-iot-device-client.version>
+    <hadoop.version>3.2.0</hadoop.version>
   </properties>
 
   <dependencies>
@@ -128,6 +129,44 @@
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
       <scope>test</scope>
+    </dependency>
+
+    <!-- Added for ABFS -->
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-client</artifactId>
+      <version>${hadoop.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-auth</artifactId>
+      <version>${hadoop.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-common</artifactId>
+      <version>${hadoop.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-hdfs-protolib</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-azure</artifactId>
+      <version>${hadoop.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-azure-datalake</artifactId>
+      <version>${hadoop.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-core</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
 
