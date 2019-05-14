@@ -18,6 +18,7 @@ package com.streamsets.datacollector.creation;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.config.AmazonEMRConfig;
+import com.streamsets.datacollector.config.DatabricksConfig;
 import com.streamsets.datacollector.config.PipelineState;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -260,6 +261,7 @@ public class PipelineConfigUpgrader implements StageUpgrader {
   private void upgradeV12ToV13(List<Config> configs) {
     addClusterConfigs(configs);
     addDatabricksConfigs(configs);
+    addLivyConfigs(configs);
   }
 
   private void addClusterConfigs(List<Config> configs) {
@@ -276,6 +278,13 @@ public class PipelineConfigUpgrader implements StageUpgrader {
     configs.add(new Config("databricksConfig.username", null));
     configs.add(new Config("databricksConfig.password", null));
     configs.add(new Config("databricksConfig.token", null));
+    configs.add(new Config("databricksConfig.clusterConfig", DatabricksConfig.DEFAULT_CLUSTER_CONFIG));
+  }
+
+  private void addLivyConfigs(List<Config> configs) {
+    configs.add(new Config("livyConfig.baseUrl", null));
+    configs.add(new Config("livyConfig.username", null));
+    configs.add(new Config("livyConfig.password", null));
   }
 
 }

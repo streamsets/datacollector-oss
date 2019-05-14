@@ -26,6 +26,7 @@ public enum SparkClusterType implements Label {
   LOCAL("None (local)"),
   YARN("Hadoop YARN"),
   DATABRICKS("Databricks"),
+  SQL_SERVER_BIG_DATA_CLUSTER("SQL Server Big Data Cluster"),
   ;
 
   private final String label;

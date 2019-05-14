@@ -22,6 +22,9 @@ import com.streamsets.pipeline.api.credential.CredentialValue;
 
 public class DatabricksConfig {
 
+  public static final String DEFAULT_CLUSTER_CONFIG =
+      "{\n    \"num_workers\": 8,\n    \"spark_version\": \"5.3.x-scala2.11\",\n    \"node_type_id\": \"i3.xlarge\"\n}";
+
   @ConfigDef(
       type = ConfigDef.Type.STRING,
       required = true,
@@ -107,5 +110,22 @@ public class DatabricksConfig {
       }
   )
   public CredentialValue token = () -> "";
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.TEXT,
+      label = "Cluster Configuration",
+      description = "Configuration for the Databricks cluster",
+      defaultValue = DEFAULT_CLUSTER_CONFIG,
+      group = "CLUSTER",
+      displayPosition = 110,
+      dependencies = {
+          @Dependency(
+              configName = "^clusterConfig.clusterType",
+              triggeredByValues = {"DATABRICKS"}
+          )
+      }
+  )
+  public String clusterConfig = DEFAULT_CLUSTER_CONFIG;
 
 }

@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.creation;
 
 import com.streamsets.datacollector.config.AmazonEMRConfig;
+import com.streamsets.datacollector.config.DatabricksConfig;
 import com.streamsets.datacollector.config.LogLevel;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -175,7 +176,15 @@ public class TestPipelineConfigUpgrader {
     Assert.assertNull(upgrade.get(8).getValue());
     Assert.assertEquals("databricksConfig.token", upgrade.get(9).getName());
     Assert.assertNull(upgrade.get(9).getValue());
-  }
+    Assert.assertEquals("databricksConfig.clusterConfig", upgrade.get(10).getName());
+    Assert.assertEquals(DatabricksConfig.DEFAULT_CLUSTER_CONFIG, upgrade.get(10).getValue());
 
+    Assert.assertEquals("livyConfig.baseUrl", upgrade.get(11).getName());
+    Assert.assertNull(upgrade.get(11).getValue());
+    Assert.assertEquals("livyConfig.username", upgrade.get(12).getName());
+    Assert.assertNull(upgrade.get(12).getValue());
+    Assert.assertEquals("livyConfig.password", upgrade.get(13).getName());
+    Assert.assertNull(upgrade.get(13).getValue());
+  }
 
 }

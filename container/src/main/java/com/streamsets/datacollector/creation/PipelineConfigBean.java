@@ -23,6 +23,7 @@ import com.streamsets.datacollector.config.ErrorHandlingChooserValues;
 import com.streamsets.datacollector.config.ErrorRecordPolicy;
 import com.streamsets.datacollector.config.ErrorRecordPolicyChooserValues;
 import com.streamsets.datacollector.config.ExecutionModeChooserValues;
+import com.streamsets.datacollector.config.LivyConfig;
 import com.streamsets.datacollector.config.LogLevel;
 import com.streamsets.datacollector.config.LogLevelChooserValues;
 import com.streamsets.datacollector.config.PipelineGroups;
@@ -442,6 +443,9 @@ public class PipelineConfigBean implements Stage {
 
   @ConfigDefBean
   public DatabricksConfig databricksConfig;
+
+  @ConfigDefBean
+  public LivyConfig livyConfig;
 
   @ConfigDefBean
   public AmazonEMRConfig amazonEMRConfig;
