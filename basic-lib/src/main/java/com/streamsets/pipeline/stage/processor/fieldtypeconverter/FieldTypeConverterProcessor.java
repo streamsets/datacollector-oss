@@ -113,11 +113,17 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
     switch (rootField.getType()) {
       case MAP:
       case LIST_MAP:
+        if(rootField.getValue() == null) {
+          return rootField;
+        }
         for (Map.Entry<String, Field> entry : rootField.getValueAsMap().entrySet()) {
           entry.setValue(processByType(matchingPath + "/" + entry.getKey(), entry.getValue()));
         }
         break;
       case LIST:
+        if(rootField.getValue() == null) {
+          return rootField;
+        }
         List<Field> fields = rootField.getValueAsList();
         for(int i = 0; i < fields.size(); i++) {
           fields.set(i, processByType(matchingPath + "[" + i + "]", fields.get(i)));

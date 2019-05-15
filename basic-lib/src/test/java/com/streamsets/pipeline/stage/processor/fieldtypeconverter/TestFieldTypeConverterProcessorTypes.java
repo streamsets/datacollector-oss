@@ -58,6 +58,30 @@ public class TestFieldTypeConverterProcessorTypes {
   }
 
   @Test
+  public void testNullMap() throws StageException {
+    WholeTypeConverterConfig converterConfig = new WholeTypeConverterConfig();
+    converterConfig.sourceType = Field.Type.STRING;
+    converterConfig.targetType = Field.Type.BOOLEAN;
+    converterConfig.dataLocale = "en";
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
+      .addConfiguration("convertBy", ConvertBy.BY_TYPE)
+      .addConfiguration("wholeTypeConverterConfigs", ImmutableList.of(converterConfig))
+      .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+     Record record = RecordCreator.create("s", "s:1");
+     record.set(Field.create(Field.Type.MAP, null));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
   public void testBooleanToInt() throws StageException {
     WholeTypeConverterConfig converterConfig = new WholeTypeConverterConfig();
     converterConfig.sourceType = Field.Type.BOOLEAN;
