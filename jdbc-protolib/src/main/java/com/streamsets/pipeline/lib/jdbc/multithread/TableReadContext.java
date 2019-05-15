@@ -33,6 +33,7 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
 
 public final class TableReadContext {
@@ -92,7 +93,7 @@ public final class TableReadContext {
       String paramVal
   ) throws SQLException, StageException {
     Utils.checkState(
-        OffsetQueryUtil.SQL_TYPE_TO_FIELD_TYPE.containsKey(sqlType),
+        OffsetQueryUtil.SQL_TYPE_TO_FIELD_TYPE.containsKey(sqlType) || TableContextUtil.VENDOR_PARTITIONABLE_TYPES.getOrDefault(vendor, Collections.emptySet()).contains(sqlType),
         Utils.format("Unsupported Partition Offset Type: {}", sqlType)
     );
     //All Date/Time Types are stored as long offsets
