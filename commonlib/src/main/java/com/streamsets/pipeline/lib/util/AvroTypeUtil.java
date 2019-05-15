@@ -149,7 +149,21 @@ public class AvroTypeUtil {
 
       // Special case for unions of [null, actual type]
       if(unionTypes.size() == 2 && unionTypes.get(0).getType() == Schema.Type.NULL && value == null) {
-        return Field.create(getFieldType(unionTypes.get(1)), null);
+        Field returnField = Field.create(getFieldType(unionTypes.get(1)), null);
+
+        // We need to set field attributes propagating some schema information
+        String logicalType = unionTypes.get(1).getProp(LOGICAL_TYPE);
+        if(logicalType != null && !logicalType.isEmpty()) {
+          switch (logicalType) {
+            case LOGICAL_TYPE_DECIMAL:
+              int scale = unionTypes.get(1).getJsonProp(LOGICAL_TYPE_ATTR_SCALE).getIntValue();
+              int precision = unionTypes.get(1).getJsonProp(LOGICAL_TYPE_ATTR_PRECISION).getIntValue();
+              returnField.setAttribute(HeaderAttributeConstants.ATTR_SCALE, String.valueOf(scale));
+              returnField.setAttribute(HeaderAttributeConstants.ATTR_PRECISION, String.valueOf(precision));
+          }
+        }
+
+        return returnField;
       }
 
       // By default try to resolve index of the union bby the data itself

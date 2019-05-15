@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.lib.generator.avro.Errors;
 import com.streamsets.pipeline.sdk.RecordCreator;
+import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericRecord;
@@ -302,12 +303,14 @@ public class TestAvroTypeUtil {
 
   @Test
   public void testCreateUnionWithNullAndLogicalType() throws Exception {
-    String schema = "[\"null\", {\"name\": \"name\", \"type\": \"int\", \"logicalType\": \"date\"}]";
+    String schema = "[\"null\", {\"name\": \"name\", \"type\": \"bytes\", \"logicalType\": \"decimal\", \"precision\":5, \"scale\":2}]";
     Schema avroSchema = new Schema.Parser().parse(schema);
     Record record = RecordCreator.create();
     Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, null);
-    Assert.assertEquals(Field.Type.DATE, field.getType());
+    Assert.assertEquals(Field.Type.DECIMAL, field.getType());
     Assert.assertEquals(null, field.getValue());
+    Assert.assertEquals("5", field.getAttribute(HeaderAttributeConstants.ATTR_PRECISION));
+    Assert.assertEquals("2", field.getAttribute(HeaderAttributeConstants.ATTR_SCALE));
 
     record.set(field);
     Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroSchema, Collections.emptyMap());
