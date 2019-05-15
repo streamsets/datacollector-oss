@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 StreamSets Inc.
+ * Copyright 2019 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,24 +15,34 @@
  */
 package com.streamsets.pipeline.stage.kinetica;
 
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
-public enum Groups implements Label {
-  CONNECTION("Connection"),
-  CREDENTIALS("Credentials"),
-  TABLE("Table")
+public enum Errors implements ErrorCode {
+
+  KINETICA_00("Error connecting to Kinetica database: {}"),
+  KINERICA_01("Error getting schema for Kinetica table: {}"),
+  KINETICA_02("Error creating Kinetica BulkInserter: {}"),
+  KINETICA_03("Error writing Kinetica record: {}"),
+  KINETICA_04("Kinetica BulkInserter Insert Error: {}")
   ;
 
-  private final String label;
+  private final String msg;
 
-  private Groups(String label) {
-    this.label = label;
+  Errors(String msg) {
+    this.msg = msg;
   }
 
+  /** {@inheritDoc} */
   @Override
-  public String getLabel() {
-    return this.label;
+  public String getCode() {
+    return name();
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public String getMessage() {
+    return msg;
   }
 }

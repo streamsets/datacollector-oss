@@ -25,31 +25,19 @@
     <relativePath>../stage-lib-parent</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
-  <artifactId>streamsets-datacollector-kinetica_6_2-lib</artifactId>
+  <artifactId>streamsets-datacollector-kinetica_7_0-lib</artifactId>
   <version>3.9.0-SNAPSHOT</version>
-  <description>StreamSets Data Collector Kinetica 6.2 Lib</description>
-  <name>StreamSets Data Collector Kinetica 6.2 Lib</name>
+  <description>StreamSets Data Collector Kinetica 7.0 Lib</description>
+  <name>StreamSets Data Collector Kinetica 7.0 Lib</name>
   <packaging>jar</packaging>
   <properties>
-    <avro.version>1.8.1</avro.version>
-    <kinetica.version>6.2.0</kinetica.version>
-    <org.json.version>20170516</org.json.version>
+    <kinetica.version>7.0.3.0</kinetica.version>
   </properties>
   <dependencies>
      <dependency>
       <groupId>com.gpudb</groupId>
       <artifactId>gpudb-api</artifactId>
       <version>${kinetica.version}</version>
-    </dependency>
-     <dependency>
-      <groupId>org.apache.avro</groupId>
-      <artifactId>avro</artifactId>
-      <version>${avro.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.json</groupId>
-      <artifactId>json</artifactId>
-      <version>${org.json.version}</version>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
@@ -80,10 +68,6 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-sdk</artifactId>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-stagesupport</artifactId>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

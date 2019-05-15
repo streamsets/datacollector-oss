@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 StreamSets Inc.
+ * Copyright 2019 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,6 @@ import com.gpudb.BulkInserter;
 import com.gpudb.GPUdb;
 import com.gpudb.GPUdbException;
 import com.gpudb.Type;
-import com.gpudb.WorkerList;
 import com.gpudb.protocol.InsertRecordsRequest;
 import com.streamsets.pipeline.stage.kinetica.KineticaConfigBean;
 
@@ -60,7 +59,7 @@ public class KineticaBulkInserterUtils {
 
   public BulkInserter<IndexedRecord> createBulkInserter() throws GPUdbException {
 
-    WorkerList workers = null;
+    BulkInserter.WorkerList workers = null;
 
     // if multi-head-ingest is disabled, leave workers as null
     if (isMultiheadIngestDisabled){
@@ -71,7 +70,7 @@ public class KineticaBulkInserterUtils {
       // Use a Custom Worker URL List if set
       if(customWorkerUrlList != null && !customWorkerUrlList.isEmpty()){
         LOG.info("Using customWorkerUrlList: {}", String.join(",", customWorkerUrlList));
-        workers = new WorkerList();
+        workers = new BulkInserter.WorkerList();
         for (String workerUrl : customWorkerUrlList){
           try{
             workerUrl = workerUrl.trim();
@@ -90,9 +89,9 @@ public class KineticaBulkInserterUtils {
         if (ipRegex != null && ipRegex.trim().length() > 0) {
           LOG.info("Using ipRegex: '" + ipRegex + "'");
           Pattern pattern = Pattern.compile(ipRegex);
-          workers = new WorkerList(gpudb, pattern);
+          workers = new BulkInserter.WorkerList(gpudb, pattern);
         } else {
-          workers = new WorkerList(gpudb);
+          workers = new BulkInserter.WorkerList(gpudb);
         }
       }
     }
@@ -105,7 +104,7 @@ public class KineticaBulkInserterUtils {
 
     HashMap<String, String> options = new HashMap<String, String>();
 
-    if (isUpdateOnExistingPrimaryKey){
+    if (isUpdateOnExistingPrimaryKey) {
       LOG.info("Setting update_on_existing_pk = true");
       options.put("update_on_existing_pk", InsertRecordsRequest.Options.TRUE);
     } else {
@@ -117,4 +116,5 @@ public class KineticaBulkInserterUtils {
 
     return new BulkInserter<IndexedRecord>(gpudb, tableName, type, batchSize, options, workers);
   }
+
 }
