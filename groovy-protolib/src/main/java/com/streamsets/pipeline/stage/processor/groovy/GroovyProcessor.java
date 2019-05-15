@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.stage.processor.scripting.AbstractScriptingProcessor;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.ScriptObjectFactory;
+import com.streamsets.pipeline.stage.processor.scripting.config.ScriptRecordType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,37 +30,42 @@ public class GroovyProcessor extends AbstractScriptingProcessor {
 
   static final String GROOVY_ENGINE = "groovy-sdc";
   static final String GROOVY_INDY_ENGINE = "groovy-sdc-indy";
+  private final ScriptRecordType scriptRecordType;
 
   public GroovyProcessor(
       ProcessingMode processingMode,
       String script,
       String initScript,
       String destroyScript,
-      String engineName
+      String engineName,
+      ScriptRecordType scriptRecordType
   ) {
     super(LOG, engineName, Groups.GROOVY.name(), processingMode, script, initScript, destroyScript);
+    this.scriptRecordType = scriptRecordType;
   }
 
-  public GroovyProcessor(ProcessingMode processingMode, String script, String engineName) {
-    this(processingMode, script, "", "", engineName);
+  public GroovyProcessor(ProcessingMode processingMode, String script, String engineName, ScriptRecordType scriptRecordType) {
+    this(processingMode, script, "", "", engineName, scriptRecordType);
   }
 
+  // For tests only
   public GroovyProcessor(ProcessingMode processingMode, String script, String initScript, String destroyScript) {
-    this(processingMode, script, initScript, destroyScript, GROOVY_ENGINE);
+    this(processingMode, script, initScript, destroyScript, GROOVY_ENGINE, ScriptRecordType.NATIVE_OBJECTS);
   }
 
+  // For tests only
   public GroovyProcessor(ProcessingMode processingMode, String script) {
-    this(processingMode, script, GROOVY_ENGINE);
+    this(processingMode, script, GROOVY_ENGINE, ScriptRecordType.NATIVE_OBJECTS);
   }
 
   @Override
   protected ScriptObjectFactory createScriptObjectFactory(Stage.Context context) {
-    return new GroovyScriptObjectFactory(engine, context);
+    return new GroovyScriptObjectFactory(engine, context, scriptRecordType);
   }
 
   private static class GroovyScriptObjectFactory extends ScriptObjectFactory {
-    public GroovyScriptObjectFactory(ScriptEngine engine, Stage.Context context) {
-      super(engine, context);
+    public GroovyScriptObjectFactory(ScriptEngine engine, Stage.Context context, ScriptRecordType scriptRecordType) {
+      super(engine, context, scriptRecordType);
     }
   }
 }

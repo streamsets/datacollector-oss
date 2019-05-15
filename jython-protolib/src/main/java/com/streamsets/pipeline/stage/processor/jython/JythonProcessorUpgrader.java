@@ -32,6 +32,9 @@ public class JythonProcessorUpgrader implements StageUpgrader {
     switch(fromVersion) { // NOSONAR
       case 1:
         upgradeV1ToV2(configs);
+        // Fall through
+      case 2:
+        upgradeV2ToV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -53,5 +56,9 @@ public class JythonProcessorUpgrader implements StageUpgrader {
 
     configs.removeAll(configsToRemove);
     configs.addAll(configsToAdd);
+  }
+
+  private void upgradeV2ToV3(List<Config> configs) {
+    configs.add(new Config("scriptRecordType", "NATIVE_OBJECTS"));
   }
 }

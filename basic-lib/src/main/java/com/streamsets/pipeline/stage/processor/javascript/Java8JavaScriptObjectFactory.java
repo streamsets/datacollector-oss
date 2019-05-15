@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.stage.processor.scripting.ScriptObjectFactory;
+import com.streamsets.pipeline.stage.processor.scripting.config.ScriptRecordType;
 
 import javax.script.ScriptEngine;
 import java.lang.reflect.Method;
@@ -51,8 +52,8 @@ public class Java8JavaScriptObjectFactory extends ScriptObjectFactory {
 
 
 
-  public Java8JavaScriptObjectFactory(ScriptEngine engine, Stage.Context context) {
-    super(engine, context);
+  public Java8JavaScriptObjectFactory(ScriptEngine engine, Stage.Context context, ScriptRecordType scriptRecordType) {
+    super(engine, context, scriptRecordType);
   }
 
   @Override

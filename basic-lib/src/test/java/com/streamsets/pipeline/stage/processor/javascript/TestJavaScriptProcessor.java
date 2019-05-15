@@ -26,6 +26,7 @@ import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.ScriptingProcessorTestUtil;
+import com.streamsets.pipeline.stage.processor.scripting.config.ScriptRecordType;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -573,7 +574,8 @@ public class TestJavaScriptProcessor {
         ProcessingMode.BATCH,
         script,
         initScript,
-        destroyScript
+        destroyScript,
+        ScriptRecordType.NATIVE_OBJECTS
     );
     ScriptingProcessorTestUtil.verifyInitDestroy(JavaScriptDProcessor.class, processor);
   }
@@ -626,5 +628,24 @@ public class TestJavaScriptProcessor {
       WRITE_ERROR_SCRIPT
     );
     ScriptingProcessorTestUtil.verifyErrorRecordErrorSink(JavaScriptDProcessor.class, processor);
+  }
+
+  @Test
+  public void testSdcRecord() throws Exception {
+    String script = "var Field = Java.type('com.streamsets.pipeline.api.Field');\n" +
+      "for (var i = 0; i < records.length; i++) {\n" +
+      "  records[i].sdcRecord.set('/new', Field.create(Field.Type.STRING, 'new-value'));\n" +
+      "  records[i].sdcRecord.get('/old').setAttribute('attr', 'attr-value');\n" +
+      "  output.write(records[i])\n" +
+      "}";
+
+     Processor processor = new JavaScriptProcessor(
+       ProcessingMode.RECORD,
+       script,
+       "",
+       "",
+       ScriptRecordType.SDC_RECORDS
+    );
+    ScriptingProcessorTestUtil.verifySdcRecord(JavaScriptDProcessor.class, processor);
   }
 }

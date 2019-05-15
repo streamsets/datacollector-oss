@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.stage.processor.scripting.AbstractScriptingProcessor;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.ScriptObjectFactory;
+import com.streamsets.pipeline.stage.processor.scripting.config.ScriptRecordType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,18 +27,21 @@ public class JavaScriptProcessor extends AbstractScriptingProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(JavaScriptProcessor.class);
 
   public static final String JAVASCRIPT_ENGINE = "javascript";
+  private final ScriptRecordType scriptRecordType;
 
-  public JavaScriptProcessor(ProcessingMode processingMode, String script, String initScript, String destroyScript) {
+  public JavaScriptProcessor(ProcessingMode processingMode, String script, String initScript, String destroyScript, ScriptRecordType scriptRecordType) {
     super(LOG, JAVASCRIPT_ENGINE, Groups.JAVASCRIPT.name(), processingMode, script, initScript, destroyScript);
+    this.scriptRecordType = scriptRecordType;
   }
 
+  // For tests
   public JavaScriptProcessor(ProcessingMode processingMode, String script) {
-    this(processingMode, script, "", "");
+    this(processingMode, script, "", "", ScriptRecordType.NATIVE_OBJECTS);
   }
 
   @Override
   protected ScriptObjectFactory createScriptObjectFactory(Stage.Context context) {
-    return ScriptObjectFactoryFactory.getScriptObjectFactory(engine, context);
+    return ScriptObjectFactoryFactory.getScriptObjectFactory(engine, context, scriptRecordType);
   }
 
 }

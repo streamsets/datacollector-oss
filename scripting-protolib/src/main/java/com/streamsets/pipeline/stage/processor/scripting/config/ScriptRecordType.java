@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2018 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.processor.javascript;
+package com.streamsets.pipeline.stage.processor.scripting.config;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  JAVASCRIPT("JavaScript"),
-  ADVANCED("Advanced"),
+public enum ScriptRecordType implements Label {
+  SDC_RECORDS("Data Collector Records"),
+  NATIVE_OBJECTS("Native Objects"),
   ;
 
   private final String label;
 
-  Groups(String label) {
+  ScriptRecordType(String label) {
     this.label = label;
   }
 

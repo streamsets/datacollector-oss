@@ -20,11 +20,18 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum Groups implements Label {
-  JYTHON;
+  JYTHON("Jython"),
+  ADVANCED("Advanced"),
+  ;
+
+  private final String label;
+
+  Groups(String label) {
+    this.label = label;
+  }
 
   @Override
   public String getLabel() {
-    return "Jython";
+    return label;
   }
-
 }

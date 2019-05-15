@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.ScriptingProcessorTestUtil;
+import com.streamsets.pipeline.stage.processor.scripting.config.ScriptRecordType;
 import org.junit.Test;
 
 import java.util.Date;
@@ -461,8 +462,7 @@ public class TestJythonProcessor {
         script
     );
 
-    Record record = RecordCreator.create();
-    ScriptingProcessorTestUtil.verifyRecordHeaderAttribute(JythonDProcessor.class, processor, record);
+    ScriptingProcessorTestUtil.verifyAccessToSdcRecord(JythonDProcessor.class, processor);
   }
 
   @Test
@@ -478,7 +478,8 @@ public class TestJythonProcessor {
         ProcessingMode.BATCH,
         script,
         initScript,
-        destroyScript
+        destroyScript,
+        ScriptRecordType.NATIVE_OBJECTS
     );
     ScriptingProcessorTestUtil.verifyInitDestroy(JythonDProcessor.class, processor);
   }
@@ -521,7 +522,6 @@ public class TestJythonProcessor {
     ScriptingProcessorTestUtil.verifyErrorRecordDiscard(JythonDProcessor.class, processor);
   }
 
-
   @Test
   public void testErrorRecordErrorSink() throws Exception {
     Processor processor = new JythonProcessor(
@@ -529,5 +529,23 @@ public class TestJythonProcessor {
       WRITE_ERROR_SCRIPT
     );
     ScriptingProcessorTestUtil.verifyErrorRecordErrorSink(JythonDProcessor.class, processor);
+  }
+
+  @Test
+  public void testSdcRecord() throws Exception {
+    String script = "from com.streamsets.pipeline.api import Field\n" +
+      "for record in records:\n" +
+      "  record.sdcRecord.set('/new', Field.create(Field.Type.STRING, 'new-value'))\n" +
+      "  record.sdcRecord.get('/old').setAttribute('attr', 'attr-value')\n" +
+      "  output.write(record)\n";
+
+     Processor processor = new JythonProcessor(
+       ProcessingMode.RECORD,
+       script,
+       "",
+       "",
+       ScriptRecordType.SDC_RECORDS
+    );
+    ScriptingProcessorTestUtil.verifySdcRecord(JythonDProcessor.class, processor);
   }
 }

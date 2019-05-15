@@ -26,9 +26,11 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingModeChooserValues;
+import com.streamsets.pipeline.stage.processor.scripting.config.ScriptRecordType;
+import com.streamsets.pipeline.stage.processor.scripting.config.ScriptRecordTypeValueChooser;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "JavaScript Evaluator",
     description = "Processes records using JavaScript",
     icon = "javascript.png",
@@ -252,9 +254,21 @@ public class JavaScriptDProcessor extends DProcessor {
   )
   public String destroyScript = "";
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "NATIVE_OBJECTS",
+      label = "Record Type",
+      description = "Record type to use during script execution",
+      displayPosition = 10,
+      group = "ADVANCED"
+  )
+  @ValueChooserModel(ScriptRecordTypeValueChooser.class)
+  public ScriptRecordType scriptRecordType = ScriptRecordType.NATIVE_OBJECTS;
+
   @Override
   protected Processor createProcessor() {
-    return new JavaScriptProcessor(processingMode, script, initScript, destroyScript);
+    return new JavaScriptProcessor(processingMode, script, initScript, destroyScript, scriptRecordType);
   }
 
 }

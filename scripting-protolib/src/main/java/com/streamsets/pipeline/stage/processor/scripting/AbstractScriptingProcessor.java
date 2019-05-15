@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.processor.scripting;
 
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.EventRecord;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -25,6 +26,7 @@ import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.processor.scripting.config.ScriptRecordType;
 import org.slf4j.Logger;
 
 import javax.script.Compilable;
@@ -97,9 +99,16 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     }
 
     public void toEvent(ScriptRecord event) throws StageException {
-      if(!(event.sdcRecord instanceof EventRecord)) {
-        log.error("Can't send normal record to event stream: {}", event.sdcRecord);
-        throw new StageException(Errors.SCRIPTING_07, event.sdcRecord.getHeader().getSourceId());
+      Record eventRecord = null;
+      if(event instanceof SdcScriptRecord) {
+        eventRecord = ((SdcScriptRecord) event).sdcRecord;
+      } else {
+        eventRecord = ((NativeScriptRecord) event).sdcRecord;
+      }
+
+      if(!(eventRecord instanceof EventRecord)) {
+        log.error("Can't send normal record to event stream: {}", eventRecord);
+        throw new StageException(Errors.SCRIPTING_07, eventRecord.getHeader().getSourceId());
       }
 
       getContext().toEvent((EventRecord)getScriptObjectFactory().getRecord(event));

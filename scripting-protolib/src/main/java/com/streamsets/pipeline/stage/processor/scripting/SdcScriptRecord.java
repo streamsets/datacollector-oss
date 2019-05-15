@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2018 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.processor.javascript;
+package com.streamsets.pipeline.stage.processor.scripting;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.Record;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  JAVASCRIPT("JavaScript"),
-  ADVANCED("Advanced"),
-  ;
+/**
+ * Version of the record for scripts that works directly with our internal SDC Record
+ */
+public class SdcScriptRecord extends ScriptRecord {
+  public final Record sdcRecord;
 
-  private final String label;
-
-  Groups(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return label;
+  SdcScriptRecord(Record record) {
+    this.sdcRecord = record;
   }
 }

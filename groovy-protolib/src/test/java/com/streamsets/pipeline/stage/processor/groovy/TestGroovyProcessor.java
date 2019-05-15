@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.ScriptingProcessorTestUtil;
+import com.streamsets.pipeline.stage.processor.scripting.config.ScriptRecordType;
 import org.junit.Test;
 
 import java.util.Date;
@@ -411,5 +412,25 @@ public class TestGroovyProcessor {
       WRITE_ERROR_SCRIPT
     );
     ScriptingProcessorTestUtil.verifyErrorRecordErrorSink(GroovyDProcessor.class, processor);
+  }
+
+  @Test
+  public void testSdcRecord() throws Exception {
+    String script = "import com.streamsets.pipeline.api.Field\n" +
+      "for (record in records) {\n" +
+      "  record.sdcRecord.set('/new', Field.create(Field.Type.STRING, 'new-value'))\n" +
+      "  record.sdcRecord.get('/old').setAttribute('attr', 'attr-value')\n" +
+      "  output.write(record)\n" +
+      "}";
+
+     Processor processor = new GroovyProcessor(
+       ProcessingMode.RECORD,
+       script,
+       "",
+       "",
+       GroovyProcessor.GROOVY_ENGINE,
+       ScriptRecordType.SDC_RECORDS
+    );
+    ScriptingProcessorTestUtil.verifySdcRecord(GroovyDProcessor.class, processor);
   }
 }

@@ -21,6 +21,7 @@ import com.streamsets.pipeline.stage.processor.scripting.AbstractScriptingProces
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.ScriptObjectFactory;
 import com.streamsets.pipeline.stage.processor.scripting.ScriptTypedNullObject;
+import com.streamsets.pipeline.stage.processor.scripting.config.ScriptRecordType;
 import org.python.core.PyDictionary;
 import org.python.core.PyList;
 import org.slf4j.Logger;
@@ -41,24 +42,27 @@ public class JythonProcessor extends AbstractScriptingProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(JythonProcessor.class);
 
   public static final String JYTHON_ENGINE = "jython";
+  private final ScriptRecordType scriptRecordType;
 
-  public JythonProcessor(ProcessingMode processingMode, String script, String initScript, String destroyScript) {
+  public JythonProcessor(ProcessingMode processingMode, String script, String initScript, String destroyScript, ScriptRecordType scriptRecordType) {
     super(LOG, JYTHON_ENGINE, Groups.JYTHON.name(), processingMode, script, initScript, destroyScript);
+    this.scriptRecordType = scriptRecordType;
   }
 
+  // For tests
   public JythonProcessor(ProcessingMode processingMode, String script) {
-    this(processingMode, script, "", "");
+    this(processingMode, script, "", "", ScriptRecordType.NATIVE_OBJECTS);
   }
 
   @Override
   protected ScriptObjectFactory createScriptObjectFactory(Stage.Context context) {
-    return new JythonScriptObjectFactory(engine, context);
+    return new JythonScriptObjectFactory(engine, context, scriptRecordType);
   }
 
   private static class JythonScriptObjectFactory extends ScriptObjectFactory {
 
-    public JythonScriptObjectFactory(ScriptEngine scriptEngine, Stage.Context context) {
-      super(scriptEngine, context);
+    public JythonScriptObjectFactory(ScriptEngine scriptEngine, Stage.Context context, ScriptRecordType scriptRecordType) {
+      super(scriptEngine, context, scriptRecordType);
     }
 
     @Override
