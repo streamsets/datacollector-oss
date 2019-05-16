@@ -85,7 +85,7 @@ angular.module('dataCollectorApp.common')
       var uiHelpBaseURL;
       if ($rootScope.$storage.helpLocation === pipelineConstant.HOSTED_HELP && navigator && navigator.onLine) {
         if (buildInfo.version.indexOf('-SNAPSHOT') === -1) {
-          var version = buildInfo.version.split('.').slice(0, 2).join('.')
+          var version = buildInfo.version.split('.').slice(0, 2).join('.');
           uiHelpBaseURL = 'https://www.streamsets.com/documentation/datacollector/' + version + '.x/help';
         } else {
           uiHelpBaseURL = 'https://streamsets.com/documentation/datacollector/latest/help/';
