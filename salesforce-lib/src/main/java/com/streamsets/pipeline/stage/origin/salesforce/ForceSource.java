@@ -54,6 +54,7 @@ import com.streamsets.pipeline.lib.salesforce.SoapRecordCreator;
 import com.streamsets.pipeline.lib.salesforce.SobjectRecordCreator;
 import com.streamsets.pipeline.lib.salesforce.SubscriptionType;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.cometd.bayeux.Message;
@@ -95,6 +96,7 @@ public class ForceSource extends BaseSource {
   private static final String AUTHENTICATION_INVALID = "401::Authentication invalid";
   private static final String META = "/meta";
   private static final String META_HANDSHAKE = "/meta/handshake";
+  private static final String META_CONNECT = "/meta/connect";
   private static final String READ_EVENTS_FROM_NOW = EVENT_ID_OFFSET_PREFIX + EVENT_ID_FROM_NOW;
   private static final String SFORCE_ENABLE_PKCHUNKING = "Sforce-Enable-PKChunking";
   private static final String CHUNK_SIZE = "chunkSize";
@@ -106,6 +108,8 @@ public class ForceSource extends BaseSource {
 
   static final String READ_EVENTS_FROM_START = EVENT_ID_OFFSET_PREFIX + EVENT_ID_FROM_START;
   private static final BigDecimal MAX_OFFSET_INT = new BigDecimal(Integer.MAX_VALUE);
+  private static final String NONE = "none";
+  private static final String RECONNECT = "reconnect";
 
   private final ForceSourceConfigBean conf;
 
@@ -801,7 +805,11 @@ public class ForceSource extends BaseSource {
   }
 
   private void processMetaMessage(Message message, String nextSourceOffset) throws StageException {
-    if (message.getChannel().startsWith(META_HANDSHAKE) && message.isSuccessful()) {
+    if (message.getChannel().startsWith(META_CONNECT)
+        && NONE.equals(MapUtils.getString(message.getAdvice(), RECONNECT))) {
+      // Need to restart the consumer after a disconnect when the CometD client doesn't do so
+      forceConsumer.restart();
+    } else if (message.getChannel().startsWith(META_HANDSHAKE) && message.isSuccessful()) {
       // Need to (re)subscribe after handshake - see
       // https://developer.salesforce.com/docs/atlas.en-us.api_streaming.meta/api_streaming/using_streaming_api_client_connection.htm
       try {
