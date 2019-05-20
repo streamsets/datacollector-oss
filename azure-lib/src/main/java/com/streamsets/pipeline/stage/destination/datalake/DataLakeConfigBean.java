@@ -30,7 +30,7 @@ import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 
 import java.util.List;
 
-
+@Deprecated
 public class DataLakeConfigBean {
   public static final String ADLS_CONFIG_BEAN_PREFIX = "dataLakeConfig.";
   public static final String ADLS_CONFIG_ACCOUNT_FQDN = ADLS_CONFIG_BEAN_PREFIX + "accountFQDN";

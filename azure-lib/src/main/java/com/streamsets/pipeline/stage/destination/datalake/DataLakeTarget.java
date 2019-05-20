@@ -58,6 +58,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+@Deprecated
 public class DataLakeTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(DataLakeTarget.class);
   private static final int MEGA_BYTE = 1024 * 1024;
