@@ -479,6 +479,7 @@
       "monitoringJSONData": "Pipeline Monitoring",
       "notifications": "Notifications",
       "noStageDefinitionFound": "Could not find stage definition for stage name: {{stageName}}, library: {{library}}",
+      "legacyStageLibFound": "Stage library '{{library}}' is now legacy and must be installed manually.",
       "pipelineConfigJSONData": "Pipeline Configuration",
       "pipelinePreviewJSONData": "Preview Data",
       "pipelineRulesJSONData": "Pipeline Rules",

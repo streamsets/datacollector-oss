@@ -184,6 +184,8 @@ public class StageLibraryResource {
 
     definitions.setRuntimeConfigs(RuntimeEL.getRuntimeConfKeys());
 
+    definitions.setLegacyStageLibs(stageLibrary.getLegacyStageLibs());
+
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(definitions).build();
   }
 

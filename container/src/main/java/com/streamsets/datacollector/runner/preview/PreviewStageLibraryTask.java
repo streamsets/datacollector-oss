@@ -201,4 +201,9 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
     return false;
   }
 
+  @Override
+  public List<String> getLegacyStageLibs() {
+    return library.getLegacyStageLibs();
+  }
+
 }

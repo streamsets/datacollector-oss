@@ -759,6 +759,11 @@ public class MockStages {
     }
 
     @Override
+    public List<String> getLegacyStageLibs() {
+      return Collections.emptyList();
+    }
+
+    @Override
     public void releaseStageClassLoader(ClassLoader classLoader) {
     }
 

@@ -19,6 +19,7 @@ import com.streamsets.datacollector.antennadoctor.engine.context.AntennaDoctorCo
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
 
 import java.util.List;
@@ -45,6 +46,10 @@ public class SdcJexl {
 
   public List<String> stagelibNames() {
     return context.getStageLibraryTask().getLoadedStageLibraries().stream().map(StageLibraryDefinition::getName).collect(Collectors.toList());
+  }
+
+  public StageLibraryTask getStageLibraryTask() {
+    return context.getStageLibraryTask();
   }
 
 }

@@ -80,6 +80,7 @@ angular.module('dataCollectorApp.common')
             self.stageDefinitions = definitions.stages;
             self.serviceDefinitions = definitions.services;
             self.elCatalog = definitions.elCatalog;
+            self.legacyStageLibs = definitions.legacyStageLibs;
 
             self.betaStages = {};
             angular.forEach(self.stageDefinitions, function (stageDefinition) {
@@ -209,6 +210,13 @@ angular.module('dataCollectorApp.common')
      */
     this.getStageDefinitions = function() {
       return self.stageDefinitions;
+    };
+
+    /**
+     * Returns names of legacy stage libraries
+     */
+    this.getLegacyStageLibs = function() {
+      return self.legacyStageLibs;
     };
 
     /**

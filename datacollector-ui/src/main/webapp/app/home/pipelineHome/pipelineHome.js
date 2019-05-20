@@ -83,6 +83,7 @@ angular
       isPipelineRunning: false,
       sourceExists: false,
       stageLibraries: [],
+      legacyStageLibs: [],
       pipelineGraphData: {},
       previewMode: false,
       snapshotMode: false,
@@ -825,6 +826,7 @@ angular
         //Definitions
         $scope.pipelineConfigDefinition = pipelineService.getPipelineConfigDefinition();
         $scope.stageLibraries = pipelineService.getStageDefinitions();
+        $scope.legacyStageLibs = pipelineService.getLegacyStageLibs();
 
         //Pipelines
 
