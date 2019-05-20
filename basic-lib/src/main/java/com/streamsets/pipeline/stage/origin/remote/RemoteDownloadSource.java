@@ -156,7 +156,7 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
 
     this.remoteURI = RemoteConnector.getURI(conf.remoteConfig, issues, getContext(), Groups.REMOTE);
 
-    if (conf.postProcessing == PostProcessingOptions.ARCHIVE) {
+    if (conf.postProcessing == PostProcessingOptions.ARCHIVE && conf.dataFormat != DataFormat.WHOLE_FILE) {
       if (conf.archiveDir == null || conf.archiveDir.isEmpty()) {
         issues.add(
             getContext().createConfigIssue(
@@ -388,7 +388,7 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
   }
 
   private void handlePostProcessing(String filePath) throws IOException {
-    if (!getContext().isPreview()) {
+    if (!getContext().isPreview() && conf.dataFormat != DataFormat.WHOLE_FILE) {
       try {
         switch (conf.postProcessing) {
           case ARCHIVE:

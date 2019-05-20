@@ -124,7 +124,23 @@ public class RemoteDownloadConfigBean {
       label = "File Post Processing",
       description = "Action to take after processing a file",
       displayPosition = 100,
-      group = "POST_PROCESSING"
+      group = "POST_PROCESSING",
+      dependsOn = "dataFormat",
+      triggeredByValue = {  // Everything in DataFormat other than "Whole File"
+          "TEXT",
+          "JSON",
+          "DELIMITED",
+          "XML",
+          "SDC_JSON",
+          "LOG",
+          "AVRO",
+          "BINARY",
+          "PROTOBUF",
+          "DATAGRAM",
+          "SYSLOG",
+          "NETFLOW",
+          "EXCEL",
+      }
   )
   @ValueChooserModel(PostProcessingOptionsChooserValues.class)
   public PostProcessingOptions postProcessing;

@@ -1663,46 +1663,60 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
 
   @Test
   public void testPostProcessingDelete() throws Exception {
-    testPostProcessing(false, false, false, true);
+    testPostProcessing(false, false, false, true, false);
   }
 
   @Test
   public void testPostProcessingDeleteUserDirIsRoot() throws Exception {
-    testPostProcessing(false, false, true, true);
+    testPostProcessing(false, false, true, true, false);
   }
 
   @Test
   public void testPostProcessingDeleteInPreview() throws Exception {
-    testPostProcessing(false, true, true, true);
+    testPostProcessing(false, true, true, true, false);
+  }
+
+  @Test
+  public void testPostProcessingDeleteWholeFile() throws Exception {
+    testPostProcessing(false, false, false, false, true);
   }
 
   @Test
   public void testPostProcessingArchive() throws Exception {
-    testPostProcessing(true, false, false, false);
+    testPostProcessing(true, false, false, false, false);
   }
 
   @Test
   public void testPostProcessingArchiveUserDirIsRoot() throws Exception {
-    testPostProcessing(true, false, true, false);
+    testPostProcessing(true, false, true, false, false);
   }
 
   @Test
   public void testPostProcessingArchiveArchiveUserDirIsRoot() throws Exception {
-    testPostProcessing(true, false, false, true);
+    testPostProcessing(true, false, false, true, false);
   }
 
   @Test
   public void testPostProcessingArchiveUserDirIsRootArchiveUserDirIsRoot() throws Exception {
-    testPostProcessing(true, false, true, true);
+    testPostProcessing(true, false, true, true, false);
   }
 
   @Test
   public void testPostProcessingArchiveInPreview() throws Exception {
-    testPostProcessing(true, true, true, true);
+    testPostProcessing(true, true, true, true, false);
+  }
+
+  @Test
+  public void testPostProcessingArchiveWholeFile() throws Exception {
+    testPostProcessing(true, false, false, false, true);
   }
 
   private void testPostProcessing(
-      boolean archive, boolean isPreview, boolean userDirIsRoot, boolean archiveDirUserDirIsRoot
+      boolean archive,
+      boolean isPreview,
+      boolean userDirIsRoot,
+      boolean archiveDirUserDirIsRoot,
+      boolean wholeFileFormat
   ) throws Exception {
     String originPath =
         currentThread().getContextClassLoader().getResource("remote-download-source/parseSameTimestamp").getPath();
@@ -1732,7 +1746,7 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         new RemoteDownloadSource(getBean(
             scheme.name() + "://localhost:" + port + "/" + pathInUri,
             userDirIsRoot,
-            DataFormat.JSON,
+            wholeFileFormat ? DataFormat.WHOLE_FILE : DataFormat.JSON,
             null,
             true,
             FilePatternMode.GLOB,
@@ -1748,28 +1762,40 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         .setPreview(isPreview)
         .build();
     runner.runInit();
-    List<Record> expected = getExpectedRecords(true);
+    List<Record> expectedRecords = getExpectedRecords(true);
+    List<String> expectedFileNameRecords = Arrays.asList("sloth.txt", "panda.txt", "polarbear.txt");
     String offset = RemoteDownloadSource.NOTHING_READ;
     for (int i = 0; i < 3; i++) {
       StageRunner.Output op = runner.runProduce(offset, 1000);
       offset = op.getNewOffset();
       List<Record> actual = op.getRecords().get("lane");
       Assert.assertEquals(1, actual.size());
-      Assert.assertEquals(expected.get(i).get(), actual.get(0).get());
+      if (wholeFileFormat) {
+        // sanity check a few values because the records for a file are a bit complicated to replicate
+        Assert.assertEquals(
+            expectedFileNameRecords.get(i),
+            actual.get(0).get("/fileInfo/filename").getValueAsString());
+        Assert.assertEquals(
+            scheme.name() + "://localhost:" + port + "/" + pathInUri,
+            actual.get(0).get("/fileInfo/remoteUri").getValueAsString());
+      } else {
+        Assert.assertEquals(expectedRecords.get(i).get(), actual.get(0).get());
+      }
     }
     // Check files were deleted (this is still the case for archiving because they were moved)
-    // On the other hand, if it's a preview, then they should still exist
+    // On the other hand, if it's a preview or whole file, then they should still exist
+    boolean shouldExist = isPreview || wholeFileFormat;
     for (File file : files) {
-      Assert.assertEquals(isPreview, file.exists());
+      Assert.assertEquals(shouldExist, file.exists());
     }
     if (archive) {
       // Check archive files were created
-      // On the other hand, if it's a preview, then they should not have been created
+      // On the other hand, if it's a preview or whole file, then they should not have been created
       File archiveDataDir = new File(archiveDir, dataDir.getName());
-      Assert.assertEquals(!isPreview, archiveDir.exists());
-      Assert.assertEquals(!isPreview, archiveDataDir.exists());
+      Assert.assertEquals(!shouldExist, archiveDir.exists());
+      Assert.assertEquals(!shouldExist, archiveDataDir.exists());
       for (File file : files) {
-        Assert.assertEquals(!isPreview, new File(archiveDataDir, file.getName()).exists());
+        Assert.assertEquals(!shouldExist, new File(archiveDataDir, file.getName()).exists());
       }
     }
     destroyAndValidate(runner);
