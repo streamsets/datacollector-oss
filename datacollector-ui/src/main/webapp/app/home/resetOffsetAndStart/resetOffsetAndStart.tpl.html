@@ -1,0 +1,36 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="no()">
+    <span aria-hidden="true">&times;</span>
+    <span class="sr-only">Close</span>
+  </button>
+  <h3 class="modal-title" translate="home.resetOffsetAndStart.confirmationTitle">Reset Offset & Start Confirmation</h3>
+</div>
+<div class="modal-body reset-offset-modal-body">
+
+  <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+
+  <div class="alert alert-success" role="alert"
+       ng-show="isOffsetResetSucceed"
+       translate="home.resetOffsetAndStart.successMessage">
+  </div>
+
+  <div ng-if="!(isOffsetResetSucceed || showLoading)">
+    <div translate="home.resetOffsetAndStart.confirmationMessage"></div>
+  </div>
+
+  <div show-loading="showLoading"></div>
+</div>
+<div class="modal-footer" ng-hide="showLoading">
+  <button type="button" class="btn btn-default"
+          ng-hide="isOffsetResetSucceed || common.errors.length"
+          ng-click="no()"
+          translate="global.form.no">No</button>
+  <button type="button" class="btn btn-primary"
+          ng-hide="isOffsetResetSucceed || common.errors.length"
+          ng-click="yes()"
+          translate="global.form.yes">Yes</button>
+  <button type="button" class="btn btn-primary"
+          ng-show="isOffsetResetSucceed || common.errors.length"
+          ng-click="close()"
+          translate="global.form.close">Close</button>
+</div>

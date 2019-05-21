@@ -276,6 +276,16 @@
       </a>
 
       <a class="btn btn-link icon-button"
+         tooltip-placement="bottom" tooltip="{{'global.form.share' | translate}}"
+         tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
+         tooltip-popup-delay="500"
+         ng-if="(common.authenticationType !== 'none' || common.isDPMEnabled) && !common.isSlaveNode"
+         ng-click="sharePipelineConfig(activeConfigInfo, $event)"
+         ng-show="!previewMode && !snapshotMode && activeConfigStatus.status != 'STARTING'">
+        <span class="fa fa-share-alt fa-14x"></span>
+      </a>
+
+      <a class="btn btn-link icon-button"
           tooltip-placement="bottom" tooltip="{{'home.header.snapshots' | translate}}"
           tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
           tooltip-popup-delay="500"
@@ -332,15 +342,42 @@
         <span class="glyphicon glyphicon-ok-circle fa-14x"></span>
       </a>
 
-      <a class="btn btn-link icon-button"
-          tooltip-placement="bottom" tooltip="{{'home.header.start' | translate}}"
-          tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
-          tooltip-popup-delay="500"
-          ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && canExecute && !(isPipelineRunning || previewMode || snapshotMode)"
-          ng-disabled="!pipelineConfig.valid"
-          ng-click="!pipelineConfig.valid || startPipeline(); ">
-        <span class="glyphicon glyphicon-play fa-14x"></span>
-      </a>
+      <div class="btn-group create-pipeline-btn-group"
+           ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && canExecute && !(isPipelineRunning || previewMode || snapshotMode)">
+        <button type="button" class="btn btn-success btn-sm create-pipeline-btn"
+                ng-disabled="!pipelineConfig.valid"
+                ng-click="!pipelineConfig.valid || startPipeline();">
+          <span class="glyphicon glyphicon-play"></span>
+          <span>{{'home.header.start' | translate}}</span>
+        </button>
+        <button type="button" class="btn btn-success btn-sm dropdown-toggle"
+                ng-disabled="!pipelineConfig.valid"
+                data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+          <span class="caret"></span>
+          <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu pull-right">
+          <li>
+            <a href="#" ng-click="startPipeline();">
+              {{'home.header.startPipeline' | translate}}
+            </a>
+          </li>
+
+          <li>
+            <a href="#" dropdown-toggle ng-click="resetOffsetAndStart()">
+              {{'home.resetOffsetAndStart.title' | translate}}
+            </a>
+          </li>
+
+          <li>
+            <a href="#" dropdown-toggle ng-click="startPipelineWithParameters()">
+              {{'home.header.startWithParametersTitle' | translate}}
+            </a>
+          </li>
+
+        </ul>
+      </div>
 
       <a class="btn btn-link icon-button-danger"
           tooltip-placement="bottom" tooltip="{{'home.header.stop' | translate}}"
@@ -350,16 +387,6 @@
           ng-click="stopPipeline(false)"
           ng-show="isPipelineRunning && !snapshotMode && activeConfigStatus.status != 'STARTING'">
         <span class="glyphicon glyphicon-stop fa-14x"></span>
-      </a>
-
-      <a class="btn btn-link icon-button"
-         tooltip-placement="bottom" tooltip="{{'global.form.share' | translate}}"
-         tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
-         tooltip-popup-delay="500"
-         ng-if="(common.authenticationType !== 'none' || common.isDPMEnabled) && !common.isSlaveNode"
-         ng-click="sharePipelineConfig(activeConfigInfo, $event)"
-         ng-show="!previewMode && !snapshotMode && activeConfigStatus.status != 'STARTING'">
-        <span class="fa fa-share-alt fa-14x"></span>
       </a>
 
       <a class="btn btn-link icon-button"

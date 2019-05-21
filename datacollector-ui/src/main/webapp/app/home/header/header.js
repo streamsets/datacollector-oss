@@ -324,6 +324,51 @@ angular
       },
 
       /**
+       * Reset Offset & start pipeline
+       */
+      resetOffsetAndStart: function() {
+        $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Reset Offset & Start', 1);
+
+        var originStageInstance = $scope.stageInstances[0];
+        var originStageDef = _.find($scope.stageLibraries, function (stageDef) {
+          return stageDef.name === originStageInstance.stageName;
+        });
+
+        var modalInstance = $modal.open({
+          templateUrl: 'app/home/resetOffsetAndStart/resetOffsetAndStart.tpl.html',
+          controller: 'ResetOffsetAndStartModalInstanceController',
+          size: '',
+          backdrop: 'static',
+          resolve: {
+            pipelineInfo: function () {
+              return $scope.activeConfigInfo;
+            },
+            originStageDef: function() {
+              return originStageDef;
+            }
+          }
+        });
+
+        modalInstance.result.then(function(res) {
+          $rootScope.common.errors = [];
+          $scope.clearTabSelectionCache();
+          $scope.selectPipelineConfig();
+
+          var currentStatus = $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.pipelineId];
+          if (!currentStatus || (res.data && currentStatus.timeStamp < res.data.timeStamp)) {
+            $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.pipelineId] = res.data;
+          }
+
+          $timeout(function() {
+            $scope.refreshGraph();
+          });
+          $scope.startMonitoring();
+        }, function () {
+
+        });
+      },
+
+      /**
        * Delete Selected Stage Instance/Stream
        */
       deleteSelection: function() {
