@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.origin.datalake.gen1;
 
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.PushSource;
@@ -31,10 +32,12 @@ import com.streamsets.pipeline.stage.conf.DataLakeSourceGroups;
     description = "Reads data from Azure Data Lake Storage Gen1",
     icon = "data-lake-store.png",
     producesEvents = true,
-    onlineHelpRefUrl = ""
-    // TODO: Obtain a new help URL from Doc team
+    execution = ExecutionMode.STANDALONE,
+    recordsByRef = true,
+    resetOffset = true,
+    onlineHelpRefUrl = "index.html?contextID=task_t13_ht5_5hb",
+    beta = true
 )
-
 @ConfigGroups(value = DataLakeSourceGroups.class)
 @HideConfigs(value = {
     "dataLakeConfig.hdfsUri",
