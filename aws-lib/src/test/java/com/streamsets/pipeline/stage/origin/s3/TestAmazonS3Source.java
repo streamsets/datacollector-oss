@@ -19,11 +19,14 @@ import com.streamsets.pipeline.stage.common.AmazonS3TestSuite;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.mockito.Mockito.when;
 
 public class TestAmazonS3Source extends AmazonS3TestSuite {
 
@@ -281,5 +284,27 @@ public class TestAmazonS3Source extends AmazonS3TestSuite {
     amazonS3Source.orphanThreads.add(S3Offset.fromString(offset1));
 
     Assert.assertEquals(offset1, amazonS3Source.getOffset(0).toString());
+  }
+
+  @Test
+  public void testJsonOffsetParsing() {
+    String offset = "{\"fileName\":\"retail1.json\",\"fileOffset\":\"10723\"}";
+
+    Assert.assertEquals("retail1.json", AmazonS3SourceImpl.getFileName(offset));
+    Assert.assertEquals(10723, AmazonS3SourceImpl.getFileOffset(offset));
+  }
+
+  @Test
+  public void testIsJsonObject() {
+    S3Offset mockOffset = Mockito.mock(S3Offset.class);
+
+    String offset = "{\"fileName\":\"retail1.json\",\"fileOffset\":\"10723\"}";
+    String notAnOffset = "{\"fileNe\":\"retail1.json\",\"fileOffset\":\"10723\"}";
+
+    when(mockOffset.getOffset()).thenReturn(offset);
+    Assert.assertTrue(AmazonS3SourceImpl.isJSONOffset(mockOffset));
+
+    when(mockOffset.getOffset()).thenReturn(notAnOffset);
+    Assert.assertFalse(AmazonS3SourceImpl.isJSONOffset(mockOffset));
   }
 }

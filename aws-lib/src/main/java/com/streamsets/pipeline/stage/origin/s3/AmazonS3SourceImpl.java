@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -123,31 +124,51 @@ public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements Amazon
 
       int offsetVal;
       int s3offsetVal;
-      if(offset.getOffset().contains("::")){
+      if (offset != null && offset.getOffset().contains(S3Offset.OFFSET_SEPARATOR)) {
         //Then is an EXCEL offset
-        offsetVal = Integer.valueOf(offset.getOffset().split("::")[1]);
-        s3offsetVal = Integer.valueOf(s3Offset.getOffset().split("::")[1]);
-      }else{
+        offsetVal = Integer.valueOf(offset.getOffset().split(S3Offset.OFFSET_SEPARATOR)[1]);
+        s3offsetVal = Integer.valueOf(s3Offset.getOffset().split(S3Offset.OFFSET_SEPARATOR)[1]);
+      } else if (isJSONOffset(s3Offset)) {
+        //If case of zipped files, if the filename is the same, we handle it as before, if not we will use the new
+        // offset for the new file
+        if (isJSONOffset(offset)) {
+          offsetVal = getFileName(offset.getOffset()).equals(getFileName(s3Offset.getOffset()))
+                      ? getFileOffset(offset.getOffset())
+                      : 0;
+        } else {
+          offsetVal = Integer.valueOf(offset.getOffset());
+        }
+        s3offsetVal = getFileOffset(s3Offset.getOffset());
+      } else {
         offsetVal = Integer.valueOf(offset.getOffset());
         s3offsetVal = Integer.valueOf(s3Offset.getOffset());
       }
-
-
-      if (!offset.getOffset().equals(S3Constants.MINUS_ONE)) {
-        if (s3Offset.getOffset().equals(S3Constants.MINUS_ONE)) {
-          offsetsMap.put(runnerId, s3Offset);
-          context.commitOffset(String.valueOf(runnerId), s3Offset.toString());
-        } else if (s3offsetVal > offsetVal) {
-          offsetsMap.put(runnerId, s3Offset);
-          context.commitOffset(String.valueOf(runnerId), s3Offset.toString());
-        }
+      if (!offset.getOffset().equals(S3Constants.MINUS_ONE) &&
+          (s3Offset.getOffset().equals(S3Constants.MINUS_ONE) || s3offsetVal > offsetVal)) {
+        offsetsMap.put(runnerId, s3Offset);
+        context.commitOffset(String.valueOf(runnerId), s3Offset.toString());
       }
     }
   }
 
+  @VisibleForTesting
+  static boolean isJSONOffset(S3Offset s3Offset) {
+    return s3Offset.getOffset().contains("fileName") && s3Offset.getOffset().contains("fileOffset");
+  }
 
   @VisibleForTesting
-  S3Offset getOffsetFromGivenKey(String key) {
+  static String getFileName(String offset) {
+    JSONObject object = new JSONObject(offset);
+    return object.get("fileName").toString();
+  }
+
+  @VisibleForTesting
+  static int getFileOffset(String offset) {
+    JSONObject object = new JSONObject(offset);
+    return Integer.valueOf(object.get("fileOffset").toString());
+  }
+
+  private S3Offset getOffsetFromGivenKey(String key) {
     for (S3Offset offset : offsetsMap.values()) {
       if (offset.getKey() != null && offset.getKey().equals(key)) {
         return offset;
@@ -156,8 +177,7 @@ public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements Amazon
     return null;
   }
 
-  @VisibleForTesting
-  boolean isKeyAlreadyInMap(String key) {
+  private boolean isKeyAlreadyInMap(String key) {
     boolean exists = true;
     if (getOffsetFromGivenKey(key) == null) {
       exists = false;
@@ -180,13 +200,13 @@ public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements Amazon
       );
       offsetsMap.put(runnerId, offset);
     } else {
-      offset = offsetsMap.computeIfAbsent(
-          runnerId,
+      offset = offsetsMap.computeIfAbsent(runnerId,
           k -> new S3Offset(S3Constants.EMPTY, S3Constants.ZERO, S3Constants.EMPTY, S3Constants.ZERO)
       );
     }
     return offset;
   }
+
   @Override
   public S3Offset getLatestOffset() {
     List<S3Offset> orderedOffsets = orderOffsets(new ArrayList<>(offsetsMap.values()));

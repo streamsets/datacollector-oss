@@ -27,7 +27,7 @@ public class S3Offset implements Serializable {
   private String offset;
   private final String timestamp;
 
-  private static final String OFFSET_SEPARATOR = "::";
+  static final String OFFSET_SEPARATOR = "::";
   private static final String ZERO = "0";
 
   S3Offset(String key, String offset, String eTag, String timestamp) {

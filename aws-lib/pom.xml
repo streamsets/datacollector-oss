@@ -37,6 +37,7 @@
     <commons-math3.version>3.5</commons-math3.version>
     <sqs.version>1.0.4</sqs.version>
     <awssdk.version>1.11.385</awssdk.version>
+    <json.version>20180813</json.version>
   </properties>
 
   <dependencyManagement>
@@ -156,6 +157,12 @@
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-common</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>${json.version}</version>
       <scope>compile</scope>
     </dependency>
 
