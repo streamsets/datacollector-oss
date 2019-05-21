@@ -234,11 +234,13 @@ public final class MSQueryUtil {
       declare_from_lsn = String.format("DECLARE @start_lsn binary(10) = 0x%s; ",
           offsetMap.get(CDC_START_LSN));
 
+      String cdcOperation = Strings.isNullOrEmpty(offsetMap.get(CDC_OPERATION)) ? "2" : offsetMap.get(CDC_OPERATION);
+
       String condition1 = String.format(
           AND_CLAUSE2,
           String.format(COLUMN_EQUALS_VALUE, CDC_START_LSN, "@start_lsn"),
           String.format(BINARY_COLUMN_EQUALS_CLAUSE, CDC_SEQVAL, offsetMap.get(CDC_SEQVAL)),
-          String.format(COLUMN_GREATER_THAN_VALUE, CDC_OPERATION, offsetMap.get(CDC_OPERATION))
+          String.format(COLUMN_GREATER_THAN_VALUE, CDC_OPERATION, cdcOperation)
       );
 
       condition1 = String.format(
