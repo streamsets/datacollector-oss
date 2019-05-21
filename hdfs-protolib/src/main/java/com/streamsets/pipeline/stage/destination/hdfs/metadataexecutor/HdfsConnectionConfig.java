@@ -97,10 +97,10 @@ public class HdfsConnectionConfig {
   )
   public Map<String, String> hdfsConfigs = Collections.emptyMap();
 
-  private Configuration conf;
-  private UserGroupInformation loginUgi;
-  private UserGroupInformation userUgi;
-  private FileSystem fs;
+  protected Configuration conf;
+  protected UserGroupInformation loginUgi;
+  protected UserGroupInformation userUgi;
+  protected FileSystem fs;
 
   public UserGroupInformation getUGI() {
     return userUgi;
