@@ -71,7 +71,7 @@ public final class AntennaDoctorConstants {
   /**
    * Manifest file for the repository.
    */
-  public final static String URL_MANIFEST = "/manifest.json";
+  public final static String URL_MANIFEST = "manifest.json";
 
   /**
    * URL end point for downloading given versioned files.

@@ -301,7 +301,7 @@ public class AntennaDoctorStorage extends AbstractTask {
         if(!currentStore.getBaseVersion().equals(manifestBean.getBaseVersion())) {
           LOG.info("Current base version ({}) is different then remote repo base version ({}), downloading remote version", currentStore.getBaseVersion(), manifestBean.getBaseVersion());
           try(Response response = ClientBuilder.newClient()
-            .target(repoURL + "/" + manifestBean.getBaseVersion() + AntennaDoctorConstants.URL_VERSION_END)
+            .target(repoURL + manifestBean.getBaseVersion() + AntennaDoctorConstants.URL_VERSION_END)
             .request()
             .get()) {
 
@@ -335,7 +335,7 @@ public class AntennaDoctorStorage extends AbstractTask {
           // Download the update bean
           AntennaDoctorRepositoryUpdateBean updateBean;
           try(Response response = ClientBuilder.newClient()
-            .target(repoURL + "/" + update + AntennaDoctorConstants.URL_VERSION_END)
+            .target(repoURL + update + AntennaDoctorConstants.URL_VERSION_END)
             .request()
             .get()) {
 
