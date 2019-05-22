@@ -61,6 +61,7 @@ public class HttpClientConfigBean {
       label = "Resource URL",
       defaultValue = "https://stream.twitter.com/1.1/statuses/sample.json",
       description = "Specify the HTTP resource URL",
+          elDefs = {TimeEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 10,
       group = "HTTP"

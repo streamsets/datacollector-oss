@@ -20,6 +20,8 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.lib.http.HttpMethod;
 import com.streamsets.pipeline.lib.http.JerseyClientConfigBean;
@@ -54,7 +56,7 @@ public class HttpClientTargetConfig {
       type = ConfigDef.Type.STRING,
       label = "Resource URL",
       description = "The HTTP resource URL",
-      elDefs = RecordEL.class,
+          elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 60,
       group = "HTTP"
