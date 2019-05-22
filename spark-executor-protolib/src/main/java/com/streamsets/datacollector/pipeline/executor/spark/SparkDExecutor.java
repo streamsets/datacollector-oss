@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2019 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DExecutor;
 
 @StageDef(
     version = 2,
-    label = "Spark Executor",
+    label = "Spark",
     description = "Run Spark Applications",
     icon = "spark-logo-hd.png",
     upgrader = SparkExecutorUpgrader.class,

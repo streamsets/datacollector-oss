@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 StreamSets Inc.
+ * Copyright 2019 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,8 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
 
 @StageDef(
     version = 1,
-    label = "SQL Parser Processor",
-    description = "Processor that can parse SQL insert, update and delete queries",
+    label = "SQL Parser",
+    description = "Processor that can parse SQL insert, update, and delete queries",
     icon = "sql.png",
     recordsByRef = true,
     onlineHelpRefUrl ="index.html?contextID=task_pfr_wdc_tdb"
