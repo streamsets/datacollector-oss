@@ -1014,9 +1014,11 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       "streamsets-datacollector-apache-kafka_0_8_1-lib",
       "streamsets-datacollector-apache-kafka_0_8_2-lib",
       "streamsets-datacollector-apache-kafka_0_9-lib",
+      "streamsets-datacollector-apache-kafka_0_11-lib",
       "streamsets-datacollector-apache-kudu_1_0-lib",
       "streamsets-datacollector-apache-kudu_1_1-lib",
       "streamsets-datacollector-apache-kudu_1_2-lib",
+      "streamsets-datacollector-cdh-spark_2_1-lib",
       "streamsets-datacollector-cdh_5_2-lib",
       "streamsets-datacollector-cdh_5_3-lib",
       "streamsets-datacollector-cdh_5_4-lib",
@@ -1026,9 +1028,13 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       "streamsets-datacollector-cdh_5_9-lib",
       "streamsets-datacollector-cdh_5_10-lib",
       "streamsets-datacollector-cdh_5_11-lib",
+      "streamsets-datacollector-cdh_5_12-lib",
+      "streamsets-datacollector-cdh_5_13-lib",
       "streamsets-datacollector-cdh_kafka_1_2-lib",
       "streamsets-datacollector-cdh_kafka_1_3-lib",
       "streamsets-datacollector-cdh_kafka_2_0-lib",
+      "streamsets-datacollector-cdh_kafka_2_1-lib",
+      "streamsets-datacollector-cdh_kafka_3_0-lib",
       "streamsets-datacollector-hdp_2_2-lib",
       "streamsets-datacollector-hdp_2_3-hive1-lib",
       "streamsets-datacollector-hdp_2_3-lib",
@@ -1037,7 +1043,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       "streamsets-datacollector-hdp_2_5-flume-lib",
       "streamsets-datacollector-hdp_2_5-lib",
       "streamsets-datacollector-mapr_5_0-lib",
-      "streamsets-datacollector-mapr_5_1-lib"
+      "streamsets-datacollector-mapr_5_1-lib",
+      "streamsets-datacollector-mapr_5_2-lib"
     );
   }
 

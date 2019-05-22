@@ -75,6 +75,20 @@
       <directory>${basedir}/../${cdh_5_11-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/</outputDirectory>
     </fileSet>
+    <fileSet>
+      <directory>${basedir}/../${cdh_5_12-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${basedir}/../${cdh_5_13-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/</outputDirectory>
+    </fileSet>
+
+    <!-- CDH Spark Kafka lib -->
+    <fileSet>
+      <directory>${basedir}/../${cdh-spark_2_1-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/</outputDirectory>
+    </fileSet>
 
     <!-- HDP Libs -->
     <fileSet>
@@ -115,6 +129,10 @@
       <directory>${basedir}/../${mapr_5_1-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/</outputDirectory>
     </fileSet>
+    <fileSet>
+      <directory>${basedir}/../${mapr_5_2-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/</outputDirectory>
+    </fileSet>
 
     <!-- Apache Kudu libs -->
     <fileSet>
@@ -147,6 +165,10 @@
       <directory>${basedir}/../${apache-kafka_0_10-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/</outputDirectory>
     </fileSet>
+    <fileSet>
+      <directory>${basedir}/../${apache-kafka_0_11-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/</outputDirectory>
+    </fileSet>
 
     <!-- CDH5 Kafka libs -->
     <fileSet>
@@ -159,6 +181,14 @@
     </fileSet>
     <fileSet>
       <directory>${basedir}/../${cdh_kafka_2_0-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${basedir}/../${cdh_kafka_2_1-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${basedir}/../${cdh_kafka_3_0-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/</outputDirectory>
     </fileSet>
 
