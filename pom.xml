@@ -171,6 +171,7 @@
     <module>sdc-kafka_0_11-common</module>
     <module>sdc-kafka_0_11</module>
     <module>sdc-kafka_1_0</module>
+    <module>sdc-kafka_2_0</module>
     <module>sdc-kafka_0_11_mapr_6_1</module>
     <module>kafka-common</module>
     <module>kafka_source-protolib</module>

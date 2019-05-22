@@ -43,6 +43,7 @@ public abstract class FactoriesBean {
     "com.streamsets.pipeline.kafka.impl.Kafka10FactoriesBean",
     "com.streamsets.pipeline.kafka.impl.Kafka11FactoriesBean",
     "com.streamsets.pipeline.kafka.impl.Kafka1_0FactoriesBean",
+    "com.streamsets.pipeline.kafka.impl.Kafka20FactoriesBean",
     "com.streamsets.pipeline.kafka.impl.MapR52Streams09FactoriesBean",
     "com.streamsets.pipeline.kafka.impl.MapR61Streams11FactoriesBean"
   );
