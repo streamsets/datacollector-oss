@@ -16,14 +16,6 @@
         </span>
         <ul class="dropdown-menu pull-right" role="menu">
           <li role="presentation"
-              ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && canExecute && !(isPipelineRunning || previewMode || snapshotMode)"
-              ng-class="{'disabled': !pipelineConfig.valid}">
-            <a href="#" dropdown-toggle ng-click="(!pipelineConfig.valid) || startPipelineWithParameters()">
-              <i class="glyphicon glyphicon-play"></i> {{'home.header.startWithParametersTitle' | translate}}
-            </a>
-          </li>
-
-          <li role="presentation"
               ng-if="!isPipelineRunning && isAuthorized([userRoles.admin, userRoles.manager])"
               ng-class="{'disabled': !pipelineConfig.valid || (activeConfigStatus.executionMode !== pipelineConstant.STANDALONE && !isEdgePipeline())}">
             <a href="#" dropdown-toggle ng-click="(!pipelineConfig.valid || (activeConfigStatus.executionMode !== pipelineConstant.STANDALONE && !isEdgePipeline())) || resetOffset()">
