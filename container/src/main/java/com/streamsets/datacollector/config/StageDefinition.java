@@ -83,6 +83,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
   private final int inputStreams;
   private final String inputStreamLabelProviderClass;
   private List<String> inputStreamLabels;
+  private List<Class> eventDefs;
 
   // localized version
   private StageDefinition(
@@ -122,7 +123,8 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
       boolean beta,
       int inputStreams,
       String inputStreamLabelProviderClass,
-      List<String> inputStreamLabels
+      List<String> inputStreamLabels,
+      List<Class> eventDefs
   ) {
     this.stageDef = stageDef;
     this.libraryDefinition = libraryDefinition;
@@ -175,6 +177,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     this.inputStreams = inputStreams;
     this.inputStreamLabelProviderClass = inputStreamLabelProviderClass;
     this.inputStreamLabels = inputStreamLabels;
+    this.eventDefs = eventDefs;
   }
 
   @SuppressWarnings("unchecked")
@@ -259,7 +262,8 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
       boolean sendsResponse,
       boolean beta,
       int inputStreams,
-      String inputStreamLabelProviderClass
+      String inputStreamLabelProviderClass,
+      List<Class> eventDefs
   ) {
     this.stageDef = stageDef;
     this.libraryDefinition = libraryDefinition;
@@ -310,6 +314,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     this.beta = beta;
     this.inputStreams = inputStreams;
     this.inputStreamLabelProviderClass = inputStreamLabelProviderClass;
+    this.eventDefs = eventDefs;
   }
 
   public List<ExecutionMode> getLibraryExecutionModes() {
@@ -605,7 +610,8 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
         beta,
         inputStreams,
         inputStreamLabelProviderClass,
-        inputStreamLabels
+        inputStreamLabels,
+        eventDefs
     );
   }
 
@@ -673,6 +679,10 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
 
   public List<String> getInputStreamLabels() {
     return inputStreamLabels;
+  }
+
+  public List<Class> getEventDefs() {
+    return eventDefs;
   }
 
   public List<String> getClassPath() {

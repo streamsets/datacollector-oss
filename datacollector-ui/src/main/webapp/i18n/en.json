@@ -397,6 +397,7 @@
       "batchesPerSecond": "( batches / sec )",
       "emailIDs": "Email IDs",
       "errors": "Errors",
+      "eventsInfo": "Events Info",
       "badRecords": "Error Records",
       "badRecordsTab": {
         "mostRecentBadRecords": "Most Recent Error Records",

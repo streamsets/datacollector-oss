@@ -22,7 +22,6 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-
 // This class was originally generated, however it's now maintained manually
 @ApiModel(description = "")
 public class StageDefinitionJson   {
@@ -102,6 +101,7 @@ public class StageDefinitionJson   {
   private Integer inputStreams = null;
   private String inputStreamLabelProviderClass = null;
   private List<String> inputStreamLabels = null;
+  private List<String> eventDefs = new ArrayList<>();
 
   /**
    **/
@@ -509,4 +509,12 @@ public class StageDefinitionJson   {
   public void setInputStreamLabels(List<String> inputStreamLabels) {
     this.inputStreamLabels = inputStreamLabels;
   }
+
+  public List<String> getEventDefs() {
+    return eventDefs;
+  }
+  public void setEventDefs(List<String> eventDefs) {
+    this.eventDefs = eventDefs;
+  }
+
 }

@@ -220,7 +220,8 @@ public class StageDefinitionBuilder {
       false,
       false,
       -1,
-      null
+      null,
+        Collections.emptyList()
     );
   }
 

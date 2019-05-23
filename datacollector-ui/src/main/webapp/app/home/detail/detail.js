@@ -25,6 +25,11 @@ angular
       template: 'app/home/detail/info/info.tpl.html',
       iconClass: 'fa fa-info-circle'
     };
+    var eventsInfoTab = {
+      name: 'eventsInfo',
+      template: 'app/home/detail/eventsInfo/eventsInfo.tpl.html',
+      iconClass: 'fa fa-info-circle'
+    };
     var historyTab = {
       name: 'history',
       template: 'app/home/detail/history/history.tpl.html',
@@ -120,9 +125,7 @@ angular
             tabsList.push(externalLibrariesTab);
           }
 
-          if ($scope.detailPaneConfigDefn && $scope.detailPaneConfigDefn.rawSourceDefinition) {
-
-          }
+          tabsList.push(eventsInfoTab);
 
           return tabsList;
         case pipelineConstant.LINK:

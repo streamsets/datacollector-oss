@@ -21,6 +21,7 @@ import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.pipeline.api.ExecutionMode;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StageDefinitionJson {
@@ -172,5 +173,9 @@ public class StageDefinitionJson {
 
   public List<String> getInputStreamLabels() {
     return stageDefinition.getInputStreamLabels();
+  }
+
+  public List<String> getEventDefs() {
+    return stageDefinition.getEventDefs().stream().map(Class::getCanonicalName).collect(Collectors.toList());
   }
 }

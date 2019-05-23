@@ -38,6 +38,7 @@ import com.streamsets.datacollector.config.StageLibraryDelegateDefinitition;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
+import com.streamsets.datacollector.restapi.bean.EventDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.RepositoryManifestJson;
 import com.streamsets.datacollector.runner.preview.StageConfigurationBuilder;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -764,6 +765,11 @@ public class MockStages {
     }
 
     @Override
+    public Map<String, EventDefinitionJson> getEventDefinitions() {
+      return Collections.emptyMap();
+    }
+
+    @Override
     public void releaseStageClassLoader(ClassLoader classLoader) {
     }
 
@@ -1067,7 +1073,8 @@ public class MockStages {
               false,
               false,
               -1,
-              null
+              null,
+              Collections.emptyList()
           );
           stages.put(name, newDef);
         } else {

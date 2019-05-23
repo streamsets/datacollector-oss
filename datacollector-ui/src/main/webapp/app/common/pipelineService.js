@@ -81,12 +81,24 @@ angular.module('dataCollectorApp.common')
             self.serviceDefinitions = definitions.services;
             self.elCatalog = definitions.elCatalog;
             self.legacyStageLibs = definitions.legacyStageLibs;
+            self.eventDefinitions = definitions.eventDefinitions;
 
             self.betaStages = {};
             angular.forEach(self.stageDefinitions, function (stageDefinition) {
               if (stageDefinition.beta) {
                 self.betaStages[stageDefinition.name] = true;
               }
+
+              // process event definitions
+              if (stageDefinition.eventDefs && stageDefinition.eventDefs.length > 0) {
+                stageDefinition.events = [];
+                angular.forEach(stageDefinition.eventDefs, function (eventDefn) {
+                  if (definitions.eventDefinitions[eventDefn]) {
+                    stageDefinition.events.push(definitions.eventDefinitions[eventDefn]);
+                  }
+                });
+              }
+
             });
 
             self.serviceDefinitionsMap = {};

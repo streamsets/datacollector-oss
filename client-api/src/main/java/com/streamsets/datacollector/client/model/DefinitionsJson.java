@@ -32,6 +32,8 @@ public class DefinitionsJson {
   private Map<String, Object> elCatalog;
   private Set<Object> runtimeConfigs;
   private Map<String, String> stageIcons;
+  private List<String> legacyStageLibs;
+  private Map<String, EventDefinitionJson> eventDefinitions;
 
   public List<PipelineDefinitionJson> getPipeline() {
     return pipeline;
@@ -103,5 +105,21 @@ public class DefinitionsJson {
 
   public void setServices(List<ServiceDefinitionJson> services) {
     this.services = services;
+  }
+
+  public List<String> getLegacyStageLibs() {
+    return legacyStageLibs;
+  }
+
+  public void setLegacyStageLibs(List<String> legacyStageLibs) {
+    this.legacyStageLibs = legacyStageLibs;
+  }
+
+  public Map<String, EventDefinitionJson> getEventDefinitions() {
+    return eventDefinitions;
+  }
+
+  public void setEventDefinitions(Map<String, EventDefinitionJson> eventDefinitions) {
+    this.eventDefinitions = eventDefinitions;
   }
 }

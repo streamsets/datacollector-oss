@@ -43,6 +43,7 @@ import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StageLibraryDelegateDefinitition;
 import com.streamsets.datacollector.config.StatsTargetChooserValues;
 import com.streamsets.datacollector.definition.CredentialStoreDefinitionExtractor;
+import com.streamsets.datacollector.definition.EventDefinitionExtractor;
 import com.streamsets.datacollector.definition.InterceptorDefinitionExtractor;
 import com.streamsets.datacollector.definition.LineagePublisherDefinitionExtractor;
 import com.streamsets.datacollector.definition.ServiceDefinitionExtractor;
@@ -56,6 +57,7 @@ import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.SdcConfiguration;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
+import com.streamsets.datacollector.restapi.bean.EventDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.RepositoryManifestJson;
 import com.streamsets.datacollector.restapi.bean.StageInfoJson;
 import com.streamsets.datacollector.restapi.bean.StageLibrariesJson;
@@ -160,7 +162,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private ObjectMapper json;
   private KeyedObjectPool<String, ClassLoader> privateClassLoaderPool;
   private Map<String, Object> gaugeMap;
-
+  private final Map<String, EventDefinitionJson> eventDefinitionMap = new HashMap<>();
   private List<RepositoryManifestJson> repositoryManifestList = null;
 
   @Inject
@@ -553,6 +555,15 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
             LOG.debug("Loaded stage '{}'  version {}", key, stage.getVersion());
             stageList.add(stage);
             stageMap.put(key, stage);
+
+            for(Class eventDefClass : stage.getEventDefs()) {
+              if (!eventDefinitionMap.containsKey(eventDefClass.getCanonicalName())) {
+                eventDefinitionMap.put(
+                    eventDefClass.getCanonicalName(),
+                    EventDefinitionExtractor.get().extractEventDefinition(eventDefClass)
+                );
+              }
+            }
           }
 
           // Load Lineage publishers
@@ -1046,6 +1057,11 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       "streamsets-datacollector-mapr_5_1-lib",
       "streamsets-datacollector-mapr_5_2-lib"
     );
+  }
+
+  @Override
+  public Map<String, EventDefinitionJson> getEventDefinitions() {
+    return eventDefinitionMap;
   }
 
   private RepositoryManifestJson getRepositoryManifestFile(String repoUrl) {

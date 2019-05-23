@@ -1,0 +1,68 @@
+<div class="metric-alert-rules-tab" >
+  <div class="panel-heading clearfix">
+
+  </div>
+  <div class="panel-body">
+    <form class="form-horizontal" role="form"
+          ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
+          name="events-info">
+
+      <table class="table table-hover">
+        <thead>
+        <tr>
+          <th class="expand-col">
+              <span class="pointer toggler {{expandAll ? 'open' : ''}}"
+                    ng-click="expandAll = !expandAll"></span>
+          </th>
+          <th class="alert-text-col">Event Type (sdc.event.type)</th>
+          <th class="id-col">Description</th>
+        </tr>
+        </thead>
+        <tbody ng-hide="showLoading">
+
+        <tr ng-repeat-start="eventDefn in detailPaneConfigDefn.events track by $index"
+            ng-init="isOpen=false;"
+            ng-click="isOpen = !isOpen"
+            class="pointer">
+
+          <td>
+            <span class="toggler {{isOpen || expandAll ? 'open' : ''}}"
+                  ng-click="isOpen = !isOpen; $event.stopPropagation()"></span>
+          </td>
+
+          <td>{{eventDefn.type}}</td>
+
+          <td>{{eventDefn.description}}</td>
+
+        </tr>
+
+        <tr ng-repeat-end ng-if="isOpen || expandAll" class="expand-row">
+          <td colspan="3">
+            <ul class="table-properties">
+              <li ng-repeat="eventField in eventDefn.fields track by $index">
+                <span class="properties-label">
+                  {{eventField.name}}:
+                </span>
+                <span class="properties-value">
+                  {{eventField.description}}
+                </span>
+              </li>
+            </ul>
+
+          </td>
+        </tr>
+
+        <tr ng-if="detailPaneConfigDefn.events.length === 0">
+          <td colspan="3" class="no-records text-center">No Events.</td>
+        </tr>
+
+        </tbody>
+      </table>
+
+      <div show-loading="showLoading"></div>
+
+    </form>
+
+  </div>
+</div>
+

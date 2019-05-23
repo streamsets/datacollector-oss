@@ -27,23 +27,23 @@ import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.creation.PipelineFragmentConfigBean;
 import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
 import com.streamsets.datacollector.creation.StageConfigBean;
-import com.streamsets.pipeline.api.HideStage;
-import com.streamsets.pipeline.api.OffsetCommitTrigger;
-import com.streamsets.pipeline.api.OffsetCommitter;
-import com.streamsets.pipeline.api.PipelineLifecycleStage;
-import com.streamsets.pipeline.api.ProtoSource;
-import com.streamsets.pipeline.api.Source;
-import com.streamsets.pipeline.api.StageType;
-import com.streamsets.pipeline.api.StatsAggregatorStage;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Executor;
 import com.streamsets.pipeline.api.HideConfigs;
+import com.streamsets.pipeline.api.HideStage;
+import com.streamsets.pipeline.api.OffsetCommitTrigger;
+import com.streamsets.pipeline.api.OffsetCommitter;
+import com.streamsets.pipeline.api.PipelineLifecycleStage;
 import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.ProtoSource;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.StageType;
 import com.streamsets.pipeline.api.StageUpgrader;
+import com.streamsets.pipeline.api.StatsAggregatorStage;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -120,7 +120,7 @@ public abstract class StageDefinitionExtractor {
         errors.add(new ErrorMessage(DefinitionError.DEF_302, contextMsg));
       }
       boolean errorStage = klass.getAnnotation(ErrorStage.class) != null;
-      if (type != null && errorStage && type == StageType.SOURCE) {
+      if (errorStage && type == StageType.SOURCE) {
         errors.add(new ErrorMessage(DefinitionError.DEF_303, contextMsg));
       }
       if (OffsetCommitter.class.isAssignableFrom(klass) && !Source.class.isAssignableFrom(klass)) {
@@ -213,7 +213,7 @@ public abstract class StageDefinitionExtractor {
         boolean preconditions = !errorStage && type != StageType.SOURCE &&
             ((hideConfigs == null) || !hideConfigs.preconditions());
         boolean onRecordError = !errorStage && ((hideConfigs == null) || !hideConfigs.onErrorRecord());
-        List<ConfigDefinition> configDefinitions = extractConfigDefinitions(libraryDef, klass, hideConfigs, new ArrayList<ErrorMessage>(), contextMsg);
+        List<ConfigDefinition> configDefinitions = extractConfigDefinitions(libraryDef, klass, hideConfigs, new ArrayList<>(), contextMsg);
         RawSourceDefinition rawSourceDefinition = RawSourceDefinitionExtractor.get().extract(klass, contextMsg);
         ConfigGroupDefinition configGroupDefinition = ConfigGroupExtractor.get().extract(klass, contextMsg);
         String outputStreamLabelProviderClass = (!type.isOneOf(StageType.TARGET, StageType.EXECUTOR)) ? sDef.outputStreams().getName() : null;
@@ -241,7 +241,7 @@ public abstract class StageDefinitionExtractor {
         // If not a stage library, then dont add stage system configs
         if (!PipelineBeanCreator.PIPELINE_LIB_DEFINITION.equals(libraryDef.getName())) {
           List<ConfigDefinition> systemConfigs =
-            ConfigDefinitionExtractor.get().extract(StageConfigBean.class, Collections.<String> emptyList(),
+            ConfigDefinitionExtractor.get().extract(StageConfigBean.class, Collections.emptyList(),
               "systemConfigs");
 
           for (ConfigDefinition def : systemConfigs) {
@@ -290,6 +290,8 @@ public abstract class StageDefinitionExtractor {
           OffsetCommitTrigger.class.isAssignableFrom(klass);
         boolean producesEvents = sDef.producesEvents();
 
+        List<Class> eventDefs = ImmutableList.copyOf(sDef.eventDefs());
+
         return new StageDefinition(
             sDef,
             libraryDef,
@@ -325,7 +327,8 @@ public abstract class StageDefinitionExtractor {
             sDef.sendsResponse(),
             sDef.beta(),
             inputStreams,
-            inputStreamLabelProviderClass
+            inputStreamLabelProviderClass,
+            eventDefs
         );
       } catch (Exception e) {
         throw new IllegalStateException("Exception while extracting stage definition for " + getStageName(klass), e);
@@ -345,7 +348,7 @@ public abstract class StageDefinitionExtractor {
 
     Set<String> hideConfigSet = (hideConfigs != null) ?
       new HashSet<>(Arrays.asList(hideConfigs.value())) :
-      Collections.<String>emptySet();
+      Collections.emptySet();
 
     if (!hideConfigSet.isEmpty()) {
       Iterator<ConfigDefinition> iterator = cDefs.iterator();
@@ -411,5 +414,4 @@ public abstract class StageDefinitionExtractor {
     }
     return errors;
   }
-
 }

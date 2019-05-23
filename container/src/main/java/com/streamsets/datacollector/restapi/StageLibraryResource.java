@@ -38,7 +38,6 @@ import com.streamsets.datacollector.restapi.bean.StageLibraryExtrasJson;
 import com.streamsets.datacollector.restapi.bean.StageLibraryManifestJson;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.AuthzRole;
-import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.RestException;
 import com.streamsets.datacollector.util.Version;
 import com.streamsets.pipeline.api.HideStage;
@@ -185,6 +184,8 @@ public class StageLibraryResource {
     definitions.setRuntimeConfigs(RuntimeEL.getRuntimeConfKeys());
 
     definitions.setLegacyStageLibs(stageLibrary.getLegacyStageLibs());
+
+    definitions.setEventDefinitions(stageLibrary.getEventDefinitions());
 
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(definitions).build();
   }
