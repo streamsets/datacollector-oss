@@ -143,6 +143,9 @@ public class HttpProcessor extends SingleLaneProcessor {
   @Override
   public void destroy() {
     httpClientCommon.destroy();
+    if(parserFactory!=null) {
+      parserFactory.destroy();
+    }
     super.destroy();
   }
 

@@ -77,6 +77,7 @@ public class TextDataParserFactory extends DataParserFactory {
   @Override
   public void destroy() {
     if (stringBuilderPool != null) {
+      stringBuilderPool.clear();
       stringBuilderPool.close();
     }
 
