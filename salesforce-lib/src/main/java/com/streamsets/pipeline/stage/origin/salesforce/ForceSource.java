@@ -38,7 +38,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
-import com.streamsets.pipeline.lib.event.CommonEvents;
+import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 import com.streamsets.pipeline.lib.salesforce.BulkRecordCreator;
 import com.streamsets.pipeline.lib.salesforce.ChangeDataCaptureRecordCreator;
 import com.streamsets.pipeline.lib.salesforce.Errors;
@@ -467,7 +467,7 @@ public class ForceSource extends BaseSource {
 
     // send event only once for each time we run out of data.
     if(shouldSendNoMoreDataEvent) {
-      CommonEvents.NO_MORE_DATA.create(getContext()).createAndSend();
+      NoMoreDataEvent.EVENT_CREATOR.create(getContext()).createAndSend();
       shouldSendNoMoreDataEvent = false;
       return lastSourceOffset;
     }

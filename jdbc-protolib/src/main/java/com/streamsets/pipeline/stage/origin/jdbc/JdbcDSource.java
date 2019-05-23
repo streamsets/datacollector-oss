@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.configurablestage.DSource;
 import com.streamsets.pipeline.lib.el.OffsetEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.UnknownTypeAction;
 import com.streamsets.pipeline.lib.jdbc.UnknownTypeActionChooserValues;
@@ -41,6 +42,7 @@ import com.streamsets.pipeline.lib.jdbc.UnknownTypeActionChooserValues;
     recordsByRef = true,
     resetOffset = true,
     producesEvents = true,
+    eventDefs = {NoMoreDataEvent.class},
     onlineHelpRefUrl ="index.html?contextID=task_ryz_tkr_bs"
 )
 @ConfigGroups(value = Groups.class)

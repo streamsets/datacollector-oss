@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DSource;
+import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 import com.streamsets.pipeline.lib.salesforce.ForceSourceConfigBean;
 
 @StageDef(
@@ -34,6 +35,7 @@ import com.streamsets.pipeline.lib.salesforce.ForceSourceConfigBean;
     recordsByRef = true,
     resetOffset = true,
     producesEvents = true,
+    eventDefs = {NoMoreDataEvent.class},
     upgrader = ForceSourceUpgrader.class,
     onlineHelpRefUrl ="index.html?contextID=task_h1n_bs3_rx"
 )

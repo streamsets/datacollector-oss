@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.event.CommonEvents;
+import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.mongodb.Errors;
 import com.streamsets.pipeline.stage.common.mongodb.Groups;
@@ -284,9 +284,9 @@ public class MongoDBSource extends AbstractMongoDBSource {
 
   private void conditionallyGenerateNoMoreDataEvent() {
     if(recordsSinceLastNMREvent != 0 || errorRecordsSinceLastNMREvent != 0) {
-      CommonEvents.NO_MORE_DATA.create(getContext())
-          .with("record-count", recordsSinceLastNMREvent)
-          .with("error-count", errorRecordsSinceLastNMREvent)
+      NoMoreDataEvent.EVENT_CREATOR.create(getContext())
+          .with(NoMoreDataEvent.RECORD_COUNT, recordsSinceLastNMREvent)
+          .with(NoMoreDataEvent.ERROR_COUNT, errorRecordsSinceLastNMREvent)
           .createAndSend();
       recordsSinceLastNMREvent = 0;
       errorRecordsSinceLastNMREvent = 0;

@@ -35,7 +35,7 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.ELUtils;
-import com.streamsets.pipeline.lib.event.CommonEvents;
+import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 import com.streamsets.pipeline.lib.jdbc.multithread.ConnectionManager;
 import com.streamsets.pipeline.lib.jdbc.multithread.DatabaseVendor;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
@@ -1194,7 +1194,7 @@ public class JdbcUtil {
   public void generateNoMoreDataEvent(PushSource.Context context) {
     LOG.info("No More data to process, Triggered No More Data Event");
     BatchContext batchContext = context.startBatch();
-    CommonEvents.NO_MORE_DATA.create(context, batchContext).createAndSend();
+    NoMoreDataEvent.EVENT_CREATOR.create(context, batchContext).createAndSend();
     context.processBatch(batchContext);
   }
 

@@ -30,8 +30,8 @@ import com.streamsets.pipeline.api.lineage.EndPointType;
 import com.streamsets.pipeline.api.lineage.LineageEvent;
 import com.streamsets.pipeline.api.lineage.LineageEventType;
 import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
-import com.streamsets.pipeline.lib.event.CommonEvents;
 import com.streamsets.pipeline.lib.event.EventCreator;
+import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
@@ -511,9 +511,9 @@ public class JdbcSource extends BaseSource {
   }
 
   private void generateNoMoreDataEvent() {
-    CommonEvents.NO_MORE_DATA.create(getContext())
-      .with("record-count", noMoreDataRecordCount)
-      .createAndSend();
+    NoMoreDataEvent.EVENT_CREATOR.create(getContext())
+        .with(NoMoreDataEvent.RECORD_COUNT, noMoreDataRecordCount)
+        .createAndSend();
     noMoreDataRecordCount = 0;
   }
 

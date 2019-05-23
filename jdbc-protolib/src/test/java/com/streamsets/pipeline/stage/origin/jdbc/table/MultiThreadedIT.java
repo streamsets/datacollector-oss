@@ -22,7 +22,7 @@ import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.lib.event.CommonEvents;
+import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 import com.streamsets.pipeline.lib.jdbc.multithread.BatchTableStrategy;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableJdbcEvents;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
@@ -57,16 +57,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.collection.IsMapContaining.hasKey;
 
 public class MultiThreadedIT extends BaseTableJdbcSourceIT {
   private static final Logger LOG = LoggerFactory.getLogger(MultiThreadedIT.class);
@@ -255,7 +248,7 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
             // somehow, items in the event records can occasionally be null
             continue;
           }
-          if (CommonEvents.NO_MORE_DATA_TAG.equals(eventRecord.getEventType())) {
+          if (NoMoreDataEvent.NO_MORE_DATA_TAG.equals(eventRecord.getEventType())) {
             noMoreDataEvent.set(true);
             break;
           }
@@ -341,7 +334,7 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
             allTablesField.getValueAsList().forEach(field -> allSchemaTables.add(field.getValueAsString()));
             assertEquals(allSchemaTables, tables);
             break;
-          case CommonEvents.NO_MORE_DATA_TAG:
+          case NoMoreDataEvent.NO_MORE_DATA_TAG:
             noMoreDataEvent = true;
             break;
         }

@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DSource;
+import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 
 @StageDef(
     version = 1,
@@ -31,6 +32,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DSource;
     recordsByRef = true,
     resetOffset = true,
     producesEvents = true,
+    eventDefs = {NoMoreDataEvent.class},
     onlineHelpRefUrl ="index.html?contextID=task_wzm_2rl_nbb"
 )
 @ConfigGroups(value = Groups.class)

@@ -31,7 +31,7 @@ import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.lib.event.CommonEvents;
+import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.parser.DataParser;
@@ -151,10 +151,11 @@ public class GoogleCloudStorageSource extends BaseSource {
                 noMoreDataErrorCount,
                 noMoreDataFileCount
             );
-            CommonEvents.NO_MORE_DATA.create(getContext()).with("record-count", noMoreDataRecordCount).with("error" +
-                    "-count",
-                noMoreDataErrorCount
-            ).with("file-count", noMoreDataFileCount).createAndSend();
+            NoMoreDataEvent.EVENT_CREATOR.create(getContext())
+                .with(NoMoreDataEvent.RECORD_COUNT, noMoreDataRecordCount)
+                .with(NoMoreDataEvent.ERROR_COUNT, noMoreDataErrorCount)
+                .with(NoMoreDataEvent.FILE_COUNT, noMoreDataFileCount)
+                .createAndSend();
             noMoreDataRecordCount = 0;
             noMoreDataErrorCount = 0;
             noMoreDataFileCount = 0;
