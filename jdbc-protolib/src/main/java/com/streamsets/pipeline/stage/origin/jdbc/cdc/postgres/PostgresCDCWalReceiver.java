@@ -141,7 +141,7 @@ public class PostgresCDCWalReceiver {
         }
       }
     } catch (SQLException e) {
-      throw new StageException(JDBC_00);
+      throw new StageException(JDBC_00, e.getMessage(), e);
     }
   }
 
@@ -217,7 +217,7 @@ public class PostgresCDCWalReceiver {
           preparedStatement.execute();
       }
     } catch (SQLException e) {
-      throw new StageException(JDBC_407, slotName);
+      throw new StageException(JDBC_407, slotName, e);
     }
   }
 
@@ -248,7 +248,7 @@ public class PostgresCDCWalReceiver {
       }
 
     } catch (SQLException e) {
-      throw new StageException(JDBC_407, slotName);
+      throw new StageException(JDBC_407, slotName, e);
     }
   }
 
@@ -299,7 +299,7 @@ public class PostgresCDCWalReceiver {
       stream.forceUpdateStatus();
     } catch (SQLException e) {
       LOG.error("Error forcing update status: {}", e.getMessage());
-      throw new StageException(JDBC_00, " forceUpdateStatus failed :"+e.getMessage());
+      throw new StageException(JDBC_00, " forceUpdateStatus failed :"+e.getMessage(), e);
     }
   }
 
@@ -331,7 +331,7 @@ public class PostgresCDCWalReceiver {
           hikariConfigBean.username.get(),
           hikariConfigBean.password.get());
     } catch (SQLException e) {
-      throw new StageException((JDBC_00));
+      throw new StageException(JDBC_00, e.getMessage(), e);
     }
 
     this.slotName = configBean.slot;
