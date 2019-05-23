@@ -17,6 +17,7 @@ package com.streamsets.pipeline.lib.remote;
 
 import com.google.common.io.Files;
 import net.schmizz.sshj.SSHClient;
+import net.schmizz.sshj.sftp.FileAttributes;
 import net.schmizz.sshj.sftp.FileMode;
 import net.schmizz.sshj.sftp.RemoteFile;
 import net.schmizz.sshj.sftp.SFTPClient;
@@ -25,6 +26,7 @@ import net.schmizz.sshj.transport.TransportException;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
@@ -95,6 +97,25 @@ public class TestChrootSFTPClient extends SSHDUnitTest {
     // relative path
     new ChrootSFTPClient(sshClient.newSFTPClient(), "blah", true, true, false);
     Assert.assertTrue(new File(path + "/blah").exists());
+  }
+
+  @Test
+  public void testRootConcatRelativeSeparator() throws Exception {
+    // Can't use SSHD because we need to access the root of the disk for these tests, which we might not have permission
+    // so we'll need to mock things instead
+    String[] values = getConcatRelativeSeparatorValues();
+    for (int i = 0; i < getConcatRelativeSeparatorValues().length; i+=3) {
+      String userDir = values[i];
+      String root = values[i+1];
+      String expected = values[i+2];
+
+      SFTPClient sftpClient = Mockito.mock(SFTPClient.class);
+      Mockito.when(sftpClient.canonicalize(".")).thenReturn(userDir);
+      Mockito.when(sftpClient.statExistence(Mockito.anyString())).thenReturn(FileAttributes.EMPTY);
+
+      new ChrootSFTPClient(sftpClient, root, true, false, false);
+      Mockito.verify(sftpClient).statExistence(expected);
+    }
   }
 
   @Test
@@ -658,6 +679,27 @@ public class TestChrootSFTPClient extends SSHDUnitTest {
   }
 
   @Test
+  public void testArchiveConcatRelativeSeparator() throws Exception {
+    // Can't use SSHD because we need to access the root of the disk for these tests, which we might not have permission
+    // so we'll need to mock things instead
+    String[] values = getConcatRelativeSeparatorValues();
+    for (int i = 0; i < getConcatRelativeSeparatorValues().length; i+=3) {
+      String userDir = values[i];
+      String archiveDir = values[i+1];
+      String expected = values[i+2];
+
+      SFTPClient sftpClient = Mockito.mock(SFTPClient.class);
+      Mockito.when(sftpClient.canonicalize(".")).thenReturn(userDir);
+      Mockito.when(sftpClient.statExistence(Mockito.anyString())).thenReturn(FileAttributes.EMPTY);
+
+      ChrootSFTPClient chrootSFTPClient = new ChrootSFTPClient(sftpClient, "/root", true, false, false);
+      chrootSFTPClient.setArchiveDir(archiveDir, true);
+      chrootSFTPClient.archive("/path");
+      Mockito.verify(sftpClient).rename(Mockito.anyString(), Mockito.eq(Paths.get(expected, "/path").toString()));
+    }
+  }
+
+  @Test
   public void testRename() throws Exception {
     String text = "hello";
     File sourceFile = testFolder.newFile("source.txt");
@@ -843,5 +885,24 @@ public class TestChrootSFTPClient extends SSHDUnitTest {
   private String getParentDir(String path) {
     int index = path.lastIndexOf("/");
     return path.substring(0, index);
+  }
+
+  private String[] getConcatRelativeSeparatorValues() {
+    String[] values = new String[]{
+        "/", "blah", "/blah",
+        "/", "/blah", "/blah",
+        "/", "/", "/",
+        "/", "", "/",
+        "/foo", "blah", "/foo/blah",
+        "/foo", "/blah", "/foo/blah",
+        "/foo/", "blah", "/foo/blah",
+        "/foo/", "/blah", "/foo/blah",
+        "/foo", "/", "/foo",
+        "/foo", "", "/foo",
+        "/foo/", "/", "/foo",
+        "/foo/", "", "/foo",
+    };
+    Assert.assertEquals("values length should be divisible by 3", 0, values.length % 3);    // sanity check
+    return values;
   }
 }

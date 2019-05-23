@@ -45,7 +45,6 @@ public class ChrootSFTPClient {
   private final String root;
   private String archiveDir;
   private SFTPClient sftpClient;
-  private final String pathSeparator;
   private final boolean disableReadAheadStream;
 
   /**
@@ -74,9 +73,9 @@ public class ChrootSFTPClient {
   ) throws
       IOException {
     this.sftpClient = sftpClient;
-    this.pathSeparator = sftpClient.getSFTPEngine().getPathHelper().getPathSeparator();
     if (rootRelativeToUserDir) {
-      root = sftpClient.canonicalize(".") + (root.startsWith(pathSeparator) ? root : pathSeparator + root);
+      String userDir = sftpClient.canonicalize(".");
+      root = Paths.get(userDir, root).toString();
     }
     if (sftpClient.statExistence(root) == null) {
       if (makeRoot) {
@@ -94,18 +93,15 @@ public class ChrootSFTPClient {
   }
 
   private String prependRoot(String path) {
-    if (path.startsWith(pathSeparator) && !path.isEmpty()) {
-      path = path.substring(1);
-    }
-    return sftpClient.getSFTPEngine().getPathHelper().adjustForParent(root, path);
+    return Paths.get(root, path).toString();
   }
 
   private String prependArchiveDir(String path) {
-    return archiveDir + (path.startsWith(pathSeparator) ? path : pathSeparator + path);
+    return Paths.get(archiveDir, path).toString();
   }
 
   private String removeRoot(String path) {
-    return pathSeparator + Paths.get(root).relativize(Paths.get(path)).toString();
+    return "/" + Paths.get(root).relativize(Paths.get(path)).toString();
   }
 
   public List<SimplifiedRemoteResourceInfo> ls() throws IOException {
@@ -152,7 +148,7 @@ public class ChrootSFTPClient {
   public OutputStream openForWriting(String path) throws IOException {
     String toPath = prependRoot(path);
     // Create the toPath's parent dir(s) if they don't exist
-    String toDir = sftpClient.getSFTPEngine().getPathHelper().getComponents(toPath).getParent();
+    String toDir = Paths.get(toPath).getParent().toString();
     sftpClient.mkdirs(toDir);
     RemoteFile remoteFile = sftpClient.open(
         toPath,
@@ -177,12 +173,8 @@ public class ChrootSFTPClient {
   public void setArchiveDir(String archiveDir, boolean archiveDirRelativeToUserDir) throws IOException {
     if (archiveDir != null) {
       if (archiveDirRelativeToUserDir) {
-        archiveDir = sftpClient.canonicalize(".") + (
-            archiveDir.startsWith(pathSeparator) ? archiveDir : pathSeparator + archiveDir
-        );
-      }
-      if (archiveDir.endsWith(pathSeparator)) {
-        archiveDir = archiveDir.substring(0, archiveDir.length() - 1);
+        String userDir = sftpClient.canonicalize(".");
+        archiveDir = Paths.get(userDir, archiveDir).toString();
       }
     }
     this.archiveDir = archiveDir;
@@ -206,7 +198,7 @@ public class ChrootSFTPClient {
 
   private void renameInternal(String fromPath, String toPath, boolean deleteExists) throws IOException {
     // Create the toPath's parent dir(s) if they don't exist
-    String toDir = sftpClient.getSFTPEngine().getPathHelper().getComponents(toPath).getParent();
+    String toDir = Paths.get(toPath).getParent().toString();
     sftpClient.mkdirs(toDir);
     // Delete the target if it already exists
     if (deleteExists && sftpClient.statExistence(toPath) != null) {
