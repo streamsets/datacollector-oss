@@ -314,7 +314,6 @@
         <dependency>
             <groupId>com.streamsets</groupId>
             <artifactId>streamsets-datacollector-kafka_source-protolib</artifactId>
-            <version>${project.version}</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
@@ -330,7 +329,6 @@
         <dependency>
             <groupId>com.streamsets</groupId>
             <artifactId>streamsets-datacollector-kafka_multisource-0_10-protolib</artifactId>
-            <version>${project.version}</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
@@ -346,7 +344,6 @@
         <dependency>
             <groupId>com.streamsets</groupId>
             <artifactId>streamsets-datacollector-kafka_target-protolib</artifactId>
-            <version>${project.version}</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
@@ -1041,6 +1038,24 @@
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.streamsets</groupId>
+            <artifactId>streamsets-datacollector-kafka_source-protolib</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.streamsets</groupId>
+            <artifactId>streamsets-datacollector-kafka_multisource-0_10-protolib</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.streamsets</groupId>
+            <artifactId>streamsets-datacollector-kafka_target-protolib</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 
@@ -1066,9 +1081,6 @@
                                 <source>${basedir}/../kudu-protolib/src/test/java</source>
                                 <source>${basedir}/../mapreduce-protolib/src/test/java</source>
                                 <source>${basedir}/../solr-protolib/src/test/java</source>
-                                <source>${basedir}/../kafka_target-protolib/src/test/java</source>
-                                <source>${basedir}/../kafka_source-protolib/src/test/java</source>
-                                <source>${basedir}/../kafka_multisource-0_10-protolib/src/test/java</source>
                                 <source>${basedir}/../spark-executor-protolib/src/test/java</source>
                                 <source>${basedir}/../spark-processor-protolib/src/test/java</source>
                             </sources>
@@ -1099,9 +1111,6 @@
                                 </resource>
                                 <resource>
                                     <directory>${basedir}/../cluster-hdfs-protolib/src/test/resources</directory>
-                                </resource>
-                                <resource>
-                                    <directory>${basedir}/../kafka_target-protolib/src/test/resources</directory>
                                 </resource>
                             </resources>
                         </configuration>

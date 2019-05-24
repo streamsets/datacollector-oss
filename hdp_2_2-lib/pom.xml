@@ -259,12 +259,10 @@
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-kafka_source-protolib</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-kafka_target-protolib</artifactId>
-      <version>${project.version}</version>
     </dependency>
 
     <dependency>
@@ -331,6 +329,19 @@
       <artifactId>streamsets-datacollector-dir-spooler-protolib</artifactId>
       <type>test-jar</type>
       <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-kafka_source-protolib</artifactId>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-kafka_target-protolib</artifactId>
+      <type>test-jar</type>
       <scope>test</scope>
     </dependency>
 
@@ -435,8 +446,6 @@
                 <source>${basedir}/../hive-protolib/src/test/java</source>
                 <source>${basedir}/../hbase-protolib/src/test/java</source>
                 <source>${basedir}/../flume-protolib/src/test/java</source>
-                <source>${basedir}/../kafka_source-protolib/src/test/java</source>
-                <source>${basedir}/../kafka_target-protolib/src/test/java</source>
                 <source>${basedir}/../cluster-hdfs-protolib/src/test/java</source>
               </sources>
             </configuration>
@@ -463,12 +472,6 @@
                 </resource>
                 <resource>
                   <directory>${basedir}/../flume-protolib/src/test/resources</directory>
-                </resource>
-                <resource>
-                  <directory>${basedir}/../kafka_source-protolib/src/test/resources</directory>
-                </resource>
-                <resource>
-                  <directory>${basedir}/../kafka_target-protolib/src/test/resources</directory>
                 </resource>
                 <resource>
                   <directory>${basedir}/../cluster-hdfs-protolib/src/test/resources</directory>

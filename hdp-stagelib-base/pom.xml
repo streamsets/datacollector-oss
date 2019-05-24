@@ -303,6 +303,7 @@
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-kafka_source-protolib</artifactId>
+        <version>${project.version}</version>
         <scope>compile</scope>
         <exclusions>
           <exclusion>
@@ -319,6 +320,7 @@
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-kafka_multisource-0_10-protolib</artifactId>
+        <version>${project.version}</version>
         <scope>compile</scope>
         <exclusions>
           <exclusion>
@@ -335,6 +337,7 @@
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-kafka_target-protolib</artifactId>
+        <version>${project.version}</version>
         <scope>compile</scope>
         <exclusions>
           <exclusion>

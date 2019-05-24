@@ -271,17 +271,14 @@
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-kafka_source-protolib</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-kafka_multisource-0_10-protolib</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-kafka_target-protolib</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
@@ -390,6 +387,25 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-kafka_source-protolib</artifactId>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-kafka_multisource-protolib</artifactId>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-kafka_target-protolib</artifactId>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -410,9 +426,6 @@
                 <source>${basedir}/../hdfs-protolib/src/test/java</source>
                 <source>${basedir}/../mapreduce-protolib/src/test/java</source>
                 <source>${basedir}/../hbase-protolib/src/test/java</source>
-                <source>${basedir}/../kafka_source-protolib/src/test/java</source>
-                <source>${basedir}/../kafka_multisource-protolib/src/test/java</source>
-                <source>${basedir}/../kafka_target-protolib/src/test/java</source>
                 <source>${basedir}/../cluster-hdfs-protolib/src/test/java</source>
               </sources>
             </configuration>
@@ -433,15 +446,6 @@
                 </resource>
                 <resource>
                   <directory>${basedir}/../hbase-protolib/src/test/resources</directory>
-                </resource>
-                <resource>
-                  <directory>${basedir}/../kafka_source-protolib/src/test/resources</directory>
-                </resource>
-                <resource>
-                  <directory>${basedir}/../kafka_multisource-protolib/src/test/resources</directory>
-                </resource>
-                <resource>
-                  <directory>${basedir}/../kafka_target-protolib/src/test/resources</directory>
                 </resource>
                 <resource>
                   <directory>${basedir}/../cluster-hdfs-protolib/src/test/resources</directory>

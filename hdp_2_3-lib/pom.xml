@@ -236,12 +236,10 @@
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-kafka_source-protolib</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-kafka_target-protolib</artifactId>
-      <version>${project.version}</version>
     </dependency>
 
     <dependency>
@@ -316,7 +314,6 @@
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.bouncycastle</groupId>
       <artifactId>bcprov-jdk15on</artifactId>
@@ -333,6 +330,18 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-kafka-common</artifactId>
       <version>${project.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-kafka_source-protolib</artifactId>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-kafka_target-protolib</artifactId>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
@@ -362,10 +371,6 @@
                 <source>${basedir}/../mapreduce-protolib/src/test/java</source>
                 <source>${basedir}/../hbase-protolib/src/test/java</source>
                 <source>${basedir}/../flume-protolib/src/test/java</source>
-                <!-- See SDC-2982. We're skipping Kafka tests intentionally.
-                <source>${basedir}/../kafka_source-protolib/src/test/java</source>
-                <source>${basedir}/../kafka_target-protolib/src/test/java</source>
-                -->
                 <source>${basedir}/../cluster-hdfs-protolib/src/test/java</source>
               </sources>
             </configuration>
@@ -389,12 +394,6 @@
                 </resource>
                 <resource>
                   <directory>${basedir}/../flume-protolib/src/test/resources</directory>
-                </resource>
-                <resource>
-                  <directory>${basedir}/../kafka_source-protolib/src/test/resources</directory>
-                </resource>
-                <resource>
-                  <directory>${basedir}/../kafka_target-protolib/src/test/resources</directory>
                 </resource>
                 <resource>
                   <directory>${basedir}/../cluster-hdfs-protolib/src/test/resources</directory>

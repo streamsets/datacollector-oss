@@ -92,7 +92,6 @@
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-kafka_source-protolib</artifactId>
-      <version>${project.version}</version>
       <scope>compile</scope>
       <exclusions>
         <exclusion>
