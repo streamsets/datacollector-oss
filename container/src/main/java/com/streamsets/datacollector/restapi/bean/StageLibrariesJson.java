@@ -26,6 +26,7 @@ public class StageLibrariesJson {
   private String stagelibVersion;
   private String stagelibManifestSha1;
   private String stagelibManifestSha256;
+  private boolean legacy;
   private StageLibraryManifestJson stageLibraryManifest;
 
   public StageLibrariesJson() {
@@ -75,6 +76,14 @@ public class StageLibrariesJson {
 
   public void setStagelibManifestSha256(String stagelibManifestSha256) {
     this.stagelibManifestSha256 = stagelibManifestSha256;
+  }
+
+  public boolean isLegacy() {
+    return legacy;
+  }
+
+  public void setLegacy(boolean legacy) {
+    this.legacy = legacy;
   }
 
   public StageLibraryManifestJson getStageLibraryManifest() {

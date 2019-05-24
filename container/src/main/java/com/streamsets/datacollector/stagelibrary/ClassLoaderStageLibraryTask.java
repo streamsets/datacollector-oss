@@ -131,6 +131,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private static final String LATEST = "latest";
   private static final String SNAPSHOT = "-SNAPSHOT";
   private static final String TARBALL_PATH = "/tarball/";
+  private static final String LEGACY_TARBALL_PATH = "/legacy/";
   private static final String ENTERPRISE_PATH = "enterprise/";
   private static final String CONFIG_PACKAGE_MANAGER_REPOSITORY_LINKS = "package.manager.repository.links";
   private static final String REPOSITORY_MANIFEST_JSON_PATH = "repository.manifest.json";
@@ -340,6 +341,9 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     this.gaugeMap.put(PRIVATE_POOL_ACTIVE, new AtomicInteger(0));
     this.gaugeMap.put(PRIVATE_POOL_IDLE, new AtomicInteger(0));
     this.gaugeMap.put(PRIVATE_POOL_MAX, maxPrivateClassloaders);
+
+    // auto load stage library definitions
+    getRepositoryManifestList();
   }
 
   /**
@@ -926,12 +930,15 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       if (StringUtils.isEmpty(repoLinksStr)) {
         String version = buildInfo.getVersion();
         String repoUrl = ARCHIVES_URL + version + TARBALL_PATH;
+        String legacyRepoUrl = ARCHIVES_URL + version + LEGACY_TARBALL_PATH;
         if (version.contains(SNAPSHOT)) {
           repoUrl = NIGHTLY_URL + LATEST + TARBALL_PATH;
+          legacyRepoUrl = NIGHTLY_URL + LATEST + LEGACY_TARBALL_PATH;
         }
         repoURLList = new String[] {
             repoUrl,
-            repoUrl + ENTERPRISE_PATH
+            repoUrl + ENTERPRISE_PATH,
+            legacyRepoUrl
         };
       } else {
         repoURLList = repoLinksStr.split(",");
@@ -983,6 +990,9 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
               );
               stageLibraryManifestJson.setStageLibFile(repoUrl + stageLibraryManifestJson.getStageLibFile());
               stageLibrariesJson.setStageLibraryManifest(stageLibraryManifestJson);
+              if (repoUrl.contains(LEGACY_TARBALL_PATH)) {
+                stageLibrariesJson.setLegacy(true);
+              }
               addedLibraryIds.add(stageLibraryManifestJson.getStageLibId());
             }
           }

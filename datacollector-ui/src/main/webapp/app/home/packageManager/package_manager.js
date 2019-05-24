@@ -52,6 +52,7 @@ angular
         'All Stage Libraries',
         'Installed Stage Libraries',
         'Enterprise Stage Libraries',
+        'Legacy Stage Libraries',
         'Machine Learning',
         'Amazon Web Services',
         'Apache Kafka',
@@ -124,6 +125,11 @@ angular
             $scope.filteredStageLibraries = _.filter($scope.stageLibraries, function(stageLibrary) {
               return stageLibrary.stageLibraryManifest && regex.test(stageLibrary.stageLibraryManifest.stageLibLabel) &&
                 stageLibrary.stageLibraryManifest.stageLibLicense === 'StreamSetsEnterprise1.0';
+            });
+            break;
+          case 'Legacy Stage Libraries':
+            $scope.filteredStageLibraries = _.filter($scope.stageLibraries, function(stageLibrary) {
+              return stageLibrary.legacy;
             });
             break;
           case 'Machine Learning':
