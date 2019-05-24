@@ -16,9 +16,9 @@
 package com.streamsets.pipeline.stage.origin.hdfs.spooler;
 
 import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
-import com.streamsets.pipeline.lib.io.fileref.AbstractSpoolerFileRef;
 import com.streamsets.pipeline.lib.dirspooler.WrappedFile;
 import com.streamsets.pipeline.lib.dirspooler.WrappedFileSystem;
+import com.streamsets.pipeline.lib.io.fileref.AbstractSpoolerFileRef;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.fs.FileStatus;
@@ -170,7 +170,7 @@ public class HdfsFileSystem implements WrappedFileSystem {
     }
   }
 
-  public void addDirectory(WrappedFile dirPath, List<WrappedFile> directories) throws Exception {
+  public void addDirectory(WrappedFile dirPath, List<WrappedFile> directories) throws IOException {
     PathFilter pathFilter = new PathFilter() {
       @Override
       public boolean accept(Path entry) {
@@ -179,6 +179,7 @@ public class HdfsFileSystem implements WrappedFileSystem {
           if (fileStatus.isDirectory()) {
             if (processSubdirectories) {
               directories.add(new HdfsFile(fs, entry));
+              addDirectory(getFile(entry.toString()), directories);
             }
             return false;
           }
@@ -190,6 +191,10 @@ public class HdfsFileSystem implements WrappedFileSystem {
     };
 
     fs.globStatus(new Path(dirPath.getAbsolutePath(), "*"), pathFilter);
+
+    if (!directories.contains(dirPath)) {
+      directories.add(dirPath);
+    }
   }
 
   public WrappedFile getFile(String filePath) {
