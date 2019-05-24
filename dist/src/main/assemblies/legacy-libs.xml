@@ -129,10 +129,6 @@
       <directory>${basedir}/../${mapr_5_1-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/</outputDirectory>
     </fileSet>
-    <fileSet>
-      <directory>${basedir}/../${mapr_5_2-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/</outputDirectory>
-    </fileSet>
 
     <!-- Apache Kudu libs -->
     <fileSet>
