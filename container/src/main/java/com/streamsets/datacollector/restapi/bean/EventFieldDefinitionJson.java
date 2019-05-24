@@ -23,7 +23,6 @@ public class EventFieldDefinitionJson {
   private final String description;
   private final boolean optional;
 
-
   public EventFieldDefinitionJson(
       String name,
       String description,

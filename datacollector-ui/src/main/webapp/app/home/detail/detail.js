@@ -125,7 +125,9 @@ angular
             tabsList.push(externalLibrariesTab);
           }
 
-          tabsList.push(eventsInfoTab);
+          if ($scope.detailPaneConfigDefn.producingEvents) {
+            tabsList.push(eventsInfoTab);
+          }
 
           return tabsList;
         case pipelineConstant.LINK:
