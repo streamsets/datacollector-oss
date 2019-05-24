@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2019 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,27 @@ package com.streamsets.pipeline.destination.aerospike;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
+import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 
 import java.util.List;
 
 public class AerospikeTargetUpgrader implements StageUpgrader {
   @Override
-  public List<Config> upgrade(String library, String stageName, String stageInstance, int fromVersion, int toVersion, List<Config> configs) throws StageException {
-    return null;
+  public List<Config> upgrade(List<Config> configs, Context context) throws StageException {
+    switch (context.getFromVersion()) {
+      case 1:
+        upgradeV1ToV2(configs);
+        break;
+      default:
+        throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", context.getFromVersion()));
+    }
+    return configs;
   }
+
+  private static void upgradeV1ToV2(List<Config> configs) {
+    configs.add(new Config("defaultOperation", AerospikeOperationType.UPSERT));
+    configs.add(new Config("unsupportedAction", UnsupportedOperationAction.USE_DEFAULT));
+  }
+
 }

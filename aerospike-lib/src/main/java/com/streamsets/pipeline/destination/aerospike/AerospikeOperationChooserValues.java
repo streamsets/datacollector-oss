@@ -15,30 +15,12 @@
  */
 package com.streamsets.pipeline.destination.aerospike;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-@GenerateResourceBundle
-public enum DataType implements Label {
-  STRING("String", String.class),
-  LONG("Long", Long.class),
-  DOUBLE("Double", Double.class);
+public class AerospikeOperationChooserValues extends BaseEnumChooserValues<AerospikeOperationType> {
 
-  private String label;
-  private Class className;
-
-  DataType(String label, Class className) {
-    this.label = label;
-    this.className = className;
+  public AerospikeOperationChooserValues() {
+    super(AerospikeOperationType.class);
   }
 
-  @Override
-  public String getLabel() {
-    return label;
-  }
-
-  public Class getClassName() {
-    return className;
-  }
 }
-

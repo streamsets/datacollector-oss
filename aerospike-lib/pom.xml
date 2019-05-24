@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright 2017 StreamSets Inc.
+    Copyright 2019 StreamSets Inc.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@
   <properties>
     <aerospike-client.version>4.1.0</aerospike-client.version>
     <guava.version>18.0</guava.version>
+    <commons-lang.version>3.4</commons-lang.version>
   </properties>
 
   <dependencies>
@@ -84,6 +85,11 @@
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-stagesupport</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${commons-lang.version}</version>
     </dependency>
 
     <!-- Test Dependencies -->

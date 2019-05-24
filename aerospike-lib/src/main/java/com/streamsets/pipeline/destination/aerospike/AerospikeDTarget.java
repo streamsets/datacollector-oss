@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2019 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,15 +20,18 @@ import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
+import com.streamsets.pipeline.lib.operation.UnsupportedOperationActionChooserValues;
 
 import java.util.List;
 
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Aerospike",
     description = "Writes data to Aerospike",
     icon = "aerospike.png",
+    upgrader = AerospikeTargetUpgrader.class,
     onlineHelpRefUrl = "index.html?contextID=task_j3q_tpr_4cb"
 )
 @ConfigGroups(value = Groups.class)
@@ -77,9 +80,33 @@ public class AerospikeDTarget extends DTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      label = "Bins",
+      defaultValue = "UPSERT",
+      label = "Default Operation",
+      description = "Default operation to perform if sdc.operation.type is not set in record header.",
+      displayPosition = 65,
+      group = "MAPPING"
+  )
+  @ValueChooserModel(AerospikeOperationChooserValues.class)
+  public AerospikeOperationType defaultOperation;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue= "USE_DEFAULT",
+      label = "Unsupported Operation Handling",
+      description = "Action to take when operation type is not supported",
+      displayPosition = 67,
+      group = "MAPPING"
+  )
+  @ValueChooserModel(UnsupportedOperationActionChooserValues.class)
+  public UnsupportedOperationAction unsupportedAction;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Bins to update",
       description = "Bin names and their values",
-      displayPosition = 60,
+      displayPosition = 70,
       group = "MAPPING"
   )
   @ListBeanModel
@@ -87,6 +114,6 @@ public class AerospikeDTarget extends DTarget {
 
   @Override
   protected Target createTarget() {
-    return new AerospikeTarget(aerospikeBeanConfig, namespaceEL, setEL, keyEL, binConfigsEL);
+    return new AerospikeTarget(aerospikeBeanConfig, namespaceEL, setEL, keyEL, binConfigsEL, unsupportedAction, defaultOperation);
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2019 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,9 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.lib.operation.OperationType;
+import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +45,6 @@ public class AerospikeTarget extends RecordTarget {
   private static final String NAMESPACE = "namespaceEL";
   private static final String SET = "setEL";
   private static final String KEY = "keyEL";
-  private static final String BIN_CONFIG_LIST = "binConfigsEL";
 
 
   private AerospikeTargetELEvals elEvals = new AerospikeTargetELEvals();
@@ -52,6 +54,8 @@ public class AerospikeTarget extends RecordTarget {
   private final String setEL;
   private final String keyEL;
   private List<BinConfig> binConfigList;
+  private final UnsupportedOperationAction unsupportedAction;
+  private final AerospikeOperationType defaultOperation;
 
 
   private static class AerospikeTargetELEvals {
@@ -67,12 +71,14 @@ public class AerospikeTarget extends RecordTarget {
     }
   }
 
-  public AerospikeTarget(AerospikeBeanConfig aerospikeBeanConfig, String namespaceEL, String setEL, String keyEL, List<BinConfig> binConfigEL) {
+  public AerospikeTarget(AerospikeBeanConfig aerospikeBeanConfig, String namespaceEL, String setEL, String keyEL, List<BinConfig> binConfigEL, UnsupportedOperationAction unsupportedAction, AerospikeOperationType defaultOperation) {
     this.aerospikeBeanConfig = aerospikeBeanConfig;
     this.namespaceEL = namespaceEL;
     this.setEL = setEL;
     this.keyEL = keyEL;
     this.binConfigList = binConfigEL;
+    this.unsupportedAction = unsupportedAction;
+    this.defaultOperation = defaultOperation;
   }
 
 
@@ -85,16 +91,11 @@ public class AerospikeTarget extends RecordTarget {
     elEvals.init(getContext());
 
     // validate bins
-    if (binConfigList.isEmpty()) {
-      issues.add(getContext().createConfigIssue(Groups.MAPPING.getLabel(), BIN_CONFIG_LIST, AerospikeErrors.AEROSPIKE_05));
-    } else {
-      binConfigList.forEach(binConfig -> {
-        validateRequiredEL(getContext(), binConfig.binName, issues, "binName", String.class);
-        validateRequiredEL(getContext(), binConfig.binValue, issues, "binValue", binConfig.valueType.getClassName());
-      });
+    binConfigList.forEach(binConfig -> {
+      validateRequiredEL(getContext(), binConfig.binName, issues, "binName", String.class);
+      validateRequiredEL(getContext(), binConfig.binValue, issues, "binValue", binConfig.valueType.getClassName());
 
-
-    }
+    });
 
     // validate namespace, key and set
     validateEL(getContext(), elEvals.namespaceELEval, namespaceEL, Groups.MAPPING.getLabel(),
@@ -115,12 +116,51 @@ public class AerospikeTarget extends RecordTarget {
 
     List<Bin> bins = new LinkedList<>();
     for (BinConfig binConfig : binConfigList) {
-      bins.add(
-          new Bin(
-              resolveEL(getContext().createELEval("binName"), variables, binConfig.binName, String.class),
-              resolveEL(getContext().createELEval("binValue"), variables, binConfig.binValue, binConfig.valueType.getClassName())
-          )
-      );
+      // retrieve action for record
+      String opType = record.getHeader().getAttribute(OperationType.SDC_OPERATION_TYPE);
+      int opCode = -1;
+      if (!StringUtils.isEmpty(opType)) {
+        try {
+          opCode = AerospikeOperationType.convertToIntCode(opType);
+        } catch (NumberFormatException | UnsupportedOperationException ex) {
+          // Operation obtained from header is not supported. Handle accordingly
+          switch (this.unsupportedAction) {
+            case DISCARD:
+              LOG.debug("Discarding record with unsupported operation {}", opType);
+              return;
+            case SEND_TO_ERROR:
+              throw new OnRecordErrorException(AerospikeErrors.AEROSPIKE_08, opType);
+            case USE_DEFAULT:
+              opCode = this.defaultOperation.code;
+              break;
+            default: //unknown action
+              throw new OnRecordErrorException(AerospikeErrors.AEROSPIKE_08, opType);
+          }
+        }
+      } else {
+        // No header attribute set. Use default.
+        opCode = this.defaultOperation.code;
+      }
+
+      switch (opCode) {
+        case OperationType.UPSERT_CODE:
+          bins.add(
+              new Bin(
+                  resolveEL(getContext().createELEval("binName"), variables, binConfig.binName, String.class),
+                  resolveEL(getContext().createELEval("binValue"), variables, binConfig.binValue, binConfig.valueType.getClassName())
+              )
+          );
+          break;
+        case OperationType.DELETE_CODE:
+          bins.add(
+              Bin.asNull(
+                  resolveEL(getContext().createELEval("binName"), variables, binConfig.binName, String.class)
+              )
+          );
+          break;
+        default:
+          throw new UnsupportedOperationException(String.format("Unsupported Operation: %s", opCode));
+      }
     }
     String namespace = resolveEL(elEvals.namespaceELEval, variables, namespaceEL, String.class);
     String set = resolveEL(elEvals.setELEval, variables, setEL, String.class);
@@ -138,7 +178,7 @@ public class AerospikeTarget extends RecordTarget {
         return;
       } catch (AerospikeException e) {
         retryCount++;
-        if (retryCount  > aerospikeBeanConfig.maxRetries) {
+        if (retryCount > aerospikeBeanConfig.maxRetries) {
           throw new OnRecordErrorException(AerospikeErrors.AEROSPIKE_04, e);
         }
       }
