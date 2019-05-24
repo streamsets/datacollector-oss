@@ -37,6 +37,7 @@ public class HBaseTargetUpgrader implements StageUpgrader {
   private static final String HBASE_USER = "hbaseUser";
   private static final String HBASE_CONF_DIR = "hbaseConfDir";
   private static final String HBASE_CONFIGS = "hbaseConfigs";
+  private static final String VALIDATE_TABLE_EXISTENCE = "validateTableExistence";
 
   private final List<Config> configsToRemove = new ArrayList<>();
   private final List<Config> configsToAdd = new ArrayList<>();
@@ -53,7 +54,14 @@ public class HBaseTargetUpgrader implements StageUpgrader {
         // fall through
       case 2:
         upgradeV2toV3(configs);
+        if (toVersion == 3) {
+          break;
+        }
+        // fall through
+      case 3:
+        upgradeV3toV4(configs);
         break;
+        // fall through
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
@@ -95,5 +103,9 @@ public class HBaseTargetUpgrader implements StageUpgrader {
       configs.add(new Config(ZOOKEEPER_PARENT_ZNODE, oldZnodeConfig.getValue()));
       configs.remove(oldZnodeConfig);
     }
+  }
+
+  private static void upgradeV3toV4(List<Config> configs) {
+    configs.add(new Config(VALIDATE_TABLE_EXISTENCE, true));
   }
 }

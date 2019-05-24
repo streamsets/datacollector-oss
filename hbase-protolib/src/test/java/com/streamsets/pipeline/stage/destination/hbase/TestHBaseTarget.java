@@ -78,6 +78,7 @@ public class TestHBaseTarget {
           implicitFieldMapping,
           ignoreMissingFieldPath,
           ignoreInvalidColumn,
+          validateTableExistence,
           timeDriver
       ) {
         @Override
@@ -141,6 +142,7 @@ public class TestHBaseTarget {
     target.hBaseConnectionConfig.kerberosAuth = false;
     target.hBaseConnectionConfig.hbaseConfDir = "";
     target.hBaseConnectionConfig.hbaseUser = "";
+    target.validateTableExistence = false;
     target.timeDriver = "${time:now()}";
   }
 

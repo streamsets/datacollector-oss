@@ -97,4 +97,23 @@ public class TestHBaseTargetUpgrader {
     assertEquals("hBaseConnectionConfig.zookeeperParentZNode", configs.get(0).getName());
 
   }
+
+  @Test
+  public void testV3toV4() throws Exception {
+    List<Config> configs = new ArrayList<>();
+
+    StageUpgrader hbaseTargetUpgrader = new HBaseTargetUpgrader();
+    hbaseTargetUpgrader.upgrade("a", "b", "c", 3, 4, configs);
+
+    HashMap<String, Object> configValues = new HashMap<>();
+    for (Config c : configs) {
+      configValues.put(c.getName(), c.getValue());
+    }
+
+    assertEquals(1, configs.size());
+    assertEquals("validateTableExistence", configs.get(0).getName());
+
+    Assert.assertTrue(configValues.containsKey("validateTableExistence"));
+    assertEquals(true, configValues.get("validateTableExistence"));
+  }
 }

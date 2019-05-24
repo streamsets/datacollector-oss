@@ -43,6 +43,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HConstants;
 import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.KeyValue;
+import org.apache.hadoop.security.UserGroupInformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,6 +65,7 @@ public class HBaseTarget extends BaseTarget {
   private final boolean implicitFieldMapping;
   private final boolean ignoreMissingField;
   private final boolean ignoreInvalidColumn;
+  private final boolean validateTableExistence;
   private final String timeDriver;
   private final HBaseConnectionConfig conf;
   private ErrorRecordHandler errorRecordHandler;
@@ -78,6 +80,7 @@ public class HBaseTarget extends BaseTarget {
       boolean implicitFieldMapping,
       boolean ignoreMissingField,
       boolean ignoreInvalidColumn,
+      boolean validateTableExistence,
       String timeDriver
   ) {
     this.conf = conf;
@@ -91,6 +94,7 @@ public class HBaseTarget extends BaseTarget {
     this.implicitFieldMapping = implicitFieldMapping;
     this.ignoreMissingField = ignoreMissingField;
     this.ignoreInvalidColumn = ignoreInvalidColumn;
+    this.validateTableExistence = validateTableExistence;
     this.timeDriver = timeDriver;
   }
 
@@ -126,20 +130,22 @@ public class HBaseTarget extends BaseTarget {
 
     HTableDescriptor hTableDescriptor = null;
     if (issues.isEmpty()) {
-      try {
-        hTableDescriptor = hbaseConnectionHelper.getUGI().doAs((PrivilegedExceptionAction<HTableDescriptor>) () -> {
-          if (isReallyHBase()){
-            hbaseProducer.checkHBaseAvailable(issues);
-          }
-          return hbaseConnectionHelper.checkConnectionAndTableExistence(issues,
-              getContext(),
-              Groups.HBASE.name(),
-              conf.tableName
-          );
-        });
-      } catch (InterruptedException | IOException e) {
-        LOG.error("Unexpected exception: {}", e.toString(), e);
-        throw Throwables.propagate(e);
+      if (validateTableExistence) {
+        try {
+          hTableDescriptor = hbaseConnectionHelper.getUGI().doAs((PrivilegedExceptionAction<HTableDescriptor>) () -> {
+            if (isReallyHBase()) {
+              hbaseProducer.checkHBaseAvailable(issues);
+            }
+            return hbaseConnectionHelper.checkConnectionAndTableExistence(issues,
+                getContext(),
+                Groups.HBASE.name(),
+                conf.tableName
+            );
+          });
+        } catch (InterruptedException | IOException e) {
+          LOG.error("Unexpected exception: {}", e.toString(), e);
+          throw Throwables.propagate(e);
+        }
       }
     }
     if (!issues.isEmpty()) {
@@ -183,6 +189,11 @@ public class HBaseTarget extends BaseTarget {
           columnMappings.put(column.columnValue, new ColumnInfo(hbaseColumn, column.columnStorageType));
         }
       }
+    } else if (issues.isEmpty() && hTableDescriptor == null && !validateTableExistence) {
+      for (HBaseFieldMappingConfig column : hbaseFieldColumnMapping) {
+        HBaseColumn hBaseColumn = hbaseConnectionHelper.getColumn(column.columnName);
+        columnMappings.put(column.columnValue, new ColumnInfo(hBaseColumn, column.columnStorageType));
+      }
     }
 
     try {
@@ -199,6 +210,11 @@ public class HBaseTarget extends BaseTarget {
     event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.HBASE.name());
     List<String> names = new ArrayList<>();
     for (HBaseFieldMappingConfig column : hbaseFieldColumnMapping) {
+      // Ensure that user does not use default behavior of only mapping "/" to a blank output.
+      if (column.columnName.isEmpty()) {
+        issues.add(getContext().createConfigIssue(Groups.HBASE.name(), HBASE_FIELD_COLUMN_MAPPING, Errors.HBASE_18));
+        return issues;
+      }
       names.add(column.columnName);
     }
 

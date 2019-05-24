@@ -48,6 +48,7 @@ public class MapRDBDTarget extends HBaseDTarget {
         implicitFieldMapping,
         ignoreMissingFieldPath,
         ignoreInvalidColumn,
+        validateTableExistence,
         timeDriver
     );
   }

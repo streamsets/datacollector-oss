@@ -35,7 +35,7 @@ import java.util.List;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 3,
+    version = 4,
     label = "HBase",
     description = "Writes data to HBase",
     icon = "hbase.png",
@@ -113,6 +113,19 @@ public class HBaseDTarget extends DTarget {
 
   @ConfigDef(
       required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Validate Table Existence",
+      description = "If enabled, write to HBase will obtain a table descriptor to determine if the table exists and"
+        + " validate column family. This requires administrator rights in HBase. Otherwise, error records will be"
+        + " generated if the target table does not exist at runtime.",
+      displayPosition = 110,
+      group = "HBASE"
+  )
+  public boolean validateTableExistence;
+
+  @ConfigDef(
+      required = false,
       type = ConfigDef.Type.STRING,
       defaultValue = "",
       label = "Time Basis",
@@ -136,6 +149,7 @@ public class HBaseDTarget extends DTarget {
         implicitFieldMapping,
         ignoreMissingFieldPath,
         ignoreInvalidColumn,
+        validateTableExistence,
         timeDriver
     );
   }

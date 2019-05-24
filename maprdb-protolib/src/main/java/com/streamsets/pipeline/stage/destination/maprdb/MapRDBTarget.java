@@ -35,6 +35,7 @@ public class MapRDBTarget extends HBaseTarget {
         boolean implicitFieldMapping,
         boolean ignoreMissingFieldPath,
         boolean ignoreInvalidColumn,
+        boolean validateTableExistence,
         String timeDriver
   ) {
     super(
@@ -45,6 +46,7 @@ public class MapRDBTarget extends HBaseTarget {
       implicitFieldMapping,
       ignoreMissingFieldPath,
       ignoreInvalidColumn,
+      validateTableExistence,
       timeDriver
     );
   }

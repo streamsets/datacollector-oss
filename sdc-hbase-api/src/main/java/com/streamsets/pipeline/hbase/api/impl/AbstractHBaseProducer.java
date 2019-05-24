@@ -291,8 +291,9 @@ public abstract class AbstractHBaseProducer implements HBaseProducer {
 
   @Override
   public Date getRecordTime(Record record, String timeDriver) throws OnRecordErrorException {
+    // Use system time if timeDriver is not set by user.
     if (timeDriver.trim().isEmpty()) {
-      return null;
+      return new Date(System.currentTimeMillis());
     }
 
     try {
