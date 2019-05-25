@@ -75,6 +75,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -336,6 +337,9 @@ public class StageLibraryResource {
               // Initialize root folder
               if (entry.getName().startsWith(STREAMSETS_LIBS_FOLDER_NAME)) {
                 directory = runtimeDir;
+              } else if (!entry.getName().contains(STREAMSETS_LIBS_FOLDER_NAME)) {
+                // legacy stage lib
+                directory = Paths.get(runtimeDir, STREAMSETS_LIBS_FOLDER_NAME).toString();
               } else {
                 directory = runtimeDirParent;
               }
