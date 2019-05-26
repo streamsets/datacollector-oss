@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.validation;
 
+import com.streamsets.pipeline.api.AntennaDoctorMessage;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.LocalizableString;
@@ -23,6 +24,7 @@ import com.streamsets.pipeline.validation.ValidationIssue;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Issue implements Serializable, ValidationIssue {
@@ -33,6 +35,7 @@ public class Issue implements Serializable, ValidationIssue {
   private long count;
   private final LocalizableString message;
   private Map<String, Object> additionalInfo;
+  private List<AntennaDoctorMessage> antennaDoctorMessages;
 
   protected Issue(String instanceName, String serviceName, String configGroup, String configName, ErrorCode error, Object... args) {
     this.instanceName = instanceName;
@@ -115,4 +118,11 @@ public class Issue implements Serializable, ValidationIssue {
     count++;
   }
 
+  public void setAntennaDoctorMessages(List<AntennaDoctorMessage> messages) {
+    this.antennaDoctorMessages = messages;
+  }
+
+  public List<AntennaDoctorMessage> getAntennaDoctorMessages() {
+    return antennaDoctorMessages;
+  }
 }

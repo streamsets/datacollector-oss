@@ -1393,6 +1393,10 @@ public class BeanHelper {
   }
 
   public static List<AntennaDoctorMessageJson> wrapAntennaDoctorMessages(List<AntennaDoctorMessage> messages) {
+    if(messages == null) {
+      return null;
+    }
+
     return messages.stream().map(AntennaDoctorMessageJson::new).collect(Collectors.toList());
   }
 }

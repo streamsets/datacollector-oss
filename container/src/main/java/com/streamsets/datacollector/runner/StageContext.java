@@ -91,8 +91,6 @@ public class StageContext extends ProtoContext implements
   private RuntimeInfo runtimeInfo;
   private final Map services;
   private final boolean isErrorStage;
-  private final AntennaDoctor antennaDoctor;
-  private final AntennaDoctorStageContext antennaDoctorContext;
 
   //for SDK
   public StageContext(
@@ -125,7 +123,9 @@ public class StageContext extends ProtoContext implements
       "x",
       stageType,
       null,
-      resourcesDir
+      resourcesDir,
+      null,
+      null
     );
     this.pipelineTitle = "My Pipeline";
     this.pipelineDescription = "Sample Pipeline";
@@ -180,10 +180,6 @@ public class StageContext extends ProtoContext implements
     // sample all records while testing
     this.startTime = System.currentTimeMillis();
     this.lineagePublisherDelegator = lineagePublisherDelegator;
-
-    // No Antenna doctor in SDK
-    this.antennaDoctor = null;
-    this.antennaDoctorContext = null;
   }
 
   public StageContext(
@@ -228,7 +224,9 @@ public class StageContext extends ProtoContext implements
       stageInfo.getInstanceName(),
       stageType,
       null,
-      runtimeInfo.getResourcesDir()
+      runtimeInfo.getResourcesDir(),
+      antennaDoctor,
+      antennaDoctorContext
     );
     this.pipelineTitle = pipelineTitle;
     this.pipelineInfo = pipelineInfo;
@@ -249,8 +247,6 @@ public class StageContext extends ProtoContext implements
     this.lineagePublisherDelegator = lineagePublisherDelegator;
     this.services = services;
     this.isErrorStage = isErrorStage;
-    this.antennaDoctor = antennaDoctor;
-    this.antennaDoctorContext = antennaDoctorContext;
   }
 
   @Override

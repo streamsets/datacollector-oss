@@ -22,6 +22,8 @@ import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.google.common.base.Preconditions;
+import com.streamsets.datacollector.antennadoctor.AntennaDoctor;
+import com.streamsets.datacollector.antennadoctor.engine.context.AntennaDoctorStageContext;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.definition.ConcreteELDefinitionExtractor;
 import com.streamsets.datacollector.el.ELEvaluator;
@@ -95,6 +97,9 @@ public abstract class ProtoContext implements ProtoConfigurableEntity.Context, C
   protected final String serviceInstanceName;
   protected final String resourcesDir;
 
+  protected final AntennaDoctor antennaDoctor;
+  protected final AntennaDoctorStageContext antennaDoctorContext;
+
   protected ProtoContext(
       Configuration configuration,
       Map<String, Class<?>[]> configToElDefMap,
@@ -107,7 +112,9 @@ public abstract class ProtoContext implements ProtoConfigurableEntity.Context, C
       String stageInstanceName,
       StageType stageType,
       String serviceInstanceName,
-      String resourcesDir
+      String resourcesDir,
+      AntennaDoctor antennaDoctor,
+      AntennaDoctorStageContext antennaDoctorStageContext
   ) {
     this.configuration = configuration.getSubSetConfiguration(STAGE_CONF_PREFIX, true);
     this.configToElDefMap = configToElDefMap;
@@ -121,6 +128,8 @@ public abstract class ProtoContext implements ProtoConfigurableEntity.Context, C
     this.stageInstanceName = stageInstanceName;
     this.serviceInstanceName = serviceInstanceName;
     this.resourcesDir = resourcesDir;
+    this.antennaDoctor = antennaDoctor;
+    this.antennaDoctorContext = antennaDoctorStageContext;
 
     // Initialize Sampler
     int sampleSize = configuration.get(SDC_RECORD_SAMPLING_SAMPLE_SIZE, 1);
@@ -212,7 +221,13 @@ public abstract class ProtoContext implements ProtoConfigurableEntity.Context, C
   ) {
     Preconditions.checkNotNull(errorCode, "errorCode cannot be null");
     args = (args != null) ? args.clone() : NULL_ONE_ARG;
-    return new ConfigIssueImpl(stageInstanceName, serviceInstanceName, configGroup, configName, errorCode, args);
+
+    ConfigIssueImpl issue = new ConfigIssueImpl(stageInstanceName, serviceInstanceName, configGroup, configName, errorCode, args);
+    if(antennaDoctor != null) {
+      issue.setAntennaDoctorMessages(antennaDoctor.onValidation(antennaDoctorContext, configGroup, configName, errorCode, args));
+    }
+
+    return issue;
   }
 
   @Override

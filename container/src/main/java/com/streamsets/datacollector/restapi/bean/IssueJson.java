@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.streamsets.datacollector.util.NullDeserializer;
 import com.streamsets.datacollector.validation.Issue;
 
+import java.util.List;
 import java.util.Map;
 
 @JsonDeserialize(using = NullDeserializer.Object.class)
@@ -65,5 +66,9 @@ public class IssueJson {
   @JsonIgnore
   public Issue getIssue() {
     return issue;
+  }
+
+  public List<AntennaDoctorMessageJson> getAntennaDoctorMessages() {
+    return BeanHelper.wrapAntennaDoctorMessages(issue.getAntennaDoctorMessages());
   }
 }
