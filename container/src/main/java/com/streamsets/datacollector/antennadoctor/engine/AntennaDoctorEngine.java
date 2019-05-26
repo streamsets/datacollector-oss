@@ -89,7 +89,7 @@ public class AntennaDoctorEngine {
       LOG.trace("Loading rule {}", ruleBean.getUuid());
 
       // We're running in SDC and currently only in STAGE 'mode', other modes will be added later
-      if(ruleBean.getEntity() == null || !ruleBean.getEntity().isOneOf(AntennaDoctorRuleBean.Entity.STAGE, AntennaDoctorRuleBean.Entity.REST)) {
+      if(ruleBean.getEntity() == null || !ruleBean.getEntity().isOneOf(AntennaDoctorRuleBean.Entity.STAGE, AntennaDoctorRuleBean.Entity.REST, AntennaDoctorRuleBean.Entity.VALIDATION)) {
         continue;
       }
 
@@ -151,6 +151,14 @@ public class AntennaDoctorEngine {
     JexlContext jexlContext = new MapContext();
     jexlContext.set("issue", new StageIssueJexl(exception));
     return evaluate(context, AntennaDoctorRuleBean.Entity.REST, jexlContext);
+  }
+
+  public List<AntennaDoctorMessage> onValidation(AntennaDoctorStageContext context, String groupName, String configName, ErrorCode errorCode, Object... args) {
+    JexlContext jexlContext = new MapContext();
+    jexlContext.set("issue", new StageIssueJexl(groupName, configName, errorCode, args));
+    jexlContext.set("stageDef", context.getStageDefinition());
+    jexlContext.set("stageConf", context.getStageConfiguration());
+    return evaluate(context, AntennaDoctorRuleBean.Entity.VALIDATION, jexlContext);
   }
 
   private List<AntennaDoctorMessage> evaluate(

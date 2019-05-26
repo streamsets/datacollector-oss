@@ -41,4 +41,7 @@ public interface AntennaDoctorTask extends Task {
   // Rest related methods - no explicit context as the SDC is used
   public List<AntennaDoctorMessage> onRest(ErrorCode errorCode, Object... args);
   public List<AntennaDoctorMessage> onRest(Exception exception);
+
+  // Validation
+  public List<AntennaDoctorMessage> onValidation(AntennaDoctorStageContext context, String groupName, String configName, ErrorCode errorCode, Object... args);
 }

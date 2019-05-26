@@ -28,11 +28,17 @@ public class StageIssueJexl {
   private final ErrorCode errorCode;
   private final List<Object> args;
 
+  // Validation config location
+  private final String groupName;
+  private final String configName;
+
   public StageIssueJexl(Throwable e) {
     this.exception = e;
     this.errorMessage = e.getMessage();
     this.errorCode = null;
     this.args = Collections.emptyList();
+    this.groupName = null;
+    this.configName = null;
   }
 
   public StageIssueJexl(String errorMessage) {
@@ -40,6 +46,8 @@ public class StageIssueJexl {
     this.errorMessage = errorMessage;
     this.errorCode = null;
     this.args = Collections.emptyList();
+    this.groupName = null;
+    this.configName = null;
   }
 
   public StageIssueJexl(ErrorCode errorCode, Object ...args) {
@@ -47,6 +55,17 @@ public class StageIssueJexl {
     this.errorMessage = null;
     this.errorCode = errorCode;
     this.args = Arrays.asList(args);
+    this.groupName = null;
+    this.configName = null;
+  }
+
+  public StageIssueJexl(String groupName, String configName, ErrorCode errorCode, Object ...args) {
+    this.exception = null;
+    this.errorMessage = null;
+    this.errorCode = errorCode;
+    this.args = Arrays.asList(args);
+    this.groupName = groupName;
+    this.configName = configName;
   }
 
   public Throwable exception() {
@@ -63,5 +82,13 @@ public class StageIssueJexl {
 
   public List<Object> args() {
     return args;
+  }
+
+  public String groupName() {
+    return groupName;
+  }
+
+  public String configName() {
+    return configName;
   }
 }

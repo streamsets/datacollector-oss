@@ -28,6 +28,7 @@ public class AntennaDoctorRuleBean {
   public enum Entity {
     REST, // Error that is propagated all the way up to REST interface
     STAGE, // Stage assumes that it's always running in SDC and thus with it's context
+    VALIDATION, // Entity validation (stage, lineage publisher, ...)
     ;
 
     public boolean isOneOf(Entity ...entities) {

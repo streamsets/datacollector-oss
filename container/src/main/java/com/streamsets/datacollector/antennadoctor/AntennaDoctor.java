@@ -174,4 +174,14 @@ public class AntennaDoctor extends AbstractTask implements AntennaDoctorTask, An
 
     return Collections.emptyList();
   }
+
+  @Override
+  public List<AntennaDoctorMessage> onValidation(AntennaDoctorStageContext context, String groupName, String configName, ErrorCode errorCode, Object... args) {
+    AntennaDoctorEngine engine = this.engine;
+    if(engine != null) {
+      return engine.onValidation(context, groupName, configName, errorCode, args);
+    }
+
+    return Collections.emptyList();
+  }
 }
