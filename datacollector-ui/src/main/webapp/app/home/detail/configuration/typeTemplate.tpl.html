@@ -15,8 +15,21 @@
 <script type="text/ng-template" id="configurationIssuesTemplate">
   <div class="help-block">
     <div ng-repeat="issue in getConfigurationIssues(detailPaneConfig, configDefinition)">
+     <i class="fa fa-info-circle help-icon"
+         ng-class="fa-info-circle"
+         ng-if="issue.antennaDoctorMessages && issue.antennaDoctorMessages.length > 0"
+         tooltip-placement="right"
+         tooltip-append-to-body="false"
+         tooltip="{{issue.antennaDoctorMessages[0].summary}}"
+         tooltip-trigger="mouseenter">
+      </i>
       <span>{{issue.message}}</span>
       <span ng-show="issue.count > 1" class="badge">{{issue.count}}</span>
+      <a class="view-stack-trace"
+         ng-if="issue.antennaDoctorMessages && issue.antennaDoctorMessages.length > 0"
+         ng-click="showIssueDetails(issue)">
+            ( <span translate="home.graphPane.viewStackTrace">View Details</span>... )
+      </a>
     </div>
   </div>
 </script>
@@ -25,8 +38,21 @@
   <div class="help-block">
     <div ng-repeat="issue in getConfigurationIssues(detailPaneConfig, customFieldConfigDefinition)"
          ng-if="issue.additionalInfo && issue.additionalInfo.index === configIndex">
+     <i class="fa fa-info-circle help-icon"
+         ng-class="fa-info-circle"
+         ng-if="issue.antennaDoctorMessages && issue.antennaDoctorMessages.length > 0"
+         tooltip-placement="right"
+         tooltip-append-to-body="false"
+         tooltip="{{issue.antennaDoctorMessages[0].summary}}"
+         tooltip-trigger="mouseenter">
+      </i>
       <span>{{issue.message}}</span>
       <span ng-show="issue.count > 1" class="badge">{{issue.count}}</span>
+      <a class="view-stack-trace"
+         ng-if="issue.antennaDoctorMessages && issue.antennaDoctorMessages.length > 0"
+         ng-click="showIssueDetails(issue)">
+            ( <span translate="home.graphPane.viewStackTrace">View Details</span>... )
+      </a>
     </div>
   </div>
 </script>

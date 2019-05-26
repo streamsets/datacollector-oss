@@ -382,7 +382,7 @@
     },
     "getStartedWithTutorials": "Try a Tutorial",
     "graphPane": {
-      "errorStackTrace": "Error Stack Trace",
+      "errorStackTrace": "Error Details",
       "dontShowAgain": "Don't show again.",
       "originMissing": "Origin missing",
       "selectExecutor": "Select Executor to connect...",

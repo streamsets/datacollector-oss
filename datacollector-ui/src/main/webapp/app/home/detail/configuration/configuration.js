@@ -742,6 +742,24 @@ angular
           }
           $scope.detailPaneConfig.eventLanes = [];
         }
+      },
+
+      showIssueDetails: function(issue) {
+        $modal.open({
+          templateUrl: 'errorModalContent.html',
+          controller: 'ErrorModalInstanceController',
+          size: 'lg',
+          backdrop: true,
+          resolve: {
+            errorObj: function () {
+              return {
+                RemoteException: {
+                  antennaDoctorMessages: issue.antennaDoctorMessages,
+                }
+              };
+            }
+          }
+        });
       }
     });
 
