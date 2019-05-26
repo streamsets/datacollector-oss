@@ -84,6 +84,18 @@ public class StageIssueJexl {
     return args;
   }
 
+  public Object args(int i) {
+    if(args == null) {
+      return null;
+    }
+
+    if(i >= args.size()) {
+      return null;
+    }
+
+    return args.get(i);
+  }
+
   public String groupName() {
     return groupName;
   }
