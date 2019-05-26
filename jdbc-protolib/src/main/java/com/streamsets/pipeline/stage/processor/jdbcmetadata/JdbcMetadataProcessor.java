@@ -121,8 +121,11 @@ public class JdbcMetadataProcessor extends RecordProcessor {
             Collections.emptyList(),
             getContext()
         );
-      } catch (RuntimeException | SQLException | StageException e) {
-        LOG.debug("Could not connect to data source", e);
+      } catch (StageException e) {
+        LOG.error("Could not connect to data source", e);
+        issues.add(getContext().createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, e.getErrorCode(), e.getParams()));
+      } catch (RuntimeException | SQLException  e) {
+        LOG.error("Could not connect to data source", e);
         issues.add(getContext().createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, e.toString()));
       }
     }

@@ -144,7 +144,7 @@ public abstract class AbstractTableJdbcSource extends BasePushSource {
     try {
       hikariDataSource = jdbcUtil.createDataSourceForRead(hikariConfigBean);
     } catch (StageException e) {
-      issues.add(context.createConfigIssue(com.streamsets.pipeline.stage.origin.jdbc.table.Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, e.toString()));
+      issues.add(context.createConfigIssue(com.streamsets.pipeline.stage.origin.jdbc.table.Groups.JDBC.name(), CONNECTION_STRING, e.getErrorCode(), e.getParams()));
     }
     if (issues.isEmpty()) {
       try {

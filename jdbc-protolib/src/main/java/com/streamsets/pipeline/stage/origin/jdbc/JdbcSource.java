@@ -225,7 +225,7 @@ public class JdbcSource extends BaseSource {
       }
     } catch (StageException e) {
       LOG.error(JdbcErrors.JDBC_00.getMessage(), e.toString(), e);
-      issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, e.toString()));
+      issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, e.getErrorCode(), e.getParams()));
     }
 
     // Don't proceed with validation query if there are issues or if validation is disabled

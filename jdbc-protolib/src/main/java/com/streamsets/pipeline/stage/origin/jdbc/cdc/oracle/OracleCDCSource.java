@@ -1178,7 +1178,11 @@ public class OracleCDCSource extends BaseSource {
         dataSource = jdbcUtil.createDataSourceForRead(hikariConfigBean);
         connection = dataSource.getConnection();
         connection.setAutoCommit(false);
-      } catch (StageException | SQLException e) {
+      } catch (StageException e) {
+        LOG.error("Error while connecting to DB", e);
+        issues.add(getContext().createConfigIssue(Groups.JDBC.name(), CONNECTION_STR, e.getErrorCode(), e.getParams()));
+        return issues;
+      } catch (SQLException e) {
         LOG.error("Error while connecting to DB", e);
         issues.add(getContext().createConfigIssue(Groups.JDBC.name(), CONNECTION_STR, JDBC_00, e.toString()));
         return issues;

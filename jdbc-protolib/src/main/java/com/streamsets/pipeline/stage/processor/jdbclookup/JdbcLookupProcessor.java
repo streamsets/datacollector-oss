@@ -144,7 +144,7 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
           dataSource = jdbcUtil.createDataSourceForRead(hikariConfigBean);
           context.getStageRunnerSharedMap().put("jdbcLookupProcessor.dataSource", dataSource);
         } catch (StageException e) {
-          issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, e.toString()));
+          issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, e.getErrorCode(), e.getParams()));
         }
       }
     } else {
