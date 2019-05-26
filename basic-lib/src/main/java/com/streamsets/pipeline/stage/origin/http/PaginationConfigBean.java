@@ -40,6 +40,18 @@ public class PaginationConfigBean {
   public PaginationMode mode = PaginationMode.NONE;
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Next Page Link Prefix",
+      description = "Prefix to concatenate with the value resolved from the Next Page Link Field. To be used in case the  Next Page Link is relative.",
+      group = "#0",
+      dependsOn = "mode",
+      triggeredByValue = "LINK_FIELD",
+      displayPosition = 30
+  )
+  public String nextPageURLPrefix;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Next Page Link Field",

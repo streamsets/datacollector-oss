@@ -39,6 +39,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -83,6 +84,7 @@ public class TestHttpClientSource extends AbstractHttpStageTest {
     final HttpClientConfigBean conf = getConf("http://api.example.com/getItems");
     conf.pagination.mode = PaginationMode.LINK_FIELD;
     conf.pagination.stopCondition = "${false}";
+    conf.pagination.nextPageURLPrefix = "http://api.example.com";
     conf.pagination.nextPageFieldPath = "/nextPageLink";
     conf.pagination.resultFieldPath = "/records";
     conf.basic.maxWaitTime = 30000;
@@ -107,15 +109,24 @@ public class TestHttpClientSource extends AbstractHttpStageTest {
         nextPage2
     );
 
+    final String nextPage3 = "/getItems?cursorId=12345&startFrom=3";
+    final String recordJson3 = String.format(
+        "{\"records\": [{\"field1\": 9, \"field2\": 10}, {\"field1\": 11, \"field2\": 12}], \"nextPageLink\": \"%s\"}",
+        nextPage3
+    );
+
+    final String[] records = {recordJson1, recordJson2, recordJson3};
+
     final Response mockResponse1 = PowerMockito.mock(Response.class);
     PowerMockito.doAnswer(new Answer<InputStream>() {
       private int invocationCount;
       @Override
       public InputStream answer(InvocationOnMock invocation) throws Throwable {
-        if (invocationCount > 1) {
-          throw new IllegalStateException("Should not be called more than twice");
+        if (invocationCount > 2) {
+          throw new IllegalStateException("Should not be called more than 3 times");
         }
-        final String json = invocationCount++ == 0 ? recordJson1 : recordJson2;
+        final String json = records[invocationCount++];
+
         return new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
       }
     }).when(mockResponse1).readEntity(InputStream.class);
@@ -154,6 +165,22 @@ public class TestHttpClientSource extends AbstractHttpStageTest {
     final String nextTarget2 = source.getResolvedUrl();
     // and the next page URL should be the value parsed from the second record
     assertThat(nextTarget2, equalTo(nextPage2));
+
+    // set up the mock again (since response was set to null by cleanup of last request handling)
+    source.setResponse(mockResponse1);
+    // the next response should contain a new next page
+    final String offsetStr3 = source.parseResponse(
+        Clock.systemUTC().millis(),
+        10,
+        PowerMockito.mock(BatchMaker.class)
+    );
+    source.resolveNextPageUrl(offsetStr3);
+    final HttpSourceOffset offset3 = HttpSourceOffset.fromString(offsetStr3);
+    // the committed offset should now be the previous starting URL
+    assertThat(offset3.getUrl(), equalTo(nextPage2));
+    final String nextTarget3 = source.getResolvedUrl();
+    // the prefix should be appended to the relative URL in this case
+    assertThat(nextTarget3, equalTo(conf.pagination.nextPageURLPrefix + nextPage3));
   }
 
 }
