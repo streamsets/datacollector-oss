@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.streamsets.pipeline.stage.origin.datalake.gen1;
+package com.streamsets.pipeline.stage.metadata.gen1;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ListBeanModel;
@@ -24,19 +24,19 @@ import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.stage.conf.DataLakeSourceGroups;
 import com.streamsets.pipeline.stage.destination.datalake.Errors;
 import com.streamsets.pipeline.stage.destination.hdfs.HadoopConfigBean;
-import com.streamsets.pipeline.stage.origin.hdfs.HdfsSourceConfigBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Contains configurations common to all Generation 2 Data Lake Connectors
  */
-public class DataLakeSourceConfig extends HdfsSourceConfigBean {
+public class DataLakeGen1MetadataConfig {
 
-  private static final Logger LOG = LoggerFactory.getLogger(DataLakeSourceConfig.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DataLakeGen1MetadataConfig.class);
 
   private static final String ADLS_CONFIG_BEAN_PREFIX = "dataLakeConfig.";
   private static final String ADLS_CONFIG_ACCOUNT_FQDN = ADLS_CONFIG_BEAN_PREFIX + "accountFQDN";
@@ -108,27 +108,19 @@ public class DataLakeSourceConfig extends HdfsSourceConfigBean {
   @ListBeanModel
   public List<HadoopConfigBean> advancedConfiguration;
 
-  @Override
-  public void init(final Stage.Context context, List<Stage.ConfigIssue> issues) {
-    initHiddenDefaults();
-
-    String accountFQDN = resolveCredentialValue(context, this.accountFQDN, ADLS_CONFIG_ACCOUNT_FQDN, issues);
-    this.hdfsUri = buildAdlUri(accountFQDN);
+  public Map<String, String> getHdfsConfigBeans(final Stage.Context context, List<Stage.ConfigIssue> issues) {
+    Map hdfsConfigs = new HashMap<>();
 
     String authEndPoint = resolveCredentialValue(context, this.authTokenEndpoint, ADLS_CONFIG_AUTH_TOKEN_ENDPOINT, issues);
     String clientId = resolveCredentialValue(context, this.clientId, ADLS_CONFIG_CLIENT_ID, issues);
     String clientKey = resolveCredentialValue(context, this.clientKey, ADLS_CONFIG_CLIENT_KEY, issues);
 
-    this.hdfsConfigs.add(new HadoopConfigBean(ADLS_GEN1_ACCESS_TOKEN_PROVIDER_KEY, ADLS_GEN1_ACCESS_TOKEN_PROVIDER_VALUE));
-    this.hdfsConfigs.add(new HadoopConfigBean(ADLS_GEN1_REFRESH_URL_KEY, authEndPoint));
-    this.hdfsConfigs.add(new HadoopConfigBean(ADLS_GEN1_CLIENT_ID_KEY, clientId));
-    this.hdfsConfigs.add(new HadoopConfigBean(ADLS_GEN1_CLIENT_SECRET_KEY, clientKey));
+    hdfsConfigs.put(ADLS_GEN1_ACCESS_TOKEN_PROVIDER_KEY, ADLS_GEN1_ACCESS_TOKEN_PROVIDER_VALUE);
+    hdfsConfigs.put(ADLS_GEN1_REFRESH_URL_KEY, authEndPoint);
+    hdfsConfigs.put(ADLS_GEN1_CLIENT_ID_KEY, clientId);
+    hdfsConfigs.put(ADLS_GEN1_CLIENT_SECRET_KEY, clientKey);
 
-    for (HadoopConfigBean configBean : this.advancedConfiguration) {
-      this.hdfsConfigs.add(configBean);
-    }
-
-    super.init(context, issues);
+    return hdfsConfigs;
   }
 
   private String resolveCredentialValue(final Stage.Context context, CredentialValue credentialValue, String configName, List<Stage.ConfigIssue> issues) {
@@ -146,15 +138,8 @@ public class DataLakeSourceConfig extends HdfsSourceConfigBean {
     return null;
   }
 
-  private void initHiddenDefaults() {
-    this.hdfsUser = "";
-    this.hdfsKerberos = false;
-    this.hdfsConfDir = "";
-    this.hdfsConfigs = new ArrayList<>();
-  }
-
-  private String buildAdlUri(String accountFQDN) {
+  public String getAdlUri(final Stage.Context context, List<Stage.ConfigIssue> issues) {
+    String accountFQDN = resolveCredentialValue(context, this.accountFQDN, ADLS_CONFIG_ACCOUNT_FQDN, issues);
     return ADL_PROTOCOL + accountFQDN;
   }
-
 }
