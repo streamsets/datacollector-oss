@@ -26,6 +26,41 @@
       ]
     }
   },{
+    "uuid": "319cc8e7-7588-4d65-a51f-4c7982f0def7",
+    "entity": "VALIDATION",
+    "preconditions": [
+      "version.isGreaterOrEqualTo('3.9.0')"
+    ],
+    "startingContext": [
+      "context['dbs'] = {'N/A': {'driver': 'N/A', 'url': 'N/A'}}",
+      "context['dbs']['mysql'] = {'name': 'MySQL','driver': 'com.mysql.jdbc.Driver', 'url': 'https://dev.mysql.com/downloads/connector/j/'}",
+      "context['dbs']['oracle'] = {'name': 'Oracle','driver': 'oracle.jdbc.driver.OracleDriver', 'url': 'https://www.oracle.com/technetwork/database/application-development/jdbc/downloads/index.html'}",
+      "context['dbs']['sqlserver'] = {'name': 'Microsoft SQL Server','driver': 'com.microsoft.sqlserver.jdbc.SQLServerDriver', 'url': 'https://docs.microsoft.com/en-us/sql/connect/jdbc/download-microsoft-jdbc-driver-for-sql-server?view=sql-server-2017'}"
+    ],
+    "conditions": [
+      "issue.errorCode() == 'JDBC_06'",
+      "issue.args(0).contains('Failed to get driver instance for')",
+      "context['db'] = issue.args(0).contains('jdbc:mysql://') ? 'mysql' : ''",
+      "context['db'] = issue.args(0).contains('jdbc:oracle:') ? 'oracle' : context['db']",
+      "context['db'] = issue.args(0).contains('jdbc:sqlserver') ? 'sqlserver' : context['db']"
+    ],
+    "message": {
+      "summary": "Proper JDBC driver needs to be manually installed.",
+      "description": [
+        "Data Collector can't ship with the JDBC drivers out of the box due to incompatible licenses. As a result, they have to be <a href='https://streamsets.com/documentation/controlhub/latest/onpremhelp/datacollector/UserGuide/Origins/JDBCConsumer.html#concept_aq1_lxp_fs'>installed manually</a>.<br /><br />",
+        "$$ if(context['db'] =~ context['dbs']) {",
+          "You are trying to connect to ${context['dbs'][context['db']]['name']}.",
+          "$$ if(java:hasClass(stageDef.getStageClassLoader(), context['dbs'][context['db']]['driver'])) {",
+            "The driver is installed, but Java is not able to load it through JDBCv4 spec. Try explicitly specifying '<i>${context['dbs'][context['db']]['driver']}</i>' in 'JDBC Driver Class Name' configuration on 'Legacy Drivers' tab.",
+          "$$ } else {",
+            "It doesn't appear that the proper JDBC driver '<i>${context['dbs'][context['db']]['driver']}</i>' has been installed. Please <a href='${context['dbs'][context['db']]['url']}'>download</a> and then install the driver per <a href='https://streamsets.com/documentation/controlhub/latest/onpremhelp/datacollector/UserGuide/Origins/JDBCConsumer.html#concept_aq1_lxp_fs'>our documentation</a>.<br /><br />",
+          "$$ }",
+        "$$ } else {",
+          "Your database vendor should provide with a download link to the JDBC driver for your specific vendor.",
+        "$$ }"
+      ]
+    }
+  },{
     "uuid": "c84aaa61-27cc-40b4-aac2-713c85f52fd0",
     "entity": "REST",
     "preconditions": [

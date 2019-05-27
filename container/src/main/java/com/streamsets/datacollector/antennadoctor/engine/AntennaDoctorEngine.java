@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.antennadoctor.bean.AntennaDoctorRuleBean;
 import com.streamsets.datacollector.antennadoctor.engine.context.AntennaDoctorContext;
 import com.streamsets.datacollector.antennadoctor.engine.context.AntennaDoctorStageContext;
+import com.streamsets.datacollector.antennadoctor.engine.jexl.JavaNamespace;
 import com.streamsets.datacollector.antennadoctor.engine.jexl.SdcJexl;
 import com.streamsets.datacollector.antennadoctor.engine.jexl.StageIssueJexl;
 import com.streamsets.datacollector.util.Version;
@@ -65,9 +66,11 @@ public class AntennaDoctorEngine {
     ImmutableList.Builder<RuntimeRule> builder = ImmutableList.builder();
 
     Map<String, Object> namespaces = new HashMap<>();
+    // Standard ELs shared with rest of SDC
     namespaces.put("collection", CollectionEL.class);
     namespaces.put("file", FileEL.class);
-
+    // Antenna Doctor special namespace additions
+    namespaces.put("java", JavaNamespace.class);
 
     // Main engine used to evaluate all expressions and templates
     engine = new JexlBuilder()
