@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.antennadoctor.bean;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -75,6 +76,14 @@ public class AntennaDoctorRuleBean {
   private List<String> conditions;
 
   /**
+   * List of conditions primarily mutating the context variable.
+   *
+   * Similarly like precoditions, the expressions here will be executed only once. However the resulting 'context' variable
+   * will be save and will be then available to each and every condition execution.
+   */
+  private List<String> startingContext;
+
+  /**
    * Message that should be displayed if the rule matches.
    */
   private AntennaDoctorMessageBean message;
@@ -117,5 +126,13 @@ public class AntennaDoctorRuleBean {
 
   public void setMessage(AntennaDoctorMessageBean message) {
     this.message = message;
+  }
+
+  public List<String> getStartingContext() {
+    return startingContext == null ? Collections.emptyList() : startingContext;
+  }
+
+  public void setStartingContext(List<String> startingContext) {
+    this.startingContext = startingContext;
   }
 }

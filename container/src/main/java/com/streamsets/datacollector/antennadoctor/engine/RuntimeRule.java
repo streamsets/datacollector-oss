@@ -19,6 +19,7 @@ import com.streamsets.datacollector.antennadoctor.bean.AntennaDoctorRuleBean;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Stripped down variant of AntennaDoctorRuleBean that doesn't contain information that is no longer relevant
@@ -30,13 +31,15 @@ public class RuntimeRule {
   private final List<String> conditions;
   private final String summary;
   private final String description;
+  private final Map<String, Object> startingContext;
 
-  public RuntimeRule(AntennaDoctorRuleBean ruleBean) {
+  public RuntimeRule(AntennaDoctorRuleBean ruleBean, Map<String, Object> startingContext) {
     this.uuid = ruleBean.getUuid();
     this.entity = ruleBean.getEntity();
     this.conditions = Collections.unmodifiableList(ruleBean.getConditions());
     this.summary = ruleBean.getMessage().getSummary();
     this.description = String.join("\n", ruleBean.getMessage().getDescription());
+    this.startingContext = Collections.unmodifiableMap(startingContext);
   }
 
   public String getUuid() {
@@ -57,5 +60,9 @@ public class RuntimeRule {
 
   public String getDescription() {
     return description;
+  }
+
+  public Map<String, Object> getStartingContext() {
+    return startingContext;
   }
 }

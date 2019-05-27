@@ -104,13 +104,29 @@ public class AntennaDoctorEngine {
             continue;
           }
         } catch (Throwable e ) {
-          LOG.error("Precondition {} failed, skipping rule {}: {}", precondition, ruleBean.getUuid(), e.toString(), e);
+          LOG.error("Precondition {} failed, skipping rule {}: {}", precondition, ruleBean.getUuid(), e.getMessage(), e);
+          continue;
+        }
+      }
+
+      // The rule was accepted and should be loaded, so we pre-compute the starting context
+      Map<String, Object> startingContext = new HashMap<>();
+      jexlContext.set("context", startingContext);
+      for(String expr : ruleBean.getStartingContext()) {
+        try {
+          LOG.trace("Evaluating starting context: {}", expr);
+          if(!evaluateCondition(expr, jexlContext)) {
+            LOG.trace("Starting context '{}' failed, skipping rule {}", expr, ruleBean.getUuid());
+            continue;
+          }
+        } catch(Throwable e) {
+          LOG.error("Starting context '{}' failed, skipping rule {}: {}", expr, ruleBean.getUuid(), e.getMessage(), e);
           continue;
         }
       }
 
       // All checks passed, so we will accept this rule
-      builder.add(new RuntimeRule(ruleBean));
+      builder.add(new RuntimeRule(ruleBean, startingContext));
     }
 
     this.rules = builder.build();
@@ -179,7 +195,7 @@ public class AntennaDoctorEngine {
       }
 
       // Reset the variables that the rule is keeping
-      jexlContext.set("context", new HashMap<>());
+      jexlContext.set("context", new HashMap<>(rule.getStartingContext()));
 
       // Firstly evaluate conditions
       boolean matched = true;
@@ -192,7 +208,7 @@ public class AntennaDoctorEngine {
           }
         } catch (JexlException e) {
           matched = false;
-          LOG.error("Failed to evaluate rule {} condition {}: {}", rule.getUuid(), condition, e.toString(), e);
+          LOG.error("Failed to evaluate rule {} condition {}: {}", rule.getUuid(), condition, e.getMessage(), e);
           break;
         }
       }
@@ -212,7 +228,7 @@ public class AntennaDoctorEngine {
 
           builder.add(new AntennaDoctorMessage(summaryWriter.toString(), descriptionWriter.toString()));
         } catch (JexlException e) {
-          LOG.error("Failed to evaluate message for rule {}: {}", rule.getUuid(), e.toString(), e);
+          LOG.error("Failed to evaluate message for rule {}: {}", rule.getUuid(), e.getMessage(), e);
         }
       } else {
         LOG.trace("Rule {} did not match", rule.getUuid());
