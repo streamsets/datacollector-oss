@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_00;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_406;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_407;
+import static com.streamsets.pipeline.lib.jdbc.JdbcUtil.*;
 import static java.sql.DriverManager.*;
 
 import com.streamsets.pipeline.api.Stage;
@@ -89,10 +90,10 @@ public class PostgresCDCWalReceiver {
     return schemasAndTables;
   }
 
-  //TODO this is a great place for generic validator
   public Optional<List<ConfigIssue>> validateSchemaAndTables(List<SchemaTableConfigBean>
       schemaTableConfigs) {
     List<ConfigIssue> issues = new ArrayList<>();
+    schemasAndTables = new ArrayList<>();
     for (SchemaTableConfigBean tables : configBean.baseConfigBean.schemaTableConfigs) {
       validateSchemaAndTable(tables).ifPresent(issues::add);
     }
@@ -100,8 +101,12 @@ public class PostgresCDCWalReceiver {
   }
 
   private Optional<ConfigIssue> validateSchemaAndTable(SchemaTableConfigBean tables) {
-    schemasAndTables = new ArrayList<>();
-    List<ConfigIssue> issues = new ArrayList<>();
+    ConfigIssue issue = null;
+    // Empty keys match ALL :(
+    if (tables.schema.isEmpty() && tables.table.isEmpty()) {
+      issue = context.createConfigIssue(Groups.CDC.name(), tables.schema, JdbcErrors.JDBC_411);
+      return Optional.ofNullable(issue);
+    }
     Pattern p = StringUtils.isEmpty(tables.excludePattern) ? null : Pattern.compile(tables.excludePattern);
     try (ResultSet rs =
         jdbcUtil.getTableAndViewMetadata(connection, tables.schema, tables.table)) {
@@ -115,15 +120,9 @@ public class PostgresCDCWalReceiver {
         }
       }
     } catch (SQLException e) {
-      issues.add(
-          context.createConfigIssue(
-              Groups.CDC.name(),
-              tables.schema,
-              JdbcErrors.JDBC_66
-              )
-      );
+      issue = context.createConfigIssue(Groups.CDC.name(), tables.schema, JdbcErrors.JDBC_66);
     }
-    return Optional.ofNullable(null);
+    return Optional.ofNullable(issue);
   }
 
   public void createReplicationSlot(String slotName) throws StageException {
@@ -181,7 +180,7 @@ public class PostgresCDCWalReceiver {
         .withSlotOption("include-xids", true)
         .withSlotOption("include-timestamp", true)
         .withSlotOption("include-lsn", true)
-        .withStatusInterval(100, TimeUnit.MILLISECONDS)
+        .withStatusInterval(20, TimeUnit.SECONDS)
         .start();
 
     /* TODO - known issue with creation of replication API and potential NPE if
