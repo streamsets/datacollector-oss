@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.stage.destination.s3;
 
 import com.streamsets.pipeline.lib.event.EventCreator;
-import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 
 public final class S3Events {
 
@@ -28,11 +27,6 @@ public final class S3Events {
       .withRequiredField("objectKey")
       .withRequiredField("recordCount")
       .build();
-
-  /**
-   * Fired when the file transfer is complete.
-   */
-  public static EventCreator FILE_TRANSFER_COMPLETE_EVENT = FileRefUtil.FILE_TRANSFER_COMPLETE_EVENT;
 
   private S3Events() {
     // Instantiation is prohibited

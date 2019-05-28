@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 import com.streamsets.pipeline.api.service.ServiceConfiguration;
 import com.streamsets.pipeline.api.service.ServiceDependency;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
+import com.streamsets.pipeline.lib.event.WholeFileProcessedEvent;
 
 @StageDef(
     version = 11,
@@ -34,6 +35,7 @@ import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorServic
     privateClassLoader = true,
     upgrader = AmazonS3TargetUpgrader.class,
     producesEvents = true,
+    eventDefs = {WholeFileProcessedEvent.class},
     onlineHelpRefUrl ="index.html?contextID=task_pxb_j3r_rt",
     execution = {
         ExecutionMode.STANDALONE,

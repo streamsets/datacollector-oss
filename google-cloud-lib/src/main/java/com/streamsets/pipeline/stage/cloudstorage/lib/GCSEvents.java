@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.stage.cloudstorage.lib;
 
 import com.streamsets.pipeline.lib.event.EventCreator;
-import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 
 public final class GCSEvents {
   public static final String BUCKET = "bucket";
@@ -32,9 +31,4 @@ public final class GCSEvents {
       .withRequiredField(OBJECT_KEY)
       .withRequiredField(RECORD_COUNT)
       .build();
-
-  /**
-   * Fired when the file transfer is complete.
-   */
-  public static EventCreator FILE_TRANSFER_COMPLETE_EVENT = FileRefUtil.FILE_TRANSFER_COMPLETE_EVENT;
 }

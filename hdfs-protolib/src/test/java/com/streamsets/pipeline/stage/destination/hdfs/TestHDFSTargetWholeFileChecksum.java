@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.ChecksumAlgorithm;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.WholeFileExistsAction;
+import com.streamsets.pipeline.lib.event.WholeFileProcessedEvent;
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.sdk.TargetRunner;
@@ -122,11 +123,11 @@ public class TestHDFSTargetWholeFileChecksum {
       while (eventRecordIterator.hasNext()) {
         Record eventRecord = eventRecordIterator.next();
         String type = eventRecord.getHeader().getAttribute("sdc.event.type");
-        Assert.assertEquals(FileRefUtil.WHOLE_FILE_WRITE_FINISH_EVENT, type);
-        Assert.assertTrue(eventRecord.has("/" +FileRefUtil.WHOLE_FILE_CHECKSUM_ALGO));
-        Assert.assertTrue(eventRecord.has("/" +FileRefUtil.WHOLE_FILE_CHECKSUM));
-        Assert.assertEquals(checksumAlgorithm.name(), eventRecord.get("/" + FileRefUtil.WHOLE_FILE_CHECKSUM_ALGO).getValueAsString());
-        verifyChecksum(eventRecord.get("/" + FileRefUtil.WHOLE_FILE_CHECKSUM).getValueAsString());
+        Assert.assertEquals(WholeFileProcessedEvent.WHOLE_FILE_WRITE_FINISH_EVENT, type);
+        Assert.assertTrue(eventRecord.has("/" + WholeFileProcessedEvent.CHECKSUM_ALGORITHM));
+        Assert.assertTrue(eventRecord.has("/" + WholeFileProcessedEvent.CHECKSUM));
+        Assert.assertEquals(checksumAlgorithm.name(), eventRecord.get("/" + WholeFileProcessedEvent.CHECKSUM_ALGORITHM).getValueAsString());
+        verifyChecksum(eventRecord.get("/" + WholeFileProcessedEvent.CHECKSUM).getValueAsString());
       }
 
     } finally {

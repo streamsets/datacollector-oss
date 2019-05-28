@@ -30,6 +30,7 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
 import com.streamsets.pipeline.api.service.dataformats.WholeFileExistsAction;
 import com.streamsets.pipeline.config.ChecksumAlgorithm;
+import com.streamsets.pipeline.lib.event.WholeFileProcessedEvent;
 import com.streamsets.pipeline.lib.io.fileref.FileRefStreamCloseEventHandler;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import org.slf4j.Logger;
@@ -84,10 +85,10 @@ final class WholeFileHelper extends FileHelper {
   }
 
   private EventRecord createEventRecordForFileTransfer(Record record, String bucket, String objectKey) {
-    return S3Events.FILE_TRANSFER_COMPLETE_EVENT
+    return WholeFileProcessedEvent.FILE_TRANSFER_COMPLETE_EVENT
         .create(context)
-        .with(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO, record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getValueAsMap())
-        .withStringMap(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO, ImmutableMap.of(BUCKET, bucket, OBJECT_KEY, objectKey))
+        .with(WholeFileProcessedEvent.SOURCE_FILE_INFO, record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getValueAsMap())
+        .withStringMap(WholeFileProcessedEvent.TARGET_FILE_INFO, ImmutableMap.of(BUCKET, bucket, OBJECT_KEY, objectKey))
         .create();
   }
 

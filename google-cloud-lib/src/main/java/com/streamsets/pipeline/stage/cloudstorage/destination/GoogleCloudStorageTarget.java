@@ -40,6 +40,7 @@ import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.lib.event.WholeFileProcessedEvent;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.lib.io.fileref.FileRefStreamCloseEventHandler;
@@ -215,10 +216,10 @@ public class GoogleCloudStorageTarget extends BaseTarget {
           return;
         } //else overwrite
 
-        EventRecord eventRecord = GCSEvents.FILE_TRANSFER_COMPLETE_EVENT.create(getContext())
-            .with(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO, record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getValueAsMap())
+        EventRecord eventRecord = WholeFileProcessedEvent.FILE_TRANSFER_COMPLETE_EVENT.create(getContext())
+            .with(WholeFileProcessedEvent.SOURCE_FILE_INFO, record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getValueAsMap())
             .withStringMap(
-                FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO,
+                WholeFileProcessedEvent.TARGET_FILE_INFO,
                 ImmutableMap.of(
                     GCSEvents.BUCKET, blobId.getBucket(),
                     GCSEvents.OBJECT_KEY, blobId.getName()

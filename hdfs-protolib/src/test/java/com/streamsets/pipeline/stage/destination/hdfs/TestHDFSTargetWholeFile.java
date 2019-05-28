@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.WholeFileExistsAction;
+import com.streamsets.pipeline.lib.event.WholeFileProcessedEvent;
 import com.streamsets.pipeline.lib.hdfs.common.Errors;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.io.fileref.LocalFileRef;
@@ -492,7 +493,7 @@ public class TestHDFSTargetWholeFile {
         Record eventRecord = eventRecordIterator.next();
 
         String type = eventRecord.getHeader().getAttribute("sdc.event.type");
-        Assert.assertEquals(FileRefUtil.WHOLE_FILE_WRITE_FINISH_EVENT, type);
+        Assert.assertEquals(WholeFileProcessedEvent.WHOLE_FILE_WRITE_FINISH_EVENT, type);
 
         Assert.assertTrue(eventRecord.has(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO_PATH));
         Assert.assertTrue(eventRecord.has(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH));

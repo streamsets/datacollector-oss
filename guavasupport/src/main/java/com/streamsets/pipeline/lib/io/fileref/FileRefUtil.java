@@ -21,19 +21,16 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.api.service.dataformats.WholeFileChecksumAlgorithm;
 import com.streamsets.pipeline.config.ChecksumAlgorithm;
-import com.streamsets.pipeline.lib.event.EventCreator;
+import com.streamsets.pipeline.lib.event.WholeFileProcessedEvent;
 import com.streamsets.pipeline.lib.generator.StreamCloseEventHandler;
 
 import java.io.IOException;
@@ -70,29 +67,10 @@ public final class FileRefUtil {
   public static final String FILE_REF_FIELD_PATH = "/" + FILE_REF_FIELD_NAME;
   public static final String FILE_INFO_FIELD_PATH = "/" + FILE_INFO_FIELD_NAME;
 
-
-  //Whole File event Record constants
-  public static final String WHOLE_FILE_WRITE_FINISH_EVENT = "wholeFileProcessed";
-
-  public static final String WHOLE_FILE_SOURCE_FILE_INFO = "sourceFileInfo";
-  public static final String WHOLE_FILE_TARGET_FILE_INFO = "targetFileInfo";
-
-  public static final String WHOLE_FILE_SOURCE_FILE_INFO_PATH = "/" + WHOLE_FILE_SOURCE_FILE_INFO;
-  public static final String WHOLE_FILE_TARGET_FILE_INFO_PATH = "/" + WHOLE_FILE_TARGET_FILE_INFO;
-
-  public static final String WHOLE_FILE_CHECKSUM = "checksum";
-  public static final String WHOLE_FILE_CHECKSUM_ALGO = "checksumAlgorithm";
+  public static final String WHOLE_FILE_SOURCE_FILE_INFO_PATH = "/" + WholeFileProcessedEvent.SOURCE_FILE_INFO;
+  public static final String WHOLE_FILE_TARGET_FILE_INFO_PATH = "/" + WholeFileProcessedEvent.TARGET_FILE_INFO;
 
   public static final Joiner COMMA_JOINER = Joiner.on(",");
-
-  public static final EventCreator FILE_TRANSFER_COMPLETE_EVENT =
-      new EventCreator.Builder(FileRefUtil.WHOLE_FILE_WRITE_FINISH_EVENT, 1)
-          .withRequiredField(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO)
-          .withRequiredField(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO)
-          .withOptionalField(FileRefUtil.WHOLE_FILE_CHECKSUM)
-          .withOptionalField(FileRefUtil.WHOLE_FILE_CHECKSUM_ALGO)
-          .build();
-
 
   public static final ImmutableSet<String> MANDATORY_METADATA_INFO =
       new ImmutableSet.Builder<String>().add("size").build();
@@ -182,7 +160,7 @@ public final class FileRefUtil {
       return Field.create(fields);
     } else if (metadataObject instanceof Map) {
       boolean isListMap = (metadataObject instanceof LinkedHashMap);
-      Map<String, Field> fieldMap = isListMap? new LinkedHashMap<String, Field>() : new HashMap<String, Field>();
+      Map<String, Field> fieldMap = isListMap? new LinkedHashMap<>() : new HashMap<>();
       Map<Object, Object> map = (Map)metadataObject;
       for (Map.Entry<Object, Object> entry : map.entrySet()) {
         fieldMap.put(entry.getKey().toString(), createFieldForMetadata(entry.getValue()));
@@ -191,16 +169,6 @@ public final class FileRefUtil {
     } else {
       return Field.create(metadataObject.toString());
     }
-  }
-
-  public static EventRecord createAndInitWholeFileEventRecord(Stage.Context context) {
-    String recordSourceId = Utils.format("event:{}:{}:{}", WHOLE_FILE_WRITE_FINISH_EVENT, 1, System.currentTimeMillis());
-    EventRecord wholeFileEventRecord = context.createEventRecord(WHOLE_FILE_WRITE_FINISH_EVENT, 1, recordSourceId);
-    Map<String, Field> fieldMap = new HashMap<>();
-    fieldMap.put(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO, Field.create(Field.Type.MAP, new HashMap<String, Field>()));
-    fieldMap.put(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO, Field.create(Field.Type.MAP, new HashMap<String, Field>()));
-    wholeFileEventRecord.set(Field.create(Field.Type.MAP, fieldMap));
-    return wholeFileEventRecord;
   }
 
   @SuppressWarnings("unchecked")

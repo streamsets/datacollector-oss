@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.WholeFileExistsAction;
+import com.streamsets.pipeline.lib.event.WholeFileProcessedEvent;
 import com.streamsets.pipeline.lib.io.fileref.FileRefTestUtil;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.tls.KeyStoreType;
@@ -458,7 +459,7 @@ public class TestRemoteUploadTarget extends FTPAndSSHDUnitTest {
     Record completedEvent = eventRecords.get(0);
 
     String type = completedEvent.getHeader().getAttribute("sdc.event.type");
-    Assert.assertEquals(FileRefUtil.WHOLE_FILE_WRITE_FINISH_EVENT, type);
+    Assert.assertEquals(WholeFileProcessedEvent.WHOLE_FILE_WRITE_FINISH_EVENT, type);
 
     Assert.assertTrue(completedEvent.has(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO_PATH));
     Assert.assertTrue(completedEvent.has(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH));

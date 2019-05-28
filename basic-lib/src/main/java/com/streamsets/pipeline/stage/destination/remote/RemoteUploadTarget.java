@@ -27,6 +27,7 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.WholeFileExistsAction;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.lib.event.WholeFileProcessedEvent;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
@@ -34,7 +35,6 @@ import com.streamsets.pipeline.lib.remote.FTPRemoteConnector;
 import com.streamsets.pipeline.lib.remote.RemoteConnector;
 import com.streamsets.pipeline.lib.remote.RemoteFile;
 import com.streamsets.pipeline.lib.remote.SFTPRemoteConnector;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -147,13 +147,13 @@ public class RemoteUploadTarget extends BaseTarget {
 
   private void sendCompleteEvent(Record record, RemoteFile file) {
     LOG.debug("Sending File Transfer Complete Event for '{}'", file.getFilePath());
-    RemoteUploadEvents.FILE_TRANSFER_COMPLETE_EVENT.create(
+    WholeFileProcessedEvent.FILE_TRANSFER_COMPLETE_EVENT.create(
         getContext())
         .with(
-            FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO,
+            WholeFileProcessedEvent.SOURCE_FILE_INFO,
             record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getValueAsMap()
         )
-        .withStringMap(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO,
+        .withStringMap(WholeFileProcessedEvent.TARGET_FILE_INFO,
             ImmutableMap.of(EVENT_PATH_FIELD_NAME, file.getFilePath())
         )
         .createAndSend();

@@ -18,6 +18,7 @@ package com.streamsets.pipeline.lib.io.fileref;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.Hasher;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.event.WholeFileProcessedEvent;
 import com.streamsets.pipeline.lib.generator.StreamCloseEventHandler;
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
 
@@ -112,8 +113,8 @@ class ChecksumCalculatingWrapperStream<T extends AutoCloseable> extends Abstract
       if (streamCloseEventHandler != null) {
         streamCloseEventHandler.handleCloseEvent(
             new ImmutableMap.Builder<String, Object>()
-                .put(FileRefUtil.WHOLE_FILE_CHECKSUM, getCalculatedChecksum())
-                .put(FileRefUtil.WHOLE_FILE_CHECKSUM_ALGO, checksumAlgorithm)
+                .put(WholeFileProcessedEvent.CHECKSUM, getCalculatedChecksum())
+                .put(WholeFileProcessedEvent.CHECKSUM_ALGORITHM, checksumAlgorithm)
                 .build()
         );
       }

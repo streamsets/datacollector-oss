@@ -30,6 +30,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.WholeFileExistsAction;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.lib.event.WholeFileProcessedEvent;
 import com.streamsets.pipeline.lib.generator.StreamCloseEventHandler;
 import com.streamsets.pipeline.lib.io.fileref.FileRefStreamCloseEventHandler;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
@@ -136,10 +137,10 @@ final class WholeFileFormatOutputStreamHandler implements OutputStreamHelper {
       throw new OnRecordErrorException(record, Errors.ADLS_00, e);
     }
     //Update the event record with source file info information
-    return DataLakeEvents.FILE_TRANSFER_COMPLETE_EVENT
+    return WholeFileProcessedEvent.FILE_TRANSFER_COMPLETE_EVENT
         .create(context)
-        .with(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO, record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getValueAsMap())
-        .withStringMap(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO, ImmutableMap.of("path", renamableFinalPath))
+        .with(WholeFileProcessedEvent.SOURCE_FILE_INFO, record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getValueAsMap())
+        .withStringMap(WholeFileProcessedEvent.TARGET_FILE_INFO, ImmutableMap.of("path", renamableFinalPath))
         .create();
   }
 }

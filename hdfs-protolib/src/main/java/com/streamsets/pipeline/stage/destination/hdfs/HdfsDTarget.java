@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.configurablestage.DTarget;
+import com.streamsets.pipeline.lib.event.WholeFileProcessedEvent;
 
 @StageDef(
     version = 4,
@@ -31,6 +32,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
     privateClassLoader = true,
     upgrader = HdfsTargetUpgrader.class,
     producesEvents = true,
+    eventDefs = {WholeFileProcessedEvent.class},
     onlineHelpRefUrl ="index.html?contextID=task_m2m_skm_zq"
 )
 @ConfigGroups(Groups.class)

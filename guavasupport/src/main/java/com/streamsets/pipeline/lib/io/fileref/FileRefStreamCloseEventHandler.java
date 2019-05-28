@@ -18,6 +18,7 @@ package com.streamsets.pipeline.lib.io.fileref;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.event.WholeFileProcessedEvent;
 import com.streamsets.pipeline.lib.generator.StreamCloseEventHandler;
 
 import java.util.Map;
@@ -31,19 +32,19 @@ public class FileRefStreamCloseEventHandler implements StreamCloseEventHandler<M
 
   @Override
   public void handleCloseEvent(Map<String, Object> eventInfo) {
-    if (eventInfo.containsKey(FileRefUtil.WHOLE_FILE_CHECKSUM_ALGO)) {
+    if (eventInfo.containsKey(WholeFileProcessedEvent.CHECKSUM_ALGORITHM)) {
       Utils.checkState(
-          eventInfo.containsKey(FileRefUtil.WHOLE_FILE_CHECKSUM),
+          eventInfo.containsKey(WholeFileProcessedEvent.CHECKSUM),
           "Calculated checksum should be present in the info"
       );
       Map<String, Field> rootField = eventRecord.get().getValueAsMap();
       rootField.put(
-          FileRefUtil.WHOLE_FILE_CHECKSUM_ALGO,
-          Field.create(Field.Type.STRING, eventInfo.get(FileRefUtil.WHOLE_FILE_CHECKSUM_ALGO))
+          WholeFileProcessedEvent.CHECKSUM_ALGORITHM,
+          Field.create(Field.Type.STRING, eventInfo.get(WholeFileProcessedEvent.CHECKSUM_ALGORITHM))
       );
       rootField.put(
-          FileRefUtil.WHOLE_FILE_CHECKSUM,
-          Field.create(Field.Type.STRING, eventInfo.get(FileRefUtil.WHOLE_FILE_CHECKSUM))
+          WholeFileProcessedEvent.CHECKSUM,
+          Field.create(Field.Type.STRING, eventInfo.get(WholeFileProcessedEvent.CHECKSUM))
       );
     }
   }

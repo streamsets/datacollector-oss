@@ -35,6 +35,7 @@ import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorServic
 import com.streamsets.pipeline.api.service.dataformats.WholeFileChecksumAlgorithm;
 import com.streamsets.pipeline.config.ChecksumAlgorithm;
 import com.streamsets.pipeline.lib.aws.AwsRegion;
+import com.streamsets.pipeline.lib.event.WholeFileProcessedEvent;
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.io.fileref.LocalFileRef;
@@ -358,11 +359,11 @@ public class TestAmazonS3TargetForWholeFile extends AmazonS3TestSuite {
             .getValueAsMap();
         Assert.assertEquals(targetFileInfo.get("bucket").getValueAsString(), TARGET_BUCKET_NAME);
 
-        Assert.assertTrue(eventRecord.has("/" + FileRefUtil.WHOLE_FILE_CHECKSUM_ALGO));
-        Assert.assertTrue(eventRecord.has("/" + FileRefUtil.WHOLE_FILE_CHECKSUM));
+        Assert.assertTrue(eventRecord.has("/" + WholeFileProcessedEvent.CHECKSUM_ALGORITHM));
+        Assert.assertTrue(eventRecord.has("/" + WholeFileProcessedEvent.CHECKSUM));
 
         Assert.assertEquals(checksumAlgorithm.name(),
-            eventRecord.get("/" + FileRefUtil.WHOLE_FILE_CHECKSUM_ALGO).getValueAsString()
+            eventRecord.get("/" + WholeFileProcessedEvent.CHECKSUM_ALGORITHM).getValueAsString()
         );
 
         //strip out the filePrefix sdc-
@@ -376,7 +377,7 @@ public class TestAmazonS3TargetForWholeFile extends AmazonS3TestSuite {
 
         String checksum = HashingUtil.getHasher(ChecksumAlgorithm.forApi(checksumAlgorithm).getHashType()).hashString(SAMPLE_TEXT_FOR_FILE.get(
             objectKey), Charset.defaultCharset()).toString();
-        Assert.assertEquals(checksum, eventRecord.get("/" + FileRefUtil.WHOLE_FILE_CHECKSUM).getValueAsString());
+        Assert.assertEquals(checksum, eventRecord.get("/" + WholeFileProcessedEvent.CHECKSUM).getValueAsString());
       }
     } finally {
       targetRunner.runDestroy();

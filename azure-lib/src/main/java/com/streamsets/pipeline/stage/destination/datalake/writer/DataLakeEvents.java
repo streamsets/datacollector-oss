@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.stage.destination.datalake.writer;
 
 import com.streamsets.pipeline.lib.event.EventCreator;
-import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 
 public final class DataLakeEvents {
   /**
@@ -28,11 +27,6 @@ public final class DataLakeEvents {
       .withRequiredField("length") // Size of the closed file in bytes
       .build();
 
-
-  /**
-   * Fired when the file transfer is complete.
-   */
-  public static EventCreator FILE_TRANSFER_COMPLETE_EVENT = FileRefUtil.FILE_TRANSFER_COMPLETE_EVENT;
 
   private DataLakeEvents() {
     // Instantiation is prohibited

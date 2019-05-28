@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.ChecksumAlgorithm;
+import com.streamsets.pipeline.lib.event.WholeFileProcessedEvent;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
@@ -42,6 +43,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 
@@ -158,7 +160,10 @@ public class TestWholeFileDataGenerator {
 
   @Test
   public void testGeneratorWithStreamHandler() throws Exception {
-    Record eventRecord = FileRefUtil.createAndInitWholeFileEventRecord(context);
+    Record eventRecord = WholeFileProcessedEvent.FILE_TRANSFER_COMPLETE_EVENT.create(context, null)
+        .with(WholeFileProcessedEvent.SOURCE_FILE_INFO, Collections.emptyMap())
+        .withStringMap(WholeFileProcessedEvent.TARGET_FILE_INFO, Collections.emptyMap())
+        .create();
 
     OutputStream os = new FileOutputStream(getTargetFilePath());
     DataGeneratorFactory factory =
@@ -173,7 +178,7 @@ public class TestWholeFileDataGenerator {
     }
     Assert.assertTrue(eventRecord.has(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH));
     Assert.assertTrue(eventRecord.has(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO_PATH));
-    Assert.assertTrue(eventRecord.has("/"+ FileRefUtil.WHOLE_FILE_CHECKSUM_ALGO));
-    Assert.assertTrue(eventRecord.has("/" + FileRefUtil.WHOLE_FILE_CHECKSUM));
+    Assert.assertTrue(eventRecord.has("/"+ WholeFileProcessedEvent.CHECKSUM_ALGORITHM));
+    Assert.assertTrue(eventRecord.has("/" + WholeFileProcessedEvent.CHECKSUM));
   }
 }
