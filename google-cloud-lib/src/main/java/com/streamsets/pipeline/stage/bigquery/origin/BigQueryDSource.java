@@ -30,6 +30,7 @@ import com.streamsets.pipeline.stage.bigquery.lib.Groups;
     icon="bigquery.png",
     execution = ExecutionMode.STANDALONE,
     producesEvents = true,
+    eventDefs = {BigQuerySuccessEvent.class},
     upgrader = BigQuerySourceUpgrader.class,
     onlineHelpRefUrl ="index.html?contextID=task_n5w_ykv_q1b"
 )

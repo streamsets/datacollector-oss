@@ -17,7 +17,6 @@ package com.streamsets.pipeline.stage.bigquery.origin;
 
 import com.google.auth.Credentials;
 import com.google.cloud.bigquery.BigQuery;
-import com.google.cloud.bigquery.FieldValue;
 import com.google.cloud.bigquery.FieldValueList;
 import com.google.cloud.bigquery.QueryJobConfiguration;
 import com.google.cloud.bigquery.Schema;
@@ -29,7 +28,6 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.event.EventCreator;
 import com.streamsets.pipeline.stage.bigquery.lib.BigQueryDelegate;
 import com.streamsets.pipeline.stage.bigquery.lib.Groups;
 import org.slf4j.Logger;
@@ -44,17 +42,6 @@ import static com.streamsets.pipeline.stage.bigquery.lib.Errors.BIGQUERY_05;
 
 public class BigQuerySource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(BigQuerySource.class);
-
-  private static final String QUERY = "query";
-  private static final String TIMESTAMP = "timestamp";
-  private static final String ROW_COUNT = "rows";
-  private static final String SOURCE_OFFSET = "offset";
-  private static final EventCreator QUERY_SUCCESS = new EventCreator.Builder("big-query-success", 1)
-      .withRequiredField(QUERY)
-      .withRequiredField(TIMESTAMP)
-      .withRequiredField(ROW_COUNT)
-      .withRequiredField(SOURCE_OFFSET)
-      .build();
 
   private final BigQuerySourceConfig conf;
 
@@ -132,11 +119,11 @@ public class BigQuerySource extends BaseSource {
 
     if (result == null) {
       // finished because no more pages
-      QUERY_SUCCESS.create(getContext())
-          .with(QUERY, conf.query)
-          .with(TIMESTAMP, System.currentTimeMillis())
-          .with(ROW_COUNT, totalCount)
-          .with(SOURCE_OFFSET, sourceOffset)
+      BigQuerySuccessEvent.EVENT_CREATOR.create(getContext())
+          .with(BigQuerySuccessEvent.QUERY, conf.query)
+          .with(BigQuerySuccessEvent.TIMESTAMP, System.currentTimeMillis())
+          .with(BigQuerySuccessEvent.ROW_COUNT, totalCount)
+          .with(BigQuerySuccessEvent.SOURCE_OFFSET, sourceOffset)
           .createAndSend();
       return null;
     }
