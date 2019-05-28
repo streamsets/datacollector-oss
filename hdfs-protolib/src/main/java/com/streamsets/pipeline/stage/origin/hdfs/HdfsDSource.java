@@ -27,6 +27,9 @@ import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.FileRawSourcePreviewer;
 import com.streamsets.pipeline.lib.dirspooler.SpoolDirConfigBean;
+import com.streamsets.pipeline.lib.event.FinishedFileEvent;
+import com.streamsets.pipeline.lib.event.NewFileEvent;
+import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 
 import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
 
@@ -39,6 +42,7 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
     recordsByRef = true,
     resetOffset = true,
     producesEvents = true,
+    eventDefs = {NewFileEvent.class, FinishedFileEvent.class, NoMoreDataEvent.class},
     onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Origins/HDFSStandalone.html#task_l3t_sdm_hdb"
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)

@@ -19,11 +19,10 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.lib.event.FinishedFileEvent;
+import com.streamsets.pipeline.lib.event.NewFileEvent;
+import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 import com.streamsets.pipeline.stage.origin.hdfs.HdfsDSource;
-import com.streamsets.pipeline.stage.origin.hdfs.HdfsSource;
-
-import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
 
 @StageDef(
     version = 1,
@@ -34,6 +33,7 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
     recordsByRef = true,
     resetOffset = true,
     producesEvents = true,
+    eventDefs = {NewFileEvent.class, FinishedFileEvent.class, NoMoreDataEvent.class},
     onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Origins/MapRFSStandalone.html#task_tpv_kqc_mdb"
 )
 @GenerateResourceBundle
