@@ -200,6 +200,18 @@
         <version>${project.version}</version>
       </dependency>
       <dependency>
+        <groupId>com.streamsets</groupId>
+        <artifactId>streamsets-datacollector-hdfs-protolib</artifactId>
+        <type>test-jar</type>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.streamsets</groupId>
+        <artifactId>streamsets-datacollector-cluster-hdfs-protolib</artifactId>
+        <type>test-jar</type>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-compress</artifactId>
         <version>${commons-compress.version}</version>

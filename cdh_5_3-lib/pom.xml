@@ -462,6 +462,18 @@
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-hdfs-protolib</artifactId>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-cluster-hdfs-protolib</artifactId>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
 
   </dependencies>
 
@@ -481,11 +493,9 @@
             <configuration>
               <sources>
                 <source>${basedir}/../hbase-protolib/src/test/java</source>
-                <source>${basedir}/../hdfs-protolib/src/test/java</source>
                 <source>${basedir}/../mapreduce-protolib/src/test/java</source>
                 <source>${basedir}/../flume-protolib/src/test/java</source>
                 <source>${basedir}/../solr-protolib/src/test/java</source>
-                <source>${basedir}/../cluster-hdfs-protolib/src/test/java</source>
               </sources>
             </configuration>
           </execution>
@@ -501,9 +511,6 @@
                   <directory>${basedir}/../hbase-protolib/src/test/resources</directory>
                 </resource>
                 <resource>
-                  <directory>${basedir}/../hdfs-protolib/src/test/resources</directory>
-                </resource>
-                <resource>
                   <directory>${basedir}/../mapreduce-protolib/src/test/resources</directory>
                 </resource>
                 <resource>
@@ -511,9 +518,6 @@
                 </resource>
                 <resource>
                   <directory>${basedir}/../solr-protolib/src/test/resources</directory>
-                </resource>
-                <resource>
-                  <directory>${basedir}/../cluster-hdfs-protolib/src/test/resources</directory>
                 </resource>
               </resources>
             </configuration>

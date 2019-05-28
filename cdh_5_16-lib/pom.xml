@@ -792,6 +792,18 @@
             <version>${jersey.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.streamsets</groupId>
+            <artifactId>streamsets-datacollector-hdfs-protolib</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.streamsets</groupId>
+            <artifactId>streamsets-datacollector-cluster-hdfs-protolib</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 
@@ -809,9 +821,7 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>${basedir}/../cluster-hdfs-protolib/src/test/java</source>
                                 <source>${basedir}/../flume-protolib/src/test/java</source>
-                                <source>${basedir}/../hdfs-protolib/src/test/java</source>
                                 <source>${basedir}/../hbase-protolib/src/test/java</source>
                                 <source>${basedir}/../hive-protolib/src/test/java</source>
                                 <source>${basedir}/../kudu-protolib/src/test/java</source>
@@ -830,9 +840,6 @@
                         <configuration>
                             <resources>
                                 <resource>
-                                    <directory>${basedir}/../hdfs-protolib/src/test/resources</directory>
-                                </resource>
-                                <resource>
                                     <directory>${basedir}/../mapreduce-protolib/src/test/resources</directory>
                                 </resource>
                                 <resource>
@@ -849,9 +856,6 @@
                                 </resource>
                                 <resource>
                                     <directory>${basedir}/../flume-protolib/src/test/resources</directory>
-                                </resource>
-                                <resource>
-                                    <directory>${basedir}/../cluster-hdfs-protolib/src/test/resources</directory>
                                 </resource>
                                 <resource>
                                     <directory>${basedir}/../spark-processor-protolib/src/test/resources</directory>
