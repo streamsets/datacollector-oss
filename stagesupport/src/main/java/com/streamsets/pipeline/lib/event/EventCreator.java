@@ -210,15 +210,13 @@ public class EventCreator {
      */
     public EventRecord create() {
       // Verify all required and optional fields
-      Set<String> missingRequiredFields = new HashSet<>();
-      missingRequiredFields.addAll(requiredFields);
+      Set<String> missingRequiredFields = new HashSet<>(requiredFields);
       missingRequiredFields.removeAll(rootMap.keySet());
       if(!missingRequiredFields.isEmpty()) {
         throw new IllegalStateException("Some of the required fields are missing: " + String.join(",", missingRequiredFields));
       }
 
-      Set<String> unknownFields = new HashSet<>();
-      unknownFields.addAll(rootMap.keySet());
+      Set<String> unknownFields = new HashSet<>(rootMap.keySet());
       unknownFields.removeAll(requiredAndOptionalFields);
       if(!unknownFields.isEmpty()) {
         throw new IllegalStateException("There are unknown fields: " + String.join(",", unknownFields));

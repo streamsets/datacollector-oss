@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
 import com.streamsets.pipeline.api.service.ServiceConfiguration;
 import com.streamsets.pipeline.api.service.ServiceDependency;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
+import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 
 @StageDef(
     version = 11,
@@ -35,12 +36,16 @@ import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
     recordsByRef = true,
     resetOffset = true,
     producesEvents = true,
+    eventDefs = {NoMoreDataEvent.class},
     upgrader = AmazonS3SourceUpgrader.class,
     onlineHelpRefUrl ="index.html?contextID=task_gfj_ssv_yq",
     services = @ServiceDependency(
       service = DataFormatParserService.class,
       configuration = {
-        @ServiceConfiguration(name = "displayFormats", value = "AVRO,DELIMITED,EXCEL,JSON,LOG,PROTOBUF,SDC_JSON,TEXT,WHOLE_FILE,XML")
+        @ServiceConfiguration(
+            name = "displayFormats",
+            value = "AVRO,DELIMITED,EXCEL,JSON,LOG,PROTOBUF,SDC_JSON,TEXT,WHOLE_FILE,XML"
+        )
       }
     )
 )

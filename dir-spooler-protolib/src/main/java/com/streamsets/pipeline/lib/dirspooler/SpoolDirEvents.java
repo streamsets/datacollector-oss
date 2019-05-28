@@ -35,9 +35,4 @@ public class SpoolDirEvents {
       .withOptionalField("error-count")
       .build();
 
-  public static EventCreator NO_MORE_DATA = new EventCreator.Builder("no-more-data", 1)
-      .withOptionalField("record-count")
-      .withOptionalField("error-count")
-      .withOptionalField("file-count")
-      .build();
 }

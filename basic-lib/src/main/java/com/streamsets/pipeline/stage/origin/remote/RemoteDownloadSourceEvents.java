@@ -36,13 +36,4 @@ public final class RemoteDownloadSourceEvents {
       .withOptionalField("record-count")
       .withOptionalField("error-count")
       .build();
-
-  /**
-   * Fired when there is no more files to be read.
-   */
-  public static EventCreator NO_MORE_DATA = new EventCreator.Builder("no-more-data", 1)
-      .withOptionalField("record-count")
-      .withOptionalField("error-count")
-      .withOptionalField("file-count")
-      .build();
 }

@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -232,11 +233,11 @@ public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements Amazon
   public boolean sendNoMoreDataEvent(BatchContext batchContext) {
     boolean eventSent = false;
     if (allFilesAreFinished() && !noMoreDataEventSent.getAndSet(true)) {
-      S3Events.NO_MORE_DATA.create(context, batchContext)
-                           .with("record-count", noMoreDataRecordCount.get())
-                           .with("error-count", noMoreDataErrorCount.get())
-                           .with("file-count", noMoreDataFileCount.get())
-                           .createAndSend();
+      NoMoreDataEvent.EVENT_CREATOR.create(context, batchContext)
+          .with(NoMoreDataEvent.RECORD_COUNT, noMoreDataRecordCount.get())
+          .with(NoMoreDataEvent.ERROR_COUNT, noMoreDataErrorCount.get())
+          .with(NoMoreDataEvent.FILE_COUNT, noMoreDataFileCount.get())
+          .createAndSend();
       noMoreDataRecordCount.set(0);
       noMoreDataErrorCount.set(0);
       noMoreDataFileCount.set(0);

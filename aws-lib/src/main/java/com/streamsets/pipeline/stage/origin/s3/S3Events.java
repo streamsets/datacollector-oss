@@ -37,11 +37,4 @@ public class S3Events {
   ).withRequiredField("filepath") // Absolute path to the done file
    .withOptionalField("record-count").withOptionalField("error-count").build();
 
-  /**
-   * Fired when there are no more objects available to process
-   */
-  public static EventCreator NO_MORE_DATA = new EventCreator.Builder(
-      "no-more-data",
-      1
-  ).withOptionalField("record-count").withOptionalField("error-count").withOptionalField("file-count").build();
 }

@@ -33,6 +33,7 @@ import com.streamsets.pipeline.api.lineage.LineageEventType;
 import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.PostProcessingOptions;
+import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -288,10 +289,10 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
                 noMoreDataRecordCount,
                 noMoreDataErrorCount
             );
-            RemoteDownloadSourceEvents.NO_MORE_DATA.create(getContext())
-                .with("record-count", noMoreDataRecordCount)
-                .with("error-count", noMoreDataErrorCount)
-                .with("file-count", noMoreDataFileCount)
+            NoMoreDataEvent.EVENT_CREATOR.create(getContext())
+                .with(NoMoreDataEvent.RECORD_COUNT, noMoreDataRecordCount)
+                .with(NoMoreDataEvent.ERROR_COUNT, noMoreDataErrorCount)
+                .with(NoMoreDataEvent.FILE_COUNT, noMoreDataFileCount)
                 .createAndSend();
             noMoreDataErrorCount = 0;
             noMoreDataRecordCount = 0;

@@ -32,6 +32,7 @@ import com.streamsets.pipeline.api.lineage.EndPointType;
 import com.streamsets.pipeline.api.lineage.LineageEvent;
 import com.streamsets.pipeline.api.lineage.LineageEventType;
 import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
+import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -286,10 +287,10 @@ public class SpoolDirRunnable implements Runnable {
       LOG.info("sending no-more-data event.  records {} errors {} files {} ",
           noMoreDataRecordCount, noMoreDataErrorCount, noMoreDataFileCount
       );
-      SpoolDirEvents.NO_MORE_DATA.create(context, batchContext)
-          .with("record-count", noMoreDataRecordCount)
-          .with("error-count", noMoreDataErrorCount)
-          .with("file-count", noMoreDataFileCount)
+      NoMoreDataEvent.EVENT_CREATOR.create(context, batchContext)
+          .with(NoMoreDataEvent.RECORD_COUNT, noMoreDataRecordCount)
+          .with(NoMoreDataEvent.ERROR_COUNT, noMoreDataErrorCount)
+          .with(NoMoreDataEvent.FILE_COUNT, noMoreDataFileCount)
           .createAndSend();
       shouldSendNoMoreDataEvent = false;
       noMoreDataRecordCount = 0;
