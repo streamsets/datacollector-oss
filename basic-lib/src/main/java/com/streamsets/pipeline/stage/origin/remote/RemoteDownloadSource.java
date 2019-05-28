@@ -33,6 +33,8 @@ import com.streamsets.pipeline.api.lineage.LineageEventType;
 import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.PostProcessingOptions;
+import com.streamsets.pipeline.lib.event.FinishedFileEvent;
+import com.streamsets.pipeline.lib.event.NewFileEvent;
 import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.parser.DataParser;
@@ -252,8 +254,9 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
             perFileErrorCount = 0;
 
             LOG.debug("Sending New File Event. File: {}", next.getFilePath());
-            RemoteDownloadSourceEvents.NEW_FILE.create(getContext()).with("filepath", next.getFilePath()).createAndSend();
-
+            NewFileEvent.EVENT_CREATOR.create(getContext())
+                .with(NewFileEvent.FILE_PATH, next.getFilePath())
+                .createAndSend();
             sendLineageEvent(next);
 
             currentOffset = delegate.createOffset(next.getFilePath());
@@ -355,10 +358,10 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
                 perFileRecordCount,
                 perFileErrorCount
             );
-            RemoteDownloadSourceEvents.FINISHED_FILE.create(getContext())
-                .with("filepath", next.getFilePath())
-                .with("record-count", perFileRecordCount)
-                .with("error-count", perFileErrorCount)
+            FinishedFileEvent.EVENT_CREATOR.create(getContext())
+                .with(FinishedFileEvent.FILE_PATH, next.getFilePath())
+                .with(FinishedFileEvent.RECORD_COUNT, perFileRecordCount)
+                .with(FinishedFileEvent.ERROR_COUNT, perFileErrorCount)
                 .createAndSend();
             handlePostProcessing(next.getFilePath());
           } finally {

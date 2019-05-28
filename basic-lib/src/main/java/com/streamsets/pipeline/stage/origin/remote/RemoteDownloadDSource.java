@@ -23,6 +23,8 @@ import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DSource;
+import com.streamsets.pipeline.lib.event.FinishedFileEvent;
+import com.streamsets.pipeline.lib.event.NewFileEvent;
 import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 
 @StageDef(
@@ -34,7 +36,7 @@ import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
     recordsByRef = true,
     resetOffset = true,
     producesEvents = true,
-    eventDefs = {NoMoreDataEvent.class},
+    eventDefs = {NewFileEvent.class, FinishedFileEvent.class, NoMoreDataEvent.class},
     upgrader = RemoteDownloadSourceUpgrader.class,
     onlineHelpRefUrl ="index.html?contextID=task_lfx_fzd_5v"
 )

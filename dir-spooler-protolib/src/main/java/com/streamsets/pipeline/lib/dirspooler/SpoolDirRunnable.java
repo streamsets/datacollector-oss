@@ -32,6 +32,8 @@ import com.streamsets.pipeline.api.lineage.EndPointType;
 import com.streamsets.pipeline.api.lineage.LineageEvent;
 import com.streamsets.pipeline.api.lineage.LineageEventType;
 import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
+import com.streamsets.pipeline.lib.event.FinishedFileEvent;
+import com.streamsets.pipeline.lib.event.NewFileEvent;
 import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.parser.DataParser;
@@ -227,7 +229,9 @@ public class SpoolDirRunnable implements Runnable {
           if (currentFile != null && !offset.equals(MINUS_ONE)) {
             perFileRecordCount = 0;
             perFileErrorCount = 0;
-            SpoolDirEvents.NEW_FILE.create(context, batchContext).with("filepath", currentFile.getAbsolutePath()).createAndSend();
+            NewFileEvent.EVENT_CREATOR.create(context, batchContext)
+                .with(NewFileEvent.FILE_PATH, currentFile.getAbsolutePath())
+                .createAndSend();
             noMoreDataFileCount++;
             totalFiles++;
           }
@@ -252,10 +256,10 @@ public class SpoolDirRunnable implements Runnable {
         offset = generateBatch(currentFile, offset, batchSize, batchContext.getBatchMaker());
 
         if (MINUS_ONE.equals(offset)) {
-          SpoolDirEvents.FINISHED_FILE.create(context, batchContext)
-              .with("filepath", currentFile.getAbsolutePath())
-              .with("error-count", perFileErrorCount)
-              .with("record-count", perFileRecordCount)
+          FinishedFileEvent.EVENT_CREATOR.create(context, batchContext)
+              .with(FinishedFileEvent.FILE_PATH, currentFile.getAbsolutePath())
+              .with(FinishedFileEvent.ERROR_COUNT, perFileErrorCount)
+              .with(FinishedFileEvent.RECORD_COUNT, perFileRecordCount)
               .createAndSend();
 
           LineageEvent event = context.createLineageEvent(LineageEventType.ENTITY_READ);

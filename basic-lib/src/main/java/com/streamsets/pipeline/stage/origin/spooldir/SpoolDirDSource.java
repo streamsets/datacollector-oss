@@ -27,6 +27,8 @@ import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.FileRawSourcePreviewer;
 import com.streamsets.pipeline.lib.dirspooler.SpoolDirConfigBean;
+import com.streamsets.pipeline.lib.event.FinishedFileEvent;
+import com.streamsets.pipeline.lib.event.NewFileEvent;
 import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 
 import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
@@ -41,7 +43,7 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
     upgrader = SpoolDirSourceUpgrader.class,
     resetOffset = true,
     producesEvents = true,
-    eventDefs = {NoMoreDataEvent.class},
+    eventDefs = {NewFileEvent.class, FinishedFileEvent.class, NoMoreDataEvent.class},
     onlineHelpRefUrl ="index.html?contextID=task_gfj_ssv_yq"
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
