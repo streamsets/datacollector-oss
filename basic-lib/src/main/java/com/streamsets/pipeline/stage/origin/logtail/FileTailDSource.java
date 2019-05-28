@@ -36,6 +36,7 @@ import com.streamsets.pipeline.config.FileRawSourcePreviewer;
     upgrader = FileTailSourceUpgrader.class,
     resetOffset = true,
     producesEvents = true,
+    eventDefs = {StartEvent.class, EndEvent.class, ErrorEvent.class},
     onlineHelpRefUrl ="index.html?contextID=task_unq_wdw_yq"
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
