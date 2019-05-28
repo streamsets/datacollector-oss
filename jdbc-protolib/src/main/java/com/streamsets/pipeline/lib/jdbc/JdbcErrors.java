@@ -147,6 +147,7 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_408("Invalid parameter value: {}"), //Postgres
   JDBC_409("Offset column can't contain NULL: {}"),
   JDBC_410("Failed to parse column '{}' to field with value {}."),
+  JDBC_411("Filter schema values cannot be empty."),
   ;
 
   private final String msg;

@@ -18,16 +18,10 @@ package com.streamsets.pipeline.lib.jdbc;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.DecoderValues;
-import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PgVersionValues;
-import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PostgresCDCConfigBean;
-import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PostgresCDCWalReceiver;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PostgresWalRecord;
-import com.zaxxer.hikari.HikariDataSource;
 import java.nio.ByteBuffer;
-import java.sql.Connection;
 import java.util.List;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.postgresql.replication.LogSequenceNumber;
 
