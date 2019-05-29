@@ -20,7 +20,10 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.stage.conf.DataLakeGen2BaseConfig;
 import com.streamsets.pipeline.stage.origin.hdfs.HdfsSourceConfigBean;
+import org.apache.hadoop.fs.FileSystem;
 
+import java.net.URI;
+import java.security.PrivilegedExceptionAction;
 import java.util.List;
 
 public class DataLakeGen2SourceConfigBean extends HdfsSourceConfigBean {
@@ -32,5 +35,23 @@ public class DataLakeGen2SourceConfigBean extends HdfsSourceConfigBean {
   public void init(final Stage.Context context, List<Stage.ConfigIssue> issues) {
     dataLakeConfig.init(this, context, issues);
     super.init(context, issues);
+  }
+
+  @Override
+  protected FileSystem createFileSystem() throws Exception {
+    try {
+      return userUgi.doAs(new PrivilegedExceptionAction<FileSystem>() {
+        @Override
+        public FileSystem run() throws Exception {
+          return FileSystem.newInstance(new URI(hdfsUri), hdfsConfiguration);
+        }
+      });
+    } catch (RuntimeException ex) {
+      Throwable cause = ex.getCause();
+      if (cause instanceof Exception) {
+        throw (Exception)cause;
+      }
+      throw ex;
+    }
   }
 }
