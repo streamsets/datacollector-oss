@@ -38,8 +38,7 @@ angular
           .then(function() {
             return api.pipelineAgent.startPipeline(pipelineInfo.pipelineId, '0')
               .then(function () {
-                $scope.showLoading = false;
-                $scope.isOffsetResetSucceed = true;
+                $modalInstance.close(pipelineInfo);
               });
           })
           .then(function () {
