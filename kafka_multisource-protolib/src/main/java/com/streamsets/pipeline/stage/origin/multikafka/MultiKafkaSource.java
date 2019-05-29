@@ -110,32 +110,29 @@ public class MultiKafkaSource extends BasePushSource {
         // protected loop. want it to finish completely, or not start at all.
         // only 2 conditions that we want to halt execution. must handle gracefully
         List<ConsumerRecord<String, byte[]>> list = new ArrayList<>();
+        long startTime = System.currentTimeMillis();
+
         while(!getContext().isStopped() && !Thread.interrupted()) {
-
-          ConsumerRecords<String, byte[]> messages = consumer.poll(conf.batchWaitTime);
-          if(!messages.isEmpty()) {
-            for (ConsumerRecord<String, byte[]> item : messages) {
-              list.add(item);
-              if (list.size() == conf.maxBatchSize) {
-                if (getContext().getDeliveryGuarantee() == DeliveryGuarantee.AT_MOST_ONCE) {
-                  consumer.commitSync();
-                }
-                boolean batchSucessful = sendBatch(list);
-                if (batchSucessful && getContext().getDeliveryGuarantee() == DeliveryGuarantee.AT_LEAST_ONCE) {
-                  consumer.commitSync();
-                }
-                list.clear();
-              }
-            }
-            messagesProcessed += messages.count();
-
-            LOG.trace("Kafka thread {} finished processing {} messages", this.threadID, messages.count());
+          long pollInterval = Math.max(0, conf.batchWaitTime - (System.currentTimeMillis() - startTime));
+          if (pollInterval == 0) {
+            sendBatchCommitAndCleanList(getContext().getDeliveryGuarantee(), list);
+            startTime = System.currentTimeMillis();
           } else {
-            if (!list.isEmpty()) {
-              sendBatch(list);
-              list.clear();
+            ConsumerRecords<String, byte[]> messages = consumer.poll(pollInterval);
+
+            if(!messages.isEmpty()) {
+              for (ConsumerRecord<String, byte[]> item : messages) {
+                list.add(item);
+                if (list.size() == conf.maxBatchSize) {
+                  sendBatchCommitAndCleanList(getContext().getDeliveryGuarantee(), list);
+                  startTime = System.currentTimeMillis();
+                }
+              }
+              messagesProcessed += messages.count();
+
+              LOG.trace("Kafka thread {} finished processing {} messages", this.threadID, messages.count());
             } else {
-              LOG.debug("No records returned from consumer.poll()");
+              LOG.trace("No records returned from consumer.poll()");
             }
           }
         }
@@ -149,6 +146,20 @@ public class MultiKafkaSource extends BasePushSource {
 
       LOG.info("multi kafka thread {} consumed {} messages", threadID, messagesProcessed);
       return messagesProcessed;
+    }
+
+    private void sendBatchCommitAndCleanList(
+        DeliveryGuarantee deliveryGuarantee,
+        List<ConsumerRecord<String, byte[]>> listOfMessages
+    ) throws StageException {
+      if (deliveryGuarantee == DeliveryGuarantee.AT_MOST_ONCE) {
+        consumer.commitSync();
+      }
+      boolean batchSucessful = sendBatch(listOfMessages);
+      if (batchSucessful && deliveryGuarantee == DeliveryGuarantee.AT_LEAST_ONCE) {
+        consumer.commitSync();
+      }
+      listOfMessages.clear();
     }
 
     private boolean sendBatch(List<ConsumerRecord<String, byte[]>> list) throws StageException {
