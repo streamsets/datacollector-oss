@@ -24,7 +24,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 import com.streamsets.pipeline.lib.jdbc.multithread.BatchTableStrategy;
-import com.streamsets.pipeline.lib.jdbc.multithread.TableJdbcEvents;
+import com.streamsets.pipeline.lib.jdbc.multithread.SchemaFinishedEvent;
+import com.streamsets.pipeline.lib.jdbc.multithread.TableFinishedEvent;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -323,13 +324,13 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
           continue;
         }
         switch (eventRecord.getEventType()) {
-          case TableJdbcEvents.TABLE_FINISHED_TAG:
-            tableFinishedEvents.remove(eventRecord.get("/" + TableJdbcEvents.TABLE_FIELD).getValueAsString());
+          case TableFinishedEvent.TABLE_FINISHED_TAG:
+            tableFinishedEvents.remove(eventRecord.get("/" + TableFinishedEvent.TABLE_FIELD).getValueAsString());
             break;
-          case TableJdbcEvents.SCHEMA_FINISHED_TAG:
+          case SchemaFinishedEvent.SCHEMA_FINISHED_TAG:
             schemaFinishedEvent = true;
             final Set<String> allSchemaTables = new HashSet<>();
-            final Field allTablesField = eventRecord.get("/" + TableJdbcEvents.TABLES_FIELD);
+            final Field allTablesField = eventRecord.get("/" + SchemaFinishedEvent.TABLES_FIELD);
             assertThat(allTablesField, notNullValue());
             allTablesField.getValueAsList().forEach(field -> allSchemaTables.add(field.getValueAsString()));
             assertEquals(allSchemaTables, tables);

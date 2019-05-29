@@ -23,7 +23,10 @@ import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
+import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.multithread.SchemaFinishedEvent;
+import com.streamsets.pipeline.lib.jdbc.multithread.TableFinishedEvent;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 
 @StageDef(
@@ -35,10 +38,10 @@ import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
     recordsByRef = true,
     resetOffset = true,
     producesEvents = true,
+    eventDefs = {NoMoreDataEvent.class, SchemaFinishedEvent.class, TableFinishedEvent.class},
     upgrader = TableJdbcSourceUpgrader.class,
     onlineHelpRefUrl ="index.html?contextID=task_kst_m4w_4y"
 )
-
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
 @HideConfigs({

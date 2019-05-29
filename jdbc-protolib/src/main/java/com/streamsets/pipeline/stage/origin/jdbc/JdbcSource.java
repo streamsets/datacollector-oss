@@ -30,7 +30,6 @@ import com.streamsets.pipeline.api.lineage.EndPointType;
 import com.streamsets.pipeline.api.lineage.LineageEvent;
 import com.streamsets.pipeline.api.lineage.LineageEventType;
 import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
-import com.streamsets.pipeline.lib.event.EventCreator;
 import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
@@ -68,11 +67,11 @@ public class JdbcSource extends BaseSource {
 
   private static final String HIKARI_CONFIG_PREFIX = "hikariConfigBean.";
   private static final String CONNECTION_STRING = HIKARI_CONFIG_PREFIX + "connectionString";
-  private static final String QUERY = "query";
-  private static final String TIMESTAMP = "timestamp";
-  private static final String ERROR = "error";
-  private static final String ROW_COUNT = "rows";
-  private static final String SOURCE_OFFSET = "offset";
+  public static final String QUERY = "query";
+  public static final String TIMESTAMP = "timestamp";
+  public static final String ERROR = "error";
+  public static final String ROW_COUNT = "rows";
+  public static final String SOURCE_OFFSET = "offset";
   private static final String OFFSET_COLUMN = "offsetColumn";
   private static final String INITIAL_OFFSET = "initialOffset";
   private static final String QUERY_INTERVAL_EL = "queryInterval";
@@ -80,19 +79,6 @@ public class JdbcSource extends BaseSource {
   private static final String TXN_MAX_SIZE = "txnMaxSize";
   private static final String JDBC_NS_HEADER_PREFIX = "jdbcNsHeaderPrefix";
   private static final HashFunction HF = Hashing.sha256();
-  private static final EventCreator QUERY_SUCCESS = new EventCreator.Builder("jdbc-query-success", 1)
-      .withRequiredField(QUERY)
-      .withRequiredField(TIMESTAMP)
-      .withRequiredField(ROW_COUNT)
-      .withRequiredField(SOURCE_OFFSET)
-      .build();
-  private static final EventCreator QUERY_FAILURE = new EventCreator.Builder("jdbc-query-failure", 1)
-      .withRequiredField(QUERY)
-      .withRequiredField(TIMESTAMP)
-      .withRequiredField(ROW_COUNT)
-      .withRequiredField(SOURCE_OFFSET)
-      .withOptionalField(ERROR)
-      .build();
 
   private final boolean isIncrementalMode;
   private final String query;
@@ -444,7 +430,7 @@ public class JdbcSource extends BaseSource {
           closeQuietly(connection);
           lastQueryCompletedTime = System.currentTimeMillis();
           LOG.debug("Query completed at: {}", lastQueryCompletedTime);
-          QUERY_SUCCESS.create(getContext())
+          JDBCQuerySuccessEvent.EVENT_CREATOR.create(getContext())
               .with(QUERY, preparedQuery)
               .with(TIMESTAMP, lastQueryCompletedTime)
               .with(ROW_COUNT, queryRowCount)
@@ -488,7 +474,7 @@ public class JdbcSource extends BaseSource {
         }
         closeQuietly(connection);
         lastQueryCompletedTime = System.currentTimeMillis();
-        QUERY_FAILURE.create(getContext())
+        JDBCQueryFailureEvent.EVENT_CREATOR.create(getContext())
             .with(QUERY, preparedQuery)
             .with(TIMESTAMP, lastQueryCompletedTime)
             .with(ERROR, formattedError)
