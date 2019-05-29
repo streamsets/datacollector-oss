@@ -91,7 +91,7 @@ public class TestMultiKafkaSource {
 
     KafkaConsumer mockConsumer = Mockito.mock(KafkaConsumer.class);
     List<KafkaConsumer> consumerList = Collections.singletonList(mockConsumer);
-    Mockito.when(mockConsumer.poll(conf.batchWaitTime)).thenReturn(consumerRecords).thenReturn(emptyRecords);
+    Mockito.when(mockConsumer.poll(Mockito.anyInt())).thenReturn(consumerRecords).thenReturn(emptyRecords);
 
     MockKafkaConsumerLoader.consumers = consumerList.iterator();
     MultiKafkaSource source = new MultiKafkaSource(conf);
@@ -129,7 +129,7 @@ public class TestMultiKafkaSource {
     KafkaConsumer mockConsumer = Mockito.mock(KafkaConsumer.class);
     List<KafkaConsumer> consumerList = Collections.singletonList(mockConsumer);
     Mockito
-        .when(mockConsumer.poll(conf.batchWaitTime))
+        .when(mockConsumer.poll(Mockito.anyInt()))
         .thenReturn(consumerRecords1)
         .thenReturn(consumerRecords2)
         .thenReturn(emptyRecords);
@@ -192,7 +192,7 @@ public class TestMultiKafkaSource {
       KafkaConsumer mockConsumer = Mockito.mock(KafkaConsumer.class);
       consumerList.add(mockConsumer);
 
-      Mockito.when(mockConsumer.poll(conf.batchWaitTime)).thenReturn(consumerRecords).thenReturn(emptyRecords);
+      Mockito.when(mockConsumer.poll(Mockito.anyInt())).thenReturn(consumerRecords).thenReturn(emptyRecords);
     }
 
     conf.topicList = topicNames;
@@ -227,7 +227,7 @@ public class TestMultiKafkaSource {
     KafkaConsumer mockConsumer = Mockito.mock(KafkaConsumer.class);
     List<KafkaConsumer> consumerList = Collections.singletonList(mockConsumer);
     Mockito
-        .when(mockConsumer.poll(conf.batchWaitTime))
+        .when(mockConsumer.poll(Mockito.anyInt()))
         .thenThrow(new IllegalStateException());
 
     MockKafkaConsumerLoader.consumers = consumerList.iterator();
@@ -279,7 +279,7 @@ public class TestMultiKafkaSource {
       KafkaConsumer mockConsumer = Mockito.mock(KafkaConsumer.class);
       consumerList.add(mockConsumer);
 
-      Mockito.when(mockConsumer.poll(conf.batchWaitTime)).thenReturn(consumerRecords).thenReturn(emptyRecords);
+      Mockito.when(mockConsumer.poll(Mockito.anyInt())).thenReturn(consumerRecords).thenReturn(emptyRecords);
     }
 
     conf.topicList = topicNames;
@@ -383,7 +383,7 @@ public class TestMultiKafkaSource {
       KafkaConsumer mockConsumer = Mockito.mock(KafkaConsumer.class);
       consumerList.add(mockConsumer);
 
-      Mockito.when(mockConsumer.poll(conf.batchWaitTime)).thenReturn(consumerRecords).thenReturn(emptyRecords);
+      Mockito.when(mockConsumer.poll(Mockito.anyInt())).thenReturn(consumerRecords).thenReturn(emptyRecords);
     }
 
     conf.topicList = topicNames;
