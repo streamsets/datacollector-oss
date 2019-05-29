@@ -364,6 +364,8 @@ public class DataParserFormatConfig implements DataFormatConfig {
       type = ConfigDef.Type.CHARACTER,
       defaultValue = "\\",
       label = "Escape Character",
+      description = "Character used to escape quote and delimiter characters. To disable select Other and enter " +
+          "\\u0000 (unicode codepoint for the NULL character).",
       displayPosition = 410,
       group = "DATA_FORMAT",
       dependsOn = "csvFileFormat",
@@ -376,6 +378,8 @@ public class DataParserFormatConfig implements DataFormatConfig {
       type = ConfigDef.Type.CHARACTER,
       defaultValue = "\"",
       label = "Quote Character",
+      description = "Character used to quote string fields. To disable select Other and enter" +
+          " \\u0000 (unicode codepoint for the NULL character).",
       displayPosition = 420,
       group = "DATA_FORMAT",
       dependsOn = "csvFileFormat",
