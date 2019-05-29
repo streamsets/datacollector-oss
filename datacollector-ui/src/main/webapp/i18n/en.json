@@ -709,8 +709,8 @@
     "resetOffsetAndStart": {
       "title": "Reset Origin & Start",
       "confirmationTitle": "Reset Origin and Start Confirmation",
-      "confirmationMessage": "The Transformer will request all available data from the origin instead of continuing from the last processed record. This might result in processing data that was already processed. Continue?",
-      "confirmationMessageBulk": "The Transformer will request all available data from the origin instead of continuing from the last processed record. This might result in processing data that was already processed, and this will only be applied to pipelines with an origin stage that supports resetting offset. Are you sure and want to reset origin for below pipelines?",
+      "confirmationMessage": "The Data Collector will request all available data from the origin instead of continuing from the last processed record. This might result in processing data that was already processed. Continue?",
+      "confirmationMessageBulk": "The Data Collector will request all available data from the origin instead of continuing from the last processed record. This might result in processing data that was already processed, and this will only be applied to pipelines with an origin stage that supports resetting offset. Are you sure and want to reset origin for below pipelines?",
       "noSupport": "Origin '{{label}}' doesn't support reset operation",
       "successMessage": "Reset Origin and Start is successful."
     },
