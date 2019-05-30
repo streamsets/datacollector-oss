@@ -38,6 +38,7 @@ import com.streamsets.pipeline.lib.jdbc.multithread.MultithreadedTableProvider;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableJdbcRunnable;
+import com.streamsets.pipeline.lib.jdbc.multithread.TableMaxOffsetValueUpdater;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableOrderProvider;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableOrderProviderFactory;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableReadContext;
@@ -71,7 +72,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public abstract class AbstractTableJdbcSource extends BasePushSource {
+public abstract class AbstractTableJdbcSource extends BasePushSource implements TableMaxOffsetValueUpdater {
   private static final Logger LOG = LoggerFactory.getLogger(AbstractTableJdbcSource.class);
   private static final Joiner NEW_LINE_JOINER = Joiner.on("\n");
   private static final String HIKARI_CONFIG_PREFIX = "hikariConfigBean.";
@@ -318,7 +319,8 @@ public abstract class AbstractTableJdbcSource extends BasePushSource {
               tableOrderProvider.getOrderedTables(),
               decideMaxTableSlotsForThreads(),
               numberOfThreads,
-              tableJdbcConfigBean.batchTableStrategy
+              tableJdbcConfigBean.batchTableStrategy,
+              this
           );
         } else {
           this.tableOrderProvider.setTableContextMap(allTableContexts, tableOrderProvider.getOrderedTables());
@@ -561,4 +563,24 @@ public abstract class AbstractTableJdbcSource extends BasePushSource {
       Map<String, String> offsets
   );
 
+  @Override
+  public void updateMaxOffsetsForTable(TableContext tableContext) {
+    try {
+      tableContext.updateOffsetColumnToMaxValues(JdbcUtil.getMaximumOffsetValues(
+          tableContext.getVendor(),
+          connectionManager.getConnection(),
+          tableContext.getSchema(),
+          tableContext.getTableName(),
+          tableContext.getQuoteChar(),
+          tableContext.getOffsetColumns()
+      ));
+    } catch (SQLException e) {
+      LOG.error(
+          "SQLException attempting to update max offsets for TableContext {}: {}",
+          tableContext,
+          e.getMessage(),
+          e
+      );
+    }
+  }
 }

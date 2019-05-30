@@ -245,9 +245,18 @@ public class TableContextUtil {
 
     checkForUnsupportedOffsetColumns(offsetColumnToType);
 
-    Map<String, String> offsetColumnMinValues = new HashMap<>();
+    final Map<String, String> offsetColumnMinValues = new HashMap<>();
+    final Map<String, String> offsetColumnMaxValues = new HashMap<>();
     if (tableConfigBean.partitioningMode != PartitioningMode.DISABLED) {
       offsetColumnMinValues.putAll(jdbcUtil.getMinimumOffsetValues(
+          vendor,
+          connection,
+          schemaName,
+          tableName,
+          quoteChar,
+          offsetColumnToType.keySet()
+      ));
+      offsetColumnMaxValues.putAll(jdbcUtil.getMaximumOffsetValues(
           vendor,
           connection,
           schemaName,
@@ -296,12 +305,14 @@ public class TableContextUtil {
 
     return new TableContext(
         vendor,
+        quoteChar,
         schemaName,
         tableName,
         offsetColumnToType,
         offsetColumnToStartOffset,
         offsetAdjustments,
         offsetColumnMinValues,
+        offsetColumnMaxValues,
         tableConfigBean.enableNonIncremental,
         tableConfigBean.partitioningMode,
         tableConfigBean.maxNumActivePartitions,
@@ -575,6 +586,168 @@ public class TableContextUtil {
     );
   }
 
+  /**
+   * Checks whether the current offset column values are past all max offset values for the table
+   *
+   * @param tableContext the {@link TableContext} instance that will be checked
+   * @param currentColumnOffsets a map from offset columns to current offsets
+   * @return true if the current offset value is greater than the max value, for each offset column that has
+   *         a max value defined, false otherwise
+   */
+  public static boolean allOffsetsBeyondMaxValues(
+      TableContext tableContext,
+      Map<String, String> currentColumnOffsets
+  ) {
+    return allOffsetsBeyondMaxValues(
+        tableContext.getVendor(),
+        tableContext.getOffsetColumnToType(),
+        currentColumnOffsets,
+        tableContext.getOffsetColumnToMaxValues()
+    );
+  }
+
+  /**
+   * Checks whether the current offset column values are past all max offset values for the table
+   *
+   * @param databaseVendor the database vendor
+   * @param offsetColumnToJdbcType a map from offset column name to JDBC types
+   * @param currentColumnOffsets a map from offset columns to current offsets
+   * @param maxColumnOffsets a map from offset columns to max offsets
+   * @return true if the current offset value is greater than the max value, for each offset column that has
+   *         a max value defined, false otherwise
+   */
+  public static boolean allOffsetsBeyondMaxValues(
+      DatabaseVendor databaseVendor,
+      Map<String, Integer> offsetColumnToJdbcType,
+      Map<String, String> currentColumnOffsets,
+      Map<String, String> maxColumnOffsets
+  ) {
+    if (maxColumnOffsets != null) {
+      for (Map.Entry<String, String> entry : maxColumnOffsets.entrySet()) {
+        final String col = entry.getKey();
+        final String max = entry.getValue();
+        final int offsetJdbcType = offsetColumnToJdbcType.get(col);
+        final String current = currentColumnOffsets.get(col);
+        if (current == null || compareOffsetValues(
+            offsetJdbcType,
+            databaseVendor,
+            current,
+            max
+        ) <= 0) {
+          LOG.trace(
+              "Current offset {} is less than max offset {} for column {}; returning false from" +
+                  " allOffsetsBeyondMaxValues",
+              current,
+              max,
+              col
+          );
+          return false;
+        }
+      }
+      return true;
+    }
+    LOG.trace("maxColumnOffsets is null; returning false from allOffsetsBeyondMaxValues");
+    return false;
+  }
+
+  /**
+   * Returns -1, 0, or 1 if the leftOffsetValue is less than, equal to, or greater than, the rightOffsetValue
+   * (respectively).
+   *
+   * @param tableContext the {@link TableContext} instance to look up offset column data from
+   * @param column the offset column to check
+   * @param leftOffsetValue the left offset value
+   * @param rightOffsetValue the right offset value
+   * @return -1, 0, or 1 if left &lt; right, left == right, or left &gt; right
+   */
+  public static int compareOffsetValues(
+      TableContext tableContext,
+      String column,
+      String leftOffsetValue,
+      String rightOffsetValue
+  ) {
+    return compareOffsetValues(
+        tableContext.getOffsetColumnToType().get(column),
+        tableContext.getVendor(),
+        leftOffsetValue,
+        rightOffsetValue
+    );
+  }
+
+  /**
+   * Returns -1, 0, or 1 if the leftOffsetValue is less than, equal to, or greater than, the rightOffsetValue
+   * (respectively).
+   *
+   * @param offsetJdbcType the {@link Types} of the offset values
+   * @param databaseVendor the database vendor for this database
+   * @param leftOffset the left offset value
+   * @param rightOffset the right offset value
+   * @return -1, 0, or 1 if left &lt; right, left == right, or left &gt; right
+   */
+  public static int compareOffsetValues(
+      int offsetJdbcType,
+      DatabaseVendor databaseVendor,
+      String leftOffset,
+      String rightOffset
+  ) {
+    if (databaseVendor != null) {
+      switch (databaseVendor) {
+        case ORACLE:
+          if(TableContextUtil.VENDOR_PARTITIONABLE_TYPES.get(DatabaseVendor.ORACLE).contains(offsetJdbcType)) {
+            switch (offsetJdbcType) {
+              case TableContextUtil.TYPE_ORACLE_TIMESTAMP_WITH_LOCAL_TIME_ZONE:
+              case TableContextUtil.TYPE_ORACLE_TIMESTAMP_WITH_TIME_ZONE:
+                final ZonedDateTime left = ZonedDateTime.parse(leftOffset, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+                final ZonedDateTime right = ZonedDateTime.parse(rightOffset, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+                return left.compareTo(right);
+              default:
+                throw new IllegalStateException(Utils.format(
+                    "Unsupported type: {} for vendor {}",
+                    offsetJdbcType,
+                    databaseVendor.name()
+                ));
+            }
+          }
+      }
+    }
+
+    switch (offsetJdbcType) {
+      case Types.TINYINT:
+      case Types.SMALLINT:
+      case Types.INTEGER:
+        final int leftInt = Integer.parseInt(leftOffset);
+        final int rightInt = Integer.parseInt(rightOffset);
+        return Integer.compare(leftInt, rightInt);
+      case Types.TIMESTAMP:
+        final Timestamp leftTs = getTimestampForOffsetValue(leftOffset);
+        final Timestamp rightTs = getTimestampForOffsetValue(rightOffset);
+        return leftTs.compareTo(rightTs);
+      case Types.BIGINT:
+        // TIME, DATE are represented as long (epoch)
+      case Types.TIME:
+      case Types.DATE:
+        final long leftLong = Long.parseLong(leftOffset);
+        final long rightLong = Long.parseLong(rightOffset);
+        return Long.compare(leftLong, rightLong);
+      case Types.FLOAT:
+      case Types.REAL:
+        final float leftFloat = Float.parseFloat(leftOffset);
+        final float rightFloat = Float.parseFloat(rightOffset);
+        return Float.compare(leftFloat, rightFloat);
+      case Types.DOUBLE:
+        final double leftDouble = Double.parseDouble(leftOffset);
+        final double rightDouble = Double.parseDouble(rightOffset);
+        return Double.compare(leftDouble, rightDouble);
+      case Types.NUMERIC:
+      case Types.DECIMAL:
+        final BigDecimal leftDecimal = new BigDecimal(leftOffset);
+        final BigDecimal rightDecimal = new BigDecimal(rightOffset);
+        return leftDecimal.compareTo(rightDecimal);
+    }
+
+    throw new IllegalStateException(Utils.format("Unsupported type: {}", offsetJdbcType));
+  }
+
   public static String generateNextPartitionOffset(
       TableContext tableContext,
       String column,
@@ -813,18 +986,21 @@ public class TableContextUtil {
 
     final Map<String, String> offsetAdjustments = new HashMap<>();
     final Map<String, String> offsetColumnMinValues = new HashMap<>();
+    final Map<String, String> offsetColumnMaxValues = new HashMap<>();
     final PartitioningMode partitioningMode = TableConfigBean.PARTITIONING_MODE_DEFAULT_VALUE;
     final int maxNumActivePartitions = 0;
     final String extraOffsetColumnConditions = "";
 
     return new TableContext(
         DatabaseVendor.SQL_SERVER,
+        QuoteChar.NONE,
         schemaName,
         tableName,
         offsetColumnToType,
         offsetColumnToStartOffset,
         offsetAdjustments,
         offsetColumnMinValues,
+        offsetColumnMaxValues,
         TableConfigBean.ENABLE_NON_INCREMENTAL_DEFAULT_VALUE,
         partitioningMode,
         maxNumActivePartitions,
@@ -852,18 +1028,21 @@ public class TableContextUtil {
 
     final Map<String, String> offsetAdjustments = new HashMap<>();
     final Map<String, String> offsetColumnMinValues = new HashMap<>();
+    final Map<String, String> offsetColumnMaxValues = new HashMap<>();
     final PartitioningMode partitioningMode = TableConfigBean.PARTITIONING_MODE_DEFAULT_VALUE;
     final int maxNumActivePartitions = 0;
     final String extraOffsetColumnConditions = "";
 
     TableContext tableContext = new TableContext(
         DatabaseVendor.SQL_SERVER,
+        QuoteChar.NONE,
         schemaName,
         tableName,
         offsetColumnToType,
         offsetColumnToStartOffset,
         offsetAdjustments,
         offsetColumnMinValues,
+        offsetColumnMaxValues,
         TableConfigBean.ENABLE_NON_INCREMENTAL_DEFAULT_VALUE,
         partitioningMode,
         maxNumActivePartitions,

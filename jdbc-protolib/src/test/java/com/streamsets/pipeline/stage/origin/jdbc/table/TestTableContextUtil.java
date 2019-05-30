@@ -16,10 +16,12 @@
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import com.streamsets.pipeline.lib.jdbc.multithread.DatabaseVendor;
+import com.streamsets.pipeline.lib.jdbc.multithread.TableContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
 import org.junit.Test;
 
 import java.sql.Types;
+import java.util.Collections;
 
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
@@ -68,5 +70,26 @@ public class TestTableContextUtil {
         TableContextUtil.getPartitionSizeValidationError(DatabaseVendor.UNKNOWN, sqlType, "col", partitionSize),
         valid ? nullValue() : notNullValue()
     );
+  }
+
+  @Test
+  public void offsetsBeyondMaxValues() {
+    final String offsetCol = "col";
+
+    final boolean first = TableContextUtil.allOffsetsBeyondMaxValues(
+        DatabaseVendor.UNKNOWN,
+        Collections.singletonMap(offsetCol, Types.INTEGER),
+        Collections.singletonMap(offsetCol, "0"),
+        Collections.singletonMap(offsetCol, "100000")
+    );
+    assertFalse(first);
+
+    final boolean second = TableContextUtil.allOffsetsBeyondMaxValues(
+        DatabaseVendor.UNKNOWN,
+        Collections.singletonMap(offsetCol, Types.BIGINT),
+        Collections.singletonMap(offsetCol, "14000000"),
+        Collections.singletonMap(offsetCol, "13999999")
+    );
+    assertTrue(second);
   }
 }

@@ -18,37 +18,29 @@ package com.streamsets.pipeline.lib.jdbc.multithread;
 import com.google.common.collect.SortedSetMultimap;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
-import com.streamsets.pipeline.stage.origin.jdbc.table.PartitioningMode;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableConfigBean;
-import com.streamsets.testing.RandomTestUtils;
 import com.vividsolutions.jts.util.Assert;
-import jersey.repackaged.com.google.common.collect.Maps;
-import org.apache.commons.lang3.StringUtils;
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
-import java.sql.Types;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
-public class TestMultithreadedTableProvider {
+public class TestMultithreadedTableProvider extends BaseMultithreadedTableProviderTest {
 
   @Test
   public void basicPartitioning() throws InterruptedException {
@@ -222,7 +214,7 @@ public class TestMultithreadedTableProvider {
     assertThat(activePartitions.size(), equalTo(1));
 
     assertThat(provider.shouldGenerateNoMoreDataEvent(), equalTo(true));
-    assertThat(provider.getSharedAvailableTablesQueue(), empty());
+    assertThat(provider.getSharedAvailableTablesList(), empty());
     assertThat(provider.shouldGenerateNoMoreDataEvent(), equalTo(false));
 
   }
@@ -378,20 +370,7 @@ public class TestMultithreadedTableProvider {
 
     part1 = provider.nextTable(threadNumber);
 
-    validatePartition(
-        part1,
-        1,
-        table1,
-        false,
-        false,
-        true,
-        false,
-        offsetCol,
-        partitionSize,
-        true,
-        null,
-        null
-    );
+    validatePartition(part1, 1, table1, false, false, true, false, offsetCol, partitionSize);
 
   }
 
@@ -469,7 +448,8 @@ public class TestMultithreadedTableProvider {
         sortedTableOrder,
         threadNumToMaxTableSlots,
         numThreads,
-        batchTableStrategy
+        batchTableStrategy,
+        (ctx) -> {} // do-nothing implementation
     );
 
     TableRuntimeContext tableRuntimeContext = provider.nextTable(threadNumber);
@@ -532,7 +512,8 @@ public class TestMultithreadedTableProvider {
         sortedTableOrder,
         threadNumToMaxTableSlots,
         numThreads,
-        batchTableStrategy
+        batchTableStrategy,
+        (ctx) -> {} // do-nothing implementation
     );
 
     assertThat(provider.getRemainingSchemasToTableContexts().size(), equalTo(3));
@@ -646,114 +627,6 @@ public class TestMultithreadedTableProvider {
 
   }
 
-  private static void validatePartition(
-      TableRuntimeContext part,
-      int partitionSequence,
-      TableContext table,
-      boolean offsetsRecorded,
-      boolean resultSetProduced,
-      boolean expectOffsets,
-      boolean expectNoMoreData,
-      String offsetColumn,
-      String partitionSize
-  ) {
-    validatePartition(
-        part,
-        partitionSequence,
-        table,
-        offsetsRecorded,
-        resultSetProduced,
-        expectOffsets,
-        expectNoMoreData,
-        offsetColumn,
-        partitionSize,
-        true,
-        null,
-        null
-    );
-  }
-
-  private static void validatePartition(
-      TableRuntimeContext part,
-      int partitionSequence,
-      TableContext table,
-      boolean offsetsRecorded,
-      boolean resultSetProduced,
-      boolean expectOffsets,
-      boolean expectNoMoreData,
-      String offsetColumn,
-      String partitionSize,
-      boolean partitioned
-  ) {
-    validatePartition(
-        part,
-        partitionSequence,
-        table,
-        offsetsRecorded,
-        resultSetProduced,
-        expectOffsets,
-        expectNoMoreData,
-        offsetColumn,
-        partitionSize,
-        partitioned,
-        null,
-        null
-    );
-  }
-
-  private static void validatePartition(
-      TableRuntimeContext part,
-      int partitionSequence,
-      TableContext table,
-      boolean offsetsRecorded,
-      boolean resultSetProduced,
-      boolean expectOffsets,
-      boolean expectNoMoreData,
-      String offsetColumn,
-      String partitionSize,
-      boolean partitioned,
-      Map<String, String> expectedMinOffsets,
-      Map<String, String> expectedMaxOffsets
-  ) {
-
-    assertThat(part.getPartitionSequence(), equalTo(partitionSequence));
-    assertThat(part.isAnyOffsetsRecorded(), equalTo(offsetsRecorded));
-    assertThat(part.isResultSetProduced(), equalTo(resultSetProduced));
-    assertThat(part.getSourceTableContext(), equalTo(table));
-    assertThat(part.isMarkedNoMoreData(), equalTo(expectNoMoreData));
-    assertThat(part.isPartitioned(), equalTo(partitioned));
-    assertThat(part.getQualifiedName(), equalTo(table.getQualifiedName()));
-
-    if (partitioned) {
-      if (expectOffsets) {
-        if (expectedMinOffsets != null) {
-          assertThat(part.getStartingPartitionOffsets(), equalTo(expectedMinOffsets));
-        } else {
-          int expectedMinOffset = (part.getPartitionSequence() - 1) * Integer.parseInt(partitionSize);
-          assertThat(part.getStartingPartitionOffsets().size(), equalTo(1));
-          assertThat(part.getStartingPartitionOffsets(), hasKey(offsetColumn));
-          assertThat(part.getStartingPartitionOffsets().get(offsetColumn), equalTo(String.valueOf(expectedMinOffset)));
-        }
-
-        if (expectedMaxOffsets != null) {
-          assertThat(part.getMaxPartitionOffsets(), equalTo(expectedMaxOffsets));
-        } else {
-          int expectedMaxOffset = part.getPartitionSequence() * Integer.parseInt(partitionSize);
-          assertThat(part.getMaxPartitionOffsets().size(), equalTo(1));
-          assertThat(part.getMaxPartitionOffsets(), hasKey(offsetColumn));
-          assertThat(part.getMaxPartitionOffsets().get(offsetColumn), equalTo(String.valueOf(expectedMaxOffset)));
-        }
-      }
-    } else {
-      if (expectOffsets) {
-        assertThat(part.getStartingPartitionOffsets().size(), equalTo(1));
-        assertThat(part.getStartingPartitionOffsets(), hasKey(offsetColumn));
-        assertThat(part.getMaxPartitionOffsets().size(), equalTo(0));
-      }
-    }
-
-  }
-
   @Test
   public void restoreFromV1Offsets() throws InterruptedException, StageException {
     Map<TableRuntimeContext, Map<String, String>> partitionsAndOffsets = createRandomPartitionsAndStoredOffsets(false);
@@ -830,345 +703,6 @@ public class TestMultithreadedTableProvider {
     );
 
     assertEquals(offset, table.getOffset());
-  }
-
-  private void assertLoadedPartitions(
-      Map<TableRuntimeContext, Map<String, String>> partitionsAndOffsets,
-      MultithreadedTableProvider provider
-  ) {
-    Map<TableRuntimeContext, Map<String, String>> checkPartitionsAndOffsets = new HashMap<>(partitionsAndOffsets);
-    final SortedSetMultimap<TableContext, TableRuntimeContext> activePartitions = provider.getActiveRuntimeContexts();
-
-    Map<TableContext, Integer> maxPartitionSequenceWithData = new HashMap<>();
-    Map<TableContext, Integer> minPartitionSequenceSeen = new HashMap<>();
-
-    for (Map.Entry<TableContext, TableRuntimeContext> partitionEntry : activePartitions.entries()) {
-      TableRuntimeContext partition = partitionEntry.getValue();
-      int sequence = partition.getPartitionSequence();
-      TableContext table = partition.getSourceTableContext();
-      if (partition.isPartitioned()
-          && (!minPartitionSequenceSeen.containsKey(table) || minPartitionSequenceSeen.get(table) > sequence)) {
-        minPartitionSequenceSeen.put(table, sequence);
-      }
-
-      assertThat(
-          "partitionsAndOffsets did not contain a key seen in provider activeRuntimeContexts",
-          checkPartitionsAndOffsets,
-          hasKey(partition)
-      );
-      Map<String, String> storedOffsets = checkPartitionsAndOffsets.remove(partition);
-      if (storedOffsets == null) {
-        assertThat(
-            "partition initialStoredOffsets should have been empty",
-            partition.getInitialStoredOffsets().size(),
-            equalTo(0)
-        );
-      } else {
-        assertThat(
-            "partition initialStoredOffsets did not match randomly generated values",
-            storedOffsets,
-            equalTo(partition.getInitialStoredOffsets())
-        );
-        if (partition.isPartitioned()) {
-          if (!maxPartitionSequenceWithData.containsKey(table)
-              || maxPartitionSequenceWithData.get(table) < sequence) {
-            maxPartitionSequenceWithData.put(table, sequence);
-          }
-        }
-      }
-    }
-    assertThat(
-        "randomly generated partition in partitionsAndOffsets did not appear in provider activeRuntimeContexts",
-        checkPartitionsAndOffsets.size(),
-        equalTo(0)
-    );
-    for (Map.Entry<TableContext, Integer> minSequenceSeenEntry : minPartitionSequenceSeen.entrySet()) {
-      final TableContext table = minSequenceSeenEntry.getKey();
-      if (!maxPartitionSequenceWithData.containsKey(table) && table.isPartitionable()) {
-        maxPartitionSequenceWithData.put(table, minSequenceSeenEntry.getValue() - 1);
-      }
-    }
-    assertThat(
-      "",
-      provider.getMaxPartitionWithDataPerTable(),
-      equalTo(new ConcurrentHashMap<>(maxPartitionSequenceWithData))
-    );
-  }
-
-  private static MultithreadedTableProvider createProvider(Collection<TableRuntimeContext> partitions) {
-
-    Map<String, TableContext> tableContexts = new HashMap<>();
-    Queue<String> tableOrder = new LinkedList<>();
-    for (TableRuntimeContext partition : partitions) {
-      TableContext table = partition.getSourceTableContext();
-      final String tableName = table.getQualifiedName();
-      tableContexts.put(tableName, table);
-      tableOrder.add(tableName);
-    }
-
-    return new MultithreadedTableProvider(
-        tableContexts,
-        tableOrder,
-        Collections.emptyMap(),
-        1,
-        BatchTableStrategy.SWITCH_TABLES
-    );
-  }
-
-  private static Map<String, String> buildOffsetMap(Map<TableRuntimeContext, Map<String, String>> partitions) {
-    return buildOffsetMap(partitions, false);
-  }
-
-  private static Map<String, String> buildOffsetMap(
-      Map<TableRuntimeContext, Map<String, String>> partitions,
-      final boolean preNonIncremental
-  ) {
-    final Map<String, String> offsets = new HashMap<>();
-    partitions.forEach((part, off) -> {
-      String offsetKey = part.getOffsetKey();
-      if (preNonIncremental) {
-        // before non-incremental mode, offset keys didn't have the final portion (usingNonIncrementalLoad)
-        // so remove the final term
-        final int index = StringUtils.lastIndexOf(offsetKey, TableRuntimeContext.OFFSET_TERM_SEPARATOR);
-        offsetKey = offsetKey.substring(0, index);
-      }
-      offsets.put(offsetKey, off == null ? null : OffsetQueryUtil.getOffsetFormat(off));
-    });
-    return offsets;
-  }
-
-  private static Matcher<Map<String, String>> offsetMapOf(String column, String offset) {
-    return new BaseMatcher<Map<String,String>>() {
-      private final Map<String, String> expectedMap = Collections.singletonMap(column, offset);
-
-      @Override
-      public boolean matches(Object item) {
-        return expectedMap.equals(item);
-      }
-
-      @Override
-      public void describeTo(Description description) {
-        description.appendValue(expectedMap);
-      }
-    };
-  }
-
-  private static Map<TableRuntimeContext, Map<String, String>> createRandomPartitionsAndStoredOffsets(
-      boolean enablePartitioning
-  ) {
-    Random random = RandomTestUtils.getRandom();
-    Map<TableRuntimeContext, Map<String, String>> partitions = new HashMap<>();
-
-    List<Integer> sqlTypes = new ArrayList<>(TableContextUtil.PARTITIONABLE_TYPES);
-
-    String schemaName = "schema";
-    String offsetColName = "OFFSET_COL";
-
-    int numTables = RandomTestUtils.nextInt(1, 8);
-    for (int t = 0; t < numTables; t++) {
-      String tableName = String.format("table%d", t);
-
-      int type = sqlTypes.get(RandomTestUtils.nextInt(0, sqlTypes.size()));
-      PartitioningMode partitioningMode = enablePartitioning && random.nextBoolean()
-          ? PartitioningMode.BEST_EFFORT : PartitioningMode.DISABLED;
-      final boolean partitioned = partitioningMode == PartitioningMode.BEST_EFFORT;
-      int maxNumPartitions = partitioned ? RandomTestUtils.nextInt(1, 10) : 1;
-
-      // an integer should be compatible with all partitionable types
-      int partitionSize = RandomTestUtils.nextInt(1, 1000000);
-
-      TableContext table = new TableContext(
-          DatabaseVendor.UNKNOWN,
-          schemaName,
-          tableName,
-          Maps.newLinkedHashMap(Collections.singletonMap(offsetColName, type)),
-          Collections.singletonMap(offsetColName, null),
-          Collections.singletonMap(offsetColName, String.valueOf(partitionSize)),
-          Collections.singletonMap(offsetColName, "0"),
-          TableConfigBean.ENABLE_NON_INCREMENTAL_DEFAULT_VALUE,
-          partitioningMode,
-          maxNumPartitions,
-          null
-      );
-
-      for (int p = 0; p < maxNumPartitions; p++) {
-        if (partitioned && random.nextBoolean() && !(p == maxNumPartitions - 1 && partitions.isEmpty())) {
-          // only create some partitions
-          continue;
-        }
-
-        int startOffset = p * partitionSize;
-        int maxOffset = (p + 1) * partitionSize;
-
-        Map<String, String> partitionStoredOffsets = null;
-        if (random.nextBoolean()) {
-          // only simulate stored offsets sometimes
-          int storedOffset = RandomTestUtils.nextInt(startOffset + 1, maxOffset + 1);
-          partitionStoredOffsets = Collections.singletonMap(offsetColName, String.valueOf(storedOffset));
-        }
-
-        TableRuntimeContext partition = new TableRuntimeContext(
-            table,
-            false,
-            partitioned,
-            partitioned ? p + 1 : TableRuntimeContext.NON_PARTITIONED_SEQUENCE,
-            Collections.singletonMap(offsetColName, String.valueOf(startOffset)),
-            Collections.singletonMap(offsetColName, String.valueOf(maxOffset)),
-            partitionStoredOffsets
-        );
-
-        partitions.put(partition, partitionStoredOffsets);
-      }
-    }
-
-    return partitions;
-  }
-
-  @NotNull
-  private MultithreadedTableProvider createTableProvider(
-      int numThreads,
-      TableContext table,
-      BatchTableStrategy batchTableStrategy
-  ) {
-    Map<String, TableContext> tableContextMap = new HashMap<>();
-    String qualifiedName = table.getQualifiedName();
-    tableContextMap.put(qualifiedName, table);
-    Queue<String> sortedTableOrder = new LinkedList<>();
-    sortedTableOrder.add(qualifiedName);
-    Map<Integer, Integer> threadNumToMaxTableSlots = new HashMap<>();
-
-    return new MultithreadedTableProvider(
-        tableContextMap,
-        sortedTableOrder,
-        threadNumToMaxTableSlots,
-        numThreads,
-        batchTableStrategy
-    );
-  }
-
-  @NotNull
-  private static TableContext createTableContext(
-      String schema,
-      String tableName,
-      String offsetColumn,
-      String partitionSize,
-      int maxActivePartitions,
-      boolean enablePartitioning
-  ) {
-    return createTableContext(
-        schema,
-        tableName,
-        offsetColumn,
-        partitionSize,
-        "0",
-        maxActivePartitions,
-        enablePartitioning
-    );
-  }
-
-  @NotNull
-  private static TableContext createTableContext(
-      String schema,
-      String tableName,
-      String offsetColumn,
-      String partitionSize,
-      String minOffsetColValue,
-      int maxActivePartitions,
-      boolean enablePartitioning
-  ) {
-    return createTableContext(
-        schema,
-        tableName,
-        offsetColumn,
-        partitionSize,
-        minOffsetColValue,
-        maxActivePartitions,
-        enablePartitioning,
-        TableConfigBean.ENABLE_NON_INCREMENTAL_DEFAULT_VALUE,
-        new Long(0)
-    );
-  }
-
-  @NotNull
-  private static TableContext createTableContext(
-      String schema,
-      String tableName,
-      String offsetColumn,
-      String partitionSize,
-      String minOffsetColValue,
-      int maxActivePartitions,
-      boolean enablePartitioning,
-      boolean enableNonIncremental
-  ) {
-    LinkedHashMap<String, Integer> offsetColumnToType = new LinkedHashMap<>();
-    Map<String, String> offsetColumnToStartOffset = new HashMap<>();
-    Map<String, String> offsetColumnToPartitionSizes = new HashMap<>();
-    Map<String, String> offsetColumnToMinValues = new HashMap<>();
-
-    if (offsetColumn != null) {
-      offsetColumnToType.put(offsetColumn, Types.INTEGER);
-      if (minOffsetColValue != null) {
-        offsetColumnToMinValues.put(offsetColumn, minOffsetColValue);
-      }
-      offsetColumnToPartitionSizes.put(offsetColumn, partitionSize);
-    }
-    String extraOffsetColumnConditions = null;
-
-    return new TableContext(
-        DatabaseVendor.UNKNOWN,
-        schema,
-        tableName,
-        offsetColumnToType,
-        offsetColumnToStartOffset,
-        offsetColumnToPartitionSizes,
-        offsetColumnToMinValues,
-        enableNonIncremental,
-        enablePartitioning ? PartitioningMode.BEST_EFFORT : PartitioningMode.DISABLED,
-        maxActivePartitions,
-        extraOffsetColumnConditions
-    );
-  }
-
-  @NotNull
-  private static TableContext createTableContext(
-      String schema,
-      String tableName,
-      String offsetColumn,
-      String partitionSize,
-      String minOffsetColValue,
-      int maxActivePartitions,
-      boolean enablePartitioning,
-      boolean enableNonIncremental,
-      long offset
-  ) {
-    LinkedHashMap<String, Integer> offsetColumnToType = new LinkedHashMap<>();
-    Map<String, String> offsetColumnToStartOffset = new HashMap<>();
-    Map<String, String> offsetColumnToPartitionSizes = new HashMap<>();
-    Map<String, String> offsetColumnToMinValues = new HashMap<>();
-
-    if (offsetColumn != null) {
-      offsetColumnToType.put(offsetColumn, Types.INTEGER);
-      if (minOffsetColValue != null) {
-        offsetColumnToMinValues.put(offsetColumn, minOffsetColValue);
-      }
-      offsetColumnToPartitionSizes.put(offsetColumn, partitionSize);
-    }
-    String extraOffsetColumnConditions = null;
-
-    return new TableContext(
-        DatabaseVendor.UNKNOWN,
-        schema,
-        tableName,
-        offsetColumnToType,
-        offsetColumnToStartOffset,
-        offsetColumnToPartitionSizes,
-        offsetColumnToMinValues,
-        enableNonIncremental,
-        enablePartitioning ? PartitioningMode.BEST_EFFORT : PartitioningMode.DISABLED,
-        maxActivePartitions,
-        extraOffsetColumnConditions,
-        offset
-    );
   }
 
 }

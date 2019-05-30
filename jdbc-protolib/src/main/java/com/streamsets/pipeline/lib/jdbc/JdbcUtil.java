@@ -140,9 +140,14 @@ public class JdbcUtil {
   public static final String MIN_OFFSET_VALUE_QUERY = "SELECT MIN(%s) FROM %s";
 
   /**
-   * The index within the result set for the MIN_OFFSET_VALUE_QUERY that contains the min offset value
+   * The query to select the max value for a particular offset column
    */
-  private static final int MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX = 1;
+  public static final String MAX_OFFSET_VALUE_QUERY = "SELECT MAX(%s) FROM %s";
+
+  /**
+   * The index within the result set for the column that contains the min or max offset value
+   */
+  private static final int MIN_MAX_OFFSET_VALUE_QUERY_RESULT_SET_INDEX = 1;
 
   public static final int NANOS_TO_MILLIS_ADJUSTMENT = 1_000_000;
   public static final String FIELD_ATTRIBUTE_NANOSECONDS = "nanoSeconds";
@@ -341,7 +346,7 @@ public class JdbcUtil {
     return keys;
   }
 
-  public Map<String, String> getMinimumOffsetValues(
+  public static Map<String, String> getMinimumOffsetValues(
       DatabaseVendor vendor,
       Connection connection,
       String schema,
@@ -349,21 +354,60 @@ public class JdbcUtil {
       QuoteChar quoteChar,
       Collection<String> offsetColumnNames
   ) throws SQLException {
-    Map<String, String> minOffsetValues = new HashMap<>();
+    return getMinMaxOffsetValueHelper(
+        MIN_OFFSET_VALUE_QUERY,
+        vendor,
+        connection,
+        schema,
+        tableName,
+        quoteChar,
+        offsetColumnNames
+    );
+  }
+
+  public static Map<String, String> getMaximumOffsetValues(
+      DatabaseVendor vendor,
+      Connection connection,
+      String schema,
+      String tableName,
+      QuoteChar quoteChar,
+      Collection<String> offsetColumnNames
+  ) throws SQLException {
+    return getMinMaxOffsetValueHelper(
+        MAX_OFFSET_VALUE_QUERY,
+        vendor,
+        connection,
+        schema,
+        tableName,
+        quoteChar,
+        offsetColumnNames
+    );
+  }
+
+  private static Map<String, String> getMinMaxOffsetValueHelper(
+      String minMaxQuery,
+      DatabaseVendor vendor,
+      Connection connection,
+      String schema,
+      String tableName,
+      QuoteChar quoteChar,
+      Collection<String> offsetColumnNames
+  ) throws SQLException {
+    Map<String, String> minMaxOffsetValues = new HashMap<>();
     final String qualifiedName = TableContextUtil.getQuotedQualifiedTableName(
         schema,
         tableName,
         quoteChar.getQuoteCharacter()
     );
     for (String offsetColumn : offsetColumnNames) {
-      final String minOffsetQuery = String.format(MIN_OFFSET_VALUE_QUERY, offsetColumn, qualifiedName);
+      final String minMaxOffsetQuery = String.format(minMaxQuery, offsetColumn, qualifiedName);
       try (
         Statement st = connection.createStatement();
-        ResultSet rs = st.executeQuery(minOffsetQuery)
+        ResultSet rs = st.executeQuery(minMaxOffsetQuery)
       ) {
         if (rs.next()) {
-          String minValue = null;
-          final int colType = rs.getMetaData().getColumnType(MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
+          String minMaxValue = null;
+          final int colType = rs.getMetaData().getColumnType(MIN_MAX_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
 
           switch (vendor) {
             case ORACLE:
@@ -371,54 +415,53 @@ public class JdbcUtil {
                 switch (colType) {
                   case TableContextUtil.TYPE_ORACLE_TIMESTAMP_WITH_LOCAL_TIME_ZONE:
                   case TableContextUtil.TYPE_ORACLE_TIMESTAMP_WITH_TIME_ZONE:
-                    OffsetDateTime offsetDateTime = rs.getObject(MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX, OffsetDateTime.class);
+                    OffsetDateTime offsetDateTime = rs.getObject(MIN_MAX_OFFSET_VALUE_QUERY_RESULT_SET_INDEX, OffsetDateTime.class);
                     if(offsetDateTime != null) {
-                      minValue = offsetDateTime.toZonedDateTime().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+                      minMaxValue = offsetDateTime.toZonedDateTime().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
                     }
                     break;
                   default:
                     throw new IllegalStateException(Utils.format("Unexpected type: {}", colType));
-
                 }
               }
           }
 
-          if(minValue == null) {
+          if(minMaxValue == null) {
             switch (colType) {
               case Types.DATE:
-                java.sql.Date date = rs.getDate(MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
+                java.sql.Date date = rs.getDate(MIN_MAX_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
                 if (date != null) {
-                  minValue = String.valueOf(date.toInstant().toEpochMilli());
+                  minMaxValue = String.valueOf(date.toInstant().toEpochMilli());
                 }
                 break;
               case Types.TIME:
-                java.sql.Time time = rs.getTime(MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
+                java.sql.Time time = rs.getTime(MIN_MAX_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
                 if (time != null) {
-                  minValue = String.valueOf(time.toInstant().toEpochMilli());
+                  minMaxValue = String.valueOf(time.toInstant().toEpochMilli());
                 }
                 break;
               case Types.TIMESTAMP:
-                Timestamp timestamp = rs.getTimestamp(MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
+                Timestamp timestamp = rs.getTimestamp(MIN_MAX_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
                 if (timestamp != null) {
                   final Instant instant = timestamp.toInstant();
-                  minValue = String.valueOf(instant.toEpochMilli());
+                  minMaxValue = String.valueOf(instant.toEpochMilli());
                 }
                 break;
               default:
-                minValue = rs.getString(MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
+                minMaxValue = rs.getString(MIN_MAX_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
                 break;
             }
           }
-          if (minValue != null) {
-            minOffsetValues.put(offsetColumn, minValue);
+          if (minMaxValue != null) {
+            minMaxOffsetValues.put(offsetColumn, minMaxValue);
           }
         } else {
-          LOG.warn("Unable to get minimum offset value using query {}; result set had no rows", minOffsetQuery);
+          LOG.warn("Unable to get minimum offset value using query {}; result set had no rows", minMaxOffsetQuery);
         }
       }
     }
 
-    return minOffsetValues;
+    return minMaxOffsetValues;
   }
 
   /**
