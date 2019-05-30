@@ -42,8 +42,6 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -54,22 +52,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public final class MultithreadedTableProvider {
   private static final Logger LOG = LoggerFactory.getLogger(MultithreadedTableProvider.class);
 
-  /**
-   * The factor by which the sum of the max number of active partitions of all tables is multiplied by to determine
-   * the overall size of the shared partition queue.  It exists to ensure there is always enough capacity to offer
-   * partitions to the queue as needed.
-   */
-  private static final int SHARED_QUEUE_SIZE_FUDGE_FACTOR = 2;
-
   private Map<String, TableContext> tableContextMap;
 
   private final Multimap<String, TableContext> remainingSchemasToTableContexts = HashMultimap.create();
   private final Multimap<String, TableContext> completedSchemasToTableContexts = HashMultimap.create();
-  private final BlockingQueue<TableRuntimeContext> sharedAvailableTablesQueue;
+  private final LinkedList<TableRuntimeContext> sharedAvailableTablesList;
   private final Set<TableContext> tablesWithNoMoreData;
   private Map<Integer, Integer> threadNumToMaxTableSlots;
   private final int numThreads;
   private final BatchTableStrategy batchTableStrategy;
+  private final TableMaxOffsetValueUpdater tableMaxOffsetValueUpdater;
 
   private Queue<String> sortedTableOrder;
 
@@ -88,12 +80,14 @@ public final class MultithreadedTableProvider {
       Queue<String> sortedTableOrder,
       Map<Integer, Integer> threadNumToMaxTableSlots,
       int numThreads,
-      BatchTableStrategy batchTableStrategy
+      BatchTableStrategy batchTableStrategy,
+      TableMaxOffsetValueUpdater tableMaxOffsetValueUpdater
   ) {
     this.tableContextMap = new ConcurrentHashMap<>(tableContextMap);
     initializeRemainingSchemasToTableContexts();
     this.numThreads = numThreads;
     this.batchTableStrategy = batchTableStrategy;
+    this.tableMaxOffsetValueUpdater = tableMaxOffsetValueUpdater;
 
     final Map<String, Integer> tableNameToOrder = new HashMap<>();
     int order = 1;
@@ -101,14 +95,7 @@ public final class MultithreadedTableProvider {
       tableNameToOrder.put(tableName, order++);
     }
 
-    int sharedPartitionQueueSize = 0;
-    for (TableContext tableContext : tableContextMap.values()) {
-      sharedPartitionQueueSize += maxNumActivePartitions(tableContext);
-    }
-    sharedAvailableTablesQueue = new ArrayBlockingQueue<TableRuntimeContext>(
-        sharedPartitionQueueSize * SHARED_QUEUE_SIZE_FUDGE_FACTOR,
-        true
-    );
+    sharedAvailableTablesList = new LinkedList<>();
 
     this.sortedTableOrder = new ArrayDeque<>(sortedTableOrder);
 
@@ -278,7 +265,7 @@ public final class MultithreadedTableProvider {
       Multimap<TableContext, TableRuntimeContext> reconstructedPartitions,
       Set<TableContext> excludeTables
   ) {
-    sharedAvailableTablesQueue.clear();
+    sharedAvailableTablesList.clear();
     activeRuntimeContexts.clear();
     for (String qualifiedTableName : sortedTableOrder) {
       //create the initial partition for each table
@@ -300,7 +287,7 @@ public final class MultithreadedTableProvider {
         partitions = Collections.singletonList(TableRuntimeContext.createInitialPartition(tableContext));
       }
 
-      partitions.forEach(sharedAvailableTablesQueue::offer);
+      partitions.forEach(sharedAvailableTablesList::add);
       activeRuntimeContexts.putAll(tableContext, partitions);
     }
   }
@@ -378,8 +365,8 @@ public final class MultithreadedTableProvider {
    * Basically acquires more tables for the current thread to work on.
    * The maximum a thread can hold is upper bounded to the
    * value the thread number was allocated in {@link #threadNumToMaxTableSlots}
-   * If there are no tables currently owned make a blocking call to {@link #sharedAvailableTablesQueue}
-   * else simply poll {@link #sharedAvailableTablesQueue} and it to the {@link #ownedTablesQueue}
+   * If there are no tables currently owned make a blocking call to {@link #sharedAvailableTablesList}
+   * else simply poll {@link #sharedAvailableTablesList} and it to the {@link #ownedTablesQueue}
    */
   @VisibleForTesting
   void acquireTableAsNeeded(int threadNumber) throws InterruptedException {
@@ -388,12 +375,12 @@ public final class MultithreadedTableProvider {
 
 
       if (getTableContextMap().containsValue(lastOwnedPartition.getSourceTableContext())) {
-        sharedAvailableTablesQueue.offer(lastOwnedPartition);
+        sharedAvailableTablesList.add(lastOwnedPartition);
       }
 
       TableContext lastOwnedTable = lastOwnedPartition.getSourceTableContext();
       // need to cycle off all partitions from the same table to the end of the queue
-      TableRuntimeContext first = sharedAvailableTablesQueue.peek();
+      TableRuntimeContext first = sharedAvailableTablesList.peekFirst();
       while (first != null && first.getSourceTableContext().equals(lastOwnedTable)
           && !first.equals(lastOwnedPartition)) {
         if (LOG.isDebugEnabled()) {
@@ -404,17 +391,16 @@ public final class MultithreadedTableProvider {
           );
         }
 
-        // poll() should never return null since it is actually returning 'first' as we want to move it from the head
-        // of the queue, that's why we are calling offer, to basically remove it from the head but keep it in the queue
-        TableRuntimeContext toMove = sharedAvailableTablesQueue.poll();
-        sharedAvailableTablesQueue.offer(toMove);
+        // move item from head to tail of list
+        TableRuntimeContext toMove = sharedAvailableTablesList.pollFirst();
+        sharedAvailableTablesList.add(toMove);
         // Get the new head of the queue
-        first = sharedAvailableTablesQueue.peek();
+        first = sharedAvailableTablesList.peekFirst();
       }
     }
 
     if (getOwnedTablesQueue().isEmpty()) {
-      TableRuntimeContext head = sharedAvailableTablesQueue.poll();
+      TableRuntimeContext head = sharedAvailableTablesList.pollFirst();
       if (head != null) {
         offerToOwnedTablesQueue(head, threadNumber);
       }
@@ -448,7 +434,7 @@ public final class MultithreadedTableProvider {
       if (newPartition != null) {
         LOG.info("Adding new partition to shared queue: {}", newPartition.getDescription());
         activeRuntimeContexts.put(newPartition.getSourceTableContext(), newPartition);
-        if (!sharedAvailableTablesQueue.offer(newPartition)) {
+        if (!sharedAvailableTablesList.add(newPartition)) {
           return;
         }
         current = newPartition;
@@ -482,8 +468,14 @@ public final class MultithreadedTableProvider {
       return false;
     }
 
+    final boolean maxOffsetValuesPassed = TableContextUtil.allOffsetsBeyondMaxValues(
+        tableContext,
+        partition.getStartingPartitionOffsets()
+    );
+
     final int maxPartitionWithData = getMaxPartitionWithData(tableContext);
-    if (partition.getPartitionSequence() - maxPartitionWithData > maxNumActivePartitions(tableContext)) {
+    if (maxOffsetValuesPassed
+        && partition.getPartitionSequence() - maxPartitionWithData > maxNumActivePartitions(tableContext)) {
       if (LOG.isDebugEnabled()) {
         LOG.debug(
             "Cannot create new partition for ({}) because there has been no data seen since partition {}",
@@ -497,7 +489,7 @@ public final class MultithreadedTableProvider {
     // check whether this particular table already has the maximum number of allowed partitions
     final SortedSet<TableRuntimeContext> runtimeContexts = activeRuntimeContexts.get(tableContext);
     final int maxNumActivePartitions = maxNumActivePartitions(tableContext);
-    if (runtimeContexts.size() >= maxNumActivePartitions) {
+    if (maxOffsetValuesPassed && runtimeContexts.size() >= maxNumActivePartitions) {
       if (LOG.isDebugEnabled()) {
         LOG.debug(
             "Cannot create new partition for ({}) because the table has already reached the maximum allowed number of" +
@@ -545,9 +537,8 @@ public final class MultithreadedTableProvider {
     final TableContext sourceTableContext = partition.getSourceTableContext();
     synchronized (partitionStateLock) {
       boolean tableExhausted = false;
-      final TableContext sourceContext = sourceTableContext;
 
-      final SortedSet<TableRuntimeContext> activeContexts = activeRuntimeContexts.get(sourceContext);
+      final SortedSet<TableRuntimeContext> activeContexts = activeRuntimeContexts.get(sourceTableContext);
 
       final Iterator<TableRuntimeContext> activeContextIter = activeContexts.iterator();
       int numActivePartitions = 0;
@@ -557,13 +548,22 @@ public final class MultithreadedTableProvider {
 
         if (thisPartition.equals(partition)) {
           final int maxPartitionWithData = getMaxPartitionWithData(partition.getSourceTableContext());
+
+          // update max offset values for table, in case new rows have been added since initialization
+          tableMaxOffsetValueUpdater.updateMaxOffsetsForTable(sourceTableContext);
+
           final boolean lastPartition =
               // no currently active partitions for the table
               numActivePartitions == 0
               // and the number of partitions since we last saw data
               && partition.getPartitionSequence() - maxPartitionWithData
               // is greater than or equal to the max number of active partitions minus 1
-              >= (maxNumActivePartitions(partition.getSourceTableContext()) - 1);
+              >= (maxNumActivePartitions(sourceTableContext) - 1)
+              && TableContextUtil.allOffsetsBeyondMaxValues(
+                  sourceTableContext,
+                  partition.getStartingPartitionOffsets()
+              )
+              ;
           if (!activeContextIter.hasNext() && thisPartition.isMarkedNoMoreData()
               && (!partition.isPartitioned() || lastPartition)) {
             // this is the last partition, and was already marked no more data once
@@ -575,15 +575,15 @@ public final class MultithreadedTableProvider {
           // this partition has already been marked as no more data once, so it can be removed now
           // but only if there is at least one more after it, since we want to keep at least one for every table
 
-          if (positionsFromEnd > maxNumActivePartitions(partition.getSourceTableContext())
+          if (positionsFromEnd > maxNumActivePartitions(sourceTableContext)
               || thisPartition.getPartitionSequence() < getMaxPartitionWithData(thisPartition.getSourceTableContext())) {
 
             activeContextIter.remove();
             removedPartitions.add(thisPartition);
-            if (!sharedAvailableTablesQueue.remove(thisPartition)) {
+            if (!sharedAvailableTablesList.remove(thisPartition)) {
               if (LOG.isDebugEnabled()) {
                 LOG.debug(
-                    "Failed to remove partition {} from sharedAvailableTablesQueue; it may be owned by another thread",
+                    "Failed to remove partition {} from sharedAvailableTablesList; it may be owned by another thread",
                     thisPartition.getDescription()
                 );
               }
@@ -677,23 +677,14 @@ public final class MultithreadedTableProvider {
     );
     synchronized (partitionStateLock) {
       boolean containsActiveEntry = activeRuntimeContexts.containsEntry(sourceContext, removedPartition);
-      if (containsActiveEntry || sharedAvailableTablesQueue.isEmpty()) {
+      if (containsActiveEntry || sharedAvailableTablesList.isEmpty()) {
         if (tableRuntimeContext.isUsingNonIncrementalLoad()) {
           if (LOG.isDebugEnabled()) {
             LOG.debug("Not re-adding table {} because it is non-incremental", removedPartition.getDescription());
           }
           return;
         }
-        try {
-          sharedAvailableTablesQueue.put(removedPartition);
-        } catch (InterruptedException e) {
-          LOG.error(
-              "InterruptedException trying to put partition {} back on shared queue",
-              removedPartition.getDescription(),
-              e
-          );
-          Thread.currentThread().interrupt();
-        }
+        sharedAvailableTablesList.add(removedPartition);
         if (!containsActiveEntry) {
           activeRuntimeContexts.put(sourceContext, removedPartition);
         }
@@ -828,8 +819,8 @@ public final class MultithreadedTableProvider {
   }
 
   @VisibleForTesting
-  BlockingQueue<TableRuntimeContext> getSharedAvailableTablesQueue() {
-    return sharedAvailableTablesQueue;
+  LinkedList<TableRuntimeContext> getSharedAvailableTablesList() {
+    return sharedAvailableTablesList;
   }
 
   @VisibleForTesting
@@ -884,7 +875,7 @@ public final class MultithreadedTableProvider {
   @VisibleForTesting
   String getSharedQueueState() {
     final StringBuilder sb = new StringBuilder();
-    for (TableRuntimeContext item : sharedAvailableTablesQueue) {
+    for (TableRuntimeContext item : sharedAvailableTablesList) {
       if (sb.length() > 0) {
         sb.append(",");
       }

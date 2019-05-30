@@ -308,12 +308,14 @@ public class TestTableJdbcSource {
 
     final TableContext tableContext = new TableContext(
         DatabaseVendor.UNKNOWN,
+        QuoteChar.NONE,
         "",
         tableName,
         offsetColumnToType,
         offsetColumnToStartOffset,
         offsetColumnToPartitionOffsetAdjustments,
         offsetColumnToMinValues,
+        Collections.emptyMap(),
         TableConfigBean.ENABLE_NON_INCREMENTAL_DEFAULT_VALUE,
         PartitioningMode.REQUIRED,
         -1,

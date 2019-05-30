@@ -371,6 +371,23 @@ Expected :Field of type MAP or LIST_MAP with field entry named values having val
     return new CaseInsensitiveSubstringMatcher(subString);
   }
 
+  public static Matcher<Integer> hasSameSignAs(final int value) {
+    return new TypeSafeMatcher<Integer>() {
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("having the same sign as ");
+        description.appendValue(value);
+        description.appendText(", which is ");
+        description.appendValue(Integer.signum(value));
+      }
+
+      @Override
+      protected boolean matchesSafely(Integer item) {
+        return Integer.signum(value) == Integer.signum(item);
+      }
+    };
+  }
+
   /**
    * Returns the {@link Field.Type} corresponding to the given value's class
    *

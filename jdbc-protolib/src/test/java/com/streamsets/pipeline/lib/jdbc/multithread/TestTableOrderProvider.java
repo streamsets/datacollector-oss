@@ -24,6 +24,7 @@ import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.table.PartitioningMode;
+import com.streamsets.pipeline.stage.origin.jdbc.table.QuoteChar;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableConfigBean;
 import org.junit.Assert;
 import org.junit.Before;
@@ -161,9 +162,11 @@ public class TestTableOrderProvider {
   private static TableContext getTableContext(String tableName) {
     return new TableContext(
         DatabaseVendor.UNKNOWN,
+        QuoteChar.NONE,
         null,
         tableName,
         new LinkedHashMap<>(ImmutableMap.of("prim_key", Types.INTEGER)),
+        Collections.emptyMap(),
         Collections.emptyMap(),
         Collections.emptyMap(),
         Collections.emptyMap(),

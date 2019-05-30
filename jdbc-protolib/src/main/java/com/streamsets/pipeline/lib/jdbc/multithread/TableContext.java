@@ -16,10 +16,10 @@
 package com.streamsets.pipeline.lib.jdbc.multithread;
 
 import com.streamsets.pipeline.stage.origin.jdbc.table.PartitioningMode;
+import com.streamsets.pipeline.stage.origin.jdbc.table.QuoteChar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.JDBCType;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -34,11 +34,13 @@ public class TableContext {
   private static final Logger LOG = LoggerFactory.getLogger(TableContext.class);
 
   private final DatabaseVendor vendor;
+  private final QuoteChar quoteChar;
   private final String schema;
   private final String tableName;
   private final LinkedHashMap<String, Integer> offsetColumnToType = new LinkedHashMap<>();
   private final Map<String, String> offsetColumnToPartitionOffsetAdjustments = new HashMap<>();
   private final Map<String, String> offsetColumnToMinValues = new HashMap<>();
+  private final Map<String, String> offsetColumnToMaxValues = new HashMap<>();
   private final boolean enableNonIncremental;
   private final PartitioningMode partitioningMode;
   private final int maxNumActivePartitions;
@@ -51,12 +53,14 @@ public class TableContext {
 
   public TableContext(
       DatabaseVendor vendor,
+      QuoteChar quoteChar,
       String schema,
       String tableName,
       LinkedHashMap<String, Integer> offsetColumnToType,
       Map<String, String> offsetColumnToStartOffset,
       Map<String, String> offsetColumnToPartitionOffsetAdjustments,
       Map<String, String> offsetColumnToMinValues,
+      Map<String, String> offsetColumnToMaxValues,
       boolean enableNonIncremental,
       PartitioningMode partitioningMode,
       int maxNumActivePartitions,
@@ -65,12 +69,14 @@ public class TableContext {
   ) {
     this(
         vendor,
+        quoteChar,
         schema,
         tableName,
         offsetColumnToType,
         offsetColumnToStartOffset,
         offsetColumnToPartitionOffsetAdjustments,
         offsetColumnToMinValues,
+        offsetColumnToMaxValues,
         enableNonIncremental,
         partitioningMode,
         maxNumActivePartitions,
@@ -81,18 +87,21 @@ public class TableContext {
 
   public TableContext(
       DatabaseVendor vendor,
+      QuoteChar quoteChar,
       String schema,
       String tableName,
       LinkedHashMap<String, Integer> offsetColumnToType,
       Map<String, String> offsetColumnToStartOffset,
       Map<String, String> offsetColumnToPartitionOffsetAdjustments,
       Map<String, String> offsetColumnToMinValues,
+      Map<String, String> offsetColumnToMaxValues,
       boolean enableNonIncremental,
       PartitioningMode partitioningMode,
       int maxNumActivePartitions,
       String extraOffsetColumnConditions
   ) {
     this.vendor = vendor;
+    this.quoteChar = quoteChar;
     this.schema = schema;
     this.tableName = tableName;
     if (offsetColumnToType != null) {
@@ -103,6 +112,9 @@ public class TableContext {
     }
     if (offsetColumnToMinValues != null) {
       this.offsetColumnToMinValues.putAll(offsetColumnToMinValues);
+    }
+    if (offsetColumnToMaxValues != null) {
+      this.offsetColumnToMaxValues.putAll(offsetColumnToMaxValues);
     }
     this.extraOffsetColumnConditions = extraOffsetColumnConditions;
     this.enableNonIncremental = enableNonIncremental;
@@ -154,6 +166,19 @@ public class TableContext {
     return Collections.unmodifiableMap(offsetColumnToMinValues);
   }
 
+  public void updateOffsetColumnToMaxValues(Map<String, String> updatedMaxValues) {
+    synchronized (offsetColumnToMaxValues) {
+      offsetColumnToMaxValues.clear();
+      offsetColumnToMaxValues.putAll(updatedMaxValues);
+    }
+  }
+
+  public Map<String, String> getOffsetColumnToMaxValues() {
+    synchronized (offsetColumnToMaxValues) {
+      return Collections.unmodifiableMap(offsetColumnToMaxValues);
+    }
+  }
+
   public boolean isNonIncrementalLoadRequired() {
     return isEnableNonIncremental() && getOffsetColumns().isEmpty();
   }
@@ -185,6 +210,10 @@ public class TableContext {
 
   public DatabaseVendor getVendor() {
     return vendor;
+  }
+
+  public QuoteChar getQuoteChar() {
+    return quoteChar;
   }
 
   public long getOffset() {
