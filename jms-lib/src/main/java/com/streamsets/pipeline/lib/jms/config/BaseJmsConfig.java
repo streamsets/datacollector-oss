@@ -67,6 +67,7 @@ public class BaseJmsConfig {
   @ConfigDef(
           required = true,
           type = ConfigDef.Type.BOOLEAN,
+          defaultValue = "false",
           label = "Use ClientID",
           description = "Check to specify a clientID for this JMS connection. e.g. Required for Durable Topic Subscriptions",
           displayPosition = 75,
