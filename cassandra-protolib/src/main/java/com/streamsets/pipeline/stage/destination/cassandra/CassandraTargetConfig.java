@@ -91,7 +91,8 @@ public class CassandraTargetConfig {
       defaultValue = "LOGGED",
       label = "Batch Type",
       description = "Un-logged batches do not use the Cassandra distributed batch log and as such as nonatomic.",
-      displayPosition = 60
+      displayPosition = 60,
+      group = "CASSANDRA"
   )
   @ValueChooserModel(BatchTypeChooserValues.class)
   public BatchStatement.Type batchType = BatchStatement.Type.LOGGED;
@@ -104,7 +105,8 @@ public class CassandraTargetConfig {
       max = 65535,
       label = "Max Batch Size",
       description = "Maximum statements to batch prior to submission.",
-      displayPosition = 70
+      displayPosition = 70,
+      group = "CASSANDRA"
   )
   public int maxBatchSize = 65535;
 
