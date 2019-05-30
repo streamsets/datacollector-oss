@@ -103,6 +103,17 @@
             </execution>
           </executions>
           <configuration>
+             <filters>
+                <!-- Must exclude signatures from signed jars when shading or they will fail verification -->
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/*.SF</exclude>
+                    <exclude>META-INF/*.DSA</exclude>
+                    <exclude>META-INF/*.RSA</exclude>
+                  </excludes>
+                </filter>
+              </filters>
             <finalName>${project.artifactId}-${project.version}</finalName>
             <dependencyReducedPomLocation>${project.build.directory}/shaded-pom.xml</dependencyReducedPomLocation>
           </configuration>
