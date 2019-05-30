@@ -182,7 +182,7 @@ public class HiveMetadataDProcessor extends DProcessor {
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
       label = "Convert Timestamps to String",
-      description = "Set this option to convert DATETIME and TIME record fields to String",
+      description = "Set this option to convert DATETIME record fields to String",
       displayPosition = 115,
       group = "ADVANCED"
   )
