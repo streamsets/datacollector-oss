@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.destination.datalake.gen2;
 
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.stage.conf.DataLakeGen2BaseConfig;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsTargetConfigBean;
 
 import java.util.List;
@@ -25,7 +26,7 @@ import java.util.List;
 public class DataLakeGen2TargetConfigBean extends HdfsTargetConfigBean {
 
   @ConfigDefBean
-  public DataLakeGen2TargetConfig dataLakeConfig;
+  public DataLakeGen2BaseConfig dataLakeConfig;
 
   @Override
   public void init(final Stage.Context context, List<Stage.ConfigIssue> issues) {
