@@ -126,7 +126,7 @@ public class RemoteDownloadConfigBean {
       displayPosition = 100,
       group = "POST_PROCESSING",
       dependsOn = "dataFormat",
-      triggeredByValue = {  // Everything in DataFormat other than "Whole File"
+      triggeredByValue = {  // Everything in DataFormat other than "WHOLE_FILE"
           "TEXT",
           "JSON",
           "DELIMITED",
@@ -140,6 +140,7 @@ public class RemoteDownloadConfigBean {
           "SYSLOG",
           "NETFLOW",
           "EXCEL",
+          "FLOWFILE",
       }
   )
   @ValueChooserModel(PostProcessingOptionsChooserValues.class)

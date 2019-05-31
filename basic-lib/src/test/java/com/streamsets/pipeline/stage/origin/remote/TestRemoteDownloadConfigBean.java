@@ -28,12 +28,14 @@ public class TestRemoteDownloadConfigBean {
   public void testPostProcessingTriggeredByValueHasAllButWholeFile() throws Exception {
     ConfigDef configDef = RemoteDownloadConfigBean.class.getDeclaredField("postProcessing")
         .getAnnotation(ConfigDef.class);
+    String[] expectedFormats = Arrays.stream(DataFormat.values())
+        .filter(dataFormat -> dataFormat != DataFormat.WHOLE_FILE)
+        .map(dataFormat -> dataFormat.name())
+        .toArray(String[]::new);
     Assert.assertArrayEquals(
-        "RemoteDownloadConfigBean#postProcessing should have all DataFormats except for WHOLE_FILE",
-        Arrays.stream(DataFormat.values())
-            .filter(dataFormat -> dataFormat != DataFormat.WHOLE_FILE)
-            .map(dataFormat -> dataFormat.name())
-            .toArray(String[]::new),
+        "RemoteDownloadConfigBean#postProcessing should have all DataFormats except for WHOLE_FILE ("
+            + Arrays.toString(expectedFormats) + ") but found " + Arrays.toString(configDef.triggeredByValue()),
+        expectedFormats,
         configDef.triggeredByValue());
   }
 
