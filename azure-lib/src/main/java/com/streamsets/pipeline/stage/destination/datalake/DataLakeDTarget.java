@@ -25,8 +25,8 @@ import com.streamsets.pipeline.lib.event.WholeFileProcessedEvent;
 
 @StageDef(
     version = 1,
-    label = "Azure Data Lake Storage Legacy",
-    description = "Writes data to Azure Data Lake Storage Legacy",
+    label = "Azure Data Lake Storage (Legacy)",
+    description = "Writes data to Azure Data Lake Storage (Legacy)",
     icon = "data-lake-store-gen1.png",
     producesEvents = true,
     eventDefs = {WholeFileProcessedEvent.class},
