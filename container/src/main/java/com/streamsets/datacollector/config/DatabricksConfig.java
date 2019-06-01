@@ -112,11 +112,11 @@ public class DatabricksConfig {
   public CredentialValue token = () -> "";
 
   @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.TEXT,
-      label = "Cluster Configuration",
-      description = "Configuration for the Databricks cluster",
-      defaultValue = DEFAULT_CLUSTER_CONFIG,
+      required = true,
+      defaultValue = "true",
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Provision a New Cluster",
+      description = "Provisions a new cluster when the pipeline starts",
       group = "CLUSTER",
       displayPosition = 110,
       dependencies = {
@@ -126,6 +126,58 @@ public class DatabricksConfig {
           )
       }
   )
+  public boolean provisionNewCluster = true;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Cluster ID",
+      group = "CLUSTER",
+      displayPosition = 111,
+      dependencies = {
+          @Dependency(
+              configName = "^clusterConfig.clusterType",
+              triggeredByValues = {"DATABRICKS"}
+          ),
+          @Dependency(configName = "provisionNewCluster", triggeredByValues = "false")
+      }
+  )
+  public String clusterId = "";
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.TEXT,
+      label = "Cluster Configuration",
+      description = "Configuration for the Databricks cluster",
+      defaultValue = DEFAULT_CLUSTER_CONFIG,
+      group = "CLUSTER",
+      displayPosition = 112,
+      dependencies = {
+          @Dependency(
+              configName = "^clusterConfig.clusterType",
+              triggeredByValues = {"DATABRICKS"}
+          ),
+          @Dependency(configName = "provisionNewCluster", triggeredByValues = "true")
+      }
+  )
   public String clusterConfig = DEFAULT_CLUSTER_CONFIG;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "FALSE",
+      label = "Terminate Cluster",
+      description = "Terminates the cluster when the pipeline stops",
+      group = "CLUSTER",
+      displayPosition = 113,
+      dependencies = {
+          @Dependency(
+              configName = "^clusterConfig.clusterType",
+              triggeredByValues = {"DATABRICKS"}
+          ),
+          @Dependency(configName = "provisionNewCluster", triggeredByValues = "true")
+      }
+  )
+  public boolean terminateCluster;
 
 }
