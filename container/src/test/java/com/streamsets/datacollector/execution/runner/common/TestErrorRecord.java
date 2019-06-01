@@ -192,6 +192,7 @@ public class TestErrorRecord {
         runtimeInfo,
         new MetricRegistry(),
         null,
+        null,
         null
     );
     runner.setDeliveryGuarantee(DeliveryGuarantee.AT_LEAST_ONCE);

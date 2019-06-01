@@ -387,6 +387,7 @@ public class TestProductionPipeline {
       runtimeInfo,
       new MetricRegistry(),
       snapshotStore,
+      null,
       null
     );
     runner.setObserveRequests(productionObserveRequests);
@@ -829,7 +830,8 @@ public class TestProductionPipeline {
         runtimeInfo,
         new MetricRegistry(),
         snapshotStore,
-        null
+        null,
+      null
     );
     runner.setObserveRequests(productionObserveRequests);
     runner.setDeliveryGuarantee(DeliveryGuarantee.AT_LEAST_ONCE);
