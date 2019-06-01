@@ -20,6 +20,7 @@ import com.google.common.hash.Hashing;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.pipeline.api.ErrorCode;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -83,6 +84,13 @@ public class StatsInfo {
 
   public void incrementRecordCount(long count) {
     doWithLock(() -> getActiveStats().incrementRecordCount(count), false);
+  }
+
+  /**
+   * Track that given error code was used.
+   */
+  void errorCode(ErrorCode errorCode) {
+    doWithLock(() -> getActiveStats().errorCode(errorCode), false);
   }
 
   @VisibleForTesting

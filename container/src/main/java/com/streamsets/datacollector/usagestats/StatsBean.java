@@ -30,6 +30,7 @@ public class StatsBean {
   private long pipelineMilliseconds;
   private Map<String, Long> stageMilliseconds;
   private long recordsOM;
+  private Map<String, Long> errorCodes;
 
   public StatsBean() {
     stageMilliseconds = new HashMap<>();
@@ -57,6 +58,7 @@ public class StatsBean {
     } else {
       setRecordsOM(-1); // no records
     }
+    setErrorCodes(new HashMap<>(activeStats.getErrorCodes()));
   }
 
   public String getVersion() {
@@ -139,4 +141,11 @@ public class StatsBean {
     this.recordsOM = recordsOM;
   }
 
+  public Map<String, Long> getErrorCodes() {
+    return errorCodes;
+  }
+
+  public void setErrorCodes(Map<String, Long> errorCodes) {
+    this.errorCodes = errorCodes;
+  }
 }
