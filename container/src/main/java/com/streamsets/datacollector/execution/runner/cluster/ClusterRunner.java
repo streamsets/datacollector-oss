@@ -811,7 +811,8 @@ public class ClusterRunner extends AbstractRunner {
       getRuntimeInfo(),
       new MetricRegistry(),
       null,
-      null
+      null,
+      statsCollector
     );
     if (rateLimit > 0) {
       runner.setRateLimit(rateLimit);

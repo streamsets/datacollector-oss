@@ -125,7 +125,7 @@ public class TestProdPipelineRunnable {
     Configuration conf = new Configuration();
     ProductionPipelineRunner runner =
       new ProductionPipelineRunner(TestUtil.MY_PIPELINE, "0", null, conf, runtimeInfo, new MetricRegistry(), snapshotStore,
-        null);
+        null, null);
     runner.setDeliveryGuarantee(deliveryGuarantee);
     runner.setObserveRequests(productionObserveRequests);
     runner.setOffsetTracker(tracker);

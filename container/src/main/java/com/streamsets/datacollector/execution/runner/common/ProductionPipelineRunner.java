@@ -68,6 +68,7 @@ import com.streamsets.datacollector.runner.production.BadRecordsHandler;
 import com.streamsets.datacollector.runner.production.PipelineErrorNotificationRequest;
 import com.streamsets.datacollector.runner.production.ReportErrorDelegate;
 import com.streamsets.datacollector.runner.production.StatsAggregationHandler;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.AggregatorUtil;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
@@ -122,6 +123,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   private final String revision;
   private final SupportBundleManager supportBundleManager;
   private final List<ErrorListener> errorListeners;
+  private final StatsCollector statsCollector;
 
   private SourcePipe originPipe;
   private List<PipeRunner> pipes;
@@ -194,7 +196,8 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       RuntimeInfo runtimeInfo,
       MetricRegistry metrics,
       SnapshotStore snapshotStore,
-      ThreadHealthReporter threadHealthReporter
+      ThreadHealthReporter threadHealthReporter,
+      StatsCollector statsCollector
   ) {
     this.runtimeInfo = runtimeInfo;
     this.configuration = configuration;
@@ -207,6 +210,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     stageToErrorRecordsMap = new HashMap<>();
     stageToErrorMessagesMap = new HashMap<>();
     this.errorListeners = new ArrayList<>();
+    this.statsCollector = statsCollector;
 
     MetricsConfigurator.registerPipeline(pipelineName, revision);
     batchProcessingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing", pipelineName, revision);
@@ -416,10 +420,29 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       batchSize = snapshotBatchSize;
     }
 
-    // Push origin will block on the call until the either all data have been consumed or the pipeline stopped
-    originPipe.process(offsetTracker.getOffsets(), batchSize, this);
+    try {
+      // Push origin will block on the call until the either all data have been consumed or the pipeline stopped
+      originPipe.process(offsetTracker.getOffsets(), batchSize, this);
+    } catch (Throwable ex) {
+      LOG.error("Origin Pipe failed", ex);
+      // Execution failed, but this could be a "dependent" exception from other pipeline execution failure
+      if(exceptionFromExecution == null) {
+        exceptionFromExecution = ex;
+      }
+    }
+
     // If execution failed on exception, we should propagate it up
     if(exceptionFromExecution != null) {
+      // If applicable record the error codes
+      if(statsCollector != null) {
+        if(exceptionFromExecution instanceof StageException) {
+          statsCollector.errorCode(((StageException) exceptionFromExecution).getErrorCode());
+        }
+        if(exceptionFromExecution instanceof PipelineRuntimeException) {
+          statsCollector.errorCode(((PipelineRuntimeException) exceptionFromExecution).getErrorCode());
+        }
+      }
+
       Throwables.propagateIfInstanceOf(exceptionFromExecution, StageException.class);
       Throwables.propagateIfInstanceOf(exceptionFromExecution, PipelineRuntimeException.class);
       Throwables.propagate(exceptionFromExecution);
@@ -584,6 +607,16 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       } catch (Throwable t) {
         // We try to create partial batch on processing failure
         createFailureBatch(pipeBatch);
+
+        // If applicable record the error codes
+        if(statsCollector != null) {
+          if(exceptionFromExecution instanceof StageException) {
+            statsCollector.errorCode(((StageException) exceptionFromExecution).getErrorCode());
+          }
+          if(exceptionFromExecution instanceof PipelineRuntimeException) {
+            statsCollector.errorCode(((PipelineRuntimeException) exceptionFromExecution).getErrorCode());
+          }
+        }
 
         Throwables.propagateIfInstanceOf(t, StageException.class);
         Throwables.propagateIfInstanceOf(t, PipelineRuntimeException.class);
