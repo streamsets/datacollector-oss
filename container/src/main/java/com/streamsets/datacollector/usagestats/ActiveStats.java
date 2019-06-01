@@ -18,10 +18,13 @@ package com.streamsets.datacollector.usagestats;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
+import com.streamsets.pipeline.api.ErrorCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -41,6 +44,7 @@ public class ActiveStats {
   private Map<String, UsageTimer> pipelines;
   private Map<String, UsageTimer> stages;
   private AtomicLong recordCount;
+  private Map<String, Long> errorCodes;
 
   public ActiveStats() {
     startTime = System.currentTimeMillis();
@@ -49,6 +53,7 @@ public class ActiveStats {
     stages = new ConcurrentHashMap<>();
     recordCount = new AtomicLong();
     dataCollectorVersion = "";
+    errorCodes = new HashMap<>();
   }
 
   public String getVersion() {
@@ -147,6 +152,15 @@ public class ActiveStats {
     return this;
   }
 
+  public ActiveStats setErrorCodes(Map<String, Long> errorCodes) {
+    this.errorCodes = errorCodes;
+    return this;
+  }
+
+  public Map<String, Long> getErrorCodes() {
+    return Collections.unmodifiableMap(errorCodes);
+  }
+
   public ActiveStats startPipeline(PipelineConfiguration pipeline) {
     LOG.debug("Starting UsageTimers for '{}' pipeline and its stages", pipeline.getPipelineId());
     // we only start the pipeline stats if not running already (to avoid stage stats going out of wak)
@@ -194,6 +208,10 @@ public class ActiveStats {
     return this;
   }
 
+  public void errorCode(ErrorCode errorCode) {
+    errorCodes.merge(errorCode.getCode(), 1L, (k, v) -> v + 1);
+  }
+
   public ActiveStats incrementRecordCount(long count) {
     recordCount.addAndGet(count);
     return this;
@@ -206,6 +224,7 @@ public class ActiveStats {
     ActiveStats statsBean = new ActiveStats().setStartTime(now)
                                              .setDataCollectorVersion(getDataCollectorVersion())
                                              .setDpmEnabled(isDpmEnabled())
+                                             .setErrorCodes(getErrorCodes())
                                              .setUpTime(getUpTime().roll());
     statsBean.setPipelines(getPipelines().stream().map(UsageTimer::roll).collect(Collectors.toList()));
     statsBean.setStages(getStages().stream()
@@ -220,6 +239,7 @@ public class ActiveStats {
     ActiveStats snapshot = new ActiveStats().setStartTime(getStartTime())
                                             .setDataCollectorVersion(getDataCollectorVersion())
                                             .setDpmEnabled(isDpmEnabled())
+                                            .setErrorCodes(getErrorCodes())
                                             .setUpTime(getUpTime().snapshot())
                                             .setRecordCount(getRecordCount());
     snapshot.setPipelines(getPipelines().stream().map(UsageTimer::snapshot).collect(Collectors.toList()));

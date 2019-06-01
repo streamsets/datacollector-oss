@@ -18,6 +18,7 @@ package com.streamsets.datacollector.usagestats;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.task.Task;
+import com.streamsets.pipeline.api.ErrorCode;
 
 import java.util.List;
 
@@ -60,6 +61,11 @@ public interface StatsCollector extends Task {
    * @param pipeline pipeline configuration to gather pipeline info for stats.
    */
   void stopPipeline(PipelineConfiguration pipeline);
+
+  /**
+   * Track that given error code was used.
+   */
+  void errorCode(ErrorCode errorCode);
 
   /**
    * To be called at the end of each batch using the number of records of the origin batch.

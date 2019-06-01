@@ -28,6 +28,7 @@ import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -357,6 +358,11 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
   @Override
   public void stopPipeline(PipelineConfiguration pipeline) {
     getStatsInfo().stopPipeline(pipeline);
+  }
+
+  @Override
+  public void errorCode(ErrorCode errorCode) {
+    getStatsInfo().errorCode(errorCode);
   }
 
   @Override
