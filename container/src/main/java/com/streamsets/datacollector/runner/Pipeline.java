@@ -104,6 +104,7 @@ public class Pipeline {
   private final long startTime;
   private final BlobStoreTask blobStore;
   private final LineagePublisherTask lineagePublisherTask;
+  private final StatsCollector statsCollector;
   private final InterceptorCreatorContextBuilder interceptorContextBuilder;
   private final StageRuntime startEventStage;
   private final StageRuntime stopEventStage;
@@ -131,6 +132,7 @@ public class Pipeline {
       long startTime,
       BlobStoreTask blobStore,
       LineagePublisherTask lineagePublisherTask,
+      StatsCollector statsCollector,
       InterceptorCreatorContextBuilder interceptorCreatorContextBuilder,
       StageRuntime startEventStage,
       StageRuntime stopEventStage
@@ -158,6 +160,7 @@ public class Pipeline {
     this.startTime = startTime;
     this.blobStore = blobStore;
     this.lineagePublisherTask = lineagePublisherTask;
+    this.statsCollector = statsCollector;
     this.interceptorContextBuilder = interceptorCreatorContextBuilder;
     this.startEventStage = startEventStage;
     this.stopEventStage = stopEventStage;
@@ -375,7 +378,8 @@ public class Pipeline {
               runnerSharedMaps,
               startTime,
               blobStore,
-              lineagePublisherTask
+              lineagePublisherTask,
+              statsCollector
             ));
           }
         } catch (PipelineRuntimeException e) {
@@ -649,7 +653,8 @@ public class Pipeline {
           startTime,
           blobStore,
           lineagePublisherTask,
-          false
+          false,
+          statsCollector
         );
 
         SourcePipe originPipe = createOriginPipe(originRuntime, runner);
@@ -678,7 +683,8 @@ public class Pipeline {
           runnerSharedMaps,
           startTime,
           blobStore,
-          lineagePublisherTask
+          lineagePublisherTask,
+          statsCollector
         ));
 
         // Error stage handling
@@ -701,7 +707,8 @@ public class Pipeline {
               startTime,
               blobStore,
               lineagePublisherTask,
-              true
+              true,
+              statsCollector
           );
           badRecordsHandler = new BadRecordsHandler(
               pipelineBean.getConfig().errorRecordPolicy,
@@ -731,7 +738,8 @@ public class Pipeline {
             startTime,
             blobStore,
             lineagePublisherTask,
-            false
+            false,
+            statsCollector
           );
 
           statsAggregationHandler = new StatsAggregationHandler(statsAggregator);
@@ -766,7 +774,8 @@ public class Pipeline {
             startTime,
             blobStore,
             lineagePublisherTask,
-            false
+            false,
+            statsCollector
           );
         }
         if(pipelineBean.getStopEventStages().size() == 1) {
@@ -787,7 +796,8 @@ public class Pipeline {
             startTime,
             blobStore,
             lineagePublisherTask,
-            false
+            false,
+            statsCollector
           );
         }
 
@@ -814,6 +824,7 @@ public class Pipeline {
             startTime,
             blobStore,
             lineagePublisherTask,
+            statsCollector,
             interceptorCreatorContextBuilder,
             startEventStageRuntime,
             stopEventStageRuntime
@@ -865,7 +876,8 @@ public class Pipeline {
     List<Map<String, Object>> sharedRunnerMaps,
     long startTime,
     BlobStoreTask blobStore,
-    LineagePublisherTask lineagePublisherTask
+    LineagePublisherTask lineagePublisherTask,
+    StatsCollector statsCollector
   ) throws PipelineRuntimeException {
     Preconditions.checkArgument(beans.size() == sharedRunnerMaps.size(),
       Utils.format("New runner have different number of states then original one! ({} != {})", beans.size(), sharedRunnerMaps.size()));
@@ -894,7 +906,8 @@ public class Pipeline {
         startTime,
         blobStore,
         lineagePublisherTask,
-        false
+        false,
+        statsCollector
       ));
     }
 
@@ -1016,7 +1029,8 @@ public class Pipeline {
     long startTime,
     BlobStoreTask blobStore,
     LineagePublisherTask lineagePublisherTask,
-    boolean isErrorStage
+    boolean isErrorStage,
+    StatsCollector statsCollector
   ) {
     EmailSender emailSender = new EmailSender(configuration);
 
@@ -1163,7 +1177,8 @@ public class Pipeline {
         services,
         isErrorStage,
         antennaDoctor,
-        antennaDoctorContext
+        antennaDoctorContext,
+        statsCollector
       )
     );
 
