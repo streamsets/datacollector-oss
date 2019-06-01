@@ -52,6 +52,7 @@ public class ServiceContext extends ProtoContext implements Service.Context {
       serviceName,
       resourceDir,
       null,
+      null,
       null
     );
   }
@@ -83,6 +84,7 @@ public class ServiceContext extends ProtoContext implements Service.Context {
       null,
       serviceName,
       resourceDir,
+      null,
       null,
       null
     );

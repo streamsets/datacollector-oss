@@ -29,6 +29,7 @@ import com.streamsets.datacollector.record.EventRecordImpl;
 import com.streamsets.datacollector.record.HeaderImpl;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.runner.production.ReportErrorDelegate;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.lib.security.http.RemoteSSOService;
@@ -125,6 +126,7 @@ public class StageContext extends ProtoContext implements
       null,
       resourcesDir,
       null,
+      null,
       null
     );
     this.pipelineTitle = "My Pipeline";
@@ -210,7 +212,8 @@ public class StageContext extends ProtoContext implements
       Map<Class, ServiceRuntime> services,
       boolean isErrorStage,
       AntennaDoctor antennaDoctor,
-      AntennaDoctorStageContext antennaDoctorContext
+      AntennaDoctorStageContext antennaDoctorContext,
+      StatsCollector statsCollector
   ) {
     super(
       configuration,
@@ -226,7 +229,8 @@ public class StageContext extends ProtoContext implements
       null,
       runtimeInfo.getResourcesDir(),
       antennaDoctor,
-      antennaDoctorContext
+      antennaDoctorContext,
+      statsCollector
     );
     this.pipelineTitle = pipelineTitle;
     this.pipelineInfo = pipelineInfo;
@@ -372,6 +376,9 @@ public class StageContext extends ProtoContext implements
     Preconditions.checkNotNull(exception, "exception cannot be null");
     if (exception instanceof StageException) {
       StageException stageException = (StageException)exception;
+      if(statsCollector != null) {
+        statsCollector.errorCode(stageException.getErrorCode());
+      }
       reportErrorDelegate.reportError(stageInfo.getInstanceName(), produceErrorMessage(stageException.getErrorCode(), stageException.getParams()));
     } else {
       reportErrorDelegate.reportError(stageInfo.getInstanceName(), produceErrorMessage(exception));
@@ -387,6 +394,9 @@ public class StageContext extends ProtoContext implements
   @Override
   public void reportError(ErrorCode errorCode, Object... args) {
     Preconditions.checkNotNull(errorCode, "errorId cannot be null");
+    if(statsCollector != null) {
+      statsCollector.errorCode(errorCode);
+    }
     reportErrorDelegate.reportError(stageInfo.getInstanceName(), produceErrorMessage(errorCode, args));
   }
 
@@ -418,6 +428,11 @@ public class StageContext extends ProtoContext implements
   public void toError(Record record, ErrorCode errorCode, Object... args) {
     Preconditions.checkNotNull(record, "record cannot be null");
     Preconditions.checkNotNull(errorCode, "errorId cannot be null");
+
+    if(statsCollector != null) {
+      statsCollector.errorCode(errorCode);
+    }
+
     // the last args needs to be Exception in order to show stack trace
     toError(record, new ErrorMessage(errorCode, args));
   }

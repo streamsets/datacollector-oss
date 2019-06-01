@@ -34,6 +34,7 @@ import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.record.io.JsonWriterReaderFactory;
 import com.streamsets.datacollector.record.io.RecordWriterReaderFactory;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.ElUtil;
@@ -99,6 +100,7 @@ public abstract class ProtoContext implements ProtoConfigurableEntity.Context, C
 
   protected final AntennaDoctor antennaDoctor;
   protected final AntennaDoctorStageContext antennaDoctorContext;
+  protected final StatsCollector statsCollector;
 
   protected ProtoContext(
       Configuration configuration,
@@ -114,7 +116,8 @@ public abstract class ProtoContext implements ProtoConfigurableEntity.Context, C
       String serviceInstanceName,
       String resourcesDir,
       AntennaDoctor antennaDoctor,
-      AntennaDoctorStageContext antennaDoctorStageContext
+      AntennaDoctorStageContext antennaDoctorStageContext,
+      StatsCollector statsCollector
   ) {
     this.configuration = configuration.getSubSetConfiguration(STAGE_CONF_PREFIX, true);
     this.configToElDefMap = configToElDefMap;
@@ -130,6 +133,7 @@ public abstract class ProtoContext implements ProtoConfigurableEntity.Context, C
     this.resourcesDir = resourcesDir;
     this.antennaDoctor = antennaDoctor;
     this.antennaDoctorContext = antennaDoctorStageContext;
+    this.statsCollector = statsCollector;
 
     // Initialize Sampler
     int sampleSize = configuration.get(SDC_RECORD_SAMPLING_SAMPLE_SIZE, 1);
@@ -221,6 +225,10 @@ public abstract class ProtoContext implements ProtoConfigurableEntity.Context, C
   ) {
     Preconditions.checkNotNull(errorCode, "errorCode cannot be null");
     args = (args != null) ? args.clone() : NULL_ONE_ARG;
+
+    if(statsCollector != null) {
+      statsCollector.errorCode(errorCode);
+    }
 
     ConfigIssueImpl issue = new ConfigIssueImpl(stageInstanceName, serviceInstanceName, configGroup, configName, errorCode, args);
     if(antennaDoctor != null) {
