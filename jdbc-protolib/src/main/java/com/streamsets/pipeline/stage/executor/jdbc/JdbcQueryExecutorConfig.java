@@ -61,6 +61,20 @@ public class JdbcQueryExecutorConfig {
   )
   public boolean batchCommit = true;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Enable Parallel Queries",
+      description = "Execute multiple queries simultaneously.  Within a batch, " +
+          "there can be up to three phases. " +
+          "Records are reordered so that all inserts are processed first, " +
+          "all updates are processed second (in original order), all deletes are processed last.",
+
+      displayPosition = 25,
+      group = "ADVANCED"
+  )
+  public boolean parallel = false;
+
   private HikariDataSource dataSource = null;
 
   public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {

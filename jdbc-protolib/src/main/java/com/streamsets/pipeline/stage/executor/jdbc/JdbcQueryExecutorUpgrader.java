@@ -19,6 +19,8 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.jdbc.JdbcBaseUpgrader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -30,7 +32,11 @@ public class JdbcQueryExecutorUpgrader extends JdbcBaseUpgrader{
     switch(fromVersion) {
       case 1:
         upgradeV1toV2(configs);
+
+      case 2:
+        upgradeV2toV3(configs);
         break;
+
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
@@ -39,5 +45,9 @@ public class JdbcQueryExecutorUpgrader extends JdbcBaseUpgrader{
 
   private void upgradeV1toV2(List<Config> configs) {
     configs.add(new Config("config.batchCommit", false));
+  }
+
+  private void upgradeV2toV3(List<Config> configs) {
+    configs.add(new Config("config.parallel", false));
   }
 }
