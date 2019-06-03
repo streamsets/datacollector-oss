@@ -36,7 +36,7 @@ import java.util.Map;
 import java.util.TimeZone;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label="Hive Metadata",
     description = "Generates Hive metadata and write information for HDFS",
     icon="metadata.png",
