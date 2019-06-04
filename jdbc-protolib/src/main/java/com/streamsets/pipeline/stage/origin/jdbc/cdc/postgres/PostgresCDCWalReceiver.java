@@ -104,7 +104,6 @@ public class PostgresCDCWalReceiver {
     ConfigIssue issue = null;
     // Empty keys match ALL :(
     if (tables.schema.isEmpty() && tables.table.isEmpty()) {
-      issue = context.createConfigIssue(Groups.CDC.name(), tables.schema, JdbcErrors.JDBC_411);
       return Optional.ofNullable(issue);
     }
     Pattern p = StringUtils.isEmpty(tables.excludePattern) ? null : Pattern.compile(tables.excludePattern);
@@ -116,6 +115,7 @@ public class PostgresCDCWalReceiver {
         if (p == null || !p.matcher(tableName).matches()) {
           schemaName = schemaName.trim();
           tableName = tableName.trim();
+          // Passed validation, added
           schemasAndTables.add(new SchemaAndTable(schemaName, tableName));
         }
       }
