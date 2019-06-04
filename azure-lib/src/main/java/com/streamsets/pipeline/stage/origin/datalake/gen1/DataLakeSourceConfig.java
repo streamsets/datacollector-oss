@@ -25,9 +25,12 @@ import com.streamsets.pipeline.stage.conf.DataLakeSourceGroups;
 import com.streamsets.pipeline.stage.destination.datalake.Errors;
 import com.streamsets.pipeline.stage.destination.hdfs.HadoopConfigBean;
 import com.streamsets.pipeline.stage.origin.hdfs.HdfsSourceConfigBean;
+import org.apache.hadoop.fs.FileSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URI;
+import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -157,4 +160,21 @@ public class DataLakeSourceConfig extends HdfsSourceConfigBean {
     return ADL_PROTOCOL + accountFQDN;
   }
 
+  @Override
+  protected FileSystem createFileSystem() throws Exception {
+    try {
+      return userUgi.doAs(new PrivilegedExceptionAction<FileSystem>() {
+        @Override
+        public FileSystem run() throws Exception {
+          return FileSystem.newInstance(new URI(hdfsUri), hdfsConfiguration);
+        }
+      });
+    } catch (RuntimeException ex) {
+      Throwable cause = ex.getCause();
+      if (cause instanceof Exception) {
+        throw (Exception)cause;
+      }
+      throw ex;
+    }
+  }
 }
