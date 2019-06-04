@@ -47,17 +47,32 @@ public class PostgresWalRunner implements Runnable {
 
   @Override
   public void run()  {
-    ByteBuffer buffer = null;
-    LogSequenceNumber lastLSN = null;
+    /*
+        Replication slot has a configured timeout within postgres.
+        It is typical to set the poll timeout interval to be 1/3 this value.
+
+        readPending() is a non-blocking call that can generate a keepalive event
+        that is sent along replication stream StatusInterval.
+
+        The thread executing this run() is executed at a FixedSchedule at the
+        same rate.
+
+        forceUpdateStatus generates an event when there was no data.
+     */
+    ByteBuffer buffer;
     PGReplicationStream stream = postgresCDCSource.getWalReceiver().getStream();
+    LogSequenceNumber lastLSN = null;
     try {
       buffer = stream.readPending();
+
       while (buffer != null) {
-        //feedback
+
         lastLSN = stream.getLastReceiveLSN();
+
         if (lastLSN.asLong() == 0) {
           lastLSN = LogSequenceNumber.valueOf(postgresCDCSource.getOffset());
         }
+
         PostgresWalRecord postgresWalRecord = new PostgresWalRecord(
             buffer,
             lastLSN,
@@ -65,17 +80,22 @@ public class PostgresWalRunner implements Runnable {
         );
 
         PostgresWalRecord filteredRecord = filter(postgresWalRecord);
+
         if (filteredRecord != null) {
           postgresCDCSource.getQueue().add(filteredRecord);
           LOG.debug("CDC: {} ", filteredRecord.toString());
         } else {
           LOG.debug("Filtered out CDC: {} ", postgresWalRecord.toString());
         }
+
         buffer = stream.readPending();
       }
+
+      // Force a feedback event along replication slot to avoid timeout.
       if (lastLSN != null) {
         stream.forceUpdateStatus();
       }
+
     } catch (SQLException e) {
       LOG.error("Error reading PostgreSQL replication stream: {}", e.getMessage());
     }

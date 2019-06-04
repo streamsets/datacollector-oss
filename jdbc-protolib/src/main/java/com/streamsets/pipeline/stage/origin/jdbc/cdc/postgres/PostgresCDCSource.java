@@ -28,8 +28,6 @@ import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.DateTimeColumnHandler;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
-import com.zaxxer.hikari.HikariDataSource;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -53,27 +51,18 @@ public class PostgresCDCSource extends BaseSource {
 
   private static final Logger LOG = LoggerFactory.getLogger(
       PostgresCDCSource.class);
-  private static final String PREFER_QUERY_MODE = "simple";
   private static final String HIKARI_CONFIG_PREFIX = "hikariConf.";
   private static final String DRIVER_CLASSNAME = HIKARI_CONFIG_PREFIX + "driverClassName";
-  private static final String USERNAME = HIKARI_CONFIG_PREFIX + "username";
   private static final String CONNECTION_STR = HIKARI_CONFIG_PREFIX + "connectionString";
   private static final int MAX_RECORD_GENERATION_ATTEMPTS = 100;
   private static final String PREFIX = "postgres.cdc.";
   private static final String LSN = PREFIX + "lsn";
   private static final String XID = PREFIX + "xid";
   private static final String TIMESTAMP_HEADER = PREFIX + "timestamp";
-  private static final String TABLE = "table";
-  private static final String SCHEMA = "schema";
-  private static PostgresChangeTypeValues changeType;
-  private Record dummyRecord;
   private final PostgresCDCConfigBean configBean;
   private final HikariPoolConfigBean hikariConfigBean;
   private volatile boolean generationStarted = false;
   private volatile boolean runnerCreated = false;
-  private boolean containerized = false;
-  private HikariDataSource dataSource = null;
-  private Connection connection = null;
   private PostgresCDCWalReceiver walReceiver = null;
   private String offset = null;
   private Queue<PostgresWalRecord> cdcQueue;
@@ -146,54 +135,52 @@ public class PostgresCDCSource extends BaseSource {
       walReceiver = new PostgresCDCWalReceiver(configBean, hikariConfigBean, getContext());
       // Schemas and Tables
       if ( ! configBean.baseConfigBean.schemaTableConfigs.isEmpty()) {
-        walReceiver.validateSchemaAndTables(configBean.baseConfigBean.schemaTableConfigs)
-            .ifPresent(issues::addAll);
+        walReceiver.validateSchemaAndTables().ifPresent(issues::addAll);
       }
       offset = walReceiver.createReplicationStream(offset);
+
     } catch (StageException | InterruptedException | SQLException  | TimeoutException e) {
       LOG.error("Error while connecting to DB", e);
       issues.add(getContext()
-          .createConfigIssue(Groups.JDBC.name(), CONNECTION_STR, JdbcErrors.JDBC_00, e.toString()));
+              .createConfigIssue(
+                  Groups.JDBC.name(),
+                  CONNECTION_STR,
+                  JdbcErrors.JDBC_00,
+                  e.toString()
+              )
+      );
+
       return issues;
     }
 
     // Setup the SDC record queue as LinkedBlockingQueue of 2x MaxBatchSize
     cdcQueue = new LinkedList<>();
-
     return issues;
   }
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, final BatchMaker batchMaker) throws StageException {
 
-    Long offsetAsLong = Long.valueOf(0);
-
-    if (dummyRecord == null) {
-      dummyRecord = getContext().createRecord("DUMMY");
-    }
-
-    final int batchSize = Math.min(configBean.baseConfigBean.maxBatchSize, maxBatchSize);
-    int recordGenerationAttempts = 0;
-    boolean recordsProduced = false;
     if (lastSourceOffset != null) {
       setOffset(StringUtils.trimToEmpty(lastSourceOffset));
     }
 
+    Long offsetAsLong = Long.valueOf(0);
     if (getOffset() != null) {
       offsetAsLong = LogSequenceNumber.valueOf(getOffset()).asLong();
     }
 
-    PostgresWalRecord postgresWalRecord = null;
-
     if ( ! runnerCreated) {
-      createRunner();
-      runnerCreated = true;
+      runnerCreated = createRunner();
     }
 
     if (( ! generationStarted ) && runnerCreated) {
-      startGeneration();
-      generationStarted = true;
+      generationStarted = startGeneration();
     }
+
+    boolean recordsProduced = false;
+    int recordGenerationAttempts = 0;
+    PostgresWalRecord postgresWalRecord;
 
     while (generationStarted &&
           !getContext().isStopped() &&
@@ -313,8 +300,9 @@ public class PostgresCDCSource extends BaseSource {
     return Optional.ofNullable(issues);
   }
 
-  private void createRunner() {
+  private boolean createRunner() {
     postgresWalRunner = new PostgresWalRunner(this);
+    return postgresWalRunner != null;
   }
 
   private PostgresWalRunner getRunner() {
@@ -325,10 +313,22 @@ public class PostgresCDCSource extends BaseSource {
     return walReceiver;
   }
 
-  private void startGeneration() {
+  private boolean startGeneration() {
     scheduledExecutor = new SafeScheduledExecutorService(1, "postgresCDC");
-    scheduledExecutor.scheduleAtFixedRate(getRunner(), configBean.pollInterval, configBean.pollInterval,
-        TimeUnit.MILLISECONDS);
+
+    if (scheduledExecutor == null) {
+      return false;
+    }
+
+    scheduledExecutor
+        .scheduleAtFixedRate(
+            getRunner(),
+            configBean.pollInterval,
+            configBean.pollInterval,
+            TimeUnit.SECONDS
+        );
+
+    return true;
   }
 
   @VisibleForTesting
