@@ -202,11 +202,11 @@ public class PostgresCDCConfigBean {
       required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Poll Interval",
-      description = "Interval between checking for CDC updates.",
+      description = "Interval between checking for CDC updates. Should be at least 1/3 of configured timeout in postgres.",
       displayPosition = 140,
       group = "CDC",
       elDefs = TimeEL.class,
-      defaultValue = "${60 * SECONDS}"
+      defaultValue = "${10 * SECONDS}"
   )
   public int pollInterval;
 
