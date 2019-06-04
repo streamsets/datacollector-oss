@@ -90,8 +90,7 @@ public class PostgresCDCWalReceiver {
     return schemasAndTables;
   }
 
-  public Optional<List<ConfigIssue>> validateSchemaAndTables(List<SchemaTableConfigBean>
-      schemaTableConfigs) {
+  public Optional<List<ConfigIssue>> validateSchemaAndTables() {
     List<ConfigIssue> issues = new ArrayList<>();
     schemasAndTables = new ArrayList<>();
     for (SchemaTableConfigBean tables : configBean.baseConfigBean.schemaTableConfigs) {
@@ -151,9 +150,8 @@ public class PostgresCDCWalReceiver {
       createReplicationSlot(slotName);
     }
 
-    PGConnection pgConnection = null;
     connection = getConnection(this.uri, this.properties);
-    pgConnection = connection.unwrap(PGConnection.class);
+    PGConnection pgConnection = connection.unwrap(PGConnection.class);
 
     LogSequenceNumber lsn = null;
     if (startOffset == null || startOffset.isEmpty()) {
@@ -180,7 +178,7 @@ public class PostgresCDCWalReceiver {
         .withSlotOption("include-xids", true)
         .withSlotOption("include-timestamp", true)
         .withSlotOption("include-lsn", true)
-        .withStatusInterval(20, TimeUnit.SECONDS)
+        .withStatusInterval(configBean.pollInterval, TimeUnit.SECONDS)
         .start();
 
     /* TODO - known issue with creation of replication API and potential NPE if
