@@ -26,10 +26,10 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 @StageDef(
     version = 1,
     label = "Azure Data Lake Storage Gen1",
-    description = "Reads data from Azure Data Lake Storage Gen1",
+    description = "Writes data to Azure Data Lake Storage Gen1",
     icon = "data-lake-store-gen1.png",
     producesEvents = true,
-    onlineHelpRefUrl = "index.html?contextID=task_t13_ht5_5hb",
+    onlineHelpRefUrl = "index.html?contextID=task_nx5_4t5_5hb",
     beta = true
 )
 
