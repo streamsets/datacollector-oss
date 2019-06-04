@@ -18,7 +18,6 @@ package com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_00;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_406;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_407;
-import static com.streamsets.pipeline.lib.jdbc.JdbcUtil.*;
 import static java.sql.DriverManager.*;
 
 import com.streamsets.pipeline.api.Stage;
@@ -180,7 +179,7 @@ public class PostgresCDCWalReceiver {
         .withSlotOption("include-xids", true)
         .withSlotOption("include-timestamp", true)
         .withSlotOption("include-lsn", true)
-        .withStatusInterval(20, TimeUnit.SECONDS)
+        .withStatusInterval(100, TimeUnit.MILLISECONDS)
         .start();
 
     /* TODO - known issue with creation of replication API and potential NPE if

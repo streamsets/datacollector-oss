@@ -47,15 +47,11 @@ public class PostgresWalRunner implements Runnable {
 
   @Override
   public void run()  {
-    ByteBuffer buffer;
+    ByteBuffer buffer = null;
+    LogSequenceNumber lastLSN = null;
     PGReplicationStream stream = postgresCDCSource.getWalReceiver().getStream();
-    LogSequenceNumber lastLSN;
     try {
       buffer = stream.readPending();
-      if (buffer == null) {
-        return;
-      }
-
       while (buffer != null) {
         //feedback
         lastLSN = stream.getLastReceiveLSN();
@@ -77,14 +73,13 @@ public class PostgresWalRunner implements Runnable {
         }
         buffer = stream.readPending();
       }
-
-      //feedback
-      stream.setAppliedLSN(stream.getLastReceiveLSN());
-      stream.setFlushedLSN(stream.getLastReceiveLSN());
-
+      if (lastLSN != null) {
+        stream.forceUpdateStatus();
+      }
     } catch (SQLException e) {
       LOG.error("Error reading PostgreSQL replication stream: {}", e.getMessage());
     }
+
   }
 
   private PostgresWalRecord passesStartValueFilter(PostgresWalRecord postgresWalRecord) {
