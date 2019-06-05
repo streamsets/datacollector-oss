@@ -154,6 +154,15 @@
           <skip>true</skip>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <dependenciesToScan>
+            <dependency>com.streamsets:streamsets-datacollector-elasticsearch-protolib</dependency>
+          </dependenciesToScan>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 </project>

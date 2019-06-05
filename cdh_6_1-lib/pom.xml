@@ -395,7 +395,7 @@
         </dependency>
         <dependency>
             <groupId>com.streamsets</groupId>
-            <artifactId>streamsets-datacollector-kafka_multisource-0_10-protolib</artifactId>
+            <artifactId>streamsets-datacollector-kafka_multisource-protolib</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
             <type>test-jar</type>
@@ -1173,6 +1173,18 @@
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.streamsets</groupId>
+            <artifactId>streamsets-datacollector-hdfs-protolib</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.streamsets</groupId>
+            <artifactId>streamsets-datacollector-cluster-hdfs-protolib</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -1189,7 +1201,6 @@
                         </goals>
                         <configuration>
                             <sources>
-                                    <source>${basedir}/../cluster-hdfs-protolib/src/test/java</source>
                                     <source>${basedir}/../flume-protolib/src/test/java</source>
                                     <source>${basedir}/../hbase-protolib/src/test/java</source>
                                     <source>${basedir}/../hive-protolib/src/test/java</source>
@@ -1211,9 +1222,6 @@
                                 <resource>
                                     <directory>${basedir}/../flume-protolib/src/test/resources</directory>
                                 </resource>
-                                <resource>
-                                    <directory>${basedir}/../cluster-hdfs-protolib/src/test/resources</directory>
-                                </resource>
                             </resources>
                         </configuration>
                     </execution>
@@ -1232,6 +1240,14 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <argLine>-Xmx1g</argLine>
+                    <dependenciesToScan>
+                        <dependency>com.streamsets:streamsets-datacollector-dir-spooler-protolib</dependency>
+                        <dependency>com.streamsets:streamsets-datacollector-hdfs-protolib</dependency>
+                        <dependency>com.streamsets:streamsets-datacollector-cluster-hdfs-protolib</dependency>
+                        <dependency>com.streamsets:streamsets-datacollector-kafka_source-protolib</dependency>
+                        <dependency>com.streamsets:streamsets-datacollector-kafka_multisource-protolib</dependency>
+                        <dependency>com.streamsets:streamsets-datacollector-kafka_target-protolib</dependency>
+                    </dependenciesToScan>
                 </configuration>
             </plugin>
             <plugin>

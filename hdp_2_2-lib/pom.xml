@@ -405,7 +405,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>${surefire.version}</version>
         <configuration>
           <classpathDependencyExcludes>
             <!-- Hive-exec have un-relocated copy of protobuf 2.x that is not compatible with our test
@@ -414,6 +413,13 @@
                  -->
             <classpathDependencyExcludes>org.apache.hive:hive-exec</classpathDependencyExcludes>
           </classpathDependencyExcludes>
+          <dependenciesToScan>
+            <dependency>com.streamsets:streamsets-datacollector-dir-spooler-protolib</dependency>
+            <dependency>com.streamsets:streamsets-datacollector-hdfs-protolib</dependency>
+            <dependency>com.streamsets:streamsets-datacollector-cluster-hdfs-protolib</dependency>
+            <dependency>com.streamsets:streamsets-datacollector-kafka_source-protolib</dependency>
+            <dependency>com.streamsets:streamsets-datacollector-kafka_target-protolib</dependency>
+          </dependenciesToScan>
         </configuration>
         <executions>
           <execution>

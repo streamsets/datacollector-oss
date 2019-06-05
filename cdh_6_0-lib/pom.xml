@@ -1069,7 +1069,7 @@
         </dependency>
         <dependency>
             <groupId>com.streamsets</groupId>
-            <artifactId>streamsets-datacollector-kafka_multisource-0_10-protolib</artifactId>
+            <artifactId>streamsets-datacollector-kafka_multisource-protolib</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
@@ -1157,6 +1157,14 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <argLine>-Xmx1g</argLine>
+                    <dependenciesToScan>
+                        <dependency>com.streamsets:streamsets-datacollector-dir-spooler-protolib</dependency>
+                        <dependency>com.streamsets:streamsets-datacollector-hdfs-protolib</dependency>
+                        <dependency>com.streamsets:streamsets-datacollector-cluster-hdfs-protolib</dependency>
+                        <dependency>com.streamsets:streamsets-datacollector-kafka_source-protolib</dependency>
+                        <dependency>com.streamsets:streamsets-datacollector-kafka_multisource-protolib</dependency>
+                        <dependency>com.streamsets:streamsets-datacollector-kafka_target-protolib</dependency>
+                    </dependenciesToScan>
                 </configuration>
             </plugin>
             <plugin>

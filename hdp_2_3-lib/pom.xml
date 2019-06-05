@@ -363,11 +363,6 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-      </plugin>
-
-      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
         <executions>
@@ -413,6 +408,19 @@
         <version>2.8.2</version>
         <configuration>
           <skip>true</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <dependenciesToScan>
+            <dependency>com.streamsets:streamsets-datacollector-dir-spooler-protolib</dependency>
+            <dependency>com.streamsets:streamsets-datacollector-hdfs-protolib</dependency>
+            <dependency>com.streamsets:streamsets-datacollector-cluster-hdfs-protolib</dependency>
+            <dependency>com.streamsets:streamsets-datacollector-kafka_source-protolib</dependency>
+            <dependency>com.streamsets:streamsets-datacollector-kafka_target-protolib</dependency>
+          </dependenciesToScan>
         </configuration>
       </plugin>
     </plugins>

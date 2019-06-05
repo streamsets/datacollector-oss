@@ -796,6 +796,11 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <argLine>-Xmx1g</argLine>
+                    <dependenciesToScan>
+                        <dependency>com.streamsets:streamsets-datacollector-dir-spooler-protolib</dependency>
+                        <dependency>com.streamsets:streamsets-datacollector-hdfs-protolib</dependency>
+                        <dependency>com.streamsets:streamsets-datacollector-cluster-hdfs-protolib</dependency>
+                    </dependenciesToScan>
                 </configuration>
             </plugin>
         </plugins>
