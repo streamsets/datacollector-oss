@@ -494,40 +494,40 @@
       
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_zwv_tw5_n2b__table_x54_v4v_n2b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
             <tr>
-              <th class="entry cellrowborder" style="text-align:left;" id="d390735e488">Field Name</th>
+              <th class="entry cellrowborder" style="text-align:left;" id="d390606e488">Field Name</th>
 
-              <th class="entry cellrowborder" style="text-align:left;" id="d390735e491">Description</th>
+              <th class="entry cellrowborder" style="text-align:left;" id="d390606e491">Description</th>
 
             </tr>
 
           </thead>
 <tbody class="tbody">
             <tr>
-              <td class="entry cellrowborder" style="text-align:left;" headers="d390735e488 ">xid</td>
+              <td class="entry cellrowborder" style="text-align:left;" headers="d390606e488 ">xid</td>
 
-              <td class="entry cellrowborder" style="text-align:left;" headers="d390735e491 ">Transaction ID. </td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" style="text-align:left;" headers="d390735e488 ">nextlsn</td>
-
-              <td class="entry cellrowborder" style="text-align:left;" headers="d390735e491 ">Next Logical Sequence Number (LSN).</td>
+              <td class="entry cellrowborder" style="text-align:left;" headers="d390606e491 ">Transaction ID. </td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" style="text-align:left;" headers="d390735e488 ">timestamp</td>
+              <td class="entry cellrowborder" style="text-align:left;" headers="d390606e488 ">nextlsn</td>
 
-              <td class="entry cellrowborder" style="text-align:left;" headers="d390735e491 ">Timestamp with sub-second granularity, including the time zone offset from
+              <td class="entry cellrowborder" style="text-align:left;" headers="d390606e491 ">Next Logical Sequence Number (LSN).</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" style="text-align:left;" headers="d390606e488 ">timestamp</td>
+
+              <td class="entry cellrowborder" style="text-align:left;" headers="d390606e491 ">Timestamp with sub-second granularity, including the time zone offset from
                 UTC.</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" style="text-align:left;" headers="d390735e488 ">change</td>
+              <td class="entry cellrowborder" style="text-align:left;" headers="d390606e488 ">change</td>
 
-              <td class="entry cellrowborder" style="text-align:left;" headers="d390735e491 ">A list field that includes the following details about each data change:<ul class="ul" id="concept_zwv_tw5_n2b__ul_lg1_ypv_n2b">
+              <td class="entry cellrowborder" style="text-align:left;" headers="d390606e491 ">A list field that includes the following details about each data change:<ul class="ul" id="concept_zwv_tw5_n2b__ul_lg1_ypv_n2b">
                   <li class="li">kind - Operation type: Insert, Update, or Delete.</li>
 
                   <li class="li">schema - Schema name.</li>
@@ -769,32 +769,32 @@
             following record header attributes:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_zzt_pb5_n2b__table_m2g_wb5_n2b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" style="text-align:left;" id="d390735e656">CDC Header Attribute</th>
+                            <th class="entry cellrowborder" style="text-align:left;" id="d390606e656">CDC Header Attribute</th>
 
-                            <th class="entry cellrowborder" style="text-align:left;" id="d390735e659">Description</th>
+                            <th class="entry cellrowborder" style="text-align:left;" id="d390606e659">Description</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" style="text-align:left;" headers="d390735e656 ">postgres.cdc.lsn</td>
+                            <td class="entry cellrowborder" style="text-align:left;" headers="d390606e656 ">postgres.cdc.lsn</td>
 
-                            <td class="entry cellrowborder" style="text-align:left;" headers="d390735e659 ">Logical Sequence Number of this record.</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry cellrowborder" style="text-align:left;" headers="d390735e656 ">postgres.cdc.xid</td>
-
-                            <td class="entry cellrowborder" style="text-align:left;" headers="d390735e659 ">Transaction ID.</td>
+                            <td class="entry cellrowborder" style="text-align:left;" headers="d390606e659 ">Logical Sequence Number of this record.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" style="text-align:left;" headers="d390735e656 ">postgres.cdc.timestamp</td>
+                            <td class="entry cellrowborder" style="text-align:left;" headers="d390606e656 ">postgres.cdc.xid</td>
 
-                            <td class="entry cellrowborder" style="text-align:left;" headers="d390735e659 ">Timestamp of transaction.</td>
+                            <td class="entry cellrowborder" style="text-align:left;" headers="d390606e659 ">Transaction ID.</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry cellrowborder" style="text-align:left;" headers="d390606e656 ">postgres.cdc.timestamp</td>
+
+                            <td class="entry cellrowborder" style="text-align:left;" headers="d390606e659 ">Timestamp of transaction.</td>
 
                         </tr>
 
@@ -827,32 +827,32 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_v21_nm4_n2b__table_vnk_4bc_x1b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d390735e750">General Property</th>
+                                    <th class="entry cellrowborder" id="d390606e750">General Property</th>
 
-                                    <th class="entry cellrowborder" id="d390735e753">Description</th>
+                                    <th class="entry cellrowborder" id="d390606e753">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-              <td class="entry cellrowborder" headers="d390735e750 ">Name</td>
+              <td class="entry cellrowborder" headers="d390606e750 ">Name</td>
 
-              <td class="entry cellrowborder" headers="d390735e753 ">Stage name.</td>
-
-            </tr>
-
-                                <tr>
-              <td class="entry cellrowborder" headers="d390735e750 ">Description</td>
-
-              <td class="entry cellrowborder" headers="d390735e753 ">Optional description.</td>
+              <td class="entry cellrowborder" headers="d390606e753 ">Stage name.</td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d390735e750 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
+              <td class="entry cellrowborder" headers="d390606e750 ">Description</td>
 
-              <td class="entry cellrowborder" headers="d390735e753 ">Error record handling for the stage: <ul class="ul" id="task_v21_nm4_n2b__d54e809">
+              <td class="entry cellrowborder" headers="d390606e753 ">Optional description.</td>
+
+            </tr>
+
+                                <tr>
+              <td class="entry cellrowborder" headers="d390606e750 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
+
+              <td class="entry cellrowborder" headers="d390606e753 ">Error record handling for the stage: <ul class="ul" id="task_v21_nm4_n2b__d54e809">
                   <li class="li">Discard - Discards the record.</li>
 
                   <li class="li">Send to Error - Sends the record to the pipeline for error handling.</li>
@@ -877,19 +877,19 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_v21_nm4_n2b__table_xqf_szv_n2b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" style="text-align:left;" id="d390735e827">PostgreSQL CDC Property</th>
+                                    <th class="entry cellrowborder" style="text-align:left;" id="d390606e827">PostgreSQL CDC Property</th>
 
-                                    <th class="entry cellrowborder" style="text-align:left;" id="d390735e830">Description</th>
+                                    <th class="entry cellrowborder" style="text-align:left;" id="d390606e830">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e827 ">Tables <a class="xref" href="PostgreSQL.html#concept_wpc_sf5_n2b" title="When you configure the PostgreSQL CDC Client origin, you specify the tables with the change capture data that you want to process. To specify the tables, you define the schema, a table name pattern, and an optional exclusion pattern.">
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e827 ">Tables <a class="xref" href="PostgreSQL.html#concept_wpc_sf5_n2b" title="When you configure the PostgreSQL CDC Client origin, you specify the tables with the change capture data that you want to process. To specify the tables, you define the schema, a table name pattern, and an optional exclusion pattern.">
                                             <img class="image" id="task_v21_nm4_n2b__image_dh2_jxq_qcb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e830 ">Tables to track. Specify related properties as needed.
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e830 ">Tables to track. Specify related properties as needed.
                                             <p class="p">Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                                 <span class="ph uicontrol">Add</span> icon to define another
                                             table configuration.</p>
@@ -898,35 +898,35 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e827 ">Schema</td>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e827 ">Schema</td>
 
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e830 ">Schema to use. You can enter a schema name or use a <a class="xref" href="../Apx-RegEx/RegEx-Title.html#concept_vd4_nsc_gs" title="A regular expression, also known as regex, describes a pattern for a string.">regular expression</a> to specify a set of
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e830 ">Schema to use. You can enter a schema name or use a <a class="xref" href="../Apx-RegEx/RegEx-Title.html#concept_vd4_nsc_gs" title="A regular expression, also known as regex, describes a pattern for a string.">regular expression</a> to specify a set of
                                         schemas.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e827 ">Table Name Pattern</td>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e827 ">Table Name Pattern</td>
 
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e830 ">A table name pattern that specifies the tables to track.
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e830 ">A table name pattern that specifies the tables to track.
                                         You can enter a table name or use a <a class="xref" href="../Apx-RegEx/RegEx-Title.html#concept_vd4_nsc_gs" title="A regular expression, also known as regex, describes a pattern for a string.">regular expression</a> to specify a set of
                                         tables.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e827 ">Exclusion Pattern</td>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e827 ">Exclusion Pattern</td>
 
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e830 ">An optional table exclusion pattern to define a subset of
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e830 ">An optional table exclusion pattern to define a subset of
                                         tables to exclude. You can enter a table name or use a <a class="xref" href="../Apx-RegEx/RegEx-Title.html#concept_vd4_nsc_gs" title="A regular expression, also known as regex, describes a pattern for a string.">regular expression</a> to specify a subset of tables
                                         to exclude. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e827 ">Initial Change</td>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e827 ">Initial Change</td>
 
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e830 ">The starting point for the read. Use one of the following
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e830 ">The starting point for the read. Use one of the following
                                             options:<ul class="ul" id="task_v21_nm4_n2b__ul_nty_bnk_dx">
                                             <li class="li">From Latest Change - Processes changes that arrive
                                                 after you start the pipeline.</li>
@@ -943,9 +943,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e827 ">Start Date</td>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e827 ">Start Date</td>
 
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e830 ">The datetime to read from when you start the pipeline.
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e830 ">The datetime to read from when you start the pipeline.
                                                 <p class="p"><span class="ph">Use the following format: <code class="ph codeph">DD-MM-YYYY
                               HH24:MI:SS</code>.</span></p>
 <p class="p">For a date-based initial change
@@ -955,17 +955,17 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e827 ">DB Time Zone</td>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e827 ">DB Time Zone</td>
 
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e830 ">Time zone of the database. For a date-based initial
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e830 ">Time zone of the database. For a date-based initial
                                         change only.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e827 ">Start LSN</td>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e827 ">Start LSN</td>
 
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e830 ">The log sequence number to start reading from when you
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e830 ">The log sequence number to start reading from when you
                                         start the pipeline. If the LSN cannot be found, the origin
                                         continues reading from the next higher LSN that is
                                             available.<p class="p">For an LSN-based initial change
@@ -975,9 +975,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e827 ">Remove Replication Slot on Close</td>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e827 ">Remove Replication Slot on Close</td>
 
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e830 ">Removes the replication slot after each use. Keeping the
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e830 ">Removes the replication slot after each use. Keeping the
                                         replication slot results in the continued production of WAL
                                         records for this slot, but may cause a degradation in
                                         performance.</td>
@@ -985,9 +985,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e827 ">Replication Slot</td>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e827 ">Replication Slot</td>
 
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e830 ">Name for the replication slot. Include only lowercase
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e830 ">Name for the replication slot. Include only lowercase
                                         letters and numbers.<p class="p">Default is
                                         <code class="ph codeph">sdc</code>.</p>
 </td>
@@ -995,25 +995,25 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e827 ">Operations</td>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e827 ">Operations</td>
 
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e830 ">Operations to include. </td>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e830 ">Operations to include. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e827 ">Add Unsupported Fields</td>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e827 ">Add Unsupported Fields</td>
 
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e830 ">Includes fields with unsupported data types in the
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e830 ">Includes fields with unsupported data types in the
                                         record. When enabled, the origin adds the field name and
                                         passes the data as an unparsed string. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e827 ">Convert Timestamp To String</td>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e827 ">Convert Timestamp To String</td>
 
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e830 "><span class="ph">Enables the origin to write
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e830 "><span class="ph">Enables the origin to write
                   timestamps as string values rather than datetime values. Strings maintain the
                   precision stored in the source database.</span><p class="p"><span class="ph">When writing timestamps to <span class="ph">Data Collector</span> date or time data
                     types that do not store nanoseconds, the origin stores any nanoseconds from the
@@ -1023,9 +1023,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e827 ">Query Timeout</td>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e827 ">Query Timeout</td>
 
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e830 ">Time to wait before timing out a WAL query and returning
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e830 ">Time to wait before timing out a WAL query and returning
                                         the batch.<p class="p">Default is <code class="ph codeph">${ 5 * MINUTES }</code>
                                             which is 300 seconds.</p>
 </td>
@@ -1033,9 +1033,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e827 ">Poll Interval</td>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e827 ">Poll Interval</td>
 
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390735e830 ">Interval between checking for updates.</td>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d390606e830 ">Interval between checking for updates.</td>
 
                                 </tr>
 
@@ -1052,18 +1052,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_v21_nm4_n2b__table_gls_htq_42b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d390735e1092">JDBC Property</th>
+                                    <th class="entry cellrowborder" id="d390606e1092">JDBC Property</th>
 
-                                    <th class="entry cellrowborder" id="d390735e1095">Description</th>
+                                    <th class="entry cellrowborder" id="d390606e1095">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d390735e1092 ">JDBC Connection String</td>
+                                    <td class="entry cellrowborder" headers="d390606e1092 ">JDBC Connection String</td>
 
-                                    <td class="entry cellrowborder" headers="d390735e1095 ">
+                                    <td class="entry cellrowborder" headers="d390606e1095 ">
                                         <p class="p">Connection string to use to connect to the database. Use
                                             the following syntax:</p>
 
@@ -1081,9 +1081,9 @@
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d390735e1092 ">Max Batch Size (records)</td>
+              <td class="entry cellrowborder" headers="d390606e1092 ">Max Batch Size (records)</td>
 
-              <td class="entry cellrowborder" headers="d390735e1095 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data Collector</span> maximum batch size.
+              <td class="entry cellrowborder" headers="d390606e1095 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data Collector</span> maximum batch size.
                   <p class="p">Default is 1000. The <span class="ph">Data Collector</span> default is
                 1000.</p>
 </td>
@@ -1091,18 +1091,18 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d390735e1092 ">Use Credentials</td>
+              <td class="entry cellrowborder" headers="d390606e1092 ">Use Credentials</td>
 
-              <td class="entry cellrowborder" headers="d390735e1095 "><span class="ph" id="task_v21_nm4_n2b__d54e2513">Enables entering credentials on the Credentials
+              <td class="entry cellrowborder" headers="d390606e1095 "><span class="ph" id="task_v21_nm4_n2b__d54e2513">Enables entering credentials on the Credentials
                   tab. Use when you do not include credentials in the JDBC connection
                 string.</span></td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d390735e1092 ">Additional JDBC Configuration Properties</td>
+              <td class="entry cellrowborder" headers="d390606e1092 ">Additional JDBC Configuration Properties</td>
 
-              <td class="entry cellrowborder" headers="d390735e1095 ">Additional JDBC configuration properties to use. To add properties, click
+              <td class="entry cellrowborder" headers="d390606e1095 ">Additional JDBC configuration properties to use. To add properties, click
                   <span class="ph uicontrol">Add</span> and define the JDBC property name and value. <p class="p">Use the
                   property names and values as expected by JDBC. </p>
 </td>
@@ -1123,18 +1123,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_v21_nm4_n2b__table_xss_zr5_pgb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d390735e1191">Credentials Property</th>
+                                    <th class="entry cellrowborder" id="d390606e1191">Credentials Property</th>
 
-                                    <th class="entry cellrowborder" id="d390735e1194">Description</th>
+                                    <th class="entry cellrowborder" id="d390606e1194">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d390735e1191 ">Username</td>
+                                    <td class="entry cellrowborder" headers="d390606e1191 ">Username</td>
 
-                                    <td class="entry cellrowborder" headers="d390735e1194 "><span class="ph">User name for the
+                                    <td class="entry cellrowborder" headers="d390606e1194 "><span class="ph">User name for the
                                             JDBC connection.</span><p class="p">The specified user must have the superuser or
                                             replication role.</p>
 </td>
@@ -1142,9 +1142,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d390735e1191 ">Password</td>
+                                    <td class="entry cellrowborder" headers="d390606e1191 ">Password</td>
 
-                                    <td class="entry cellrowborder" headers="d390735e1194 ">Password for the JDBC account.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_v21_nm4_n2b__d12e5908">To
+                                    <td class="entry cellrowborder" headers="d390606e1194 ">Password for the JDBC account.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_v21_nm4_n2b__d12e5908">To
                         secure sensitive information such as user names and passwords, you can use
                               <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
 </td>
@@ -1165,26 +1165,26 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_v21_nm4_n2b__d81e4983" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d390735e1271">Legacy Drivers Property</th>
+                                    <th class="entry cellrowborder" id="d390606e1271">Legacy Drivers Property</th>
 
-                                    <th class="entry cellrowborder" id="d390735e1274">Description</th>
+                                    <th class="entry cellrowborder" id="d390606e1274">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d390735e1271 ">JDBC Class Driver Name</td>
+                                    <td class="entry cellrowborder" headers="d390606e1271 ">JDBC Class Driver Name</td>
 
-                                    <td class="entry cellrowborder" headers="d390735e1274 ">Class name for the JDBC driver. Required for JDBC
+                                    <td class="entry cellrowborder" headers="d390606e1274 ">Class name for the JDBC driver. Required for JDBC
                                         versions older than version 4.0.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d390735e1271 ">Connection Health Test Query</td>
+                                    <td class="entry cellrowborder" headers="d390606e1271 ">Connection Health Test Query</td>
 
-                                    <td class="entry cellrowborder" headers="d390735e1274 ">Optional query to test the health of a connection.
+                                    <td class="entry cellrowborder" headers="d390606e1274 ">Optional query to test the health of a connection.
                                         Recommended only when the JDBC version is older than 4.0.
                                     </td>
 
@@ -1203,27 +1203,27 @@
                     <div class="p">The defaults for these properties should work in most cases:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_v21_nm4_n2b__table_gyz_4gv_n2b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                     <tr>
-                                        <th class="entry cellrowborder" style="text-align:left;" id="d390735e1329">Advanced Property</th>
+                                        <th class="entry cellrowborder" style="text-align:left;" id="d390606e1329">Advanced Property</th>
 
-                                        <th class="entry cellrowborder" style="text-align:left;" id="d390735e1332">Description</th>
+                                        <th class="entry cellrowborder" style="text-align:left;" id="d390606e1332">Description</th>
 
                                     </tr>
 
                                 </thead>
 <tbody class="tbody">
                                     <tr>
-              <td class="entry cellrowborder" style="text-align:left;" headers="d390735e1329 ">Maximum Pool Size </td>
+              <td class="entry cellrowborder" style="text-align:left;" headers="d390606e1329 ">Maximum Pool Size </td>
 
-              <td class="entry cellrowborder" style="text-align:left;" headers="d390735e1332 ">Maximum number of connections to create. <p class="p">Default is 1. The recommended value
+              <td class="entry cellrowborder" style="text-align:left;" headers="d390606e1332 ">Maximum number of connections to create. <p class="p">Default is 1. The recommended value
                   is 1.</p>
 </td>
 
             </tr>
 
                                     <tr>
-              <td class="entry cellrowborder" style="text-align:left;" headers="d390735e1329 ">Minimum Idle Connections</td>
+              <td class="entry cellrowborder" style="text-align:left;" headers="d390606e1329 ">Minimum Idle Connections</td>
 
-              <td class="entry cellrowborder" style="text-align:left;" headers="d390735e1332 ">Minimum number of connections to create and maintain. To define a fixed
+              <td class="entry cellrowborder" style="text-align:left;" headers="d390606e1332 ">Minimum number of connections to create and maintain. To define a fixed
                 connection pool, set to the same value as Maximum Pool Size. <p class="p">Default is 1.
                 </p>
 </td>
@@ -1231,9 +1231,9 @@
             </tr>
 
                                     <tr>
-              <td class="entry cellrowborder" style="text-align:left;" headers="d390735e1329 ">Connection Timeout</td>
+              <td class="entry cellrowborder" style="text-align:left;" headers="d390606e1329 ">Connection Timeout</td>
 
-              <td class="entry cellrowborder" style="text-align:left;" headers="d390735e1332 ">Maximum time to wait for a connection. Use a time constant in an expression to
+              <td class="entry cellrowborder" style="text-align:left;" headers="d390606e1332 ">Maximum time to wait for a connection. Use a time constant in an expression to
                 define the time increment. <div class="p">Default is 30 seconds, defined as follows:
                   <pre class="pre codeblock"><code>${30 * SECONDS}</code></pre></div>
 </td>
@@ -1241,9 +1241,9 @@
             </tr>
 
                                     <tr>
-              <td class="entry cellrowborder" style="text-align:left;" headers="d390735e1329 ">Idle Timeout</td>
+              <td class="entry cellrowborder" style="text-align:left;" headers="d390606e1329 ">Idle Timeout</td>
 
-              <td class="entry cellrowborder" style="text-align:left;" headers="d390735e1332 ">Maximum time to allow a connection to idle. Use a time constant in an
+              <td class="entry cellrowborder" style="text-align:left;" headers="d390606e1332 ">Maximum time to allow a connection to idle. Use a time constant in an
                 expression to define the time increment. <p class="p">Use 0 to avoid removing any idle
                   connections.</p>
 <p class="p">When the entered value is close to or more than the maximum
@@ -1256,9 +1256,9 @@
             </tr>
 
                                     <tr>
-              <td class="entry cellrowborder" style="text-align:left;" headers="d390735e1329 ">Max Connection Lifetime</td>
+              <td class="entry cellrowborder" style="text-align:left;" headers="d390606e1329 ">Max Connection Lifetime</td>
 
-              <td class="entry cellrowborder" style="text-align:left;" headers="d390735e1332 ">Maximum lifetime for a connection. Use a time constant in an expression to
+              <td class="entry cellrowborder" style="text-align:left;" headers="d390606e1332 ">Maximum lifetime for a connection. Use a time constant in an expression to
                 define the time increment. <p class="p">Use 0 to set no maximum lifetime.</p>
 <p class="p">When a maximum
                   lifetime is set, the minimum valid value is 30 minutes.</p>
@@ -1269,18 +1269,18 @@
             </tr>
 
                                     <tr>
-              <td class="entry cellrowborder" style="text-align:left;" headers="d390735e1329 ">Enforce Read-only Connection</td>
+              <td class="entry cellrowborder" style="text-align:left;" headers="d390606e1329 ">Enforce Read-only Connection</td>
 
-              <td class="entry cellrowborder" style="text-align:left;" headers="d390735e1332 ">Creates read-only connections to avoid any type of write. <p class="p">Default is
+              <td class="entry cellrowborder" style="text-align:left;" headers="d390606e1332 ">Creates read-only connections to avoid any type of write. <p class="p">Default is
                   enabled. Disabling this property is not recommended. </p>
 </td>
 
             </tr>
 
                                     <tr>
-              <td class="entry cellrowborder" style="text-align:left;" headers="d390735e1329 ">Transaction Isolation</td>
+              <td class="entry cellrowborder" style="text-align:left;" headers="d390606e1329 ">Transaction Isolation</td>
 
-              <td class="entry cellrowborder" style="text-align:left;" headers="d390735e1332 ">Transaction isolation level used to connect to the database. <p class="p">Default is the
+              <td class="entry cellrowborder" style="text-align:left;" headers="d390606e1332 ">Transaction isolation level used to connect to the database. <p class="p">Default is the
                   default transaction isolation level set for the database. You can override the
                   database default by setting the level to any of the following:</p>
 <ul class="ul" id="task_v21_nm4_n2b__d54e3190">
@@ -1298,9 +1298,9 @@
             </tr>
 
                                     <tr>
-                                        <td class="entry cellrowborder" style="text-align:left;" headers="d390735e1329 ">Init Query</td>
+                                        <td class="entry cellrowborder" style="text-align:left;" headers="d390606e1329 ">Init Query</td>
 
-                                        <td class="entry cellrowborder" style="text-align:left;" headers="d390735e1332 ">SQL query to perform immediately after the stage
+                                        <td class="entry cellrowborder" style="text-align:left;" headers="d390606e1332 ">SQL query to perform immediately after the stage
                                             connects to the database. Use to set up the database
                                             session as needed. </td>
 

@@ -424,15 +424,15 @@
         <p class="p">You can add custom Kafka configuration
             properties to the Kafka Producer destination. </p>
 
-        <p class="p" id="concept_wnp_gfc_rw__d999e28">When you add a Kafka configuration property, enter the exact property name and
+        <p class="p" id="concept_wnp_gfc_rw__d984e28">When you add a Kafka configuration property, enter the exact property name and
             the value. The stage does not validate the property names or values.</p>
 
-        <p class="p" id="concept_wnp_gfc_rw__d999e31">Several properties are defined by default, you can edit or remove the properties
+        <p class="p" id="concept_wnp_gfc_rw__d984e31">Several properties are defined by default, you can edit or remove the properties
             as necessary.</p>
 
         <div class="p">
-            <div class="note note" id="concept_wnp_gfc_rw__d999e36"><span class="notetitle">Note:</span> Because the stage uses several configuration properties, it ignores
-                user-defined values for the following properties:<ul class="ul" id="concept_wnp_gfc_rw__d999e38">
+            <div class="note note" id="concept_wnp_gfc_rw__d984e36"><span class="notetitle">Note:</span> Because the stage uses several configuration properties, it ignores
+                user-defined values for the following properties:<ul class="ul" id="concept_wnp_gfc_rw__d984e38">
                     <li class="li">key.serializer.class</li>
 
                     <li class="li">metadata.broker.list</li>
@@ -478,20 +478,20 @@
             instructions.</p>
 
         <div class="p">
-            <ol class="ol" id="concept_czm_55c_rw__d1167e27">
-                <li class="li" id="concept_czm_55c_rw__d1167e29">To use SSL/TLS to connect, first make sure Kafka is
+            <ol class="ol" id="concept_czm_55c_rw__d1150e27">
+                <li class="li" id="concept_czm_55c_rw__d1150e29">To use SSL/TLS to connect, first make sure Kafka is
                     configured for SSL/TLS as described in the <a class="xref" href="http://kafka.apache.org/documentation.html#security_ssl" target="_blank">Kafka documentation</a>. </li>
 
-                <li class="li" id="concept_czm_55c_rw__d1167e35">On the <span class="ph uicontrol">General</span> tab of the stage, set
+                <li class="li" id="concept_czm_55c_rw__d1150e35">On the <span class="ph uicontrol">General</span> tab of the stage, set
                     the <span class="ph uicontrol">Stage Library</span> property to the appropriate Apache
                     Kafka version.</li>
 
-                <li class="li" id="concept_czm_55c_rw__d1167e44">On the <strong class="ph b">Kafka</strong> tab, add the
+                <li class="li" id="concept_czm_55c_rw__d1150e44">On the <strong class="ph b">Kafka</strong> tab, add the
                         <span class="ph uicontrol">security.protocol</span> Kafka configuration property and
                     set it to <strong class="ph b">SSL</strong>.</li>
 
-                <li class="li" id="concept_czm_55c_rw__d1167e56">Then add and configure the following SSL Kafka
-                        properties:<ul class="ul" id="concept_czm_55c_rw__d1167e58">
+                <li class="li" id="concept_czm_55c_rw__d1150e56">Then add and configure the following SSL Kafka
+                        properties:<ul class="ul" id="concept_czm_55c_rw__d1150e58">
                         <li class="li">ssl.truststore.location</li>
 
                         <li class="li">ssl.truststore.password</li>
@@ -499,7 +499,7 @@
                     </ul>
 <div class="p">When the Kafka broker requires client authentication - when the
                         ssl.client.auth broker property is set to "required" - add and configure the
-                        following properties: <ul class="ul" id="concept_czm_55c_rw__d1167e68">
+                        following properties: <ul class="ul" id="concept_czm_55c_rw__d1150e68">
                             <li class="li">ssl.keystore.location</li>
 
                             <li class="li">ssl.keystore.password</li>
@@ -509,7 +509,7 @@
                         </ul>
 </div>
 <div class="p">Some brokers might require adding the following properties as
-                            well:<ul class="ul" id="concept_czm_55c_rw__d1167e81">
+                            well:<ul class="ul" id="concept_czm_55c_rw__d1150e81">
                             <li class="li">ssl.enabled.protocols</li>
 
                             <li class="li">ssl.truststore.type</li>
@@ -546,15 +546,15 @@
 
         <div class="p">
             <ol class="ol">
-                <li class="li" id="concept_vtc_rvc_rw__d1126e41">To use Kerberos, first make sure Kafka is configured for
+                <li class="li" id="concept_vtc_rvc_rw__d1109e41">To use Kerberos, first make sure Kafka is configured for
                     Kerberos as described in the <a class="xref" href="http://kafka.apache.org/documentation.html#security_sasl" target="_blank">Kafka documentation</a>.</li>
 
-                <li class="li" id="concept_vtc_rvc_rw__d1126e47">Make sure that Kerberos authentication is enabled for <span class="ph">Data Collector</span>, as described
+                <li class="li" id="concept_vtc_rvc_rw__d1109e47">Make sure that Kerberos authentication is enabled for <span class="ph">Data Collector</span>, as described
                     in <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Kerberos Authentication</a>.</li>
 
-                <li class="li" id="concept_vtc_rvc_rw__d1126e54">Add the Java Authentication and Authorization
+                <li class="li" id="concept_vtc_rvc_rw__d1109e54">Add the Java Authentication and Authorization
                     Service (JAAS) configuration properties required for Kafka clients based on your
-                    installation and authentication type:<ul class="ul" id="concept_vtc_rvc_rw__d1126e56">
+                    installation and authentication type:<ul class="ul" id="concept_vtc_rvc_rw__d1109e56">
                         <li class="li"><span class="ph uicontrol">RPM, tarball, or Cloudera Manager installation without LDAP
                                 authentication</span> - If <span class="ph">Data Collector</span> does
                             not use LDAP authentication, create a separate JAAS configuration file
@@ -644,11 +644,11 @@
                 <li class="li">On the <span class="keyword wintitle">General</span> tab of the stage, set the <span class="ph uicontrol">Stage
                         Library</span> property to the appropriate Apache Kafka version.</li>
 
-                <li class="li" id="concept_vtc_rvc_rw__d1126e137">On the <span class="keyword wintitle">Kafka</span> tab, add the
+                <li class="li" id="concept_vtc_rvc_rw__d1109e137">On the <span class="keyword wintitle">Kafka</span> tab, add the
                         <span class="ph uicontrol">security.protocol</span> Kafka configuration property, and
                     set it to <span class="ph uicontrol">SASL_PLAINTEXT</span>.</li>
 
-                <li class="li" id="concept_vtc_rvc_rw__d1126e150">Then, add the
+                <li class="li" id="concept_vtc_rvc_rw__d1109e150">Then, add the
                         <span class="ph uicontrol">sasl.kerberos.service.name</span> configuration property,
                     and set it to <span class="ph uicontrol">kafka</span>. </li>
 
@@ -659,7 +659,7 @@
         <p class="p">For example, the following Kafka properties enable connecting to Kafka
             with Kerberos:</p>
 
-        <p class="p"><img class="image" id="concept_vtc_rvc_rw__d1126e165" src="../../../reusable-content/datacollector/reusable-topics/../../../datacollector/UserGuide/Graphics/Kafka-Kerberos.png" height="95" width="639" /></p>
+        <p class="p"><img class="image" id="concept_vtc_rvc_rw__d1109e165" src="../../../reusable-content/datacollector/reusable-topics/../../../datacollector/UserGuide/Graphics/Kafka-Kerberos.png" height="95" width="639" /></p>
 
  </div>
 
@@ -674,11 +674,11 @@
         <p class="p"><span class="ph"><img class="image" id="concept_ksm_svc_rw__d14e181" src="../../../reusable-content/shared-graphics/icon-Edge.png" height="19" width="19" /> Not valid in <span class="ph">Data Collector Edge</span> pipelines.</span> In <span class="ph">Data Collector Edge</span> pipelines, the Kafka Producer destination supports using <a class="xref" href="KProducer.html#concept_czm_55c_rw">only SSL/TLS</a> to connect
             to Kafka.</p>
 
-        <div class="p"><span class="ph" id="concept_ksm_svc_rw__d1269e30">To use SSL/TLS and Kerberos, combine the required
+        <div class="p"><span class="ph" id="concept_ksm_svc_rw__d1251e30">To use SSL/TLS and Kerberos, combine the required
                 steps to enable each and set the security.protocol property as follows:</span>
-            <ol class="ol" id="concept_ksm_svc_rw__d1269e33">
-                <li class="li" id="concept_ksm_svc_rw__d1269e35">Make sure Kafka is configured to use SSL/TLS and
-                    Kerberos (SASL) as described in the following Kafka documentation:<ul class="ul" id="concept_ksm_svc_rw__d1269e37">
+            <ol class="ol" id="concept_ksm_svc_rw__d1251e33">
+                <li class="li" id="concept_ksm_svc_rw__d1251e35">Make sure Kafka is configured to use SSL/TLS and
+                    Kerberos (SASL) as described in the following Kafka documentation:<ul class="ul" id="concept_ksm_svc_rw__d1251e37">
                         <li class="li"><a class="xref" href="http://kafka.apache.org/documentation.html#security_ssl" target="_blank">http://kafka.apache.org/documentation.html#security_ssl</a></li>
 
                         <li class="li"><a class="xref" href="http://kafka.apache.org/documentation.html#security_sasl" target="_blank">http://kafka.apache.org/documentation.html#security_sasl</a></li>
@@ -691,7 +691,7 @@
 
                 <li class="li">Add the Java Authentication and Authorization
                     Service (JAAS) configuration properties required for Kafka clients based on your
-                    installation and authentication type:<ul class="ul" id="concept_ksm_svc_rw__d1126e56">
+                    installation and authentication type:<ul class="ul" id="concept_ksm_svc_rw__d1109e56">
                         <li class="li"><span class="ph uicontrol">RPM, tarball, or Cloudera Manager installation without LDAP
                                 authentication</span> - If <span class="ph">Data Collector</span> does
                             not use LDAP authentication, create a separate JAAS configuration file
@@ -781,7 +781,7 @@
                 <li class="li">On the <span class="keyword wintitle">General</span> tab of the stage, set the <span class="ph uicontrol">Stage
                         Library</span> property to the appropriate Apache Kafka version.</li>
 
-                <li class="li" id="concept_ksm_svc_rw__d1269e59">On the <span class="keyword wintitle">Kafka</span> tab, add the
+                <li class="li" id="concept_ksm_svc_rw__d1251e59">On the <span class="keyword wintitle">Kafka</span> tab, add the
                         <span class="ph uicontrol">security.protocol</span> property and set it to
                         <span class="ph uicontrol">SASL_SSL</span>.</li>
 
@@ -790,7 +790,7 @@
                     and set it to <span class="ph uicontrol">kafka</span>. </li>
 
                 <li class="li">Then add and configure the following SSL Kafka
-                        properties:<ul class="ul" id="concept_ksm_svc_rw__d1167e58">
+                        properties:<ul class="ul" id="concept_ksm_svc_rw__d1150e58">
                         <li class="li">ssl.truststore.location</li>
 
                         <li class="li">ssl.truststore.password</li>
@@ -798,7 +798,7 @@
                     </ul>
 <div class="p">When the Kafka broker requires client authentication - when the
                         ssl.client.auth broker property is set to "required" - add and configure the
-                        following properties: <ul class="ul" id="concept_ksm_svc_rw__d1167e68">
+                        following properties: <ul class="ul" id="concept_ksm_svc_rw__d1150e68">
                             <li class="li">ssl.keystore.location</li>
 
                             <li class="li">ssl.keystore.password</li>
@@ -808,7 +808,7 @@
                         </ul>
 </div>
 <div class="p">Some brokers might require adding the following properties as
-                            well:<ul class="ul" id="concept_ksm_svc_rw__d1167e81">
+                            well:<ul class="ul" id="concept_ksm_svc_rw__d1150e81">
                             <li class="li">ssl.enabled.protocols</li>
 
                             <li class="li">ssl.truststore.type</li>

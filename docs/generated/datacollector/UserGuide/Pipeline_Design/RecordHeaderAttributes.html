@@ -312,73 +312,73 @@
             that you can use to access the data in the pipeline:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_itf_55z_dz__table_mj1_q2y_rz" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:25%" /><col style="width:50%" /><col style="width:25%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d483847e236">Internal Record Header Attribute</th>
+                            <th class="entry cellrowborder" id="d483718e236">Internal Record Header Attribute</th>
 
-                            <th class="entry cellrowborder" id="d483847e239">Description</th>
+                            <th class="entry cellrowborder" id="d483718e239">Description</th>
 
-                            <th class="entry cellrowborder" id="d483847e242">Related Function </th>
+                            <th class="entry cellrowborder" id="d483718e242">Related Function </th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e236 ">stageCreator</td>
+                            <td class="entry cellrowborder" headers="d483718e236 ">stageCreator</td>
 
-                            <td class="entry cellrowborder" headers="d483847e239 ">The ID of the stage that created the record.</td>
+                            <td class="entry cellrowborder" headers="d483718e239 ">The ID of the stage that created the record.</td>
 
-                            <td class="entry cellrowborder" headers="d483847e242 ">record:creator()</td>
+                            <td class="entry cellrowborder" headers="d483718e242 ">record:creator()</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e236 ">sourceId</td>
+                            <td class="entry cellrowborder" headers="d483718e236 ">sourceId</td>
 
-                            <td class="entry cellrowborder" headers="d483847e239 ">Source of the record. Can include different information based on
+                            <td class="entry cellrowborder" headers="d483718e239 ">Source of the record. Can include different information based on
                                 the origin type.</td>
 
-                            <td class="entry cellrowborder" headers="d483847e242 ">record:id()</td>
+                            <td class="entry cellrowborder" headers="d483718e242 ">record:id()</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e236 ">stagesPath</td>
+                            <td class="entry cellrowborder" headers="d483718e236 ">stagesPath</td>
 
-                            <td class="entry cellrowborder" headers="d483847e239 ">List of stages that processed the record in order, by stage name. </td>
+                            <td class="entry cellrowborder" headers="d483718e239 ">List of stages that processed the record in order, by stage name. </td>
 
-                            <td class="entry cellrowborder" headers="d483847e242 ">record:path()</td>
+                            <td class="entry cellrowborder" headers="d483718e242 ">record:path()</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e236 ">trackingId</td>
+                            <td class="entry cellrowborder" headers="d483718e236 ">trackingId</td>
 
-                            <td class="entry cellrowborder" headers="d483847e239 ">The route the record has taken through the pipeline, starting
+                            <td class="entry cellrowborder" headers="d483718e239 ">The route the record has taken through the pipeline, starting
                                 with the sourceId, then listing the stages that processed the
                                 record.</td>
 
-                            <td class="entry cellrowborder" headers="d483847e242 ">n/a</td>
+                            <td class="entry cellrowborder" headers="d483718e242 ">n/a</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e236 ">previousTrackingId</td>
+                            <td class="entry cellrowborder" headers="d483718e236 ">previousTrackingId</td>
 
-                            <td class="entry cellrowborder" headers="d483847e239 ">The tracking ID of the record before it entered the current
+                            <td class="entry cellrowborder" headers="d483718e239 ">The tracking ID of the record before it entered the current
                                 stage.</td>
 
-                            <td class="entry cellrowborder" headers="d483847e242 ">n/a</td>
+                            <td class="entry cellrowborder" headers="d483718e242 ">n/a</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e236 ">errorStage</td>
+                            <td class="entry cellrowborder" headers="d483718e236 ">errorStage</td>
 
-                            <td class="entry cellrowborder" headers="d483847e239 ">The stage that generated the error. <p class="p">In error records only.
+                            <td class="entry cellrowborder" headers="d483718e239 ">The stage that generated the error. <p class="p">In error records only.
                                 </p>
 </td>
 
-                            <td class="entry cellrowborder" headers="d483847e242 ">
+                            <td class="entry cellrowborder" headers="d483718e242 ">
                                 <p class="p">record:errorStage() </p>
 
                             </td>
@@ -386,44 +386,44 @@
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e236 ">errorStageLabel</td>
+                            <td class="entry cellrowborder" headers="d483718e236 ">errorStageLabel</td>
 
-                            <td class="entry cellrowborder" headers="d483847e239 ">The user-defined name for a stage.<p class="p">In error records only.
+                            <td class="entry cellrowborder" headers="d483718e239 ">The user-defined name for a stage.<p class="p">In error records only.
                                 </p>
 </td>
 
-                            <td class="entry cellrowborder" headers="d483847e242 ">record:errorStageLabel()</td>
+                            <td class="entry cellrowborder" headers="d483718e242 ">record:errorStageLabel()</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e236 ">errorCode</td>
+                            <td class="entry cellrowborder" headers="d483718e236 ">errorCode</td>
 
-                            <td class="entry cellrowborder" headers="d483847e239 ">The error code.<p class="p">In error records only. </p>
+                            <td class="entry cellrowborder" headers="d483718e239 ">The error code.<p class="p">In error records only. </p>
 </td>
 
-                            <td class="entry cellrowborder" headers="d483847e242 ">record:errorCode()</td>
+                            <td class="entry cellrowborder" headers="d483718e242 ">record:errorCode()</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e236 ">errorJobId</td>
+                            <td class="entry cellrowborder" headers="d483718e236 ">errorJobId</td>
 
-                            <td class="entry cellrowborder" headers="d483847e239 ">The ID of the job that started the pipeline. <p class="p">Only in error
+                            <td class="entry cellrowborder" headers="d483718e239 ">The ID of the job that started the pipeline. <p class="p">Only in error
                                     records from pipelines started by <span class="ph">Control Hub</span> jobs.</p>
 </td>
 
-                            <td class="entry cellrowborder" headers="d483847e242 ">n/a</td>
+                            <td class="entry cellrowborder" headers="d483718e242 ">n/a</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e236 ">errorMessage</td>
+                            <td class="entry cellrowborder" headers="d483718e236 ">errorMessage</td>
 
-                            <td class="entry cellrowborder" headers="d483847e239 ">The error message. <p class="p">In error records only. </p>
+                            <td class="entry cellrowborder" headers="d483718e239 ">The error message. <p class="p">In error records only. </p>
 </td>
 
-                            <td class="entry cellrowborder" headers="d483847e242 ">
+                            <td class="entry cellrowborder" headers="d483718e242 ">
                                 <p class="p">record:errorMessage() </p>
 
                             </td>
@@ -431,13 +431,13 @@
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e236 ">errorTimestamp</td>
+                            <td class="entry cellrowborder" headers="d483718e236 ">errorTimestamp</td>
 
-                            <td class="entry cellrowborder" headers="d483847e239 ">The time that the error occurred.<p class="p">In error records
+                            <td class="entry cellrowborder" headers="d483718e239 ">The time that the error occurred.<p class="p">In error records
                                 only.</p>
 </td>
 
-                            <td class="entry cellrowborder" headers="d483847e242 ">
+                            <td class="entry cellrowborder" headers="d483718e242 ">
                                 <p class="p">record:errorTime() </p>
 
                             </td>
@@ -445,13 +445,13 @@
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e236 ">errorStackTrace</td>
+                            <td class="entry cellrowborder" headers="d483718e236 ">errorStackTrace</td>
 
-                            <td class="entry cellrowborder" headers="d483847e239 ">The stack trace associated with the error.<p class="p">In error records
+                            <td class="entry cellrowborder" headers="d483718e239 ">The stack trace associated with the error.<p class="p">In error records
                                     only.</p>
 </td>
 
-                            <td class="entry cellrowborder" headers="d483847e242 ">n/a</td>
+                            <td class="entry cellrowborder" headers="d483718e242 ">n/a</td>
 
                         </tr>
 
@@ -472,18 +472,18 @@
             special processing:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_ih1_3f1_2z__table_hzf_lf1_2z" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d483847e451">Stage</th>
+                            <th class="entry cellrowborder" id="d483718e451">Stage</th>
 
-                            <th class="entry cellrowborder" id="d483847e454">Description</th>
+                            <th class="entry cellrowborder" id="d483718e454">Description</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">CDC-enabled origins </td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">CDC-enabled origins </td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Include the CRUD operation type in the sdc.operation.type header
+                            <td class="entry cellrowborder" headers="d483718e454 ">Include the CRUD operation type in the sdc.operation.type header
                                 attribute and can include additional CRUD and CDC information in
                                 record header attributes. For more information, see <a class="xref" href="CDC-Overview.html#concept_iws_mhd_ty">CDC-Enabled
                                     Origins</a>.</td>
@@ -491,53 +491,53 @@
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">Origins that process Avro data and the Data Parser
+                            <td class="entry cellrowborder" headers="d483718e451 ">Origins that process Avro data and the Data Parser
                                 processor</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Include the Avro schema in an avroSchema record header
+                            <td class="entry cellrowborder" headers="d483718e454 ">Include the Avro schema in an avroSchema record header
                                 attribute.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">Origins that process XML data</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">Origins that process XML data</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Can include namespaces in an xmlns record header attribute when
+                            <td class="entry cellrowborder" headers="d483718e454 ">Can include namespaces in an xmlns record header attribute when
                                 you <a class="xref" href="../Data_Formats/XMLDFormat.html#concept_w3k_1ch_qz">enable field XPaths</a>. </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 "><a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_zrl_mhn_lx">Stages that generate events</a></td>
+                            <td class="entry cellrowborder" headers="d483718e451 "><a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_zrl_mhn_lx">Stages that generate events</a></td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Generate record header attributes for event records. For details
+                            <td class="entry cellrowborder" headers="d483718e454 ">Generate record header attributes for event records. For details
                                 about event record header attributes, see "Event Records" in the
                                 stage documentation. </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">Amazon S3 origin</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">Amazon S3 origin</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Can be configured to include system-defined and user-defined
+                            <td class="entry cellrowborder" headers="d483718e454 ">Can be configured to include system-defined and user-defined
                                 object metadata in record header attributes. <a class="xref" href="../Origins/AmazonS3.html#concept_inh_qjx_yw">
                                     <img class="image" id="concept_ih1_3f1_2z__image_kjt_3m4_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">Amazon SQS Consumer origin</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">Amazon SQS Consumer origin</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Can be configured to include SQS message attributes in record
+                            <td class="entry cellrowborder" headers="d483718e454 ">Can be configured to include SQS message attributes in record
                                 header attributes. <a class="xref" href="../Origins/AmazonSQS.html#concept_lk3_rfc_vbb">
                                     <img class="image" id="concept_ih1_3f1_2z__image_zxr_lvc_vbb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">Directory origin</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">Directory origin</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Includes <span class="ph">information about the originating file for
+                            <td class="entry cellrowborder" headers="d483718e454 ">Includes <span class="ph">information about the originating file for
                     the record</span> in record header attributes. <a class="xref" href="../Origins/Directory.html#concept_tlj_3g1_2z" title="The Directory origin creates record header attributes that include information about the originating file for the record.">
                                     <img class="image" id="concept_ih1_3f1_2z__image_cy1_jm4_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                             </td>
@@ -545,9 +545,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">File Tail origin</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">File Tail origin</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Includes <span class="ph">information about the originating file for
+                            <td class="entry cellrowborder" headers="d483718e454 ">Includes <span class="ph">information about the originating file for
                     the record</span> in record header attributes.
                                     <a class="xref" href="../Origins/FileTail.html#concept_tlj_3g1_2z">
                                     <img class="image" id="concept_ih1_3f1_2z__image_j1n_ycv_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a><p class="p">Can be configured to use
@@ -558,27 +558,27 @@
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">Google Pub/Sub Subscriber origin</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">Google Pub/Sub Subscriber origin</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">When available, includes user-defined message attributes in
+                            <td class="entry cellrowborder" headers="d483718e454 ">When available, includes user-defined message attributes in
                                 record header attributes. <a class="xref" href="../Origins/PubSub.html#concept_qvl_y4q_v1b" title="The Google Pub/Sub Subscriber origin includes user-defined message attributes in record header attributes when they are available. When the origin processes Avro data, it includes the Avro schema in an avroSchema record header attribute.">
                                     <img class="image" id="concept_ih1_3f1_2z__image_wsz_k4w_9s" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">Hadoop FS origin</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">Hadoop FS origin</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Includes information about the file and offset in record header
+                            <td class="entry cellrowborder" headers="d483718e454 ">Includes information about the file and offset in record header
                                 attributes. <a class="xref" href="../Origins/HadoopFS-origin.html#concept_efs_2fs_fdb" title="The Hadoop FS origin creates record header attributes that include information about the originating file for the record.">
                                     <img class="image" id="concept_ih1_3f1_2z__image_nt2_ngs_fdb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">Hadoop FS Standalone origin</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">Hadoop FS Standalone origin</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Includes <span class="ph">information about the originating file for
+                            <td class="entry cellrowborder" headers="d483718e454 ">Includes <span class="ph">information about the originating file for
                     the record</span> in record header attributes. <a class="xref" href="../Origins/HDFSStandalone.html#concept_asp_lfh_ldb" title="The Hadoop FS Standalone origin creates record header attributes that include information about the originating file for the record.">
                                     <img class="image" id="concept_ih1_3f1_2z__image_qg2_flv_ldb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                             </td>
@@ -586,18 +586,18 @@
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">HTTP Client origin</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">HTTP Client origin</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Includes response header fields in record header attributes.
+                            <td class="entry cellrowborder" headers="d483718e454 ">Includes response header fields in record header attributes.
                                     <a class="xref" href="../Origins/HTTPClient.html#concept_etl_bsh_l2b" title="The HTTP Client origin generates records based on the responses it receives.">
                                     <img class="image" id="concept_ih1_3f1_2z__image_wsz_k2v_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">HTTP Server origin</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">HTTP Server origin</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Includes information about the requested URL and request header
+                            <td class="entry cellrowborder" headers="d483718e454 ">Includes information about the requested URL and request header
                                 fields in record header attributes. <a class="xref" href="../Origins/HTTPServer.html#concept_rvj_5qy_4cb">
                                     <img class="image" id="concept_ih1_3f1_2z__image_wrj_k3v_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                             </td>
@@ -605,54 +605,54 @@
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">JDBC Multitable Consumer origin</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">JDBC Multitable Consumer origin</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Includes table and data type information in record header
+                            <td class="entry cellrowborder" headers="d483718e454 ">Includes table and data type information in record header
                                 attributes. <a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_xrx_11y_4y">
                                     <img class="image" id="concept_ih1_3f1_2z__image_ezd_l2v_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">JDBC Query Consumer origin</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">JDBC Query Consumer origin</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Can be configured to include table and data type information in
+                            <td class="entry cellrowborder" headers="d483718e454 ">Can be configured to include table and data type information in
                                 record header attributes. <a class="xref" href="../Origins/JDBCConsumer.html#concept_egw_d4c_kw">
                                     <img class="image" id="concept_ih1_3f1_2z__image_wfh_l2v_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">Kafka Consumer origin</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">Kafka Consumer origin</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Includes information about the origins of the record in record
+                            <td class="entry cellrowborder" headers="d483718e454 ">Includes information about the origins of the record in record
                                 header attributes. <a class="xref" href="../Origins/KConsumer.html#concept_tlj_3g1_2z">
                                     <img class="image" id="concept_ih1_3f1_2z__image_mgp_l2v_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">Kafka Multitopic Consumer origin</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">Kafka Multitopic Consumer origin</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Includes information about the origins of the record in record
+                            <td class="entry cellrowborder" headers="d483718e454 ">Includes information about the origins of the record in record
                                 header attributes. <a class="xref" href="../Origins/KafkaMultiConsumer.html#concept_tlj_3g1_2z">
                                     <img class="image" id="concept_ih1_3f1_2z__image_vyh_ty3_fbb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">MapR FS origin</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">MapR FS origin</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Includes information about the file and offset in record header
+                            <td class="entry cellrowborder" headers="d483718e454 ">Includes information about the file and offset in record header
                                 attributes. <a class="xref" href="../Origins/MapRFS.html#concept_efs_2fs_fdb" title="The MapR FS origin creates record header attributes that include information about the originating file for the record.">
                                     <img class="image" id="concept_ih1_3f1_2z__image_ppt_zwf_gdb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">MapR FS Standalone origin</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">MapR FS Standalone origin</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Includes <span class="ph">information about the originating file for
+                            <td class="entry cellrowborder" headers="d483718e454 ">Includes <span class="ph">information about the originating file for
                     the record</span> in record header attributes. <a class="xref" href="../Origins/MapRFSStandalone.html#concept_uyy_nsn_ndb" title="The MapR FS Standalone origin creates record header attributes that include information about the originating file for the record.">
                                     <img class="image" id="concept_ih1_3f1_2z__image_iqb_pmh_ndb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                             </td>
@@ -660,53 +660,53 @@
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">MapR Multitopic Streams Consumer origin</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">MapR Multitopic Streams Consumer origin</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Includes information about the origins of the record in record
+                            <td class="entry cellrowborder" headers="d483718e454 ">Includes information about the origins of the record in record
                                 header attributes. <a class="xref" href="../Origins/MapRStreamsMultiConsumer.html#concept_tlj_3g1_2z">
                                     <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">MapR Streams Consumer origin</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">MapR Streams Consumer origin</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Includes information about the origins of the record in record
+                            <td class="entry cellrowborder" headers="d483718e454 ">Includes information about the origins of the record in record
                                 header attributes. <a class="xref" href="../Origins/MapRStreamsCons.html#concept_tlj_3g1_2z">
                                     <img class="image" id="concept_ih1_3f1_2z__image_wrf_xsv_5bb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">MQTT Subscriber origin</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">MQTT Subscriber origin</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Includes information about the origins of the record in record
+                            <td class="entry cellrowborder" headers="d483718e454 ">Includes information about the origins of the record in record
                                 header attributes. <a class="xref" href="../Origins/MQTTSubscriber.html#concept_fwm_2kn_scb">
                                     <img class="image" id="concept_ih1_3f1_2z__image_x1l_3ln_scb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">Pulsar Consumer origin</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">Pulsar Consumer origin</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Includes information in the properties field of the message in
+                            <td class="entry cellrowborder" headers="d483718e454 ">Includes information in the properties field of the message in
                                 record header attributes. <a class="xref" href="../Origins/PulsarConsumer.html#concept_tvr_r3m_y2b" title="The Pulsar Consumer origin includes any information in the properties field of the message - outside of the payload field - in records as record header attributes.">
                                     <img class="image" id="concept_ih1_3f1_2z__image_tfd_jnr_y2b" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">RabbitMQ Consumer origin</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">RabbitMQ Consumer origin</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Includes RabbitMQ attributes in record header attributes. <a class="xref" href="../Origins/RabbitMQ.html#concept_rg5_yts_y1b">
+                            <td class="entry cellrowborder" headers="d483718e454 ">Includes RabbitMQ attributes in record header attributes. <a class="xref" href="../Origins/RabbitMQ.html#concept_rg5_yts_y1b">
                                     <img class="image" id="concept_ih1_3f1_2z__image_gy5_dvs_y1b" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">REST Service origin</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">REST Service origin</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Includes information about the URL and request header fields in
+                            <td class="entry cellrowborder" headers="d483718e454 ">Includes information about the URL and request header fields in
                                 record header attributes. <a class="xref" href="../Origins/RESTService.html#concept_rrj_5qy_4cb">
                                     <img class="image" id="concept_ih1_3f1_2z__image_fsj_5wl_t2b" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                             </td>
@@ -714,18 +714,18 @@
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">Salesforce origin</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">Salesforce origin</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Includes Salesforce information about the origins of the record
+                            <td class="entry cellrowborder" headers="d483718e454 ">Includes Salesforce information about the origins of the record
                                 in record header attributes. <a class="xref" href="../Origins/Salesforce.html#concept_psx_1wg_cy" title="The Salesforce origin generates Salesforce record header attributes that provide additional information about each record, such as the source objects for the record. The origin receives these details from Salesforce.">
                                     <img class="image" id="concept_ih1_3f1_2z__image_rkv_wcv_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">SFTP/FTP Client origin</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">SFTP/FTP Client origin</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Includes <span class="ph">information about the originating file for
+                            <td class="entry cellrowborder" headers="d483718e454 ">Includes <span class="ph">information about the originating file for
                     the record</span> in record header attributes.
                                     <a class="xref" href="../Origins/SFTP.html#concept_tlj_3g1_2z">
                                     <img class="image" id="concept_ih1_3f1_2z__image_ocq_zjb_j1b" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
@@ -733,27 +733,27 @@
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">Teradata Consumer origin</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">Teradata Consumer origin</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Includes table and data type information in record header
+                            <td class="entry cellrowborder" headers="d483718e454 ">Includes table and data type information in record header
                                 attributes. <a class="xref" href="../Origins/Teradata.html#concept_xrx_11y_4y">
                                     <img class="image" id="concept_ih1_3f1_2z__image_uzf_p32_1gb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">Expression Evaluator processor</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">Expression Evaluator processor</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Can be configured to create or update record header attributes.
+                            <td class="entry cellrowborder" headers="d483718e454 ">Can be configured to create or update record header attributes.
                                     <a class="xref" href="../Processors/Expression.html#concept_qf3_mfq_f5">
                                     <img class="image" id="concept_ih1_3f1_2z__image_fxq_144_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">Groovy Evaluator processor</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">Groovy Evaluator processor</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">
+                            <td class="entry cellrowborder" headers="d483718e454 ">
                                 <p class="p">Can be configured to create or update record header attributes.
                                         <a class="xref" href="../Processors/Groovy.html#concept_uw4_kqw_1y">
                                         <img class="image" id="concept_ih1_3f1_2z__image_k22_wcv_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></p>
@@ -763,9 +763,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">Hive Metadata processor</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">Hive Metadata processor</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Generates record header attributes for the data record. These
+                            <td class="entry cellrowborder" headers="d483718e454 ">Generates record header attributes for the data record. These
                                 attributes can be used for record-based writes as part of the <a class="xref" href="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_phk_bdf_2w">Drift Synchronization Solution for Hive</a>. <a class="xref" href="../Processors/HiveMetadata.html#concept_g3p_sss_dw">
                                     <img class="image" id="concept_ih1_3f1_2z__image_u1j_m2v_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a><p class="p">Can be configured to add
                                     custom header attributes to the metadata record. <a class="xref" href="../Processors/HiveMetadata.html#concept_jv2_jjn_l1b">
@@ -775,9 +775,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">HTTP Client processor</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">HTTP Client processor</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Includes response header fields in record header attributes.
+                            <td class="entry cellrowborder" headers="d483718e454 ">Includes response header fields in record header attributes.
                                     <a class="xref" href="../Processors/HTTPClient.html#concept_ekz_wrz_zw">
                                     <img class="image" id="concept_ih1_3f1_2z__image_fqg_m2v_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                             </td>
@@ -785,27 +785,27 @@
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">JavaScript Evaluator processor</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">JavaScript Evaluator processor</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Can be configured to create or update record header attributes.
+                            <td class="entry cellrowborder" headers="d483718e454 ">Can be configured to create or update record header attributes.
                                     <a class="xref" href="../Processors/JavaScript.html#concept_sh1_khh_cy">
                                     <img class="image" id="concept_ih1_3f1_2z__image_r5p_xc4_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">Jython Evaluator processor</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">Jython Evaluator processor</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Can be configured to create or update record header attributes.
+                            <td class="entry cellrowborder" headers="d483718e454 ">Can be configured to create or update record header attributes.
                                     <a class="xref" href="../Processors/Jython.html#concept_s2k_qhh_cy">
                                     <img class="image" id="concept_ih1_3f1_2z__image_z4j_byn_lw" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d483847e451 ">Schema Generator processor</td>
+                            <td class="entry cellrowborder" headers="d483718e451 ">Schema Generator processor</td>
 
-                            <td class="entry cellrowborder" headers="d483847e454 ">Generates schemas and write them to a user-defined record header
+                            <td class="entry cellrowborder" headers="d483718e454 ">Generates schemas and write them to a user-defined record header
                                 attribute. <a class="xref" href="../Processors/SchemaGenerator.html#concept_rfz_ks3_x1b">
                                     <img class="image" id="concept_ih1_3f1_2z__image_aj4_3tp_1bb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
