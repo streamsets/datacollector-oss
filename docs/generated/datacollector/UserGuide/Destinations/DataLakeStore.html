@@ -2,7 +2,7 @@
 <!DOCTYPE html
   PUBLIC "" "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
-    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="Supported pipeline types: Data Collector The Azure Data Lake Storage destination writes data to Microsoft Azure Data Lake Storage. You can use the Azure Data Lake Storage destination in standalone and ..." /><meta name="copyright" content="(C) Copyright 2019" /><meta name="DC.rights.owner" content="(C) Copyright 2019" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Azure Data Lake Storage" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/Destinations-title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/AmazonS3.html#concept_avx_bnq_rt" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/AzureEventHubProducer.html#concept_xq5_d5q_1bb" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_jzm_kf4_zx" /><title>Azure Data Lake Storage</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_jzm_kf4_zx-d46e97442" />         
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="Supported pipeline types: Data Collector The Azure Data Lake Storage destination writes data to Microsoft Azure Data Lake Storage. You can use the Azure Data Lake Storage destination in standalone and ..." /><meta name="copyright" content="(C) Copyright 2019" /><meta name="DC.rights.owner" content="(C) Copyright 2019" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Azure Data Lake Storage" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/Destinations-title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/AmazonS3.html#concept_avx_bnq_rt" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/ADLS-G1-D.html" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_jzm_kf4_zx" /><title>Azure Data Lake Storage</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_jzm_kf4_zx-d46e99131" />         
         
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <!-- Latest compiled and minified Bootstrap CSS -->
@@ -85,7 +85,7 @@
                         <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
   
 <span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Destinations/AmazonS3.html#concept_avx_bnq_rt" title="Amazon S3"></a></span>  
-<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Destinations/AzureEventHubProducer.html#concept_xq5_d5q_1bb" title="Azure Event Hub Producer"></a></span>  </span></div>
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Destinations/ADLS-G1-D.html" title="Azure Data Lake Storage Gen1"></a></span>  </span></div>
                         <button class="wh_hide_highlight" title="Toggle search highlights"></button>
                         <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
                         <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
@@ -103,135 +103,144 @@
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_l4q_flb_kr-d46e6523" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
-   <li><span data-tocid="concept_ylh_yyz_ky-d46e8794" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
-   <li><span data-tocid="concept_ejk_f1f_5v-d46e18525" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
-   <li><span data-tocid="concept_qsw_cjy_bt-d46e24888" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
-   <li><span data-tocid="concept_qn1_wn4_kq-d46e26612" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
-   <li><span data-tocid="concept_hdr_gyw_41b-d46e29325" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_l4q_flb_kr-d46e7229" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e9491" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e19222" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e26481" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e28205" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e30918" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e31439" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e80243" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
-   <li><span data-tocid="concept_agj_cfj_br-d46e96406" class="topicref" data-id="concept_agj_cfj_br" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span><ul class="nav nav-list">
-         <li><span data-tocid="concept_hpr_twm_jq-d46e96428" class="topicref" data-id="concept_hpr_twm_jq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations_overview.html#concept_hpr_twm_jq">Destinations</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e33032" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e81932" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e98095" class="topicref" data-id="concept_agj_cfj_br" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_hpr_twm_jq-d46e98117" class="topicref" data-id="concept_hpr_twm_jq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations_overview.html#concept_hpr_twm_jq">Destinations</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_gyq_rpr_4cb-d46e96452" class="topicref" data-id="concept_gyq_rpr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Aerospike.html#concept_gyq_rpr_4cb">Aerospike</a></span></span></li>
-         <li><span data-tocid="concept_avx_bnq_rt-d46e96506" class="topicref" data-id="concept_avx_bnq_rt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/AmazonS3.html#concept_avx_bnq_rt">Amazon S3</a></span></span></li>
-         <li class="active"><span data-tocid="concept_jzm_kf4_zx-d46e97442" class="topicref" data-id="concept_jzm_kf4_zx" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DataLakeStore.html#concept_jzm_kf4_zx">Azure Data Lake Storage</a></span></span><ul class="nav nav-list">
-               <li><span data-tocid="concept_tsr_ml4_zx-d46e97575" class="topicref" data-id="concept_tsr_ml4_zx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DataLakeStore.html#concept_tsr_ml4_zx">Prerequisites</a></span></span></li>
-               <li><span data-tocid="concept_gr4_qww_zx-d46e97726" class="topicref" data-id="concept_gr4_qww_zx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DataLakeStore.html#concept_gr4_qww_zx">Directory Templates</a></span></span></li>
-               <li><span data-tocid="concept_ff4_cxw_zx-d46e97788" class="topicref" data-id="concept_ff4_cxw_zx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DataLakeStore.html#concept_ff4_cxw_zx">Time Basis</a></span></span></li>
-               <li><span data-tocid="concept_c2p_wzh_4z-d46e97860" class="topicref" data-id="concept_c2p_wzh_4z" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DataLakeStore.html#concept_c2p_wzh_4z">Timeout to Close Idle Files</a></span></span></li>
-               <li><span data-tocid="concept_eck_fm3_vz-d46e97943" class="topicref" data-id="concept_eck_fm3_vz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DataLakeStore.html#concept_eck_fm3_vz">Event Generation</a></span></span></li>
-               <li><span data-tocid="concept_wsz_qj4_zx-d46e98139" class="topicref" data-id="concept_wsz_qj4_zx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DataLakeStore.html#concept_wsz_qj4_zx">Data Formats</a></span></span></li>
-               <li><span data-tocid="task_jfl_nf4_zx-d46e98252" class="topicref" data-id="task_jfl_nf4_zx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DataLakeStore.html#task_jfl_nf4_zx">Configuring an Azure Data Lake Storage Destination</a></span></span></li>
+         <li><span data-tocid="concept_gyq_rpr_4cb-d46e98141" class="topicref" data-id="concept_gyq_rpr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Aerospike.html#concept_gyq_rpr_4cb">Aerospike</a></span></span></li>
+         <li><span data-tocid="concept_avx_bnq_rt-d46e98195" class="topicref" data-id="concept_avx_bnq_rt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/AmazonS3.html#concept_avx_bnq_rt">Amazon S3</a></span></span></li>
+         <li class="active"><span data-tocid="concept_jzm_kf4_zx-d46e99131" class="topicref" data-id="concept_jzm_kf4_zx" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DataLakeStore.html#concept_jzm_kf4_zx">Azure Data Lake Storage</a></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_tsr_ml4_zx-d46e99264" class="topicref" data-id="concept_tsr_ml4_zx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DataLakeStore.html#concept_tsr_ml4_zx">Prerequisites</a></span></span></li>
+               <li><span data-tocid="concept_gr4_qww_zx-d46e99415" class="topicref" data-id="concept_gr4_qww_zx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DataLakeStore.html#concept_gr4_qww_zx">Directory Templates</a></span></span></li>
+               <li><span data-tocid="concept_ff4_cxw_zx-d46e99477" class="topicref" data-id="concept_ff4_cxw_zx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DataLakeStore.html#concept_ff4_cxw_zx">Time Basis</a></span></span></li>
+               <li><span data-tocid="concept_c2p_wzh_4z-d46e99549" class="topicref" data-id="concept_c2p_wzh_4z" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DataLakeStore.html#concept_c2p_wzh_4z">Timeout to Close Idle Files</a></span></span></li>
+               <li><span data-tocid="concept_eck_fm3_vz-d46e99632" class="topicref" data-id="concept_eck_fm3_vz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DataLakeStore.html#concept_eck_fm3_vz">Event Generation</a></span></span></li>
+               <li><span data-tocid="concept_wsz_qj4_zx-d46e99828" class="topicref" data-id="concept_wsz_qj4_zx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DataLakeStore.html#concept_wsz_qj4_zx">Data Formats</a></span></span></li>
+               <li><span data-tocid="task_jfl_nf4_zx-d46e99941" class="topicref" data-id="task_jfl_nf4_zx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DataLakeStore.html#task_jfl_nf4_zx">Configuring an Azure Data Lake Storage Destination</a></span></span></li>
             </ul>
          </li>
-         <li><span data-tocid="concept_xq5_d5q_1bb-d46e98375" class="topicref" data-id="concept_xq5_d5q_1bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/AzureEventHubProducer.html#concept_xq5_d5q_1bb">Azure Event Hub Producer</a></span></span></li>
-         <li><span data-tocid="concept_pnd_jkq_1bb-d46e98471" class="topicref" data-id="concept_pnd_jkq_1bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/AzureIoTHub.html#concept_pnd_jkq_1bb">Azure IoT Hub Producer</a></span></span></li>
-         <li><span data-tocid="concept_hfy_mfd_sr-d46e98627" class="topicref" data-id="concept_hfy_mfd_sr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Cassandra.html#concept_hfy_mfd_sr">Cassandra</a></span></span></li>
-         <li><span data-tocid="concept_hw5_s3n_sz-d46e98909" class="topicref" data-id="concept_hw5_s3n_sz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/CoAPClient.html#concept_hw5_s3n_sz">CoAP Client</a></span></span></li>
-         <li><span data-tocid="concept_ahq_1wq_h2b-d46e99005" class="topicref" data-id="concept_ahq_1wq_h2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Couchbase.html#concept_ahq_1wq_h2b">Couchbase</a></span></span></li>
-         <li><span data-tocid="concept_u5t_vpv_4r-d46e99059" class="topicref" data-id="concept_u5t_vpv_4r" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Elasticsearch.html#concept_u5t_vpv_4r">Elasticsearch</a></span></span></li>
-         <li><span data-tocid="concept_hlx_r53_rx-d46e99350" class="topicref" data-id="concept_hlx_r53_rx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/WaveAnalytics.html#concept_hlx_r53_rx">Einstein Analytics</a></span></span></li>
-         <li><span data-tocid="concept_pzn_hl4_yr-d46e99635" class="topicref" data-id="concept_pzn_hl4_yr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Flume.html#concept_pzn_hl4_yr">Flume</a></span></span></li>
-         <li><span data-tocid="concept_hj4_brk_dbb-d46e99731" class="topicref" data-id="concept_hj4_brk_dbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/BigQuery.html#concept_hj4_brk_dbb">Google BigQuery</a></span></span></li>
-         <li><span data-tocid="concept_pl5_tmq_tx-d46e100022" class="topicref" data-id="concept_pl5_tmq_tx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Bigtable.html#concept_pl5_tmq_tx">Google Bigtable</a></span></span></li>
-         <li><span data-tocid="concept_p4n_jrl_nbb-d46e100603" class="topicref" data-id="concept_p4n_jrl_nbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/GCS.html#concept_p4n_jrl_nbb">Google Cloud Storage</a></span></span></li>
-         <li><span data-tocid="concept_qsj_hk1_v1b-d46e101533" class="topicref" data-id="concept_qsj_hk1_v1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/PubSubPublisher.html#concept_qsj_hk1_v1b">Google Pub/Sub Publisher</a></span></span></li>
-         <li><span data-tocid="concept_awl_4km_zq-d46e101818" class="topicref" data-id="concept_awl_4km_zq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HadoopFS-destination.html#concept_awl_4km_zq">Hadoop FS</a></span></span></li>
-         <li><span data-tocid="concept_wsz_5t5_vr-d46e103214" class="topicref" data-id="concept_wsz_5t5_vr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HBase.html#concept_wsz_5t5_vr">HBase</a></span></span></li>
-         <li><span data-tocid="concept_gcr_z2t_zv-d46e103594" class="topicref" data-id="concept_gcr_z2t_zv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HiveMetastore.html#concept_gcr_z2t_zv">Hive Metastore</a></span></span></li>
-         <li><span data-tocid="concept_kvs_3hh_ht-d46e104186" class="topicref" data-id="concept_kvs_3hh_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Hive.html#concept_kvs_3hh_ht">Hive Streaming</a></span></span></li>
-         <li><span data-tocid="concept_khl_sg5_lz-d46e104282" class="topicref" data-id="concept_khl_sg5_lz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HTTPClient.html#concept_khl_sg5_lz">HTTP Client</a></span></span></li>
-         <li><span data-tocid="concept_inf_db_sr-d46e105234" class="topicref" data-id="concept_inf_db_sr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/InfluxDB.html#concept_inf_db_sr">InfluxDB</a></span></span></li>
-         <li><span data-tocid="concept_kvs_3hh_ht-d46e105288" class="topicref" data-id="concept_kvs_3hh_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/JDBCProducer.html#concept_kvs_3hh_ht">JDBC Producer</a></span></span></li>
-         <li><span data-tocid="concept_sfz_ww5_n1b-d46e105662" class="topicref" data-id="concept_sfz_ww5_n1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/JMSProducer.html#concept_sfz_ww5_n1b">JMS Producer</a></span></span></li>
-         <li><span data-tocid="concept_oq2_5jl_zq-d46e106030" class="topicref" data-id="concept_oq2_5jl_zq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KProducer.html#concept_oq2_5jl_zq">Kafka Producer</a></span></span></li>
-         <li><span data-tocid="concept_bjv_dpk_kv-d46e106966" class="topicref" data-id="concept_bjv_dpk_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KinFirehose.html#concept_bjv_dpk_kv">Kinesis Firehose</a></span></span></li>
-         <li><span data-tocid="concept_swk_h1j_yr-d46e107185" class="topicref" data-id="concept_swk_h1j_yr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KinProducer.html#concept_swk_h1j_yr">Kinesis Producer</a></span></span></li>
-         <li><span data-tocid="concept_hxh_5xg_qbb-d46e107401" class="topicref" data-id="concept_hxh_5xg_qbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KineticaDB.html#concept_hxh_5xg_qbb">KineticaDB</a></span></span></li>
-         <li><span data-tocid="concept_chy_xxg_4v-d46e107549" class="topicref" data-id="concept_chy_xxg_4v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Kudu.html#concept_chy_xxg_4v">Kudu </a></span></span></li>
-         <li><span data-tocid="concept_zvc_bv5_1r-d46e107697" class="topicref" data-id="concept_zvc_bv5_1r" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/LocalFS.html#concept_zvc_bv5_1r">Local FS</a></span></span></li>
-         <li><span data-tocid="concept_vxg_w2z_yv-d46e108371" class="topicref" data-id="concept_vxg_w2z_yv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRDB.html#concept_vxg_w2z_yv">MapR DB</a></span></span></li>
-         <li><span data-tocid="concept_i4h_2kj_dy-d46e108751" class="topicref" data-id="concept_i4h_2kj_dy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRDBJSON.html#concept_i4h_2kj_dy">MapR DB JSON</a></span></span></li>
-         <li><span data-tocid="concept_spv_xlc_fv-d46e109123" class="topicref" data-id="concept_spv_xlc_fv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRFS.html#concept_spv_xlc_fv">MapR FS </a></span></span></li>
-         <li><span data-tocid="concept_cfj_qbn_2v-d46e110206" class="topicref" data-id="concept_cfj_qbn_2v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRStreamsProd.html#concept_cfj_qbn_2v">MapR Streams Producer</a></span></span></li>
-         <li><span data-tocid="concept_kvs_3hh_ht-d46e110501" class="topicref" data-id="concept_kvs_3hh_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MemSQLLoader.html#concept_kvs_3hh_ht">MemSQL Fast Loader</a></span></span></li>
-         <li><span data-tocid="concept_eth_k5n_4v-d46e110962" class="topicref" data-id="concept_eth_k5n_4v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MongoDB.html#concept_eth_k5n_4v">MongoDB</a></span></span></li>
-         <li><span data-tocid="concept_odz_txt_lz-d46e111244" class="topicref" data-id="concept_odz_txt_lz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MQTTPublisher.html#concept_odz_txt_lz">MQTT Publisher</a></span></span></li>
-         <li><span data-tocid="concept_pl5_tdg_gcb-d46e111457" class="topicref" data-id="concept_pl5_tdg_gcb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/NamedPipe.html#concept_pl5_tdg_gcb">Named Pipe</a></span></span></li>
-         <li><span data-tocid="concept_fq3_kpc_r2b-d46e111840" class="topicref" data-id="concept_fq3_kpc_r2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/PulsarProducer.html#concept_fq3_kpc_r2b">Pulsar Producer</a></span></span></li>
-         <li><span data-tocid="concept_pxj_rvy_dv-d46e111991" class="topicref" data-id="concept_pxj_rvy_dv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/RabbitMQ.html#concept_pxj_rvy_dv">RabbitMQ Producer</a></span></span></li>
-         <li><span data-tocid="concept_ktc_gw2_gw-d46e112087" class="topicref" data-id="concept_ktc_gw2_gw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Redis.html#concept_ktc_gw2_gw">Redis</a></span></span></li>
-         <li><span data-tocid="concept_rlb_rt3_rx-d46e112369" class="topicref" data-id="concept_rlb_rt3_rx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Salesforce.html#concept_rlb_rt3_rx">Salesforce</a></span></span></li>
-         <li><span data-tocid="concept_lfk_hx2_ct-d46e112582" class="topicref" data-id="concept_lfk_hx2_ct" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/SDC_RPCdest.html#concept_lfk_hx2_ct">SDC RPC</a></span></span></li>
-         <li><span data-tocid="concept_eyd_zx4_q2b-d46e112737" class="topicref" data-id="concept_eyd_zx4_q2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/SendResponse.html#concept_eyd_zx4_q2b">Send Response to Origin</a></span></span></li>
-         <li><span data-tocid="concept_vxl_zzc_1gb-d46e112791" class="topicref" data-id="concept_vxl_zzc_1gb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Snowflake.html#concept_vxl_zzc_1gb">Snowflake</a></span></span></li>
-         <li><span data-tocid="concept_z2g_q1r_wr-d46e114756" class="topicref" data-id="concept_z2g_q1r_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Solr.html#concept_z2g_q1r_wr">Solr</a></span></span></li>
-         <li><span data-tocid="concept_zzr_pqn_xdb-d46e114913" class="topicref" data-id="concept_zzr_pqn_xdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Splunk.html#concept_zzr_pqn_xdb">Splunk</a></span></span></li>
-         <li><span data-tocid="concept_idr_ct5_w2b-d46e115132" class="topicref" data-id="concept_idr_ct5_w2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Syslog.html#concept_idr_ct5_w2b">Syslog</a></span></span></li>
-         <li><span data-tocid="concept_ryn_v3z_lr-d46e115417" class="topicref" data-id="concept_ryn_v3z_lr" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/ToError.html">To Error </a><span class="wh-tooltip">
+         <li><span data-tocid="concept_xzc_wfq_xhb-d46e100064" class="topicref" data-id="concept_xzc_wfq_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/ADLS-G1-D.html">Azure Data Lake Storage Gen1</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_htf_ydj_wq-d46e115441" class="topicref" data-id="concept_htf_ydj_wq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Trash.html#concept_htf_ydj_wq">Trash</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_ajp_1d2_vhb-d46e100112" class="topicref" data-id="concept_ajp_1d2_vhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/ADLS-G2-D.html#concept_ajp_1d2_vhb">Azure Data Lake Storage Gen2</a></span></span></li>
+         <li><span data-tocid="concept_xq5_d5q_1bb-d46e100912" class="topicref" data-id="concept_xq5_d5q_1bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/AzureEventHubProducer.html#concept_xq5_d5q_1bb">Azure Event Hub Producer</a></span></span></li>
+         <li><span data-tocid="concept_pnd_jkq_1bb-d46e101008" class="topicref" data-id="concept_pnd_jkq_1bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/AzureIoTHub.html#concept_pnd_jkq_1bb">Azure IoT Hub Producer</a></span></span></li>
+         <li><span data-tocid="concept_hfy_mfd_sr-d46e101164" class="topicref" data-id="concept_hfy_mfd_sr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Cassandra.html#concept_hfy_mfd_sr">Cassandra</a></span></span></li>
+         <li><span data-tocid="concept_hw5_s3n_sz-d46e101446" class="topicref" data-id="concept_hw5_s3n_sz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/CoAPClient.html#concept_hw5_s3n_sz">CoAP Client</a></span></span></li>
+         <li><span data-tocid="concept_ahq_1wq_h2b-d46e101543" class="topicref" data-id="concept_ahq_1wq_h2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Couchbase.html#concept_ahq_1wq_h2b">Couchbase</a></span></span></li>
+         <li><span data-tocid="concept_u5t_vpv_4r-d46e101597" class="topicref" data-id="concept_u5t_vpv_4r" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Elasticsearch.html#concept_u5t_vpv_4r">Elasticsearch</a></span></span></li>
+         <li><span data-tocid="concept_hlx_r53_rx-d46e101887" class="topicref" data-id="concept_hlx_r53_rx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/WaveAnalytics.html#concept_hlx_r53_rx">Einstein Analytics</a></span></span></li>
+         <li><span data-tocid="concept_pzn_hl4_yr-d46e102172" class="topicref" data-id="concept_pzn_hl4_yr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Flume.html#concept_pzn_hl4_yr">Flume</a></span></span></li>
+         <li><span data-tocid="concept_hj4_brk_dbb-d46e102268" class="topicref" data-id="concept_hj4_brk_dbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/BigQuery.html#concept_hj4_brk_dbb">Google BigQuery</a></span></span></li>
+         <li><span data-tocid="concept_pl5_tmq_tx-d46e102559" class="topicref" data-id="concept_pl5_tmq_tx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Bigtable.html#concept_pl5_tmq_tx">Google Bigtable</a></span></span></li>
+         <li><span data-tocid="concept_p4n_jrl_nbb-d46e103140" class="topicref" data-id="concept_p4n_jrl_nbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/GCS.html#concept_p4n_jrl_nbb">Google Cloud Storage</a></span></span></li>
+         <li><span data-tocid="concept_qsj_hk1_v1b-d46e104070" class="topicref" data-id="concept_qsj_hk1_v1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/PubSubPublisher.html#concept_qsj_hk1_v1b">Google Pub/Sub Publisher</a></span></span></li>
+         <li><span data-tocid="concept_awl_4km_zq-d46e104355" class="topicref" data-id="concept_awl_4km_zq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HadoopFS-destination.html#concept_awl_4km_zq">Hadoop FS</a></span></span></li>
+         <li><span data-tocid="concept_wsz_5t5_vr-d46e105751" class="topicref" data-id="concept_wsz_5t5_vr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HBase.html#concept_wsz_5t5_vr">HBase</a></span></span></li>
+         <li><span data-tocid="concept_gcr_z2t_zv-d46e106131" class="topicref" data-id="concept_gcr_z2t_zv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HiveMetastore.html#concept_gcr_z2t_zv">Hive Metastore</a></span></span></li>
+         <li><span data-tocid="concept_kvs_3hh_ht-d46e106724" class="topicref" data-id="concept_kvs_3hh_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Hive.html#concept_kvs_3hh_ht">Hive Streaming</a></span></span></li>
+         <li><span data-tocid="concept_khl_sg5_lz-d46e106820" class="topicref" data-id="concept_khl_sg5_lz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HTTPClient.html#concept_khl_sg5_lz">HTTP Client</a></span></span></li>
+         <li><span data-tocid="concept_inf_db_sr-d46e107771" class="topicref" data-id="concept_inf_db_sr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/InfluxDB.html#concept_inf_db_sr">InfluxDB</a></span></span></li>
+         <li><span data-tocid="concept_kvs_3hh_ht-d46e107825" class="topicref" data-id="concept_kvs_3hh_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/JDBCProducer.html#concept_kvs_3hh_ht">JDBC Producer</a></span></span></li>
+         <li><span data-tocid="concept_sfz_ww5_n1b-d46e108199" class="topicref" data-id="concept_sfz_ww5_n1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/JMSProducer.html#concept_sfz_ww5_n1b">JMS Producer</a></span></span></li>
+         <li><span data-tocid="concept_oq2_5jl_zq-d46e108567" class="topicref" data-id="concept_oq2_5jl_zq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KProducer.html#concept_oq2_5jl_zq">Kafka Producer</a></span></span></li>
+         <li><span data-tocid="concept_bjv_dpk_kv-d46e109503" class="topicref" data-id="concept_bjv_dpk_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KinFirehose.html#concept_bjv_dpk_kv">Kinesis Firehose</a></span></span></li>
+         <li><span data-tocid="concept_swk_h1j_yr-d46e109722" class="topicref" data-id="concept_swk_h1j_yr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KinProducer.html#concept_swk_h1j_yr">Kinesis Producer</a></span></span></li>
+         <li><span data-tocid="concept_hxh_5xg_qbb-d46e109938" class="topicref" data-id="concept_hxh_5xg_qbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KineticaDB.html#concept_hxh_5xg_qbb">KineticaDB</a></span></span></li>
+         <li><span data-tocid="concept_chy_xxg_4v-d46e110086" class="topicref" data-id="concept_chy_xxg_4v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Kudu.html#concept_chy_xxg_4v">Kudu </a></span></span></li>
+         <li><span data-tocid="concept_zvc_bv5_1r-d46e110234" class="topicref" data-id="concept_zvc_bv5_1r" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/LocalFS.html#concept_zvc_bv5_1r">Local FS</a></span></span></li>
+         <li><span data-tocid="concept_vxg_w2z_yv-d46e110909" class="topicref" data-id="concept_vxg_w2z_yv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRDB.html#concept_vxg_w2z_yv">MapR DB</a></span></span></li>
+         <li><span data-tocid="concept_i4h_2kj_dy-d46e111289" class="topicref" data-id="concept_i4h_2kj_dy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRDBJSON.html#concept_i4h_2kj_dy">MapR DB JSON</a></span></span></li>
+         <li><span data-tocid="concept_spv_xlc_fv-d46e111660" class="topicref" data-id="concept_spv_xlc_fv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRFS.html#concept_spv_xlc_fv">MapR FS </a></span></span></li>
+         <li><span data-tocid="concept_cfj_qbn_2v-d46e112743" class="topicref" data-id="concept_cfj_qbn_2v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRStreamsProd.html#concept_cfj_qbn_2v">MapR Streams Producer</a></span></span></li>
+         <li><span data-tocid="concept_kvs_3hh_ht-d46e113038" class="topicref" data-id="concept_kvs_3hh_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MemSQLLoader.html#concept_kvs_3hh_ht">MemSQL Fast Loader</a></span></span></li>
+         <li><span data-tocid="concept_eth_k5n_4v-d46e113499" class="topicref" data-id="concept_eth_k5n_4v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MongoDB.html#concept_eth_k5n_4v">MongoDB</a></span></span></li>
+         <li><span data-tocid="concept_odz_txt_lz-d46e113781" class="topicref" data-id="concept_odz_txt_lz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MQTTPublisher.html#concept_odz_txt_lz">MQTT Publisher</a></span></span></li>
+         <li><span data-tocid="concept_pl5_tdg_gcb-d46e113994" class="topicref" data-id="concept_pl5_tdg_gcb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/NamedPipe.html#concept_pl5_tdg_gcb">Named Pipe</a></span></span></li>
+         <li><span data-tocid="concept_fq3_kpc_r2b-d46e114377" class="topicref" data-id="concept_fq3_kpc_r2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/PulsarProducer.html#concept_fq3_kpc_r2b">Pulsar Producer</a></span></span></li>
+         <li><span data-tocid="concept_pxj_rvy_dv-d46e114528" class="topicref" data-id="concept_pxj_rvy_dv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/RabbitMQ.html#concept_pxj_rvy_dv">RabbitMQ Producer</a></span></span></li>
+         <li><span data-tocid="concept_ktc_gw2_gw-d46e114624" class="topicref" data-id="concept_ktc_gw2_gw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Redis.html#concept_ktc_gw2_gw">Redis</a></span></span></li>
+         <li><span data-tocid="concept_rlb_rt3_rx-d46e114907" class="topicref" data-id="concept_rlb_rt3_rx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Salesforce.html#concept_rlb_rt3_rx">Salesforce</a></span></span></li>
+         <li><span data-tocid="concept_lfk_hx2_ct-d46e115120" class="topicref" data-id="concept_lfk_hx2_ct" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/SDC_RPCdest.html#concept_lfk_hx2_ct">SDC RPC</a></span></span></li>
+         <li><span data-tocid="concept_eyd_zx4_q2b-d46e115274" class="topicref" data-id="concept_eyd_zx4_q2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/SendResponse.html#concept_eyd_zx4_q2b">Send Response to Origin</a></span></span></li>
+         <li><span data-tocid="concept_sgt_m2m_xhb-d46e115328" class="topicref" data-id="concept_sgt_m2m_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/SFTP.html">SFTP/FTP/FTPS Client</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_l4d_mjn_lz-d46e115465" class="topicref" data-id="concept_l4d_mjn_lz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/WebSocketClient.html#concept_l4d_mjn_lz">WebSocket Client</a></span></span></li>
+         <li><span data-tocid="concept_vxl_zzc_1gb-d46e115376" class="topicref" data-id="concept_vxl_zzc_1gb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Snowflake.html#concept_vxl_zzc_1gb">Snowflake</a></span></span></li>
+         <li><span data-tocid="concept_z2g_q1r_wr-d46e117341" class="topicref" data-id="concept_z2g_q1r_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Solr.html#concept_z2g_q1r_wr">Solr</a></span></span></li>
+         <li><span data-tocid="concept_zzr_pqn_xdb-d46e117498" class="topicref" data-id="concept_zzr_pqn_xdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Splunk.html#concept_zzr_pqn_xdb">Splunk</a></span></span></li>
+         <li><span data-tocid="concept_idr_ct5_w2b-d46e117717" class="topicref" data-id="concept_idr_ct5_w2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Syslog.html#concept_idr_ct5_w2b">Syslog</a></span></span></li>
+         <li><span data-tocid="concept_ryn_v3z_lr-d46e118005" class="topicref" data-id="concept_ryn_v3z_lr" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/ToError.html">To Error </a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_htf_ydj_wq-d46e118029" class="topicref" data-id="concept_htf_ydj_wq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Trash.html#concept_htf_ydj_wq">Trash</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_l4d_mjn_lz-d46e118053" class="topicref" data-id="concept_l4d_mjn_lz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/WebSocketClient.html#concept_l4d_mjn_lz">WebSocket Client</a></span></span></li>
       </ul>
    </li>
-   <li><span data-tocid="concept_umc_1lk_fx-d46e115562" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
-   <li><span data-tocid="concept_fyf_gkq_4bb-d46e121379" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
-   <li><span data-tocid="concept_ugp_kwf_xw-d46e123982" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
-   <li><span data-tocid="concept_xxd_f5r_kx-d46e127551" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_umc_1lk_fx-d46e118150" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e124302" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e126905" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e130474" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_fjj_zcf_2w-d46e131465" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
-   <li><span data-tocid="concept_kgt_pnr_4cb-d46e134291" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
-   <li><span data-tocid="concept_wwq_gxc_py-d46e135090" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e134388" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e137214" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e138013" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_gzw_tdm_p2b-d46e135672" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_wr1_ktz_bt-d46e136048" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_fpz_5r4_vs-d46e136530" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_jjk_23z_sq-d46e137995" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
-   <li><span data-tocid="concept_pgk_brx_rr-d46e138964" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_gzw_tdm_p2b-d46e138595" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e138971" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e139453" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e140918" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e141887" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_asx_fdz_sq-d46e141592" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_asx_fdz_sq-d46e144515" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_o3l_dtr_5q-d46e142849" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
-   <li><span data-tocid="concept_yms_ftm_sq-d46e144502" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e145772" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e147425" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_nls_w1r_ks-d46e149306" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
-   <li><span data-tocid="concept_sh3_frm_tq-d46e150519" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_nls_w1r_ks-d46e152229" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e153442" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_xbx_rs1_tq-d46e155318" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
-   <li><span data-tocid="concept_jn1_nzb_kv-d46e155373" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e158241" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e158296" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_pvm_yt3_wq-d46e155595" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
-   <li><span data-tocid="concept_vcj_1ws_js-d46e159296" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e158518" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e162219" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_chv_vmj_wr-d46e159519" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_chv_vmj_wr-d46e162442" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
@@ -603,7 +612,7 @@
                         
                               <dt class="dt dlterm">Constants</dt>
 
-                              <dd class="dd">You can use any constant, such as "output".</dd>
+                              <dd class="dd">You can use any constant, such as <code class="ph codeph">output</code>.</dd>
 
                         
                         
@@ -618,10 +627,11 @@
 
                               <dd class="dd ddexpand">When you use datetime variables in an expression, use all of the
                                     datetime variables between one of the year variables and the
-                                    smallest variable that you want to use. For example, to create
-                                    directories on a daily basis for a Hadoop FS destination, use a
-                                    year variable, a month variable, and then a day variable. You
-                                    might use one of the following datetime variable progressions: </dd>
+                                    smallest variable that you want to use. Do not skip a variable
+                                    within the progression. For example, to create directories on a
+                                    daily basis, use a year variable, a month variable, and then a
+                                    day variable. You might use one of the following datetime
+                                    variable progressions: </dd>
 
                               <dd class="dd ddexpand">
                                     <pre class="pre codeblock"><code>${YYYY()}-${MM()}-${DD()}
@@ -739,7 +749,7 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                   processing the files.</p>
 
         <div class="p">Output files might remain idle for too long for the following
-                  reasons: <ul class="ul" id="concept_c2p_wzh_4z__d41e4789">
+                  reasons: <ul class="ul" id="concept_c2p_wzh_4z__d38e4953">
                         <li class="li">You configured the maximum number of records to be written to output
                               files or the maximum size of output files, but records have stopped
                               arriving. An output file that has not reached the maximum number of
@@ -808,18 +818,18 @@ ${YY()}_${MM()}_${DD()}</code></pre>
             
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_kwq_m54_vz__table_ilm_xsc_rx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
             <tr>
-              <th class="entry cellrowborder" id="d88035e1140">Record Header Attribute</th>
+              <th class="entry cellrowborder" id="d93258e1145">Record Header Attribute</th>
 
-              <th class="entry cellrowborder" id="d88035e1143">Description</th>
+              <th class="entry cellrowborder" id="d93258e1148">Description</th>
 
             </tr>
 
           </thead>
 <tbody class="tbody">
             <tr>
-              <td class="entry cellrowborder" id="concept_kwq_m54_vz__d39e2248" headers="d88035e1140 ">sdc.event.type</td>
+              <td class="entry cellrowborder" id="concept_kwq_m54_vz__d36e2275" headers="d93258e1145 ">sdc.event.type</td>
 
-              <td class="entry cellrowborder" headers="d88035e1143 ">Event type. Uses one of the following types:<ul class="ul" id="concept_kwq_m54_vz__d39e2253">
+              <td class="entry cellrowborder" headers="d93258e1148 ">Event type. Uses one of the following types:<ul class="ul" id="concept_kwq_m54_vz__d36e2280">
                   <li class="li">file-closed - Generated when the destination closes a file.</li>
 
                   <li class="li">wholeFileProcessed - Generated when the destination completes streaming a
@@ -830,17 +840,17 @@ ${YY()}_${MM()}_${DD()}</code></pre>
 
             </tr>
 
-            <tr id="concept_kwq_m54_vz__d39e2263">
-              <td class="entry cellrowborder" headers="d88035e1140 ">sdc.event.version</td>
+            <tr id="concept_kwq_m54_vz__d36e2290">
+              <td class="entry cellrowborder" headers="d93258e1145 ">sdc.event.version</td>
 
-              <td class="entry cellrowborder" headers="d88035e1143 ">Integer that indicates the version of the event record type.</td>
+              <td class="entry cellrowborder" headers="d93258e1148 ">Integer that indicates the version of the event record type.</td>
 
             </tr>
 
-            <tr id="concept_kwq_m54_vz__d39e2272">
-              <td class="entry cellrowborder" headers="d88035e1140 ">sdc.event.creation_timestamp</td>
+            <tr id="concept_kwq_m54_vz__d36e2299">
+              <td class="entry cellrowborder" headers="d93258e1145 ">sdc.event.creation_timestamp</td>
 
-              <td class="entry cellrowborder" id="concept_kwq_m54_vz__d39e2277" headers="d88035e1143 ">Epoch timestamp when the stage created the event.
+              <td class="entry cellrowborder" id="concept_kwq_m54_vz__d36e2304" headers="d93258e1148 ">Epoch timestamp when the stage created the event.
               </td>
 
             </tr>
@@ -862,34 +872,34 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                                           <code class="ph codeph">sdc.event.type</code> record header attribute
                                     set to <code class="ph codeph">file-closed</code> and include the following
                                           fields:
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_kwq_m54_vz__d41e5258" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_kwq_m54_vz__d38e5422" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                                   <tr>
-                                                  <th class="entry cellrowborder" id="d88035e1221">Field</th>
+                                                  <th class="entry cellrowborder" id="d93258e1226">Field</th>
 
-                                                  <th class="entry cellrowborder" id="d88035e1224">Description</th>
+                                                  <th class="entry cellrowborder" id="d93258e1229">Description</th>
 
                                                   </tr>
 
                                                 </thead>
 <tbody class="tbody">
                                                   <tr>
-                                                  <td class="entry cellrowborder" headers="d88035e1221 ">filepath</td>
+                                                  <td class="entry cellrowborder" headers="d93258e1226 ">filepath</td>
 
-                                                  <td class="entry cellrowborder" headers="d88035e1224 ">Absolute path to the closed file. </td>
-
-                                                  </tr>
-
-                                                  <tr>
-                                                  <td class="entry cellrowborder" headers="d88035e1221 ">filename</td>
-
-                                                  <td class="entry cellrowborder" headers="d88035e1224 ">File name of the closed file.</td>
+                                                  <td class="entry cellrowborder" headers="d93258e1229 ">Absolute path to the closed file. </td>
 
                                                   </tr>
 
                                                   <tr>
-                                                  <td class="entry cellrowborder" headers="d88035e1221 ">length</td>
+                                                  <td class="entry cellrowborder" headers="d93258e1226 ">filename</td>
 
-                                                  <td class="entry cellrowborder" headers="d88035e1224 ">Size of the closed file in bytes.</td>
+                                                  <td class="entry cellrowborder" headers="d93258e1229 ">File name of the closed file.</td>
+
+                                                  </tr>
+
+                                                  <tr>
+                                                  <td class="entry cellrowborder" headers="d93258e1226 ">length</td>
+
+                                                  <td class="entry cellrowborder" headers="d93258e1229 ">Size of the closed file in bytes.</td>
 
                                                   </tr>
 
@@ -907,22 +917,22 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                                           <code class="ph codeph">sdc.event.type</code> record header attribute
                                     set to <code class="ph codeph">wholeFileProcessed</code> and have the
                                     following fields:
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_kwq_m54_vz__d41e5324" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_kwq_m54_vz__d38e5488" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                                   <tr>
-                                                  <th class="entry cellrowborder" id="d88035e1287">Field</th>
+                                                  <th class="entry cellrowborder" id="d93258e1292">Field</th>
 
-                                                  <th class="entry cellrowborder" id="d88035e1290">Description</th>
+                                                  <th class="entry cellrowborder" id="d93258e1295">Description</th>
 
                                                   </tr>
 
                                                 </thead>
 <tbody class="tbody">
                                                   <tr>
-                                                  <td class="entry cellrowborder" headers="d88035e1287 ">sourceFileInfo</td>
+                                                  <td class="entry cellrowborder" headers="d93258e1292 ">sourceFileInfo</td>
 
-                                                  <td class="entry cellrowborder" headers="d88035e1290 ">A map of attributes about the original
+                                                  <td class="entry cellrowborder" headers="d93258e1295 ">A map of attributes about the original
                                                   whole file that was processed. The attributes
-                                                  include:<ul class="ul" id="concept_kwq_m54_vz__d41e5353">
+                                                  include:<ul class="ul" id="concept_kwq_m54_vz__d38e5517">
                                                   <li class="li">size - Size of the whole file in bytes. </li>
 
                                                   </ul>
@@ -934,11 +944,11 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                                                   </tr>
 
                                                   <tr>
-                                                  <td class="entry cellrowborder" headers="d88035e1287 ">targetFileInfo</td>
+                                                  <td class="entry cellrowborder" headers="d93258e1292 ">targetFileInfo</td>
 
-                                                  <td class="entry cellrowborder" headers="d88035e1290 ">A map of attributes about the whole file
+                                                  <td class="entry cellrowborder" headers="d93258e1295 ">A map of attributes about the whole file
                                                   written to the destination. The attributes
-                                                  include:<ul class="ul" id="concept_kwq_m54_vz__d41e5369">
+                                                  include:<ul class="ul" id="concept_kwq_m54_vz__d38e5533">
                                                   <li class="li">path - An absolute path the processed whole
                                                   file.</li>
 
@@ -947,10 +957,10 @@ ${YY()}_${MM()}_${DD()}</code></pre>
 
                                                   </tr>
 
-                                                  <tr id="concept_kwq_m54_vz__d41e5376">
-                                                  <td class="entry cellrowborder" headers="d88035e1287 ">checksum</td>
+                                                  <tr id="concept_kwq_m54_vz__d38e5540">
+                                                  <td class="entry cellrowborder" headers="d93258e1292 ">checksum</td>
 
-                                                  <td class="entry cellrowborder" headers="d88035e1290 ">Checksum generated for the written file.
+                                                  <td class="entry cellrowborder" headers="d93258e1295 ">Checksum generated for the written file.
                                                   <p class="p">Included only when you configure the
                                                   destination to include checksums in the event
                                                   record. </p>
@@ -958,10 +968,10 @@ ${YY()}_${MM()}_${DD()}</code></pre>
 
                                                   </tr>
 
-                                                  <tr id="concept_kwq_m54_vz__d41e5387">
-                                                  <td class="entry cellrowborder" headers="d88035e1287 ">checksumAlgorithm</td>
+                                                  <tr id="concept_kwq_m54_vz__d38e5551">
+                                                  <td class="entry cellrowborder" headers="d93258e1292 ">checksumAlgorithm</td>
 
-                                                  <td class="entry cellrowborder" headers="d88035e1290 ">Algorithm used to generate the checksum.
+                                                  <td class="entry cellrowborder" headers="d93258e1295 ">Algorithm used to generate the checksum.
                                                   <p class="p">Included only when you configure the
                                                   destination to include checksums in the event
                                                   record. </p>
@@ -997,7 +1007,7 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                                     Avro schema definition:</dd>
 
                               <dd class="dd ddexpand">
-                                    <ul class="ul" id="concept_wsz_qj4_zx__d41e3790">
+                                    <ul class="ul" id="concept_wsz_qj4_zx__d38e3803">
                                           <li class="li"><span class="ph uicontrol">In Pipeline Configuration</span> - Use
                                                 the schema that you provide in the stage
                                                 configuration.</li>
@@ -1008,15 +1018,14 @@ ${YY()}_${MM()}_${DD()}</code></pre>
 
                                           <li class="li"><span class="ph uicontrol">Confluent Schema Registry</span> -
                                                 Retrieve the schema from Confluent Schema Registry.
-                                                The Confluent Schema Registry is a distributed
-                                                storage layer for Avro schemas. You can configure
-                                                the destination to look up the schema in the
-                                                Confluent Schema Registry by the schema ID or
-                                                subject. <p class="p">If using the Avro schema in the stage or
-                                                  in the record header attribute, you can optionally
+                                                Confluent Schema Registry is a distributed storage
+                                                layer for Avro schemas. You can configure the
+                                                destination to look up the schema in Confluent
+                                                Schema Registry by the schema ID or subject. <p class="p">If
+                                                  using the Avro schema in the stage or in the
+                                                  record header attribute, you can optionally
                                                   configure the destination to register the Avro
-                                                  schema with the Confluent Schema
-                                                Registry.</p>
+                                                  schema with Confluent Schema Registry.</p>
 </li>
 
                                     </ul>
@@ -1033,14 +1042,14 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                 
                               <dt class="dt dlterm">Binary</dt>
 
-                              <dd class="dd">The stage writes <span class="ph" id="concept_wsz_qj4_zx__d41e3927">binary data to a single
+                              <dd class="dd">The stage writes <span class="ph" id="concept_wsz_qj4_zx__d38e3940">binary data to a single
                                           field in the record. </span></dd>
 
                         
                 
                               <dt class="dt dlterm">Delimited</dt>
 
-                              <dd class="dd"><span class="ph" id="concept_wsz_qj4_zx__d41e3937">The destination writes records as
+                              <dd class="dd"><span class="ph" id="concept_wsz_qj4_zx__d38e3950">The destination writes records as
                                           delimited data. When you use this data format, the root
                                           field must be list or list-map.</span></dd>
 
@@ -1082,7 +1091,7 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                               <dt class="dt dlterm">JSON</dt>
 
                               <dd class="dd">The destination writes records as JSON data. You can use one of
-                                    the following formats:<ul class="ul" id="concept_wsz_qj4_zx__d41e3958">
+                                    the following formats:<ul class="ul" id="concept_wsz_qj4_zx__d38e3971">
                                           <li class="li">Array - Each file includes a single array. In the
                                                 array, each element is a JSON representation of each
                                                 record.</li>
@@ -1110,23 +1119,20 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                         <dt class="dt dlterm">Text</dt>
 
                         <dd class="dd">The destination writes data from a single text field to the destination
-                              system. When you configure the stage, you select the field to use.
-                              When necessary, merge record data into the field earlier in the
-                              pipeline. </dd>
+                              system. When you configure the stage, you select the field to use. </dd>
 
                         <dd class="dd ddexpand">You can configure the characters to use as record separators. By
                               default, the destination uses a UNIX-style line ending (\n) to
                               separate records.</dd>
 
-                        <dd class="dd ddexpand">When a record does not contain the selected text field, you can
-                              configure the destination to report the missing field as an error or
-                              to ignore the missing field. By default, the destination reports an
-                              error.</dd>
+                        <dd class="dd ddexpand">When a record does not contain the selected text field, the destination
+                              can report the missing field as an error or to ignore the missing
+                              field. By default, the destination reports an error.</dd>
 
-                        <dd class="dd ddexpand">When configured to ignore a missing text field, you can configure the
-                              destination to discard the record or to write the record separator
-                              characters to create an empty line for the record. By default, the
-                              destination discards the record.</dd>
+                        <dd class="dd ddexpand">When configured to ignore a missing text field, the destination can
+                              discard the record or write the record separator characters to create
+                              an empty line for the record. By default, the destination discards the
+                              record.</dd>
 
                   
                 
@@ -1167,89 +1173,66 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d15e6441" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__table_yxz_pvs_5x" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d88035e1625">General Property</th>
+                                    <th class="entry cellrowborder" id="d93258e1630">General Property</th>
 
-                                    <th class="entry cellrowborder" id="d88035e1628">Description</th>
+                                    <th class="entry cellrowborder" id="d93258e1633">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e1625 ">Name</td>
+              <td class="entry cellrowborder" headers="d93258e1630 ">Name</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e1628 ">Stage name.</td>
+              <td class="entry cellrowborder" headers="d93258e1633 ">Stage name.</td>
+
+            </tr>
+
+                                <tr>
+              <td class="entry cellrowborder" headers="d93258e1630 ">Description</td>
+
+              <td class="entry cellrowborder" headers="d93258e1633 ">Optional description.</td>
+
+            </tr>
+
+                                <tr>
+              <td class="entry cellrowborder" headers="d93258e1630 ">Stage Library</td>
+
+              <td class="entry cellrowborder" headers="d93258e1633 ">Library version that you want to use. </td>
+
+            </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d93258e1630 "><a class="xref" href="DataLakeStore.html#concept_eck_fm3_vz">Produce Events</a></td>
+
+                                    <td class="entry cellrowborder" headers="d93258e1633 ">Generates event records when events occur. Use for
+                  <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">event handling</a>.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e1625 ">Description</td>
+              <td class="entry cellrowborder" headers="d93258e1630 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">Required Fields</a></td>
 
-                                    <td class="entry cellrowborder" headers="d88035e1628 ">Optional description.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry cellrowborder" headers="d88035e1625 ">Stage Library</td>
-
-                                    <td class="entry cellrowborder" headers="d88035e1628 ">Library version that you want to use. </td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry cellrowborder" headers="d88035e1625 ">Produce Events <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_zrl_mhn_lx">
-                                            <img class="image" id="task_jfl_nf4_zx__d15e6496" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
-
-                                    <td class="entry cellrowborder" headers="d88035e1628 ">Generates event records when events occur. Use for event
-                                        handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
-                                            <img class="image" id="task_jfl_nf4_zx__d15e6502" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry cellrowborder" headers="d88035e1625 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">Required Fields</a></td>
-
-                                    <td class="entry cellrowborder" headers="d88035e1628 ">Fields that must include data for the record to be passed
-                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
-                                            include fields that the stage uses.</div>
-<p class="p">Records
-                                            that do not include all required fields are processed
-                                            based on the error handling configured for the
-                                            pipeline.</p>
+              <td class="entry cellrowborder" headers="d93258e1633 ">Fields that must include data for the record to be passed into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields that the stage
+                  uses.</div>
+<p class="p">Records that do not include all required fields are processed based
+                  on the error handling configured for the pipeline.</p>
 </td>
 
-                                </tr>
+            </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e1625 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">Preconditions</a></td>
+              <td class="entry cellrowborder" headers="d93258e1630 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">Preconditions</a></td>
 
-                                    <td class="entry cellrowborder" headers="d88035e1628 ">Conditions that must evaluate to TRUE to allow a record
-                                        to enter the stage for processing. Click
-                                            <span class="ph uicontrol">Add</span> to create additional
-                                        preconditions. <p class="p">Records that do not meet all preconditions
-                                            are processed based on the error handling configured for
-                                            the stage.</p>
+              <td class="entry cellrowborder" headers="d93258e1633 ">Conditions that must evaluate to TRUE to allow a record to enter the stage for
+                processing. Click <span class="ph uicontrol">Add</span> to create additional preconditions.
+                  <p class="p">Records that do not meet all preconditions are processed based on the error
+                  handling configured for the stage.</p>
 </td>
 
-                                </tr>
-
-                                <tr>
-                                    <td class="entry cellrowborder" headers="d88035e1625 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
-
-                                    <td class="entry cellrowborder" headers="d88035e1628 ">Error record handling for the stage: <ul class="ul" id="task_jfl_nf4_zx__d15e6543">
-                                            <li class="li">Discard - Discards the record.</li>
-
-                                            <li class="li">Send to Error - Sends the record to the pipeline for
-                                                error handling.</li>
-
-                                            <li class="li">Stop Pipeline - Stops the pipeline.</li>
-
-                                        </ul>
-</td>
-
-                                </tr>
+            </tr>
 
                             </tbody>
 </table>
@@ -1264,18 +1247,18 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__table_umv_hsw_zx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d88035e1760">Data Lake Property</th>
+                                    <th class="entry cellrowborder" id="d93258e1741">Data Lake Property</th>
 
-                                    <th class="entry cellrowborder" id="d88035e1763">Description</th>
+                                    <th class="entry cellrowborder" id="d93258e1744">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e1760 ">Application ID</td>
+                                    <td class="entry cellrowborder" headers="d93258e1741 ">Application ID</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e1763 ">Azure Application ID. <p class="p">The Application ID for the <span class="ph">Data Collector</span> web application created in Active Directory.
+                                    <td class="entry cellrowborder" headers="d93258e1744 ">Azure Application ID. <p class="p">The Application ID for the <span class="ph">Data Collector</span> web application created in Active Directory.
                                             </p>
 <p class="p">For help locating this information in Azure, see
                                                 <a class="xref" href="DataLakeStore.html#concept_xv4_b2h_1y">Step 2. Retrieve Information from Azure</a>.</p>
@@ -1284,18 +1267,18 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e1760 ">Auth Token Endpoint</td>
+                                    <td class="entry cellrowborder" headers="d93258e1741 ">Auth Token Endpoint</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e1763 ">Azure OAuth 2.0 token endpoint URL for the <span class="ph">Data Collector</span> web application.<p class="p">For help locating this information in
+                                    <td class="entry cellrowborder" headers="d93258e1744 ">Azure OAuth 2.0 token endpoint URL for the <span class="ph">Data Collector</span> web application.<p class="p">For help locating this information in
                                             Azure, see <a class="xref" href="DataLakeStore.html#concept_xv4_b2h_1y">Step 2. Retrieve Information from Azure</a>.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e1760 ">Account FQDN</td>
+                                    <td class="entry cellrowborder" headers="d93258e1741 ">Account FQDN</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e1763 ">The host name of the Data Lake Storage account. For
+                                    <td class="entry cellrowborder" headers="d93258e1744 ">The host name of the Data Lake Storage account. For
                                         example:
                                             <pre class="pre codeblock"><code>&lt;service name&gt;.azuredatalakestore.net</code></pre><p class="p">For
                                             help locating this information in Azure, see <a class="xref" href="DataLakeStore.html#concept_xv4_b2h_1y">Step 2. Retrieve Information from Azure</a>.</p>
@@ -1304,9 +1287,9 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e1760 ">Application Key</td>
+                                    <td class="entry cellrowborder" headers="d93258e1741 ">Application Key</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e1763 ">The Application Key of the <span class="ph">Data Collector</span> web application created in Active Directory. <p class="p">For help
+                                    <td class="entry cellrowborder" headers="d93258e1744 ">The Application Key of the <span class="ph">Data Collector</span> web application created in Active Directory. <p class="p">For help
                                             locating this information in Azure, see <a class="xref" href="DataLakeStore.html#concept_xv4_b2h_1y">Step 2. Retrieve Information from Azure</a>.</p>
 </td>
 
@@ -1325,21 +1308,21 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__table_tdz_3z4_sy" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d88035e1870">Output Files Property</th>
+                                    <th class="entry cellrowborder" id="d93258e1851">Output Files Property</th>
 
-                                    <th class="entry cellrowborder" id="d88035e1873">Description</th>
+                                    <th class="entry cellrowborder" id="d93258e1854">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e1870 ">File Prefix</td>
+                                    <td class="entry cellrowborder" headers="d93258e1851 ">File Prefix</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e1873 ">Prefix to use for output files. Use when writing to a
+                                    <td class="entry cellrowborder" headers="d93258e1854 ">Prefix to use for output files. Use when writing to a
                                         directory that receives files from other sources.<p class="p">Uses the
-                                            prefix sdc-${sdc:id()} by default. The prefix evaluates
-                                            to sdc-&lt;<span class="ph">Data Collector</span> ID&gt;. </p>
+                                            prefix <code class="ph codeph">sdc-${sdc:id()}</code> by default. The
+                                            prefix evaluates to <code class="ph codeph">sdc-&lt;<span class="ph">Data Collector</span> ID&gt;</code>. </p>
 <p class="p">The <span class="ph">Data Collector</span> ID is stored in the following file:
                                                 <span class="ph filepath">$SDC_DATA/sdc.id</span>. <span class="ph">For more information about environment variables, see
                               <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr">Data Collector Environment Configuration</a>.</span></p>
@@ -1348,11 +1331,13 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e1870 ">File Suffix</td>
+                                    <td class="entry cellrowborder" headers="d93258e1851 ">File Suffix</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e1873 ">Suffix to use for output files, such as txt or json. When
+                                    <td class="entry cellrowborder" headers="d93258e1854 ">Suffix to use for output files, such as
+                                            <code class="ph codeph">txt</code> or <code class="ph codeph">json</code>. When
                                         used, the destination adds a period and the configured
-                                        suffix as follows: &lt;filename&gt;.&lt;suffix&gt;.<p class="p">You can
+                                        suffix as follows:
+                                            <code class="ph codeph">&lt;filename&gt;.&lt;suffix&gt;</code>.<p class="p">You can
                                             include periods within the suffix, but do not start the
                                             suffix with a period. Forward slashes are not
                                             allowed.</p>
@@ -1363,21 +1348,18 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e1870 ">Directory in Header <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_lmn_gdc_1w">
-                                            <img class="image" id="task_jfl_nf4_zx__d15e8146" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a>
-                                    </td>
+                                    <td class="entry cellrowborder" headers="d93258e1851 "><a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_lmn_gdc_1w">Directory in Header</a></td>
 
-                                    <td class="entry cellrowborder" headers="d88035e1873 ">Indicates that the target directory is defined in record
+                                    <td class="entry cellrowborder" headers="d93258e1854 ">Indicates that the target directory is defined in record
                                         headers. Use only when the targetDirectory header attribute
                                         is defined for all records. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e1870 ">Directory Template <a class="xref" href="DataLakeStore.html#concept_gr4_qww_zx">
-                                            <img class="image" id="task_jfl_nf4_zx__image_dpb_pyn_lw" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry cellrowborder" headers="d93258e1851 "><a class="xref" href="DataLakeStore.html#concept_gr4_qww_zx">Directory Template</a></td>
 
-                                    <td class="entry cellrowborder" headers="d88035e1873 ">Template for creating output
+                                    <td class="entry cellrowborder" headers="d93258e1854 ">Template for creating output
                                         directories. You can use constants, field values, and
                                         datetime variables. <p class="p">Output directories are created based
                                             on the smallest datetime variable in the
@@ -1387,27 +1369,26 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e1870 ">Data Time Zone</td>
+                                    <td class="entry cellrowborder" headers="d93258e1851 ">Data Time Zone</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e1873 ">Time zone for the destination system. Used to resolve
+                                    <td class="entry cellrowborder" headers="d93258e1854 ">Time zone for the destination system. Used to resolve
                                         datetimes in the directory template and evaluate where
                                         records are written.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e1870 ">Time Basis <a class="xref" href="DataLakeStore.html#concept_ff4_cxw_zx">
-                                            <img class="image" id="task_jfl_nf4_zx__image_jwd_mxw_zx" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry cellrowborder" headers="d93258e1851 "><a class="xref" href="DataLakeStore.html#concept_ff4_cxw_zx">Time Basis</a></td>
 
-                                    <td class="entry cellrowborder" headers="d88035e1873 ">Time basis to use for creating
+                                    <td class="entry cellrowborder" headers="d93258e1854 ">Time basis to use for creating
                                         output directories and writing records to the directories.
-                                        Use one of the following expressions:<ul class="ul" id="task_jfl_nf4_zx__d15e8186">
-                                            <li class="li">${time:now()} - Uses the processing time as the time
-                                                basis. </li>
+                                        Use one of the following expressions:<ul class="ul" id="task_jfl_nf4_zx__d15e8811">
+                                            <li class="li"><code class="ph codeph">${time:now()}</code> - Uses the processing
+                                                time as the time basis. </li>
 
-                                            <li class="li">${record:value(&lt;date field path&gt;)} - Uses the
-                                                time associated with the record as the time
-                                                basis.</li>
+                                            <li class="li"><code class="ph codeph">${record:value(&lt;date field
+                                                  path&gt;)}</code> - Uses the time associated with
+                                                the record as the time basis.</li>
 
                                         </ul>
 </td>
@@ -1415,11 +1396,11 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e1870 ">Max Records in a File</td>
+                                    <td class="entry cellrowborder" headers="d93258e1851 ">Max Records in File</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e1873 ">Maximum number of records to be written to an output
-                                        file. Additional records are written to a new file. <p class="p">Use 0
-                                            to opt out of this property. </p>
+                                    <td class="entry cellrowborder" headers="d93258e1854 ">Maximum number of records written to an output file.
+                                        Additional records are written to a new file. <p class="p">Use 0 to
+                                            opt out of this property. </p>
 <p class="p">Not available when
                                             using the whole file data format. </p>
 </td>
@@ -1427,9 +1408,9 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e1870 ">Max File Size (MB)</td>
+                                    <td class="entry cellrowborder" headers="d93258e1851 ">Max File Size (MB)</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e1873 ">Maximum size of an output file. Additional records are
+                                    <td class="entry cellrowborder" headers="d93258e1854 ">Maximum size of an output file. Additional records are
                                         written to a new file. <p class="p">Use 0 to opt out of this property.
                                             </p>
 <p class="p">Not available when using the whole file data
@@ -1439,11 +1420,10 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e1870 ">Idle Timeout <a class="xref" href="DataLakeStore.html#concept_c2p_wzh_4z">
-                                            <img class="image" id="task_jfl_nf4_zx__image_rlr_l13_4z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
+                                    <td class="entry cellrowborder" headers="d93258e1851 "><a class="xref" href="DataLakeStore.html#concept_c2p_wzh_4z">Idle Timeout</a>
                                     </td>
 
-                                    <td class="entry cellrowborder" headers="d88035e1873 ">Maximum time that an output file
+                                    <td class="entry cellrowborder" headers="d93258e1854 ">Maximum time that an output file
                                         can remain idle. After no records are written to a file for
                                         this amount of time, the destination closes the file. Enter
                                         a time in seconds or use the <code class="ph codeph">MINUTES</code> or
@@ -1458,11 +1438,10 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e1870 ">Use Roll Attribute <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_lmn_gdc_1w">
-                                            <img class="image" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a>
+                                    <td class="entry cellrowborder" headers="d93258e1851 "><a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_lmn_gdc_1w">Use Roll Attribute</a>
                                     </td>
 
-                                    <td class="entry cellrowborder" headers="d88035e1873 ">Checks the record header for the roll header attribute
+                                    <td class="entry cellrowborder" headers="d93258e1854 ">Checks the record header for the roll header attribute
                                         and closes the current file when the roll attribute exists.
                                             <p class="p">Can be used with Max Records in a File and Max File
                                             Size to close files.</p>
@@ -1471,18 +1450,18 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e1870 ">Roll Attribute Name</td>
+                                    <td class="entry cellrowborder" headers="d93258e1851 ">Roll Attribute Name</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e1873 ">Name of the roll header attribute.<p class="p">Default is
+                                    <td class="entry cellrowborder" headers="d93258e1854 ">Name of the roll header attribute.<p class="p">Default is
                                         roll.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e1870 ">Validate Directory Permissions</td>
+                                    <td class="entry cellrowborder" headers="d93258e1851 ">Validate Directory Permissions</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e1873 ">When you start the
+                                    <td class="entry cellrowborder" headers="d93258e1854 ">When you start the
                                         pipeline, the destination tries writing to the configured
                                         directory template to validate permissions. The pipeline
                                         does not start if validation fails.<div class="note note"><span class="notetitle">Note:</span> Do not use this
@@ -1505,20 +1484,18 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__table_hvy_pt3_vx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d88035e2100">Data Format Property</th>
+                                    <th class="entry cellrowborder" id="d93258e2089">Data Format Property</th>
 
-                                    <th class="entry cellrowborder" id="d88035e2103">Description</th>
+                                    <th class="entry cellrowborder" id="d93258e2092">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e2100 ">Data Format <a class="xref" href="DataLakeStore.html#concept_wsz_qj4_zx">
-                                            <img class="image" id="task_jfl_nf4_zx__image_ohs_4fj_vx" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
-                                        </a></td>
+                                    <td class="entry cellrowborder" headers="d93258e2089 "><a class="xref" href="DataLakeStore.html#concept_wsz_qj4_zx">Data Format</a></td>
 
-                                    <td class="entry cellrowborder" headers="d88035e2103 ">Format of data to be written. Use one of the following
+                                    <td class="entry cellrowborder" headers="d93258e2092 ">Format of data to be written. Use one of the following
                                             options:<ul class="ul" id="task_jfl_nf4_zx__ul_ffs_xxw_zx">
                                             <li class="li">Avro</li>
 
@@ -1550,21 +1527,21 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d15e6751" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d15e7359" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d88035e2175">Avro Property</th>
+                                    <th class="entry cellrowborder" id="d93258e2161">Avro Property</th>
 
-                                    <th class="entry cellrowborder" id="d88035e2178">Description</th>
+                                    <th class="entry cellrowborder" id="d93258e2164">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e2175 ">Avro Schema Location</td>
+                                    <td class="entry cellrowborder" headers="d93258e2161 ">Avro Schema Location</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e2178 ">Location of the Avro schema definition to use when
-                                        writing data:<ul class="ul" id="task_jfl_nf4_zx__d15e6780">
+                                    <td class="entry cellrowborder" headers="d93258e2164 ">Location of the Avro schema definition to use when
+                                        writing data:<ul class="ul" id="task_jfl_nf4_zx__d15e7388">
                                             <li class="li">In Pipeline Configuration - Use the schema that you
                                                 provide in the stage configuration. </li>
 
@@ -1583,28 +1560,28 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e2175 ">Avro Schema</td>
+                                    <td class="entry cellrowborder" headers="d93258e2161 ">Avro Schema</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e2178 ">Avro schema definition used to write the data. <p class="p">You can
-                                            optionally use the runtime:loadResource function to use
-                                            a schema definition stored in a runtime resource file.
-                                        </p>
+                                    <td class="entry cellrowborder" headers="d93258e2164 ">Avro schema definition used to write the data. <p class="p">You can
+                                            optionally use the <code class="ph codeph">runtime:loadResource</code>
+                                            function to use a schema definition stored in a runtime
+                                            resource file. </p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e2175 ">Register Schema</td>
+                                    <td class="entry cellrowborder" headers="d93258e2161 ">Register Schema</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e2178 ">Select to register a new Avro schema with the Confluent
+                                    <td class="entry cellrowborder" headers="d93258e2164 ">Select to register a new Avro schema with Confluent
                                         Schema Registry.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e2175 ">Schema Registry URLs</td>
+                                    <td class="entry cellrowborder" headers="d93258e2161 ">Schema Registry URLs</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e2178 ">Confluent Schema Registry URLs used to look up the schema
+                                    <td class="entry cellrowborder" headers="d93258e2164 ">Confluent Schema Registry URLs used to look up the schema
                                         or to register a new schema. To add a URL, click
                                             <span class="ph uicontrol">Add</span>. Use the following format to
                                         enter the
@@ -1613,10 +1590,10 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e2175 ">Look Up Schema By</td>
+                                    <td class="entry cellrowborder" headers="d93258e2161 ">Look Up Schema By</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e2178 ">Method used to look up the schema in the Confluent Schema
-                                            Registry:<ul class="ul" id="task_jfl_nf4_zx__d15e6839">
+                                    <td class="entry cellrowborder" headers="d93258e2164 ">Method used to look up the schema in Confluent Schema
+                                            Registry:<ul class="ul" id="task_jfl_nf4_zx__d15e7450">
                                             <li class="li">Subject - Look up the specified Avro schema
                                                 subject.</li>
 
@@ -1629,9 +1606,9 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e2175 ">Schema Subject</td>
+                                    <td class="entry cellrowborder" headers="d93258e2161 ">Schema Subject</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e2178 ">Avro schema subject to look up or to register in the
+                                    <td class="entry cellrowborder" headers="d93258e2164 ">Avro schema subject to look up or to register in
                                         Confluent Schema Registry.<p class="p">If the specified subject to
                                             look up has multiple schema versions, the origin uses
                                             the latest schema version for that subject. To use an
@@ -1643,17 +1620,17 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e2175 ">Schema ID</td>
+                                    <td class="entry cellrowborder" headers="d93258e2161 ">Schema ID</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e2178 ">Avro schema ID to look up in the Confluent Schema
+                                    <td class="entry cellrowborder" headers="d93258e2164 ">Avro schema ID to look up in Confluent Schema
                                         Registry.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e2175 ">Avro Compression Codec</td>
+                                    <td class="entry cellrowborder" headers="d93258e2161 ">Avro Compression Codec</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e2178 ">The Avro compression type to use. <p class="p">When using Avro
+                                    <td class="entry cellrowborder" headers="d93258e2164 ">The Avro compression type to use. <p class="p">When using Avro
                                             compression, do not enable other compression available
                                             in the destination. </p>
 </td>
@@ -1671,20 +1648,20 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                     following property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d15e7247" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d15e7858" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d88035e2325">Binary Property</th>
+                                    <th class="entry cellrowborder" id="d93258e2314">Binary Property</th>
 
-                                    <th class="entry cellrowborder" id="d88035e2328">Description</th>
+                                    <th class="entry cellrowborder" id="d93258e2317">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e2325 ">Binary Field Path</td>
+                                    <td class="entry cellrowborder" headers="d93258e2314 ">Binary Field Path</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e2328 ">Field that contains the binary data.</td>
+                                    <td class="entry cellrowborder" headers="d93258e2317 ">Field that contains the binary data.</td>
 
                                 </tr>
 
@@ -1699,20 +1676,20 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d15e7304" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d15e7916" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d88035e2371">Delimited Property</th>
+                                    <th class="entry cellrowborder" id="d93258e2360">Delimited Property</th>
 
-                                    <th class="entry cellrowborder" id="d88035e2374">Description</th>
+                                    <th class="entry cellrowborder" id="d93258e2363">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e2371 ">Delimiter Format</td>
+                                    <td class="entry cellrowborder" headers="d93258e2360 ">Delimiter Format</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e2374 ">Format for delimited data:<ul class="ul" id="task_jfl_nf4_zx__ul_k3j_vvf_jr">
+                                    <td class="entry cellrowborder" headers="d93258e2363 ">Format for delimited data:<ul class="ul" id="task_jfl_nf4_zx__ul_k3j_vvf_jr">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
 
@@ -1741,16 +1718,16 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e2371 ">Header Line</td>
+                                    <td class="entry cellrowborder" headers="d93258e2360 ">Header Line</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e2374 ">Indicates whether to create a header line.</td>
+                                    <td class="entry cellrowborder" headers="d93258e2363 ">Indicates whether to create a header line.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e2371 ">Replace New Line Characters</td>
+                                    <td class="entry cellrowborder" headers="d93258e2360 ">Replace New Line Characters</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e2374 ">Replaces new line characters with the configured
+                                    <td class="entry cellrowborder" headers="d93258e2363 ">Replaces new line characters with the configured
                                             string.<p class="p">Recommended when writing data as a single line
                                             of text.</p>
 </td>
@@ -1758,9 +1735,9 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e2371 ">New Line Character Replacement</td>
+                                    <td class="entry cellrowborder" headers="d93258e2360 ">New Line Character Replacement</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e2374 ">String to replace each new line character. For example,
+                                    <td class="entry cellrowborder" headers="d93258e2363 ">String to replace each new line character. For example,
                                         enter a space to replace each new line character with a
                                         space. <p class="p">Leave empty to remove the new line
                                         characters.</p>
@@ -1769,9 +1746,9 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e2371 ">Delimiter Character</td>
+                                    <td class="entry cellrowborder" headers="d93258e2360 ">Delimiter Character</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e2374 ">Delimiter character for a custom delimiter format. Select
+                                    <td class="entry cellrowborder" headers="d93258e2363 ">Delimiter character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">You can enter a Unicode control character
                                             using the format \u<em class="ph i">NNNN</em>, where ​<em class="ph i">N</em> is a
@@ -1786,9 +1763,9 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e2371 ">Escape Character </td>
+                                    <td class="entry cellrowborder" headers="d93258e2360 ">Escape Character </td>
 
-                                    <td class="entry cellrowborder" headers="d88035e2374 ">Escape character for a custom delimiter format. Select
+                                    <td class="entry cellrowborder" headers="d93258e2363 ">Escape character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the backslash character ( \
                                         ).</p>
@@ -1797,9 +1774,9 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e2371 ">Quote Character</td>
+                                    <td class="entry cellrowborder" headers="d93258e2360 ">Quote Character</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e2374 ">Quote character for a custom delimiter format. Select one
+                                    <td class="entry cellrowborder" headers="d93258e2363 ">Quote character for a custom delimiter format. Select one
                                         of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the quotation mark character ( "
                                             ).</p>
@@ -1808,9 +1785,9 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d88035e2371 ">Charset</td>
+              <td class="entry cellrowborder" headers="d93258e2360 ">Charset</td>
 
-              <td class="entry cellrowborder" headers="d88035e2374 ">Character set to use when writing data. </td>
+              <td class="entry cellrowborder" headers="d93258e2363 ">Character set to use when writing data. </td>
 
             </tr>
 
@@ -1825,20 +1802,20 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                     following property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d15e7443" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d15e8055" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d88035e2542">JSON Property</th>
+                                    <th class="entry cellrowborder" id="d93258e2531">JSON Property</th>
 
-                                    <th class="entry cellrowborder" id="d88035e2545">Description</th>
+                                    <th class="entry cellrowborder" id="d93258e2534">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e2542 ">JSON Content</td>
+                                    <td class="entry cellrowborder" headers="d93258e2531 ">JSON Content</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e2545 ">Determines how JSON data is written:<ul class="ul" id="task_jfl_nf4_zx__d15e7472">
+                                    <td class="entry cellrowborder" headers="d93258e2534 ">Determines how JSON data is written:<ul class="ul" id="task_jfl_nf4_zx__d15e8084">
                                             <li class="li">JSON Array of Objects - Each file includes a single
                                                 array. In the array, each element is a JSON
                                                 representation of each record.</li>
@@ -1853,9 +1830,9 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d88035e2542 ">Charset</td>
+              <td class="entry cellrowborder" headers="d93258e2531 ">Charset</td>
 
-              <td class="entry cellrowborder" headers="d88035e2545 ">Character set to use when writing data. </td>
+              <td class="entry cellrowborder" headers="d93258e2534 ">Character set to use when writing data. </td>
 
             </tr>
 
@@ -1870,20 +1847,20 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d15e7516" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d15e8127" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d88035e2605">Protobuf Property</th>
+                                    <th class="entry cellrowborder" id="d93258e2594">Protobuf Property</th>
 
-                                    <th class="entry cellrowborder" id="d88035e2608">Description</th>
+                                    <th class="entry cellrowborder" id="d93258e2597">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e2605 ">Protobuf Descriptor File </td>
+                                    <td class="entry cellrowborder" headers="d93258e2594 ">Protobuf Descriptor File </td>
 
-                                    <td class="entry cellrowborder" headers="d88035e2608 ">Descriptor file (.desc) to use. The descriptor file must
+                                    <td class="entry cellrowborder" headers="d93258e2597 ">Descriptor file (.desc) to use. The descriptor file must
                                         be in the <span class="ph">Data Collector</span> resources directory, <code class="ph codeph">$SDC_RESOURCES</code>.
                                                 <p class="p"><span class="ph">For more information about environment variables, see
                               <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr">Data Collector Environment Configuration</a>.</span> For information about generating the descriptor file,
@@ -1893,9 +1870,9 @@ ${YY()}_${MM()}_${DD()}</code></pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e2605 ">Message Type</td>
+                                    <td class="entry cellrowborder" headers="d93258e2594 ">Message Type</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e2608 ">The fully-qualified name for the message type to use when
+                                    <td class="entry cellrowborder" headers="d93258e2597 ">The fully-qualified name for the message type to use when
                                         writing data.<p class="p">Use the following format:
                                                 <code class="ph codeph">&lt;package name&gt;.&lt;message
                                             type&gt;</code>. </p>
@@ -1915,48 +1892,49 @@ Use a message type defined in the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d15e7689" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d15e8301" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d88035e2687">Text Property</th>
+                                    <th class="entry cellrowborder" id="d93258e2676">Text Property</th>
 
-                                    <th class="entry cellrowborder" id="d88035e2690">Description</th>
+                                    <th class="entry cellrowborder" id="d93258e2679">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e2687 ">Text Field Path</td>
+                                    <td class="entry cellrowborder" headers="d93258e2676 ">Text Field Path</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e2690 ">Field that contains the text data to be written. All data
+                                    <td class="entry cellrowborder" headers="d93258e2679 ">Field that contains the text data to be written. All data
                                         must be incorporated into the specified field. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e2687 ">Record Separator</td>
+                                    <td class="entry cellrowborder" headers="d93258e2676 ">Record Separator</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e2690 ">Characters to use to separate records. Use any valid Java
+                                    <td class="entry cellrowborder" headers="d93258e2679 ">Characters to use to separate records. Use any valid Java
                                         string literal. For example, when writing to Windows, you
-                                        might use \r\n to separate records. <p class="p">By default, the
-                                            destination uses \n.</p>
+                                        might use <kbd class="ph userinput">\r\n</kbd> to separate records.
+                                            <p class="p">By default, the destination uses
+                                                <kbd class="ph userinput">\n</kbd>.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e2687 ">On Missing Field</td>
+                                    <td class="entry cellrowborder" headers="d93258e2676 ">On Missing Field</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e2690 ">When a record does not include the text field, determines
+                                    <td class="entry cellrowborder" headers="d93258e2679 ">When a record does not include the text field, determines
                                         whether the destination reports the missing field as an
                                         error or ignores the missing field.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e2687 ">Insert Record Separator if No Text</td>
+                                    <td class="entry cellrowborder" headers="d93258e2676 ">Insert Record Separator if No Text</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e2690 ">When configured to ignore a missing text field, inserts
+                                    <td class="entry cellrowborder" headers="d93258e2679 ">When configured to ignore a missing text field, inserts
                                         the configured record separator string to create an empty
                                             line.<p class="p">When not selected, discards records without the
                                             text field.</p>
@@ -1965,9 +1943,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d88035e2687 ">Charset</td>
+              <td class="entry cellrowborder" headers="d93258e2676 ">Charset</td>
 
-              <td class="entry cellrowborder" headers="d88035e2690 ">Character set to use when writing data. </td>
+              <td class="entry cellrowborder" headers="d93258e2679 ">Character set to use when writing data. </td>
 
             </tr>
 
@@ -1984,18 +1962,18 @@ Use a message type defined in the
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__table_wvv_hcw_1x" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d88035e2773">Whole File Property</th>
+                                    <th class="entry cellrowborder" id="d93258e2768">Whole File Property</th>
 
-                                    <th class="entry cellrowborder" id="d88035e2776">Description</th>
+                                    <th class="entry cellrowborder" id="d93258e2771">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e2773 ">File Name Expression</td>
+                                    <td class="entry cellrowborder" headers="d93258e2768 ">File Name Expression</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e2776 ">
+                                    <td class="entry cellrowborder" headers="d93258e2771 ">
                                         <p class="p">Expression to use for the file names. </p>
 
                                         <p class="p">For tips on how to name files based on input file names,
@@ -2006,10 +1984,10 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e2773 ">Permissions Expression <a class="xref" href="../Data_Formats/WholeFile.html#concept_ttm_ywv_1x">
-                                            <img class="image" id="task_jfl_nf4_zx__d15e7830" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry cellrowborder" headers="d93258e2768 ">Permissions Expression <a class="xref" href="../Data_Formats/WholeFile.html#concept_ttm_ywv_1x">
+                                            <img class="image" id="task_jfl_nf4_zx__d15e8447" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry cellrowborder" headers="d88035e2776 ">Expression that defines the access permissions for output
+                                    <td class="entry cellrowborder" headers="d93258e2771 ">Expression that defines the access permissions for output
                                         files. Expressions should evaluate to a symbolic or
                                         numeric/octal representation of the permissions you want to
                                         use. <p class="p">By default, with no specified expression, files use
@@ -2023,11 +2001,11 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e2773 ">File Exists</td>
+                                    <td class="entry cellrowborder" headers="d93258e2768 ">File Exists</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e2776 ">Action to take when a file of the same name already
+                                    <td class="entry cellrowborder" headers="d93258e2771 ">Action to take when a file of the same name already
                                         exists in the output directory. Use one of the following
-                                            options:<ul class="ul" id="task_jfl_nf4_zx__d15e7849">
+                                            options:<ul class="ul" id="task_jfl_nf4_zx__d15e8466">
                                             <li class="li">Send to Error - Handles the record based on stage
                                                 error record handling. </li>
 
@@ -2039,9 +2017,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e2773 "><a class="xref" href="../Data_Formats/WholeFile.html#concept_ojv_sr4_vx">Include Checksum in Events</a></td>
+                                    <td class="entry cellrowborder" headers="d93258e2768 "><a class="xref" href="../Data_Formats/WholeFile.html#concept_ojv_sr4_vx">Include Checksum in Events</a></td>
 
-                                    <td class="entry cellrowborder" headers="d88035e2776 ">Includes checksum information in whole file event
+                                    <td class="entry cellrowborder" headers="d93258e2771 ">Includes checksum information in whole file event
                                         records. <p class="p">Use only when the destination generates event
                                             records. </p>
 </td>
@@ -2049,9 +2027,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d88035e2773 ">Checksum Algorithm</td>
+                                    <td class="entry cellrowborder" headers="d93258e2768 ">Checksum Algorithm</td>
 
-                                    <td class="entry cellrowborder" headers="d88035e2776 ">Algorithm to generate the checksum.</td>
+                                    <td class="entry cellrowborder" headers="d93258e2771 ">Algorithm to generate the checksum.</td>
 
                                 </tr>
 
