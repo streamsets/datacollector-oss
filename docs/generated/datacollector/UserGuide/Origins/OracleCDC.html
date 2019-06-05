@@ -1069,49 +1069,49 @@ EXECUTE DBMS_LOGMNR_D.BUILD(OPTIONS=&gt; DBMS_LOGMNR_D.STORE_IN_REDO_LOGS);</cod
         <div class="p">The following table describes how the origin generates record data: 
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_vfw_bjz_ty__table_zpr_2j5_gx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:23.076923076923077%" /><col style="width:53.84615384615385%" /><col style="width:23.076923076923077%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d383698e1465">Oplog Operation</th>
+                            <th class="entry cellrowborder" id="d383569e1465">Oplog Operation</th>
 
-                            <th class="entry cellrowborder" id="d383698e1468">Identification/Primary Key Logging Only</th>
+                            <th class="entry cellrowborder" id="d383569e1468">Identification/Primary Key Logging Only</th>
 
-                            <th class="entry cellrowborder" id="d383698e1471">Full Supplemental Logging</th>
+                            <th class="entry cellrowborder" id="d383569e1471">Full Supplemental Logging</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d383698e1465 ">INSERT</td>
+                            <td class="entry cellrowborder" headers="d383569e1465 ">INSERT</td>
 
-                            <td class="entry cellrowborder" headers="d383698e1468 ">All fields that contain data, ignoring fields with null values. </td>
+                            <td class="entry cellrowborder" headers="d383569e1468 ">All fields that contain data, ignoring fields with null values. </td>
 
-                            <td class="entry cellrowborder" headers="d383698e1471 ">All fields.</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry cellrowborder" headers="d383698e1465 ">UPDATE</td>
-
-                            <td class="entry cellrowborder" headers="d383698e1468 ">Primary key field and fields with updated values.</td>
-
-                            <td class="entry cellrowborder" headers="d383698e1471 ">All fields.</td>
+                            <td class="entry cellrowborder" headers="d383569e1471 ">All fields.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d383698e1465 ">SELECT_FOR_ UPDATE</td>
+                            <td class="entry cellrowborder" headers="d383569e1465 ">UPDATE</td>
 
-                            <td class="entry cellrowborder" headers="d383698e1468 ">Primary key field and fields with updated values.</td>
+                            <td class="entry cellrowborder" headers="d383569e1468 ">Primary key field and fields with updated values.</td>
 
-                            <td class="entry cellrowborder" headers="d383698e1471 ">All fields.</td>
+                            <td class="entry cellrowborder" headers="d383569e1471 ">All fields.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d383698e1465 ">DELETE</td>
+                            <td class="entry cellrowborder" headers="d383569e1465 ">SELECT_FOR_ UPDATE</td>
 
-                            <td class="entry cellrowborder" headers="d383698e1468 ">Primary key field.</td>
+                            <td class="entry cellrowborder" headers="d383569e1468 ">Primary key field and fields with updated values.</td>
 
-                            <td class="entry cellrowborder" headers="d383698e1471 ">All fields.</td>
+                            <td class="entry cellrowborder" headers="d383569e1471 ">All fields.</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry cellrowborder" headers="d383569e1465 ">DELETE</td>
+
+                            <td class="entry cellrowborder" headers="d383569e1468 ">Primary key field.</td>
+
+                            <td class="entry cellrowborder" headers="d383569e1471 ">All fields.</td>
 
                         </tr>
 
@@ -1296,18 +1296,18 @@ CRUD-enabled destinations check for this attribute for the operation
             attributes. Record header attributes are stored as strings:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_cbz_sz1_vy__table_brz_3gp_qx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d383698e1791">Record Header Attribute</th>
+                            <th class="entry cellrowborder" id="d383569e1791">Record Header Attribute</th>
 
-                            <th class="entry cellrowborder" id="d383698e1794">Description</th>
+                            <th class="entry cellrowborder" id="d383569e1794">Description</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d383698e1791 ">sdc.event.type</td>
+                            <td class="entry cellrowborder" headers="d383569e1791 ">sdc.event.type</td>
 
-                            <td class="entry cellrowborder" headers="d383698e1794 ">Event type. Uses one of the following types:<ul class="ul" id="concept_cbz_sz1_vy__ul_m12_mgp_qx">
+                            <td class="entry cellrowborder" headers="d383569e1794 ">Event type. Uses one of the following types:<ul class="ul" id="concept_cbz_sz1_vy__ul_m12_mgp_qx">
                                     <li class="li">STARTUP </li>
 
                                     <li class="li">ALTER</li>
@@ -1324,31 +1324,31 @@ CRUD-enabled destinations check for this attribute for the operation
                         </tr>
 
                         <tr>
-              <td class="entry cellrowborder" headers="d383698e1791 ">sdc.event.version</td>
+              <td class="entry cellrowborder" headers="d383569e1791 ">sdc.event.version</td>
 
-              <td class="entry cellrowborder" headers="d383698e1794 ">Integer that indicates the version of the event record type.</td>
+              <td class="entry cellrowborder" headers="d383569e1794 ">Integer that indicates the version of the event record type.</td>
 
             </tr>
 
                         <tr>
-              <td class="entry cellrowborder" headers="d383698e1791 ">sdc.event.creation_timestamp</td>
+              <td class="entry cellrowborder" headers="d383569e1791 ">sdc.event.creation_timestamp</td>
 
-              <td class="entry cellrowborder" id="concept_cbz_sz1_vy__d54e2304" headers="d383698e1794 ">Epoch timestamp when the stage created the event.
+              <td class="entry cellrowborder" id="concept_cbz_sz1_vy__d54e2304" headers="d383569e1794 ">Epoch timestamp when the stage created the event.
               </td>
 
             </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d383698e1791 ">oracle.cdc.table</td>
+                            <td class="entry cellrowborder" headers="d383569e1791 ">oracle.cdc.table</td>
 
-                            <td class="entry cellrowborder" headers="d383698e1794 ">Name of the Oracle database table that changed.</td>
+                            <td class="entry cellrowborder" headers="d383569e1794 ">Name of the Oracle database table that changed.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d383698e1791 ">oracle.cdc.ddl</td>
+                            <td class="entry cellrowborder" headers="d383569e1791 ">oracle.cdc.ddl</td>
 
-                            <td class="entry cellrowborder" headers="d383698e1794 ">The DDL statement that triggered the event.</td>
+                            <td class="entry cellrowborder" headers="d383569e1794 ">The DDL statement that triggered the event.</td>
 
                         </tr>
 
@@ -1534,33 +1534,33 @@ STARTUP event records are generated when the pipeline starts. The origin creates
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ehh_mjj_tw__table_j2h_qvk_wy" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d383698e2142">General Property</th>
+                                    <th class="entry cellrowborder" id="d383569e2142">General Property</th>
 
-                                    <th class="entry cellrowborder" id="d383698e2145">Description</th>
+                                    <th class="entry cellrowborder" id="d383569e2145">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-              <td class="entry cellrowborder" headers="d383698e2142 ">Name</td>
+              <td class="entry cellrowborder" headers="d383569e2142 ">Name</td>
 
-              <td class="entry cellrowborder" headers="d383698e2145 ">Stage name.</td>
-
-            </tr>
-
-                                <tr>
-              <td class="entry cellrowborder" headers="d383698e2142 ">Description</td>
-
-              <td class="entry cellrowborder" headers="d383698e2145 ">Optional description.</td>
+              <td class="entry cellrowborder" headers="d383569e2145 ">Stage name.</td>
 
             </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2142 "><a class="xref" href="OracleCDC.html#concept_h2t_hx1_vy">Produce
+              <td class="entry cellrowborder" headers="d383569e2142 ">Description</td>
+
+              <td class="entry cellrowborder" headers="d383569e2145 ">Optional description.</td>
+
+            </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d383569e2142 "><a class="xref" href="OracleCDC.html#concept_h2t_hx1_vy">Produce
                                             Events</a></td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2145 ">When the origin uses redo logs as the dictionary source,
+                                    <td class="entry cellrowborder" headers="d383569e2145 ">When the origin uses redo logs as the dictionary source,
                                         can generate event records when the origin reads DDL
                                         statements. Use for event handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
                                             <img class="image" id="task_ehh_mjj_tw__image_plp_tp2_px" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
@@ -1568,9 +1568,9 @@ STARTUP event records are generated when the pipeline starts. The origin creates
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d383698e2142 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
+              <td class="entry cellrowborder" headers="d383569e2142 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
 
-              <td class="entry cellrowborder" headers="d383698e2145 ">Error record handling for the stage: <ul class="ul" id="task_ehh_mjj_tw__d54e809">
+              <td class="entry cellrowborder" headers="d383569e2145 ">Error record handling for the stage: <ul class="ul" id="task_ehh_mjj_tw__d54e809">
                   <li class="li">Discard - Discards the record.</li>
 
                   <li class="li">Send to Error - Sends the record to the pipeline for error handling.</li>
@@ -1595,18 +1595,18 @@ STARTUP event records are generated when the pipeline starts. The origin creates
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ehh_mjj_tw__table_bvw_wwj_dx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d383698e2234">Oracle CDC Property</th>
+                                    <th class="entry cellrowborder" id="d383569e2234">Oracle CDC Property</th>
 
-                                    <th class="entry cellrowborder" id="d383698e2237">Description</th>
+                                    <th class="entry cellrowborder" id="d383569e2237">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2234 "><a class="xref" href="OracleCDC.html#concept_gj4_sjq_qcb">Tables</a></td>
+                                    <td class="entry cellrowborder" headers="d383569e2234 "><a class="xref" href="OracleCDC.html#concept_gj4_sjq_qcb">Tables</a></td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2237 ">Tables to track. Specify related properties as needed.
+                                    <td class="entry cellrowborder" headers="d383569e2237 ">Tables to track. Specify related properties as needed.
                                             <p class="p">Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                                 <span class="ph uicontrol">Add</span> icon to define another
                                             table configuration.</p>
@@ -1615,9 +1615,9 @@ STARTUP event records are generated when the pipeline starts. The origin creates
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2234 ">Schema Name</td>
+                                    <td class="entry cellrowborder" headers="d383569e2234 ">Schema Name</td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2237 ">Schema to use. You can enter a schema name or use <a class="xref" href="https://docs.oracle.com/database/121/SQLRF/conditions007.htm#SQLRF00501" target="_blank">SQL LIKE syntax</a> to
+                                    <td class="entry cellrowborder" headers="d383569e2237 ">Schema to use. You can enter a schema name or use <a class="xref" href="https://docs.oracle.com/database/121/SQLRF/conditions007.htm#SQLRF00501" target="_blank">SQL LIKE syntax</a> to
                                         specify a set of schemas.<p class="p">The origin submits the schema
                                             name in all caps by default. To use a lower or
                                             mixed-case name, enable the Case-Sensitive Names
@@ -1627,10 +1627,10 @@ STARTUP event records are generated when the pipeline starts. The origin creates
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2234 "><a class="xref" href="OracleCDC.html#concept_gj4_sjq_qcb">Table Name
+                                    <td class="entry cellrowborder" headers="d383569e2234 "><a class="xref" href="OracleCDC.html#concept_gj4_sjq_qcb">Table Name
                                             Pattern</a></td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2237 "><p class="p">A table name pattern that specifies the tables to
+                                    <td class="entry cellrowborder" headers="d383569e2237 "><p class="p">A table name pattern that specifies the tables to
                                             track. You can enter a table name or use <a class="xref" href="https://docs.oracle.com/database/121/SQLRF/conditions007.htm#SQLRF00501" target="_blank">SQL LIKE
                                                 syntax</a> to specify a set of tables.</p>
 The
@@ -1641,19 +1641,19 @@ The
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2234 "><a class="xref" href="OracleCDC.html#concept_gj4_sjq_qcb">Exclusion
+                                    <td class="entry cellrowborder" headers="d383569e2234 "><a class="xref" href="OracleCDC.html#concept_gj4_sjq_qcb">Exclusion
                                             Pattern</a></td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2237 ">An optional table exclusion pattern to define a subset of
+                                    <td class="entry cellrowborder" headers="d383569e2237 ">An optional table exclusion pattern to define a subset of
                                         tables to exclude. You can enter a table name or use a <a class="xref" href="../Apx-RegEx/RegEx-Title.html#concept_vd4_nsc_gs" title="A regular expression, also known as regex, describes a pattern for a string.">regular expression</a> to specify a subset of tables
                                         to exclude. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2234 ">Case-Sensitive Names</td>
+                                    <td class="entry cellrowborder" headers="d383569e2234 ">Case-Sensitive Names</td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2237 ">Enables using case-sensitive schema, table, and column
+                                    <td class="entry cellrowborder" headers="d383569e2237 ">Enables using case-sensitive schema, table, and column
                                         names. When not enabled, the origin submits names in all
                                                 caps.<p class="p"><span class="ph">Oracle uses all caps for schema, table, and column names by
                         default. Names can be lower- or mixed-case only if the schema, table, or
@@ -1663,10 +1663,10 @@ The
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2234 "><a class="xref" href="OracleCDC.html#concept_zrc_pyj_dx">Initial
+                                    <td class="entry cellrowborder" headers="d383569e2234 "><a class="xref" href="OracleCDC.html#concept_zrc_pyj_dx">Initial
                                             Change</a></td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2237 ">The starting point for the read. Use one of the following
+                                    <td class="entry cellrowborder" headers="d383569e2237 ">The starting point for the read. Use one of the following
                                             options:<ul class="ul" id="task_ehh_mjj_tw__ul_nty_bnk_dx">
                                             <li class="li">From Latest Change - Processes changes that arrive
                                                 after you start the pipeline.</li>
@@ -1683,9 +1683,9 @@ The
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2234 ">Start Date</td>
+                                    <td class="entry cellrowborder" headers="d383569e2234 ">Start Date</td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2237 ">The datetime to read from when you start the pipeline.
+                                    <td class="entry cellrowborder" headers="d383569e2237 ">The datetime to read from when you start the pipeline.
                                         For a date-based initial change. <p class="p"><span class="ph">Use the following format: <code class="ph codeph">DD-MM-YYYY
                               HH24:MI:SS</code>.</span></p>
 </td>
@@ -1693,9 +1693,9 @@ The
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2234 ">Start SCN</td>
+                                    <td class="entry cellrowborder" headers="d383569e2234 ">Start SCN</td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2237 ">The system change number to start reading from when you
+                                    <td class="entry cellrowborder" headers="d383569e2237 ">The system change number to start reading from when you
                                         start the pipeline. If the SCN cannot be found in the redo
                                         logs, the origin continues reading from the next higher SCN
                                         that is available in the redo logs.<p class="p">For an SCN-based
@@ -1705,18 +1705,18 @@ The
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2234 ">Operations</td>
+                                    <td class="entry cellrowborder" headers="d383569e2234 ">Operations</td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2237 ">Operations to include when creating records. All unlisted
+                                    <td class="entry cellrowborder" headers="d383569e2237 ">Operations to include when creating records. All unlisted
                                         operations are ignored. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2234 "><a class="xref" href="OracleCDC.html#concept_eq5_wh2_dx">Dictionary Source
+                                    <td class="entry cellrowborder" headers="d383569e2234 "><a class="xref" href="OracleCDC.html#concept_eq5_wh2_dx">Dictionary Source
                                         </a></td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2237 ">Location of the LogMiner dictionary:<ul class="ul" id="task_ehh_mjj_tw__ul_s5d_mqk_dx">
+                                    <td class="entry cellrowborder" headers="d383569e2237 ">Location of the LogMiner dictionary:<ul class="ul" id="task_ehh_mjj_tw__ul_s5d_mqk_dx">
                                             <li class="li">Redo logs - Use when schemas can change. Allows the
                                                 origin to adapt to schema changes and to generate
                                                 events for DDL statements.</li>
@@ -1730,10 +1730,10 @@ The
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2234 "><a class="xref" href="OracleCDC.html#concept_yqk_3hn_n1b">Buffer
+                                    <td class="entry cellrowborder" headers="d383569e2234 "><a class="xref" href="OracleCDC.html#concept_yqk_3hn_n1b">Buffer
                                             Changes Locally</a></td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2237 ">Determines the buffers that the origin uses. Select to
+                                    <td class="entry cellrowborder" headers="d383569e2237 ">Determines the buffers that the origin uses. Select to
                                         use local <span class="ph">Data Collector</span> buffers. Clear to use Oracle LogMiner buffers. Generally,
                                         using local buffers will enhance pipeline performance.<p class="p">By
                                             default, the origin uses local buffers. </p>
@@ -1742,9 +1742,9 @@ The
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2234 ">Buffer Location</td>
+                                    <td class="entry cellrowborder" headers="d383569e2234 ">Buffer Location</td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2237 ">Determines which local buffers are used:<ul class="ul">
+                                    <td class="entry cellrowborder" headers="d383569e2237 ">Determines which local buffers are used:<ul class="ul">
                                             <li class="li">In memory</li>
 
                                             <li class="li">To disk</li>
@@ -1757,17 +1757,17 @@ The
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2234 "><a class="xref" href="OracleCDC.html#concept_ssg_tgm_p1b">Discard Old Uncommitted Transactions</a></td>
+                                    <td class="entry cellrowborder" headers="d383569e2234 "><a class="xref" href="OracleCDC.html#concept_ssg_tgm_p1b">Discard Old Uncommitted Transactions</a></td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2237 ">Discards older uncommitted transactions rather than
+                                    <td class="entry cellrowborder" headers="d383569e2237 ">Discards older uncommitted transactions rather than
                                         processing them into error records. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2234 ">Unsupported Field Type</td>
+                                    <td class="entry cellrowborder" headers="d383569e2234 ">Unsupported Field Type</td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2237 ">Determines the behavior when the origin encounters
+                                    <td class="entry cellrowborder" headers="d383569e2237 ">Determines the behavior when the origin encounters
                                         unsupported data types in the record:<ul class="ul" id="task_ehh_mjj_tw__ul_ufl_lzp_x1b">
                                             <li class="li">Ignore and Send Record to Pipeline - The origin
                                                 ignores unsupported data types and passes the record
@@ -1788,27 +1788,27 @@ The
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2234 ">Add Unsupported Fields to Records</td>
+                                    <td class="entry cellrowborder" headers="d383569e2234 ">Add Unsupported Fields to Records</td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2237 ">Includes fields with unsupported data types in the
+                                    <td class="entry cellrowborder" headers="d383569e2237 ">Includes fields with unsupported data types in the
                                         record. Includes the field names and the unparsed string
                                         values of the unsupported fields.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2234 ">Include Nulls</td>
+                                    <td class="entry cellrowborder" headers="d383569e2234 ">Include Nulls</td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2237 ">Includes null values in records generated from full
+                                    <td class="entry cellrowborder" headers="d383569e2237 ">Includes null values in records generated from full
                                         supplemental logging that include null values. By default,
                                         the origin generates a record without null values. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2234 ">Convert Timestamp To String</td>
+                                    <td class="entry cellrowborder" headers="d383569e2234 ">Convert Timestamp To String</td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2237 "><span class="ph">Enables the origin to write
+                                    <td class="entry cellrowborder" headers="d383569e2237 "><span class="ph">Enables the origin to write
                   timestamps as string values rather than datetime values. Strings maintain the
                   precision stored in the source database.</span> For example, strings can maintain the precision of a
                                         high-precision Timestamp(6) field.<p class="p"><span class="ph">When writing timestamps to <span class="ph">Data Collector</span> date or time data
@@ -1819,9 +1819,9 @@ The
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2234 ">Maximum Transaction Length </td>
+                                    <td class="entry cellrowborder" headers="d383569e2234 ">Maximum Transaction Length </td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2237 ">Time in seconds to wait for changes for a transaction.
+                                    <td class="entry cellrowborder" headers="d383569e2237 ">Time in seconds to wait for changes for a transaction.
                                         Enter the longest period of time that you expect a
                                         transaction to require. <p class="p">Default is ${ 1 * HOURS } which
                                             is 3600 seconds.</p>
@@ -1830,9 +1830,9 @@ The
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2234 ">LogMiner Session Window</td>
+                                    <td class="entry cellrowborder" headers="d383569e2234 ">LogMiner Session Window</td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2237 ">Time in seconds to keep a LogMiner session open. Set to
+                                    <td class="entry cellrowborder" headers="d383569e2237 ">Time in seconds to keep a LogMiner session open. Set to
                                         larger than the maximum transaction length. Reduce when not
                                         using local buffering to reduce LogMiner resource
                                             use.<p class="p">Default is ${ 2 * HOURS } which is 7200
@@ -1842,9 +1842,9 @@ The
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2234 ">Parse SQL Query</td>
+                                    <td class="entry cellrowborder" headers="d383569e2234 ">Parse SQL Query</td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2237 ">Determines whether to parse SQL queries. <p class="p">If set to
+                                    <td class="entry cellrowborder" headers="d383569e2237 ">Determines whether to parse SQL queries. <p class="p">If set to
                                             false, the origin writes the SQL query to a “sql” field
                                             that can be parsed later by the <a class="xref" href="../Processors/SQLParser.html#concept_zh2_kfj_tdb">SQL Parser processor</a>.</p>
 <p class="p">The default is
@@ -1855,17 +1855,17 @@ The
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2234 ">Send Redo Query in Headers</td>
+                                    <td class="entry cellrowborder" headers="d383569e2234 ">Send Redo Query in Headers</td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2237 ">Includes the LogMiner redo query in the oracle.cdc.query
+                                    <td class="entry cellrowborder" headers="d383569e2237 ">Includes the LogMiner redo query in the oracle.cdc.query
                                         record header attribute.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2234 ">DB Time Zone</td>
+                                    <td class="entry cellrowborder" headers="d383569e2234 ">DB Time Zone</td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2237 ">Time zone of the database. Specify when the database
+                                    <td class="entry cellrowborder" headers="d383569e2237 ">Time zone of the database. Specify when the database
                                         operates in a different time zone from <span class="ph">Data Collector</span>.</td>
 
                                 </tr>
@@ -1883,18 +1883,18 @@ The
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ehh_mjj_tw__table_qrz_kpj_dx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d383698e2613">JDBC Property</th>
+                                    <th class="entry cellrowborder" id="d383569e2613">JDBC Property</th>
 
-                                    <th class="entry cellrowborder" id="d383698e2616">Description</th>
+                                    <th class="entry cellrowborder" id="d383569e2616">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2613 ">JDBC Connection String</td>
+                                    <td class="entry cellrowborder" headers="d383569e2613 ">JDBC Connection String</td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2616 ">
+                                    <td class="entry cellrowborder" headers="d383569e2616 ">
                                         <div class="p">Connection string to use to connect to the database.
                                                 <div class="note note"><span class="notetitle">Note:</span> If you include the JDBC credentials in the
                                                 connection string, use the user account created for
@@ -1908,9 +1908,9 @@ The
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d383698e2613 ">Max Batch Size (records)</td>
+              <td class="entry cellrowborder" headers="d383569e2613 ">Max Batch Size (records)</td>
 
-              <td class="entry cellrowborder" headers="d383698e2616 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data Collector</span> maximum batch size.
+              <td class="entry cellrowborder" headers="d383569e2616 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data Collector</span> maximum batch size.
                   <p class="p">Default is 1000. The <span class="ph">Data Collector</span> default is
                 1000.</p>
 </td>
@@ -1918,9 +1918,9 @@ The
             </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2613 ">PDB</td>
+                                    <td class="entry cellrowborder" headers="d383569e2613 ">PDB</td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2616 ">Name of the pluggable database that contains the schema
+                                    <td class="entry cellrowborder" headers="d383569e2616 ">Name of the pluggable database that contains the schema
                                         you want to use. Use only when the schema was created in a
                                         pluggable database. <p class="p">Required for schemas created in
                                             pluggable databases. </p>
@@ -1929,18 +1929,18 @@ The
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d383698e2613 ">Use Credentials</td>
+              <td class="entry cellrowborder" headers="d383569e2613 ">Use Credentials</td>
 
-              <td class="entry cellrowborder" headers="d383698e2616 "><span class="ph" id="task_ehh_mjj_tw__d54e2513">Enables entering credentials on the Credentials
+              <td class="entry cellrowborder" headers="d383569e2616 "><span class="ph" id="task_ehh_mjj_tw__d54e2513">Enables entering credentials on the Credentials
                   tab. Use when you do not include credentials in the JDBC connection
                 string.</span></td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d383698e2613 ">Additional JDBC Configuration Properties</td>
+              <td class="entry cellrowborder" headers="d383569e2613 ">Additional JDBC Configuration Properties</td>
 
-              <td class="entry cellrowborder" headers="d383698e2616 ">Additional JDBC configuration properties to use. To add properties, click
+              <td class="entry cellrowborder" headers="d383569e2616 ">Additional JDBC configuration properties to use. To add properties, click
                   <span class="ph uicontrol">Add</span> and define the JDBC property name and value. <p class="p">Use the
                   property names and values as expected by JDBC. </p>
 </td>
@@ -1961,18 +1961,18 @@ The
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ehh_mjj_tw__table_dvj_msj_dx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d383698e2720">Credentials Property</th>
+                                    <th class="entry cellrowborder" id="d383569e2720">Credentials Property</th>
 
-                                    <th class="entry cellrowborder" id="d383698e2723">Description</th>
+                                    <th class="entry cellrowborder" id="d383569e2723">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2720 ">Username</td>
+                                    <td class="entry cellrowborder" headers="d383569e2720 ">Username</td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2723 ">
+                                    <td class="entry cellrowborder" headers="d383569e2723 ">
                                         <p class="p">User name for the JDBC connection. Use the user account
                                             created for the origin. Common user accounts for Oracle
                                             12c multitenant databases start with "c##".</p>
@@ -1984,9 +1984,9 @@ The
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2720 ">Password</td>
+                                    <td class="entry cellrowborder" headers="d383569e2720 ">Password</td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2723 ">Password for the account.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_ehh_mjj_tw__d12e5908">To
+                                    <td class="entry cellrowborder" headers="d383569e2723 ">Password for the account.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_ehh_mjj_tw__d12e5908">To
                         secure sensitive information such as user names and passwords, you can use
                               <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
 </td>
@@ -2007,26 +2007,26 @@ The
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ehh_mjj_tw__d81e4983" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d383698e2807">Legacy Drivers Property</th>
+                                    <th class="entry cellrowborder" id="d383569e2807">Legacy Drivers Property</th>
 
-                                    <th class="entry cellrowborder" id="d383698e2810">Description</th>
+                                    <th class="entry cellrowborder" id="d383569e2810">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2807 ">JDBC Class Driver Name</td>
+                                    <td class="entry cellrowborder" headers="d383569e2807 ">JDBC Class Driver Name</td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2810 ">Class name for the JDBC driver. Required for JDBC
+                                    <td class="entry cellrowborder" headers="d383569e2810 ">Class name for the JDBC driver. Required for JDBC
                                         versions older than version 4.0.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2807 ">Connection Health Test Query</td>
+                                    <td class="entry cellrowborder" headers="d383569e2807 ">Connection Health Test Query</td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2810 ">Optional query to test the health of a connection.
+                                    <td class="entry cellrowborder" headers="d383569e2810 ">Optional query to test the health of a connection.
                                         Recommended only when the JDBC version is older than 4.0.
                                     </td>
 
@@ -2044,18 +2044,18 @@ The
                 <div class="itemgroup info">The defaults for these properties should work in most cases:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ehh_mjj_tw__table_z1c_hjj_kw" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d383698e2863">Advanced Property</th>
+                                    <th class="entry cellrowborder" id="d383569e2863">Advanced Property</th>
 
-                                    <th class="entry cellrowborder" id="d383698e2866">Description</th>
+                                    <th class="entry cellrowborder" id="d383569e2866">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2863 ">JDBC Fetch Size for Current Window</td>
+                                    <td class="entry cellrowborder" headers="d383569e2863 ">JDBC Fetch Size for Current Window</td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2866 ">Number of redo logs to fetch and process together when
+                                    <td class="entry cellrowborder" headers="d383569e2866 ">Number of redo logs to fetch and process together when
                                         the LogMiner session includes the current time. <p class="p">At the
                                             end of the session, the origin fetches and processes any
                                             remaining redo logs.</p>
@@ -2068,9 +2068,9 @@ The
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2863 ">JDBC Fetch Size for Past Windows</td>
+                                    <td class="entry cellrowborder" headers="d383569e2863 ">JDBC Fetch Size for Past Windows</td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2866 ">Number of redo logs to fetch and process together when
+                                    <td class="entry cellrowborder" headers="d383569e2866 ">Number of redo logs to fetch and process together when
                                         the LogMiner session is entirely in the past.<p class="p">When the
                                             fetch size exceeds available redo logs, the origin
                                             fetches and processes the remaining redo logs. Lower
@@ -2083,10 +2083,10 @@ The
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2863 "><a class="xref" href="OracleCDC.html#concept_jy5_dyd_12b" title="The Oracle CDC Client origin provides an alternate PEG parser that you can try when concerned about pipeline performance.">Use PEG Parser
+                                    <td class="entry cellrowborder" headers="d383569e2863 "><a class="xref" href="OracleCDC.html#concept_jy5_dyd_12b" title="The Oracle CDC Client origin provides an alternate PEG parser that you can try when concerned about pipeline performance.">Use PEG Parser
                                             (beta)</a></td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2866 ">Enables use of the beta PEG parser instead of the default
+                                    <td class="entry cellrowborder" headers="d383569e2866 ">Enables use of the beta PEG parser instead of the default
                                         Oracle CDC Client origin parser. Can improve performance,
                                         but should be carefully tested before use in
                                         production.</td>
@@ -2094,10 +2094,10 @@ The
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d383698e2863 "><a class="xref" href="OracleCDC.html#concept_syx_pjy_12b" title="When you configure the origin to use local buffering and to parse the SQL query, you can configure the Oracle CDC Client origin to use multiple threads to parse transactions. You can use multithreaded parsing with both the default Oracle CDC Client parser and the alternate PEG parser.">Parse
+                                    <td class="entry cellrowborder" headers="d383569e2863 "><a class="xref" href="OracleCDC.html#concept_syx_pjy_12b" title="When you configure the origin to use local buffering and to parse the SQL query, you can configure the Oracle CDC Client origin to use multiple threads to parse transactions. You can use multithreaded parsing with both the default Oracle CDC Client parser and the alternate PEG parser.">Parse
                                             Thread Pool Size</a></td>
 
-                                    <td class="entry cellrowborder" headers="d383698e2866 ">Number of threads that the origin uses for multithreaded
+                                    <td class="entry cellrowborder" headers="d383569e2866 ">Number of threads that the origin uses for multithreaded
                                         parsing. Available only when performing local buffering and
                                         parsing the SQL query. <p class="p">Can be used with both the default
                                             parser and PEG parser.</p>
@@ -2106,18 +2106,18 @@ The
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d383698e2863 ">Maximum Pool Size </td>
+              <td class="entry cellrowborder" headers="d383569e2863 ">Maximum Pool Size </td>
 
-              <td class="entry cellrowborder" headers="d383698e2866 ">Maximum number of connections to create. <p class="p">Default is 1. The recommended value
+              <td class="entry cellrowborder" headers="d383569e2866 ">Maximum number of connections to create. <p class="p">Default is 1. The recommended value
                   is 1.</p>
 </td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d383698e2863 ">Minimum Idle Connections</td>
+              <td class="entry cellrowborder" headers="d383569e2863 ">Minimum Idle Connections</td>
 
-              <td class="entry cellrowborder" headers="d383698e2866 ">Minimum number of connections to create and maintain. To define a fixed
+              <td class="entry cellrowborder" headers="d383569e2866 ">Minimum number of connections to create and maintain. To define a fixed
                 connection pool, set to the same value as Maximum Pool Size. <p class="p">Default is 1.
                 </p>
 </td>
@@ -2125,9 +2125,9 @@ The
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d383698e2863 ">Connection Timeout</td>
+              <td class="entry cellrowborder" headers="d383569e2863 ">Connection Timeout</td>
 
-              <td class="entry cellrowborder" headers="d383698e2866 ">Maximum time to wait for a connection. Use a time constant in an expression to
+              <td class="entry cellrowborder" headers="d383569e2866 ">Maximum time to wait for a connection. Use a time constant in an expression to
                 define the time increment. <div class="p">Default is 30 seconds, defined as follows:
                   <pre class="pre codeblock"><code>${30 * SECONDS}</code></pre></div>
 </td>
@@ -2135,9 +2135,9 @@ The
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d383698e2863 ">Idle Timeout</td>
+              <td class="entry cellrowborder" headers="d383569e2863 ">Idle Timeout</td>
 
-              <td class="entry cellrowborder" headers="d383698e2866 ">Maximum time to allow a connection to idle. Use a time constant in an
+              <td class="entry cellrowborder" headers="d383569e2866 ">Maximum time to allow a connection to idle. Use a time constant in an
                 expression to define the time increment. <p class="p">Use 0 to avoid removing any idle
                   connections.</p>
 <p class="p">When the entered value is close to or more than the maximum
@@ -2150,9 +2150,9 @@ The
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d383698e2863 ">Max Connection Lifetime</td>
+              <td class="entry cellrowborder" headers="d383569e2863 ">Max Connection Lifetime</td>
 
-              <td class="entry cellrowborder" headers="d383698e2866 ">Maximum lifetime for a connection. Use a time constant in an expression to
+              <td class="entry cellrowborder" headers="d383569e2866 ">Maximum lifetime for a connection. Use a time constant in an expression to
                 define the time increment. <p class="p">Use 0 to set no maximum lifetime.</p>
 <p class="p">When a maximum
                   lifetime is set, the minimum valid value is 30 minutes.</p>
@@ -2163,18 +2163,18 @@ The
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d383698e2863 ">Enforce Read-only Connection</td>
+              <td class="entry cellrowborder" headers="d383569e2863 ">Enforce Read-only Connection</td>
 
-              <td class="entry cellrowborder" headers="d383698e2866 ">Creates read-only connections to avoid any type of write. <p class="p">Default is
+              <td class="entry cellrowborder" headers="d383569e2866 ">Creates read-only connections to avoid any type of write. <p class="p">Default is
                   enabled. Disabling this property is not recommended. </p>
 </td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d383698e2863 ">Transaction Isolation</td>
+              <td class="entry cellrowborder" headers="d383569e2863 ">Transaction Isolation</td>
 
-              <td class="entry cellrowborder" headers="d383698e2866 ">Transaction isolation level used to connect to the database. <p class="p">Default is the
+              <td class="entry cellrowborder" headers="d383569e2866 ">Transaction isolation level used to connect to the database. <p class="p">Default is the
                   default transaction isolation level set for the database. You can override the
                   database default by setting the level to any of the following:</p>
 <ul class="ul" id="task_ehh_mjj_tw__d54e3190">

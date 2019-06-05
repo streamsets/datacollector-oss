@@ -324,12 +324,12 @@
                 
                     <dt class="dt dlterm">Uses temporary directories for Avro output files</dt>
 
-                    <dd class="dd"><p class="p">When processing Parquet data, the Hive Metadata processor <span class="ph" id="concept_ndg_3zw_vz__d330e3606">adds .avro to the target directory that it
+                    <dd class="dd"><p class="p">When processing Parquet data, the Hive Metadata processor <span class="ph" id="concept_ndg_3zw_vz__d327e3606">adds .avro to the target directory that it
                         generates for each record. This allows the data-processing destination to
                         write the Avro files to a directory that Hive ignores as a temporary
                         directory.</span></p>
 <p class="p">As a result, the destination writes files to the following
-                  directories: <code class="ph codeph" id="concept_ndg_3zw_vz__d330e3612">&lt;generated
+                  directories: <code class="ph codeph" id="concept_ndg_3zw_vz__d327e3612">&lt;generated
                   directory&gt;/.avro</code>.</p>
 <span class="ph">You can configure
                               the MapReduce executor to write the Parquet files to the parent
@@ -482,14 +482,14 @@
 </li>
 
                         <li class="li">Configure the decimal field precision
-                              and scale attribute names.<p class="p" id="concept_y5w_dj3_fw__d330e7012">When
+                              and scale attribute names.<p class="p" id="concept_y5w_dj3_fw__d327e7012">When
                                     processing data from the JDBC Query Consumer or JDBC Multitable
                                     Consumer origins, use the default attribute names, "precision"
-                                    and "scale". Both <span class="ph" id="concept_y5w_dj3_fw__d330e7014">origins
+                                    and "scale". Both <span class="ph" id="concept_y5w_dj3_fw__d327e7014">origins
                                           store the precision and scale of Decimal columns in
                                           "precision" and "scale" field attributes for each Decimal
                                           field.</span></p>
-<p class="p"><span class="ph" id="concept_y5w_dj3_fw__d330e7017">When processing data from other origins, you can use the
+<p class="p"><span class="ph" id="concept_y5w_dj3_fw__d327e7017">When processing data from other origins, you can use the
                                           Expression Evaluator processor earlier in the pipeline to
                                           create precision and scale field attributes for Decimal
                                           fields. </span></p>
@@ -737,7 +737,7 @@
 
         <p class="p"><img class="image" id="concept_jzr_ypn_fw__image_wzp_1sn_fw" src="../Graphics/HiveMeta-Ex-HDFS-Avro.png" height="327" width="478" /></p>
 
-        <p class="p"><span class="ph" id="concept_jzr_ypn_fw__d330e4278">With this
+        <p class="p"><span class="ph" id="concept_jzr_ypn_fw__d327e4278">With this
                         configuration, the destination uses the information in record header
                         attributes to write data to HDFS. It writes each record to the directory in
                         the targetDirectory header attribute, using the Avro schema in the
@@ -934,7 +934,7 @@ ${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.precision'))
                         directory.</span></p>
 
         <p class="p">As a result, the destination writes files to the following
-                  directories: <code class="ph codeph" id="concept_kt2_zrf_zz__d330e3612">&lt;generated
+                  directories: <code class="ph codeph" id="concept_kt2_zrf_zz__d327e3612">&lt;generated
                   directory&gt;/.avro</code>.</p>
 
  </div>

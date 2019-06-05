@@ -285,11 +285,11 @@
             origin to create the number of threads or amount of concurrency that you want to use.
                 <span class="ph">And <span class="ph">Data Collector</span> creates a
                         number of pipeline runners based on the pipeline Max Runners property to
-                        perform pipeline processing. <span class="ph" id="concept_njg_4mx_4y__d512e2954">Each thread
+                        perform pipeline processing. <span class="ph" id="concept_njg_4mx_4y__d505e2954">Each thread
                               connects to the origin system, creates a batch of data, and passes the
                               batch to an available pipeline runner.</span></span></p>
 
-        <p class="p"><span class="ph"><span class="ph" id="concept_njg_4mx_4y__d512e2962">Each pipeline runner
+        <p class="p"><span class="ph"><span class="ph" id="concept_njg_4mx_4y__d505e2962">Each pipeline runner
                               processes one batch at a time, just like a pipeline that runs on a
                               single thread.</span> When the flow of data slows, the pipeline runners
                         wait idly until they are needed, generating an empty batch at regular
@@ -363,164 +363,164 @@
             to external systems:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_hjl_vyd_kcb__table_xnp_vyf_dhb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d480661e283">Data Type</th>
+                            <th class="entry cellrowborder" id="d480532e283">Data Type</th>
 
-                            <th class="entry cellrowborder" id="d480661e286">Description</th>
+                            <th class="entry cellrowborder" id="d480532e286">Description</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d480661e283 ">BOOLEAN</td>
+                            <td class="entry cellrowborder" headers="d480532e283 ">BOOLEAN</td>
 
-                            <td class="entry cellrowborder" headers="d480661e286 ">True or False. Corresponds to the Boolean Java data type.</td>
+                            <td class="entry cellrowborder" headers="d480532e286 ">True or False. Corresponds to the Boolean Java data type.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d480661e283 ">BYTE</td>
+                            <td class="entry cellrowborder" headers="d480532e283 ">BYTE</td>
 
-                            <td class="entry cellrowborder" headers="d480661e286 ">8-bit signed whole number. Ranges from -128 to 127. Corresponds
+                            <td class="entry cellrowborder" headers="d480532e286 ">8-bit signed whole number. Ranges from -128 to 127. Corresponds
                                 to the Byte Java data type.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d480661e283 ">BYTE_ARRAY</td>
+                            <td class="entry cellrowborder" headers="d480532e283 ">BYTE_ARRAY</td>
 
-                            <td class="entry cellrowborder" headers="d480661e286 ">Array of byte values. Corresponds to the Byte[] Java data
+                            <td class="entry cellrowborder" headers="d480532e286 ">Array of byte values. Corresponds to the Byte[] Java data
                                 type.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d480661e283 ">CHAR</td>
+                            <td class="entry cellrowborder" headers="d480532e283 ">CHAR</td>
 
-                            <td class="entry cellrowborder" headers="d480661e286 ">Stores a single Unicode character. Corresponds to the Char Java
+                            <td class="entry cellrowborder" headers="d480532e286 ">Stores a single Unicode character. Corresponds to the Char Java
                                 data type.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d480661e283 ">DATE</td>
+                            <td class="entry cellrowborder" headers="d480532e283 ">DATE</td>
 
-                            <td class="entry cellrowborder" headers="d480661e286 ">Time object that includes the day, month, and four-digit year.
+                            <td class="entry cellrowborder" headers="d480532e286 ">Time object that includes the day, month, and four-digit year.
                                 Does not include time zone.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d480661e283 ">DATETIME</td>
+                            <td class="entry cellrowborder" headers="d480532e283 ">DATETIME</td>
 
-                            <td class="entry cellrowborder" headers="d480661e286 ">Time object that includes the day, month, four-digit year, hours,
+                            <td class="entry cellrowborder" headers="d480532e286 ">Time object that includes the day, month, four-digit year, hours,
                                 minutes, and seconds. Precise to the millisecond. Does not include
                                 time zone.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d480661e283 ">DECIMAL</td>
+                            <td class="entry cellrowborder" headers="d480532e283 ">DECIMAL</td>
 
-                            <td class="entry cellrowborder" headers="d480661e286 ">Arbitrary-precision signed decimal numbers. Corresponds to the
+                            <td class="entry cellrowborder" headers="d480532e286 ">Arbitrary-precision signed decimal numbers. Corresponds to the
                                 BigDecimal Java class. </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d480661e283 ">DOUBLE</td>
+                            <td class="entry cellrowborder" headers="d480532e283 ">DOUBLE</td>
 
-                            <td class="entry cellrowborder" headers="d480661e286 ">64-bit double-precision IEEE 754 floating point. Corresponds to
+                            <td class="entry cellrowborder" headers="d480532e286 ">64-bit double-precision IEEE 754 floating point. Corresponds to
                                 the Double Java data type.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d480661e283 ">FILE_REF</td>
+                            <td class="entry cellrowborder" headers="d480532e283 ">FILE_REF</td>
 
-                            <td class="entry cellrowborder" headers="d480661e286 ">Internal type for <a class="xref" href="../Data_Formats/WholeFile.html#concept_nfc_qkh_xw" title="You can use the whole file data format to transfer entire files from an origin system to a destination system. With the whole file data format, you can transfer any type of file.">whole
+                            <td class="entry cellrowborder" headers="d480532e286 ">Internal type for <a class="xref" href="../Data_Formats/WholeFile.html#concept_nfc_qkh_xw" title="You can use the whole file data format to transfer entire files from an origin system to a destination system. With the whole file data format, you can transfer any type of file.">whole
                                     file format</a>.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d480661e283 ">FLOAT</td>
+                            <td class="entry cellrowborder" headers="d480532e283 ">FLOAT</td>
 
-                            <td class="entry cellrowborder" headers="d480661e286 ">32-bit single-precision IEEE 754 floating point. Corresponds to
+                            <td class="entry cellrowborder" headers="d480532e286 ">32-bit single-precision IEEE 754 floating point. Corresponds to
                                 the Float Java data type.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d480661e283 ">INTEGER</td>
+                            <td class="entry cellrowborder" headers="d480532e283 ">INTEGER</td>
 
-                            <td class="entry cellrowborder" headers="d480661e286 ">32-bit signed whole number. Corresponds to the Int Java data
+                            <td class="entry cellrowborder" headers="d480532e286 ">32-bit signed whole number. Corresponds to the Int Java data
                                 type.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d480661e283 ">LIST</td>
+                            <td class="entry cellrowborder" headers="d480532e283 ">LIST</td>
 
-                            <td class="entry cellrowborder" headers="d480661e286 ">Nested type. Contains an enumerated list of values. Values can be
+                            <td class="entry cellrowborder" headers="d480532e286 ">Nested type. Contains an enumerated list of values. Values can be
                                 any type, and each value in a list can be a different type.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d480661e283 ">LIST_MAP</td>
+                            <td class="entry cellrowborder" headers="d480532e283 ">LIST_MAP</td>
 
-                            <td class="entry cellrowborder" headers="d480661e286 ">Nested type. Contains a list of key-value pairs kept in a
+                            <td class="entry cellrowborder" headers="d480532e286 ">Nested type. Contains a list of key-value pairs kept in a
                                 specific order. Keys are always strings. Values can be any type, and
                                 each value can be a different type.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d480661e283 ">LONG</td>
+                            <td class="entry cellrowborder" headers="d480532e283 ">LONG</td>
 
-                            <td class="entry cellrowborder" headers="d480661e286 ">64-bit signed whole number. Ranges from
+                            <td class="entry cellrowborder" headers="d480532e286 ">64-bit signed whole number. Ranges from
                                 -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807. Corresponds
                                 to the Long Java data type.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d480661e283 ">MAP</td>
+                            <td class="entry cellrowborder" headers="d480532e283 ">MAP</td>
 
-                            <td class="entry cellrowborder" headers="d480661e286 ">Nested type. Contains a list of key-value pairs. Keys are always
+                            <td class="entry cellrowborder" headers="d480532e286 ">Nested type. Contains a list of key-value pairs. Keys are always
                                 strings. Values can be any type, and each value can be a different
                                 type. </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d480661e283 ">SHORT</td>
+                            <td class="entry cellrowborder" headers="d480532e283 ">SHORT</td>
 
-                            <td class="entry cellrowborder" headers="d480661e286 ">16-bit signed whole number. Ranges from -32,768 to 32767.
+                            <td class="entry cellrowborder" headers="d480532e286 ">16-bit signed whole number. Ranges from -32,768 to 32767.
                                 Corresponds to the Short Java data type.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d480661e283 ">STRING</td>
+                            <td class="entry cellrowborder" headers="d480532e283 ">STRING</td>
 
-                            <td class="entry cellrowborder" headers="d480661e286 ">Text. Corresponds to the String Java class.</td>
+                            <td class="entry cellrowborder" headers="d480532e286 ">Text. Corresponds to the String Java class.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d480661e283 ">TIME</td>
+                            <td class="entry cellrowborder" headers="d480532e283 ">TIME</td>
 
-                            <td class="entry cellrowborder" headers="d480661e286 ">Time object that includes the hours, minutes, and seconds.
+                            <td class="entry cellrowborder" headers="d480532e286 ">Time object that includes the hours, minutes, and seconds.
                                 Precise to the millisecond. Does not include the time zone. </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d480661e283 ">ZONED_DATETIME</td>
+                            <td class="entry cellrowborder" headers="d480532e283 ">ZONED_DATETIME</td>
 
-                            <td class="entry cellrowborder" headers="d480661e286 ">Time object that includes day, month, four-digit year, hours,
+                            <td class="entry cellrowborder" headers="d480532e286 ">Time object that includes day, month, four-digit year, hours,
                                 minutes, seconds, and time zone. Precise to the nanosecond.
                                 Corresponds to the ZonedDateTime Java class.</td>
 

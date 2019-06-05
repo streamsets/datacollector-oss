@@ -539,7 +539,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</code></pre></div>
                         <span class="ph uicontrol">security.protocol</span> Kafka configuration property and
                     set it to <strong class="ph b">SSL</strong>.</li>
 <li class="li">Then add and configure the following SSL Kafka
-                        properties:<ul class="ul" id="concept_c2g_myp_tdb__d340e58">
+                        properties:<ul class="ul" id="concept_c2g_myp_tdb__d337e58">
                         <li class="li">ssl.truststore.location</li>
 
                         <li class="li">ssl.truststore.password</li>
@@ -547,7 +547,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</code></pre></div>
                     </ul>
 <div class="p">When the Kafka broker requires client authentication - when the
                         ssl.client.auth broker property is set to "required" - add and configure the
-                        following properties: <ul class="ul" id="concept_c2g_myp_tdb__d340e68">
+                        following properties: <ul class="ul" id="concept_c2g_myp_tdb__d337e68">
                             <li class="li">ssl.keystore.location</li>
 
                             <li class="li">ssl.keystore.password</li>
@@ -557,7 +557,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</code></pre></div>
                         </ul>
 </div>
 <div class="p">Some brokers might require adding the following properties as
-                            well:<ul class="ul" id="concept_c2g_myp_tdb__d340e81">
+                            well:<ul class="ul" id="concept_c2g_myp_tdb__d337e81">
                             <li class="li">ssl.enabled.protocols</li>
 
                             <li class="li">ssl.truststore.type</li>
@@ -600,7 +600,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</code></pre></div>
                     in <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Kerberos Authentication</a>.</li>
 <li class="li">Add the Java Authentication and Authorization
                     Service (JAAS) configuration properties required for Kafka clients based on your
-                    installation and authentication type:<ul class="ul" id="concept_rjl_rgq_tdb__d338e56">
+                    installation and authentication type:<ul class="ul" id="concept_rjl_rgq_tdb__d335e56">
                         <li class="li"><span class="ph uicontrol">RPM, tarball, or Cloudera Manager installation without LDAP
                                 authentication</span> - If <span class="ph">Data Collector</span> does
                             not use LDAP authentication, create a separate JAAS configuration file
@@ -722,7 +722,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</code></pre></div>
 
         <ol class="ol" id="concept_ijh_kmq_tdb__ol_tpp_vyq_tdb">
             <li class="li">Make sure Kafka is configured to use SSL/TLS and
-                    Kerberos (SASL) as described in the following Kafka documentation:<ul class="ul" id="concept_ijh_kmq_tdb__d337e37">
+                    Kerberos (SASL) as described in the following Kafka documentation:<ul class="ul" id="concept_ijh_kmq_tdb__d334e37">
                         <li class="li"><a class="xref" href="http://kafka.apache.org/documentation.html#security_ssl" target="_blank">http://kafka.apache.org/documentation.html#security_ssl</a></li>
 
                         <li class="li"><a class="xref" href="http://kafka.apache.org/documentation.html#security_sasl" target="_blank">http://kafka.apache.org/documentation.html#security_sasl</a></li>
@@ -735,7 +735,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</code></pre></div>
 
             <li class="li">Add the Java Authentication and Authorization
                     Service (JAAS) configuration properties required for Kafka clients based on your
-                    installation and authentication type:<ul class="ul" id="concept_ijh_kmq_tdb__d338e56">
+                    installation and authentication type:<ul class="ul" id="concept_ijh_kmq_tdb__d335e56">
                         <li class="li"><span class="ph uicontrol">RPM, tarball, or Cloudera Manager installation without LDAP
                                 authentication</span> - If <span class="ph">Data Collector</span> does
                             not use LDAP authentication, create a separate JAAS configuration file
@@ -838,7 +838,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</code></pre></div>
                     and set it to <span class="ph uicontrol">kafka</span>. </li>
 
             <li class="li">Then add and configure the following SSL Kafka
-                        properties:<ul class="ul" id="concept_ijh_kmq_tdb__d340e58">
+                        properties:<ul class="ul" id="concept_ijh_kmq_tdb__d337e58">
                         <li class="li">ssl.truststore.location</li>
 
                         <li class="li">ssl.truststore.password</li>
@@ -846,7 +846,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</code></pre></div>
                     </ul>
 <div class="p">When the Kafka broker requires client authentication - when the
                         ssl.client.auth broker property is set to "required" - add and configure the
-                        following properties: <ul class="ul" id="concept_ijh_kmq_tdb__d340e68">
+                        following properties: <ul class="ul" id="concept_ijh_kmq_tdb__d337e68">
                             <li class="li">ssl.keystore.location</li>
 
                             <li class="li">ssl.keystore.password</li>
@@ -856,7 +856,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</code></pre></div>
                         </ul>
 </div>
 <div class="p">Some brokers might require adding the following properties as
-                            well:<ul class="ul" id="concept_ijh_kmq_tdb__d340e81">
+                            well:<ul class="ul" id="concept_ijh_kmq_tdb__d337e81">
                             <li class="li">ssl.enabled.protocols</li>
 
                             <li class="li">ssl.truststore.type</li>

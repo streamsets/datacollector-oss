@@ -243,20 +243,20 @@
         <p class="p">When you start the pipeline, the origin creates a number of threads based on the
             multithreaded property configured in the origin. <span class="ph">And <span class="ph">Data Collector</span> creates a
                         number of pipeline runners based on the pipeline Max Runners property to
-                        perform pipeline processing. <span class="ph" id="concept_xl3_ncd_py__d1115e2954">Each thread
+                        perform pipeline processing. <span class="ph" id="concept_xl3_ncd_py__d1098e2954">Each thread
                               connects to the origin system, creates a batch of data, and passes the
                               batch to an available pipeline runner.</span></span></p>
 
-        <p class="p"><span class="ph"><span class="ph" id="concept_xl3_ncd_py__d1115e2962">Each pipeline runner
+        <p class="p"><span class="ph"><span class="ph" id="concept_xl3_ncd_py__d1098e2962">Each pipeline runner
                               processes one batch at a time, just like a pipeline that runs on a
                               single thread.</span> When the flow of data slows, the pipeline runners
                         wait idly until they are needed, generating an empty batch at regular
                         intervals. You can configure the Runner Idle Time pipeline property to
                         specify the interval or to opt out of empty batch generation.</span></p>
 
-        <p class="p"><span class="ph"><span class="ph" id="concept_xl3_ncd_py__d1115e2968">Multithreaded pipelines preserve the order of records within each
+        <p class="p"><span class="ph"><span class="ph" id="concept_xl3_ncd_py__d1098e2968">Multithreaded pipelines preserve the order of records within each
                               batch, just like a single-threaded pipeline. But since</span> batches
-                              <span class="ph" id="concept_xl3_ncd_py__d1115e2971">are processed by different
+                              <span class="ph" id="concept_xl3_ncd_py__d1098e2971">are processed by different
                               pipeline runners, the order that batches are written to destinations
                               is not ensured.</span></span></p>
 
@@ -286,7 +286,7 @@
             other pipeline runners, so the write-order of the batches can differ from the
             read-order.</p>
 
-        <p class="p"><span class="ph" id="concept_xl3_ncd_py__d1115e3153">At any given moment, the five
+        <p class="p"><span class="ph" id="concept_xl3_ncd_py__d1098e3153">At any given moment, the five
                         pipeline runners can each process a batch, so this multithreaded pipeline
                         processes up to five batches at a time.</span> When incoming data slows, the
                   pipeline runners sit idle, available for use as soon as the data flow
