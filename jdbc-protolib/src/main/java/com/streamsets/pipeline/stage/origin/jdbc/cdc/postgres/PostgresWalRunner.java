@@ -83,11 +83,9 @@ public class PostgresWalRunner implements Runnable {
 
         if (filteredRecord != null) {
           postgresCDCSource.getQueue().add(filteredRecord);
-          LOG.debug("CDC: {} ", filteredRecord.toString());
-        } else {
+        } else if (LOG.isDebugEnabled()) {
           LOG.debug("Filtered out CDC: {} ", postgresWalRecord.toString());
         }
-
         buffer = stream.readPending();
       }
 

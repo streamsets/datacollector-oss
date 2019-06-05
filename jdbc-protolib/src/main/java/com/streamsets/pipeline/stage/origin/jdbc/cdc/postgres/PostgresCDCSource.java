@@ -26,6 +26,7 @@ import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.DateTimeColumnHandler;
+import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import java.sql.SQLException;
@@ -40,6 +41,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import org.apache.commons.lang3.StringUtils;
@@ -65,12 +69,24 @@ public class PostgresCDCSource extends BaseSource {
   private volatile boolean runnerCreated = false;
   private PostgresCDCWalReceiver walReceiver = null;
   private String offset = null;
-  private Queue<PostgresWalRecord> cdcQueue;
+  private BlockingQueue<PostgresWalRecord> cdcQueue;
   private SafeScheduledExecutorService scheduledExecutor;
   private PostgresWalRunner postgresWalRunner;
   private DateTimeColumnHandler dateTimeColumnHandler;
   private LocalDateTime startDate;
   private ZoneId zoneId;
+
+  /*
+      The Postgres WAL (Write Ahead Log) uses a XLOG sequence number to
+      track what has been committed etc and this number is used for CDC.
+
+      This is presented via a helper class LogSequenceNumber (LSN) which
+      internally is a Long representing the WAL segment and the offset into
+      that segment, portrayed in String as "X/yyyyyy". "0/0" is invalid, hence
+      if selecting "Initial change: fromLSN" (vs fromDate or latestChange) then
+      a valid LSN must be used. This value is our default in this case.
+   */
+  public static final String SEED_LSN = "0/1";
 
 
   public PostgresCDCSource(HikariPoolConfigBean hikariConf, PostgresCDCConfigBean postgresCDCConfigBean) {
@@ -153,8 +169,7 @@ public class PostgresCDCSource extends BaseSource {
       return issues;
     }
 
-    // Setup the SDC record queue as LinkedBlockingQueue of 2x MaxBatchSize
-    cdcQueue = new LinkedList<>();
+    cdcQueue = new LinkedBlockingQueue<>();
     return issues;
   }
 
@@ -178,37 +193,40 @@ public class PostgresCDCSource extends BaseSource {
       generationStarted = startGeneration();
     }
 
-    boolean recordsProduced = false;
     int recordGenerationAttempts = 0;
     PostgresWalRecord postgresWalRecord;
 
     while (generationStarted &&
           !getContext().isStopped() &&
-          !recordsProduced &&
           recordGenerationAttempts++ < MAX_RECORD_GENERATION_ATTEMPTS) {
 
       postgresWalRecord = cdcQueue.poll();
 
-      if ((postgresWalRecord != null) &&
-          (postgresWalRecord.getLsn().asLong() > offsetAsLong)) {
-
-        final Record record = processWalRecord(postgresWalRecord);
-        if (record != null) {
-          Map<String, String> attributes = new HashMap<>();
-          attributes.put(LSN, postgresWalRecord.getLsn().asString());
-          attributes.put(XID, postgresWalRecord.getXid());
-          attributes.put(TIMESTAMP_HEADER, postgresWalRecord.getTimestamp());
-          attributes.forEach((k, v) -> record.getHeader().setAttribute(k, v));
-
-          batchMaker.addRecord(record);
-          walReceiver.setLsnFlushed(postgresWalRecord.getLsn());
-          this.setOffset(postgresWalRecord.getLsn().asString());
-        }
+      if (postgresWalRecord == null) {
+        ThreadUtil.sleep(configBean.pollInterval * 1000 / 3);
+        continue;
       }
-      try {
-        Thread.sleep(100);
-      } catch (InterruptedException e) {
-        LOG.debug("Interrupted wait");
+
+      if (postgresWalRecord.getLsn().asLong() <= offsetAsLong) {
+        LOG.debug("Ignoring already processed CDC with LSN: {} ", postgresWalRecord.getLsn().asString());
+        continue;
+      }
+
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Valid CDC: {} ", postgresWalRecord);
+      }
+
+      final Record record = processWalRecord(postgresWalRecord);
+
+      if (record != null) {
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put(LSN, postgresWalRecord.getLsn().asString());
+        attributes.put(XID, postgresWalRecord.getXid());
+        attributes.put(TIMESTAMP_HEADER, postgresWalRecord.getTimestamp());
+        attributes.forEach((k, v) -> record.getHeader().setAttribute(k, v));
+        batchMaker.addRecord(record);
+        walReceiver.setLsnFlushed(postgresWalRecord.getLsn());
+        setOffset(postgresWalRecord.getLsn().asString());
       }
     }
     return getOffset();
@@ -246,15 +264,13 @@ public class PostgresCDCSource extends BaseSource {
         if (configBean.startLSN == null ||
             configBean.startLSN.isEmpty() ||
             (LogSequenceNumber.valueOf(configBean.startLSN).equals(LogSequenceNumber.INVALID_LSN))
-            ) {
+        ) {
           issues.add(
-              getContext().createConfigIssue(
-                  Groups.CDC.name(),
+              getContext().createConfigIssue(Groups.CDC.name(),
                   configBean.startLSN+" is invalid LSN.",
-                  JdbcErrors.JDBC_408
-              )
+                  JdbcErrors.JDBC_408)
           );
-          this.setOffset("0/0"); //Valid "non-LSN" LSN or set to latest.
+          this.setOffset(SEED_LSN);
         } else {
           this.setOffset(configBean.startLSN);
         }
@@ -283,7 +299,7 @@ public class PostgresCDCSource extends BaseSource {
         break;
 
       case LATEST:
-        this.setOffset("0/0"); //Valid "non-LSN" LSN or set to latest.
+        this.setOffset(null); //Null picks up the latestLSN.
         break;
 
       default:
