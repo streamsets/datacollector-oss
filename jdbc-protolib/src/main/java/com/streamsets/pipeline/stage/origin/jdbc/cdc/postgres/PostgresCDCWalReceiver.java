@@ -18,7 +18,6 @@ package com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_00;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_406;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_407;
-import static com.streamsets.pipeline.lib.jdbc.JdbcUtil.*;
 import static java.sql.DriverManager.*;
 
 import com.streamsets.pipeline.api.Stage;
@@ -50,6 +49,7 @@ import org.postgresql.PGConnection;
 import org.postgresql.PGProperty;
 import org.postgresql.replication.LogSequenceNumber;
 import org.postgresql.replication.PGReplicationStream;
+import org.postgresql.replication.fluent.logical.ChainedLogicalStreamBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,11 +65,11 @@ public class PostgresCDCWalReceiver {
   private final String slotName;
   private final DecoderValues outputPlugin;
 
-  private String offset;
   private String configuredPlugin;
   private String configuredSlotType;
   private Boolean slotActive;
   private String restartLsn;
+  private String confirmedFlushLSN;
   private Connection connection = null;
   private PGReplicationStream stream;
   private List<SchemaAndTable> schemasAndTables;
@@ -80,10 +80,6 @@ public class PostgresCDCWalReceiver {
 
   public PGReplicationStream getStream() {
     return stream;
-  }
-
-  public String getOffset() {
-    return offset;
   }
 
   public List<SchemaAndTable> getSchemasAndTables() {
@@ -135,7 +131,6 @@ public class PostgresCDCWalReceiver {
             throw new StageException(JDBC_407);
           }
           LOG.debug("Slot Name: " +  rs.getString(1) + " " + rs.getString(2));
-          this.offset = rs.getString(2);
         }
       }
     } catch (SQLException e) {
@@ -148,45 +143,68 @@ public class PostgresCDCWalReceiver {
 
     if ( ! isReplicationSlotConfigured(slotName)) {
       createReplicationSlot(slotName);
+      getReplicationSlot(slotName); //Sets restartLsn etc
     }
 
     connection = getConnection(this.uri, this.properties);
     PGConnection pgConnection = connection.unwrap(PGConnection.class);
 
-    LogSequenceNumber lsn = null;
-    if (startOffset == null || startOffset.isEmpty()) {
-      if (this.offset == null) {
-        if (restartLsn != null) {
-          this.offset = restartLsn;
-        } else {
-          this.offset = "0/0";
-        }
-      }
-      lsn = LogSequenceNumber.valueOf(this.offset);
-    } else {
-      lsn = LogSequenceNumber.valueOf(startOffset);
-    }
-
-    /* TODO: These are wal2json options only. Want to implement a factory based on config.
-     */
-    stream = pgConnection
+    ChainedLogicalStreamBuilder streamBuilder = pgConnection
         .getReplicationAPI()
         .replicationStream()
         .logical()
         .withSlotName(slotName)
-        .withStartPosition(lsn)
         .withSlotOption("include-xids", true)
         .withSlotOption("include-timestamp", true)
         .withSlotOption("include-lsn", true)
-        .withStatusInterval(configBean.pollInterval, TimeUnit.SECONDS)
-        .start();
+        .withStatusInterval(configBean.pollInterval, TimeUnit.SECONDS);
+
+    LogSequenceNumber lsn = getLogSequenceNumber(startOffset);
+    if (lsn != null) {
+      streamBuilder.withStartPosition(lsn);
+    }
+
+    stream = streamBuilder.start();
 
     /* TODO - known issue with creation of replication API and potential NPE if
     * forceUpdateStatus() called too soon. */
     ThreadUtil.sleep(100L);
     stream.forceUpdateStatus();
-    LOG.debug("Receiving changes from LSN: {}", stream.getLastReceiveLSN().asString());
-    return stream.getLastReceiveLSN().asString();
+
+    String lsnFrom = lsn != null ? lsn.asString() : stream.getLastReceiveLSN().asString();
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Receiving changes from LSN: {}", lsnFrom);
+    }
+
+    return lsnFrom;
+  }
+
+  private LogSequenceNumber getLogSequenceNumber(String startOffset) {
+    LogSequenceNumber lsn = null;
+
+    switch(configBean.startValue) {
+
+      case LATEST:
+        if (startOffset == null) {
+          startOffset = confirmedFlushLSN;
+        }
+        LogSequenceNumber lsnStartOffset = LogSequenceNumber.valueOf(startOffset);
+        LogSequenceNumber lsnConfirmedFlush = LogSequenceNumber.valueOf(confirmedFlushLSN);
+        lsn = lsnStartOffset.asLong() > lsnConfirmedFlush.asLong() ?
+            lsnStartOffset : lsnConfirmedFlush;
+        break;
+
+      case LSN:
+      case DATE:
+        if (startOffset == null) {
+          startOffset = PostgresCDCSource.SEED_LSN;
+        }
+        lsn = LogSequenceNumber.valueOf(startOffset);
+        break;
+
+      default:
+    }
+    return lsn;
   }
 
   public void dropReplicationSlot(String slotName)
@@ -218,19 +236,16 @@ public class PostgresCDCWalReceiver {
     }
   }
 
-  public  void getReplicationSlot(String slotName)
-      throws StageException
-  {
+  public  void getReplicationSlot(String slotName) throws StageException {
     try {
       try (Connection localConnection = DriverManager.getConnection(
           hikariConfigBean.getConnectionString(),
           hikariConfigBean.username.get(),
           hikariConfigBean.password.get()
       )) {
+        String sql = "select plugin, slot_type, active, restart_lsn, confirmed_flush_lsn from pg_replication_slots where slot_name = ?";
         try (PreparedStatement preparedStatement = localConnection
-            .prepareStatement("select plugin, slot_type, active, "
-                + "restart_lsn from "
-                + "      pg_replication_slots where slot_name = ?")) {
+            .prepareStatement(sql)) {
           preparedStatement.setString(1, slotName);
           try (ResultSet rs = preparedStatement.executeQuery()) {
 
@@ -239,6 +254,7 @@ public class PostgresCDCWalReceiver {
               this.configuredSlotType = rs.getString("slot_type");
               this.slotActive = rs.getBoolean("active");
               this.restartLsn = rs.getString("restart_lsn");
+              this.confirmedFlushLSN = rs.getString("confirmed_flush_lsn");
             }
           }
         }
@@ -338,6 +354,7 @@ public class PostgresCDCWalReceiver {
     this.configuredSlotType = null;
     this.slotActive = false;
     this.restartLsn = null ;
+    this.confirmedFlushLSN = null ;
 
     this.properties = new Properties();
     PGProperty.USER.set(properties, hikariConfigBean.username.get());
