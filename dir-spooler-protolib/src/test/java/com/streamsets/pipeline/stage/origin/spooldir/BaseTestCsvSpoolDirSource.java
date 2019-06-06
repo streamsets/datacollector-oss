@@ -131,6 +131,7 @@ public abstract class BaseTestCsvSpoolDirSource {
       Assert.assertFalse(records.get(0).has("[1]/header"));
       Assert.assertFalse(records.get(0).has("[2]"));
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -153,6 +154,7 @@ public abstract class BaseTestCsvSpoolDirSource {
       Assert.assertEquals("B", records.get(0).get("/1").getValueAsString());
       Assert.assertEquals("B", records.get(0).get("[1]").getValueAsString());
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -230,6 +232,7 @@ public abstract class BaseTestCsvSpoolDirSource {
       Assert.assertNotNull(records);
       Assert.assertEquals(0, records.size());
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -288,6 +291,7 @@ public abstract class BaseTestCsvSpoolDirSource {
       Assert.assertNotNull(records);
       Assert.assertEquals(0, records.size());
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -309,6 +313,7 @@ public abstract class BaseTestCsvSpoolDirSource {
       Assert.assertEquals("B ", records.get(0).get("[1]/value").getValueAsString());
       Assert.assertEquals("^A", records.get(0).get("[2]/value").getValueAsString());
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -362,6 +367,7 @@ public abstract class BaseTestCsvSpoolDirSource {
       Assert.assertTrue(batchCount.get() > 0);
 
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
 
@@ -387,6 +393,7 @@ public abstract class BaseTestCsvSpoolDirSource {
       Assert.assertEquals("^A", records.get(0).get("/2").getValueAsString());
       Assert.assertEquals("^A", records.get(0).get("[2]").getValueAsString());
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -422,6 +429,7 @@ public abstract class BaseTestCsvSpoolDirSource {
       Assert.assertTrue(records.isEmpty());
       Assert.assertFalse(runner.getErrors().isEmpty());
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -444,6 +452,7 @@ public abstract class BaseTestCsvSpoolDirSource {
       Assert.assertEquals("c", records.get(1).get("[0]/value").getValueAsString());
       Assert.assertEquals("d", records.get(1).get("[1]/value").getValueAsString());
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -466,6 +475,7 @@ public abstract class BaseTestCsvSpoolDirSource {
       Assert.assertEquals("c", records.get(1).get("[0]/value").getValueAsString());
       Assert.assertEquals("d", records.get(1).get("[1]/value").getValueAsString());
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -489,6 +499,7 @@ public abstract class BaseTestCsvSpoolDirSource {
       Assert.assertEquals("c", records.get(2).get("[0]/value").getValueAsString());
       Assert.assertEquals("d", records.get(2).get("[1]/value").getValueAsString());
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }

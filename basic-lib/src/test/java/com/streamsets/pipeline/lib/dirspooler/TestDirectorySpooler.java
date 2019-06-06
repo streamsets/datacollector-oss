@@ -118,6 +118,7 @@ public class TestDirectorySpooler {
       test_passed = test_status.get(10000, TimeUnit.MILLISECONDS);
 
     } finally {
+      spooler.destroy();
       schedService.shutdownNow();
     }
     assertTrue("Test did not pass, Spooler did not find files", test_passed);

@@ -48,12 +48,13 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import org.apache.avro.ipc.NettyTransceiver;
 import org.apache.avro.ipc.specific.SpecificRequestor;
 import org.apache.commons.io.Charsets;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.flume.source.avro.AvroFlumeEvent;
 import org.apache.flume.source.avro.AvroSourceProtocol;
 import org.apache.flume.source.avro.Status;
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -65,19 +66,21 @@ import java.security.cert.Certificate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
@@ -86,9 +89,12 @@ import static org.hamcrest.collection.IsMapContaining.hasKey;
 import static com.streamsets.testing.Matchers.fieldWithValue;
 
 public class TestTCPServerSource {
+  private static final Logger LOG = LoggerFactory.getLogger(TestTCPServerSource.class);
 
   public static final String TEN_DELIMITED_RECORDS = "one\ntwo\nthree\nfour\nfive\nsix\nseven\neight\nnine\nten\n";
   public static final String SYSLOG_RECORD = "<42>Mar 24 17:18:10 10.1.2.34 Got an error";
+
+  private static final String ACK_SEPARATOR = "\n";
 
   @Test
   public void syslogRecords() {
@@ -221,8 +227,8 @@ public class TestTCPServerSource {
     configBean.tcpMode = TCPMode.DELIMITED_RECORDS;
     configBean.recordSeparatorStr = recordSeparatorStr;
     configBean.ports = NetworkUtils.getRandomPorts(1);
-    configBean.recordProcessedAckMessage = "record_ack_${record:id()}";
-    configBean.batchCompletedAckMessage = "batch_ack_${batchSize}";
+    configBean.recordProcessedAckMessage = "record_ack_${record:id()}" + ACK_SEPARATOR;
+    configBean.batchCompletedAckMessage = "batch_ack_${batchSize}" + ACK_SEPARATOR;
     configBean.batchSize = batchSize;
 
     final TCPServerSource source = new TCPServerSource(configBean);
@@ -245,43 +251,53 @@ public class TestTCPServerSource {
     final Channel channel = channelFuture.channel();
     TCPServerSourceClientHandler clientHandler = channel.pipeline().get(TCPServerSourceClientHandler.class);
 
+    LOG.trace("About to run produce");
     runner.runProduce(new HashMap<>(), batchSize, output -> {
       records.addAll(output.getRecords().get(outputLane));
       runner.setStop();
     });
 
     // Wait until the connection is closed.
+    LOG.trace("Waiting on produce");
     runner.waitOnProduce();
+    LOG.trace("Finished waiting on produce");
 
-    final List<String> responses = new LinkedList<>();
-    for (int i = 0; i < batchSize + 1; i++) {
-      // one for each record, plus one for the batch
-      responses.add(clientHandler.getResponse());
+    final List<String> acks = new LinkedList<>();
+    // one for each record, plus one for the batch
+    final int totalExpectedAcks = batchSize + 1;
+    LOG.trace("About to fetch {} acks", totalExpectedAcks);
+    for (int i = 0; i < totalExpectedAcks; i++) {
+      final String response = clientHandler.getResponse();
+      if (response != null) {
+        acks.add(response);
+      }
     }
 
+    LOG.trace("Closing channel");
     channel.close();
 
+    LOG.trace("Shutting down worker group");
     workerGroup.shutdownGracefully();
+    LOG.trace("Worker group shut down");
 
     assertThat(records, hasSize(batchSize));
 
-    final List<String> expectedAcks = new LinkedList<>();
+    final Set<String> expectedAcks = new HashSet<>();
     for (int i = 0; i < records.size(); i++) {
       // validate the output record value
       assertThat(records.get(i).get("/text").getValueAsString(), equalTo(expectedRecords[i]));
       // validate the record-level ack
+      // we don't add the ack separator the expected value, as we are effectively stripping it out of
+      // the actual acks in the client handler (via String.split)
       expectedAcks.add(String.format("record_ack_%s", records.get(i).getHeader().getSourceId()));
     }
     // validate the batch-level ack
     expectedAcks.add(String.format("batch_ack_%d", batchSize));
 
-    // because of the vagaries of TCP, we can't be sure that a single ack is returned in each discrete read
-    // this is due to the fact that the server can choose to flush the buffer in different ways, and the client
-    // can choose if/how to buffer on its side when reading from the channel
-    // therefore, we will simply combine all acks in the expected order into a single String and assert at that
-    // level, rather than at an individual read/expected ack level
-    final String combinedAcks = StringUtils.join(responses, "");
-    assertThat(combinedAcks, startsWith(StringUtils.join(expectedAcks, "")));
+    final Set<String> actualAcks = new HashSet<>();
+    actualAcks.addAll(acks);
+
+    assertThat(actualAcks, equalTo(expectedAcks));
   }
 
   @Test
@@ -511,7 +527,7 @@ public class TestTCPServerSource {
     private final boolean randomlySlice;
     private final byte[] data;
 
-    private final BlockingQueue<String> responses = new LinkedBlockingDeque<>();
+    private final BlockingQueue<String> acks = new LinkedBlockingDeque<>();
 
     private TCPServerSourceClientHandler(boolean randomlySlice, byte[] data) {
       this.randomlySlice = randomlySlice;
@@ -521,7 +537,11 @@ public class TestTCPServerSource {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
       ByteBuf buf = (ByteBuf) msg;
-      responses.add(buf.toString(com.google.common.base.Charsets.UTF_8));
+      final String readMsg = buf.toString(com.google.common.base.Charsets.UTF_8);
+      LOG.debug("Channel read message: {}", readMsg);
+      final List<String> acks = Arrays.asList(readMsg.split(ACK_SEPARATOR));
+      LOG.debug("Split into acks: {}", acks);
+      this.acks.addAll(acks);
     }
 
     @Override
@@ -537,7 +557,8 @@ public class TestTCPServerSource {
     }
 
     private String getResponse() throws InterruptedException {
-      return responses.take();
+      LOG.debug("getResponse called, waiting 30 seconds to get a message");
+      return acks.poll(30l, TimeUnit.SECONDS);
     }
   }
 

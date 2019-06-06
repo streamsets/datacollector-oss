@@ -143,6 +143,7 @@ public class TestWholeFileSpoolDirSource {
       Assert.assertEquals(Field.Type.MAP, record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getType());
 
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -203,6 +204,7 @@ public class TestWholeFileSpoolDirSource {
       //Now make sure the file is copied properly,
       checkFileContent(new FileInputStream(sourcePath.toString()), new FileInputStream(targetFile));
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }

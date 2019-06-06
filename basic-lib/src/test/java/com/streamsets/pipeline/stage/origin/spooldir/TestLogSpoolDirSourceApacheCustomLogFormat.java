@@ -182,6 +182,7 @@ public class TestLogSpoolDirSourceApacheCustomLogFormat {
       Assert.assertEquals("2326", record.get("/bytesSent").getValueAsString());
 
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -282,6 +283,7 @@ public class TestLogSpoolDirSourceApacheCustomLogFormat {
       Assert.assertEquals(0, records.size());
 
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -316,5 +318,6 @@ public class TestLogSpoolDirSourceApacheCustomLogFormat {
     SpoolDirSource spoolDirSource = new SpoolDirSource(conf);
     PushSourceRunner runner = new PushSourceRunner.Builder(SpoolDirDSource.class, spoolDirSource).addOutputLane("lane").build();
     runner.runInit();
+    spoolDirSource.destroy();
   }
 }

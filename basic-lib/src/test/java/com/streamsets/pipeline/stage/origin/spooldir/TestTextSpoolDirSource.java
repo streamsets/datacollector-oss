@@ -115,6 +115,7 @@ public class TestTextSpoolDirSource {
       Assert.assertEquals(LINE2.substring(0, 10), records.get(1).get().getValueAsMap().get("text").getValueAsString());
       Assert.assertTrue(records.get(1).has("/truncated"));
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -165,6 +166,7 @@ public class TestTextSpoolDirSource {
       Assert.assertNotNull(records);
       Assert.assertEquals(0, records.size());
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -199,6 +201,7 @@ public class TestTextSpoolDirSource {
       );
       Assert.assertTrue(records.get(0).has("/truncated"));
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }

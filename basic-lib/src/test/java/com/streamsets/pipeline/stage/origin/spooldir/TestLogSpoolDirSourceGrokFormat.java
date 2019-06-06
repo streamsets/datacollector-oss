@@ -160,6 +160,7 @@ public class TestLogSpoolDirSourceGrokFormat {
         record.get("/message").getValueAsString());
 
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -232,6 +233,7 @@ public class TestLogSpoolDirSourceGrokFormat {
       Assert.assertEquals(0, records.size());
 
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }

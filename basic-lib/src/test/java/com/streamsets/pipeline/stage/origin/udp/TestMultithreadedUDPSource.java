@@ -77,6 +77,7 @@ public class TestMultithreadedUDPSource extends BaseUDPSourceTest {
   @Override
   protected void destroyRunner() throws StageException {
     pushRunner.runDestroy();
+    multithreadedSource.destroy();
   }
 
 }

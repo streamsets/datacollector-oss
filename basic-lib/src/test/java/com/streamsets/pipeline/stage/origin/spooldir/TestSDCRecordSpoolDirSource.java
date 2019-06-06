@@ -121,6 +121,7 @@ public class TestSDCRecordSpoolDirSource {
       r.set(Field.create("Bye"));
       Assert.assertEquals("Bye", records.get(1).get("/").getValueAsString());
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }

@@ -151,6 +151,7 @@ public class TestLogSpoolDirSourceApacheErrorLogFormat {
         record.get("/" + Constants.MESSAGE).getValueAsString());
 
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -223,6 +224,7 @@ public class TestLogSpoolDirSourceApacheErrorLogFormat {
       Assert.assertEquals(0, records.size());
 
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }

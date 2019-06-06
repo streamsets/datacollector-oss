@@ -208,6 +208,7 @@ public class AvroSpoolDirSourceTestUtil {
       Assert.assertEquals("boss2@company.com", emails.get(1).getValueAsString());
 
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -321,6 +322,7 @@ public class AvroSpoolDirSourceTestUtil {
       Assert.assertEquals(0, records.size());
 
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }

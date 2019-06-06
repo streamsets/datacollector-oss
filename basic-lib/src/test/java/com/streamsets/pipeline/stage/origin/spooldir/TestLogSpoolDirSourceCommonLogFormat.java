@@ -172,6 +172,7 @@ public class TestLogSpoolDirSourceCommonLogFormat {
 
 
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -272,6 +273,7 @@ public class TestLogSpoolDirSourceCommonLogFormat {
       Assert.assertEquals(0, records.size());
 
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }

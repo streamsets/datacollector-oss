@@ -106,5 +106,6 @@ public class TestUDPSource extends BaseUDPSourceTest {
   @Override
   protected void destroyRunner() throws StageException {
     runner.runDestroy();
+    source.destroy();
   }
 }

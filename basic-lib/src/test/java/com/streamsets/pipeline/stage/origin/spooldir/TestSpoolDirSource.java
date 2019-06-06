@@ -114,6 +114,7 @@ public class TestSpoolDirSource {
       Assert.assertTrue(source.getSpooler().isRunning());
       Assert.assertEquals(runner.getContext(), source.getSpooler().getContext());
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -208,6 +209,7 @@ public class TestSpoolDirSource {
       runner3.runDestroy();
 
     } finally {
+      source.destroy();
       runner2.runDestroy();
     }
   }
@@ -231,6 +233,7 @@ public class TestSpoolDirSource {
       Assert.assertEquals("no-more-data", runner.getEventRecords().get(0).getEventType());
 
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -259,6 +262,7 @@ public class TestSpoolDirSource {
       TestOffsetUtil.compare("file-0.log::0", runner.getOffsets());
       Assert.assertTrue(runnable.produceCalled);
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -279,6 +283,7 @@ public class TestSpoolDirSource {
 
       TestOffsetUtil.compare("file-0.log::0", runner.getOffsets());
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -305,6 +310,7 @@ public class TestSpoolDirSource {
       TestOffsetUtil.compare("file-0.log::0", runner.getOffsets());
       Assert.assertTrue(runnable.produceCalled);
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -330,6 +336,7 @@ public class TestSpoolDirSource {
       TestOffsetUtil.compare("file-0.log::1", runner.getOffsets());
       Assert.assertTrue(runnable.produceCalled);
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -372,6 +379,7 @@ public class TestSpoolDirSource {
 
       Assert.assertEquals(3, batchCount.get());
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -450,6 +458,7 @@ public class TestSpoolDirSource {
       Assert.assertTrue(events.get(0).getSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME).contains("file-0.log"));
       Assert.assertTrue(events.get(1).getSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME).contains("file-1.log"));
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -511,6 +520,7 @@ public class TestSpoolDirSource {
       Assert.assertEquals(1, errorRecords.size());
 
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -661,6 +671,7 @@ public class TestSpoolDirSource {
       Assert.assertEquals(12, batchCount.get());
 
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -699,6 +710,7 @@ public class TestSpoolDirSource {
     Assert.assertEquals(1, offsetMap.size());
     Assert.assertTrue(offsetMap.containsKey(NULL_FILE));
     Assert.assertEquals("0", offsetMap.get(NULL_FILE).getOffset());
+    source.destroy();
   }
 
   @Test
@@ -730,6 +742,7 @@ public class TestSpoolDirSource {
     Map<String, Offset>  offsetMap = source.handleLastSourceOffset(lastSourceOffset, createTestContext());
     Assert.assertEquals(1, offsetMap.size());
     Assert.assertEquals("0", offsetMap.get("file-1.log").getOffset());
+    source.destroy();
   }
 
   @Test
@@ -779,6 +792,7 @@ public class TestSpoolDirSource {
 
     // get the very last file from the last source offset
     Assert.assertEquals("file-0.log", source.getLastSourceFileName());
+    source.destroy();
   }
 
   @Test
@@ -851,6 +865,7 @@ public class TestSpoolDirSource {
       TestOffsetUtil.compare("-file-9.log::-1", runner.getOffsets());
       Assert.assertEquals(50, records.size());
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -927,6 +942,7 @@ public class TestSpoolDirSource {
       TestOffsetUtil.compare("file-9.log::-1", runner.getOffsets());
       Assert.assertTrue(records.size() == 34 || batchCount.get() > 10);
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
 
@@ -1006,6 +1022,7 @@ public class TestSpoolDirSource {
       }
 
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }

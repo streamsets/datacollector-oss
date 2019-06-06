@@ -189,6 +189,7 @@ public class TestLogSpoolDirSourceCombinedLogFormat {
       Assert.assertEquals("\"Mozilla/4.08 [en] (Win98; I ;Nav)\"", record.get("/" + Constants.AGENT).getValueAsString());
 
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -301,6 +302,7 @@ public class TestLogSpoolDirSourceCombinedLogFormat {
       Assert.assertEquals(0, records.size());
 
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }

@@ -106,6 +106,7 @@ public class TestProtobufSpoolDirSource {
       assertEquals("world", testMap.get("hello").getValueAsString());
       assertEquals("earth", testMap.get("bye").getValueAsString());
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }

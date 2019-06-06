@@ -136,6 +136,7 @@ public class TestSpoolDirSourceOnErrorHandling {
       Assert.assertEquals(0, runner.getErrorRecords().size());
 
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -182,6 +183,7 @@ public class TestSpoolDirSourceOnErrorHandling {
       Assert.assertEquals(1, runner.getErrors().size());
 
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -204,6 +206,7 @@ public class TestSpoolDirSourceOnErrorHandling {
       });
       runner.waitOnProduce();
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -319,6 +322,7 @@ public class TestSpoolDirSourceOnErrorHandling {
       Assert.assertEquals(0, runner.getErrorRecords().size());
 
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -363,6 +367,7 @@ public class TestSpoolDirSourceOnErrorHandling {
       Assert.assertEquals(0, runner.getErrors().size());
 
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -381,6 +386,7 @@ public class TestSpoolDirSourceOnErrorHandling {
       Assert.assertTrue(e instanceof StageException);
 
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
@@ -411,6 +417,7 @@ public class TestSpoolDirSourceOnErrorHandling {
     } catch (Exception ex) {
       ex.getStackTrace();
     } finally {
+      source.destroy();
       runner.runDestroy();
     }
   }
