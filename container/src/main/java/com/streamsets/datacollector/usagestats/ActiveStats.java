@@ -224,7 +224,7 @@ public class ActiveStats {
     ActiveStats statsBean = new ActiveStats().setStartTime(now)
                                              .setDataCollectorVersion(getDataCollectorVersion())
                                              .setDpmEnabled(isDpmEnabled())
-                                             .setErrorCodes(getErrorCodes())
+                                             .setErrorCodes(errorCodes)
                                              .setUpTime(getUpTime().roll());
     statsBean.setPipelines(getPipelines().stream().map(UsageTimer::roll).collect(Collectors.toList()));
     statsBean.setStages(getStages().stream()
@@ -239,7 +239,7 @@ public class ActiveStats {
     ActiveStats snapshot = new ActiveStats().setStartTime(getStartTime())
                                             .setDataCollectorVersion(getDataCollectorVersion())
                                             .setDpmEnabled(isDpmEnabled())
-                                            .setErrorCodes(getErrorCodes())
+                                            .setErrorCodes(errorCodes)
                                             .setUpTime(getUpTime().snapshot())
                                             .setRecordCount(getRecordCount());
     snapshot.setPipelines(getPipelines().stream().map(UsageTimer::snapshot).collect(Collectors.toList()));
