@@ -102,6 +102,7 @@ public class StageDefinitionJson   {
   private String inputStreamLabelProviderClass = null;
   private List<String> inputStreamLabels = null;
   private List<String> eventDefs = new ArrayList<>();
+  private Boolean bisectable = false;
 
   /**
    **/
@@ -515,6 +516,19 @@ public class StageDefinitionJson   {
   }
   public void setEventDefs(List<String> eventDefs) {
     this.eventDefs = eventDefs;
+  }
+
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("bisectable")
+  public Boolean isBisectable() {
+    return bisectable;
+  }
+
+  public void setBisectable(Boolean bisectable) {
+    this.bisectable = bisectable;
   }
 
 }

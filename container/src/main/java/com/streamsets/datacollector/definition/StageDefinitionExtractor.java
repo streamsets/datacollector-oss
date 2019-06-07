@@ -229,6 +229,7 @@ public abstract class StageDefinitionExtractor {
         }
         List<String> libJarsRegex = ImmutableList.copyOf(sDef.libJarsRegex());
         boolean recordsByRef = sDef.recordsByRef();
+        boolean bisectable = sDef.bisectable();
         List<ServiceDependencyDefinition> services = extractServiceDependencies(sDef);
 
         // Should the stage be hidden from canvas? If so, where else should it be displayed?
@@ -328,6 +329,7 @@ public abstract class StageDefinitionExtractor {
             sDef.beta(),
             inputStreams,
             inputStreamLabelProviderClass,
+            bisectable,
             eventDefs
         );
       } catch (Exception e) {

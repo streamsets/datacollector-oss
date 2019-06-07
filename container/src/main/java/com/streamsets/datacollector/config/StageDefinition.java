@@ -84,6 +84,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
   private final String inputStreamLabelProviderClass;
   private List<String> inputStreamLabels;
   private List<Class> eventDefs;
+  private final boolean bisectable;
 
   // localized version
   private StageDefinition(
@@ -124,6 +125,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
       int inputStreams,
       String inputStreamLabelProviderClass,
       List<String> inputStreamLabels,
+      boolean bisectable,
       List<Class> eventDefs
   ) {
     this.stageDef = stageDef;
@@ -177,6 +179,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     this.inputStreams = inputStreams;
     this.inputStreamLabelProviderClass = inputStreamLabelProviderClass;
     this.inputStreamLabels = inputStreamLabels;
+    this.bisectable = bisectable;
     this.eventDefs = eventDefs;
   }
 
@@ -225,6 +228,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     inputStreams = def.inputStreams;
     inputStreamLabelProviderClass = def.inputStreamLabelProviderClass;
     inputStreamLabels = def.inputStreamLabels;
+    bisectable = def.bisectable;
   }
 
   public StageDefinition(
@@ -263,6 +267,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
       boolean beta,
       int inputStreams,
       String inputStreamLabelProviderClass,
+      boolean bisectable,
       List<Class> eventDefs
   ) {
     this.stageDef = stageDef;
@@ -314,6 +319,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     this.beta = beta;
     this.inputStreams = inputStreams;
     this.inputStreamLabelProviderClass = inputStreamLabelProviderClass;
+    this.bisectable = bisectable;
     this.eventDefs = eventDefs;
   }
 
@@ -611,6 +617,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
         inputStreams,
         inputStreamLabelProviderClass,
         inputStreamLabels,
+        bisectable,
         eventDefs
     );
   }
@@ -679,6 +686,10 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
 
   public List<String> getInputStreamLabels() {
     return inputStreamLabels;
+  }
+
+  public boolean isBisectable() {
+    return bisectable;
   }
 
   public List<Class> getEventDefs() {

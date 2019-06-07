@@ -175,6 +175,10 @@ public class StageDefinitionJson {
     return stageDefinition.getInputStreamLabels();
   }
 
+  public Boolean isBisectable() {
+    return stageDefinition.isBisectable();
+  }
+
   public List<String> getEventDefs() {
     return stageDefinition.getEventDefs().stream().map(Class::getCanonicalName).collect(Collectors.toList());
   }

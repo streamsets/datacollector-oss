@@ -191,6 +191,19 @@ public class PipelineConfigBean implements Stage {
 
   @ConfigDef(
       required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Advanced Error Handling",
+      dependencies = {
+          @Dependency(configName = "shouldRetry", triggeredByValues = "false"),
+          @Dependency(configName = "executionMode", triggeredByValues = {"BATCH", "STREAMING"})
+      },
+      displayPosition = 30
+  )
+  public boolean advancedErrorHandling;
+
+  @ConfigDef(
+      required = false,
       type = ConfigDef.Type.MODEL,
       defaultValue = "[\"RUN_ERROR\", \"STOPPED\", \"FINISHED\"]",
       label = "Notify on Pipeline State Changes",

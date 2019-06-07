@@ -93,6 +93,8 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0071("Stage '{}' from '{}' library does not support '{}' execution mode"),
   VALIDATION_0072("Data Collector is in standalone mode, cannot run pipeline cluster mode"),
   VALIDATION_0073("Data Collector is in cluster mode, cannot run pipeline standalone mode"),
+  VALIDATION_0074("Origin '{}' of type '{}' is not bisectable, and can't be used for Advanced Error Handling"),
+
   VALIDATION_0080("Precondition '{}' must begin with '${' and end with '}'"),
   VALIDATION_0081("Invalid precondition '{}': {}"),
   VALIDATION_0082("Cannot create runner with execution mode '{}', another runner with execution mode '{}'"

@@ -85,6 +85,7 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
       false,
       -1,
       null,
+      false,
       Collections.emptyList()
   );
 

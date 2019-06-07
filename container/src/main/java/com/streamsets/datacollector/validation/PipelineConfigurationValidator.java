@@ -20,10 +20,12 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
 import com.streamsets.datacollector.config.PipelineGroups;
 import com.streamsets.datacollector.config.ServiceConfiguration;
 import com.streamsets.datacollector.config.ServiceDependencyDefinition;
 import com.streamsets.datacollector.config.StageConfiguration;
+import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.configupgrade.PipelineConfigurationUpgrader;
 import com.streamsets.datacollector.creation.PipelineBean;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
@@ -35,6 +37,7 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.StageType;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,6 +106,7 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
     canPreview &= validateStatsAggregatorStage();
     canPreview &= validatePipelineLifecycleEvents();
     canPreview &= validateStagesExecutionMode(pipelineConfiguration);
+    canPreview &= validateBisectability(pipelineConfiguration);
     canPreview &= validateCommitTriggerStage(pipelineConfiguration);
 
     if (!issues.hasIssues()) {
@@ -293,6 +297,31 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
     issues.addAll(errors);
     return canPreview;
   }
+
+
+  public boolean validateBisectability(PipelineConfiguration pipelineConf) {
+    boolean canPreview = true;
+    if (pipelineConf.getConfiguration("advancedErrorHandling") != null &&
+        (boolean) pipelineConf.getConfiguration("advancedErrorHandling").getValue()) {
+      for (StageConfiguration stageConf : pipelineConf.getStages()) {
+        StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(), false);
+        if (isOrigin(stageDef) && !stageDef.isBisectable()) {
+          issues.add(IssueCreator.getPipeline().create(
+              ValidationError.VALIDATION_0074,
+              stageConf.getInstanceName(),
+              stageDef.getClassName()
+          ));
+          canPreview = false;
+        }
+      }
+    }
+    return canPreview;
+  }
+
+  private boolean isOrigin(StageDefinition stageDef) {
+    return stageDef.getType() == StageType.SOURCE;
+  }
+
 
   private boolean loadAndValidatePipelineConfig() {
     List<Issue> errors = new ArrayList<>();

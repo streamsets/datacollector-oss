@@ -1074,6 +1074,7 @@ public class MockStages {
               false,
               -1,
               null,
+              false,
               Collections.emptyList()
           );
           stages.put(name, newDef);

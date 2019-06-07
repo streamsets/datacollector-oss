@@ -221,6 +221,7 @@ public class StageDefinitionBuilder {
       false,
       -1,
       null,
+       false,
        Collections.emptyList()
     );
   }
