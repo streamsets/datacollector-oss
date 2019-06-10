@@ -326,8 +326,10 @@ public class StageLibraryResource {
         Optional<StageLibraryDefinition> installedLibrary = stageLibrary.getLoadedStageLibraries().stream()
             .filter(lib -> libraryId.equals(lib.getName()))
             .findFirst();
-        if(installedLibrary.isPresent()) {
-          throw new RestException(RestErrors.REST_1002, libraryId, installedLibrary.get().getVersion());
+        // In case that the library was installed, but SDC wasn't rebooted
+        File libraryDirectory = new File(runtimeDir + STREAMSETS_LIBS_PATH + libraryId);
+        if(installedLibrary.isPresent() || libraryDirectory.exists()) {
+          throw new RestException(RestErrors.REST_1002, libraryId, installedLibrary.isPresent() ? installedLibrary.get().getVersion() : "Unknown");
         }
 
         while (entry != null) {
