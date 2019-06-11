@@ -193,12 +193,12 @@ public class PostgresCDCSource extends BaseSource {
       generationStarted = startGeneration();
     }
 
-    int recordGenerationAttempts = 0;
     PostgresWalRecord postgresWalRecord;
-
+    maxBatchSize = Math.min(configBean.baseConfigBean.maxBatchSize, maxBatchSize);
+    int currentBatchSize = 0;
     while (generationStarted &&
           !getContext().isStopped() &&
-          recordGenerationAttempts++ < MAX_RECORD_GENERATION_ATTEMPTS) {
+          currentBatchSize < maxBatchSize) {
 
       postgresWalRecord = cdcQueue.poll();
 
@@ -225,6 +225,7 @@ public class PostgresCDCSource extends BaseSource {
         attributes.put(TIMESTAMP_HEADER, postgresWalRecord.getTimestamp());
         attributes.forEach((k, v) -> record.getHeader().setAttribute(k, v));
         batchMaker.addRecord(record);
+        currentBatchSize++;
         walReceiver.setLsnFlushed(postgresWalRecord.getLsn());
         setOffset(postgresWalRecord.getLsn().asString());
       }
