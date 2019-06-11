@@ -102,12 +102,25 @@ angular
         if (configDefinition.type !== 'TEXT') {
           codeMirrorOptions = {
             dictionary: $scope.getCodeMirrorHints(configDefinition),
-            lineWrapping: $rootScope.$storage.lineWrapping
+            lineWrapping: $rootScope.$storage.lineWrapping,
+            extraKeys: {
+              'Ctrl-Space': 'autocomplete'
+            }
           };
         } else {
           codeMirrorOptions = {
             dictionary: $scope.getTextCodeMirrorHints(configDefinition),
-            lineWrapping: $rootScope.$storage.lineWrapping
+            lineWrapping: $rootScope.$storage.lineWrapping,
+            extraKeys: {
+              'Ctrl-Space': 'autocomplete',
+              'F11': function(cm) {
+                cm.setOption('fullScreen', !cm.getOption('fullScreen'));
+              },
+              'Esc': function(cm) {
+                console.log('fsfsdfsdf');
+                cm.setOption('fullScreen', !cm.getOption('fullScreen'));
+              }
+            }
           };
         }
 

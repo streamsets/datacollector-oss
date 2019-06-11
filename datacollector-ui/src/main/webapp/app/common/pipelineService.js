@@ -31,10 +31,7 @@ angular.module('dataCollectorApp.common')
       autoCloseBrackets: {
         pairs: '(){}\'\'""'
       },
-      cursorHeight: 1,
-      extraKeys: {
-        'Ctrl-Space': 'autocomplete'
-      }
+      cursorHeight: 1
     };
     var fragmentGroupStages = [
       'com_streamsets_pipeline_stage_origin_fragment_FragmentSource',
