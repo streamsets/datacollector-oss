@@ -79,7 +79,13 @@ object Driver {
     if (partitionCount == -1) {
       // Count the number of executors (subtract 1 since the getExecutorStorageStatus
       // returns the storage stages for the driver as well.
-      partitionCount = rdd.sparkContext.getExecutorStorageStatus.length - 1
+      if(rdd.sparkContext.getClass.getMethods.map(_.getName).filter(_ matches "getExecutorStorageStatus").length > 0){
+        // For Spark versions < 2.4.0
+        partitionCount = rdd.sparkContext.getExecutorStorageStatus.length - 1
+      }else{
+        // For Spark versions >= 2.4.0
+        partitionCount = rdd.sparkContext.statusTracker.getExecutorInfos.length
+      }
     }
 
     def repartition[T: ClassTag](rdd: RDD[T]) : RDD[T] = {
