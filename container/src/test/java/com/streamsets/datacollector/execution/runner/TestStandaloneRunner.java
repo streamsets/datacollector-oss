@@ -31,6 +31,7 @@ import com.streamsets.datacollector.execution.StartPipelineContextBuilder;
 import com.streamsets.datacollector.execution.StateListener;
 import com.streamsets.datacollector.execution.common.ExecutorConstants;
 import com.streamsets.datacollector.execution.manager.standalone.StandaloneAndClusterPipelineManager;
+import com.streamsets.datacollector.execution.metrics.MetricsEventRunnable;
 import com.streamsets.datacollector.execution.runner.common.AsyncRunner;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
 import com.streamsets.datacollector.execution.runner.standalone.StandaloneRunner;
@@ -59,6 +60,8 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.mockito.internal.util.reflection.Whitebox;
 
 import javax.inject.Singleton;
 import java.io.File;
@@ -664,6 +667,20 @@ public class TestStandaloneRunner {
     Assert.assertNotNull(GreenMailUtil.getBody(mailServer.getReceivedMessages()[0]));
 
     mailServer.reset();
+  }
+
+  @Test(timeout = 20000)
+  public void testMetricsEventRunnableCalledOnFinishPipeline() throws Exception {
+    Runner runner = Mockito.spy(pipelineManager.getRunner( TestUtil.PIPELINE_WITH_EMAIL, "0"));
+    StandaloneRunner standaloneRunner = Mockito.spy(runner.getRunner(StandaloneRunner.class));
+    MetricsEventRunnable metricsEventRunnable =  Mockito.mock(MetricsEventRunnable.class);
+    Mockito.doNothing().when(metricsEventRunnable).run();
+    Whitebox.setInternalState(standaloneRunner, "metricsEventRunnable", metricsEventRunnable);
+    standaloneRunner.stateChanged(PipelineStatus.STARTING, "", Collections.emptyMap());
+    standaloneRunner.stateChanged(PipelineStatus.RUNNING, "", Collections.emptyMap());
+    standaloneRunner.stateChanged(PipelineStatus.FINISHING, "", Collections.emptyMap());
+    standaloneRunner.stateChanged(PipelineStatus.FINISHED, "", Collections.emptyMap());
+    Mockito.verify(metricsEventRunnable, Mockito.times(1)).onStopOrFinishPipeline();
   }
 
   @Module(overrides = true, library = true)

@@ -595,6 +595,9 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         allAttributes.putAll(attributes);
       }
       validateAndSetStateTransition(getState().getUser(), pipelineStatus, message, allAttributes);
+      if (pipelineStatus == PipelineStatus.FINISHED && metricsEventRunnable != null) {
+        this.metricsEventRunnable.onStopOrFinishPipeline();
+      }
     } catch (PipelineStoreException | PipelineRunnerException ex) {
       throw new PipelineRuntimeException(ex.getErrorCode(), ex);
     }
@@ -939,7 +942,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
       pipelineRunnable = null;
     }
     if (metricsEventRunnable != null) {
-      metricsEventRunnable.onStopPipeline();
+      metricsEventRunnable.onStopOrFinishPipeline();
       metricsEventRunnable = null;
     }
     if (threadHealthReporter != null) {
