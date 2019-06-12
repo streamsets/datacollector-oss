@@ -134,7 +134,7 @@ public class MetricsEventRunnable implements Runnable {
     this.runtimeInfo = runtimeInfo;
   }
 
-  public void onStopPipeline() {
+  public void onStopOrFinishPipeline() {
     this.threadHealthReporter = null;
     if (isDPMPipeline) {
       // Send final metrics to DPM on stop
