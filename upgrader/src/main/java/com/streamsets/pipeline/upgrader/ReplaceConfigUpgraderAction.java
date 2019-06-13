@@ -1,0 +1,120 @@
+/*
+ * Copyright 2019 StreamSets Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.streamsets.pipeline.upgrader;
+
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.impl.Utils;
+
+import java.util.function.Function;
+import java.util.regex.Pattern;
+
+public class ReplaceConfigUpgraderAction<T> extends UpgraderAction<ReplaceConfigUpgraderAction, T> {
+
+  public static final String MATCHES_ALL = ".*";
+
+  public static final String DEFAULT_TOKEN = "$$";
+
+  private String ifOldValueMatches = MATCHES_ALL;
+  private String tokenForOldValue = DEFAULT_TOKEN;
+  private Object newValue;
+  private Object elseNewValue;
+
+  public ReplaceConfigUpgraderAction(Function<T, ConfigsAdapter> wrapper) {
+    super(wrapper);
+  }
+
+  public String getIfOldValueMatches() {
+    return ifOldValueMatches;
+  }
+
+  public ReplaceConfigUpgraderAction setIfOldValueMatches(String ifOldValueMatches) {
+    if (ifOldValueMatches != null) {
+      this.ifOldValueMatches = ifOldValueMatches;
+    }
+    return this;
+  }
+
+  public String getTokenForOldValue() {
+    return tokenForOldValue;
+  }
+
+  public ReplaceConfigUpgraderAction setTokenForOldValue(String tokenForOldValue) {
+    if (tokenForOldValue != null) {
+      this.tokenForOldValue = tokenForOldValue;
+    }
+    return this;
+  }
+
+  public Object getNewValue() {
+    return newValue;
+  }
+
+  public ReplaceConfigUpgraderAction setNewValue(Object newValue) {
+    this.newValue = newValue;
+    return this;
+  }
+
+  public Object getElseNewValue() {
+    return elseNewValue;
+  }
+
+  public ReplaceConfigUpgraderAction setElseNewValue(Object elseNewValue) {
+    this.elseNewValue = elseNewValue;
+    return this;
+  }
+
+  protected Object getNewValue(Object oldValue, Object newValue) {
+    Object value = newValue;
+    if (newValue instanceof String) {
+      String newValueStr = (String) newValue;
+      if (newValueStr.contains(tokenForOldValue)) {
+        if (oldValue instanceof String) {
+          value = newValueStr.replace(tokenForOldValue, (String) oldValue);
+        } else {
+          throw new StageException(Errors.YAML_UPGRADER_05, getName());
+        }
+      }
+    }
+    return value;
+  }
+
+  @Override
+  public void upgrade(T configs) {
+    Utils.checkNotNull(getName(), "name");
+    Utils.checkNotNull(getNewValue(), "newValue");
+    ConfigsAdapter configsAdapter = wrap(configs);
+    ConfigsAdapter.Pair config = configsAdapter.find(getName());
+    if (config != null) {
+      if (MATCHES_ALL.equals(getIfOldValueMatches())) {
+        configsAdapter.set(getName(), getNewValue(config.getValue(), getNewValue()));
+      } else {
+        boolean matches;
+        if ((config.getValue() instanceof String)) {
+          Pattern pattern = Pattern.compile(getIfOldValueMatches());
+          matches = pattern.matcher(config.getValue().toString()).matches();
+        } else {
+          matches = config.getValue().toString().equals(getIfOldValueMatches());
+        }
+        if (matches) {
+          configsAdapter.set(getName(), getNewValue(config.getValue(), getNewValue()));
+        } else if (getElseNewValue() != null) {
+          configsAdapter.set(getName(), getNewValue(config.getValue(), getElseNewValue()));
+        }
+      }
+    }
+  }
+
+}

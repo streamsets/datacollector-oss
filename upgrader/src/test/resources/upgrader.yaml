@@ -1,0 +1,129 @@
+#
+# Copyright 2019 StreamSets Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+upgraderVersion: 1
+
+# The YAML parser converts to closest type possible,
+# for example:
+#    Hello is parsed a String
+#    1 is parsed as an Integer
+#    true is parsed as a Boolean
+#    [] is parsed as a List
+#    [{"K","V"}] is parsed as a List of Map
+#
+# To force A String value surround the value with double quotes
+#
+# When dealing with configurations that are Java enums treat them as String values
+#
+upgrades:
+  - toVersion: 1                          # upgrades up to version 1
+    actions:                              # applies the actions in order
+
+    - setConfig:                          # sets a configuration
+        name: foo
+        value: bar                        # value is a string or JSON
+
+    - renameConfig:                       # renames configurations
+        oldNamePattern: prefix\.(.*$)     # Java regex, () can be used to define groups
+        newNamePattern: newPrefix.(0)     # new pattern, it can reference groups from the old pattern using (#)
+
+    - setConfigIfMissing:                 # if a configuration entry is missing sets a configuration
+        lookForName: missing              # name of the configuration to look for
+        name: addedBecauseMissing         # name of the configuration to set
+        value: [{}]                       # this is an example of a JSON value
+
+    - setConfigIfFound:                   # if a configuration entry is found set a configuration
+        lookForName: found                # name of the configuration to look for
+        name: addedBecauseFound
+        value: FOUND
+    - removeConfigs:
+        namePattern: remove.*
+    - replaceConfig:
+        name: replace
+        ifOldValueMatches: .*REPLACE.*    # optional, default .* (always)
+        newValue: NEW_VALUE_$$$
+        elseNewValue: $$$$_ELSE_VALUE     # optional, no default
+        tokenForOldValue: $$$             # optional, default $$
+    - iterateListConfig:
+        name: listConfig
+        actions:
+        - setConfig:
+            name: foo
+            value: bar
+        - renameConfig:
+            oldNamePattern: prefix\.(.*$)
+            newNamePattern: newPrefix.(0)
+        - setConfigIfMissing:
+            lookForName: missing
+            name: addedBecauseMissing
+            value: [{}]
+        - setConfigIfFound:
+            lookForName: found
+            name: addedBecauseFound
+            value: FOUND
+        - removeConfigs:
+            namePattern: remove.*
+        - replaceConfig:
+            name: replace
+            ifOldValueMatches: .*REPLACE.*    # optional, default .* (always)
+            newValue: NEW_VALUE_$$$
+            elseNewValue: $$$$_ELSE_VALUE     # optional, no default
+            tokenForOldValue: $$$             # optional, default $$
+        - configStringMapPut:
+            name: mapConfig
+            key: key
+            value: value
+        - configStringMapRemove:
+            name: mapConfig
+            key: key                          # optional, key or value must be set
+        - configStringMapRemove:
+            name: mapConfig
+            value: value                      # optional, key or value must be set
+        - configStringListAdd:
+            name: listConfig
+            value: value
+        - configStringListRemove:
+            name: listConfig
+            value: value
+    - configStringMapPut:
+        name: mapConfig
+        key: key
+        value: value
+    - configStringMapRemove:
+        name: mapConfig
+        key: key                              # optional, key or value must be set
+    - configStringMapRemove:
+        name: mapConfig
+        value: value                          # optional, key or value must be set
+    - configStringListAdd:
+        name: listConfig
+        value: value
+    - configStringListRemove:
+        name: listConfig
+        value: value
+
+
+  - toVersion: 2
+    actions:
+    - setConfig:
+        name: foofoo
+        value: barbar
+
+  - toVersion: 3
+    actions:
+    - setConfig:
+        name: foofoofoo
+        value: barbarbar
