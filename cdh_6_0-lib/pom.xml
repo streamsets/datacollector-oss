@@ -748,6 +748,10 @@
                     <groupId>org.glassfish</groupId>
                     <artifactId>javax.el</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.apache.hadoop</groupId>
+                    <artifactId>hadoop-common</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -1079,7 +1083,7 @@
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
-        <dependency>
+	<dependency>
             <groupId>com.streamsets</groupId>
             <artifactId>streamsets-datacollector-hdfs-protolib</artifactId>
             <type>test-jar</type>

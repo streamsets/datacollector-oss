@@ -854,6 +854,10 @@
                     <groupId>org.glassfish</groupId>
                     <artifactId>javax.el</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.apache.hadoop</groupId>
+                    <artifactId>hadoop-common</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 

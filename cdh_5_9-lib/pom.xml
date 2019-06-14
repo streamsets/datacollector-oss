@@ -352,7 +352,7 @@
                 <exclusion>
                     <groupId>org.mockito</groupId>
                     <artifactId>mockito-all</artifactId>
-                </exclusion>                  
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -457,6 +457,10 @@
                 <exclusion>
                     <groupId>javax.servlet</groupId>
                     <artifactId>servlet-api</artifactId>
+                </exclusion>
+		<exclusion>
+                    <groupId>org.apache.hadoop</groupId>
+                    <artifactId>hadoop-common</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
