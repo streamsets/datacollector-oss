@@ -163,7 +163,9 @@ public class AclPipelineStoreTask implements PipelineStoreTask {
       RuleDefinitions ruleDefinitions,
       boolean draft
   ) throws PipelineException {
-    aclStore.validateWritePermission(pipelineName, currentUser);
+    if (!draft) {
+      aclStore.validateWritePermission(pipelineName, currentUser);
+    }
     return pipelineStore.storeRules(pipelineName, tag, ruleDefinitions, draft);
   }
 

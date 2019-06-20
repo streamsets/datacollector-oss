@@ -1444,7 +1444,7 @@ public class PipelineStoreResource {
     }
 
     if (overwrite) {
-      if (store.hasPipeline(name)) {
+      if (!draft && store.hasPipeline(name)) {
         newPipelineConfig = store.load(name, rev);
       } else {
         if (autoGeneratePipelineId) {
