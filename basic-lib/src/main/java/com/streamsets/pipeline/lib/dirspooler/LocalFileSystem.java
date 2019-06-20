@@ -180,8 +180,20 @@ public class LocalFileSystem implements WrappedFileSystem {
   }
 
   public WrappedFile getFile(String dirPath, String filePath) {
+    if (isAbsolutePath(dirPath, filePath)) {
+      return getFile(filePath);
+    }
     Path path = Paths.get(dirPath, filePath);
     return new LocalFile(path);
+  }
+
+  /*
+   * Java File.isAbsolute method only checks whether the path begins with /
+   * This is not enough since sometimes the method receives relative paths starting with /
+   * We want to check whether the filePath already includes the directory path
+   */
+  private boolean isAbsolutePath(String dirPath, String filePath) {
+    return filePath != null && filePath.startsWith(dirPath);
   }
 
   public void mkdir(WrappedFile filePath) {
