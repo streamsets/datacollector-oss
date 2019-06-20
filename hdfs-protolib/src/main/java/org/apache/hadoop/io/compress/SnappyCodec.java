@@ -54,4 +54,8 @@ public class SnappyCodec extends AbstractCodec {
     return new SnappyDecompressor(getBufferSize());
   }
 
+  public static boolean isNativeCodeLoaded() {
+    return false;
+  }
+
 }

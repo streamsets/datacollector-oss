@@ -62,4 +62,7 @@ public class Lz4Codec extends AbstractCodec {
     return new Lz4Decompressor(unsafe, getBufferSize());
   }
 
+  public static boolean isNativeCodeLoaded() {
+    return false;
+  }
 }
