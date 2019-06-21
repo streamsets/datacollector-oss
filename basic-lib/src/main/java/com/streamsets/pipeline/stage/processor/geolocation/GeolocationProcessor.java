@@ -23,6 +23,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Maps;
 import com.google.common.net.InetAddresses;
+import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.AddressNotFoundException;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
@@ -352,7 +353,7 @@ public class  GeolocationProcessor extends SingleLaneRecordProcessor {
             default:
               throw new IllegalStateException(Utils.format("Unknown configuration value: ", config.targetType));
           }
-        } catch (ExecutionException ex) {
+        } catch (ExecutionException|UncheckedExecutionException ex) {
           Throwable cause = ex.getCause();
           if (cause == null) {
             cause = ex;
