@@ -102,7 +102,7 @@ public class AmazonS3Runnable implements Runnable {
     String oldThreadName = Thread.currentThread().getName();
     Thread.currentThread().setName(S3Constants.AMAZON_S3_THREAD_PREFIX + runnerId);
     try {
-      s3Client = createConnection();
+      s3Client = s3ConfigBean.s3Config.getS3Client();
       initGaugeIfNeeded();
       S3Offset offset;
       while (!context.isStopped()) {
@@ -130,7 +130,6 @@ public class AmazonS3Runnable implements Runnable {
       handleStageError(e.getErrorCode(), e);
     } finally {
       Thread.currentThread().setName(oldThreadName);
-      s3Client.shutdown();
       IOUtils.closeQuietly(parser);
     }
   }
@@ -532,27 +531,5 @@ public class AmazonS3Runnable implements Runnable {
       //Way to throw stage exception from runnable to main source thread
       Throwables.propagate(se);
     }
-  }
-
-  private AmazonS3 createConnection() throws StageException {
-    AwsRegion region = s3ConfigBean.s3Config.region;
-    AWSConfig awsConfig = s3ConfigBean.s3Config.awsConfig;
-    int maxErrorRetries = s3ConfigBean.s3Config.getMaxErrorRetries();
-
-    AWSCredentialsProvider credentials = AWSUtil.getCredentialsProvider(awsConfig);
-    ClientConfiguration clientConfig = AWSUtil.getClientConfiguration(s3ConfigBean.proxyConfig);
-
-    if (maxErrorRetries >= 0) {
-      clientConfig.setMaxErrorRetry(maxErrorRetries);
-    }
-
-    AmazonS3ClientBuilder builder = AmazonS3ClientBuilder.standard()
-                                                         .withCredentials(credentials)
-                                                         .withClientConfiguration(clientConfig)
-                                                         .withChunkedEncodingDisabled(awsConfig.disableChunkedEncoding)
-                                                         .withPathStyleAccessEnabled(true);
-
-    builder.withRegion(region.getId());
-    return builder.build();
   }
 }
