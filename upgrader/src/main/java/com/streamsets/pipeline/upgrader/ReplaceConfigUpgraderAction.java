@@ -27,7 +27,7 @@ public class ReplaceConfigUpgraderAction<T> extends UpgraderAction<ReplaceConfig
 
   public static final String DEFAULT_TOKEN = "$$";
 
-  private String ifOldValueMatches = MATCHES_ALL;
+  private Object ifOldValueMatches = MATCHES_ALL;
   private String tokenForOldValue = DEFAULT_TOKEN;
   private Object newValue;
   private Object elseNewValue;
@@ -36,11 +36,11 @@ public class ReplaceConfigUpgraderAction<T> extends UpgraderAction<ReplaceConfig
     super(wrapper);
   }
 
-  public String getIfOldValueMatches() {
+  public Object getIfOldValueMatches() {
     return ifOldValueMatches;
   }
 
-  public ReplaceConfigUpgraderAction setIfOldValueMatches(String ifOldValueMatches) {
+  public ReplaceConfigUpgraderAction setIfOldValueMatches(Object ifOldValueMatches) {
     if (ifOldValueMatches != null) {
       this.ifOldValueMatches = ifOldValueMatches;
     }
@@ -103,10 +103,10 @@ public class ReplaceConfigUpgraderAction<T> extends UpgraderAction<ReplaceConfig
       } else {
         boolean matches;
         if ((config.getValue() instanceof String)) {
-          Pattern pattern = Pattern.compile(getIfOldValueMatches());
+          Pattern pattern = Pattern.compile(getIfOldValueMatches().toString());
           matches = pattern.matcher(config.getValue().toString()).matches();
         } else {
-          matches = config.getValue().toString().equals(getIfOldValueMatches());
+          matches = config.getValue().equals(getIfOldValueMatches());
         }
         if (matches) {
           configsAdapter.set(getName(), getNewValue(config.getValue(), getNewValue()));
