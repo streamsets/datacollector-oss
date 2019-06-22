@@ -1518,10 +1518,9 @@ angular
         $scope.detailPaneConfigDefn = undefined;
 
         _.each($scope.stageLibraries, function (stageLibrary) {
-          if (stageLibrary.name === selectedObject.stageName &&
-            stageLibrary.version === selectedObject.stageVersion) {
+          if (stageLibrary.name === selectedObject.stageName) {
 
-            if (stageLibrary.library === selectedObject.library) {
+            if (stageLibrary.library === selectedObject.library && stageLibrary.version === selectedObject.stageVersion) {
               $scope.detailPaneConfigDefn = stageLibrary;
             }
 
