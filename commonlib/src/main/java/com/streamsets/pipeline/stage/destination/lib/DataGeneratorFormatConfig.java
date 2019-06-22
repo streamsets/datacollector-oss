@@ -195,6 +195,19 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
   )
   public char csvCustomQuote;
 
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "MINIMAL",
+    label = "Quote Mode",
+    displayPosition = 365,
+    group = "#0",
+    dependsOn = "csvFileFormat",
+    triggeredByValue = "CUSTOM"
+  )
+  @ValueChooserModel(DelimitedQuoteModeValueChooser.class)
+  public DelimitedQuoteMode csvQuoteMode = DelimitedQuoteMode.MINIMAL;
+
   /** For JSON **/
 
   @ConfigDef(
@@ -725,6 +738,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
     builder.setConfig(DelimitedDataConstants.DELIMITER_CONFIG, csvCustomDelimiter);
     builder.setConfig(DelimitedDataConstants.ESCAPE_CONFIG, csvCustomEscape);
     builder.setConfig(DelimitedDataConstants.QUOTE_CONFIG, csvCustomQuote);
+    builder.setConfig(DelimitedDataConstants.QUOTE_MODE, csvQuoteMode.getQuoteMode());
   }
 
   private boolean configureAvroDataGenerator(
