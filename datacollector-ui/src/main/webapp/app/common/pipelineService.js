@@ -757,7 +757,9 @@ angular.module('dataCollectorApp.common')
       if (options.insertBetweenEdge && (stage.outputStreams > 0 || stage.variableOutputStreams)) {
         //Insert stage instance in the middle of edge
         var edge = options.insertBetweenEdge;
-        var targetInstance = edge.target;
+        var targetInstance = _.find(pipelineConfig.stages, function (stageInstance) {
+          return stageInstance.instanceName === edge.target.instanceName;
+        });
         var laneIndex;
         var lane = edge.outputLane;
 
@@ -780,6 +782,7 @@ angular.module('dataCollectorApp.common')
         stageInstance.uiInfo.xPos = targetInstance.uiInfo.xPos - 20;
         stageInstance.uiInfo.yPos = targetInstance.uiInfo.yPos + 50;
         targetInstance.uiInfo.xPos += 200;
+        edge.target = targetInstance;
       }
 
       angular.forEach(stage.configDefinitions, function (configDefinition) {
