@@ -20,6 +20,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.util.concurrent.RateLimiter;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
+import com.streamsets.pipeline.stage.origin.jdbc.cdc.sqlserver.SQLServerCDCSource;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
 
 import java.util.Map;
@@ -36,6 +37,7 @@ public class JdbcRunnableBuilder {
   private CacheLoader<TableRuntimeContext, TableReadContext> tableReadContextCache;
   private RateLimiter queryRateLimiter;
   private boolean isReconnect;
+  private Map<String, SQLServerCDCSource.SourceTableInfo> infoMap;
 
   public JdbcRunnableBuilder() {
   }
@@ -95,6 +97,11 @@ public class JdbcRunnableBuilder {
     return this;
   }
 
+  public JdbcRunnableBuilder sourceTableInfo(Map<String, SQLServerCDCSource.SourceTableInfo> infoMap) {
+    this.infoMap = infoMap;
+    return this;
+  }
+
   public JdbcBaseRunnable build() {
     final String SQLServerCT = "SQLServerChangeTrackingClient";
     final String SQLServerCDC = "SQLServerCDCClient";
@@ -124,7 +131,8 @@ public class JdbcRunnableBuilder {
           commonSourceConfigBean,
           tableReadContextCache,
           queryRateLimiter,
-          isReconnect
+          isReconnect,
+          infoMap
       );
     } else {
       return new TableJdbcRunnable(

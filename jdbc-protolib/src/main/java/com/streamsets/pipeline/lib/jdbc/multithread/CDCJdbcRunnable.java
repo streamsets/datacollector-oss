@@ -33,6 +33,7 @@ import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.JdbcEvents;
+import com.streamsets.pipeline.stage.origin.jdbc.cdc.sqlserver.SQLServerCDCSource;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -51,6 +52,9 @@ public class CDCJdbcRunnable extends JdbcBaseRunnable {
   private static final Logger LOG = LoggerFactory.getLogger(CTJdbcRunnable.class);
 
   private final Set<String> recordHeader;
+  private final Map<String, SQLServerCDCSource.SourceTableInfo> infoMap;
+
+  protected static final String CDC_NAMESPACE_HEADER = "cdc.";
 
   public CDCJdbcRunnable(
       PushSource.Context context,
@@ -63,7 +67,8 @@ public class CDCJdbcRunnable extends JdbcBaseRunnable {
       CommonSourceConfigBean commonSourceConfigBean,
       CacheLoader<TableRuntimeContext, TableReadContext> tableReadContextCache,
       RateLimiter queryRateLimiter,
-      boolean isReconnect
+      boolean isReconnect,
+      Map<String, SQLServerCDCSource.SourceTableInfo> infoMap
   ) {
     super(
         context,
@@ -87,6 +92,7 @@ public class CDCJdbcRunnable extends JdbcBaseRunnable {
         MSQueryUtil.CDC_UPDATE_MASK,
         MSQueryUtil.CDC_COMMAND_ID
     );
+    this.infoMap = infoMap;
   }
 
   @Override
@@ -148,6 +154,21 @@ public class CDCJdbcRunnable extends JdbcBaseRunnable {
         //no-op
         LOG.trace("the column name {} does not exists in the table: {}", fieldName, tableRuntimeContext.getQualifiedName());
       }
+    }
+
+    //Set Source Table Info Headers
+    String tableName = tableRuntimeContext.getSourceTableContext().getTableName();
+    String captureInstanceName = tableName.substring(0, tableName.length() - "_CT".length());
+    SQLServerCDCSource.SourceTableInfo sourceTableInfo = infoMap.get(captureInstanceName);
+    if (sourceTableInfo != null) {
+      record.getHeader().setAttribute(
+          JDBC_NAMESPACE_HEADER + CDC_NAMESPACE_HEADER + MSQueryUtil.SOURCE_SCHEMA_NAME,
+          sourceTableInfo.schemaName
+      );
+      record.getHeader().setAttribute(
+          JDBC_NAMESPACE_HEADER + CDC_NAMESPACE_HEADER + MSQueryUtil.SOURCE_NAME,
+          sourceTableInfo.tableName
+      );
     }
 
     batchContext.getBatchMaker().addRecord(record);

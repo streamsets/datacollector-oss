@@ -43,6 +43,7 @@ import com.streamsets.pipeline.lib.jdbc.multithread.TableOrderProvider;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableOrderProviderFactory;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableReadContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableRuntimeContext;
+import com.streamsets.pipeline.stage.origin.jdbc.cdc.sqlserver.SQLServerCDCSource;
 import com.streamsets.pipeline.stage.origin.jdbc.table.PartitioningMode;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
@@ -90,7 +91,7 @@ public abstract class AbstractTableJdbcSource extends BasePushSource implements 
   private ScheduledExecutorService executorServiceForNoMoreDataDelay;
 
   private HikariDataSource hikariDataSource;
-  private ConnectionManager connectionManager;
+  protected ConnectionManager connectionManager;
   private Map<String, String> offsets;
   private ScheduledExecutorService executorService;
   private MultithreadedTableProvider tableOrderProvider;
@@ -100,6 +101,8 @@ public abstract class AbstractTableJdbcSource extends BasePushSource implements 
   protected TableContextUtil tableContextUtil;
 
   protected boolean isReconnect;
+
+  protected Map<String, SQLServerCDCSource.SourceTableInfo> sourceTableInfoMap;
 
   public AbstractTableJdbcSource(
       HikariPoolConfigBean hikariConfigBean,
@@ -122,6 +125,7 @@ public abstract class AbstractTableJdbcSource extends BasePushSource implements 
     this.tableContextUtil = tableContextUtil;
     this.jdbcUtil = UtilsProvider.getJdbcUtil();
     this.isReconnect = false;
+    this.sourceTableInfoMap = new HashMap<>();
   }
 
   @Override
@@ -363,6 +367,7 @@ public abstract class AbstractTableJdbcSource extends BasePushSource implements 
             .tableJdbcConfigBean(tableJdbcConfigBean)
             .queryRateLimiter(commonSourceConfigBean.creatQueryRateLimiter())
             .isReconnect(isReconnect)
+            .sourceTableInfo(sourceTableInfoMap)
             .build();
 
         toBeInvalidatedThreadCaches.add(runnable.getTableReadContextCache());

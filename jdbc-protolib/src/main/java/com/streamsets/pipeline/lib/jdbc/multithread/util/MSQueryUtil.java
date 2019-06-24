@@ -19,6 +19,7 @@ package com.streamsets.pipeline.lib.jdbc.multithread.util;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.stage.origin.jdbc.cdc.sqlserver.CDCTableConfigBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,6 +71,18 @@ public final class MSQueryUtil {
           "%3$s\n" +
           "%4$s\n" +
           "%5$s\n";
+
+  public static final String SOURCE_SCHEMA_NAME = "source_schema_name";
+  public static final String SOURCE_NAME = "source_name";
+  public static final String CREATE_DATE = "create_date";
+  public static final String CAPTURE_INSTANCE_NAME = "capture_instance";
+
+  private static final String CHANGE_TABLES_QUERY = "SELECT " +
+      CAPTURE_INSTANCE_NAME + ", " +
+      "object_schema_name(source_object_id) AS "+ SOURCE_SCHEMA_NAME + ", " +
+      "object_name(source_object_id) AS " + SOURCE_NAME + ", " +
+      CREATE_DATE +
+      " FROM cdc.change_tables %s";
 
   private static final String SELECT_CT_CLAUSE = "SELECT * FROM CHANGETABLE(CHANGES %s, %s) AS CT %s %s";
   private static final String SELECT_CLAUSE = "SELECT * " +
@@ -178,6 +191,18 @@ public final class MSQueryUtil {
           orderby
       );
     }
+  }
+
+  public static String buildCDCSourceTableQuery(
+      List<CDCTableConfigBean> cdcTableConfigBeanList
+  ) {
+    List<String> captureInstanceLike = new ArrayList<>();
+    for (CDCTableConfigBean cdcTableConfigBean : cdcTableConfigBeanList) {
+      captureInstanceLike.add(String.format("capture_instance like '%s'", cdcTableConfigBean.capture_instance));
+    }
+
+    String whereClause = String.format(WHERE_CLAUSE, String.join(" OR ", captureInstanceLike));
+    return String.format(CHANGE_TABLES_QUERY, whereClause);
   }
 
   public static String buildCDCQuery(

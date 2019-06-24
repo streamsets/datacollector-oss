@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.jdbc.DataType;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.jdbc.multithread.ConnectionManager;
@@ -27,15 +28,21 @@ import com.streamsets.pipeline.lib.jdbc.multithread.TableContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableReadContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableRuntimeContext;
+import com.streamsets.pipeline.lib.jdbc.multithread.util.MSQueryUtil;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
 import com.streamsets.pipeline.lib.jdbc.multithread.cache.SQLServerCDCContextLoader;
 import com.streamsets.pipeline.stage.origin.jdbc.AbstractTableJdbcSource;
 import com.streamsets.pipeline.stage.origin.jdbc.CT.sqlserver.SQLServerCTSource;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
+import org.joda.time.DateTime;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -74,6 +81,17 @@ public class SQLServerCDCSource extends AbstractTableJdbcSource {
     super(hikariConfigBean, commonSourceConfigBean, tableJdbcConfigBean, tableContextUtil);
     this.cdcTableJdbcConfigBean = cdcTableJdbcConfigBean;
     this.isReconnect = cdcTableJdbcConfigBean == null ? false : cdcTableJdbcConfigBean.isReconnect;
+  }
+
+  @Override
+  protected List<Stage.ConfigIssue> init() {
+    List<Stage.ConfigIssue> issues = super.init();
+
+    if (issues.isEmpty()) {
+      this.sourceTableInfoMap = listSourceTables();
+    }
+
+    return issues;
   }
 
   @Override
@@ -123,6 +141,46 @@ public class SQLServerCDCSource extends AbstractTableJdbcSource {
     }
 
     return allTableContexts;
+  }
+
+  public class SourceTableInfo {
+    public String schemaName;
+    public String tableName;
+  }
+
+  private Map<String, SourceTableInfo> listSourceTables() {
+    Map<String, SourceTableInfo> sourceTables = new HashMap<>();
+    String query = MSQueryUtil.buildCDCSourceTableQuery(cdcTableJdbcConfigBean.tableConfigs);
+
+    try {
+      PreparedStatement ps = connectionManager.getConnection().prepareStatement(query);
+
+      LOG.debug("Executing Query: ", query);
+      ResultSet rs = ps.executeQuery();
+
+      while (!rs.isClosed() && rs.next()) {
+        if (rs.isClosed()) {
+          LOG.trace("ResultSet is closed");
+        }
+
+        String captureInstanceName = rs.getString(MSQueryUtil.CAPTURE_INSTANCE_NAME);
+        String schema = rs.getString(MSQueryUtil.SOURCE_SCHEMA_NAME);
+        String table = rs.getString(MSQueryUtil.SOURCE_NAME);
+
+        SourceTableInfo sourceTableInfo = new SourceTableInfo();
+        sourceTableInfo.schemaName = schema;
+        sourceTableInfo.tableName = table;
+
+        sourceTables.put(captureInstanceName, sourceTableInfo);
+      }
+
+      jdbcUtil.closeQuietly(rs);
+      jdbcUtil.closeQuietly(ps);
+      connectionManager.closeConnection();
+    } catch (SQLException ex) {
+      LOG.error("Failed to get source table infos: ", ex);
+    }
+    return sourceTables;
   }
 
   @Override
