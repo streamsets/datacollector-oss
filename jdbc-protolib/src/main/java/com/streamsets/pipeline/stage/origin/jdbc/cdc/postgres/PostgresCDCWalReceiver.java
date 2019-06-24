@@ -36,6 +36,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +59,7 @@ public class PostgresCDCWalReceiver {
   private static final Logger LOG = LoggerFactory.getLogger(PostgresCDCWalReceiver.class);
   private static final String TABLE_METADATA_TABLE_SCHEMA_CONSTANT = "table_schem";
   private static final String TABLE_METADATA_TABLE_NAME_CONSTANT = "table_name";
+  public static final String SELECT_SLOT = "select * from pg_replication_slots where slot_name = ?";
 
   private final Properties properties;
   private final String uri;
@@ -243,18 +245,33 @@ public class PostgresCDCWalReceiver {
           hikariConfigBean.username.get(),
           hikariConfigBean.password.get()
       )) {
-        String sql = "select plugin, slot_type, active, restart_lsn, confirmed_flush_lsn from pg_replication_slots where slot_name = ?";
+        String sql = SELECT_SLOT;
+        String flushedLabel = "confirmed_flush_lsn";
+        boolean hasFlushLsn = false;
         try (PreparedStatement preparedStatement = localConnection
             .prepareStatement(sql)) {
           preparedStatement.setString(1, slotName);
           try (ResultSet rs = preparedStatement.executeQuery()) {
+
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int columns = rsmd.getColumnCount();
+            for (int x = 1; x <= columns; x++) {
+              if (flushedLabel.equals(rsmd.getColumnName(x))) {
+                hasFlushLsn=true;
+                break;
+              }
+            }
+            if (!hasFlushLsn) {
+              LOG.debug("No column: confirmed_flush_lsn found. Using restart_lsn");
+              flushedLabel="restart_lsn";
+            }
 
             while (rs.next()) {
               this.configuredPlugin = rs.getString("plugin");
               this.configuredSlotType = rs.getString("slot_type");
               this.slotActive = rs.getBoolean("active");
               this.restartLsn = rs.getString("restart_lsn");
-              this.confirmedFlushLSN = rs.getString("confirmed_flush_lsn");
+              this.confirmedFlushLSN = rs.getString(flushedLabel);
             }
           }
         }
