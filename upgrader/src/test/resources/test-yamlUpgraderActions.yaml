@@ -40,6 +40,81 @@ upgrades:
 
 - toVersion: 2
   actions:
+  - setConfig:
+      lookForName: a
+      name: x
+      value: X
+  - setConfig:
+      lookForName: b
+      name: y
+      value: Y
+  - setConfig:
+      lookForName: c
+      ifValueMatches: .*FOO.*
+      name: new1
+      value: true
+  - setConfig:
+      lookForName: d
+      ifValueMatches: [1]
+      name: new2
+      value: []
+  - setConfig:
+      name: z
+      value: Z
+  - iterateListConfig:
+      name: listConfig
+      actions:
+      - setConfig:
+          lookForName: a
+          name: a
+          value: AA
+      - setConfig:
+          lookForName: b
+          name: b
+          value: B
+
+- toVersion: 3
+  actions:
+  - setConfig:
+      lookForName: a
+      elseName: x
+      elseValue: X
+  - setConfig:
+      lookForName: b
+      elseName: y
+      elseValue: Y
+  - setConfig:
+      lookForName: c
+      ifValueMatches: .*FOO.*
+      elseName: new1
+      elseValue: true
+  - setConfig:
+      lookForName: d
+      ifValueMatches: .*FOO.*
+      name: caseA
+      value: true
+      elseName: caseB
+      elseValue: false
+  - setConfig:
+      lookForName: e
+      ifValueMatches: .*FOO.*
+      name: caseC
+      value: 3
+      elseName: caseD
+      elseValue: 5
+  - setConfig:
+      name: z
+      value: Z
+  - iterateListConfig:
+      name: listConfig
+      actions:
+      - setConfig:
+          lookForName: a
+          elseName: a
+          elseValue: A
+
+- toVersion: 4
+  actions:
   - renameConfig:
       oldNamePattern: old
       newNamePattern: new
@@ -52,46 +127,6 @@ upgrades:
       - renameConfig:
           oldNamePattern: old
           newNamePattern: new
-
-- toVersion: 3
-  actions:
-  - setConfigIfMissing:
-      lookForName: a
-      name: x
-      value: X
-  - setConfigIfMissing:
-      lookForName: z
-      name: y
-      value: Y
-  - iterateListConfig:
-      name: listConfig
-      actions:
-      - setConfigIfMissing:
-          lookForName: a
-          name: a
-          value: A
-
-- toVersion: 4
-  actions:
-  - setConfigIfFound:
-      lookForName: a
-      name: x
-      value: X
-  - setConfigIfFound:
-      lookForName: z
-      name: y
-      value: Y
-  - iterateListConfig:
-      name: listConfig
-      actions:
-      - setConfigIfFound:
-          lookForName: a
-          name: a
-          value: AA
-      - setConfigIfFound:
-          lookForName: b
-          name: b
-          value: B
 
 - toVersion: 5
   actions:

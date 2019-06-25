@@ -88,10 +88,6 @@ public class YamlStageUpgraderLoader {
       action = parseSetConfigAction(wrapper, map);
     } else if (map.containsKey("renameConfig")) {
       action = parseRenameConfigAction(wrapper, map);
-    } else if (map.containsKey("setConfigIfMissing")) {
-      action = parseSetConfigIfMissing(wrapper, map);
-    } else if (map.containsKey("setConfigIfFound")) {
-      action = parseSetConfigIfFound(wrapper, map);
     } else if (map.containsKey("removeConfigs")) {
       action = parseRemoveConfigs(wrapper, map);
     } else if (map.containsKey("replaceConfig")) {
@@ -120,6 +116,10 @@ public class YamlStageUpgraderLoader {
     SetConfigUpgraderAction action = new SetConfigUpgraderAction<>(wrapper);
     action.setName((String) map.get("name"));
     action.setValue(map.get("value"));
+    action.setElseName((String) map.get("elseName"));
+    action.setElseValue(map.get("elseValue"));
+    action.setLookForName((String) map.get("lookForName"));
+    action.setIfValueMatches(map.get("ifValueMatches"));
     return action;
   }
 
@@ -131,32 +131,6 @@ public class YamlStageUpgraderLoader {
     RenameConfigUpgraderAction action = new RenameConfigUpgraderAction<>(wrapper);
     action.setOldNamePattern((String) map.get("oldNamePattern"));
     action.setNewNamePattern((String) map.get("newNamePattern"));
-    return action;
-  }
-
-  SetConfigIfMissingUpgraderAction parseSetConfigIfMissing(
-      Function<?, UpgraderAction.ConfigsAdapter> wrapper,
-      Map<String, Object> map
-  ) {
-    map = (Map) map.get("setConfigIfMissing");
-    SetConfigIfMissingUpgraderAction action =
-        new SetConfigIfMissingUpgraderAction<>(wrapper);
-    action.setLookForName((String) map.get("lookForName"));
-    action.setName((String) map.get("name"));
-    action.setValue(map.get("value"));
-    return action;
-  }
-
-  SetConfigIfFoundUpgraderAction parseSetConfigIfFound(
-      Function<?, UpgraderAction.ConfigsAdapter> wrapper,
-      Map<String, Object> map
-  ) {
-    map = (Map) map.get("setConfigIfFound");
-    SetConfigIfFoundUpgraderAction action =
-        new SetConfigIfFoundUpgraderAction<>(wrapper);
-    action.setLookForName((String) map.get("lookForName"));
-    action.setName((String) map.get("name"));
-    action.setValue((String) map.get("value"));
     return action;
   }
 

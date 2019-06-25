@@ -18,10 +18,17 @@ package com.streamsets.pipeline.upgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.function.Function;
+import java.util.regex.Pattern;
 
 public class SetConfigUpgraderAction<T> extends UpgraderAction<SetConfigUpgraderAction, T> {
 
+  public static final String MATCHES_ALL = ".*";
+
+  private String lookForName;
+  private Object ifValueMatches = MATCHES_ALL;
   private Object value;
+  private String elseName;
+  private Object elseValue;
 
   public SetConfigUpgraderAction(Function<T, ConfigsAdapter> wrapper) {
     super(wrapper);
@@ -36,12 +43,92 @@ public class SetConfigUpgraderAction<T> extends UpgraderAction<SetConfigUpgrader
     return this;
   }
 
-  @Override
-  public void upgrade(T configs) {
-    Utils.checkNotNull(getName(), "name");
-    Utils.checkNotNull(getValue(), "value");
-    ConfigsAdapter configsAdapter = wrap(configs);
-    configsAdapter.set(getName(), getValue());
+  public String getLookForName() {
+    return lookForName;
   }
 
+  public SetConfigUpgraderAction setLookForName(String lookForName) {
+    this.lookForName = lookForName;
+    return this;
+  }
+
+  public Object getIfValueMatches() {
+    return ifValueMatches;
+  }
+
+  public SetConfigUpgraderAction setIfValueMatches(Object ifValueMatches) {
+    if (ifValueMatches != null) {
+      this.ifValueMatches = ifValueMatches;
+    }
+    return this;
+  }
+
+  public String getElseName() {
+    return elseName;
+  }
+
+  public SetConfigUpgraderAction setElseName(String elseName) {
+    this.elseName = elseName;
+    return this;
+  }
+
+  public Object getElseValue() {
+    return elseValue;
+  }
+
+  public SetConfigUpgraderAction setElseValue(Object elseValue) {
+    this.elseValue = elseValue;
+    return this;
+  }
+
+  @Override
+  public void upgrade(T configs) {
+    if (getName() == null && getElseName() == null) {
+      throw new NullPointerException("either name or elseName must be not null");
+    } else if (getName() != null && getValue() == null) {
+      throw new NullPointerException("value cannot be null when name is set");
+    } else if (getElseName() != null && getElseValue() == null) {
+      throw new NullPointerException("elseValue cannot be null when elseName is set");
+    }
+
+    ConfigsAdapter configsAdapter = wrap(configs);
+
+    if (getLookForName() == null) {
+      configsAdapter.set(getName(), getValue());
+    } else {
+      boolean configFound = existsConfigWithValue(getLookForName(), getIfValueMatches(), configsAdapter);
+      if (getName() != null && configFound) {
+        configsAdapter.set(getName(), getValue());
+      } else if (getElseName() != null && !configFound) {
+        configsAdapter.set(getElseName(), getElseValue());
+      }
+    }
+  }
+
+  /**
+   * Check if a configuration exists and has a given value.
+   *
+   * @param name Name of the configuration to look for.
+   * @param value Expected value for the configuration. Use {@value MATCHES_ALL} to accept any value.
+   * @param adapter Adapter used to find the configuration.
+   * @return true if {@code name} exists and equals {@code value}, false otherwise.
+   */
+  private boolean existsConfigWithValue(String name, Object value, ConfigsAdapter adapter) {
+    ConfigsAdapter.Pair config = adapter.find(name);
+    if (config != null) {
+      if (MATCHES_ALL.equals(value)) {
+        return true;
+      } else {
+        boolean matches;
+        if ((config.getValue() instanceof String)) {
+          Pattern pattern = Pattern.compile(value.toString());
+          matches = pattern.matcher(config.getValue().toString()).matches();
+        } else {
+          matches = config.getValue().equals(value);
+        }
+        return matches;
+      }
+    }
+    return false;
+  }
 }

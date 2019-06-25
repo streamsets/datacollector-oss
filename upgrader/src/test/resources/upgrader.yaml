@@ -36,27 +36,57 @@ upgrades:
         name: foo
         value: bar                        # value is a string or JSON
 
+    - setConfig:                          # sets a configuration if a given config exists
+        lookForName: found                # name of the configuration to look for
+        name: addedBecauseFound           # name of the configuration to set
+        value: [{}]                       # this is an example of a JSON value
+
+    - setConfig:                          # sets a configuration if a given config does not exists
+        lookForName: missing
+        elseName: addedBecauseMissing
+        elseValue: MISSING
+
+    - setConfig:                          # sets a configuration if queryName exists and has queryValue value
+        lookForName: queryName
+        ifValueMatches: queryValue        # value of the configuration to look for (can be a Java regex)
+        name: addedBecauseMatching
+        value: 3
+
+    - setConfig:                          # sets a configuration if queryName does not exists or has a value different than queryValue
+        lookForName: queryName
+        ifValueMatches: queryValue        # comparison value for the configuration to look for (can be a Java regex)
+        elseName: addedBecauseNotMatching
+        elseValue: 5
+
+    - setConfig:                          # conditionally sets a config depending on the existence of queryName
+        lookForName: queryName
+        name: foo                         # configuration to set when queryName exists
+        value: 3
+        elseName: bar                     # configuration to set when queryName does not exist
+        elseValue: 5
+
+    - setConfig:                          # conditionally set a config depending on queryName having queryValue value
+        lookForName: queryName
+        ifValueMatches: queryValue        # value for the configuration to look for (can be a Java regex)
+        name: foo                         # configuration to set when queryName exists and equals queryValue
+        value: 3
+        elseName: bar                     # configuration to set when either queryName does not exist or does not equal queryValue
+        elseValue: 5
+
     - renameConfig:                       # renames configurations
         oldNamePattern: prefix\.(.*$)     # Java regex, () can be used to define groups
         newNamePattern: newPrefix.(0)     # new pattern, it can reference groups from the old pattern using (#)
 
-    - setConfigIfMissing:                 # if a configuration entry is missing sets a configuration
-        lookForName: missing              # name of the configuration to look for
-        name: addedBecauseMissing         # name of the configuration to set
-        value: [{}]                       # this is an example of a JSON value
-
-    - setConfigIfFound:                   # if a configuration entry is found set a configuration
-        lookForName: found                # name of the configuration to look for
-        name: addedBecauseFound
-        value: FOUND
     - removeConfigs:
         namePattern: remove.*
+
     - replaceConfig:
         name: replace
         ifOldValueMatches: .*REPLACE.*    # optional, default .* (always)
         newValue: NEW_VALUE_$$$
         elseNewValue: $$$$_ELSE_VALUE     # optional, no default
         tokenForOldValue: $$$             # optional, default $$
+
     - iterateListConfig:
         name: listConfig
         actions:
@@ -66,11 +96,11 @@ upgrades:
         - renameConfig:
             oldNamePattern: prefix\.(.*$)
             newNamePattern: newPrefix.(0)
-        - setConfigIfMissing:
+        - setConfig:
             lookForName: missing
-            name: addedBecauseMissing
-            value: [{}]
-        - setConfigIfFound:
+            elseName: addedBecauseMissing
+            elseValue: [{}]
+        - setConfig:
             lookForName: found
             name: addedBecauseFound
             value: FOUND
@@ -98,6 +128,7 @@ upgrades:
         - configStringListRemove:
             name: listConfig
             value: value
+
     - configStringMapPut:
         name: mapConfig
         key: key
