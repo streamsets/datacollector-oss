@@ -52,6 +52,8 @@ public class StageDefinitionJson   {
     SLAVE("SLAVE"),
     EDGE("EDGE"),
     EMR_BATCH("EMR_BATCH"),
+    BATCH("BATCH"),
+    STREAMING("STREAMING"),
     ;
 
     private final String value;
