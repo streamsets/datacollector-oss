@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Configuring an ADLS Gen2 File Metadata Executor ","href":"datacollector\/UserGuide\/Executors\/ADLS-G2-FileMeta-Configuring.html","attributes": {"data-id":"task_uwz_m45_rhb",},"menu": {"hasChildren":false,},"tocID":"task_uwz_m45_rhb-d46e118437","topics":[]}]});

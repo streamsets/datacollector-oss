@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Oracle Data Types","shortdesc":"\n                  <p class=\"shortdesc\"></p>\n               ","href":"datacollector\/UserGuide\/Origins\/MultiTableJDBCConsumer.html#concept_khb_jmr_jhb","attributes": {"data-id":"concept_khb_jmr_jhb",},"menu": {"hasChildren":false,},"tocID":"concept_khb_jmr_jhb-d46e54274","topics":[]}]});
