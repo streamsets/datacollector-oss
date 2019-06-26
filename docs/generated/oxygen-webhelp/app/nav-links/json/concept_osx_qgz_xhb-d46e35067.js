@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Configuring an Azure Data Lake Storage Gen1 Origin","shortdesc":"\n               <p class=\"shortdesc\"></p>\n            ","href":"datacollector\/UserGuide\/Origins\/ADLS-G1-Configuring.html","attributes": {"data-id":"task_t13_ht5_5hb",},"menu": {"hasChildren":false,},"tocID":"task_t13_ht5_5hb-d46e35091","topics":[]}]});

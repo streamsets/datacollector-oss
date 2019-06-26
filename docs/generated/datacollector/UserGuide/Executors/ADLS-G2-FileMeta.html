@@ -3,7 +3,7 @@
   PUBLIC "" "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
     <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link>        
-      <meta name="copyright" content="(C) Copyright 2019" /><meta name="DC.rights.owner" content="(C) Copyright 2019" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="ADLS Gen2 File Metadata" /><meta name="abstract" content="" /><meta name="description" content="The ADLS Gen2 File Metadata executor changes file metadata, creates an empty file, or removes a file or directory in Azure Data Lake Storage Gen2 each time it receives an event. This executor is a ..." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/Executors-title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/ADLS-G1-FileMeta.html#concept_zhp_ldk_xhb" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/ADLS-G2-FileMeta-Configuring.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/ADLS-G2-FileMeta-Configuring.html" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_i22_k2k_xhb" /><title>ADLS Gen2 File Metadata</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_i22_k2k_xhb-d46e118413" />         
+      <meta name="copyright" content="(C) Copyright 2019" /><meta name="DC.rights.owner" content="(C) Copyright 2019" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="ADLS Gen2 File Metadata" /><meta name="abstract" content="" /><meta name="description" content="The ADLS Gen2 File Metadata executor changes file metadata, creates an empty file, or removes a file or directory in Azure Data Lake Storage Gen2 each time it receives an event. To perform these tasks ..." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/Executors-title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/ADLS-G1-FileMeta.html#concept_zhp_ldk_xhb" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/AmazonS3.html#concept_mvh_bnm_f1b" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_i22_k2k_xhb" /><title>ADLS Gen2 File Metadata</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_i22_k2k_xhb-d46e127643" />         
         
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <!-- Latest compiled and minified Bootstrap CSS -->
@@ -28,7 +28,7 @@
         
     <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
 
-    <body class="wh_topic_page frmBody" id="concept_i22_k2k_xhb">
+    <body class="wh_topic_page frmBody">
         <!-- EXM-36950 - Expand the args.hdr parameter here -->
         
         
@@ -79,7 +79,7 @@
                 <nav class="wh_tools hidden-print">
                     <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
    <li><span class="topicref" data-id="concept_umc_1lk_fx"><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
-   <li class="active"><span class="topicref" data-id="concept_i22_k2k_xhb"><span class="title"><a href="../../../datacollector/UserGuide/Executors/ADLS-G2-FileMeta.html">ADLS Gen2 File Metadata</a><span class="wh-tooltip">
+   <li class="active"><span class="topicref" data-id="concept_i22_k2k_xhb"><span class="title"><a href="../../../datacollector/UserGuide/Executors/ADLS-G2-FileMeta.html#concept_i22_k2k_xhb">ADLS Gen2 File Metadata</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
@@ -89,7 +89,7 @@
                         <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
   
 <span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Executors/ADLS-G1-FileMeta.html#concept_zhp_ldk_xhb" title="ADLS Gen1 File Metadata"></a></span>  
-<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Executors/ADLS-G2-FileMeta-Configuring.html" title="Configuring an ADLS Gen2 File Metadata Executor"></a></span>  </span></div>
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Executors/AmazonS3.html#concept_mvh_bnm_f1b" title="Amazon S3 Executor"></a></span>  </span></div>
                         <button class="wh_hide_highlight" title="Toggle search highlights"></button>
                         <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
                         <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
@@ -109,87 +109,102 @@
                </span></span></span></li>
    <li><span data-tocid="concept_l4q_flb_kr-d46e7229" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
    <li><span data-tocid="concept_ylh_yyz_ky-d46e9491" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
-   <li><span data-tocid="concept_ejk_f1f_5v-d46e19222" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
-   <li><span data-tocid="concept_qsw_cjy_bt-d46e26481" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
-   <li><span data-tocid="concept_qn1_wn4_kq-d46e28205" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
-   <li><span data-tocid="concept_hdr_gyw_41b-d46e30918" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e19221" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e26480" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e28204" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e30917" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e33032" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e81932" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
-   <li><span data-tocid="concept_agj_cfj_br-d46e98095" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
-   <li><span data-tocid="concept_umc_1lk_fx-d46e118150" class="topicref" data-id="concept_umc_1lk_fx" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span><ul class="nav nav-list">
-         <li><span data-tocid="concept_stt_2lk_fx-d46e118172" class="topicref" data-id="concept_stt_2lk_fx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-overview.html#concept_stt_2lk_fx">Executors</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e33031" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e89265" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e105428" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e126511" class="topicref" data-id="concept_umc_1lk_fx" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_stt_2lk_fx-d46e126533" class="topicref" data-id="concept_stt_2lk_fx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-overview.html#concept_stt_2lk_fx">Executors</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_zhp_ldk_xhb-d46e118196" class="topicref" data-id="concept_zhp_ldk_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/ADLS-G1-FileMeta.html#concept_zhp_ldk_xhb">ADLS Gen1 File Metadata</a></span></span></li>
-         <li class="active"><span data-tocid="concept_i22_k2k_xhb-d46e118413" class="topicref" data-id="concept_i22_k2k_xhb" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/ADLS-G2-FileMeta.html">ADLS Gen2 File Metadata</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_zhp_ldk_xhb-d46e126557" class="topicref" data-id="concept_zhp_ldk_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/ADLS-G1-FileMeta.html#concept_zhp_ldk_xhb">ADLS Gen1 File Metadata</a></span></span></li>
+         <li class="active"><span data-tocid="concept_i22_k2k_xhb-d46e127643" class="topicref" data-id="concept_i22_k2k_xhb" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/ADLS-G2-FileMeta.html#concept_i22_k2k_xhb">ADLS Gen2 File Metadata</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span><ul class="nav nav-list">
-               <li><span data-tocid="task_uwz_m45_rhb-d46e118437" class="topicref" data-id="task_uwz_m45_rhb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/ADLS-G2-FileMeta-Configuring.html">Configuring an ADLS Gen2 File Metadata Executor </a></span></span></li>
+               <li><span data-tocid="concept_vkp_gqb_b3b-d46e127788" class="topicref" data-id="concept_vkp_gqb_b3b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/ADLS-G2-FileMeta.html#concept_vkp_gqb_b3b">Prerequisites</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_ncc_4qb_b3b-d46e127844" class="topicref" data-id="concept_ncc_4qb_b3b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/ADLS-G2-FileMeta.html#concept_ncc_4qb_b3b">Related Event Generating Stages</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_yxv_sqb_b3b-d46e127888" class="topicref" data-id="concept_yxv_sqb_b3b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/ADLS-G2-FileMeta.html#concept_yxv_sqb_b3b">Changing Metadata</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_gtd_nrb_b3b-d46e128164" class="topicref" data-id="concept_gtd_nrb_b3b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/ADLS-G2-FileMeta.html#concept_gtd_nrb_b3b">Creating an Empty File</a></span></span></li>
+               <li><span data-tocid="concept_zjn_qrb_b3b-d46e128257" class="topicref" data-id="concept_zjn_qrb_b3b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/ADLS-G2-FileMeta.html#concept_zjn_qrb_b3b">Removing a File or Directory</a></span></span></li>
+               <li><span data-tocid="concept_h5x_5rb_b3b-d46e128360" class="topicref" data-id="concept_h5x_5rb_b3b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/ADLS-G2-FileMeta.html#concept_h5x_5rb_b3b">Event Generation</a></span></span></li>
+               <li><span data-tocid="task_uwz_m45_rhb-d46e128596" class="topicref" data-id="task_uwz_m45_rhb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/ADLS-G2-FileMeta.html#task_uwz_m45_rhb">Configuring an ADLS Gen2 File Metadata Executor </a></span></span></li>
             </ul>
          </li>
-         <li><span data-tocid="concept_mvh_bnm_f1b-d46e118459" class="topicref" data-id="concept_mvh_bnm_f1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/AmazonS3.html#concept_mvh_bnm_f1b">Amazon S3 Executor</a></span></span></li>
-         <li><span data-tocid="concept_fdc_qrx_jz-d46e118753" class="topicref" data-id="concept_fdc_qrx_jz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Databricks.html#concept_fdc_qrx_jz">Databricks Executor</a></span></span></li>
-         <li><span data-tocid="concept_sjs_sfp_qz-d46e119043" class="topicref" data-id="concept_sjs_sfp_qz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Email.html#concept_sjs_sfp_qz">Email Executor</a></span></span></li>
-         <li><span data-tocid="concept_wgj_slk_fx-d46e119253" class="topicref" data-id="concept_wgj_slk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#concept_wgj_slk_fx">HDFS File Metadata Executor</a></span></span></li>
-         <li><span data-tocid="concept_kjw_llk_fx-d46e120479" class="topicref" data-id="concept_kjw_llk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HiveQuery.html#concept_kjw_llk_fx">Hive Query Executor</a></span></span></li>
-         <li><span data-tocid="concept_j3r_gcv_sx-d46e120937" class="topicref" data-id="concept_j3r_gcv_sx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/JDBCQuery.html#concept_j3r_gcv_sx">JDBC Query Executor</a></span></span></li>
-         <li><span data-tocid="concept_ohx_r5h_z1b-d46e121088" class="topicref" data-id="concept_ohx_r5h_z1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapRFSFileMeta.html#concept_ohx_r5h_z1b">MapR FS File Metadata Executor</a></span></span></li>
-         <li><span data-tocid="concept_bj2_zlk_fx-d46e122315" class="topicref" data-id="concept_bj2_zlk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapReduce.html#concept_bj2_zlk_fx">MapReduce Executor</a></span></span></li>
-         <li><span data-tocid="concept_qzm_l4r_kz-d46e122992" class="topicref" data-id="concept_qzm_l4r_kz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/PipelineFinisher.html#concept_qzm_l4r_kz">Pipeline Finisher Executor</a></span></span></li>
-         <li><span data-tocid="concept_jsr_zpw_tz-d46e123274" class="topicref" data-id="concept_jsr_zpw_tz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Shell.html#concept_jsr_zpw_tz">Shell Executor</a></span></span></li>
-         <li><span data-tocid="concept_cvy_vxb_1z-d46e123504" class="topicref" data-id="concept_cvy_vxb_1z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Spark.html#concept_cvy_vxb_1z">Spark Executor</a></span></span></li>
+         <li><span data-tocid="concept_mvh_bnm_f1b-d46e128729" class="topicref" data-id="concept_mvh_bnm_f1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/AmazonS3.html#concept_mvh_bnm_f1b">Amazon S3 Executor</a></span></span></li>
+         <li><span data-tocid="concept_fdc_qrx_jz-d46e129023" class="topicref" data-id="concept_fdc_qrx_jz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Databricks.html#concept_fdc_qrx_jz">Databricks Executor</a></span></span></li>
+         <li><span data-tocid="concept_sjs_sfp_qz-d46e129313" class="topicref" data-id="concept_sjs_sfp_qz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Email.html#concept_sjs_sfp_qz">Email Executor</a></span></span></li>
+         <li><span data-tocid="concept_wgj_slk_fx-d46e129523" class="topicref" data-id="concept_wgj_slk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#concept_wgj_slk_fx">HDFS File Metadata Executor</a></span></span></li>
+         <li><span data-tocid="concept_kjw_llk_fx-d46e130749" class="topicref" data-id="concept_kjw_llk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HiveQuery.html#concept_kjw_llk_fx">Hive Query Executor</a></span></span></li>
+         <li><span data-tocid="concept_j3r_gcv_sx-d46e131207" class="topicref" data-id="concept_j3r_gcv_sx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/JDBCQuery.html#concept_j3r_gcv_sx">JDBC Query Executor</a></span></span></li>
+         <li><span data-tocid="concept_ohx_r5h_z1b-d46e131358" class="topicref" data-id="concept_ohx_r5h_z1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapRFSFileMeta.html#concept_ohx_r5h_z1b">MapR FS File Metadata Executor</a></span></span></li>
+         <li><span data-tocid="concept_bj2_zlk_fx-d46e132585" class="topicref" data-id="concept_bj2_zlk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapReduce.html#concept_bj2_zlk_fx">MapReduce Executor</a></span></span></li>
+         <li><span data-tocid="concept_qzm_l4r_kz-d46e133262" class="topicref" data-id="concept_qzm_l4r_kz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/PipelineFinisher.html#concept_qzm_l4r_kz">Pipeline Finisher Executor</a></span></span></li>
+         <li><span data-tocid="concept_jsr_zpw_tz-d46e133544" class="topicref" data-id="concept_jsr_zpw_tz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Shell.html#concept_jsr_zpw_tz">Shell Executor</a></span></span></li>
+         <li><span data-tocid="concept_cvy_vxb_1z-d46e133774" class="topicref" data-id="concept_cvy_vxb_1z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Spark.html#concept_cvy_vxb_1z">Spark Executor</a></span></span></li>
       </ul>
    </li>
-   <li><span data-tocid="concept_fyf_gkq_4bb-d46e124302" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
-   <li><span data-tocid="concept_ugp_kwf_xw-d46e126905" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
-   <li><span data-tocid="concept_xxd_f5r_kx-d46e130474" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e134572" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e137175" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e140744" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_fjj_zcf_2w-d46e134388" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
-   <li><span data-tocid="concept_kgt_pnr_4cb-d46e137214" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
-   <li><span data-tocid="concept_wwq_gxc_py-d46e138013" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e144658" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e147484" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e148283" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_gzw_tdm_p2b-d46e138595" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_wr1_ktz_bt-d46e138971" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_fpz_5r4_vs-d46e139453" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_jjk_23z_sq-d46e140918" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
-   <li><span data-tocid="concept_pgk_brx_rr-d46e141887" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_gzw_tdm_p2b-d46e148865" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e149241" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e149723" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e151188" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e152157" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_asx_fdz_sq-d46e144515" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_asx_fdz_sq-d46e154785" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_o3l_dtr_5q-d46e145772" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
-   <li><span data-tocid="concept_yms_ftm_sq-d46e147425" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e156042" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e157695" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_nls_w1r_ks-d46e152229" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
-   <li><span data-tocid="concept_sh3_frm_tq-d46e153442" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_nls_w1r_ks-d46e162499" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e163712" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_xbx_rs1_tq-d46e158241" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
-   <li><span data-tocid="concept_jn1_nzb_kv-d46e158296" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e168511" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e168566" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_pvm_yt3_wq-d46e158518" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
-   <li><span data-tocid="concept_vcj_1ws_js-d46e162219" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e168788" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e172489" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_chv_vmj_wr-d46e162442" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_chv_vmj_wr-d46e172712" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
@@ -198,7 +213,7 @@
                     
                     
                     <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
-                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_i22_k2k_xhb">
     <h1 class="title topictitle1" id="ariaid-title1">ADLS Gen2 File Metadata</h1>
 
     
@@ -206,22 +221,1130 @@
 
         <p class="p">The ADLS Gen2 File Metadata
             executor changes file metadata, creates an empty file, or removes a file or directory in
-            Azure Data Lake Storage Gen2 each time it receives an event.</p>
+            Azure Data Lake Storage Gen2 each time it receives an event. To perform these tasks in
+            Azure Data Lake Storage Gen1, use the <a class="xref" href="ADLS-G1-FileMeta.html#concept_zhp_ldk_xhb">ADLS Gen1 File Metadata
+                executor</a>.</p>
 
         <p class="p">This executor <span class="ph">is a <a class="xref" href="../Pipeline_Design/TechPreview.html#concept_prl_qfv_gfb" title="Data Collector includes certain new features and stages with the Technology Preview designation. Technology Preview functionality is available for use in development and testing, but is not meant for use in production.">Technology Preview</a> feature. It is not meant for use in
                         production.</span></p>
 
-        <p class="p"><span class="ph">The documentation for this stage is forthcoming.</span></p>
+        <p class="p">Before you use the executor, you must perform some prerequisite tasks.</p>
+
+        <p class="p">An executor can perform a single task. To perform more than one task, use additional
+            executors. </p>
+
+        <p class="p">Use the ADLS Gen2 File Metadata executor as part of an event stream. For example, you
+            might use the executor to move a file or change file permissions after it receives a
+            file closure event from the Azure Data Lake Storage Gen2 destination.</p>
+
+        <p class="p">To change metadata, configure an expression that represents the location and name of the
+            file to process, and then specify the changes you want to make. To create an empty file,
+            specify the output location for the file, and optionally specify the owner, permissions,
+            and ACLs for the file. To remove a file or directory, specify the location of the file
+            or directory.</p>
+
+        <p class="p">When necessary, you can configure advanced properties to pass to the underlying Hadoop
+            file system. </p>
+
+        <p class="p">You can also configure the executor to generate events for
+                  another event stream. <span class="ph" id="concept_i22_k2k_xhb__d19e2756">For more information about dataflow
+                        triggers and the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>.</span></p>
+
+        <p class="p">For a case study about using a similar file metadata executor, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_d1q_xl4_lx">Case Study: Output File Management</a>.</p>
 
     </div>
 
-</article></main></div>
-                        <div class=" wh_child_links "><nav role="navigation" class="related-links">
-<ul class="ullinks">
-<li class="link ulchildlink"><strong><a href="../../../datacollector/UserGuide/Executors/ADLS-G2-FileMeta-Configuring.html">Configuring an ADLS Gen2 File Metadata Executor</a></strong><br />
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_vkp_gqb_b3b">
+    <h2 class="title topictitle2" id="ariaid-title2">Prerequisites</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc"></p>
+
+        <div class="p">Complete the following
+            prerequisites before you configure the ADLS Gen2 File Metadata executor:<ol class="ol" id="concept_vkp_gqb_b3b__ol_xrz_g1l_vhb">
+                <li class="li">If necessary, create a new Azure Active
+                              Directory application for <span class="ph">Data Collector</span>.<p class="p">For
+                                    information about creating a new application, see the <a class="xref" href="https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal" target="_blank">Azure
+                                    documentation</a>.</p>
 </li>
-</ul>
-</nav></div>
+
+                <li class="li"><span class="ph">Ensure that the Azure Active Directory
+                                          <span class="ph">Data Collector</span>
+                                    application has the appropriate access control to perform the
+                                    necessary tasks.</span><p class="p">The <span class="ph">Data Collector</span>
+                                    application requires Read, Write, and Execute permissions to
+                                    perform all possible tasks. </p>
+<p class="p">For
+                                    information about configuring Gen2 access control, see the <a class="xref" href="https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-access-control" target="_blank">Azure
+                                    documentation</a>.</p>
+</li>
+
+                <li class="li"><a class="xref" href="ADLS-G2-FileMeta.html#concept_j2q_kqb_b3b">Retrieve
+                        information from Azure</a> to configure the executor. </li>
+
+            </ol>
+</div>
+
+        <p class="p">After you complete all of the prerequisite tasks, you can configure the executor. </p>
+
+    </div>
+
+<article class="topic concept nested2" aria-labelledby="ariaid-title3" id="concept_j2q_kqb_b3b">
+    <h3 class="title topictitle3" id="ariaid-title3">Retrieve Authentication Information</h3>
+
+    <div class="body conbody">
+        <p class="p">The ADLS Gen2 File Metadata executor can use
+            different methods to authenticate connections to Azure.   </p>
+
+        <div class="p">The authentication information required depends on the selected authentication method:
+                <dl class="dl">
+                        
+                              <dt class="dt dlterm">OAuth Token</dt>
+
+                              <dd class="dd">Connections made with OAuth Token authentication require the
+                                    following information:<ul class="ul" id="concept_j2q_kqb_b3b__d19e4400">
+                                          <li class="li">Application ID - <span class="ph" id="concept_j2q_kqb_b3b__d19e4404">Application
+                                                  ID for the Azure Active Directory <span class="ph">Data Collector</span> application. Also known as the client ID.
+                                                  </span><p class="p" id="concept_j2q_kqb_b3b__d19e4408">For information on
+                                                  accessing this from the Azure portal, see "Get
+                                                  values for signing in" in the <a class="xref" href="https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal#get-application-id-and-authentication-key" target="_blank">Azure
+                                                  documentation</a>.</p>
+</li>
+
+                                          <li class="li">Auth Token Endpoint - <span class="ph" id="concept_j2q_kqb_b3b__d19e4416">OAuth 2.0 token
+                                                  endpoint for the Azure Active Directory <span class="ph">Data Collector</span> application.</span>
+                                                <p class="p"><span class="ph" id="concept_j2q_kqb_b3b__d19e4422">For information on
+                                                  accessing this from the Azure portal, see "Step 4:
+                                                  Get the OAuth 2.0 token endpoint" in the <a class="xref" href="https://docs.microsoft.com/en-us/azure/data-lake-store/data-lake-store-service-to-service-authenticate-using-active-directory" target="_blank">Azure
+                                                  documentation</a>.</span></p>
+</li>
+
+                                          <li class="li">Application Key - <span class="ph" id="concept_j2q_kqb_b3b__d19e4430">Authentication key for the Azure Active Directory
+                                                  <span class="ph">Data Collector</span> application. Also known as the client
+                                                  key.</span><p class="p">For information on
+                                                  accessing this from the Azure portal, see "Get
+                                                  values for signing in" in the <a class="xref" href="https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal#get-application-id-and-authentication-key" target="_blank">Azure
+                                                  documentation</a>.</p>
+</li>
+
+                                    </ul>
+</dd>
+
+                        
+                        
+                              <dt class="dt dlterm">Shared Key</dt>
+
+                              <dd class="dd">Connections made with Shared Key authentication require the
+                                    following information:<ul class="ul" id="concept_j2q_kqb_b3b__d19e4445">
+                                          <li class="li">Account Shared Key - <span class="ph" id="concept_j2q_kqb_b3b__d19e4449">Storage account access key for the Azure Active
+                                                  Directory <span class="ph">Data Collector</span> application.</span><p class="p" id="concept_j2q_kqb_b3b__d19e4453">For
+                                                  more information on accessing this from the Azure
+                                                  portal, see "View and copy access keys" in the
+                                                  <a class="xref" href="https://docs.microsoft.com/en-us/azure/storage/common/storage-account-manage#access-keys" target="_blank">Azure
+                                                  documentation</a>. </p>
+</li>
+
+                                    </ul>
+</dd>
+
+                        
+                  </dl>
+</div>
+
+    </div>
+
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title4" id="concept_ncc_4qb_b3b">
+    <h2 class="title topictitle2" id="ariaid-title4">Related Event Generating Stages</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc"></p>
+
+        <p class="p">Use the ADLS Gen2 File Metadata executor in the
+            event stream of a pipeline. The ADLS Gen2 File Metadata executor is optimized to update
+            file metadata for output files or whole files processed by the Azure Data Lake Storage
+            Gen2 destination or another ADLS Gen2 File Metadata executor. However, you can use the
+            executor in any logical way. </p>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title5" id="concept_yxv_sqb_b3b">
+    <h2 class="title topictitle2" id="ariaid-title5">Changing Metadata</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc"></p>
+
+        <p class="p">You can configure the ADLS Gen2 File Metadata
+            executor to change metadata for a file in Azure Data Lake Storage Gen2 after receiving
+            an event. For example, you might use the executor to change file permissions after a
+            destination closes a file.</p>
+
+        <div class="p">The ADLS Gen2 File Metadata executor can change the following file metadata at the same
+                time:<ul class="ul" id="concept_yxv_sqb_b3b__ul_gym_xw3_rx">
+                <li class="li">File name</li>
+
+                <li class="li">File location</li>
+
+                <li class="li">File owner and group</li>
+
+                <li class="li">File permissions</li>
+
+                <li class="li">Access control lists (ACLs)</li>
+
+            </ul>
+</div>
+
+        <p class="p">To change metadata, the Azure Active Directory application for <span class="ph">Data Collector</span>
+            must have the required permission. </p>
+
+    </div>
+
+<article class="topic concept nested2" aria-labelledby="ariaid-title6" id="concept_concept_sj5_wqb_b3b">
+    <h3 class="title topictitle3" id="ariaid-title6">Specifying the File Path</h3>
+
+    
+    <div class="body conbody"><p class="shortdesc"></p>
+
+        <p class="p">When using the ADLS Gen2 File Metadata executor to change
+            file metadata, specify an expression for the File Path property that provides an
+            absolute path to the files you want to use. </p>
+
+        <p class="p">Use the default file path expression, <code class="ph codeph">${record:value('/filepath')}</code>, to
+            update output files closed by the Azure Data Lake Storage Gen2 destination. The file
+            closure event records generated by this destination include a <code class="ph codeph">filepath</code>
+            field that contains the location and name of the closed output files.</p>
+
+        <div class="p">To update whole files that the Azure Data Lake Storage Gen2 destination has completed
+            streaming, use the following
+            expression:<pre class="pre codeblock"><code>${record:value('/targetFileInfo/path')}</code></pre></div>
+
+        <p class="p">The whole file processed event records from the destination include a
+                <code class="ph codeph">/targetFileInfo/path</code> field that contains the location and name of
+            the processed whole files. </p>
+
+        <p class="p">For more information about the event records generated by the Azure Data Lake Storage
+            Gen2 destination, see <a class="xref" href="../Destinations/ADLS-G2-D.html#concept_fcy_msk_vhb">Event Records</a>. </p>
+
+    </div>
+
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title7" id="concept_dz4_brb_b3b">
+    <h3 class="title topictitle3" id="ariaid-title7">Changing the File Name or Location</h3>
+
+    
+    <div class="body conbody"><p class="shortdesc"></p>
+
+        <p class="p">When using the ADLS Gen2 File Metadata executor
+            to change file metadata, you can change the name or location of files after they close.
+            To specify new file names and locations, you can enter constants or expressions. Use any
+            expression that evaluates to the values that you want to use. </p>
+
+        <div class="p">When needed, you can include file functions in expressions to specify part of the
+            existing file path. File functions can return any part of a path, file name, or
+            extension. <dl class="dl">
+                
+                    <dt class="dt dlterm">Example for moving files</dt>
+
+                    <dd class="dd">Say the Azure Data Lake Storage Gen2 destination writes JSON files to the
+                        following directory
+                        structure:<pre class="pre codeblock"><code>/server1/weblogs/&lt;subdir&gt;/&lt;filename&gt;</code></pre></dd>
+
+                    <dd class="dd ddexpand">After the files are written, you want the ADLS Gen2 File Metadata executor
+                        to move the files to a different root directory. To move files you need to
+                        specify the new location for the files. So you configure the executor to
+                        move files to a different directory while still using the rest of the path,
+                        as
+                        follows:<pre class="pre codeblock"><code>/newDir/${file:pathElement(record:value('/filepath'),1)}/${file:pathElement(record:value('/filepath'),2)}/</code></pre></dd>
+
+                    <dd class="dd ddexpand">
+                        <p class="p">This expression uses <span class="ph filepath">newDir</span> as the new root
+                            directory, then uses two levels of subdirectories. Do not include file
+                            names when moving files. </p>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Example for renaming files</dt>
+
+                    <dd class="dd">Say you want to add the <span class="ph filepath">.json</span> suffix to the original
+                        file name. To rename files, you need to specify the new name for the files,
+                        so you use the following
+                        expression:<pre class="pre codeblock"><code>${file:fileName(record:value('/filepath'))}.json</code></pre></dd>
+
+                    <dd class="dd ddexpand">This expression returns the file name from the <code class="ph codeph">filepath</code>
+                        field in the event record and adds <code class="ph codeph">.json</code> to the file name,
+                        such as <code class="ph codeph"> &lt;filename&gt;.json</code>.</dd>
+
+                    <dd class="dd ddexpand">If you wanted to strip the extension from written files, you could use the
+                        following expression in the New Name property:
+                        <pre class="pre codeblock"><code>${file:removeExtension(file:fileName(record:value('/filepath')))}</code></pre></dd>
+
+                    <dd class="dd ddexpand">This expression returns the file name from the event record of the
+                            <code class="ph codeph">filepath</code> field,  strips the extension from the name,
+                        and uses the result as the new file name.</dd>
+
+                
+            </dl>
+</div>
+
+        <p class="p">For more information about file functions, see <a class="xref" href="../Expression_Language/Functions.html#concept_kxj_nyl_5x">File Functions</a>.</p>
+
+    </div>
+
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title8" id="concept_rxm_grb_b3b">
+ <h3 class="title topictitle3" id="ariaid-title8">Defining the Owner, Group, Permissions, and ACLs</h3>
+
+ <div class="body conbody">
+  <div class="p">When using the ADLS Gen2 File Metadata executor
+            to change file metadata or create an empty file, you can define the file owner, group,
+            file permissions, and the access control list (ACL).<div class="note important"><span class="importanttitle">Important:</span> When the
+                executor changes permissions, it removes existing permissions and implements the
+                requested permissions. The executor does not add permissions to the existing
+                permissions, so be sure to configure permissions exactly how you want
+            them.</div>
+</div>
+
+        <div class="p">You can set permissions using any combination of the following methods: <dl class="dl">
+                
+                    <dt class="dt dlterm">Define a new owner and group</dt>
+
+                    <dd class="dd">You can define the owner and group for files. When you use this option, you
+                        must enter both an owner and a group name. </dd>
+
+                
+                
+                    <dt class="dt dlterm">Set file permissions using the octal or symbolic formats</dt>
+
+                    <dd class="dd">You can set file permissions by entering the permissions you want to use in
+                        octal or symbolic format. </dd>
+
+                    <dd class="dd ddexpand">For example, you can use the following octal format to make files
+                        read-only:<pre class="pre codeblock"><code>0444</code></pre>You can alternatively use the following
+                        symbolic format to make files
+                        read-only:<pre class="pre codeblock"><code>-r--r--r-- </code></pre></dd>
+
+                    <dd class="dd ddexpand">To make them read-only for the user and the group, forbidding all access to
+                        other users, you could use either of the following
+                        formats:<pre class="pre codeblock"><code>0440
+
+-r--r-----</code></pre></dd>
+
+                
+            </dl>
+<dl class="dl">
+                
+                    <dt class="dt dlterm">Define ACLs </dt>
+
+                    <dd class="dd">You can define the ACLs for files. When you define ACLs, note that Azure
+                        Data Lake Storage expects permissions defined for the user, group, and
+                        other. You can alternatively add permissions for additional users or groups. </dd>
+
+                    <dd class="dd ddexpand">Use the following format to define
+                        ACLs:<pre class="pre codeblock"><code>user::&lt;permissions&gt;,group::&lt;permissions&gt;,other::&lt;permissions&gt;\
+[,&lt;user | group&gt;:&lt;user or group name:&lt;permissions&gt;]</code></pre></dd>
+
+                    <dd class="dd ddexpand">Define permissions using the symbolic format, with r, w, x, or -
+                        representing the permission type. </dd>
+
+                    <dd class="dd ddexpand">For example, the following ACLs allow read access for the user and group
+                        only:<pre class="pre codeblock"><code>user::r--,group::r--,other::–-</code></pre></dd>
+
+                    <dd class="dd ddexpand">If you wanted to allow read access to the operations group in addition to
+                        the group associated with the file, you would enter the following
+                        permissions:<pre class="pre codeblock"><code>user::r--,group::r--,other::–-,group:operations:r--</code></pre></dd>
+
+                
+            </dl>
+</div>
+
+ </div>
+
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title9" id="concept_gtd_nrb_b3b">
+ <h2 class="title topictitle2" id="ariaid-title9">Creating an Empty File</h2>
+
+ <div class="body conbody">
+  <p class="p">You can configure the ADLS Gen2 File Metadata executor
+            to create empty files in Azure Data Lake Storage Gen2 upon receiving an event. You might
+            create empty files to trigger downstream actions in other applications, such as Oozie. </p>
+
+        <div class="p">To create an empty file, specify an expression for the File Path property that provides
+            an absolute path to the location where you want the file created. <div class="note note"><span class="notetitle">Note:</span> In most cases, you will not want to use the
+                        default expression. The default expression is more appropriate for changing
+                        file metadata.</div>
+</div>
+
+        <div class="p">When creating an empty file, you can also specify the following file details:<ul class="ul" id="concept_gtd_nrb_b3b__ul_mh3_r44_x1b">
+                <li class="li">File owner and group</li>
+
+                <li class="li">File permissions</li>
+
+                <li class="li">Access control lists (ACLs)</li>
+
+            </ul>
+</div>
+
+        <p class="p">For more information, see <a class="xref" href="ADLS-G2-FileMeta.html#concept_rxm_grb_b3b">Defining the Owner, Group, Permissions, and ACLs</a>.</p>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title10" id="concept_zjn_qrb_b3b">
+ <h2 class="title topictitle2" id="ariaid-title10">Removing a File or Directory</h2>
+
+ <div class="body conbody">
+  <p class="p">You can configure the ADLS Gen2 File Metadata executor
+            to remove a file or directory from Azure Data Lake Storage Gen2 after receiving an
+            event. </p>
+
+        <p class="p">For example, say you run a daily pipeline that writes data to Azure Data Lake Storage
+            Gen2. You can use the ADLS Gen2 File Metadata executor to remove the target directory
+            and all of its contents before a pipeline starts processing data. Simply configure the
+            pipeline to pass the pipeline start event to an ADLS Gen2 File Metadata executor, then
+            specify the target directory when you configure the executor. For more information about
+            using pipeline events, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_amg_2qr_t1b">Pipeline Event Generation</a>.</p>
+
+        <p class="p">Remove directories with caution. The executor removes directories recursively, deleting
+            any subdirectories and their contents in addition to the specified directory. </p>
+
+ </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title11" id="concept_h5x_5rb_b3b">
+ <h2 class="title topictitle2" id="ariaid-title11">Event Generation</h2>
+
+ <div class="body conbody">
+  <p class="p">The ADLS Gen2 File Metadata
+            executor can generate events that you can use in an event stream. When you enable event
+            generation, the executor generates events each time it changes file metadata, creates an
+            empty file, or removes a file or directory.</p>
+
+        <div class="p">ADLS Gen2 File Metadata events can be used in any logical way. For example: <ul class="ul">
+                <li class="li">With the Email executor to send a custom email
+                              after receiving an event.<p class="p">For an example, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_t2t_lp5_xz">Case Study: Sending Email</a>.</p>
+</li>
+
+                <li class="li">With a destination to store event information.
+                                    <p class="p">For an example, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_ocb_nnl_px">Case Study: Event Storage</a>.</p>
+</li>
+
+            </ul>
+</div>
+
+        <p class="p"><span class="ph">For more information about dataflow
+                        triggers and the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>.</span></p>
+
+ </div>
+
+<article class="topic concept nested2" aria-labelledby="ariaid-title12" id="concept_dnb_n3g_b3b">
+ <h3 class="title topictitle3" id="ariaid-title12">Event Records</h3>
+
+ <div class="body conbody">
+  <div class="p">Event records generated by the ADLS
+            Gen2 File Metadata executor have the following event-related record header attributes.
+            Record header attributes are stored as String values.
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_dnb_n3g_b3b__table_brz_3gp_qx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                        <tr>
+                            <th class="entry cellrowborder" id="d212334e883">Record Header Attribute</th>
+
+                            <th class="entry cellrowborder" id="d212334e886">Description</th>
+
+                        </tr>
+
+                    </thead>
+<tbody class="tbody">
+                        <tr>
+                            <td class="entry cellrowborder" headers="d212334e883 ">sdc.event.type</td>
+
+                            <td class="entry cellrowborder" headers="d212334e886 ">Event type. Uses the following event types:<ul class="ul" id="concept_dnb_n3g_b3b__ul_m12_mgp_qx">
+                                    <li class="li">file-changed - Generated when the executor changes file
+                                        metadata, including file name, location, permissions, or
+                                        ACLs.</li>
+
+                                    <li class="li">file-created - Generated when the executor creates an empty
+                                        file.</li>
+
+                                    <li class="li">file-removed - Generated when the executor removes a file or
+                                        directory.</li>
+
+                                </ul>
+</td>
+
+                        </tr>
+
+                        <tr>
+              <td class="entry cellrowborder" headers="d212334e883 ">sdc.event.version</td>
+
+              <td class="entry cellrowborder" headers="d212334e886 ">Integer that indicates the version of the event record type.</td>
+
+            </tr>
+
+                        <tr>
+              <td class="entry cellrowborder" headers="d212334e883 ">sdc.event.creation_timestamp</td>
+
+              <td class="entry cellrowborder" id="concept_dnb_n3g_b3b__d155e2304" headers="d212334e886 ">Epoch timestamp when the stage created the event.
+              </td>
+
+            </tr>
+
+                    </tbody>
+</table>
+</div>
+</div>
+
+        <div class="p">The ADLS Gen2 File Metadata executor can generate the following types of event records:<dl class="dl">
+                
+                    <dt class="dt dlterm">File changed</dt>
+
+                    <dd class="dd">
+                        <p class="p">The executor generates a file-changed event record when it changes file
+                            metadata, including file name, location, permissions, or ACLs. </p>
+
+                        <div class="p">File-changed event records have the <code class="ph codeph">sdc.event.type</code>
+                            record header attribute set to <code class="ph codeph">file-changed</code> and include
+                            the following fields: 
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_dnb_n3g_b3b__table_rzy_xd2_pz" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                        <tr>
+                                            <th class="entry cellrowborder" id="d212334e968">Event Field Name</th>
+
+                                            <th class="entry cellrowborder" id="d212334e971">Description</th>
+
+                                        </tr>
+
+                                    </thead>
+<tbody class="tbody">
+                                        <tr>
+                                            <td class="entry cellrowborder" headers="d212334e968 ">filepath</td>
+
+                                            <td class="entry cellrowborder" headers="d212334e971 ">Most recent path and name of the changed file.
+                                            </td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td class="entry cellrowborder" headers="d212334e968 ">filename</td>
+
+                                            <td class="entry cellrowborder" headers="d212334e971 ">Most recent name of the changed file.</td>
+
+                                        </tr>
+
+                                    </tbody>
+</table>
+</div>
+</div>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">File created</dt>
+
+                    <dd class="dd">
+                        <p class="p">The executor generates a file-created event record when it creates an
+                            empty file.</p>
+
+                        <div class="p">File-created event records have the <code class="ph codeph">sdc.event.type</code>
+                            record header attribute set to <code class="ph codeph">file-created</code> and include
+                            the following fields: 
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_dnb_n3g_b3b__table_jtk_zd2_pz" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                        <tr>
+                                            <th class="entry cellrowborder" id="d212334e1031">Event Field Name</th>
+
+                                            <th class="entry cellrowborder" id="d212334e1034">Description</th>
+
+                                        </tr>
+
+                                    </thead>
+<tbody class="tbody">
+                                        <tr>
+                                            <td class="entry cellrowborder" headers="d212334e1031 ">filepath</td>
+
+                                            <td class="entry cellrowborder" headers="d212334e1034 ">Location where the file was created.</td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td class="entry cellrowborder" headers="d212334e1031 ">filename</td>
+
+                                            <td class="entry cellrowborder" headers="d212334e1034 ">Name of the file.</td>
+
+                                        </tr>
+
+                                    </tbody>
+</table>
+</div>
+</div>
+
+                    </dd>
+
+                
+            </dl>
+<dl class="dl">
+                
+                    <dt class="dt dlterm">File removed</dt>
+
+                    <dd class="dd">
+                        <p class="p">The executor generates a file-removed event record when it removes a file
+                            or directory.</p>
+
+                        <div class="p">File-removed event records have the <code class="ph codeph">sdc.event.type</code>
+                            record header attribute set to <code class="ph codeph">file-removed </code> and
+                            include the following fields: 
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_dnb_n3g_b3b__table_fgd_y2w_x1b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                        <tr>
+                                            <th class="entry cellrowborder" id="d212334e1096">Event Field Name</th>
+
+                                            <th class="entry cellrowborder" id="d212334e1099">Description</th>
+
+                                        </tr>
+
+                                    </thead>
+<tbody class="tbody">
+                                        <tr>
+                                            <td class="entry cellrowborder" headers="d212334e1096 ">filepath</td>
+
+                                            <td class="entry cellrowborder" headers="d212334e1099 ">Location of the directory that was removed, or
+                                                the directory where the removed file was
+                                                located.</td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td class="entry cellrowborder" headers="d212334e1096 ">filename</td>
+
+                                            <td class="entry cellrowborder" headers="d212334e1099 ">Name of the file that was removed, when
+                                                applicable.</td>
+
+                                        </tr>
+
+                                    </tbody>
+</table>
+</div>
+</div>
+
+                    </dd>
+
+                
+            </dl>
+</div>
+
+ </div>
+
+</article>
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title13" id="task_uwz_m45_rhb">
+    <h2 class="title topictitle2" id="ariaid-title13">Configuring an ADLS Gen2 File Metadata Executor </h2>
+
+    <div class="body taskbody">
+        <section class="section context" id="task_uwz_m45_rhb__context_sjk_sbt_yhb">Configure an ADLS Gen2
+            File Metadata executor to create an empty file, change file metadata, or remove a file
+            or directory from Azure Data Lake Storage Gen2 upon receiving an event.<p class="p">This executor
+                    <span class="ph">is a <a class="xref" href="../Pipeline_Design/TechPreview.html#concept_prl_qfv_gfb" title="Data Collector includes certain new features and stages with the Technology Preview designation. Technology Preview functionality is available for use in development and testing, but is not meant for use in production.">Technology Preview</a> feature. It is not meant for use in
+                        production.</span></p>
+</section>
+
+        <ol class="ol steps" id="task_uwz_m45_rhb__steps_whh_1ct_yhb"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_uwz_m45_rhb__table_yxz_pvs_5x" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d212334e1186">General Property</th>
+
+                                    <th class="entry cellrowborder" id="d212334e1189">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+              <td class="entry cellrowborder" headers="d212334e1186 ">Name</td>
+
+              <td class="entry cellrowborder" headers="d212334e1189 ">Stage name.</td>
+
+            </tr>
+
+                                <tr>
+              <td class="entry cellrowborder" headers="d212334e1186 ">Description</td>
+
+              <td class="entry cellrowborder" headers="d212334e1189 ">Optional description.</td>
+
+            </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1186 "><a class="xref" href="ADLS-G2-FileMeta.html#concept_h5x_5rb_b3b">Produce Events</a></td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1189 ">Generates event records when events occur. Use for
+                  <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">event handling</a>.</td>
+
+                                </tr>
+
+                                <tr>
+              <td class="entry cellrowborder" headers="d212334e1186 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">Required Fields</a></td>
+
+              <td class="entry cellrowborder" headers="d212334e1189 ">Fields that must include data for the record to be passed into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields that the stage
+                  uses.</div>
+<p class="p">Records that do not include all required fields are processed based
+                  on the error handling configured for the pipeline.</p>
+</td>
+
+            </tr>
+
+                                <tr>
+              <td class="entry cellrowborder" headers="d212334e1186 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">Preconditions</a></td>
+
+              <td class="entry cellrowborder" headers="d212334e1189 ">Conditions that must evaluate to TRUE to allow a record to enter the stage for
+                processing. Click <span class="ph uicontrol">Add</span> to create additional preconditions.
+                  <p class="p">Records that do not meet all preconditions are processed based on the error
+                  handling configured for the stage.</p>
+</td>
+
+            </tr>
+
+                                <tr>
+              <td class="entry cellrowborder" headers="d212334e1186 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
+
+              <td class="entry cellrowborder" headers="d212334e1189 ">Error record handling for the stage: <ul class="ul" id="task_uwz_m45_rhb__d155e809">
+                  <li class="li">Discard - Discards the record.</li>
+
+                  <li class="li">Send to Error - Sends the record to the pipeline for error handling.</li>
+
+                  <li class="li">Stop Pipeline - Stops the pipeline. </li>
+
+                </ul>
+</td>
+
+            </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Data Lake</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_uwz_m45_rhb__table_umv_hsw_zx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d212334e1310">Data Lake Property</th>
+
+                                    <th class="entry cellrowborder" id="d212334e1313">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1310 ">Account FQDN</td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1313 ">The host name of the Azure Data Lake Storage Gen2
+                                        account. For example:
+                                        <pre class="pre codeblock"><code>&lt;storage account name&gt;.dfs.core.windows.net</code></pre></td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1310 ">Storage Container / File System</td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1313 ">
+                                        <p class="p">Name of the storage container or file system where the
+                                            executor reads or writes the data. </p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1310 ">Authentication Method</td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1313 ">
+                                        <div class="p">Authentication method used to connect to Azure: <ul class="ul" id="task_uwz_m45_rhb__ul_f22_dnj_xhb">
+                                                <li class="li">OAuth Token</li>
+
+                                                <li class="li">Shared Key </li>
+
+                                            </ul>
+</div>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1310 ">Application ID</td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1313 "><span class="ph">Application
+                                                  ID for the Azure Active Directory <span class="ph">Data Collector</span> application. Also known as the client ID.
+                                                  </span><p class="p">For information on
+                                                  accessing this from the Azure portal, see "Get
+                                                  values for signing in" in the <a class="xref" href="https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal#get-application-id-and-authentication-key" target="_blank">Azure
+                                                  documentation</a>.</p>
+<p class="p">Available when using the OAuth Token authentication
+                                            method. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1310 ">Auth Token Endpoint</td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1313 "><span class="ph">OAuth 2.0 token
+                                                  endpoint for the Azure Active Directory <span class="ph">Data Collector</span> application.</span><p class="p"><span class="ph">For information on
+                                                  accessing this from the Azure portal, see "Step 4:
+                                                  Get the OAuth 2.0 token endpoint" in the <a class="xref" href="https://docs.microsoft.com/en-us/azure/data-lake-store/data-lake-store-service-to-service-authenticate-using-active-directory" target="_blank">Azure
+                                                  documentation</a>.</span></p>
+<p class="p">Available when using the OAuth Token
+                                            authentication method. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1310 ">Application Key</td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1313 "><span class="ph">Authentication key for the Azure Active Directory
+                                                  <span class="ph">Data Collector</span> application. Also known as the client
+                                                  key.</span><p class="p">For information on
+                                                  accessing this from the Azure portal, see "Get
+                                                  values for signing in" in the <a class="xref" href="https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal#get-application-id-and-authentication-key" target="_blank">Azure
+                                                  documentation</a>.</p>
+<p class="p">Available when using the OAuth Token authentication
+                                            method. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1310 ">Account Shared Key </td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1313 "><span class="ph">Storage account access key for the Azure Active
+                                                  Directory <span class="ph">Data Collector</span> application.</span><p class="p">For
+                                                  more information on accessing this from the Azure
+                                                  portal, see "View and copy access keys" in the
+                                                  <a class="xref" href="https://docs.microsoft.com/en-us/azure/storage/common/storage-account-manage#access-keys" target="_blank">Azure
+                                                  documentation</a>. </p>
+<p class="p">Available when using the Shared Key authentication
+                                            method.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1310 ">Advanced Configuration</td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1313 ">
+                                        <p class="p">Additional HDFS properties to pass to the underlying
+                                            Hadoop file system. Specified properties override those
+                                            in Hadoop configuration files. </p>
+
+                                        <p class="p">To add properties, click the <strong class="ph b">Add </strong>icon and define
+                                            the HDFS property name and value. Use the property names
+                                            and values as expected by your version of Hadoop. </p>
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Tasks</span> tab, configure the following property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_uwz_m45_rhb__table_tcf_bhj_rx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d212334e1494">Task Property</th>
+
+                                    <th class="entry cellrowborder" id="d212334e1497">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1494 ">Task</td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1497 ">Type of task that the executor performs. The executor can
+                                        create an empty file, change file metadata, or remove a file
+                                        or directory.<p class="p">To do more than one type of task, add
+                                            additional executors to the pipeline.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To create an empty file, configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_uwz_m45_rhb__table_bdr_hp5_4z" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d212334e1539">Task Property</th>
+
+                                    <th class="entry cellrowborder" id="d212334e1542">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1539 ">File Path</td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1542 ">Expression that represents the full path to the file that
+                                        you want to create.<div class="p">By default, the property uses
+                                                <code class="ph codeph">${record:value('/filepath')}</code>. <div class="note note"><span class="notetitle">Note:</span> In most cases, you will not want to use the
+                        default expression. The default expression is more appropriate for changing
+                        file metadata.</div>
+</div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1539 "><a class="xref" href="ADLS-G2-FileMeta.html#concept_rxm_grb_b3b">Set
+                                            Ownership</a>
+                                    </td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1542 ">Select to specify a file owner or group. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1539 ">New Owner</td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1542 ">The user name to become the new owner of the file.
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1539 ">New Group</td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1542 ">The group to become the new group owner of the file.
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1539 "><a class="xref" href="ADLS-G2-FileMeta.html#concept_rxm_grb_b3b">Set Permissions</a></td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1542 ">Select to set file permissions in an octal or symbolic
+                                        format.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1539 ">New Permissions</td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1542 ">File permissions in octal or symbolic format.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1539 "><a class="xref" href="ADLS-G2-FileMeta.html#concept_rxm_grb_b3b">Set ACLs</a></td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1542 ">Select to define access control list (ACL) permissions.
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1539 ">New ACLs</td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1542 ">Define ACLs for the owner, group, and other. You can
+                                        optionally define other user and group permissions. </td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To change file metadata, configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_uwz_m45_rhb__table_dr2_ns5_4z" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d212334e1660">Task Property</th>
+
+                                    <th class="entry cellrowborder" id="d212334e1663">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1660 "><a class="xref" href="ADLS-G2-FileMeta.html#concept_concept_sj5_wqb_b3b">File Path</a></td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1663 ">Expression that represents the full path to the file.
+                                            <p class="p">By default, the property uses
+                                                <code class="ph codeph">${record:value('/filepath')}</code>, which
+                                            processes data in the <code class="ph codeph">filepath</code> field.
+                                            The Azure Data Lake Storage Gen2 destination generates
+                                            file-closure event records that include the path to
+                                            closed files in a <code class="ph codeph">filepath</code>
+                                            field.</p>
+<div class="p">To update whole files that the Azure Data
+                                            Lake Storage Gen2 destination has completed streaming,
+                                            use the following
+                                            expression:<pre class="pre codeblock"><code>${record:value('/targetFileInfo/path')}</code></pre></div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1660 ">Move File</td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1663 ">Select to move the file.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1660 ">New Location</td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1663 ">New location for the file. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1660 ">Rename</td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1663 ">Select to rename the file.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1660 ">New Name</td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1663 ">New name for the file. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1660 "><a class="xref" href="ADLS-G2-FileMeta.html#concept_rxm_grb_b3b">Set
+                                            Ownership</a></td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1663 ">Select to change the file owner or group. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1660 ">New Owner</td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1663 ">The user name to own the file. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1660 ">New Group</td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1663 ">The group to own the file. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1660 "><a class="xref" href="ADLS-G2-FileMeta.html#concept_rxm_grb_b3b">Set Permissions</a>
+                                    </td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1663 ">Select to set file permissions in an octal or symbolic
+                                        format.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1660 ">New Permissions</td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1663 ">File permissions in octal or symbolic format.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1660 "><a class="xref" href="ADLS-G2-FileMeta.html#concept_rxm_grb_b3b">Set ACLs</a></td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1663 ">Select to define access control list (ACL) permissions.
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1660 ">New ACLs</td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1663 ">Define ACLs for the owner, group, and other. You can
+                                        optionally define other user and group permissions. </td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To remove a file or directory, configure the following property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_uwz_m45_rhb__table_cnj_kp4_x1b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d212334e1829">Task Property</th>
+
+                                    <th class="entry cellrowborder" id="d212334e1832">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d212334e1829 ">File Path</td>
+
+                                    <td class="entry cellrowborder" headers="d212334e1832 ">Expression that represents the full path to the file or
+                                        directory that you want to remove. <p class="p">The executor removes
+                                            directories recursively, removing all subdirectories as
+                                            well. Use with caution. For more information, see <a class="xref" href="ADLS-G2-FileMeta.html#concept_zjn_qrb_b3b">Removing a File or Directory</a>. </p>
+<div class="p">By default, the property uses
+                                                <code class="ph codeph">${record:value('/filepath')}</code>. <div class="note note"><span class="notetitle">Note:</span> In most cases, you will not want to use the
+                        default expression. The default expression is more appropriate for changing
+                        file metadata.</div>
+</div>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+</article>
+</article></main></div>
+                        
                         
                         
                     </div>

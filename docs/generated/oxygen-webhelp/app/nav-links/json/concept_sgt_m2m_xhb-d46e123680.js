@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Configuring an SFTP\/FTP\/FTPS Client Destination","shortdesc":"\n               <p class=\"shortdesc\"></p>\n            ","href":"datacollector\/UserGuide\/Destinations\/SFTP.html#task_jgs_4fw_pgb","attributes": {"data-id":"task_jgs_4fw_pgb",},"menu": {"hasChildren":false,},"tocID":"task_jgs_4fw_pgb-d46e123714","topics":[]}]});

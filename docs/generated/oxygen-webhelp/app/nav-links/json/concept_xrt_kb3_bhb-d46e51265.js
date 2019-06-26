@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Oracle Data Types","shortdesc":"\n                  <p class=\"shortdesc\"></p>\n               ","href":"datacollector\/UserGuide\/Origins\/JDBCConsumer.html#concept_fbg_qwq_jhb","attributes": {"data-id":"concept_fbg_qwq_jhb",},"menu": {"hasChildren":false,},"tocID":"concept_fbg_qwq_jhb-d46e51300","topics":[]}]});
