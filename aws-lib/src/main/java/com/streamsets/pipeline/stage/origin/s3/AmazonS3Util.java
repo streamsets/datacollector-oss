@@ -177,7 +177,7 @@ public class AmazonS3Util {
       //compare names
       if(s.getKey().compareTo(s3Offset.getKey()) > 0) {
         isEligible = true;
-      } else if (s.getKey().compareTo(s3Offset.getKey()) == 0 && !"-1".equals(s3Offset.getOffset())) {
+      } else if (s.getKey().compareTo(s3Offset.getKey()) == 0 && !S3Constants.MINUS_ONE.equals(s3Offset.getOffset())) {
         //same time stamp, same name
         //If the current offset is not -1, return the file. It means the previous file was partially processed.
         isEligible = true;

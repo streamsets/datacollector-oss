@@ -31,7 +31,7 @@ public interface AmazonS3Source {
    * @param context stage context
    * @return s3Object as String
    */
-  Map<Integer, S3Offset> handleOffset(
+  void handleOffset(
       Map<String, String> lastSourceOffset, PushSource.Context context
   ) throws StageException;
 

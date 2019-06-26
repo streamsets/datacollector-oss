@@ -24,7 +24,7 @@ import java.io.Serializable;
 public class S3Offset implements Serializable {
   private final String key;
   private final String eTag;
-  private String offset;
+  private final String offset;
   private final String timestamp;
 
   static final String OFFSET_SEPARATOR = "::";
@@ -35,6 +35,20 @@ public class S3Offset implements Serializable {
     this.offset = offset;
     this.eTag = eTag;
     this.timestamp = timestamp;
+  }
+
+  S3Offset(S3Offset offset) {
+    this.key = offset.getKey();
+    this.offset = offset.getOffset();
+    this.eTag = offset.geteTag();
+    this.timestamp = offset.getTimestamp();
+  }
+
+  S3Offset(S3Offset offset, String offsetValue) {
+    this.key = offset.getKey();
+    this.offset = offsetValue;
+    this.eTag = offset.geteTag();
+    this.timestamp = offset.getTimestamp();
   }
 
   public String getKey() {
@@ -51,10 +65,6 @@ public class S3Offset implements Serializable {
 
   String getTimestamp() {
     return timestamp;
-  }
-
-  public void setOffset(String offset) {
-    this.offset = offset;
   }
 
   @Override

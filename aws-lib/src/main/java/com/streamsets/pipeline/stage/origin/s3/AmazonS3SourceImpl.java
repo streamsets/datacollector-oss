@@ -25,6 +25,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements AmazonS3Source {
-  volatile Map<Integer, S3Offset> offsetsMap;
+  private volatile Map<Integer, S3Offset> offsetsMap;
   volatile Queue<S3Offset> orphanThreads;
   private AtomicBoolean noMoreDataEventSent;
 
@@ -55,7 +56,7 @@ public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements Amazon
   }
 
   @Override
-  public Map<Integer, S3Offset> handleOffset(Map<String, String> lastSourceOffset, PushSource.Context context)
+  public void handleOffset(Map<String, String> lastSourceOffset, PushSource.Context context)
       throws StageException {
     this.context = context;
     int threadCount = 0;
@@ -68,7 +69,6 @@ public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements Amazon
     } else {
       createInitialOffsetsMap(lastSourceOffset);
     }
-    return offsetsMap;
   }
 
   @VisibleForTesting
@@ -116,7 +116,7 @@ public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements Amazon
     if (s3Offset.getKey() != null) {
 
       if (!isKeyAlreadyInMap(s3Offset.getKey())) {
-        offsetsMap.put(runnerId, s3Offset);
+        offsetsMap.put(runnerId, new S3Offset(s3Offset));
         context.commitOffset(String.valueOf(runnerId), s3Offset.toString());
         return;
       }
@@ -129,27 +129,32 @@ public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements Amazon
         //Then is an EXCEL offset
         offsetVal = Integer.valueOf(offset.getOffset().split(S3Offset.OFFSET_SEPARATOR)[1]);
         s3offsetVal = Integer.valueOf(s3Offset.getOffset().split(S3Offset.OFFSET_SEPARATOR)[1]);
-      } else if (isJSONOffset(s3Offset)) {
-        //If case of zipped files, if the filename is the same, we handle it as before, if not we will use the new
-        // offset for the new file
-        if (isJSONOffset(offset)) {
-          offsetVal = getFileName(offset.getOffset()).equals(getFileName(s3Offset.getOffset()))
-                      ? getFileOffset(offset.getOffset())
-                      : 0;
-        } else {
-          offsetVal = Integer.valueOf(offset.getOffset());
-        }
-        s3offsetVal = getFileOffset(s3Offset.getOffset());
       } else {
-        offsetVal = Integer.valueOf(offset.getOffset());
-        s3offsetVal = Integer.valueOf(s3Offset.getOffset());
+        offsetVal = parseOffset(offset);
+        s3offsetVal = parseOffset(s3Offset);
       }
       if (!offset.getOffset().equals(S3Constants.MINUS_ONE) &&
           (s3Offset.getOffset().equals(S3Constants.MINUS_ONE) || s3offsetVal > offsetVal)) {
-        offsetsMap.put(runnerId, s3Offset);
+        offsetsMap.put(runnerId, new S3Offset(s3Offset));
         context.commitOffset(String.valueOf(runnerId), s3Offset.toString());
       }
     }
+  }
+
+  /*
+   * Parse Integer or extract offset from JSON
+   * If case of zipped files, the offset is a json containing fileName + fileOffset
+   */
+  private Integer parseOffset(S3Offset s3Offset) {
+    Integer offset;
+    if (isJSONOffset(s3Offset)) {
+      offset = getFileName(s3Offset.getOffset()).equals(getFileName(s3Offset.getOffset()))
+          ? getFileOffset(s3Offset.getOffset())
+          : 0;
+    } else {
+      offset = Integer.valueOf(s3Offset.getOffset());
+    }
+    return offset;
   }
 
   @VisibleForTesting
@@ -172,7 +177,7 @@ public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements Amazon
   private S3Offset getOffsetFromGivenKey(String key) {
     for (S3Offset offset : offsetsMap.values()) {
       if (offset.getKey() != null && offset.getKey().equals(key)) {
-        return offset;
+        return new S3Offset(offset);
       }
     }
     return null;
@@ -205,7 +210,7 @@ public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements Amazon
           k -> new S3Offset(S3Constants.EMPTY, S3Constants.ZERO, S3Constants.EMPTY, S3Constants.ZERO)
       );
     }
-    return offset;
+    return new S3Offset(offset);
   }
 
   @Override
@@ -262,5 +267,15 @@ public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements Amazon
       }
     }
     return filesFinished;
+  }
+
+  // Return a deep copy to avoid the original offsets map being modified
+  @VisibleForTesting
+  public Map<Integer, S3Offset> getOffsetsMap() {
+    Map<Integer, S3Offset> offsetsCopy = new HashMap<>();
+    for (Integer offset : offsetsMap.keySet()) {
+      offsetsCopy.put(offset, offsetsMap.get(offset));
+    }
+    return offsetsCopy;
   }
 }

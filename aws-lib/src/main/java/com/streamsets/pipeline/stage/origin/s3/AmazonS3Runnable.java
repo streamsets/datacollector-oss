@@ -17,10 +17,7 @@ package com.streamsets.pipeline.stage.origin.s3;
 
 import com.amazonaws.AbortedException;
 import com.amazonaws.AmazonClientException;
-import com.amazonaws.ClientConfiguration;
-import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.google.common.base.Throwables;
@@ -42,13 +39,10 @@ import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
 import com.streamsets.pipeline.api.service.dataformats.DataParser;
 import com.streamsets.pipeline.api.service.dataformats.DataParserException;
 import com.streamsets.pipeline.api.service.dataformats.RecoverableDataParserException;
-import com.streamsets.pipeline.lib.aws.AwsRegion;
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
-import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
-import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,7 +117,7 @@ public class AmazonS3Runnable implements Runnable {
           }
           // we set the offset to -1 to indicate we are done with the current object and we should fetch a new one
           // from the spooler
-          offset.setOffset(S3Constants.MINUS_ONE);
+          offset = new S3Offset(offset, S3Constants.MINUS_ONE);
         }
       }
     } catch (StageException e) {
@@ -235,7 +229,7 @@ public class AmazonS3Runnable implements Runnable {
               batchMaker.addRecord(record);
               amazonS3Source.incrementNoMoreDataRecordCount();
               i++;
-              offset.setOffset(parser.getOffset());
+              offset = new S3Offset(offset, parser.getOffset());
             } else {
               parser.close();
               parser = null;
@@ -244,13 +238,13 @@ public class AmazonS3Runnable implements Runnable {
                 object = null;
               }
               amazonS3Source.incrementNoMoreDataFileCount();
-              offset.setOffset(S3Constants.MINUS_ONE);
+              offset = new S3Offset(offset, S3Constants.MINUS_ONE);
               break;
             }
           } catch (ObjectLengthException ex) {
             errorRecordHandler.onError(Errors.S3_SPOOLDIR_02, s3Object.getKey(), offset.toString(), ex);
             amazonS3Source.incrementNoMoreDataErrorCount();
-            offset.setOffset(S3Constants.MINUS_ONE);
+            offset = new S3Offset(offset, S3Constants.MINUS_ONE);
           }
         }
       } catch (AmazonClientException e) {
@@ -258,7 +252,7 @@ public class AmazonS3Runnable implements Runnable {
         throw new StageException(Errors.S3_SPOOLDIR_25, e.toString(), e);
       } catch (IOException | DataParserException ex) {
         if (!(ex.getCause() instanceof AbortedException)) {
-          offset.setOffset(S3Constants.MINUS_ONE);
+          offset = new S3Offset(offset, S3Constants.MINUS_ONE);
           String exOffset;
           if (ex instanceof OverrunException) {
             exOffset = String.valueOf(((OverrunException) ex).getStreamOffset());
@@ -270,7 +264,7 @@ public class AmazonS3Runnable implements Runnable {
               exOffset = S3Constants.MINUS_ONE;
             }
           }
-          offset.setOffset(exOffset);
+          offset = new S3Offset(offset, exOffset);
 
           switch (context.getOnErrorRecord()) {
             case DISCARD:

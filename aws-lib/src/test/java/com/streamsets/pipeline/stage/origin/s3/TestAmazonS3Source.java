@@ -150,7 +150,7 @@ public class TestAmazonS3Source extends AmazonS3TestSuite {
     amazonS3Source.createInitialOffsetsMap(mapOfOffsets);
 
     List<S3Offset> expectedList = amazonS3Source.orderOffsets(listOfOffsets);
-    List<S3Offset> resultList = new ArrayList<>(amazonS3Source.offsetsMap.values());
+    List<S3Offset> resultList = new ArrayList<>(amazonS3Source.getOffsetsMap().values());
     for (int iterator = 0; iterator < 3; iterator++) {
       Assert.assertEquals(expectedList.get(iterator).toString(), resultList.get(iterator).toString());
     }
@@ -177,7 +177,7 @@ public class TestAmazonS3Source extends AmazonS3TestSuite {
     amazonS3Source.createInitialOffsetsMap(mapOfOffsets);
 
     List<S3Offset> expectedList = amazonS3Source.orderOffsets(listOfOffsets);
-    List<S3Offset> resultList = new ArrayList<>(amazonS3Source.offsetsMap.values());
+    List<S3Offset> resultList = new ArrayList<>(amazonS3Source.getOffsetsMap().values());
     for (int iterator = 0; iterator < 3; iterator++) {
       Assert.assertEquals(expectedList.get(iterator).toString(), resultList.get(iterator).toString());
     }
