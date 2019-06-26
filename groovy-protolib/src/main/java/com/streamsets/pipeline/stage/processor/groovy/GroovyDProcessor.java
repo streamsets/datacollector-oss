@@ -28,6 +28,8 @@ import com.streamsets.pipeline.stage.processor.scripting.ProcessingModeChooserVa
 import com.streamsets.pipeline.stage.processor.scripting.config.ScriptRecordType;
 import com.streamsets.pipeline.stage.processor.scripting.config.ScriptRecordTypeValueChooser;
 
+import java.util.Map;
+
 import static com.streamsets.pipeline.api.ConfigDef.Evaluation.EXPLICIT;
 import static com.streamsets.pipeline.stage.processor.groovy.GroovyProcessor.GROOVY_ENGINE;
 import static com.streamsets.pipeline.stage.processor.groovy.GroovyProcessor.GROOVY_INDY_ENGINE;
@@ -269,10 +271,21 @@ public class GroovyDProcessor extends DProcessor {
   )
   public boolean invokeDynamic = false;
 
+  @ConfigDef(
+    required = false,
+    defaultValue = "{}",
+    type = ConfigDef.Type.MAP,
+    label = "User-Defined Parameters",
+    displayPosition = 80,
+    group = "ADVANCED"
+  )
+  public Map<String, String> userParams;
+
   @Override
   protected Processor createProcessor() {
     final String engineName = invokeDynamic ? GROOVY_INDY_ENGINE : GROOVY_ENGINE;
-    return new GroovyProcessor(processingMode, script, initScript, destroyScript, engineName, scriptRecordType);
+    return new GroovyProcessor(processingMode, script, initScript, destroyScript, engineName, scriptRecordType,
+        userParams);
   }
 
 }

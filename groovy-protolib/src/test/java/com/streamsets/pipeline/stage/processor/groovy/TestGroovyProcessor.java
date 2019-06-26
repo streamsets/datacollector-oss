@@ -423,14 +423,35 @@ public class TestGroovyProcessor {
       "  output.write(record)\n" +
       "}";
 
-     Processor processor = new GroovyProcessor(
-       ProcessingMode.RECORD,
-       script,
-       "",
-       "",
-       GroovyProcessor.GROOVY_ENGINE,
-       ScriptRecordType.SDC_RECORDS
+    Processor processor = new GroovyProcessor(
+        ProcessingMode.RECORD,
+        script,
+        "",
+        "",
+        GroovyProcessor.GROOVY_ENGINE,
+        ScriptRecordType.SDC_RECORDS,
+        new HashMap<>()
     );
     ScriptingProcessorTestUtil.verifySdcRecord(GroovyDProcessor.class, processor);
+  }
+
+  @Test
+  public void testUserParams() throws Exception {
+    String script ="for(record in records) {\n" +
+        "  record.value['user-param-key'] = sdcUserParams['user-param-key'];\n" +
+        "  output.write(record);\n" +
+        "}";
+    Map<String, String> userParams = new HashMap<>();
+    userParams.put("user-param-key", "user-param-value");
+    Processor processor = new GroovyProcessor(
+        ProcessingMode.RECORD,
+        script,
+        "",
+        "",
+        GroovyProcessor.GROOVY_ENGINE,
+        ScriptRecordType.NATIVE_OBJECTS,
+        userParams
+     );
+    ScriptingProcessorTestUtil.verifyUserParams(GroovyDProcessor.class, processor);
   }
 }

@@ -23,20 +23,25 @@ import com.streamsets.pipeline.stage.processor.scripting.config.ScriptRecordType
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class JavaScriptProcessor extends AbstractScriptingProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(JavaScriptProcessor.class);
 
   public static final String JAVASCRIPT_ENGINE = "javascript";
   private final ScriptRecordType scriptRecordType;
 
-  public JavaScriptProcessor(ProcessingMode processingMode, String script, String initScript, String destroyScript, ScriptRecordType scriptRecordType) {
-    super(LOG, JAVASCRIPT_ENGINE, Groups.JAVASCRIPT.name(), processingMode, script, initScript, destroyScript);
+  public JavaScriptProcessor(ProcessingMode processingMode, String script, String initScript, String destroyScript,
+                             ScriptRecordType scriptRecordType, Map<String, String> userParams) {
+    super(LOG, JAVASCRIPT_ENGINE, Groups.JAVASCRIPT.name(), processingMode, script, initScript, destroyScript,
+        userParams);
     this.scriptRecordType = scriptRecordType;
   }
 
   // For tests
   public JavaScriptProcessor(ProcessingMode processingMode, String script) {
-    this(processingMode, script, "", "", ScriptRecordType.NATIVE_OBJECTS);
+    this(processingMode, script, "", "", ScriptRecordType.NATIVE_OBJECTS, new HashMap<>());
   }
 
   @Override

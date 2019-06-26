@@ -479,7 +479,8 @@ public class TestJythonProcessor {
         script,
         initScript,
         destroyScript,
-        ScriptRecordType.NATIVE_OBJECTS
+        ScriptRecordType.NATIVE_OBJECTS,
+        new HashMap<>()
     );
     ScriptingProcessorTestUtil.verifyInitDestroy(JythonDProcessor.class, processor);
   }
@@ -539,13 +540,32 @@ public class TestJythonProcessor {
       "  record.sdcRecord.get('/old').setAttribute('attr', 'attr-value')\n" +
       "  output.write(record)\n";
 
-     Processor processor = new JythonProcessor(
-       ProcessingMode.RECORD,
-       script,
-       "",
-       "",
-       ScriptRecordType.SDC_RECORDS
-    );
+    Processor processor = new JythonProcessor(
+        ProcessingMode.RECORD,
+        script,
+        "",
+        "",
+        ScriptRecordType.SDC_RECORDS,
+        new HashMap<>()
+     );
     ScriptingProcessorTestUtil.verifySdcRecord(JythonDProcessor.class, processor);
+  }
+
+  @Test
+  public void testUserParams() throws Exception {
+    String script =  "for record in records:\n" +
+        "  record.value['user-param-key'] = sdcUserParams['user-param-key']\n" +
+        "  output.write(record)";
+    Map<String, String> userParams = new HashMap<>();
+    userParams.put("user-param-key", "user-param-value");
+    Processor processor = new JythonProcessor(
+        ProcessingMode.RECORD,
+        script,
+        "",
+        "",
+        ScriptRecordType.NATIVE_OBJECTS,
+        userParams
+     );
+    ScriptingProcessorTestUtil.verifyUserParams(JythonDProcessor.class, processor);
   }
 }

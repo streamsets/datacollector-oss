@@ -17,7 +17,6 @@ package com.streamsets.pipeline.stage.processor.scripting;
 
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.EventRecord;
-import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -26,7 +25,6 @@ import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
-import com.streamsets.pipeline.stage.processor.scripting.config.ScriptRecordType;
 import org.slf4j.Logger;
 
 import javax.script.Compilable;
@@ -62,6 +60,7 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
   private List<ScriptRecord> records;
 
   protected ScriptEngine engine;
+  public final Map<String, String> userParams;
 
   // to hide all other methods of batchMaker
   public interface Out {
@@ -114,6 +113,8 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
       getContext().toEvent((EventRecord)getScriptObjectFactory().getRecord(event));
     }
 
+
+
     public boolean isPreview() { return getContext().isPreview(); }
 
     public Object createMap(boolean listMap) {
@@ -132,7 +133,8 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
       ProcessingMode processingMode,
       String script,
       String initScript,
-      String destroyScript
+      String destroyScript,
+      Map<String, String> userParams
   ) {
     this.log = log;
     this.scriptingEngineName = scriptingEngineName;
@@ -141,6 +143,7 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     this.script = script;
     this.initScript = initScript;
     this.destroyScript = destroyScript;
+    this.userParams = userParams;
     this.records = new ArrayList<>();
   }
 
@@ -286,6 +289,7 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     bindings.put(LOG_BINDING_NAME, log);
     ScriptTypedNullObject.fillNullTypes(bindings);
     bindings.put("sdcFunctions", sdcFunc);
+    bindings.put("sdcUserParams", userParams);
 
     return bindings;
   }

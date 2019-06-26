@@ -24,6 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.script.ScriptEngine;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GroovyProcessor extends AbstractScriptingProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(GroovyProcessor.class);
@@ -38,19 +40,21 @@ public class GroovyProcessor extends AbstractScriptingProcessor {
       String initScript,
       String destroyScript,
       String engineName,
-      ScriptRecordType scriptRecordType
+      ScriptRecordType scriptRecordType,
+      Map<String, String> userParams
   ) {
-    super(LOG, engineName, Groups.GROOVY.name(), processingMode, script, initScript, destroyScript);
+    super(LOG, engineName, Groups.GROOVY.name(), processingMode, script, initScript, destroyScript, userParams);
     this.scriptRecordType = scriptRecordType;
   }
 
   public GroovyProcessor(ProcessingMode processingMode, String script, String engineName, ScriptRecordType scriptRecordType) {
-    this(processingMode, script, "", "", engineName, scriptRecordType);
+    this(processingMode, script, "", "", engineName, scriptRecordType, new HashMap<>());
   }
 
   // For tests only
   public GroovyProcessor(ProcessingMode processingMode, String script, String initScript, String destroyScript) {
-    this(processingMode, script, initScript, destroyScript, GROOVY_ENGINE, ScriptRecordType.NATIVE_OBJECTS);
+    this(processingMode, script, initScript, destroyScript, GROOVY_ENGINE, ScriptRecordType.NATIVE_OBJECTS,
+        new HashMap<>());
   }
 
   // For tests only

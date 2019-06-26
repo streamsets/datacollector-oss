@@ -29,6 +29,8 @@ import com.streamsets.pipeline.stage.processor.scripting.ProcessingModeChooserVa
 import com.streamsets.pipeline.stage.processor.scripting.config.ScriptRecordType;
 import com.streamsets.pipeline.stage.processor.scripting.config.ScriptRecordTypeValueChooser;
 
+import java.util.Map;
+
 @StageDef(
     version = 3,
     label = "JavaScript Evaluator",
@@ -41,7 +43,6 @@ import com.streamsets.pipeline.stage.processor.scripting.config.ScriptRecordType
         ExecutionMode.CLUSTER_MESOS_STREAMING,
         ExecutionMode.EDGE,
         ExecutionMode.EMR_BATCH
-
     },
     upgrader = JavaScriptProcessorUpgrader.class,
     producesEvents = true,
@@ -266,9 +267,19 @@ public class JavaScriptDProcessor extends DProcessor {
   @ValueChooserModel(ScriptRecordTypeValueChooser.class)
   public ScriptRecordType scriptRecordType = ScriptRecordType.NATIVE_OBJECTS;
 
+  @ConfigDef(
+    required = false,
+    defaultValue = "{}",
+    type = ConfigDef.Type.MAP,
+    label = "User-Defined Parameters",
+    displayPosition = 80,
+    group = "ADVANCED"
+  )
+  public Map<String, String> userParams;
+
   @Override
   protected Processor createProcessor() {
-    return new JavaScriptProcessor(processingMode, script, initScript, destroyScript, scriptRecordType);
+    return new JavaScriptProcessor(processingMode, script, initScript, destroyScript, scriptRecordType, userParams);
   }
 
 }

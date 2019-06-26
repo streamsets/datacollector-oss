@@ -1055,4 +1055,32 @@ public class ScriptingProcessorTestUtil {
     assertTrue(outputRecord.has("/old"));
     assertEquals("old-value", outputRecord.get("/old").getValueAsString());
   }
+
+  public static <C extends Processor> void verifyUserParams(
+      Class<C> clazz,
+      Processor processor
+  ) throws StageException {
+    ProcessorRunner runner = new ProcessorRunner.Builder(clazz, processor)
+        .addOutputLane("lane")
+        .build();
+
+    Record record = RecordCreator.create();
+    Map<String, Field> map = new HashMap<>();
+    record.set(Field.create(map));
+
+    runner.runInit();
+    StageRunner.Output output;
+    try{
+      output = runner.runProcess(Collections.singletonList(record));
+    } finally {
+      runner.runDestroy();
+    }
+    List<Record> records = output.getRecords().get("lane");
+    assertEquals(1, records.size());
+
+    Record outputRecord = records.get(0);
+
+    assertTrue(outputRecord.has("/user-param-key"));
+    assertEquals("user-param-value", outputRecord.get("/user-param-key").getValueAsString());
+  }
 }

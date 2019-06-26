@@ -575,7 +575,8 @@ public class TestJavaScriptProcessor {
         script,
         initScript,
         destroyScript,
-        ScriptRecordType.NATIVE_OBJECTS
+        ScriptRecordType.NATIVE_OBJECTS,
+        new HashMap<>()
     );
     ScriptingProcessorTestUtil.verifyInitDestroy(JavaScriptDProcessor.class, processor);
   }
@@ -639,13 +640,33 @@ public class TestJavaScriptProcessor {
       "  output.write(records[i])\n" +
       "}";
 
-     Processor processor = new JavaScriptProcessor(
-       ProcessingMode.RECORD,
-       script,
-       "",
-       "",
-       ScriptRecordType.SDC_RECORDS
+    Processor processor = new JavaScriptProcessor(
+        ProcessingMode.RECORD,
+        script,
+        "",
+        "",
+        ScriptRecordType.SDC_RECORDS,
+        new HashMap<>()
     );
     ScriptingProcessorTestUtil.verifySdcRecord(JavaScriptDProcessor.class, processor);
+  }
+
+  @Test
+  public void testUserParams() throws Exception {
+    String script = "for(var i = 0; i < records.length; i++) {\n" +
+        "  records[i].value['user-param-key'] = sdcUserParams['user-param-key'];\n" +
+        "  output.write(records[i]);\n" +
+        "}";
+    Map<String, String> userParams = new HashMap<>();
+    userParams.put("user-param-key", "user-param-value");
+    JavaScriptProcessor processor = new JavaScriptProcessor(
+        ProcessingMode.RECORD,
+        script,
+        "",
+        "",
+        ScriptRecordType.NATIVE_OBJECTS,
+        userParams
+     );
+    ScriptingProcessorTestUtil.verifyUserParams(JavaScriptDProcessor.class, processor);
   }
 }
