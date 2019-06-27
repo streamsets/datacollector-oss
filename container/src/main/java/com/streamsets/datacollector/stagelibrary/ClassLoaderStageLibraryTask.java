@@ -79,6 +79,8 @@ import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -1074,8 +1076,11 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   }
 
   private RepositoryManifestJson getRepositoryManifestFile(String repoUrl) {
+    ClientConfig clientConfig = new ClientConfig();
+    clientConfig.property(ClientProperties.READ_TIMEOUT, 2000);
+    clientConfig.property(ClientProperties.CONNECT_TIMEOUT, 2000);
     RepositoryManifestJson repositoryManifestJson = null;
-    try (Response response = ClientBuilder.newClient().target(repoUrl).request().get()) {
+    try (Response response = ClientBuilder.newClient(clientConfig).target(repoUrl).request().get()) {
       InputStream inputStream = response.readEntity(InputStream.class);
       repositoryManifestJson = ObjectMapperFactory.get().readValue(inputStream, RepositoryManifestJson.class);
     } catch (Exception ex) {
