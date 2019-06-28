@@ -257,8 +257,9 @@ public class ValidationUtil {
       // -1: Means that framework is fully in control on how many input lanes should be present
       //  0: Means that the stage supports unlimited number of input lanes
       // >0: Means that stage needs exactly that amount of lanes which we will validate here
-      if(stageDef.getInputStreams() > 0) {
-        if(stageDef.getInputStreams() != stageConf.getInputLanes().size()) {
+      // Ignore validation for Pipeline Fragments
+      if (stageDef.getInputStreams() > 0) {
+        if (stageDef.getInputStreams() != stageConf.getInputLanes().size() && !isPipelineFragment) {
            issues.add(
               issueCreator.create(
                   stageConf.getInstanceName(),
