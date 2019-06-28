@@ -44,7 +44,10 @@ import com.streamsets.pipeline.lib.dirspooler.SpoolDirConfigBean;
     "dataLakeGen2SourceConfigBean.hdfsUser",
     "dataLakeGen2SourceConfigBean.hdfsKerberos",
     "dataLakeGen2SourceConfigBean.hdfsConfDir",
-    "dataLakeGen2SourceConfigBean.hdfsConfigs"
+    "dataLakeGen2SourceConfigBean.hdfsConfigs",
+    "conf.allowLateDirectory",
+    "conf.dataFormatConfig.verifyChecksum",
+    "conf.dataFormatConfig.avroSchemaSource"
 })
 @GenerateResourceBundle
 public class DataLakeGen2DSource extends DPushSource {
