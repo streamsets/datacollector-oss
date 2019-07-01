@@ -24,12 +24,18 @@ import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.jdbc.multithread.DatabaseVendor;
 import com.streamsets.pipeline.stage.destination.jdbc.Groups;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.sql.DriverManager;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
 public class HikariPoolConfigBean {
+  private static final Logger LOG = LoggerFactory.getLogger(HikariPoolConfigBean.class);
+
   private static final int TEN_MINUTES = 600;
   private static final int THIRTY_MINUTES = 1800;
   private static final int THIRTY_SECONDS = 30;
@@ -255,6 +261,29 @@ public class HikariPoolConfigBean {
 
 
   public List<Stage.ConfigIssue> validateConfigs(Stage.Context context, List<Stage.ConfigIssue> issues) {
+    // Java services facility that JDBC uses for auto-loading drivers doesn't entirely work properly with multiple
+    // class loaders. Thus we proactively attempt to load all 'known' drivers proactively to register them in the
+    // current class loader.
+    LOG.debug("Preloading JDBC drivers");
+    for(DatabaseVendor vendor: DatabaseVendor.values()) {
+      if(vendor.getDrivers() != null) {
+        for (String driver : vendor.getDrivers()) {
+          try {
+            Class.forName(driver);
+            LOG.debug("Pre-loaded {}", driver);
+          } catch (ClassNotFoundException e) {
+            LOG.debug("Can't pre-load {}", driver);
+          }
+        }
+      }
+    }
+
+    // Log all registered drivers
+    LOG.info("Registered JDBC drivers:");
+    Collections.list(DriverManager.getDrivers()).forEach(driver -> {
+      LOG.info("Driver class {} (version {}.{})", driver.getClass().getName(), driver.getMajorVersion(), driver.getMinorVersion());
+    });
+
     // Validation for NUMBER fields is currently disabled due to allowing ELs so we do our own here.
     if (maximumPoolSize < MAX_POOL_SIZE_MIN) {
       issues.add(

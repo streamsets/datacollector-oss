@@ -19,12 +19,23 @@ package com.streamsets.pipeline.lib.jdbc.multithread;
  * Database vendor (Oracle, MySQL, ...)
  */
 public enum DatabaseVendor {
-  // Oracle
-  ORACLE,
+  DB2("com.ibm.db2.jcc.DB2Driver"),
+  MYSQL("com.mysql.jdbc.Driver"),
+  HIVE("org.apache.hive.jdbc.HiveDriver", "com.cloudera.impala.jdbc41.Driver", "com.cloudera.impala.jdbc4.Driver"),
+  TERADATA("com.teradata.jdbc.TeraDriver"),
+  ORACLE("oracle.jdbc.driver.OracleDriver"),
+  POSTGRESQL("org.postgresql.Driver"),
+  SQL_SERVER("com.microsoft.sqlserver.jdbc.SQLServerDriver"),
+  UNKNOWN(),
+  ;
 
-  // Microsoft SQL Server
-  SQL_SERVER,
+  private final String[] drivers;
 
-  // Not a specific vendor in use
-  UNKNOWN,
+  DatabaseVendor(String ...drivers) {
+    this.drivers = drivers;
+  }
+
+  public String[] getDrivers() {
+    return drivers;
+  }
 }

@@ -866,12 +866,6 @@ public class JdbcUtil {
   ) throws StageException {
     HikariConfig config = new HikariConfig();
 
-    // Log all registered drivers
-    LOG.info("Registered JDBC drivers:");
-    Collections.list(DriverManager.getDrivers()).forEach(driver -> {
-      LOG.info("Driver class {} (version {}.{})", driver.getClass().getName(), driver.getMajorVersion(), driver.getMinorVersion());
-    });
-
     config.setJdbcUrl(hikariConfigBean.getConnectionString());
     if (hikariConfigBean.useCredentials){
        config.setUsername(hikariConfigBean.username.get());
