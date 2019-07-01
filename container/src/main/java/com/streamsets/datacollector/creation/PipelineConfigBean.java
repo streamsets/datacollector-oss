@@ -274,7 +274,7 @@ public class PipelineConfigBean implements Stage {
       displayPosition = 95,
       group = "STATS",
       dependsOn = "executionMode",
-      triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING", "EDGE", "EMR_BATCH"}
+      triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING", "EDGE", "EMR_BATCH", "BATCH", "STREAMING"}
   )
   @ValueChooserModel(StatsTargetChooserValues.class)
   public String statsAggregatorStage = STATS_DPM_DIRECTLY_TARGET;

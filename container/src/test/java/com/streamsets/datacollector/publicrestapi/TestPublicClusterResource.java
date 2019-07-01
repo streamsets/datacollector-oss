@@ -41,6 +41,7 @@ public class TestPublicClusterResource {
     Manager manager = Mockito.mock(Manager.class);
     PublicClusterResource publicClusterResource = Mockito.spy(new PublicClusterResource(manager, runtimeInfo));
     Mockito.when(runtimeInfo.isDPMEnabled()).thenReturn(true);
+    Mockito.when(runtimeInfo.getComponentType()).thenReturn("dc");
     Mockito.doReturn(null).when(publicClusterResource).updateSlaveCallbackInfo(Mockito.any());
     File testDir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(testDir.mkdirs());

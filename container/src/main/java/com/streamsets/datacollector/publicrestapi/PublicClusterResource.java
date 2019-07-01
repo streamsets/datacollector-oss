@@ -74,8 +74,8 @@ public class PublicClusterResource {
   @PermitAll
   public Response callbackWithResponse(CallbackInfoJson callbackInfoJson) throws PipelineException, IOException {
     Map<String, Object> response = updateSlaveCallbackInfo(callbackInfoJson);
-    File storeFile = new File(runtimeInfo.getDataDir(), DisconnectedSSOManager.DISCONNECTED_SSO_AUTHENTICATION_FILE);
-    if (runtimeInfo.isDPMEnabled()) {
+    if (runtimeInfo.isDPMEnabled() && RuntimeInfo.DC_COMPONENT_TYPE.equalsIgnoreCase(runtimeInfo.getComponentType())) {
+      File storeFile = new File(runtimeInfo.getDataDir(), DisconnectedSSOManager.DISCONNECTED_SSO_AUTHENTICATION_FILE);
       DisconnectedSecurityInfo disconnectedSecurityInfo = DisconnectedSecurityInfo.fromJsonFile(storeFile);
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(MessagingDtoJsonMapper.INSTANCE.toJson(
           disconnectedSecurityInfo)).build();

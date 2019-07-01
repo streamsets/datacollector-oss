@@ -53,7 +53,6 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.LogUtil;
 import com.streamsets.datacollector.util.PipelineException;
-import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
 import com.streamsets.lib.security.acl.dto.Acl;
@@ -76,7 +75,6 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -216,7 +214,7 @@ public class RemoteDataCollector implements DataCollector {
       RuleDefinitions ruleDefinitions,
       Acl acl,
       Map<String, Object> metadata
-  ) throws PipelineException {
+  ) {
     UUID uuid = null;
     try {
       uuid = GroupsInScope.executeIgnoreGroups(() -> {
@@ -227,6 +225,7 @@ public class RemoteDataCollector implements DataCollector {
         }
         UUID uuidRet = pipelineStore.create(user, name, name, description, true, false, metadata).getUuid();
         pipelineConfiguration.setUuid(uuidRet);
+        pipelineConfiguration.setPipelineId(name);
         PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary,
             name,
             pipelineConfiguration
@@ -439,7 +438,9 @@ public class RemoteDataCollector implements DataCollector {
       Map<String, String> offset = pipelineStateAndOffset.getRight();
       String name = pipelineState.getPipelineId();
       String rev = pipelineState.getRev();
-      boolean isClusterMode = (pipelineState.getExecutionMode() != ExecutionMode.STANDALONE) ? true : false;
+      boolean isClusterMode = pipelineState.getExecutionMode() != ExecutionMode.STANDALONE &&
+          pipelineState.getExecutionMode() != ExecutionMode.BATCH &&
+          pipelineState.getExecutionMode() != ExecutionMode.STREAMING;
       List<WorkerInfo> workerInfos = new ArrayList<>();
       String title;
       int runnerCount = 0;
@@ -547,7 +548,9 @@ public class RemoteDataCollector implements DataCollector {
       // ignore local and non active pipelines
       if (isRemote || manager.isPipelineActive(name, rev)) {
         List<WorkerInfo> workerInfos = new ArrayList<>();
-        boolean isClusterMode = (pipelineState.getExecutionMode() != ExecutionMode.STANDALONE) ? true: false;
+        boolean isClusterMode = pipelineState.getExecutionMode() != ExecutionMode.STANDALONE &&
+            pipelineState.getExecutionMode() != ExecutionMode.BATCH &&
+            pipelineState.getExecutionMode() != ExecutionMode.STREAMING;
         Runner runner = manager.getRunner(name, rev);
         if (isClusterMode) {
           for (CallbackInfo callbackInfo : runner.getSlaveCallbackList(CallbackObjectType.METRICS)) {

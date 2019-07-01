@@ -54,6 +54,7 @@ public class SchAdmin {
   private static final String APP_TOKEN_FILE = "application-token.txt";
   private static final String APP_TOKEN_FILE_PROP_VAL = "@application-token.txt@";
 
+
   public static class Context {
     private RuntimeInfo runtimeInfo;
     private Configuration configuration;
@@ -84,17 +85,21 @@ public class SchAdmin {
     // If token exists skip first 3 steps
     String currentDPMBaseURL = context.configuration.get(RemoteSSOService.DPM_BASE_URL_CONFIG, "");
     String currentAppAuthToken = context.configuration.get(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "").trim();
+    String componentType = context.configuration.get(
+        RuntimeInfo.DPM_COMPONENT_TYPE_CONFIG,
+        RuntimeInfo.DC_COMPONENT_TYPE
+    ).trim();
     if (!currentDPMBaseURL.equals(dpmBaseURL) ||  currentAppAuthToken.length() == 0) {
       // 1. Login to DPM to get user auth token
       String userAuthToken = retrieveUserToken(dpmBaseURL, dpmInfo.getUserID(), dpmInfo.getUserPassword());
-      String appAuthToken = null;
+      String appAuthToken;
 
       // 2. Create Data Collector application token
       Response response = null;
       try {
         Map<String, Object> newComponentJson = new HashMap<>();
         newComponentJson.put("organization", dpmInfo.getOrganization());
-        newComponentJson.put("componentType", "dc");
+        newComponentJson.put("componentType", componentType);
         newComponentJson.put("numberOfComponents", 1);
         newComponentJson.put("active", true);
         response = ClientBuilder.newClient()

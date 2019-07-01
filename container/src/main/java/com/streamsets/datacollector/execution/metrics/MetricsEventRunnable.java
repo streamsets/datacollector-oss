@@ -97,6 +97,7 @@ public class MetricsEventRunnable implements Runnable {
   private final RuntimeInfo runtimeInfo;
   private BlockingQueue<Record> statsQueue;
   private PipelineConfiguration pipelineConfiguration;
+  private MetricRegistryJson metricRegistryJson;
 
   private boolean isDPMPipeline = false;
   private String remoteTimeSeriesUrl;
@@ -153,6 +154,10 @@ public class MetricsEventRunnable implements Runnable {
     this.initializeDPMMetricsVariables();
   }
 
+  public void setMetricRegistryJson(MetricRegistryJson metricRegistryJson) {
+    this.metricRegistryJson = metricRegistryJson;
+  }
+
   @Override
   public void run() {
     // Added log trace to debug SDC-725
@@ -174,7 +179,10 @@ public class MetricsEventRunnable implements Runnable {
         if (state.getExecutionMode() == ExecutionMode.CLUSTER_BATCH
           || state.getExecutionMode() == ExecutionMode.CLUSTER_YARN_STREAMING
           || state.getExecutionMode() == ExecutionMode.CLUSTER_MESOS_STREAMING) {
-          MetricRegistryJson metricRegistryJson = getAggregatedMetrics();
+          MetricRegistryJson json = getAggregatedMetrics();
+          metricsJSONStr = objectMapper.writer().writeValueAsString(json);
+        } else if (state.getExecutionMode() == ExecutionMode.BATCH
+            || state.getExecutionMode() == ExecutionMode.STREAMING && metricRegistryJson != null) {
           metricsJSONStr = objectMapper.writer().writeValueAsString(metricRegistryJson);
         } else {
           metricsJSONStr = objectMapper.writer().writeValueAsString(metricRegistry);
@@ -349,7 +357,11 @@ public class MetricsEventRunnable implements Runnable {
       sdcMetricsJson.setAggregated(false);
       sdcMetricsJson.setSdcId(runtimeInfo.getId());
       sdcMetricsJson.setMasterSdcId(runtimeInfo.getMasterSDCId());
-      sdcMetricsJson.setMetrics(ObjectMapperFactory.get().readValue(metricsJSONStr, MetricRegistryJson.class));
+      if (metricRegistryJson != null) {
+        sdcMetricsJson.setMetrics(metricRegistryJson);
+      } else {
+        sdcMetricsJson.setMetrics(ObjectMapperFactory.get().readValue(metricsJSONStr, MetricRegistryJson.class));
+      }
       Map<String, String> metadata = new HashMap<>();
       if (pipelineConfiguration.getMetadata() != null && !pipelineConfiguration.getMetadata().isEmpty()) {
         for (Map.Entry<String, Object> e : pipelineConfiguration.getMetadata().entrySet()) {
@@ -363,7 +375,9 @@ public class MetricsEventRunnable implements Runnable {
       metadata.put(AggregatorUtil.TIME_SERIES_ANALYSIS, String.valueOf(timeSeriesAnalysis));
       sdcMetricsJson.setMetadata(metadata);
 
-      sendUpdate(ImmutableList.of(sdcMetricsJson));
+      if (sdcMetricsJson.getMetrics() != null) {
+        sendUpdate(ImmutableList.of(sdcMetricsJson));
+      }
 
       if (stopwatch == null) {
         stopwatch = Stopwatch.createStarted();

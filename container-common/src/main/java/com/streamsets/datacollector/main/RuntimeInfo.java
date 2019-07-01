@@ -61,11 +61,14 @@ public abstract class RuntimeInfo {
   public static final String DATA_COLLECTOR_BASE_HTTP_URL = "sdc.base.http.url";
   public static final String PIPELINE_ACCESS_CONTROL_ENABLED = "pipeline.access.control.enabled";
   public static final boolean PIPELINE_ACCESS_CONTROL_ENABLED_DEFAULT = false;
+  public static final String DPM_COMPONENT_TYPE_CONFIG = "dpm.componentType";
+  public static final String DC_COMPONENT_TYPE = "dc";
 
   private boolean DPMEnabled;
   private boolean aclEnabled;
   private boolean remoteSsoDisabled;
   private String deploymentId;
+  private String componentType = DC_COMPONENT_TYPE;
 
   private final static String USER_ROLE = "user";
 
@@ -293,6 +296,14 @@ public abstract class RuntimeInfo {
     return DPMEnabled;
   }
 
+  public void setComponentType(String componentType) {
+    this.componentType = componentType;
+  }
+
+  public String getComponentType() {
+    return componentType;
+  }
+
   public boolean isAclEnabled() {
     return aclEnabled;
   }
@@ -320,6 +331,8 @@ public abstract class RuntimeInfo {
         runtimeInfo.setAppAuthToken(appAuthToken);
         boolean isDPMEnabled = conf.get(RemoteSSOService.DPM_ENABLED, RemoteSSOService.DPM_ENABLED_DEFAULT);
         runtimeInfo.setDPMEnabled(isDPMEnabled);
+        String componentType = conf.get(DPM_COMPONENT_TYPE_CONFIG, DC_COMPONENT_TYPE).trim();
+        runtimeInfo.setComponentType(componentType);
         boolean skipSsoService = conf.get(
             RemoteSSOService.SECURITY_SERVICE_REMOTE_SSO_DISABLED_CONFIG,
             RemoteSSOService.SECURITY_SERVICE_REMOTE_SSO_DISABLED_DEFAULT
