@@ -452,8 +452,9 @@ public class AmazonS3Runnable implements Runnable {
         return nextAvailObj == null || s3Offset == null || nextAvailObj.getLastModified().getTime() >= Long.parseLong(
             s3Offset.getTimestamp());
       case LEXICOGRAPHICAL:
-        return nextAvailObj == null || s3Offset == null || s3Offset.getKey() == null || s3Offset.getKey().equals(
-            S3Constants.EMPTY) || nextAvailObj.getKey().compareTo(s3Offset.getKey()) > 0;
+        return nextAvailObj == null || s3Offset == null || s3Offset.getKey() == null
+            || s3Offset.getKey().equals(S3Constants.EMPTY) || nextAvailObj.getKey().compareTo(s3Offset.getKey()) > 0
+            || (nextAvailObj.getKey().compareTo(s3Offset.getKey()) == 0 && AmazonS3Util.parseOffset(s3Offset) != -1);
       default:
         throw new IllegalArgumentException("Unknown ordering: " + objectOrdering.getLabel());
     }

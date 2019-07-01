@@ -27,11 +27,14 @@ import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.services.s3.model.SSECustomerKey;
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.common.InterfaceAudience;
 import com.streamsets.pipeline.common.InterfaceStability;
 import com.streamsets.pipeline.lib.util.AntPathMatcher;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -72,7 +75,19 @@ public class AmazonS3Util {
     listObjectsRequest.setBucketName(s3ConfigBean.s3Config.bucket);
     listObjectsRequest.setPrefix(s3ConfigBean.s3Config.commonPrefix);
     listObjectsRequest.setMaxKeys(BATCH_SIZE);
+
     if (s3Offset.getKey() != null) {
+      if (!s3Offset.getKey().isEmpty() && parseOffset(s3Offset) != -1) {
+        S3Object currentObject = s3Client.getObject(s3ConfigBean.s3Config.bucket, s3Offset.getKey());
+        S3ObjectSummary currentObjectSummary = new S3ObjectSummary();
+        currentObjectSummary.setBucketName(currentObject.getBucketName());
+        currentObjectSummary.setKey(currentObject.getKey());
+        currentObjectSummary.setETag(currentObject.getObjectMetadata().getETag());
+        currentObjectSummary.setSize(currentObject.getObjectMetadata().getContentLength());
+        currentObjectSummary.setLastModified(currentObject.getObjectMetadata().getLastModified());
+        currentObjectSummary.setStorageClass(currentObject.getObjectMetadata().getStorageClass());
+        list.add(currentObjectSummary);
+      }
       listObjectsRequest.setMarker(s3Offset.getKey());
     }
 
@@ -273,5 +288,38 @@ public class AmazonS3Util {
       }
     }
     return s3ObjectSummary;
+  }
+
+  /*
+   * Parse Integer or extract offset from JSON
+   * If case of zipped files, the offset is a json containing fileName + fileOffset
+   */
+  static Integer parseOffset(S3Offset s3Offset) {
+    Integer offset;
+    if (isJSONOffset(s3Offset)) {
+      offset = getFileName(s3Offset.getOffset()).equals(getFileName(s3Offset.getOffset()))
+          ? getFileOffset(s3Offset.getOffset())
+          : 0;
+    } else {
+      offset = Integer.valueOf(s3Offset.getOffset());
+    }
+    return offset;
+  }
+
+  @VisibleForTesting
+  static boolean isJSONOffset(S3Offset s3Offset) {
+    return s3Offset.getOffset().contains("fileName") && s3Offset.getOffset().contains("fileOffset");
+  }
+
+  @VisibleForTesting
+  static String getFileName(String offset) {
+    JSONObject object = new JSONObject(offset);
+    return object.get("fileName").toString();
+  }
+
+  @VisibleForTesting
+  static int getFileOffset(String offset) {
+    JSONObject object = new JSONObject(offset);
+    return Integer.valueOf(object.get("fileOffset").toString());
   }
 }

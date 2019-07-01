@@ -290,8 +290,8 @@ public class TestAmazonS3Source extends AmazonS3TestSuite {
   public void testJsonOffsetParsing() {
     String offset = "{\"fileName\":\"retail1.json\",\"fileOffset\":\"10723\"}";
 
-    Assert.assertEquals("retail1.json", AmazonS3SourceImpl.getFileName(offset));
-    Assert.assertEquals(10723, AmazonS3SourceImpl.getFileOffset(offset));
+    Assert.assertEquals("retail1.json", AmazonS3Util.getFileName(offset));
+    Assert.assertEquals(10723, AmazonS3Util.getFileOffset(offset));
   }
 
   @Test
@@ -302,9 +302,9 @@ public class TestAmazonS3Source extends AmazonS3TestSuite {
     String notAnOffset = "{\"fileNe\":\"retail1.json\",\"fileOffset\":\"10723\"}";
 
     when(mockOffset.getOffset()).thenReturn(offset);
-    Assert.assertTrue(AmazonS3SourceImpl.isJSONOffset(mockOffset));
+    Assert.assertTrue(AmazonS3Util.isJSONOffset(mockOffset));
 
     when(mockOffset.getOffset()).thenReturn(notAnOffset);
-    Assert.assertFalse(AmazonS3SourceImpl.isJSONOffset(mockOffset));
+    Assert.assertFalse(AmazonS3Util.isJSONOffset(mockOffset));
   }
 }

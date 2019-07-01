@@ -130,8 +130,8 @@ public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements Amazon
         offsetVal = Integer.valueOf(offset.getOffset().split(S3Offset.OFFSET_SEPARATOR)[1]);
         s3offsetVal = Integer.valueOf(s3Offset.getOffset().split(S3Offset.OFFSET_SEPARATOR)[1]);
       } else {
-        offsetVal = parseOffset(offset);
-        s3offsetVal = parseOffset(s3Offset);
+        offsetVal = AmazonS3Util.parseOffset(offset);
+        s3offsetVal = AmazonS3Util.parseOffset(s3Offset);
       }
       if (!offset.getOffset().equals(S3Constants.MINUS_ONE) &&
           (s3Offset.getOffset().equals(S3Constants.MINUS_ONE) || s3offsetVal > offsetVal)) {
@@ -139,39 +139,6 @@ public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements Amazon
         context.commitOffset(String.valueOf(runnerId), s3Offset.toString());
       }
     }
-  }
-
-  /*
-   * Parse Integer or extract offset from JSON
-   * If case of zipped files, the offset is a json containing fileName + fileOffset
-   */
-  private Integer parseOffset(S3Offset s3Offset) {
-    Integer offset;
-    if (isJSONOffset(s3Offset)) {
-      offset = getFileName(s3Offset.getOffset()).equals(getFileName(s3Offset.getOffset()))
-          ? getFileOffset(s3Offset.getOffset())
-          : 0;
-    } else {
-      offset = Integer.valueOf(s3Offset.getOffset());
-    }
-    return offset;
-  }
-
-  @VisibleForTesting
-  static boolean isJSONOffset(S3Offset s3Offset) {
-    return s3Offset.getOffset().contains("fileName") && s3Offset.getOffset().contains("fileOffset");
-  }
-
-  @VisibleForTesting
-  static String getFileName(String offset) {
-    JSONObject object = new JSONObject(offset);
-    return object.get("fileName").toString();
-  }
-
-  @VisibleForTesting
-  static int getFileOffset(String offset) {
-    JSONObject object = new JSONObject(offset);
-    return Integer.valueOf(object.get("fileOffset").toString());
   }
 
   private S3Offset getOffsetFromGivenKey(String key) {
