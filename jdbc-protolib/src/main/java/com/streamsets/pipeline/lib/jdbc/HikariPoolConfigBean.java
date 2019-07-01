@@ -33,7 +33,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.ServiceLoader;
@@ -41,6 +40,8 @@ import java.util.Set;
 
 public class HikariPoolConfigBean {
   private static final Logger LOG = LoggerFactory.getLogger(HikariPoolConfigBean.class);
+
+  private static final String CONF_DRIVERS_LOAD = "com.streamsets.pipeline.stage.jdbc.drivers.load";
 
   private static final int TEN_MINUTES = 600;
   private static final int THIRTY_MINUTES = 1800;
@@ -267,53 +268,7 @@ public class HikariPoolConfigBean {
 
 
   public List<Stage.ConfigIssue> validateConfigs(Stage.Context context, List<Stage.ConfigIssue> issues) {
-    // Java services facility that JDBC uses for auto-loading drivers doesn't entirely work properly with multiple
-    // class loaders. To ease on the user experience, we attempt to remediate the situation in various ways.
-    Set<String> loadedDrivers = new HashSet<>();
-    Collections.list(DriverManager.getDrivers()).forEach(driver -> {
-      loadedDrivers.add(driver.getClass().getName());
-    });
-
-    // 1) Attempt at improving the situation with Java not always working properly with JDBC drivers is that we
-    // go over all known JDBC 4 compatible drivers again (via the services concept) and make sure that they are all
-    // registered.
-    LOG.debug("Exploring Service Loader for available JDBC drivers");
-    for (Driver driver : ServiceLoader.load(Driver.class)) {
-      if(loadedDrivers.contains(driver.getClass().getName())) {
-        LOG.debug("Driver {} already loaded", driver.getClass().getName());
-      } else {
-        LOG.debug("Driver {} wasn't registered, registering now", driver.getClass().getName());
-        try {
-          DriverManager.registerDriver(driver);
-          loadedDrivers.add(driver.getClass().getName());
-        } catch (SQLException e) {
-          LOG.error("Explicit registration of {} have failed: {}", driver.getClass().getName(), e.getMessage(), e);
-        }
-      }
-    }
-
-    // 2) Explicitly attempting to load known drivers if the service loading fails again
-    LOG.debug("Preloading JDBC drivers");
-    for(DatabaseVendor vendor: DatabaseVendor.values()) {
-      if(vendor.getDrivers() != null) {
-        for (String driver : vendor.getDrivers()) {
-          try {
-            Class klass = Class.forName(driver);
-
-            if(loadedDrivers.contains(klass.getName())) {
-              LOG.debug("Driver {} already known", driver);
-            } else {
-              DriverManager.registerDriver((Driver)klass.newInstance());
-              loadedDrivers.add(klass.getName());
-            }
-
-          } catch (Throwable e) {
-            LOG.debug("Can't pre-load {} ({})", driver, e.getClass().getSimpleName());
-          }
-        }
-      }
-    }
-
+    ensureJdbcDrivers(context);
 
     // Finally we dump registered drivers to logs
     LOG.info("Currently Registered JDBC drivers:");
@@ -403,6 +358,67 @@ public class HikariPoolConfigBean {
     }
 
     return issues;
+  }
+
+  /**
+   * Java services facility that JDBC uses for auto-loading drivers doesn't entirely work properly with multiple
+   * class loaders. To ease on the user experience, we attempt to remediate the situation in various ways.
+   */
+  private void ensureJdbcDrivers(Stage.Context context) {
+    // Currently loaded drivers
+    Set<String> loadedDrivers = new HashSet<>();
+    Collections.list(DriverManager.getDrivers()).forEach(driver -> loadedDrivers.add(driver.getClass().getName()));
+
+    // 1) Attempt at improving the situation with Java not always working properly with JDBC drivers is that we
+    // go over all known JDBC 4 compatible drivers again (via the services concept) and make sure that they are all
+    // registered.
+    LOG.debug("Exploring Service Loader for available JDBC drivers");
+    for (Driver driver : ServiceLoader.load(Driver.class)) {
+      if(loadedDrivers.contains(driver.getClass().getName())) {
+        LOG.debug("Driver {} already loaded", driver.getClass().getName());
+      } else {
+        LOG.debug("Driver {} wasn't registered, registering now", driver.getClass().getName());
+        try {
+          DriverManager.registerDriver(driver);
+          loadedDrivers.add(driver.getClass().getName());
+        } catch (SQLException e) {
+          LOG.error("Explicit registration of {} have failed: {}", driver.getClass().getName(), e.getMessage(), e);
+        }
+      }
+    }
+
+    // 2) Explicitly attempting to load known drivers if the service loading fails again
+    LOG.debug("Loading known JDBC drivers");
+    for(DatabaseVendor vendor: DatabaseVendor.values()) {
+      if(vendor.getDrivers() != null) {
+        for (String driver : vendor.getDrivers()) {
+          ensureJdbcDriverIfNeeded(loadedDrivers, driver);
+        }
+      }
+    }
+
+    // 3) User can explicitly configure to auto-load given drivers
+    LOG.debug("Loading explicitly configured drivers");
+    String explicitDrivers = context.getConfiguration().get(CONF_DRIVERS_LOAD, "");
+    for(String driver : explicitDrivers.split(",")) {
+      ensureJdbcDriverIfNeeded(loadedDrivers, driver);
+    }
+  }
+
+  private void ensureJdbcDriverIfNeeded(Set<String> loadedDrivers, String driver) {
+    try {
+      Class klass = Class.forName(driver);
+
+      if (loadedDrivers.contains(klass.getName())) {
+        LOG.debug("Driver {} already known", driver);
+      } else {
+        DriverManager.registerDriver((Driver) klass.newInstance());
+        loadedDrivers.add(klass.getName());
+      }
+
+    } catch (Throwable e) {
+      LOG.debug("Can't pre-load {} ({})", driver, e.getClass().getSimpleName());
+    }
   }
 
   public Properties getDriverProperties() throws StageException {
