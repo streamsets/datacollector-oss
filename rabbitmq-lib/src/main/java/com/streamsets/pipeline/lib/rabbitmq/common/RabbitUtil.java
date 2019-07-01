@@ -138,18 +138,20 @@ public final class RabbitUtil {
 
     builder.deliveryMode(basicPropertiesConfig.deliveryMode.getDeliveryMode());
 
-    if (basicPropertiesConfig.expiration < 0) {
-      LOG.error("Invalid Configuration value for AMQP Basic Properties Expiration", basicPropertiesConfig.expiration);
-      issues.add(context.createConfigIssue(
-          Groups.RABBITMQ.name(),
-          "conf.basicPropertiesConfig.expiration",
-          Errors.RABBITMQ_09,
-          basicPropertiesConfig.expiration,
-          "Expiration"
-      ));
-      return;
+    if (basicPropertiesConfig.setExpiration) {
+      if (basicPropertiesConfig.expiration < 0) {
+        LOG.error("Invalid Configuration value for AMQP Basic Properties Expiration", basicPropertiesConfig.expiration);
+        issues.add(context.createConfigIssue(
+            Groups.RABBITMQ.name(),
+            "conf.basicPropertiesConfig.expiration",
+            Errors.RABBITMQ_09,
+            basicPropertiesConfig.expiration,
+            "Expiration"
+        ));
+        return;
+      }
+      builder.expiration(String.valueOf(basicPropertiesConfig.expiration));
     }
-    builder.expiration(String.valueOf(basicPropertiesConfig.expiration));
 
     if (basicPropertiesConfig.headers != null && !basicPropertiesConfig.headers.isEmpty()) {
       builder.headers(basicPropertiesConfig.headers);

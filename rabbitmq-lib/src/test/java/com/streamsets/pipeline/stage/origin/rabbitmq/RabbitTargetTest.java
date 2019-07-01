@@ -76,6 +76,7 @@ public class RabbitTargetTest extends BaseRabbitStageTest{
     RabbitTargetConfigBean config = ((RabbitTargetConfigBean)this.conf);
 
     config.basicPropertiesConfig.setAMQPMessageProperties = true;
+    config.basicPropertiesConfig.setExpiration = true;
     config.basicPropertiesConfig.expiration = -1;
 
     initStageAndRunner("output");
@@ -84,7 +85,6 @@ public class RabbitTargetTest extends BaseRabbitStageTest{
 
     assertEquals(1L, issues.size());
     assertTrue(checkIssue(issues.get(0), Errors.RABBITMQ_09.getCode()));
-
   }
 
   @Test
@@ -101,7 +101,6 @@ public class RabbitTargetTest extends BaseRabbitStageTest{
 
     assertEquals(1L, issues.size());
     assertTrue(checkIssue(issues.get(0), Errors.RABBITMQ_09.getCode()));
-
   }
 
   @Test(expected = StageException.class)

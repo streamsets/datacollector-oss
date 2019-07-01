@@ -128,12 +128,25 @@ public class BasicPropertiesConfig {
 
   @ConfigDef(
       required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Set Expiration",
+      description = "Sets the expiration time in message properties",
+      displayPosition = 130,
+      dependsOn = "setAMQPMessageProperties",
+      triggeredByValue = "true",
+      group = "#0"
+  )
+  public boolean setExpiration = false;
+
+  @ConfigDef(
+      required = false,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "0",
       label = "Expiration",
       description = "Expiration Time",
-      displayPosition = 130,
-      dependsOn = "setAMQPMessageProperties",
+      displayPosition = 135,
+      dependsOn = "setExpiration",
       triggeredByValue = "true",
       group = "#0"
   )

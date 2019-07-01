@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RabbitTargetUpgrader implements StageUpgrader {
@@ -31,6 +32,11 @@ public class RabbitTargetUpgrader implements StageUpgrader {
     switch (fromVersion) {
       case 1:
         upgradeV1toV2(configs);
+        if (toVersion == 2) {
+          break;
+        }
+      case 2:
+        upgradeV2toV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -40,5 +46,16 @@ public class RabbitTargetUpgrader implements StageUpgrader {
 
   private static void upgradeV1toV2(List<Config> configs) {
     DataFormatUpgradeHelper.upgradeAvroGeneratorWithSchemaRegistrySupport(configs);
+  }
+
+  private static void upgradeV2toV3(List<Config> configs) {
+    List<Config> configsToAdd = new ArrayList<>();
+    for (Config cfg : configs) {
+      if (cfg.getName().equals("conf.basicPropertiesConfig.setAMQPMessageProperties")) {
+        configsToAdd.add(new Config("conf.basicPropertiesConfig.setExpiration", cfg.getValue()));
+        break;
+      }
+    }
+    configs.addAll(configsToAdd);
   }
 }
