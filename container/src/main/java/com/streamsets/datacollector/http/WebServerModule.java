@@ -108,7 +108,7 @@ public class WebServerModule {
       @Override
       public void init(ServletContextHandler context) {
         ServletHolder servlet = new ServletHolder(new DefaultServlet());
-        servlet.setInitParameter("dirAllowed", "true");
+        servlet.setInitParameter("dirAllowed", "false");
         servlet.setInitParameter("resourceBase", runtimeInfo.getStaticWebDir());
         servlet.setInitParameter("cacheControl","max-age=0,public");
         context.addServlet(servlet, "/*");
