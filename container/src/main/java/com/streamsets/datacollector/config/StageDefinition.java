@@ -85,6 +85,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
   private List<String> inputStreamLabels;
   private List<Class> eventDefs;
   private final boolean bisectable;
+  private String yamlUpgrader;
 
   // localized version
   private StageDefinition(
@@ -126,7 +127,8 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
       String inputStreamLabelProviderClass,
       List<String> inputStreamLabels,
       boolean bisectable,
-      List<Class> eventDefs
+      List<Class> eventDefs,
+      String yamlUpgrader
   ) {
     this.stageDef = stageDef;
     this.libraryDefinition = libraryDefinition;
@@ -181,6 +183,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     this.inputStreamLabels = inputStreamLabels;
     this.bisectable = bisectable;
     this.eventDefs = eventDefs;
+    this.yamlUpgrader = yamlUpgrader;
   }
 
   @SuppressWarnings("unchecked")
@@ -229,6 +232,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     inputStreamLabelProviderClass = def.inputStreamLabelProviderClass;
     inputStreamLabels = def.inputStreamLabels;
     bisectable = def.bisectable;
+    yamlUpgrader = (def.yamlUpgrader.isEmpty()) ? null : def.yamlUpgrader;
   }
 
   public StageDefinition(
@@ -268,7 +272,8 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
       int inputStreams,
       String inputStreamLabelProviderClass,
       boolean bisectable,
-      List<Class> eventDefs
+      List<Class> eventDefs,
+      String yamlUpgrader
   ) {
     this.stageDef = stageDef;
     this.libraryDefinition = libraryDefinition;
@@ -321,6 +326,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     this.inputStreamLabelProviderClass = inputStreamLabelProviderClass;
     this.bisectable = bisectable;
     this.eventDefs = eventDefs;
+    this.yamlUpgrader = yamlUpgrader;
   }
 
   public List<ExecutionMode> getLibraryExecutionModes() {
@@ -618,7 +624,8 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
         inputStreamLabelProviderClass,
         inputStreamLabels,
         bisectable,
-        eventDefs
+        eventDefs,
+        yamlUpgrader
     );
   }
 
@@ -700,6 +707,11 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     SDCClassLoader classLoader = (SDCClassLoader)getStageClassLoader();
     return Arrays.stream(classLoader.getURLs()).map(URL::getFile).collect(Collectors.toList());
   }
+
+  public String getYamlUpgrader() {
+    return yamlUpgrader;
+  }
+
 }
 
 

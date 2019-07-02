@@ -34,6 +34,9 @@ public class DefinitionsJson {
   private Map<String, String> stageIcons;
   private List<String> legacyStageLibs;
   private Map<String, EventDefinitionJson> eventDefinitions;
+  private String version;
+  private String apiMinVersion;
+  private String category;
 
   public List<PipelineDefinitionJson> getPipeline() {
     return pipeline;
@@ -122,4 +125,32 @@ public class DefinitionsJson {
   public void setEventDefinitions(Map<String, EventDefinitionJson> eventDefinitions) {
     this.eventDefinitions = eventDefinitions;
   }
+
+  public String getVersion() {
+    return version;
+  }
+
+  public DefinitionsJson setVersion(String version) {
+    this.version = version;
+    return this;
+  }
+
+  public String getApiMinVersion() {
+    return apiMinVersion;
+  }
+
+  public DefinitionsJson setApiMinVersion(String apiMinVersion) {
+    this.apiMinVersion = apiMinVersion;
+    return this;
+  }
+
+  public String getCategory() {
+    return category;
+  }
+
+  public DefinitionsJson setCategory(String category) {
+    this.category = category;
+    return this;
+  }
+
 }

@@ -182,4 +182,9 @@ public class StageDefinitionJson {
   public List<String> getEventDefs() {
     return stageDefinition.getEventDefs().stream().map(Class::getCanonicalName).collect(Collectors.toList());
   }
+
+  public String getYamlUpgrader() {
+    return stageDefinition.getYamlUpgrader();
+  }
+
 }

@@ -23,10 +23,12 @@ import com.streamsets.datacollector.el.ElFunctionDefinition;
 import com.streamsets.datacollector.runner.StageDefinitionBuilder;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.impl.LocaleInContext;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -65,6 +67,7 @@ public class TestStageDefinitionLocalization {
         (List)ImmutableList.of(ImmutableMap.of("label", "Group", "name", "GROUP"))
     );
     StageDefinition def = new StageDefinitionBuilder(TestStageDefinitionLocalization.class.getClassLoader(), TProcessor.class, "stage")
+      .withStageDef(Mockito.mock(StageDef.class))
       .withConfig(configs)
       .withErrorStage(true)
       .withRawSourceDefintion(rawSource)

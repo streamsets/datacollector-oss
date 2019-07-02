@@ -58,11 +58,13 @@ public class YamlStageUpgraderLoader {
 
   Map<Integer, UpgradeToVersion> parseToVersions(List list) {
     Map<Integer, UpgradeToVersion> toVersions = new LinkedHashMap<>();
-    for (Map map : (List<Map>) list) {
-      if (map.containsKey("toVersion")) {
-        Integer toVersion = (Integer) map.get("toVersion");
-        List actions = (List) map.get("actions");
-        toVersions.put(toVersion, parseConfigActions(toVersion, actions));
+    if (list != null) {
+      for (Map map : (List<Map>) list) {
+        if (map.containsKey("toVersion")) {
+          Integer toVersion = (Integer) map.get("toVersion");
+          List actions = (List) map.get("actions");
+          toVersions.put(toVersion, parseConfigActions(toVersion, actions));
+        }
       }
     }
     return toVersions;

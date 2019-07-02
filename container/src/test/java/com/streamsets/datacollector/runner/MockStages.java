@@ -62,12 +62,14 @@ import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.RawSourcePreviewer;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.impl.ClusterSource;
+import org.mockito.Mockito;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -795,22 +797,28 @@ public class MockStages {
           Arrays.asList(brokerHostConfig, brokerPortConfig));
 
         StageDefinition sDef = new StageDefinitionBuilder(cl, MSource.class, "sourceName")
+          .withStageDef(Mockito.mock(StageDef.class))
           .withRawSourceDefintion(rawSourceDefinition)
           .build();
         StageDefinition socDef = new StageDefinitionBuilder(cl, MSourceOffsetCommitter.class, "sourceOffsetCommitterName")
+          .withStageDef(Mockito.mock(StageDef.class))
           .build();
         // Event producing source
         StageDefinition seDef = new StageDefinitionBuilder(cl, MSource.class, "sourceNameEvent")
+          .withStageDef(Mockito.mock(StageDef.class))
           .withProducingEvents(true)
           .build();
         StageDefinition pushSourceDef = new StageDefinitionBuilder(cl, MPushSource.class, "pushSourceName")
+          .withStageDef(Mockito.mock(StageDef.class))
           .withProducingEvents(true)
           .build();
 
         StageDefinition hiddenPDef = new StageDefinitionBuilder(cl, MProcessor.class, "hiddenProcessor")
+          .withStageDef(Mockito.mock(StageDef.class))
           .withHideStage(Collections.singletonList(HideStage.Type.FIELD_PROCESSOR))
           .build();
         StageDefinition pDef = new StageDefinitionBuilder(cl, MProcessor.class, "processorName")
+          .withStageDef(Mockito.mock(StageDef.class))
           .build();
 
         ModelDefinition m = new ModelDefinition(ModelType.FIELD_SELECTOR_MULTI_VALUE, null, Collections.<String>emptyList(),
@@ -821,6 +829,7 @@ public class MockStages {
           ConfigDef.Evaluation.IMPLICIT, new HashMap<String, List<Object>>());
 
         StageDefinition tDef = new StageDefinitionBuilder(cl, MTarget.class, "targetName")
+          .withStageDef(Mockito.mock(StageDef.class))
           .withConfig(stageReqField)
           .withExecutionModes(
               ExecutionMode.CLUSTER_YARN_STREAMING,
@@ -833,6 +842,7 @@ public class MockStages {
           .build();
 
         StageDefinition tEventDef = new StageDefinitionBuilder(cl, MExecutor.class, "executorName")
+          .withStageDef(Mockito.mock(StageDef.class))
           .withConfig(stageReqField)
           .withProducingEvents(true)
           .withPipelineLifecycleStage(true)
@@ -847,6 +857,7 @@ public class MockStages {
           .build();
 
         StageDefinition teDef = new StageDefinitionBuilder(cl, MTarget.class, "targetNameEvent")
+          .withStageDef(Mockito.mock(StageDef.class))
           .withProducingEvents(true)
           .build();
 
@@ -857,6 +868,7 @@ public class MockStages {
           ConfigDef.Evaluation.IMPLICIT, new HashMap<String, List<Object>>());
 
         StageDefinition targetWithReqField = new StageDefinitionBuilder(cl, MTarget.class, "targetWithReqField")
+          .withStageDef(Mockito.mock(StageDef.class))
           .withConfig(reqField)
           .build();
 
@@ -885,6 +897,7 @@ public class MockStages {
         );
 
         StageDefinition targetWithRequiredMapField = new StageDefinitionBuilder(cl, MTarget.class, "targetWithRequiredMapField")
+            .withStageDef(Mockito.mock(StageDef.class))
             .withConfig(requiredMapField)
             .build();
 
@@ -896,6 +909,7 @@ public class MockStages {
           Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, new HashMap<String, List<Object>>());
 
         StageDefinition eDef = new StageDefinitionBuilder(cl, ETarget.class, "errorTarget")
+          .withStageDef(Mockito.mock(StageDef.class))
           .withErrorStage(true)
           .withPreconditions(false)
           .withConfig(errorTargetConf)
@@ -910,6 +924,7 @@ public class MockStages {
           .build();
 
         StageDefinition statsDef = new StageDefinitionBuilder(cl, StatsTarget.class, "statsAggregator")
+          .withStageDef(Mockito.mock(StageDef.class))
           .withPreconditions(false)
           .withStatsAggregatorStage(true)
           .withExecutionModes(
@@ -940,10 +955,12 @@ public class MockStages {
           Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, triggered);
 
         StageDefinition swcDef = new StageDefinitionBuilder(cl, MSource.class, "sourceWithConfigsName")
+          .withStageDef(Mockito.mock(StageDef.class))
           .withConfig(depConfDef, triggeredConfDef)
           .build();
 
         StageDefinition clusterStageDef = new StageDefinitionBuilder(cl, ClusterMSource.class, "clusterSource")
+          .withStageDef(Mockito.mock(StageDef.class))
           .withExecutionModes(
               ExecutionMode.CLUSTER_YARN_STREAMING,
               ExecutionMode.CLUSTER_BATCH,
@@ -954,6 +971,7 @@ public class MockStages {
           .build();
 
         StageDefinition clusterLibraryStageDef = new StageDefinitionBuilder(cl, ClusterMSource.class, "clusterLibrarySource")
+          .withStageDef(Mockito.mock(StageDef.class))
           .withExecutionModes(
               ExecutionMode.CLUSTER_YARN_STREAMING,
               ExecutionMode.CLUSTER_BATCH,
@@ -963,6 +981,7 @@ public class MockStages {
           .build();
 
         StageDefinition commonLibraryTargetDef = new StageDefinitionBuilder(cl, MTarget.class, "commonLibraryTarget")
+          .withStageDef(Mockito.mock(StageDef.class))
           .build();
 
         ConfigDefinition regularConf = new ConfigDefinition(
@@ -983,15 +1002,18 @@ public class MockStages {
           ConfigDef.Evaluation.IMPLICIT, new HashMap<String, List<Object>>());
 
         StageDefinition complexStage = new StageDefinitionBuilder(cl,ComplexSource.class, "complexStageName")
+          .withStageDef(Mockito.mock(StageDef.class))
           .withConfig(complexConf)
           .build();
 
         StageDefinition offsetControlTarget = new StageDefinitionBuilder(cl, OffsetControllerTarget.class, "offsetControlTarget")
+          .withStageDef(Mockito.mock(StageDef.class))
           .withOffsetCommitTrigger(true)
           .build();
 
 
         StageDefinition multiLaneSource = new StageDefinitionBuilder(cl, OffsetControllerSource.class, "multiLaneSource")
+          .withStageDef(Mockito.mock(StageDef.class))
           .withOutputStreams(2)
           .build();
 
@@ -1075,7 +1097,8 @@ public class MockStages {
               -1,
               null,
               false,
-              Collections.emptyList()
+              Collections.emptyList(),
+              null
           );
           stages.put(name, newDef);
         } else {
@@ -1113,6 +1136,7 @@ public class MockStages {
         Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, null);
 
       return new StageDefinitionBuilder(cl, ETarget.class, "errorTarget")
+        .withStageDef(Mockito.mock(StageDef.class))
         .withErrorStage(true)
         .withPreconditions(false)
         .withConfig(errorTargetConf)
@@ -1129,6 +1153,7 @@ public class MockStages {
 
     public static StageDefinition getStatsAggStageDefinition(ClassLoader cl) {
       return new StageDefinitionBuilder(cl, StatsTarget.class, "statsAggregator")
+          .withStageDef(Mockito.mock(StageDef.class))
           .withPreconditions(false)
           .withStatsAggregatorStage(true)
           .withExecutionModes(
@@ -1152,6 +1177,7 @@ public class MockStages {
 
       public ClusterStreamingBuilder(ClassLoader cl) {
         clusterStageDef = new StageDefinitionBuilder(cl, MSource.class, "sourceName")
+          .withStageDef(Mockito.mock(StageDef.class))
           .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
           .withRawSourceDefintion(getRawSourceDefinition())
           .withLibJarsRegexp(ClusterModeConstants.SPARK_KAFKA_JAR_REGEX)
@@ -1179,6 +1205,7 @@ public class MockStages {
 
       public ClusterMapRStreamingBuilder(ClassLoader cl) {
         clusterStageDef = new StageDefinitionBuilder(cl, MSource.class, "sourceName")
+            .withStageDef(Mockito.mock(StageDef.class))
             .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE)
             .withRawSourceDefintion(getRawSourceDefinition())
             .withLibJarsRegexp("maprfs-\\d+.*")
@@ -1205,6 +1232,7 @@ public class MockStages {
 
       public ClusterBatchBuilder(ClassLoader cl) {
         clusterStageDef = new StageDefinitionBuilder(cl, MSource.class, "sourceName")
+          .withStageDef(Mockito.mock(StageDef.class))
           .withExecutionModes(ExecutionMode.CLUSTER_BATCH, ExecutionMode.STANDALONE)
           .withRawSourceDefintion(getRawSourceDefinition())
           .withLibJarsRegexp(ClusterModeConstants.AVRO_JAR_REGEX, ClusterModeConstants.AVRO_MAPRED_JAR_REGEX)

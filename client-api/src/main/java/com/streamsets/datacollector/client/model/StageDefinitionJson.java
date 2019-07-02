@@ -105,6 +105,7 @@ public class StageDefinitionJson   {
   private List<String> inputStreamLabels = null;
   private List<String> eventDefs = new ArrayList<>();
   private Boolean bisectable = false;
+  private String yamlUpgrader;
 
   /**
    **/
@@ -531,6 +532,17 @@ public class StageDefinitionJson   {
 
   public void setBisectable(Boolean bisectable) {
     this.bisectable = bisectable;
+  }
+
+  @ApiModelProperty(value = "")
+  @JsonProperty("yamlUpgrader")
+  public String getYamlUpgrader() {
+    return yamlUpgrader;
+  }
+
+  public StageDefinitionJson setYamlUpgrader(String yamlUpgrader) {
+    this.yamlUpgrader = yamlUpgrader;
+    return this;
   }
 
 }

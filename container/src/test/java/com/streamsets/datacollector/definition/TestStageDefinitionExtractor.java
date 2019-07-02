@@ -170,8 +170,14 @@ public class TestStageDefinitionExtractor {
     }
   }
 
-  @StageDef(version = 1, label = "L", outputStreams = StageDef.VariableOutputStreams.class,
-      outputStreamsDrivenByConfig = "config1", onlineHelpRefUrl = "")
+  @StageDef(
+      version = 1,
+      label = "L",
+      outputStreams = StageDef.VariableOutputStreams.class,
+      outputStreamsDrivenByConfig = "config1",
+      onlineHelpRefUrl = "",
+      upgraderDef = "upgrader/source1.yaml"
+  )
   public static class Source3 extends Source1 {
 
     @Override
@@ -536,6 +542,12 @@ public class TestStageDefinitionExtractor {
     Assert.assertNotNull(def.getHideStage());
     Assert.assertEquals(1, def.getHideStage().size());
     Assert.assertEquals(HideStage.Type.FIELD_PROCESSOR, def.getHideStage().get(0));
+  }
+
+  @Test
+  public void testExtractYamlUpgrader() {
+    StageDefinition def = StageDefinitionExtractor.get().extract(MOCK_LIB_DEF, Source3.class, "x");
+    Assert.assertEquals("upgrader/source1.yaml", def.getYamlUpgrader());
   }
 
 }
