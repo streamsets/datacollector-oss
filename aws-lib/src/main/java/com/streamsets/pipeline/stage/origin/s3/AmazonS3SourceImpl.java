@@ -123,16 +123,9 @@ public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements Amazon
 
       S3Offset offset = getOffsetFromGivenKey(s3Offset.getKey());
 
-      int offsetVal;
-      int s3offsetVal;
-      if (offset != null && offset.getOffset().contains(S3Offset.OFFSET_SEPARATOR)) {
-        //Then is an EXCEL offset
-        offsetVal = Integer.valueOf(offset.getOffset().split(S3Offset.OFFSET_SEPARATOR)[1]);
-        s3offsetVal = Integer.valueOf(s3Offset.getOffset().split(S3Offset.OFFSET_SEPARATOR)[1]);
-      } else {
-        offsetVal = AmazonS3Util.parseOffset(offset);
-        s3offsetVal = AmazonS3Util.parseOffset(s3Offset);
-      }
+      int offsetVal = AmazonS3Util.parseOffset(offset);
+      int s3offsetVal = AmazonS3Util.parseOffset(s3Offset);
+
       if (!offset.getOffset().equals(S3Constants.MINUS_ONE) &&
           (s3Offset.getOffset().equals(S3Constants.MINUS_ONE) || s3offsetVal > offsetVal)) {
         offsetsMap.put(runnerId, new S3Offset(s3Offset));
