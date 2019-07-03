@@ -27,6 +27,7 @@ import org.apache.poi.ss.usermodel.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -81,17 +82,24 @@ public class WorkbookParser extends AbstractDataParser {
       for (int s=0; s<workbook.getNumberOfSheets(); s++) {
         sheet = workbook.getSheetAt(s);
         sheetName = sheet.getSheetName();
+
+        // In case that the given sheet is completely empty, we assume no headers, but continue processing
+        if(!sheet.rowIterator().hasNext()) {
+          headers.put(sheetName, Collections.emptyList());
+          continue;
+        }
+
         hdrRow = sheet.rowIterator().next();
         List<Field> sheetHeaders = new ArrayList<>();
         // if the table happens to have blank columns in front of it, loop through and artificially add those as headers
         // This helps in the matching of headers to data later as the indexes will line up properly.
         for (int columnNum=0; columnNum < hdrRow.getFirstCellNum(); columnNum++) {
-          sheetHeaders.add(Field.create(""));
+          sheetHeaders.add(null);
         }
         for (int columnNum = hdrRow.getFirstCellNum(); columnNum < hdrRow.getLastCellNum(); columnNum++) {
           Cell cell = hdrRow.getCell(columnNum);
           try {
-            sheetHeaders.add(Cells.parseCell(cell, this.evaluator));
+            sheetHeaders.add(cell == null ? null : Cells.parseCell(cell, this.evaluator));
           } catch (ExcelUnsupportedCellTypeException e) {
             throw new DataParserException(Errors.EXCEL_PARSER_05, cell.getCellTypeEnum());
           }
@@ -198,7 +206,7 @@ public class WorkbookParser extends AbstractDataParser {
       if (headers.isEmpty()) {
         columnHeader = String.valueOf(columnNum);
       } else {
-        if (columnNum >= headers.get(sheetName).size()) {
+        if (columnNum >= headers.get(sheetName).size() || headers.get(sheetName).get(columnNum) == null) {
           columnHeader = String.valueOf(columnNum);   // no header for this column.  mismatch
         } else {
           columnHeader = headers.get(sheetName).get(columnNum).getValueAsString();
