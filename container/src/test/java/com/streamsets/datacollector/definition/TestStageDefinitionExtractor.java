@@ -36,6 +36,7 @@ import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.PipelineLifecycleStage;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.RawSourcePreviewer;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageType;
@@ -481,7 +482,7 @@ public class TestStageDefinitionExtractor {
   @Test
   public void testLibraryExecutionOverride() {
     Properties props = new Properties();
-    props.put(StageLibraryDefinition.EXECUTION_MODE_PREFIX + Source1.class.getName(), "CLUSTER_BATCH");
+    props.put("execution.mode_" + Source1.class.getName(), "CLUSTER_BATCH");
     StageLibraryDefinition libDef = new StageLibraryDefinition(TestStageDefinitionExtractor.class.getClassLoader(),
                                                                "mock", "MOCK", props, null, null, null);
 
@@ -490,9 +491,37 @@ public class TestStageDefinitionExtractor {
   }
 
   @Test
+  public void testLibraryExecutionOverrideCloud() {
+    try {
+      System.setProperty("streamsets.cloud", "true");
+      Properties props = new Properties();
+      props.put("cloud.execution.mode_" + Source1.class.getName(), "CLUSTER_BATCH");
+      StageLibraryDefinition libDef = new StageLibraryDefinition(TestStageDefinitionExtractor.class.getClassLoader(),
+          "mock", "MOCK", props, null, null, null
+      );
+
+      StageDefinition def = StageDefinitionExtractor.get().extract(libDef, Source1.class, "x");
+      Assert.assertEquals(ImmutableList.of(ExecutionMode.CLUSTER_BATCH), def.getExecutionModes());
+    } finally {
+      System.getProperties().remove("streamsets.cloud");
+    }
+  }
+
+  @Test
+  public void testLibraryExecutionWildcardOverride() {
+    Properties props = new Properties();
+    props.put(StageLibraryDefinition.getExecutionModePrefix() + StageLibraryDefinition.STAGE_WILDCARD, "CLUSTER_BATCH");
+    StageLibraryDefinition libDef = new StageLibraryDefinition(TestStageDefinitionExtractor.class.getClassLoader(),
+        "mock", "MOCK", props, null, null, null);
+
+    StageDefinition def = StageDefinitionExtractor.get().extract(libDef, Source1.class, "x");
+    Assert.assertEquals(ImmutableList.of(ExecutionMode.CLUSTER_BATCH),def.getExecutionModes());
+  }
+
+  @Test
   public void testProducesEvents() {
     Properties props = new Properties();
-    props.put(StageLibraryDefinition.EXECUTION_MODE_PREFIX + ProducesEventsTarger.class.getName(), "CLUSTER_BATCH");
+    props.put(StageLibraryDefinition.getExecutionModePrefix() + ProducesEventsTarger.class.getName(), "CLUSTER_BATCH");
     StageLibraryDefinition libDef = new StageLibraryDefinition(TestStageDefinitionExtractor.class.getClassLoader(),
                                                                "mock", "MOCK", props, null, null, null);
 

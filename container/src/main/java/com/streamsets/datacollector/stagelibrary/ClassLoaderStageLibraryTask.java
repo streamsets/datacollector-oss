@@ -111,7 +111,14 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   public static final String MAX_PRIVATE_STAGE_CLASS_LOADERS_KEY = "max.stage.private.classloaders";
   public static final int MAX_PRIVATE_STAGE_CLASS_LOADERS_DEFAULT = 50;
 
-  public static final String IGNORE_STAGE_DEFINITIONS = "ignore.stage.definitions";
+  public static String getIgnoreStageDefinitions() {
+    String propertyName = "ignore.stage.definitions";
+    if (Boolean.getBoolean("streamsets.cloud")) {
+      propertyName = "cloud." + propertyName;
+    }
+    return propertyName;
+  }
+
   public static final String JAVA_UNSUPPORTED_REGEXP = "java.unsupported.regexp";
   public static final String MIN_SDC_VERSION = "min.sdc.version";
 
@@ -467,7 +474,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   Set<String> loadIgnoreStagesList(StageLibraryDefinition libDef) throws IOException {
     Set<String> ignoreStages = new HashSet<>();
 
-    String ignore = getPropertyFromLibraryProperties(libDef.getClassLoader(), IGNORE_STAGE_DEFINITIONS, "");
+    String ignore = getPropertyFromLibraryProperties(libDef.getClassLoader(), getIgnoreStageDefinitions(), "");
     if(!StringUtils.isEmpty(ignore)) {
       ignoreStages.addAll(Splitter.on(",").trimResults().splitToList(ignore));
     }

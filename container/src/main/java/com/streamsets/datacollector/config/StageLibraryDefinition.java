@@ -15,7 +15,6 @@
  */
 package com.streamsets.datacollector.config;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Splitter;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
@@ -27,10 +26,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 public class StageLibraryDefinition {
-  @VisibleForTesting
-  public static final String EXECUTION_MODE_PREFIX = "execution.mode_";
+
+  public static final String STAGE_WILDCARD = "*";
+
+  public static String getExecutionModePrefix() {
+    String prefix = "execution.mode_";
+    if (Boolean.getBoolean("streamsets.cloud")) {
+      prefix = "cloud." + prefix;
+    }
+    return prefix;
+  }
 
   private ClassLoader classLoader;
   private String name;
@@ -50,16 +58,19 @@ public class StageLibraryDefinition {
     this.name =  name;
     this.label = label;
     this.stagesExecutionMode = new HashMap<>();
-    for (Map.Entry entry : props.entrySet()) {
-      String key = (String) entry.getKey();
-      if (key.startsWith(EXECUTION_MODE_PREFIX)) {
-        String className = key.substring(EXECUTION_MODE_PREFIX.length());
-        String value = (String) entry.getValue();
-        List<ExecutionMode> executionModes = new ArrayList<>();
-        for (String mode : Splitter.on(",").trimResults().omitEmptyStrings().split(value)) {
-          executionModes.add(ExecutionMode.valueOf(mode.trim()));
+    String executionModePrefix = getExecutionModePrefix();
+    String allValue = props.getProperty(executionModePrefix + STAGE_WILDCARD, null);
+    if (allValue != null) {
+      List<ExecutionMode> executionModesForAll = (allValue == null) ? null : parseExecutionModes(allValue);
+      stagesExecutionMode.put(STAGE_WILDCARD, executionModesForAll);;
+    } else {
+      for (Map.Entry entry : props.entrySet()) {
+        String key = (String) entry.getKey();
+        if (key.startsWith(executionModePrefix)) {
+          String className = key.substring(executionModePrefix.length());
+          String value = (String) entry.getValue();
+          stagesExecutionMode.put(className, parseExecutionModes(value));
         }
-        stagesExecutionMode.put(className, executionModes);
       }
     }
     this.elDefs = new ArrayList<>();
@@ -80,6 +91,16 @@ public class StageLibraryDefinition {
     for (ElConstantDefinition c : elConstantDefinitions) {
       elConstantDefinitionsIdx.add(c.getIndex());
     }
+  }
+
+  List<ExecutionMode> parseExecutionModes(String value) {
+    return Splitter.on(",")
+        .trimResults()
+        .omitEmptyStrings()
+        .splitToList(value)
+        .stream()
+        .map(ExecutionMode::valueOf)
+        .collect(Collectors.toList());
   }
 
   public ClassLoader getClassLoader() {
@@ -104,7 +125,9 @@ public class StageLibraryDefinition {
   }
 
   public List<ExecutionMode> getStageExecutionModesOverride(Class klass) {
-    return stagesExecutionMode.get(klass.getName());
+    return (stagesExecutionMode.containsKey(STAGE_WILDCARD))
+        ? stagesExecutionMode.get(STAGE_WILDCARD)
+        : stagesExecutionMode.get(klass.getName());
   }
 
   public List<Class> getElDefs() {
