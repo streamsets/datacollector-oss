@@ -105,7 +105,7 @@ public class WorkbookParser extends AbstractDataParser {
           sheetHeaders.add(null);
         }
         for (int columnNum = hdrRow.getFirstCellNum(); columnNum < hdrRow.getLastCellNum(); columnNum++) {
-          Cell cell = hdrRow.getCell(columnNum);
+          Cell cell = hdrRow.getCell(columnNum, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
           try {
             sheetHeaders.add(cell == null ? null : Cells.parseCell(cell, this.evaluator));
           } catch (ExcelUnsupportedCellTypeException e) {
@@ -225,7 +225,12 @@ public class WorkbookParser extends AbstractDataParser {
         columnHeader = String.valueOf(columnNum);
       } else {
         if (columnNum >= headers.get(sheetName).size() || headers.get(sheetName).get(columnNum) == null) {
-          columnHeader = String.valueOf(columnNum);   // no header for this column.  mismatch
+          // The current cell doesn't hae any associated header, which we conditionally skip
+          if(settings.shouldSkipCellsWithNoHeader()) {
+            continue;
+          }
+
+          columnHeader = String.valueOf(columnNum);
         } else {
           columnHeader = headers.get(sheetName).get(columnNum).getValueAsString();
         }

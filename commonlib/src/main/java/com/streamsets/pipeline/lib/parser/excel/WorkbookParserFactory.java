@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -37,7 +38,9 @@ public class WorkbookParserFactory extends DataParserFactory {
   public static final Set<Class<? extends Enum>> MODES;
 
   static {
-    CONFIGS = Collections.singletonMap(WorkbookParserConstants.SHEETS, Collections.emptyList());
+    CONFIGS = new HashMap<>();
+    CONFIGS.put(WorkbookParserConstants.SHEETS, Collections.emptyList());
+    CONFIGS.put(WorkbookParserConstants.SKIP_CELLS_WITH_NO_HEADER, false);
     MODES = Collections.singleton(ExcelHeader.class);
   }
 
@@ -57,6 +60,7 @@ public class WorkbookParserFactory extends DataParserFactory {
     WorkbookParserSettings workbookSettings = WorkbookParserSettings.builder()
         .withSheets(getSettings().getConfig(WorkbookParserConstants.SHEETS))
         .withHeader(getSettings().getMode(ExcelHeader.class))
+        .withSkipCellsWithNoHeader(getSettings().getConfig(WorkbookParserConstants.SKIP_CELLS_WITH_NO_HEADER))
         .build();
     return new WorkbookParser(workbookSettings, getSettings().getContext(), workbook, offset);
   }

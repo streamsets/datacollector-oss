@@ -23,6 +23,7 @@ import java.util.List;
 public class WorkbookParserSettings {
   private ExcelHeader header;
   private List<String> sheets;
+  private boolean skipCellsWithNoHeader;
 
   public ExcelHeader getHeader() {
     return header;
@@ -36,6 +37,10 @@ public class WorkbookParserSettings {
     return sheets;
   }
 
+  public boolean shouldSkipCellsWithNoHeader() {
+    return skipCellsWithNoHeader;
+  }
+
   public static Builder builder() {
     return new Builder();
   }
@@ -43,6 +48,7 @@ public class WorkbookParserSettings {
   public static final class Builder {
     private ExcelHeader header;
     private List<String> sheets = Collections.emptyList();
+    private boolean skipCellsWithNoHeader;
 
     private Builder() {
     }
@@ -57,10 +63,16 @@ public class WorkbookParserSettings {
       return this;
     }
 
+    public Builder withSkipCellsWithNoHeader(boolean skipCellsWithNoHeader) {
+      this.skipCellsWithNoHeader = skipCellsWithNoHeader;
+      return this;
+    }
+
     public WorkbookParserSettings build() {
       WorkbookParserSettings workbookParserSettings = new WorkbookParserSettings();
       workbookParserSettings.header = this.header;
       workbookParserSettings.sheets = this.sheets;
+      workbookParserSettings.skipCellsWithNoHeader = this.skipCellsWithNoHeader;
       return workbookParserSettings;
     }
   }

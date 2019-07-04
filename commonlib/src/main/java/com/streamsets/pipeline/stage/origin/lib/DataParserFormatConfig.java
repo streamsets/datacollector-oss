@@ -1080,6 +1080,19 @@ public class DataParserFormatConfig implements DataFormatConfig {
   public ExcelHeader excelHeader;
 
   @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "false",
+    label = "Skip Cells With No Header",
+    description = "If checked, cells that have no associated header value will be skipped.",
+    displayPosition = 1001,
+    group = "DATA_FORMAT",
+    dependsOn = "excelHeader",
+    triggeredByValue = "WITH_HEADER"
+  )
+  public boolean excelSkipCellsWithNoHeader = false;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "true",
@@ -1675,6 +1688,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
   private void buildWorkbookParser(DataParserFactoryBuilder builder) {
     builder
         .setConfig(WorkbookParserConstants.SHEETS, excelReadAllSheets ? Collections.emptyList() : excelSheetNames)
+        .setConfig(WorkbookParserConstants.SKIP_CELLS_WITH_NO_HEADER, excelSkipCellsWithNoHeader)
         .setMode(excelHeader)
         .setMaxDataLen(-1);
   }

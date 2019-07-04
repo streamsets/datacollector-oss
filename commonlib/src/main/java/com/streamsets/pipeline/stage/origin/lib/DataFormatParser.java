@@ -404,6 +404,7 @@ public class DataFormatParser {
       case EXCEL:
         builder
             .setMaxDataLen(-1)
+            .setConfig(WorkbookParserConstants.SKIP_CELLS_WITH_NO_HEADER, dataFormatConfig.excelSkipCellsWithNoHeader)
             .setConfig(WorkbookParserConstants.HEADER, dataFormatConfig.excelHeader)
             .setConfig(WorkbookParserConstants.SHEETS, dataFormatConfig.excelReadAllSheets ? Collections.emptyList() : dataFormatConfig.excelSheetNames);
         break;
