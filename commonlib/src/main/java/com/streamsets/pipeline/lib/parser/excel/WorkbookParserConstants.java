@@ -18,6 +18,7 @@ package com.streamsets.pipeline.lib.parser.excel;
 public final class WorkbookParserConstants {
 
   public static final String HEADER = "header";
+  public static final String SHEETS = "sheets";
 
   private WorkbookParserConstants() {
   }

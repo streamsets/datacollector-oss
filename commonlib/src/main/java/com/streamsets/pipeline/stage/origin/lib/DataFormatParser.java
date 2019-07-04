@@ -49,6 +49,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -403,7 +404,8 @@ public class DataFormatParser {
       case EXCEL:
         builder
             .setMaxDataLen(-1)
-            .setConfig(WorkbookParserConstants.HEADER, dataFormatConfig.excelHeader);
+            .setConfig(WorkbookParserConstants.HEADER, dataFormatConfig.excelHeader)
+            .setConfig(WorkbookParserConstants.SHEETS, dataFormatConfig.excelReadAllSheets ? Collections.emptyList() : dataFormatConfig.excelSheetNames);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unknown data format: {}", dataFormat));

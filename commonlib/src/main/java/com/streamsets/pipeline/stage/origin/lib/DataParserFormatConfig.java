@@ -52,6 +52,7 @@ import com.streamsets.pipeline.lib.el.DataUnitsEL;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
+import com.streamsets.pipeline.lib.parser.excel.WorkbookParserConstants;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.LogDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
@@ -77,6 +78,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1077,6 +1079,32 @@ public class DataParserFormatConfig implements DataFormatConfig {
   @ValueChooserModel(ExcelHeaderChooserValues.class)
   public ExcelHeader excelHeader;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Read All Sheets",
+      description = "Specifies whether all sheets from the document should be read.",
+      displayPosition = 1010,
+      group = "DATA_FORMAT",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "EXCEL"
+  )
+  public boolean excelReadAllSheets = true;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.LIST,
+      label = "Import Sheets",
+      defaultValue = "[]",
+      description = "Names of the sheets that should be imported. Other sheets will be ignored.",
+      displayPosition = 1020,
+      group = "DATA_FORMAT",
+      dependsOn = "excelReadAllSheets",
+      triggeredByValue = "false"
+  )
+  public List<String> excelSheetNames = Collections.emptyList();
+
   // Size of StringBuilder pool maintained by Text and Log Data Parser Factories.
   // The default value is 1 for regular origins. Multithreaded origins should override this value as required.
   public int stringBuilderPoolSize = DataFormatConstants.STRING_BUILDER_POOL_SIZE;
@@ -1646,6 +1674,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
 
   private void buildWorkbookParser(DataParserFactoryBuilder builder) {
     builder
+        .setConfig(WorkbookParserConstants.SHEETS, excelReadAllSheets ? Collections.emptyList() : excelSheetNames)
         .setMode(excelHeader)
         .setMaxDataLen(-1);
   }

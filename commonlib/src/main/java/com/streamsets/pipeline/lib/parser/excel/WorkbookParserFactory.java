@@ -37,7 +37,7 @@ public class WorkbookParserFactory extends DataParserFactory {
   public static final Set<Class<? extends Enum>> MODES;
 
   static {
-    CONFIGS = Collections.emptyMap();
+    CONFIGS = Collections.singletonMap(WorkbookParserConstants.SHEETS, Collections.emptyList());
     MODES = Collections.singleton(ExcelHeader.class);
   }
 
@@ -55,6 +55,7 @@ public class WorkbookParserFactory extends DataParserFactory {
     Workbook workbook = open(is);
 
     WorkbookParserSettings workbookSettings = WorkbookParserSettings.builder()
+        .withSheets(getSettings().getConfig(WorkbookParserConstants.SHEETS))
         .withHeader(getSettings().getMode(ExcelHeader.class))
         .build();
     return new WorkbookParser(workbookSettings, getSettings().getContext(), workbook, offset);

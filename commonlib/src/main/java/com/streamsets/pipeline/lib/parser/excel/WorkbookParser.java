@@ -24,6 +24,8 @@ import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.RecoverableDataParserException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,6 +45,7 @@ import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 
 public class WorkbookParser extends AbstractDataParser {
+  private static Logger LOG = LoggerFactory.getLogger(WorkbookParser.class);
 
   private final WorkbookParserSettings settings;
   private final Context context;
@@ -82,6 +85,11 @@ public class WorkbookParser extends AbstractDataParser {
       for (int s=0; s<workbook.getNumberOfSheets(); s++) {
         sheet = workbook.getSheetAt(s);
         sheetName = sheet.getSheetName();
+
+        if(!settings.getSheets().isEmpty() && !settings.getSheets().contains(sheetName)) {
+          LOG.debug("Skipping sheet '{}'", sheetName);
+          continue;
+        }
 
         // In case that the given sheet is completely empty, we assume no headers, but continue processing
         if(!sheet.rowIterator().hasNext()) {
@@ -149,7 +157,7 @@ public class WorkbookParser extends AbstractDataParser {
     Row currentRow = rowIterator.next();
 
     // skip over rows that have cells but all cells are of BLANK celltype.
-    while (rowIsBlank(currentRow)) {
+    while (shouldSkipRow(currentRow)) {
       if (rowIterator.hasNext()) {
         currentRow = rowIterator.next();
       }
@@ -186,8 +194,18 @@ public class WorkbookParser extends AbstractDataParser {
     workbook.close();
   }
 
-  private boolean rowIsBlank(Row row) {
-    // returns true if a row has cells but all cells are 'BLANK' type.
+  /**
+   * Return true if the current row should be skipped for any reason.
+   */
+  private boolean shouldSkipRow(Row row) {
+    // If we're running a mode that doesn't read all the sheets, skip all rows from the 'wrong' sheets
+    if(!settings.getSheets().isEmpty()) {
+      if(!settings.getSheets().contains(row.getSheet().getSheetName())) {
+        return true;
+      }
+    }
+
+    // Lastly skip all rows that are completely empty (BLANK cell type is everywhere)
     boolean isBlank = true;
     for (int columnNum = row.getFirstCellNum(); columnNum < row.getLastCellNum(); columnNum++) {
       Cell c = row.getCell(columnNum);
