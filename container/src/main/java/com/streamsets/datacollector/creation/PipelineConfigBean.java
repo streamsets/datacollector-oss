@@ -75,6 +75,11 @@ public class PipelineConfigBean implements Stage {
   public static final String STATS_DPM_DIRECTLY_TARGET = DEFAULT_STATS_AGGREGATOR_LIBRARY_NAME + "::" +
       DEFAULT_STATS_AGGREGATOR_STAGE_NAME + "::" + DEFAULT_STATS_AGGREGATOR_STAGE_VERSION;
 
+  public static final String STREAMING_STATS_AGGREGATOR_LIBRARY_NAME = "streamsets-spark-basic-lib";
+
+  public static final String STREAMING_STATS_DPM_DIRECTLY_TARGET = STREAMING_STATS_AGGREGATOR_LIBRARY_NAME + "::" +
+      DEFAULT_STATS_AGGREGATOR_STAGE_NAME + "::" + DEFAULT_STATS_AGGREGATOR_STAGE_VERSION;
+
   public static final String STATS_AGGREGATOR_DEFAULT = "streamsets-datacollector-basic-lib" +
       "::com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget::1";
 

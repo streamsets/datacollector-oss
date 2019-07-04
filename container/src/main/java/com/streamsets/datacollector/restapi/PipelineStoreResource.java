@@ -729,7 +729,7 @@ public class PipelineStoreResource {
     if (pipelineType.equals(DATA_COLLECTOR_EDGE)) {
       List<Config> newConfigs = createWithNewConfig(
           pipelineConfig.getConfiguration(),
-          new Config("executionMode", ExecutionMode.EDGE.name())
+          ImmutableMap.of("executionMode", new Config("executionMode", ExecutionMode.EDGE.name()))
       );
       pipelineConfig.setConfiguration(newConfigs);
       if (!draft) {
@@ -742,11 +742,7 @@ public class PipelineStoreResource {
         );
       }
     } else if (pipelineType.equals(STREAMING_MODE)) {
-      List<Config> newConfigs = createWithNewConfig(
-          pipelineConfig.getConfiguration(),
-          new Config("executionMode", ExecutionMode.STREAMING.name())
-      );
-      pipelineConfig.setConfiguration(newConfigs);
+      setStreamingModeDefaults(pipelineConfig);
       if (!draft) {
         pipelineConfig = store.save(
             user,
@@ -1700,7 +1696,7 @@ public class PipelineStoreResource {
               pipelineConfig.getTitle(),
               pipelineConfig.getDescription(),
               false,
-              false, new HashMap<String, Object>()
+              false, new HashMap<>()
           );
 
           pipelineConfig.setUuid(newPipelineConfig.getUuid());
@@ -1730,14 +1726,10 @@ public class PipelineStoreResource {
 
   }
 
-  public List<Config> createWithNewConfig(List<Config> configs, Config replacement) {
+  private List<Config> createWithNewConfig(List<Config> configs, Map<String, Config> replacement) {
     List<Config> newConfigurations = new ArrayList<>();
     for (Config candidate : configs) {
-      if (replacement.getName().equals(candidate.getName())) {
-        newConfigurations.add(replacement);
-      } else {
-        newConfigurations.add(candidate);
-      }
+      newConfigurations.add(replacement.getOrDefault(candidate.getName(), candidate));
     }
     return newConfigurations;
   }
@@ -1754,7 +1746,7 @@ public class PipelineStoreResource {
   @RolesAllowed({
       AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
   })
-  public Response createDetachedStageEnvelope() throws PipelineException {
+  public Response createDetachedStageEnvelope() {
     DetachedStageConfigurationJson detachedStage = new DetachedStageConfigurationJson(new DetachedStageConfiguration());
     return Response.ok().entity(detachedStage).build();
   }
@@ -1772,9 +1764,30 @@ public class PipelineStoreResource {
   })
   public Response validateDetachedStage(
       @ApiParam(name="stage", required = true) DetachedStageConfigurationJson detachedStage
-  ) throws PipelineException {
+  ) {
     DetachedStageConfiguration stageConf = detachedStage.getDetachedStageConfiguration();
     DetachedStageValidator validator = new DetachedStageValidator(stageLibrary, stageConf);
     return Response.ok().entity(new DetachedStageConfigurationJson(validator.validate())).build();
+  }
+
+  private void setStreamingModeDefaults(PipelineConfiguration pipelineConfig) {
+    List<Map<String, String>> sparkConfigsDefault = ImmutableList.<Map<String, String>>builder()
+        .add(ImmutableMap.of("key", "spark.driver.memory", "value", "2G"))
+        .add(ImmutableMap.of("key", "spark.driver.cores", "value","1"))
+        .add(ImmutableMap.of("key", "spark.executor.memory", "value","2G"))
+        .add(ImmutableMap.of("key", "spark.executor.cores", "value","1"))
+        .add(ImmutableMap.of("key", "spark.executor.instances", "value","5"))
+        .build();
+    Map<String, Config> replacementConfigs = ImmutableMap.<String, Config>builder()
+        .put("executionMode", new Config("executionMode", ExecutionMode.STREAMING.name()))
+        .put("sparkConfigs", new Config("sparkConfigs", sparkConfigsDefault))
+        .put("logLevel", new Config("logLevel", "ERROR"))
+        .put(
+            "statsAggregatorStage",
+            new Config("statsAggregatorStage", PipelineConfigBean.STREAMING_STATS_DPM_DIRECTLY_TARGET)
+        )
+        .build();
+    List<Config> newConfigs = createWithNewConfig(pipelineConfig.getConfiguration(), replacementConfigs);
+    pipelineConfig.setConfiguration(newConfigs);
   }
 }
