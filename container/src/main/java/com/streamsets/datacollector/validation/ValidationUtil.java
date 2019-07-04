@@ -421,7 +421,7 @@ public class ValidationUtil {
 
       // Validate service definitions
       Set<String> expectedServices = stageDef.getServices().stream()
-        .map(service -> service.getService().getName())
+        .map(service -> service.getServiceClass().getName())
         .collect(Collectors.toSet());
       Set<String> configuredServices = stageConf.getServices().stream()
         .map(service -> service.getService().getName())

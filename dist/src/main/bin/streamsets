@@ -85,6 +85,10 @@ while test $# -gt 0; do
       fi
       exec ${BASEDIR}/libexec/_stagelib_cli "$@"
       ;;
+    metadata-generator)
+      shift
+      exec ${BASEDIR}/libexec/_metadata-generator "$@"
+      ;;
     help)
       ${PRG} --help
       exit 0
@@ -117,6 +121,8 @@ while test $# -gt 0; do
       echo "                MapR installation."
       echo ""
       echo "    stagelib-cli <STAGE LIB>: Runs the command line tool of the specified Stage Library if available."
+      echo ""
+      echo "    metadata-generator: Generates Metadata for Cloud, for the Pipeline Executor and for Stage Libraries"
       echo ""
       exit 0
       ;;

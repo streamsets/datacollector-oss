@@ -62,7 +62,6 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.delegate.exported.ClusterJob;
 import com.streamsets.pipeline.api.impl.PipelineUtils;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.util.SystemProcess;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -644,7 +643,7 @@ public abstract class BaseClusterProvider implements ClusterProvider {
       String stageLibName = stageDef.getLibrary();
       if(streamsetsLibsCl.containsKey(stageLibName) || userLibsCL.containsKey(stageLibName)) {
         for(ServiceDependencyDefinition serviceDep : stageDef.getServices()) {
-          ServiceDefinition serviceDef = stageLibrary.getServiceDefinition(serviceDep.getService(), false);
+          ServiceDefinition serviceDef = stageLibrary.getServiceDefinition(serviceDep.getServiceClass(), false);
           getLog().debug("Adding service {} for stage {}", serviceDef.getClassName(), stageDef.getName());
           extractClassLoaderInfo(streamsetsLibsCl, userLibsCL, serviceDef.getStageClassLoader(), serviceDef.getClassName());
         }

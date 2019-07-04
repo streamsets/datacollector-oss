@@ -18,31 +18,18 @@ package com.streamsets.datacollector.el;
 import com.streamsets.datacollector.definition.ConcreteELDefinitionExtractor;
 import com.streamsets.datacollector.definition.ELDefinitionExtractor;
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.lib.el.AggregationEL;
-import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.el.StringEL;
-import com.streamsets.pipeline.lib.el.StringELConstants;
 import com.streamsets.testing.Matchers;
-import org.junit.Assert;
 import org.junit.Test;
-import org.testcontainers.shaded.com.google.common.collect.ImmutableMap;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import static org.hamcrest.CoreMatchers.anyOf;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;

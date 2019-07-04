@@ -15,6 +15,8 @@
  */
 package com.streamsets.datacollector.config;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Collections;
 import java.util.Map;
 
@@ -28,8 +30,13 @@ public class ServiceDependencyDefinition {
     this.configuration = Collections.unmodifiableMap(configuration);
   }
 
-  public Class getService() {
+  @JsonIgnore
+  public Class getServiceClass() {
     return service;
+  }
+
+  public String getService() {
+    return getServiceClass().getName();
   }
 
   public Map<String, String> getConfiguration() {

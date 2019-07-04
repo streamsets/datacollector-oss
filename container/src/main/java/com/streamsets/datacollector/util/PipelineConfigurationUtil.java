@@ -150,7 +150,7 @@ public class PipelineConfigurationUtil {
       List<ServiceDefinition> serviceDefinitions = stageLibraryTask.getServiceDefinitions();
       for(ServiceDependencyDefinition serviceDependencyDefinition: stageDefinition.getServices()) {
         ServiceDefinition serviceDefinition = serviceDefinitions.stream()
-            .filter(s -> s.getProvides().equals(serviceDependencyDefinition.getService()))
+            .filter(s -> s.getProvides().equals(serviceDependencyDefinition.getServiceClass()))
             .findAny()
             .orElse(null);
 
@@ -286,11 +286,11 @@ public class PipelineConfigurationUtil {
         List<ServiceDefinition> serviceDefinitions = stageLibrary.getServiceDefinitions();
         for(ServiceDependencyDefinition serviceDependencyDefinition: stageDefinition.getServices()) {
           ServiceDefinition serviceDefinition = serviceDefinitions.stream()
-              .filter(s -> s.getProvides().equals(serviceDependencyDefinition.getService()))
+              .filter(s -> s.getProvides().equals(serviceDependencyDefinition.getServiceClass()))
               .findAny()
               .orElse(null);
           ServiceConfiguration serviceConfiguration = stageInstance.getServices().stream()
-              .filter(s -> s.getService().equals(serviceDependencyDefinition.getService()))
+              .filter(s -> s.getService().equals(serviceDependencyDefinition.getServiceClass()))
               .findAny()
               .orElse(null);
 

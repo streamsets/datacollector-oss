@@ -330,7 +330,7 @@ public class TestStageDefinitionExtractor {
     Assert.assertEquals(1, def.getServices().size());
     ServiceDependencyDefinition service = def.getServices().get(0);
     Assert.assertNotNull(service);
-    Assert.assertEquals(Runnable.class, service.getService());
+    Assert.assertEquals(Runnable.class, service.getServiceClass());
     Assert.assertEquals(2, service.getConfiguration().size());
     Assert.assertTrue(service.getConfiguration().containsKey("country"));
     Assert.assertTrue(service.getConfiguration().containsKey("importance"));

@@ -33,6 +33,7 @@
   <packaging>jar</packaging>
 
   <properties>
+    <executor.version>4</executor.version>
     <californium.version>1.0.4</californium.version>
     <commons-io.version>2.4</commons-io.version>
     <commons-lang.version>3.4</commons-lang.version>

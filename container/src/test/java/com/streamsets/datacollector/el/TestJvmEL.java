@@ -20,11 +20,6 @@ import com.streamsets.datacollector.definition.ELDefinitionExtractor;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.streamsets.datacollector.el.ELEvaluator;
-import com.streamsets.datacollector.el.ELVariables;
-import com.streamsets.datacollector.el.JvmEL;
-import com.streamsets.datacollector.el.RuleELRegistry;
-
 public class TestJvmEL {
   private ELDefinitionExtractor elDefinitionExtractor = ConcreteELDefinitionExtractor.get();
 

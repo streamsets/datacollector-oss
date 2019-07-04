@@ -455,6 +455,17 @@
       <version>0.7.2</version>
     </dependency>
 
+    <dependency>
+      <groupId>fr.xebia.extras</groupId>
+      <artifactId>selma-processor</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>fr.xebia.extras</groupId>
+      <artifactId>selma</artifactId>
+      <version>${selma.version}</version>
+    </dependency>
+
     <!-- Support bundles -->
     <dependency>
       <groupId>com.amazonaws</groupId>

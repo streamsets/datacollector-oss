@@ -1,0 +1,94 @@
+#!/bin/bash
+#
+# Copyright 2019 StreamSets Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+# resolve links - $0 may be a softlink
+PRG="${0}"
+
+while [ -h "${PRG}" ]; do
+ls=`ls -ld "${PRG}"`
+link=`expr "$ls" : '.*-> \(.*\)$'`
+if expr "$link" : '/.*' > /dev/null; then
+PRG="$link"
+else
+PRG=`dirname "${PRG}"`/"$link"
+fi
+done
+
+BASEDIR=`dirname ${PRG}`
+BASEDIR=`cd ${BASEDIR}/..;pwd`
+
+SDC_DIST=${BASEDIR}
+
+BOOT_DIR=${BOOT_DIR:=${SDC_DIST}/libexec/bootstrap-libs/main}
+BOOT_CLASSPATH=${BOOT_CLASSPATH:="${BOOT_DIR}/*"}
+
+API_LIB_DIR=${API_LIB_DIR:=${SDC_DIST}/api-lib}
+API_CLASSPATH=${API_CLASSPATH:="${API_LIB_DIR}/*"}
+
+CONTAINER_LIB_DIR=${CONTAINER_LIB_DIR:=${SDC_DIST}/container-lib}
+CONTAINER_CLASSPATH=${CONTAINER_CLASSPATH:="${CONTAINER_LIB_DIR}/*"}
+
+STREAMSETS_LIBRARIES_DIR="${STREAMSETS_LIBRARIES_DIR:=${SDC_DIST}/streamsets-libs}"
+
+if [ -z "$JAVA_HOME" ]
+then
+  JAVA=`which java 2> /dev/null`
+else
+  JAVA="$JAVA_HOME/bin/java"
+fi
+
+if [ -z "$JAVA" ]
+then
+  echo "Can't find java, please set JAVA_HOME pointing to your java installation"
+  exit 1
+fi
+
+JAVA_VERSION=`$JAVA -version 2>&1 | grep -e 'version' | sed -e 's/.*"\([0-9]*\)\.\([0-9]*\)\.\([\_0-9]*\)"/\1\.\2/'`
+if [[ "$JAVA_VERSION" = '1.7' ]];
+then
+  echo "ERROR: Detected JDK7 that is no longer supported. Please upgrade to JDK8."
+  exit
+elif [[ "$JAVA_VERSION" = '1.8' ]];
+then
+  echo "Java 1.8 detected; adding \$SDC_JAVA8_OPTS of \"${SDC_JAVA8_OPTS}\" to \$SDC_JAVA_OPTS"
+  SDC_JAVA_OPTS="${SDC_JAVA_OPTS} ${SDC_JAVA8_OPTS}"
+else
+  echo "WARN: could not determine Java environment version; expected 1.8, which are the supported versions" >&2
+fi
+
+# Verify correct JVM vendor
+JAVA_VENDOR=`$JAVA -XshowSettings:properties -version 2>&1 | grep -e 'java.vm.name' | sed -e 's/\(.*\)= \(.*\)/\2/'`
+if [[ ! "$JAVA_VENDOR" =~ "Java HotSpot(TM)" ]] && [[ ! "$JAVA_VENDOR" =~ "OpenJDK" ]]
+then
+  echo "WARN: Detected unsupported JDK vendor: $JAVA_VENDOR"
+
+  # And unless unsupported JDK is explicitly enabled, die
+  if [[ "${SDC_ALLOW_UNSUPPORTED_JDK}" != "true" ]]
+  then
+  echo "ERROR: Please install supported JDK or explicitly allow unsupported JDKs via SDC_ALLOW_UNSUPPORTED_JDK=true"
+    exit 1
+  fi
+fi
+
+ulimit=`ulimit -n`
+if [[ $ulimit -lt $SDC_FILE_LIMIT ]]; then
+  echo "Configuration of maximum open file limit is too low: $ulimit (expected at least $SDC_FILE_LIMIT). Please consult https://goo.gl/6dmjXd"
+  exit 1
+fi
+
+${JAVA} -classpath ${BOOT_CLASSPATH}:${API_CLASSPATH}:${CONTAINER_CLASSPATH} ${SDC_JAVA_OPTS} -Dstreamsets.cloud=true -Dsdc.libraries.dir=${STREAMSETS_LIBRARIES_DIR} \
+        com.streamsets.datacollector.main.MetadataGeneratorMain "${@}"

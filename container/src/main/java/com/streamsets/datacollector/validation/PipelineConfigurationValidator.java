@@ -485,7 +485,7 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
     for(StageBean stageBean : pipelineBean.getPipelineStageBeans().getStages()) {
       for(ServiceDependencyDefinition serviceDependency: stageBean.getDefinition().getServices()) {
 
-        ServiceBean stageService = stageBean.getService(serviceDependency.getService());
+        ServiceBean stageService = stageBean.getService(serviceDependency.getServiceClass());
         if (stageService == null){
           continue;
         }

@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.config;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
 import com.streamsets.pipeline.api.ChooserValues;
@@ -212,6 +213,7 @@ public class ConfigDefinition {
     return lines;
   }
 
+  @JsonIgnore
   public List<Class> getElDefs() {
     return elDefs;
   }

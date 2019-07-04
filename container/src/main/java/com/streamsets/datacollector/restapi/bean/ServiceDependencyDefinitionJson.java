@@ -28,7 +28,7 @@ public class ServiceDependencyDefinitionJson {
   }
 
   public String getService() {
-    return serviceDependencyDefinition.getService().getName();
+    return serviceDependencyDefinition.getServiceClass().getName();
   }
 
   public Map<String, String> getConfiguration() {

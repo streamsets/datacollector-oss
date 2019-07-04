@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.config;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.creation.StageConfigBean;
 import com.streamsets.pipeline.SDCClassLoader;
@@ -345,6 +346,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     return libraryDefinition.getLabel();
   }
 
+  @JsonIgnore
   @Override
   public ClassLoader getStageClassLoader() {
     return classLoader;
@@ -359,6 +361,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     return klass.getName();
   }
 
+  @JsonIgnore
   public Class<? extends Stage> getStageClass() {
     return klass;
   }
@@ -437,6 +440,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     return hideConfigSet;
   }
 
+  @JsonIgnore
   // This method returns not only main configs, but also all complex ones!
   public Map<String, ConfigDefinition> getConfigDefinitionsMap() {
     return configDefinitionsMap;
@@ -484,6 +488,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     return recordsByRef;
   }
 
+  @JsonIgnore
   public StageUpgrader getUpgrader() {
     return upgrader;
   }
@@ -671,6 +676,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     return stageDef != null ? stageDef.outputStreamsDrivenByConfig(): null;
   }
 
+  @JsonIgnore
   public StageDef getStageDef() {
     return stageDef;
   }

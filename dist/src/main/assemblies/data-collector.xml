@@ -628,6 +628,7 @@
       <scope>compile</scope>
       <includes>
         <include>com.streamsets:streamsets-datacollector-container</include>
+        <include>com.streamsets:streamsets-datacollector-metadata-generator</include>
       </includes>
       <excludes>
         <exclude>com.streamsets:streamsets-datacollector-api</exclude>

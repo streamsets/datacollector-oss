@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.el;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.lang.reflect.Method;
@@ -74,6 +75,7 @@ public class ElFunctionDefinition {
     return elFunctionArgumentDefinition;
   }
 
+  @JsonIgnore
   public Method getMethod() {
     return method;
   }

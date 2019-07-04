@@ -130,6 +130,7 @@
     <module>common</module>
     <module>upgrader</module>
     <module>container-common</module>
+    <module>metadata-generator</module>
     <module>google-common</module>
     <module>json-dto</module>
     <module>messaging-client</module>

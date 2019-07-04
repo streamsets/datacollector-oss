@@ -417,8 +417,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
     for(StageDefinition stage : stageList) {
       for(ServiceDependencyDefinition service : stage.getServices()) {
-        if(!serviceMap.containsKey(service.getService())) {
-          missingServices.add(Utils.format("Stage {} is missing service {}", stage.getName(), service.getService().getName()));
+        if(!serviceMap.containsKey(service.getServiceClass())) {
+          missingServices.add(Utils.format("Stage {} is missing service {}", stage.getName(), service.getServiceClass().getName()));
         }
       }
     }

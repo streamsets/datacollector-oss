@@ -45,7 +45,7 @@ import java.util.Set;
 
 /**
  * This is general wrapper on top of Service implementation. This actual instance will be returned when Stage calls
- * getContext().getService(Class) and hence it needs to implement all supported services. We return this wrapping
+ * getContext().getServiceClass(Class) and hence it needs to implement all supported services. We return this wrapping
  * object rather then Service instance itself because we need to wrap each method execution to change active class
  * loader and execute the code in privileged mode to apply the proper permissions.
  */

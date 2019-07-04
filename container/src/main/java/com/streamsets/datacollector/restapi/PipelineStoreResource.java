@@ -1225,7 +1225,7 @@ public class PipelineStoreResource {
 
       List<ServiceDefinition> pipelineServices = stageDefinitions.stream()
           .flatMap(stageDefinition -> stageDefinition.getServices().stream())
-          .map(ServiceDependencyDefinition::getService)
+          .map(ServiceDependencyDefinition::getServiceClass)
           .distinct()
           .map(serviceClass -> serviceByClass.get(serviceClass))
           .filter(Objects::nonNull)
@@ -1293,7 +1293,7 @@ public class PipelineStoreResource {
 
       List<ServiceDefinition> pipelineServices = stageDefinitions.stream()
           .flatMap(stageDefinition -> stageDefinition.getServices().stream())
-          .map(ServiceDependencyDefinition::getService)
+          .map(ServiceDependencyDefinition::getServiceClass)
           .distinct()
           .map(serviceClass -> serviceByClass.get(serviceClass))
           .filter(Objects::nonNull)
