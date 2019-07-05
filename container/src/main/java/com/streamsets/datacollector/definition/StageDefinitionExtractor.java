@@ -49,7 +49,7 @@ import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.service.ServiceConfiguration;
 import com.streamsets.pipeline.api.service.ServiceDependency;
-import com.streamsets.pipeline.upgrader.YamlStageUpgraderLoader;
+import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.apache.commons.lang3.ClassUtils;
 
 import java.util.ArrayList;
@@ -280,7 +280,7 @@ public abstract class StageDefinitionExtractor {
           if (sDef.upgraderDef().isEmpty()) {
             upgrader = sDef.upgrader().newInstance();
           } else {
-            upgrader = new YamlStageUpgraderLoader(name, sDef.upgraderDef()).get();
+            upgrader = new SelectorStageUpgrader(name, sDef.upgrader().newInstance(), sDef.upgraderDef());
           }
         } catch (Exception ex) {
           throw new IllegalArgumentException(Utils.format(

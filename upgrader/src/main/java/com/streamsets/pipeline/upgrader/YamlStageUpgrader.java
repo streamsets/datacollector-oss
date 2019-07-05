@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -32,8 +33,11 @@ import java.util.stream.Collectors;
 public class YamlStageUpgrader implements StageUpgrader {
   private static final Logger LOG = LoggerFactory.getLogger(YamlStageUpgrader.class);
 
+  public static final int NO_CONFIG_VERSIONS_HANDLED = -1;
+
   private int upgraderVersion;
   private String stageName;
+  private int minimumConfigVersionHandled = NO_CONFIG_VERSIONS_HANDLED;
   private Map<Integer, UpgradeToVersion> toVersionMap = Collections.emptyMap();
 
   public int getUpgraderVersion() {
@@ -60,7 +64,16 @@ public class YamlStageUpgrader implements StageUpgrader {
 
   public YamlStageUpgrader setToVersionMap(Map<Integer, UpgradeToVersion> toVersionMap) {
     this.toVersionMap = toVersionMap;
+    minimumConfigVersionHandled = toVersionMap.isEmpty() ?
+                                  NO_CONFIG_VERSIONS_HANDLED : new TreeMap<>(toVersionMap).firstKey() - 1;
     return this;
+  }
+
+  /**
+   * Returns the minimum version required for a config to be potentially updatable by this upgrader.
+   */
+  public int getMinimumConfigVersionHandled() {
+    return minimumConfigVersionHandled;
   }
 
   public List<Config> upgrade(
