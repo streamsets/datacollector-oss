@@ -879,7 +879,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <argLine>-Xmx1g -Djava.security.egd=file:/dev/./urandom</argLine>
+                    <argLine>-Xmx4g -Djava.security.egd=file:/dev/./urandom</argLine>
                     <dependenciesToScan>
                         <dependency>com.streamsets:streamsets-datacollector-dir-spooler-protolib</dependency>
                         <dependency>com.streamsets:streamsets-datacollector-hdfs-protolib</dependency>

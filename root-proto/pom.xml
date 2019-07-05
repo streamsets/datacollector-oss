@@ -69,7 +69,7 @@
     <hikaricp.version>3.2.0</hikaricp.version>
     <jersey.version>2.25.1</jersey.version>
     <!-- Sets the VM argument line used when unit and integration tests are run. -->
-    <argLine>-Xmx2g</argLine>
+    <argLine>-Xmx4g</argLine>
     <testcontainers.version>1.4.3</testcontainers.version>
     <netty.version>4.1.16.Final</netty.version>
     <jetty.version>9.4.12.v20180830</jetty.version>
