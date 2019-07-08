@@ -208,11 +208,9 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
 
         setParameters(opCode, columnsToParameters, record, connection, statement);
 
-        if (!perRecord) {
-          statement.addBatch();
-        } else {
-          statement.executeUpdate();
+        executeStatement(statement, perRecord);
 
+        if (perRecord) {
           if (getGeneratedColumnMappings() != null) {
             writeGeneratedColumns(statement, Arrays.asList(record).iterator(), errorRecords);
           }
@@ -255,6 +253,14 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
     }
 
     queue.clear();
+  }
+
+  protected void executeStatement(PreparedStatement statement, boolean perRecord) throws SQLException {
+    if (!perRecord) {
+      statement.addBatch();
+    } else {
+      statement.executeUpdate();
+    }
   }
 
   /**

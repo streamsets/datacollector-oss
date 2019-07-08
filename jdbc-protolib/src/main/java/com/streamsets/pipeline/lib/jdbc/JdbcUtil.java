@@ -909,7 +909,7 @@ public class JdbcUtil {
       List<JdbcFieldColumnParamMapping> customMappings,
       Stage.Context context
   ) throws SQLException, StageException {
-    HikariDataSource dataSource = new HikariDataSource(createDataSourceConfig(hikariConfigBean, false, false));
+    HikariDataSource dataSource = new HikariDataSource(createDataSourceConfig(hikariConfigBean, hikariConfigBean.autoCommit, false));
 
     // Can only validate schema+table configuration when the user specified plain constant values
     if (isPlainString(schemaNameTemplate) && isPlainString(tableNameTemplate)) {

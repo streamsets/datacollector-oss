@@ -57,29 +57,29 @@ public class JdbcTarget extends BaseTarget {
   private static final String HIKARI_CONFIG_PREFIX = "hikariConfigBean.";
   private static final String CONNECTION_STRING = HIKARI_CONFIG_PREFIX + "connectionString";
 
-  private final boolean rollbackOnError;
-  private final boolean useMultiRowOp;
-  private final int maxPrepStmtParameters;
+  protected final boolean rollbackOnError;
+  protected final boolean useMultiRowOp;
+  protected final int maxPrepStmtParameters;
 
   private final String schemaNameTemplate;
   private final String tableNameTemplate;
   private SchemaTableClassifier schemaTableClassifier = null;
-  private final List<JdbcFieldColumnParamMapping> customMappings;
-  private final boolean caseSensitive;
+  protected final List<JdbcFieldColumnParamMapping> customMappings;
+  protected final boolean caseSensitive;
   private final boolean dynamicSchemaName;
   private final boolean dynamicTableName;
-  private final List<String> customDataSqlStateCodes;
+  protected final List<String> customDataSqlStateCodes;
 
-  private final ChangeLogFormat changeLogFormat;
+  protected final ChangeLogFormat changeLogFormat;
   private final HikariPoolConfigBean hikariConfigBean;
   private final CacheCleaner cacheCleaner;
 
   private ErrorRecordHandler errorRecordHandler;
-  private HikariDataSource dataSource = null;
+  protected HikariDataSource dataSource = null;
 
-  private final int defaultOpCode;
-  private final UnsupportedOperationAction unsupportedAction;
-  private final DuplicateKeyAction duplicateKeyAction;
+  protected final int defaultOpCode;
+  protected final UnsupportedOperationAction unsupportedAction;
+  protected final DuplicateKeyAction duplicateKeyAction;
 
   private final JdbcUtil jdbcUtil;
 
@@ -105,7 +105,7 @@ public class JdbcTarget extends BaseTarget {
     }
   }
 
-  private final LoadingCache<SchemaAndTable, JdbcRecordWriter> recordWriters;
+  protected LoadingCache<SchemaAndTable, JdbcRecordWriter> recordWriters;
 
   public JdbcTarget(
       final String schemaNameTemplate,
@@ -249,12 +249,15 @@ public class JdbcTarget extends BaseTarget {
 
   @Override
   public void write(Batch batch) throws StageException {
+    // jdbc target always commit batch execution
+    write(batch, false);
+  }
+
+  protected void write(Batch batch, boolean perRecord) {
     if (!batch.getRecords().hasNext()) {
       // No records - take the opportunity to clean up the cache so that we don't hold on to memory indefinitely
       cacheCleaner.periodicCleanUp();
     }
-    // jdbc target always commit batch execution
-    final boolean perRecord = false;
 
     if (dynamicSchemaName || dynamicTableName)  {
       jdbcUtil.write(
@@ -269,4 +272,5 @@ public class JdbcTarget extends BaseTarget {
       jdbcUtil.write(batch.getRecords(), key, recordWriters, errorRecordHandler, perRecord);
     }
   }
+
 }
