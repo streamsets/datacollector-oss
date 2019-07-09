@@ -50,7 +50,7 @@ import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
     "commonSourceConfigBean.enableSchemaChanges",
     "commonSourceConfigBean.txnWindow"
 })
-public final class TableJdbcDSource extends DPushSource {
+public class TableJdbcDSource extends DPushSource {
 
   @ConfigDefBean
   public TableJdbcConfigBean tableJdbcConfigBean;
