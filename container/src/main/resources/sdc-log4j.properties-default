@@ -38,3 +38,4 @@ log4j.logger.com.streamsets=${sdc.log4j.level}
 log4j.logger.org.eclipse.jetty=WARN
 log4j.logger.com.amazonaws.services.kinesis.clientlibrary.lib.worker.SequenceNumberValidator=WARN
 log4j.logger.org.apache.kafka=WARN
+log4j.logger.com.datastax.driver.core.QueryLogger.SLOW=DEBUG

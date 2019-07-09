@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.destination.cassandra;
 
 import com.datastax.driver.core.BatchStatement;
+import com.datastax.driver.core.ConsistencyLevel;
 import com.datastax.driver.core.ProtocolVersion;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
@@ -130,6 +131,70 @@ public class CassandraTargetConfig {
   )
   @ListBeanModel
   public List<CassandraFieldMappingConfig> columnNames;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "5000", // from SocketOptions.DEFAULT_CONNECT_TIMEOUT_MILLIS
+      min = 1,
+      max = Integer.MAX_VALUE,
+      label = "Connection Timeout",
+      description = "The connection timeout (in milliseconds)",
+      displayPosition = 100,
+      group = "CASSANDRA"
+  )
+  public int connectionTimeout = 5000;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "5000", // from SocketOptions.DEFAULT_CONNECT_TIMEOUT_MILLIS
+      min = 1,
+      max = Integer.MAX_VALUE,
+      label = "Read Timeout",
+      description = "The per-host read timeout (in milliseconds)",
+      displayPosition = 110,
+      group = "CASSANDRA"
+  )
+  public int readTimeout = 5000;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "LOCAL_ONE",
+      label = "Consistency Level",
+      description = "The consistency level to use for queries",
+      displayPosition = 120,
+      group = "CASSANDRA"
+  )
+  @ValueChooserModel(ConsistencyLevelChooserValues.class)
+  public ConsistencyLevel consistencyLevel = ConsistencyLevel.LOCAL_ONE;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Log Slow Queries",
+      description = "Enables the logging of slow queries. " +
+          "Note that the logger for com.datastax.driver.core.QueryLogger.SLOW must be set to either DEBUG or TRACE.",
+      displayPosition = 130,
+      group = "CASSANDRA"
+  )
+  public boolean logSlowQueries = false;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "5000",  // from QueryLogger.DEFAULT_SLOW_QUERY_THRESHOLD_MS
+      min = 1,
+      label = "Slow Query Logging Threshold",
+      description = "The threshold (in milliseconds) to consider a query slow",
+      displayPosition = 140,
+      group = "CASSANDRA",
+      dependsOn = "logSlowQueries",
+      triggeredByValue = "true"
+  )
+  public long slowQueryThreshold = 5000;
 
   /** Credentials group **/
   @ConfigDef(

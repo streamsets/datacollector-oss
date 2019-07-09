@@ -24,8 +24,11 @@ import com.datastax.driver.core.ColumnMetadata;
 import com.datastax.driver.core.KeyspaceMetadata;
 import com.datastax.driver.core.PlainTextAuthProvider;
 import com.datastax.driver.core.PreparedStatement;
+import com.datastax.driver.core.QueryLogger;
+import com.datastax.driver.core.QueryOptions;
 import com.datastax.driver.core.RemoteEndpointAwareJdkSSLOptions;
 import com.datastax.driver.core.Session;
+import com.datastax.driver.core.SocketOptions;
 import com.datastax.driver.core.TableMetadata;
 import com.datastax.driver.core.TypeCodec;
 import com.datastax.driver.core.exceptions.AuthenticationException;
@@ -399,7 +402,14 @@ public class CassandraTarget extends BaseTarget {
           .build();
     }
 
-    return Cluster.builder()
+    SocketOptions socketOptions = new SocketOptions();
+    socketOptions.setConnectTimeoutMillis(conf.connectionTimeout);
+    socketOptions.setReadTimeoutMillis(conf.readTimeout);
+
+    QueryOptions queryOptions = new QueryOptions();
+    queryOptions.setConsistencyLevel(conf.consistencyLevel);
+
+    Cluster cluster = Cluster.builder()
         .addContactPoints(contactPoints)
         .withSSL(sslOptions)
         // If authentication is disabled on the C* cluster, this method has no effect.
@@ -407,7 +417,17 @@ public class CassandraTarget extends BaseTarget {
         .withProtocolVersion(conf.protocolVersion)
         .withPort(conf.port)
         .withCodecRegistry(new CodecRegistry().register(SDC_CODECS))
+        .withSocketOptions(socketOptions)
+        .withQueryOptions(queryOptions)
         .build();
+
+    if (conf.logSlowQueries) {
+      QueryLogger queryLogger = QueryLogger.builder()
+          .withConstantThreshold(conf.slowQueryThreshold)
+          .build();
+      cluster.register(queryLogger);
+    }
+    return cluster;
   }
 
   private AuthProvider getAuthProvider() throws StageException {
