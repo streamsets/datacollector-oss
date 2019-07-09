@@ -25,6 +25,7 @@ import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
@@ -115,13 +116,29 @@ public class JdbcRecordReader {
    * @return
    */
   @VisibleForTesting
-  SortedMap<String, String> getColumnsToParameters(
+   SortedMap<String, String> getColumnsToParameters(
       final Record record,
       int op,
       Map<String, String> parameters,
       Map<String, String> columnsToFields
   ) {
-    SortedMap<String, String> filtered = new TreeMap<>();
+    return getColumnsToParameters(record, op, parameters, columnsToFields, true);
+  }
+
+  @VisibleForTesting
+  <T extends Map<String, String>> T getColumnsToParameters(
+      final Record record,
+      int op,
+      Map<String, String> parameters,
+      Map<String, String> columnsToFields,
+      boolean sortedMap
+  ) {
+    Map<String, String> filtered = null;
+    if (sortedMap) {
+      filtered = new TreeMap<>();
+    } else {
+      filtered = new LinkedHashMap<>();
+    }
     for (Map.Entry<String, String> entry : columnsToFields.entrySet()) {
       String columnName = entry.getKey();
       String fieldPath = entry.getValue();
@@ -132,7 +149,7 @@ public class JdbcRecordReader {
         LOG.trace("Record is missing a field for column {} for the operation code {}", columnName, op);
       }
     }
-    return filtered;
+    return (T) filtered;
   }
 
   /**

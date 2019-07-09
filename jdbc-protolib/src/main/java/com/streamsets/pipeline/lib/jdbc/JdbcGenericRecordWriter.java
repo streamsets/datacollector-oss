@@ -49,6 +49,7 @@ import static com.streamsets.pipeline.lib.operation.OperationType.INSERT_CODE;
 public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
   private static final Logger LOG = LoggerFactory.getLogger(JdbcGenericRecordWriter.class);
   private final boolean caseSensitive;
+  private final boolean sortedColumns;
 
   private static final HashFunction columnHashFunction = Hashing.goodFastHash(64);
   private static final Funnel<Map<String, String>> stringMapFunnel = (map, into) -> {
@@ -82,7 +83,8 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
       List<JdbcFieldColumnMapping> generatedColumnMappings,
       JdbcRecordReader recordReader,
       boolean caseSensitive,
-      List<String> customDataSqlStateCodes
+      List<String> customDataSqlStateCodes,
+      boolean sortedColumns
   ) throws StageException {
     super(
         connectionString,
@@ -99,6 +101,7 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
         customDataSqlStateCodes
     );
     this.caseSensitive = caseSensitive;
+    this.sortedColumns = sortedColumns;
   }
 
   @Override
@@ -181,11 +184,12 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
       }
 
       // columnName to parameter mapping. Ex. parameter is default "?".
-      SortedMap<String, String> columnsToParameters = recordReader.getColumnsToParameters(
+      Map<String, String> columnsToParameters = recordReader.getColumnsToParameters(
           record,
           opCode,
           getColumnsToParameters(),
-          opCode == OperationType.UPDATE_CODE ? getColumnsToFieldNoPK() : getColumnsToFields()
+          opCode == OperationType.UPDATE_CODE ? getColumnsToFieldNoPK() : getColumnsToFields(),
+          sortedColumns
       );
 
       if (columnsToParameters.isEmpty()) {
@@ -276,7 +280,7 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
   @SuppressWarnings("unchecked")
   int setParameters(
       int opCode,
-      SortedMap<String, String> columnsToParameters,
+      Map<String, String> columnsToParameters,
       final Record record,
       final Connection connection,
       PreparedStatement statement
@@ -353,13 +357,19 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
 
   private HashCode getColumnHash(Record record, int op) {
     Map<String, String> parameters = getColumnsToParameters();
-    SortedMap<String, String> columnsToParameters = recordReader.getColumnsToParameters(record, op, parameters, getColumnsToFields());
+    Map<String, String> columnsToParameters = recordReader.getColumnsToParameters(
+        record,
+        op,
+        parameters,
+        getColumnsToFields(),
+        sortedColumns
+    );
     return columnHashFunction.newHasher().putObject(columnsToParameters, stringMapFunnel).hash();
   }
 
   private String generateQuery(
       int opCode,
-      final SortedMap<String, String> columns
+      final Map<String, String> columns
   ) throws OnRecordErrorException {
     List<String> primaryKeyParams = new LinkedList<>();
     for (String key: getPrimaryKeyColumns()) {

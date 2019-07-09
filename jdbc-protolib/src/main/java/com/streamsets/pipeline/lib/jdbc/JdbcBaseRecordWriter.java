@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 import java.sql.Types;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.zip.DataFormatException;
 import org.slf4j.Logger;
@@ -58,8 +59,8 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
   private final boolean caseSensitive;
   private final List<String> customDataSqlStateCodes;
 
-  private Map<String, String> columnsToFields = new HashMap<>();
-  private Map<String, String> columnsToParameters = new HashMap<>();
+  private Map<String, String> columnsToFields = new LinkedHashMap<>();
+  private Map<String, String> columnsToParameters = new LinkedHashMap<>();
   private final List<JdbcFieldColumnMapping> generatedColumnMappings;
   private Map<String, Integer> columnType = new HashMap<>();
   private List<String> primaryKeyColumns;
@@ -460,7 +461,7 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
 
   int setParamsToStatement(int paramIdx,
                 PreparedStatement statement,
-                SortedMap<String, String> columnsToParameters,
+                Map<String, String> columnsToParameters,
                 Record record,
                 Connection connection,
                 int opCode) throws OnRecordErrorException {

@@ -135,7 +135,8 @@ public class TestJDBCBaseRecordWriter {
         null,
         new JdbcRecordReader(),
         caseSensitive,
-        Collections.emptyList()
+        Collections.emptyList(),
+        true
     );
 
     try {
@@ -163,7 +164,8 @@ public class TestJDBCBaseRecordWriter {
         null,
         new JdbcRecordReader(),
         caseSensitive,
-        Collections.emptyList()
+        Collections.emptyList(),
+        true
     );
 
     try {
@@ -203,7 +205,8 @@ public class TestJDBCBaseRecordWriter {
         generatedColumnMapping,
         new JdbcRecordReader(),
         caseSensitive,
-        Collections.emptyList()
+        Collections.emptyList(),
+        true
     );
     Record record = RecordCreator.create();
     Map<String, Field> fields = new HashMap<>();
@@ -278,7 +281,8 @@ public class TestJDBCBaseRecordWriter {
         generatedColumnMapping,
         new JdbcRecordReader(),
         caseSensitive,
-        Collections.emptyList()
+        Collections.emptyList(),
+        true
     );
     Record record = RecordCreator.create();
     Map<String, Field> fields = new HashMap<>();
@@ -363,7 +367,8 @@ public class TestJDBCBaseRecordWriter {
         null,
         new JdbcRecordReader(),
         false,
-        Collections.emptyList()
+        Collections.emptyList(),
+        true
     );
 
     /* isColumnTypeNumeric() - true assertions */

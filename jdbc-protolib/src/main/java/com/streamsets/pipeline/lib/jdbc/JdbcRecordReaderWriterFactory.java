@@ -125,7 +125,8 @@ public final class JdbcRecordReaderWriterFactory {
           generatedColumnMappings,
           recordReader,
           caseSensitive,
-          customDataSqlStateCodes
+          customDataSqlStateCodes,
+          true
       );
     }
     return recordWriter;

@@ -122,7 +122,8 @@ public class TestGenericRecordWriter {
         null,
         new JdbcRecordReader(),
         caseSensitive,
-        Collections.emptyList()
+        Collections.emptyList(),
+        true
     );
     List<Record> batch = ImmutableList.of(record);
     writer.writeBatch(batch.iterator());
@@ -171,7 +172,8 @@ public class TestGenericRecordWriter {
         null,
         new JdbcRecordReader(),
         caseSensitive,
-        Collections.emptyList()
+        Collections.emptyList(),
+        true
     );
     List<Record> batch = ImmutableList.of(insertRecord, updateRecord);
     writer.writeBatch(batch.iterator());
@@ -221,7 +223,8 @@ public class TestGenericRecordWriter {
         null,
         new JdbcRecordReader(),
         caseSensitive,
-        Collections.emptyList()
+        Collections.emptyList(),
+        true
     );
     List<Record> batch = ImmutableList.of(insertRecord, deleteRecord);
     writer.writeBatch(batch.iterator());
@@ -272,7 +275,8 @@ public class TestGenericRecordWriter {
         null,
         new JdbcRecordReader(),
         caseSensitive,
-        Collections.emptyList()
+        Collections.emptyList(),
+        true
     );
     List<Record> batch = ImmutableList.of(insertRecord, updateRecord);
     writer.writeBatch(batch.iterator());
@@ -325,7 +329,8 @@ public class TestGenericRecordWriter {
         null,
         new JdbcRecordReader(),
         caseSensitive,
-        Collections.emptyList()
+        Collections.emptyList(),
+        true
     );
     List<Record> batch = ImmutableList.of(insertRecord, deleteRecord);
     writer.writeBatch(batch.iterator());
@@ -363,7 +368,8 @@ public class TestGenericRecordWriter {
         null,
         new JdbcRecordReader(),
         caseSensitive,
-        Collections.emptyList()
+        Collections.emptyList(),
+        true
     );
     Record record = RecordCreator.create();
     Map<String, Field> fields = new HashMap<>();
@@ -407,7 +413,8 @@ public class TestGenericRecordWriter {
         null,
         new JdbcRecordReader(),
         caseSensitive,
-        Collections.emptyList()
+        Collections.emptyList(),
+        true
     );
     List<Record> batch = ImmutableList.of(record);
     final List<OnRecordErrorException> errors = writer.writeBatch(batch.iterator());

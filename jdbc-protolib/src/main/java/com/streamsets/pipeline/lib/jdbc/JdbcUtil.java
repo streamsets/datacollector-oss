@@ -1097,7 +1097,7 @@ public class JdbcUtil {
       String tableName,
       List<String> primaryKeys,
       List<String> primaryKeyParams,
-      SortedMap<String, String> columns,
+      Map<String, String> columns,
       int numRecords,
       boolean caseSensitive,
       boolean multiRow
