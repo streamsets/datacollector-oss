@@ -94,6 +94,16 @@ public class SchAdmin {
       String userAuthToken = retrieveUserToken(dpmBaseURL, dpmInfo.getUserID(), dpmInfo.getUserPassword());
       String appAuthToken;
 
+      // If component type is not Data Collector, make sure Control Hub Instance supports the requested component type
+      if (!componentType.equals(RuntimeInfo.DC_COMPONENT_TYPE) &&
+          !isValidComponentType(dpmBaseURL, userAuthToken, componentType)) {
+        throw new RuntimeException(Utils.format(
+            "Control Hub Instance: {} doesn't support component type: {}.",
+            dpmBaseURL,
+            componentType
+        ));
+      }
+
       // 2. Create Data Collector application token
       Response response = null;
       try {
@@ -141,7 +151,7 @@ public class SchAdmin {
   /**
    * Disable Control Hub on this Data Collector - with explicit login.
    */
-  public static void disableDPM(String username, String password, String organizationId, Context context) throws IOException {
+  static void disableDPM(String username, String password, String organizationId, Context context) throws IOException {
     String dpmBaseURL = normalizeDpmBaseURL(context.configuration.get(RemoteSSOService.DPM_BASE_URL_CONFIG, ""));
     String userToken = retrieveUserToken(dpmBaseURL, username, password);
     try {
@@ -278,6 +288,30 @@ public class SchAdmin {
   }
 
   /**
+   * Validates Component type is supported by Control Hub instance or not.
+   */
+  private static boolean isValidComponentType(String url, String userAuthToken, String componentType) {
+    Response response = null;
+    try {
+      response = ClientBuilder.newClient()
+        .target(url + "/security/rest/v1/componentTypes")
+        .register(new CsrfProtectionFilter("CSRF"))
+        .request()
+        .header(SSOConstants.X_USER_AUTH_TOKEN, userAuthToken)
+        .get();
+      if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+        String componentTypesStr = response.readEntity(String.class);
+        return componentTypesStr.contains(componentType);
+      }
+    } finally {
+      if (response != null) {
+        response.close();
+      }
+    }
+    return false;
+  }
+
+  /**
    * Logout given token.
    */
   private static void logout(String dpmBaseURL, String userAuthToken) {
@@ -327,7 +361,7 @@ public class SchAdmin {
                   .setThrowExceptionOnMissing(true)
                   .setListDelimiterHandler(new DefaultListDelimiterHandler(';'))
                   .setIncludesAllowed(false));
-      PropertiesConfiguration config = null;
+      PropertiesConfiguration config;
       config = builder.getConfiguration();
       config.setProperty(RemoteSSOService.DPM_ENABLED, Boolean.toString(enableSch));
       config.setProperty(RemoteSSOService.DPM_BASE_URL_CONFIG, dpmBaseURL);
