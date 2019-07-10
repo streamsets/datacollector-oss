@@ -21,6 +21,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +32,8 @@ public class TestSelectorStageUpgrader {
     List<Config> configs = new ArrayList<>();
 
     StageUpgrader legacyUpgrader = Mockito.mock(StageUpgrader.class);
-    SelectorStageUpgrader upgrader = new SelectorStageUpgrader("stage", legacyUpgrader, "test-selectorUpgrader.yaml");
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("test-selectorUpgrader.yaml");
+    SelectorStageUpgrader upgrader = new SelectorStageUpgrader("stage", legacyUpgrader, yamlResource);
 
     StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
     Mockito.doReturn(2).when(context).getFromVersion();
@@ -55,7 +57,8 @@ public class TestSelectorStageUpgrader {
     List<Config> configs = new ArrayList<>();
 
     StageUpgrader legacyUpgrader = Mockito.mock(StageUpgrader.class);
-    SelectorStageUpgrader upgrader = new SelectorStageUpgrader("stage", legacyUpgrader, "test-selectorUpgrader.yaml");
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("test-selectorUpgrader.yaml");
+    SelectorStageUpgrader upgrader = new SelectorStageUpgrader("stage", legacyUpgrader, yamlResource);
 
     StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
     Mockito.doReturn(3).when(context).getFromVersion();
@@ -80,7 +83,8 @@ public class TestSelectorStageUpgrader {
     List<Config> configs = new ArrayList<>();
 
     StageUpgrader legacyUpgrader = Mockito.mock(StageUpgrader.class);
-    SelectorStageUpgrader upgrader = new SelectorStageUpgrader("stage", legacyUpgrader, "test-selectorUpgrader.yaml");
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("test-selectorUpgrader.yaml");
+    SelectorStageUpgrader upgrader = new SelectorStageUpgrader("stage", legacyUpgrader, yamlResource);
 
     StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
     Mockito.doReturn(1).when(context).getFromVersion();
@@ -101,7 +105,8 @@ public class TestSelectorStageUpgrader {
     List<Config> configs = new ArrayList<>();
 
     StageUpgrader legacyUpgrader = Mockito.mock(StageUpgrader.class);
-    SelectorStageUpgrader upgrader = new SelectorStageUpgrader("stage", legacyUpgrader, "test-empty.yaml");
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("test-empty.yaml");
+    SelectorStageUpgrader upgrader = new SelectorStageUpgrader("stage", legacyUpgrader, yamlResource);
 
     StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
     Mockito.doReturn(1).when(context).getFromVersion();
@@ -120,7 +125,8 @@ public class TestSelectorStageUpgrader {
   @Test
   public void testSelectorNullLegacyUpgrader() {
     List<Config> configs = new ArrayList<>();
-    SelectorStageUpgrader upgrader = new SelectorStageUpgrader("stage", null, "test-selectorUpgrader.yaml");
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("test-selectorUpgrader.yaml");
+    SelectorStageUpgrader upgrader = new SelectorStageUpgrader("stage", null, yamlResource);
 
     StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
     Mockito.doReturn(3).when(context).getFromVersion();

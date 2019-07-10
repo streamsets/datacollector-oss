@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.StageUpgrader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URL;
 import java.util.List;
 
 public class SelectorStageUpgrader implements StageUpgrader {
@@ -29,9 +30,9 @@ public class SelectorStageUpgrader implements StageUpgrader {
   private StageUpgrader legacyUpgrader;
   private YamlStageUpgrader yamlUpgrader;
 
-  public SelectorStageUpgrader(String stageName, StageUpgrader legacyUpgrader, String yamlResource) {
+  public SelectorStageUpgrader(String stageName, StageUpgrader legacyUpgrader, URL yamlResource) {
     this.legacyUpgrader = legacyUpgrader;
-    if (yamlResource != null && !yamlResource.isEmpty()) {
+    if (yamlResource != null) {
       this.yamlUpgrader = new YamlStageUpgraderLoader(stageName, yamlResource).get();
     }
   }

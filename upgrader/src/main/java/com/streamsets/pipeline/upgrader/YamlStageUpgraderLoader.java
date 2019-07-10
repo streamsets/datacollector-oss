@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,15 +33,15 @@ public class YamlStageUpgraderLoader {
   private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper(new YAMLFactory());
 
   private final String stageName;
-  private final String resource;
+  private final URL resource;
 
-  public YamlStageUpgraderLoader(String stageName, String resource) {
+  public YamlStageUpgraderLoader(String stageName, URL resource) {
     this.stageName = stageName;
     this.resource = resource;
   }
 
   public YamlStageUpgrader get() {
-    try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource)) {
+    try (InputStream is = resource.openStream()) {
       Map yaml = OBJECT_MAPPER.readValue(is, Map.class);
       Integer upgraderVersion = (Integer) yaml.get("upgraderVersion");
       if (upgraderVersion == null || upgraderVersion != 1) {

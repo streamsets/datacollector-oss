@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.Config;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -39,7 +40,8 @@ public class TestYamlStageUpgraderLoader {
 
   @Test
   public void testToVersion() {
-    YamlStageUpgraderLoader loader = new YamlStageUpgraderLoader("stage", "test-yamlUpgraderToVersion.yaml");
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("test-yamlUpgraderToVersion.yaml");
+    YamlStageUpgraderLoader loader = new YamlStageUpgraderLoader("stage", yamlResource);
     YamlStageUpgrader upgrader = loader.get();
 
     List<Config> configs = upgrader.upgrade("lib", "stage", "instance", 0, 0, new ArrayList<>());
@@ -62,7 +64,8 @@ public class TestYamlStageUpgraderLoader {
 
   @Test
   public void testSetConfigAction() {
-    YamlStageUpgraderLoader loader = new YamlStageUpgraderLoader("stage", "test-yamlUpgraderActions.yaml");
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("test-yamlUpgraderActions.yaml");
+    YamlStageUpgraderLoader loader = new YamlStageUpgraderLoader("stage", yamlResource);
     YamlStageUpgrader upgrader = loader.get();
 
     List<Config> configs = new ArrayList<>();
@@ -78,7 +81,8 @@ public class TestYamlStageUpgraderLoader {
 
   @Test
   public void testSetConfigActionWithLookForName() {
-    YamlStageUpgraderLoader loader = new YamlStageUpgraderLoader("stage", "test-yamlUpgraderActions.yaml");
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("test-yamlUpgraderActions.yaml");
+    YamlStageUpgraderLoader loader = new YamlStageUpgraderLoader("stage", yamlResource);
     YamlStageUpgrader upgrader = loader.get();
 
     List<Config> configs = new ArrayList<>();
@@ -100,7 +104,8 @@ public class TestYamlStageUpgraderLoader {
 
   @Test
   public void testSetConfigActionWithElse() {
-    YamlStageUpgraderLoader loader = new YamlStageUpgraderLoader("stage", "test-yamlUpgraderActions.yaml");
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("test-yamlUpgraderActions.yaml");
+    YamlStageUpgraderLoader loader = new YamlStageUpgraderLoader("stage", yamlResource);
     YamlStageUpgrader upgrader = loader.get();
 
     List<Config> configs = new ArrayList<>();
@@ -125,7 +130,8 @@ public class TestYamlStageUpgraderLoader {
 
   @Test
   public void testRenameConfigAction() {
-    YamlStageUpgraderLoader loader = new YamlStageUpgraderLoader("stage", "test-yamlUpgraderActions.yaml");
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("test-yamlUpgraderActions.yaml");
+    YamlStageUpgraderLoader loader = new YamlStageUpgraderLoader("stage", yamlResource);
     YamlStageUpgrader upgrader = loader.get();
 
     List<Config> configs = new ArrayList<>();
@@ -143,7 +149,8 @@ public class TestYamlStageUpgraderLoader {
 
   @Test
   public void testRemoveConfigs() {
-    YamlStageUpgraderLoader loader = new YamlStageUpgraderLoader("stage", "test-yamlUpgraderActions.yaml");
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("test-yamlUpgraderActions.yaml");
+    YamlStageUpgraderLoader loader = new YamlStageUpgraderLoader("stage", yamlResource);
     YamlStageUpgrader upgrader = loader.get();
 
     List<Config> configs = new ArrayList<>();
@@ -159,7 +166,8 @@ public class TestYamlStageUpgraderLoader {
 
   @Test
   public void testReplaceConfigs() {
-    YamlStageUpgraderLoader loader = new YamlStageUpgraderLoader("stage", "test-yamlUpgraderActions.yaml");
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("test-yamlUpgraderActions.yaml");
+    YamlStageUpgraderLoader loader = new YamlStageUpgraderLoader("stage", yamlResource);
     YamlStageUpgrader upgrader = loader.get();
 
     List<Config> configs = new ArrayList<>();
@@ -191,7 +199,8 @@ public class TestYamlStageUpgraderLoader {
 
   @Test
   public void testStringCollectionsConfigs() {
-    YamlStageUpgraderLoader loader = new YamlStageUpgraderLoader("stage", "test-yamlUpgraderActions.yaml");
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("test-yamlUpgraderActions.yaml");
+    YamlStageUpgraderLoader loader = new YamlStageUpgraderLoader("stage", yamlResource);
     YamlStageUpgrader upgrader = loader.get();
 
     List<Config> configs = new ArrayList<>();

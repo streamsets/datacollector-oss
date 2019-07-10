@@ -280,7 +280,11 @@ public abstract class StageDefinitionExtractor {
           if (sDef.upgraderDef().isEmpty()) {
             upgrader = sDef.upgrader().newInstance();
           } else {
-            upgrader = new SelectorStageUpgrader(name, sDef.upgrader().newInstance(), sDef.upgraderDef());
+            upgrader = new SelectorStageUpgrader(
+                name,
+                sDef.upgrader().newInstance(),
+                klass.getClassLoader().getResource(sDef.upgraderDef())
+            );
           }
         } catch (Exception ex) {
           throw new IllegalArgumentException(Utils.format(
