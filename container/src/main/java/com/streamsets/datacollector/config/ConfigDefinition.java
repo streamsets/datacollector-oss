@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2019 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 package com.streamsets.datacollector.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
 import com.streamsets.pipeline.api.ChooserValues;
@@ -23,7 +25,10 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.impl.LocalizableMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -65,13 +70,14 @@ public class ConfigDefinition {
       List<Object> triggeredByValues, int displayPosition, List<ElFunctionDefinition> elFunctionDefinitions,
       List<ElConstantDefinition> elConstantDefinitions, long min, long max, String mode, int lines,
       List<Class> elDefs, ConfigDef.Evaluation evaluation, Map<String, List<Object>> dependsOnMap) {
-    this(null, name, type, label, description, defaultValue, required, group, fieldName, model,
-         dependsOn, triggeredByValues, displayPosition, elFunctionDefinitions,
-         elConstantDefinitions, min, max, mode, lines, elDefs, evaluation, dependsOnMap);
+    this(null, name, type, label, description, defaultValue, "",
+        required, group, fieldName,
+        model, dependsOn, triggeredByValues, displayPosition, elFunctionDefinitions,
+        elConstantDefinitions, min, max, mode, lines, elDefs, evaluation, dependsOnMap);
   }
 
   public ConfigDefinition(Field configField, String name, ConfigDef.Type type, String label, String description,
-      Object defaultValue,
+      Object defaultValue, String defaultValueFromResource,
       boolean required, String group, String fieldName, ModelDefinition model, String dependsOn,
       List<Object> triggeredByValues, int displayPosition, List<ElFunctionDefinition> elFunctionDefinitions,
       List<ElConstantDefinition> elConstantDefinitions, long min, long max, String mode, int lines,
@@ -82,6 +88,7 @@ public class ConfigDefinition {
     this.label = label;
     this.description = description;
     this.defaultValue = defaultValue;
+
     this.required = required;
     this.group = group;
     this.fieldName = fieldName;
@@ -108,6 +115,51 @@ public class ConfigDefinition {
     this.lines = lines;
     this.dependsOnMap = dependsOnMap;
     this.evaluation = evaluation;
+
+    // if getDefaultValueFromResources is a valid resource path we'll read that into String and use it as defaultValue
+    if (defaultValueFromResource != null && !defaultValueFromResource.equals("")) {
+      if (defaultValue != null && !defaultValue.equals("")) {
+        throw new IllegalArgumentException(
+            String.format(
+                "Can't use both defaultValue and defaultValueFromResources in the same ConfigDef:%n" +
+                    "defaultValue=%s, defaultValueFromResources=%s",
+                defaultValue,
+                defaultValueFromResource
+            ));
+      }
+      if (type != ConfigDef.Type.STRING && type != ConfigDef.Type.TEXT) {
+        throw new IllegalArgumentException(
+            String.format(
+                "Only STRING or TEXT types can have default value read in from resources:%n" +
+                    "type=%s, defaultValueFromResources=%s",
+                type,
+                defaultValueFromResource
+                ));
+      }
+      if (configField == null) {
+        throw new IllegalArgumentException(
+            String.format(
+                "Cannot read default value from resources when configField is null (don't know which resources):%n" +
+                    "configField=%s, defaultValueFromResources=%s",
+                configField,
+                defaultValueFromResource
+            ));
+      }
+      String resourcePath = defaultValueFromResource;
+      try {
+        Class declaringClass = configField.getDeclaringClass();
+        URL url = Resources.getResource(declaringClass, resourcePath);
+        this.defaultValue = Resources.toString(url, Charsets.UTF_8);
+      } catch (IOException | NullPointerException e) {
+        throw new IllegalArgumentException(
+            String.format(
+                "Can't load resource from %s. Make sure its a relative path in \\resources of the same package.%n%s",
+                resourcePath,
+                e.getMessage()
+            )
+        );
+      }
+    }
   }
 
   public void addAutoELDefinitions(StageLibraryDefinition libraryDef) {
@@ -308,8 +360,9 @@ public class ConfigDefinition {
     }
 
     return new ConfigDefinition(getConfigField(), getName(), getType(), label, description, getDefaultValue(),
-                                isRequired(), getGroup(), getFieldName(), model, getDependsOn(), getTriggeredByValues(),
-                                getDisplayPosition(), getElFunctionDefinitions(), getElConstantDefinitions(), getMin(),
+                                "", isRequired(), getGroup(), getFieldName(), model,
+                                getDependsOn(), getTriggeredByValues(), getDisplayPosition(),
+                                getElFunctionDefinitions(), getElConstantDefinitions(), getMin(),
                                 getMax(), getMode(), getLines(), getElDefs(), getEvaluation(), getDependsOnMap());
   }
 

@@ -432,6 +432,7 @@ public abstract class ConfigDefinitionExtractor {
         String label = annotation.label();
         String description = annotation.description();
         Object defaultValue = ConfigValueExtractor.get().extract(field, annotation, contextMsg);
+        String defaultValueFromResource = annotation.defaultValueFromResource();
         boolean required = annotation.required();
         String group = annotation.group();
         group = resolveGroup(stageGroups, group, contextMsg, errors);
@@ -466,7 +467,8 @@ public abstract class ConfigDefinitionExtractor {
         int lines = annotation.lines();
         ConfigDef.Evaluation evaluation = annotation.evaluation();
 
-        def = new ConfigDefinition(field, configPrefix + name, type, label, description, defaultValue, required, group,
+        def = new ConfigDefinition(field, configPrefix + name, type, label, description, defaultValue,
+                                   defaultValueFromResource, required, group,
                                    fieldName, model, dependsOn, triggeredByValues, displayPosition,
                                    elFunctionDefinitions, elConstantDefinitions, min, max, mode, lines, elDefs,
                                    evaluation, dependsOnMap);

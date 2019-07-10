@@ -1,0 +1,1 @@
+This was read from test-default-value-from-resources.txt
