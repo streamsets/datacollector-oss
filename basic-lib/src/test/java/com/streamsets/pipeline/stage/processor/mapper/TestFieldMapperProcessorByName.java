@@ -594,6 +594,52 @@ public class TestFieldMapperProcessorByName {
     }
   }
 
+  @Test
+  public void createFieldsBySiblings() throws StageException {
+    final FieldMapperProcessorConfig config = new FieldMapperProcessorConfig();
+    config.operateOn = OperateOn.FIELD_PATHS;
+    config.mappingExpression = "/outputs/foo_value";
+    config.conditionalExpression = "${str:startsWith(f:path(), '/inputs') and f:name() == 'AttributeValue' and f:hasSiblingWithValue('AttributeName', 'foo')}";
+    config.structureChangeAllowed = true;
+
+    final ProcessorRunner runner = new ProcessorRunner.Builder(
+        FieldMapperDProcessor.class,
+        new FieldMapperProcessor(config)
+    ).addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      final MapFieldBuilder builder = MapFieldBuilder.builder();
+      builder.startListMap("outputs").end().startListMap("inputs").startList("dataItems")
+          .startListMap("data")
+          .add("AttributeName", "attr1")
+          .add("AttributeValue", "val1")
+          .end()
+          .startListMap("data")
+          .add("AttributeName", "attr2")
+          .add("AttributeValue", "val2")
+          .end()
+          .startListMap("data")
+          .add("AttributeName", "foo")
+          .add("AttributeValue", "bar")
+          .end()
+          .end() // end dataItems list
+          .end(); // end inputs map
+
+
+      final Record record = RecordCreator.create("s", "s:1");
+      record.set(builder.build());
+
+      final StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      final Record outputRecord = output.getRecords().get("a").get(0);
+      final Field outputs = assertInputsAndReturnOutputs(outputRecord, false);
+      assertThat(outputs, Matchers.mapFieldWithEntry("foo_value", "bar"));
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
   private static Field assertInputsEmptyAndReturnOutputs(Record record) {
     return assertInputsAndReturnOutputs(record, true);
   }

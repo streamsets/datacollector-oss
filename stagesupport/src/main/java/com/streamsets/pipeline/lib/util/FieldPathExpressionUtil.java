@@ -133,7 +133,10 @@ public class FieldPathExpressionUtil {
     PathElement currentMatcher = null;
     PathElement currentPath = null;
     Field currentField = null;
+    Field parentField = null;
     StringBuilder currentFieldPath = new StringBuilder();
+    String parentFieldPath = null;
+    int indexWithinParent = -1;
 
     while (matcherPathIter.hasNext()) {
       currentMatcher = matcherPathIter.next();
@@ -153,6 +156,9 @@ public class FieldPathExpressionUtil {
             patternName = FieldRegexUtil.transformFieldPathRegex(patternName);
           }
           if (childName.matches(patternName)) {
+            indexWithinParent = -1;
+            parentField = currentField;
+            parentFieldPath = currentFieldPath.toString();
             currentField = currentField.getValueAsMap().get(childName);
             currentFieldPath.append("/");
             currentFieldPath.append(childName);
@@ -175,7 +181,10 @@ public class FieldPathExpressionUtil {
           if (matchInd == PathElement.WILDCARD_INDEX_ANY_LENGTH
               || (matchInd == PathElement.WILDCARD_INDEX_SINGLE_CHAR && childIndex < 10)
               || matchInd == childIndex) {
+            parentField = currentField;
+            parentFieldPath = currentFieldPath.toString();
             currentField = currentField.getValueAsList().get(childIndex);
+            indexWithinParent = childIndex;
             currentFieldPath.append("[");
             currentFieldPath.append(childIndex);
             currentFieldPath.append("]");
@@ -197,7 +206,15 @@ public class FieldPathExpressionUtil {
           break;
         case FIELD_EXPRESSION:
           // see if the current field matches the given expression
-          FieldEL.setFieldInContext(elVars, currentFieldPath.toString(), currentPath.getName(), currentField);
+          FieldEL.setFieldInContext(
+              elVars,
+              currentFieldPath.toString(),
+              currentPath.getName(),
+              currentField,
+              parentFieldPath,
+              parentField,
+              indexWithinParent
+          );
           String expression = currentMatcher.getName();
           final boolean result = elEval.eval(elVars, expression, Boolean.class);
           if (LOG.isDebugEnabled()) {

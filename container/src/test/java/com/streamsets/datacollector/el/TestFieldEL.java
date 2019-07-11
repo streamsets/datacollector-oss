@@ -16,49 +16,101 @@
 package com.streamsets.datacollector.el;
 
 import com.streamsets.datacollector.definition.ConcreteELDefinitionExtractor;
+import com.streamsets.datacollector.record.HeaderImpl;
+import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.lib.el.RecordEL;
-
 import com.streamsets.pipeline.lib.el.FieldEL;
+import com.streamsets.testing.fieldbuilder.MapFieldBuilder;
 import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 public class TestFieldEL {
 
   @Test
-  public void testFieldFunctions() throws Exception {
-    ELEvaluator eval = new ELEvaluator("testRecordFunctions", ConcreteELDefinitionExtractor.get(), FieldEL.class);
-    ELVariables variables = new ELVariables();
+  public void testFieldFunctions() {
+    final MapFieldBuilder builder = MapFieldBuilder.builder();
+    final int aFieldValue = 1;
+    final String aFieldName = "a";
+    final String sisterFieldName = "sister";
+    final long sisterFieldValue = -89l;
+    final String baseFieldName = "fields";
+    final int indexWithinParent = 3;
+    builder.startListMap(baseFieldName)
+        .add(aFieldName, aFieldValue)
+        .add(sisterFieldName, sisterFieldValue)
+        .end(); // end fields map
 
-    final int expectedIntFieldValue = 1;
-    final String expectedAFieldValue = "A";
-    final String expectedAFieldPath = "/a";
+    // cannot use RecordCreator here, since that is from sdk module, and depending on it from here would create
+    // a circular dependency
+    final Record record = new RecordImpl(new HeaderImpl(), builder.build());
 
-    Record record = Mockito.mock(Record.class);
-    Mockito.when(record.get(Mockito.eq(""))).thenReturn(Field.create(expectedIntFieldValue));
-    Mockito.when(record.get(Mockito.eq("/x"))).thenReturn(null);
-    Mockito.when(record.has(Mockito.eq("/x"))).thenReturn(true);
-    Mockito.when(record.has(Mockito.eq("/y"))).thenReturn(false);
-    Mockito.when(record.get(Mockito.eq(expectedAFieldPath))).thenReturn(Field.create(expectedAFieldValue));
-    Mockito.when(record.get(Mockito.eq("/null"))).thenReturn(Field.create((String) null));
+    final ELEvaluator eval = new ELEvaluator("testFieldFunctions", ConcreteELDefinitionExtractor.get(), FieldEL.class);
+    final ELVariables variables = new ELVariables();
 
     RecordEL.setRecordInContext(variables, record);
-    Field aField = record.get(expectedAFieldPath);
+    final String parentFieldPath = "/" + baseFieldName;
+    final String sisterFieldPath = parentFieldPath + "/" + sisterFieldName;
+    final String aFieldPath = parentFieldPath + "/" + aFieldName;
 
-    FieldEL.setFieldInContext(variables, expectedAFieldPath, null, aField);
+    final Field parentField = record.get(parentFieldPath);
+    final Field aField = record.get(aFieldPath);
 
-    final Field.Type typeEval = eval.eval(variables, "${f:type()}", Field.Type.class);
-    Assert.assertNotNull(typeEval);
-    Assert.assertEquals(Field.Type.STRING, typeEval);
+    FieldEL.setFieldInContext(variables, aFieldPath, aFieldName, aField, parentFieldPath, parentField, indexWithinParent);
 
-    final Object valueEval = eval.eval(variables, "${f:value()}", Object.class);
-    Assert.assertNotNull(valueEval);
-    Assert.assertEquals(expectedAFieldValue, valueEval);
+    assertNonNullEval(eval, variables, "${f:type()}", Field.Type.INTEGER, Field.Type.class);
 
-    final String pathEval = eval.eval(variables, "${f:path()}", String.class);
-    Assert.assertNotNull(pathEval);
-    Assert.assertEquals(expectedAFieldPath, pathEval);
+    assertNonNullEval(eval, variables, "${f:value()}", aFieldValue, Object.class);
+
+    assertNonNullEval(eval, variables, "${f:path()}", aFieldPath, String.class);
+
+    // indexWithinParent is just set to an arbitrary value here; we are not testing that it's set correctly for actual
+    // record traversal, just that it's evaluated correctly by the EL functions
+    assertNonNullEval(eval, variables, "${f:index()}", indexWithinParent, Integer.class);
+
+    assertNonNullEval(eval, variables, "${f:parentPath()}", parentFieldPath, String.class);
+
+    assertNonNullEval(eval, variables, "${f:parent()}", parentField, Field.class);
+
+    assertNonNullEval(
+        eval,
+        variables,
+        String.format("${f:hasSiblingWithName('%s')}", sisterFieldName),
+        true,
+        Boolean.class
+    );
+
+    assertNonNullEval(
+        eval,
+        variables,
+        String.format("${f:getSiblingWithName('%s')}", sisterFieldName),
+        record.get(sisterFieldPath),
+        Field.class
+    );
+
+    assertNonNullEval(
+        eval,
+        variables,
+        String.format("${f:hasSiblingWithValue('%s', %d)}", sisterFieldName, sisterFieldValue),
+        true,
+        Boolean.class
+    );
+  }
+
+  static <T> void assertNonNullEval(
+      ELEvaluator eval,
+      ELVariables elVars,
+      String expression,
+      T expected,
+      Class<T> expectedClass
+  ) {
+    final T evalResult = eval.eval(
+        elVars,
+        expression,
+        expectedClass
+    );
+    Assert.assertNotNull(evalResult);
+    Assert.assertEquals(expected, evalResult);
   }
 }

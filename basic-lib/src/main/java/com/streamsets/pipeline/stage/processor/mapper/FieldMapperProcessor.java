@@ -139,7 +139,18 @@ public class FieldMapperProcessor extends SingleLaneRecordProcessor {
       final String fieldPath = fv.getFieldPath();
       final String fieldName = fv.getFieldName();
       final Field field = fv.getField();
-      if (checkSkipFieldAndSetContextVar(fieldPath, fieldName, field, true)) {
+      final String parentFieldPath = fv.getParentFieldPath();
+      final Field parentField = fv.getParentField();
+      final int indexWithinParent = fv.getIndexInParent();
+      if (checkSkipFieldAndSetContextVar(
+          fieldPath,
+          fieldName,
+          field,
+          parentFieldPath,
+          parentField,
+          indexWithinParent,
+          true
+      )) {
         return;
       }
 
@@ -162,7 +173,18 @@ public class FieldMapperProcessor extends SingleLaneRecordProcessor {
       final String fieldPath = fv.getFieldPath();
       final String fieldName = fv.getFieldName();
       final Field field = fv.getField();
-      if (checkSkipFieldAndSetContextVar(fieldPath, fieldName, field, false)) {
+      final String parentFieldPath = fv.getParentFieldPath();
+      final Field parentField = fv.getParentField();
+      final int indexWithinParent = fv.getIndexInParent();
+      if (checkSkipFieldAndSetContextVar(
+          fieldPath,
+          fieldName,
+          field,
+          parentFieldPath,
+          parentField,
+          indexWithinParent,
+          false
+      )) {
         return;
       }
       if (fieldMapperConfig.operateOn == OperateOn.FIELD_NAMES && fv.getParentField() != null
@@ -181,7 +203,6 @@ public class FieldMapperProcessor extends SingleLaneRecordProcessor {
         );
 
         if (!StringUtils.equals(newName, fieldName)) {
-          final Field parentField = fv.getParentField();
           if (parentField == null) {
             throw new IllegalStateException(String.format(
                 "parentField is null in FieldVisitor when processing field path %s",
@@ -239,7 +260,18 @@ public class FieldMapperProcessor extends SingleLaneRecordProcessor {
       final String fieldPath = fv.getFieldPath();
       final String fieldName = fv.getFieldName();
       final Field field = fv.getField();
-      if (checkSkipFieldAndSetContextVar(fieldPath, fieldName, field, true)) {
+      final String parentFieldPath = fv.getParentFieldPath();
+      final Field parentField = fv.getParentField();
+      final int indexWithinParent = fv.getIndexInParent();
+      if (checkSkipFieldAndSetContextVar(
+          fieldPath,
+          fieldName,
+          field,
+          parentFieldPath,
+          parentField,
+          indexWithinParent,
+          true
+      )) {
         return;
       }
       try {
@@ -314,13 +346,24 @@ public class FieldMapperProcessor extends SingleLaneRecordProcessor {
       String fieldPath,
       String fieldName,
       Field field,
+      String parentFieldPath,
+      Field parentField,
+      int indexWithinParent,
       boolean leafNodesOnly
   ) {
     if (leafNodesOnly && EnumSet.of(Field.Type.MAP, Field.Type.LIST_MAP, Field.Type.LIST).contains(field.getType())) {
       // operate only on leaf nodes
       return true;
     }
-    FieldEL.setFieldInContext(expressionVars, fieldPath, fieldName, field);
+    FieldEL.setFieldInContext(
+        expressionVars,
+        fieldPath,
+        fieldName,
+        field,
+        parentFieldPath,
+        parentField,
+        indexWithinParent
+    );
     if (mapperConditionalEval != null) {
       try {
         final boolean conditionalResult = mapperExpressionEval.eval(
