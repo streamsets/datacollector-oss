@@ -365,6 +365,17 @@
             <!-- Test Databricks ML Model files -->
             <exclude>databricks-ml-protolib/src/test/resources/**</exclude>
 
+            <!-- Example scripts for scripting stages -->
+            <exclude>jython-protolib/src/main/resources/com/streamsets/pipeline/stage/processor/jython/default_init_script.py</exclude>
+            <exclude>jython-protolib/src/main/resources/com/streamsets/pipeline/stage/processor/jython/default_script.py</exclude>
+            <exclude>jython-protolib/src/main/resources/com/streamsets/pipeline/stage/processor/jython/default_destroy_script.py</exclude>
+            <exclude>basic-lib/src/main/resources/com/streamsets/pipeline/stage/processor/javascript/default_init_script.js</exclude>
+            <exclude>basic-lib/src/main/resources/com/streamsets/pipeline/stage/processor/javascript/default_script.js</exclude>
+            <exclude>basic-lib/src/main/resources/com/streamsets/pipeline/stage/processor/javascript/default_destroy_script.js</exclude>
+            <exclude>groovy-protolib/src/main/resources/com/streamsets/pipeline/stage/processor/groovy/default_init_script.groovy</exclude>
+            <exclude>groovy-protolib/src/main/resources/com/streamsets/pipeline/stage/processor/groovy/default_script.groovy</exclude>
+            <exclude>groovy-protolib/src/main/resources/com/streamsets/pipeline/stage/processor/groovy/default_destroy_script.groovy</exclude>
+
           </excludes>
           <goal>run</goal>
         </configuration>
