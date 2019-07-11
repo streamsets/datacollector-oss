@@ -32,6 +32,7 @@ import com.streamsets.pipeline.lib.rabbitmq.config.Groups;
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     upgrader = RabbitTargetUpgrader.class,
+    upgraderDef = "upgrader/RabbitDTarget.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_rwy_wn5_2v"
 )
 @ConfigGroups(value = Groups.class)
