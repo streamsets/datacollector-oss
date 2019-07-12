@@ -66,8 +66,8 @@ public class JdbcTarget extends BaseTarget {
   private SchemaTableClassifier schemaTableClassifier = null;
   protected final List<JdbcFieldColumnParamMapping> customMappings;
   protected final boolean caseSensitive;
-  private final boolean dynamicSchemaName;
-  private final boolean dynamicTableName;
+  protected final boolean dynamicSchemaName;
+  protected final boolean dynamicTableName;
   protected final List<String> customDataSqlStateCodes;
 
   protected final ChangeLogFormat changeLogFormat;

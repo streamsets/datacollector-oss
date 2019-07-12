@@ -972,6 +972,34 @@ public class JdbcUtil {
 
   /**
    * Write records to potentially different schemas and tables using EL expressions, and handle errors.
+   * @param batch batch of SDC records
+   * @param schemaTableClassifier classifier to group records according to the schema and table names, resolving the
+   * EL expressions involved.
+   * @param recordWriters JDBC record writer cache
+   * @param errorRecordHandler error record handler
+   * @param perRecord indicate record or batch update
+   * @param tableCreator handler which creates the table if it does not exist yet
+   * @throws StageException
+   */
+  public void write(
+      Batch batch,
+      SchemaTableClassifier schemaTableClassifier,
+      LoadingCache<SchemaAndTable, JdbcRecordWriter> recordWriters,
+      ErrorRecordHandler errorRecordHandler,
+      boolean perRecord,
+      JdbcTableCreator tableCreator
+  ) throws StageException {
+    Multimap<SchemaAndTable, Record> partitions = schemaTableClassifier.classify(batch);
+
+    for (SchemaAndTable key : partitions.keySet()) {
+      tableCreator.create(key.getSchemaName(), key.getTableName());
+      Iterator<Record> recordIterator = partitions.get(key).iterator();
+      write(recordIterator, key, recordWriters, errorRecordHandler, perRecord);
+    }
+  }
+
+  /**
+   * Write records to potentially different schemas and tables using EL expressions, and handle errors.
    *
    * @param batch batch of SDC records
    * @param schemaTableClassifier classifier to group records according to the schema and table names, resolving the
