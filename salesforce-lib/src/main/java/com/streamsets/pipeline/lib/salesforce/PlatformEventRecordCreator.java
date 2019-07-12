@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -167,7 +168,7 @@ public class PlatformEventRecordCreator extends ForceRecordCreatorImpl {
       } else if ("double".contains(type)) {
         return  Field.create(Field.Type.DOUBLE, val);
       } else if ("bytes".contains(type)) {
-        return  Field.create(Field.Type.BYTE_ARRAY, val);
+        return  Field.create(Field.Type.BYTE_ARRAY, Base64.getDecoder().decode((String)val));
       } else if ("string".equals(type)) {
         return Field.create(Field.Type.STRING, val);
       } else {

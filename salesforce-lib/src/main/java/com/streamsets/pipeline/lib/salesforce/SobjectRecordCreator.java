@@ -35,6 +35,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -419,7 +420,8 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
       } else if (STRING_TYPES.contains(sfdcType)) {
         return  com.streamsets.pipeline.api.Field.create(com.streamsets.pipeline.api.Field.Type.STRING, val);
       } else if (BINARY_TYPES.contains(sfdcType)) {
-        return  com.streamsets.pipeline.api.Field.create(com.streamsets.pipeline.api.Field.Type.BYTE_ARRAY, val);
+        return  com.streamsets.pipeline.api.Field.create(com.streamsets.pipeline.api.Field.Type.BYTE_ARRAY,
+            Base64.getDecoder().decode((String)val));
       } else if (DATETIME_TYPES.contains(sfdcType)) {
         if (val != null && !(val instanceof String)) {
           throw new StageException(
