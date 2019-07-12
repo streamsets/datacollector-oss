@@ -49,7 +49,7 @@ public enum JDBCOperationType implements Label {
    * @return Operation code in int. Throws UnsupportedOperationException or
    *        NumberFormatException if invalid.
    */
-  static int convertToIntCode(String op)  {
+  public static int convertToIntCode(String op)  {
     try {
       int intOp = Integer.parseInt(op);
       switch (intOp) {

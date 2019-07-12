@@ -113,8 +113,8 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
   private static final int DATA_TYPE = 5;
   private static final String MSSQL = "Microsoft";
 
-  private final int defaultOpCode;
-  private final UnsupportedOperationAction unsupportedAction;
+  protected final int defaultOpCode;
+  protected final UnsupportedOperationAction unsupportedAction;
   private final List<String> primaryKeyParams;
 
   protected final JdbcUtil jdbcUtil;
