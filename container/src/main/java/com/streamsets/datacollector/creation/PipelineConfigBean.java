@@ -152,7 +152,7 @@ public class PipelineConfigBean implements Stage {
       defaultValue = TRASH_TARGET,
       displayPosition = 23,
       dependsOn = "executionMode",
-      triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING"}
+      triggeredByValue =  {"STANDALONE"}
   )
   @ValueChooserModel(PipelineLifecycleStageChooserValues.class)
   public String startEventStage;
@@ -165,7 +165,7 @@ public class PipelineConfigBean implements Stage {
       defaultValue = TRASH_TARGET,
       displayPosition = 26,
       dependsOn = "executionMode",
-      triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING"}
+      triggeredByValue =  {"STANDALONE"}
   )
   @ValueChooserModel(PipelineLifecycleStageChooserValues.class)
   public String stopEventStage;
