@@ -611,7 +611,13 @@ angular
             if (previewData.issues) {
               $rootScope.common.errors = [previewData.issues];
             } else if (previewData.message) {
-              $rootScope.common.errors = [previewData.message];
+              $rootScope.common.errors = [{
+                RemoteException: {
+                  antennaDoctorMessages: previewData.antennaDoctorMessages,
+                  localizedMessage: previewData.message,
+                  stackTrace: previewData.errorStackTrace
+                }
+              }];
             }
 
             $scope.closePreview();

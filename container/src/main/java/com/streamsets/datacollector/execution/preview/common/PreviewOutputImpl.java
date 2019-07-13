@@ -19,7 +19,11 @@ import com.streamsets.datacollector.execution.PreviewOutput;
 import com.streamsets.datacollector.execution.PreviewStatus;
 import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.validation.Issues;
+import com.streamsets.pipeline.api.AntennaDoctorMessage;
+import com.streamsets.pipeline.api.StageException;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 
 public class PreviewOutputImpl implements PreviewOutput {
@@ -28,12 +32,45 @@ public class PreviewOutputImpl implements PreviewOutput {
   private final Issues issues;
   private final List<List<StageOutput>> output;
   private final String message;
+  private final String errorStackTrace;
+  private final List<AntennaDoctorMessage> antennaDoctorMessages;
 
-  public PreviewOutputImpl(PreviewStatus previewStatus, Issues issues, List<List<StageOutput>> output, String message) {
+  public PreviewOutputImpl(
+    PreviewStatus previewStatus,
+    Issues issues,
+    List<List<StageOutput>> output
+  ) {
     this.previewStatus = previewStatus;
     this.issues = issues;
     this.output = output;
-    this.message = message;
+    this.message = null;
+    this.errorStackTrace = null;
+    this.antennaDoctorMessages = null;
+  }
+
+  public PreviewOutputImpl(
+    PreviewStatus previewStatus,
+    Issues issues,
+    Throwable e
+  ) {
+    this.previewStatus = previewStatus;
+    this.issues = issues;
+    this.output = null;
+    this.message = e.toString();
+    this.errorStackTrace = stackTraceToString(e);
+    this.antennaDoctorMessages = e instanceof StageException ? ((StageException) e).getAntennaDoctorMessages() : null;
+  }
+
+  public PreviewOutputImpl(
+    PreviewStatus previewStatus,
+    Throwable e
+  ) {
+    this.previewStatus = previewStatus;
+    this.issues = null;
+    this.output = null;
+    this.message = e.toString();
+    this.errorStackTrace = stackTraceToString(e);
+    this.antennaDoctorMessages = e instanceof StageException ? ((StageException) e).getAntennaDoctorMessages() : null;
   }
 
   @Override
@@ -55,4 +92,24 @@ public class PreviewOutputImpl implements PreviewOutput {
   public String getMessage() {
     return message;
   }
+
+  @Override
+  public String getErrorStackTrace() {
+    return errorStackTrace;
+  }
+
+  @Override
+  public List<AntennaDoctorMessage> getAntennaDoctorMessages() {
+    return antennaDoctorMessages;
+  }
+
+  private String stackTraceToString(Throwable e) {
+    StringWriter writer = new StringWriter();
+    PrintWriter printWriter = new PrintWriter(writer);
+    e.printStackTrace(printWriter);
+    printWriter.close();
+
+    return writer.toString();
+  }
+
 }

@@ -17,6 +17,7 @@ package com.streamsets.datacollector.execution;
 
 import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.validation.Issues;
+import com.streamsets.pipeline.api.AntennaDoctorMessage;
 
 import java.util.List;
 
@@ -29,4 +30,8 @@ public interface PreviewOutput {
   public List<List<StageOutput>> getOutput();
 
   public String getMessage();
+
+  public String getErrorStackTrace();
+
+  public List<AntennaDoctorMessage> getAntennaDoctorMessages();
 }

@@ -45,6 +45,14 @@ public class PreviewOutputJson {
     return previewOutput.getMessage();
   }
 
+  public String getErrorStackTrace() {
+    return previewOutput.getErrorStackTrace();
+  }
+
+  public List<AntennaDoctorMessageJson> getAntennaDoctorMessages() {
+    return BeanHelper.wrapAntennaDoctorMessages(previewOutput.getAntennaDoctorMessages());
+  }
+
   @JsonIgnore
   public PreviewOutput getPreviewOutput() {
     return previewOutput;

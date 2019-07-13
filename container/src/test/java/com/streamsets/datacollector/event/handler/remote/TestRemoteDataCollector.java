@@ -622,10 +622,10 @@ public class TestRemoteDataCollector {
     @Override
     public PreviewOutput getOutput() {
       if (isValid) {
-        return new PreviewOutputImpl(PreviewStatus.VALID, null, null, null);
+        return new PreviewOutputImpl(PreviewStatus.VALID, null, (List)null);
       } else {
         Issues issues = new Issues();
-        return new PreviewOutputImpl(PreviewStatus.INVALID, issues, null, null);
+        return new PreviewOutputImpl(PreviewStatus.INVALID, issues, (List)null);
       }
     }
   }

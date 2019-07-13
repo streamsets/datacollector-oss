@@ -55,6 +55,7 @@ import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.lib.security.http.RemoteSSOService;
+import com.streamsets.pipeline.api.AntennaDoctorMessage;
 import com.streamsets.pipeline.api.RawSourcePreviewer;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageType;
@@ -157,26 +158,22 @@ public class SyncPreviewer implements Previewer {
       previewPipeline = buildPreviewPipeline(0, 0, null, false, true, false);
       List<Issue> stageIssues = previewPipeline.validateConfigs();
       PreviewStatus status = stageIssues.size() == 0 ? PreviewStatus.VALID : PreviewStatus.INVALID;
-      changeState(status, new PreviewOutputImpl(status, new Issues(stageIssues), null, null));
+      changeState(status, new PreviewOutputImpl(status, new Issues(stageIssues), (List)null));
     } catch (PipelineRuntimeException e) {
       //Preview Pipeline Builder validates configurations and throws PipelineRuntimeException with code CONTAINER_0165
       //for validation errors.
       if (e.getErrorCode() == ContainerError.CONTAINER_0165) {
-        changeState(PreviewStatus.INVALID, new PreviewOutputImpl(PreviewStatus.INVALID, e.getIssues(), null,
-            e.toString()));
+        changeState(PreviewStatus.INVALID, new PreviewOutputImpl(PreviewStatus.INVALID, e.getIssues(), e));
       } else {
-        changeState(PreviewStatus.VALIDATION_ERROR, new PreviewOutputImpl(PreviewStatus.VALIDATION_ERROR, null, null,
-            e.toString()));
+        changeState(PreviewStatus.VALIDATION_ERROR, new PreviewOutputImpl(PreviewStatus.VALIDATION_ERROR, e));
         throw e;
       }
     } catch (PipelineStoreException e) {
-      changeState(PreviewStatus.VALIDATION_ERROR, new PreviewOutputImpl(PreviewStatus.VALIDATION_ERROR, null, null,
-          e.toString()));
+      changeState(PreviewStatus.VALIDATION_ERROR, new PreviewOutputImpl(PreviewStatus.VALIDATION_ERROR, e));
       throw e;
     } catch (Throwable e) {
       //Wrap stage exception in PipelineException
-      changeState(PreviewStatus.VALIDATION_ERROR, new PreviewOutputImpl(PreviewStatus.VALIDATION_ERROR, null, null,
-          e.toString()));
+      changeState(PreviewStatus.VALIDATION_ERROR, new PreviewOutputImpl(PreviewStatus.VALIDATION_ERROR, e));
       throw new PipelineException(PreviewError.PREVIEW_0003, e.toString(), e) ;
     } finally {
       PipelineEL.unsetConstantsInContext();
@@ -232,7 +229,7 @@ public class SyncPreviewer implements Previewer {
       previewPipeline = buildPreviewPipeline(batches, batchSize, stopStage, skipTargets, skipLifecycleEvents, testOrigin);
       PreviewPipelineOutput output = previewPipeline.run(stagesOverride);
       changeState(PreviewStatus.FINISHED, new PreviewOutputImpl(PreviewStatus.FINISHED, output.getIssues(),
-          output.getBatchesOutput(), null));
+          output.getBatchesOutput()));
     } catch (PipelineRuntimeException e) {
       if(timingOut) {
         LOG.debug("Ignoring exception during time out {}", e.toString(), e);
@@ -241,11 +238,9 @@ public class SyncPreviewer implements Previewer {
       //Preview Pipeline Builder validates configurations and throws PipelineRuntimeException with code CONTAINER_0165
       //for validation errors.
       if (e.getErrorCode() == ContainerError.CONTAINER_0165) {
-        changeState(PreviewStatus.INVALID, new PreviewOutputImpl(PreviewStatus.INVALID, e.getIssues(), null,
-            e.toString()));
+        changeState(PreviewStatus.INVALID, new PreviewOutputImpl(PreviewStatus.INVALID, e.getIssues(), e));
       } else {
-        changeState(PreviewStatus.RUN_ERROR, new PreviewOutputImpl(PreviewStatus.RUN_ERROR, e.getIssues(), null,
-            e.toString()));
+        changeState(PreviewStatus.RUN_ERROR, new PreviewOutputImpl(PreviewStatus.RUN_ERROR, e.getIssues(), e));
         throw e;
       }
     } catch (PipelineStoreException e) {
@@ -253,14 +248,14 @@ public class SyncPreviewer implements Previewer {
         LOG.debug("Ignoring exception during time out {}", e.toString(), e);
         return;
       }
-      changeState(PreviewStatus.RUN_ERROR, new PreviewOutputImpl(PreviewStatus.RUN_ERROR, null, null, e.toString()));
+      changeState(PreviewStatus.RUN_ERROR, new PreviewOutputImpl(PreviewStatus.RUN_ERROR, e));
       throw e;
     } catch (Throwable e) {
       if(timingOut) {
         LOG.debug("Ignoring exception during time out {}", e.toString(), e);
         return;
       }
-      changeState(PreviewStatus.RUN_ERROR, new PreviewOutputImpl(PreviewStatus.RUN_ERROR, null, null, e.toString()));
+      changeState(PreviewStatus.RUN_ERROR, new PreviewOutputImpl(PreviewStatus.RUN_ERROR, e));
       throw new PipelineException(PreviewError.PREVIEW_0003, e.toString(), e);
     } finally {
       if (previewPipeline != null) {
