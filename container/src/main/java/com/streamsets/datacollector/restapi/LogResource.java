@@ -149,7 +149,7 @@ public class LogResource {
       } catch (PipelineException e) {
         // To support viewing logs of pipeline controlled by Control Hub after job is stopped
         // check if job is accessible for the user (ACL check)
-        String[] strArr = pipeline.split(":");
+        String[] strArr = pipeline.split("__");
         if (strArr.length == 3 && runtimeInfo.isDPMEnabled() &&
             isJobAccessibleFromControlHub(request, strArr[1] + ":" + strArr[2])) {
           pipeline = strArr[0] + "/" + pipeline;
