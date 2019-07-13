@@ -747,7 +747,7 @@ public class ClusterRunner extends AbstractRunner {
       List<Issue> issues = pipeline.init(false);
       if (!issues.isEmpty()) {
         PipelineRuntimeException e =
-          new PipelineRuntimeException(ContainerError.CONTAINER_0800, name, issues.get(0).getMessage());
+          new PipelineRuntimeException(ContainerError.CONTAINER_0800, issues.size(), issues.get(0).getMessage());
         Map<String, Object> attributes = new HashMap<>();
         attributes.putAll(getAttributes());
         attributes.put("issues", new IssuesJson(new Issues(issues)));

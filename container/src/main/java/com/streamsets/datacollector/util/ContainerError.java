@@ -138,7 +138,7 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0792("Pipeline lifecycle event stage generated error record: {}"),
 
   //Runner
-  CONTAINER_0800("Pipeline '{}' validation error : {}"),
+  CONTAINER_0800("Can't start pipeline due {} validation error(s). First one: {}"),
   CONTAINER_0801("Thread unexpectedly interrupted"),
   CONTAINER_0802("Detected run away pipeline runners (only {} out of {} runners have finished)"),
   CONTAINER_0803("Trying to acquire pipeline runner after the pool was destroyed."),

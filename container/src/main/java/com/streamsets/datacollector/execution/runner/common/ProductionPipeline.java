@@ -135,10 +135,12 @@ public class ProductionPipeline {
           }
         } else {
           LOG.debug("Stopped due to validation error");
-          PipelineRuntimeException e = new PipelineRuntimeException(ContainerError.CONTAINER_0800, name,
-            issues.get(0).getMessage());
+          PipelineRuntimeException e = new PipelineRuntimeException(ContainerError.CONTAINER_0800, issues.size(), issues.get(0).getMessage());
           Map<String, Object> attributes = new HashMap<>();
           attributes.put("issues", new IssuesJson(new Issues(issues)));
+          attributes.put(AbstractRunner.ANTENNA_DOCTOR_MESSAGES_ATTR, issues.get(0).getAntennaDoctorMessages());
+          attributes.put(AbstractRunner.ERROR_MESSAGE_ATTR, e.getMessage());
+          attributes.put(AbstractRunner.ERROR_STACKTRACE_ATTR, ErrorMessage.toStackTrace(e));
           // We need to store the error in runningErrorMsg, so that it gets propagated to START_ERROR terminal state
           runningErrorMsg = issues.get(0).getMessage();
           stateChanged(PipelineStatus.STARTING_ERROR, runningErrorMsg, attributes);
