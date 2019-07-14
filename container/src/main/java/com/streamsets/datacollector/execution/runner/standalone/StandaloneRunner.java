@@ -73,6 +73,7 @@ import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.updatechecker.UpdateChecker;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.LogUtil;
 import com.streamsets.datacollector.util.PipelineException;
@@ -114,6 +115,12 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   public static final String STATS_NULL_TARGET = "com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget";
   public static final String STATS_DPM_DIRECTLY_TARGET =
       "com_streamsets_pipeline_stage_destination_devnull_StatsDpmDirectlyDTarget";
+  public static final String CAPTURE_SNAPSHOT_ON_START = "capture.snapshot.on.start";
+  public static final boolean CAPTURE_SNAPSHOT_ON_START_DEFAULT = true;
+  public static final String SNAPSHOT_NUM_BATCHES = "snapshot.num.batches";
+  public static final int SNAPSHOT_NUM_BATCHES_DEFAULT = 1;
+  public static final String SNAPSHOT_BATCH_SIZE = "snapshot.batch.size";
+  public static final int SNAPSHOT_BATCH_SIZE_DEFAULT = 10;
 
   private static final ImmutableList<PipelineStatus> RESET_OFFSET_DISALLOWED_STATUSES = ImmutableList.of(
       PipelineStatus.CONNECTING,
@@ -358,7 +365,16 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     PipelineState pipelineState = getState();
     if (pipelineState.getRetryAttempt() == 0 || pipelineState.getStatus() == PipelineStatus.DISCONNECTED) {
       prepareForStart(context);
-      start(context);
+      Configuration configuraton = objectGraph.get(Configuration.class);
+      LOG.info("Configuration object ::::  " + configuraton.toString());
+      if (configuraton.get(CAPTURE_SNAPSHOT_ON_START, CAPTURE_SNAPSHOT_ON_START_DEFAULT)) {
+        int numBatches = configuraton.get(SNAPSHOT_NUM_BATCHES, SNAPSHOT_NUM_BATCHES_DEFAULT);
+        int batchSize = configuraton.get(SNAPSHOT_BATCH_SIZE, SNAPSHOT_BATCH_SIZE_DEFAULT);
+        LOG.info("Capturing " + numBatches + " batches of snapshot with size " + batchSize);
+        startAndCaptureSnapshot(context, "default", "default", numBatches, batchSize);
+      } else {
+        start(context);
+      }
     } else {
       validateAndSetStateTransition(context.getUser(), PipelineStatus.RETRY, "Changing the state to RETRY on startup", null);
       isRetrying = true;
@@ -988,5 +1004,15 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   @Override
   public Runner getDelegatingRunner() {
     return null;
+  }
+
+  private static int getNumBatches() {
+    String sNumBatches = System.getenv(SNAPSHOT_NUM_BATCHES);
+    return null != sNumBatches && sNumBatches.matches("\\d+") ? Integer.parseInt(sNumBatches) : 1;
+  }
+
+  private static int getBatchSize() {
+    String sBatchSize = System.getenv(SNAPSHOT_BATCH_SIZE);
+    return null != sBatchSize && sBatchSize.matches("\\d+") ? Integer.parseInt(sBatchSize) : 10;
   }
 }
