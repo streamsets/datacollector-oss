@@ -30,7 +30,8 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
     icon = "couchbase.png",
     recordsByRef = true,
     onlineHelpRefUrl = "index.html?contextID=task_cnl_dwq_h2b",
-    upgrader = CouchbaseTargetUpgrader.class
+    upgrader = CouchbaseTargetUpgrader.class,
+    upgraderDef = "upgrader/CouchbaseDTarget.yaml"
 )
 @HideConfigs({
     "config.dataFormatConfig.jsonMode",

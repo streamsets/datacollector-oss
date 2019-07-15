@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     description = "Performs lookups to enrich records",
     icon = "couchbase.png",
     privateClassLoader = true,
+    upgraderDef = "upgrader/CouchbaseDProcessor.yaml",
     onlineHelpRefUrl = "index.html?contextID=concept_rxk_1dq_2fb"
 )
 @HideConfigs({
