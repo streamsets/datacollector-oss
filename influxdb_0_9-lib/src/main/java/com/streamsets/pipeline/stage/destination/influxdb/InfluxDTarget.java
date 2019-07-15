@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
     label = "InfluxDB",
     description = "Writes data to InfluxDB",
     icon = "influxdb.png",
+    upgraderDef = "upgrader/InfluxDTarget.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_fgx_vcc_fv"
 )
 @ConfigGroups(value = Groups.class)
