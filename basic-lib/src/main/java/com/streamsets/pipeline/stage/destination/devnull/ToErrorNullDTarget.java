@@ -38,6 +38,7 @@ import com.streamsets.pipeline.api.StageDef;
         ExecutionMode.EMR_BATCH
     },
     flags = StageBehaviorFlags.PASSTHROUGH,
+    upgraderDef = "upgrader/ToErrorNullDTarget.yaml",
     onlineHelpRefUrl ="index.html?contextID=concept_kgc_l4y_5r"
 )
 @HideConfigs(preconditions = true, onErrorRecord = true)

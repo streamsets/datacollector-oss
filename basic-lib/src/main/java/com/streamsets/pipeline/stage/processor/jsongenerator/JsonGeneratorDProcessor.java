@@ -31,6 +31,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     description = "Serializes a field to a string field in JSON format",
     icon = "json.png",
     flags = StageBehaviorFlags.PURE_FUNCTION,
+    upgraderDef = "upgrader/JsonGeneratorDProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_kgk_3w1_h1b"
 )
 @ConfigGroups(Groups.class)

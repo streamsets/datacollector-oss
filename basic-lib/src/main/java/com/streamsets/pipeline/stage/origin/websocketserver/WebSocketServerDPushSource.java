@@ -39,7 +39,8 @@ import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
     recordsByRef = true,
     onlineHelpRefUrl ="index.html?contextID=task_mzv_cvc_3z",
     sendsResponse = true,
-    upgrader = WebSocketServerPushSourceUpgrader.class
+    upgrader = WebSocketServerPushSourceUpgrader.class,
+    upgraderDef = "upgrader/WebSocketServerDPushSource.yaml"
 )
 @ConfigGroups(WebSocketOriginGroups.class)
 @HideConfigs(value = {

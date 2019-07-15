@@ -30,6 +30,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     // from https://www.iconfinder.com/icons/1243687/guide_map_navigation_icon
     icon="iconfinder_thefreeforty_map_1243687.png",
     upgrader = FieldMapperProcessorUpgrader.class,
+    upgraderDef = "upgrader/FieldMapperDProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_f2j_g2q_xgb",
     execution = {
         ExecutionMode.STANDALONE,

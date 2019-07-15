@@ -41,6 +41,7 @@ import java.util.Random;
   description = "Generates records with the specified field names, using Long data. For development only.",
   execution = {ExecutionMode.STANDALONE, ExecutionMode.EDGE},
   icon = "dev.png",
+  upgraderDef = "upgrader/RandomSource.yaml",
   onlineHelpRefUrl ="index.html#datacollector/UserGuide/Pipeline_Design/DevStages.html"
 )
 public class RandomSource extends BaseSource {

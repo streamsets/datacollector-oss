@@ -30,6 +30,7 @@ import com.streamsets.pipeline.stage.destination.http.HttpClientTargetConfig;
     description = "Writes data to Splunk via its HTTP Collector.",
     icon = "splunk.png",
     recordsByRef = true,
+    upgraderDef = "upgrader/SplunkDTarget.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_rc1_wqn_xdb",
     execution = {
         ExecutionMode.STANDALONE,

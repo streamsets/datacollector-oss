@@ -33,6 +33,7 @@ import com.streamsets.pipeline.api.impl.Utils;
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     upgrader = TCPServerSourceUpgrader.class,
+    upgraderDef = "upgrader/TCPServerDSource.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_w2y_yb1_4z"
 )
 

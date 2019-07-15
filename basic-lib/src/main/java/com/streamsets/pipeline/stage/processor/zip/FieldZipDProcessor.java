@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     description = "Zips two lists together into one.",
     icon = "zipper.png",
     upgrader = FieldZipProcessorUpgrader.class,
+    upgraderDef = "upgrader/FieldZipDProcessor.yaml",
     flags = StageBehaviorFlags.PURE_FUNCTION,
     onlineHelpRefUrl ="index.html?contextID=task_nqj_51k_yx"
 )

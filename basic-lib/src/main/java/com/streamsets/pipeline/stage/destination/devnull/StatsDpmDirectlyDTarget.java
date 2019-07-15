@@ -35,6 +35,7 @@ import com.streamsets.pipeline.api.StatsAggregatorStage;
         ExecutionMode.EMR_BATCH,
         ExecutionMode.EDGE
     },
+    upgraderDef = "upgrader/StatsDpmDirectlyDTarget.yaml",
     onlineHelpRefUrl = ""
 )
 @HideConfigs(preconditions = true, onErrorRecord = true)

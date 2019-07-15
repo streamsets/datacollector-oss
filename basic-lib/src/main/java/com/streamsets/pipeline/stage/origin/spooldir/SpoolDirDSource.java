@@ -41,6 +41,7 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
     execution = {ExecutionMode.STANDALONE, ExecutionMode.EDGE},
     recordsByRef = true,
     upgrader = SpoolDirSourceUpgrader.class,
+    upgraderDef = "upgrader/SpoolDirDSource.yaml",
     resetOffset = true,
     producesEvents = true,
     eventDefs = {NewFileEvent.class, FinishedFileEvent.class, NoMoreDataEvent.class},

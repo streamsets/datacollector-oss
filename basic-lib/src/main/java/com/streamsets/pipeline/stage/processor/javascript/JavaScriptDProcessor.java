@@ -45,6 +45,7 @@ import java.util.Map;
         ExecutionMode.EMR_BATCH
     },
     upgrader = JavaScriptProcessorUpgrader.class,
+    upgraderDef = "upgrader/JavaScriptDProcessor.yaml",
     producesEvents = true,
     flags = StageBehaviorFlags.USER_CODE_INJECTION,
     onlineHelpRefUrl ="index.html?contextID=task_mzc_1by_nr"

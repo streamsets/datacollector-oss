@@ -42,7 +42,8 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
     recordsByRef = true,
     sendsResponse = true,
     onlineHelpRefUrl ="index.html?contextID=task_upp_lgp_q2b",
-    upgrader = RestServicePushSourceUpgrader.class
+    upgrader = RestServicePushSourceUpgrader.class,
+    upgraderDef = "upgrader/RestServiceDPushSource.yaml"
 )
 @ConfigGroups(Groups.class)
 @HideConfigs(value = {

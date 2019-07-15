@@ -34,7 +34,8 @@ import com.streamsets.pipeline.lib.mqtt.MqttClientConfigBean;
     execution = {ExecutionMode.STANDALONE, ExecutionMode.EDGE},
     recordsByRef = true,
     onlineHelpRefUrl ="index.html?contextID=task_wnz_mxt_lz",
-    upgrader = MqttClientSourceUpgrader.class
+    upgrader = MqttClientSourceUpgrader.class,
+    upgraderDef = "upgrader/MqttClientDSource.yaml"
 )
 @HideConfigs({
     "subscriberConf.dataFormatConfig.jsonContent"

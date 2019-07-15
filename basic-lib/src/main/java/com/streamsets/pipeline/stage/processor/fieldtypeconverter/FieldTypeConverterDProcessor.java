@@ -36,7 +36,8 @@ import java.util.List;
     icon = "converter.png",
     onlineHelpRefUrl ="index.html?contextID=task_g23_2tq_wq",
     flags = StageBehaviorFlags.PURE_FUNCTION,
-    upgrader = FieldTypeConverterProcessorUpgrader.class
+    upgrader = FieldTypeConverterProcessorUpgrader.class,
+    upgraderDef = "upgrader/FieldTypeConverterDProcessor.yaml"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

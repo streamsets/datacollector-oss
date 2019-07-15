@@ -38,6 +38,7 @@ import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
     producesEvents = true,
     eventDefs = {NewFileEvent.class, FinishedFileEvent.class, NoMoreDataEvent.class},
     upgrader = RemoteDownloadSourceUpgrader.class,
+    upgraderDef = "upgrader/RemoteDownloadDSource.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_lfx_fzd_5v"
 )
 @HideConfigs(value = {"conf.dataFormatConfig.verifyChecksum", "conf.remoteConfig.createPathIfNotExists"})

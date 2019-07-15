@@ -33,6 +33,7 @@ import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
     label = "Named Pipe",
     description = "Sends records to a Named Pipe",
     icon="fifo.png",
+    upgraderDef = "upgrader/FifoDTarget.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_pdv_vdg_gcb"
 )
 

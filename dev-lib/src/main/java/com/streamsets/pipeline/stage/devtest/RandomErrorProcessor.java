@@ -45,6 +45,7 @@ import java.util.Random;
       ExecutionMode.EDGE
   },
   upgrader = RandomErrorProcessorUpgrader.class,
+  upgraderDef = "upgrader/RandomErrorProcessor.yaml",
   onlineHelpRefUrl ="index.html#datacollector/UserGuide/Pipeline_Design/DevStages.html"
 )
 public class RandomErrorProcessor extends SingleLaneProcessor {

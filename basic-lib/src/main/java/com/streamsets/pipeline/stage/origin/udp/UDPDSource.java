@@ -32,6 +32,7 @@ import com.streamsets.pipeline.api.impl.Utils;
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     upgrader = UDPSourceUpgrader.class,
+    upgraderDef = "upgrader/UDPDSource.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_kgn_rcv_1s"
 )
 

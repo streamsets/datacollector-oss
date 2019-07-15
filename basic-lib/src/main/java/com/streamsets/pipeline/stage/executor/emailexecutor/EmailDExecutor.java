@@ -31,6 +31,7 @@ import java.util.List;
     label="Email",
     description = "Sends emails upon receipt of specific events",
     icon="envelope.png",
+    upgraderDef = "upgrader/EmailDExecutor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_pyx_tfp_qz"
 )
 

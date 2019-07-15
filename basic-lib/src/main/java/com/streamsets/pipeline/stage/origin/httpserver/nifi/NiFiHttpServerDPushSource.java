@@ -42,6 +42,7 @@ import com.streamsets.pipeline.stage.origin.lib.OuterDataParserFormatConfig;
     icon="Apache-nifi-logo.png",
     execution = {ExecutionMode.STANDALONE},
     recordsByRef = true,
+    upgraderDef = "upgrader/NiFiHttpServerDPushSource.yaml",
     onlineHelpRefUrl ="" //TODO
 )
 @ConfigGroups(Groups.class)

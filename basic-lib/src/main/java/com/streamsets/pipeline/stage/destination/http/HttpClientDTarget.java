@@ -39,7 +39,8 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
         ExecutionMode.EMR_BATCH
 
     },
-    upgrader = HttpClientTargetUpgrader.class
+    upgrader = HttpClientTargetUpgrader.class,
+    upgraderDef = "upgrader/HttpClientDTarget.yaml"
 )
 @ConfigGroups(HttpClientTargetGroups.class)
 @GenerateResourceBundle

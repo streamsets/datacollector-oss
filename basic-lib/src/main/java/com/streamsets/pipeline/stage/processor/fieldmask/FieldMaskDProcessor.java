@@ -32,6 +32,7 @@ import java.util.List;
     description = "Masks field values",
     icon = "mask.png",
     flags = StageBehaviorFlags.PURE_FUNCTION,
+    upgraderDef = "upgrader/FieldMaskDProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_vgg_z44_wq"
 )
 @ConfigGroups(Groups.class)

@@ -39,7 +39,8 @@ import com.streamsets.pipeline.config.DataFormat;
 
     },
     onlineHelpRefUrl ="index.html?contextID=concept_kgc_l4y_5r",
-    upgrader = MqttClientTargetUpgrader.class
+    upgrader = MqttClientTargetUpgrader.class,
+    upgraderDef = "upgrader/ToErrorMqttClientDTarget.yaml"
 )
 @HideConfigs(
     preconditions = true,

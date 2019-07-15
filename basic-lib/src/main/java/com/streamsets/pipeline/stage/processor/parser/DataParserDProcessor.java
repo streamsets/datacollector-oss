@@ -38,6 +38,7 @@ import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
       }
     ),
     upgrader = DataParserUpgrader.class,
+    upgraderDef = "upgrader/DataParserDProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_cx3_2yk_r1b"
 )
 @ConfigGroups(Groups.class)

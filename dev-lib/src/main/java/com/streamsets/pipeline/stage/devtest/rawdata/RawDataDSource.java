@@ -34,6 +34,7 @@ import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
     execution = {ExecutionMode.STANDALONE, ExecutionMode.EDGE},
     icon = "dev.png",
     upgrader = RawDataSourceUpgrader.class,
+    upgraderDef = "upgrader/RawDataDSource.yaml",
     producesEvents = true,
     onlineHelpRefUrl ="index.html#datacollector/UserGuide/Pipeline_Design/DevStages.html",
     services = @ServiceDependency(

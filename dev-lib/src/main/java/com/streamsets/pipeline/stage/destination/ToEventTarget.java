@@ -42,6 +42,7 @@ import java.util.Iterator;
     },
     icon="dev.png",
     producesEvents = true,
+    upgraderDef = "upgrader/ToEventTarget.yaml",
     onlineHelpRefUrl ="index.html#datacollector/UserGuide/Pipeline_Design/DevStages.html"
 )
 public class ToEventTarget extends BaseTarget {

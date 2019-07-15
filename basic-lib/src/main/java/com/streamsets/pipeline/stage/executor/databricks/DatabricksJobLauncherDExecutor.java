@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DExecutor;
     label = "Databricks Job Launcher",
     description = "Execute Jobs on Databricks Cloud",
     icon = "spark-logo-hd.png",
+    upgraderDef = "upgrader/DatabricksJobLauncherDExecutor.yaml",
     onlineHelpRefUrl ="",
     producesEvents = true
 )

@@ -34,6 +34,7 @@ import java.util.List;
     icon="laneSelector.png",
     outputStreams = StageDef.VariableOutputStreams.class,
     outputStreamsDrivenByConfig = "routerLaneConfigs",
+    upgraderDef = "upgrader/HttpRouterDProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_ny1_rrk_x2b",
     execution = {
         ExecutionMode.STANDALONE,

@@ -30,7 +30,8 @@ import com.streamsets.pipeline.api.StageDef;
     description = "",
     icon = "",
     onlineHelpRefUrl ="index.html?contextID=concept_kgc_l4y_5r",
-    upgrader = SdcIpcTargetUpgrader.class
+    upgrader = SdcIpcTargetUpgrader.class,
+    upgraderDef = "upgrader/ToErrorSdcIpcDTarget.yaml"
 )
 @HideConfigs(
     preconditions = true,

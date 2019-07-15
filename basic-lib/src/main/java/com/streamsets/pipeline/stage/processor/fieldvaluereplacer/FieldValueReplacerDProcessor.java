@@ -37,7 +37,8 @@ import java.util.List;
     icon="replacer.png",
     onlineHelpRefUrl ="index.html?contextID=task_ihq_ymf_zq",
     flags = StageBehaviorFlags.PURE_FUNCTION,
-    upgrader = FieldValueReplacerUpgrader.class
+    upgrader = FieldValueReplacerUpgrader.class,
+    upgraderDef = "upgrader/FieldValueReplacerDProcessor.yaml"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

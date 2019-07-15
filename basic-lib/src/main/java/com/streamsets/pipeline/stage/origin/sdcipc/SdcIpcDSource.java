@@ -31,7 +31,8 @@ import com.streamsets.pipeline.api.base.configurablestage.DSourceOffsetCommitter
     description = "Receives records via SDC RPC from a Data Collector pipeline that uses an SDC RPC destination",
     icon="sdcipc.png",
     onlineHelpRefUrl ="index.html?contextID=task_lxh_1w2_ct",
-    upgrader = SdcIpcSourceUpgrader.class
+    upgrader = SdcIpcSourceUpgrader.class,
+    upgraderDef = "upgrader/SdcIpcDSource.yaml"
 )
 @ConfigGroups(Groups.class)
 @HideConfigs({

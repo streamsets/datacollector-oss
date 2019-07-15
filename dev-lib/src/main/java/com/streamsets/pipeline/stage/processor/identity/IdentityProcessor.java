@@ -36,6 +36,7 @@ import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
         ExecutionMode.EMR_BATCH,
         ExecutionMode.EDGE
     },
+    upgraderDef = "upgrader/IdentityProcessor.yaml",
     onlineHelpRefUrl ="index.html#datacollector/UserGuide/Pipeline_Design/DevStages.html"
 )
 public class IdentityProcessor extends SingleLaneRecordProcessor {

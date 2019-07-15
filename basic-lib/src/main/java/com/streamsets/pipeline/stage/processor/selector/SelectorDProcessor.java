@@ -38,6 +38,7 @@ import java.util.Map;
     outputStreams = StageDef.VariableOutputStreams.class,
     outputStreamsDrivenByConfig = "lanePredicates",
     flags = StageBehaviorFlags.PASSTHROUGH,
+    upgraderDef = "upgrader/SelectorDProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_iss_2zx_wq",
     execution = {
         ExecutionMode.STANDALONE,

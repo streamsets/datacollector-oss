@@ -35,7 +35,8 @@ import com.streamsets.pipeline.lib.websocket.WebSocketOriginGroups;
     recordsByRef = true,
     onlineHelpRefUrl ="index.html?contextID=task_u4n_rzk_fbb",
     sendsResponse = true,
-    upgrader = WebSocketClientSourceUpgrader.class
+    upgrader = WebSocketClientSourceUpgrader.class,
+    upgraderDef = "upgrader/WebSocketClientDSource.yaml"
 )
 @HideConfigs({
     "conf.dataFormatConfig.jsonContent",

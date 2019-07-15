@@ -30,6 +30,7 @@ import com.streamsets.pipeline.stage.processor.fieldreplacer.config.ReplacerConf
     description = "Replaces field values.",
     icon="replacer.png",
     flags = StageBehaviorFlags.PURE_FUNCTION,
+    upgraderDef = "upgrader/FieldReplacerDProcessor.yaml",
     onlineHelpRefUrl = "index.html?contextID=task_fk5_kd3_4cb"
 )
 @ConfigGroups(Groups.class)

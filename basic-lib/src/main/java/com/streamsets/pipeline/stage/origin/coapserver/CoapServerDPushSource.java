@@ -36,6 +36,7 @@ import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
     icon="coap_multithreaded.png",
     execution = {ExecutionMode.STANDALONE},
     recordsByRef = true,
+    upgraderDef = "upgrader/CoapServerDPushSource.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_hsb_l3n_sz"
 )
 @ConfigGroups(Groups.class)

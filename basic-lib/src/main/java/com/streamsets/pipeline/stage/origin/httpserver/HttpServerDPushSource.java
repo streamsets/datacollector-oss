@@ -40,7 +40,8 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
     execution = {ExecutionMode.STANDALONE, ExecutionMode.EDGE},
     recordsByRef = true,
     onlineHelpRefUrl ="index.html?contextID=task_pgw_b3b_4y",
-    upgrader = HttpServerPushSourceUpgrader.class
+    upgrader = HttpServerPushSourceUpgrader.class,
+    upgraderDef = "upgrader/HttpServerDPushSource.yaml"
 )
 @ConfigGroups(Groups.class)
 @HideConfigs(value = {

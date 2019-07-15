@@ -35,7 +35,8 @@ import java.util.Arrays;
     description = "Writes pipeline Statistic records to another pipeline over SDC RPC",
     icon="sdcipc.png",
     onlineHelpRefUrl = "",
-    upgrader = StatsSdcIpcTargetUpgrader.class
+    upgrader = StatsSdcIpcTargetUpgrader.class,
+    upgraderDef = "upgrader/StatsSdcIpcDTarget.yaml"
 )
 @ConfigGroups(Groups.class)
 @StatsAggregatorStage

@@ -34,7 +34,8 @@ import com.streamsets.pipeline.stage.origin.sdcipc.Configs;
     execution = ExecutionMode.STANDALONE,
     icon = "dev.png",
     onlineHelpRefUrl ="index.html#datacollector/UserGuide/Pipeline_Design/DevStages.html",
-    upgrader = SdcIpcWithDiskBufferSourceUpgrader.class
+    upgrader = SdcIpcWithDiskBufferSourceUpgrader.class,
+    upgraderDef = "upgrader/SdcIpcWithDiskBufferDSource.yaml"
 )
 @ConfigGroups(Groups.class)
 @HideConfigs({

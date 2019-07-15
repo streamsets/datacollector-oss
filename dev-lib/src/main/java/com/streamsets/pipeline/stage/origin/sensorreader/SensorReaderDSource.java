@@ -30,6 +30,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DSource;
   description = "Sensor Reader. For development only.",
   execution = ExecutionMode.EDGE,
   icon = "sensor.png",
+    upgraderDef = "upgrader/SensorReaderDSource.yaml",
   onlineHelpRefUrl = "index.html?contextID=concept_czx_ktn_ht"
 )
 @ConfigGroups(Groups.class)

@@ -37,6 +37,7 @@ import java.util.List;
     outputStreams = OutputStreams.class,
     execution = ExecutionMode.STANDALONE,
     flags = StageBehaviorFlags.PASSTHROUGH,
+    upgraderDef = "upgrader/DeDupDProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_ikr_c2f_zq"
 )
 @ConfigGroups(Groups.class)

@@ -33,6 +33,7 @@ import com.streamsets.pipeline.api.impl.Utils;
     icon = "udp.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
+    upgraderDef = "upgrader/MultithreadedUDPDSource.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_g2k_v5f_5bb"
 )
 

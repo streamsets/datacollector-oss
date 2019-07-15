@@ -32,6 +32,7 @@ import com.streamsets.pipeline.lib.http.Groups;
     icon = "httpclient.png",
     recordsByRef = true,
     upgrader = HttpProcessorUpgrader.class,
+    upgraderDef = "upgrader/HttpDProcessor.yaml",
     execution = {
         ExecutionMode.STANDALONE,
         ExecutionMode.CLUSTER_BATCH,

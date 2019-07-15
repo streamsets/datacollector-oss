@@ -32,7 +32,8 @@ import java.util.List;
     description = "IP address geolocation using a Maxmind GeoIP2 database file",
     icon="globe.png",
     onlineHelpRefUrl ="index.html?contextID=task_wpz_nhs_ns",
-    upgrader = GeolocationProcessorUpgrader.class
+    upgrader = GeolocationProcessorUpgrader.class,
+    upgraderDef = "upgrader/GeolocationDProcessor.yaml"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

@@ -44,6 +44,7 @@ import java.util.Iterator;
 
     },
     flags = StageBehaviorFlags.PASSTHROUGH,
+    upgraderDef = "upgrader/DelayProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_jh5_qxf_wbb"
 )
 public class DelayProcessor extends SingleLaneRecordProcessor {

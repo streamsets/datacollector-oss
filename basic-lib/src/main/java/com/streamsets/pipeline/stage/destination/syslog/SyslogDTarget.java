@@ -33,6 +33,7 @@ import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorServic
     recordsByRef = true,
     onlineHelpRefUrl = "index.html?contextID=task_bbc_pt5_w2b",
     upgrader = SyslogTargetUpgrader.class,
+    upgraderDef = "upgrader/SyslogDTarget.yaml",
     services = @ServiceDependency(
         service = DataFormatGeneratorService.class,
         configuration = {

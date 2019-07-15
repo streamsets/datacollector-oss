@@ -31,7 +31,8 @@ import com.streamsets.pipeline.api.base.configurablestage.DSource;
     execution = {ExecutionMode.EDGE},
     icon = "metrics.png",
     onlineHelpRefUrl ="", //TODO: Update help URL
-    upgrader = SystemMetricsUpgrader.class
+    upgrader = SystemMetricsUpgrader.class,
+    upgraderDef = "upgrader/SystemMetricsDSource.yaml"
 )
 @ConfigGroups(Groups.class)
 public class SystemMetricsDSource extends DSource {

@@ -31,6 +31,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DSource;
     execution = {ExecutionMode.EDGE},
     icon = "grpc.png",
     beta = true,
+    upgraderDef = "upgrader/GrpcClientDSource.yaml",
     onlineHelpRefUrl = "index.html?contextID=task_dhb_d1t_yfb"
 )
 @ConfigGroups(Groups.class)

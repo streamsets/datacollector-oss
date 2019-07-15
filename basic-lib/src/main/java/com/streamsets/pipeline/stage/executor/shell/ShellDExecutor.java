@@ -29,6 +29,7 @@ import com.streamsets.pipeline.stage.executor.shell.config.ShellConfig;
     label = "Shell",
     description = "Executor allowing execution of a custom shell script.",
     icon = "shell.png",
+    upgraderDef = "upgrader/ShellDExecutor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_kl1_kfy_pz"
 )
 @ConfigGroups(Groups.class)

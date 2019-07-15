@@ -31,6 +31,7 @@ import com.streamsets.pipeline.stage.executor.finishpipeline.config.PipelineFini
     description = "Forces pipeline to transition to Finished after receiving an event.",
     icon = "finisher.png",
     flags = StageBehaviorFlags.PASSTHROUGH,
+    upgraderDef = "upgrader/PipelineFinisherDExecutor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_lrm_pws_3z"
 )
 @ConfigGroups(Groups.class)

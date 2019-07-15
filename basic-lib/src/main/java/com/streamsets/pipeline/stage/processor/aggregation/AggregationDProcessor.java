@@ -31,7 +31,8 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     producesEvents = true,
     onlineHelpRefUrl ="index.html?contextID=task_bd3_vvm_5bb",
     flags = StageBehaviorFlags.PASSTHROUGH,
-    upgrader = AggregationProcessorUpgrader.class
+    upgrader = AggregationProcessorUpgrader.class,
+    upgraderDef = "upgrader/AggregationDProcessor.yaml"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

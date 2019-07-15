@@ -67,6 +67,7 @@ import java.util.concurrent.Future;
     icon= "dev.png",
     producesEvents = true,
     upgrader = RandomDataGeneratorSourceUpgrader.class,
+    upgraderDef = "upgrader/RandomDataGeneratorSource.yaml",
     onlineHelpRefUrl ="index.html#datacollector/UserGuide/Pipeline_Design/DevStages.html"
 )
 @ConfigGroups(value = RandomDataGeneratorGroups.class)

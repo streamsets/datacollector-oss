@@ -31,6 +31,7 @@ import com.streamsets.pipeline.stage.processor.fieldorder.config.OrderConfigBean
   description = "Order MAP or LIST_MAP fields into LIST_MAP or LIST.",
   icon = "order.png",
   flags = StageBehaviorFlags.PURE_FUNCTION,
+    upgraderDef = "upgrader/FieldOrderDProcessor.yaml",
   onlineHelpRefUrl = "index.html?contextID=task_myf_wfv_vy"
 )
 @ConfigGroups(Groups.class)

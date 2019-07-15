@@ -38,6 +38,7 @@ import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorServic
       @ServiceConfiguration(name = "displayFormats", value = "AVRO,BINARY,DELIMITED,JSON,PROTOBUF,TEXT,SDC_JSON,XML")
     }
   ),
+  upgraderDef = "upgrader/DataGeneratorDProcessor.yaml",
   onlineHelpRefUrl = "index.html?contextID=task_aw1_hq4_3fb"
 )
 @ConfigGroups(Groups.class)

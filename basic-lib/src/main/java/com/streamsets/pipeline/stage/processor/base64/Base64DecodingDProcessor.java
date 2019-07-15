@@ -30,6 +30,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     icon = "base64decoder.png",
     description = "Decodes a Base64 encoded Byte Array field",
     flags = StageBehaviorFlags.PURE_FUNCTION,
+    upgraderDef = "upgrader/Base64DecodingDProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_pnn_5py_kv"
 )
 @ConfigGroups(Groups.class)

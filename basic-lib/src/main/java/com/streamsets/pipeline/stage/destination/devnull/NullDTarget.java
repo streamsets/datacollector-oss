@@ -37,6 +37,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
         ExecutionMode.EMR_BATCH
     },
     flags = StageBehaviorFlags.PASSTHROUGH,
+    upgraderDef = "upgrader/NullDTarget.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_ad4_qyl_zq"
 )
 @HideConfigs(preconditions = true, onErrorRecord = true)

@@ -33,6 +33,7 @@ import java.util.List;
     description="Performs calculations on a field-by-field basis",
     icon="expression.png",
     upgrader = ExpressionProcessorUpgrader.class,
+    upgraderDef = "upgrader/ExpressionDProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_x2h_tv4_yq",
     execution = {
         ExecutionMode.STANDALONE,

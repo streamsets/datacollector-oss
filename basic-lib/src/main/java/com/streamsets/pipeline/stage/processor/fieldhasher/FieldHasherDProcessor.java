@@ -33,6 +33,7 @@ import com.streamsets.pipeline.config.OnStagePreConditionFailureChooserValues;
     description = "Uses an algorithm to hash field values",
     icon="hash.png",
     upgrader = FieldHasherProcessorUpgrader.class,
+    upgraderDef = "upgrader/FieldHasherDProcessor.yaml",
     flags = StageBehaviorFlags.PURE_FUNCTION,
     onlineHelpRefUrl ="index.html?contextID=task_xjd_dlk_wq"
 )

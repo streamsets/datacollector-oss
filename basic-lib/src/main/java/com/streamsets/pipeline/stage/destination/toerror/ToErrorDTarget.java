@@ -37,6 +37,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
     },
     icon="toerror.png",
     flags = StageBehaviorFlags.PURE_FUNCTION,
+    upgraderDef = "upgrader/ToErrorDTarget.yaml",
     onlineHelpRefUrl ="index.html#datacollector/UserGuide/Destinations/ToError.html"
 )
 @HideConfigs(preconditions = true, onErrorRecord = true)

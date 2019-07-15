@@ -33,6 +33,7 @@ import java.util.List;
     description = "Rename fields",
     icon="edit.png",
     upgrader = FieldRenamerProcessorUpgrader.class,
+    upgraderDef = "upgrader/FieldRenamerDProcessor.yaml",
     flags = StageBehaviorFlags.PURE_FUNCTION,
     onlineHelpRefUrl ="index.html?contextID=task_y5g_4hh_ht"
 )

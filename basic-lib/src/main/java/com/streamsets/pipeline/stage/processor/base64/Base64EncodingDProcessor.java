@@ -30,6 +30,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     icon = "base64encoder.png",
     description = "Encodes a Byte Array field into a Base64 encoded Byte Array",
     flags = StageBehaviorFlags.PURE_FUNCTION,
+    upgraderDef = "upgrader/Base64EncodingDProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_ekg_ppy_kv"
 )
 @ConfigGroups(Groups.class)

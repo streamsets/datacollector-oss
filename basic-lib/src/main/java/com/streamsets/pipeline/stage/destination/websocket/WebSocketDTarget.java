@@ -41,7 +41,8 @@ import com.streamsets.pipeline.lib.websocket.Groups;
 
     },
     onlineHelpRefUrl ="index.html?contextID=task_erb_pjn_lz",
-    upgrader = WebSocketTargetUpgrader.class
+    upgrader = WebSocketTargetUpgrader.class,
+    upgraderDef = "upgrader/WebSocketDTarget.yaml"
 )
 @ConfigGroups(Groups.class)
 @HideConfigs({

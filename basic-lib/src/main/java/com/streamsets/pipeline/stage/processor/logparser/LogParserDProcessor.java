@@ -32,6 +32,7 @@ import com.streamsets.pipeline.api.service.dataformats.log.LogParserService;
     icon="logparser.png",
     onlineHelpRefUrl ="index.html?contextID=task_jm1_b4w_fs",
     upgrader = LogParserUpgrader.class,
+    upgraderDef = "upgrader/LogParserDProcessor.yaml",
     services = @ServiceDependency(
         service = LogParserService.class
     )

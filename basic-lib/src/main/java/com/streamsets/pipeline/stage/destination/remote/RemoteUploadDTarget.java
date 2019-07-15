@@ -35,6 +35,7 @@ import com.streamsets.pipeline.lib.event.WholeFileProcessedEvent;
     resetOffset = true,
     producesEvents = true,
     eventDefs = {WholeFileProcessedEvent.class},
+    upgraderDef = "upgrader/RemoteUploadDTarget.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_jgs_4fw_pgb"
 )
 @HideConfigs(value = {

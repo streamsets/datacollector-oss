@@ -32,7 +32,8 @@ import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     onlineHelpRefUrl ="index.html?contextID=task_bqt_mx3_h1b",
-    upgrader = OpcUaClientSourceUpgrader.class
+    upgrader = OpcUaClientSourceUpgrader.class,
+    upgraderDef = "upgrader/OpcUaClientDSource.yaml"
 )
 @ConfigGroups(Groups.class)
 @HideConfigs({

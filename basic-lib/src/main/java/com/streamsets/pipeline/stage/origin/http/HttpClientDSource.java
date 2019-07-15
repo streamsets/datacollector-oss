@@ -33,6 +33,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DSource;
     resetOffset = true,
     recordsByRef = true,
     upgrader = HttpClientSourceUpgrader.class,
+    upgraderDef = "upgrader/HttpClientDSource.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_akl_rkz_5r"
 )
 @HideConfigs(value = {

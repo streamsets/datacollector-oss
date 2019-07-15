@@ -31,6 +31,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DSource;
     execution = ExecutionMode.STANDALONE,
     icon = "dev.png",
     upgrader = SnapshotReplaySourceUpgrader.class,
+    upgraderDef = "upgrader/SnapshotReplayDSource.yaml",
     onlineHelpRefUrl = "index.html#Pipeline_Design/DevStages.html"
 )
 @ConfigGroups(value = SnapshotReplaySourceGroups.class)

@@ -38,6 +38,7 @@ import com.streamsets.pipeline.lib.coap.Groups;
         ExecutionMode.EMR_BATCH
     },
     recordsByRef = true,
+    upgraderDef = "upgrader/CoapClientDTarget.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_d2p_w3n_sz"
 )
 @ConfigGroups(Groups.class)

@@ -36,6 +36,7 @@ import java.util.List;
     description = "Merge fields of like types",
     icon="merge.png",
     flags = StageBehaviorFlags.PURE_FUNCTION,
+    upgraderDef = "upgrader/FieldMergerDProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_ghx_5vl_gt"
 )
 @ConfigGroups(Groups.class)

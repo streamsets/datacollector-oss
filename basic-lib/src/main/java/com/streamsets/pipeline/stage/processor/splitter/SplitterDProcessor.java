@@ -36,7 +36,8 @@ import java.util.List;
     icon="splitter.png",
     flags = StageBehaviorFlags.PURE_FUNCTION,
     onlineHelpRefUrl ="index.html?contextID=task_av1_5g3_yq",
-    upgrader = SplitterProcessorUpgrader.class
+    upgrader = SplitterProcessorUpgrader.class,
+    upgraderDef = "upgrader/SplitterDProcessor.yaml"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

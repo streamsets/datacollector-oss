@@ -26,6 +26,7 @@ import java.util.Map;
 @StageDef(
   version = 1,
   label = "Test stage",
+    upgraderDef = "upgrader/TSpoolDirSource.yaml",
   onlineHelpRefUrl = ""
 )
 public class TSpoolDirSource extends SpoolDirSource {

@@ -38,6 +38,7 @@ import com.streamsets.pipeline.api.StageDef;
 
     },
     flags = StageBehaviorFlags.PASSTHROUGH,
+    upgraderDef = "upgrader/StatsNullDTarget.yaml",
     onlineHelpRefUrl = ""
 )
 @HideConfigs(preconditions = true, onErrorRecord = true)

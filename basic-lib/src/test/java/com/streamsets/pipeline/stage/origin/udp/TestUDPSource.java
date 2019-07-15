@@ -36,6 +36,7 @@ public class TestUDPSource extends BaseUDPSourceTest {
   @StageDef(
     version = 1,
     label = "Test stage",
+    upgraderDef = "upgrader/TestUDPSource.yaml",
     onlineHelpRefUrl = ""
   )
   public static class TUDPSource extends UDPSource {

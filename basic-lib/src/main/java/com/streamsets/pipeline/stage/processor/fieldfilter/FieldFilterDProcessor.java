@@ -37,6 +37,7 @@ import java.util.List;
     label="Field Remover",
     description="Removes fields from a record",
     icon="filter.png",
+    upgraderDef = "upgrader/FieldFilterDProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_c1j_btr_wq",
     flags = StageBehaviorFlags.PURE_FUNCTION,
     execution = {

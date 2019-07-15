@@ -33,6 +33,7 @@ import com.streamsets.pipeline.lib.el.TimeEL;
     label = "Write to File",
     description = "Writes records to a local File System as SDC records",
     execution = ExecutionMode.STANDALONE,
+    upgraderDef = "upgrader/ToErrorLocalFSDTarget.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_e33_3v5_1r"
 )
 @HideConfigs(preconditions = true, onErrorRecord = true)
