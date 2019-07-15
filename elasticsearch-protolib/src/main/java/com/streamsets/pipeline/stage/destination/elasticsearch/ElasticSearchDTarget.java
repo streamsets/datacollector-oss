@@ -33,7 +33,8 @@ import com.streamsets.pipeline.stage.config.elasticsearch.Groups;
     description = "Upload data to an Elasticsearch cluster",
     icon = "elasticsearch.png",
     onlineHelpRefUrl ="index.html?contextID=task_uns_gtv_4r",
-    upgrader = ElasticsearchDTargetUpgrader.class
+    upgrader = ElasticsearchDTargetUpgrader.class,
+    upgraderDef = "upgrader/ElasticSearchDTarget.yaml"
 )
 @ConfigGroups(Groups.class)
 public class ElasticSearchDTarget extends DTarget {

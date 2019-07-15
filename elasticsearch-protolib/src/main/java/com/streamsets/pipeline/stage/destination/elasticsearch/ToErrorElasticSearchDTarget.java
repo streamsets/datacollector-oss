@@ -30,7 +30,8 @@ import com.streamsets.pipeline.api.StageDef;
     description = "",
     icon = "",
     onlineHelpRefUrl ="index.html?contextID=task_uns_gtv_4r",
-    upgrader = ElasticsearchDTargetUpgrader.class
+    upgrader = ElasticsearchDTargetUpgrader.class,
+    upgraderDef = "upgrader/ToErrorElasticSearchDTarget.yaml"
 )
 @HideConfigs(
     preconditions = true,
