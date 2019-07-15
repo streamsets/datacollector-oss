@@ -15,17 +15,10 @@
  */
 package com.streamsets.pipeline.stage.origin.scripting;
 
-import com.streamsets.pipeline.api.BatchContext;
-import com.streamsets.pipeline.api.EventRecord;
-import com.streamsets.pipeline.api.PushSource;
-import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.ToEventContext;
 import com.streamsets.pipeline.api.base.BasePushSource;
-import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.origin.scripting.config.ScriptSourceConfigBean;
@@ -38,15 +31,10 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import javax.script.SimpleBindings;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractScriptingSource extends BasePushSource {
-  private static final String ERROR_BINDING_NAME = "sdcError";
-  private static final String LOG_BINDING_NAME = "sdcLog";
-  private static final String PARAMS_BINDING_NAME = "sdcUserParams";
   private Logger log;
   private String scriptingEngineName;
   private String scriptConfigGroup;
@@ -59,137 +47,8 @@ public abstract class AbstractScriptingSource extends BasePushSource {
   private CompiledScript compiledScript;
   private ScriptObjectFactory scriptObjectFactory;
   private ErrorRecordHandler errorRecordHandler;
-  private Err err;
-  private SdcFunctions sdcFunc;
 
   protected ScriptEngine engine;
-
-  public class PushSourceScriptBatch {
-    private int batchSize;
-    private BatchContext batchContext;
-    private String[] allLanes;
-
-    PushSourceScriptBatch () {
-      batchContext = getContext().startBatch();
-      batchSize = 0;
-      allLanes = batchContext.getBatchMaker().getLanes().toArray(new String[0]);
-    }
-
-    public int size() {
-      return batchSize;
-    }
-
-    public boolean process(String entityName, String entityOffset) {
-      if (entityName == null) {
-        entityName = "";
-      }
-      batchSize = 0;
-      PushSource.Context context = getContext();
-      return context.processBatch(batchContext, entityName, entityOffset);
-    }
-
-    public void add(ScriptRecord scriptRecord) {
-      batchSize++;
-      Record record = getScriptObjectFactory().getRecord(scriptRecord);
-      batchContext.getBatchMaker().addRecord(record, allLanes);
-    }
-
-    // TODO: untested by Jython scripting origin
-    public void add(Collection<ScriptRecord> scriptRecords) {
-      for (ScriptRecord scriptRecord : scriptRecords) {
-        add(scriptRecord);
-      }
-    }
-
-    // a Jython list of records hits this method signature;
-    public void add(ScriptRecord[] scriptRecords) {
-      for (ScriptRecord scriptRecord : scriptRecords) {
-        add(scriptRecord);
-      }
-    }
-
-    public List<ScriptRecord> getSourceResponseRecords() {
-      List<Record> records = batchContext.getSourceResponseRecords();
-      List<ScriptRecord> scriptRecords = new ArrayList<>();
-      for (Record record : records) {
-        scriptRecords.add(getScriptObjectFactory().createScriptRecord(record));
-      }
-      return scriptRecords;
-    }
-  }
-
-  // to hide all other methods of Stage.Context
-  public class Err {
-    public void write(ScriptRecord scriptRecord, String errMsg) throws StageException {
-      errorRecordHandler.onError(new OnRecordErrorException(
-          getScriptObjectFactory().getRecord(scriptRecord),
-          Errors.SCRIPTING_04,
-          errMsg
-      ));
-    }
-  }
-
-  // This class will contain functions to expose to scripting origins
-  public class SdcFunctions {
-
-    // To access getFieldNull function through SimpleBindings
-    public Object getFieldNull(ScriptRecord scriptRecord, String fieldPath) {
-      return ScriptTypedNullObject.getFieldNull(getScriptObjectFactory().getRecord(scriptRecord), fieldPath);
-    }
-
-    /**
-     * Create record
-     * Note: Default field value is null.
-     * @param recordSourceId the unique record id for this record.
-     * @return ScriptRecord The Newly Created Record
-     */
-    public ScriptRecord createRecord(String recordSourceId) {
-      return getScriptObjectFactory().createScriptRecord(getContext().createRecord(recordSourceId));
-    }
-
-    public ScriptRecord createEvent(String type, int version) {
-      String recordSourceId = Utils.format("event:{}:{}:{}", type, version, System.currentTimeMillis());
-      PushSource.Context context = getContext();
-      EventRecord er = context.createEventRecord(type, version, recordSourceId);
-      ScriptObjectFactory sof = getScriptObjectFactory();
-      ScriptRecord sr = sof.createScriptRecord(er);
-      return sr;
-    }
-
-    public void toEvent(ScriptRecord event) throws StageException {
-      Record eventRecord = null;
-      if(event instanceof SdcScriptRecord) {
-        eventRecord = ((SdcScriptRecord) event).sdcRecord;
-      } else {
-        eventRecord = ((NativeScriptRecord) event).sdcRecord;
-      }
-
-      if(!(eventRecord instanceof EventRecord)) {
-        log.error("Can't send normal record to event stream: {}", eventRecord);
-        throw new StageException(Errors.SCRIPTING_07, eventRecord.getHeader().getSourceId());
-      }
-
-      ((ToEventContext) getContext()).toEvent((EventRecord)getScriptObjectFactory().getRecord(event));
-    }
-
-    public boolean isPreview() { return getContext().isPreview(); }
-
-    public Object createMap(boolean listMap) {
-      return getScriptObjectFactory().createMap(listMap);
-    }
-
-    public Map<String, Object> pipelineParameters() {
-      return getContext().getPipelineConstants();
-    }
-
-    public PushSourceScriptBatch createBatch() {
-      return new PushSourceScriptBatch();
-    }
-
-    public boolean isStopped() {
-      return getContext().isStopped();
-    }
-  }
 
   public AbstractScriptingSource(
       Logger log,
@@ -221,6 +80,7 @@ public abstract class AbstractScriptingSource extends BasePushSource {
 
   protected abstract ScriptObjectFactory createScriptObjectFactory(Stage.Context context);
 
+
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
     errorRecordHandler = new DefaultErrorRecordHandler((Source.Context) getContext());
@@ -250,24 +110,18 @@ public abstract class AbstractScriptingSource extends BasePushSource {
       }
     }
 
-    err = new Err();
-    sdcFunc = new SdcFunctions();
-
     return issues;
   }
 
-  private SimpleBindings createBindings(Map<String, String> lastOffsets, int maxBatchSize) {
+
+
+  protected SimpleBindings createBindings(Map<String, String> lastOffsets, int maxBatchSize) {
     SimpleBindings bindings = new SimpleBindings();
-
-    bindings.put(ERROR_BINDING_NAME, err);
-    bindings.put(PARAMS_BINDING_NAME, params);
-    bindings.put(LOG_BINDING_NAME, log);
-    bindings.put("sdcConstants.numThreads", numThreads);
-    bindings.put("sdcConstants.batchSize", Math.min(batchSize, maxBatchSize));
-    bindings.put("sdcConstants.lastOffsets", lastOffsets);
-    ScriptTypedNullObject.fillNullTypes(bindings);
-    bindings.put("sdcFunctions", sdcFunc);
-
+    ScriptingOriginBindings scriptingOriginBindings = new ScriptingOriginBindings(
+        getScriptObjectFactory(), getContext(), errorRecordHandler, params, log, numThreads,
+        Math.min(batchSize, maxBatchSize), lastOffsets
+    );
+    bindings.put("sdc", scriptingOriginBindings);
     return bindings;
   }
 
