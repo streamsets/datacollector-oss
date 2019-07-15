@@ -39,6 +39,7 @@ import com.streamsets.pipeline.lib.jdbc.UnknownTypeActionChooserValues;
     icon = "rdbms.png",
     execution = ExecutionMode.STANDALONE,
     upgrader = JdbcSourceUpgrader.class,
+    upgraderDef = "upgrader/JdbcDSource.yaml",
     recordsByRef = true,
     resetOffset = true,
     producesEvents = true,

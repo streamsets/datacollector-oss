@@ -34,6 +34,7 @@ import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
     resetOffset = true,
     producesEvents = true,
     upgrader = SQLServerCDCSourceUpgrader.class,
+    upgraderDef = "upgrader/SQLServerCDCDSource.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_nsg_fxc_v1b"
 )
 @GenerateResourceBundle

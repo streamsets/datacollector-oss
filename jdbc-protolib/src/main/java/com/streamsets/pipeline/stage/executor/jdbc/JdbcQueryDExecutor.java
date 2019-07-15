@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DExecutor;
     label = "JDBC Query",
     description = "Executes queries against JDBC compliant database",
     upgrader = JdbcQueryExecutorUpgrader.class,
+    upgraderDef = "upgrader/JdbcQueryDExecutor.yaml",
     icon = "rdbms-executor.png",
     onlineHelpRefUrl ="index.html?contextID=task_ym2_3cv_sx"
 )

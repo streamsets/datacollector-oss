@@ -40,6 +40,7 @@ import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
     producesEvents = true,
     eventDefs = {NoMoreDataEvent.class, SchemaFinishedEvent.class, TableFinishedEvent.class},
     upgrader = TableJdbcSourceUpgrader.class,
+    upgraderDef = "upgrader/TableJdbcDSource.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_kst_m4w_4y"
 )
 @ConfigGroups(value = Groups.class)

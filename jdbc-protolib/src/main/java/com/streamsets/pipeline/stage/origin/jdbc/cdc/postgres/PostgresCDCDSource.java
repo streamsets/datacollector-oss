@@ -34,7 +34,8 @@ import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.Groups;
     producesEvents = true,
     resetOffset = true,
     onlineHelpRefUrl ="index.html?contextID=task_v21_nm4_n2b",
-    upgrader = PostgresCDCSourceUpgrader.class
+    upgrader = PostgresCDCSourceUpgrader.class,
+    upgraderDef = "upgrader/PostgresCDCDSource.yaml"
 )
 @GenerateResourceBundle
 @ConfigGroups(Groups.class)

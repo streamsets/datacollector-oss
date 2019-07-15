@@ -29,6 +29,7 @@ import com.streamsets.pipeline.stage.destination.jdbc.Groups;
     label = "PostgreSQL Metadata",
     description = "Create/alter tables in PostgreSQL to match record structure",
     icon = "rdbms.png",
+    upgraderDef = "upgrader/JdbcMetadataDProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_lpv_zsh_qcb"
 )
 @ConfigGroups(Groups.class)

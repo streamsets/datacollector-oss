@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.*;
     resetOffset = true,
     recordsByRef = true,
     upgrader = MySqlSourceUpgrader.class,
+    upgraderDef = "upgrader/MysqlDSource.yaml",
     onlineHelpRefUrl = "index.html?contextID=task_qbt_kyh_xx"
 )
 @ConfigGroups(value = Groups.class)

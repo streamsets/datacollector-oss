@@ -45,6 +45,7 @@ import java.util.List;
     label = "JDBC Tee",
     description = "Write records to JDBC and enrich records with generated columns",
     upgrader = JdbcTeeUpgrader.class,
+    upgraderDef = "upgrader/JdbcTeeDProcessor.yaml",
     icon = "rdbms.png",
     onlineHelpRefUrl ="index.html?contextID=task_qpj_ncy_hw"
 )

@@ -46,6 +46,7 @@ import java.util.List;
     label = "JDBC Producer",
     description = "Insert, update, and delete data to a JDBC destination.",
     upgrader = JdbcTargetUpgrader.class,
+    upgraderDef = "upgrader/JdbcDTarget.yaml",
     icon = "rdbms.png",
     onlineHelpRefUrl ="index.html?contextID=task_cx3_lhh_htq"
 )

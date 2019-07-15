@@ -33,7 +33,8 @@ import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
     producesEvents = true,
     resetOffset = true,
     onlineHelpRefUrl ="index.html?contextID=task_ehh_mjj_tw",
-    upgrader = OracleCDCSourceUpgrader.class
+    upgrader = OracleCDCSourceUpgrader.class,
+    upgraderDef = "upgrader/OracleCDCDSource.yaml"
 )
 @GenerateResourceBundle
 @ConfigGroups(Groups.class)

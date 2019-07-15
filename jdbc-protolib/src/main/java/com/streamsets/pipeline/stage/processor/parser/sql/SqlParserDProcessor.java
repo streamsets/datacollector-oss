@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     description = "Processor that can parse SQL insert, update, and delete queries",
     icon = "sql.png",
     recordsByRef = true,
+    upgraderDef = "upgrader/SqlParserDProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_pfr_wdc_tdb"
 )
 @GenerateResourceBundle
