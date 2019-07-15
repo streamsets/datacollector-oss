@@ -39,6 +39,7 @@ import com.streamsets.pipeline.stage.origin.lib.MessageConfig;
     icon = "jms.png",
     execution = ExecutionMode.STANDALONE,
     upgrader = JmsSourceUpgrader.class,
+    upgraderDef = "upgrader/JmsDSource.yaml",
     recordsByRef = true,
     onlineHelpRefUrl ="index.html?contextID=task_zp1_4ck_dt",
       services = @ServiceDependency(

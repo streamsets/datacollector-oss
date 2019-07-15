@@ -33,6 +33,7 @@ import com.streamsets.pipeline.stage.common.CredentialsConfig;
     description = "Write data to a JMS MQ.",
     icon = "jms.png",
     upgrader = JmsTargetUpgrader.class,
+    upgraderDef = "upgrader/JmsDTarget.yaml",
     recordsByRef = true,
     onlineHelpRefUrl ="index.html?contextID=task_udk_yw5_n1b",
     services = @ServiceDependency(
