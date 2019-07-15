@@ -42,6 +42,7 @@ import static com.streamsets.pipeline.stage.processor.groovy.GroovyProcessor.GRO
     producesEvents = true,
     flags = StageBehaviorFlags.USER_CODE_INJECTION,
     upgrader = GroovyProcessorUpgrader.class,
+    upgraderDef = "upgrader/GroovyDProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_asl_bpt_gv"
 )
 @ConfigGroups(Groups.class)
