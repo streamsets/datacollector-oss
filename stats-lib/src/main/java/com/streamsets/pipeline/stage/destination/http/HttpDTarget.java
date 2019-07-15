@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.el.SdcEL;
   label = "Http Destination",
   description = "Writes data to Http destination",
   icon = "httpclient.png",
+    upgraderDef = "upgrader/HttpDTarget.yaml",
   onlineHelpRefUrl = ""
 )
 @ConfigGroups(value = Groups.class)

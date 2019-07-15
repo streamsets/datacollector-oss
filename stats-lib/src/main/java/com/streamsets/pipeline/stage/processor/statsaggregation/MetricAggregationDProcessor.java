@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.el.SdcEL;
     label="Aggregates Pipeline Metrics",
     description="",
     icon="stats.png",
+    upgraderDef = "upgrader/MetricAggregationDProcessor.yaml",
     onlineHelpRefUrl = ""
 )
 @ConfigGroups(Groups.class)
