@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
   label = "KineticaDB",
   description = "Inserts data into KineticaDB",
   icon = "kinetica.png",
+  upgraderDef = "upgrader/KineticaDTarget.yaml",
   onlineHelpRefUrl ="index.html?contextID=task_r1q_vxg_qbb"
 )
 
