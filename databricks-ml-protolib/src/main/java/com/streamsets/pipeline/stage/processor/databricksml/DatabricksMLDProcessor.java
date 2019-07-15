@@ -35,6 +35,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
         ExecutionMode.CLUSTER_MESOS_STREAMING,
         ExecutionMode.EMR_BATCH
     },
+    upgraderDef = "upgrader/DatabricksMLDProcessor.yaml",
     onlineHelpRefUrl = "index.html?contextID=task_bgq_g3r_1fb"
 )
 @GenerateResourceBundle
