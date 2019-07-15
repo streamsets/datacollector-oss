@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
     description = "Writes data to Cassandra",
     icon = "cassandra.png",
     upgrader = CassandraTargetUpgrader.class,
+    upgraderDef = "upgrader/CassandraDTarget.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_t1d_z3l_sr"
 )
 @ConfigGroups(value = Groups.class)
