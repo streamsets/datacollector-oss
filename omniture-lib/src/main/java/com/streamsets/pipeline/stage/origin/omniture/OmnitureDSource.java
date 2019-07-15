@@ -34,6 +34,7 @@ import com.streamsets.pipeline.api.credential.CredentialValue;
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     upgrader = OmnitureSourceUpgrader.class,
+    upgraderDef = "upgrader/OmnitureDSource.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_of4_wpw_1s"
 )
 
