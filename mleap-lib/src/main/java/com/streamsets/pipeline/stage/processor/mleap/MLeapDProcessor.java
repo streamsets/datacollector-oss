@@ -36,6 +36,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
         ExecutionMode.CLUSTER_MESOS_STREAMING,
         ExecutionMode.EMR_BATCH
     },
+    upgraderDef = "upgrader/MLeapDProcessor.yaml",
     onlineHelpRefUrl = "index.html?contextID=ask_k44_2ys_cfb"
 )
 @GenerateResourceBundle
