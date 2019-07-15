@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     description = "Tranform Whole File Data Format into Different Types",
     execution = {ExecutionMode.STANDALONE,},
     icon = "whole_file_transformer.png",
+    upgraderDef = "upgrader/WholeFileTransformerDProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_jzd_dz4_l2b"
 )
 @GenerateResourceBundle
