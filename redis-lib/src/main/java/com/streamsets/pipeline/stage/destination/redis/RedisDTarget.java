@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 @StageDef(
     version = 2,
     upgrader = RedisDTargetUpgrader.class,
+    upgraderDef = "upgrader/RedisDTarget.yaml",
     label = "Redis",
     description = "Writes data to Redis",
     icon = "redis.png",

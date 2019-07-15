@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     label = "Redis Lookup Processor",
     description = "Performs key-value lookups in Redis.",
     icon = "redis.png",
+    upgraderDef = "upgrader/RedisLookupDProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_gpv_npr_pv"
 )
 @ConfigGroups(Groups.class)

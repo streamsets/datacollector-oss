@@ -30,6 +30,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DSource;
     description = "Reads data from Redis",
     icon = "redis.png",
     upgrader = RedisSourceUpgrader.class,
+    upgraderDef = "upgrader/RedisDSource.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_dtz_npv_jw",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true
