@@ -31,6 +31,7 @@ import com.streamsets.pipeline.lib.waveanalytics.WaveAnalyticsConfigBean;
     icon = "analytics.png",
     recordsByRef = true,
     upgrader = WaveAnalyticsUpgrader.class,
+    upgraderDef = "upgrader/WaveAnalyticsDTarget.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_mdt_dv3_rx"
 )
 

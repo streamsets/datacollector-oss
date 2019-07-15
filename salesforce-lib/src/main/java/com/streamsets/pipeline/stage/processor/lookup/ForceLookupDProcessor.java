@@ -30,6 +30,7 @@ import com.streamsets.pipeline.lib.salesforce.ForceLookupConfigBean;
     description = "Lookup records in Salesforce to enrich records",
     icon = "salesforce.png",
     upgrader = ForceLookupProcessorUpgrader.class,
+    upgraderDef = "upgrader/ForceLookupDProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_fhn_yrk_yx"
 )
 @ConfigGroups(value = Groups.class)

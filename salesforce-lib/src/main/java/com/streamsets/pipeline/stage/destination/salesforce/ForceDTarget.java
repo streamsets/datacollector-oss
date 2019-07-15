@@ -30,6 +30,7 @@ import com.streamsets.pipeline.lib.salesforce.ForceTargetConfigBean;
     description = "Writes data to Salesforce",
     icon = "salesforce.png",
     recordsByRef = true,
+    upgraderDef = "upgrader/ForceDTarget.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_ncv_153_rx"
 )
 

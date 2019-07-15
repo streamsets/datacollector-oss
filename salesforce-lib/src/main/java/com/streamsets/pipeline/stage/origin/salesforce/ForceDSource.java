@@ -37,6 +37,7 @@ import com.streamsets.pipeline.lib.salesforce.ForceSourceConfigBean;
     producesEvents = true,
     eventDefs = {NoMoreDataEvent.class},
     upgrader = ForceSourceUpgrader.class,
+    upgraderDef = "upgrader/ForceDSource.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_h1n_bs3_rx"
 )
 @ConfigGroups(value = Groups.class)
