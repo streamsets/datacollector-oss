@@ -36,6 +36,7 @@ import com.streamsets.pipeline.stage.common.mongodb.Groups;
     eventDefs = {NoMoreDataEvent.class},
     onlineHelpRefUrl ="index.html?contextID=task_mdf_2rs_ns",
     upgrader = MongoDBSourceUpgrader.class,
+    upgraderDef = "upgrader/MongoDBDSource.yaml",
     resetOffset = true
 )
 @ConfigGroups(Groups.class)

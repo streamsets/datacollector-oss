@@ -30,7 +30,8 @@ import com.streamsets.pipeline.stage.common.mongodb.Groups;
     description = "Writes data to MongoDB",
     icon="mongodb.png",
     onlineHelpRefUrl ="index.html?contextID=task_mrc_k5n_4v",
-    upgrader = MongoDBTargetUpgrader.class
+    upgrader = MongoDBTargetUpgrader.class,
+    upgraderDef = "upgrader/MongoDBDTarget.yaml"
 )
 
 @ConfigGroups(value = Groups.class)
