@@ -39,6 +39,7 @@ import com.streamsets.pipeline.lib.eventhubs.Groups;
         ExecutionMode.EDGE,
         ExecutionMode.EMR_BATCH
     },
+    upgraderDef = "upgrader/EventHubProducerDTarget.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_in4_f5q_1bb"
 )
 @ConfigGroups(Groups.class)

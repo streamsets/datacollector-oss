@@ -31,6 +31,7 @@ import com.streamsets.pipeline.stage.destination.hdfs.metadataexecutor.HdfsActio
   description = "Changes ADLS Gen2 file metadata, such as renaming files or changing permissions",
   icon = "data-lake-metadata-executor-gen2.png",
   privateClassLoader = true,
+  upgraderDef = "upgrader/DataLakeGen2MetadataDExecutor.yaml",
   onlineHelpRefUrl ="index.html?contextID=task_uwz_m45_rhb",
   producesEvents = true,
   beta = true

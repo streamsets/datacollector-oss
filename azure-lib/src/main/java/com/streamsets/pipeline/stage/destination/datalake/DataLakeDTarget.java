@@ -30,6 +30,7 @@ import com.streamsets.pipeline.lib.event.WholeFileProcessedEvent;
     icon = "data-lake-store-gen1.png",
     producesEvents = true,
     eventDefs = {WholeFileProcessedEvent.class},
+    upgraderDef = "upgrader/DataLakeDTargetLegacy.yaml",
     onlineHelpRefUrl = "index.html?contextID=task_jfl_nf4_zx"
 )
 @ConfigGroups(value = Groups.class)

@@ -32,6 +32,7 @@ import com.streamsets.pipeline.stage.metadata.DataLakeMetadataGroups;
   description = "Changes ADLS Gen1 file metadata, such as renaming files or changing permissions",
   icon = "data-lake-metadata-executor-gen1.png",
   privateClassLoader = true,
+  upgraderDef = "upgrader/DataLakeMetadataDExecutor.yaml",
   onlineHelpRefUrl ="index.html?contextID=task_vpx_ys5_5hb",
   producesEvents = true,
   beta = true

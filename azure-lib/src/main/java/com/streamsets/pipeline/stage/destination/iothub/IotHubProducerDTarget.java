@@ -37,6 +37,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
         ExecutionMode.EDGE,
         ExecutionMode.EMR_BATCH
     },
+    upgraderDef = "upgrader/IotHubProducerDTarget.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_tqc_vkq_1bb"
 )
 @ConfigGroups(Groups.class)

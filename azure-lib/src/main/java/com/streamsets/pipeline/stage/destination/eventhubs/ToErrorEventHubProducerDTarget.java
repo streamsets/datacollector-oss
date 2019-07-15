@@ -31,6 +31,7 @@ import com.streamsets.pipeline.config.DataFormat;
     description = "",
     icon = "",
     recordsByRef = true,
+    upgraderDef = "upgrader/ToErrorEventHubProducerDTarget.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_in4_f5q_1bb"
 )
 @HideConfigs(preconditions = true, onErrorRecord = true, value = {

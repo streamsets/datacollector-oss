@@ -35,6 +35,7 @@ import com.streamsets.pipeline.lib.dirspooler.SpoolDirConfigBean;
     recordsByRef = true,
     resetOffset = true,
     producesEvents = true,
+    upgraderDef = "upgrader/DataLakeGen2DSource.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_sh1_d45_rhb",
     beta = true
 )
