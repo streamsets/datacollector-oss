@@ -35,7 +35,8 @@ import com.streamsets.pipeline.stage.origin.windows.wineventlog.WinEventLogConfi
     icon = "winlogo.png",
     onlineHelpRefUrl ="index.html?contextID=task_lmc_yjv_sbb",
     resetOffset = true,
-    upgrader = WindowsEventLogUpgrader.class
+    upgrader = WindowsEventLogUpgrader.class,
+    upgraderDef = "upgrader/WindowsEventLogDSource.yaml"
 )
 @ConfigGroups(Groups.class)
 public class WindowsEventLogDSource extends DSource {
