@@ -28,6 +28,7 @@ import com.streamsets.pipeline.config.DataFormat;
     label = "Write to Google Pub Sub",
     description = "Writes error records to Google Pub Sub",
     upgrader = PubSubTargetUpgrader.class,
+    upgraderDef = "upgrader/ToErrorPubSubDTarget.yaml",
     onlineHelpRefUrl ="index.html?contextID=concept_kgc_l4y_5r"
 )
 @HideConfigs(preconditions = true, onErrorRecord = true, value = {

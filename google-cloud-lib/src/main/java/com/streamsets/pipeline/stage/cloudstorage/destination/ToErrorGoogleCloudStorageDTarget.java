@@ -28,6 +28,7 @@ import com.streamsets.pipeline.config.DataFormat;
     version = 1,
     label = "Write to Google Cloud Storage",
     description = "Writes error records to Google Cloud Storage",
+    upgraderDef = "upgrader/ToErrorGoogleCloudStorageDTarget.yaml",
     onlineHelpRefUrl ="index.html?contextID=concept_kgc_l4y_5r"
 )
 @HideConfigs(preconditions = true, onErrorRecord = true, value = {

@@ -33,6 +33,7 @@ import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
     resetOffset = true,
     producesEvents = true,
     eventDefs = {NoMoreDataEvent.class},
+    upgraderDef = "upgrader/GoogleCloudStorageDSource.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_wzm_2rl_nbb"
 )
 @ConfigGroups(value = Groups.class)

@@ -30,6 +30,7 @@ import com.streamsets.pipeline.stage.pubsub.lib.Groups;
     description = "Publishes messages to Google Pub/Sub",
     icon = "pubsub.png",
     upgrader = PubSubTargetUpgrader.class,
+    upgraderDef = "upgrader/PubSubDTarget.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_n1k_sk1_v1b"
 )
 @ConfigGroups(value = Groups.class)

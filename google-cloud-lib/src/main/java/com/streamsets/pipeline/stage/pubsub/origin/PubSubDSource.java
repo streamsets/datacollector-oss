@@ -30,6 +30,7 @@ import com.streamsets.pipeline.stage.pubsub.lib.Groups;
     description = "Consumes messages from a Google Pub/Sub subscription",
     icon = "pubsub.png",
     execution = ExecutionMode.STANDALONE,
+    upgraderDef = "upgrader/PubSubDSource.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_jvp_f5l_r1b"
 )
 @ConfigGroups(Groups.class)

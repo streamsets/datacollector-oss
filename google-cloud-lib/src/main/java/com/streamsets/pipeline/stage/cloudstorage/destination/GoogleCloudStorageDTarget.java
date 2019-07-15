@@ -31,6 +31,7 @@ import com.streamsets.pipeline.lib.event.WholeFileProcessedEvent;
     icon = "cloud-storage-logo.png",
     producesEvents = true,
     eventDefs = {WholeFileProcessedEvent.class},
+    upgraderDef = "upgrader/GoogleCloudStorageDTarget.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_vn4_nrl_nbb"
 )
 @ConfigGroups(value = Groups.class)

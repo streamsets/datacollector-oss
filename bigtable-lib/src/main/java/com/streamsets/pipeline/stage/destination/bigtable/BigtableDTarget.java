@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
     description = "Writes data to Google Cloud Bigtable",
     icon = "bigtable.png",
     privateClassLoader = true,
+    upgraderDef = "upgrader/BigtableDTarget.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_op4_zmq_tx"
 )
 

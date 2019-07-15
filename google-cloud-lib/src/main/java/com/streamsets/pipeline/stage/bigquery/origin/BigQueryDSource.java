@@ -32,6 +32,7 @@ import com.streamsets.pipeline.stage.bigquery.lib.Groups;
     producesEvents = true,
     eventDefs = {BigQuerySuccessEvent.class},
     upgrader = BigQuerySourceUpgrader.class,
+    upgraderDef = "upgrader/BigQueryDSource.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_n5w_ykv_q1b"
 )
 @ConfigGroups(Groups.class)
