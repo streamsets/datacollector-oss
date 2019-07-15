@@ -32,6 +32,7 @@ import java.util.List;
     description = "Writes data to Aerospike",
     icon = "aerospike.png",
     upgrader = AerospikeTargetUpgrader.class,
+    upgraderDef = "upgrader/AerospikeDTarget.yaml",
     onlineHelpRefUrl = "index.html?contextID=task_j3q_tpr_4cb"
 )
 @ConfigGroups(value = Groups.class)
