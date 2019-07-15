@@ -36,6 +36,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
         ExecutionMode.CLUSTER_MESOS_STREAMING,
         ExecutionMode.EDGE
     },
+    upgraderDef = "upgrader/TensorFlowDProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_fr5_gsh_z2b"
 )
 @ConfigGroups(Groups.class)
