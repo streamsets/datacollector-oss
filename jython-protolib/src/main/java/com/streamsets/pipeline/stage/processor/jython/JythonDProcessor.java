@@ -36,6 +36,7 @@ import java.util.Map;
     description = "Processes records using Jython",
     icon = "jython.png",
     upgrader = JythonProcessorUpgrader.class,
+    upgraderDef = "upgrader/JythonDProcessor.yaml",
     producesEvents = true,
     flags = StageBehaviorFlags.USER_CODE_INJECTION,
     onlineHelpRefUrl ="index.html?contextID=task_fty_jwx_nr"
