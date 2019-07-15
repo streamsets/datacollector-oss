@@ -41,6 +41,7 @@ import java.util.function.Function;
     version = 1,
     label = "Encrypt Data",
     description = "Encrypt Fields",
+    upgraderDef = "upgrader/EncryptFieldProtector.yaml",
     onlineHelpRefUrl = "index.html?contextID=concept_w3j_24j_cgb" 
 )
 @ConfigGroups(ProtectorEncryptGroups.class)

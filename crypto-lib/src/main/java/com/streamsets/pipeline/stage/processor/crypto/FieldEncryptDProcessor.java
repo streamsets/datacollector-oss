@@ -32,6 +32,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     label = "Encrypt and Decrypt Fields",
     description = "Encrypts or decrypts field values",
     icon = "crypto.png",
+    upgraderDef = "upgrader/FieldEncryptDProcessor.yaml",
     onlineHelpRefUrl = "index.html?contextID=ask_fyd_vcj_x2b"
 )
 @ConfigGroups(ProcessorEncryptGroups.class)
