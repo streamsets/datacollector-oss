@@ -34,6 +34,7 @@ import com.streamsets.pipeline.lib.pulsar.config.PulsarGroups;
     icon = "pulsar.png",
     recordsByRef = true,
     upgrader = PulsarTargetUpgrader.class,
+    upgraderDef = "upgrader/PulsarDTarget.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_j5s_lpc_r2b",
     services = @ServiceDependency(
         service = DataFormatGeneratorService.class,
