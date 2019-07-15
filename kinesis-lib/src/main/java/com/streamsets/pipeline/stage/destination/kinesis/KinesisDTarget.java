@@ -32,6 +32,7 @@ import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
     description = "Writes data to Amazon Kinesis",
     icon = "kinesis.png",
     upgrader = KinesisTargetUpgrader.class,
+    upgraderDef = "upgrader/KinesisDTarget.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_q2j_ml4_yr",
     execution = {
         ExecutionMode.STANDALONE,

@@ -32,6 +32,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
     recordsByRef = true,
     resetOffset = true,
     upgrader = KinesisSourceUpgrader.class,
+    upgraderDef = "upgrader/KinesisDSource.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_p4b_vv4_yr"
 )
 @ConfigGroups(value = Groups.class)

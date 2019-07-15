@@ -36,6 +36,7 @@ import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
     resetOffset = true,
     onlineHelpRefUrl ="index.html?contextID=task_jxn_nnm_5bb",
     upgrader = SqsUpgrader.class,
+    upgraderDef = "upgrader/SqsDSource.yaml",
     services = @ServiceDependency(
       service = DataFormatParserService.class,
       configuration = {

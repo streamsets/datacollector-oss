@@ -32,7 +32,8 @@ import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
     label = "Write to Kinesis",
     description = "Writes records to Kinesis as SDC Records",
     onlineHelpRefUrl ="index.html?contextID=concept_kgc_l4y_5r",
-    upgrader = KinesisTargetUpgrader.class
+    upgrader = KinesisTargetUpgrader.class,
+    upgraderDef = "upgrader/ToErrorKinesisDTarget.yaml"
 )
 @HideConfigs(
     preconditions = true,

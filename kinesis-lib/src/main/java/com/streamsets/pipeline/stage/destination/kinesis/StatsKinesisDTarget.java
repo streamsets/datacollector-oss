@@ -33,6 +33,7 @@ import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
     description = "Writes Pipeline Statistic records to Kinesis",
     icon = "",
     upgrader = KinesisTargetUpgrader.class,
+    upgraderDef = "upgrader/StatsKinesisDTarget.yaml",
     onlineHelpRefUrl = ""
 )
 @ConfigGroups(value = Groups.class)

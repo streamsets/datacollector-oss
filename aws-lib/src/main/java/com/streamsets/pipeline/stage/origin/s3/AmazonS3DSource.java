@@ -38,6 +38,7 @@ import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
     producesEvents = true,
     eventDefs = {NoMoreDataEvent.class},
     upgrader = AmazonS3SourceUpgrader.class,
+    upgraderDef = "upgrader/AmazonS3DSource.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_gfj_ssv_yq",
     services = @ServiceDependency(
       service = DataFormatParserService.class,

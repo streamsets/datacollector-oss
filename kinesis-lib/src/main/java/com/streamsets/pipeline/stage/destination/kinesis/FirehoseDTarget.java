@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
     description = "Writes data to Amazon Kinesis Firehose",
     icon = "kinesisfirehose.png",
     upgrader = FirehoseTargetUpgrader.class,
+    upgraderDef = "upgrader/FirehoseDTarget.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_rpf_qbq_kv",
     execution = {
         ExecutionMode.STANDALONE,

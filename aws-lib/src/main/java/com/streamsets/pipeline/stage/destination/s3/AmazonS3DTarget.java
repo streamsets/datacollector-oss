@@ -34,6 +34,7 @@ import com.streamsets.pipeline.lib.event.WholeFileProcessedEvent;
     icon = "s3.png",
     privateClassLoader = true,
     upgrader = AmazonS3TargetUpgrader.class,
+    upgraderDef = "upgrader/AmazonS3DTarget.yaml",
     producesEvents = true,
     eventDefs = {WholeFileProcessedEvent.class},
     onlineHelpRefUrl ="index.html?contextID=task_pxb_j3r_rt",
