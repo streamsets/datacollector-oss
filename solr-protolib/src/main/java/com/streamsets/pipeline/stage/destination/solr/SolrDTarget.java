@@ -36,7 +36,8 @@ import java.util.List;
     description = "Upload data to an Apache Solr",
     icon = "solr.png",
     onlineHelpRefUrl ="index.html?contextID=task_ld1_phr_wr",
-    upgrader = SolrDTargetUpgrader.class
+    upgrader = SolrDTargetUpgrader.class,
+    upgraderDef = "upgrader/SolrDTarget.yaml"
 )
 @ConfigGroups(Groups.class)
 public class SolrDTarget extends DTarget {

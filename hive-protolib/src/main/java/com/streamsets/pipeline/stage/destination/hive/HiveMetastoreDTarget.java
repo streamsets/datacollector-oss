@@ -30,6 +30,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
     icon = "hive.png",
     privateClassLoader = true,
     upgrader = HiveMetastoreTargetUpgrader.class,
+    upgraderDef = "upgrader/HiveMetastoreDTarget.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_a4n_1ft_zv",
     producesEvents = true
 )

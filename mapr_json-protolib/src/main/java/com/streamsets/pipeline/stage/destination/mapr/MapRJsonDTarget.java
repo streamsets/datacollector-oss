@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
     icon = "mapr_db.png",
     privateClassLoader = true,
     upgrader = MapRJsonTargetUpgrader.class,
+    upgraderDef = "upgrader/MapRJsonDTarget.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_wq3_wkj_dy"
 )
 

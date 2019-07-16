@@ -40,6 +40,7 @@ import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
 
     },
   upgrader = KafkaTargetUpgrader.class,
+  upgraderDef = "upgrader/KafkaDTarget.yaml",
   onlineHelpRefUrl ="index.html?contextID=task_q4d_4yl_zq"
 )
 @ConfigGroups(value = KafkaDestinationGroups.class)

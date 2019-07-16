@@ -31,7 +31,8 @@ import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
     label = "Write to Kafka",
     description = "Writes Pipeline Statistic records to Kafka",
     onlineHelpRefUrl = "",
-    upgrader = KafkaTargetUpgrader.class)
+    upgrader = KafkaTargetUpgrader.class,
+    upgraderDef = "upgrader/StatsKafkaDTarget.yaml")
 @HideConfigs(
     preconditions = true,
     onErrorRecord = true,

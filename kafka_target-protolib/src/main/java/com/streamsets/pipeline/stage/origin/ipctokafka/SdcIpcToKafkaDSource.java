@@ -34,7 +34,8 @@ import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
     "writes them to Kafka",
   icon="sdcipctokafka.png",
   onlineHelpRefUrl ="index.html?contextID=task_il5_gtl_pw",
-  upgrader = SdcIpcToKafkaUpgrader.class
+  upgrader = SdcIpcToKafkaUpgrader.class,
+  upgraderDef = "upgrader/SdcIpcToKafkaDSource.yaml"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

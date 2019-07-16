@@ -28,6 +28,7 @@ import com.streamsets.pipeline.stage.destination.mapreduce.config.MapReduceConfi
 @StageDef(
     version = 3,
     upgrader = MapReduceExecutorUpgrader.class,
+    upgraderDef = "upgrader/MapReduceDExecutor.yaml",
     label = "MapReduce",
     description = "Starts a MapReduce job",
     icon = "mapreduce-executor.png",

@@ -43,6 +43,7 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
     resetOffset = true,
     producesEvents = true,
     eventDefs = {NewFileEvent.class, FinishedFileEvent.class, NoMoreDataEvent.class},
+    upgraderDef = "upgrader/HdfsDSource.yaml",
     onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Origins/HDFSStandalone.html#task_l3t_sdm_hdb"
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)

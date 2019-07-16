@@ -32,6 +32,7 @@ import com.streamsets.pipeline.hbase.api.common.processor.HBaseLookupConfig;
     icon = "hbase.png",
     privateClassLoader = true,
     upgrader = HBaseProcessorUpgrader.class,
+    upgraderDef = "upgrader/HBaseLookupDProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_z25_b3q_bw"
 )
 

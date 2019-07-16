@@ -31,6 +31,7 @@ import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
     label = "Write to MapR Streams",
     description = "Writes records to MapR Streams as SDC Records",
     upgrader = MapRStreamsTargetUpgrader.class,
+    upgraderDef = "upgrader/ToErrorMapRStreamsDTarget.yaml",
     onlineHelpRefUrl ="index.html?contextID=concept_kgc_l4y_5r")
 @HideConfigs(preconditions = true, onErrorRecord = true, value = {"maprStreamsTargetConfigBean.dataFormat"})
 @ErrorStage

@@ -34,7 +34,8 @@ import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
   description = "Receives data via HTTP and writes every HTTP request payload to Kafka",
   icon="httptokafka.png",
   onlineHelpRefUrl ="index.html?contextID=task_vgx_nqd_dy",
-  upgrader = HttpToKafkaSourceUpgrader.class
+  upgrader = HttpToKafkaSourceUpgrader.class,
+  upgraderDef = "upgrader/HttpToKafkaDSource.yaml"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

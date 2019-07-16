@@ -41,6 +41,7 @@ import java.util.List;
     icon = "hbase.png",
     privateClassLoader = true,
     upgrader = HBaseTargetUpgrader.class,
+    upgraderDef = "upgrader/HBaseDTarget.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_pyq_qx5_vr"
 )
 @ConfigGroups(Groups.class)

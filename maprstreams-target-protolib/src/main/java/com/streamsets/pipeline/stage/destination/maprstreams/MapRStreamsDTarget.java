@@ -30,7 +30,8 @@ import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
   label = "MapR Streams Producer",
   description = "Writes data to MapR Streams",
   icon = "mapr_es.png",
-    upgrader = MapRStreamsTargetUpgrader.class,
+  upgrader = MapRStreamsTargetUpgrader.class,
+  upgraderDef = "upgrader/MapRStreamsDTarget.yaml",
   onlineHelpRefUrl ="index.html?contextID=task_tbh_nbn_2v"
 )
 @ConfigGroups(value = MapRStreamsTargetGroups.class)

@@ -30,6 +30,7 @@ import com.streamsets.pipeline.stage.origin.hdfs.cluster.ClusterHdfsDSource;
     libJarsRegex = {"avro-\\d+.*", "avro-mapred.*"},
     icon = "mapr_xd.png",
     privateClassLoader = false,
+    upgraderDef = "upgrader/ClusterMapRFSDSource.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_h2p_mb4_lx"
 )
 @HideConfigs(value =

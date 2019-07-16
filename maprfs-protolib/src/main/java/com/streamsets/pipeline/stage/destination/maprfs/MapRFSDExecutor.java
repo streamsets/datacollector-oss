@@ -28,6 +28,7 @@ import com.streamsets.pipeline.stage.destination.hdfs.metadataexecutor.HdfsMetad
     icon = "mapr_xd.png",
     producesEvents = true,
     privateClassLoader = false,
+    upgraderDef = "upgrader/MapRFSDExecutor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_v3c_bvh_z1b"
 )
 @GenerateResourceBundle

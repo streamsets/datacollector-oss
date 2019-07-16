@@ -29,6 +29,7 @@ import com.streamsets.pipeline.stage.destination.hdfs.HdfsDTarget;
     producesEvents = true,
     privateClassLoader = false,
     upgrader = MapRFSTargetUpgrader.class,
+    upgraderDef = "upgrader/MapRFSDTarget.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_spl_1fj_fv"
 )
 @HideConfigs(

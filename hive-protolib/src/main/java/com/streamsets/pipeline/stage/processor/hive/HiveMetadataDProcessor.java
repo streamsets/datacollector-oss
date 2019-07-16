@@ -43,7 +43,8 @@ import java.util.TimeZone;
     outputStreams = HiveMetadataOutputStreams.class,
     privateClassLoader = true,
     onlineHelpRefUrl ="index.html?contextID=task_hpg_pft_zv",
-    upgrader = HiveMetadataProcessorUpgrader.class
+    upgrader = HiveMetadataProcessorUpgrader.class,
+    upgraderDef = "upgrader/HiveMetadataDProcessor.yaml"
 )
 
 @ConfigGroups(Groups.class)

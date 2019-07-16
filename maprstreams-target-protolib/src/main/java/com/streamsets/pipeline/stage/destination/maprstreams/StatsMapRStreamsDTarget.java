@@ -32,6 +32,7 @@ import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
     description = "Writes Pipeline Statistic records to MapR Streams",
     icon = "mapr_es.png",
     upgrader = MapRStreamsTargetUpgrader.class,
+    upgraderDef = "upgrader/StatsMapRStreamsDTarget.yaml",
     onlineHelpRefUrl = ""
 )
 @StatsAggregatorStage

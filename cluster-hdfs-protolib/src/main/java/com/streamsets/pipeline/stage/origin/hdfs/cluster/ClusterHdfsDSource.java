@@ -35,6 +35,7 @@ import com.streamsets.pipeline.api.impl.ClusterSource;
   icon = "hdfs.png",
   privateClassLoader = true,
   upgrader = ClusterHdfsSourceUpgrader.class,
+  upgraderDef = "upgrader/ClusterHdfsDSource.yaml",
   onlineHelpRefUrl ="index.html?contextID=task_hgl_vgn_vs"
 )
 @ConfigGroups(value = Groups.class)

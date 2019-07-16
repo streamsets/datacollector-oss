@@ -31,6 +31,7 @@ import com.streamsets.pipeline.lib.event.WholeFileProcessedEvent;
     icon = "hdfs.png",
     privateClassLoader = true,
     upgrader = HdfsTargetUpgrader.class,
+    upgraderDef = "upgrader/HdfsDTarget.yaml",
     producesEvents = true,
     eventDefs = {WholeFileProcessedEvent.class},
     onlineHelpRefUrl ="index.html?contextID=task_m2m_skm_zq"

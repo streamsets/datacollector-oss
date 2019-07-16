@@ -31,7 +31,8 @@ import com.streamsets.pipeline.api.base.configurablestage.DSource;
     resetOffset = true,
     privateClassLoader = true,
     onlineHelpRefUrl ="index.html?contextID=task_hys_s15_3y",
-    upgrader = MaprJsonSourceUpgrader.class
+    upgrader = MaprJsonSourceUpgrader.class,
+    upgraderDef = "upgrader/MapRJsonOriginDSource.yaml"
 )
 
 @ConfigGroups(Groups.class)

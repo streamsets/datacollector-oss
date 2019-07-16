@@ -37,6 +37,7 @@ import com.streamsets.pipeline.kafka.api.KafkaOriginGroups;
   icon = "kafka.png",
   recordsByRef = true,
   upgrader = KafkaSourceUpgrader.class,
+  upgraderDef = "upgrader/KafkaDSource.yaml",
   onlineHelpRefUrl ="index.html?contextID=task_npx_xgf_vq"
 )
 @RawSource(rawSourcePreviewer = KafkaRawSourcePreviewer.class, mimeType = "*/*")

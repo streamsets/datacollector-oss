@@ -30,6 +30,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DExecutor;
     description = "Run Spark Applications",
     icon = "spark-logo-hd.png",
     upgrader = SparkExecutorUpgrader.class,
+    upgraderDef = "upgrader/SparkDExecutor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_cdw_wxb_1z",
     producesEvents = true
 )

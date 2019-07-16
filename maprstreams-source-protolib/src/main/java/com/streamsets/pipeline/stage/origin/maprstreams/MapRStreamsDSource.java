@@ -40,6 +40,7 @@ import com.streamsets.pipeline.stage.origin.kafka.StandaloneKafkaSourceFactory;
     icon = "mapr_es.png",
     recordsByRef = true,
     upgrader = MapRStreamsSourceUpgrader.class,
+    upgraderDef = "upgrader/MapRStreamsDSource.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_bfz_gch_2v"
 )
 @ConfigGroups(value = MapRStreamsSourceGroups.class)

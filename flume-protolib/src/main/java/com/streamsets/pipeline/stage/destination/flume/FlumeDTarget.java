@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
   description = "Writes data to Flume Source",
   icon = "flume.png",
   upgrader = FlumeTargetUpgrader.class,
+  upgraderDef = "upgrader/FlumeDTarget.yaml",
   onlineHelpRefUrl ="index.html?contextID=task_vft_g5p_yr"
 )
 @ConfigGroups(value = Groups.class)

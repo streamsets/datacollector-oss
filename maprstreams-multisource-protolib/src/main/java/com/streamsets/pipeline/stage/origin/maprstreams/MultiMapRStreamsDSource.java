@@ -36,6 +36,7 @@ import com.streamsets.pipeline.stage.origin.multikafka.MultiKafkaRawSourcePrevie
     execution = ExecutionMode.STANDALONE,
     icon = "mapr_es.png",
     recordsByRef = true,
+    upgraderDef = "upgrader/MultiMapRStreamsDSource.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_pkc_lww_lbb"
 )
 @RawSource(rawSourcePreviewer = MultiKafkaRawSourcePreviewer.class,  mimeType = "*/*")

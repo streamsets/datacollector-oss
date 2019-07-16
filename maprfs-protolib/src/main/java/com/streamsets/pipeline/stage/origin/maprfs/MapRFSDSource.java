@@ -34,6 +34,7 @@ import com.streamsets.pipeline.stage.origin.hdfs.HdfsDSource;
     resetOffset = true,
     producesEvents = true,
     eventDefs = {NewFileEvent.class, FinishedFileEvent.class, NoMoreDataEvent.class},
+    upgraderDef = "upgrader/MapRFSDSource.yaml",
     onlineHelpRefUrl ="index.html#/datacollector/UserGuide/Origins/MapRFSStandalone.html#task_tpv_kqc_mdb"
 )
 @GenerateResourceBundle

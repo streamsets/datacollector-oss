@@ -30,7 +30,8 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
     icon = "kudu.png",
     privateClassLoader = true,
     onlineHelpRefUrl ="index.html?contextID=task_c4x_tmh_4v",
-    upgrader = KuduTargetUpgrader.class
+    upgrader = KuduTargetUpgrader.class,
+    upgraderDef = "upgrader/KuduDTarget.yaml"
 )
 @ConfigGroups(Groups.class)
 public class KuduDTarget extends DTarget {
