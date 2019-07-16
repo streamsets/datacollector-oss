@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 StreamSets Inc.
+ * Copyright 2019 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.runner;
+package com.streamsets.pipeline.sdk;
 
-import com.streamsets.pipeline.api.Record;
+import com.streamsets.datacollector.runner.SourceResponseSinkImpl;
+import com.streamsets.pipeline.api.SourceResponseSink;
 
-import java.util.ArrayList;
-import java.util.List;
+public class SinkUtils {
 
-public class SourceResponseSink {
-
-  private List<Record> responseRecords;
-
-  public SourceResponseSink() {
-    this.responseRecords = new ArrayList<>();
-  }
-
-  public void addResponse(Record record) {
-    responseRecords.add(record);
-  }
-
-  public List<Record> getResponseRecords() {
-    return responseRecords;
+  public static SourceResponseSink createSourceResponseSink() {
+    return new SourceResponseSinkImpl();
   }
 
 }

@@ -30,7 +30,7 @@ import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.runner.ErrorSink;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.runner.Pipeline;
-import com.streamsets.datacollector.runner.SourceResponseSink;
+import com.streamsets.datacollector.runner.SourceResponseSinkImpl;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
 import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
@@ -235,7 +235,7 @@ public class TestErrorRecord {
         String.class,
         String.class,
         ErrorSink.class,
-        SourceResponseSink.class
+        SourceResponseSinkImpl.class
     )).with((proxy, method, args) -> {
       ErrorSink errorSink = (ErrorSink) args[2];
       for (Map.Entry<String, List<Record>> entry : errorSink.getErrorRecords().entrySet()) {

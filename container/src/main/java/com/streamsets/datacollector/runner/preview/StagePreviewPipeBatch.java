@@ -22,10 +22,11 @@ import com.streamsets.datacollector.runner.EventSink;
 import com.streamsets.datacollector.runner.Pipe;
 import com.streamsets.datacollector.runner.PipeBatch;
 import com.streamsets.datacollector.runner.ProcessedSink;
-import com.streamsets.datacollector.runner.SourceResponseSink;
+import com.streamsets.datacollector.runner.SourceResponseSinkImpl;
 import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.runner.StagePipe;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.SourceResponseSink;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.interceptor.Interceptor;
 
@@ -49,7 +50,7 @@ public class StagePreviewPipeBatch implements PipeBatch {
     errorSink = new ErrorSink();
     eventSink = new EventSink();
     processedSink = new ProcessedSink();
-    sourceResponseSink = new SourceResponseSink();
+    sourceResponseSink = new SourceResponseSinkImpl();
   }
 
   @Override

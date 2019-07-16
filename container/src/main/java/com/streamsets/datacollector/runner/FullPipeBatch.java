@@ -20,6 +20,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.RateLimiter;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.SourceResponseSink;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageType;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -37,7 +38,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class FullPipeBatch implements PipeBatch {
   private static final Logger LOG = LoggerFactory.getLogger(FullPipeBatch.class);
@@ -70,7 +70,7 @@ public class FullPipeBatch implements PipeBatch {
     errorSink = new ErrorSink();
     eventSink = new EventSink();
     processedSink = new ProcessedSink();
-    sourceResponseSink = new SourceResponseSink();
+    sourceResponseSink = new SourceResponseSinkImpl();
   }
 
   @VisibleForTesting

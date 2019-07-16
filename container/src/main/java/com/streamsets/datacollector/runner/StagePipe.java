@@ -30,6 +30,7 @@ import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
 import com.streamsets.datacollector.util.AggregatorUtil;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.SourceResponseSink;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageType;
 import org.slf4j.Logger;

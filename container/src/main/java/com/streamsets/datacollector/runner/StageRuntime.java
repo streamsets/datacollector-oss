@@ -33,6 +33,7 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.api.SourceResponseSink;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;

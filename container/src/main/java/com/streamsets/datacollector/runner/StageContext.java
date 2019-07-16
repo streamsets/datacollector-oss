@@ -44,6 +44,7 @@ import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.api.SourceResponseSink;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageType;
@@ -177,7 +178,7 @@ public class StageContext extends ProtoContext implements
     this.services = services;
     this.isErrorStage = false;
 
-    this.sourceResponseSink = new SourceResponseSink();
+    this.sourceResponseSink = new SourceResponseSinkImpl();
 
     // sample all records while testing
     this.startTime = System.currentTimeMillis();

@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.runner;
 
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.SourceResponseSink;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.interceptor.Interceptor;
 

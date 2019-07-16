@@ -20,11 +20,11 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.runner.BatchImpl;
 import com.streamsets.datacollector.runner.ErrorSink;
-import com.streamsets.datacollector.runner.SourceResponseSink;
 import com.streamsets.datacollector.runner.StagePipe;
 import com.streamsets.datacollector.runner.StageRuntime;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.SourceResponseSink;
 import com.streamsets.pipeline.api.StageException;
 
 import java.util.ArrayList;
