@@ -376,6 +376,7 @@
             <exclude>groovy-protolib/src/main/resources/com/streamsets/pipeline/stage/processor/groovy/default_script.groovy</exclude>
             <exclude>groovy-protolib/src/main/resources/com/streamsets/pipeline/stage/processor/groovy/default_destroy_script.groovy</exclude>
             <exclude>groovy-protolib/src/main/resources/com/streamsets/pipeline/stage/origin/groovy/GeneratorOriginScript.groovy</exclude>
+            <exclude>basic-lib/src/main/resources/com/streamsets/pipeline/stage/origin/javascript/GeneratorOriginScript.js</exclude>
 
           </excludes>
           <goal>run</goal>
