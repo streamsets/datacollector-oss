@@ -61,9 +61,9 @@ public class JdbcTarget extends BaseTarget {
   protected final boolean useMultiRowOp;
   protected final int maxPrepStmtParameters;
 
-  private final String schemaNameTemplate;
-  private final String tableNameTemplate;
-  private SchemaTableClassifier schemaTableClassifier = null;
+  protected final String schemaNameTemplate;
+  protected final String tableNameTemplate;
+  protected SchemaTableClassifier schemaTableClassifier = null;
   protected final List<JdbcFieldColumnParamMapping> customMappings;
   protected final boolean caseSensitive;
   protected final boolean dynamicSchemaName;
@@ -72,16 +72,16 @@ public class JdbcTarget extends BaseTarget {
 
   protected final ChangeLogFormat changeLogFormat;
   private final HikariPoolConfigBean hikariConfigBean;
-  private final CacheCleaner cacheCleaner;
+  protected final CacheCleaner cacheCleaner;
 
-  private ErrorRecordHandler errorRecordHandler;
+  protected ErrorRecordHandler errorRecordHandler;
   protected HikariDataSource dataSource = null;
 
   protected final int defaultOpCode;
   protected final UnsupportedOperationAction unsupportedAction;
   protected final DuplicateKeyAction duplicateKeyAction;
 
-  private final JdbcUtil jdbcUtil;
+  protected final JdbcUtil jdbcUtil;
 
   class RecordWriterLoader extends CacheLoader<SchemaAndTable, JdbcRecordWriter> {
     @Override
