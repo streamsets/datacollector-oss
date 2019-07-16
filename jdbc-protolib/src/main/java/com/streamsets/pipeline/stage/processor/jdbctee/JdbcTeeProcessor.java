@@ -186,7 +186,8 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
             caseSensitive,
             issues,
             customMappings,
-            getContext()
+            getContext(),
+            false
         );
       } catch (StageException e) {
         LOG.error("Could not connect to data source", e);

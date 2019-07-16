@@ -119,7 +119,8 @@ public class JdbcMetadataProcessor extends RecordProcessor {
             false,
             issues,
             Collections.emptyList(),
-            getContext()
+            getContext(),
+            false
         );
       } catch (StageException e) {
         LOG.error("Could not connect to data source", e);

@@ -907,12 +907,14 @@ public class JdbcUtil {
       boolean caseSensitive,
       List<Stage.ConfigIssue> issues,
       List<JdbcFieldColumnParamMapping> customMappings,
-      Stage.Context context
+      Stage.Context context,
+      boolean tableAutoCreate
   ) throws SQLException, StageException {
     HikariDataSource dataSource = new HikariDataSource(createDataSourceConfig(hikariConfigBean, hikariConfigBean.autoCommit, false));
 
-    // Can only validate schema+table configuration when the user specified plain constant values
-    if (isPlainString(schemaNameTemplate) && isPlainString(tableNameTemplate)) {
+    // Can only validate schema+table configuration when the user specified plain constant values and table auto
+    // create is not set
+    if (isPlainString(schemaNameTemplate) && isPlainString(tableNameTemplate) && !tableAutoCreate) {
       try (
         Connection connection = dataSource.getConnection();
         ResultSet res = getTableMetadata(connection, schemaNameTemplate, tableNameTemplate);

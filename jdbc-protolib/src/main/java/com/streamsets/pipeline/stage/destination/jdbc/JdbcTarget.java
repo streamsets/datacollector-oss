@@ -83,6 +83,8 @@ public class JdbcTarget extends BaseTarget {
 
   protected final JdbcUtil jdbcUtil;
 
+  protected boolean tableAutoCreate;
+
   class RecordWriterLoader extends CacheLoader<SchemaAndTable, JdbcRecordWriter> {
     @Override
     public JdbcRecordWriter load(SchemaAndTable key) throws Exception {
@@ -169,6 +171,7 @@ public class JdbcTarget extends BaseTarget {
     this.dynamicTableName = jdbcUtil.isElString(tableNameTemplate);
     this.dynamicSchemaName = jdbcUtil.isElString(schemaNameTemplate);
     this.customDataSqlStateCodes = customDataSqlStateCodes;
+    this.tableAutoCreate = false;
 
     CacheBuilder cacheBuilder = CacheBuilder.newBuilder()
         .maximumSize(500)
@@ -224,7 +227,8 @@ public class JdbcTarget extends BaseTarget {
             caseSensitive,
             issues,
             customMappings,
-            context
+            context,
+            tableAutoCreate
         );
       } catch (StageException e) {
         LOG.error("Could not connect to data source", e);
