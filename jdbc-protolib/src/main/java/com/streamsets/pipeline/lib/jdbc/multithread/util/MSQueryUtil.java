@@ -233,7 +233,7 @@ public final class MSQueryUtil {
     // initial offset
     if (offsetMap.get(CDC_START_LSN) == null) {
       String condition = "";
-      if (startOffset.get(CDC_START_LSN) == null) {
+      if (startOffset.get(CDC_START_LSN) == null || startOffset.get(CDC_START_LSN).equals("0")) {
         declare_from_lsn = String.format("DECLARE @start_lsn binary(10) = sys.fn_cdc_get_min_lsn (N'%s')",
             captureInstanceName
         );
@@ -255,6 +255,12 @@ public final class MSQueryUtil {
 
       where_clause = String.format(WHERE_CLAUSE, condition);
 
+    } else if (offsetMap.get(CDC_START_LSN).equals("0")) {
+      declare_from_lsn = String.format("DECLARE @start_lsn binary(10) = sys.fn_cdc_get_min_lsn (N'%s')",
+          captureInstanceName
+      );
+      String condition = "__$start_lsn > @start_lsn and __$start_lsn <= @to_lsn";
+      where_clause = String.format(WHERE_CLAUSE, condition);
     } else {
       declare_from_lsn = String.format("DECLARE @start_lsn binary(10) = 0x%s; ",
           offsetMap.get(CDC_START_LSN));
