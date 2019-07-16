@@ -46,11 +46,7 @@
       <artifactId>streamsets-datacollector-container-common</artifactId>
       <scope>provided</scope>
     </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-hadoop-common</artifactId>
-      <scope>provided</scope>
-    </dependency>
+
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-upgrader</artifactId>

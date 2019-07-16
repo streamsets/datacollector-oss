@@ -36,7 +36,6 @@ import com.streamsets.datacollector.el.ELVariables;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.record.PathElement;
 import com.streamsets.datacollector.record.RecordImpl;
-import com.streamsets.datacollector.security.HadoopConfigConstants;
 import com.streamsets.datacollector.security.SecurityConfiguration;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
@@ -70,6 +69,10 @@ import java.util.stream.Collectors;
  */
 public class ValidationUtil {
   private static final Logger LOG = LoggerFactory.getLogger(ValidationUtil.class);
+
+  //Have to be kept in sync with hadoop-common
+  //This is to avoid adding a dependency to hadoop-common
+  public static final String IMPERSONATION_ALWAYS_CURRENT_USER = "hadoop.always.impersonate.current.user";
 
   /**
    * Resolve stage aliases (e.g. when a stage is renamed).
@@ -1068,7 +1071,7 @@ public class ValidationUtil {
         ));
       }
       final boolean alwaysImpersonate = dataCollectorConfiguration.get(
-          HadoopConfigConstants.IMPERSONATION_ALWAYS_CURRENT_USER,
+          IMPERSONATION_ALWAYS_CURRENT_USER,
           false
       );
       if (alwaysImpersonate && StringUtils.isNotBlank(config.clusterConfig.hadoopUserName)) {
@@ -1076,7 +1079,7 @@ public class ValidationUtil {
             PipelineGroups.CLUSTER.name(),
             "clusterConfig.hadoopUserName",
             ValidationError.VALIDATION_0305,
-            HadoopConfigConstants.IMPERSONATION_ALWAYS_CURRENT_USER
+            IMPERSONATION_ALWAYS_CURRENT_USER
         ));
       }
     }

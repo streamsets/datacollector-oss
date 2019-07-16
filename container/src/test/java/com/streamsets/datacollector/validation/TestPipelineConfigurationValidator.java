@@ -23,10 +23,8 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.configupgrade.PipelineConfigurationUpgrader;
-import com.streamsets.datacollector.execution.runner.common.Constants;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.MockStages;
-import com.streamsets.datacollector.security.HadoopConfigConstants;
 import com.streamsets.datacollector.security.SecurityConfiguration;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
@@ -546,7 +544,7 @@ public class TestPipelineConfigurationValidator {
           return null;
         },
         conf -> {
-          conf.set(HadoopConfigConstants.IMPERSONATION_ALWAYS_CURRENT_USER, true);
+          conf.set(ValidationUtil.IMPERSONATION_ALWAYS_CURRENT_USER, true);
           return null;
         }
     );
