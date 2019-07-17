@@ -16,6 +16,8 @@
 
 package com.streamsets.pipeline.lib.jdbc;
 
+import com.streamsets.pipeline.api.StageException;
+
 @FunctionalInterface
 public interface JdbcTableCreator {
 
@@ -25,7 +27,8 @@ public interface JdbcTableCreator {
    * @param schema the Schema name where the table belongs to
    * @param table the table name
    * @return true if table is created, false otherwise. If table already exists it should return false.
+   * @throws StageException Exception thrown when running the sql create table query another exception is thrown
    */
-  boolean create(String schema, String table);
+  boolean create(String schema, String table) throws StageException;
 
 }
