@@ -60,7 +60,16 @@ public class PipelineFragmentConfigBean implements Stage {
       label = "Test Origin",
       description = "Stage used for testing in preview mode.",
       defaultValue = PipelineConfigBean.RAW_DATA_ORIGIN,
-      displayPosition = 21
+      displayPosition = 21,
+      dependsOn = "executionMode",
+      triggeredByValue =  {
+          "STANDALONE",
+          "CLUSTER_BATCH",
+          "CLUSTER_YARN_STREAMING",
+          "CLUSTER_MESOS_STREAMING",
+          "EDGE",
+          "EMR_BATCH"
+      }
   )
   @ValueChooserModel(PipelineTestStageChooserValues.class)
   public String testOriginStage;
