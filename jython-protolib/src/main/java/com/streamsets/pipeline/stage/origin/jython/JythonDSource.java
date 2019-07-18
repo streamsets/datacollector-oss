@@ -22,7 +22,7 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
+import com.streamsets.pipeline.stage.origin.scripting.AbstractScriptingDSource;
 import com.streamsets.pipeline.stage.origin.scripting.Groups;
 import com.streamsets.pipeline.stage.origin.scripting.config.ScriptSourceConfigBean;
 
@@ -39,10 +39,7 @@ import com.streamsets.pipeline.stage.origin.scripting.config.ScriptSourceConfigB
 )
 @ConfigGroups(value = Groups.class)
 
-public class JythonDSource extends DPushSource {
-
-  @ConfigDefBean
-  public ScriptSourceConfigBean scriptConf;
+public class JythonDSource extends AbstractScriptingDSource {
 
   @ConfigDef(
     required = true,

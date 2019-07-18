@@ -16,15 +16,13 @@
 package com.streamsets.pipeline.stage.origin.groovy;
 
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
+import com.streamsets.pipeline.stage.origin.scripting.AbstractScriptingDSource;
 import com.streamsets.pipeline.stage.origin.scripting.Groups;
-import com.streamsets.pipeline.stage.origin.scripting.config.ScriptSourceConfigBean;
 
 @GenerateResourceBundle
 @StageDef(
@@ -38,17 +36,15 @@ import com.streamsets.pipeline.stage.origin.scripting.config.ScriptSourceConfigB
 )
 @ConfigGroups(value = Groups.class)
 
-public class GroovyDSource extends DPushSource {
-
-  @ConfigDefBean
-  public ScriptSourceConfigBean scriptConf;
+public class GroovyDSource extends AbstractScriptingDSource {
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.TEXT,
       defaultValueFromResource = "GeneratorOriginScript.groovy",
-      label = "Press F11 (or ESC on Mac OS X) when cursor is in the editor to "
-          + "toggle full screen editing.",
+      label = "User Script",
+      description = "Press F11 (or ESC on Mac OS X) when cursor is in the editor to "
+        + "toggle full screen editing.",
       displayPosition = 10,
       group = "SCRIPT",
       mode = ConfigDef.Mode.GROOVY)
