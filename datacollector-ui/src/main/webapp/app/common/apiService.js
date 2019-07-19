@@ -1519,6 +1519,9 @@ angular.module('dataCollectorApp.common')
           headers:  {
             'Content-Type': 'application/json; charset=utf-8',
             'X-SS-User-Auth-Token': ssoToken
+          },
+          params: {
+            executionModes: 'STANDALONE,CLUSTER_BATCH,CLUSTER_YARN_STREAMING,CLUSTER_MESOS_STREAMING,EDGE,EMR_BATCH'
           }
         });
       },
