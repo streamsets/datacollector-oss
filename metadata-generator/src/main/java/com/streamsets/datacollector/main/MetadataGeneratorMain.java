@@ -17,6 +17,7 @@ package com.streamsets.datacollector.main;
 
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.definition.ConcreteELDefinitionExtractor;
@@ -24,12 +25,15 @@ import com.streamsets.datacollector.execution.alerts.DataRuleEvaluator;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.DefinitionsJson;
+import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.PipelineDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.PipelineFragmentDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.PipelineRulesDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.StageDefinitionJson;
 import com.streamsets.datacollector.stagelibrary.ClassLoaderStageLibraryTask;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.store.PipelineStoreTask;
+import com.streamsets.datacollector.store.impl.PipelineCreator;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.SDCClassLoader;
 import io.airlift.airline.Cli;
@@ -89,7 +93,7 @@ public class MetadataGeneratorMain {
         arity = 1,
         required = true
     )
-    private String output;
+    protected String output;
 
     @NotNull
     protected SDCClassLoader getStagelibClassLoader(File stagelibJarsDir) throws MalformedURLException {
@@ -167,6 +171,10 @@ public class MetadataGeneratorMain {
 
     protected abstract DefinitionsJson getMetadata(StageLibraryTask task);
 
+    protected void generateAdditionalMetadata(RuntimeInfo runtimeInfo, StageLibraryTask task) throws IOException {
+
+    }
+
     @Override
     public void run() {
       try {
@@ -222,6 +230,7 @@ public class MetadataGeneratorMain {
           // the getMetadata extracts icons and yaml upgraders to the output directory
           ObjectMapperFactory.get().writeValue(out, getMetadata(task));
         }
+        generateAdditionalMetadata(runtimeInfo, task);
         task.stop();
       } catch (Exception ex) {
         System.err.printf("ERROR:Generating metadata: %s", ex);
@@ -276,6 +285,30 @@ public class MetadataGeneratorMain {
       definitions.setElCatalog(map);
 
       return definitions;
+    }
+
+    public ExecutorMetadataCommand() {
+    }
+
+    @Override
+    protected void generateAdditionalMetadata(RuntimeInfo runtimeInfo, StageLibraryTask task) throws IOException {
+      PipelineCreator pipelineCreator = new PipelineCreator(
+          task.getPipeline(),
+          PipelineStoreTask.SCHEMA_VERSION,
+          BUILD_INFO.getVersion(),
+          runtimeInfo.getId(),
+          () -> null,
+          () -> null
+      );
+
+      PipelineConfiguration pipelineConfiguration = pipelineCreator.create(null, null, null, null, null);
+      PipelineConfigurationJson pipelineConfigurationJson = new PipelineConfigurationJson(pipelineConfiguration);
+
+      try (PrintStream out = new PrintStream(new FileOutputStream(new File(output, "empty-pipeline.json")))) {
+        // the getMetadata extracts icons and yaml upgraders to the output directory
+        ObjectMapperFactory.get().writeValue(out, pipelineConfigurationJson);
+      }
+
     }
 
   }

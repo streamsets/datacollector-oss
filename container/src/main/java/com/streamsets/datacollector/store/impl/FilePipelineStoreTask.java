@@ -98,6 +98,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   private final PipelineStateStore pipelineStateStore;
   private final ConcurrentMap<String, RuleDefinitions> pipelineToRuleDefinitionMap;
   private StateEventListener stateEventListener;
+  private final PipelineCreator pipelineCreator;
 
   @Inject
   public FilePipelineStoreTask(RuntimeInfo runtimeInfo, StageLibraryTask stageLibrary,
@@ -110,6 +111,14 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     this.pipelineStateStore = pipelineStateStore;
     this.lockCache = lockCache;
     buildInfo = new DataCollectorBuildInfo();
+    pipelineCreator = new PipelineCreator(
+        stageLibrary.getPipeline(),
+        SCHEMA_VERSION,
+        buildInfo.getVersion(),
+        runtimeInfo.getId(),
+        () -> getDefaultStatsAggrStageInstance(),
+        () -> getDefaultTestOriginStageInstance()
+        );
   }
 
   @VisibleForTesting
@@ -198,48 +207,14 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         }
       }
 
-      Date date = new Date();
-      UUID uuid = UUID.randomUUID();
-      PipelineInfo info = new PipelineInfo(
-          pipelineId,
-          pipelineTitle,
-          description,
-          date,
-          date,
-          user,
-          user,
-          REV,
-          uuid,
-          false,
-          null,
-          buildInfo.getVersion(),
-          runtimeInfo.getId()
-      );
-
-      PipelineConfiguration pipeline = new PipelineConfiguration(
-          SCHEMA_VERSION,
-          PipelineConfigBean.VERSION,
-          pipelineId,
-          uuid,
-          pipelineTitle,
-          description,
-          stageLibrary.getPipeline().getPipelineDefaultConfigs(),
-          Collections.emptyMap(),
-          null,
-          Collections.emptyList(),
-          null,
-          getDefaultStatsAggrStageInstance(),
-          Collections.emptyList(),
-          Collections.emptyList(),
-          getDefaultTestOriginStageInstance()
-      );
+      PipelineConfiguration pipeline = pipelineCreator.create(user, pipelineId, pipelineTitle, description, new Date());
 
       if (!draft) {
         try (
             OutputStream infoFile = Files.newOutputStream(getInfoFile(pipelineId));
             OutputStream pipelineFile = Files.newOutputStream(getPipelineFile(pipelineId))
         ){
-          json.writeValue(infoFile, BeanHelper.wrapPipelineInfo(info));
+          json.writeValue(infoFile, BeanHelper.wrapPipelineInfo(pipeline.getInfo()));
           json.writeValue(pipelineFile, BeanHelper.wrapPipelineConfiguration(pipeline));
         } catch (Exception ex) {
           throw new PipelineStoreException(ContainerError.CONTAINER_0202, pipelineId, ex.toString(), ex);
@@ -249,7 +224,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         }
       }
 
-      pipeline.setPipelineInfo(info);
+      pipeline.setPipelineInfo(pipeline.getInfo());
       return pipeline;
     }
   }
