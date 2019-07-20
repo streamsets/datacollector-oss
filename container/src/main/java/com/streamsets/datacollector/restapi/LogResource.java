@@ -55,6 +55,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
@@ -150,9 +151,16 @@ public class LogResource {
         // To support viewing logs of pipeline controlled by Control Hub after job is stopped
         // check if job is accessible for the user (ACL check)
         String[] strArr = pipeline.split("__");
-        if (strArr.length == 3 && runtimeInfo.isDPMEnabled() &&
-            isJobAccessibleFromControlHub(request, strArr[1] + ":" + strArr[2])) {
-          pipeline = strArr[0] + "/" + pipeline;
+        if (strArr.length >= 3 && runtimeInfo.isDPMEnabled()) {
+          String pipelineTitle = isJobAccessibleFromControlHub(
+              request,
+              strArr[strArr.length - 2] + ":" + strArr[strArr.length - 1]
+          );
+          if (pipelineTitle != null) {
+            pipeline = pipelineTitle + "/" + pipeline;
+          } else {
+            throw e;
+          }
         } else {
           throw e;
         }
@@ -370,7 +378,8 @@ public class LogResource {
     return Response.ok().build();
   }
 
-  private boolean isJobAccessibleFromControlHub(HttpServletRequest request, String jobId) {
+  private String isJobAccessibleFromControlHub(HttpServletRequest request, String jobId) {
+    String controlHubPipelineName = null;
     String dpmBaseURL = config.get(RemoteSSOService.DPM_BASE_URL_CONFIG, "");
     if (dpmBaseURL.endsWith("/")) {
       dpmBaseURL = dpmBaseURL.substring(0, dpmBaseURL.length() - 1);
@@ -379,7 +388,6 @@ public class LogResource {
     // Get DPM user auth token from request cookie
     SSOPrincipal ssoPrincipal = (SSOPrincipal)request.getUserPrincipal();
     String userAuthToken = ssoPrincipal.getTokenStr();
-    String componentId = runtimeInfo.getId();
 
     Response response = null;
     try {
@@ -391,14 +399,17 @@ public class LogResource {
           .header(SSOConstants.X_REST_CALL, true)
           .get();
       if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-        return true;
+        Map<String, Object> job = response.readEntity(new GenericType<Map<String,Object>>() {});
+        if (job != null && job.containsKey("pipelineName")) {
+          controlHubPipelineName = (String)job.get("pipelineName");
+        }
       }
     } finally {
       if (response != null) {
         response.close();
       }
     }
-    return false;
+    return controlHubPipelineName;
   }
 
 }
