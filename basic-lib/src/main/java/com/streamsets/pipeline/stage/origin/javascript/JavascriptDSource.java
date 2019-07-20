@@ -29,8 +29,8 @@ import com.streamsets.pipeline.stage.origin.scripting.config.ScriptSourceConfigB
 @GenerateResourceBundle
 @StageDef(
     version = 1,
-    label="Javascript Scripting",
-    description = "Produces record batches using Javascript script",
+    label="JavaScript Scripting",
+    description = "Produces record batches using JavaScript script",
     execution = {ExecutionMode.STANDALONE, ExecutionMode.EDGE},
     icon= "javascript.png",
     producesEvents = true,
@@ -47,8 +47,9 @@ public class JavascriptDSource extends DPushSource {
       required = true,
       type = ConfigDef.Type.TEXT,
       defaultValueFromResource = "GeneratorOriginScript.js",
-      label = "Press F11 (or ESC on Mac OS X) when cursor is in the editor to "
-          + "toggle full screen editing.",
+      label = "User Script",
+      description = "Press F11 (or ESC on Mac OS X) when cursor is in the editor to "
+        + "toggle full screen editing.",
       displayPosition = 10,
       group = "SCRIPT",
       mode = ConfigDef.Mode.JAVASCRIPT)
