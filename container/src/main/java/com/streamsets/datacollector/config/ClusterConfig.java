@@ -37,7 +37,7 @@ public class ClusterConfig {
       }
   )
   @ValueChooserModel(SparkClusterTypeChooserValues.class)
-  public SparkClusterType clusterType;
+  public SparkClusterType clusterType = SparkClusterType.LOCAL;
 
   @ConfigDef(
       required = true,
@@ -50,7 +50,7 @@ public class ClusterConfig {
       dependsOn = "clusterType",
       triggeredByValue = "LOCAL"
   )
-  public String sparkMasterUrl;
+  public String sparkMasterUrl = "local[*]";
 
   @ConfigDef(
       required = true,
@@ -64,7 +64,7 @@ public class ClusterConfig {
       triggeredByValue = "YARN"
   )
   @ValueChooserModel(SparkDeployModeChooserValues.class)
-  public SparkDeployMode deployMode;
+  public SparkDeployMode deployMode = SparkDeployMode.CLIENT;
 
   @ConfigDef(
       required = false,
@@ -94,7 +94,7 @@ public class ClusterConfig {
           )
       }
   )
-  public String sparkAppName;
+  public String sparkAppName = "${pipeline:title()}" ;
 
   @ConfigDef(
       required = true,
@@ -107,7 +107,7 @@ public class ClusterConfig {
       dependsOn = "clusterType",
       triggeredByValue = "DATABRICKS"
   )
-  public String stagingDir;
+  public String stagingDir = "/streamsets";
 
   @ConfigDef(
       required = true,
@@ -134,7 +134,7 @@ public class ClusterConfig {
       triggeredByValue = "true"
   )
   @ValueChooserModel(KeytabSourceChooserValues.class)
-  public KeytabSource yarnKerberosKeytabSource;
+  public KeytabSource yarnKerberosKeytabSource = KeytabSource.PROPERTIES_FILE;
 
   @ConfigDef(
       required = true,
@@ -160,6 +160,6 @@ public class ClusterConfig {
       dependsOn = "yarnKerberosKeytabSource",
       triggeredByValue = "PIPELINE"
   )
-  public String yarnKerberosPrincipal;
+  public String yarnKerberosPrincipal = "name@DOMAIN";
 
 }

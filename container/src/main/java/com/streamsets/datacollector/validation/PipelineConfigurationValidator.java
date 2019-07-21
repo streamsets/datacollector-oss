@@ -20,7 +20,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
-import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
 import com.streamsets.datacollector.config.PipelineGroups;
 import com.streamsets.datacollector.config.ServiceConfiguration;
 import com.streamsets.datacollector.config.ServiceDependencyDefinition;
@@ -351,7 +350,7 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
       issues.add(IssueCreator.getPipeline().create(ValidationError.VALIDATION_0093));
     }
 
-    if (dataCollectorConfiguration != null && runtimeInfo != null) {
+    if (dataCollectorConfiguration != null && runtimeInfo != null && pipelineBean != null) {
       ValidationUtil.validateClusterConfigs(
           pipelineBean,
           dataCollectorConfiguration,

@@ -457,7 +457,7 @@ public class PipelineConfigBean implements Stage {
   public Map<String, String> sparkConfigs;
 
   @ConfigDefBean
-  public ClusterConfig clusterConfig;
+  public ClusterConfig clusterConfig = new ClusterConfig();
 
   @ConfigDefBean
   public DatabricksConfig databricksConfig;
