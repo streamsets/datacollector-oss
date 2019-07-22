@@ -62,7 +62,7 @@ public class ScriptingOriginTestUtil<T extends AbstractScriptingSource> {
       throws Exception {
     ScriptSourceConfigBean scriptConf = new ScriptSourceConfigBean();
     scriptConf.scriptRecordType = ScriptRecordType.NATIVE_OBJECTS;
-    scriptConf.params = new HashMap<>();
+    scriptConf.params = Collections.unmodifiableMap(new HashMap<>());
     scriptConf.numThreads = 1;
     scriptConf.batchSize = 1000;
     scriptingDSource.scriptConf = scriptConf;
@@ -71,7 +71,7 @@ public class ScriptingOriginTestUtil<T extends AbstractScriptingSource> {
         .addOutputLane("lane")
         .build();
     runner.runInit();
-    Map<String, String> offsets = new HashMap<>();
+    Map<String, String> offsets = Collections.unmodifiableMap(new HashMap<>());
     final List<Record> records = Collections.synchronizedList(new ArrayList<>());
     runner.runProduce(offsets, scriptConf.batchSize, new PushSourceRunner.Callback() {
         @Override
@@ -93,7 +93,7 @@ public class ScriptingOriginTestUtil<T extends AbstractScriptingSource> {
       throws Exception {
     ScriptSourceConfigBean scriptConf = new ScriptSourceConfigBean();
     scriptConf.scriptRecordType = ScriptRecordType.NATIVE_OBJECTS;
-    scriptConf.params = new HashMap<>();
+    scriptConf.params = Collections.unmodifiableMap(new HashMap<>());
     scriptConf.numThreads = 10;
     scriptConf.batchSize = 1000;
     scriptingDSource.scriptConf = scriptConf;
@@ -102,7 +102,7 @@ public class ScriptingOriginTestUtil<T extends AbstractScriptingSource> {
         .addOutputLane("lane")
         .build();
     runner.runInit();
-    Map<String, String> offsets = new HashMap<>();
+    Map<String, String> offsets = Collections.unmodifiableMap(new HashMap<>());
     final List<Record> records = Collections.synchronizedList(new ArrayList<>());
     // Each thread should run process() exactly once;
     runner.runProduce(offsets, scriptConf.batchSize, new PushSourceRunner.Callback() {
@@ -130,8 +130,9 @@ public class ScriptingOriginTestUtil<T extends AbstractScriptingSource> {
   ) throws Exception {
     ScriptSourceConfigBean scriptConf = new ScriptSourceConfigBean();
     scriptConf.scriptRecordType = ScriptRecordType.NATIVE_OBJECTS;
-    scriptConf.params = new HashMap<>();
-    scriptConf.params.put("param1", "value1");
+    Map<String, String> params = new HashMap<>();
+    params.put("param1", "value1");
+    scriptConf.params = Collections.unmodifiableMap(params);
     scriptConf.numThreads = 42;
     scriptConf.batchSize = 4242;
     scriptingDSource.scriptConf = scriptConf;
@@ -145,8 +146,9 @@ public class ScriptingOriginTestUtil<T extends AbstractScriptingSource> {
         .addOutputLane("lane")
         .build();
     runner.runInit();
-    Map<String, String> offsets = new HashMap<>();
-    offsets.put("coolEntityName", "coolOffsetName");
+    Map<String, String> coolOffsets = new HashMap<>();
+    coolOffsets.put("coolEntityName", "coolOffsetName");
+    Map<String, String> offsets = Collections.unmodifiableMap(coolOffsets);
     final List<Record> records = Collections.synchronizedList(new ArrayList<>());
     // Each thread should run process(entityName, entityValue) exactly once;
     runner.runProduce(offsets, scriptConf.batchSize, new PushSourceRunner.Callback() {
@@ -220,7 +222,7 @@ public class ScriptingOriginTestUtil<T extends AbstractScriptingSource> {
     ScriptSourceConfigBean scriptConf = new ScriptSourceConfigBean();
     scriptConf.scriptRecordType = ScriptRecordType.NATIVE_OBJECTS;
     scriptConf.numThreads = 4;
-    scriptConf.params = new HashMap<>();
+    scriptConf.params = Collections.unmodifiableMap(new HashMap<>());
     scriptConf.batchSize = 100;
     scriptingDSource.scriptConf = scriptConf;
     final PushSourceRunner.Builder builder = new PushSourceRunner.Builder(clazz, scriptingDSource)
@@ -228,7 +230,8 @@ public class ScriptingOriginTestUtil<T extends AbstractScriptingSource> {
         .addOutputLane("lane");
     final PushSourceRunner runner = builder.build();
     runner.runInit();
-    final Map<String, String> offsets = Collections.synchronizedMap(new HashMap<>());
+    Map<String, String> offsets = Collections.unmodifiableMap(new HashMap<>());
+    Map<String, String> newOffsets = Collections.synchronizedMap(new HashMap<>());
     final List<Record> records = Collections.synchronizedList(new ArrayList<>());
     // Each thread should run process(entityName, entityValue) exactly once;
     runner.runProduce(offsets, scriptConf.batchSize, new PushSourceRunner.Callback() {
@@ -236,27 +239,28 @@ public class ScriptingOriginTestUtil<T extends AbstractScriptingSource> {
       public void processBatch(StageRunner.Output output) {
         records.addAll(output.getRecords().get("lane"));
         runner.setStop();
-        offsets.put(output.getOffsetEntity(), output.getNewOffset());
+        newOffsets.put(output.getOffsetEntity(), output.getNewOffset());
       }
     });
     runner.waitOnProduce();
-    assertEquals("100", offsets.get("0"));
-    assertEquals("100", offsets.get("1"));
-    assertEquals("100", offsets.get("2"));
-    assertEquals("100", offsets.get("3"));
+    assertEquals("100", newOffsets.get("0"));
+    assertEquals("100", newOffsets.get("1"));
+    assertEquals("100", newOffsets.get("2"));
+    assertEquals("100", newOffsets.get("3"));
+    offsets = Collections.unmodifiableMap(new HashMap<>(newOffsets));
     runner.runProduce(offsets, scriptConf.batchSize, new PushSourceRunner.Callback() {
       @Override
       public void processBatch(StageRunner.Output output) {
         records.addAll(output.getRecords().get("lane"));
         runner.setStop();
-        offsets.replace(output.getOffsetEntity(), output.getNewOffset());
+        newOffsets.replace(output.getOffsetEntity(), output.getNewOffset());
       }
     });
     runner.waitOnProduce();
-    assertEquals("200", offsets.get("0"));
-    assertEquals("200", offsets.get("1"));
-    assertEquals("200", offsets.get("2"));
-    assertEquals("200", offsets.get("3"));
+    assertEquals("200", newOffsets.get("0"));
+    assertEquals("200", newOffsets.get("1"));
+    assertEquals("200", newOffsets.get("2"));
+    assertEquals("200", newOffsets.get("3"));
     runner.runDestroy();
   }
 
@@ -270,7 +274,7 @@ public class ScriptingOriginTestUtil<T extends AbstractScriptingSource> {
   ) throws Exception {
     ScriptSourceConfigBean serverScriptConf = new ScriptSourceConfigBean();
     serverScriptConf.scriptRecordType = ScriptRecordType.NATIVE_OBJECTS;
-    serverScriptConf.params = new HashMap<>();
+    serverScriptConf.params = Collections.unmodifiableMap(new HashMap<>());
     serverScriptConf.numThreads = 1;
     serverScriptConf.batchSize = 1;
     serverDSource.scriptConf = serverScriptConf;
@@ -296,8 +300,9 @@ public class ScriptingOriginTestUtil<T extends AbstractScriptingSource> {
     // Set up client pipeline to read from server
     ScriptSourceConfigBean clientScriptConf = new ScriptSourceConfigBean();
     clientScriptConf.scriptRecordType = ScriptRecordType.NATIVE_OBJECTS;
-    clientScriptConf.params = new HashMap<>();
-    clientScriptConf.params.put("baseURL", "//localhost:8080");
+    Map<String, String> params = new HashMap<>();
+    params.put("baseURL", "//localhost:8080");
+    clientScriptConf.params = Collections.unmodifiableMap(params);
     clientScriptConf.numThreads = 10;
     clientScriptConf.batchSize = 100;
     clientDSource.scriptConf = clientScriptConf;
@@ -336,7 +341,7 @@ public class ScriptingOriginTestUtil<T extends AbstractScriptingSource> {
   ) throws Exception {
     ScriptSourceConfigBean scriptConf = new ScriptSourceConfigBean();
     scriptConf.scriptRecordType = ScriptRecordType.NATIVE_OBJECTS;
-    scriptConf.params = new HashMap<>();
+    scriptConf.params = Collections.unmodifiableMap(new HashMap<>());
     scriptConf.numThreads = 1;
     scriptConf.batchSize = 1;
     scriptingDSource.scriptConf = scriptConf;

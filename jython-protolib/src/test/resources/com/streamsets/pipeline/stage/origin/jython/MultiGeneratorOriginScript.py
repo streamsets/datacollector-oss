@@ -19,13 +19,12 @@ sdc.importLock()
 from threading import Thread
 sdc.importUnlock()
 
-prefix = sdc.userParams.get('recordPrefix', '')
-verbose = sdc.userParams.get('verbose', False)
+if sdc.userParams.containsKey('recordPrefix'):
+    prefix = sdc.userParams.get('recordPrefix')
+else:
+    prefix = ''
 
 def produce(entityName, entityOffset):
-    if verbose:
-        print ('starting jython script ' + entityName
-            + ' with offset ' + entityOffset)
     offset = int(entityOffset)
             
     cur_batch = sdc.createBatch()

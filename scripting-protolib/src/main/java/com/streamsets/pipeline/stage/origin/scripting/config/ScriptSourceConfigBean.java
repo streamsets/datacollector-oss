@@ -27,8 +27,8 @@ public class ScriptSourceConfigBean {
       type = ConfigDef.Type.NUMBER,
       defaultValue = "1000",
       label = "Batch Size",
-      description = "Number of records that should be generated for a single batch.\n" +
-          "Accessible within user scripts as sdc.batchSize.",
+      description = "Number of records to generate in a single batch.\n" +
+          "Access in user script with sdc.batchSize.",
       min = 1,
       max = Integer.MAX_VALUE,
       group = "PERFORMANCE"
@@ -40,8 +40,8 @@ public class ScriptSourceConfigBean {
       type = ConfigDef.Type.NUMBER,
       defaultValue = "1",
       label = "Number of Threads",
-      description = "Number of concurrent threads that will be generating data in parallel.\n" +
-          "Accessible within user scripts as sdc.numThreads.",
+      description = "Number of concurrent threads that generate data in parallel.\n" +
+          "Access in user script with sdc.numThreads.",
       min = 1,
       max = Integer.MAX_VALUE,
       group = "PERFORMANCE"
@@ -64,8 +64,9 @@ public class ScriptSourceConfigBean {
       required = false,
       defaultValue = "{}",
       type = ConfigDef.Type.MAP,
-      label = "Parameters for User Code.\n" +
-          "Accessbile within user scripts as sdc.userParams.",
+      label = "Parameters in Script",
+      description = "Parameters and values for use in script.\n" +
+          "Access in user script as sdc.userParams.",
       displayPosition = 80,
       group = "ADVANCED"
   )

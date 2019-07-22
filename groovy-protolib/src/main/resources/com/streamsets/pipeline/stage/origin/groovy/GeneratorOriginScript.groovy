@@ -3,9 +3,9 @@
  * Available constants:
  *   sdc.lastOffsets: Dictionary representing the (string) offset previously reached
  *       for each (string) entityName. Offsets are committed by the pipeline.
- *   sdc.batchSize: Requested record batch size (from UI)
- *   sdc.nThreads: Number of threads to run (from UI)
- *   sdc.userParams: Dictionary of user-specified keys and values (from UI)
+ *   sdc.batchSize: Requested record batch size (from UI).
+ *   sdc.nThreads: Number of threads to run (from UI).
+ *   sdc.userParams: Dictionary of user-specified keys and values (from UI).
  *
  *   These can be used to assign a type to a field with a value null:
  *       sdc.NULL_BOOLEAN, sdc.NULL_CHAR, sdc.NULL_BYTE, sdc.NULL_SHORT, sdc.NULL_INTEGER,
@@ -14,46 +14,53 @@
  *       sdc.NULL_MAP
  *
  * Available functions:
- *   sdc.createBatch(): return a new Batch
- *   sdc.createRecord(): return a new Record
- *   Batch.add(record): append a record to the Batch
- *   Batch.add(record[]): append a list of records to the Batch
- *   Batch.size(): return the number of records in the batch
- *   Batch.process(entityName, entityOffSet): process the batch through the rest of
+ *   sdc.createBatch(): Return a new batch.
+ *   sdc.createRecord(): Return a new record.
+ *   sdc.createRecord(String recordId): Return a new record. Pass a recordId to uniquely identify
+ *       the record and include enough information to track down the record source.
+ *   Batch.add(record): Append a record to the batch.
+ *   Batch.add(record[]): Append a list of records to the batch.
+ *   Batch.size(): Return the number of records in the batch.
+ *   Batch.process(entityName, entityOffSet): Process the batch through the rest of
  *       the pipeline and commit the offset in accordance with the pipeline's
- *       delivery guarantee
- *   Batch.getSourceResponseRecords(): after a batch is processed, retrieve any
- *       response records returned by downstream stages
- *   sdc.isStopped(): returns whether or not the pipeline has been stopped
+ *       delivery guarantee.
+ *   Batch.getSourceResponseRecords(): After a batch is processed, retrieve any
+ *       response records returned by downstream stages.
+ *   sdc.isStopped(): Return whether or not the pipeline has been stopped.
+ *   sdc.isPreview(): Return whether or not the pipeline is in preview mode.
  *   sdc.importLock() and sdc.importUnlock(): Acquire or release a systemwide lock which can be
- *       used to circumvent a known bug with the thread-safety of Jython imports (https://bugs.jython.org/issue2642)
- *
- * Available Objects:
- *  sdc.log.<loglevel>(msg, obj...): use instead of print to send log messages to the log4j log instead of stdout.
- *                               loglevel is any log4j level: e.g. info, error, warn, trace.
- *  sdc.error.write(record, message): sends a record to error
- *  sdc.getFieldNull(Record, 'field path'): Receive a constant defined above
- *                                  to check if the field is typed field with value null
- *  sdc.createRecord(String recordId): Creates a new record.
- *                            Pass a recordId to uniquely identify the record and include enough information to track down the record source.
- *  sdc.createMap(boolean listMap): Create a map for use as a field in a record.
- *                            Pass True to this function to create a list map (ordered map)
- *  sdc.createEvent(String type, int version): Creates a new event.
- *                            Create new empty event with standard headers.
- *  sdc.toEvent(Record): Send event to event stream
- *                            Only events created with sdcFunctions.createEvent are supported.
- *  sdc.isPreview(): Determine if pipeline is in preview mode.
+ *       used to circumvent a known bug with the thread-safety of Jython imports. (https://bugs.jython.org/issue2642)
+ *   sdc.log.<loglevel>(msg, obj...): Use instead of print to send log messages to the log4j log instead of stdout.
+ *       loglevel is any log4j level: e.g. info, error, warn, trace.
+ *   sdc.error.write(record, message): Send a record to error.
+ *   sdc.getFieldNull(Record, 'field path'): Receive a constant defined above
+ *       to check if the field is a typed field with value null.
+ *   sdc.createMap(boolean listMap): Create a map for use as a field in a record.
+ *       Pass true to this function to create a list map (ordered map).
+ *   sdc.createEvent(String type, int version): Create a new empty event with standard headers.
+ *   sdc.toEvent(Record): Send event to event stream.
+ *       Only events created with sdc.createEvent are supported.
  *
  * Available Record Header Variables:
- *  record.attributes: a map of record header attributes.
- *  record.<header name>: get the value of 'header name'.
+ *   record.attributes: A map of record header attributes.
+ *   record.<header name>: Get the value of 'header name'.
  */
 
 // single threaded - no entityName because we need only one offset
 entityName = ''
-offset = sdc.lastOffsets.get(entityName, '0').toInteger()
 
-prefix = sdc.userParams.get('recordPrefix', '')
+// get the previously committed offset or start at 0
+if (sdc.lastOffsets.containsKey(entityName)) {
+    offset = sdc.lastOffsets.get(entityName) as int
+} else {
+    offset = 0
+}
+
+if (sdc.userParams.containsKey('recordPrefix')) {
+    prefix = sdc.userParams.get('recordPrefix')
+} else {
+    prefix = ''
+}
 
 cur_batch = sdc.createBatch()
 record = sdc.createRecord('generated data')
