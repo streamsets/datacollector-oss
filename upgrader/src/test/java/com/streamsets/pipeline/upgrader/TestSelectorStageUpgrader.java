@@ -46,10 +46,7 @@ public class TestSelectorStageUpgrader {
     Assert.assertEquals("bbb", find(configs, "b").getValue());
     Assert.assertEquals("ccc", find(configs, "c").getValue());
 
-    Mockito.verify(legacyUpgrader, Mockito.times(1)).upgrade(
-        Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt(),
-        Mockito.any()
-    );
+    Mockito.verify(legacyUpgrader, Mockito.times(1)).upgrade(Mockito.any(), Mockito.any());
   }
 
   @Test
@@ -72,10 +69,7 @@ public class TestSelectorStageUpgrader {
     Assert.assertEquals("ccc", find(configs, "c").getValue());
     Assert.assertEquals("ddd", find(configs, "d").getValue());
 
-    Mockito.verify(legacyUpgrader, Mockito.times(0)).upgrade(
-        Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt(),
-        Mockito.any()
-    );
+    Mockito.verify(legacyUpgrader, Mockito.times(0)).upgrade(Mockito.any(), Mockito.any());
   }
 
   @Test
@@ -94,10 +88,7 @@ public class TestSelectorStageUpgrader {
 
     Assert.assertEquals(0, configs.size());
 
-    Mockito.verify(legacyUpgrader, Mockito.times(1)).upgrade(
-        Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt(),
-        Mockito.any()
-    );
+    Mockito.verify(legacyUpgrader, Mockito.times(1)).upgrade(Mockito.any(), Mockito.any());
   }
 
   @Test
@@ -116,10 +107,7 @@ public class TestSelectorStageUpgrader {
 
     Assert.assertEquals(0, configs.size());
 
-    Mockito.verify(legacyUpgrader, Mockito.times(1)).upgrade(
-        Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt(),
-        Mockito.any()
-    );
+    Mockito.verify(legacyUpgrader, Mockito.times(1)).upgrade(Mockito.any(), Mockito.any());
   }
 
   @Test
@@ -156,10 +144,7 @@ public class TestSelectorStageUpgrader {
 
     Assert.assertEquals(0, configs.size());
 
-    Mockito.verify(legacyUpgrader, Mockito.times(1)).upgrade(
-        Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt(),
-        Mockito.any()
-    );
+    Mockito.verify(legacyUpgrader, Mockito.times(1)).upgrade(Mockito.any(), Mockito.any());
   }
 
   private Config find(List<Config> configs, String name) {

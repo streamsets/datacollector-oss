@@ -37,39 +37,24 @@ public class SelectorStageUpgrader implements StageUpgrader {
     }
   }
 
-  public List<Config> upgrade(
-      String library,
-      String stageName,
-      String stageInstance,
-      int fromVersion,
-      int toVersion,
-      List<Config> configs
-  ) throws StageException {
+  public List<Config> upgrade(List<Config> configs, Context context) throws StageException {
     if (legacyUpgrader != null) {
-      int toLegacyVersion = (yamlUpgrader != null) ? yamlUpgrader.getMinimumConfigVersionHandled() : toVersion;
+      int toLegacyVersion = (yamlUpgrader != null) ? yamlUpgrader.getMinimumConfigVersionHandled()
+                                                   : context.getToVersion();
 
-      if (toLegacyVersion == YamlStageUpgrader.NO_CONFIG_VERSIONS_HANDLED) {
+      if (toLegacyVersion == YamlStageUpgrader.NO_CONFIG_VERSIONS_HANDLED || toLegacyVersion > context.getFromVersion()) {
         LOG.debug(
             "Running legacy upgrader to upgrade '{}' stage from '{}' version to '{}' version",
-            stageName,
-            fromVersion,
-            toVersion
+            context.getStageName(),
+            context.getFromVersion(),
+            toLegacyVersion == YamlStageUpgrader.NO_CONFIG_VERSIONS_HANDLED ? context.getToVersion() : toLegacyVersion
         );
-        configs = legacyUpgrader.upgrade(library, stageName, stageInstance, fromVersion, toVersion, configs);
-      } else if (toLegacyVersion > fromVersion) {
-        LOG.debug(
-            "Running legacy upgrader to upgrade '{}' stage from '{}' version to '{}' version",
-            stageName,
-            fromVersion,
-            toLegacyVersion
-        );
-        configs = legacyUpgrader.upgrade(library, stageName, stageInstance, fromVersion, toLegacyVersion, configs);
-        fromVersion = toLegacyVersion;
+        configs = legacyUpgrader.upgrade(configs, context);
       }
     }
 
     if (yamlUpgrader != null) {
-      configs = yamlUpgrader.upgrade(library, stageName, stageInstance, fromVersion, toVersion, configs);
+      configs = yamlUpgrader.upgrade(configs, context);
     }
 
     return configs;
