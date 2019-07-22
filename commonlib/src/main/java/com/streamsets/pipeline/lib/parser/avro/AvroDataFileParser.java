@@ -50,6 +50,7 @@ public class AvroDataFileParser extends AbstractDataParser {
   private final DataFileReader<GenericRecord> dataFileReader;
   private boolean eof;
   private ProtoConfigurableEntity.Context context;
+  private String avroSchemaString;
 
   public AvroDataFileParser(ProtoConfigurableEntity.Context context, Schema schema, File file, String readerOffset, int maxObjectLength)
     throws IOException {
@@ -92,7 +93,10 @@ public class AvroDataFileParser extends AbstractDataParser {
       recordCount++;
       Record record = context.createRecord(file.getName() + OFFSET_SEPARATOR + previousSync + OFFSET_SEPARATOR + recordCount);
       record.set(AvroTypeUtil.avroToSdcField(record, avroRecord.getSchema(), avroRecord));
-      record.getHeader().setAttribute(HeaderAttributeConstants.AVRO_SCHEMA, avroRecord.getSchema().toString());
+      if(avroSchemaString == null) {
+        this.avroSchemaString = avroRecord.getSchema().toString();
+      }
+      record.getHeader().setAttribute(HeaderAttributeConstants.AVRO_SCHEMA, avroSchemaString);
       return record;
     }
     eof = true;

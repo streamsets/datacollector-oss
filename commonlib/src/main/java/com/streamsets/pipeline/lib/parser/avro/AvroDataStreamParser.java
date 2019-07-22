@@ -37,6 +37,7 @@ public class AvroDataStreamParser extends AbstractDataParser {
   private static final String OFFSET_SEPARATOR = "::";
 
   private final Schema avroSchema;
+  private String avroSchemaString;
   private final String streamName;
   private long recordCount;
   private final DatumReader<GenericRecord> datumReader;
@@ -76,7 +77,10 @@ public class AvroDataStreamParser extends AbstractDataParser {
       recordCount++;
       Record record = context.createRecord(streamName + OFFSET_SEPARATOR + recordCount);
       record.set(AvroTypeUtil.avroToSdcField(record, avroRecord.getSchema(), avroRecord));
-      record.getHeader().setAttribute(HeaderAttributeConstants.AVRO_SCHEMA, avroRecord.getSchema().toString());
+      if(avroSchemaString == null) {
+        avroSchemaString = avroRecord.getSchema().toString();
+      }
+      record.getHeader().setAttribute(HeaderAttributeConstants.AVRO_SCHEMA, avroSchemaString);
       return record;
     }
     eof = true;
