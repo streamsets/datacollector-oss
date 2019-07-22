@@ -77,6 +77,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -248,6 +249,9 @@ public class StageLibraryResource {
     // Find Stage Lib location to each stage library that we should install
     Map<String, String> libraryUrlList= new HashMap<>();
     List<RepositoryManifestJson> repoManifestList = stageLibrary.getRepositoryManifestList();
+    if (repoManifestList == null) {
+      repoManifestList = Collections.emptyList();
+    }
     for(RepositoryManifestJson repositoryManifestJson: repoManifestList) {
       for (StageLibrariesJson stageLibrariesJson : repositoryManifestJson.getStageLibraries()) {
         if (stageLibrariesJson.getStageLibraryManifest() != null) {

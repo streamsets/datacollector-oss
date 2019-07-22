@@ -91,6 +91,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -104,6 +106,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -173,7 +176,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private KeyedObjectPool<String, ClassLoader> privateClassLoaderPool;
   private Map<String, Object> gaugeMap;
   private final Map<String, EventDefinitionJson> eventDefinitionMap = new HashMap<>();
-  private List<RepositoryManifestJson> repositoryManifestList = null;
+  private volatile List<RepositoryManifestJson> repositoryManifestList = null;
 
   @Inject
   public ClassLoaderStageLibraryTask(RuntimeInfo runtimeInfo, BuildInfo buildInfo, Configuration configuration) {
@@ -352,7 +355,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     this.gaugeMap.put(PRIVATE_POOL_MAX, maxPrivateClassloaders);
 
     // auto load stage library definitions
-    getRepositoryManifestList();
+    Executors.newSingleThreadExecutor().submit((Runnable) this::getRepositoryManifestList);
   }
 
   /**
@@ -929,7 +932,9 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
   @Override
   public List<RepositoryManifestJson> getRepositoryManifestList() {
-    if (repositoryManifestList == null) {
+    if (repositoryManifestList == null && !Boolean.getBoolean("streamsets.cloud")) {
+      Instant start = Instant.now();
+
       // initialize when it is called for first time
       repositoryManifestList = new ArrayList<>();
 
@@ -1027,6 +1032,10 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
         additionalRepo.setStageLibraries(additionalList);
         repositoryManifestList.add(additionalRepo);
       }
+
+      Instant end = Instant.now();
+      Duration timeElapsed = Duration.between(start, end);
+      LOG.debug("Time taken for fetching repository manifest files : "+ timeElapsed.getSeconds() + " seconds");
     }
 
     return repositoryManifestList;
