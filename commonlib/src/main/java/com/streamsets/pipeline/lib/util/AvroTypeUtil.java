@@ -146,30 +146,37 @@ public class AvroTypeUtil {
   private static Field avroToSdcField(Record record, String fieldPath, Schema schema, Object value, boolean skipAvroUnionIndexes) {
     if(schema.getType() == Schema.Type.UNION) {
       List<Schema> unionTypes = schema.getTypes();
+      int typeIndex;
 
       // Special case for unions of [null, actual type]
-      if(unionTypes.size() == 2 && unionTypes.get(0).getType() == Schema.Type.NULL && value == null) {
-        Field returnField = Field.create(getFieldType(unionTypes.get(1)), null);
+      if(unionTypes.size() == 2 && unionTypes.get(0).getType() == Schema.Type.NULL) {
+        if(value == null) {
+          Field returnField = Field.create(getFieldType(unionTypes.get(1)), null);
 
-        // We need to set field attributes propagating some schema information
-        String logicalType = unionTypes.get(1).getProp(LOGICAL_TYPE);
-        if(logicalType != null && !logicalType.isEmpty()) {
-          switch (logicalType) {
-            case LOGICAL_TYPE_DECIMAL:
-              int scale = unionTypes.get(1).getJsonProp(LOGICAL_TYPE_ATTR_SCALE).getIntValue();
-              int precision = unionTypes.get(1).getJsonProp(LOGICAL_TYPE_ATTR_PRECISION).getIntValue();
-              returnField.setAttribute(HeaderAttributeConstants.ATTR_SCALE, String.valueOf(scale));
-              returnField.setAttribute(HeaderAttributeConstants.ATTR_PRECISION, String.valueOf(precision));
+          // We need to set field attributes propagating some schema information
+          String logicalType = unionTypes.get(1).getProp(LOGICAL_TYPE);
+          if (logicalType != null && !logicalType.isEmpty()) {
+            switch (logicalType) {
+              case LOGICAL_TYPE_DECIMAL:
+                int scale = unionTypes.get(1).getJsonProp(LOGICAL_TYPE_ATTR_SCALE).getIntValue();
+                int precision = unionTypes.get(1).getJsonProp(LOGICAL_TYPE_ATTR_PRECISION).getIntValue();
+                returnField.setAttribute(HeaderAttributeConstants.ATTR_SCALE, String.valueOf(scale));
+                returnField.setAttribute(HeaderAttributeConstants.ATTR_PRECISION, String.valueOf(precision));
+            }
           }
-        }
 
-        return returnField;
+          return returnField;
+        } else {
+          typeIndex = 1;
+          schema = unionTypes.get(1);
+        }
+      } else {
+        // By default try to resolve index of the union bby the data itself
+        typeIndex = GenericData.get().resolveUnion(schema, value);
+        schema = unionTypes.get(typeIndex);
       }
 
-      // By default try to resolve index of the union bby the data itself
-      int typeIndex = GenericData.get().resolveUnion(schema, value);
-      schema = unionTypes.get(typeIndex);
-      if(!skipAvroUnionIndexes) {
+      if (!skipAvroUnionIndexes) {
         record.getHeader().setAttribute(AVRO_UNION_TYPE_INDEX_PREFIX + fieldPath, String.valueOf(typeIndex));
       }
     }
