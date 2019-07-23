@@ -55,7 +55,7 @@ public class ScriptingOriginTestUtil<T extends AbstractScriptingSource> {
     }
   }
 
-  public static <C extends AbstractScriptingDSource> void testGenerateRecords(
+  public static <C extends AbstractScriptingDSource> void testResumeGenerateRecords(
       Class<C> clazz,
       AbstractScriptingDSource scriptingDSource,
       String scriptName)
@@ -66,23 +66,30 @@ public class ScriptingOriginTestUtil<T extends AbstractScriptingSource> {
     scriptConf.numThreads = 1;
     scriptConf.batchSize = 1000;
     scriptingDSource.scriptConf = scriptConf;
-    PushSourceRunner runner = new PushSourceRunner.Builder(clazz, scriptingDSource)
+    final PushSourceRunner runner = new PushSourceRunner.Builder(clazz, scriptingDSource)
         .addConfiguration("script", getScript(scriptName, clazz))
         .addOutputLane("lane")
         .build();
     runner.runInit();
-    Map<String, String> offsets = Collections.unmodifiableMap(new HashMap<>());
+    Map<String, String> oldOffsets = new HashMap<>();
+    oldOffsets.put("", "1000");
+    Map<String, String> offsets = Collections.unmodifiableMap(new HashMap<>(oldOffsets));
+    Map<String, String> newOffsets = new HashMap<>();
     final List<Record> records = Collections.synchronizedList(new ArrayList<>());
     runner.runProduce(offsets, scriptConf.batchSize, new PushSourceRunner.Callback() {
         @Override
         public void processBatch(StageRunner.Output output) {
           records.addAll(output.getRecords().get("lane"));
           runner.setStop();
+          newOffsets.put(output.getOffsetEntity(), output.getNewOffset());
         }
       });
     runner.waitOnProduce();
-    List<EventRecord> events = runner.getEventRecords();
-    List<String> errors = runner.getErrors();
+    assertEquals("2000", newOffsets.get(""));
+    assertEquals(0, runner.getEventRecords().size());
+    assertEquals(0, runner.getErrorRecords().size());
+    assertEquals(1000, records.size());
+    assertEquals(":2000", records.get(999).get("").getValueAsString());
     runner.runDestroy();
   }
 

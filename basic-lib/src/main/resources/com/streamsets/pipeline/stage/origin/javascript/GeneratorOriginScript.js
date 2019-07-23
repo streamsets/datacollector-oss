@@ -48,9 +48,9 @@
 
 // single threaded - no entityName because we need only one offset
 var entityName = '';
-var offset = '0';
-if ('entityName' in sdc.lastOffsets) {
-    offset = parseInt(sdc.lastOffsets['entityName']);
+var offset = 0;
+if (sdc.lastOffsets.containsKey(entityName)) {
+    offset = parseInt(sdc.lastOffsets.get(entityName));
 }
 
 var prefix = '';
