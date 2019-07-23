@@ -491,8 +491,19 @@ public abstract class PipelineBeanCreator {
         errors
       );
     } else {
-      errors.add(issueCreator.create(CreationError.CREATION_006, stageConf.getLibrary(), stageConf.getStageName(),
-                                     stageConf.getStageVersion()));
+      if(library.getLegacyStageLibs().contains(stageConf.getLibrary())) {
+        errors.add(issueCreator.create(
+          CreationError.CREATION_072,
+          stageConf.getLibrary()
+        ));
+      } else {
+        errors.add(issueCreator.create(
+          CreationError.CREATION_006,
+          stageConf.getLibrary(),
+          stageConf.getStageName(),
+          stageConf.getStageVersion()
+        ));
+      }
     }
     return bean;
   }

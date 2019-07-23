@@ -104,6 +104,7 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0092("Delivery Guarantee can only be {} if pipeline contains a Target that triggers offset commit"),
   VALIDATION_0093("The pipeline title is empty"),
   VALIDATION_0094("Stage expects {} input lanes, but only {} given"),
+  VALIDATION_0095("Stage library {} is a legacy library and must be installed separately"),
 
   // Event related validations
   VALIDATION_0100("Invalid event stream name '{}'. Streams can include the following characters: '{}'"),

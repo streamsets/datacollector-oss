@@ -149,6 +149,7 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0902("Definition requires at least version {} which is higher then available library supports ({})"),
   CONTAINER_0903("Could not find service definition for '{}'"),
   CONTAINER_0904("Service Upgrader can't register another service."),
+  CONTAINER_0905("Stage library {} is a legacy library and must be installed separately"),
 
   //Email Notifier
   CONTAINER_01000("Error loading email template, reason : {}"),

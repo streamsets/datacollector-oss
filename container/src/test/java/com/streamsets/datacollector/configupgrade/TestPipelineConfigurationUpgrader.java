@@ -137,6 +137,7 @@ public class TestPipelineConfigurationUpgrader {
 
   private StageLibraryTask getLibrary(StageDefinition def, ServiceDefinition ...services) {
     StageLibraryTask library = Mockito.mock(StageLibraryTask.class);
+    Mockito.when(library.getLegacyStageLibs()).thenReturn(Collections.emptyList());
     Mockito.when(library.getStage(Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean())).thenReturn(def);
 
     for(ServiceDefinition serviceDef : services) {
@@ -168,7 +169,7 @@ public class TestPipelineConfigurationUpgrader {
       .build();
 
     // null def
-    Assert.assertFalse(up.needsUpgrade(null, null, stageConf, issues));
+    Assert.assertFalse(up.needsUpgrade(getLibrary(null), null, stageConf, issues));
     Assert.assertFalse(issues.isEmpty());
 
     // invalid downgrade

@@ -264,14 +264,7 @@ public class PipelineFragmentConfigurationValidator {
       }
     } else {
       canPreview = false;
-      issues.add(
-          issueCreator.create(
-              ValidationError.VALIDATION_0006,
-              stageConf.getLibrary(),
-              stageConf.getStageName(),
-              stageConf.getStageVersion()
-          )
-      );
+      // StageDef missing is already handled in validateStageConfiguration, no need to issue the same error again
     }
     return canPreview;
   }
@@ -523,15 +516,7 @@ public class PipelineFragmentConfigurationValidator {
         }
       } else {
         valid = false;
-        IssueCreator issueCreator = IssueCreator.getStage(stageConf.getStageName());
-        issues.add(
-          issueCreator.create(
-              ValidationError.VALIDATION_0006,
-              stageConf.getLibrary(),
-              stageConf.getStageName(),
-              stageConf.getStageVersion()
-          )
-        );
+        // Validation for missing StageDef is already in validateStageConfiguration(), not producing duplicate errors
       }
     }
     // If a pipeline contains a target that triggers offset commit then,
