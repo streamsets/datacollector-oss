@@ -69,6 +69,8 @@ public enum CreationError implements ErrorCode {
   CREATION_070("Invalid execution mode '{}'"),
   CREATION_071("Execution mode not set"),
 
+  CREATION_072("Stage library {} is a legacy library and must be installed separately"),
+
   CREATION_080("Configuration value is required for Webhook URL"),
 
   // Detached stage support

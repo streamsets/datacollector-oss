@@ -169,16 +169,19 @@ public class ValidationUtil {
         false
     );
     if (stageDef == null) {
-      // stage configuration refers to an undefined stage definition
-      issues.add(
-          issueCreator.create(
-              stageConf.getInstanceName(),
-              ValidationError.VALIDATION_0006,
-              stageConf.getLibrary(),
-              stageConf.getStageName(),
-              stageConf.getStageVersion()
-          )
-      );
+      if(stageLibrary.getLegacyStageLibs().contains(stageConf.getLibrary())) {
+        issues.add(issueCreator.create(
+          ValidationError.VALIDATION_0095,
+          stageConf.getLibrary()
+        ));
+      } else {
+        issues.add(issueCreator.create(
+          ValidationError.VALIDATION_0006,
+          stageConf.getLibrary(),
+          stageConf.getStageName(),
+          stageConf.getStageVersion()
+        ));
+      }
       preview = false;
     } else {
       if (shouldBeSource) {

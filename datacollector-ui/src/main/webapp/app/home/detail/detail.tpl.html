@@ -163,7 +163,8 @@
         <div class="col-md-12" >
           <div class="alert alert-danger" role="alert">
             <i class="fa fa-exclamation-triangle"></i>
-            <span translate="home.detailPane.noStageDefinitionFound" translate-values="{stageName: detailPaneConfig.stageName, library: detailPaneConfig.library}"></span>
+            <span translate="home.detailPane.noStageDefinitionFound" translate-values="{stageName: detailPaneConfig.stageName, library: detailPaneConfig.library}" ng-if="legacyStageLibs.indexOf(detailPaneConfig.library) == -1"></span>
+            <span translate="home.detailPane.legacyStageLibFound" translate-values="{library: detailPaneConfig.library}" ng-if="legacyStageLibs.indexOf(detailPaneConfig.library) != -1"></span>
           </div>
         </div>
 

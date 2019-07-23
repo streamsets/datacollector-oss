@@ -309,11 +309,18 @@ public class PipelineConfigurationUpgrader {
   static boolean needsUpgrade(StageLibraryTask library, StageDefinition def, StageConfiguration conf, List<Issue> issues) {
     boolean upgrade = false;
     if (def == null) {
-      issues.add(IssueCreator.getStage(conf.getInstanceName()).create(
+      if(library.getLegacyStageLibs().contains(conf.getLibrary())) {
+        issues.add(IssueCreator.getStage(conf.getInstanceName()).create(
+          ContainerError.CONTAINER_0905,
+          conf.getLibrary()
+        ));
+      } else {
+        issues.add(IssueCreator.getStage(conf.getInstanceName()).create(
           ContainerError.CONTAINER_0901,
           conf.getLibrary(),
           conf.getStageName()
-      ));
+        ));
+      }
     } else {
       // Go over services first
       for(ServiceConfiguration serviceConf: conf.getServices()) {
