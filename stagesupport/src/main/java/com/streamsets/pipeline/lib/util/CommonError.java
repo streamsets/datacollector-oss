@@ -27,7 +27,7 @@ public enum CommonError implements ErrorCode {
   CMN_0103("Error converting record '{}' to string: {}"),
   CMN_0104("Error evaluating expression {}: {}"),
   CMN_0105("Error parsing expression {}: {}"),
-  CMN_0106("Error resolving union for field '{}' of SDC Type {} (java class {}): {}"),
+  CMN_0106("Error resolving union for SDC Type {} (java class {}) against schema {}: {}"),
 
   ;
   private final String msg;

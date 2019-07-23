@@ -334,7 +334,6 @@ public class AvroTypeUtil {
     return sdcRecordToAvro(
         record,
         record.get(),
-        "",
         schema,
         defaultValueMap
     );
@@ -344,7 +343,6 @@ public class AvroTypeUtil {
   private static Object sdcRecordToAvro(
       Record record,
       Field field,
-      String avroFieldPath,
       Schema schema,
       Map<String, Object> defaultValueMap
   ) throws StageException {
@@ -381,8 +379,7 @@ public class AvroTypeUtil {
           Schema match = bestEffortResolve(schema, field, object);
           if(match == null) {
             String objectType = object == null ? "null" : object.getClass().getName();
-            throw new StageException(CommonError.CMN_0106, avroFieldPath, field.getType().name(), objectType, e.toString(),
-                e);
+            throw new StageException(CommonError.CMN_0106, field.getType().name(), objectType, schema.toString(), e.toString(), e);
           } else {
             schema = match;
           }
@@ -460,7 +457,6 @@ public class AvroTypeUtil {
                 sdcRecordToAvro(
                     record,
                     valueAsList.get(i),
-                    avroFieldPath + "[" + i + "]",
                     schema.getElementType(),
                     defaultValueMap
                 )
@@ -503,7 +499,6 @@ public class AvroTypeUtil {
                     sdcRecordToAvro(
                         record,
                         e.getValue(),
-                        avroFieldPath + FORWARD_SLASH + e.getKey(),
                         schema.getValueType(),
                         defaultValueMap
                     )
@@ -520,7 +515,6 @@ public class AvroTypeUtil {
           Map<String, Field> valueAsMap = field.getValueAsMap();
           GenericRecord genericRecord = new GenericData.Record(schema);
           for (Schema.Field f : schema.getFields()) {
-            String key = schema.getFullName() + SCHEMA_PATH_SEPARATOR + f.name();
             // If the record does not contain a field corresponding to the schema field, look up the default value from
             // the schema.
             // If no default value was specified for the field and record does not contain it, then throw exception.
@@ -534,12 +528,12 @@ public class AvroTypeUtil {
               Object v = sdcRecordToAvro(
                   record,
                   valueAsMap.get(f.name()),
-                  avroFieldPath + FORWARD_SLASH + f.name(),
                   fieldSchema,
                   defaultValueMap
               );
               // If value in record is null and there is no default value specified, send to error.
               if(v == null) {
+                String key = schema.getFullName() + SCHEMA_PATH_SEPARATOR + f.name();
                 if (!defaultValueMap.containsKey(key)) {
                   // DatumWriter can handle writing null value for the Union and Null types
                   if (!(fieldSchema.getType() == Schema.Type.UNION || fieldSchema.getType() == Schema.Type.NULL)) {
@@ -555,6 +549,7 @@ public class AvroTypeUtil {
               }
               genericRecord.put(f.name(), v);
             } else {
+              String key = schema.getFullName() + SCHEMA_PATH_SEPARATOR + f.name();
               if(!defaultValueMap.containsKey(key)) {
                 throw new DataGeneratorException(
                     Errors.AVRO_GENERATOR_00,

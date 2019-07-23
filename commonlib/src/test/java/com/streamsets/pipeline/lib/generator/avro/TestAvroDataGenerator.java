@@ -803,7 +803,7 @@ public class TestAvroDataGenerator {
     } catch(DataGeneratorException e) {
       Assert.assertNotNull(e);
       Assert.assertEquals(CommonError.CMN_0106, e.getErrorCode());
-      Assert.assertTrue(e.getMessage().contains("Error resolving union for field '/short' of SDC Type SHORT (java class java.lang.Short)"));
+      Assert.assertEquals(e.getMessage(), "CMN_0106 - Error resolving union for SDC Type SHORT (java class java.lang.Short) against schema [\"int\",\"null\"]: org.apache.avro.AvroRuntimeException: Unknown datum type java.lang.Short: 1");
     } finally {
       gen.close();
     }
