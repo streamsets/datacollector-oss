@@ -54,6 +54,8 @@ import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_REPO_URLS
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_SOURCE_KEY;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SUBJECT_DEFAULT;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SUBJECT_KEY;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_DEFAULT_SKIP_AVRO_INDEXES;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_SKIP_AVRO_INDEXES;
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
 
@@ -69,6 +71,7 @@ public class AvroDataParserFactory extends DataParserFactory {
     configs.put(SUBJECT_KEY, SUBJECT_DEFAULT);
     configs.put(SCHEMA_REPO_URLS_KEY, new ArrayList<>());
     configs.put(REGISTER_SCHEMA_KEY, REGISTER_SCHEMA_DEFAULT);
+    configs.put(SCHEMA_SKIP_AVRO_INDEXES, SCHEMA_DEFAULT_SKIP_AVRO_INDEXES);
     CONFIGS = Collections.unmodifiableMap(configs);
   }
 
@@ -79,6 +82,7 @@ public class AvroDataParserFactory extends DataParserFactory {
   private final AvroSchemaHelper schemaHelper;
   private Schema schema;
   LoadingCache<Integer, Schema> schemas;
+  private final boolean skipAvroUnionIndexes;
 
   public AvroDataParserFactory(Settings settings) throws SchemaRegistryException {
     super(settings);
@@ -89,6 +93,7 @@ public class AvroDataParserFactory extends DataParserFactory {
     int schemaId = settings.getConfig(SCHEMA_ID_KEY);
     final String subject = settings.getConfig(SUBJECT_KEY);
 
+    skipAvroUnionIndexes = settings.getConfig(SCHEMA_SKIP_AVRO_INDEXES);
     schemas = CacheBuilder.newBuilder()
       .maximumSize(100)
       .build(new CacheLoader<Integer, Schema>() {
@@ -128,7 +133,8 @@ public class AvroDataParserFactory extends DataParserFactory {
     try {
       return new AvroDataStreamParser(
           getSettings().getContext(), schema, id, is, Long.parseLong(offset),
-          getSettings().getOverRunLimit()
+          getSettings().getOverRunLimit(),
+          skipAvroUnionIndexes
       );
     } catch (IOException e) {
       throw new DataParserException(Errors.DATA_PARSER_01, e.toString(), e);
@@ -156,13 +162,13 @@ public class AvroDataParserFactory extends DataParserFactory {
         } else {
           remaining = data;
         }
-        return new AvroMessageParser(getSettings().getContext(), recordSchema, remaining, id, schemaSource);
+        return new AvroMessageParser(getSettings().getContext(), recordSchema, remaining, id, schemaSource, skipAvroUnionIndexes);
       } catch (IOException | ExecutionException e) {
         throw new DataParserException(Errors.DATA_PARSER_03, e.toString(), e);
       }
     }
     try {
-      return new AvroMessageParser(getSettings().getContext(), schema, data, id, schemaSource);
+      return new AvroMessageParser(getSettings().getContext(), schema, data, id, schemaSource, skipAvroUnionIndexes);
     } catch (IOException e) {
       throw new DataParserException(Errors.DATA_PARSER_01, e.toString(), e);
     }
@@ -173,7 +179,7 @@ public class AvroDataParserFactory extends DataParserFactory {
     throws DataParserException {
     try {
       return new AvroDataFileParser(getSettings().getContext(), schema, file, fileOffset,
-        getSettings().getOverRunLimit());
+        getSettings().getOverRunLimit(), skipAvroUnionIndexes);
     } catch (IOException e) {
       throw new DataParserException(Errors.DATA_PARSER_01, e.toString(), e);
     }

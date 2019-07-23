@@ -62,6 +62,9 @@ public class AvroSchemaHelper {
   public static final String SCHEMA_KEY = KEY_PREFIX + "schema";
   public static final String SCHEMA_DEFAULT = "";
 
+  public static final String SCHEMA_SKIP_AVRO_INDEXES = KEY_PREFIX + "skipAvroIndexes";
+  public static final boolean SCHEMA_DEFAULT_SKIP_AVRO_INDEXES = false;
+
   public static final String INCLUDE_SCHEMA_KEY = KEY_PREFIX + "includeSchema";
   public static final boolean INCLUDE_SCHEMA_DEFAULT = true;
 

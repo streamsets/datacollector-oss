@@ -46,17 +46,20 @@ public class AvroMessageParser extends AbstractDataParser {
   private boolean eof;
   private final ProtoConfigurableEntity.Context context;
   private final String messageId;
+  private final boolean skipAvroUnionIndexes;
 
   public AvroMessageParser(
       ProtoConfigurableEntity.Context context,
       final Schema schema,
       final byte[] message,
       final String messageId,
-      final OriginAvroSchemaSource schemaSource
+      final OriginAvroSchemaSource schemaSource,
+      boolean skipAvroUnionIndexes
   ) throws IOException {
     this.context = context;
     this.messageId = messageId;
     this.schemaSource = schemaSource;
+    this.skipAvroUnionIndexes = skipAvroUnionIndexes;
 
     datumReader = new GenericDatumReader<>(schema); //Reader schema argument is optional
     if(schemaSource == OriginAvroSchemaSource.SOURCE) {
@@ -78,7 +81,7 @@ public class AvroMessageParser extends AbstractDataParser {
     }
     if(genericRecord != null) {
       record = context.createRecord(messageId);
-      record.set(AvroTypeUtil.avroToSdcField(record, genericRecord.getSchema(), genericRecord));
+      record.set(AvroTypeUtil.avroToSdcField(record, genericRecord.getSchema(), genericRecord, skipAvroUnionIndexes));
       record.getHeader().setAttribute(HeaderAttributeConstants.AVRO_SCHEMA, genericRecord.getSchema().toString());
     }
     return record;

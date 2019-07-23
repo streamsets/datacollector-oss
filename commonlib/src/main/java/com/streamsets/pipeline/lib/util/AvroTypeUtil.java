@@ -139,11 +139,11 @@ public class AvroTypeUtil {
     return jsonSchema;
   }
 
-  public static Field avroToSdcField(Record record, Schema schema, Object value) {
-    return avroToSdcField(record, "", schema, value);
+  public static Field avroToSdcField(Record record, Schema schema, Object value, boolean skipAvroUnionIndexes) {
+    return avroToSdcField(record, "", schema, value, skipAvroUnionIndexes);
   }
 
-  private static Field avroToSdcField(Record record, String fieldPath, Schema schema, Object value) {
+  private static Field avroToSdcField(Record record, String fieldPath, Schema schema, Object value, boolean skipAvroUnionIndexes) {
     if(schema.getType() == Schema.Type.UNION) {
       List<Schema> unionTypes = schema.getTypes();
 
@@ -169,7 +169,9 @@ public class AvroTypeUtil {
       // By default try to resolve index of the union bby the data itself
       int typeIndex = GenericData.get().resolveUnion(schema, value);
       schema = unionTypes.get(typeIndex);
-      record.getHeader().setAttribute(AVRO_UNION_TYPE_INDEX_PREFIX + fieldPath, String.valueOf(typeIndex));
+      if(!skipAvroUnionIndexes) {
+        record.getHeader().setAttribute(AVRO_UNION_TYPE_INDEX_PREFIX + fieldPath, String.valueOf(typeIndex));
+      }
     }
     if(value == null) {
       return Field.create(getFieldType(schema), null);
@@ -247,7 +249,7 @@ public class AvroTypeUtil {
         List<?> objectList = (List<?>) value;
         List<Field> list = new ArrayList<>(objectList.size());
         for (int i = 0; i < objectList.size(); i++) {
-          list.add(avroToSdcField(record, fieldPath + "[" + i + "]", schema.getElementType(), objectList.get(i)));
+          list.add(avroToSdcField(record, fieldPath + "[" + i + "]", schema.getElementType(), objectList.get(i), skipAvroUnionIndexes));
         }
         f = Field.create(list);
         break;
@@ -289,7 +291,7 @@ public class AvroTypeUtil {
                 .getClass().getName()));
           }
           map.put(key, avroToSdcField(record, fieldPath + FORWARD_SLASH + key,
-              schema.getValueType(), entry.getValue()));
+              schema.getValueType(), entry.getValue(), skipAvroUnionIndexes));
         }
         f = Field.create(map);
         break;
@@ -301,7 +303,7 @@ public class AvroTypeUtil {
         LinkedHashMap<String, Field> recordMap = new LinkedHashMap<>();
         for(Schema.Field field : schema.getFields()) {
           Field temp = avroToSdcField(record, fieldPath + FORWARD_SLASH + field.name(), field.schema(),
-              avroRecord.get(field.name()));
+              avroRecord.get(field.name()), skipAvroUnionIndexes);
           if(temp != null) {
             recordMap.put(field.name(), temp);
           }

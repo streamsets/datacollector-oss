@@ -45,6 +45,7 @@ public class AvroDataStreamParser extends AbstractDataParser {
   private final OverrunInputStream overrunInputStream;
   private boolean eof;
   private ProtoConfigurableEntity.Context context;
+  private final boolean skipAvroUnionIndexes;
 
   public AvroDataStreamParser(
       ProtoConfigurableEntity.Context context,
@@ -52,7 +53,8 @@ public class AvroDataStreamParser extends AbstractDataParser {
       String streamName,
       InputStream inputStream,
       long recordCount,
-      int maxObjectLength
+      int maxObjectLength,
+      boolean skipAvroUnionIndexes
   ) throws IOException {
     this.context = context;
     avroSchema = schema;
@@ -62,6 +64,7 @@ public class AvroDataStreamParser extends AbstractDataParser {
     overrunInputStream = new OverrunInputStream(inputStream, maxObjectLength, true);
     dataFileStream = new DataFileStream<>(overrunInputStream, datumReader);
     seekToOffset();
+    this.skipAvroUnionIndexes = skipAvroUnionIndexes;
   }
 
   @Override
@@ -76,7 +79,7 @@ public class AvroDataStreamParser extends AbstractDataParser {
       GenericRecord avroRecord = dataFileStream.next();
       recordCount++;
       Record record = context.createRecord(streamName + OFFSET_SEPARATOR + recordCount);
-      record.set(AvroTypeUtil.avroToSdcField(record, avroRecord.getSchema(), avroRecord));
+      record.set(AvroTypeUtil.avroToSdcField(record, avroRecord.getSchema(), avroRecord, skipAvroUnionIndexes));
       if(avroSchemaString == null) {
         avroSchemaString = avroRecord.getSchema().toString();
       }

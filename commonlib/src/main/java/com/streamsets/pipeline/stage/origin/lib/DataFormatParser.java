@@ -58,6 +58,7 @@ import java.util.Set;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_ID_KEY;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_KEY;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_REPO_URLS_KEY;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_SKIP_AVRO_INDEXES;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_SOURCE_KEY;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SUBJECT_KEY;
 import static org.apache.commons.lang.StringUtils.isEmpty;
@@ -373,7 +374,8 @@ public class DataFormatParser {
             .setConfig(SUBJECT_KEY, dataFormatConfig.subject)
             .setConfig(SCHEMA_ID_KEY, dataFormatConfig.schemaId)
             .setConfig(SCHEMA_SOURCE_KEY, dataFormatConfig.avroSchemaSource)
-            .setConfig(SCHEMA_REPO_URLS_KEY, dataFormatConfig.schemaRegistryUrls);
+            .setConfig(SCHEMA_REPO_URLS_KEY, dataFormatConfig.schemaRegistryUrls)
+            .setConfig(SCHEMA_SKIP_AVRO_INDEXES, dataFormatConfig.avroSkipUnionIndex);
         break;
       case PROTOBUF:
         builder

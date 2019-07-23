@@ -67,7 +67,7 @@ public class TestAvroTypeUtil {
     String schema = "{\"name\": \"name\", \"type\": \"boolean\"}";
     Schema avroSchema = new Schema.Parser().parse(schema);
     Record record = RecordCreator.create();
-    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, true);
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, true, false);
     Assert.assertEquals(Field.Type.BOOLEAN, field.getType());
     Assert.assertEquals(true, field.getValueAsBoolean());
 
@@ -82,7 +82,7 @@ public class TestAvroTypeUtil {
     String schema = "{\"name\": \"name\", \"type\": \"double\"}";
     Schema avroSchema = new Schema.Parser().parse(schema);
     Record record = RecordCreator.create();
-    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, 345823746923.863423);
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, 345823746923.863423, false);
     Assert.assertEquals(Field.Type.DOUBLE, field.getType());
     Assert.assertTrue(345823746923.863423 == field.getValueAsDouble());
 
@@ -100,7 +100,7 @@ public class TestAvroTypeUtil {
     String schema = "{\"name\": \"name\", \"type\": \"int\"}";
     Schema avroSchema = new Schema.Parser().parse(schema);
     Record record = RecordCreator.create();
-    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, 34582);
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, 34582, false);
     Assert.assertEquals(Field.Type.INTEGER, field.getType());
     Assert.assertTrue(34582 == field.getValueAsInteger());
 
@@ -118,7 +118,7 @@ public class TestAvroTypeUtil {
     String schema = "{\"name\": \"name\", \"type\": \"long\"}";
     Schema avroSchema = new Schema.Parser().parse(schema);
     Record record = RecordCreator.create();
-    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, 3458236L);
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, 3458236L, false);
     Assert.assertEquals(Field.Type.LONG, field.getType());
     Assert.assertEquals(3458236L, field.getValueAsLong());
 
@@ -136,7 +136,7 @@ public class TestAvroTypeUtil {
     String schema = "{\"name\": \"name\", \"type\": \"string\"}";
     Schema avroSchema = new Schema.Parser().parse(schema);
     Record record = RecordCreator.create();
-    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, "Hari");
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, "Hari", false);
     Assert.assertEquals(Field.Type.STRING, field.getType());
     Assert.assertEquals("Hari", field.getValueAsString());
 
@@ -155,7 +155,7 @@ public class TestAvroTypeUtil {
     Schema avroSchema = new Schema.Parser().parse(schema);
     Record record = RecordCreator.create();
     GenericData.EnumSymbol enumSymbol = new GenericData.EnumSymbol(avroSchema, "CLUBS");
-    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, enumSymbol);
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, enumSymbol, false);
 
     Assert.assertEquals(Field.Type.STRING, field.getType());
     Assert.assertEquals("CLUBS", field.getValueAsString());
@@ -178,7 +178,7 @@ public class TestAvroTypeUtil {
     GenericData.Fixed fixed = new GenericData.Fixed(avroSchema, bytes);
 
     Record record = RecordCreator.create();
-    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, fixed);
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, fixed, false);
 
     Assert.assertEquals(Field.Type.BYTE_ARRAY, field.getType());
     byte[] valueAsByteArray = field.getValueAsByteArray();
@@ -204,7 +204,7 @@ public class TestAvroTypeUtil {
     String schema = "{\"name\": \"name\", \"type\": \"bytes\"}";
     Schema avroSchema = new Schema.Parser().parse(schema);
     Record record = RecordCreator.create();
-    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, ByteBuffer.wrap("Hari".getBytes()));
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, ByteBuffer.wrap("Hari".getBytes()), false);
     Assert.assertEquals(Field.Type.BYTE_ARRAY, field.getType());
     Assert.assertTrue(Arrays.equals("Hari".getBytes(), field.getValueAsByteArray()));
 
@@ -218,7 +218,7 @@ public class TestAvroTypeUtil {
   public void testCreateNullField() throws Exception {
     Schema schema = Schema.create(Schema.Type.NULL);
     Record record = RecordCreator.create();
-    Field field = AvroTypeUtil.avroToSdcField(record, schema, null);
+    Field field = AvroTypeUtil.avroToSdcField(record, schema, null, false);
     Assert.assertEquals(Field.Type.MAP, field.getType());
     Assert.assertEquals(null, field.getValue());
 
@@ -232,7 +232,7 @@ public class TestAvroTypeUtil {
     String schema = "{\"name\": \"name\", \"type\": \"bytes\", \"logicalType\": \"decimal\", \"precision\": 2, \"scale\": 1}";
     Schema avroSchema = new Schema.Parser().parse(schema);
     Record record = RecordCreator.create();
-    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, BigDecimal.valueOf(1.5));
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, BigDecimal.valueOf(1.5), false);
     Assert.assertEquals(Field.Type.DECIMAL, field.getType());
     Assert.assertEquals(BigDecimal.valueOf(1.5), field.getValueAsDecimal());
     Assert.assertEquals("decimal", field.getAttribute(AvroTypeUtil.FIELD_ATTRIBUTE_TYPE));
@@ -258,7 +258,7 @@ public class TestAvroTypeUtil {
     record.set(Field.create(Field.Type.DECIMAL, expectedValue));
     Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroSchema, Collections.emptyMap());
 
-    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, avroObject);
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, avroObject, false);
     Assert.assertEquals(Field.Type.DECIMAL, field.getType());
     Assert.assertEquals(expectedValue, field.getValueAsDecimal());
     Assert.assertEquals("2", field.getAttribute(AvroTypeUtil.LOGICAL_TYPE_ATTR_PRECISION));
@@ -273,7 +273,7 @@ public class TestAvroTypeUtil {
     String schema = "{\"name\": \"name\", \"type\": \"int\", \"logicalType\": \"date\"}";
     Schema avroSchema = new Schema.Parser().parse(schema);
     Record record = RecordCreator.create();
-    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, new Date(116, 0, 1));
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, new Date(116, 0, 1), false);
     Assert.assertEquals(Field.Type.DATE, field.getType());
     Assert.assertEquals("date", field.getAttribute(AvroTypeUtil.FIELD_ATTRIBUTE_TYPE));
     Assert.assertEquals(new Date(116, 0, 1), field.getValueAsDate());
@@ -292,7 +292,7 @@ public class TestAvroTypeUtil {
     String schema = "[\"null\", \"string\"]";
     Schema avroSchema = new Schema.Parser().parse(schema);
     Record record = RecordCreator.create();
-    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, null);
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, null, false);
     Assert.assertEquals(Field.Type.STRING, field.getType());
     Assert.assertEquals(null, field.getValue());
 
@@ -302,11 +302,41 @@ public class TestAvroTypeUtil {
   }
 
   @Test
+  public void testCreateUnion() throws Exception {
+    String schema = "[\"int\", \"string\"]";
+    Schema avroSchema = new Schema.Parser().parse(schema);
+    Record record = RecordCreator.create();
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, "Str", false);
+    Assert.assertEquals(Field.Type.STRING, field.getType());
+    Assert.assertEquals("Str", field.getValue());
+    Assert.assertEquals("1", record.getHeader().getAttribute("avro.union.typeIndex."));
+
+    record.set(field);
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroSchema, Collections.emptyMap());
+    Assert.assertNotNull(avroObject);
+  }
+
+  @Test
+  public void testCreateUnionNoIndex() throws Exception {
+    String schema = "[\"int\", \"string\"]";
+    Schema avroSchema = new Schema.Parser().parse(schema);
+    Record record = RecordCreator.create();
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, "Str", true);
+    Assert.assertEquals(Field.Type.STRING, field.getType());
+    Assert.assertEquals("Str", field.getValue());
+    Assert.assertFalse(record.getHeader().getAttributeNames().contains("avro.union.typeIndex."));
+
+    record.set(field);
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroSchema, Collections.emptyMap());
+    Assert.assertNotNull(avroObject);
+  }
+
+  @Test
   public void testCreateUnionWithNullAndLogicalType() throws Exception {
     String schema = "[\"null\", {\"name\": \"name\", \"type\": \"bytes\", \"logicalType\": \"decimal\", \"precision\":5, \"scale\":2}]";
     Schema avroSchema = new Schema.Parser().parse(schema);
     Record record = RecordCreator.create();
-    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, null);
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, null, false);
     Assert.assertEquals(Field.Type.DECIMAL, field.getType());
     Assert.assertEquals(null, field.getValue());
     Assert.assertEquals("5", field.getAttribute(HeaderAttributeConstants.ATTR_PRECISION));
@@ -328,7 +358,7 @@ public class TestAvroTypeUtil {
     record.set(Field.create(Field.Type.DATE, expectedDate));
 
     Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroSchema, Collections.emptyMap());
-    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, avroObject);
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, avroObject, false);
     Assert.assertEquals(Field.Type.DATE, field.getType());
     Assert.assertEquals(expectedDate, field.getValueAsDate());
   }
@@ -338,7 +368,7 @@ public class TestAvroTypeUtil {
     String schema = "{\"name\": \"name\", \"type\": \"int\", \"logicalType\": \"time-millis\"}";
     Schema avroSchema = new Schema.Parser().parse(schema);
     Record record = RecordCreator.create();
-    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, 1000);
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, 1000, false);
     Assert.assertEquals(Field.Type.TIME, field.getType());
     Assert.assertEquals("time-millis", field.getAttribute(AvroTypeUtil.FIELD_ATTRIBUTE_TYPE));
     Assert.assertEquals(new Date(1000L), field.getValueAsDate());
@@ -357,7 +387,7 @@ public class TestAvroTypeUtil {
     String schema = "{\"name\": \"name\", \"type\": \"long\", \"logicalType\": \"time-micros\"}";
     Schema avroSchema = new Schema.Parser().parse(schema);
     Record record = RecordCreator.create();
-    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, 1000);
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, 1000, false);
     Assert.assertEquals(Field.Type.LONG, field.getType());
     Assert.assertEquals("time-micros", field.getAttribute(AvroTypeUtil.FIELD_ATTRIBUTE_TYPE));
     Assert.assertEquals(1000L, field.getValueAsLong());
@@ -377,7 +407,7 @@ public class TestAvroTypeUtil {
     Date date = new Date(116, 0, 1, 3, 30, 5);
     Schema avroSchema = new Schema.Parser().parse(schema);
     Record record = RecordCreator.create();
-    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, date);
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, date, false);
     Assert.assertEquals(Field.Type.DATETIME, field.getType());
     Assert.assertEquals("timestamp-millis", field.getAttribute(AvroTypeUtil.FIELD_ATTRIBUTE_TYPE));
     Assert.assertEquals(date, field.getValueAsDate());
@@ -396,7 +426,7 @@ public class TestAvroTypeUtil {
     String schema = "{\"name\": \"name\", \"type\": \"long\", \"logicalType\": \"timestamp-micros\"}";
     Schema avroSchema = new Schema.Parser().parse(schema);
     Record record = RecordCreator.create();
-    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, 1000L);
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, 1000L, false);
     Assert.assertEquals(Field.Type.LONG, field.getType());
     Assert.assertEquals("timestamp-micros", field.getAttribute(AvroTypeUtil.FIELD_ATTRIBUTE_TYPE));
     Assert.assertEquals(1000L, field.getValueAsLong());
@@ -412,7 +442,7 @@ public class TestAvroTypeUtil {
     String schema = "{\"type\": \"array\", \"items\": \"string\"}";
     Schema avroSchema = new Schema.Parser().parse(schema);
     Record record = RecordCreator.create();
-    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, Arrays.asList("Hari", "Kiran"));
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, Arrays.asList("Hari", "Kiran"), false);
 
     Assert.assertEquals(Field.Type.LIST, field.getType());
     List<Field> valueAsList = field.getValueAsList();
@@ -439,7 +469,7 @@ public class TestAvroTypeUtil {
     Schema avroSchema = new Schema.Parser().parse(schema);
 
     Record record = RecordCreator.create();
-    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, ImmutableMap.of(new Utf8("Hari"), 1, new Utf8("Kiran"), 2));
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, ImmutableMap.of(new Utf8("Hari"), 1, new Utf8("Kiran"), 2), false);
     Assert.assertEquals(Field.Type.MAP, field.getType());
     Map<String, Field> valueAsMap = field.getValueAsMap();
 
@@ -493,7 +523,7 @@ public class TestAvroTypeUtil {
     genericRecord.put("boss", boss);
 
     Record record = RecordCreator.create();
-    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, genericRecord);
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, genericRecord, false);
     Assert.assertEquals(Field.Type.LIST_MAP, field.getType());
     Map<String, Field> map = field.getValueAsMap();
     Assert.assertTrue(map.containsKey("name"));
@@ -587,7 +617,7 @@ public class TestAvroTypeUtil {
     genericRecord.put("boss", ImmutableList.of(boss1, boss2));
 
     Record record = RecordCreator.create();
-    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, genericRecord);
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, genericRecord, false);
     Assert.assertEquals(Field.Type.LIST_MAP, field.getType());
     Map<String, Field> map = field.getValueAsMap();
     Assert.assertTrue(map.containsKey("name"));
@@ -718,7 +748,7 @@ public class TestAvroTypeUtil {
 
     Record record = RecordCreator.create();
     Field root = AvroTypeUtil.avroToSdcField(record, avroListSchema,
-      ImmutableList.of(genericRecord2, genericRecord1));
+      ImmutableList.of(genericRecord2, genericRecord1), false);
     Assert.assertEquals(Field.Type.LIST, root.getType());
     List<Field> valueAsList = root.getValueAsList();
     Assert.assertEquals(2, valueAsList.size());
@@ -881,7 +911,7 @@ public class TestAvroTypeUtil {
 
     Record record = RecordCreator.create();
     Field root = AvroTypeUtil.avroToSdcField(record, avroMapSchema, ImmutableMap.of(new Utf8("Hari"), genericRecord2,
-      new Utf8("Kiran"), genericRecord1));
+      new Utf8("Kiran"), genericRecord1), false);
     Assert.assertEquals(Field.Type.MAP, root.getType());
 
     Map<String, Field> valueAsMap = root.getValueAsMap();

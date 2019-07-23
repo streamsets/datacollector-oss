@@ -51,11 +51,13 @@ public class AvroDataFileParser extends AbstractDataParser {
   private boolean eof;
   private ProtoConfigurableEntity.Context context;
   private String avroSchemaString;
+  private final boolean skipUnionIndexes;
 
-  public AvroDataFileParser(ProtoConfigurableEntity.Context context, Schema schema, File file, String readerOffset, int maxObjectLength)
+  public AvroDataFileParser(ProtoConfigurableEntity.Context context, Schema schema, File file, String readerOffset, int maxObjectLength, boolean skipUnionIndexes)
     throws IOException {
     this.context = context;
     this.file = file;
+    this.skipUnionIndexes = skipUnionIndexes;
     DatumReader<GenericRecord> datumReader = new GenericDatumReader<>(schema, schema, GenericData.get());
     sin = new SeekableOverrunFileInputStream(
       new FileInputStream(file), maxObjectLength, true);
@@ -92,7 +94,7 @@ public class AvroDataFileParser extends AbstractDataParser {
       GenericRecord avroRecord = dataFileReader.next();
       recordCount++;
       Record record = context.createRecord(file.getName() + OFFSET_SEPARATOR + previousSync + OFFSET_SEPARATOR + recordCount);
-      record.set(AvroTypeUtil.avroToSdcField(record, avroRecord.getSchema(), avroRecord));
+      record.set(AvroTypeUtil.avroToSdcField(record, avroRecord.getSchema(), avroRecord, skipUnionIndexes));
       if(avroSchemaString == null) {
         this.avroSchemaString = avroRecord.getSchema().toString();
       }

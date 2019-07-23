@@ -811,6 +811,22 @@ public class DataParserFormatConfig implements DataFormatConfig {
   )
   public int schemaId;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Skip Union Indexes",
+      defaultValue = "false",
+      description = "When checked generated records will not contain header attributes identifying which part of a" +
+        " union was used to read data in. Data Collector does not use the header attributes directly, thus this can" +
+        " be selected safely unless the pipeline explicitly depends on them.",
+      dependencies = {
+          @Dependency(configName = "dataFormat^", triggeredByValues = "AVRO")
+      },
+      displayPosition = 460,
+      group = "DATA_FORMAT"
+  )
+  public boolean avroSkipUnionIndex = false;
+
   // PROTOBUF
 
   @ConfigDef(
@@ -1598,7 +1614,8 @@ public class DataParserFormatConfig implements DataFormatConfig {
         .setMaxDataLen(-1)
         .setConfig(SCHEMA_KEY, avroSchema)
         .setConfig(SCHEMA_SOURCE_KEY, avroSchemaSource)
-        .setConfig(SCHEMA_REPO_URLS_KEY, schemaRegistryUrls);
+        .setConfig(SCHEMA_REPO_URLS_KEY, schemaRegistryUrls)
+        .setConfig(SCHEMA_SKIP_AVRO_INDEXES, avroSkipUnionIndex);
     if (schemaLookupMode == AvroSchemaLookupMode.SUBJECT) {
       // Subject used for looking up schema
       builder.setConfig(SUBJECT_KEY, subject);
