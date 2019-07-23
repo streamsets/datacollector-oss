@@ -28,8 +28,8 @@ public class TestJavascriptSource {
   }
 
   @Test
-  public void testGenerateRecords() throws Exception {
-    ScriptingOriginTestUtil.testGenerateRecords(
+  public void testResumeGenerateRecords() throws Exception {
+    ScriptingOriginTestUtil.testResumeGenerateRecords(
         DSOURCECLASS,
         getDSource(),
         "GeneratorOriginScript.js"
