@@ -1081,6 +1081,11 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       "streamsets-datacollector-hdp_2_4-lib",
       "streamsets-datacollector-hdp_2_5-flume-lib",
       "streamsets-datacollector-hdp_2_5-lib",
+      "streamsets-datacollector-hdp_2_6-lib",
+      "streamsets-datacollector-hdp_2_6_1-hive1-lib",
+      "streamsets-datacollector-hdp_2_6_2-hive1-lib",
+      "streamsets-datacollector-hdp_2_6-hive2-lib",
+      "streamsets-datacollector-hdp_2_6-flume-lib",
       "streamsets-datacollector-mapr_5_0-lib",
       "streamsets-datacollector-mapr_5_1-lib"
     );
