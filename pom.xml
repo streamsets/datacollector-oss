@@ -160,6 +160,7 @@
     <module>mapr_json-5_2-protolib</module>
     <module>mapr_json-6_0-protolib</module>
     <module>hive-protolib</module>
+    <module>jks-credentialstore-protolib</module>
 
     <module>dir-spooler-protolib</module>
 
