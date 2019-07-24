@@ -32,7 +32,7 @@ import com.streamsets.pipeline.stage.origin.scripting.config.ScriptSourceConfigB
     version = 1,
     label="Jython Scripting",
     description = "Produces record batches using Jython script",
-    execution = {ExecutionMode.STANDALONE, ExecutionMode.EDGE},
+    execution = {ExecutionMode.STANDALONE},
     icon= "jython.png",
     producesEvents = true,
     onlineHelpRefUrl ="index.html?contextID=task_ptn_xnj_l3b"

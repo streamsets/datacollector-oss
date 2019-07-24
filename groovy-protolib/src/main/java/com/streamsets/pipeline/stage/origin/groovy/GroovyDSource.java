@@ -29,7 +29,7 @@ import com.streamsets.pipeline.stage.origin.scripting.Groups;
     version = 1,
     label="Groovy Scripting",
     description = "Produces record batches using Groovy script",
-    execution = {ExecutionMode.STANDALONE, ExecutionMode.EDGE},
+    execution = {ExecutionMode.STANDALONE},
     icon= "groovy.png",
     producesEvents = true,
     onlineHelpRefUrl =""
