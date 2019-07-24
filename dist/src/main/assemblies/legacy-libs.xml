@@ -119,6 +119,26 @@
       <directory>${basedir}/../${hdp_2_5-flume-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/</outputDirectory>
     </fileSet>
+    <fileSet>
+      <directory>${basedir}/../${hdp_2_6-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${basedir}/../${hdp_2_6_1-hive1-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${basedir}/../${hdp_2_6_2-hive1-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${basedir}/../${hdp_2_6-hive2-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${basedir}/../${hdp_2_6-flume-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/</outputDirectory>
+    </fileSet>
 
     <!-- MapR Libs -->
     <fileSet>
