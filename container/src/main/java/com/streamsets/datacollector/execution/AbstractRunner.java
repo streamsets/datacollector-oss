@@ -172,7 +172,9 @@ public abstract  class AbstractRunner implements Runner {
   @Override
   public Map<String, Object> createStateAttributes() throws PipelineStoreException {
     Map<String, Object> attributes = new HashMap<>(getState().getAttributes());
-    attributes.put(RUNTIME_PARAMETERS_ATTR, startPipelineContext.getRuntimeParameters());
+    if(startPipelineContext != null) {
+      attributes.put(RUNTIME_PARAMETERS_ATTR, startPipelineContext.getRuntimeParameters());
+    }
 
     List<String> interceptors = new ArrayList<>();
     try {
