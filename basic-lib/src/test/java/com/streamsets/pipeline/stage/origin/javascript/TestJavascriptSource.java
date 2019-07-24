@@ -36,4 +36,21 @@ public class TestJavascriptSource {
     );
   }
 
+  @Test
+  public void testAllBindings() throws Exception {
+    ScriptingOriginTestUtil.testAllBindings(
+        DSOURCECLASS,
+        getDSource(),
+        "TestAllBindings.js"
+    );
+  }
+
+  @Test
+  public void testNullTypes() throws Exception {
+    ScriptingOriginTestUtil.testNullTypes(
+        DSOURCECLASS,
+        getDSource(),
+        "TestNullTypes.js"
+    );
+  }
 }

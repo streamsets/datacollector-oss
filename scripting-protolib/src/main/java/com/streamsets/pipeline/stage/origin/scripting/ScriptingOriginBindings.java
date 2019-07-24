@@ -50,22 +50,22 @@ public class ScriptingOriginBindings {
 
   // These must be bound to the same objects instantiated in ScriptTypedNullObject.
   // They will be decoded later by "==" comparison to these objects.
-  public static final Object NULL_BOOLEAN = ScriptTypedNullObject.NULL_BOOLEAN;
-  public static final Object NULL_CHAR = ScriptTypedNullObject.NULL_CHAR; //Groovy support char
-  public static final Object NULL_BYTE = ScriptTypedNullObject.NULL_BYTE; //Groovy support byte
-  public static final Object NULL_SHORT = ScriptTypedNullObject.NULL_SHORT; //Groovy support short
-  public static final Object NULL_INTEGER = ScriptTypedNullObject.NULL_INTEGER;
-  public static final Object NULL_LONG = ScriptTypedNullObject.NULL_LONG;
-  public static final Object NULL_FLOAT = ScriptTypedNullObject.NULL_FLOAT;
-  public static final Object NULL_DOUBLE = ScriptTypedNullObject.NULL_DOUBLE;
-  public static final Object NULL_DATE = ScriptTypedNullObject.NULL_DATE;
-  public static final Object NULL_DATETIME = ScriptTypedNullObject.NULL_DATETIME;
-  public static final Object NULL_TIME = ScriptTypedNullObject.NULL_TIME;
-  public static final Object NULL_DECIMAL = ScriptTypedNullObject.NULL_DECIMAL;
-  public static final Object NULL_BYTE_ARRAY = ScriptTypedNullObject.NULL_BYTE_ARRAY;
-  public static final Object NULL_STRING = ScriptTypedNullObject.NULL_STRING;
-  public static final Object NULL_LIST = ScriptTypedNullObject.NULL_LIST;
-  public static final Object NULL_MAP = ScriptTypedNullObject.NULL_MAP;
+  public final Object NULL_BOOLEAN = ScriptTypedNullObject.NULL_BOOLEAN;
+  public final Object NULL_CHAR = ScriptTypedNullObject.NULL_CHAR; //Groovy support char
+  public final Object NULL_BYTE = ScriptTypedNullObject.NULL_BYTE; //Groovy support byte
+  public final Object NULL_SHORT = ScriptTypedNullObject.NULL_SHORT; //Groovy support short
+  public final Object NULL_INTEGER = ScriptTypedNullObject.NULL_INTEGER;
+  public final Object NULL_LONG = ScriptTypedNullObject.NULL_LONG;
+  public final Object NULL_FLOAT = ScriptTypedNullObject.NULL_FLOAT;
+  public final Object NULL_DOUBLE = ScriptTypedNullObject.NULL_DOUBLE;
+  public final Object NULL_DATE = ScriptTypedNullObject.NULL_DATE;
+  public final Object NULL_DATETIME = ScriptTypedNullObject.NULL_DATETIME;
+  public final Object NULL_TIME = ScriptTypedNullObject.NULL_TIME;
+  public final Object NULL_DECIMAL = ScriptTypedNullObject.NULL_DECIMAL;
+  public final Object NULL_BYTE_ARRAY = ScriptTypedNullObject.NULL_BYTE_ARRAY;
+  public final Object NULL_STRING = ScriptTypedNullObject.NULL_STRING;
+  public final Object NULL_LIST = ScriptTypedNullObject.NULL_LIST;
+  public final Object NULL_MAP = ScriptTypedNullObject.NULL_MAP;
 
   // to hide all other methods of Stage.Context
   public class Err {

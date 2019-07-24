@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin;
+package com.streamsets.pipeline.stage.origin.groovy;
 
-import com.streamsets.pipeline.stage.origin.groovy.GroovyDSource;
 import com.streamsets.pipeline.stage.origin.scripting.AbstractScriptingDSource;
 import com.streamsets.pipeline.stage.origin.scripting.ScriptingOriginTestUtil;
 import org.junit.Test;
@@ -37,4 +36,21 @@ public class TestGroovySource {
     );
   }
 
+  @Test
+  public void testAllBindings() throws Exception {
+    ScriptingOriginTestUtil.testAllBindings(
+        DSOURCECLASS,
+        getDSource(),
+        "TestAllBindings.groovy"
+    );
+  }
+
+  @Test
+  public void testNullTypes() throws Exception {
+    ScriptingOriginTestUtil.testNullTypes(
+        DSOURCECLASS,
+        getDSource(),
+        "TestNullTypes.groovy"
+    );
+  }
 }
