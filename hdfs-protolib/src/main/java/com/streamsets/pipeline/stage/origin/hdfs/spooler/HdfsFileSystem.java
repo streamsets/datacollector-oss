@@ -31,7 +31,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -207,23 +206,11 @@ public class HdfsFileSystem implements WrappedFileSystem {
   }
 
   public WrappedFile getFile(String dirPath, String filePath) {
-    if (isAbsolutePath(dirPath, filePath)) {
-      return getFile(dirPath, filePath);
-    }
     if (filePath.startsWith(File.separator)) {
       filePath = filePath.replaceFirst(File.separator, "");
     }
     Path path = new Path(dirPath, filePath);
     return new HdfsFile(fs, path);
-  }
-
-  /*
-   * Java File.isAbsolute method only checks whether the path begins with /
-   * This is not enough since sometimes the method receives relative paths starting with /
-   * We want to check whether the filePath already includes the directory path
-   */
-  private boolean isAbsolutePath(String dirPath, String filePath) {
-    return filePath.startsWith(dirPath);
   }
 
   public void mkdir(WrappedFile filePath) {
