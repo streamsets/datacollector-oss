@@ -29,7 +29,7 @@ import com.streamsets.pipeline.stage.origin.scripting.Groups;
     version = 1,
     label="JavaScript Scripting",
     description = "Produces record batches using JavaScript script",
-    execution = {ExecutionMode.STANDALONE, ExecutionMode.EDGE},
+    execution = {ExecutionMode.STANDALONE},
     icon= "javascript.png",
     producesEvents = true,
     onlineHelpRefUrl =""
