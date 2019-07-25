@@ -964,8 +964,8 @@ public class JdbcUtil {
     // create is not set
     if (isPlainString(schemaNameTemplate) && isPlainString(tableNameTemplate) && !tableAutoCreate) {
       try (
-        Connection connection = dataSource.getConnection();
-        ResultSet res = getTableMetadata(connection, schemaNameTemplate, tableNameTemplate);
+          Connection connection = dataSource.getConnection();
+          ResultSet res = getTableMetadata(connection, schemaNameTemplate, tableNameTemplate);
       ) {
         if (!res.next()) {
           issues.add(context.createConfigIssue(Groups.JDBC.name(), TABLE_NAME, JdbcErrors.JDBC_16, tableNameTemplate));
@@ -978,10 +978,10 @@ public class JdbcUtil {
             for (JdbcFieldColumnParamMapping customMapping : customMappings) {
               if (!columnNames.contains(customMapping.columnName)) {
                 issues.add(context.createConfigIssue(Groups.JDBC.name(),
-                  CUSTOM_MAPPINGS,
-                  JdbcErrors.JDBC_07,
-                  customMapping.field,
-                  customMapping.columnName
+                    CUSTOM_MAPPINGS,
+                    JdbcErrors.JDBC_07,
+                    customMapping.field,
+                    customMapping.columnName
                 ));
               }
             }
@@ -991,6 +991,27 @@ public class JdbcUtil {
     }
 
     return dataSource;
+  }
+
+  public HikariDataSource createDataSourceForWrite(
+      HikariPoolConfigBean hikariConfigBean,
+      String schemaNameTemplate,
+      String tableNameTemplate,
+      boolean caseSensitive,
+      List<Stage.ConfigIssue> issues,
+      List<JdbcFieldColumnParamMapping> customMappings,
+      Stage.Context context
+  ) throws SQLException, StageException {
+    return createDataSourceForWrite(
+        hikariConfigBean,
+        schemaNameTemplate,
+        tableNameTemplate,
+        caseSensitive,
+        issues,
+        customMappings,
+        context,
+        false
+    );
   }
 
   public HikariDataSource createDataSourceForRead(
