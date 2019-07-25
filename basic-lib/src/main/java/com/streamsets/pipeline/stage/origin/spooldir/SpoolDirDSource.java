@@ -45,7 +45,7 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
     resetOffset = true,
     producesEvents = true,
     eventDefs = {NewFileEvent.class, FinishedFileEvent.class, NoMoreDataEvent.class},
-    onlineHelpRefUrl ="index.html?contextID=task_gfj_ssv_yq"
+    onlineHelpRefUrl ="index.html?contextID=task_o5v_bp1_n3b"
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
 @ConfigGroups(Groups.class)
