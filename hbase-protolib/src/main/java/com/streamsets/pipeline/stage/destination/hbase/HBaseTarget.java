@@ -287,7 +287,10 @@ public class HBaseTarget extends BaseTarget {
   }
 
   private static StageException throwStageException(Exception e) {
-    if (e instanceof RuntimeException) {
+    if (e instanceof StageException) {
+      return (StageException) e;
+    }
+    else if (e instanceof RuntimeException) {
       Throwable cause = e.getCause();
       if (cause != null) {
         return new StageException(Errors.HBASE_26, cause, cause);
