@@ -281,6 +281,13 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     return bindings;
   }
 
+  public class ScriptingProcessorBindings {
+    public final Map<String, String> userParams;
+    public ScriptingProcessorBindings(Map<String, String> userParams) {
+      this.userParams = userParams;
+    }
+  }
+
   private SimpleBindings createBindings() {
     SimpleBindings bindings = new SimpleBindings();
 
@@ -289,7 +296,7 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     bindings.put(LOG_BINDING_NAME, log);
     ScriptTypedNullObject.fillNullTypes(bindings);
     bindings.put("sdcFunctions", sdcFunc);
-    bindings.put("sdcUserParams", userParams);
+    bindings.put("sdc", new ScriptingProcessorBindings(userParams));
 
     return bindings;
   }

@@ -438,7 +438,7 @@ public class TestGroovyProcessor {
   @Test
   public void testUserParams() throws Exception {
     String script ="for(record in records) {\n" +
-        "  record.value['user-param-key'] = sdcUserParams['user-param-key'];\n" +
+        "  record.value['user-param-key'] = sdc.userParams['user-param-key'];\n" +
         "  output.write(record);\n" +
         "}";
     Map<String, String> userParams = new HashMap<>();
