@@ -118,7 +118,9 @@ public class JavaScriptDProcessor extends DProcessor {
     required = false,
     defaultValue = "{}",
     type = ConfigDef.Type.MAP,
-    label = "User-Defined Parameters",
+    label = "Parameters in Script",
+    description = "Parameters and values for use in script.\n" +
+        "Access in user script as sdc.userParams.",
     displayPosition = 80,
     group = "ADVANCED"
   )

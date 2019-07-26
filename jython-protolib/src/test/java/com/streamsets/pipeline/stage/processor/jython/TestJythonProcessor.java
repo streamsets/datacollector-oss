@@ -554,7 +554,7 @@ public class TestJythonProcessor {
   @Test
   public void testUserParams() throws Exception {
     String script =  "for record in records:\n" +
-        "  record.value['user-param-key'] = sdcUserParams['user-param-key']\n" +
+        "  record.value['user-param-key'] = sdc.userParams['user-param-key']\n" +
         "  output.write(record)";
     Map<String, String> userParams = new HashMap<>();
     userParams.put("user-param-key", "user-param-value");

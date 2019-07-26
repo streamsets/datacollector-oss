@@ -654,7 +654,7 @@ public class TestJavaScriptProcessor {
   @Test
   public void testUserParams() throws Exception {
     String script = "for(var i = 0; i < records.length; i++) {\n" +
-        "  records[i].value['user-param-key'] = sdcUserParams['user-param-key'];\n" +
+        "  records[i].value['user-param-key'] = sdc.userParams['user-param-key'];\n" +
         "  output.write(records[i]);\n" +
         "}";
     Map<String, String> userParams = new HashMap<>();

@@ -104,12 +104,14 @@ public class JythonDProcessor extends DProcessor {
   public ScriptRecordType scriptRecordType = ScriptRecordType.NATIVE_OBJECTS;
 
   @ConfigDef(
-      required = false,
-      defaultValue = "{}",
-      type = ConfigDef.Type.MAP,
-      label = "User-Defined Parameters",
-      displayPosition = 80,
-      group = "ADVANCED"
+    required = false,
+    defaultValue = "{}",
+    type = ConfigDef.Type.MAP,
+    label = "Parameters in Script",
+    description = "Parameters and values for use in script.\n" +
+        "Access in user script as sdc.userParams.",
+    displayPosition = 80,
+    group = "ADVANCED"
   )
   public Map<String, String> userParams;
 
