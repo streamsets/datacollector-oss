@@ -272,7 +272,7 @@ public class RecordImpl implements Record, Cloneable {
   }
 
   List<PathElement> parse(String fieldPath) {
-    return PathElement.parse(fieldPath, true);
+    return CachedPathElement.parse(fieldPath);
   }
 
   private List<Field> get(List<PathElement> elements) {
