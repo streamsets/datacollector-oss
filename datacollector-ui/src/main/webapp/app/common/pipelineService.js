@@ -729,7 +729,8 @@ angular.module('dataCollectorApp.common')
           description: '',
           xPos: xPos,
           yPos: yPos,
-          stageType: stage.type
+          stageType: stage.type,
+          icon: stage.icon
         },
         services: [],
         inputLanes: [],

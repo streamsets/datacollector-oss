@@ -20,9 +20,10 @@ import com.streamsets.datacollector.client.StringUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
 
 @ApiModel(description = "")
 public class IssueJson   {
@@ -33,8 +34,9 @@ public class IssueJson   {
   private String serviceName = null;
   private String configGroup = null;
   private String configName = null;
-  private Map<String, Object> additionalInfo = new HashMap<String, Object>();
+  private Map<String, Object> additionalInfo = new HashMap<>();
   private long count;
+  private List<AntennaDoctorMessageJson> antennaDoctorMessages = new ArrayList<>();
 
   /**
    **/
@@ -129,6 +131,16 @@ public class IssueJson   {
     this.count = count;
   }
 
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("antennaDoctorMessages")
+  public List<AntennaDoctorMessageJson> getAntennaDoctorMessages() {
+    return antennaDoctorMessages;
+  }
+  public void setAntennaDoctorMessages(List<AntennaDoctorMessageJson> antennaDoctorMessages) {
+    this.antennaDoctorMessages = antennaDoctorMessages;
+  }
 
   @Override
   public String toString()  {
