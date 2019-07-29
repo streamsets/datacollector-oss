@@ -19,7 +19,7 @@ import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.stage.destination.mapreduce.MapReduceErrors;
 import com.streamsets.pipeline.stage.destination.mapreduce.config.MapReduceConfig;
-import jersey.repackaged.com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList;
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.junit.Assert;
