@@ -19,8 +19,8 @@ package com.streamsets.pipeline.stage.origin.javascript;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.stage.origin.scripting.AbstractScriptingSource;
 import com.streamsets.pipeline.stage.origin.scripting.config.ScriptSourceConfigBean;
-import com.streamsets.pipeline.stage.origin.scripting.config.ScriptRecordType;
-import com.streamsets.pipeline.stage.origin.scripting.ScriptObjectFactory;
+import com.streamsets.pipeline.stage.util.scripting.ScriptObjectFactory;
+import com.streamsets.pipeline.stage.util.scripting.config.ScriptRecordType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

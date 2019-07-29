@@ -25,8 +25,8 @@ import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.SinkUtils;
 import com.streamsets.pipeline.sdk.StageRunner;
-import com.streamsets.pipeline.stage.origin.scripting.config.ScriptRecordType;
 import com.streamsets.pipeline.stage.origin.scripting.config.ScriptSourceConfigBean;
+import com.streamsets.pipeline.stage.util.scripting.config.ScriptRecordType;
 
 import java.io.IOException;
 import java.net.URL;

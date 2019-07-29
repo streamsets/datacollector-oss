@@ -18,10 +18,10 @@ package com.streamsets.pipeline.stage.origin.jython;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.stage.origin.scripting.AbstractScriptingSource;
-import com.streamsets.pipeline.stage.origin.scripting.ScriptTypedNullObject;
 import com.streamsets.pipeline.stage.origin.scripting.config.ScriptSourceConfigBean;
-import com.streamsets.pipeline.stage.origin.scripting.config.ScriptRecordType;
-import com.streamsets.pipeline.stage.origin.scripting.ScriptObjectFactory;
+import com.streamsets.pipeline.stage.util.scripting.ScriptObjectFactory;
+import com.streamsets.pipeline.stage.util.scripting.ScriptTypedNullObject;
+import com.streamsets.pipeline.stage.util.scripting.config.ScriptRecordType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,8 +30,6 @@ import javax.script.ScriptEngine;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 
 public class JythonSource extends AbstractScriptingSource {
@@ -39,7 +37,6 @@ public class JythonSource extends AbstractScriptingSource {
   private static final Logger LOG = LoggerFactory.getLogger(JythonSource.class);
   private static final String JYTHON_ENGINE = "jython";
   private final ScriptRecordType scriptRecordType;
-  private static final Lock lock = new ReentrantLock();
 
   public JythonSource(String script, ScriptSourceConfigBean scriptConf) {
     super(

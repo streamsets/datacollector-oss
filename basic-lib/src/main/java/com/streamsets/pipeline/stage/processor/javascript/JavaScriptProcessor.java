@@ -18,8 +18,8 @@ package com.streamsets.pipeline.stage.processor.javascript;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.stage.processor.scripting.AbstractScriptingProcessor;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
-import com.streamsets.pipeline.stage.processor.scripting.ScriptObjectFactory;
-import com.streamsets.pipeline.stage.processor.scripting.config.ScriptRecordType;
+import com.streamsets.pipeline.stage.util.scripting.ScriptObjectFactory;
+import com.streamsets.pipeline.stage.util.scripting.config.ScriptRecordType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

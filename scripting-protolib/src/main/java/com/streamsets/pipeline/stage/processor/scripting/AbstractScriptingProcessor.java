@@ -25,6 +25,12 @@ import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.util.scripting.Errors;
+import com.streamsets.pipeline.stage.util.scripting.NativeScriptRecord;
+import com.streamsets.pipeline.stage.util.scripting.ScriptObjectFactory;
+import com.streamsets.pipeline.stage.util.scripting.ScriptRecord;
+import com.streamsets.pipeline.stage.util.scripting.ScriptTypedNullObject;
+import com.streamsets.pipeline.stage.util.scripting.SdcScriptRecord;
 import org.slf4j.Logger;
 
 import javax.script.Compilable;

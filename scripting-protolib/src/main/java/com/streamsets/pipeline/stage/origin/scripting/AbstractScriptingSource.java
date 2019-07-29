@@ -23,6 +23,8 @@ import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.origin.scripting.config.ScriptSourceConfigBean;
 
+import com.streamsets.pipeline.stage.util.scripting.Errors;
+import com.streamsets.pipeline.stage.util.scripting.ScriptObjectFactory;
 import org.slf4j.Logger;
 
 import javax.script.Compilable;

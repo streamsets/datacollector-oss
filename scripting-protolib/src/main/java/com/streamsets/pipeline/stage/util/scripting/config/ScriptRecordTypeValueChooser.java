@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.processor.scripting.config;
+package com.streamsets.pipeline.stage.util.scripting.config;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 

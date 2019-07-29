@@ -25,8 +25,8 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingModeChooserValues;
-import com.streamsets.pipeline.stage.processor.scripting.config.ScriptRecordType;
-import com.streamsets.pipeline.stage.processor.scripting.config.ScriptRecordTypeValueChooser;
+import com.streamsets.pipeline.stage.util.scripting.config.ScriptRecordType;
+import com.streamsets.pipeline.stage.util.scripting.config.ScriptRecordTypeValueChooser;
 
 import java.util.Map;
 

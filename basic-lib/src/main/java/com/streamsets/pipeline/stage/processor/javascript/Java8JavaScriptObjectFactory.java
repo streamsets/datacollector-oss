@@ -18,8 +18,8 @@ package com.streamsets.pipeline.stage.processor.javascript;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.stage.processor.scripting.ScriptObjectFactory;
-import com.streamsets.pipeline.stage.processor.scripting.config.ScriptRecordType;
+import com.streamsets.pipeline.stage.util.scripting.ScriptObjectFactory;
+import com.streamsets.pipeline.stage.util.scripting.config.ScriptRecordType;
 
 import javax.script.ScriptEngine;
 import java.lang.reflect.Method;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.processor.scripting;
+package com.streamsets.pipeline.stage.util.scripting;
 
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -30,6 +30,7 @@ public enum Errors implements ErrorCode {
   SCRIPTING_07("Sending normal record to event stream: {}"),
   SCRIPTING_08("Script error while running init script: {}"),
   SCRIPTING_09("Script error while running destroy script: {}"),
+  SCRIPTING_10("Script error in user script: {}"),
   ;
   private final String msg;
 
