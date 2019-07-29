@@ -412,7 +412,8 @@ angular
 
                   stageOutputs = [{
                     instanceName: $scope.stageInstances[0].instanceName,
-                    output: {}
+                    output: {},
+                    eventRecords: []
                   }];
 
                   stageOutputs[0].output[$scope.stageInstances[0].outputLanes[0]] =
