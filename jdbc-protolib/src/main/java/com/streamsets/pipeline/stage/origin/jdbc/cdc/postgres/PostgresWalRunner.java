@@ -95,7 +95,7 @@ public class PostgresWalRunner implements Runnable {
       }
 
     } catch (SQLException e) {
-      LOG.error("Error reading PostgreSQL replication stream: {}", e.getMessage());
+      LOG.error("Error reading PostgreSQL replication stream: {}", e.getMessage(), e);
     }
   }
 
