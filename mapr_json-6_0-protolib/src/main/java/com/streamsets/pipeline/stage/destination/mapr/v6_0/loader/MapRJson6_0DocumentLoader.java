@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.destination.mapr.v6_0.loader;
 
 import com.mapr.db.MapRDB;
 import com.mapr.db.exceptions.DBException;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.stage.destination.mapr.loader.MapRJsonDocumentLoader;
 import com.streamsets.pipeline.stage.destination.mapr.loader.MapRJsonDocumentLoaderException;
 import org.ojai.Document;
@@ -27,6 +28,7 @@ import org.ojai.store.DocumentStore;
 import org.ojai.store.DriverManager;
 import org.ojai.store.exceptions.StoreException;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,13 +37,29 @@ public class MapRJson6_0DocumentLoader extends MapRJsonDocumentLoader {
   private Connection connection;
 
   @Override
+  protected Document createNewEmptyDocument() {
+    if(connection == null) {
+      startConnection();
+    }
+    return connection.newDocument();
+  }
+
+  @Override
   protected Document createDocumentInternal(String jsonString) {
     if(connection == null) {
       startConnection();
     }
-
     return connection.newDocument(jsonString);
   }
+
+  @Override
+  protected Document createDocumentInternal(Record record) throws IOException {
+    Document doc = createNewEmptyDocument();
+    getGenerator().writeRecordToDocument(doc, record);
+    return doc;
+  }
+
+
 
   @Override
   protected DocumentMutation createDocumentMutationInternal() {

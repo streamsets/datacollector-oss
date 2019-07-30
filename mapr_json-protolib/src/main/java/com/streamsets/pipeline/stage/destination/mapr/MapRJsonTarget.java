@@ -173,8 +173,7 @@ public class MapRJsonTarget extends BaseTarget {
 
   private void performInsertOperation(Record rec) throws StageException {
     os.reset();
-    createJson(os, rec);
-    Document document = populateDocument(os, rec);
+    Document document = populateDocument(rec);
     setId(document, rec);
     doInsert(document, rec);
   }
@@ -288,13 +287,16 @@ public class MapRJsonTarget extends BaseTarget {
     }
   }
 
-  private Document populateDocument(ByteArrayOutputStream os, Record rec) throws OnRecordErrorException {
+  private Document populateDocument(Record rec) throws OnRecordErrorException {
     Document document;
     try {
-      document = MapRJsonDocumentLoader.createDocument(new String(os.toByteArray(), StandardCharsets.UTF_8));
+      document = MapRJsonDocumentLoader.createDocument(rec);
     } catch (DecodingException ex) {
       LOG.error(Errors.MAPR_JSON_10.getMessage(), ex.toString(), ex);
       throw new OnRecordErrorException(rec, Errors.MAPR_JSON_10, ex.toString(), ex);
+    } catch (IOException e) {
+      LOG.error(Errors.MAPR_JSON_10.getMessage(), e.toString(), e);
+      throw new OnRecordErrorException(rec, Errors.MAPR_JSON_10, e.toString(), e);
     }
     return document;
   }

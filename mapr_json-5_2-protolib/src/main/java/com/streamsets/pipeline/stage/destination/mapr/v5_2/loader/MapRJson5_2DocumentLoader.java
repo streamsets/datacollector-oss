@@ -18,11 +18,13 @@ package com.streamsets.pipeline.stage.destination.mapr.v5_2.loader;
 import com.mapr.db.MapRDB;
 import com.mapr.db.Table;
 import com.mapr.db.exceptions.DBException;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.stage.destination.mapr.loader.MapRJsonDocumentLoader;
 import com.streamsets.pipeline.stage.destination.mapr.loader.MapRJsonDocumentLoaderException;
 import org.ojai.Document;
 import org.ojai.store.DocumentMutation;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,9 +32,23 @@ public class MapRJson5_2DocumentLoader extends MapRJsonDocumentLoader {
   private Map<String, Table> theTables = new HashMap<>();
 
   @Override
+  protected Document createNewEmptyDocument() {
+    return MapRDB.newDocument();
+  }
+
+  @Override
   protected Document createDocumentInternal(String jsonString) {
     return MapRDB.newDocument(jsonString);
   }
+
+  @Override
+  protected Document createDocumentInternal(Record record) throws IOException {
+    Document doc = createNewEmptyDocument();
+    getGenerator().writeRecordToDocument(doc, record);
+    return doc;
+  }
+
+
 
   @Override
   protected DocumentMutation createDocumentMutationInternal() {
