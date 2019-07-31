@@ -63,7 +63,7 @@ import java.util.Map;
 @ConfigGroups(PipelineGroups.class)
 public class PipelineConfigBean implements Stage {
 
-  public static final int VERSION = 14;
+  public static final int VERSION = 15;
 
   public static final String DEFAULT_STATS_AGGREGATOR_LIBRARY_NAME = "streamsets-datacollector-basic-lib";
 
@@ -198,12 +198,39 @@ public class PipelineConfigBean implements Stage {
       required = false,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
+      label = "Enable Ludicrous Mode",
+      description = "Ludicrous mode may significantly improve performance, but metrics will be limited",
+      dependencies = {
+          @Dependency(configName = "executionMode", triggeredByValues = {"BATCH", "STREAMING"})
+      },
+      displayPosition = 40
+  )
+  public boolean ludicrousMode;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Collect Input Metrics",
+      description = "Collects and displays input metrics. Can result in rereading data unless origins are configured to cache data",
+      dependencies = {
+          @Dependency(configName = "ludicrousMode", triggeredByValues = "true")
+      },
+      displayPosition = 50
+  )
+  public boolean ludicrousModeInputCount;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
       label = "Advanced Error Handling",
+      description = "Reports the record that generates an error, when possible. Supported in single-origin pipelines",
       dependencies = {
           @Dependency(configName = "shouldRetry", triggeredByValues = "false"),
           @Dependency(configName = "executionMode", triggeredByValues = {"BATCH", "STREAMING"})
       },
-      displayPosition = 30
+      displayPosition = 60
   )
   public boolean advancedErrorHandling;
 

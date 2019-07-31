@@ -80,6 +80,9 @@ public class PipelineConfigUpgrader implements StageUpgrader {
         // fall through
       case 13:
         upgradeV13ToV14(configs);
+        // fall through
+      case 14:
+        upgradeV14ToV15(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", context.getFromVersion()));
@@ -294,6 +297,12 @@ public class PipelineConfigUpgrader implements StageUpgrader {
     configs.add(new Config("databricksConfig.provisionNewCluster", true));
     configs.add(new Config("databricksConfig.clusterId", null));
     configs.add(new Config("databricksConfig.terminateCluster", false));
+  }
+
+  private void upgradeV14ToV15(List<Config> configs) {
+    configs.add(new Config("ludicrousMode", false));
+    configs.add(new Config("ludicrousModeInputCount", false));
+    configs.add(new Config("advancedErrorHandling", false));
   }
 
 }

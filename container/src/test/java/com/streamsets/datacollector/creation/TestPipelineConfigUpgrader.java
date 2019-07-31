@@ -201,4 +201,20 @@ public class TestPipelineConfigUpgrader {
     Assert.assertEquals("databricksConfig.terminateCluster", upgrade.get(2).getName());
     Assert.assertEquals(upgrade.get(2).getValue(), false);
   }
+
+
+  @Test
+  public void testPipelineConfigUpgradeV14ToV15() throws StageException {
+    PipelineConfigUpgrader pipelineConfigUpgrader = new PipelineConfigUpgrader();
+    TestUpgraderContext context = new TestUpgraderContext("x", "y", "z", 14, 15);
+
+    List<Config> upgrade = pipelineConfigUpgrader.upgrade(new ArrayList<>(), context);
+
+    Assert.assertEquals("ludicrousMode", upgrade.get(0).getName());
+    Assert.assertEquals(false, upgrade.get(0).getValue());
+    Assert.assertEquals("ludicrousModeInputCount", upgrade.get(1).getName());
+    Assert.assertEquals(false, upgrade.get(1).getValue());
+    Assert.assertEquals("advancedErrorHandling", upgrade.get(2).getName());
+    Assert.assertEquals(false, upgrade.get(2).getValue());
+  }
 }
