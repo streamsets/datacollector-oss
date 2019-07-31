@@ -77,7 +77,7 @@ while (hasNext) {
             // in accordance with delivery guarantee
             cur_batch.process(entityName, offset.toString())
             cur_batch = sdc.createBatch();
-            if (sdc.isStopped) {
+            if (sdc.isStopped()) {
                 hasNext = false;
             }
         }
