@@ -38,32 +38,6 @@ public class ScriptTypedNullObject {
   public static final Object NULL_LIST = new Object();
   public static final Object NULL_MAP = new Object();
 
-
-  /**
-   * Add each object of typed null to SimpleBindings, so that script languages
-   * can use constants such as "NULL_INTEGER", "NULL_LONG" without importing
-   * other files.
-   * @param bindings: initialized in AbstractScriptingProcessor
-   */
-  public static void fillNullTypes(SimpleBindings bindings) {
-    bindings.put("NULL_BOOLEAN", NULL_BOOLEAN);
-    bindings.put("NULL_CHAR", NULL_CHAR);
-    bindings.put("NULL_BYTE", NULL_BYTE);
-    bindings.put("NULL_SHORT", NULL_SHORT);
-    bindings.put("NULL_INTEGER", NULL_INTEGER);
-    bindings.put("NULL_LONG", NULL_LONG);
-    bindings.put("NULL_FLOAT", NULL_FLOAT);
-    bindings.put("NULL_DOUBLE", NULL_DOUBLE);
-    bindings.put("NULL_DATE", NULL_DATE);
-    bindings.put("NULL_DATETIME", NULL_DATETIME);
-    bindings.put("NULL_TIME", NULL_TIME);
-    bindings.put("NULL_DECIMAL", NULL_DECIMAL);
-    bindings.put("NULL_BYTE_ARRAY", NULL_BYTE_ARRAY);
-    bindings.put("NULL_STRING", NULL_STRING);
-    bindings.put("NULL_LIST", NULL_LIST);
-    bindings.put("NULL_MAP", NULL_MAP);
-  }
-
   /**
    * Receive record and fieldPath from scripting processor.
    * It resolves type of the field, and if value is null, it returns

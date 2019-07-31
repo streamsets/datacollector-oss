@@ -42,7 +42,7 @@ public class ScriptingOriginBindings extends ScriptingStageBindings {
     private BatchContext batchContext;
     private String[] allLanes;
 
-    PushSourceScriptBatch () {
+    private PushSourceScriptBatch () {
       batchContext = context.startBatch();
       batchSize = 0;
       allLanes = batchContext.getBatchMaker().getLanes().toArray(new String[0]);
@@ -89,7 +89,6 @@ public class ScriptingOriginBindings extends ScriptingStageBindings {
     }
   }
 
-
   public ScriptingOriginBindings(
       ScriptObjectFactory scriptObjectFactory,
       PushSource.Context context,
@@ -106,7 +105,6 @@ public class ScriptingOriginBindings extends ScriptingStageBindings {
     this.batchSize = batchSize;
     this.lastOffsets = lastOffsets;
   }
-
 
   public PushSourceScriptBatch createBatch() {
     return new PushSourceScriptBatch();

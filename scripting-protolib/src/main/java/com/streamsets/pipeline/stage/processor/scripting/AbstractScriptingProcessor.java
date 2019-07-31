@@ -15,8 +15,8 @@
  */
 package com.streamsets.pipeline.stage.processor.scripting;
 
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -25,12 +25,10 @@ import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.util.scripting.DeprecatedBindings;
 import com.streamsets.pipeline.stage.util.scripting.Errors;
-import com.streamsets.pipeline.stage.util.scripting.NativeScriptRecord;
 import com.streamsets.pipeline.stage.util.scripting.ScriptObjectFactory;
 import com.streamsets.pipeline.stage.util.scripting.ScriptRecord;
-import com.streamsets.pipeline.stage.util.scripting.ScriptTypedNullObject;
-import com.streamsets.pipeline.stage.util.scripting.SdcScriptRecord;
 import org.slf4j.Logger;
 
 import javax.script.Compilable;
@@ -40,13 +38,17 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+import static com.streamsets.pipeline.stage.util.scripting.DeprecatedBindings.allDeprecatedMappings;
 
 public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
-  private static final String STATE_BINDING_NAME = "state";
-  private static final String LOG_BINDING_NAME = "log";
   private final Logger log;
 
   private final String scriptingEngineName;
@@ -61,76 +63,13 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
   private CompiledScript compiledScript;
   private ScriptObjectFactory scriptObjectFactory;
   private ErrorRecordHandler errorRecordHandler;
-  private Err err;
-  private SdcFunctions sdcFunc;
   private List<ScriptRecord> records;
 
   protected ScriptEngine engine;
   public final Map<String, String> userParams;
 
-  // to hide all other methods of batchMaker
-  public interface Out {
-    void write(ScriptRecord record);
-  }
 
-  // to hide all other methods of Stage.Context
-  public class Err {
-    public void write(ScriptRecord scriptRecord, String errMsg) throws StageException {
-      errorRecordHandler.onError(new OnRecordErrorException(getScriptObjectFactory().getRecord(scriptRecord), Errors.SCRIPTING_04, errMsg));
-    }
-  }
-
-  // This class will contain functions to expose to scripting processors
-  public class SdcFunctions {
-
-    // To access getFieldNull function through SimpleBindings
-    public Object getFieldNull(ScriptRecord scriptRecord, String fieldPath) {
-      return ScriptTypedNullObject.getFieldNull(getScriptObjectFactory().getRecord(scriptRecord), fieldPath);
-    }
-
-    /**
-     * Create record
-     * Note: Default field value is null.
-     * @param recordSourceId the unique record id for this record.
-     * @return ScriptRecord The Newly Created Record
-     */
-    public ScriptRecord createRecord(String recordSourceId) {
-      return getScriptObjectFactory().createScriptRecord(getContext().createRecord(recordSourceId));
-    }
-
-    public ScriptRecord createEvent(String type, int version) {
-      String recordSourceId = Utils.format("event:{}:{}:{}", type, version, System.currentTimeMillis());
-      return getScriptObjectFactory().createScriptRecord(getContext().createEventRecord(type, version, recordSourceId));
-    }
-
-    public void toEvent(ScriptRecord event) throws StageException {
-      Record eventRecord = null;
-      if(event instanceof SdcScriptRecord) {
-        eventRecord = ((SdcScriptRecord) event).sdcRecord;
-      } else {
-        eventRecord = ((NativeScriptRecord) event).sdcRecord;
-      }
-
-      if(!(eventRecord instanceof EventRecord)) {
-        log.error("Can't send normal record to event stream: {}", eventRecord);
-        throw new StageException(Errors.SCRIPTING_07, eventRecord.getHeader().getSourceId());
-      }
-
-      getContext().toEvent((EventRecord)getScriptObjectFactory().getRecord(event));
-    }
-
-
-
-    public boolean isPreview() { return getContext().isPreview(); }
-
-    public Object createMap(boolean listMap) {
-      return getScriptObjectFactory().createMap(listMap);
-    }
-
-    public Map<String, Object> pipelineParameters() {
-      return getContext().getPipelineConstants();
-    }
-  }
+  public ConcurrentHashMap<String, String> unwarnedDeprecatedMappings = new ConcurrentHashMap<>(allDeprecatedMappings);
 
   public AbstractScriptingProcessor(
       Logger log,
@@ -167,8 +106,12 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     List<ConfigIssue> issues = super.init();
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
-    //We need Stage.Context for createScriptObjectFactory()
+    // We need Stage.Context for createScriptObjectFactory()
     state = getScriptObjectFactory().createMap(false);
+
+    // We want to throw a warning for using deprecated script bindings only once per binding.
+    // When pipeline is restarted, we can forget which warnings we've already thrown and throw them all again.
+    unwarnedDeprecatedMappings = new ConcurrentHashMap<>(allDeprecatedMappings);
 
     try {
       engine = new ScriptEngineManager(getClass().getClassLoader()).getEngineByName(scriptingEngineName);
@@ -195,11 +138,8 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
       }
     }
 
-    err = new Err();
-    sdcFunc = new SdcFunctions();
-
     try {
-      engine.eval(initScript, createBindings());
+      engine.eval(initScript, createInitDestroyBindings());
     } catch (ScriptException e) {
       issues.add(getContext().createConfigIssue(scriptConfigGroup, "initScript", Errors.SCRIPTING_08, e.toString(), e));
     }
@@ -211,7 +151,7 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
   public void destroy() {
     try {
       if(engine != null) {
-        engine.eval(destroyScript, createBindings());
+        engine.eval(destroyScript, createInitDestroyBindings());
       }
     } catch (ScriptException e) {
       log.error(Errors.SCRIPTING_09.getMessage(), e.toString(), e);
@@ -221,7 +161,8 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
 
   @Override
   public void process(Batch batch, final SingleLaneBatchMaker singleLaneBatchMaker) throws StageException {
-    Out out = scriptRecord -> singleLaneBatchMaker.addRecord(getScriptObjectFactory().getRecord(scriptRecord));
+    ScriptingProcessorOutput out =
+        scriptRecord -> singleLaneBatchMaker.addRecord(getScriptObjectFactory().getRecord(scriptRecord));
     records.clear();
 
     switch (processingMode) {
@@ -236,7 +177,7 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     }
   }
 
-  private void runRecord(Batch batch, Out out) throws StageException {
+  private void runRecord(Batch batch, ScriptingProcessorOutput out) throws StageException {
     records.add(null);
     Iterator<Record> it = batch.getRecords();
     while (it.hasNext()) {
@@ -246,7 +187,7 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     }
   }
 
-  private void runBatch(Batch batch, Out out) throws StageException {
+  private void runBatch(Batch batch, ScriptingProcessorOutput out) throws StageException {
     Iterator<Record> it = batch.getRecords();
     while (it.hasNext()) {
       Record record = it.next();
@@ -255,9 +196,9 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     runScript(records, out);
   }
 
-  private void runScript(List<ScriptRecord> records, Out out) throws StageException {
+  private void runScript(List<ScriptRecord> records, ScriptingProcessorOutput out) throws StageException {
     try {
-      runScript(createBindings(records, out));
+      runScript(createProcessBindings(records, out));
     } catch (ScriptException ex) {
       switch (processingMode) {
         case RECORD:
@@ -280,29 +221,111 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     }
   }
 
-  private SimpleBindings createBindings(List<ScriptRecord> records, Out out) {
-    SimpleBindings bindings = createBindings();
-    bindings.put("records", records.toArray(new Object[records.size()]));
-    bindings.put("output", out);
-    return bindings;
-  }
+  /**
+   * This object wraps the ScriptingProcessorInitDestroyBindings to mimic old script bindings.
+   * It will be removed in a future release.
+   */
+  @Deprecated
+  public class SdcFunctions {
+    private final ScriptingProcessorInitDestroyBindings spb;
 
-  public class ScriptingProcessorBindings {
-    public final Map<String, String> userParams;
-    public ScriptingProcessorBindings(Map<String, String> userParams) {
-      this.userParams = userParams;
+    public SdcFunctions(ScriptingProcessorInitDestroyBindings spb) {
+      this.spb = spb;
+    }
+
+    public ScriptRecord createRecord(String recordSourceId) {
+      return spb.createRecord(recordSourceId);
+    }
+
+    public ScriptRecord createEvent(String type, int version) {
+      return spb.createEvent(type, version);
+    }
+
+    public void toEvent(ScriptRecord event) throws StageException {
+      spb.toEvent(event);
+    }
+
+    public boolean isPreview() {
+      return spb.isPreview();
+    }
+
+    public boolean isStopped() {
+      return spb.isStopped();
+    }
+
+    public Map<String, Object> pipelineParameters() {
+      return spb.pipelineParameters();
+    }
+
+    public Object createMap(boolean listMap) {
+      return spb.createMap(listMap);
+    }
+
+    public Object getFieldNull(ScriptRecord scriptRecord, String fieldPath) {
+      return spb.getFieldNull(scriptRecord, fieldPath);
     }
   }
 
-  private SimpleBindings createBindings() {
-    SimpleBindings bindings = new SimpleBindings();
 
-    bindings.put("error", err);
-    bindings.put(STATE_BINDING_NAME, state);
-    bindings.put(LOG_BINDING_NAME, log);
-    ScriptTypedNullObject.fillNullTypes(bindings);
-    bindings.put("sdcFunctions", sdcFunc);
-    bindings.put("sdc", new ScriptingProcessorBindings(userParams));
+  @Deprecated
+  private void addDeprecatedInitDestroyBindings(DeprecatedBindings bindings,
+                                                ScriptingProcessorInitDestroyBindings spb) {
+    bindings.put("error", spb.error);
+    bindings.put("log", spb.log);
+    bindings.put("state", spb.state);
+    bindings.put("sdcFunctions", new SdcFunctions(spb));
+    bindings.put("NULL_BOOLEAN", spb.NULL_BOOLEAN);
+    bindings.put("NULL_CHAR", spb.NULL_CHAR);
+    bindings.put("NULL_BYTE", spb.NULL_BYTE);
+    bindings.put("NULL_SHORT", spb.NULL_SHORT);
+    bindings.put("NULL_INTEGER", spb.NULL_INTEGER);
+    bindings.put("NULL_LONG", spb.NULL_LONG);
+    bindings.put("NULL_FLOAT", spb.NULL_FLOAT);
+    bindings.put("NULL_DOUBLE",spb.NULL_DOUBLE);
+    bindings.put("NULL_DATE", spb.NULL_DATE);
+    bindings.put("NULL_DATETIME", spb.NULL_DATETIME);
+    bindings.put("NULL_TIME",spb.NULL_TIME);
+    bindings.put("NULL_DECIMAL", spb.NULL_DECIMAL);
+    bindings.put("NULL_BYTE_ARRAY", spb.NULL_BYTE_ARRAY);
+    bindings.put("NULL_STRING", spb.NULL_STRING);
+    bindings.put("NULL_LIST", spb.NULL_LIST);
+    bindings.put("NULL_MAP", spb.NULL_MAP);
+  }
+
+  @Deprecated
+  // Bindings available in a "process" script are a superset of those available in "init" or "destroy" scripts
+  private void addDeprecatedProcessBindings(DeprecatedBindings bindings,
+                                            ScriptingProcessorProcessBindings spb) {
+    addDeprecatedInitDestroyBindings(bindings, spb);
+    bindings.put("records", spb.records);
+    bindings.put("output", spb.output);
+  }
+
+  private SimpleBindings createInitDestroyBindings() {
+    DeprecatedBindings bindings = new DeprecatedBindings(log, unwarnedDeprecatedMappings);
+
+    // Add new bindings
+    ScriptingProcessorInitDestroyBindings spb = new ScriptingProcessorInitDestroyBindings(
+        scriptObjectFactory, getContext(), errorRecordHandler, userParams, log, state);
+    bindings.put("sdc", spb);
+
+    // Add deprecated bindings
+    addDeprecatedInitDestroyBindings(bindings, spb);
+
+    return bindings;
+  }
+
+  private SimpleBindings createProcessBindings(List<ScriptRecord> records, ScriptingProcessorOutput out) {
+    DeprecatedBindings bindings = new DeprecatedBindings(log, unwarnedDeprecatedMappings);
+
+    // Add new bindings
+    ScriptingProcessorProcessBindings spb = new ScriptingProcessorProcessBindings(
+        scriptObjectFactory, getContext(), errorRecordHandler, userParams, log, state,
+        out, records);
+    bindings.put("sdc", spb);
+
+    // Add deprecated bindings
+    addDeprecatedProcessBindings(bindings, spb);
 
     return bindings;
   }

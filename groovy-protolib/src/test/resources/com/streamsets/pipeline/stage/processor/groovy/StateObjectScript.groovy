@@ -13,6 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-for (record in records) {
-  output.write(record)
+if (!sdc.state.containsKey('total_count')) {
+  sdc.state['total_count'] = 0
+}
+
+sdc.state['total_count'] = sdc.state['total_count'] + sdc.records.size()
+
+for (record in sdc.records) {
+  record.value['count'] = sdc.state['total_count']
+  sdc.output.write(record)
 }

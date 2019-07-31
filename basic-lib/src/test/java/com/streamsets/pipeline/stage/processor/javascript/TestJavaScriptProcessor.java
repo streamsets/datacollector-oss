@@ -30,6 +30,7 @@ import com.streamsets.pipeline.stage.util.scripting.config.ScriptRecordType;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -42,7 +43,7 @@ public class TestJavaScriptProcessor {
   @Test
   public void testJavascriptAllTypes() throws Exception {
     Processor processor = new JavaScriptProcessor(ProcessingMode.RECORD,
-        "var record = records[0];\n" +
+        "var record = sdc.records[0];\n" +
         "record.value['newField'] = {\n" +
             "a: {\n" +
               "b: record.value['beginner'], \n" +
@@ -51,7 +52,7 @@ public class TestJavaScriptProcessor {
             "d: ['str1', 'str2'], \n" +
             "e: record.value['expert'] \n" +
           "};\n" +
-        "output.write(record);");
+        "sdc.output.write(record);");
     ProcessorRunner runner = new ProcessorRunner.Builder(JavaScriptDProcessor.class, processor)
       .addOutputLane("lane")
       .build();
@@ -118,14 +119,14 @@ public class TestJavaScriptProcessor {
   public void testJavascriptMapArray() throws Exception {
     Processor processor = new JavaScriptProcessor(
         ProcessingMode.RECORD,
-        "output.write(records[0]);\n" +
-        "records[0].value = {};\n" +
-        "records[0].value = 'Hello';\n" +
-        "output.write(records[0]);\n" +
-        "records[0].value = { 'foo' : 'FOO' };\n" +
-        "output.write(records[0]);\n" +
-        "records[0].value = [ 5 ];\n" +
-        "output.write(records[0]);\n" +
+        "sdc.output.write(sdc.records[0]);\n" +
+        "sdc.records[0].value = {};\n" +
+        "sdc.records[0].value = 'Hello';\n" +
+        "sdc.output.write(sdc.records[0]);\n" +
+        "sdc.records[0].value = { 'foo' : 'FOO' };\n" +
+        "sdc.output.write(sdc.records[0]);\n" +
+        "sdc.records[0].value = [ 5 ];\n" +
+        "sdc.output.write(sdc.records[0]);\n" +
         ""
     );
     ScriptingProcessorTestUtil.verifyMapAndArray(JavaScriptDProcessor.class, processor);
@@ -133,7 +134,7 @@ public class TestJavaScriptProcessor {
 
   @Test
   public void testJavaScriptFileRefField() throws Exception {
-    String script = "var record = records[0];\n" +
+    String script = "var record = sdc.records[0];\n" +
         "var fileRef = record.value['fileRef'];\n" +
         "var is = fileRef.getInputStream();\n" +
         "var b = [];\n" +
@@ -146,7 +147,7 @@ public class TestJavaScriptProcessor {
         "} while (true);\n" +
         "is.close();\n" +
         "record.value['byte_array'] = b;\n" +
-        "output.write(records[0]);";
+        "sdc.output.write(records[0]);";
 
     Processor processor = new JavaScriptProcessor(
         ProcessingMode.RECORD,
@@ -159,8 +160,8 @@ public class TestJavaScriptProcessor {
   private void testMode(ProcessingMode mode) throws Exception {
     Processor processor = new JavaScriptProcessor(
         mode,
-        "for (var i = 0; i < records.length; i++){\n" +
-        "  output.write(records[i]);\n" +
+        "for (var i = 0; i < sdc.records.length; i++){\n" +
+        "  sdc.output.write(records[i]);\n" +
         "}"
     );
     ScriptingProcessorTestUtil.verifyMode(JavaScriptDProcessor.class, processor);
@@ -179,12 +180,12 @@ public class TestJavaScriptProcessor {
   private void testRecordModeOnErrorHandling(OnRecordError onRecordError) throws Exception {
     Processor processor = new JavaScriptProcessor(
         ProcessingMode.RECORD,
-        "for (var i = 0; i < records.length; i++){\n" +
-        "  var record = records[i];" +
+        "for (var i = 0; i < sdc.records.length; i++){\n" +
+        "  var record = sdc.records[i];" +
         "  if (record.value == 'Hello') {\n" +
         "    throw 'Exception';\n" +
         "  }" +
-        "  output.write(record);" +
+        "  sdc.output.write(record);" +
         "}"
     );
     ScriptingProcessorTestUtil.verifyRecordModeOnErrorHandling(JavaScriptDProcessor.class, processor, onRecordError);
@@ -209,12 +210,12 @@ public class TestJavaScriptProcessor {
   private void testBatchModeOnErrorHandling(OnRecordError onRecordError) throws Exception {
     Processor processor = new JavaScriptProcessor(
         ProcessingMode.BATCH,
-        "for (var i = 0; i < records.length; i++){\n" +
-        "  var record = records[i];" +
+        "for (var i = 0; i < sdc.records.length; i++){\n" +
+        "  var record = sdc.records[i];" +
         "  if (record.value == 'Hello') {\n" +
         "    throw 'Exception';\n" +
         "  }" +
-        "  output.write(record);" +
+        "  sdc.output.write(record);" +
         "}"
     );
     ScriptingProcessorTestUtil.verifyBatchModeOnErrorHandling(JavaScriptDProcessor.class, processor, onRecordError);
@@ -240,8 +241,8 @@ public class TestJavaScriptProcessor {
   public void testPrimitiveTypesPassthrough() throws Exception {
     Processor processor = new JavaScriptProcessor(
         ProcessingMode.BATCH,
-        "for (var i = 0; i < records.length; i++){\n" +
-        "  output.write(records[i]);\n" +
+        "for (var i = 0; i < sdc.records.length; i++){\n" +
+        "  sdc.output.write(records[i]);\n" +
         "}"
     );
     ScriptingProcessorTestUtil.verifyPrimitiveTypesPassthrough(JavaScriptDProcessor.class, processor);
@@ -264,13 +265,13 @@ public class TestJavaScriptProcessor {
   @Test
   public void testStateObject() throws Exception {
     Processor processor = new JavaScriptProcessor(ProcessingMode.RECORD,
-        "if (!state['total_count']) {\n" +
-        "  state['total_count'] = 0;\n" +
+        "if (!sdc.state['total_count']) {\n" +
+        "  sdc.state['total_count'] = 0;\n" +
         "}\n" +
-        "state['total_count'] = state['total_count'] + records.length;\n" +
-        "for (var i = 0; i < records.length; i++) {\n" +
-        "  records[i].value['count'] = state['total_count'];\n" +
-        "  output.write(records[i]);\n" +
+        "sdc.state['total_count'] = sdc.state['total_count'] + sdc.records.length;\n" +
+        "for (var i = 0; i < sdc.records.length; i++) {\n" +
+        "  sdc.records[i].value['count'] = sdc.state['total_count'];\n" +
+        "  sdc.output.write(records[i]);\n" +
         "}");
     ScriptingProcessorTestUtil.verifyStateObjectJavaScript(JavaScriptDProcessor.class, processor);
   }
@@ -279,9 +280,9 @@ public class TestJavaScriptProcessor {
   public void testListMap() throws Exception {
     Processor processor = new JavaScriptProcessor(
         ProcessingMode.RECORD,
-        "output.write(records[0]);\n" +
-        "records[0].value['Hello'] = 2\n" +
-        "output.write(records[0])\n" +
+        "sdc.output.write(sdc.records[0]);\n" +
+        "sdc.records[0].value['Hello'] = 2\n" +
+        "sdc.output.write(records[0])\n" +
         ""
     );
     ScriptingProcessorTestUtil.verifyListMap(JavaScriptDProcessor.class, processor);
@@ -291,18 +292,18 @@ public class TestJavaScriptProcessor {
   public void testMapCreation() throws Exception {
     Processor processor = new JavaScriptProcessor(
         ProcessingMode.RECORD,
-        "newMap = sdcFunctions.createMap(true)\n" +
+        "newMap = sdc.createMap(true)\n" +
             "newMap['Key'] = 'streamsets'\n" +
-            "records[0].value['Test'] = newMap\n" +
-            "output.write(records[0])\n" +
-            "newRecord = sdcFunctions.createRecord('id')\n" +
-            "rootMap = sdcFunctions.createMap(true)\n" +
+            "sdc.records[0].value['Test'] = newMap\n" +
+            "sdc.output.write(sdc.records[0])\n" +
+            "newRecord = sdc.createRecord('id')\n" +
+            "rootMap = sdc.createMap(true)\n" +
             "rootMap['Hello'] = 2\n" +
             "newRecord.value = rootMap\n" +
-            "newMap2 = sdcFunctions.createMap(false)\n" +
+            "newMap2 = sdc.createMap(false)\n" +
             "newMap2['Key'] = 'dpm'\n" +
             "newRecord.value['Test'] = newMap2\n" +
-            "output.write(newRecord)"
+            "sdc.output.write(newRecord)"
     );
     ScriptingProcessorTestUtil.verifyMapListMapCreation(JavaScriptDProcessor.class, processor);
   }
@@ -311,9 +312,9 @@ public class TestJavaScriptProcessor {
   public void testEventCreation() throws Exception {
     Processor processor = new JavaScriptProcessor(
         ProcessingMode.RECORD,
-        "event = sdcFunctions.createEvent(\"not important\", 1)\n" +
+        "event = sdc.createEvent(\"not important\", 1)\n" +
             "event.value = {\"a\": 1, \"b\" :2, \"c\": 3}\n" +
-            "sdcFunctions.toEvent(event)"
+            "sdc.toEvent(event)"
     );
     ScriptingProcessorTestUtil.verifyEventCreation(JavaScriptDProcessor.class, processor);
   }
@@ -322,9 +323,9 @@ public class TestJavaScriptProcessor {
   public void testTypedNullPassThrough() throws Exception {
     Processor processor = new JavaScriptProcessor(
         ProcessingMode.BATCH,
-        "for (var i = 0; i < records.length; i++){\n" +
-            "  records[i].value['new_field'] = 'testtest';\n" +
-            "  output.write(records[i]);\n" +
+        "for (var i = 0; i < sdc.records.length; i++){\n" +
+            "  sdc.records[i].value['new_field'] = 'testtest';\n" +
+            "  sdc.output.write(sdc.records[i]);\n" +
             "}"
     );
     ScriptingProcessorTestUtil.verifyPreserveTypeForNullValue(JavaScriptDProcessor.class, processor);
@@ -334,12 +335,12 @@ public class TestJavaScriptProcessor {
   public void testAssignNullToTypedField() throws Exception {
     Processor processor = new JavaScriptProcessor(
         ProcessingMode.BATCH,
-        "for (var i = 0; i < records.length; i++){\n" +
+        "for (var i = 0; i < sdc.records.length; i++){\n" +
             // record.value will be an array
-            "  for(var index=0; index < records[i].value.length; index++){\n" +
-            "    records[i].value[index] = null;\n" +
+            "  for(var index=0; index < sdc.records[i].value.length; index++){\n" +
+            "    sdc.records[i].value[index] = null;\n" +
             "  }\n" +
-            "  output.write(records[i]);\n" +
+            "  sdc.output.write(sdc.records[i]);\n" +
             "}"
     );
     ScriptingProcessorTestUtil.verifyPreserveTypeForNullValue(JavaScriptDProcessor.class, processor);
@@ -349,12 +350,12 @@ public class TestJavaScriptProcessor {
   public void testNestedMapWithNull() throws Exception {
     Processor processor = new JavaScriptProcessor(
         ProcessingMode.BATCH,
-        "for (var i = 0; i < records.length; i++){\n" +
-            "  for(var key in records[i].value.row1) {\n" +
-            "      records[i].value.row1[key] = null;\n" +
+        "for (var i = 0; i < sdc.records.length; i++){\n" +
+            "  for(var key in sdc.records[i].value.row1) {\n" +
+            "      sdc.records[i].value.row1[key] = null;\n" +
             "  }\n" +
-            "  records[i].value.row2 = null;\n" +
-            "  output.write(records[i]);\n" +
+            "  sdc.records[i].value.row2 = null;\n" +
+            "  sdc.output.write(records[i]);\n" +
             "}"
     );
     ScriptingProcessorTestUtil.verifyNestedMap(JavaScriptDProcessor.class, processor);
@@ -365,10 +366,10 @@ public class TestJavaScriptProcessor {
     Processor processor = new JavaScriptProcessor(
         ProcessingMode.BATCH,
         // record.value will be a map
-        "for (var i = 0; i < records.length; i++){\n" +
-            "  records[i].value.long_bool = true;\n" +
-            "  records[i].value.str_date = new Date();\n" +
-            "  output.write(records[i]);" +
+        "for (var i = 0; i < sdc.records.length; i++){\n" +
+            "  sdc.records[i].value.long_bool = true;\n" +
+            "  sdc.records[i].value.str_date = new Date();\n" +
+            "  sdc.output.write(sdc.records[i]);" +
             "}"
     );
     ScriptingProcessorTestUtil.verifyChangedTypeFromScripting(JavaScriptDProcessor.class, processor);
@@ -378,27 +379,27 @@ public class TestJavaScriptProcessor {
   public void testListMapOrder() throws Exception {
     Processor processor = new JavaScriptProcessor(
         ProcessingMode.RECORD,
-        "records[0].value['A0'] = 0\n" +
-        "records[0].value['A1'] = 1\n" +
-        "records[0].value['A2'] = 2\n" +
-        "records[0].value['A3'] = 3\n" +
-        "records[0].value['A4'] = 4\n" +
-        "records[0].value['A5'] = 5\n" +
-        "records[0].value['A6'] = 6\n" +
-        "records[0].value['A7'] = 7\n" +
-        "records[0].value['A8'] = 8\n" +
-        "records[0].value['A9'] = 9\n" +
-        "records[0].value['A10'] = 10\n" +
-        "records[0].value['A11'] = 11\n" +
-        "records[0].value['A12'] = 12\n" +
-        "records[0].value['A13'] = 13\n" +
-        "records[0].value['A14'] = 14\n" +
-        "records[0].value['A15'] = 15\n" +
-        "records[0].value['A16'] = 16\n" +
-        "records[0].value['A17'] = 17\n" +
-        "records[0].value['A18'] = 18\n" +
-        "records[0].value['A19'] = 19\n" +
-        "output.write(records[0])\n" +
+        "sdc.records[0].value['A0'] = 0\n" +
+        "sdc.records[0].value['A1'] = 1\n" +
+        "sdc.records[0].value['A2'] = 2\n" +
+        "sdc.records[0].value['A3'] = 3\n" +
+        "sdc.records[0].value['A4'] = 4\n" +
+        "sdc.records[0].value['A5'] = 5\n" +
+        "sdc.records[0].value['A6'] = 6\n" +
+        "sdc.records[0].value['A7'] = 7\n" +
+        "sdc.records[0].value['A8'] = 8\n" +
+        "sdc.records[0].value['A9'] = 9\n" +
+        "sdc.records[0].value['A10'] = 10\n" +
+        "sdc.records[0].value['A11'] = 11\n" +
+        "sdc.records[0].value['A12'] = 12\n" +
+        "sdc.records[0].value['A13'] = 13\n" +
+        "sdc.records[0].value['A14'] = 14\n" +
+        "sdc.records[0].value['A15'] = 15\n" +
+        "sdc.records[0].value['A16'] = 16\n" +
+        "sdc.records[0].value['A17'] = 17\n" +
+        "sdc.records[0].value['A18'] = 18\n" +
+        "sdc.records[0].value['A19'] = 19\n" +
+        "sdc.output.write(sdc.records[0])\n" +
             ""
     );
     ScriptingProcessorTestUtil.verifyListMapOrder(JavaScriptDProcessor.class, processor);
@@ -413,18 +414,18 @@ public class TestJavaScriptProcessor {
 
     Processor processor = new JavaScriptProcessor(
         ProcessingMode.RECORD,
-        "for (var i = 0; i < records.length; i++){\n" +
-            "  records[i].value.null_int = NULL_INTEGER;\n" +
-            "  records[i].value.null_long = NULL_LONG;\n" +
-            "  records[i].value.null_float = NULL_FLOAT;\n" +
-            "  records[i].value.null_double = NULL_DOUBLE;\n" +
-            "  records[i].value.null_date = NULL_DATE;\n" +
-            "  records[i].value.null_datetime = NULL_DATETIME;\n" +
-            "  records[i].value.null_boolean = NULL_BOOLEAN;\n" +
-            "  records[i].value.null_decimal = NULL_DECIMAL;\n" +
-            "  records[i].value.null_byteArray = NULL_BYTE_ARRAY;\n" +
-            "  records[i].value.null_string = NULL_STRING;\n" +
-            "  output.write(records[i]);\n" +
+        "for (var i = 0; i < sdc.records.length; i++){\n" +
+            "  sdc.records[i].value.null_int = sdc.NULL_INTEGER;\n" +
+            "  sdc.records[i].value.null_long = sdc.NULL_LONG;\n" +
+            "  sdc.records[i].value.null_float = sdc.NULL_FLOAT;\n" +
+            "  sdc.records[i].value.null_double = sdc.NULL_DOUBLE;\n" +
+            "  sdc.records[i].value.null_date = sdc.NULL_DATE;\n" +
+            "  sdc.records[i].value.null_datetime = sdc.NULL_DATETIME;\n" +
+            "  sdc.records[i].value.null_boolean = sdc.NULL_BOOLEAN;\n" +
+            "  sdc.records[i].value.null_decimal = sdc.NULL_DECIMAL;\n" +
+            "  sdc.records[i].value.null_byteArray = sdc.NULL_BYTE_ARRAY;\n" +
+            "  sdc.records[i].value.null_string = sdc.NULL_STRING;\n" +
+            "  sdc.output.write(sdc.records[i]);\n" +
         "}"
     );
 
@@ -454,14 +455,14 @@ public class TestJavaScriptProcessor {
 
     Processor processor = new JavaScriptProcessor(
         ProcessingMode.RECORD,
-        "for (var i = 0; i < records.length; i++){\n" +
-            "  records[i].value.null_int = NULL_INTEGER;\n" +
-            "  records[i].value.null_date = NULL_DATE;\n" +
-            "  records[i].value.null_decimal = NULL_DECIMAL;\n" +
-            "  records[i].value.null_string = NULL_STRING;\n" +
-            "  records[i].value.null_list = NULL_LIST;\n" +
-            "  records[i].value.null_map = NULL_MAP;\n" +
-            "  output.write(records[i]);\n" +
+        "for (var i = 0; i < sdc.records.length; i++){\n" +
+            "  sdc.records[i].value.null_int = sdc.NULL_INTEGER;\n" +
+            "  sdc.records[i].value.null_date = sdc.NULL_DATE;\n" +
+            "  sdc.records[i].value.null_decimal = sdc.NULL_DECIMAL;\n" +
+            "  sdc.records[i].value.null_string = sdc.NULL_STRING;\n" +
+            "  sdc.records[i].value.null_list = sdc.NULL_LIST;\n" +
+            "  sdc.records[i].value.null_map = sdc.NULL_MAP;\n" +
+            "  sdc.output.write(sdc.records[i]);\n" +
             "}"
     );
     ScriptingProcessorTestUtil.verifyTypedFieldWithNullValue(JavaScriptDProcessor.class, processor,record);
@@ -483,20 +484,20 @@ public class TestJavaScriptProcessor {
 
     Processor processor = new JavaScriptProcessor(
         ProcessingMode.RECORD,
-        "for (var i = 0; i < records.length; i++){\n" +
-            "  if(sdcFunctions.getFieldNull(records[i], '/null_int') == NULL_INTEGER)\n" +
-            "    records[i].value.null_int = 123; \n" +
-            "  if(sdcFunctions.getFieldNull(records[i], '/null_string') == NULL_STRING)\n" +
-            "    records[i].value.null_string = 'test'; \n" +
-            "  if(sdcFunctions.getFieldNull(records[i], '/null_boolean') == NULL_BOOLEAN)\n" +
-            "    records[i].value.null_boolean = true; \n" +
-            "  if(sdcFunctions.getFieldNull(records[i], '/null_list') == NULL_LIST)\n" +
-            "    records[i].value.null_list = ['elem1', 'elem2']; \n" +
-            "  if(sdcFunctions.getFieldNull(records[i], '/null_map') == NULL_MAP)\n" +
-            "    records[i].value.null_map = {x: 'X', y: 'Y'}; \n" +
-            "  if(sdcFunctions.getFieldNull(records[i], '/null_datetime') == NULL_DATETIME)\n" + // this should be false
-            "    records[i].value.null_datetime = NULL_DATETIME \n" +
-            "  output.write(records[i]);\n" +
+        "for (var i = 0; i < sdc.records.length; i++){\n" +
+            "  if(sdc.getFieldNull(sdc.records[i], '/null_int') == sdc.NULL_INTEGER)\n" +
+            "    sdc.records[i].value.null_int = 123; \n" +
+            "  if(sdc.getFieldNull(sdc.records[i], '/null_string') == sdc.NULL_STRING)\n" +
+            "    sdc.records[i].value.null_string = 'test'; \n" +
+            "  if(sdc.getFieldNull(sdc.records[i], '/null_boolean') == sdc.NULL_BOOLEAN)\n" +
+            "    sdc.records[i].value.null_boolean = true; \n" +
+            "  if(sdc.getFieldNull(sdc.records[i], '/null_list') == sdc.NULL_LIST)\n" +
+            "    sdc.records[i].value.null_list = ['elem1', 'elem2']; \n" +
+            "  if(sdc.getFieldNull(sdc.records[i], '/null_map') == sdc.NULL_MAP)\n" +
+            "    sdc.records[i].value.null_map = {x: 'X', y: 'Y'}; \n" +
+            "  if(sdc.getFieldNull(sdc.records[i], '/null_datetime') == sdc.NULL_DATETIME)\n" + // this should be false
+            "    sdc.records[i].value.null_datetime = sdc.NULL_DATETIME \n" +
+            "  sdc.output.write(records[i]);\n" +
             "}"
     );
 
@@ -506,15 +507,15 @@ public class TestJavaScriptProcessor {
   @Test
   public void testCreateRecordWithNewRecordId() throws Exception {
     String recordId = "recordId";
-    String script = "for(var i = 0; i < records.length; i++) {\n" +
+    String script = "for (var i = 0; i < sdc.records.length; i++) {\n" +
         "  try {\n" +
-        "    var newRecord = sdcFunctions.createRecord('" + recordId + "');\n" +
+        "    var newRecord = sdc.createRecord('" + recordId + "');\n" +
         "    newRecord.value = {'record_value' :'record_value'};\n" +
-        "    output.write(records[i]);\n" +
-        "    output.write(newRecord);\n" +
+        "    sdc.output.write(records[i]);\n" +
+        "    sdc.output.write(newRecord);\n" +
         "  } catch (e) {\n" +
         "    // Send record to error\n" +
-        "    error.write(records[i], e);\n" +
+        "    sdc.error.write(records[i], e);\n" +
         "  }\n" +
         "}";
 
@@ -530,10 +531,10 @@ public class TestJavaScriptProcessor {
   public void testRecordHeaderAttributes() throws Exception {
     String headerKey = "key1";
     String value = "value1";
-    String script = "for (var i = 0; i < records.length; i++) {\n" +
-        "  records[i].attributes['" + headerKey + "'] = '" + value + "'\n" +
-        "  records[i].attributes.remove('remove')\n" +
-        "  output.write(records[i])\n" +
+    String script = "for (var i = 0; i < sdc.records.length; i++) {\n" +
+        "  sdc.records[i].attributes['" + headerKey + "'] = '" + value + "'\n" +
+        "  sdc.records[i].attributes.remove('remove')\n" +
+        "  sdc.output.write(sdc.records[i])\n" +
         "}";
 
     Processor processor = new JavaScriptProcessor(
@@ -547,9 +548,9 @@ public class TestJavaScriptProcessor {
 
   @Test
   public void testAccessSdcRecord() throws Exception {
-    String script = "for (var i = 0; i < records.length; i++) {\n" +
-        "  records[i].attributes['attr'] = records[i].sdcRecord.get('/value').getAttribute('attr')\n" +
-        "  output.write(records[i])\n" +
+    String script = "for (var i = 0; i < sdc.records.length; i++) {\n" +
+        "  sdc.records[i].attributes['attr'] = sdc.records[i].sdcRecord.get('/value').getAttribute('attr')\n" +
+        "  sdc.output.write(sdc.records[i])\n" +
         "}";
 
     Processor processor = new JavaScriptProcessor(
@@ -562,13 +563,13 @@ public class TestJavaScriptProcessor {
 
   @Test
   public void testInitDestroy() throws Exception {
-    String initScript = "state['initValue'] = 'init';";
-    String script = "for (var i = 0; i < records.length; i++) {\n" +
-        "  records[i].value['initValue'] = state['initValue'];\n" +
-        "  output.write(records[i])\n" +
+    String initScript = "sdc.state['initValue'] = 'init';";
+    String script = "for (var i = 0; i < sdc.records.length; i++) {\n" +
+        "  sdc.records[i].value['initValue'] = sdc.state['initValue'];\n" +
+        "  sdc.output.write(records[i])\n" +
         "}";
-    String destroyScript = "event = sdcFunctions.createEvent(\"event\", 1)\n" +
-      "sdcFunctions.toEvent(event)";
+    String destroyScript = "event = sdc.createEvent(\"event\", 1)\n" +
+      "sdc.toEvent(event)";
 
     Processor processor = new JavaScriptProcessor(
         ProcessingMode.BATCH,
@@ -583,9 +584,9 @@ public class TestJavaScriptProcessor {
 
   @Test
   public void testConstants() throws Exception {
-    String script = "for(var i = 0; i < records.length; i++) {\n" +
-        "  records[i].value['company'] = sdcFunctions.pipelineParameters()['company'];\n" +
-        "  output.write(records[i]);\n" +
+    String script = "for (var i = 0; i < sdc.records.length; i++) {\n" +
+        "  sdc.records[i].value['company'] = sdc.pipelineParameters()['company'];\n" +
+        "  sdc.output.write(sdc.records[i]);\n" +
         "}";
     Processor processor = new JavaScriptProcessor(ProcessingMode.BATCH, script);
     ScriptingProcessorTestUtil.verifyConstants(JavaScriptDProcessor.class, processor);
@@ -593,15 +594,15 @@ public class TestJavaScriptProcessor {
 
   @Test
   public void testIsPreview() throws Exception {
-    String script = "for(var i = 0; i < records.length; i++) {\n" +
-        "  records[i].value['isPreview'] = sdcFunctions.isPreview();\n" +
-        "  output.write(records[i]);\n" +
+    String script = "for (var i = 0; i < sdc.records.length; i++) {\n" +
+        "  sdc.records[i].value['isPreview'] = sdc.isPreview();\n" +
+        "  sdc.output.write(sdc.records[i]);\n" +
         "}";
     Processor processor = new JavaScriptProcessor(ProcessingMode.BATCH, script);
     ScriptingProcessorTestUtil.verifyIsPreview(JavaScriptDProcessor.class, processor);
   }
 
-  private static final String WRITE_ERROR_SCRIPT = "for(var i = 0; i < records.length; i++) { error.write(records[i], 'oops'); }";
+  private static final String WRITE_ERROR_SCRIPT = "for(var i = 0; i < sdc.records.length; i++) { sdc.error.write(sdc.records[i], 'oops'); }";
 
   @Test
   public void testErrorRecordStopPipeline() throws Exception {
@@ -634,10 +635,10 @@ public class TestJavaScriptProcessor {
   @Test
   public void testSdcRecord() throws Exception {
     String script = "var Field = Java.type('com.streamsets.pipeline.api.Field');\n" +
-      "for (var i = 0; i < records.length; i++) {\n" +
-      "  records[i].sdcRecord.set('/new', Field.create(Field.Type.STRING, 'new-value'));\n" +
-      "  records[i].sdcRecord.get('/old').setAttribute('attr', 'attr-value');\n" +
-      "  output.write(records[i])\n" +
+      "for (var i = 0; i < sdc.records.length; i++) {\n" +
+      "  sdc.records[i].sdcRecord.set('/new', Field.create(Field.Type.STRING, 'new-value'));\n" +
+      "  sdc.records[i].sdcRecord.get('/old').setAttribute('attr', 'attr-value');\n" +
+      "  sdc.output.write(sdc.records[i])\n" +
       "}";
 
     Processor processor = new JavaScriptProcessor(
@@ -653,9 +654,9 @@ public class TestJavaScriptProcessor {
 
   @Test
   public void testUserParams() throws Exception {
-    String script = "for(var i = 0; i < records.length; i++) {\n" +
-        "  records[i].value['user-param-key'] = sdc.userParams['user-param-key'];\n" +
-        "  output.write(records[i]);\n" +
+    String script = "for(var i = 0; i < sdc.records.length; i++) {\n" +
+        "  sdc.records[i].value['user-param-key'] = sdc.userParams['user-param-key'];\n" +
+        "  output.write(sdc.records[i]);\n" +
         "}";
     Map<String, String> userParams = new HashMap<>();
     userParams.put("user-param-key", "user-param-value");
@@ -668,5 +669,33 @@ public class TestJavaScriptProcessor {
         userParams
      );
     ScriptingProcessorTestUtil.verifyUserParams(JavaScriptDProcessor.class, processor);
+  }
+
+  @Test
+  @Deprecated
+  public void testDeprecatedBindings() throws Exception {
+    List<String> allNames = new ArrayList<>();
+    allNames.addAll(ScriptingProcessorTestUtil.renames.keySet());
+    allNames.addAll(ScriptingProcessorTestUtil.renames.values());
+    String script = ScriptingProcessorTestUtil.writeBindingTestScript(
+        "var isListMap = false;\n" +
+            "for(var i = 0; i < sdc.records.length; i++) {\n",
+        "  sdc.records[i].value['%s'] = %s;\n",
+        "  sdc.output.write(records[i]);\n" +
+        "}",
+        allNames
+    );
+    Processor processor = new JavaScriptProcessor(
+        ProcessingMode.RECORD,
+        script,
+        "",
+        "",
+        ScriptRecordType.NATIVE_OBJECTS,
+        new HashMap<>()
+    );
+    ScriptingProcessorTestUtil.verifyDeprecatedBindings(
+        JavaScriptDProcessor.class,
+        processor
+    );
   }
 }

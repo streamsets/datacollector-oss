@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-for (record in records) {
-  record.value['int_long'] = 10000090L
-  record.value['long_bool'] = true
-  record.value['str_date'] = new Date()
-  record.value['double_decimal'] = new BigDecimal(1235.678)
-  output.write(record);
+for (record in sdc.records) {
+  record.value = [1, 5L, 0.5d, true, 'hello']
+  sdc.output.write(record)
+  record.value = null
+  sdc.output.write(record)
 }

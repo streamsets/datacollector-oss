@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-for (record in records) {
-  output.write(record)
-  record.value = 'Bye'
-  output.write(record)
-  record.value = 'Error'
-  error.write(record, 'error')
+for (record in sdc.records) {
+  for (r in record.value) {
+    r = null;
+  }
+  sdc.output.write(record)
 }

@@ -13,9 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-for (record in records) {
-  record.value = [1, 5L, 0.5d, true, 'hello']
-  output.write(record)
-  record.value = null
-  output.write(record)
+for (record in sdc.records) {
+  sdc.output.write(record)
 }

@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-output.write(records[0])
-records[0].value = 'Hello'
-output.write(records[0])
-records[0].value = ['foo': 'FOO']
-output.write(records[0])
-records[0].value = [5]
-output.write(records[0])
+sdc.output.write(records[0])
+sdc.records[0].value = 'Hello'
+sdc.output.write(records[0])
+sdc.records[0].value = ['foo': 'FOO']
+sdc.output.write(records[0])
+sdc.records[0].value = [5]
+sdc.output.write(records[0])
 

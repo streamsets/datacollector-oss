@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-for (record in records) {
-  for (k in record.value['row1']) {
-    record.value['row1'][k.key]= null
-  }
-  record.value['row2'] = null
-  output.write(record)
+for (record in sdc.records) {
+  sdc.output.write(record)
+  record.value = 'Bye'
+  sdc.output.write(record)
+  record.value = 'Error'
+  sdc.error.write(record, 'error')
 }

@@ -15,6 +15,9 @@
  */
 package com.streamsets.pipeline.stage.processor.scripting;
 
+import com.google.common.base.Charsets;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.io.Resources;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
@@ -31,6 +34,7 @@ import org.junit.Assert;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -60,6 +64,18 @@ import static org.junit.Assert.fail;
  * Subsequently this utility can be called to run and verify the results of the scripts.
  */
 public class ScriptingProcessorTestUtil {
+
+  public static String getScript(String scriptName, Class searchClass) {
+    try {
+      URL url = Resources.getResource(searchClass, scriptName);
+      return Resources.toString(url, Charsets.UTF_8);
+    } catch (IOException e) {
+      System.out.println(e);
+      return null;
+    }
+  }
+
+
   private ScriptingProcessorTestUtil() {}
   static final String JAVASCRIPT_CLASSNAME = "com.streamsets.pipeline.stage.processor.javascript.JavaScriptDProcessor";
 
@@ -1082,5 +1098,87 @@ public class ScriptingProcessorTestUtil {
 
     assertTrue(outputRecord.has("/user-param-key"));
     assertEquals("user-param-value", outputRecord.get("/user-param-key").getValueAsString());
+  }
+
+  @Deprecated
+  public static final ImmutableMap<String, String> renames =
+      new ImmutableMap.Builder<String, String>()
+          .put("error", "sdc.error")
+          .put("state", "sdc.state")
+          .put("sdcFunctions.isPreview()", "sdc.isPreview()")
+          .put("sdcFunctions.createMap(isListMap)", "sdc.createMap(isListMap)")
+          .put("sdcFunctions.pipelineParameters()", "sdc.pipelineParameters()")
+          .put("NULL_BOOLEAN", "sdc.NULL_BOOLEAN")
+          .put("NULL_CHAR", "sdc.NULL_CHAR")
+          .put("NULL_BYTE", "sdc.NULL_BYTE")
+          .put("NULL_SHORT", "sdc.NULL_SHORT")
+          .put("NULL_INTEGER", "sdc.NULL_INTEGER")
+          .put("NULL_LONG", "sdc.NULL_LONG")
+          .put("NULL_FLOAT", "sdc.NULL_FLOAT")
+          .put("NULL_DOUBLE", "sdc.NULL_DOUBLE")
+          .put("NULL_DATE", "sdc.NULL_DATE")
+          .put("NULL_DATETIME", "sdc.NULL_DATETIME")
+          .put("NULL_TIME", "sdc.NULL_TIME")
+          .put("NULL_DECIMAL", "sdc.NULL_DECIMAL")
+          .put("NULL_BYTE_ARRAY", "sdc.NULL_BYTE_ARRAY")
+          .put("NULL_STRING", "sdc.NULL_STRING")
+          .put("NULL_LIST", "sdc.NULL_LIST")
+          .put("NULL_MAP", "sdc.NULL_MAP")
+          // These mappings can't be tested this way
+          //.put("sdcFunctions.getFieldNull(record, \"/NULL_CHAR\")", "sdc.getFieldNull(record, \"/sdc.NULL_CHAR\")")
+          //.put("sdcFunctions.createRecord(\"id\")", "sdc.createRecord(\"id\")")
+          //.put("sdcFunctions.createEvent(\"someType\", 1)", "sdc.createEvent(\"someType\", 1)")
+          .build();
+
+  @Deprecated
+  public static String writeBindingTestScript(String first, String middle, String last, List<String> vars) {
+    StringBuilder builder = new StringBuilder();
+    builder.append(first);
+    for (String var : vars) {
+      builder.append(String.format(middle, var, var));
+    }
+    builder.append(last);
+    return builder.toString();
+  }
+
+  @Deprecated
+  public static <C extends Processor> void verifyDeprecatedBindings(
+      Class<C> clazz, Processor processor ) throws StageException {
+    ProcessorRunner runner = new ProcessorRunner.Builder(clazz, processor)
+        .addOutputLane("lane")
+        .build();
+
+    Record record = RecordCreator.create();
+    Map<String, Field> map = new HashMap<>();
+    record.set(Field.create(map));
+
+    runner.runInit();
+    StageRunner.Output output;
+    try {
+      output = runner.runProcess(Collections.singletonList(record));
+    } finally {
+      runner.runDestroy();
+    }
+    List<Record> records = output.getRecords().get("lane");
+    assertEquals(1, records.size());
+    Record outputRecord = records.get(0);
+
+    String oldBinding = "/";
+    String newBinding = "/";
+    for (Map.Entry<String, String> entry : renames.entrySet()) {
+      try {
+        oldBinding = "/" + entry.getKey();
+        newBinding = "/" + entry.getValue();
+        assertTrue(record.has(oldBinding));
+        assertTrue(record.has(newBinding));
+        assertEquals(record.get(oldBinding), record.get(newBinding));
+      } catch (AssertionError e) {
+        System.out.println("Failed on " + entry.toString());
+        System.out.println(record.has(oldBinding) + " " + record.get(oldBinding));
+        System.out.println(record.has(newBinding) + " " + record.get(newBinding));
+        throw e;
+      }
+    }
+
   }
 }

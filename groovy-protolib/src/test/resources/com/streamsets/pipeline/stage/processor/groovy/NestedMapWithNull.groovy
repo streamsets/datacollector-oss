@@ -13,6 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-output.write(records[0])
-records[0].value['Hello'] = 2
-output.write(records[0])
+for (record in sdc.records) {
+  for (k in record.value['row1']) {
+    record.value['row1'][k.key]= null
+  }
+  record.value['row2'] = null
+  sdc.output.write(record)
+}

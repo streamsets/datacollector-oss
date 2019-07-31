@@ -13,9 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-for (record in records) {
-  if (record.value == 'Hello') {
-    throw new Exception()
-  }
-  output.write(record)
+for (record in sdc.records) {
+  sdc.output.write(record)
 }

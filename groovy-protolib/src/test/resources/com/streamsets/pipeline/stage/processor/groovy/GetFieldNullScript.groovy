@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-for (record in records) {
-  if(sdcFunctions.getFieldNull(record, "/null_int") == NULL_INTEGER)
+for (record in sdc.records) {
+  if(sdc.getFieldNull(record, "/null_int") == sdc.NULL_INTEGER)
     record.value['null_int'] = 123;
-  if(sdcFunctions.getFieldNull(record, "/null_string") == NULL_STRING)
+  if(sdc.getFieldNull(record, "/null_string") == sdc.NULL_STRING)
     record.value['null_string'] = "test";
-  if(sdcFunctions.getFieldNull(record, '/null_boolean') == NULL_BOOLEAN)
+  if(sdc.getFieldNull(record, '/null_boolean') == sdc.NULL_BOOLEAN)
     record.value['null_boolean'] = true;
-  if(sdcFunctions.getFieldNull(record, '/null_list') == NULL_LIST)
+  if(sdc.getFieldNull(record, '/null_list') == sdc.NULL_LIST)
     record.value['null_list'] = ['elem1', 'elem2'];
-  if(sdcFunctions.getFieldNull(record, '/null_map') == NULL_MAP)
+  if(sdc.getFieldNull(record, '/null_map') == sdc.NULL_MAP)
     record.value['null_map'] = [x: 'X', y: 'Y'];
-  if(sdcFunctions.getFieldNull(record, '/null_datetime') == NULL_DATETIME)  // this should be false
-    record.value['null_datetime'] = NULL_DATETIME
-  output.write(record);
+  if(sdc.getFieldNull(record, '/null_datetime') == sdc.NULL_DATETIME)  // this should be false
+    record.value['null_datetime'] = sdc.NULL_DATETIME
+  sdc.output.write(record);
 }

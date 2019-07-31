@@ -13,13 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-if (!state.containsKey('total_count')) {
-  state['total_count'] = 0
-}
-
-state['total_count'] = state['total_count'] + records.size()
-
-for (record in records) {
-  record.value['count'] = state['total_count']
-  output.write(record)
+for (record in sdc.records) {
+  if (record.value == 'Hello') {
+    throw new Exception()
+  }
+  sdc.output.write(record)
 }
