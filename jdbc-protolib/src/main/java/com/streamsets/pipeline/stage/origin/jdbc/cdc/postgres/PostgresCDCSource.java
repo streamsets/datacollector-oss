@@ -212,8 +212,8 @@ public class PostgresCDCSource extends BaseSource {
         continue;
       }
 
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("Valid CDC: {} ", postgresWalRecord);
+      if (LOG.isTraceEnabled()) {
+        LOG.trace("Valid CDC: {} ", postgresWalRecord);
       }
 
       final Record record = processWalRecord(postgresWalRecord);
