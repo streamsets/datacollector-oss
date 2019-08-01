@@ -48,7 +48,7 @@ public class PostgresCDCConfigBean {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Start Date",
-      description = "Datetime to use for the initial change. Use the following format: DD-MM-YYYY HH24:MM:SS.",
+      description = "Datetime to use for the initial change. Use the following format: MM-DD-YYYY HH24:MM:SS.",
       displayPosition = 45,
       group = "CDC",
       dependsOn = "startValue",
