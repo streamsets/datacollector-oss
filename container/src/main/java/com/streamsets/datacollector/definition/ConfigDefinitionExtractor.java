@@ -109,7 +109,7 @@ public abstract class ConfigDefinitionExtractor {
       errors.add(new ErrorMessage(DefinitionError.DEF_160, contextMsg));
     }
     if (errors.isEmpty() & validateDependencies) {
-      errors.addAll(validateDependencies(getConfigDefinitions(configPrefix, klass, stageGroups, contextMsg),
+      errors.addAll(validateDependencies(getConfigDefinitions(configPrefix, klass, stageGroups, contextMsg, null),
                                          contextMsg));
     }
     return errors;
@@ -156,16 +156,20 @@ public abstract class ConfigDefinitionExtractor {
   }
 
   private List<ConfigDefinition> getConfigDefinitions(String configPrefix, Class klass, List<String> stageGroups,
-      Object contextMsg) {
+      Object contextMsg, Dependency[] parentDependency) {
     List<ConfigDefinition> defs = new ArrayList<>();
     for (Field field : klass.getFields()) {
       if (field.getAnnotation(ConfigDef.class) != null) {
         defs.add(extractConfigDef(configPrefix, stageGroups, field, Utils.formatL("{} Field='{}'", contextMsg,
-                                                                                  field.getName())));
+                                                                                  field.getName()), parentDependency));
       } else if (field.getAnnotation(ConfigDefBean.class) != null) {
         List<String> beanGroups = getGroups(field, stageGroups, contextMsg, new ArrayList<ErrorMessage>());
+
+        ConfigDefBean configDefBean = field.getAnnotation(ConfigDefBean.class);
+        Dependency[] dependency = configDefBean.dependencies();
+
         defs.addAll(extract(configPrefix + field.getName() + ".", field.getType(), beanGroups, true,
-            Utils.formatL("{} BeanField='{}'", contextMsg, field.getName())));
+            Utils.formatL("{} BeanField='{}'", contextMsg, field.getName()), dependency));
       }
     }
     return defs;
@@ -176,16 +180,16 @@ public abstract class ConfigDefinitionExtractor {
   }
 
   public List<ConfigDefinition> extract(String configPrefix, Class klass, List<String> stageGroups, Object contextMsg) {
-    List<ConfigDefinition> defs = extract(configPrefix, klass, stageGroups, false, contextMsg);
+    List<ConfigDefinition> defs = extract(configPrefix, klass, stageGroups, false, contextMsg, null);
     resolveDependencies("", defs, contextMsg);
     return defs;
   }
 
   private List<ConfigDefinition> extract(String configPrefix, Class klass, List<String> stageGroups, boolean isBean,
-      Object contextMsg) {
+      Object contextMsg, Dependency[] parentDependency) {
     List<ErrorMessage> errors = validate(configPrefix, klass, stageGroups, false, isBean, false, contextMsg);
     if (errors.isEmpty()) {
-      return getConfigDefinitions(configPrefix, klass, stageGroups, contextMsg);
+      return getConfigDefinitions(configPrefix, klass, stageGroups, contextMsg, parentDependency);
     } else {
       throw new IllegalArgumentException(Utils.format("Invalid ConfigDefinition: {}", errors));
     }
@@ -421,7 +425,7 @@ public abstract class ConfigDefinitionExtractor {
   }
 
   @SuppressWarnings("unchecked")
-  ConfigDefinition extractConfigDef(String configPrefix, List<String> stageGroups, Field field, Object contextMsg) {
+  ConfigDefinition extractConfigDef(String configPrefix, List<String> stageGroups, Field field, Object contextMsg, Dependency[] parentDependency) {
     List<ErrorMessage> errors = validateConfigDef(configPrefix, stageGroups, field, false, contextMsg);
     if (errors.isEmpty()) {
       ConfigDefinition def = null;
@@ -446,6 +450,11 @@ public abstract class ConfigDefinitionExtractor {
         for (Dependency dependency : dependencies) {
           if (!StringUtils.isEmpty(dependency.configName())) {
             dependsOnMap.put(resolveDependsOn(configPrefix, dependency.configName()), (List) Arrays.asList(dependency.triggeredByValues()));
+          }
+        }
+        if (parentDependency != null) {
+          for (Dependency parent : parentDependency) {
+            dependsOnMap.put(resolveDependsOn(configPrefix, parent.configName() + "^"), (List) Arrays.asList(parent.triggeredByValues()));
           }
         }
         ModelDefinition model = ModelDefinitionExtractor.get().extract(configPrefix + field.getName() + ".",
