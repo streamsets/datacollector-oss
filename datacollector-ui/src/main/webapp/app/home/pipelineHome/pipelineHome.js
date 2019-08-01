@@ -871,6 +871,11 @@ angular
             };
           }
 
+          if (config.metadata && config.metadata.controlHubTestRun) {
+            // Pipeline is Control Hub test run pipeline - so mark it readonly
+            $scope.isPipelineReadOnly = true;
+          }
+
           updateGraph(config, rules, undefined, undefined, true);
 
           if (_.contains(['RUNNING', 'STARTING'], $rootScope.common.pipelineStatusMap[routeParamPipelineName].status)) {
