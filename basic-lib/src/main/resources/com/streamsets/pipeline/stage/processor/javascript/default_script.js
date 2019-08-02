@@ -33,7 +33,8 @@
  *                            Only events created with sdcFunctions.createEvent are supported.
  *  sdcFunctions.isPreview(): Determine if pipeline is in preview mode.
  *
- * Available Record Header Variables:n *
+ * Available Record Header Variables:
+ *
  *  record.attributes: a map of record header attributes.
  *
  *  record.<header name>: get the value of 'header name'.

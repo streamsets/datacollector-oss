@@ -15,7 +15,6 @@
  *
  * Available functions:
  *   sdc.createBatch(): Return a new batch.
- *   sdc.createRecord(): Return a new record.
  *   sdc.createRecord(String recordId): Return a new record. Pass a recordId to uniquely identify
  *       the record and include enough information to track down the record source.
  *   Batch.add(record): Append a record to the batch.
