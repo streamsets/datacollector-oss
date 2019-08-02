@@ -26,6 +26,7 @@ import com.sforce.soap.partner.UndeleteResult;
 import com.sforce.soap.partner.UpsertResult;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.ConnectionException;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
@@ -38,13 +39,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
+
+import static com.streamsets.pipeline.api.Field.Type.DATETIME;
+import static com.streamsets.pipeline.api.Field.Type.TIME;
 
 public class ForceSoapWriter extends ForceWriter {
   // Max number of records allowed in a create() call
@@ -245,12 +251,20 @@ public class ForceSoapWriter extends ForceWriter {
             continue;
           }
 
-          final Object value = record.get(fieldPath).getValue();
+          final Field field = record.get(fieldPath);
+          Object value = field.getValue();
 
           if (value == null &&
               (opCode == OperationType.UPDATE_CODE || opCode == OperationType.UPSERT_CODE)) {
             fieldsToNull.add(sFieldName);
           } else {
+            Field.Type type = field.getType();
+            // Salesforce WSC does not work correctly with Date type for times or datetimes
+            if (type == TIME || type == DATETIME) {
+              Calendar cal = Calendar.getInstance();
+              cal.setTime((Date)value);
+              value = cal;
+            }
             so.setField(sFieldName, value);
           }
         }
