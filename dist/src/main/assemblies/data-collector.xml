@@ -183,13 +183,13 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
-    <!-- DataFormants libs -->
+    <!-- Data Formats libs -->
     <fileSet>
       <directory>${basedir}/../dataformats-lib/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
-<!-- crypto-lib -->
+    <!-- crypto-lib -->
     <fileSet>
       <directory>${basedir}/../crypto-lib/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
@@ -228,6 +228,12 @@
     <!-- mysql-binlog-lib -->
     <fileSet>
       <directory>${basedir}/../mysql-binlog-lib/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
+    <!-- orchestrator-lib -->
+    <fileSet>
+      <directory>${basedir}/../orchestrator-lib/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 

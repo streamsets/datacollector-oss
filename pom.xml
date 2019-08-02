@@ -81,6 +81,7 @@
     <mleap-lib>mleap-lib</mleap-lib>
     <mysql-binlog-lib>mysql-binlog-lib</mysql-binlog-lib>
     <omniture-lib>omniture-lib</omniture-lib>
+    <orchestrator-lib>orchestrator-lib</orchestrator-lib>
     <rabbitmq-lib>rabbitmq-lib</rabbitmq-lib>
     <redis-lib>redis-lib</redis-lib>
     <salesforce-lib>salesforce-lib</salesforce-lib>
@@ -257,6 +258,7 @@
     <module>mleap-lib</module>
     <module>mysql-binlog-lib</module>
     <module>omniture-lib</module>
+    <module>orchestrator-lib</module>
     <module>rabbitmq-lib</module>
     <module>redis-lib</module>
     <module>salesforce-lib</module>
