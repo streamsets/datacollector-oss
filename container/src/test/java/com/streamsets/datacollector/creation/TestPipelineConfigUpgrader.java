@@ -216,5 +216,7 @@ public class TestPipelineConfigUpgrader {
     Assert.assertEquals(false, upgrade.get(1).getValue());
     Assert.assertEquals("advancedErrorHandling", upgrade.get(2).getName());
     Assert.assertEquals(false, upgrade.get(2).getValue());
+    Assert.assertEquals("triggerInterval", upgrade.get(3).getName());
+    Assert.assertEquals(2000, upgrade.get(3).getValue());
   }
 }

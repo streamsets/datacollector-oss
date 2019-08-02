@@ -303,6 +303,7 @@ public class PipelineConfigUpgrader implements StageUpgrader {
     configs.add(new Config("ludicrousMode", false));
     configs.add(new Config("ludicrousModeInputCount", false));
     configs.add(new Config("advancedErrorHandling", false));
+    configs.add(new Config("triggerInterval", 2000));
   }
 
 }

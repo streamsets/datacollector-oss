@@ -184,6 +184,20 @@ public class PipelineConfigBean implements Stage {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.NUMBER,
+      defaultValue = "2000",
+      label = "Trigger Interval (millis)",
+      description = "Time interval between generation of batches",
+      min = 1,
+      dependencies = {
+          @Dependency(configName = "executionMode", triggeredByValues = {"STREAMING"})
+      },
+      displayPosition = 35
+  )
+  public long triggerInterval = 1; // default so tests don't wait forever
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.NUMBER,
       defaultValue = "-1",
       label = "Retry Attempts",
       dependsOn = "shouldRetry",
