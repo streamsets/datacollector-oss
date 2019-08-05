@@ -746,6 +746,24 @@ public class ValidationUtil {
           preview = false;
         }
         break;
+      case FIELD_SELECTOR:
+        if (!(conf.getValue() instanceof String)) {
+          // stage configuration must be a model
+          issues.add(
+                  issueCreator.create(
+                          confDef.getGroup(),
+                          confDef.getName(),
+                          ValidationError.VALIDATION_0009,
+                          "String")
+          );
+          preview = false;
+        } else {
+          //validate all the field names for proper syntax
+          String fieldPath = (String) conf.getValue();
+          preview &= validatePath(confDef, issueCreator, issues, fieldPath);
+          break;
+        }
+        break;
       case FIELD_SELECTOR_MULTI_VALUE:
         if (!(conf.getValue() instanceof List)) {
           // stage configuration must be a model
@@ -761,18 +779,8 @@ public class ValidationUtil {
           //validate all the field names for proper syntax
           List<String> fieldPaths = (List<String>) conf.getValue();
           for (String fieldPath : fieldPaths) {
-            try {
-              PathElement.parse(fieldPath, true);
-            } catch (IllegalArgumentException e) {
-              issues.add(
-                  issueCreator.create(
-                      confDef.getGroup(),
-                      confDef.getName(),
-                      ValidationError.VALIDATION_0033,
-                      e.toString()
-                  )
-              );
-              preview = false;
+            preview &= validatePath(confDef, issueCreator, issues, fieldPath);
+            if (! preview) {
               break;
             }
           }
@@ -933,14 +941,29 @@ public class ValidationUtil {
           }
         }
         break;
-      case FIELD_SELECTOR:
-        // fall through
       case MULTI_VALUE_CHOOSER:
         break;
       default:
         throw new RuntimeException("Unknown model type: " + confDef.getModel().getModelType().name());
     }
     return preview;
+  }
+
+  private static boolean validatePath(ConfigDefinition confDef, IssueCreator issueCreator, List<Issue> issues, String fieldPath) {
+    try {
+      PathElement.parse(fieldPath, true);
+    } catch (IllegalArgumentException e) {
+      issues.add(
+              issueCreator.create(
+                      confDef.getGroup(),
+                      confDef.getName(),
+                      ValidationError.VALIDATION_0033,
+                      e.toString()
+              )
+      );
+      return false;
+    }
+    return true;
   }
 
   private static boolean validateComplexConfig(

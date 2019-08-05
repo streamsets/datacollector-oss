@@ -81,6 +81,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class MockStages {
 
@@ -821,10 +822,21 @@ public class MockStages {
           .withStageDef(Mockito.mock(StageDef.class))
           .build();
 
-        ModelDefinition m = new ModelDefinition(ModelType.FIELD_SELECTOR_MULTI_VALUE, null, Collections.<String>emptyList(),
+
+        ModelDefinition singleFieldModelDef = new ModelDefinition(ModelType.FIELD_SELECTOR, null, Collections.<String>emptyList(),
+                Collections.<String>emptyList(), null, null, null);
+        ModelDefinition multiFieldModelDef = new ModelDefinition(ModelType.FIELD_SELECTOR_MULTI_VALUE, null, Collections.<String>emptyList(),
           Collections.<String>emptyList(), null, null, null);
+
+        StageDefinition fieldPDef = new StageDefinitionBuilder(cl, MProcessor.class, "fieldProcessorName")
+          .withStageDef(Mockito.mock(StageDef.class))
+          .withConfig(
+            createFieldDef("singleField", ConfigDef.Type.MODEL, singleFieldModelDef),
+            createFieldDef("multiField", ConfigDef.Type.MODEL, multiFieldModelDef))
+          .build();
+
         ConfigDefinition stageReqField = new ConfigDefinition("stageRequiredFields", ConfigDef.Type.MODEL, "stageRequiredFields",
-          "stageRequiredFields", null, false, "groupName", "stageRequiredFieldName", m, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
+          "stageRequiredFields", null, false, "groupName", "stageRequiredFieldName", multiFieldModelDef, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
           Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
           ConfigDef.Evaluation.IMPLICIT, new HashMap<String, List<Object>>());
 
@@ -1025,6 +1037,7 @@ public class MockStages {
               pushSourceDef,
               hiddenPDef,
               pDef,
+              fieldPDef,
               tDef,
               tEventDef,
               teDef,
@@ -1110,6 +1123,15 @@ public class MockStages {
       public StageLibraryTask build() {
         return new MockStageLibraryTask(stages.values());
       }
+    }
+
+    private static ConfigDefinition createFieldDef(String configName,
+                                                   ConfigDef.Type configType,
+                                                   ModelDefinition modelDefinition) {
+      return new ConfigDefinition(configName, configType, configName + "Label", configName + "Desc",
+              "", true, "", configName + "FieldName", modelDefinition, "", null, 10, Collections.<ElFunctionDefinition>emptyList(),
+              Collections.<ElConstantDefinition>emptyList(), 0, 0,
+              "", 0, Collections.<Class>emptyList(), ConfigDef.Evaluation.IMPLICIT, Collections.<String, List<Object>>emptyMap());
     }
 
     public static RawSourceDefinition getRawSourceDefinition() {
@@ -2090,6 +2112,28 @@ public class MockStages {
       .withConfig(new Config("stageRequiredFields", Arrays.asList("dummy")))
       .withInputLanes("a")
       .build();
+    stages.add(target);
+    return pipeline(stages);
+  }
+
+  public static PipelineConfiguration createPipelineConfigurationWithFieldNames(String fieldName,
+                                                                                String ... multiFieldNames) {
+    List<StageConfiguration> stages = new ArrayList<>();
+    StageConfiguration source = new StageConfigurationBuilder("s", "sourceName")
+            .withOutputLanes("s")
+            .build();
+    stages.add(source);
+    StageConfiguration processor = new StageConfigurationBuilder("p", "fieldProcessorName")
+            .withInputLanes("s")
+            .withOutputLanes("p")
+            .withConfig(
+                    new Config("singleField", fieldName),
+                    new Config("multiField", Arrays.stream(multiFieldNames).collect(Collectors.toList())))
+            .build();
+    stages.add(processor);
+    StageConfiguration target = new StageConfigurationBuilder("t", "targetName")
+            .withInputLanes("p")
+            .build();
     stages.add(target);
     return pipeline(stages);
   }

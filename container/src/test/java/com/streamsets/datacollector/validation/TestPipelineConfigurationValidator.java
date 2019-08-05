@@ -39,9 +39,11 @@ import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
@@ -601,6 +603,45 @@ public class TestPipelineConfigurationValidator {
     Assert.assertEquals(ValidationError.VALIDATION_0304.name(), issue.getErrorCode());
     // error message should mention the configuration property
     assertThat(issue.getMessage(), containsString(SecurityConfiguration.KERBEROS_KEYTAB_KEY));
+  }
+
+  @Test
+  public void testFieldsWithSlashPrefix() {
+    StageLibraryTask lib = MockStages.createStageLibrary();
+    PipelineConfiguration conf = MockStages.createPipelineConfigurationWithFieldNames(
+            "/singleFieldFoo", "/multiA", "/multiB");
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
+
+    conf = validator.validate();
+    Assert.assertFalse(conf.getIssues().hasIssues());
+  }
+
+  @Test
+  public void testFieldMissingSlashPrefix() {
+    StageLibraryTask lib = MockStages.createStageLibrary();
+    PipelineConfiguration conf = MockStages.createPipelineConfigurationWithFieldNames(
+            "singleFieldFoo", "/multiA", "/multiB");
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
+
+    conf = validator.validate();
+    Assert.assertTrue(conf.getIssues().hasIssues());
+    List<Issue> issues = conf.getIssues().getIssues();
+    Assert.assertEquals(1, issues.size());
+    Assert.assertEquals(ValidationError.VALIDATION_0033.name(), issues.get(0).getErrorCode());
+  }
+
+  @Test
+  public void testMultiFieldMissingSlashPrefix() {
+    StageLibraryTask lib = MockStages.createStageLibrary();
+    PipelineConfiguration conf = MockStages.createPipelineConfigurationWithFieldNames(
+            "/singleFieldFoo", "/multiA", "multiB");
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
+
+    conf = validator.validate();
+    Assert.assertTrue(conf.getIssues().hasIssues());
+    List<Issue> issues = conf.getIssues().getIssues();
+    Assert.assertEquals(1, issues.size());
+    Assert.assertEquals(ValidationError.VALIDATION_0033.name(), issues.get(0).getErrorCode());
   }
 
   private static PipelineConfigurationValidator createClusterPropertiesValidator(
