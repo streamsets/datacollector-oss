@@ -76,7 +76,8 @@ public class SlavePipelineManager extends AbstractTask implements Manager {
       String name,
       String rev,
       List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
-      Function<Object, Void> afterActionsFunction
+      Function<Object, Void> afterActionsFunction,
+      boolean remote
   ) {
     throw new UnsupportedOperationException();
   }

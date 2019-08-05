@@ -15,21 +15,31 @@
  */
 package com.streamsets.datacollector.restapi.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.streamsets.datacollector.execution.PreviewStatus;
 
+import java.util.Map;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PreviewInfoJson {
   private String previewerId;
   private PreviewStatus status;
   private String pipelineId;
+  private Map<String, Object> attributes;
 
-  public PreviewInfoJson(String previewerId, PreviewStatus previewStatus) {
-    this(previewerId, previewStatus, null);
+  public PreviewInfoJson() {
   }
 
-  public PreviewInfoJson(String previewerId, PreviewStatus previewStatus, String pipelineId) {
+  public PreviewInfoJson(
+      String previewerId,
+      PreviewStatus status,
+      String pipelineId,
+      Map<String, Object> attributes
+  ) {
     this.previewerId = previewerId;
-    this.status = previewStatus;
+    this.status = status;
     this.pipelineId = pipelineId;
+    this.attributes = attributes;
   }
 
   public String getPreviewerId() {
@@ -54,5 +64,13 @@ public class PreviewInfoJson {
 
   public void setPipelineId(String pipelineId) {
     this.pipelineId = pipelineId;
+  }
+
+  public Map<String, Object> getAttributes() {
+    return attributes;
+  }
+
+  public void setAttributes(Map<String, Object> attributes) {
+    this.attributes = attributes;
   }
 }

@@ -239,7 +239,8 @@ public class TestStandalonePipelineManager {
             PreviewerListener listener,
             ObjectGraph objectGraph,
             List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
-            Function<Object, Void> afterActionsFunction
+            Function<Object, Void> afterActionsFunction,
+            boolean remote
         ) {
           Previewer mock = Mockito.mock(Previewer.class);
           Mockito.when(mock.getId()).thenReturn(UUID.randomUUID().toString());
@@ -331,7 +332,7 @@ public class TestStandalonePipelineManager {
     Previewer previewer = pipelineManager.createPreviewer("user", "abcd", "0", interceptorConfs, p -> {
       this.afterActionsFunctionCallParam = p;
       return null;
-    });
+    }, false);
     assertEquals(previewer, pipelineManager.getPreviewer(previewer.getId()));
     assertEquals(interceptorConfs, previewer.getInterceptorConfs());
     ((StandaloneAndClusterPipelineManager)pipelineManager).outputRetrieved(previewer.getId());

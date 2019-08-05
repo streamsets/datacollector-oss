@@ -158,7 +158,8 @@ public class TestRemoteDataCollector {
         String name,
         String rev,
         List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
-        Function<Object, Void> afterActionsFunction
+        Function<Object, Void> afterActionsFunction,
+        boolean remote
     ) throws PipelineStoreException {
       final MockPreviewer mockPreviewer = new MockPreviewer(user, name, rev, interceptorConfs, afterActionsFunction);
       Previewer previewer = mockPreviewer;
@@ -563,7 +564,7 @@ public class TestRemoteDataCollector {
     }
 
     @Override
-    public void validateConfigs(long timeoutMillis) throws PipelineException {
+    public void validateConfigs(long timeoutMillis) {
       if (name.equals("ns:name")) {
         isValid = true;
       } else {
@@ -576,7 +577,7 @@ public class TestRemoteDataCollector {
     public RawPreview getRawSource(
         int maxLength,
         MultivaluedMap<String, String> previewParams
-    ) throws PipelineRuntimeException, PipelineStoreException {
+    ) {
       // TODO Auto-generated method stub
       return null;
     }
@@ -591,7 +592,7 @@ public class TestRemoteDataCollector {
         List<StageOutput> stagesOverride,
         long timeoutMillis,
         boolean testOrigin
-    ) throws PipelineException {
+    ) {
       previewStarted = true;
     }
 

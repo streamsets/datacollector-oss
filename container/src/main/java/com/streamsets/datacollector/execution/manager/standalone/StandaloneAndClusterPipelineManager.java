@@ -122,7 +122,8 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
       String name,
       String rev,
       List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
-      Function<Object, Void> afterActionsFunction
+      Function<Object, Void> afterActionsFunction,
+      boolean remote
   ) throws PipelineException {
     if (!pipelineStore.hasPipeline(name)) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
@@ -134,7 +135,8 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
         this,
         objectGraph,
         interceptorConfs,
-        afterActionsFunction
+        afterActionsFunction,
+        remote
     );
     previewerCache.put(previewer.getId(), previewer);
     return previewer;

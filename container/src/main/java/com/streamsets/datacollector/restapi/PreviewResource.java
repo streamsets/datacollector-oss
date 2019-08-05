@@ -191,6 +191,7 @@ public class PreviewResource {
       @QueryParam("timeout") @DefaultValue("2000") long timeout,
       @QueryParam("edge") @DefaultValue("false") boolean edge,
       @QueryParam("testOrigin") @DefaultValue("false") boolean testOrigin,
+      @QueryParam("remote") @DefaultValue("false") boolean remote,
       @ApiParam(name="stageOutputsToOverrideJson", required = true)  List<StageOutputJson> stageOutputsToOverrideJson
   ) throws PipelineException {
     if (stageOutputsToOverrideJson == null) {
@@ -228,6 +229,7 @@ public class PreviewResource {
         endStageInstanceName,
         timeout,
         testOrigin,
+        remote,
         stageOutputsToOverrideJson
     );
   }
@@ -242,6 +244,7 @@ public class PreviewResource {
       String endStageInstanceName,
       long timeout,
       boolean testOrigin,
+      boolean remote,
       List<StageOutputJson> stageOutputsToOverrideJson
   ) throws PipelineException {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
@@ -251,7 +254,7 @@ public class PreviewResource {
     int maxBatches = configuration.get(MAX_BATCHES_KEY, MAX_BATCHES_DEFAULT);
     batches = Math.min(maxBatches, batches);
 
-    Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev, Collections.emptyList(), p -> null);
+    Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev, Collections.emptyList(), p -> null, remote);
     try {
       previewer.start(
           batches,
@@ -263,7 +266,12 @@ public class PreviewResource {
           timeout,
           testOrigin
       );
-      PreviewInfoJson previewInfoJson = new PreviewInfoJson(previewer.getId(), previewer.getStatus());
+      PreviewInfoJson previewInfoJson = new PreviewInfoJson(
+          previewer.getId(),
+          previewer.getStatus(),
+          pipelineId,
+          previewer.getAttributes()
+      );
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewInfoJson).build();
     } catch (PipelineRuntimeException ex) {
       if (ex.getErrorCode() == ContainerError.CONTAINER_0165) {
@@ -384,7 +392,8 @@ public class PreviewResource {
     final PreviewInfoJson previewInfoJson = new PreviewInfoJson(
         previewer.getId(),
         previewer.getStatus(),
-        generatedPipelineId
+        generatedPipelineId,
+        previewer.getAttributes()
     );
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewInfoJson).build();
   }
@@ -500,7 +509,12 @@ public class PreviewResource {
     }
     PipelineInfo pipelineInfo = store.getInfo(previewer.getName());
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
-    PreviewInfoJson previewInfoJson = new PreviewInfoJson(previewer.getId(), previewer.getStatus());
+    PreviewInfoJson previewInfoJson = new PreviewInfoJson(
+        previewer.getId(),
+        previewer.getStatus(),
+        pipelineId,
+        previewer.getAttributes()
+    );
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewInfoJson).build();
   }
 
@@ -579,7 +593,12 @@ public class PreviewResource {
     PipelineInfo pipelineInfo = store.getInfo(previewer.getName());
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     previewer.stop();
-    PreviewInfoJson previewInfoJson = new PreviewInfoJson(previewer.getId(), previewer.getStatus());
+    PreviewInfoJson previewInfoJson = new PreviewInfoJson(
+        previewer.getId(),
+        previewer.getStatus(),
+        pipelineId,
+        previewer.getAttributes()
+    );
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewInfoJson).build();
   }
 
@@ -602,7 +621,7 @@ public class PreviewResource {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     MultivaluedMap<String, String> previewParams = uriInfo.getQueryParameters();
-    Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev, Collections.emptyList(), p -> null);
+    Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev, Collections.emptyList(), p -> null, false);
     RawPreview rawPreview = previewer.getRawSource(4 * 1024, previewParams);
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(rawPreview).build();
   }
@@ -624,7 +643,8 @@ public class PreviewResource {
       @PathParam("pipelineId") String pipelineId,
       @QueryParam("rev") String rev,
       @QueryParam("timeout") @DefaultValue("2000") long timeout,
-      @QueryParam("edge") @DefaultValue("false") boolean edge
+      @QueryParam("edge") @DefaultValue("false") boolean edge,
+      @QueryParam("remote") @DefaultValue("false") boolean remote
   ) throws PipelineException {
     if (edge) {
       PipelineConfiguration pipelineConfiguration = store.load(pipelineId, "0");
@@ -641,13 +661,18 @@ public class PreviewResource {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     try {
-      Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev, Collections.emptyList(), p -> null);
+      Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev, Collections.emptyList(), p -> null, remote);
       previewer.validateConfigs(timeout);
       PreviewStatus previewStatus = previewer.getStatus();
       if(previewStatus == null) {
         previewStatus =  PreviewStatus.VALIDATING;
       }
-      PreviewInfoJson previewInfoJson = new PreviewInfoJson(previewer.getId(), previewStatus);
+      PreviewInfoJson previewInfoJson = new PreviewInfoJson(
+          previewer.getId(),
+          previewStatus,
+          pipelineId,
+          previewer.getAttributes()
+      );
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewInfoJson).build();
     } catch (PipelineRuntimeException ex) {
       if (ex.getErrorCode() == ContainerError.CONTAINER_0165) {

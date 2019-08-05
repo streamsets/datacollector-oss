@@ -15,17 +15,49 @@
  */
 package com.streamsets.datacollector.restapi.bean;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.datacollector.execution.PreviewOutput;
 import com.streamsets.datacollector.execution.PreviewStatus;
+import com.streamsets.datacollector.execution.preview.common.PreviewOutputImpl;
+import com.streamsets.datacollector.runner.StageOutput;
+import org.apache.commons.collections.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PreviewOutputJson {
 
   private final PreviewOutput previewOutput;
 
-  public PreviewOutputJson(PreviewOutput previewOutput) {
+  @JsonCreator
+  public PreviewOutputJson(
+      @JsonProperty("status") PreviewStatus status,
+      @JsonProperty("issues") IssuesJson issues,
+      @JsonProperty("batchesOutput") List<List<StageOutputJson>> batchesOutput,
+      @JsonProperty("message") String message,
+      @JsonProperty("errorStackTrace") String errorStackTrace,
+      @JsonProperty("antennaDoctorMessages") List<AntennaDoctorMessageJson> antennaDoctorMessages
+  ) {
+    List<List<StageOutput>> output = new ArrayList<>();
+    if (CollectionUtils.isNotEmpty(batchesOutput)) {
+      output.addAll(batchesOutput.stream().map(BeanHelper::unwrapStageOutput).collect(Collectors.toList()));
+    }
+    previewOutput = new PreviewOutputImpl(
+        status,
+        BeanHelper.unwrapIssues(issues),
+        output,
+        message,
+        errorStackTrace,
+        BeanHelper.unwrapAntennaDoctorMessages(antennaDoctorMessages)
+    );
+  }
+
+  PreviewOutputJson(PreviewOutput previewOutput) {
     this.previewOutput = previewOutput;
   }
 

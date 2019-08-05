@@ -276,7 +276,7 @@ public class RemoteDataCollector implements DataCollector {
       String rev,
       List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
   ) throws PipelineException {
-    Previewer previewer = manager.createPreviewer(user, name, rev, interceptorConfs, p -> null);
+    Previewer previewer = manager.createPreviewer(user, name, rev, interceptorConfs, p -> null, false);
     previewer.validateConfigs(1000L);
     validatorIdList.add(previewer.getId());
   }
@@ -297,7 +297,7 @@ public class RemoteDataCollector implements DataCollector {
       List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
       Function<Object, Void> afterActionsFunction
   ) throws PipelineException {
-    final Previewer previewer = manager.createPreviewer(user, name, rev, interceptorConfs, afterActionsFunction);
+    final Previewer previewer = manager.createPreviewer(user, name, rev, interceptorConfs, afterActionsFunction, false);
     previewer.validateConfigs(10000l);
 
     if (!EnumSet.of(PreviewStatus.VALIDATION_ERROR,  PreviewStatus.INVALID).contains(previewer.getStatus())) {

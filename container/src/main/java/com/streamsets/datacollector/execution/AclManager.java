@@ -80,10 +80,11 @@ public class AclManager implements Manager {
       String name,
       String rev,
       List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
-      Function<Object, Void> afterActionsFunction
+      Function<Object, Void> afterActionsFunction,
+      boolean remote
   ) throws PipelineException {
     aclStore.validateExecutePermission(name, currentUser);
-    return manager.createPreviewer(user, name, rev, interceptorConfs, afterActionsFunction);
+    return manager.createPreviewer(user, name, rev, interceptorConfs, afterActionsFunction, remote);
   }
 
   @Override

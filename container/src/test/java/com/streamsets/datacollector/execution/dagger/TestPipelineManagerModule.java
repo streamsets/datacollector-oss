@@ -93,7 +93,8 @@ public class TestPipelineManagerModule {
         pc.getInfo().getPipelineId(),
         "1",
         Collections.emptyList(),
-        p -> null
+        p -> null,
+        false
     );
     assertEquals(previewer, pipelineManager.getPreviewer(previewer.getId()));
     ((StandaloneAndClusterPipelineManager)pipelineManager).outputRetrieved(previewer.getId());
@@ -126,7 +127,7 @@ public class TestPipelineManagerModule {
     Assert.assertTrue(pipelineManager instanceof SlavePipelineManager);
 
     try {
-      pipelineManager.createPreviewer("user", "p1", "1", Collections.emptyList(), p -> null);
+      pipelineManager.createPreviewer("user", "p1", "1", Collections.emptyList(), p -> null, false);
       Assert.fail("Expected UnsupportedOperationException");
     } catch (UnsupportedOperationException e) {
 

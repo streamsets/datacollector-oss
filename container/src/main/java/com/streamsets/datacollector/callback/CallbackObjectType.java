@@ -20,5 +20,7 @@ public enum CallbackObjectType {
   ERROR,
   STATE,
   OFFSET,
+  PREVIEW_INFO,
+  PREVIEW_OUTPUT,
   ;
 }

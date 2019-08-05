@@ -52,6 +52,8 @@ import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineRevInfo;
+import com.streamsets.datacollector.validation.Issue;
+import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.pipeline.api.AntennaDoctorMessage;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -441,59 +443,71 @@ public class BeanHelper {
   }
 
   public static Map<String, List<IssueJson>> wrapIssuesMap(
-      Map<String, List<com.streamsets.datacollector.validation.Issue>> stageIssuesMapList
+      Map<String, List<Issue>> stageIssuesMapList
   ) {
     if(stageIssuesMapList == null) {
       return null;
     }
     Map<String, List<IssueJson>> stageIssuesMap = new HashMap<>();
-    for(Map.Entry<String, List<com.streamsets.datacollector.validation.Issue>> e : stageIssuesMapList.entrySet()) {
+    for(Map.Entry<String, List<Issue>> e : stageIssuesMapList.entrySet()) {
       stageIssuesMap.put(e.getKey(), wrapIssues(e.getValue()));
     }
     return stageIssuesMap;
   }
 
 
-  public static Map<String, List<com.streamsets.datacollector.validation.Issue>> unwrapIssuesMap(
+  public static Map<String, List<Issue>> unwrapIssuesMap(
       Map<String, List<IssueJson>> Issues
   ) {
     if(Issues == null) {
       return null;
     }
-    Map<String, List<com.streamsets.datacollector.validation.Issue>> IssuesMap = new HashMap<>();
+    Map<String, List<Issue>> IssuesMap = new HashMap<>();
     for(Map.Entry<String, List<IssueJson>> e : Issues.entrySet()) {
       IssuesMap.put(e.getKey(), unwrapIssues(e.getValue()));
     }
     return IssuesMap;
   }
 
-  public static List<IssueJson> wrapIssues(List<com.streamsets.datacollector.validation.Issue> issues) {
+  public static List<IssueJson> wrapIssues(List<Issue> issues) {
     if(issues == null) {
       return null;
     }
     List<IssueJson> issueJsonList = new ArrayList<>(issues.size());
-    for(com.streamsets.datacollector.validation.Issue r : issues) {
+    for(Issue r : issues) {
       issueJsonList.add(new IssueJson(r));
     }
     return issueJsonList;
   }
 
-  public static List<com.streamsets.datacollector.validation.Issue> unwrapIssues(List<IssueJson> issueJsons) {
+  public static List<Issue> unwrapIssues(List<IssueJson> issueJsons) {
     if(issueJsons == null) {
       return null;
     }
-    List<com.streamsets.datacollector.validation.Issue> issueList = new ArrayList<>(issueJsons.size());
+    List<Issue> issueList = new ArrayList<>(issueJsons.size());
     for(IssueJson r : issueJsons) {
       issueList.add(r.getIssue());
     }
     return issueList;
   }
 
-  public static IssuesJson wrapIssues(com.streamsets.datacollector.validation.Issues issues) {
+  public static IssuesJson wrapIssues(Issues issues) {
     if(issues == null) {
       return null;
     }
     return new IssuesJson(issues);
+  }
+
+  public static Issues unwrapIssues(IssuesJson issuesJson) {
+    if(issuesJson == null) {
+      return null;
+    }
+    Issues issues = new Issues();
+    issues.addAll(unwrapIssues(issuesJson.getPipelineIssues()));
+    for(Map.Entry<String, List<IssueJson>> e : issuesJson.getStageIssues().entrySet()) {
+      issues.addAll(unwrapIssues(e.getValue()));
+    }
+    return issues;
   }
 
   public static com.streamsets.pipeline.api.Field unwrapField(FieldJson fieldJson) {
@@ -1398,5 +1412,15 @@ public class BeanHelper {
     }
 
     return messages.stream().map(AntennaDoctorMessageJson::new).collect(Collectors.toList());
+  }
+
+  public static List<AntennaDoctorMessage> unwrapAntennaDoctorMessages(List<AntennaDoctorMessageJson> messages) {
+    if(messages == null) {
+      return null;
+    }
+
+    return messages.stream()
+        .map(m -> new AntennaDoctorMessage(m.getSummary(), m.getDescription()))
+        .collect(Collectors.toList());
   }
 }

@@ -36,28 +36,29 @@ public interface Manager extends Task {
   // (using a last-access cache). the previewer is given a PreviewerListener at <init> time which will be used
   // by the previewer to signal the PreviewOutput has been given back to the client and the Previewer could be
   // eagerly removed from the cache.
-  public Previewer createPreviewer(
+  Previewer createPreviewer(
       String user,
       String name,
       String rev,
       List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
-      Function<Object, Void> afterActionsFunction
+      Function<Object, Void> afterActionsFunction,
+      boolean remote
   ) throws PipelineException;
 
   // returns the previewer from the cache with the specified ID
-  public Previewer getPreviewer(String previewerId);
+  Previewer getPreviewer(String previewerId);
 
   // creates a runner for a given pipeline, the runner will have the current state of the pipeline.
-  public Runner getRunner(String name, String rev) throws PipelineException;
+  Runner getRunner(String name, String rev) throws PipelineException;
 
-  public List<PipelineState> getPipelines() throws PipelineException;
+  List<PipelineState> getPipelines() throws PipelineException;
 
-  public PipelineState getPipelineState(String name, String rev) throws PipelineException;
+  PipelineState getPipelineState(String name, String rev) throws PipelineException;
 
   // returns if the pipeline is in a 'running' state (starting, stopping, running)
-  public boolean isPipelineActive(String name, String rev) throws PipelineException;
+  boolean isPipelineActive(String name, String rev) throws PipelineException;
 
-  public boolean isRemotePipeline(String name, String rev) throws PipelineStoreException;
+  boolean isRemotePipeline(String name, String rev) throws PipelineStoreException;
 
   void addStateEventListener(StateEventListener listener);
 }

@@ -17,6 +17,7 @@ package com.streamsets.datacollector.publicrestapi;
 
 import com.streamsets.datacollector.event.binding.MessagingDtoJsonMapper;
 import com.streamsets.datacollector.execution.Manager;
+import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.CallbackInfoJson;
@@ -30,6 +31,7 @@ import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -82,7 +84,23 @@ public class PublicClusterResource {
     } else {
       return Response.ok(response).build();
     }
+  }
 
+  @POST
+  @Path("/previewCallback/{previewerId}")
+  @Produces(MediaType.APPLICATION_JSON)
+  @PermitAll
+  public Response previewCallback(
+      @PathParam("previewerId") String previewerId,
+      CallbackInfoJson callbackInfoJson
+  ) {
+    Previewer previewer = manager.getPreviewer(previewerId);
+    if (previewer != null) {
+      Map<String, Object> response = previewer.updateCallbackInfo(callbackInfoJson.getCallbackInfo());
+      return Response.ok(response).build();
+    }
+    throw new RuntimeException(Utils.format("Pipeline '{}' previewer '{} is not available",
+        callbackInfoJson.getName(), previewerId));
   }
 
 }

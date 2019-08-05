@@ -796,7 +796,8 @@ public class TestUtil {
             PreviewerListener listener,
             ObjectGraph objectGraph,
             List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
-            Function<Object, Void> afterActionsFunction
+            Function<Object, Void> afterActionsFunction,
+            boolean remote
         ) {
           Previewer mock = Mockito.mock(Previewer.class);
           Mockito.when(mock.getId()).thenReturn(UUID.randomUUID().toString());

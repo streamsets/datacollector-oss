@@ -73,6 +73,22 @@ public class PreviewOutputImpl implements PreviewOutput {
     this.antennaDoctorMessages = e instanceof StageException ? ((StageException) e).getAntennaDoctorMessages() : null;
   }
 
+  public PreviewOutputImpl(
+      PreviewStatus previewStatus,
+      Issues issues,
+      List<List<StageOutput>> output,
+      String message,
+      String errorStackTrace,
+      List<AntennaDoctorMessage> antennaDoctorMessages
+  ) {
+    this.previewStatus = previewStatus;
+    this.issues = issues;
+    this.output = output;
+    this.message = message;
+    this.errorStackTrace = errorStackTrace;
+    this.antennaDoctorMessages = antennaDoctorMessages;
+  }
+
   @Override
   public PreviewStatus getStatus() {
     return previewStatus;

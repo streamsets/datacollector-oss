@@ -69,13 +69,10 @@ public class AsyncPreviewer implements Previewer {
   }
 
   @Override
-  public void validateConfigs(final long timeoutMillis) throws PipelineException {
-    Callable<Object> callable = new Callable<Object>() {
-      @Override
-      public Object call() throws Exception {
-        syncPreviewer.validateConfigs(timeoutMillis);
-        return null;
-      }
+  public void validateConfigs(final long timeoutMillis) {
+    Callable<Object> callable = () -> {
+      syncPreviewer.validateConfigs(timeoutMillis);
+      return null;
     };
     future = executorService.submit(callable);
     scheduleTimeout(timeoutMillis);
