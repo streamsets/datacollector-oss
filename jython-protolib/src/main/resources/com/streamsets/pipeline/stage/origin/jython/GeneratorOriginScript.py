@@ -46,15 +46,20 @@
 #   record.<header name>: Get the value of 'header name'.
 #
 # Add additional module search paths:
-#   sdc.importLock()
-#   import sys
-#   sdc.importUnlock()
-#   sys.path.append('/some/other/dir/to/search')
+#   try:
+#       sdc.importLock()
+#       import sys
+#       sys.path.append('/some/other/dir/to/search')
+#       import something
+#   finally:
+#       sdc.importUnlock()
 #
 
-sdc.importLock()
-import datetime
-sdc.importUnlock()
+try:
+    sdc.importLock()
+    import datetime
+finally:
+    sdc.importUnlock()
 
 # single threaded - no entityName because we need only one offset
 entityName = ''
