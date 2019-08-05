@@ -40,6 +40,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
+
 public class TestJdbcQueryExecutor {
 
   private final String JDBC_USER = "sa";
@@ -91,6 +93,8 @@ public class TestJdbcQueryExecutor {
       new ImmutablePair("ID", Types.INTEGER),
       new ImmutablePair("NAME", Types.VARCHAR)
     );
+
+    assertEquals(runner.getEventRecords().get(0).getEventType(), "successful-query");
   }
 
   @Test
@@ -115,6 +119,8 @@ public class TestJdbcQueryExecutor {
       new ImmutablePair("ID", Types.INTEGER),
       new ImmutablePair("NAME", Types.VARCHAR)
     );
+
+    assertEquals(runner.getEventRecords().get(0).getEventType(), "successful-query");
   }
 
   @Test
@@ -134,17 +140,64 @@ public class TestJdbcQueryExecutor {
     Assert.assertNotNull(errors);
     Assert.assertEquals(1, errors.size());
     Assert.assertEquals("FIELD", errors.get(0).get().getValueAsString());
+    Assert.assertEquals(runner.getEventRecords().get(0).getEventType(), "failed-query");
 
     runner.runDestroy();
   }
 
-  public JdbcQueryExecutor createExecutor(String query) {
+  @Test
+  public void testIncludeQueryResultCountEnabledForInsert() throws Exception{
+    JdbcQueryExecutor queryExecutor = createExecutor("INSERT INTO origin(id, name) VALUES(1, 'abc') ", true);
+    ExecutorRunner runner = new ExecutorRunner.Builder(JdbcQueryDExecutor.class, queryExecutor)
+            .setOnRecordError(OnRecordError.STOP_PIPELINE)
+            .build();
+    runner.runInit();
+
+    Record record = RecordCreator.create();
+    runner.runWrite(ImmutableList.of(record));
+    runner.runDestroy();
+
+    assertEquals(runner.getEventRecords().get(0).getEventType(), "successful-query");
+    assertEquals(runner.getEventRecords().get(0).get().getValueAsMap().get("query-result").getValue(), "1 row(s) affected");
+  }
+
+  @Test
+  public void testIncludeQueryResultCountEnabledForSelect() throws Exception{
+    JdbcQueryExecutor queryExecutor = createExecutor("SELECT COUNT(*) FROM origin", true);
+    ExecutorRunner runner = new ExecutorRunner.Builder(JdbcQueryDExecutor.class, queryExecutor)
+            .setOnRecordError(OnRecordError.STOP_PIPELINE)
+            .build();
+    runner.runInit();
+
+    Record record = RecordCreator.create();
+    runner.runWrite(ImmutableList.of(record));
+    runner.runDestroy();
+
+    assertEquals(runner.getEventRecords().get(0).getEventType(), "successful-query");
+    assertEquals(runner.getEventRecords().get(0).get().getValueAsMap().get("query-result").getValue(), "1 row(s) returned");
+  }
+
+  JdbcQueryExecutorConfig createJdbcQueryExecutorConfig(){
     JdbcQueryExecutorConfig config = new JdbcQueryExecutorConfig();
     config.hikariConfigBean = new HikariPoolConfigBean();
     config.hikariConfigBean.connectionString = JDBC_CONNECTION;
     config.hikariConfigBean.useCredentials = true;
     config.hikariConfigBean.username = () -> JDBC_USER;
     config.hikariConfigBean.password = () -> JDBC_PASSWD;
+
+    return config;
+  }
+
+  JdbcQueryExecutor createExecutor(String query, boolean queryResultCount){
+    JdbcQueryExecutorConfig config = createJdbcQueryExecutorConfig();
+    config.query = query;
+    config.queryResultCount = queryResultCount;
+
+    return new JdbcQueryExecutor(config);
+  }
+
+  public JdbcQueryExecutor createExecutor(String query) {
+    JdbcQueryExecutorConfig config = createJdbcQueryExecutorConfig();
 
     config.query = query;
     return new JdbcQueryExecutor(config);

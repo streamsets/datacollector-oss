@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.event.EventCreator;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.destination.jdbc.Groups;
@@ -30,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Iterator;
@@ -181,14 +183,42 @@ public class JdbcQueryExecutor extends BaseExecutor {
   private void processARecord(Connection connection, ErrorRecordHandler errorRecordHandler, String query, Record record) throws StageException {
     LOG.trace("Executing query: {}", query);
     try (Statement stmt = connection.createStatement()) {
-      stmt.execute(query);
+      final boolean queryResult = stmt.execute(query);
+
+      if (queryResult && config.queryResultCount){
+        int count = 0;
+        ResultSet rs = stmt.getResultSet();
+        while(rs.next()){
+          count++;
+        }
+
+        JdbcQueryExecutorEvents.successfulQuery.create(getContext())
+                .with(JdbcQueryExecutorEvents.QUERY_EVENT_FIELD, query)
+                .with(JdbcQueryExecutorEvents.QUERY_RESULT_FIELD, count + " row(s) returned")
+                .createAndSend();
+      }
+      else if (config.queryResultCount){
+        JdbcQueryExecutorEvents.successfulQuery.create(getContext())
+                .with(JdbcQueryExecutorEvents.QUERY_EVENT_FIELD, query)
+                .with(JdbcQueryExecutorEvents.QUERY_RESULT_FIELD, stmt.getUpdateCount() + " row(s) affected")
+                .createAndSend();
+      }
+      else{
+        JdbcQueryExecutorEvents.successfulQuery.create(getContext())
+                .with(JdbcQueryExecutorEvents.QUERY_EVENT_FIELD, query)
+                .createAndSend();
+      }
     } catch (SQLException ex) {
       LOG.error("Can't execute query", ex);
+
+      EventCreator.EventBuilder failedQueryEventBuilder = JdbcQueryExecutorEvents.failedQuery.create(getContext()).with(JdbcQueryExecutorEvents.QUERY_EVENT_FIELD, query);
       errorRecordHandler.onError(new OnRecordErrorException(record,
           QueryExecErrors.QUERY_EXECUTOR_001,
           query,
           ex.getMessage()
       ));
+
+      failedQueryEventBuilder.createAndSend();
     }
   }
 

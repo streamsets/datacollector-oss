@@ -51,6 +51,17 @@ public class JdbcQueryExecutorConfig {
   public String query;
 
   @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.BOOLEAN,
+    label = "Include Query Result Count in Events",
+    description = "The number of results returned/affected by the query when produce events is enabled",
+    defaultValue = "false",
+    displayPosition = 40,
+    group = "JDBC"
+  )
+  public boolean queryResultCount = false;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Batch Commit",
