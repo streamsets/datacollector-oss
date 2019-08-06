@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.origin.spooldir;
 
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.lib.dirspooler.Offset;
+import com.streamsets.pipeline.lib.dirspooler.SpoolDirBaseContext;
 import com.streamsets.pipeline.lib.dirspooler.SpoolDirConfigBean;
 import com.streamsets.pipeline.lib.dirspooler.SpoolDirRunnable;
 
@@ -49,12 +50,13 @@ public class TSpoolDirSource extends SpoolDirSource {
   public SpoolDirRunnable getSpoolDirRunnable(int threadNumber, int batchSize, Map<String, Offset> lastSourceOffset) {
     runnable = new TSpoolDirRunnable(
         getContext(),
-        getNumberOfThreads(),
+        threadNumber,
         maxBatchSize,
         lastSourceOffset,
         getLastSourceFileName(),
         getSpooler(),
-        conf
+        conf,
+        spoolDirBaseContext
     );
 
     runnable.file = file;

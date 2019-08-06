@@ -53,6 +53,7 @@ public abstract class SpoolDirBaseSource extends BasePushSource {
   private int numberOfThreads;
   private ExecutorService executorService;
   private WrappedFileSystem fs;
+  protected SpoolDirBaseContext spoolDirBaseContext;
 
   abstract public WrappedFileSystem getFs();
 
@@ -71,6 +72,7 @@ public abstract class SpoolDirBaseSource extends BasePushSource {
     fs = getFs();
 
     numberOfThreads = conf.numberOfThreads;
+    this.spoolDirBaseContext = new SpoolDirBaseContext(getContext(), numberOfThreads);
     lastSourceFileName = null;
 
     conf.dataFormatConfig.checkForInvalidAvroSchemaLookupMode(conf.dataFormat,
@@ -367,6 +369,7 @@ public abstract class SpoolDirBaseSource extends BasePushSource {
         .spooler(getSpooler())
         .conf(conf)
         .wrappedFileSystem(getFs())
+        .spoolDirBaseContext(spoolDirBaseContext)
         .build();
   }
 }
