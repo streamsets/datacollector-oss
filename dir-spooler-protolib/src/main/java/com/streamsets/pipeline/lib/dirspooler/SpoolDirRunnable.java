@@ -82,6 +82,7 @@ public class SpoolDirRunnable implements Runnable {
   private final Map<String, Object> gaugeMap;
   private final boolean useLastModified;
   private final WrappedFileSystem fs;
+  private final SpoolDirBaseContext spoolDirBaseContext;
 
   private DataParser parser;
   private SpoolDirConfigBean conf;
@@ -111,7 +112,8 @@ public class SpoolDirRunnable implements Runnable {
       String lastSourcFileName,
       DirectorySpooler spooler,
       SpoolDirConfigBean conf,
-      WrappedFileSystem fs
+      WrappedFileSystem fs,
+      SpoolDirBaseContext spoolDirBaseContext
   ) {
     this.context = context;
     this.threadNumber = threadNumber;
@@ -126,6 +128,7 @@ public class SpoolDirRunnable implements Runnable {
     this.rateLimitElVars = context.createELVars();
     this.useLastModified = conf.useLastModified == FileOrdering.TIMESTAMP;
     this.fs = fs;
+    this.spoolDirBaseContext = spoolDirBaseContext;
 
     // Metrics
     this.gaugeMap = context.createGauge(SPOOL_DIR_METRICS + threadNumber).getValue();
@@ -288,18 +291,23 @@ public class SpoolDirRunnable implements Runnable {
     }
 
     if (shouldSendNoMoreDataEvent) {
-      LOG.info("sending no-more-data event.  records {} errors {} files {} ",
-          noMoreDataRecordCount, noMoreDataErrorCount, noMoreDataFileCount
+      LOG.info("Setting no-more-data for thread {}.", threadNumber);
+      spoolDirBaseContext.setNoMoreData(
+          threadNumber,
+          true,
+          batchContext,
+          noMoreDataRecordCount,
+          noMoreDataErrorCount,
+          noMoreDataFileCount
       );
-      NoMoreDataEvent.EVENT_CREATOR.create(context, batchContext)
-          .with(NoMoreDataEvent.RECORD_COUNT, noMoreDataRecordCount)
-          .with(NoMoreDataEvent.ERROR_COUNT, noMoreDataErrorCount)
-          .with(NoMoreDataEvent.FILE_COUNT, noMoreDataFileCount)
-          .createAndSend();
-      shouldSendNoMoreDataEvent = false;
+
       noMoreDataRecordCount = 0;
       noMoreDataErrorCount = 0;
       noMoreDataFileCount = 0;
+    } else {
+      // setting to false the no more data for current thread, batchContext is not used counters shall not be
+      // incremented in this case
+      spoolDirBaseContext.setNoMoreData(threadNumber, false, null, 0, 0, 0);
     }
 
     Offset newOffset = new Offset(Offset.VERSION_ONE, file, offset);

@@ -23,6 +23,7 @@ import com.streamsets.pipeline.lib.dirspooler.BadSpoolFileException;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
 import com.streamsets.pipeline.lib.dirspooler.Offset;
 import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
+import com.streamsets.pipeline.lib.dirspooler.SpoolDirBaseContext;
 import com.streamsets.pipeline.lib.dirspooler.SpoolDirConfigBean;
 import com.streamsets.pipeline.lib.dirspooler.SpoolDirRunnable;
 import com.streamsets.pipeline.lib.dirspooler.WrappedFile;
@@ -46,15 +47,26 @@ public class TSpoolDirRunnable extends SpoolDirRunnable {
       Map<String, Offset> offsets,
       String lastSourcFileName,
       DirectorySpooler spooler,
-      SpoolDirConfigBean conf
+      SpoolDirConfigBean conf,
+      SpoolDirBaseContext spoolDirBaseContext
   ) {
-    super(context, threadNumber, batchSize, offsets, lastSourcFileName, spooler, conf, new LocalFileSystem("*", PathMatcherMode.GLOB));
+    super(
+        context,
+        threadNumber,
+        batchSize,
+        offsets,
+        lastSourcFileName,
+        spooler,
+        conf,
+        new LocalFileSystem("*", PathMatcherMode.GLOB),
+        spoolDirBaseContext
+    );
     this.produceCalled = false;
   }
 
   @Override
-  public String generateBatch(WrappedFile file, String offset, int maxBatchSize, BatchMaker batchMaker) throws
-      StageException, BadSpoolFileException {
+  public String generateBatch(WrappedFile file, String offset, int maxBatchSize, BatchMaker batchMaker)
+      throws StageException, BadSpoolFileException {
     long longOffset = Long.parseLong(offset);
     produceCalled = true;
     Assert.assertEquals(this.file.getPath(), file.getAbsolutePath());

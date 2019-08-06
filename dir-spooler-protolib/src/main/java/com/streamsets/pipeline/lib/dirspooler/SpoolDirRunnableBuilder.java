@@ -28,6 +28,7 @@ public class SpoolDirRunnableBuilder {
   private DirectorySpooler spooler;
   private SpoolDirConfigBean conf;
   private WrappedFileSystem fs;
+  private SpoolDirBaseContext spoolDirBaseContext;
 
   public SpoolDirRunnableBuilder() {}
 
@@ -71,7 +72,22 @@ public class SpoolDirRunnableBuilder {
     return this;
   }
 
+  public SpoolDirRunnableBuilder spoolDirBaseContext(SpoolDirBaseContext spoolDirBaseContext) {
+    this.spoolDirBaseContext = spoolDirBaseContext;
+    return this;
+  }
+
   public SpoolDirRunnable build() {
-    return new SpoolDirRunnable(context, threadNumber, batchSize, offsets, lastSourcFileName, spooler, conf, fs);
+    return new SpoolDirRunnable(
+        context,
+        threadNumber,
+        batchSize,
+        offsets,
+        lastSourcFileName,
+        spooler,
+        conf,
+        fs,
+        spoolDirBaseContext
+    );
   }
 }
