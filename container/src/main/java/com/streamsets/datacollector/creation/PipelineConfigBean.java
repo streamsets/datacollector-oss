@@ -241,7 +241,6 @@ public class PipelineConfigBean implements Stage {
       label = "Advanced Error Handling",
       description = "Reports the record that generates an error, when possible. Supported in single-origin pipelines",
       dependencies = {
-          @Dependency(configName = "shouldRetry", triggeredByValues = "false"),
           @Dependency(configName = "executionMode", triggeredByValues = {"BATCH", "STREAMING"})
       },
       displayPosition = 60
