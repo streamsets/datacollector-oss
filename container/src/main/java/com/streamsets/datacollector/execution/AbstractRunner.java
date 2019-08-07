@@ -151,7 +151,7 @@ public abstract  class AbstractRunner implements Runner {
 
   @Override
   public PipelineConfiguration getPipelineConfiguration() throws PipelineException {
-    return pipelineStore.load(getName(), getRev());
+    return getPipelineConf(getName(), getRev());
   }
 
   @Override
