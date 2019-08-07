@@ -39,7 +39,7 @@ public class CredentialStoresTaskImpl extends AbstractTask implements Credential
   static final String VAULT_CREDENTIAL_STORE_KEY = "com.streamsets.datacollector.vaultELs.credentialStore";
 
   private final Configuration configuration;
-  private final StageLibraryTask stageLibraryTask;
+  protected final StageLibraryTask stageLibraryTask;
   private final Map<String, CredentialStore> stores;
   private final List<CredentialStoreDefinition> credentialStoreDefinitions;
 
@@ -103,13 +103,24 @@ public class CredentialStoresTaskImpl extends AbstractTask implements Credential
     super.stopTask();
   }
 
-  protected List<CredentialStore.ConfigIssue> loadAndInitStores() {
-    List<CredentialStore.ConfigIssue> issues = new ArrayList<>();
-
+  // Added this method to override map key in subclass
+  protected Map<String, CredentialStoreDefinition> getDefs() {
     Map<String, CredentialStoreDefinition> defs = new HashMap<>();
     for (CredentialStoreDefinition def : stageLibraryTask.getCredentialStoreDefinitions()) {
       defs.put(def.getStageLibraryDefinition().getName() + "::" + def.getName(), def);
     }
+    return defs;
+  }
+
+  // Added this method to override map key in subclass
+  protected CredentialStoreDefinition getDef(Map<String, CredentialStoreDefinition> defs, String defName) {
+    return defs.get(defName);
+  }
+
+  protected List<CredentialStore.ConfigIssue> loadAndInitStores() {
+    List<CredentialStore.ConfigIssue> issues = new ArrayList<>();
+
+    Map<String, CredentialStoreDefinition> defs = getDefs();
 
     String storeIds = configuration.get("credentialStores", "");
     for (String storeId : Splitter.on(",").omitEmptyStrings().trimResults().split(storeIds)) {
@@ -123,7 +134,7 @@ public class CredentialStoresTaskImpl extends AbstractTask implements Credential
             storeConfigPrefix + ".def"
         ));
       }
-      CredentialStoreDefinition storeDef = defs.get(defName);
+      CredentialStoreDefinition storeDef = getDef(defs, defName);
       if (storeDef == null) {
         throw new RuntimeException(Utils.format("Missing CredentialStore definition '{}'", defName));
       }
