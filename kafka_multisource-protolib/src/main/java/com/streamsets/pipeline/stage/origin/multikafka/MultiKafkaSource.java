@@ -133,6 +133,7 @@ public class MultiKafkaSource extends BasePushSource {
           } else {
             if (!list.isEmpty()) {
               sendBatch(list);
+              consumer.commitSync();
               list.clear();
             } else {
               LOG.debug("No records returned from consumer.poll()");
