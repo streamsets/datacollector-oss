@@ -354,8 +354,13 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     this.gaugeMap.put(PRIVATE_POOL_IDLE, new AtomicInteger(0));
     this.gaugeMap.put(PRIVATE_POOL_MAX, maxPrivateClassloaders);
 
-    // auto load stage library definitions
-    Executors.newSingleThreadExecutor().submit((Runnable) this::getRepositoryManifestList);
+    if (!Boolean.getBoolean("streamsets.cloud")) {
+      // auto load stage library definitions
+      Thread thread = new Thread(this::getRepositoryManifestList);
+      thread.setDaemon(true);
+      thread.setName("ManifestFetcher");
+      thread.start();
+    }
   }
 
   /**
@@ -932,7 +937,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
   @Override
   public List<RepositoryManifestJson> getRepositoryManifestList() {
-    if (repositoryManifestList == null && !Boolean.getBoolean("streamsets.cloud")) {
+    if (repositoryManifestList == null &&  !Boolean.getBoolean("streamsets.cloud")) {
       Instant start = Instant.now();
 
       // initialize when it is called for first time
