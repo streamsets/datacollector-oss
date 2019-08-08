@@ -15,18 +15,54 @@
  */
 package com.streamsets.datacollector.restapi.bean;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.streamsets.datacollector.util.NullDeserializer;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.datacollector.validation.Issue;
+import com.streamsets.pipeline.api.impl.ErrorMessage;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
 import java.util.Map;
 
-@JsonDeserialize(using = NullDeserializer.Object.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class IssueJson {
 
   private final Issue issue;
+
+  @JsonCreator
+  public IssueJson(
+      @JsonProperty("instanceName") String instanceName,
+      @JsonProperty("serviceName") String serviceName,
+      @JsonProperty("level") String level,
+      @JsonProperty("configGroup") String configGroup,
+      @JsonProperty("configName") String configName,
+      @JsonProperty("message") String message,
+      @JsonProperty("count") long count,
+      @JsonProperty("additionalInfo") Map<String, Object> additionalInfo,
+      @JsonProperty("antennaDoctorMessages") List<AntennaDoctorMessageJson> antennaDoctorMessages
+  ) {
+    String errorCode = "";
+    String errorMessage = "";
+    if (StringUtils.isNotEmpty(message)) {
+      String[] messageArr = message.split(" - ", 2);
+      if (messageArr.length > 1) {
+        errorCode = messageArr[0];
+        errorMessage = messageArr[1];
+      }
+    }
+    this.issue = new Issue(
+        instanceName,
+        serviceName,
+        configGroup,
+        configName,
+        count,
+        new ErrorMessage(errorCode, errorMessage, System.currentTimeMillis()),
+        additionalInfo,
+        BeanHelper.unwrapAntennaDoctorMessages(antennaDoctorMessages)
+    );
+  }
 
   IssueJson(Issue issue) {
     this.issue = issue;

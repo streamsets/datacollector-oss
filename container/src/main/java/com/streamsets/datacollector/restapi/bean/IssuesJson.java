@@ -15,16 +15,38 @@
  */
 package com.streamsets.datacollector.restapi.bean;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.streamsets.datacollector.validation.Issues;
 
 import java.util.List;
 import java.util.Map;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class IssuesJson {
 
-  private final com.streamsets.datacollector.validation.Issues issues;
+  private final Issues issues;
 
-  public IssuesJson(com.streamsets.datacollector.validation.Issues issues) {
+  @JsonCreator
+  public IssuesJson(
+      @JsonProperty("pipelineIssues") List<IssueJson> pipelineIssues,
+      @JsonProperty("stageIssues") Map<String, List<IssueJson>> stageIssues,
+      @JsonProperty("issueCount") int issueCount
+  ) {
+    this.issues = new Issues();
+    if (pipelineIssues != null) {
+      issues.addAll(BeanHelper.unwrapIssues(pipelineIssues));
+    }
+    for(Map.Entry<String, List<IssueJson>> e : stageIssues.entrySet()) {
+      if (e.getValue() != null) {
+        issues.addAll(BeanHelper.unwrapIssues(e.getValue()));
+      }
+    }
+  }
+
+  public IssuesJson(Issues issues) {
     this.issues = issues;
   }
 
@@ -41,7 +63,7 @@ public class IssuesJson {
   }
 
   @JsonIgnore
-  public com.streamsets.datacollector.validation.Issues getIssues() {
+  public Issues getIssues() {
     return issues;
   }
 }

@@ -33,7 +33,7 @@ public class Issue implements Serializable, ValidationIssue {
   private final String configGroup;
   private final String configName;
   private long count;
-  private final LocalizableString message;
+  private LocalizableString message;
   private Map<String, Object> additionalInfo;
   private List<AntennaDoctorMessage> antennaDoctorMessages;
 
@@ -46,11 +46,35 @@ public class Issue implements Serializable, ValidationIssue {
     message = new ErrorMessage(error, args);
   }
 
+  public Issue(
+      String instanceName,
+      String serviceName,
+      String configGroup,
+      String configName,
+      long count,
+      LocalizableString message,
+      Map<String, Object> additionalInfo,
+      List<AntennaDoctorMessage> antennaDoctorMessages
+  ) {
+    this.instanceName = instanceName;
+    this.serviceName = serviceName;
+    this.configGroup = configGroup;
+    this.configName = configName;
+    this.count = count;
+    this.message = message;
+    this.additionalInfo = additionalInfo;
+    this.antennaDoctorMessages = antennaDoctorMessages;
+  }
+
   public void setAdditionalInfo(String key, Object value) {
     if (additionalInfo == null) {
       additionalInfo = new HashMap<>();
     }
     additionalInfo.put(key, value);
+  }
+
+  public void setMessage(LocalizableString message) {
+    this.message = message;
   }
 
   @Override

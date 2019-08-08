@@ -15,29 +15,47 @@
  */
 package com.streamsets.datacollector.restapi.bean;
 
-import com.streamsets.datacollector.restapi.bean.BeanHelper;
-import com.streamsets.datacollector.restapi.bean.IssuesJson;
+import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.Issues;
-
+import com.streamsets.pipeline.api.impl.ErrorMessage;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Collections;
 
 public class TestIssuesBean {
 
   @Test
   public void testIssuesBean() {
 
-    com.streamsets.datacollector.validation.Issues issues = new Issues();
+    Issues issues = new Issues();
+    Issue stageIssue = new Issue(
+        "s1",
+        "serviceName",
+        "group1",
+        "config1",
+        1,
+        new ErrorMessage("errorCode", "message", System.currentTimeMillis()),
+        Collections.emptyMap(),
+        Collections.emptyList()
+    );
+    issues.add(stageIssue);
     IssuesJson issuesJsonBean = new IssuesJson(issues);
 
     Assert.assertEquals(issues.getIssueCount(), issuesJsonBean.getIssueCount());
     Assert.assertEquals(issues.getPipelineIssues(), BeanHelper.unwrapIssues(issuesJsonBean.getPipelineIssues()));
     Assert.assertEquals(issues.getStageIssues(), BeanHelper.unwrapIssuesMap(issuesJsonBean.getStageIssues()));
 
-    //test underlying
+    // test underlying
     Assert.assertEquals(issues.getIssueCount(), issuesJsonBean.getIssues().getIssueCount());
     Assert.assertEquals(issues.getPipelineIssues(), issuesJsonBean.getIssues().getPipelineIssues());
     Assert.assertEquals(issues.getStageIssues(), issuesJsonBean.getIssues().getStageIssues());
+
+    IssuesJson issuesJson = BeanHelper.wrapIssues(issues);
+    Issues backToIssues = BeanHelper.unwrapIssues(issuesJson);
+    Assert.assertEquals(backToIssues.getIssueCount(), issuesJson.getIssues().getIssueCount());
+    Assert.assertEquals(backToIssues.getPipelineIssues(), issuesJson.getIssues().getPipelineIssues());
+    Assert.assertEquals(backToIssues.getStageIssues(), issuesJson.getIssues().getStageIssues());
 
   }
 }

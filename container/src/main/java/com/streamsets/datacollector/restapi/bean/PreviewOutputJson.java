@@ -49,7 +49,7 @@ public class PreviewOutputJson {
     }
     previewOutput = new PreviewOutputImpl(
         status,
-        BeanHelper.unwrapIssues(issues),
+        issues.getIssues(),
         output,
         message,
         errorStackTrace,

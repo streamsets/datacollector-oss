@@ -15,16 +15,33 @@
  */
 package com.streamsets.datacollector.restapi.bean;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ErrorMessageJson {
 
-  private final com.streamsets.pipeline.api.impl.ErrorMessage errorMessage;
+  private final ErrorMessage errorMessage;
 
-  public ErrorMessageJson(com.streamsets.pipeline.api.impl.ErrorMessage errorMessage) {
+  @JsonCreator
+  public ErrorMessageJson(
+      @JsonProperty("errorCode") String errorCode,
+      @JsonProperty("timestamp") long timestamp,
+      @JsonProperty("nonLocalized") String nonLocalized,
+      @JsonProperty("localized") String localized,
+      @JsonProperty("errorStackTrace") String errorStackTrace,
+      @JsonProperty("antennaDoctorMessages") List<AntennaDoctorMessageJson> antennaDoctorMessages
+  ) {
+    this.errorMessage = new ErrorMessage(errorCode, nonLocalized, timestamp);
+  }
+
+  public ErrorMessageJson(ErrorMessage errorMessage) {
     Utils.checkNotNull(errorMessage, "errorMessage");
     this.errorMessage = errorMessage;
   }
@@ -54,7 +71,7 @@ public class ErrorMessageJson {
   }
 
   @JsonIgnore
-  public com.streamsets.pipeline.api.impl.ErrorMessage getErrorMessage() {
+  public ErrorMessage getErrorMessage() {
     return errorMessage;
   }
 }
