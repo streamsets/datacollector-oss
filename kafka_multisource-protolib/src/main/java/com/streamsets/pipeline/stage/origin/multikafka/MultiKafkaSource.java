@@ -117,13 +117,7 @@ public class MultiKafkaSource extends BasePushSource {
             for (ConsumerRecord<String, byte[]> item : messages) {
               list.add(item);
               if (list.size() == conf.maxBatchSize) {
-                if (getContext().getDeliveryGuarantee() == DeliveryGuarantee.AT_MOST_ONCE) {
-                  consumer.commitSync();
-                }
-                boolean batchSucessful = sendBatch(list);
-                if (batchSucessful && getContext().getDeliveryGuarantee() == DeliveryGuarantee.AT_LEAST_ONCE) {
-                  consumer.commitSync();
-                }
+                sendAndCommitOffset(list);
                 list.clear();
               }
             }
@@ -132,7 +126,7 @@ public class MultiKafkaSource extends BasePushSource {
             LOG.trace("Kafka thread {} finished processing {} messages", this.threadID, messages.count());
           } else {
             if (!list.isEmpty()) {
-              sendBatch(list);
+              sendAndCommitOffset(list);
               list.clear();
             } else {
               LOG.debug("No records returned from consumer.poll()");
@@ -149,6 +143,16 @@ public class MultiKafkaSource extends BasePushSource {
 
       LOG.info("multi kafka thread {} consumed {} messages", threadID, messagesProcessed);
       return messagesProcessed;
+    }
+
+    private void sendAndCommitOffset(List<ConsumerRecord<String, byte[]>> list) throws StageException {
+      if (getContext().getDeliveryGuarantee() == DeliveryGuarantee.AT_MOST_ONCE) {
+        consumer.commitSync();
+      }
+      boolean batchSucessful = sendBatch(list);
+      if (batchSucessful && getContext().getDeliveryGuarantee() == DeliveryGuarantee.AT_LEAST_ONCE) {
+        consumer.commitSync();
+      }
     }
 
     private boolean sendBatch(List<ConsumerRecord<String, byte[]>> list) throws StageException {
