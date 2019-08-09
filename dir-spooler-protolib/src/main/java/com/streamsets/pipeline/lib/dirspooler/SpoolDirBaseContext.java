@@ -34,9 +34,11 @@ public class SpoolDirBaseContext {
   private final SpoolDirRunnableContext[] shouldSendNoMoreDataEventArray;
 
   private final PushSource.Context context;
+  private volatile boolean noMoreDataSent;
 
   public SpoolDirBaseContext(PushSource.Context context, int numThreads) {
     this.context = context;
+    this.noMoreDataSent = false;
     this.shouldSendNoMoreDataEventArray = new SpoolDirRunnableContext[numThreads];
 
     for (int i = 0; i < shouldSendNoMoreDataEventArray.length; ++i) {
@@ -80,7 +82,7 @@ public class SpoolDirBaseContext {
 
     shouldSendNoMoreDataEventArray[threadNumber] = spoolDirRunnableContext;
 
-    if (noMoreData) {
+    if (noMoreData && !noMoreDataSent) {
       // check if no more data event has to be sent which will happen when all threads have their
       // shouldSendNoMoreDataEvent variable set to true
       boolean shouldSendNoMoreData = true;
@@ -118,7 +120,12 @@ public class SpoolDirBaseContext {
         ).with(NoMoreDataEvent.FILE_COUNT, aggregatedNoMoreDataFileCount).createAndSend();
 
         clearCounters();
+        noMoreDataSent = true;
       }
+    } else if (!noMoreData) {
+      // Set noMoreDataSent to false in case it was true to send another no more data event when needed as there is a
+      // thread reading data from files
+      noMoreDataSent = false;
     }
   }
 

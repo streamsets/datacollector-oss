@@ -637,7 +637,7 @@ public class TestSpoolDirSource {
           // new-file event, finished-file event for each file.
           // file-0.log through file-7.log and a.log  (9 files)
           // two no-more-data events.
-          Assert.assertEquals(20, runner.getEventRecords().size());
+          Assert.assertEquals(19, runner.getEventRecords().size());
           Map<String, Integer> map = new HashMap<>();
           for(EventRecord rec : runner.getEventRecords()) {
             if(map.get(rec.getEventType()) != null) {
@@ -659,7 +659,7 @@ public class TestSpoolDirSource {
           Assert.assertEquals(9, numEvents);
 
           numEvents = map.get("no-more-data");
-          Assert.assertEquals(2, numEvents);
+          Assert.assertEquals(1, numEvents);
         } else {
           runner.setStop();
         }
