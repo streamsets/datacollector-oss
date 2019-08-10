@@ -49,7 +49,7 @@ public class PreviewOutputJson {
     }
     previewOutput = new PreviewOutputImpl(
         status,
-        issues.getIssues(),
+        issues != null ? issues.getIssues() : null,
         output,
         message,
         errorStackTrace,
