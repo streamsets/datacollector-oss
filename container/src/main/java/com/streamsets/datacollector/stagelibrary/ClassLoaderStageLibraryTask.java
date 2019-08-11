@@ -106,7 +106,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -161,6 +160,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private final Configuration configuration;
   private List<? extends ClassLoader> stageClassLoaders;
   private List<StageLibraryDefinition> stageLibraries;
+  private Map<String, StageLibraryDefinition> stageLibraryMap;
   private Map<String, StageDefinition> stageMap;
   private List<StageDefinition> stageList;
   private List<LineagePublisherDefinition> lineagePublisherDefinitions;
@@ -277,6 +277,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     // Load all stages and other objects from the libraries
     json = ObjectMapperFactory.get();
     stageLibraries = new ArrayList<>();
+    stageLibraryMap = new HashMap<>();
     stageList = new ArrayList<>();
     stageMap = new HashMap<>();
     lineagePublisherDefinitions = new ArrayList<>();
@@ -289,6 +290,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     delegateMap = new HashMap<>();
     loadStages();
     stageLibraries = ImmutableList.copyOf(stageLibraries);
+    stageLibraryMap = ImmutableMap.copyOf(stageLibraryMap);
     stageList = ImmutableList.copyOf(stageList);
     stageMap = ImmutableMap.copyOf(stageMap);
     lineagePublisherDefinitions = ImmutableList.copyOf(lineagePublisherDefinitions);
@@ -566,6 +568,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
           libDef.setVersion(getPropertyFromLibraryProperties(cl, "version", ""));
           LOG.debug("Loading stages and plugins from library '{}' on version {}", libDef.getName(), libDef.getVersion());
           stageLibraries.add(libDef);
+          stageLibraryMap.put(libDef.getName(), libDef);
           libs++;
 
           // Load Stages
@@ -1129,6 +1132,11 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private void updatePrivateClassLoaderPoolMetrics() {
     ((AtomicInteger)this.gaugeMap.get(PRIVATE_POOL_ACTIVE)).set(privateClassLoaderPool.getNumActive());
     ((AtomicInteger)this.gaugeMap.get(PRIVATE_POOL_IDLE)).set(privateClassLoaderPool.getNumIdle());
+  }
+
+  @Override
+  public StageLibraryDefinition getStageLibraryDefinition(String libraryName) {
+    return this.stageLibraryMap.get(libraryName);
   }
 
 }

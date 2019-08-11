@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 public class StageLibraryDefinition {
 
   public static final String STAGE_WILDCARD = "*";
+  public static final String CLUSTER_CONFIG_CLUSTER_TYPES = "clusterConfig.clusterTypes";
 
   public static String getExecutionModePrefix() {
     String prefix = "execution.mode_";
@@ -44,6 +45,7 @@ public class StageLibraryDefinition {
   private String name;
   private String label;
   private Map<String, List<ExecutionMode>> stagesExecutionMode;
+  private List<SparkClusterType> clusterTypes;
   private String version;
 
   private final List<Class> elDefs;
@@ -91,6 +93,15 @@ public class StageLibraryDefinition {
     for (ElConstantDefinition c : elConstantDefinitions) {
       elConstantDefinitionsIdx.add(c.getIndex());
     }
+
+    this.clusterTypes = new ArrayList<>();
+    for (Map.Entry entry : props.entrySet()) {
+      String key = (String) entry.getKey();
+      if (key.equals(CLUSTER_CONFIG_CLUSTER_TYPES)) {
+        String value = (String) entry.getValue();
+        clusterTypes.addAll(parseClusterTypes(value));
+      }
+    }
   }
 
   List<ExecutionMode> parseExecutionModes(String value) {
@@ -100,6 +111,16 @@ public class StageLibraryDefinition {
         .splitToList(value)
         .stream()
         .map(ExecutionMode::valueOf)
+        .collect(Collectors.toList());
+  }
+
+  List<SparkClusterType> parseClusterTypes(String value) {
+    return Splitter.on(",")
+        .trimResults()
+        .omitEmptyStrings()
+        .splitToList(value)
+        .stream()
+        .map(SparkClusterType::valueOf)
         .collect(Collectors.toList());
   }
 
@@ -150,4 +171,7 @@ public class StageLibraryDefinition {
     return elConstantDefinitionsIdx;
   }
 
+  public List<SparkClusterType> getClusterTypes() {
+    return clusterTypes;
+  }
 }

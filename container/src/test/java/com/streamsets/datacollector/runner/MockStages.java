@@ -20,8 +20,10 @@ import com.streamsets.datacollector.classpath.ClasspathValidatorResult;
 import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
+import com.streamsets.datacollector.config.CredentialType;
 import com.streamsets.datacollector.config.InterceptorDefinition;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
+import com.streamsets.datacollector.config.LogLevel;
 import com.streamsets.datacollector.config.ModelDefinition;
 import com.streamsets.datacollector.config.ModelType;
 import com.streamsets.datacollector.config.PipelineConfiguration;
@@ -31,11 +33,13 @@ import com.streamsets.datacollector.config.PipelineFragmentDefinition;
 import com.streamsets.datacollector.config.PipelineRulesDefinition;
 import com.streamsets.datacollector.config.RawSourceDefinition;
 import com.streamsets.datacollector.config.ServiceDefinition;
+import com.streamsets.datacollector.config.SparkClusterType;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StageLibraryDelegateDefinitition;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.definition.TestStageDefinitionExtractor;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
 import com.streamsets.datacollector.restapi.bean.EventDefinitionJson;
@@ -80,6 +84,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -617,6 +622,9 @@ public class MockStages {
     return new MockStageLibraryTask.ClusterBatchBuilder(cl).build();
   }
 
+  public static StageLibraryTask createStreamingStageLibrary(ClassLoader cl) {
+    return new MockStageLibraryTask.StreamingBuilder(cl).build();
+  }
 
   public static StageLibraryTask createStageLibrary() {
     return createStageLibrary(Thread.currentThread().getContextClassLoader());
@@ -628,6 +636,7 @@ public class MockStages {
 
   public static class MockStageLibraryTask implements StageLibraryTask {
     private final List<StageDefinition> stages;
+    private StageLibraryDefinition stageLibraryDefinition;
 
     private MockStageLibraryTask(Collection<StageDefinition> stages) {
       this.stages = ImmutableList.copyOf(stages);
@@ -770,6 +779,15 @@ public class MockStages {
     @Override
     public Map<String, EventDefinitionJson> getEventDefinitions() {
       return Collections.emptyMap();
+    }
+
+    public void setLibraryDefinition(StageLibraryDefinition stageLibraryDefinition) {
+      this.stageLibraryDefinition = stageLibraryDefinition;
+    }
+
+    @Override
+    public StageLibraryDefinition getStageLibraryDefinition(String libraryName) {
+      return stageLibraryDefinition;
     }
 
     @Override
@@ -1267,6 +1285,90 @@ public class MockStages {
         return new MockStageLibraryTask(ImmutableList.of(clusterStageDef, errorTargetStageDef, statsTargetStageDef));
       }
     }
+
+    public static class StreamingBuilder {
+      private final StageDefinition streamingSourceDef;
+      private final StageDefinition streamingTargetDef;
+
+      public StreamingBuilder() {
+        this(Thread.currentThread().getContextClassLoader());
+      }
+
+      public StreamingBuilder(ClassLoader cl) {
+        streamingSourceDef = new StageDefinitionBuilder(cl, MSource.class, "streamingSource")
+            .withStageDef(Mockito.mock(StageDef.class))
+            .withExecutionModes(ExecutionMode.STREAMING, ExecutionMode.BATCH)
+            .withRawSourceDefintion(getRawSourceDefinition())
+            .build();
+
+        streamingTargetDef = new StageDefinitionBuilder(cl, MTarget.class, "streamingTarget")
+            .withStageDef(Mockito.mock(StageDef.class))
+            .withExecutionModes(ExecutionMode.STREAMING, ExecutionMode.BATCH)
+            .withRawSourceDefintion(getRawSourceDefinition())
+            .build();
+      }
+
+      public StageLibraryTask build() {
+        MockStageLibraryTask libraryTask =  new MockStageLibraryTask(ImmutableList.of(
+            streamingSourceDef,
+            streamingTargetDef
+        ));
+        Properties props = new Properties();
+        props.put(StageLibraryDefinition.CLUSTER_CONFIG_CLUSTER_TYPES, "LOCAL,YARN");
+        StageLibraryDefinition libDef = new StageLibraryDefinition(
+            TestStageDefinitionExtractor.class.getClassLoader(),
+            "mock",
+            "MOCK",
+            props,
+            null,
+            null,
+            null
+        );
+        libraryTask.setLibraryDefinition(libDef);
+        return libraryTask;
+      }
+    }
+  }
+
+  public static PipelineConfiguration createPipelineConfigurationWithStreamingOnlyStage(
+      ExecutionMode executionMode,
+      SparkClusterType clusterType
+  ) {
+    List<StageConfiguration> stages = new ArrayList<>();
+    StageConfiguration source = new StageConfigurationBuilder("s", "streamingSource")
+        .withOutputLanes("a")
+        .build();
+    stages.add(source);
+    StageConfiguration target = new StageConfigurationBuilder("t", "streamingTarget")
+        .withInputLanes("a")
+        .build();
+    stages.add(target);
+    return new PipelineConfiguration(
+        PipelineStoreTask.SCHEMA_VERSION,
+        PipelineConfigBean.VERSION,
+        "pipelineId",
+        UUID.randomUUID(),
+        "label",
+        null,
+        Arrays.asList(
+            new Config("executionMode", executionMode.name()),
+            new Config("clusterConfig.clusterType", clusterType.name()),
+            new Config("logLevel", LogLevel.ERROR.name()),
+            new Config("clusterConfig.sparkAppName", "sparkAppName"),
+            new Config("databricksConfig.baseUrl", "baseUrl"),
+            new Config("databricksConfig.credentialType", CredentialType.TOKEN.name()),
+            new Config("databricksConfig.token", "token"),
+            new Config("clusterConfig.sparkAppName", "sparkAppName"),
+            new Config("retryAttempts", 3),
+            new Config("webhookConfigs", Collections.emptyList())
+        ),
+        null,
+        stages,
+        null,
+        null,
+        Collections.emptyList(),
+        Collections.emptyList()
+    );
   }
 
   @SuppressWarnings("unchecked")

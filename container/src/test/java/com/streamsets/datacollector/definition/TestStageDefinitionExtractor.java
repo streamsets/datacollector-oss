@@ -18,6 +18,7 @@ package com.streamsets.datacollector.definition;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.datacollector.config.ServiceDependencyDefinition;
+import com.streamsets.datacollector.config.SparkClusterType;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.creation.StageConfigBean;
@@ -36,16 +37,15 @@ import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.PipelineLifecycleStage;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.RawSourcePreviewer;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageType;
 import com.streamsets.pipeline.api.StageUpgrader;
+import com.streamsets.pipeline.api.base.BaseExecutor;
 import com.streamsets.pipeline.api.base.BaseProcessor;
 import com.streamsets.pipeline.api.base.BasePushSource;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
-import com.streamsets.pipeline.api.base.BaseExecutor;
 import com.streamsets.pipeline.api.service.ServiceConfiguration;
 import com.streamsets.pipeline.api.service.ServiceDependency;
 import org.junit.Assert;
@@ -57,7 +57,6 @@ import java.util.Map;
 import java.util.Properties;
 
 public class TestStageDefinitionExtractor {
-
 
   public enum Group1 implements Label {
     G1;
@@ -483,6 +482,22 @@ public class TestStageDefinitionExtractor {
     } catch(IllegalArgumentException ex) {
       Assert.assertTrue(ex.getMessage(), ex.getMessage().contains("OffsetCommitter can only be a (Pull) Source"));
     }
+  }
+
+  @Test
+  public void testLibraryClusterTypes() {
+    Properties props = new Properties();
+    props.put(StageLibraryDefinition.CLUSTER_CONFIG_CLUSTER_TYPES, "LOCAL,YARN");
+    StageLibraryDefinition libDef = new StageLibraryDefinition(
+        TestStageDefinitionExtractor.class.getClassLoader(),
+        "mock",
+        "MOCK",
+        props,
+        null,
+        null,
+        null
+    );
+    Assert.assertEquals(ImmutableList.of(SparkClusterType.LOCAL, SparkClusterType.YARN), libDef.getClusterTypes());
   }
 
   @Test

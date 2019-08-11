@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.streamsets.datacollector.config.KeytabSource;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.config.SparkClusterType;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.configupgrade.PipelineConfigurationUpgrader;
@@ -39,11 +40,9 @@ import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
@@ -137,6 +136,32 @@ public class TestPipelineConfigurationValidator {
     Assert.assertFalse(validator.validate().getIssues().hasIssues());
     Assert.assertTrue(validator.canPreview());
     Assert.assertFalse(validator.getIssues().hasIssues());
+  }
+
+  @Test
+  public void testStageLibraryClusterTypes() {
+    StageLibraryTask lib = MockStages.createStreamingStageLibrary(Thread.currentThread().getContextClassLoader());
+
+    // Mock Stage Library support only LOCAL and YARN Cluster Manager types
+    PipelineConfiguration conf = MockStages.createPipelineConfigurationWithStreamingOnlyStage(
+        ExecutionMode.STREAMING,
+        SparkClusterType.DATABRICKS
+    );
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
+    Assert.assertTrue(validator.validate().getIssues().hasIssues());
+    Assert.assertFalse(validator.canPreview());
+    Assert.assertTrue(validator.getIssues().hasIssues());
+    Assert.assertEquals(2, validator.issues.getIssueCount());
+
+    // With LOCAL Cluster Type, validation will pass
+    conf = MockStages.createPipelineConfigurationWithStreamingOnlyStage(
+        ExecutionMode.STREAMING,
+        SparkClusterType.LOCAL
+    );
+    validator = new PipelineConfigurationValidator(lib, "name", conf);
+    Assert.assertFalse(validator.validate().getIssues().hasIssues());
+    Assert.assertTrue(validator.canPreview());
+    Assert.assertEquals(0, validator.issues.getIssueCount());
   }
 
   @Test

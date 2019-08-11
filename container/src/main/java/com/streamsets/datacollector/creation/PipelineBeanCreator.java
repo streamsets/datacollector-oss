@@ -25,6 +25,7 @@ import com.streamsets.datacollector.config.PipelineWebhookConfig;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.ServiceConfiguration;
 import com.streamsets.datacollector.config.ServiceDefinition;
+import com.streamsets.datacollector.config.SparkClusterType;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
@@ -409,6 +410,29 @@ public abstract class PipelineBeanCreator {
       errors.add(IssueCreator.getPipeline().create("", "executionMode", CreationError.CREATION_071));
     }
     return mode;
+  }
+
+  public SparkClusterType getClusterType(PipelineFragmentConfiguration pipelineConf, List<Issue> errors) {
+    SparkClusterType clusterType = SparkClusterType.LOCAL;
+    String value = null;
+    if (pipelineConf.getConfiguration("clusterConfig.clusterType") != null) {
+      if (pipelineConf.getConfiguration("clusterConfig.clusterType").getValue() != null) {
+        value = pipelineConf.getConfiguration("clusterConfig.clusterType").getValue().toString();
+      }
+    }
+    if (value != null) {
+      try {
+        clusterType = SparkClusterType.valueOf(value);
+      } catch (IllegalArgumentException ex) {
+        errors.add(IssueCreator.getPipeline().create(
+            PipelineGroups.CLUSTER.name(),
+            "clusterConfig.clusterType",
+            CreationError.CREATION_1000,
+            value
+        ));
+      }
+    }
+    return clusterType;
   }
 
   public String getMesosDispatcherURL(PipelineConfiguration pipelineConf) {

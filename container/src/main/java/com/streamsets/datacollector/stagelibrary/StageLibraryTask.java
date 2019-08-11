@@ -91,4 +91,6 @@ public interface StageLibraryTask extends Task, ClassLoaderReleaser {
   List<String> getLegacyStageLibs();
 
   Map<String, EventDefinitionJson> getEventDefinitions();
+
+  StageLibraryDefinition getStageLibraryDefinition(String libraryName);
 }

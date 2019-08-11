@@ -23,6 +23,7 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.PipelineGroups;
 import com.streamsets.datacollector.config.ServiceConfiguration;
 import com.streamsets.datacollector.config.ServiceDependencyDefinition;
+import com.streamsets.datacollector.config.SparkClusterType;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.configupgrade.PipelineConfigurationUpgrader;
@@ -288,6 +289,19 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
       }
       for (StageConfiguration stageConf : pipelineConf.getStages()) {
         canPreview &= validateStageExecutionMode(stageConf, pipelineExecutionMode, errors, null, null);
+
+        if (pipelineExecutionMode.equals(ExecutionMode.BATCH) ||
+            pipelineExecutionMode.equals(ExecutionMode.STREAMING)) {
+          // validate Stage library cluster type for Batch and Streaming mode
+          SparkClusterType clusterType = PipelineBeanCreator.get().getClusterType(pipelineConf, errors);
+          canPreview &= validateStageLibraryClusterType(
+              stageConf,
+              clusterType,
+              errors,
+              null,
+              null
+          );
+        }
       }
     } else {
       canPreview = false;

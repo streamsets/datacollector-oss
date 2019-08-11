@@ -119,6 +119,7 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0200("Invalid services declaration, expected definition for '{}', but got '{}'"),
 
   // cluster config validations
+  VALIDATION_0300("Stage '{}' from '{}' library does not support '{}' cluster type manager"),
   VALIDATION_0301("Cannot specify keytab if Kerberos is disabled via the {} configuration property"),
   VALIDATION_0302("Keytab path must be absolute; specified path {} was relative{}"),
   VALIDATION_0303("No file was found at {}; please double check the keytab path{}"),

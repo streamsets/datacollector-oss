@@ -75,6 +75,9 @@ public enum CreationError implements ErrorCode {
 
   // Detached stage support
   CREATION_0900("Can't parse stage definition: {}"),
+
+  // Cluster Type support
+  CREATION_1000("Invalid cluster manager type '{}'"),
   ;
 
   private final String msg;
