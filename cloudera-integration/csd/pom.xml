@@ -22,12 +22,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-cloudera-integration</artifactId>
-    <version>3.8.1-0008</version>
+    <version>3.8.1-0011</version>
   </parent>
 
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-csd</artifactId>
-  <version>3.8.1-0008</version>
+  <version>3.8.1-0011</version>
   <name>The StreamSets CSD for Cloudera Manager</name>
   <packaging>pom</packaging>
 
