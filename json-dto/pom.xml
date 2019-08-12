@@ -23,7 +23,7 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root</artifactId>
-    <version>3.8.3-SNAPSHOT</version>
+    <version>3.8.3</version>
     <relativePath>../root</relativePath>
   </parent>
   <artifactId>streamsets-datacollector-json-dto</artifactId>
