@@ -48,7 +48,12 @@ import com.streamsets.pipeline.lib.dirspooler.SpoolDirConfigBean;
     "dataLakeGen2SourceConfigBean.hdfsConfigs",
     "conf.allowLateDirectory",
     "conf.dataFormatConfig.verifyChecksum",
-    "conf.dataFormatConfig.avroSchemaSource"
+    "conf.dataFormatConfig.avroSchemaSource",
+    "conf.dataFormatConfig.avroSchema",
+    "conf.dataFormatConfig.schemaRegistryUrls",
+    "conf.dataFormatConfig.schemaLookupMode",
+    "conf.dataFormatConfig.subject",
+    "conf.dataFormatConfig.schemaId"
 })
 @GenerateResourceBundle
 public class DataLakeGen2DSource extends DPushSource {

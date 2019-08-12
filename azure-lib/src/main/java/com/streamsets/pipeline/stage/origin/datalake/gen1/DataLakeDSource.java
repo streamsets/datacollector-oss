@@ -45,7 +45,15 @@ import com.streamsets.pipeline.stage.conf.DataLakeSourceGroups;
     "dataLakeConfig.hdfsUser",
     "dataLakeConfig.hdfsKerberos",
     "dataLakeConfig.hdfsConfDir",
-    "dataLakeConfig.hdfsConfigs"
+    "dataLakeConfig.hdfsConfigs",
+    "spoolDirConfig.allowLateDirectory",
+    "spoolDirConfig.dataFormatConfig.verifyChecksum",
+    "spoolDirConfig.dataFormatConfig.avroSchemaSource",
+    "spoolDirConfig.dataFormatConfig.avroSchema",
+    "spoolDirConfig.dataFormatConfig.schemaRegistryUrls",
+    "spoolDirConfig.dataFormatConfig.schemaLookupMode",
+    "spoolDirConfig.dataFormatConfig.subject",
+    "spoolDirConfig.dataFormatConfig.schemaId"
 })
 @GenerateResourceBundle
 public class DataLakeDSource extends DPushSource {
