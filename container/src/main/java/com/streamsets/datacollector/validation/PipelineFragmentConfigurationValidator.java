@@ -19,6 +19,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.streamsets.datacollector.config.ConfigDefinition;
+import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
 import com.streamsets.datacollector.config.SparkClusterType;
 import com.streamsets.datacollector.config.StageConfiguration;
@@ -26,7 +27,9 @@ import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.configupgrade.FragmentConfigurationUpgrader;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
+import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
 import com.streamsets.datacollector.util.ElUtil;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
@@ -37,6 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -308,6 +312,32 @@ public class PipelineFragmentConfigurationValidator {
 
   private boolean loadAndValidatePipelineFragmentConfig() {
     List<Issue> errors = new ArrayList<>();
+
+    // to validate EL values in the pipeline and stage configuration
+    PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(
+        FilePipelineStoreTask.SCHEMA_VERSION,
+        PipelineConfigBean.VERSION,
+        pipelineFragmentConfiguration.getPipelineId(),
+        pipelineFragmentConfiguration.getUuid(),
+        pipelineFragmentConfiguration.getTitle(),
+        pipelineFragmentConfiguration.getDescription(),
+        new ArrayList<>(pipelineFragmentConfiguration.getConfiguration()),
+        Collections.emptyMap(),
+        null,
+        pipelineFragmentConfiguration.getStages(),
+        null,
+        null,
+        Collections.emptyList(),
+        Collections.emptyList(),
+        null
+    );
+    PipelineBeanCreator.get().create(
+        false,
+        stageLibrary,
+        pipelineConfiguration,
+        null,
+        errors
+    );
     if (pipelineFragmentConfiguration.getTitle() != null && pipelineFragmentConfiguration.getTitle().isEmpty()) {
       issues.add(IssueCreator.getPipeline().create(ValidationError.VALIDATION_0093));
     }
