@@ -54,7 +54,6 @@ import java.util.stream.Stream;
 @SuppressWarnings("Duplicates")
 public class PipelineConfigurationValidator extends PipelineFragmentConfigurationValidator {
   private static final Logger LOG = LoggerFactory.getLogger(PipelineConfigurationValidator.class);
-  private static final String TO_ERROR_NULL_TARGET = "com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget";
 
   private final Configuration dataCollectorConfiguration;
   private final RuntimeInfo runtimeInfo;

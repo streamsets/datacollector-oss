@@ -17,6 +17,7 @@ package com.streamsets.datacollector.validation;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
@@ -31,6 +32,7 @@ import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
 import com.streamsets.datacollector.util.ElUtil;
+import com.streamsets.datacollector.util.PipelineConfigurationUtil;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -51,6 +53,7 @@ import java.util.Set;
 @SuppressWarnings("Duplicates")
 public class PipelineFragmentConfigurationValidator {
   private static final Logger LOG = LoggerFactory.getLogger(PipelineFragmentConfigurationValidator.class);
+  static final String TO_ERROR_NULL_TARGET = "com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget";
 
   protected final StageLibraryTask stageLibrary;
   protected final String name;
@@ -313,7 +316,19 @@ public class PipelineFragmentConfigurationValidator {
   private boolean loadAndValidatePipelineFragmentConfig() {
     List<Issue> errors = new ArrayList<>();
 
-    // to validate EL values in the pipeline and stage configuration
+    // to validate EL values in the pipeline and stage configuration create Pipeline bean from Pipeline Fragment
+    StageConfiguration errorStageInstance = PipelineConfigurationUtil.getStageConfigurationWithDefaultValues(
+        stageLibrary,
+        PipelineConfigBean.DEFAULT_STATS_AGGREGATOR_LIBRARY_NAME,
+        TO_ERROR_NULL_TARGET,
+        "errorStageInstance",
+        "Error Stage"
+    );
+    if (errorStageInstance != null) {
+      errorStageInstance.setOutputLanes(
+          ImmutableList.of(errorStageInstance.getInstanceName() + "OutputLane1")
+      );
+    }
     PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(
         FilePipelineStoreTask.SCHEMA_VERSION,
         PipelineConfigBean.VERSION,
@@ -325,7 +340,7 @@ public class PipelineFragmentConfigurationValidator {
         Collections.emptyMap(),
         null,
         pipelineFragmentConfiguration.getStages(),
-        null,
+        errorStageInstance,
         null,
         Collections.emptyList(),
         Collections.emptyList(),
