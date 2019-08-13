@@ -306,7 +306,7 @@ public class PipelineFragmentConfigurationValidator {
           );
         }
       }
-    } else {
+    } else if (stageDef == null) {
       canPreview = false;
       // StageDef missing is already handled in validateStageConfiguration, no need to issue the same error again
     }
