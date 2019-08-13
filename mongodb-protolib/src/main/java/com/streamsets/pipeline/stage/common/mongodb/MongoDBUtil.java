@@ -21,7 +21,6 @@ import com.streamsets.pipeline.lib.util.JsonUtil;
 import org.bson.types.Binary;
 import org.bson.BsonTimestamp;
 import org.bson.Document;
-import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
 
 import java.io.IOException;
@@ -71,8 +70,6 @@ public final class MongoDBUtil {
     } else if (object instanceof Binary) {
       byte[] data = ((Binary) object).getData();
       return JsonUtil.jsonToField(data);
-    } else if (object instanceof Decimal128) {
-      return Field.create(Field.Type.DECIMAL, ((Decimal128)object).bigDecimalValue());
     } else if (object instanceof BsonTimestamp) {
       int time = ((BsonTimestamp) object).getTime();
       Date date = new Date(time * 1000L);
