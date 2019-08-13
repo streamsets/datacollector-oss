@@ -110,4 +110,7 @@ public class ScriptingOriginBindings extends ScriptingStageBindings {
     return new PushSourceScriptBatch();
   }
 
+  public void commitOffset(String entityName, String entityOffset) {
+    context.commitOffset(entityName, entityOffset);
+  }
 }
