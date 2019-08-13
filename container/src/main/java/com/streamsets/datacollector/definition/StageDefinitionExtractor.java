@@ -304,6 +304,8 @@ public abstract class StageDefinitionExtractor {
 
         String yamlUpgrader = sDef.upgraderDef();
 
+        List<String> tags = ImmutableList.copyOf(sDef.tags());
+
         return new StageDefinition(
             sDef,
             libraryDef,
@@ -342,7 +344,8 @@ public abstract class StageDefinitionExtractor {
             inputStreamLabelProviderClass,
             bisectable,
             eventDefs,
-            yamlUpgrader
+            yamlUpgrader,
+            tags
         );
       } catch (Exception e) {
         throw new IllegalStateException("Exception while extracting stage definition for " + getStageName(klass), e);

@@ -87,6 +87,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
   private List<Class> eventDefs;
   private final boolean bisectable;
   private String yamlUpgrader;
+  private List<String> tags;
 
   // localized version
   private StageDefinition(
@@ -129,7 +130,8 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
       List<String> inputStreamLabels,
       boolean bisectable,
       List<Class> eventDefs,
-      String yamlUpgrader
+      String yamlUpgrader,
+      List<String> tags
   ) {
     this.stageDef = stageDef;
     this.libraryDefinition = libraryDefinition;
@@ -185,6 +187,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     this.bisectable = bisectable;
     this.eventDefs = eventDefs;
     this.yamlUpgrader = yamlUpgrader;
+    this.tags = tags;
   }
 
   @SuppressWarnings("unchecked")
@@ -234,6 +237,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     inputStreamLabels = def.inputStreamLabels;
     bisectable = def.bisectable;
     yamlUpgrader = (def.yamlUpgrader.isEmpty()) ? null : def.yamlUpgrader;
+    tags = def.tags;
   }
 
   public StageDefinition(
@@ -274,7 +278,8 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
       String inputStreamLabelProviderClass,
       boolean bisectable,
       List<Class> eventDefs,
-      String yamlUpgrader
+      String yamlUpgrader,
+      List<String> tags
   ) {
     this.stageDef = stageDef;
     this.libraryDefinition = libraryDefinition;
@@ -328,6 +333,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     this.bisectable = bisectable;
     this.eventDefs = eventDefs;
     this.yamlUpgrader = yamlUpgrader;
+    this.tags = tags;
   }
 
   public List<ExecutionMode> getLibraryExecutionModes() {
@@ -630,7 +636,8 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
         inputStreamLabels,
         bisectable,
         eventDefs,
-        yamlUpgrader
+        yamlUpgrader,
+        tags
     );
   }
 
@@ -718,6 +725,9 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     return yamlUpgrader;
   }
 
+  public List<String> getTags() {
+    return tags;
+  }
 }
 
 

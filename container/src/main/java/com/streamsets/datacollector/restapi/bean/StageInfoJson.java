@@ -18,6 +18,9 @@ package com.streamsets.datacollector.restapi.bean;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.streamsets.datacollector.config.StageDefinition;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StageInfoJson {
 
@@ -31,6 +34,7 @@ public class StageInfoJson {
   private boolean beta;
   private String icon;
   private String onlineHelpRefUrl;
+  private List<String> tags = new ArrayList<>();
 
   public StageInfoJson() { }
 
@@ -44,7 +48,7 @@ public class StageInfoJson {
     statsAggregatorStage = stageDefinition.isStatsAggregatorStage();
     beta = stageDefinition.isBeta();
     icon = stageDefinition.getIcon();
-
+    tags = stageDefinition.getTags();
   }
 
   public String getName() {
@@ -125,6 +129,14 @@ public class StageInfoJson {
 
   public void setOnlineHelpRefUrl(String onlineHelpRefUrl) {
     this.onlineHelpRefUrl = onlineHelpRefUrl;
+  }
+
+  public List<String> getTags() {
+    return tags;
+  }
+
+  public void setTags(List<String> tags) {
+    this.tags = tags;
   }
 }
 

@@ -223,7 +223,8 @@ public class StageDefinitionBuilder {
       null,
        false,
        Collections.emptyList(),
-      stageDef.upgraderDef()
+      stageDef.upgraderDef(),
+      Collections.emptyList()
     );
   }
 

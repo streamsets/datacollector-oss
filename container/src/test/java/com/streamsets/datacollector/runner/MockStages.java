@@ -1129,7 +1129,8 @@ public class MockStages {
               null,
               false,
               Collections.emptyList(),
-              null
+              null,
+              oldDef.getTags()
           );
           stages.put(name, newDef);
         } else {
