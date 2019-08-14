@@ -98,8 +98,12 @@ public class TestStandaloneRunner {
     System.setProperty(DATA_DIR_KEY, dataDir.getAbsolutePath());
     TestUtil.captureStagesForProductionRun();
     TestUtil.EMPTY_OFFSET = false;
-    RuntimeInfo info = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
-        Arrays.asList(getClass().getClassLoader()));
+    RuntimeInfo info = new StandaloneRuntimeInfo(
+        RuntimeInfo.SDC_PRODUCT,
+        RuntimeModule.SDC_PROPERTY_PREFIX,
+        new MetricRegistry(),
+        Arrays.asList(getClass().getClassLoader())
+    );
     Files.createDirectories(PipelineDirectoryUtil.getPipelineDir(info, TestUtil.MY_PIPELINE, "0").toPath());
     OffsetFileUtil.saveOffsets(info, TestUtil.MY_PIPELINE, "0", Collections.singletonMap(Source.POLL_SOURCE_OFFSET_KEY, "dummy"));
     ObjectGraph objectGraph = ObjectGraph.create(new TestUtil.TestPipelineManagerModule());

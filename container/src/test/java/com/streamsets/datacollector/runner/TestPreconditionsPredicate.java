@@ -78,6 +78,9 @@ public class TestPreconditionsPredicate {
     Files.write(new File(dir, "sdc.properties").toPath(), Collections.singletonList(""), StandardCharsets.UTF_8);
     Files.write(new File(dir, "res.txt").toPath(), Collections.singletonList("R"), StandardCharsets.UTF_8);
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    Mockito.when(runtimeInfo.getProductName()).thenReturn("sdc");
+    Mockito.when(runtimeInfo.getPropertyPrefix()).thenReturn("sdc");
+    Mockito.when(runtimeInfo.getPropertiesFile()).thenCallRealMethod();
     Mockito.when(runtimeInfo.getConfigDir()).thenReturn(dir.getAbsolutePath());
     Mockito.when(runtimeInfo.getResourcesDir()).thenReturn(dir.getAbsolutePath());
     RuntimeEL.loadRuntimeConfiguration(runtimeInfo);

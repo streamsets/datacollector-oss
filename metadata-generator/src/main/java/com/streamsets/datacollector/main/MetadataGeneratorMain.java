@@ -170,7 +170,12 @@ public class MetadataGeneratorMain {
     @Override
     public void run() {
       try {
-        RuntimeInfo runtimeInfo = new RuntimeInfo("sdc", new MetricRegistry(), getClassLoaders()) {
+        RuntimeInfo runtimeInfo = new RuntimeInfo(
+            RuntimeInfo.SDC_PRODUCT,
+            "sdc",
+            new MetricRegistry(),
+            getClassLoaders()
+        ) {
           @Override
           public void init() {
           }

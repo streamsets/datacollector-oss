@@ -31,15 +31,22 @@ public class StandaloneRuntimeInfo extends RuntimeInfo {
   private File baseDir;
 
   public StandaloneRuntimeInfo(
-      String propertyPrefix, MetricRegistry metrics, List<? extends ClassLoader> stageLibraryClassLoaders
+      String productName,
+      String propertyPrefix,
+      MetricRegistry metrics,
+      List<? extends ClassLoader> stageLibraryClassLoaders
   ) {
-    super(propertyPrefix, metrics, stageLibraryClassLoaders);
+    super(productName, propertyPrefix, metrics, stageLibraryClassLoaders);
   }
 
   public StandaloneRuntimeInfo(
-      String propertyPrefix, MetricRegistry metrics, List<? extends ClassLoader> stageLibraryClassLoaders, File baseDir
+      String productName,
+      String propertyPrefix,
+      MetricRegistry metrics,
+      List<? extends ClassLoader> stageLibraryClassLoaders,
+      File baseDir
   ) {
-    super(propertyPrefix, metrics, stageLibraryClassLoaders);
+    super(productName, propertyPrefix, metrics, stageLibraryClassLoaders);
     this.baseDir = baseDir;
   }
 
@@ -60,7 +67,7 @@ public class StandaloneRuntimeInfo extends RuntimeInfo {
     if (baseDir != null) {
       return baseDir.getAbsolutePath();
     }
-    if (Boolean.getBoolean("sdc.testing-mode")) {
+    if (Boolean.getBoolean(propertyPrefix + ".testing-mode")) {
       return System.getProperty("test.data.dir") + "/runtime-" + getRandomUUID();
     }
     return System.getProperty("user.dir");

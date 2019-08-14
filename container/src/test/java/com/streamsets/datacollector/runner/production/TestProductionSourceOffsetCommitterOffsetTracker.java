@@ -56,9 +56,10 @@ public class TestProductionSourceOffsetCommitterOffsetTracker {
   @Test
   public void testProductionSourceOffsetCommitterOffsetTracker() throws Exception {
     RuntimeInfo info = new StandaloneRuntimeInfo(
-      RuntimeModule.SDC_PROPERTY_PREFIX,
-      new MetricRegistry(),
-      Arrays.asList(getClass().getClassLoader())
+        RuntimeInfo.SDC_PRODUCT,
+        RuntimeModule.SDC_PROPERTY_PREFIX,
+        new MetricRegistry(),
+        Arrays.asList(getClass().getClassLoader())
     );
     Files.createDirectories(PipelineDirectoryUtil.getPipelineDir(info, PIPELINE_NAME, PIPELINE_REV).toPath());
     ProductionSourceOffsetCommitterOffsetTracker offsetTracker = new ProductionSourceOffsetCommitterOffsetTracker(

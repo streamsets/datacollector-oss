@@ -142,7 +142,7 @@ public class RuntimeEL {
      */
 
     Configuration configuration = new Configuration();
-    File configFile = new File(runtimeInfo.getConfigDir(), SDC_PROPERTIES);
+    File configFile = runtimeInfo.getPropertiesFile();
     if (configFile.exists()) {
       try(FileReader reader = new FileReader(configFile)) {
         configuration.load(reader);
@@ -177,7 +177,7 @@ public class RuntimeEL {
         }
       }
     } else {
-      LOG.error("Error did not find sdc.properties at expected location: {}", configFile);
+      LOG.error("Error did not find {}.properties at expected location: {}", runtimeInfo.getProductName(), configFile);
     }
   }
 

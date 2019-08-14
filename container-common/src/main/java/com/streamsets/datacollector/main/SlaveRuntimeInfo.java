@@ -29,7 +29,7 @@ public class SlaveRuntimeInfo extends RuntimeInfo {
   public SlaveRuntimeInfo(
       String propertyPrefix, MetricRegistry metrics, List<? extends ClassLoader> stageLibraryClassLoaders
   ) {
-    super(propertyPrefix, metrics, stageLibraryClassLoaders);
+    super(RuntimeInfo.SDC_PRODUCT, propertyPrefix, metrics, stageLibraryClassLoaders);
   }
 
   @Override
@@ -39,7 +39,7 @@ public class SlaveRuntimeInfo extends RuntimeInfo {
 
   @Override
   public String getRuntimeDir() {
-    if (Boolean.getBoolean("sdc.testing-mode")) {
+    if (Boolean.getBoolean(propertyPrefix + ".testing-mode")) {
       return System.getProperty("user.dir") + "/target/runtime-" + getRandomUUID();
     } else {
       return System.getProperty("user.dir") + "/" + getRandomUUID();

@@ -90,8 +90,12 @@ public class TestRuntimeEL {
 
   @Before()
   public void setUp() {
-    runtimeInfo = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX,new MetricRegistry(),
-      Arrays.asList(getClass().getClassLoader()));
+    runtimeInfo = new StandaloneRuntimeInfo(
+        RuntimeInfo.SDC_PRODUCT,
+        RuntimeModule.SDC_PROPERTY_PREFIX,
+        new MetricRegistry(),
+        Arrays.asList(getClass().getClassLoader())
+    );
   }
 
   @Test
@@ -118,6 +122,9 @@ public class TestRuntimeEL {
       props.store(os, "");
     }
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    Mockito.when(runtimeInfo.getProductName()).thenReturn("sdc");
+    Mockito.when(runtimeInfo.getPropertyPrefix()).thenReturn("sdc");
+    Mockito.when(runtimeInfo.getPropertiesFile()).thenCallRealMethod();
     Mockito.when(runtimeInfo.getConfigDir()).thenReturn(configDir.getAbsolutePath());
     RuntimeEL.loadRuntimeConfiguration(runtimeInfo);
     Assert.assertEquals("bar", RuntimeEL.conf("foo"));

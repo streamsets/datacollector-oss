@@ -77,8 +77,12 @@ public class TestWebhookNotifier {
       }
     });
     server.start();
-    runtimeInfo = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
-      Arrays.asList(TestWebhookNotifier.class.getClassLoader()));
+    runtimeInfo = new StandaloneRuntimeInfo(
+        RuntimeInfo.SDC_PRODUCT,
+        RuntimeModule.SDC_PROPERTY_PREFIX,
+        new MetricRegistry(),
+        Arrays.asList(TestWebhookNotifier.class.getClassLoader())
+    );
   }
 
   @After

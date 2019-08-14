@@ -92,8 +92,7 @@ public class TestClassLoaderStageLibraryTask {
     ClassLoader cl = new SDCClassLoader("library", "lib", Collections.<URL>emptyList(), getClass().getClassLoader(),
                                         new String[0], new SystemPackage(new String[0]),
                                         new ApplicationPackage(new TreeSet<String>()), false, false, false);
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getConfigDir()).thenReturn(configDir.getAbsolutePath());
+    RuntimeInfo runtimeInfo = mockRuntimeInfo(configDir);
     Mockito.when(runtimeInfo.getStageLibraryClassLoaders()).thenReturn((List) ImmutableList.of(cl));
     Mockito.when(runtimeInfo.getMetrics()).thenReturn(new MetricRegistry());
 
@@ -131,8 +130,7 @@ public class TestClassLoaderStageLibraryTask {
     Answer<InputStream> answer = invocation -> new ByteArrayInputStream("min.sdc.version=3.1.0.0\n".getBytes());
     Mockito.when(cl.getResourceAsStream(StageLibraryDefinitionExtractor.DATA_COLLECTOR_LIBRARY_PROPERTIES)).thenAnswer(answer);
 
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getConfigDir()).thenReturn(configDir.getAbsolutePath());
+    RuntimeInfo runtimeInfo = mockRuntimeInfo(configDir);
     Mockito.when(runtimeInfo.getStageLibraryClassLoaders()).thenReturn((List) ImmutableList.of(cl));
 
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
@@ -231,5 +229,14 @@ public class TestClassLoaderStageLibraryTask {
     ClassLoaderStageLibraryTask library = new ClassLoaderStageLibraryTask(null, null, new Configuration());
 
     library.validateRequiredStageLibraries();
+  }
+
+  private static RuntimeInfo mockRuntimeInfo(File configDir) {
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    Mockito.when(runtimeInfo.getConfigDir()).thenReturn(configDir.getAbsolutePath());
+    Mockito.when(runtimeInfo.getProductName()).thenReturn("sdc");
+    Mockito.when(runtimeInfo.getPropertyPrefix()).thenReturn("sdc");
+    Mockito.when(runtimeInfo.getPropertiesFile()).thenCallRealMethod();
+    return runtimeInfo;
   }
 }

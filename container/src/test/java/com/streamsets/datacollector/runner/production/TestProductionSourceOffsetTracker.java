@@ -65,9 +65,10 @@ public class TestProductionSourceOffsetTracker {
   @Before
   public void createOffsetTracker() throws Exception {
     RuntimeInfo info = new StandaloneRuntimeInfo(
-      RuntimeModule.SDC_PROPERTY_PREFIX,
-      new MetricRegistry(),
-      Arrays.asList(TestProductionSourceOffsetTracker.class.getClassLoader())
+        RuntimeInfo.SDC_PRODUCT,
+        RuntimeModule.SDC_PROPERTY_PREFIX,
+        new MetricRegistry(),
+        Arrays.asList(TestProductionSourceOffsetTracker.class.getClassLoader())
     );
     Files.createDirectories(PipelineDirectoryUtil.getPipelineDir(info, PIPELINE_NAME, PIPELINE_REV).toPath());
     OffsetFileUtil.resetOffsets(info, PIPELINE_NAME, PIPELINE_REV);

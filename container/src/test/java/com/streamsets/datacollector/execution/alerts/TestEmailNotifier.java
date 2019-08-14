@@ -58,8 +58,12 @@ public class TestEmailNotifier {
     conf.set("mail.smtp.port", Integer.toString(server.getSmtp().getPort()));
     emailSender = new EmailSender(conf);
 
-    runtimeInfo = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
-      Arrays.asList(TestEmailNotifier.class.getClassLoader()));
+    runtimeInfo = new StandaloneRuntimeInfo(
+        RuntimeInfo.SDC_PRODUCT,
+        RuntimeModule.SDC_PROPERTY_PREFIX,
+        new MetricRegistry(),
+        Arrays.asList(TestEmailNotifier.class.getClassLoader())
+    );
   }
 
   @After

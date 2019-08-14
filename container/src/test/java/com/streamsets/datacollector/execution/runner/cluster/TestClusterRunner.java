@@ -89,9 +89,11 @@ import static org.junit.Assert.fail;
 @SuppressWarnings("unchecked")
 public class TestClusterRunner {
 
+  private static final String SDC_TRANSIENT_ENV = RuntimeInfo.SDC_PRODUCT + RuntimeInfo.TRANSIENT_ENVIRONMENT_SUFFIX;
   private static final String APPID = "123";
   private static final String NAME = "p1";
   private static final String REV = "0";
+
   private static final ApplicationState APPLICATION_STATE = new ApplicationState();
   static {
     APPLICATION_STATE.setAppId(APPID);
@@ -118,7 +120,7 @@ public class TestClusterRunner {
     tempDir = Files.createTempDir();
     Assert.assertTrue(tempDir.delete());
     Assert.assertTrue(tempDir.mkdir());
-    System.setProperty(RuntimeInfo.TRANSIENT_ENVIRONMENT, "true");
+    System.setProperty(SDC_TRANSIENT_ENV, "true");
     System.setProperty("sdc.testing-mode", "true");
     File libexecDir = new File(tempDir, "libexec");
     Assert.assertTrue(libexecDir.mkdir());
@@ -128,7 +130,7 @@ public class TestClusterRunner {
     MockSystemProcess.isAlive = false;
     MockSystemProcess.output.clear();
     MockSystemProcess.error.clear();
-    runtimeInfo = new StandaloneRuntimeInfo("dummy", null, Arrays.asList(emptyCL), tempDir);
+    runtimeInfo = new StandaloneRuntimeInfo("dummy", "dummy", null, Arrays.asList(emptyCL), tempDir);
     clusterProvider = new MockClusterProvider();
     conf = new Configuration();
     pipelineStateStore = new CachePipelineStateStore(new FilePipelineStateStore(runtimeInfo, conf), conf);
@@ -159,7 +161,7 @@ public class TestClusterRunner {
 
   @After
   public void tearDown() {
-    System.clearProperty(RuntimeInfo.TRANSIENT_ENVIRONMENT);
+    System.clearProperty(SDC_TRANSIENT_ENV);
     System.clearProperty("sdc.testing-mode");
     clusterProvider.submitTimesOut = false;
     clusterProvider.isRunningCommandFails = false;

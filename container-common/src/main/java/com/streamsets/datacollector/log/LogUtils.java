@@ -42,7 +42,7 @@ public class LogUtils {
   private LogUtils() {}
 
   public static String getLogFile(RuntimeInfo runtimeInfo) throws IOException {
-    if(Boolean.getBoolean("sdc.transient-env")) {
+    if (runtimeInfo.isTransientEnv()) {
       // running under mesos
       // TODO - find a better way, as this logs all spark stuff under sdc pipeline logs
       String mesosRootDir = System.getenv("MESOS_DIRECTORY");
@@ -101,7 +101,7 @@ public class LogUtils {
     Grok logFileGrok = runtimeInfo.getAttribute(LOG4J_GROK_ATTR);
     String logPattern;
     if(logFileGrok == null) {
-      if(Boolean.getBoolean("sdc.transient-env")) {
+      if (runtimeInfo.isTransientEnv()) {
         // hack for Worker SDC until we use single log4j property for Standalone and Worker SDC
         logPattern = LOG4J_CONVERSION_PATTERN;
       } else {

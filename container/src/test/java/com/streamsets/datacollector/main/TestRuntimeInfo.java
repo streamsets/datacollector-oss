@@ -70,7 +70,12 @@ public class TestRuntimeInfo {
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.RESOURCES_DIR, "r");
 
     List<? extends ClassLoader> customCLs = Arrays.asList(new URLClassLoader(new URL[0], null));
-    RuntimeInfo info = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), customCLs);
+    RuntimeInfo info = new StandaloneRuntimeInfo(
+        RuntimeInfo.SDC_PRODUCT,
+        RuntimeModule.SDC_PROPERTY_PREFIX,
+        new MetricRegistry(),
+        customCLs
+    );
     Assert.assertEquals(System.getProperty("user.dir"), info.getRuntimeDir());
     Assert.assertEquals("w", info.getStaticWebDir());
     Assert.assertEquals("x", info.getConfigDir());
@@ -84,8 +89,12 @@ public class TestRuntimeInfo {
 
   @Test
   public void testAttributes() {
-    RuntimeInfo info = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
-      Arrays.asList(getClass().getClassLoader()));
+    RuntimeInfo info = new StandaloneRuntimeInfo(
+        RuntimeInfo.SDC_PRODUCT,
+        RuntimeModule.SDC_PROPERTY_PREFIX,
+        new MetricRegistry(),
+        Arrays.asList(getClass().getClassLoader())
+    );
     Assert.assertFalse(info.hasAttribute("a"));
     info.setAttribute("a", 1);
     Assert.assertTrue(info.hasAttribute("a"));
@@ -160,7 +169,7 @@ public class TestRuntimeInfo {
 
   @Test
   public void testTrailingSlashRemovedFromHttpURL() throws Exception {
-    RuntimeInfo runtimeInfo = new StandaloneRuntimeInfo(null, null, null);
+    RuntimeInfo runtimeInfo = new StandaloneRuntimeInfo(RuntimeInfo.SDC_PRODUCT,null, null, null);
     runtimeInfo.setBaseHttpUrl("http://localhost:18630");
     Assert.assertEquals("http://localhost:18630", runtimeInfo.getBaseHttpUrl());
     // add a leading forward slash
@@ -181,17 +190,32 @@ public class TestRuntimeInfo {
                        new File("target", UUID.randomUUID().toString()).getAbsolutePath());
 
     List<? extends ClassLoader> customCLs = Arrays.asList(new URLClassLoader(new URL[0], null));
-    RuntimeInfo info = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), customCLs);
+    RuntimeInfo info = new StandaloneRuntimeInfo(
+        RuntimeInfo.SDC_PRODUCT,
+        RuntimeModule.SDC_PROPERTY_PREFIX,
+        new MetricRegistry(),
+        customCLs
+    );
     info.init();
     String id = info.getId();
     Assert.assertNotNull(id);
-    info = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), customCLs);
+    info = new StandaloneRuntimeInfo(
+        RuntimeInfo.SDC_PRODUCT,
+        RuntimeModule.SDC_PROPERTY_PREFIX,
+        new MetricRegistry(),
+        customCLs
+    );
     info.init();
     Assert.assertEquals(id, info.getId());
 
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR,
                        new File("target", UUID.randomUUID().toString()).getAbsolutePath());
-    info = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), customCLs);
+    info = new StandaloneRuntimeInfo(
+        RuntimeInfo.SDC_PRODUCT,
+        RuntimeModule.SDC_PROPERTY_PREFIX,
+        new MetricRegistry(),
+        customCLs
+    );
     info.init();
     Assert.assertNotEquals(id, info.getId());
     Assert.assertFalse(info.isClusterSlave());

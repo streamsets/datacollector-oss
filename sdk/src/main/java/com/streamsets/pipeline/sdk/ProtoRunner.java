@@ -61,6 +61,7 @@ public abstract class ProtoRunner {
 
   static {
     RuntimeInfo runtimeInfo = new StandaloneRuntimeInfo(
+        RuntimeInfo.SDC_PRODUCT,
         RuntimeModule.SDC_PROPERTY_PREFIX,
         new MetricRegistry(),
         Collections.singletonList(ProtoRunner.class.getClassLoader())

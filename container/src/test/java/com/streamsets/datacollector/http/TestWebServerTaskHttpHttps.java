@@ -86,6 +86,7 @@ public class TestWebServerTaskHttpHttps {
       boolean isDPMEnabled
   ) throws Exception {
     runtimeInfo = new StandaloneRuntimeInfo(
+        RuntimeInfo.SDC_PRODUCT,
         RuntimeModule.SDC_PROPERTY_PREFIX,
         new MetricRegistry(),
         Collections.emptyList()

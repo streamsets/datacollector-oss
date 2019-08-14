@@ -48,6 +48,7 @@ public class BootstrapMain {
   private static final String USER_LIBRARIES_DIR_OPTION = "-userLibrariesDir";
   private static final String LIBS_COMMON_LIB_DIR_OPTION = "-libsCommonLibDir";
   private static final String CONFIG_DIR_OPTION = "-configDir";
+  private static final String PRODUCT_NAME_OPTION = "-productName";
 
   private static final String SET_CONTEXT_METHOD = "setContext";
   private static final String MAIN_METHOD = "main";
@@ -67,7 +68,7 @@ public class BootstrapMain {
   private static final String CLASSPATH_DIR_DOES_NOT_EXIST_MSG = "Classpath directory '%s' does not exist";
   private static final String CLASSPATH_PATH_S_IS_NOT_A_DIR_MSG = "Specified Classpath path '%s' is not a directory";
 
-  static final String SDC_CONFIG_FILE = "sdc.properties";
+  public static final String DEFAULT_PRODUCT_NAME = "sdc";
 
   static final String WHITE_LIST_FILE = "stagelibswhitelist.properties";
   static final String SYSTEM_LIBS_WHITE_LIST_KEY = "system.stagelibs.whitelist";
@@ -140,6 +141,10 @@ public class BootstrapMain {
     }
   }
 
+  private static String getProductConfigFileName(String productName) {
+    return productName + ".properties";
+  }
+
   @SuppressWarnings("unchecked")
   public static void bootstrap(String[] args) throws Exception {
     try {
@@ -158,6 +163,9 @@ public class BootstrapMain {
     String userLibrariesDir = null;
     String configDir = null;
     String libsCommonLibDir = null;
+    String productName = DEFAULT_PRODUCT_NAME;
+
+    // TODO: improve this: use lightweight arg parsing library, or other refactoring to reduce verbosity
     for (int i = 0; i < args.length; i++) {
       if (args[i].equals(MAIN_CLASS_OPTION)) {
         i++;
@@ -216,6 +224,13 @@ public class BootstrapMain {
         } else {
           throw new IllegalArgumentException(String.format(MISSING_ARG_MSG, USER_LIBRARIES_DIR_OPTION));
         }
+      } else if (args[i].equals(PRODUCT_NAME_OPTION)) {
+        i++;
+        if (i < args.length) {
+          productName = args[i];
+        } else {
+          throw new IllegalArgumentException(String.format(MISSING_ARG_MSG, PRODUCT_NAME_OPTION));
+        }
       } else {
         throw new IllegalArgumentException(String.format(INVALID_OPTION_ARG_MSG, args[i]));
       }
@@ -272,8 +287,8 @@ public class BootstrapMain {
       systemStageLibs = getWhiteList(configDir, SYSTEM_LIBS_WHITE_LIST_KEY);
       userStageLibs = getWhiteList(configDir, USER_LIBS_WHITE_LIST_KEY);
     } else {
-      systemStageLibs = getSystemStageLibs(configDir);
-      userStageLibs = getUserStageLibs(configDir);
+      systemStageLibs = getSystemStageLibs(configDir, productName);
+      userStageLibs = getUserStageLibs(configDir, productName);
     }
 
     if (debug) {
@@ -308,7 +323,7 @@ public class BootstrapMain {
     libsUrls.putAll(streamsetsLibsUrls);
     libsUrls.putAll(userLibsUrls);
 
-    setOverRunProperties(configDir);
+    setOverRunProperties(configDir, productName);
 
     // Create all ClassLoaders
     SDCClassLoader apiCL = SDCClassLoader.getAPIClassLoader(apiUrls, ClassLoader.getSystemClassLoader());
@@ -351,8 +366,8 @@ public class BootstrapMain {
     method.invoke(null, new Object[]{new String[]{}});
   }
 
-  private static void setOverRunProperties(String configDir) {
-    Properties config = readSdcConfiguration(configDir);
+  private static void setOverRunProperties(String configDir, String productName) {
+    Properties config = readProductConfiguration(configDir, productName);
 
     if (config.containsKey(PARSER_LIMIT) && Integer.parseInt(config.getProperty(PARSER_LIMIT)) > 1024 * 1024) {
       System.setProperty("DataFactoryBuilder.OverRunLimit", config.getProperty(PARSER_LIMIT));
@@ -360,15 +375,20 @@ public class BootstrapMain {
     }
   }
 
-  public static Set<String> getSystemStageLibs(String configDir) {
-    return getStageLibs(configDir, SYSTEM_LIBS_WHITE_LIST_KEY, SYSTEM_LIBS_BLACK_LIST_KEY);
+  public static Set<String> getSystemStageLibs(String configDir, String productName) {
+    return getStageLibs(configDir, SYSTEM_LIBS_WHITE_LIST_KEY, SYSTEM_LIBS_BLACK_LIST_KEY, productName);
   }
 
-  public static Set<String> getUserStageLibs(String configDir) {
-    return getStageLibs(configDir, USER_LIBS_WHITE_LIST_KEY, USER_LIBS_BLACK_LIST_KEY);
+  public static Set<String> getUserStageLibs(String configDir, String productName) {
+    return getStageLibs(configDir, USER_LIBS_WHITE_LIST_KEY, USER_LIBS_BLACK_LIST_KEY, productName);
   }
 
-  public static Set<String> getStageLibs(String configDir, String whiteListKey, String blackListKey) {
+  public static Set<String> getStageLibs(
+      String configDir,
+      String whiteListKey,
+      String blackListKey,
+      String productName
+  ) {
     Set<String> stageLibs = null;
     if (isDeprecatedWhiteListConfiguration(configDir)) {
       System.out.println(String.format(
@@ -378,8 +398,8 @@ public class BootstrapMain {
       ));
       stageLibs = getWhiteList(configDir, whiteListKey);
     } else {
-      Properties config = readSdcConfiguration(configDir);
-      validateWhiteBlackList(config, whiteListKey, blackListKey);
+      Properties config = readProductConfiguration(configDir, productName);
+      validateWhiteBlackList(config, whiteListKey, blackListKey, productName);
       if (config.containsKey(whiteListKey)) {
         stageLibs = getList(config, whiteListKey, true);
       } else if (config.containsKey(blackListKey)) {
@@ -429,8 +449,8 @@ public class BootstrapMain {
     return new File(configDir, WHITE_LIST_FILE).getAbsoluteFile().exists();
   }
 
-  public static Properties readSdcConfiguration(String configDir) {
-    File file = new File(configDir, SDC_CONFIG_FILE).getAbsoluteFile();
+  public static Properties readProductConfiguration(String configDir, String productName) {
+    File file = new File(configDir, getProductConfigFileName(productName)).getAbsoluteFile();
     try (InputStream is = new FileInputStream(file)) {
       Properties props = new Properties();
       props.load(is);
@@ -440,11 +460,11 @@ public class BootstrapMain {
     }
   }
 
-  public static void validateWhiteBlackList(Properties props, String whiteList, String blackList) {
+  public static void validateWhiteBlackList(Properties props, String whiteList, String blackList, String productName) {
     if (props.containsKey(whiteList) && props.containsKey(blackList)) {
       throw new IllegalArgumentException(String.format(
           CANNOT_HAVE_WHITE_BLACK_LIST_MSG,
-          SDC_CONFIG_FILE,
+          getProductConfigFileName(productName),
           whiteList,
           blackList
       ));

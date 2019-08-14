@@ -541,8 +541,12 @@ public class TestUtil {
 
     @Provides @Singleton
     public RuntimeInfo provideRuntimeInfo() {
-      RuntimeInfo info = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
-        Arrays.asList(getClass().getClassLoader()));
+      RuntimeInfo info = new StandaloneRuntimeInfo(
+          RuntimeInfo.SDC_PRODUCT,
+          RuntimeModule.SDC_PROPERTY_PREFIX,
+          new MetricRegistry(),
+          Arrays.asList(getClass().getClassLoader())
+      );
       return info;
     }
 

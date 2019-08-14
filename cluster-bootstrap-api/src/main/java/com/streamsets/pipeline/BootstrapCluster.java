@@ -152,8 +152,8 @@ public class BootstrapCluster {
         systemStageLibs = BootstrapMain.getWhiteList(etcRoot, BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY);
         userStageLibs = BootstrapMain.getWhiteList(etcRoot, BootstrapMain.USER_LIBS_WHITE_LIST_KEY);
       } else {
-        systemStageLibs = BootstrapMain.getSystemStageLibs(etcRoot);
-        userStageLibs = BootstrapMain.getUserStageLibs(etcRoot);
+        systemStageLibs = BootstrapMain.getSystemStageLibs(etcRoot, BootstrapMain.DEFAULT_PRODUCT_NAME);
+        userStageLibs = BootstrapMain.getUserStageLibs(etcRoot, BootstrapMain.DEFAULT_PRODUCT_NAME);
       }
 
       String libsCommonLibDir = libraryRoot + "/libs-common-lib";

@@ -187,7 +187,13 @@ public class TestShellClusterProvider {
     sourceInfo = new HashMap<>();
     sourceInfo.put(ClusterModeConstants.NUM_EXECUTORS_KEY, "64");
     URLClassLoader emptyCL = new URLClassLoader(new URL[0]);
-    RuntimeInfo runtimeInfo = new StandaloneRuntimeInfo(SDC_TEST_PREFIX, null, Arrays.asList(emptyCL), tempDir);
+    RuntimeInfo runtimeInfo = new StandaloneRuntimeInfo(
+        RuntimeInfo.SDC_PRODUCT,
+        SDC_TEST_PREFIX,
+        null,
+        Arrays.asList(emptyCL),
+        tempDir
+    );
     File configFile = new File(runtimeInfo.getConfigDir(), SDC_TEST_PREFIX + RuntimeInfo.LOG4J_PROPERTIES);
     File f = new File(runtimeInfo.getConfigDir());
     Assert.assertTrue(f.mkdirs());
@@ -612,7 +618,13 @@ public class TestShellClusterProvider {
         "aaa", null, null, null, true, null, "x", "y"));
 
     URLClassLoader emptyCL = new URLClassLoader(new URL[0]);
-    RuntimeInfo runtimeInfo = new StandaloneRuntimeInfo(SDC_TEST_PREFIX, null, Arrays.asList(emptyCL), tempDir);
+    RuntimeInfo runtimeInfo = new StandaloneRuntimeInfo(
+        RuntimeInfo.SDC_PRODUCT,
+        SDC_TEST_PREFIX,
+        null,
+        Arrays.asList(emptyCL),
+        tempDir
+    );
 
     Configuration conf = new Configuration();
     conf.set(SecurityConfiguration.KERBEROS_ENABLED_KEY, true);

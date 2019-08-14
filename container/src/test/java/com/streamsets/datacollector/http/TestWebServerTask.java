@@ -64,8 +64,12 @@ public class TestWebServerTask {
       boolean isDPMEnabled
   ) throws Exception {
     RuntimeInfo runtimeInfo =
-        new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), Collections
-            .<ClassLoader>emptyList()) {
+        new StandaloneRuntimeInfo(
+            RuntimeInfo.SDC_PRODUCT,
+            RuntimeModule.SDC_PROPERTY_PREFIX,
+            new MetricRegistry(),
+            Collections.emptyList()
+        ) {
           @Override
           public String getConfigDir() {
             return confDir;
@@ -188,8 +192,12 @@ public class TestWebServerTask {
   @Test
   public void testSSOServiceInRuntime() throws Exception {
     RuntimeInfo runtimeInfo =
-        new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), Collections
-            .<ClassLoader>emptyList()) {
+        new StandaloneRuntimeInfo(
+            RuntimeInfo.SDC_PRODUCT,
+            RuntimeModule.SDC_PROPERTY_PREFIX,
+            new MetricRegistry(),
+            Collections.emptyList()
+        ) {
           @Override
           public String getConfigDir() {
             return new File("target").getAbsolutePath();
@@ -229,7 +237,12 @@ public class TestWebServerTask {
   @Test
   public void testSSOServiceDisabled() throws Exception {
     RuntimeInfo runtimeInfo =
-        new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), Collections.emptyList()) {
+        new StandaloneRuntimeInfo(
+            RuntimeInfo.SDC_PRODUCT,
+            RuntimeModule.SDC_PROPERTY_PREFIX,
+            new MetricRegistry(),
+            Collections.emptyList()
+        ) {
           @Override
           public String getConfigDir() {
             return new File("target").getAbsolutePath();
@@ -318,7 +331,12 @@ public class TestWebServerTask {
   @Test
   public void testTraceHttpDisabled() throws Exception {
     RuntimeInfo runtimeInfo =
-        new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), Collections.emptyList()) {
+        new StandaloneRuntimeInfo(
+            RuntimeInfo.SDC_PRODUCT,
+            RuntimeModule.SDC_PROPERTY_PREFIX,
+            new MetricRegistry(),
+            Collections.emptyList()
+        ) {
           @Override
           public String getConfigDir() {
             return new File("target").getAbsolutePath();

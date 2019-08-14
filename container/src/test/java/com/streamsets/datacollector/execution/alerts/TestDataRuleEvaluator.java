@@ -72,8 +72,12 @@ public class TestDataRuleEvaluator {
     metrics = new MetricRegistry();
     variables = new ELVariables();
     elEvaluator = new ELEvaluator("TestDataRuleEvaluator", ConcreteELDefinitionExtractor.get(), RecordEL.class, StringEL.class);
-    runtimeInfo = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
-      Arrays.asList(TestDataRuleEvaluator.class.getClassLoader()));
+    runtimeInfo = new StandaloneRuntimeInfo(
+        RuntimeInfo.SDC_PRODUCT,
+        RuntimeModule.SDC_PROPERTY_PREFIX,
+        new MetricRegistry(),
+        Arrays.asList(TestDataRuleEvaluator.class.getClassLoader())
+    );
   }
 
   @Test

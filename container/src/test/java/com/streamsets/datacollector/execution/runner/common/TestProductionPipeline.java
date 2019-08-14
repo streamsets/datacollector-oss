@@ -124,8 +124,12 @@ public class TestProductionPipeline {
   @Before
   public void setUp() {
     runtimeInfoMetrics = new MetricRegistry();
-    runtimeInfo = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, runtimeInfoMetrics,
-                                  Arrays.asList(getClass().getClassLoader()));
+    runtimeInfo = new StandaloneRuntimeInfo(
+        RuntimeInfo.SDC_PRODUCT,
+        RuntimeModule.SDC_PROPERTY_PREFIX,
+        runtimeInfoMetrics,
+        Arrays.asList(getClass().getClassLoader())
+    );
     runtimeInfo.init();
     MetricsConfigurator.registerJmxMetrics(runtimeInfoMetrics);
 

@@ -533,8 +533,12 @@ public class TestBootstrapMain {
     Properties props = new Properties();
     props.setProperty(BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY, "a, b ,");
     props.setProperty(BootstrapMain.SYSTEM_LIBS_BLACK_LIST_KEY, "a, b ,");
-    BootstrapMain.validateWhiteBlackList(props, BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY,
-        BootstrapMain.SYSTEM_LIBS_BLACK_LIST_KEY);
+    BootstrapMain.validateWhiteBlackList(
+        props,
+        BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY,
+        BootstrapMain.SYSTEM_LIBS_BLACK_LIST_KEY,
+        BootstrapMain.DEFAULT_PRODUCT_NAME
+    );
   }
 
   @Test
@@ -543,8 +547,12 @@ public class TestBootstrapMain {
     Assert.assertTrue(dir.mkdirs());
     Properties props = new Properties();
     props.setProperty(BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY, "a, b ,");
-    BootstrapMain.validateWhiteBlackList(props, BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY,
-        BootstrapMain.SYSTEM_LIBS_BLACK_LIST_KEY);
+    BootstrapMain.validateWhiteBlackList(
+        props,
+        BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY,
+        BootstrapMain.SYSTEM_LIBS_BLACK_LIST_KEY,
+        BootstrapMain.DEFAULT_PRODUCT_NAME
+    );
     Set<String> list = BootstrapMain.getList(props, BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY, true);
     Assert.assertEquals(ImmutableSet.of("+a","+b"), list);
 
@@ -556,8 +564,12 @@ public class TestBootstrapMain {
     Assert.assertTrue(dir.mkdirs());
     Properties props = new Properties();
     props.setProperty(BootstrapMain.SYSTEM_LIBS_BLACK_LIST_KEY, "a, b ,");
-    BootstrapMain.validateWhiteBlackList(props, BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY,
-        BootstrapMain.SYSTEM_LIBS_BLACK_LIST_KEY);
+    BootstrapMain.validateWhiteBlackList(
+        props,
+        BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY,
+        BootstrapMain.SYSTEM_LIBS_BLACK_LIST_KEY,
+        BootstrapMain.DEFAULT_PRODUCT_NAME
+    );
     Set<String> list = BootstrapMain.getList(props, BootstrapMain.SYSTEM_LIBS_BLACK_LIST_KEY, false);
     Assert.assertEquals(ImmutableSet.of("-a","-b"), list);
   }

@@ -136,8 +136,12 @@ public class TestStandalonePipelineManager {
 
     @Provides @Singleton
     public RuntimeInfo providesRuntimeInfo() {
-      RuntimeInfo runtimeInfo = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
-        Arrays.asList(TestStandalonePipelineManager.class.getClassLoader()));
+      RuntimeInfo runtimeInfo = new StandaloneRuntimeInfo(
+          RuntimeInfo.SDC_PRODUCT,
+          RuntimeModule.SDC_PROPERTY_PREFIX,
+          new MetricRegistry(),
+          Arrays.asList(TestStandalonePipelineManager.class.getClassLoader())
+      );
 
       File targetDir = new File("target", UUID.randomUUID().toString());
       targetDir.mkdir();

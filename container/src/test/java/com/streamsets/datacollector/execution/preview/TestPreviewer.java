@@ -101,8 +101,12 @@ public abstract class TestPreviewer {
     @Provides
     @Singleton
     public RuntimeInfo providesRuntimeInfo() {
-      return new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
-        Arrays.asList(TestPreviewer.class.getClassLoader()));
+      return new StandaloneRuntimeInfo(
+          RuntimeInfo.SDC_PRODUCT,
+          RuntimeModule.SDC_PROPERTY_PREFIX,
+          new MetricRegistry(),
+          Arrays.asList(TestPreviewer.class.getClassLoader())
+      );
     }
 
     @Provides @Singleton

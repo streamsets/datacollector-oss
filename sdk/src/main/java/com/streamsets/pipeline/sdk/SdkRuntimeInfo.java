@@ -23,7 +23,7 @@ import java.util.List;
 public class SdkRuntimeInfo extends RuntimeInfo {
 
   public SdkRuntimeInfo(String propertyPrefix, MetricRegistry metrics, List<? extends ClassLoader> stageLibraryClassLoaders) {
-    super(propertyPrefix, metrics, stageLibraryClassLoaders);
+    super(RuntimeInfo.SDC_PRODUCT, propertyPrefix, metrics, stageLibraryClassLoaders);
     this.setBaseHttpUrl("no-where://");
   }
 

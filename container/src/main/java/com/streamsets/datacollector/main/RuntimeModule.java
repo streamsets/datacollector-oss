@@ -41,13 +41,30 @@ import java.util.List;
 }, includes = MetricsModule.class)
 public class RuntimeModule {
   private static final Logger LOG = LoggerFactory.getLogger(RuntimeModule.class);
-  public static final String SDC_PROPERTY_PREFIX = "sdc";
+  private static String productName = RuntimeInfo.SDC_PRODUCT;
+  private static String propertyPrefix = RuntimeInfo.SDC_PRODUCT;
+
+  /**
+   * Kept under SDC-12270 to avoid changing too many files
+   */
+  public static final String SDC_PROPERTY_PREFIX = RuntimeInfo.SDC_PRODUCT;
+
   public static final String PIPELINE_EXECUTION_MODE_KEY = "pipeline.execution.mode";
   private static List<ClassLoader> stageLibraryClassLoaders = Collections.emptyList();//ImmutableList.of(RuntimeModule.class.getClassLoader());
 
   public static synchronized void setStageLibraryClassLoaders(List<? extends ClassLoader> classLoaders) {
     stageLibraryClassLoaders = ImmutableList.copyOf(classLoaders);
   }
+
+  public static synchronized void setProductName(String productName) {
+    RuntimeModule.productName = productName;
+  }
+
+  public static synchronized void setPropertyPrefix(String propertyPrefix) {
+    RuntimeModule.propertyPrefix = propertyPrefix;
+  }
+
+  //TODO: add setProductName and make that available in RuntimeInfo when constructed
 
   @Provides @Singleton
   public BuildInfo provideBuildInfo() {
@@ -56,7 +73,7 @@ public class RuntimeModule {
 
   @Provides @Singleton
   public RuntimeInfo provideRuntimeInfo(MetricRegistry metrics) {
-    RuntimeInfo info = new StandaloneRuntimeInfo(SDC_PROPERTY_PREFIX, metrics, stageLibraryClassLoaders);
+    RuntimeInfo info = new StandaloneRuntimeInfo(productName, propertyPrefix, metrics, stageLibraryClassLoaders);
     info.init();
     return info;
   }

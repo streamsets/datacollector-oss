@@ -34,6 +34,9 @@ public class RuntimeInfoTest {
     Path confDir = Files.createTempDirectory("conf-dir");
 
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    Mockito.when(runtimeInfo.getProductName()).thenReturn("sdc");
+    Mockito.when(runtimeInfo.getPropertyPrefix()).thenReturn("sdc");
+    Mockito.when(runtimeInfo.getPropertiesFile()).thenCallRealMethod();
     Mockito.when(runtimeInfo.getDataDir()).thenReturn(dataDir.toString());
     Mockito.when(runtimeInfo.getConfigDir()).thenReturn(confDir.toString());
 
