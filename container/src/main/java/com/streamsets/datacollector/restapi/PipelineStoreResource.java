@@ -1785,7 +1785,8 @@ public class PipelineStoreResource {
         .add(ImmutableMap.of("key", "spark.driver.cores", "value","1"))
         .add(ImmutableMap.of("key", "spark.executor.memory", "value","2G"))
         .add(ImmutableMap.of("key", "spark.executor.cores", "value","1"))
-        .add(ImmutableMap.of("key", "spark.executor.instances", "value","5"))
+        .add(ImmutableMap.of("key", "spark.dynamicAllocation.enabled", "value", "true"))
+        .add(ImmutableMap.of("key", "spark.dynamicAllocation.minExecutors", "value", "1"))
         .build();
     Map<String, Config> replacementConfigs = ImmutableMap.<String, Config>builder()
         .put("executionMode", new Config("executionMode", ExecutionMode.STREAMING.name()))
