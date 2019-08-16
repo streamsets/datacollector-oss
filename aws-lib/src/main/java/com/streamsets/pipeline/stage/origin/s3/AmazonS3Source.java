@@ -73,6 +73,20 @@ public interface AmazonS3Source {
   long incrementNoMoreDataFileCount();
 
   /**
+   * Increments the counter for records in  file
+   *
+   * @param filename
+   */
+  long incrementFileFinishedRecordCounter(String filename);
+
+  /**
+   * Increments the counter for errors in file
+   *
+   * @param filename
+   */
+  long incrementFileFinishedErrorCounter(String filename);
+
+  /**
    * Send the NO_MORE_DATA_EVENT if all the threads have finished processing the ongoing event
    *
    * @param batchContext batch context of the runner to create the event
@@ -84,4 +98,22 @@ public interface AmazonS3Source {
    * When a refill occurs the no-more-data event needs can be sent again
    */
   void restartNoMoreDataEvent();
+
+  /**
+   * Send the NEW_FILE when a thread starts processing a new file from the spooler
+   *
+   * @param filename the absolute path of the new file that has been picked from the spooler
+   * @param batchContext batch context of the runner to create the event
+   */
+  void sendNewFileEvent(String filename, BatchContext batchContext);
+
+  /**
+   * Send the FINISHED_FILE when a file has been completely processed and offset for the file set to -1
+   *  & cleanup the counters stored in the fileFinishedRecordCount & fileFinishedErrorCount maps
+   *
+   * @param filename the absolute path of the file that has been processed
+   * @param batchContext batch context of the runner to create the event
+   */
+  void sendFileFinishedEvent(String filename, BatchContext batchContext);
+
 }

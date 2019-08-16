@@ -25,6 +25,8 @@ import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
 import com.streamsets.pipeline.api.service.ServiceConfiguration;
 import com.streamsets.pipeline.api.service.ServiceDependency;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
+import com.streamsets.pipeline.lib.event.FinishedFileEvent;
+import com.streamsets.pipeline.lib.event.NewFileEvent;
 import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 
 @StageDef(
@@ -36,7 +38,7 @@ import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
     recordsByRef = true,
     resetOffset = true,
     producesEvents = true,
-    eventDefs = {NoMoreDataEvent.class},
+    eventDefs = {NewFileEvent.class, FinishedFileEvent.class, NoMoreDataEvent.class},
     upgrader = AmazonS3SourceUpgrader.class,
     upgraderDef = "upgrader/AmazonS3DSource.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_gfj_ssv_yq",

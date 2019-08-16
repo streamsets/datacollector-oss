@@ -117,7 +117,7 @@ public class AmazonS3Runnable implements Runnable {
           }
           // we set the offset to -1 to indicate we are done with the current object and we should fetch a new one
           // from the spooler
-          offset = new S3Offset(offset, S3Constants.MINUS_ONE);
+          amazonS3Source.updateOffset(runnerId, new S3Offset(offset, S3Constants.MINUS_ONE));
         }
       }
     } catch (StageException e) {
@@ -143,6 +143,9 @@ public class AmazonS3Runnable implements Runnable {
       updateGauge(Status.SPOOLING, null);
       offset = fetchNextObjectFromSpooler(offset, batchContext);
       LOG.debug("Object '{}' with offset '{}' fetched from Spooler", offset.getKey(), offset.getOffset());
+      if (getCurrentObject() != null) {
+        amazonS3Source.sendNewFileEvent(offset.getKey(), batchContext);
+      }
     } else {
       //check if the current object was modified between batches
       LOG.debug("Checking if Object '{}' has been modified between batches", getCurrentObject().getKey());
@@ -228,6 +231,7 @@ public class AmazonS3Runnable implements Runnable {
               setHeaders(record, object);
               batchMaker.addRecord(record);
               amazonS3Source.incrementNoMoreDataRecordCount();
+              amazonS3Source.incrementFileFinishedRecordCounter(offset.getKey());
               i++;
               offset = new S3Offset(offset, parser.getOffset());
             } else {
@@ -239,11 +243,13 @@ public class AmazonS3Runnable implements Runnable {
               }
               amazonS3Source.incrementNoMoreDataFileCount();
               offset = new S3Offset(offset, S3Constants.MINUS_ONE);
+              amazonS3Source.sendFileFinishedEvent(offset.getKey(), batchContext);
               break;
             }
           } catch (ObjectLengthException ex) {
             errorRecordHandler.onError(Errors.S3_SPOOLDIR_02, s3Object.getKey(), offset.toString(), ex);
             amazonS3Source.incrementNoMoreDataErrorCount();
+            amazonS3Source.incrementFileFinishedErrorCounter(offset.getKey());
             offset = new S3Offset(offset, S3Constants.MINUS_ONE);
           }
         }

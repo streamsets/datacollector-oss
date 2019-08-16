@@ -20,6 +20,8 @@ import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.event.FinishedFileEvent;
+import com.streamsets.pipeline.lib.event.NewFileEvent;
 import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 import org.json.JSONObject;
 
@@ -42,6 +44,8 @@ public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements Amazon
   private AtomicLong noMoreDataRecordCount;
   private AtomicLong noMoreDataErrorCount;
   private AtomicLong noMoreDataFileCount;
+  private Map<String, Long> fileFinishedRecordCount;
+  private Map<String, Long> fileFinishedErrorCount;
 
   private PushSource.Context context;
 
@@ -53,6 +57,8 @@ public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements Amazon
     noMoreDataRecordCount = new AtomicLong();
     noMoreDataErrorCount = new AtomicLong();
     noMoreDataFileCount = new AtomicLong();
+    fileFinishedRecordCount = new HashMap<>();
+    fileFinishedErrorCount = new HashMap<>();
   }
 
   @Override
@@ -216,6 +222,39 @@ public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements Amazon
     noMoreDataEventSent.set(false);
   }
 
+  @Override
+  public long incrementFileFinishedRecordCounter(String filename) {
+    return fileFinishedRecordCount.merge(filename, 1L, Long::sum);
+  }
+
+  @Override
+  public long incrementFileFinishedErrorCounter(String filename) {
+    return fileFinishedErrorCount.merge(filename, 1L, Long::sum);
+  }
+
+  @Override
+  public void sendNewFileEvent(String filename, BatchContext batchContext) {
+    NewFileEvent.EVENT_CREATOR.create(context, batchContext)
+        .with(NewFileEvent.FILE_PATH, filename)
+        .createAndSend();
+  }
+
+  @Override
+  public void sendFileFinishedEvent(String filename, BatchContext batchContext) {
+    long records = fileFinishedRecordCount.containsKey(filename) ? fileFinishedRecordCount.get(filename).longValue() : 0;
+    long errors = fileFinishedErrorCount.containsKey(filename) ? fileFinishedErrorCount.get(filename).longValue() : 0;
+    FinishedFileEvent.EVENT_CREATOR.create(context, batchContext)
+        .with(FinishedFileEvent.FILE_PATH, filename)
+        .with(FinishedFileEvent.RECORD_COUNT, records)
+        .with(FinishedFileEvent.ERROR_COUNT, errors)
+        .createAndSend();
+    destroyFileCounters(filename);
+  }
+
+  private void destroyFileCounters(String filename) {
+    fileFinishedRecordCount.remove(filename);
+    fileFinishedErrorCount.remove(filename);
+  }
 
   @VisibleForTesting
   boolean allFilesAreFinished() {
