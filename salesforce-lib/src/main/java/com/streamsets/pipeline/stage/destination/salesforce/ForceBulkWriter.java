@@ -27,6 +27,8 @@ import com.sforce.async.ContentType;
 import com.sforce.async.JobInfo;
 import com.sforce.async.JobStateEnum;
 import com.sforce.async.OperationEnum;
+import com.sforce.soap.partner.PartnerConnection;
+import com.sforce.ws.ConnectionException;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -93,8 +95,14 @@ public class ForceBulkWriter extends ForceWriter {
     }
   }
 
-  public ForceBulkWriter(Map<String, String> fieldMappings, BulkConnection bulkConnection, Target.Context context) {
-    super(fieldMappings);
+  public ForceBulkWriter(
+      PartnerConnection partnerConnection,
+      String sObject,
+      Map<String, String> customMappings,
+      BulkConnection bulkConnection,
+      Target.Context context
+  ) throws ConnectionException {
+    super(partnerConnection, sObject, customMappings);
     this.bulkConnection = bulkConnection;
     this.context = context;
 

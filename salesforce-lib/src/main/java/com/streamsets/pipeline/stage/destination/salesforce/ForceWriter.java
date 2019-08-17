@@ -15,11 +15,16 @@
  */
 package com.streamsets.pipeline.stage.destination.salesforce;
 
+import com.sforce.soap.partner.DescribeSObjectResult;
+import com.sforce.soap.partner.Field;
+import com.sforce.soap.partner.PartnerConnection;
+import com.sforce.ws.ConnectionException;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,13 +35,27 @@ import java.util.Map;
  */
 public abstract class ForceWriter {
   final Map<String, String> fieldMappings;
+  final String sObject;
+  final PartnerConnection partnerConnection;
 
   /**
    * Constructs and sets field mappings for the writer.
-   * @param fieldMappings Mappings of SDC field names to Salesforce field names
+   * @param customMappings Mappings of SDC field names to Salesforce field names
    */
-  public ForceWriter(Map<String, String> fieldMappings) {
-    this.fieldMappings = fieldMappings;
+  public ForceWriter(PartnerConnection partnerConnection, String sObject, Map<String, String> customMappings) throws
+      ConnectionException {
+    this.partnerConnection = partnerConnection;
+    this.sObject = sObject;
+
+    // Get default field mappings and add them to the configured mappings
+    this.fieldMappings = new HashMap<String, String>(customMappings);
+    DescribeSObjectResult result = partnerConnection.describeSObject(sObject);
+    for (Field field : result.getFields()) {
+      String fieldName = field.getName();
+      if (!customMappings.containsKey(fieldName)) {
+        fieldMappings.put(fieldName, "/" + fieldName);
+      }
+    }
   }
 
   /**

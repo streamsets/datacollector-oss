@@ -15,6 +15,9 @@
  */
 package com.streamsets.pipeline.stage.destination.salesforce;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Multimap;
 import com.sforce.async.AsyncApiException;
 import com.sforce.async.BulkConnection;
@@ -31,6 +34,7 @@ import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.lib.cache.CacheCleaner;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.salesforce.ForceTargetConfigBean;
 import com.streamsets.pipeline.lib.salesforce.ForceUtils;
@@ -48,6 +52,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This target writes records to Salesforce objects
@@ -67,12 +72,35 @@ public class ForceTarget extends BaseTarget {
   private final boolean useCompression;
   private final boolean showTrace;
 
-  private ForceWriter writer;
-  private SortedMap<String, String> fieldMappings;
+  private SortedMap<String, String> customMappings;
   private PartnerConnection partnerConnection;
   private BulkConnection bulkConnection;
   private ELVars sObjectNameVars;
   private ELEval sObjectNameEval;
+
+  private class ApiAndSObject {
+    public boolean bulkApi;
+    public String sObject;
+
+    public ApiAndSObject(boolean bulkApi, String sObject) {
+      this.bulkApi = bulkApi;
+      this.sObject = sObject;
+    }
+  }
+
+  private class ForceWriterLoader extends CacheLoader<ApiAndSObject, ForceWriter> {
+    @Override
+    public ForceWriter load(ApiAndSObject key) throws ConnectionException {
+      if (key.bulkApi) {
+        return new ForceBulkWriter(partnerConnection, key.sObject, customMappings, bulkConnection, getContext());
+      } else {
+        return new ForceSoapWriter(partnerConnection, key.sObject, customMappings);
+      }
+    }
+  }
+
+  protected LoadingCache<ApiAndSObject, ForceWriter> forceWriters;
+  protected final CacheCleaner cacheCleaner;
 
   public ForceTarget(
       ForceTargetConfigBean conf, boolean useCompression, boolean showTrace
@@ -80,6 +108,18 @@ public class ForceTarget extends BaseTarget {
     this.conf = conf;
     this.useCompression = useCompression;
     this.showTrace = showTrace;
+
+    CacheBuilder cacheBuilder = CacheBuilder.newBuilder()
+        .maximumSize(500)
+        .expireAfterAccess(1, TimeUnit.HOURS);
+
+    if(LOG.isDebugEnabled()) {
+      cacheBuilder.recordStats();
+    }
+
+    forceWriters = cacheBuilder.build(new ForceWriterLoader());
+
+    cacheCleaner = new CacheCleaner(forceWriters, "ForceTarget", 10 * 60 * 1000);
   }
 
   // Renew the Salesforce session on timeout
@@ -134,13 +174,13 @@ public class ForceTarget extends BaseTarget {
     );
 
     if (issues.isEmpty()) {
-      fieldMappings = new TreeMap<>();
+      customMappings = new TreeMap<>();
       for (ForceFieldMapping mapping : conf.fieldMapping) {
         // SDC-7446 Allow colon as well as period as field separator
         String salesforceField = conf.useBulkAPI
             ? mapping.salesforceField.replace(':', '.')
             : mapping.salesforceField;
-        fieldMappings.put(salesforceField, mapping.sdcField);
+        customMappings.put(salesforceField, mapping.sdcField);
       }
 
       try {
@@ -158,12 +198,6 @@ public class ForceTarget extends BaseTarget {
             Errors.FORCE_00,
             ForceUtils.getExceptionCode(ce) + ", " + ForceUtils.getExceptionMessage(ce)
         ));
-      }
-
-      if (conf.useBulkAPI) {
-        writer = new ForceBulkWriter(fieldMappings, bulkConnection, getContext());
-      } else {
-        writer = new ForceSoapWriter(fieldMappings, partnerConnection);
       }
     }
 
@@ -184,6 +218,11 @@ public class ForceTarget extends BaseTarget {
    */
   @Override
   public void write(Batch batch) throws StageException {
+    if (!batch.getRecords().hasNext()) {
+      // No records - take the opportunity to clean up the cache so that we don't hold on to memory indefinitely
+      cacheCleaner.periodicCleanUp();
+    }
+
     Multimap<String, Record> partitions = ELUtils.partitionBatchByExpression(sObjectNameEval,
         sObjectNameVars,
         conf.sObjectNameTemplate,
@@ -191,6 +230,7 @@ public class ForceTarget extends BaseTarget {
     );
     Set<String> sObjectNames = partitions.keySet();
     for (String sObjectName : sObjectNames) {
+      ForceWriter writer = forceWriters.getUnchecked(new ApiAndSObject(conf.useBulkAPI, sObjectName));
       List<OnRecordErrorException> errors = writer.writeBatch(
           sObjectName,
           partitions.get(sObjectName),

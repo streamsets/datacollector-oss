@@ -57,11 +57,11 @@ public class ForceSoapWriter extends ForceWriter {
   // See https://developer.salesforce.com/docs/atlas.en-us.api.meta/api/sforce_api_calls_create.htm
   private static final int MAX_RECORDS_CREATE = 200;
   private static final Logger LOG = LoggerFactory.getLogger(ForceSoapWriter.class);
-  private final PartnerConnection partnerConnection;
 
-  public ForceSoapWriter(Map<String, String> fieldMappings, PartnerConnection partnerConnection) {
-    super(fieldMappings);
-    this.partnerConnection = partnerConnection;
+  public ForceSoapWriter(
+      PartnerConnection partnerConnection, String sObject, Map<String, String> customMappings
+  ) throws ConnectionException {
+    super(partnerConnection, sObject, customMappings);
   }
 
   private String[] sObjectsToIds(SObject[] sobjects) {
