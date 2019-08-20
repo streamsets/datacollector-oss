@@ -21,12 +21,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-stage-lib-parent</artifactId>
-    <version>3.11.0-SNAPSHOT</version>
+    <version>3.11.0-01</version>
     <relativePath>../stage-lib-parent</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-kinetica_6_2-lib</artifactId>
-  <version>3.11.0-SNAPSHOT</version>
+  <version>3.11.0-01</version>
   <description>StreamSets Data Collector Kinetica 6.2 Lib</description>
   <name>StreamSets Data Collector Kinetica 6.2 Lib</name>
   <packaging>jar</packaging>
