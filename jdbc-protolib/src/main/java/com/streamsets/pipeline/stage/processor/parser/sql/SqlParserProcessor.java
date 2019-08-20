@@ -160,6 +160,7 @@ public class SqlParserProcessor extends SingleLaneProcessor {
     }
     if (StringUtils.isEmpty(sql)) {
       errorRecordHandler.onError(new OnRecordErrorException(record, JdbcErrors.JDBC_401, record, configBean.sqlField));
+      return Optional.empty();
     }
     int op = getOp(record.get(configBean.sqlField).getValueAsString());
     try {
