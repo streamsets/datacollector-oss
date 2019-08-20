@@ -18,12 +18,15 @@ package com.streamsets.datacollector.cli.sch;
 import com.streamsets.datacollector.restapi.bean.DPMInfoJson;
 import io.airlift.airline.Command;
 import io.airlift.airline.Option;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.Collections;
 
 @Command(name = "register", description = "Register this Data Collector in Control Hub.")
 public class RegisterCommand extends AbstractCommand {
+  private static final Logger logger = LoggerFactory.getLogger(RegisterCommand.class);
 
   @Option(
     name = {"-l", "--url"},
@@ -55,5 +58,7 @@ public class RegisterCommand extends AbstractCommand {
       infoJson,
       new SchAdmin.Context(getRuntimeInfo(), getConfiguration(), isSkipConfigUpdate(), getTokenFilePath())
     );
+
+    logger.info("SCH registration successful. Please restart {} to complete.", getRuntimeInfo().getProductName());
   }
 }

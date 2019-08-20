@@ -16,9 +16,13 @@
 package com.streamsets.datacollector.cli.sch;
 
 import io.airlift.airline.Command;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Command(name = "unregister", description = "Unregister this Data Collector from Control Hub.")
 public class UnregisterCommand extends AbstractCommand {
+  private static final Logger logger = LoggerFactory.getLogger(UnregisterCommand.class);
+
   @Override
   protected void executeAction() throws Exception {
     SchAdmin.disableDPM(
@@ -26,6 +30,10 @@ public class UnregisterCommand extends AbstractCommand {
       getUserPassword(),
       getOrganization(),
       new SchAdmin.Context(getRuntimeInfo(), getConfiguration(), isSkipConfigUpdate(), getTokenFilePath())
+    );
+    logger.info(
+        "SCH registration successfully removed. Please restart {} to complete.",
+        getRuntimeInfo().getProductName()
     );
   }
 }

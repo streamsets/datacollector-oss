@@ -17,6 +17,7 @@ package com.streamsets.datacollector.cli.sch;
 
 import com.streamsets.datacollector.main.MainStandalonePipelineManagerModule;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.util.Configuration;
 import dagger.ObjectGraph;
 import io.airlift.airline.Option;
@@ -63,6 +64,17 @@ abstract public class AbstractCommand implements Runnable {
     return skipConfigUpdate;
   }
 
+  @Option(
+      name = {"--product"},
+      description = "Product name (ex: sdc, transformer, etc.)",
+      allowedValues = {"sdc", "transformer"}
+  )
+  private String productName = "sdc";
+
+  protected String getProductName() {
+    return productName;
+  }
+
   protected String getOrganization() {
     String []parts = userID.split("@");
     if(parts.length != 2) {
@@ -84,6 +96,9 @@ abstract public class AbstractCommand implements Runnable {
 
   @Override
   public void run() {
+    RuntimeModule.setProductName(getProductName());
+    // for now, product name and property prefix are the same, so just set it here instead of requiring new arg
+    RuntimeModule.setPropertyPrefix(getProductName());
     ObjectGraph dagger = ObjectGraph.create(MainStandalonePipelineManagerModule.class);
 
     this.runtimeInfo = dagger.get(RuntimeInfo.class);
