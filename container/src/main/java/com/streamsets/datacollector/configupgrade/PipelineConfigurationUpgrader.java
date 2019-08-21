@@ -173,8 +173,12 @@ public class PipelineConfigurationUpgrader {
     // Added new attributes:
     // * statEventStages
     // * stopEventStages
-    pipelineConf.setStartEventStages(Collections.emptyList());
-    pipelineConf.setStopEventStages(Collections.emptyList());
+    if(pipelineConf.getStartEventStages() == null) {
+      pipelineConf.setStartEventStages(Collections.emptyList());
+    }
+    if(pipelineConf.getStopEventStages() == null) {
+      pipelineConf.setStopEventStages(Collections.emptyList());
+    }
   }
 
   private void upgradeSchema4to5(PipelineConfiguration pipelineConf, List<Issue> issues) {
@@ -292,6 +296,23 @@ public class PipelineConfigurationUpgrader {
     StageConfiguration errorStageConf = pipelineConf.getErrorStage();
     if (errorStageConf != null) {
       upgrade |= needsUpgrade(library, errorStageConf, issues);
+    }
+
+    // Pipeline start and stop events
+    if(pipelineConf.getStartEventStages() != null) {
+      for(StageConfiguration conf : pipelineConf.getStartEventStages()) {
+        upgrade |= needsUpgrade(library, conf, issues);
+      }
+    }
+    if(pipelineConf.getStopEventStages() != null) {
+      for(StageConfiguration conf : pipelineConf.getStopEventStages()) {
+        upgrade |= needsUpgrade(library, conf, issues);
+      }
+    }
+
+    // Test origin
+    if(pipelineConf.getTestOriginStage() != null) {
+      upgrade |= needsUpgrade(library, pipelineConf.getTestOriginStage(), issues);
     }
 
     // pipeline stages confs
@@ -419,6 +440,27 @@ public class PipelineConfigurationUpgrader {
       errorStageConf = upgradeIfNeeded(library, errorStageConf, ownIssues);
     }
 
+    // Pipeline start and stop events
+    List<StageConfiguration> startEventStages = new ArrayList<>();
+    if(pipelineConf.getStartEventStages() != null) {
+      for(StageConfiguration conf : pipelineConf.getStartEventStages()) {
+        StageConfiguration upgradedConf = upgradeIfNeeded(library, conf, ownIssues);
+        startEventStages.add(upgradedConf);
+      }
+    }
+    List<StageConfiguration> stopEventStages = new ArrayList<>();
+    if(pipelineConf.getStopEventStages() != null) {
+      for(StageConfiguration conf : pipelineConf.getStopEventStages()) {
+        StageConfiguration upgradedConf = upgradeIfNeeded(library, conf, ownIssues);
+        stopEventStages.add(upgradedConf);
+      }
+    }
+
+    // Test origin
+    StageConfiguration testOrigin = pipelineConf.getTestOriginStage();
+    if(testOrigin != null) {
+      testOrigin = upgradeIfNeeded(library, testOrigin, ownIssues);
+    }
     // upgrade stages;
     for (StageConfiguration stageConf : pipelineConf.getStages()) {
       stageConf = upgradeIfNeeded(library, stageConf, issues);
@@ -433,6 +475,9 @@ public class PipelineConfigurationUpgrader {
       pipelineConf.setVersion(pipelineConfs.getStageVersion());
       pipelineConf.setErrorStage(errorStageConf);
       pipelineConf.setStatsAggregatorStage(statsAggregatorStageConf);
+      pipelineConf.setStartEventStages(startEventStages);
+      pipelineConf.setStopEventStages(stopEventStages);
+      pipelineConf.setTestOriginStage(testOrigin);
       pipelineConf.setStages(stageConfs);
     } else {
       issues.addAll(ownIssues);
