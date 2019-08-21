@@ -76,14 +76,13 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
@@ -192,9 +191,10 @@ public class OracleCDCSource extends BaseSource {
   public static final String REDO_SELECT_QUERY = "Redo select query for selectFromLogMnrContents = {}";
   public static final String CURRENT_LATEST_SCN_IS = "Current latest SCN is: {}";
   private static final String SESSION_WINDOW_CURRENT_MSG = "Session window is in current time. Fetch size now set to {}";
-
+  private static final String ROLLBACK_MESSAGE = "got rollback for {} - transaction discarded.";
   public static final int LOGMINER_START_MUST_BE_CALLED = 1306;
   public static final String ROLLBACK = "rollback";
+  public static final String SKIP = "skip";
   public static final String ONE = "1";
   public static final String READ_NULL_QUERY_FROM_ORACLE = "Read (null) query from Oracle with SCN: {}, Txn Id: {}";
   private DateTimeColumnHandler dateTimeColumnHandler;
@@ -230,6 +230,10 @@ public class OracleCDCSource extends BaseSource {
 
   private Gauge<Map<String, Object>> delay;
   private CallableStatement startLogMnrSCNToDate;
+
+  private static final String CONFIG_PROPERTY = "com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle.addrecordstoqueue";
+  private static final boolean CONFIG_PROPERTY_DEFAULT_VALUE = false;
+  private boolean useNewAddRecordsToQueue;
 
   private enum DDL_EVENT {
     CREATE,
@@ -650,7 +654,39 @@ public class OracleCDCSource extends BaseSource {
                   int nextSeq = records.isEmpty() ? 1 : records.tail().seq + 1;
                   RecordSequence node =
                       new RecordSequence(attributes, queryString, nextSeq, op, rsId, ssn, tsDate);
-                  records.add(node);
+
+                  //check for SAVEPOINT/ROLLBACK here...
+                  // when we get a record with the ROLLBACK indicator set,
+                  // we go through all records in the transaction,
+                  // find the last one with the matching rowId.
+                  // save it's position if and only if, it has
+                  // not previously been marked as a record to SKIP.
+                  if(node.headers.get(ROLLBACK).equals(ONE)) {
+                    int lastOne = -1;
+                    int count = 0;
+                    for(RecordSequence rs : records) {
+                      if(rs.headers.get(ROWID_KEY).equals(node.headers.get(ROWID_KEY))
+                      && rs.headers.get(SKIP) == null) {
+                        lastOne = count;
+                      }
+                      count++;
+                    }
+                    // go through the records again, and
+                    // update the lastOne that has the specific
+                    // rowId to indicate we should not process it.
+                    // the original "ROLLBACK" record will *not* be
+                    // added to the transaction.
+                    count = 0;
+                    for(RecordSequence rs : records) {
+                      if(count == lastOne) {
+                        rs.headers.put(SKIP, ONE);
+                        break;
+                      }
+                      count++;
+                    }
+                  } else {
+                    records.add(node);
+                  }
                 } finally {
                   bufferedRecordsLock.unlock();
                 }
@@ -663,6 +699,7 @@ public class OracleCDCSource extends BaseSource {
                 bufferedRecordsLock.lock();
                 try {
                   bufferedRecords.remove(key);
+                  LOG.info(ROLLBACK_MESSAGE, key.txnId);
                 } finally {
                   bufferedRecordsLock.unlock();
                 }
@@ -677,7 +714,13 @@ public class OracleCDCSource extends BaseSource {
                   LOG.debug(FOUND_RECORDS_IN_TRANSACTION, bufferedRecordsToBeRemoved, xid);
                   lastCommitSCN = scnDecimal;
                   lastTxnId = xid;
-                  sequenceNumber = addRecordsToQueue(tsDate, scn, xid);
+
+                  if(useNewAddRecordsToQueue) {
+                    sequenceNumber = addRecordsToQueue(tsDate, scn, xid);
+                  } else {
+                    sequenceNumber = addRecordsToQueueOLD(tsDate, scn, xid);
+                  }
+
                 } finally {
                   bufferedRecordsLock.unlock();
                 }
@@ -942,8 +985,7 @@ public class OracleCDCSource extends BaseSource {
   private long localDateTimeToEpoch(LocalDateTime date) {
     return date.atZone(zoneId).toEpochSecond();
   }
-
-  private int addRecordsToQueue(
+  private int addRecordsToQueueOLD(
       LocalDateTime commitTimestamp,
       String commitScn,
       String xid
@@ -1020,6 +1062,95 @@ public class OracleCDCSource extends BaseSource {
         }
       }
     }
+    return seq;
+  }
+
+  private int addRecordsToQueue(
+      LocalDateTime commitTimestamp,
+      String commitScn,
+      String xid
+  ) throws InterruptedException {
+
+    TransactionIdKey key = new TransactionIdKey(xid);
+    int seq = 0;
+
+    HashQueue<RecordSequence> records;
+
+    bufferedRecordsLock.lock();
+    try {
+      records = bufferedRecords.getOrDefault(key, EMPTY_LINKED_HASHSET);
+      records.completeInserts();
+      bufferedRecords.remove(key);
+    } finally {
+      bufferedRecordsLock.unlock();
+    }
+
+    final List<FutureWrapper> parseFutures = new LinkedList<>();
+    while (!records.isEmpty()) {
+      parseFutures.clear();
+
+      for (int i = 0; i < 2 * configBean.baseConfigBean.maxBatchSize; i++) {
+        if (records.isEmpty()) {
+          break;
+        }
+        RecordSequence r = records.remove();
+
+        // Check this record to determine if it's affected by a 'ROLLBACK TO'.
+        // in this case we do not want to let the affected record go into the SDC Batch...
+        if (r.headers.get(SKIP) != null) {
+          LOG.debug("addRecordsToQueue(): skipping record due to 'ROLLBACK TO': {} rowId: '{}'",
+              r.sqlString, r.headers.get(ROWID_KEY)
+          );
+          continue;
+        }
+
+        if (configBean.keepOriginalQuery) {
+          r.headers.put(QUERY_KEY, r.sqlString);
+        }
+
+        try {
+          final Future<Record> recordFuture = parsingExecutor.submit(() -> generateRecord(r.sqlString,
+              r.headers,
+              r.opCode
+          ));
+          parseFutures.add(new FutureWrapper(recordFuture, r.sqlString, r.seq));
+
+        } catch (Exception ex) {
+          LOG.error("Exception {}", ex.getMessage(), ex);
+          final Throwable cause = ex.getCause();
+          otherErrors.offer(new ErrorAndCause(JDBC_405, cause));
+        }
+      }
+
+      for (FutureWrapper recordFuture : parseFutures) {
+        try {
+          final RecordOffset recordOffset;
+          Record record = recordFuture.future.get();
+          recordOffset = new RecordOffset(record,
+              new Offset(VERSION_UNCOMMITTED, commitTimestamp, commitScn, recordFuture.seq, xid)
+          );
+
+          seq = recordOffset.offset.sequence;
+
+          while(!recordQueue.offer(recordOffset, 1, TimeUnit.SECONDS)) {
+            if (getContext().isStopped()) {
+              records.close();
+              return seq;
+            }
+          }
+
+          LOG.trace(GENERATED_RECORD, recordOffset.record, recordOffset.record.getHeader().getAttribute(XID));
+        } catch (InterruptedException | ExecutionException ex) {
+          try {
+            errorRecordHandler.onError(JDBC_405, ex);
+          } catch (StageException stageException) {
+            addToStageExceptionsQueue(stageException);
+          }
+        }
+      }
+    }
+
+    records.close();
     return seq;
   }
 
@@ -1161,6 +1292,11 @@ public class OracleCDCSource extends BaseSource {
   @Override
   public List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+
+    // save configuration parameter
+    useNewAddRecordsToQueue = getContext().getConfiguration().get(CONFIG_PROPERTY, CONFIG_PROPERTY_DEFAULT_VALUE);
+    LOG.info("init():  {} = {} ", CONFIG_PROPERTY, useNewAddRecordsToQueue);
+
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     useLocalBuffering = !getContext().isPreview() && configBean.bufferLocally;
     if (!hikariConfigBean.driverClassName.isEmpty()) {
