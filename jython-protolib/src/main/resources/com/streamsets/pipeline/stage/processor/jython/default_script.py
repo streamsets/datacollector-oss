@@ -39,8 +39,16 @@
 #  record.<header name>: get the value of 'header name'.
 #
 # Add additional module search paths:
-#import sys
-#sys.path.append('/some/other/dir/to/search')
+#   try:
+#       sdc.importLock()
+#       import sys
+#       sys.path.append('/some/other/dir/to/search')
+#       import something
+#   finally:
+#       sdc.importUnlock()
+#
+
+
 
 # Sample Jython code
 for record in records:
