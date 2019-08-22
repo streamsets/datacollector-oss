@@ -196,6 +196,32 @@ public class CassandraTargetConfig {
   )
   public long slowQueryThreshold = 5000;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Disable Batch Insert",
+      description = "Disables inserting into Cassandra using batches",
+      displayPosition = 150,
+      group = "CASSANDRA"
+  )
+  public boolean disableBatchInsert;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "5000", // from SocketOptions.DEFAULT_CONNECT_TIMEOUT_MILLIS
+      min = 1,
+      max = Integer.MAX_VALUE,
+      label = "Request Timeout",
+      description = "The timeout for each insert request (in milliseconds)",
+      displayPosition = 160,
+      group = "CASSANDRA",
+      dependsOn = "disableBatchInsert",
+      triggeredByValue = "true"
+  )
+  public int requestTimeout = 5000;
+
   /** Credentials group **/
   @ConfigDef(
       required = true,

@@ -21,12 +21,14 @@ import com.datastax.driver.core.BoundStatement;
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.CodecRegistry;
 import com.datastax.driver.core.ColumnMetadata;
+import com.datastax.driver.core.HostDistance;
 import com.datastax.driver.core.KeyspaceMetadata;
 import com.datastax.driver.core.PlainTextAuthProvider;
 import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.QueryLogger;
 import com.datastax.driver.core.QueryOptions;
 import com.datastax.driver.core.RemoteEndpointAwareJdkSSLOptions;
+import com.datastax.driver.core.ResultSetFuture;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.SocketOptions;
 import com.datastax.driver.core.TableMetadata;
@@ -75,6 +77,8 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 /**
@@ -189,7 +193,6 @@ public class CassandraTarget extends BaseTarget {
                 e.toString()
             ));
           }
-
         }
       }
     }
@@ -300,14 +303,69 @@ public class CassandraTarget extends BaseTarget {
   @Override
   @SuppressWarnings("unchecked")
   public void write(Batch batch) throws StageException {
+    if (conf.disableBatchInsert) {
+      writeUnbatchedInsert(batch);
+    } else {
+      writeBatchInsert(batch);
+    }
+  }
+
+  /**
+   * Submits async un-batched records for performance improvement
+   */
+  public void writeUnbatchedInsert(Batch batch) throws StageException {
+    Iterator<Record> records = batch.getRecords();
+    Map<BoundStatement, Record> statementsToExecute = new HashMap<>();
+    Map<ResultSetFuture, Record> tasks = new HashMap<>();
+
+    while (records.hasNext()) {
+      final Record record = records.next();
+      BoundStatement boundStatement = recordToBoundStatement(record);
+      if (boundStatement != null) {
+        statementsToExecute.put(boundStatement, record);
+      }
+    }
+
+    for (BoundStatement statement : statementsToExecute.keySet()) {
+      tasks.put(session.executeAsync(statement), statementsToExecute.get(statement));
+      if (tasks.size() == getMaxConnections()) {
+        getTaskResult(tasks);
+      }
+    }
+
+    if (tasks.size() > 0) {
+      getTaskResult(tasks);
+    }
+  }
+
+  private void getTaskResult(Map<ResultSetFuture, Record> tasks) {
+    for (ResultSetFuture task : tasks.keySet()) {
+      try {
+        task.getUninterruptibly(conf.readTimeout, TimeUnit.MILLISECONDS);
+      } catch (TimeoutException e) {
+        LOG.debug(Errors.CASSANDRA_11.getMessage(), conf.requestTimeout, e);
+        Record errorRecord = tasks.get(task);
+        errorRecordHandler.onError(
+            new OnRecordErrorException(
+                errorRecord,
+                Errors.CASSANDRA_11,
+                conf.requestTimeout,
+                e.toString(),
+                e
+            )
+        );
+      }
+    }
+    tasks.clear();
+  }
+
+  public void writeBatchInsert(Batch batch) throws StageException {
     // The batch holding the current batch to INSERT.
     BatchStatement batchedStatement = new BatchStatement(conf.batchType);
-
     Iterator<Record> records = batch.getRecords();
 
     while (records.hasNext()) {
       final Record record = records.next();
-
       BoundStatement boundStmt = recordToBoundStatement(record);
 
       // if the bound statement is null here, it's probably because the record was an error record and should be
@@ -445,5 +503,9 @@ public class CassandraTarget extends BaseTarget {
       default:
         throw new IllegalArgumentException("Unrecognized AuthProvider: " + conf.authProviderOption);
     }
+  }
+
+  private int getMaxConnections() {
+    return cluster.getConfiguration().getPoolingOptions().getMaxRequestsPerConnection(HostDistance.REMOTE);
   }
 }
