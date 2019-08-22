@@ -77,7 +77,7 @@ public class KafkaConsumer09 extends BaseKafkaConsumer09 {
 
   @Override
   MessageAndOffset getMessageAndOffset(ConsumerRecord message, boolean isEnabled) {
-    return new MessageAndOffset(message.value(), message.offset(), message.partition());
+    return new MessageAndOffset(message.key(), message.value(), message.offset(), message.partition());
   }
 
   @Override

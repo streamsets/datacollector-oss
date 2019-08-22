@@ -17,11 +17,14 @@ package com.streamsets.pipeline.stage.origin.multikafka;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetReset;
 import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetResetValues;
+import com.streamsets.pipeline.stage.origin.kafka.KeyCaptureMode;
+import com.streamsets.pipeline.stage.origin.kafka.KeyCaptureModeChooserValues;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
 import java.util.ArrayList;
@@ -171,6 +174,45 @@ public class MultiKafkaBeanConfig {
   )
   @ValueChooserModel(KeyDeserializerChooserValues.class)
   public Deserializer keyDeserializer = Deserializer.STRING;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Key Capture Mode",
+      description = "Controls how the Kafka message key is stored in the record.",
+      defaultValue = "NONE",
+      displayPosition = 115,
+      group = "KAFKA"
+  )
+  @ValueChooserModel(KeyCaptureModeChooserValues.class)
+  public KeyCaptureMode keyCaptureMode = KeyCaptureMode.NONE;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Key Capture Header Attribute",
+      description = "Sets the record header attribute name where the message key will be stored.",
+      defaultValue = "kafkaMessageKey",
+      displayPosition = 116,
+      group = "KAFKA",
+      dependsOn = "keyCaptureMode",
+      triggeredByValue = {"RECORD_HEADER", "RECORD_HEADER_AND_FIELD"}
+  )
+  public String keyCaptureAttribute;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Key Capture Field",
+      description = "Sets the record field where the message key will be stored.",
+      defaultValue = "/kafkaMessageKey",
+      displayPosition = 117,
+      group = "KAFKA",
+      dependsOn = "keyCaptureMode",
+      triggeredByValue = {"RECORD_FIELD", "RECORD_HEADER_AND_FIELD"}
+  )
+  @FieldSelectorModel(singleValued = true)
+  public String keyCaptureField;
 
   @ConfigDef(
       required = true,

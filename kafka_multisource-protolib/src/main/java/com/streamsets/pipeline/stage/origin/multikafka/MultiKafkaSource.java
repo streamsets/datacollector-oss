@@ -32,6 +32,7 @@ import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
+import com.streamsets.pipeline.lib.kafka.MessageKeyUtil;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
@@ -166,8 +167,14 @@ public class MultiKafkaSource extends BasePushSource {
       BatchContext batchContext = getContext().startBatch();
       ErrorRecordHandler errorRecordHandler = new DefaultErrorRecordHandler(getContext(), batchContext);
       for (ConsumerRecord<String, byte[]> mm : list) {
-        createRecord(errorRecordHandler, mm.topic(), mm.partition(), mm.offset(), mm.value()).forEach(
-            batchContext.getBatchMaker()::addRecord);
+        createRecord(
+            errorRecordHandler,
+            mm.topic(),
+            mm.partition(),
+            mm.offset(),
+            mm.value(),
+            mm.key()
+        ).forEach(batchContext.getBatchMaker()::addRecord);
       }
       LOG.debug("Multi Kafka sendBatch {}", list.size());
       return getContext().processBatch(batchContext);
@@ -178,7 +185,8 @@ public class MultiKafkaSource extends BasePushSource {
       String topic,
       int partition,
       long offset,
-      byte[] payload
+      byte[] payload,
+      Object messageKey
     ) throws StageException {
       String messageId = getMessageId(topic, partition, offset);
       List<Record> records = new ArrayList<>();
@@ -188,6 +196,25 @@ public class MultiKafkaSource extends BasePushSource {
           record.getHeader().setAttribute(HeaderAttributeConstants.TOPIC, topic);
           record.getHeader().setAttribute(HeaderAttributeConstants.PARTITION, String.valueOf(partition));
           record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, String.valueOf(offset));
+
+          try {
+            MessageKeyUtil.handleMessageKey(
+                messageKey,
+                conf.keyCaptureMode,
+                record,
+                conf.keyCaptureField,
+                conf.keyCaptureAttribute
+            );
+          } catch (Exception e) {
+            throw new OnRecordErrorException(
+                record,
+                KafkaErrors.KAFKA_201,
+                partition,
+                offset,
+                e.getMessage(),
+                e
+            );
+          }
 
           records.add(record);
           record = parser.parse();

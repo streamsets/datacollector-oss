@@ -37,6 +37,12 @@ public class MultiKafkaSourceUpgrader implements StageUpgrader {
           break;
         }
         // fall through
+      case 2:
+        // handled by YAML upgrader
+        if (toVersion == 3) {
+          break;
+        }
+        // fall through
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }

@@ -185,9 +185,15 @@ public class KafkaLowLevelConsumer09 implements SdcKafkaLowLevelConsumer {
         continue;
       }
       ByteBuffer payload = messageAndOffset.message().payload();
+      final Object key = messageAndOffset.message().key();
       byte[] bytes = new byte[payload.limit()];
       payload.get(bytes);
-      MessageAndOffset partitionToPayloadMap = new MessageAndOffset(bytes, messageAndOffset.nextOffset(), partition);
+      MessageAndOffset partitionToPayloadMap = new MessageAndOffset(
+          key,
+          bytes,
+          messageAndOffset.nextOffset(),
+          partition
+      );
       partitionToPayloadMapArrayList.add(partitionToPayloadMap);
     }
     return partitionToPayloadMapArrayList;

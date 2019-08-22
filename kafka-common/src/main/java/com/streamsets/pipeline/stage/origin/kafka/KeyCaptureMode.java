@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2019 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,23 @@
  */
 package com.streamsets.pipeline.stage.origin.kafka;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.Label;
 
-public class KeyDeserializerChooserValues extends BaseEnumChooserValues<Deserializer> {
-  public KeyDeserializerChooserValues() {
-    super(Deserializer.class);
+public enum KeyCaptureMode implements Label {
+  NONE("None"),
+  RECORD_HEADER("Record Header"),
+  RECORD_FIELD("Record Field"),
+  RECORD_HEADER_AND_FIELD("Record Header and Field"),
+  ;
+
+  private final String label;
+
+  KeyCaptureMode(String label) {
+    this.label = label;
+  }
+
+  @Override
+  public String getLabel() {
+    return label;
   }
 }

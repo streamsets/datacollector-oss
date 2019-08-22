@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.origin.kafka;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
@@ -153,6 +154,45 @@ public class KafkaConfigBean {
   )
   @ValueChooserModel(KeyDeserializerChooserValues.class)
   public Deserializer keyDeserializer = Deserializer.STRING;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Key Capture Mode",
+      description = "Controls how the Kafka message key is stored in the record.",
+      defaultValue = "NONE",
+      displayPosition = 95,
+      group = "KAFKA"
+  )
+  @ValueChooserModel(KeyCaptureModeChooserValues.class)
+  public KeyCaptureMode keyCaptureMode = KeyCaptureMode.NONE;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Key Capture Header Attribute",
+      description = "Sets the record header attribute name where the message key will be stored.",
+      defaultValue = "kafkaMessageKey",
+      displayPosition = 98,
+      group = "KAFKA",
+      dependsOn = "keyCaptureMode",
+      triggeredByValue = {"RECORD_HEADER", "RECORD_HEADER_AND_FIELD"}
+  )
+  public String keyCaptureAttribute;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Key Capture Field",
+      description = "Sets the record field where the message key will be stored.",
+      defaultValue = "/kafkaMessageKey",
+      displayPosition = 99,
+      group = "KAFKA",
+      dependsOn = "keyCaptureMode",
+      triggeredByValue = {"RECORD_FIELD", "RECORD_HEADER_AND_FIELD"}
+  )
+  @FieldSelectorModel(singleValued = true)
+  public String keyCaptureField;
 
   @ConfigDef(
       required = true,

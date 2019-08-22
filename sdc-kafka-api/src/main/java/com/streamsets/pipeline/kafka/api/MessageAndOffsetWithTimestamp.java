@@ -22,13 +22,14 @@ public class MessageAndOffsetWithTimestamp extends MessageAndOffset {
   private final String timestampType;
 
   public MessageAndOffsetWithTimestamp(
+      Object messageKey,
       Object payload,
       long offset,
       int partition,
       long timestamp,
       String timestampType
   ) {
-    super(payload, offset, partition);
+    super(messageKey, payload, offset, partition);
     this.timestamp = timestamp;
     this.timestampType = timestampType;
   }

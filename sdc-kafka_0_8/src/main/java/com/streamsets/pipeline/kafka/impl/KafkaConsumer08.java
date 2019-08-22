@@ -142,7 +142,7 @@ public class KafkaConsumer08 implements SdcKafkaConsumer {
         byte[] message = messageAndMetadata.message();
         long offset = messageAndMetadata.offset();
         int partition = messageAndMetadata.partition();
-        return new MessageAndOffset(message, offset, partition);
+        return new MessageAndOffset(messageAndMetadata.key(), message, offset, partition);
       }
       return null;
     } catch (ConsumerTimeoutException e) {

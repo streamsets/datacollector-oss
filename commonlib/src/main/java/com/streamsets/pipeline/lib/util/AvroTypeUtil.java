@@ -27,13 +27,22 @@ import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.avro.AvroRuntimeException;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData;
+import org.apache.avro.generic.GenericDatumReader;
+import org.apache.avro.generic.GenericDatumWriter;
 import org.apache.avro.generic.GenericFixed;
 import org.apache.avro.generic.GenericRecord;
+import org.apache.avro.io.BinaryDecoder;
+import org.apache.avro.io.BinaryEncoder;
+import org.apache.avro.io.DatumReader;
+import org.apache.avro.io.DatumWriter;
+import org.apache.avro.io.DecoderFactory;
+import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.util.Utf8;
 import org.codehaus.jackson.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -890,5 +899,25 @@ public class AvroTypeUtil {
   public static BigDecimal bigDecimalFromBytes(byte[] decimalBytes, int scale) {
     final BigInteger bigInt = new BigInteger(decimalBytes);
     return new BigDecimal(bigInt, scale);
+  }
+
+  public static byte[] getBinaryEncodedAvroRecord(GenericRecord datum) throws IOException {
+    final ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
+    final DatumWriter<GenericRecord> outputDatumWriter = new GenericDatumWriter<>(datum.getSchema());
+    final BinaryEncoder encoder = EncoderFactory.get().binaryEncoder(baos, null);
+
+    outputDatumWriter.write(datum, encoder);
+    encoder.flush();
+    baos.flush();
+    baos.close();
+
+    return baos.toByteArray();
+  }
+
+  public static GenericRecord getAvroRecordFromBinaryEncoding(Schema schema, byte[] data) throws IOException {
+    final BinaryDecoder decoder = DecoderFactory.get().binaryDecoder(data, null);
+
+    DatumReader<GenericRecord> reader = new GenericDatumReader<>(schema);
+    return reader.read(null, decoder);
   }
 }

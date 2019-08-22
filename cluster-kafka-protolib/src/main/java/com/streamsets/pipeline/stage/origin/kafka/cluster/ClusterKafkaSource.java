@@ -69,6 +69,7 @@ public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitt
     for (Map.Entry  messageAndPartition : offsetAndResult.getResult()) {
       messageId = String.format("kafka::%s::%d", conf.topic, offset);
       List<Record> records = processKafkaMessageDefault(
+          messageAndPartition.getKey(),
           new String((byte[]) messageAndPartition.getKey()),
           offset,
           messageId,

@@ -77,7 +77,10 @@ public enum KafkaErrors implements ErrorCode {
   KAFKA_72("Subject or Schema ID must be defined to use Confluent Serializer"),
   KAFKA_73("Confluent Avro Serializer not supported by this version of Kafka."),
   KAFKA_75("Inherited timestamps from Kafka are enabled but not supported in this Kafka version."),
-  KAFKA_76("Auto Offset Reset = 'Timestamp' can only be used for Kafka version >= 0.10.1.0")
+  KAFKA_76("Auto Offset Reset = 'Timestamp' can only be used for Kafka version >= 0.10.1.0"),
+
+  KAFKA_201("Error handling message key for partition {}, offset {}: {}"),
+  KAFKA_202("{} when serializing message key to bytes: {}"),
   ;
 
   private final String msg;

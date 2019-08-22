@@ -43,6 +43,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
+
 public class TestAvroTypeUtil {
 
   private static void makeBadType(
@@ -1595,5 +1598,26 @@ public class TestAvroTypeUtil {
     } catch (StageException e){
       Assert.fail();
     }
+  }
+
+  @Test
+  public void testBinaryEncodeAndDecode() throws IOException {
+
+    final String schemaStr = "{ \"type\": \"record\", "+
+        "  \"name\": \"BinaryEncodeAndDecode\"," +
+        "  \"fields\" : [{\"name\": \"first\", \"type\": \"string\"}," +
+        "                {\"name\": \"second\", \"type\": \"int\"}] " +
+        "  }" +
+        "}";
+    final Schema schema = new Schema.Parser().parse(schemaStr);
+
+    final GenericRecord record = new GenericData.Record(schema);
+    record.put("first", "foo");
+    record.put("second", 42);
+
+    final byte[] encoded = AvroTypeUtil.getBinaryEncodedAvroRecord(record);
+
+    final GenericRecord decoded = AvroTypeUtil.getAvroRecordFromBinaryEncoding(schema, encoded);
+    assertThat(decoded, equalTo(record));
   }
 }

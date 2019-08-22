@@ -17,11 +17,16 @@ package com.streamsets.pipeline.stage.origin.kafka;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
 import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetReset;
+import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -119,5 +124,27 @@ public class TestKafkaSourceUpgrader {
     Assert.assertEquals(KafkaAutoOffsetReset.LATEST, configs.get(configs.size() - 2).getValue());
     Assert.assertTrue(kafkaOptions.isEmpty());
 
+  }
+
+  @Test
+  public void testV7ToV8() {
+    List<Config> configs = new ArrayList<>();
+
+    final URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/KafkaDSource.yaml");
+    final SelectorStageUpgrader upgrader = new SelectorStageUpgrader(
+        "stage",
+        new KafkaSourceUpgrader(),
+        yamlResource
+    );
+
+    StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
+    Mockito.doReturn(7).when(context).getFromVersion();
+    Mockito.doReturn(8).when(context).getToVersion();
+
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.keyCaptureMode", "NONE");
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.keyCaptureAttribute", "kafkaMessageKey");
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.keyCaptureField", "/kafkaMessageKey");
   }
 }

@@ -75,7 +75,9 @@ public class StandaloneKafkaSource extends BaseKafkaSource {
         String messageId = getMessageID(message);
         List<Record> records;
         if (conf.timestampsEnabled && message instanceof MessageAndOffsetWithTimestamp){
-          records = processKafkaMessageDefault(String.valueOf(message.getPartition()),
+          records = processKafkaMessageDefault(
+              message.getMessageKey(),
+              String.valueOf(message.getPartition()),
               message.getOffset(),
               messageId,
               (byte[]) message.getPayload(),
@@ -83,7 +85,9 @@ public class StandaloneKafkaSource extends BaseKafkaSource {
               ((MessageAndOffsetWithTimestamp) message).getTimestampType()
           );
         }else{
-          records = processKafkaMessageDefault(String.valueOf(message.getPartition()),
+          records = processKafkaMessageDefault(
+              message.getMessageKey(),
+              String.valueOf(message.getPartition()),
               message.getOffset(),
               messageId,
               (byte[]) message.getPayload()

@@ -55,14 +55,16 @@ public class KafkaConsumer10 extends KafkaConsumer09 {
   MessageAndOffset getMessageAndOffset(ConsumerRecord message, boolean isEnabled) {
     MessageAndOffset messageAndOffset;
     if (message.timestampType() != TimestampType.NO_TIMESTAMP_TYPE && message.timestamp() > 0 && isEnabled) {
-      messageAndOffset = new MessageAndOffsetWithTimestamp(message.value(),
+      messageAndOffset = new MessageAndOffsetWithTimestamp(
+          message.key(),
+          message.value(),
           message.offset(),
           message.partition(),
           message.timestamp(),
           message.timestampType().toString()
       );
     } else {
-      messageAndOffset = new MessageAndOffset(message.value(), message.offset(), message.partition());
+      messageAndOffset = new MessageAndOffset(message.key(), message.value(), message.offset(), message.partition());
     }
     return messageAndOffset;
   }

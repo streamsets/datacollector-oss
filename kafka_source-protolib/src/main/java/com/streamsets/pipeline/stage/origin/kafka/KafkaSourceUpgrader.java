@@ -72,6 +72,12 @@ public class KafkaSourceUpgrader implements StageUpgrader {
         // fall through
       case 6:
         upgradeV6ToV7(configs);
+        if (toVersion == 7) {
+          break;
+        }
+        // fall through
+      case 7:
+        // handled by YAML upgrader
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));

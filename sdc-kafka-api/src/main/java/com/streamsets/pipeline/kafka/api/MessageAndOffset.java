@@ -17,14 +17,20 @@ package com.streamsets.pipeline.kafka.api;
 
 public class MessageAndOffset {
 
+  private final Object messageKey;
   private final Object payload;
   private final long offset;
   private final int partition;
 
-  public MessageAndOffset(Object payload, long offset, int partition) {
+  public MessageAndOffset(Object messageKey, Object payload, long offset, int partition) {
+    this.messageKey = messageKey;
     this.payload = payload;
     this.offset = offset;
     this.partition = partition;
+  }
+
+  public Object getMessageKey() {
+    return messageKey;
   }
 
   public Object getPayload() {

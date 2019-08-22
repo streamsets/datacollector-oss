@@ -32,7 +32,7 @@ if [ $? -ne 0 ]; then
 	return
 fi
 
-jar=`find target -iname 'streamsets-datacollector-*.jar' -maxdepth 1 -not -iname '*-tests.jar' -not -iname '*-javadoc.jar' -exec basename {} \; `
+jar=`find target -iname 'streamsets-datacollector-*.jar' -maxdepth 1 -not -iname '*-tests.jar' -not -iname '*-javadoc.jar' -not -iname '*-sources.jar' -exec basename {} \; `
 echo "Working on jar: $jar"
 count=0
 for target in `find ../dist/target -iname $jar`; do
