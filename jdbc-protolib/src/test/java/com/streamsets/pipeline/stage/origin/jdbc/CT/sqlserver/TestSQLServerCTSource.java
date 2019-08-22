@@ -94,4 +94,20 @@ public class TestSQLServerCTSource {
           .build();
       testWrongConfiguration(tableJdbcSource);
     }
+
+    @Test
+    public void testHandleLastOffsetWithNull() {
+      CTTableConfigBean tableConfigBean = new CTTableConfigBean();
+      SQLServerCTSource tableJdbcSource = new SQLServerCTSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
+          .tableConfigBeans(
+              ImmutableList.of(
+                  tableConfigBean
+              )
+          )
+          .numberOfThreads(3)
+          .maximumPoolSize(2)
+          .build();
+      // Sholdn't throw NPE
+      tableJdbcSource.handleLastOffset(null);
+    }
   }

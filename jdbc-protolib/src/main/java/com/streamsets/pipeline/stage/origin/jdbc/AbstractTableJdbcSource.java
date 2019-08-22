@@ -92,7 +92,7 @@ public abstract class AbstractTableJdbcSource extends BasePushSource implements 
 
   private HikariDataSource hikariDataSource;
   protected ConnectionManager connectionManager;
-  private Map<String, String> offsets;
+  private Map<String, String> offsets = new HashMap<>();
   private ScheduledExecutorService executorService;
   private MultithreadedTableProvider tableOrderProvider;
   private int numberOfThreads;

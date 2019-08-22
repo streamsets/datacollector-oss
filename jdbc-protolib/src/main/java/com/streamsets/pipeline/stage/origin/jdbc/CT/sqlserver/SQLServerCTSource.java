@@ -77,6 +77,9 @@ public class SQLServerCTSource extends AbstractTableJdbcSource {
 
   @Override
   protected void handleLastOffset(Map<String, String> lastOffsets) throws StageException {
+    if (lastOffsets == null) {
+      return;
+    }
     OffsetQueryUtil.validateV1Offset(getAllTableContexts(), getOffsets());
     getOffsets().putAll(lastOffsets);
     getOffsets().forEach((tableName, tableOffset) -> getContext().commitOffset(tableName, tableOffset));
