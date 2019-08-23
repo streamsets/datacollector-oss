@@ -36,6 +36,7 @@ import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.util.http.HttpStageUtil;
+import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.client.oauth1.OAuth1ClientSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +52,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -198,9 +200,20 @@ public class HttpProcessor extends SingleLaneProcessor {
     int recordNum = 0;
     while (records.hasNext()) {
       try {
-        Record record = processResponse(records.next(), responses.get(recordNum), conf.maxRequestCompletionSecs, false);
-        if (record != null) {
-          batchMaker.addRecord(record);
+        Record inRec = records.next();
+        List<Record> recordsResponse = processResponse(inRec, responses.get(recordNum), conf.maxRequestCompletionSecs, false);
+        Response response = null;
+        try {
+          response = responses.get(recordNum).get(conf.maxRequestCompletionSecs, TimeUnit.SECONDS);
+        } catch (InterruptedException | ExecutionException e) {
+          LOG.error(Errors.HTTP_03.getMessage(), e.toString(), e);
+          throw new OnRecordErrorException(inRec, Errors.HTTP_03, e.toString());
+        } catch (TimeoutException e) {
+          LOG.error("HTTP request future timed out", e.toString(), e);
+          throw new OnRecordErrorException(inRec , Errors.HTTP_03, e.toString());
+        }
+        if (recordsResponse != null && response != null) {
+          processRecord(batchMaker, recordsResponse, inRec, response);
         }
       } catch (OnRecordErrorException e) {
         errorRecordHandler.onError(e);
@@ -212,6 +225,121 @@ public class HttpProcessor extends SingleLaneProcessor {
       reprocessIfRequired(batchMaker);
     }
   }
+
+
+  private void processRecord(SingleLaneBatchMaker batchMaker, List<Record> parsedRecords, Record inRec, Response response) throws OnRecordErrorException {
+    Record firstRecord = null;
+    Field field = null;
+    if(parsedRecords.size()>0) {
+      firstRecord = parsedRecords.get(0);
+      field = inRec.get();
+    }
+    if (field != null) {
+      try {
+        final String parserId = String.format("%s_%s_%s",
+            getContext().getStageInfo().getInstanceName(),
+            firstRecord.getHeader().getSourceId(),
+            conf.outputField
+        );
+
+        // Check the type is correct and if it's a File Ref then it is parsed using the input stream.
+        switch (field.getType()) {
+          case LIST_MAP:
+          case LIST:
+          case MAP:
+          case STRING:
+          case BYTE_ARRAY:
+            // Do nothing...
+            break;
+          case FILE_REF:
+            try {
+              parsedRecords.clear();
+              final InputStream inputStream = field.getValueAsFileRef().createInputStream(getContext(),
+                  InputStream.class
+              );
+              byte[] fieldData = IOUtils.toByteArray(inputStream);
+
+              try (DataParser parser = parserFactory.getParser(parserId, fieldData)) {
+                parsedRecords.add(parser.parse());
+              }
+
+            } catch (IOException e) {
+              throw new OnRecordErrorException(inRec,
+                  Errors.HTTP_64,
+                  conf.outputField,
+                  inRec.getHeader().getSourceId(),
+                  e.getMessage(),
+                  e
+              );
+            }
+            break;
+          default:
+            throw new OnRecordErrorException(inRec, Errors.HTTP_61, conf.outputField, field.getType().name());
+        }
+
+        if (parsedRecords.isEmpty()) {
+          LOG.warn("No records were parsed from field {} of record {}",
+              conf.outputField,
+              inRec.getHeader().getSourceId()
+          );
+          batchMaker.addRecord(inRec);
+          return;
+        }
+        switch (conf.multipleValuesBehavior) {
+          case FIRST_ONLY:
+            Map<String, Field> fieldsMap = new HashMap<>((Map<String,Field>)inRec.get().getValue());
+            Field resFieldHeaders = createResponseHeaders(inRec,response);
+            if(resFieldHeaders != null){
+              fieldsMap.put(conf.headerOutputField.replace("/",""),resFieldHeaders);
+            }
+            fieldsMap.put(conf.outputField.replace("/",""),firstRecord.get());
+            Record rec = getContext().createRecord("");
+            rec.set(Field.create(fieldsMap));
+            batchMaker.addRecord(rec);
+            break;
+          case ALL_AS_LIST:
+            List<Field> multipleFieldValues = new LinkedList<>();
+            parsedRecords.forEach(parsedRecord -> multipleFieldValues.add(parsedRecord.get()));
+            Map<String, Field> fs = new HashMap<>((Map<String,Field>)inRec.get().getValue());
+            Field resField = createResponseHeaders(inRec,response);
+            if(resField != null){
+              fs.put(conf.headerOutputField.replace("/",""),resField);
+            }
+            fs.put(conf.outputField.replace("/",""),Field.create(multipleFieldValues));
+            Record newRec = getContext().createRecord("");
+            newRec.set(Field.create(fs));
+            batchMaker.addRecord(newRec);
+            break;
+          case SPLIT_INTO_MULTIPLE_RECORDS:
+            int size = parsedRecords.size();
+            for (int i=0; i<size; i++) {
+              Record parsedRecord = parsedRecords.get(i);
+              Map<String, Field> fields = new HashMap<>((Map<String,Field>)inRec.get().getValue());
+              Field responseField = createResponseHeaders(inRec,response);
+              if(responseField != null){
+                fields.put(conf.headerOutputField.replace("/",""),responseField);
+              }
+              fields.put(conf.outputField.replace("/",""),parsedRecord.get());
+              Record splitRecord = getContext().createRecord("");
+              splitRecord.set(Field.create(fields));
+              batchMaker.addRecord(splitRecord);
+            }
+            break;
+        }
+      } catch (DataParserException ex) {
+        throw new OnRecordErrorException(inRec,
+            Errors.HTTP_61,
+            conf.outputField,
+            inRec.getHeader().getSourceId(),
+            ex.toString(),
+            ex
+        );
+      }
+    } else {
+      throw new OnRecordErrorException(inRec, Errors.HTTP_65, conf.outputField, inRec.getHeader().getSourceId());
+    }
+  }
+
 
   private void reprocessIfRequired(SingleLaneBatchMaker batchMaker) throws StageException {
     Map<Record, Future<Response>> responses = new HashMap<>(resolvedRecords.size());
@@ -229,9 +357,11 @@ public class HttpProcessor extends SingleLaneProcessor {
     }
     for (Map.Entry<Record, Future<Response>> entry : responses.entrySet()) {
       try {
-        Record output = processResponse(entry.getKey(), entry.getValue(), conf.maxRequestCompletionSecs, true);
+        List<Record> output = processResponse(entry.getKey(), entry.getValue(), conf.maxRequestCompletionSecs, true);
         if (output != null) {
-          batchMaker.addRecord(output);
+          for (Record r: output) {
+            batchMaker.addRecord(r);
+          }
         }
       } catch (OnRecordErrorException e) {
         errorRecordHandler.onError(e);
@@ -250,7 +380,7 @@ public class HttpProcessor extends SingleLaneProcessor {
    * @return parsed record from the request
    * @throws StageException if the request fails, times out, or cannot be parsed
    */
-  private Record processResponse(
+  private List<Record> processResponse(
       Record record,
       Future<Response> responseFuture,
       long maxRequestCompletionSecs,
@@ -278,14 +408,11 @@ public class HttpProcessor extends SingleLaneProcessor {
         );
       }
       resolvedRecords.remove(record);
-      Record parsedResponse = parseResponse(responseBody);
-      if (parsedResponse != null) {
-        record.set(conf.outputField, parsedResponse.get());
-        addResponseHeaders(record, response);
-      } else if (responseBody == null && responseStatus != 204) {
+      List<Record> parsedResponse = parseResponse(responseBody);
+      if (responseBody == null && responseStatus != 204) {
         throw new OnRecordErrorException(record, Errors.HTTP_34);
       }
-      return record;
+      return parsedResponse;
     } catch (InterruptedException | ExecutionException e) {
       LOG.error(Errors.HTTP_03.getMessage(), e.toString(), e);
       throw new OnRecordErrorException(record, Errors.HTTP_03, e.toString());
@@ -307,26 +434,48 @@ public class HttpProcessor extends SingleLaneProcessor {
    * @return an SDC record resulting from the response text
    * @throws StageException if the response could not be parsed
    */
-  private Record parseResponse(InputStream response) throws StageException {
-    Record record = null;
+  private List<Record> parseResponse(InputStream response) throws StageException {
+    List<Record> records = new ArrayList<Record>();
     if (conf.httpMethod == HttpMethod.HEAD) {
       // Head will have no body so can't be parsed.   Return an empty record.
-      record = getContext().createRecord("");
+      Record record = getContext().createRecord("");
       record.set(Field.create(new HashMap()));
-
+      records.add(record);
     } else if (response != null) {
       try (DataParser parser = parserFactory.getParser("", response, "0")) {
         // A response may only contain a single record, so we only parse it once.
-        record = parser.parse();
-        if (conf.dataFormat == DataFormat.TEXT) {
-          // Output is placed in a field "/text" so we remove it here.
-          record.set(record.get("/text"));
+        Record record = parser.parse();
+        while(record!=null){
+          if(conf.dataFormat == DataFormat.TEXT) {
+            // Output is placed in a field "/text" so we remove it here.
+            Record rec = getContext().createRecord("");
+            rec.set(record.get("/text"));
+            records.add(rec);
+          }else if(conf.dataFormat == DataFormat.JSON || conf.dataFormat == DataFormat.XML){
+            if(record.get().getValue() instanceof List) {
+              // JSON Array. It returns all data in a list already. So we split each element of
+              // the list in a separate record.
+              ArrayList<Field> list = (ArrayList<Field>) record.get().getValue();
+              for (Field f : list) {
+                Record rec = getContext().createRecord("");
+                rec.set(f);
+                records.add(rec);
+              }
+            }else{
+              //JSON Object
+              records.add(record);
+            }
+          }else{
+            records.add(record);
+          }
+          record = parser.parse();
         }
+
       } catch (IOException | DataParserException e) {
         errorRecordHandler.onError(Errors.HTTP_00, e.toString(), e);
       }
     }
-    return record;
+    return records;
   }
 
   /**
@@ -336,29 +485,31 @@ public class HttpProcessor extends SingleLaneProcessor {
    * @param response HTTP response
    * @throws StageException when writing headers to a field path that already exists
    */
-  private void addResponseHeaders(Record record, Response response) throws StageException {
+  private Field createResponseHeaders(Record record, Response response) throws StageException {
     if (conf.headerOutputLocation == HeaderOutputLocation.NONE) {
-      return;
+      return null;
     }
 
     Record.Header header = record.getHeader();
 
     if (conf.headerOutputLocation == HeaderOutputLocation.FIELD) {
-      writeResponseHeaderToField(record, response);
+      return createResponseHeaderField(record, response);
     } else if (conf.headerOutputLocation == HeaderOutputLocation.HEADER) {
-      writeResponseHeaderToRecordHeader(response, header);
+      createResponseHeaderToRecordHeader(response, header);
+      return null;
     }
+    return null;
   }
 
   /**
-   * Writes HTTP response headers to the SDC Record at the configured field path.
+   * Creates the HTTP response headers to the SDC Record at the configured field path.
    *
    * @param record Record to populate with response headers.
    * @param response HTTP response
    * @throws StageException if the field path already exists
    */
-  private void writeResponseHeaderToField(Record record, Response response) throws StageException {
-    if (record.has(conf.headerOutputField)) {
+  private Field createResponseHeaderField(Record record, Response response) throws StageException {
+    if (record.has(conf.headerOutputField) || conf.headerOutputLocation.equals(conf.outputField)) {
       throw new StageException(Errors.HTTP_11, conf.headerOutputField);
     }
     Map<String, Field> headers = new HashMap<>(response.getStringHeaders().size());
@@ -370,7 +521,7 @@ public class HttpProcessor extends SingleLaneProcessor {
       }
     }
 
-    record.set(conf.headerOutputField, Field.create(headers));
+    return Field.create(headers);
   }
 
   /**
@@ -379,7 +530,7 @@ public class HttpProcessor extends SingleLaneProcessor {
    * @param response HTTP response
    * @param header SDC Record header
    */
-  private void writeResponseHeaderToRecordHeader(Response response, Record.Header header) {
+  private void createResponseHeaderToRecordHeader(Response response, Record.Header header) {
     for (Map.Entry<String, List<String>> entry : response.getStringHeaders().entrySet()) {
       if (!entry.getValue().isEmpty()) {
         String firstValue = entry.getValue().get(0);

@@ -98,6 +98,12 @@ public class HttpProcessorUpgrader implements StageUpgrader {
         // fall through
       case 10:
         upgradeV10ToV11(configs);
+        if (toVersion == 11) {
+          break;
+        }
+      // fall through
+      case 11:
+        upgradeV11ToV12(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -169,5 +175,9 @@ public class HttpProcessorUpgrader implements StageUpgrader {
 
   private void upgradeV10ToV11(List<Config> configs) {
     HttpConfigUpgraderUtil.addDefaultRequestLoggingConfigs(configs, "conf.client");
+  }
+
+  private void upgradeV11ToV12(List<Config> configs) {
+    configs.add(new Config(joiner.join(CONF, "parsedFieldPath"), "/"));
   }
 }

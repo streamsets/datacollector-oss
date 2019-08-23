@@ -28,6 +28,8 @@ import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.http.DataFormatChooserValues;
 import com.streamsets.pipeline.lib.http.HttpMethod;
 import com.streamsets.pipeline.lib.http.JerseyClientConfigBean;
+import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
+import com.streamsets.pipeline.stage.common.MultipleValuesBehaviorChooserValues;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import com.streamsets.pipeline.stage.util.http.HttpStageUtil;
 
@@ -101,7 +103,6 @@ public class HttpProcessorConfig {
   )
   @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat = DataFormat.JSON;
-
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
@@ -208,6 +209,30 @@ public class HttpProcessorConfig {
       group = "HTTP"
   )
   public long maxRequestCompletionSecs = 60L;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "",
+      label = "Target Field",
+      description = "Name of the field to set the parsed data to",
+      displayPosition = 11,
+      group = "HTTP"
+  )
+  @FieldSelectorModel(singleValued = true)
+  public String parsedFieldPath;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Multiple Values Behavior",
+      description = "How to handle multiple values produced by the parser",
+      defaultValue = "FIRST_ONLY",
+      displayPosition = 12,
+      group = "HTTP"
+  )
+  @ValueChooserModel(MultipleValuesBehaviorChooserValues.class)
+  public MultipleValuesBehavior multipleValuesBehavior = MultipleValuesBehavior.DEFAULT;
 
   public void init(Stage.Context context, String group, String prefix, List<Stage.ConfigIssue> issues) {
     client.init(context, group, prefix + "client", issues);
