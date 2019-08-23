@@ -1789,7 +1789,7 @@ public class PipelineStoreResource {
         .add(ImmutableMap.of("key", "spark.dynamicAllocation.minExecutors", "value", "1"))
         .build();
     Map<String, Config> replacementConfigs = ImmutableMap.<String, Config>builder()
-        .put("executionMode", new Config("executionMode", ExecutionMode.STREAMING.name()))
+        .put("executionMode", new Config("executionMode", ExecutionMode.BATCH.name()))
         .put("sparkConfigs", new Config("sparkConfigs", sparkConfigsDefault))
         .put("logLevel", new Config("logLevel", "ERROR"))
         .put(
