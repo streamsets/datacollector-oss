@@ -1,0 +1,1081 @@
+
+<!DOCTYPE html
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link>        
+      <meta name="copyright" content="(C) Copyright 2019" /><meta name="DC.rights.owner" content="(C) Copyright 2019" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Jython Scripting" /><meta name="abstract" content="" /><meta name="description" content="Supported pipeline types: Data Collector The Jython Scripting origin runs a Jython script to create Data Collector records. The Jython Scripting origin supports Jython version 2.7.x . The script runs ..." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/Origins_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/JMS.html#concept_rhh_4nj_dt" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/KConsumer.html#concept_msz_wnr_5q" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_fxz_35t_m3b" /><title>Jython Scripting</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_fxz_35t_m3b-d46e62903" />         
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018042310" />
+        
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+        
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018042310" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+        
+        
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+        
+        
+        
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+                    
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+                    
+                </div>
+                
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+                
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+                
+                
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+        
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref" data-id="concept_yjl_nc5_jq"><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li class="active"><span class="topicref" data-id="concept_fxz_35t_m3b"><span class="title"><a href="../../../datacollector/UserGuide/Origins/JythonScripting.html#concept_fxz_35t_m3b">Jython Scripting</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+  
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Origins/JMS.html#concept_rhh_4nj_dt" title="JMS Consumer"></a></span>  
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Origins/KConsumer.html#concept_msz_wnr_5q" title="Kafka Consumer"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+                    
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e804" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e7596" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e9858" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e19588" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e26847" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e28593" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e31306" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e33420" class="topicref" data-id="concept_yjl_nc5_jq" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_hpr_twm_jq-d46e33442" class="topicref" data-id="concept_hpr_twm_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_overview.html#concept_hpr_twm_jq">Origins</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">An origin stage represents the source for the pipeline. You can use a single origin     stage in a pipeline.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_kvs_3hh_ht-d46e33906" class="topicref" data-id="concept_kvs_3hh_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/AmazonS3.html#concept_kvs_3hh_ht">Amazon S3</a></span></span></li>
+         <li><span data-tocid="concept_xsh_knm_5bb-d46e34991" class="topicref" data-id="concept_xsh_knm_5bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/AmazonSQS.html#concept_xsh_knm_5bb">Amazon SQS Consumer</a></span></span></li>
+         <li><span data-tocid="concept_osx_qgz_xhb-d46e35455" class="topicref" data-id="concept_osx_qgz_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/ADLS-G1.html#concept_osx_qgz_xhb">Azure Data Lake Storage Gen1</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_osx_qgz_xhb-d46e38237" class="topicref" data-id="concept_osx_qgz_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/ADLS-G2.html#concept_osx_qgz_xhb">Azure Data Lake Storage Gen2</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_c1z_15q_1bb-d46e41019" class="topicref" data-id="concept_c1z_15q_1bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/AzureEventHub.html#concept_c1z_15q_1bb">Azure IoT/Event Hub Consumer</a></span></span></li>
+         <li><span data-tocid="concept_wfy_ghn_sz-d46e41301" class="topicref" data-id="concept_wfy_ghn_sz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/CoAPServer.html#concept_wfy_ghn_sz">CoAP Server</a></span></span></li>
+         <li><span data-tocid="concept_qcq_54n_jq-d46e41592" class="topicref" data-id="concept_qcq_54n_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Directory.html#concept_qcq_54n_jq">Directory</a></span></span></li>
+         <li><span data-tocid="concept_f1q_vpm_2z-d46e42980" class="topicref" data-id="concept_f1q_vpm_2z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Elasticsearch.html#concept_f1q_vpm_2z">Elasticsearch </a></span></span></li>
+         <li><span data-tocid="concept_n1y_qyp_5q-d46e43455" class="topicref" data-id="concept_n1y_qyp_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/FileTail.html#concept_n1y_qyp_5q">File Tail</a></span></span></li>
+         <li><span data-tocid="concept_cg3_y3v_q1b-d46e44702" class="topicref" data-id="concept_cg3_y3v_q1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/BigQuery.html#concept_cg3_y3v_q1b">Google BigQuery</a></span></span></li>
+         <li><span data-tocid="concept_iyd_wql_nbb-d46e45275" class="topicref" data-id="concept_iyd_wql_nbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/GCS.html#concept_iyd_wql_nbb">Google Cloud Storage</a></span></span></li>
+         <li><span data-tocid="concept_pjw_qtl_r1b-d46e45836" class="topicref" data-id="concept_pjw_qtl_r1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/PubSub.html#concept_pjw_qtl_r1b">Google Pub/Sub Subscriber</a></span></span></li>
+         <li><span data-tocid="concept_chr_zjj_l3b-d46e46303" class="topicref" data-id="concept_chr_zjj_l3b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/GroovyScripting.html#concept_chr_zjj_l3b">Groovy Scripting</a></span></span></li>
+         <li><span data-tocid="concept_yp1_4zs_yfb-d46e47103" class="topicref" data-id="concept_yp1_4zs_yfb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/gRPCClient.html#concept_yp1_4zs_yfb">gRPC Client</a></span></span></li>
+         <li><span data-tocid="concept_lw2_tnm_vs-d46e47319" class="topicref" data-id="concept_lw2_tnm_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HadoopFS-origin.html#concept_lw2_tnm_vs">Hadoop FS</a></span></span></li>
+         <li><span data-tocid="concept_djz_pdm_hdb-d46e47895" class="topicref" data-id="concept_djz_pdm_hdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HDFSStandalone.html#concept_djz_pdm_hdb">Hadoop FS Standalone</a></span></span></li>
+         <li><span data-tocid="concept_wk4_bjz_5r-d46e51827" class="topicref" data-id="concept_wk4_bjz_5r" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HTTPClient.html#concept_wk4_bjz_5r">HTTP Client</a></span></span></li>
+         <li><span data-tocid="concept_s2p_5hb_4y-d46e54215" class="topicref" data-id="concept_s2p_5hb_4y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HTTPServer.html#concept_s2p_5hb_4y">HTTP Server</a></span></span></li>
+         <li><span data-tocid="concept_izh_mqd_dy-d46e54679" class="topicref" data-id="concept_izh_mqd_dy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HTTPtoKafka.html#concept_izh_mqd_dy">HTTP to Kafka (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_kn5_bvt_m3b-d46e55240" class="topicref" data-id="concept_kn5_bvt_m3b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JavaScriptScripting.html#concept_kn5_bvt_m3b">JavaScript Scripting</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_zp3_wnw_4y-d46e55922" class="topicref" data-id="concept_zp3_wnw_4y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y">JDBC Multitable Consumer</a></span></span></li>
+         <li><span data-tocid="concept_qhf_hjr_bs-d46e60371" class="topicref" data-id="concept_qhf_hjr_bs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JDBCConsumer.html#concept_qhf_hjr_bs">JDBC Query Consumer</a></span></span></li>
+         <li><span data-tocid="concept_rhh_4nj_dt-d46e62535" class="topicref" data-id="concept_rhh_4nj_dt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JMS.html#concept_rhh_4nj_dt">JMS Consumer</a></span></span></li>
+         <li class="active"><span data-tocid="concept_fxz_35t_m3b-d46e62903" class="topicref" data-id="concept_fxz_35t_m3b" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JythonScripting.html#concept_fxz_35t_m3b">Jython Scripting</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_nwp_g3p_p3b-d46e63028" class="topicref" data-id="concept_nwp_g3p_p3b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JythonScripting.html#concept_nwp_g3p_p3b">Scripting Objects</a></span></span></li>
+               <li><span data-tocid="concept_gmh_h24_p3b-d46e63082" class="topicref" data-id="concept_gmh_h24_p3b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JythonScripting.html#concept_gmh_h24_p3b">Multithreaded Processing</a></span></span></li>
+               <li><span data-tocid="concept_bp3_vjh_p3b-d46e63124" class="topicref" data-id="concept_bp3_vjh_p3b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JythonScripting.html#concept_bp3_vjh_p3b">Accessing Record Details</a></span></span></li>
+               <li><span data-tocid="concept_vxd_43n_p3b-d46e63176" class="topicref" data-id="concept_vxd_43n_p3b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JythonScripting.html#concept_vxd_43n_p3b">Type Handling</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_ukb_2b3_p3b-d46e63241" class="topicref" data-id="concept_ukb_2b3_p3b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JythonScripting.html#concept_ukb_2b3_p3b">Event Generation</a></span></span></li>
+               <li><span data-tocid="concept_ydl_j13_p3b-d46e63396" class="topicref" data-id="concept_ydl_j13_p3b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JythonScripting.html#concept_ydl_j13_p3b">Record Header Attributes</a></span></span></li>
+               <li><span data-tocid="concept_vws_vth_p3b-d46e63489" class="topicref" data-id="concept_vws_vth_p3b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JythonScripting.html#concept_vws_vth_p3b">Calling External Java Code</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can call external Java code from the Jython Scripting origin. Simply install the         external Java library to make
+                              it available to the origin. Then, call the external Java code         from the Jython script that you develop for the origin.
+                              
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="task_ptn_xnj_l3b-d46e63595" class="topicref" data-id="task_ptn_xnj_l3b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JythonScripting.html#task_ptn_xnj_l3b">Configuring a Jython Scripting Origin</a></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_msz_wnr_5q-d46e63708" class="topicref" data-id="concept_msz_wnr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KConsumer.html#concept_msz_wnr_5q">Kafka Consumer</a></span></span></li>
+         <li><span data-tocid="concept_ccs_fn4_x1b-d46e64391" class="topicref" data-id="concept_ccs_fn4_x1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KafkaMultiConsumer.html#concept_ccs_fn4_x1b">Kafka Multitopic Consumer</a></span></span></li>
+         <li><span data-tocid="concept_anh_4y3_yr-d46e65194" class="topicref" data-id="concept_anh_4y3_yr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KinConsumer.html#concept_anh_4y3_yr">Kinesis Consumer</a></span></span></li>
+         <li><span data-tocid="concept_qwj_5vm_pbb-d46e65664" class="topicref" data-id="concept_qwj_5vm_pbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRdbCDC.html#concept_qwj_5vm_pbb">MapR DB CDC</a></span></span></li>
+         <li><span data-tocid="concept_ywh_k15_3y-d46e65946" class="topicref" data-id="concept_ywh_k15_3y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRDBJSON.html#concept_ywh_k15_3y">MapR DB JSON</a></span></span></li>
+         <li><span data-tocid="concept_psz_db4_lx-d46e66045" class="topicref" data-id="concept_psz_db4_lx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRFS.html#concept_psz_db4_lx">MapR FS</a></span></span></li>
+         <li><span data-tocid="concept_b43_3qc_mdb-d46e66428" class="topicref" data-id="concept_b43_3qc_mdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRFSStandalone.html#concept_b43_3qc_mdb">MapR FS Standalone</a></span></span></li>
+         <li><span data-tocid="concept_hvd_hww_lbb-d46e68038" class="topicref" data-id="concept_hvd_hww_lbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRStreamsMultiConsumer.html#concept_hvd_hww_lbb">MapR Multitopic Streams Consumer</a></span></span></li>
+         <li><span data-tocid="concept_cvy_xsf_2v-d46e68499" class="topicref" data-id="concept_cvy_xsf_2v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRStreamsCons.html#concept_cvy_xsf_2v">MapR Streams Consumer</a></span></span></li>
+         <li><span data-tocid="concept_bk4_2rs_ns-d46e68787" class="topicref" data-id="concept_bk4_2rs_ns" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDB.html#concept_bk4_2rs_ns">MongoDB</a></span></span></li>
+         <li><span data-tocid="concept_mjn_yqw_4y-d46e69348" class="topicref" data-id="concept_mjn_yqw_4y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDBOplog.html#concept_mjn_yqw_4y">MongoDB Oplog</a></span></span></li>
+         <li><span data-tocid="concept_ukz_3vt_lz-d46e69806" class="topicref" data-id="concept_ukz_3vt_lz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MQTTSubscriber.html#concept_ukz_3vt_lz">MQTT Subscriber</a></span></span></li>
+         <li><span data-tocid="concept_kqg_1yh_xx-d46e70091" class="topicref" data-id="concept_kqg_1yh_xx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MySQLBinaryLog.html#concept_kqg_1yh_xx">MySQL Binary Log</a></span></span></li>
+         <li><span data-tocid="concept_ynn_vdb_p3b-d46e70661" class="topicref" data-id="concept_ynn_vdb_p3b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/NiFi.html#concept_ynn_vdb_p3b">NiFi HTTP Server</a></span></span></li>
+         <li><span data-tocid="concept_dsr_xmw_1s-d46e70717" class="topicref" data-id="concept_dsr_xmw_1s" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Omniture.html#concept_dsr_xmw_1s">Omniture</a></span></span></li>
+         <li><span data-tocid="concept_nmf_1ly_f1b-d46e70771" class="topicref" data-id="concept_nmf_1ly_f1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/OPCUAClient.html#concept_nmf_1ly_f1b">OPC UA Client </a></span></span></li>
+         <li><span data-tocid="concept_lnz_kzp_zgb-d46e70983" class="topicref" data-id="concept_lnz_kzp_zgb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/OracleBulk.html#concept_lnz_kzp_zgb">Oracle Bulkload</a></span></span></li>
+         <li><span data-tocid="concept_rs5_hjj_tw-d46e72230" class="topicref" data-id="concept_rs5_hjj_tw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/OracleCDC.html#concept_rs5_hjj_tw">Oracle CDC Client</a></span></span></li>
+         <li><span data-tocid="concept_cfs_4m4_n2b-d46e76373" class="topicref" data-id="concept_cfs_4m4_n2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/PostgreSQL.html#concept_cfs_4m4_n2b">PostgreSQL CDC Client</a></span></span></li>
+         <li><span data-tocid="concept_o2b_1pc_r2b-d46e76841" class="topicref" data-id="concept_o2b_1pc_r2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/PulsarConsumer.html#concept_o2b_1pc_r2b">Pulsar Consumer</a></span></span></li>
+         <li><span data-tocid="concept_dyg_lq1_h5-d46e77315" class="topicref" data-id="concept_dyg_lq1_h5" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/RabbitMQ.html#concept_dyg_lq1_h5">RabbitMQ Consumer</a></span></span></li>
+         <li><span data-tocid="concept_plr_t3v_jw-d46e77531" class="topicref" data-id="concept_plr_t3v_jw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Redis.html#concept_plr_t3v_jw">Redis Consumer</a></span></span></li>
+         <li><span data-tocid="concept_hfg_2sn_p2b-d46e77682" class="topicref" data-id="concept_hfg_2sn_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/RESTService.html#concept_hfg_2sn_p2b">REST Service </a></span></span></li>
+         <li><span data-tocid="concept_odf_vr3_rx-d46e78362" class="topicref" data-id="concept_odf_vr3_rx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Salesforce.html#concept_odf_vr3_rx">Salesforce</a></span></span></li>
+         <li><span data-tocid="concept_agb_5c1_ct-d46e81440" class="topicref" data-id="concept_agb_5c1_ct" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SDC_RPCorigin.html#concept_agb_5c1_ct">SDC RPC </a></span></span></li>
+         <li><span data-tocid="concept_tdk_slk_pw-d46e81494" class="topicref" data-id="concept_tdk_slk_pw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SDCRPCtoKafka.html#concept_tdk_slk_pw">SDC RPC to Kafka (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_ic5_bzd_5v-d46e82174" class="topicref" data-id="concept_ic5_bzd_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SFTP.html#concept_ic5_bzd_5v">SFTP/FTP/FTPS Client</a></span></span></li>
+         <li><span data-tocid="concept_ut3_ywc_v1b-d46e82978" class="topicref" data-id="concept_ut3_ywc_v1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SQLServerCDC.html#concept_ut3_ywc_v1b">SQL Server CDC Client</a></span></span></li>
+         <li><span data-tocid="concept_ewq_b2s_r1b-d46e84548" class="topicref" data-id="concept_ewq_b2s_r1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SQLServerChange.html#concept_ewq_b2s_r1b">SQL Server Change Tracking</a></span></span></li>
+         <li><span data-tocid="concept_gzy_gmv_32b-d46e85628" class="topicref" data-id="concept_gzy_gmv_32b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SystemMetrics.html#concept_gzy_gmv_32b">System Metrics</a></span></span></li>
+         <li><span data-tocid="concept_ppm_xb1_4z-d46e85782" class="topicref" data-id="concept_ppm_xb1_4z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/TCPServer.html#concept_ppm_xb1_4z">TCP Server</a></span></span></li>
+         <li><span data-tocid="concept_zp3_wnw_4y-d46e86240" class="topicref" data-id="concept_zp3_wnw_4y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Teradata.html#concept_zp3_wnw_4y">Teradata Consumer</a></span></span></li>
+         <li><span data-tocid="concept_wng_g5f_5bb-d46e90457" class="topicref" data-id="concept_wng_g5f_5bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/UDPMulti.html#concept_wng_g5f_5bb">UDP Multithreaded Source</a></span></span></li>
+         <li><span data-tocid="concept_rst_2y5_1s-d46e90822" class="topicref" data-id="concept_rst_2y5_1s" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/UDP.html#concept_rst_2y5_1s">UDP Source</a></span></span></li>
+         <li><span data-tocid="concept_jzq_jcz_pw-d46e90970" class="topicref" data-id="concept_jzq_jcz_pw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/UDPtoKafka.html#concept_jzq_jcz_pw">UDP to Kafka (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_unk_nzk_fbb-d46e91431" class="topicref" data-id="concept_unk_nzk_fbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/WebSocketClient.html#concept_unk_nzk_fbb">WebSocket Client</a></span></span></li>
+         <li><span data-tocid="concept_u2r_gpc_3z-d46e91665" class="topicref" data-id="concept_u2r_gpc_3z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/WebSocketServer.html#concept_u2r_gpc_3z">WebSocket Server</a></span></span></li>
+         <li><span data-tocid="concept_agf_5jv_sbb-d46e92154" class="topicref" data-id="concept_agf_5jv_sbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/WindowsLog.html#concept_agf_5jv_sbb">Windows Event Log</a></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e92251" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e108902" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e131011" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e139072" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e141675" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e145244" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e149158" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e151984" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e152783" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_gzw_tdm_p2b-d46e153365" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e153741" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e154223" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e155688" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e156657" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e159285" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e160542" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e162195" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e166999" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e168212" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e173328" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e173383" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e173605" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e177306" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e177529" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+                    
+                    
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_fxz_35t_m3b">
+    <h1 class="title topictitle1" id="ariaid-title1">Jython Scripting</h1>
+
+    
+    <div class="body conbody"><p class="shortdesc"></p>
+
+        <div class="p"><div class="simpletable-container"><table cellpadding="4" cellspacing="0" summary="" id="concept_fxz_35t_m3b__simpletable_gxj_hjb_sgb" border="0" class="simpletable"><col style="width:100%" /><thead></thead><tbody><tr class="strow">
+                <td style="vertical-align:top;" class="stentry"><a class="xref" href="../Pipeline_Configuration/ProductIcons_Doc.html#concept_mjg_ly5_pgb" title="In Data Collector, you can configure pipelines that are run by Data Collector and pipelines that are run by Data Collector Edge.">Supported pipeline types:</a><ul class="ul" id="concept_fxz_35t_m3b__d23e103">
+                        <li class="li">
+                            <p class="p"><img class="image" id="concept_fxz_35t_m3b__d23e108" src="../../../reusable-content/shared-graphics/icon-SDC.png" height="21" width="21" /> Data Collector</p>
+
+                        </li>
+
+                    </ul>
+</td>
+
+            </tr>
+</tbody></table>
+</div>The Jython Scripting origin runs a Jython
+            script to create <span class="ph">Data Collector</span>
+            records. The Jython Scripting origin <span class="ph">supports Jython version
+                2.7.x</span>.</div>
+
+        <div class="p">The script runs for the duration of the
+            pipeline. The origin can support a complex multithreaded script or a simple
+            single-threaded script. The script can act on script parameters configured in the stage.
+            The basic flow of a script must do the following:<ul class="ul" id="concept_fxz_35t_m3b__d24e1815">
+                <li class="li">Create threads if supporting multithreaded processing</li>
+
+                <li class="li">Create batches</li>
+
+                <li class="li">Create records</li>
+
+                <li class="li">Add the records to a batch</li>
+
+                <li class="li">Process the batch</li>
+
+                <li class="li">Stop when the pipeline stops</li>
+
+            </ul>
+</div>
+<p class="p">The script must handle all necessary processing, such as generating events, sending
+            errors for handling, and stopping when users stop the pipeline or when there is no more
+            data. <span class="ph">You can call external Java code from the script.</span>
+        </p>
+<p class="p">To handle restarts, the script must maintain an offset to track where the origin stopped
+            and should restart. For the offset, the script requires a key, called an entity,
+            associated with a unique value. For multithreaded processing, the entity must identify
+            the partition of data processed by each thread. The method that processes batches saves
+            an offset value for each entity. </p>
+<p class="p">For example, suppose your script processes data about U.S. states, using an API to read
+            data with a URL of the form <code class="ph codeph">../&lt;state&gt;&amp;page=&lt;number&gt;</code>. In the
+            script, each thread reads data from one state until finished with that state. You can
+            set the entity to the state and the offset to the page number. </p>
+<p class="p">The origin <span class="ph">provides extensive sample code
+                that you can use to develop your script. </span></p>
+<p class="p">When configuring the origin, you enter the script
+            and the inputs required, including the batch size and number of threads, along with any
+            script parameters used in the script. </p>
+
+    </div>
+
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_nwp_g3p_p3b">
+    <h2 class="title topictitle2" id="ariaid-title2">Scripting Objects</h2>
+
+    <div class="body conbody">
+        <div class="p">Scripts in the Jython Scripting origin
+            can use the following objects: <dl class="dl">
+                
+                    <dt class="dt dlterm">record</dt>
+
+                    <dd class="dd">An object that contains fields and values to
+                    process. Create new <code class="ph codeph">record</code> objects with the
+                        <code class="ph codeph">sdc.createRecord(&lt;String record ID&gt;)</code> method. The methods
+                    available to the object depend on the origin configuration. You can configure
+                    the record type to be native objects or <span class="ph">Data Collector</span>
+                    records.</dd>
+
+                    <dd class="dd ddexpand"> For more information see <a class="xref" href="JythonScripting.html#concept_bp3_vjh_p3b">Accessing Record Details</a>.</dd>
+
+                
+                
+                <dt class="dt dlterm">batch</dt>
+
+                <dd class="dd">An object that collects records to process together. Create new
+                        <code class="ph codeph">batch</code> objects with the <code class="ph codeph">sdc.createBatch()</code>
+                    method.  The object includes the following methods: <ul class="ul">
+                        <li class="li"><code class="ph codeph">add(&lt;record&gt;)</code> - Appends a record to the batch.</li>
+
+                        <li class="li"><code class="ph codeph">add(&lt;record[]&gt;)</code> - Appends a list of records to the
+                            batch.</li>
+
+                        <li class="li"><code class="ph codeph">size()</code> - Returns the number of records in the
+                            batch.</li>
+
+                        <li class="li"><code class="ph codeph">process(&lt;String entity&gt;, &lt;String offset&gt;)</code> -
+                            Processes the batch and commits the offset for the named entity.</li>
+
+                        <li class="li"><code class="ph codeph">getSourceResponseRecords()</code> - After processing a batch,
+                            retrieves any response records returned by downstream stages.</li>
+
+                    </ul>
+</dd>
+
+            
+                
+                    <dt class="dt dlterm">log</dt>
+
+                    <dd class="dd">An object that writes messages to the log4j log. Use
+                            <code class="ph codeph">sdc.log</code> to access the object configured for the stage.
+                        The object includes methods that correspond to the level in the log file:
+                            <ul class="ul" id="concept_nwp_g3p_p3b__d24e663">
+                            <li class="li"><code class="ph codeph">info(&lt;message template&gt;, &lt;arguments&gt;...)</code></li>
+
+                            <li class="li"><code class="ph codeph">warn(&lt;message template&gt;, &lt;arguments&gt;...)</code></li>
+
+                            <li class="li"><code class="ph codeph">error(&lt;message template&gt;,
+                                &lt;arguments&gt;...)</code></li>
+
+                            <li class="li"><code class="ph codeph">trace(&lt;message template&gt;,
+                                &lt;arguments&gt;...)</code></li>
+
+                        </ul>
+<p class="p">The message template can contain positional variables, indicated by
+                            curly brackets: { }. When writing messages, the method replaces each
+                            variable with the argument in the corresponding position - that is, the
+                            method replaces the first { } occurrence with the first argument, and so
+                            on.</p>
+</dd>
+
+                
+                
+                    <dt class="dt dlterm">output</dt>
+
+                    <dd class="dd">An object that writes the record to the output batch. Use
+                            <code class="ph codeph">sdc.output</code> to access the object configured for the
+                        stage. The object includes a <code class="ph codeph">write(&lt;record&gt;)</code>
+                        method.</dd>
+
+                
+                
+                    <dt class="dt dlterm">error</dt>
+
+                    <dd class="dd">An object that passes error records for error handling. Use
+                            <code class="ph codeph">sdc.error</code> to access the object configured for the
+                        stage. The object includes a <code class="ph codeph">write(&lt;record&gt;, &lt;String
+                            message&gt;)</code> method.</dd>
+
+                
+                
+                <dt class="dt dlterm">sdc</dt>
+
+                <dd class="dd">A wrapper object that accesses the constants, methods, and objects available to
+                    the user script.  </dd>
+
+                <dd class="dd ddexpand">The <code class="ph codeph">sdc</code> object contains the following constants: <ul class="ul" id="concept_nwp_g3p_p3b__d24e904">
+                        <li class="li"><code class="ph codeph">lastOffsets</code> - Dictionary that contains the last-saved
+                            offset for each entity. Use at the start of the script to read the last
+                            value associated with a successfully processed batch.<div class="note note"><span class="notetitle">Note:</span> The constant
+                                does not update while the pipeline runs.</div>
+</li>
+
+                        <li class="li"><code class="ph codeph">batchSize</code> - Number of records to create in a single
+                            batch. Configured on the Performance tab with the Batch Size
+                            property.</li>
+
+                        <li class="li"><code class="ph codeph">nThreads</code> - Number of threads to run simultaneously.
+                            Configured on the Performance tab with the Number of Threads
+                            property.</li>
+
+                        <li class="li"><code class="ph codeph">userParams</code> - Dictionary that contains the script
+                            parameters and values configured on the Advanced tab with the Parameters
+                            in Script property.</li>
+
+                    </ul>
+</dd>
+
+                <dd class="dd ddexpand">The <code class="ph codeph">sdc</code> object contains the following methods:<ul class="ul" id="concept_nwp_g3p_p3b__d24e934">
+                        <li class="li" id="concept_nwp_g3p_p3b__d24e936"><code class="ph codeph">createBatch()</code> - Returns a new
+                            batch.</li>
+
+                        <li class="li"><code class="ph codeph">createRecord(&lt;String record
+                                ID&gt;)</code> - Returns a new record with the passed ID. Pass a
+                            string that uniquely identifies the record and includes enough
+                            information to track the record source.</li>
+
+                        <li class="li" id="concept_nwp_g3p_p3b__d24e943"><code class="ph codeph">isStopped()</code> - Returns a Boolean that
+                            indicates whether the pipeline has been stopped.</li>
+
+                        <li class="li"><code class="ph codeph">isPreview()</code> - Returns a Boolean that
+                            indicates whether the pipeline is in preview mode.</li>
+
+                        <li class="li"><code class="ph codeph">getFieldNull(&lt;record&gt;, &lt;String field
+                                path&gt;)</code> - Returns one of the following: <ul class="ul" id="concept_nwp_g3p_p3b__d24e741">
+                                <li class="li">The value of the field at the specified path if the value is not
+                                    null</li>
+
+                                <li class="li">The null object defined for the field type, such as
+                                        <code class="ph codeph">NULL_INTEGER</code> or
+                                        <code class="ph codeph">NULL_STRING</code>, if the value is null</li>
+
+                                <li class="li">The unassigned null object <code class="ph codeph">NULL</code> if there is no
+                                    field at the specified path</li>
+
+                            </ul>
+</li>
+
+                        <li class="li"><code class="ph codeph">createMap(&lt;Boolean list-map&gt;)</code> -
+                            Returns a map for use as a field in a record. Pass <code class="ph codeph">true</code>
+                            to create a list-map field, or <code class="ph codeph">false</code> to create a map
+                            field.</li>
+
+                        <li class="li"><span class="ph" id="concept_nwp_g3p_p3b__d24e779"><code class="ph codeph">createEvent(&lt;String type&gt;, &lt;Integer
+                                    version&gt;)</code> - Returns a new event record with the
+                                specified event type and version.</span> Verify that the stage enables
+                            event generation before implementing event methods. </li>
+
+                        <li class="li"><span class="ph" id="concept_nwp_g3p_p3b__d24e786"><code class="ph codeph">toEvent(&lt;event
+                                    record&gt;)</code> - Sends an event record to the event output
+                                stream.</span> Verify that the stage enables event generation before
+                            implementing event methods. </li>
+
+                    </ul>
+</dd>
+
+            
+                
+                    <dt class="dt dlterm"></dt>
+
+                    <dd class="dd">The <code class="ph codeph">sdc</code> object contains the following methods to work
+                        around a <a class="xref" href="https://bugs.jython.org/issue2642" target="_blank">Jython import issue</a>. For more information about
+                        using these methods, see <a class="xref" href="JythonScripting.html#concept_ky4_dmq_q3b">Thread Safety in Jython Scripts</a>. <ul class="ul" id="concept_nwp_g3p_p3b__ul_trr_32j_q3b">
+                <li class="li"><code class="ph codeph">importLock()</code> - Acquires a system-wide lock. Call this method
+                    before importing.</li>
+
+                <li class="li"><code class="ph codeph">importUnlock()</code> - Releases a system-wide lock. Call this method
+                    after importing.</li>
+
+            </ul>
+</dd>
+
+                
+            </dl>
+
+        </div>
+
+    </div>
+
+<article class="topic concept nested2" aria-labelledby="ariaid-title3" id="concept_ky4_dmq_q3b">
+    <h3 class="title topictitle3" id="ariaid-title3">Thread Safety in Jython Scripts</h3>
+
+    <div class="body conbody">
+        <p class="p">Jython has a <a class="xref" href="https://bugs.jython.org/issue2642" target="_blank">known issue</a> with the thread safety of imports. To work
+            around this issue, you can use a system-wide lock available with the Jython Scripting
+            origin to synchronize imports between threads and between pipelines. In your script,
+            acquire the lock, import all needed modules, and then release the lock. </p>
+
+        <div class="p">When using the system-wide lock, the script must release the lock, even upon failure or
+            an error. In Jython, use a <code class="ph codeph">try</code> statement with a
+                <code class="ph codeph">finally</code>
+            block:<pre class="pre codeblock"><code>try:
+    sdc.importLock()
+    import ...
+finally:
+    sdc.importUnlock()
+</code></pre>
+        </div>
+
+        <p class="p">If a script that fails does not include the <code class="ph codeph">finally</code> block to release the
+            lock, then no other script can use the lock until you restart <span class="ph">Data Collector</span>.</p>
+
+    </div>
+
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title4" id="concept_gmh_h24_p3b">
+    <h2 class="title topictitle2" id="ariaid-title4">Multithreaded Processing</h2>
+
+    <div class="body conbody">
+        <p class="p">The Jython Scripting origin can use
+            multiple concurrent threads to process data based on the Number of Threads property. </p>
+
+        <p class="p">To enable multithreaded processing, write the
+            script to create the configured number of threads. Each thread must create a batch and
+            pass the batch to an available pipeline runner by calling the
+                <code class="ph codeph">batch.process(&lt;String entity&gt;, &lt;String offset&gt;)</code> method. <span class="ph">A pipeline runner is a <dfn class="term">sourceless
+                              pipeline instance</dfn> - an instance of the pipeline that includes
+                        all of the processors, executors,  and destinations in the pipeline and
+                        handles all pipeline processing after the origin.</span>
+        </p>
+<p class="p"><span class="ph"><span class="ph" id="concept_gmh_h24_p3b__d120e2969">Each pipeline runner
+                              processes one batch at a time, just like a pipeline that runs on a
+                              single thread.</span> When the flow of data slows, the pipeline runners
+                        wait idly until they are needed, generating an empty batch at regular
+                        intervals. You can configure the Runner Idle Time pipeline property to
+                        specify the interval or to opt out of empty batch generation.</span></p>
+<p class="p"><span class="ph"><span class="ph" id="concept_gmh_h24_p3b__d120e2975">Multithreaded pipelines preserve the order of records within each
+                              batch, just like a single-threaded pipeline. But since</span> batches
+                              <span class="ph" id="concept_gmh_h24_p3b__d120e2978">are processed by different
+                              pipeline runners, the order that batches are written to destinations
+                              is not ensured.</span></span></p>
+<p class="p">For example, suppose you write the script to use multiple threads to read files in the
+            order of last-modified timestamp, and you configure the origin to use five threads. When
+            you start the pipeline, <span class="ph">the origin creates five
+                              threads, and <span class="ph">Data Collector</span>
+                              creates a matching number of pipeline runners.</span>
+        </p>
+<p class="p">The origin assigns a thread to each of the five oldest files. Each thread processes its
+            assigned file, creating batches of data and passing each batch to a pipeline runner. </p>
+<p class="p">After a thread completes processing a file, the origin assigns the thread to the next
+            file based on the last-modified timestamp, until all files are processed. </p>
+<p class="p">For more information about multithreaded
+            pipelines, see <a class="xref" href="../Multithreaded_Pipelines/MultithreadedPipelines.html#concept_zpp_2xc_py">Multithreaded Pipeline Overview</a>.</p>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title5" id="concept_bp3_vjh_p3b">
+    <h2 class="title topictitle2" id="ariaid-title5">Accessing Record Details</h2>
+
+    <div class="body conbody">
+        <p class="p">By default, you use native types from the scripting
+            language to access records in scripts. However, with native types, you cannot easily
+            access all the features of <span class="ph">Data Collector</span>
+            records, such as field attributes. </p>
+<p class="p">To access records in scripts directly as <span class="ph">Data Collector</span>
+            records, configure the stage to use the Data Collector Java API to process records in
+            scripts by setting the Record Type advanced property to <code class="ph codeph">Data Collector
+                Records</code>. </p>
+<p class="p">In the script, reference the needed classes from
+            the Java package <code class="ph codeph">com.streamsets.pipeline.api</code> and then use the
+            appropriate methods to access records and fields. With the <span class="ph">Data Collector</span>
+            Java API, scripts can access all the features of <span class="ph">Data Collector</span>
+            records. For a complete description, see the <a class="xref" href="https://github.com/streamsets/datacollector-api/blob/master/src/main/java/com/streamsets/pipeline/api/Record.java#L64" target="_blank">Data Collector Java API in GitHub</a>.</p>
+
+        <div class="p">For example, include the following lines in the
+            script to use the <span class="ph">Data Collector</span>
+            Java API to do the following: <ul class="ul" id="concept_bp3_vjh_p3b__d147e93">
+                <li class="li">Create a String field named <code class="ph codeph">new</code> and set its value to
+                        <code class="ph codeph">new-value</code>
+                </li>
+
+                <li class="li">Update the existing field named <code class="ph codeph">old</code> to set the value of the
+                        <code class="ph codeph">attr</code> attribute to <code class="ph codeph">attr-value</code></li>
+
+            </ul>
+<pre class="pre codeblock"><code>from com.streamsets.pipeline.api import Field
+...
+record.sdcRecord.set('/new', Field.create(Field.Type.STRING, 'new-value'))
+record.sdcRecord.get('/old').setAttribute('attr', 'attr-value')
+...</code></pre></div>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title6" id="concept_vxd_43n_p3b">
+    <h2 class="title topictitle2" id="ariaid-title6">Type Handling</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc"></p>
+
+        <div class="p"><span class="ph">Though Jython does not use type information when processing data,
+                passing data to the rest of the pipeline requires data types. Note the following
+                type information when working with the</span> Jython Scripting origin: <dl class="dl">
+                
+                    <dt class="dt dlterm">Data type of null values</dt>
+
+                    <dd class="dd">You can associate null values with a data type. For example, if the script
+                        assigns a null value to an Integer field, the field is returned to the
+                        pipeline as an integer with a null value.</dd>
+
+                    <dd class="dd ddexpand">Use constants in the Jython code to create a new field of a specific data
+                        type with a null value. For example, you can create a new String field with
+                        a null value by assigning the <code class="ph codeph">NULL_STRING</code> type constant to
+                        the field as
+                        follows:<pre class="pre codeblock"><code>record.value['new_field'] = sdc.NULL_STRING</code></pre></dd>
+
+                
+                
+                    <dt class="dt dlterm">Date fields</dt>
+
+                    <dd class="dd"><span class="ph">Use the String data type to create a new
+                            field to store a date with a specific format. For example, the following
+                            sample code creates a new String field that stores the current date
+                            using the format
+                            <code class="ph codeph">YYYY-MM-dd</code>:</span><pre class="pre codeblock"><code># Define a date object to record the current date
+import datetime as dt
+newDate = dt.datetime.utcnow().strftime("%Y-%m-%d")
+
+for record in records:
+  try:
+    # Create a string field to store the current date with the specified format
+    record.value["date"] = newDate
+    
+    # Write record to the output
+    sdc.output.write(record)
+
+  except Exception as e:
+    # Send record to error
+    sdc.error.write(record, str(e))</code></pre></dd>
+
+                
+            </dl>
+<dl class="dl">
+                
+                    <dt class="dt dlterm">Data type of modified values</dt>
+
+                    <dd class="dd">Values that are not modified by the stage retain their original type.</dd>
+
+                    <dd class="dd ddexpand">Numeric data that is modified becomes a Double, other types of data retain
+                        their original type.</dd>
+
+                
+            </dl>
+</div>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title7" id="concept_ukb_2b3_p3b">
+    <h2 class="title topictitle2" id="ariaid-title7">Event Generation</h2>
+
+    <div class="body conbody">
+        <p class="p">You can use the Jython Scripting origin
+                <span class="ph">to generate event records
+                for an event stream. Enable event generation when you want the stage to generate an
+                event record based on scripting logic. </span></p>
+
+        <p class="p"><span class="ph">As with any record, you can pass event records downstream to a
+                destination for event storage or to any executor that can be configured to use the
+                event. For more information about events and the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>.</span>
+        </p>
+
+        <div class="p">To generate events:<ol class="ol" id="concept_ukb_2b3_p3b__d24e1327">
+                <li class="li">On the <span class="keyword wintitle">General</span> tab, select the <span class="ph uicontrol">Produce
+                        Events</span> property.<p class="p">This enables the event output stream for use.
+                    </p>
+</li>
+
+                <li class="li">Include <span class="ph">both of the following methods in the script:</span><ul class="ul" id="concept_ukb_2b3_p3b__d24e1344">
+                        <li class="li">
+                            <code class="ph codeph">sdc.createEvent(&lt;String type&gt;, &lt;Integer version&gt;)</code>
+                            - Creates an event record with the specified event type and version
+                            number. You can create a new event type or use an existing event type.
+                            Existing event types are documented in other event-generating stages.
+                                <p class="p">The event record contains no record fields. Generate record
+                                fields as needed.</p>
+</li>
+
+                        <li class="li">
+                            <code class="ph codeph">sdc.toEvent(&lt;record&gt;)</code> - Use to pass events to the
+                            event output stream. </li>
+
+                    </ul>
+</li>
+
+            </ol>
+</div>
+
+    </div>
+
+<article class="topic concept nested2" aria-labelledby="ariaid-title8" id="concept_ibl_tj3_p3b">
+    <h3 class="title topictitle3" id="ariaid-title8">Event Record</h3>
+
+    <div class="body conbody">
+        <div class="p">Event records generated by the Jython Scripting
+            origin have the standard event-related record header attributes:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_ibl_tj3_p3b__table_brz_3gp_qx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                        <tr>
+                            <th class="entry cellrowborder" id="d364473e915">Record Header Attribute</th>
+
+                            <th class="entry cellrowborder" id="d364473e918">Description</th>
+
+                        </tr>
+
+                    </thead>
+<tbody class="tbody">
+                        <tr>
+              <td class="entry cellrowborder" headers="d364473e915 ">sdc.event.type</td>
+
+              <td class="entry cellrowborder" headers="d364473e918 ">Event type, specified by the <code class="ph codeph">sdc.createEvent</code> method.</td>
+
+            </tr>
+
+                        <tr>
+              <td class="entry cellrowborder" headers="d364473e915 ">sdc.event.version</td>
+
+              <td class="entry cellrowborder" headers="d364473e918 ">Event version, specified by the <code class="ph codeph">sdc.createEvent</code>
+                method.</td>
+
+            </tr>
+
+                        <tr>
+              <td class="entry cellrowborder" headers="d364473e915 ">sdc.event.creation_timestamp</td>
+
+              <td class="entry cellrowborder" id="concept_ibl_tj3_p3b__d56e2304" headers="d364473e918 ">Epoch timestamp when the stage created the event.
+              </td>
+
+            </tr>
+
+                    </tbody>
+</table>
+</div>
+</div>
+
+    </div>
+
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title9" id="concept_ydl_j13_p3b">
+    <h2 class="title topictitle2" id="ariaid-title9">Record Header Attributes</h2>
+
+    <div class="body conbody">
+        <p class="p">The script
+            in the Jython Scripting origin can create custom record header attributes. <span class="ph">Pipeline logic can use record header attributes to affect data
+                flow. Therefore, you might create a custom record header attribute for a specific
+                purpose. For more information, see <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_wn2_jcz_dz">Record Header Attributes</a>.</span></p>
+
+        <p class="p">All records include a set of internal record header attributes that stages
+            update automatically as they process records. Error records also have their own set of
+            internal header attributes. You cannot change values of internal header attributes in
+            scripts.</p>
+
+        <div class="p">You can use the following record header variables to work with header
+                attributes:<ul class="ul" id="concept_ydl_j13_p3b__d24e1394">
+                <li class="li"><code class="ph codeph">record.&lt;header name&gt;</code> - Use to return the value of a header
+                    attribute.</li>
+
+                <li class="li"><code class="ph codeph">record.attributes</code> - Use to return a map of custom record header
+                    attributes, or to create or update a specific record header attribute.</li>
+
+            </ul>
+</div>
+
+        <div class="note tip"><span class="tiptitle">Tip:</span> Use data preview to view the record header attributes
+            included in a record.</div>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title10" id="concept_vws_vth_p3b">
+    <h2 class="title topictitle2" id="ariaid-title10">Calling External Java Code</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc">You can call external Java code from the Jython Scripting origin. Simply install the
+        external Java library to make it available to the origin. Then, call the external Java code
+        from the Jython script that you develop for the origin. </p>
+
+        <p class="p"><span class="ph">For information about installing additional drivers, see
+                              <a class="xref" href="../Configuration/ExternalLibs.html#concept_pdv_qlw_ft">Install External Libraries</a>.</span></p>
+
+        <div class="p">To call the external Java code from a Jython script, add an import
+            statement to your
+            script:<pre class="pre codeblock"><code>from &lt;package&gt; import &lt;class name&gt;</code></pre></div>
+
+        <div class="p">For example, let's say that you installed the Bouncy Castle JAR
+            file to compute SHA-3 (Secure Hash Algorithm 3) digests. Add the following statement to
+            your
+            script:<pre class="pre codeblock"><code>from org.bouncycastle.jcajce.provider.digest.SHA3 import DigestSHA3</code></pre></div>
+
+        <p class="p">For more information, see the following StreamSets blog post:
+                <a class="xref" href="https://streamsets.com/blog/calling-external-java-code-script-evaluators/" target="_blank">Calling External Java Code from Script
+                Evaluators</a>.</p>
+
+    </div>
+
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title11" id="task_ptn_xnj_l3b">
+    <h2 class="title topictitle2" id="ariaid-title11">Configuring a Jython Scripting Origin</h2>
+
+    <div class="body taskbody">
+        <section class="section context">
+            <p class="p">Configure a Jython Scripting
+                origin to run a Jython script to create <span class="ph">Data Collector</span>
+                records. </p>
+
+        </section>
+
+        <ol class="ol steps" id="task_ptn_xnj_l3b__steps_u5h_qlj_q3b"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ptn_xnj_l3b__table_ac1_hss_5x" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d364473e1108">General Property</th>
+
+                                    <th class="entry cellrowborder" id="d364473e1111">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+              <td class="entry cellrowborder" headers="d364473e1108 ">Name</td>
+
+              <td class="entry cellrowborder" headers="d364473e1111 ">Stage name.</td>
+
+            </tr>
+
+                                <tr>
+              <td class="entry cellrowborder" headers="d364473e1108 ">Description</td>
+
+              <td class="entry cellrowborder" headers="d364473e1111 ">Optional description.</td>
+
+            </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d364473e1108 "><a class="xref" href="JythonScripting.html#concept_ukb_2b3_p3b">Produce Events</a></td>
+
+                                    <td class="entry cellrowborder" headers="d364473e1111 ">Generates event records when events occur. Use for
+                  <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">event handling</a>.</td>
+
+                                </tr>
+
+                                <tr>
+              <td class="entry cellrowborder" headers="d364473e1108 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
+
+              <td class="entry cellrowborder" headers="d364473e1111 ">Error record handling for the stage: <ul class="ul" id="task_ptn_xnj_l3b__d56e809">
+                  <li class="li">Discard - Discards the record.</li>
+
+                  <li class="li">Send to Error - Sends the record to the pipeline for error handling.</li>
+
+                  <li class="li">Stop Pipeline - Stops the pipeline. </li>
+
+                </ul>
+</td>
+
+            </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Performance</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ptn_xnj_l3b__table_ugl_2lj_q3b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                        <tr>
+                            <th class="entry cellrowborder" id="d364473e1200">Performance Property</th>
+
+                            <th class="entry cellrowborder" id="d364473e1203">Description</th>
+
+                        </tr>
+
+                    </thead>
+<tbody class="tbody">
+                        <tr>
+                            <td class="entry cellrowborder" headers="d364473e1200 ">Batch Size</td>
+
+                            <td class="entry cellrowborder" headers="d364473e1203 ">Number of records to generate in a single batch.<p class="p">The script
+                                    accesses this value with the <code class="ph codeph">sdc.batchSize</code>
+                                    constant and implements batch processing.</p>
+<p class="p">Default value is
+                                    1000. <span class="ph">Data Collector</span> honors values up to the <span class="ph">Data Collector</span> maximum batch size. The <span class="ph">Data Collector</span> default is 1000.</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry cellrowborder" headers="d364473e1200 ">Number of Threads</td>
+
+                            <td class="entry cellrowborder" headers="d364473e1203 ">Number of threads that generate data concurrently in
+                                    parallel.<p class="p">The script accesses this value with the
+                                        <code class="ph codeph">sdc.numThreads</code> constant and implements
+                                    multithreaded processing.</p>
+</td>
+
+                        </tr>
+
+                    </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Script</span> tab, configure the following property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ptn_xnj_l3b__table_lk2_glj_q3b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                        <tr>
+                            <th class="entry cellrowborder" id="d364473e1276">Script Property</th>
+
+                            <th class="entry cellrowborder" id="d364473e1279">Description</th>
+
+                        </tr>
+
+                    </thead>
+<tbody class="tbody">
+                        <tr>
+                            <td class="entry cellrowborder" headers="d364473e1276 ">User Script</td>
+
+                            <td class="entry cellrowborder" headers="d364473e1279 ">Script that runs during pipeline execution.<div class="p">
+                                    <div class="note tip"><span class="tiptitle">Tip:</span> To toggle full-screen editing, press either F11
+                                        or Esc, depending on the operating system, when the cursor
+                                        is in the editor.</div>
+
+                                </div>
+</td>
+
+                        </tr>
+
+                    </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Advanced</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ptn_xnj_l3b__table_o1r_15p_l3b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d364473e1327">Advanced Property</th>
+
+                                    <th class="entry cellrowborder" id="d364473e1330">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d364473e1327 "><a class="xref" href="JythonScripting.html#concept_bp3_vjh_p3b">Record Type</a></td>
+
+                                    <td class="entry cellrowborder" headers="d364473e1330 ">Record type to use during script
+                                    execution:<ul class="ul" id="task_ptn_xnj_l3b__d24e1636">
+                                    <li class="li">Data Collector Records - Select when scripts use <span class="ph">Data Collector</span> Java API methods to access records.</li>
+
+                                    <li class="li">Native Objects - Select when scripts use native types to
+                                        access records.</li>
+
+                                </ul>
+<p class="p">Default value is Native Objects.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                            <td class="entry cellrowborder" headers="d364473e1327 ">Parameters in Script</td>
+
+                            <td class="entry cellrowborder" headers="d364473e1330 ">Script parameters and their values.<p class="p">The script accesses the
+                                    values with the <code class="ph codeph">sdc.userParams</code>
+                                dictionary.</p>
+</td>
+
+                        </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+</article>
+</article></main></div>
+                        
+                        
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script>
+  </div>
+</nav>
+
+        
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+        
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+        
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
+</html>
