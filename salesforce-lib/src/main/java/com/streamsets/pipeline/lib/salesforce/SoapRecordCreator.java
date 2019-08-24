@@ -137,15 +137,16 @@ public class SoapRecordCreator extends SobjectRecordCreator {
         }
 
         Field field;
+        XmlType xmlType = obj.getXmlType() != null ? XmlType.fromString(obj.getXmlType().getLocalPart()) : null;
         if (AGGREGATE_RESULT.equals(type)) {
-          field = getField(obj, dataType);
+          field = getField(xmlType, val, dataType);
         } else {
           com.sforce.soap.partner.Field sfdcField = getFieldMetadata(type, key);
           if (sfdcField == null) {
             // null relationship
             field = Field.createListMap(new LinkedHashMap<>());
           } else {
-            field = createField(val, dataType, sfdcField);
+            field = createField(xmlType, val, dataType, sfdcField);
           }
           if (conf.createSalesforceNsHeaders) {
             setHeadersOnField(field, sfdcField);
@@ -156,36 +157,5 @@ public class SoapRecordCreator extends SobjectRecordCreator {
     }
 
     return map;
-  }
-
-  @NotNull
-  private Field getField(XmlObject obj, DataType userSpecifiedType) throws StageException {
-    Object val = obj.getValue();
-
-    if (userSpecifiedType != DataType.USE_SALESFORCE_TYPE) {
-      return Field.create(Field.Type.valueOf(userSpecifiedType.getLabel()), val);
-    }
-
-    Field field;
-    if (obj.getXmlType() == null) {  // String data does not contain an XML type!
-      field = Field.create(Field.Type.STRING, (val == null) ? null : val.toString());
-    } else {
-      XmlType xmlType = XmlType.fromString(obj.getXmlType().getLocalPart());
-
-      switch (xmlType) {
-        case DATE_TIME:
-          field = Field.create(xmlType.getFieldType(), (val == null) ? null : ((GregorianCalendar)val).getTime());
-          break;
-        case DATE:
-        case INT:
-        case DOUBLE:
-          field = Field.create(xmlType.getFieldType(), val);
-          break;
-        default:
-          throw new StageException(Errors.FORCE_04, UNEXPECTED_TYPE + xmlType);
-      }
-    }
-
-    return field;
   }
 }

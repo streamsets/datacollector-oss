@@ -20,10 +20,12 @@ import com.sforce.soap.partner.DescribeSObjectResult;
 import com.sforce.soap.partner.Field;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.ws.ConnectionException;
+import com.sforce.ws.bind.XmlObject;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.util.JsonUtil;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import soql.SOQLParser;
@@ -37,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -95,6 +98,7 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
   private static final TimeZone TZ = TimeZone.getTimeZone("GMT");
   private static final String NAME = "Name";
   private static final String COUNT = "count()";
+  private static final String ERROR_PARSING_DATA = "Error parsing data";
 
   private final SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss");
   private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -105,6 +109,33 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
   Map<String, ObjectMetadata> metadataCache;
   final Stage.Context context;
   private boolean countQuery = false;
+
+  @NotNull
+  protected com.streamsets.pipeline.api.Field getField(SoapRecordCreator.XmlType xmlType, Object val, DataType userSpecifiedType) throws StageException {
+    if (userSpecifiedType != DataType.USE_SALESFORCE_TYPE) {
+      return com.streamsets.pipeline.api.Field.create(com.streamsets.pipeline.api.Field.Type.valueOf(userSpecifiedType.getLabel()), val);
+    }
+
+    com.streamsets.pipeline.api.Field field;
+    if (xmlType == null) {  // String data does not contain an XML type!
+      field = com.streamsets.pipeline.api.Field.create(com.streamsets.pipeline.api.Field.Type.STRING, (val == null) ? null : val.toString());
+    } else {
+      switch (xmlType) {
+        case DATE_TIME:
+          field = com.streamsets.pipeline.api.Field.create(xmlType.getFieldType(), (val == null) ? null : ((GregorianCalendar)val).getTime());
+          break;
+        case DATE:
+        case INT:
+        case DOUBLE:
+          field = com.streamsets.pipeline.api.Field.create(xmlType.getFieldType(), val);
+          break;
+        default:
+          throw new StageException(Errors.FORCE_04, UNEXPECTED_TYPE + xmlType);
+      }
+    }
+
+    return field;
+  }
 
   class ObjectMetadata {
     Map<String, Field> nameToField;
@@ -384,10 +415,11 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
 
   com.streamsets.pipeline.api.Field createField(Object val, Field sfdcField) throws
       StageException {
-    return createField(val, DataType.USE_SALESFORCE_TYPE, sfdcField);
+    return createField(null, val, DataType.USE_SALESFORCE_TYPE, sfdcField);
   }
 
   com.streamsets.pipeline.api.Field createField(
+      SoapRecordCreator.XmlType xmlType,
       Object val,
       DataType userSpecifiedType,
       Field sfdcField
@@ -396,13 +428,24 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
     if (userSpecifiedType != DataType.USE_SALESFORCE_TYPE) {
       return com.streamsets.pipeline.api.Field.create(com.streamsets.pipeline.api.Field.Type.valueOf(userSpecifiedType.getLabel()), val);
     } else {
-      if(val instanceof Map || ANYTYPE.equals(sfdcType)) {
+      if (val instanceof Map) {
         // Fields like Fiscal on Opportunity show up as Maps from Streaming API
-        // anyType can be String, boolean etc
         try {
           return JsonUtil.jsonToField(val);
         } catch (IOException e) {
-          throw new StageException(Errors.FORCE_04, "Error parsing data", e);
+          throw new StageException(Errors.FORCE_04, ERROR_PARSING_DATA, e);
+        }
+      } else if (ANYTYPE.equals(sfdcType)) {
+        // anyType can be String, boolean etc
+        try {
+          // xmlType gives us a hint, if it is present
+          if (xmlType != null) {
+            return getField(xmlType, val, userSpecifiedType);
+          } else {
+            return JsonUtil.jsonToField(val);
+          }
+        } catch (IOException e) {
+          throw new StageException(Errors.FORCE_04, ERROR_PARSING_DATA, e);
         }
       } else if (BOOLEAN_TYPES.contains(sfdcType)) {
         return com.streamsets.pipeline.api.Field.create(com.streamsets.pipeline.api.Field.Type.BOOLEAN, val);
