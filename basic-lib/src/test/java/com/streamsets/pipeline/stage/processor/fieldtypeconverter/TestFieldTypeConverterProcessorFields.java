@@ -42,6 +42,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -1270,6 +1271,53 @@ public class TestFieldTypeConverterProcessorFields {
       Assert.assertEquals(current, output.get("/zdt-1").getValueAsZonedDateTime());
       Assert.assertEquals(current.toOffsetDateTime().toZonedDateTime(), output.get("/zdt-2").getValueAsZonedDateTime());
       Assert.assertEquals(current, output.get("/zdt-3").getValueAsZonedDateTime());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testDateAndTimeAndDateTimeToZonedDatetime() throws Exception {
+    ZoneId zoneId = ZoneId.of("Europe/Prague");
+
+    FieldTypeConverterConfig config = new FieldTypeConverterConfig();
+    config.fields = ImmutableList.of("/dt", "/t", "/d");
+    config.targetType = Field.Type.ZONED_DATETIME;
+    config.dataLocale = "en";
+    config.zonedDateTimeFormat = ZonedDateTimeFormat.ISO_ZONED_DATE_TIME;
+    config.zonedDateTimeTargetTimeZone = zoneId.getId();
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", Collections.singletonList(config))
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    Date dt = new Date();
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("d", Field.create(Field.Type.DATE, dt));
+    map.put("dt", Field.create(Field.Type.DATETIME, dt));
+    map.put("t", Field.create(Field.Type.TIME, dt));
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+
+    ZonedDateTime expected = ZonedDateTime.ofInstant(dt.toInstant(), zoneId);
+
+    try {
+      Record output = runner.runProcess(ImmutableList.of(record)).getRecords().get("a").get(0);
+
+      Assert.assertTrue(output.has("/d"));
+      Assert.assertEquals(Field.Type.ZONED_DATETIME, output.get("/d").getType());
+      Assert.assertEquals(expected, output.get("/d").getValueAsZonedDateTime());
+
+      Assert.assertTrue(output.has("/dt"));
+      Assert.assertEquals(Field.Type.ZONED_DATETIME, output.get("/dt").getType());
+      Assert.assertEquals(expected, output.get("/dt").getValueAsZonedDateTime());
+
+      Assert.assertTrue(output.has("/t"));
+      Assert.assertEquals(Field.Type.ZONED_DATETIME, output.get("/t").getType());
+      Assert.assertEquals(expected, output.get("/t").getValueAsZonedDateTime());
     } finally {
       runner.runDestroy();
     }

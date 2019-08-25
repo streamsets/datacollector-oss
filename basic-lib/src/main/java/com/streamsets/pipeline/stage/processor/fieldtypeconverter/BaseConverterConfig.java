@@ -27,8 +27,10 @@ import com.streamsets.pipeline.config.DecimalScaleRoundingStrategyChooserValues;
 import com.streamsets.pipeline.config.LocaleChooserValues;
 import com.streamsets.pipeline.config.DateFormatChooserValues;
 import com.streamsets.pipeline.config.PrimitiveFieldTypeChooserValues;
+import com.streamsets.pipeline.config.TimeZoneChooserValues;
 import com.streamsets.pipeline.config.ZonedDateTimeFormat;
 
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
@@ -151,6 +153,19 @@ public class BaseConverterConfig {
   )
   @ValueChooserModel(ZonedDateTimeFormatChooserValues.class)
   public ZonedDateTimeFormat zonedDateTimeFormat = ZonedDateTimeFormat.ISO_ZONED_DATE_TIME;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Target Time Zone",
+      description = "Time Zone ",
+      displayPosition = 180,
+      group = "TYPE_CONVERSION",
+      dependsOn = "targetType",
+      triggeredByValue = {"ZONED_DATETIME"}
+  )
+  @ValueChooserModel(TimeZoneChooserValues.class)
+  public String zonedDateTimeTargetTimeZone = ZoneId.systemDefault().getId();
 
   @ConfigDef(
       required = true,

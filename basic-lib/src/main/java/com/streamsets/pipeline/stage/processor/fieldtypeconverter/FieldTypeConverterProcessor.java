@@ -35,6 +35,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.util.LinkedList;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -212,7 +213,7 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
       }
     }
 
-    if (field.getType().isOneOf(Field.Type.DATETIME, Field.Type.DATE, Field.Type.TIME) && converterConfig.targetType.isOneOf(Field.Type.LONG, Field.Type.STRING)) {
+    if (field.getType().isOneOf(Field.Type.DATETIME, Field.Type.DATE, Field.Type.TIME) && converterConfig.targetType.isOneOf(Field.Type.LONG, Field.Type.STRING, Field.Type.ZONED_DATETIME)) {
       if (field.getValue() == null) {
         return Field.create(converterConfig.targetType, null);
       } else if(converterConfig.targetType == Field.Type.LONG) {
@@ -221,6 +222,11 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
         String dateMask = converterConfig.getDateMask();
         java.text.DateFormat dateFormat = new SimpleDateFormat(dateMask, Locale.ENGLISH);
         return Field.create(converterConfig.targetType, dateFormat.format(field.getValueAsDatetime()));
+      } else if(converterConfig.targetType == Field.Type.ZONED_DATETIME) {
+        return Field.create(Field.Type.ZONED_DATETIME, ZonedDateTime.ofInstant(
+            field.getValueAsDatetime().toInstant(),
+            ZoneId.of(converterConfig.zonedDateTimeTargetTimeZone)
+        ));
       }
     }
 
