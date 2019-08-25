@@ -81,6 +81,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class TestStandaloneRunner {
 
@@ -304,12 +305,12 @@ public class TestStandaloneRunner {
   @Test(timeout = 20000)
   public void testLoadingUnsupportedPipeline() throws Exception {
     Runner runner = pipelineManager.getRunner(TestUtil.HIGHER_VERSION_PIPELINE, "0");
-    runner.start(new StartPipelineContextBuilder("user2").build());
-    waitForState(runner, PipelineStatus.START_ERROR);
-    PipelineState state = pipelineManager.getRunner(TestUtil.HIGHER_VERSION_PIPELINE, "0").getState();
-    Assert.assertTrue(state.getStatus() == PipelineStatus.START_ERROR);
-    Assert.assertTrue(state.getMessage().contains("CONTAINER_0158"));
-    assertNull(runner.getState().getMetrics());
+    try {
+      runner.start(new StartPipelineContextBuilder("user2").build());
+      fail();
+    } catch (PipelineRunnerException e) {
+      assertEquals("CONTAINER_0158", e.getErrorCode().getCode());
+    }
   }
 
   @Test(timeout = 20000)
