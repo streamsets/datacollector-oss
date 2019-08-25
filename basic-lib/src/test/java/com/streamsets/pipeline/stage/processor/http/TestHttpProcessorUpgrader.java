@@ -320,6 +320,14 @@ public class TestHttpProcessorUpgrader {
     }
   }
 
+  private static Map<String, Object> getConfigsAsMap(List<Config> configs) {
+  HashMap<String, Object> map = new HashMap<>();
+    for (Config c : configs) {
+      map.put(c.getName(), c.getValue());
+    }
+    return map;
+  }
+
   @Test
   public void testV11ToV12() throws Exception {
     List<Config> configs = new ArrayList<>();
