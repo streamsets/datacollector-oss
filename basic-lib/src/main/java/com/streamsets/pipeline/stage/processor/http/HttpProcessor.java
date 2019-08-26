@@ -355,13 +355,22 @@ public class HttpProcessor extends SingleLaneProcessor {
       }
       responses.put(entry.getKey(), responseFuture);
     }
+
     for (Map.Entry<Record, Future<Response>> entry : responses.entrySet()) {
       try {
         List<Record> output = processResponse(entry.getKey(), entry.getValue(), conf.maxRequestCompletionSecs, true);
-        if (output != null) {
-          for (Record r: output) {
-            batchMaker.addRecord(r);
-          }
+        Response response = null;
+        try {
+          response = responses.get(entry.getKey()).get(conf.maxRequestCompletionSecs, TimeUnit.SECONDS);
+        } catch (InterruptedException | ExecutionException e) {
+          LOG.error(Errors.HTTP_03.getMessage(), e.toString(), e);
+          throw new OnRecordErrorException(entry.getKey(), Errors.HTTP_03, e.toString());
+        } catch (TimeoutException e) {
+          LOG.error("HTTP request future timed out", e.toString(), e);
+          throw new OnRecordErrorException(entry.getKey() , Errors.HTTP_03, e.toString());
+        }
+        if (output != null && response != null) {
+          processRecord(batchMaker, output, entry.getKey(), response);
         }
       } catch (OnRecordErrorException e) {
         errorRecordHandler.onError(e);
@@ -408,7 +417,7 @@ public class HttpProcessor extends SingleLaneProcessor {
         );
       }
       resolvedRecords.remove(record);
-      List<Record> parsedResponse = parseResponse(responseBody);
+      List<Record> parsedResponse = parseResponse(record, responseBody);
       if (conf.httpMethod != HttpMethod.HEAD && responseBody == null && responseStatus != 204) {
         throw new OnRecordErrorException(record, Errors.HTTP_34);
       }
@@ -434,7 +443,7 @@ public class HttpProcessor extends SingleLaneProcessor {
    * @return an SDC record resulting from the response text
    * @throws StageException if the response could not be parsed
    */
-  private List<Record> parseResponse(InputStream response) throws StageException {
+  private List<Record> parseResponse(Record inRecord, InputStream response) throws StageException {
     List<Record> records = new ArrayList<Record>();
     if (conf.httpMethod == HttpMethod.HEAD) {
       // Head will have no body so can't be parsed.   Return an empty record.
@@ -448,7 +457,7 @@ public class HttpProcessor extends SingleLaneProcessor {
         while(record!=null){
           if(conf.dataFormat == DataFormat.TEXT) {
             // Output is placed in a field "/text" so we remove it here.
-            Record rec = getContext().createRecord("");
+            Record rec = getContext().cloneRecord(inRecord);
             rec.set(record.get("/text"));
             records.add(rec);
           }else if(conf.dataFormat == DataFormat.JSON || conf.dataFormat == DataFormat.XML){
@@ -457,7 +466,7 @@ public class HttpProcessor extends SingleLaneProcessor {
               // the list in a separate record.
               ArrayList<Field> list = (ArrayList<Field>) record.get().getValue();
               for (Field f : list) {
-                Record rec = getContext().createRecord("");
+                Record rec = getContext().cloneRecord(inRecord);
                 rec.set(f);
                 records.add(rec);
               }
