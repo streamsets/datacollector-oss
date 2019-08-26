@@ -213,18 +213,6 @@ public class HttpProcessorConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "",
-      label = "Target Field",
-      description = "Name of the field to set the parsed data to",
-      displayPosition = 11,
-      group = "HTTP"
-  )
-  @FieldSelectorModel(singleValued = true)
-  public String parsedFieldPath;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
       label = "Multiple Values Behavior",
       description = "How to handle multiple values produced by the parser",
       defaultValue = "FIRST_ONLY",
