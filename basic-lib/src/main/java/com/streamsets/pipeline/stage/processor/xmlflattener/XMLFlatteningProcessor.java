@@ -294,7 +294,8 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
   }
 
   private void ensureOutputFieldExists(Record record) {
-    if(StringUtils.isEmpty(outputField)) {
+    // when keepExistingFields is set to false, the outputField is hidden.. so any existing value in the outputField should not be used
+    if(StringUtils.isEmpty(outputField) || !keepExistingFields) {
       return;
     }
 
@@ -304,7 +305,8 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
   }
 
   private String getPathPrefix() {
-    if(StringUtils.isEmpty(outputField)) {
+    // when keepExistingFields is set to false, the outputField is hidden.. so any existing value in the outputField should not be used
+    if(StringUtils.isEmpty(outputField) || !keepExistingFields) {
       return  "/";
     }
 

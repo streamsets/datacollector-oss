@@ -77,7 +77,8 @@ public class TestXMLFlatteningProcessor {
     String attrStr,
     String outputField,
     boolean addAttrs,
-    boolean addNS
+    boolean addNS,
+    boolean keepFields
   ) {
     LinkedHashMap<String, Field> fields = new LinkedHashMap<>();
     String baseName = prefix + "contact" + offset + delimStr;
@@ -94,7 +95,7 @@ public class TestXMLFlatteningProcessor {
     fields.put(baseName + "phone(0)", Field.create("(111)111-1111" + id));
     fields.put(baseName + "phone(1)", Field.create("(222)222-2222" + id));
 
-    if(!StringUtils.isEmpty(outputField)) {
+    if(!StringUtils.isEmpty(outputField) && keepFields) {
       LinkedHashMap<String, Field> newRoot = new LinkedHashMap<>();
       newRoot.put(outputField, Field.create(Field.Type.MAP, fields));
       fields = newRoot;
@@ -107,7 +108,7 @@ public class TestXMLFlatteningProcessor {
   public void testSingleRecordNoAttrsNoNS() throws Exception {
     String xml = getXML("");
     Record expected = RecordCreator.create();
-    expected.set(Field.create(createExpectedRecord("", "", "", ".", "#", "", false, false)));
+    expected.set(Field.create(createExpectedRecord("", "", "", ".", "#", "", false, false, false)));
     doTest(xml, "contact", ImmutableList.of(expected), Collections.EMPTY_LIST, OnRecordError.DISCARD, true, true, false, false);
   }
 
@@ -115,7 +116,7 @@ public class TestXMLFlatteningProcessor {
   public void testSingleRecordNoAttrsNoNSWithWhiteSpace() throws Exception {
     String xml = getXMLWithWhitespace("");
     Record expected = RecordCreator.create();
-    expected.set(Field.create(createExpectedRecord("", "", "", ".", "#", "", false, false)));
+    expected.set(Field.create(createExpectedRecord("", "", "", ".", "#", "", false, false, false)));
     doTest(xml, "contact", ImmutableList.of(expected), Collections.EMPTY_LIST, OnRecordError.DISCARD, true, true, false, false);
   }
 
@@ -123,7 +124,7 @@ public class TestXMLFlatteningProcessor {
   public void testSingleRecordAttrsNoNS() throws Exception {
     String xml = getXML("");
     Record expected = RecordCreator.create();
-    expected.set(Field.create(createExpectedRecord("", "", "", ".", "#", "", true, false)));
+    expected.set(Field.create(createExpectedRecord("", "", "", ".", "#", "", true, false, false)));
     doTest(xml, "contact", ImmutableList.of(expected), Collections.EMPTY_LIST, OnRecordError.DISCARD, false, true, false, false);
   }
 
@@ -131,7 +132,7 @@ public class TestXMLFlatteningProcessor {
   public void testSingleRecordNoAttrsNS() throws Exception {
     String xml = getXML("");
     Record expected = RecordCreator.create();
-    expected.set(Field.create(createExpectedRecord("", "", "", ".", "#", "", false, true)));
+    expected.set(Field.create(createExpectedRecord("", "", "", ".", "#", "", false, true, false)));
     doTest(xml, "contact", ImmutableList.of(expected), Collections.EMPTY_LIST, OnRecordError.DISCARD, true, false, false, false);
   }
 
@@ -139,7 +140,7 @@ public class TestXMLFlatteningProcessor {
   public void testSingleRecordAttrsNS() throws Exception {
     String xml = getXML("");
     Record expected = RecordCreator.create();
-    expected.set(Field.create(createExpectedRecord("", "", "", "_", ".", "", true, true)));
+    expected.set(Field.create(createExpectedRecord("", "", "", "_", ".", "", true, true, false)));
     doTest(xml, "contact", "_", ".", "", ImmutableList.of(expected), Collections.EMPTY_LIST, OnRecordError.DISCARD,
         false, false, false, false);
   }
@@ -148,7 +149,7 @@ public class TestXMLFlatteningProcessor {
   public void testSingleRecordAttrsNSWithWhitespace() throws Exception {
     String xml = getXMLWithWhitespace("");
     Record expected = RecordCreator.create();
-    expected.set(Field.create(createExpectedRecord("", "", "", "_", ".", "", true, true)));
+    expected.set(Field.create(createExpectedRecord("", "", "", "_", ".", "", true, true, false)));
     doTest(xml, "contact", "_", ".", "", ImmutableList.of(expected), Collections.EMPTY_LIST, OnRecordError.DISCARD,
         false, false, false, false);
   }
@@ -157,7 +158,15 @@ public class TestXMLFlatteningProcessor {
   public void testOutputField() throws Exception {
     String xml = getXML("");
     Record expected = RecordCreator.create();
-    expected.set(Field.create(createExpectedRecord("", "", "", "_", ".", "output", true, true)));
+    expected.set(Field.create(createExpectedRecord("", "", "", "_", ".", "output", true, true, true)));
+    doTest(xml, "contact", "_", ".", "output", ImmutableList.of(expected), Collections.EMPTY_LIST, OnRecordError.DISCARD, false, false, true, false);
+  }
+
+  @Test
+  public void testOutputFieldWithKeepFieldsFalse() throws Exception {
+    String xml = getXML("");
+    Record expected = RecordCreator.create();
+    expected.set(Field.create(createExpectedRecord("", "", "", "_", ".", "output", true, true, false)));
     doTest(xml, "contact", "_", ".", "output", ImmutableList.of(expected), Collections.EMPTY_LIST, OnRecordError.DISCARD, false, false, false, false);
   }
 
@@ -165,9 +174,9 @@ public class TestXMLFlatteningProcessor {
   public void testMultipleRecords() throws Exception {
     String xml = "<contacts>" + getXML("0") + getXML("1") + "</contacts>";
     Record expected1 = RecordCreator.create();
-    expected1.set(Field.create(createExpectedRecord("", "0", "", ".", "#", "", false, false)));
+    expected1.set(Field.create(createExpectedRecord("", "0", "", ".", "#", "", false, false, false)));
     Record expected2 = RecordCreator.create();
-    expected2.set(Field.create(createExpectedRecord("", "1", "", ".", "#", "", false, false)));
+    expected2.set(Field.create(createExpectedRecord("", "1", "", ".", "#", "", false, false, false)));
     List<Record> expected = ImmutableList.of(expected1, expected2);
     doTest(xml, "contact", expected, Collections.EMPTY_LIST, OnRecordError.DISCARD, true, true, false, false);
   }
@@ -176,9 +185,9 @@ public class TestXMLFlatteningProcessor {
   public void testMultipleRecordsWhitespace() throws Exception {
     String xml = "<contacts>" + getXMLWithWhitespace("0") + getXMLWithWhitespace("1") + "</contacts>";
     Record expected1 = RecordCreator.create();
-    expected1.set(Field.create(createExpectedRecord("", "0", "", ".", "#", "", false, false)));
+    expected1.set(Field.create(createExpectedRecord("", "0", "", ".", "#", "", false, false, false)));
     Record expected2 = RecordCreator.create();
-    expected2.set(Field.create(createExpectedRecord("", "1", "", ".", "#", "", false, false)));
+    expected2.set(Field.create(createExpectedRecord("", "1", "", ".", "#", "", false, false, false)));
     List<Record> expected = ImmutableList.of(expected1, expected2);
     doTest(xml, "contact", expected, Collections.EMPTY_LIST, OnRecordError.DISCARD, true, true, false, false);
   }
@@ -187,8 +196,8 @@ public class TestXMLFlatteningProcessor {
   public void testMultipleRecordsNoDelimiter() throws Exception {
     String xml = "<contacts>" + getXML("0") + getXML("1") + "</contacts>";
     Record expected = RecordCreator.create();
-    Map<String, Field> allFields = createExpectedRecord("contacts.", "0", "(0)", ".", "#", "", false, false);
-    allFields.putAll(createExpectedRecord("contacts.", "1", "(1)", ".", "#", "", false, false));
+    Map<String, Field> allFields = createExpectedRecord("contacts.", "0", "(0)", ".", "#", "", false, false, false);
+    allFields.putAll(createExpectedRecord("contacts.", "1", "(1)", ".", "#", "", false, false, false));
     expected.set(Field.create(allFields));
     doTest(xml, "", ImmutableList.of(expected), Collections.EMPTY_LIST, OnRecordError.DISCARD, true, true, false, false);
   }
@@ -197,8 +206,8 @@ public class TestXMLFlatteningProcessor {
   public void testMultipleRecordsNoDelimiterWithWhitespace() throws Exception {
     String xml = "<contacts>" + getXMLWithWhitespace("0") + getXMLWithWhitespace("1") + "</contacts>";
     Record expected = RecordCreator.create();
-    Map<String, Field> allFields = createExpectedRecord("contacts.", "0", "(0)", ".", "#", "", false, false);
-    allFields.putAll(createExpectedRecord("contacts.", "1", "(1)", ".", "#", "", false, false));
+    Map<String, Field> allFields = createExpectedRecord("contacts.", "0", "(0)", ".", "#", "", false, false, false);
+    allFields.putAll(createExpectedRecord("contacts.", "1", "(1)", ".", "#", "", false, false, false));
     expected.set(Field.create(allFields));
     doTest(xml, "", ImmutableList.of(expected), Collections.EMPTY_LIST, OnRecordError.DISCARD, true, true, false, false);
   }
@@ -207,8 +216,8 @@ public class TestXMLFlatteningProcessor {
   public void testMultipleRecordsNoDelimiterWithAndWithoutWhitespace() throws Exception {
     String xml = "<contacts>" + getXMLWithWhitespace("0") + getXML("1") + "</contacts>";
     Record expected = RecordCreator.create();
-    Map<String, Field> allFields = createExpectedRecord("contacts.", "0", "(0)", ".", "#", "", false, false);
-    allFields.putAll(createExpectedRecord("contacts.", "1", "(1)", ".", "#", "", false, false));
+    Map<String, Field> allFields = createExpectedRecord("contacts.", "0", "(0)", ".", "#", "", false, false, false);
+    allFields.putAll(createExpectedRecord("contacts.", "1", "(1)", ".", "#", "", false, false, false));
     expected.set(Field.create(allFields));
     doTest(xml, "", ImmutableList.of(expected), Collections.EMPTY_LIST, OnRecordError.DISCARD, true, true, false, false);
   }
@@ -303,10 +312,10 @@ public class TestXMLFlatteningProcessor {
   public void testMultipleRecordsKeepOriginalFields() throws Exception {
     String xml = "<contacts>" + getXML("0") + getXML("1") + "</contacts>";
     Record expected1 = RecordCreator.create();
-    expected1.set(Field.createListMap(createExpectedRecord("", "0", "", ".", "#", "", false, false)));
+    expected1.set(Field.createListMap(createExpectedRecord("", "0", "", ".", "#", "", false, false, true)));
     expected1.set("/contact.name", Field.create("streamsets"));
     Record expected2 = RecordCreator.create();
-    expected2.set(Field.create(createExpectedRecord("", "1", "", ".", "#", "", false, false)));
+    expected2.set(Field.create(createExpectedRecord("", "1", "", ".", "#", "", false, false, true)));
     expected2.set("/contact.name", Field.create("streamsets"));
     List<Record> expected = ImmutableList.of(expected1, expected2);
     doTest(xml, "contact", expected, Collections.EMPTY_LIST, OnRecordError.DISCARD, true, true, true, false);
@@ -316,10 +325,10 @@ public class TestXMLFlatteningProcessor {
   public void testMultipleRecordsKeepOriginalFieldsOverWrite() throws Exception {
     String xml = "<contacts>" + getXML("0") + getXML("1") + "</contacts>";
     Record expected1 = RecordCreator.create();
-    expected1.set(Field.create(createExpectedRecord("", "0", "", ".", "#", "", false, false)));
+    expected1.set(Field.create(createExpectedRecord("", "0", "", ".", "#", "", false, false, true)));
     expected1.set("/contact.name", Field.create("streamsets"));
     Record expected2 = RecordCreator.create();
-    expected2.set(Field.create(createExpectedRecord("", "1", "", ".", "#", "", false, false)));
+    expected2.set(Field.create(createExpectedRecord("", "1", "", ".", "#", "", false, false, true)));
     List<Record> expected = ImmutableList.of(expected1, expected2);
     doTest(xml, "contact", expected, Collections.EMPTY_LIST, OnRecordError.DISCARD, true, true, true, true);
   }
@@ -419,7 +428,7 @@ public class TestXMLFlatteningProcessor {
         .addOutputLane("xml").setOnRecordError(onRecordError).build();
     runner.runInit();
     Record r = createRecord(xml);
-    if (keepFields && !newFieldOverwrites) {
+    if ((keepFields && !newFieldOverwrites) && !(keepFields && !outputField.isEmpty()) ) {
       r.set("/contact.name", Field.create("streamsets"));
     }
     StageRunner.Output output = runner.runProcess(ImmutableList.of(r));
