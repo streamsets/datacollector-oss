@@ -634,7 +634,18 @@ public class TestPipelineConfigurationValidator {
   public void testFieldsWithSlashPrefix() {
     StageLibraryTask lib = MockStages.createStageLibrary();
     PipelineConfiguration conf = MockStages.createPipelineConfigurationWithFieldNames(
-            "/singleFieldFoo", "/multiA", "/multiB");
+            "/singleFieldFoo with spaces", "/multiA", "/multiB");
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
+
+    conf = validator.validate();
+    Assert.assertFalse(conf.getIssues().hasIssues());
+  }
+
+  @Test
+  public void testFieldsWithParameterReferences() {
+    StageLibraryTask lib = MockStages.createStageLibrary();
+    PipelineConfiguration conf = MockStages.createPipelineConfigurationWithFieldNames(
+            "${param1} with spaces", "/multi A/${param 2}", "${param3}/suffix B");
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
 
     conf = validator.validate();

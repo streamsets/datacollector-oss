@@ -62,6 +62,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -73,6 +74,8 @@ public class ValidationUtil {
   //Have to be kept in sync with hadoop-common
   //This is to avoid adding a dependency to hadoop-common
   public static final String IMPERSONATION_ALWAYS_CURRENT_USER = "hadoop.always.impersonate.current.user";
+
+  private static final Pattern CONTAINS_EXPRESSION_PATTERN = Pattern.compile(".*\\$\\{.*}.*");
 
   /**
    * Resolve stage aliases (e.g. when a stage is renamed).
@@ -950,6 +953,9 @@ public class ValidationUtil {
   }
 
   private static boolean validatePath(ConfigDefinition confDef, IssueCreator issueCreator, List<Issue> issues, String fieldPath) {
+    if (CONTAINS_EXPRESSION_PATTERN.matcher(fieldPath).matches()) {
+      return true; // don't try and validate expressions statically
+    }
     try {
       PathElement.parse(fieldPath, true);
     } catch (IllegalArgumentException e) {
