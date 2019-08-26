@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.salesforce;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ValueChooserModel;
 
 public class ForceInputConfigBean extends ForceConfigBean {
   @ConfigDef(
@@ -41,4 +42,16 @@ public class ForceInputConfigBean extends ForceConfigBean {
       triggeredByValue = "true"
   )
   public String salesforceNsHeaderPrefix = "salesforce.";
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Mismatched Types Behavior",
+      description = "How to handle fields with types that do not match the schema.",
+      defaultValue = "PRESERVE_DATA",
+      displayPosition = 310,
+      group = "ADVANCED"
+  )
+  @ValueChooserModel(MismatchedTypesOptionChooserValues.class)
+  public MismatchedTypesOption mismatchedTypesOption = MismatchedTypesOption.PRESERVE_DATA;
 }

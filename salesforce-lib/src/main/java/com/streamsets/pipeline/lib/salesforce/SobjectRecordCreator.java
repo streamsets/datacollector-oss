@@ -32,6 +32,7 @@ import soql.SOQLParser;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -452,6 +453,21 @@ public abstract class SobjectRecordCreator extends ForceRecordCreatorImpl {
       } else if (BYTE_TYPES.contains(sfdcType)) {
         return  com.streamsets.pipeline.api.Field.create(com.streamsets.pipeline.api.Field.Type.BYTE, val);
       } else if (INT_TYPES.contains(sfdcType)) {
+        if (val != null && val.toString().contains(".")) {
+          // SDC-12343 - schema says int, but Salesforce can give you a float!
+          switch (conf.mismatchedTypesOption) {
+            case PRESERVE_DATA:
+              // Keep the data, coerce the type to decimal
+              return com.streamsets.pipeline.api.Field.create(com.streamsets.pipeline.api.Field.Type.DECIMAL, val);
+            case TRUNCATE_DATA:
+              // Simply chop the data in half at the decimal point
+              val = val.toString().split("\\.")[0];
+              break;
+            case ROUND_DATA:
+              val = (new BigDecimal(val.toString())).setScale(sfdcField.getScale(), RoundingMode.HALF_UP).intValueExact();
+              break;
+          }
+        }
         return  com.streamsets.pipeline.api.Field.create(com.streamsets.pipeline.api.Field.Type.INTEGER, val);
       } else if (DECIMAL_TYPES.contains(sfdcType)) {
         // Salesforce can return a string value with greater scale than that defined in the schema - see SDC-10152
