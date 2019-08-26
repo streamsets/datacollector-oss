@@ -293,7 +293,7 @@ public class HttpProcessor extends SingleLaneProcessor {
               fieldsMap.put(conf.headerOutputField.replace("/",""),resFieldHeaders);
             }
             fieldsMap.put(conf.outputField.replace("/",""),firstRecord.get());
-            Record rec = getContext().createRecord("");
+            Record rec = getContext().cloneRecord(inRec);
             rec.set(Field.create(fieldsMap));
             batchMaker.addRecord(rec);
             break;
@@ -306,7 +306,7 @@ public class HttpProcessor extends SingleLaneProcessor {
               fs.put(conf.headerOutputField.replace("/",""),resField);
             }
             fs.put(conf.outputField.replace("/",""),Field.create(multipleFieldValues));
-            Record newRec = getContext().createRecord("");
+            Record newRec = getContext().cloneRecord(inRec);
             newRec.set(Field.create(fs));
             batchMaker.addRecord(newRec);
             break;
@@ -320,7 +320,7 @@ public class HttpProcessor extends SingleLaneProcessor {
                 fields.put(conf.headerOutputField.replace("/",""),responseField);
               }
               fields.put(conf.outputField.replace("/",""),parsedRecord.get());
-              Record splitRecord = getContext().createRecord("");
+              Record splitRecord = getContext().cloneRecord(inRec);
               splitRecord.set(Field.create(fields));
               batchMaker.addRecord(splitRecord);
             }
