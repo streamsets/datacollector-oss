@@ -409,7 +409,7 @@ public class HttpProcessor extends SingleLaneProcessor {
       }
       resolvedRecords.remove(record);
       List<Record> parsedResponse = parseResponse(responseBody);
-      if (responseBody == null && responseStatus != 204) {
+      if (conf.httpMethod != HttpMethod.HEAD && responseBody == null && responseStatus != 204) {
         throw new OnRecordErrorException(record, Errors.HTTP_34);
       }
       return parsedResponse;
