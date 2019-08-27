@@ -16,6 +16,7 @@
 
 package com.streamsets.pipeline.lib.dirspooler;
 
+import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
@@ -107,17 +108,19 @@ public class SpoolDirBaseContext {
           aggregatedNoMoreDataFileCount += runnableContext.getNoMoreDataFileCount();
         }
 
-        LOG.info("sending no-more-data event.  records {} errors {} files {} ",
+        LOG.info("Sending no-more-data event: records:{}, errors:{}, files:{} ",
             aggregatedNoMoreDataRecordCount,
             aggregatedNoMoreDataErrorCount,
             aggregatedNoMoreDataFileCount
         );
-        NoMoreDataEvent.EVENT_CREATOR.create(context, batchContext).with(NoMoreDataEvent.RECORD_COUNT,
-            aggregatedNoMoreDataRecordCount
-        ).with(
-            NoMoreDataEvent.ERROR_COUNT,
-            aggregatedNoMoreDataErrorCount
-        ).with(NoMoreDataEvent.FILE_COUNT, aggregatedNoMoreDataFileCount).createAndSend();
+        Preconditions.checkNotNull(NoMoreDataEvent.EVENT_CREATOR);
+        Preconditions.checkNotNull(context);
+        Preconditions.checkNotNull(batchContext);
+        NoMoreDataEvent.EVENT_CREATOR.create(context, batchContext)
+          .with(NoMoreDataEvent.RECORD_COUNT, aggregatedNoMoreDataRecordCount)
+          .with(NoMoreDataEvent.ERROR_COUNT, aggregatedNoMoreDataErrorCount)
+          .with(NoMoreDataEvent.FILE_COUNT, aggregatedNoMoreDataFileCount)
+          .createAndSend();
 
         clearCounters();
         noMoreDataSent = true;
