@@ -23,7 +23,6 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.HashMap;
 import java.util.Map;
 
-
 @ApiModel(description = "")
 public class PipelineStateJson   {
 
@@ -79,7 +78,9 @@ public class PipelineStateJson   {
     CLUSTER_MESOS_STREAMING("CLUSTER_MESOS_STREAMING"),
     SLAVE("SLAVE"),
     EDGE("EDGE"),
-    EMR_BATCH("EMR_BATCH")
+    EMR_BATCH("EMR_BATCH"),
+    BATCH("BATCH"),
+    STREAMING("STREAMING")
     ;
 
     private final String value;
