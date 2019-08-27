@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 StreamSets Inc.
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.processor.startPipeline;
+package com.streamsets.pipeline.stage.origin.startPipeline;
 
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
+import com.streamsets.pipeline.api.base.configurablestage.DSource;
 import com.streamsets.pipeline.lib.startPipeline.Groups;
 import com.streamsets.pipeline.lib.startPipeline.StartPipelineConfig;
 
@@ -38,14 +38,13 @@ import com.streamsets.pipeline.lib.startPipeline.StartPipelineConfig;
 )
 @GenerateResourceBundle
 @ConfigGroups(Groups.class)
-public class StartPipelineDProcessor extends DProcessor {
+public class StartPipelineDSource extends DSource {
 
   @ConfigDefBean
   public StartPipelineConfig conf;
 
   @Override
-  protected Processor createProcessor() {
-    return new StartPipelineProcessor(conf);
+  protected Source createSource() {
+    return new StartPipelineSource(conf);
   }
-
 }

@@ -15,148 +15,112 @@
  */
 package com.streamsets.pipeline.stage.processor.startPipeline;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableList;
-import com.streamsets.datacollector.client.ApiClient;
-import com.streamsets.datacollector.client.ApiException;
-import com.streamsets.datacollector.client.api.ManagerApi;
-import com.streamsets.datacollector.client.api.StoreApi;
-import com.streamsets.datacollector.client.api.SystemApi;
-import com.streamsets.datacollector.client.model.PipelineStateJson;
-import com.streamsets.datacollector.client.model.SourceOffsetJson;
+import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
-import com.streamsets.pipeline.lib.util.ThreadUtil;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.api.base.SingleLaneProcessor;
+import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.startPipeline.PipelineIdConfig;
+import com.streamsets.pipeline.lib.startPipeline.StartPipelineCommon;
+import com.streamsets.pipeline.lib.startPipeline.StartPipelineConfig;
+import com.streamsets.pipeline.lib.startPipeline.StartPipelineSupplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
-public class StartPipelineProcessor extends SingleLaneRecordProcessor {
+public class StartPipelineProcessor extends SingleLaneProcessor {
 
   private static final Logger LOG = LoggerFactory.getLogger(StartPipelineProcessor.class);
-  private static final String REV = "0";
+  private StartPipelineCommon startPipelineCommon;
   private StartPipelineConfig conf;
-  private ManagerApi managerApi;
-  private ObjectMapper objectMapper = new ObjectMapper();
-
-  private List<PipelineStateJson.StatusEnum> successStates = ImmutableList.of(
-      PipelineStateJson.StatusEnum.STOPPED,
-      PipelineStateJson.StatusEnum.FINISHED
-  );
-
-  private List<PipelineStateJson.StatusEnum> errorStates = ImmutableList.of(
-      PipelineStateJson.StatusEnum.START_ERROR,
-      PipelineStateJson.StatusEnum.RUN_ERROR,
-      PipelineStateJson.StatusEnum.STOP_ERROR,
-      PipelineStateJson.StatusEnum.DISCONNECTED
-  );
 
   StartPipelineProcessor(StartPipelineConfig conf) {
+    this.startPipelineCommon = new StartPipelineCommon(conf);
     this.conf = conf;
   }
 
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
-    ApiClient apiClient;
-
-    // Validate Server is reachable
-    try {
-      apiClient = getApiClient();
-      SystemApi systemApi = new SystemApi(apiClient);
-      systemApi.getServerTime();
-    } catch (Exception ex) {
-      LOG.error(ex.getMessage(), ex);
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.PIPELINE.getLabel(),
-              "conf.baseUrl",
-              Errors.START_PIPELINE_01,
-              ex.getMessage(),
-              ex
-          )
-      );
-      return issues;
-    }
-
-    // Validate pipelineId exists in the server
-    try {
-      StoreApi storeApi = new StoreApi(apiClient);
-      storeApi.getPipelineInfo(conf.pipelineId, REV, "info", false);
-    } catch (ApiException ex) {
-      LOG.error(ex.getMessage(), ex);
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.PIPELINE.getLabel(),
-              "conf.pipelineId",
-              Errors.START_PIPELINE_02,
-              ex.getMessage(),
-              ex
-          )
-      );
-      return issues;
-    }
-
-    managerApi = new ManagerApi(apiClient);
-    return issues;
+    return this.startPipelineCommon.init(issues, getContext());
   }
 
-  @Override
-  protected void process(Record record, SingleLaneBatchMaker batchMaker) {
-    try {
-      if (conf.resetOrigin) {
-        managerApi.resetOffset(conf.pipelineId, REV);
+  public void process(Batch batch, SingleLaneBatchMaker batchMaker) throws StageException {
+    List<CompletableFuture<Field>> startPipelineFutures = new ArrayList<>();
+    Executor executor = Executors.newCachedThreadPool();
+    Iterator<Record> it = batch.getRecords();
+    Record firstRecord = null;
+    while (it.hasNext()) {
+      Record record = it.next();
+      if (firstRecord == null) {
+        firstRecord = record;
       }
-      PipelineStateJson pipelineStateJson = managerApi.startPipeline(conf.pipelineId, REV, conf.runtimeParameters);
-      if (conf.runInBackground) {
-        updateRecord(record, pipelineStateJson);
-        batchMaker.addRecord(record);
+      try {
+        for(PipelineIdConfig pipelineIdConfig: conf.pipelineIdConfigList) {
+          CompletableFuture<Field> future = CompletableFuture.supplyAsync(new StartPipelineSupplier(
+              this.startPipelineCommon.managerApi,
+              this.startPipelineCommon.storeApi,
+              conf,
+              pipelineIdConfig,
+              getContext()
+          ), executor);
+          startPipelineFutures.add(future);
+        }
+
+      } catch (OnRecordErrorException ex) {
+        switch (this.getContext().getOnErrorRecord()) {
+          case DISCARD:
+            break;
+          case TO_ERROR:
+            this.getContext().toError(record, ex);
+            break;
+          case STOP_PIPELINE:
+            throw ex;
+          default:
+            throw new IllegalStateException(Utils.format(
+                "It should never happen. OnError '{}'",
+                this.getContext().getOnErrorRecord(),
+                ex
+            ));
+        }
+      }
+    }
+
+    if (startPipelineFutures.isEmpty()) {
+      return;
+    }
+
+    try {
+      LinkedHashMap<String, Field> outputField = startPipelineCommon.startPipelineInParallel(
+          startPipelineFutures,
+          getContext()
+      );
+
+      if (firstRecord == null) {
+        firstRecord = getContext().createRecord("startPipelineProcessor");
+        firstRecord.set(Field.createListMap(outputField));
       } else {
-        waitForPipelineCompletion(record, batchMaker);
+        Field rootField = firstRecord.get();
+        if (rootField.getType() == Field.Type.LIST_MAP) {
+          // If the root field merge results with existing record
+          LinkedHashMap<String, Field> currentField = rootField.getValueAsListMap();
+          currentField.putAll(outputField);
+        } else {
+          firstRecord.set(Field.createListMap(outputField));
+        }
       }
-    } catch (Exception e) {
-      getContext().toError(record, e);
+      batchMaker.addRecord(firstRecord);
+    } catch (Exception ex) {
+      getContext().reportError(ex);
     }
-  }
-
-  private void waitForPipelineCompletion(Record record, SingleLaneBatchMaker batchMaker) throws Exception {
-    PipelineStateJson pipelineStateJson = managerApi.getPipelineStatus(conf.pipelineId, REV);
-    if (successStates.contains(pipelineStateJson.getStatus())) {
-      updateRecord(record, pipelineStateJson);
-      batchMaker.addRecord(record);
-    } else if (errorStates.contains(pipelineStateJson.getStatus())) {
-      updateRecord(record, pipelineStateJson);
-      getContext().toError(record, pipelineStateJson.getMessage());
-    } else {
-      ThreadUtil.sleep(conf.waitTime);
-      waitForPipelineCompletion(record, batchMaker);
-    }
-  }
-
-  private void updateRecord(Record record, PipelineStateJson pipelineStateJson) throws Exception {
-    // after done add status, offset and metrics to record
-    SourceOffsetJson sourceOffset = managerApi.getCommittedOffsets(conf.pipelineId, REV);
-    LinkedHashMap<String, Field> startOutput = new LinkedHashMap<>();
-    startOutput.put("committedOffsets", Field.create(objectMapper.writeValueAsString(sourceOffset)));
-    startOutput.put("pipelineState", Field.create(objectMapper.writeValueAsString(pipelineStateJson)));
-    record.set(conf.outputFieldPath, Field.createListMap(startOutput));
-  }
-
-  private ApiClient getApiClient() throws StageException {
-    String authType = "form";
-    if (conf.controlHubEnabled) {
-      authType = "dpm";
-    }
-    ApiClient apiClient = new ApiClient(authType);
-    apiClient.setUserAgent("Start Pipeline Processor");
-    apiClient.setBasePath(conf.baseUrl + "/rest");
-    apiClient.setUsername(conf.username.get());
-    apiClient.setPassword(conf.password.get());
-    apiClient.setDPMBaseURL(conf.controlHubUrl);
-    return  apiClient;
   }
 }

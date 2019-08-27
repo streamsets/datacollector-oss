@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.processor.startPipeline;
+package com.streamsets.pipeline.lib.startPipeline;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 
-import java.util.Map;
+import java.util.List;
 
 public class StartPipelineConfig {
 
@@ -36,25 +37,16 @@ public class StartPipelineConfig {
   public String baseUrl = "http://localhost:18630";
 
   @ConfigDef(
+      label = "Pipelines",
       required = true,
-      type = ConfigDef.Type.STRING,
-      label = "Pipeline ID",
-      description = "ID of the pipeline to start",
+      type = ConfigDef.Type.MODEL,
+      defaultValue="",
+      description="Pipelines to start in parallel",
       displayPosition = 20,
       group = "PIPELINE"
   )
-  public String pipelineId = "";
-
-  @ConfigDef(
-      required = false,
-      defaultValue = "{}",
-      type = ConfigDef.Type.MAP,
-      label = "Runtime Parameters",
-      description = "Runtime parameters to pass to the pipeline",
-      displayPosition = 30,
-      group = "PIPELINE"
-  )
-  public Map<String, Object> runtimeParameters;
+  @ListBeanModel
+  public List<PipelineIdConfig> pipelineIdConfigList;
 
   @ConfigDef(
       required = true,
@@ -117,17 +109,6 @@ public class StartPipelineConfig {
       triggeredByValue = { "false" }
   )
   public int waitTime;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "/output",
-      label = "Output Field Path",
-      description = "Writes the pipeline status, offset, and metrics to the specified field",
-      displayPosition = 70,
-      group = "PIPELINE"
-  )
-  public String outputFieldPath = "/output";
 
   @ConfigDef(
       required = true,

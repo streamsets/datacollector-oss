@@ -13,24 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.processor.startPipeline;
+package com.streamsets.pipeline.lib.startPipeline;
 
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
-public enum Groups implements Label {
-  PIPELINE("Pipeline"),
-  CREDENTIALS("Credentials"),
-  TLS("TLS"),
+@GenerateResourceBundle
+public enum Errors implements ErrorCode {
+  START_PIPELINE_01("Failed to connect to Execution Engine: {}"),
+  START_PIPELINE_02("Pipeline ID {} does not exist in Execution Engine: {}"),
   ;
 
-  private final String label;
-
-  Groups(String label) {
-    this.label = label;
+  private final String msg;
+  Errors(String msg) {
+    this.msg = msg;
   }
 
-  public String getLabel() {
-    return label;
+  @Override
+  public String getCode() {
+    return name();
   }
+
+  @Override
+  public String getMessage() {
+    return msg;
+  }
+
 }
-
