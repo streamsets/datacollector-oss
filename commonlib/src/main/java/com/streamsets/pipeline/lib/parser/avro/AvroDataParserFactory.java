@@ -28,7 +28,9 @@ import com.streamsets.pipeline.lib.parser.Errors;
 import com.streamsets.pipeline.lib.util.AvroSchemaHelper;
 import com.streamsets.pipeline.lib.util.SchemaRegistryException;
 import org.apache.avro.Schema;
+import org.apache.commons.io.IOUtils;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -130,6 +132,17 @@ public class AvroDataParserFactory extends DataParserFactory {
 
   @Override
   public DataParser getParser(String id, InputStream is, String offset) throws DataParserException {
+    if (is instanceof ByteArrayInputStream) {
+      // HACK ALERT
+      // The data parser framework currently has no way to invoke the byte[] forms of getParser, so for now
+      // we will have to check if we are dealing with a ByteArrayInputStream and invoke the byte[] form from
+      // here.  This condition can be removed if API-328 is completed.
+      try {
+        return getParser(id, IOUtils.toByteArray(is));
+      } catch (IOException e) {
+        throw new DataParserException(Errors.DATA_PARSER_05, e.getClass().getSimpleName(), e.getMessage(), e);
+      }
+    }
     try {
       return new AvroDataStreamParser(
           getSettings().getContext(), schema, id, is, Long.parseLong(offset),

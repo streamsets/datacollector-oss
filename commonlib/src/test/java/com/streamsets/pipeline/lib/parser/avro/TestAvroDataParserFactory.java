@@ -32,6 +32,7 @@ import org.mockserver.client.server.MockServerClient;
 import org.mockserver.junit.MockServerRule;
 import org.mockserver.model.Header;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -119,7 +120,8 @@ public class TestAvroDataParserFactory {
     try (InputStream is = Resources.getResource("message2.avro").openStream()) {
       byte[] data = ByteStreams.toByteArray(is);
 
-      DataParser parser = dataParserFactory.getParser(ID, data);
+      // use ByteArrayInputStream to confirm workaround in SDC-12367
+      DataParser parser = dataParserFactory.getParser(ID, new ByteArrayInputStream(data), "0");
       Record record = parser.parse();
       Assert.assertNotEquals(null, record);
       Assert.assertEquals(record.get("/f1").getValue(), "value1");

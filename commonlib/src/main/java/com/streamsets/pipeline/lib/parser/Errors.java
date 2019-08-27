@@ -25,6 +25,7 @@ public enum Errors implements ErrorCode {
   DATA_PARSER_02("Parser error: '{}'"),
   DATA_PARSER_03("Failed to parse/load schema from registry: {}"),
   DATA_PARSER_04("Error attempting to parse delimited record: {}"),
+  DATA_PARSER_05("{} attempting to read bytes from ByteArrayInputStream: {}"),
   ;
 
   private final String msg;
