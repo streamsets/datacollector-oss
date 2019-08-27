@@ -60,7 +60,7 @@ public class FieldMapperProcessor extends SingleLaneRecordProcessor {
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues =  super.init();
     expressionVars = ELUtils.parseConstants(
-        null, getContext(), Groups.MAPPER.name(), "constants", Errors.EXPR_01, issues
+        null, getContext(), Groups.MAPPER.name(), "constants", Errors.FIELD_MAPPER_01, issues
     );
     mapperExpressionEval = createMapperExpressionEval(getContext());
     if (!Strings.isNullOrEmpty(fieldMapperConfig.aggregationExpression)) {
