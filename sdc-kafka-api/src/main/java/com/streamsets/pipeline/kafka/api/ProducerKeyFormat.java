@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2019 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,24 +15,27 @@
  */
 package com.streamsets.pipeline.kafka.api;
 
-import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 
-import java.util.List;
+@GenerateResourceBundle
+public enum ProducerKeyFormat implements Label {
+  STRING("String"),
+  AVRO("Avro"),
 
-public interface SdcKafkaProducer {
+  ;
 
-  public void init() throws StageException;
+  private final String label;
 
-  public void destroy();
+  ProducerKeyFormat(String label) {
+    this.label = label;
+  }
 
-  public void enqueueMessage(String topic, Object message, Object messageKey);
+  @Override
+  public String getLabel() {
+    return label;
+  }
 
-  public List<Record> write(Stage.Context context) throws StageException;
-
-  public void clearMessages();
-
-  public String getVersion();
 
 }
+

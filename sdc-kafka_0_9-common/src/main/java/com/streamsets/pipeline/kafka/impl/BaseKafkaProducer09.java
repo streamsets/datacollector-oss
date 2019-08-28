@@ -58,8 +58,8 @@ public abstract class BaseKafkaProducer09 implements SdcKafkaProducer {
 
   @SuppressWarnings("unchecked")
   @Override
-  public void enqueueMessage(String topic, Object message, Object partitionKey) {
-    ProducerRecord e = new ProducerRecord<>(topic, partitionKey, message);
+  public void enqueueMessage(String topic, Object message, Object messageKey) {
+    ProducerRecord e = new ProducerRecord<>(topic, messageKey, message);
     // send will place this record in the buffer to be batched later
     futureList.add(producer.send(e));
   }
@@ -112,7 +112,7 @@ public abstract class BaseKafkaProducer09 implements SdcKafkaProducer {
     return Kafka09Constants.KAFKA_VERSION;
   }
 
-  protected abstract Producer<String, byte[]> createKafkaProducer();
+  protected abstract Producer<Object, byte[]> createKafkaProducer();
 
   protected abstract StageException createWriteException(Exception e);
 

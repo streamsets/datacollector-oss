@@ -117,6 +117,8 @@ public class KafkaProducer09IT {
     kafkaProducerConfigs.put("retries", 0);
     kafkaProducerConfigs.put("batch.size", 100);
     kafkaProducerConfigs.put("linger.ms", 0);
+    kafkaProducerConfigs.put(KafkaConstants.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+    kafkaProducerConfigs.put(KafkaConstants.VALUE_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class);
 
     String topic = getNextTopic();
     SdcKafkaProducer sdcKafkaProducer = createSdcKafkaProducer(port, kafkaProducerConfigs);

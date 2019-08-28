@@ -110,10 +110,10 @@ public class KafkaProducer08 implements SdcKafkaProducer {
   }
 
   @Override
-  public void enqueueMessage(String topic, Object message, Object partitionKey) {
+  public void enqueueMessage(String topic, Object message, Object messageKey) {
     //Topic could be a record EL string. This is not a good place to evaluate expression
     //Hence get topic as parameter
-    messageList.add(new KeyedMessage<>(topic, partitionKey, message));
+    messageList.add(new KeyedMessage<>(topic, messageKey, message));
   }
 
   @Override

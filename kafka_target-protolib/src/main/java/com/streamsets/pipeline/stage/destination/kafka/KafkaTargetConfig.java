@@ -19,6 +19,7 @@ import com.google.common.base.Joiner;
 import com.google.common.net.HostAndPort;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -31,15 +32,20 @@ import com.streamsets.pipeline.kafka.api.KafkaDestinationGroups;
 import com.streamsets.pipeline.kafka.api.KafkaOriginGroups;
 import com.streamsets.pipeline.kafka.api.PartitionStrategy;
 import com.streamsets.pipeline.kafka.api.ProducerFactorySettings;
+import com.streamsets.pipeline.kafka.api.ProducerKeyFormat;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducer;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducerFactory;
 import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtil;
 import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtilFactory;
+import com.streamsets.pipeline.lib.el.AvroEL;
+import com.streamsets.pipeline.lib.el.Base64EL;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
+import com.streamsets.pipeline.sdk.ElUtil;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
+import org.apache.avro.generic.GenericRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,6 +83,17 @@ public class KafkaTargetConfig {
   )
   @ValueChooserModel(ProducerDataFormatChooserValues.class)
   public DataFormat dataFormat;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "STRING",
+      label = "Message Key Format",
+      displayPosition = 2,
+      group = "DATA_FORMAT"
+  )
+  @ValueChooserModel(ProducerKeyFormatChooserValues.class)
+  public ProducerKeyFormat messageKeyFormat;
 
   @ConfigDefBean(groups = {"DATA_FORMAT"})
   public DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
@@ -195,7 +212,7 @@ public class KafkaTargetConfig {
       description = "Method used to serialize the Kafka message key. Set to Confluent to embed the Avro schema ID in each message the destination writes.",
       defaultValue = "STRING",
       displayPosition = 440,
-      dependsOn = "dataFormat",
+      dependsOn = "messageKeyFormat",
       triggeredByValue = "AVRO",
       group = "KAFKA"
   )
@@ -227,6 +244,36 @@ public class KafkaTargetConfig {
   )
   public Map<String, String> kafkaProducerConfigs = new HashMap<>();
 
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "${avro:decode(record:attribute('avroKeySchema'),base64:decodeBytes(record:attribute('kafkaMessageKey')))}",
+      label = "Kafka Message Key",
+      description = "The Kafka message key",
+      displayPosition = 70,
+      dependsOn = "messageKeyFormat",
+      triggeredByValue = "AVRO",
+      group = "#0",
+      elDefs = {AvroEL.class, RecordEL.class, Base64EL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
+  )
+  public String avroMessageKey;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "${record:attribute('kafkaMessageKey')}",
+      label = "Kafka Message Key",
+      description = "The Kafka message key",
+      displayPosition = 80,
+      group = "#0",
+      dependsOn = "messageKeyFormat",
+      triggeredByValue = "STRING",
+      elDefs = {RecordEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
+  )
+  public String stringMessageKey;
+
 
   // Private members
 
@@ -236,6 +283,8 @@ public class KafkaTargetConfig {
   private ELVars partitionVars;
   private ELEval topicEval;
   private ELVars topicVars;
+  private ELVars messageKeyVars;
+  private ELEval messageKeyEval;
   private Set<String> allowedTopics;
   private boolean allowAllTopics;
   private List<HostAndPort> kafkaBrokers;
@@ -264,6 +313,9 @@ public class KafkaTargetConfig {
         KAFKA_CONFIG_BEAN_PREFIX + "dataGeneratorFormatConfig.",
         issues
     );
+
+    validateMessageKeySerializerConfig(context, issues);
+    validateMessageKeyExpression(context, issues);
 
     if (valueSerializer == CONFLUENT || keySerializer == CONFLUENT) {
       validateConfluentSerializerConfigs(context, issues);
@@ -370,6 +422,20 @@ public class KafkaTargetConfig {
       } catch (StageException ex) {
         issues.add(context.createConfigIssue(null, null, ex.getErrorCode(), ex.getParams()));
       }
+    }
+  }
+
+  private void validateMessageKeySerializerConfig(Stage.Context context, List<Stage.ConfigIssue> issues){
+
+    if(messageKeyFormat == ProducerKeyFormat.AVRO && keySerializer != CONFLUENT){
+      issues.add(
+          context.createConfigIssue(
+              KafkaOriginGroups.KAFKA.name(),
+              KAFKA_CONFIG_BEAN_PREFIX + "keySerializer",
+              KafkaErrors.KAFKA_77,
+              keySerializer
+          )
+      );
     }
   }
 
@@ -619,6 +685,53 @@ public class KafkaTargetConfig {
       }
     }
     return partitionKey;
+  }
+
+  private void validateMessageKeyExpression(Stage.Context context, List<Stage.ConfigIssue> issues) {
+    messageKeyVars = context.createELVars();
+
+    if (messageKeyFormat == ProducerKeyFormat.STRING){
+      messageKeyEval = context.createELEval(stringMessageKey, RecordEL.class);
+      ELUtils.validateExpression(
+          stringMessageKey,
+          context,
+          KafkaDestinationGroups.KAFKA.name(),
+          KAFKA_CONFIG_BEAN_PREFIX + "stringMessageKey",
+          KafkaErrors.KAFKA_53,
+          issues
+      );
+    }
+    else if(messageKeyFormat == ProducerKeyFormat.AVRO){
+      messageKeyEval = context.createELEval(avroMessageKey, RecordEL.class, Base64EL.class, AvroEL.class);
+      ELUtils.validateExpression(
+          avroMessageKey,
+          context,
+          KafkaDestinationGroups.KAFKA.name(),
+          KAFKA_CONFIG_BEAN_PREFIX + "avroMessageKey",
+          KafkaErrors.KAFKA_53,
+          issues
+      );
+    }
+  }
+
+  Object getMessageKey(Record record) throws StageException {
+    Object messageKey = null;
+    RecordEL.setRecordInContext(messageKeyVars, record);
+
+    if (messageKeyFormat == ProducerKeyFormat.STRING) {
+      try {
+         messageKey = messageKeyEval.eval(messageKeyVars, stringMessageKey, String.class);
+      } catch (ELEvalException e) {
+        throw new StageException(KafkaErrors.KAFKA_52, stringMessageKey, record.getHeader().getSourceId(), e.getMessage(), e);
+      }
+    } else if (messageKeyFormat == ProducerKeyFormat.AVRO) {
+      try {
+        messageKey = messageKeyEval.eval(messageKeyVars, avroMessageKey, GenericRecord.class);
+      } catch (ELEvalException e) {
+        throw new StageException(KafkaErrors.KAFKA_52, avroMessageKey, record.getHeader().getSourceId(), e.getMessage(), e);
+      }
+    }
+    return messageKey;
   }
 
 

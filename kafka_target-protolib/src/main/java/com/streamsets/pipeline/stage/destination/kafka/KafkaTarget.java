@@ -163,6 +163,7 @@ public class KafkaTarget extends BaseTarget {
               currentRecord = null;
               generator.close();
               byte[] bytes = baos.toByteArray();
+              // multiple records squashed.. so using partition as the message key
               kafkaProducer.enqueueMessage(entryTopic, bytes, partition);
             } catch (StageException ex) {
               errorRecordHandler.onError(
@@ -229,8 +230,9 @@ public class KafkaTarget extends BaseTarget {
       recordList.add(record);
       try {
         String topic = conf.getTopic(record);
-        Object partitionKey = conf.getPartitionKey(record, topic);
-        kafkaProducer.enqueueMessage(topic, serializeRecord(record), partitionKey);
+        Object messageKey = conf.getMessageKey(record);
+
+        kafkaProducer.enqueueMessage(topic, serializeRecord(record), messageKey);
         count++;
         sendLineageEventIfNeeded(topic);
       } catch (KafkaConnectionException ex) {

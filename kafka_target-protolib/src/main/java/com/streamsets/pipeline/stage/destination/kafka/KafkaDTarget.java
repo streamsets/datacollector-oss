@@ -26,7 +26,7 @@ import com.streamsets.pipeline.kafka.api.KafkaDestinationGroups;
 import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
 
 @StageDef(
-  version = 4,
+  version = 5,
   label = "Kafka Producer",
   description = "Writes data to Kafka",
   icon = "kafka.png",

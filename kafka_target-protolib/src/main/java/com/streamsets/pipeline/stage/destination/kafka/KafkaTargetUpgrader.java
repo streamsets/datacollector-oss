@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
+import com.streamsets.pipeline.kafka.api.ProducerKeyFormat;
 import com.streamsets.pipeline.stage.destination.lib.ResponseType;
 
 import java.util.ArrayList;
@@ -53,6 +54,12 @@ public class KafkaTargetUpgrader implements StageUpgrader {
         // fall-through to next version
       case 3:
         upgradeV3ToV4(configs);
+        if (toVersion == 4) {
+          break;
+        }
+        // fall-through to next version
+      case 4:
+        // handled by yaml upgrader
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));

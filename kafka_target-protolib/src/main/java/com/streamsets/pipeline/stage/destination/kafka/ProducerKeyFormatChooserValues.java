@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2019 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.kafka.api;
+package com.streamsets.pipeline.stage.destination.kafka;
 
-import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.kafka.api.ProducerKeyFormat;
 
-import java.util.List;
+public class ProducerKeyFormatChooserValues extends BaseEnumChooserValues {
 
-public interface SdcKafkaProducer {
-
-  public void init() throws StageException;
-
-  public void destroy();
-
-  public void enqueueMessage(String topic, Object message, Object messageKey);
-
-  public List<Record> write(Stage.Context context) throws StageException;
-
-  public void clearMessages();
-
-  public String getVersion();
+  public ProducerKeyFormatChooserValues() {
+    super(ProducerKeyFormat.class);
+  }
 
 }

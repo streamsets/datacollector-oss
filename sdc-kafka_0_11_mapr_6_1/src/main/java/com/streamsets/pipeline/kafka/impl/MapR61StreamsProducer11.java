@@ -18,6 +18,7 @@ package com.streamsets.pipeline.kafka.impl;
 
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.kafka.api.PartitionStrategy;
+import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import com.streamsets.pipeline.lib.maprstreams.MapRStreamsErrors;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
@@ -78,7 +79,7 @@ public class MapR61StreamsProducer11 extends KafkaProducer09 {
   }
 
   @Override
-  protected Producer<String, byte[]> createKafkaProducer() {
+  protected Producer<Object, byte[]> createKafkaProducer() {
     Properties props = new Properties();
     // Following are the supported list of kafka producer options
     //  1. key.serializer
@@ -93,7 +94,8 @@ public class MapR61StreamsProducer11 extends KafkaProducer09 {
     // determined at the volume level, with a default of 3.
 
     // key and value serializers
-    props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, KEY_SERIALIZER_DEFAULT);
+    props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
+        kafkaProducerConfigs.get(KafkaConstants.KEY_SERIALIZER_CLASS_CONFIG));
     props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, VALUE_SERIALIZER_DEFAULT);
     // configure the StreamsPartitioner implementation
     configurePartitionStrategy(props, partitionStrategy);

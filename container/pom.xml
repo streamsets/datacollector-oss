@@ -461,6 +461,12 @@
       <artifactId>selma</artifactId>
       <version>${selma.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.avro</groupId>
+      <artifactId>avro</artifactId>
+      <version>${avro.version}</version>
+      <scope>test</scope>
+    </dependency>
 
     <!-- Support bundles -->
     <dependency>

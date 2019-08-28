@@ -56,6 +56,8 @@ public enum KafkaErrors implements ErrorCode {
   //Kafka target messages
   KAFKA_50("Error writing data to the Kafka broker: {}"),
   KAFKA_51("Error serializing record '{}': {}"),
+  KAFKA_52("Error evaluating the message key expression '{}' for record '{}': {}"),
+  KAFKA_53("Invalid message key expression '{}': {}"),
   KAFKA_54("Error evaluating the partition expression '{}' for record '{}': {}"),
   KAFKA_55("Error converting the partition expression '{}' to a partition ID for topic '{}': {}"),
   KAFKA_56("Partition expression generated an invalid partition ID '{}'. Topic '{}' has {} partitions. Record '{}'."),
@@ -78,6 +80,7 @@ public enum KafkaErrors implements ErrorCode {
   KAFKA_73("Confluent Avro Serializer not supported by this version of Kafka."),
   KAFKA_75("Inherited timestamps from Kafka are enabled but not supported in this Kafka version."),
   KAFKA_76("Auto Offset Reset = 'Timestamp' can only be used for Kafka version >= 0.10.1.0"),
+  KAFKA_77("Invalid key serializer '{}' used for the Avro message key format"),
 
   KAFKA_201("Error handling message key for partition {}, offset {}: {}"),
   KAFKA_202("{} when serializing message key to bytes: {}"),
