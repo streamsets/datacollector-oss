@@ -19,6 +19,7 @@ package com.streamsets.pipeline.lib.dirspooler;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.PushSource;
+import com.streamsets.pipeline.lib.event.EventCreator;
 import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,7 +117,12 @@ public class SpoolDirBaseContext {
         Preconditions.checkNotNull(NoMoreDataEvent.EVENT_CREATOR);
         Preconditions.checkNotNull(context);
         Preconditions.checkNotNull(batchContext);
-        NoMoreDataEvent.EVENT_CREATOR.create(context, batchContext)
+
+        // Separation to easy debugging of hardly reproducible unit test
+        EventCreator.EventBuilder builder = NoMoreDataEvent.EVENT_CREATOR.create(context, batchContext);
+        Preconditions.checkNotNull(builder);
+
+        builder
           .with(NoMoreDataEvent.RECORD_COUNT, aggregatedNoMoreDataRecordCount)
           .with(NoMoreDataEvent.ERROR_COUNT, aggregatedNoMoreDataErrorCount)
           .with(NoMoreDataEvent.FILE_COUNT, aggregatedNoMoreDataFileCount)
