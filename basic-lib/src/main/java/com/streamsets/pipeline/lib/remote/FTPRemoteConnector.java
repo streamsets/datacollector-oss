@@ -173,6 +173,17 @@ public abstract class FTPRemoteConnector extends RemoteConnector {
     configBuilder.setPassiveMode(options, true);
     configBuilder.setUserDirIsRoot(options, remoteConfig.userDirIsRoot);
 
+    // VFS uses null to indicate no timeout (whereas we use 0)
+    if (remoteConfig.socketTimeout > 0) {
+      configBuilder.setSoTimeout(options, remoteConfig.socketTimeout * 1000);
+    }
+    if (remoteConfig.connectionTimeout > 0) {
+      configBuilder.setConnectTimeout(options, remoteConfig.connectionTimeout * 1000);
+    }
+    if (remoteConfig.dataTimeout > 0) {
+      configBuilder.setDataTimeout(options, remoteConfig.dataTimeout * 1000);
+    }
+
     // Only actually try to connect and authenticate if there were no issues
     if (issues.isEmpty()) {
       LOG.info("Connecting to {}", remoteURI.toString());
