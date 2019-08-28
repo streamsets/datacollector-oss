@@ -39,6 +39,8 @@ class SSHClientRebuilder {
   private int port;
   private String username;
   private String password;
+  private int socketTimeout;
+  private int connectionTimeout;
 
   public SSHClient build() throws IOException {
     SSHClient sshClient = new SSHClient(config);
@@ -69,6 +71,8 @@ class SSHClientRebuilder {
     } else {
       sshClient.authPassword(username, password);
     }
+    sshClient.setTimeout(socketTimeout * 1000);
+    sshClient.setConnectTimeout(connectionTimeout * 1000);
     return sshClient;
   }
 
@@ -103,5 +107,13 @@ class SSHClientRebuilder {
 
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  public void setSocketTimeout(int socketTimeout) {
+    this.socketTimeout = socketTimeout;
+  }
+
+  public void setConnectionTimeout(int connectionTimeout) {
+    this.connectionTimeout = connectionTimeout;
   }
 }

@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import net.schmizz.sshj.DefaultConfig;
 import net.schmizz.sshj.SSHClient;
+import net.schmizz.sshj.sftp.SFTPClient;
 import net.schmizz.sshj.transport.compression.DelayedZlibCompression;
 import net.schmizz.sshj.transport.compression.NoneCompression;
 import net.schmizz.sshj.transport.compression.ZlibCompression;
@@ -222,14 +223,23 @@ public abstract class SFTPRemoteConnector extends RemoteConnector {
         if (remotePath.isEmpty()) {
           remotePath = "/";
         }
-        sftpClient = new ChrootSFTPClient(
-            sshClient.newSFTPClient(),
+
+        // SSHJ uses 0 to indicate no timeout
+        sshClient.setTimeout(remoteConfig.socketTimeout * 1000);
+        sshClientRebuilder.setSocketTimeout(sshClient.getTimeout());
+        sshClient.setConnectTimeout(remoteConfig.connectionTimeout * 1000);
+        sshClientRebuilder.setConnectionTimeout(sshClient.getConnectTimeout());
+        SFTPClient sftpClientRaw = sshClient.newSFTPClient();
+        sftpClientRaw.getSFTPEngine().setTimeoutMs(remoteConfig.dataTimeout * 1000);
+
+        this.sftpClient = new ChrootSFTPClient(
+            sftpClientRaw,
             remotePath,
             remoteConfig.userDirIsRoot,
             remoteConfig.createPathIfNotExists,
             remoteConfig.disableReadAheadStream
         );
-        sftpClient.ls();
+        this.sftpClient.ls();
       } catch (IOException e) {
         LOG.error(Errors.REMOTE_11.getMessage(), remoteURI.toString(), e.getMessage(), e);
         issues.add(context.createConfigIssue(
@@ -253,7 +263,9 @@ public abstract class SFTPRemoteConnector extends RemoteConnector {
       try {
         if (reconnect) {
           sshClient = sshClientRebuilder.build();
-          sftpClient.setSFTPClient(sshClient.newSFTPClient());
+          SFTPClient sftpClientRaw = sshClient.newSFTPClient();
+          sftpClientRaw.getSFTPEngine().setTimeoutMs(remoteConfig.dataTimeout * 1000);
+          sftpClient.setSFTPClient(sftpClientRaw);
           reconnect = false;
         }
         sftpClient.ls();
