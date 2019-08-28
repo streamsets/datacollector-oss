@@ -163,4 +163,40 @@ public class RemoteConfigBean {
       triggeredByValue = "true"
   )
   public String knownHosts;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "0",
+      label = "Socket Timeout",
+      description = "The socket timeout in seconds. A value of 0 indicates no timeout.",
+      displayPosition = 110,
+      group = "#0",
+      min = 0
+  )
+  public int socketTimeout = 0;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "0",
+      label = "Connection Timeout",
+      description = "The connection timeout in seconds. A value of 0 indicates no timeout.",
+      displayPosition = 111,
+      group = "#0",
+      min = 0
+  )
+  public int connectionTimeout = 0;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "0",
+      label = "Data Timeout",
+      description = "The data timeout in seconds. A value of 0 indicates no timeout.",
+      displayPosition = 112,
+      group = "#0",
+      min = 0
+  )
+  public int dataTimeout = 0;
 }
