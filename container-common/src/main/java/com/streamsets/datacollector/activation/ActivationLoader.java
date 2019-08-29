@@ -43,7 +43,10 @@ public class ActivationLoader {
     final Activation activation;
     ServiceLoader<Activation> serviceLoader = ServiceLoader.load(Activation.class);
     List<Activation> list = ImmutableList.copyOf(serviceLoader.iterator());
-    if (list.isEmpty()) {
+    if (runtimeInfo.isDPMEnabled()) {
+      activation = new NopActivation();
+      LOG.debug("Control Hub is enabled, using {}", activation.getClass().getName());
+    } else if (list.isEmpty()) {
       activation = new NopActivation();
       LOG.debug("No activation service available, using {}", activation.getClass().getName());
     } else if (list.size() == 1) {
