@@ -484,6 +484,10 @@ public class HttpProcessor extends SingleLaneProcessor {
         errorRecordHandler.onError(Errors.HTTP_00, e.toString(), e);
       }
     }
+    // Ensure there is always at least one record.
+    if(records.size()==0){
+      records.add(getContext().cloneRecord(inRecord));
+    }
     return records;
   }
 
