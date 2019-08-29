@@ -290,7 +290,7 @@ public class TestAmazonS3TargetForWholeFile extends AmazonS3TestSuite {
     s3TargetConfigBean.tmConfig = new TransferManagerConfig();
     s3TargetConfigBean.tmConfig.threadPoolSize = 3;
 
-    return new AmazonS3Target(s3TargetConfigBean);
+    return new AmazonS3Target(s3TargetConfigBean, false);
   }
 
   private static void verifyStreamCorrectness(InputStream is1, InputStream is2) throws Exception {

@@ -65,6 +65,6 @@ public class AmazonS3DTarget extends DTarget {
 
   @Override
   protected Target createTarget() {
-    return new AmazonS3Target(s3TargetConfigBean);
+    return new AmazonS3Target(s3TargetConfigBean, false);
   }
 }

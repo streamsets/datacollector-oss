@@ -74,19 +74,21 @@ public class AmazonS3Target extends BaseTarget {
   private ELEval timeDriverEval;
   private ELVars elVars;
   private Calendar calendar;
+  private final boolean isErrorStage;
 
   private ErrorRecordHandler errorRecordHandler;
 
-  public AmazonS3Target(S3TargetConfigBean s3TargetConfigBean) {
+  public AmazonS3Target(S3TargetConfigBean s3TargetConfigBean, boolean isErrorStage) {
     this.s3TargetConfigBean = s3TargetConfigBean;
     this.partitionTemplate = s3TargetConfigBean.partitionTemplate == null ? "" : s3TargetConfigBean.partitionTemplate;
     this.timeDriverTemplate = s3TargetConfigBean.timeDriverTemplate == null ? "" : s3TargetConfigBean.timeDriverTemplate;
     this.bucketTemplate = s3TargetConfigBean.s3Config.bucketTemplate;
+    this.isErrorStage = isErrorStage;
   }
 
   @Override
   public List<ConfigIssue> init() {
-    List<ConfigIssue> issues = s3TargetConfigBean.init(getContext(), super.init());
+    List<ConfigIssue> issues = s3TargetConfigBean.init(getContext(), super.init(), isErrorStage);
 
     elVars = getContext().createELVars();
     bucketEval = getContext().createELEval(BUCKET_TEMPLATE);
@@ -122,10 +124,10 @@ public class AmazonS3Target extends BaseTarget {
           Errors.S3_04, issues
       );
     }
-    if (getContext().getService(DataFormatGeneratorService.class).isWholeFileFormat()) {
+    if (!isErrorStage && getContext().getService(DataFormatGeneratorService.class).isWholeFileFormat()) {
       fileHelper = new WholeFileHelper(getContext(), s3TargetConfigBean, transferManager, issues);
     } else {
-      fileHelper = new DefaultFileHelper(getContext(), s3TargetConfigBean, transferManager);
+      fileHelper = new DefaultFileHelper(getContext(), s3TargetConfigBean, transferManager, isErrorStage);
     }
 
     this.errorRecordHandler = new DefaultErrorRecordHandler(getContext());
@@ -162,10 +164,11 @@ public class AmazonS3Target extends BaseTarget {
         try {
           // Wait for given object to fully upload
           upload.getUpload().waitForCompletion();
-
-          // Propagate events associated with this upload
-          for(EventRecord event : upload.getEvents()) {
-            getContext().toEvent(event);
+          if (!isErrorStage) {
+            // Propagate events associated with this upload
+            for (EventRecord event : upload.getEvents()) {
+              getContext().toEvent(event);
+            }
           }
         } catch (AmazonClientException | InterruptedException e) {
           LOG.error(Errors.S3_21.getMessage(), e.toString(), e);

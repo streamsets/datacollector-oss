@@ -17,7 +17,7 @@
 // Controller for Error Configuration.
 angular
   .module('dataCollectorApp.home')
-  .controller('ErrorConfigurationController', function ($scope) {
+  .controller('ErrorConfigurationController', function ($scope, pipelineService) {
     var initialize = function() {
       $scope.detailPaneConfig = $scope.errorStageConfig;
       $scope.detailPaneServices = [];

@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
+import com.streamsets.pipeline.api.service.dataformats.SdcRecordGeneratorService;
 import com.streamsets.pipeline.config.TimeZoneChooserValues;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
@@ -118,15 +119,21 @@ public class S3TargetConfigBean {
   )
   public boolean compress;
 
-  public List<Stage.ConfigIssue> init(Stage.Context context, List<Stage.ConfigIssue> issues) {
-    DataFormatGeneratorService generatorService = context.getService(DataFormatGeneratorService.class);
+  public List<Stage.ConfigIssue> init(Stage.Context context, List<Stage.ConfigIssue> issues, boolean isErrorStage) {
+    boolean isWholeFileFormat;
+    if (isErrorStage) {
+      isWholeFileFormat = false;
+    }
+    else {
+      isWholeFileFormat = context.getService(DataFormatGeneratorService.class).isWholeFileFormat();
+    }
 
     // Don't use amazon s3 client for file transfer error retries (Setting maxErrorRetries to 0)
     // (SDC will retry the file transfer based on AT_LEAST_ONCE/AT_MOST_ONCE SEMANTICS)
-    s3Config.init(context, S3_CONFIG_PREFIX, proxyConfig, issues, generatorService.isWholeFileFormat() ? 0 : -1);
+    s3Config.init(context, S3_CONFIG_PREFIX, proxyConfig, issues, isWholeFileFormat ? 0 : -1);
 
     //File prefix should not be empty for non whole file format.
-    if (!generatorService.isWholeFileFormat() && (fileNamePrefix == null || fileNamePrefix.isEmpty())) {
+    if (!isWholeFileFormat && (fileNamePrefix == null || fileNamePrefix.isEmpty())) {
       issues.add(
           context.createConfigIssue(
               Groups.S3.getLabel(),

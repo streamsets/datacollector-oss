@@ -287,7 +287,7 @@ public class TestAmazonS3Target {
     s3TargetConfigBean.tmConfig.threadPoolSize = 3;
     s3TargetConfigBean.fileNameSuffix = suffix;
 
-    return new AmazonS3Target(s3TargetConfigBean);
+    return new AmazonS3Target(s3TargetConfigBean, false);
   }
 
   @Test
