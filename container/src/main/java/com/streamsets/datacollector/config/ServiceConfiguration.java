@@ -60,13 +60,21 @@ public class ServiceConfiguration implements UserConfigurable {
     return configMap.get(name);
   }
 
+  public void addConfig(Config config) {
+    Config prevConfig = configMap.put(config.getName(), config);
+    if (prevConfig != null) {
+      configuration.remove(prevConfig);
+    }
+    configuration.add(config);
+  }
+
   @Override
   public List<Config> getConfiguration() {
     return new ArrayList<>(configuration);
   }
 
   public void setConfig(List<Config> configList) {
-    this.configuration = Collections.unmodifiableList(configList);
+    this.configuration = configList;
     this.configMap = configuration.stream().collect(Collectors.toMap(Config::getName, c -> c));
   }
 }

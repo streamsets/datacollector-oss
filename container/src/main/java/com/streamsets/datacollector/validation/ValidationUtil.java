@@ -149,6 +149,35 @@ public class ValidationUtil {
           stageConf.addConfig(config);
         }
       }
+
+      for(ServiceConfiguration serviceConf : stageConf.getServices()) {
+        addMissingConfigsToService(stageLibrary, stageConf, serviceConf);
+      }
+    }
+  }
+
+  /**
+   * Add any missing configs to the service configuration.
+   */
+  public static void addMissingConfigsToService(StageLibraryTask stageLibrary, StageConfiguration stageConf, ServiceConfiguration serviceConf) {
+    ServiceDefinition serviceDef = stageLibrary.getServiceDefinition(serviceConf.getService(), false);
+    if (serviceDef != null) {
+      for (ConfigDefinition configDef : serviceDef.getConfigDefinitions()) {
+        String configName = configDef.getName();
+        Config config = serviceConf.getConfig(configName);
+        if (config == null) {
+          Object defaultValue = configDef.getDefaultValue();
+          LOG.warn(
+            "Service {} of stage '{}' missing configuration '{}', adding with '{}' as default",
+            serviceConf.getService().getName(),
+            stageConf.getInstanceName(),
+            configName,
+            defaultValue
+          );
+          config = new Config(configName, defaultValue);
+          serviceConf.addConfig(config);
+        }
+      }
     }
   }
 
