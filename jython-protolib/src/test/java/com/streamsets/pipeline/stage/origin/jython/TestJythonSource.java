@@ -73,4 +73,12 @@ public class TestJythonSource {
     );
   }
 
+  @Test
+  public void testGenerateErrorRecords() throws Exception {
+    ScriptingOriginTestUtil.testGenerateErrorRecords(
+        DSOURCECLASS,
+        getDSource(),
+        "GeneratorOriginScriptErrors.py"
+    );
+  }
 }

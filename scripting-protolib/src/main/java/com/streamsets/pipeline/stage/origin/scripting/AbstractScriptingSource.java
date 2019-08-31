@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.stage.origin.scripting;
 
-import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BasePushSource;
@@ -48,7 +47,6 @@ public abstract class AbstractScriptingSource extends BasePushSource {
 
   private CompiledScript compiledScript;
   private ScriptObjectFactory scriptObjectFactory;
-  private ErrorRecordHandler errorRecordHandler;
 
   protected ScriptEngine engine;
 
@@ -85,7 +83,6 @@ public abstract class AbstractScriptingSource extends BasePushSource {
 
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
-    errorRecordHandler = new DefaultErrorRecordHandler((Source.Context) getContext());
 
     try {
       engine = new ScriptEngineManager(getClass().getClassLoader()).getEngineByName(scriptingEngineName);
@@ -116,11 +113,10 @@ public abstract class AbstractScriptingSource extends BasePushSource {
   }
 
 
-
   protected SimpleBindings createBindings(Map<String, String> lastOffsets, int maxBatchSize) {
     SimpleBindings bindings = new SimpleBindings();
     ScriptingOriginBindings scriptingOriginBindings = new ScriptingOriginBindings(
-        getScriptObjectFactory(), getContext(), errorRecordHandler, params, log, numThreads,
+        getScriptObjectFactory(), getContext(), params, log, numThreads,
         Math.min(batchSize, maxBatchSize), lastOffsets
     );
     bindings.put("sdc", scriptingOriginBindings);

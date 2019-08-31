@@ -20,25 +20,21 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ToEventContext;
-import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.slf4j.Logger;
 
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class ScriptingStageBindings {
+public abstract class ScriptingStageBindings {
 
   protected final ScriptObjectFactory scriptObjectFactory;
   protected final Stage.Context context;
-  private final ErrorRecordHandler errorRecordHandler;
 
   // Needed to address SDC-8697 where simultaneously started Jython pipelines cause import errors
   private static Lock lock = new ReentrantLock();
 
-  public final Err error;
   public final Map<String, String> userParams;
   public final Logger log;
 
@@ -61,38 +57,24 @@ public class ScriptingStageBindings {
   public final Object NULL_LIST = ScriptTypedNullObject.NULL_LIST;
   public final Object NULL_MAP = ScriptTypedNullObject.NULL_MAP;
 
-  // to hide all other methods of Stage.Context
-  public class Err {
-    public void write(ScriptRecord scriptRecord, String errMsg) throws StageException {
-      errorRecordHandler.onError(new OnRecordErrorException(
-          scriptObjectFactory.getRecord(scriptRecord),
-          Errors.SCRIPTING_04,
-          errMsg
-      ));
-    }
-  }
-
   public ScriptingStageBindings(
       ScriptObjectFactory scriptObjectFactory,
       Stage.Context context,
-      ErrorRecordHandler errorRecordHandler,
       Map<String, String> userParams,
       Logger log
       ) {
     this.scriptObjectFactory = scriptObjectFactory;
     this.context = context;
-    this.errorRecordHandler = errorRecordHandler;
     this.userParams = userParams;
     this.log = log;
-    this.error = new Err();
   }
 
   /**
-   * Create record
-   * Note: Default field value is null.
-   * @param recordSourceId the unique record id for this record.
-   * @return ScriptRecord The Newly Created Record
-   */
+  * Create record
+  * Note: Default field value is null.
+  * @param recordSourceId the unique record id for this record.
+  * @return ScriptRecord The Newly Created Record
+  */
   public ScriptRecord createRecord(String recordSourceId) {
     return scriptObjectFactory.createScriptRecord(context.createRecord(recordSourceId));
   }

@@ -19,6 +19,7 @@ import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.SourceResponseSink;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
@@ -69,6 +70,7 @@ public class ScriptingOriginTestUtil<T extends AbstractScriptingSource> {
     final PushSourceRunner runner = new PushSourceRunner.Builder(clazz, scriptingDSource)
         .addConfiguration("script", getScript(scriptName, clazz))
         .addOutputLane("lane")
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
         .build();
     runner.runInit();
     Map<String, String> oldOffsets = new HashMap<>();
@@ -433,6 +435,37 @@ public class ScriptingOriginTestUtil<T extends AbstractScriptingSource> {
         Field.create(Field.Type.MAP, null, null),
         record.get("/null_map")
     );
+  }
+  public static <C extends AbstractScriptingDSource> void testGenerateErrorRecords(
+      Class<C> clazz,
+      AbstractScriptingDSource scriptingDSource,
+      String scriptName)
+      throws Exception {
+    ScriptSourceConfigBean scriptConf = new ScriptSourceConfigBean();
+    scriptConf.scriptRecordType = ScriptRecordType.NATIVE_OBJECTS;
+    scriptConf.params = Collections.unmodifiableMap(new HashMap<>());
+    scriptConf.numThreads = 1;
+    scriptConf.batchSize = 234;
+    scriptingDSource.scriptConf = scriptConf;
+    final PushSourceRunner runner = new PushSourceRunner.Builder(clazz, scriptingDSource)
+        .addConfiguration("script", getScript(scriptName, clazz))
+        .addOutputLane("lane")
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+    runner.runInit();
+    Map<String, String> offsets = Collections.unmodifiableMap(new HashMap<>());
+    final List<Record> records = Collections.synchronizedList(new ArrayList<>());
+    runner.runProduce(offsets, scriptConf.batchSize, new PushSourceRunner.Callback() {
+      @Override
+      public void processBatch(StageRunner.Output output) {
+        records.addAll(output.getRecords().get("lane"));
+        runner.setStop();
+      }
+    });
+    runner.waitOnProduce();
+    assertEquals(234, runner.getErrorRecords().size());
+    assertEquals(234, records.size());
+    runner.runDestroy();
   }
 
 }

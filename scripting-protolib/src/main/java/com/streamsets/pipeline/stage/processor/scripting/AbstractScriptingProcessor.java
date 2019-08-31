@@ -306,7 +306,13 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
 
     // Add new bindings
     ScriptingProcessorInitDestroyBindings spb = new ScriptingProcessorInitDestroyBindings(
-        scriptObjectFactory, getContext(), errorRecordHandler, userParams, log, state);
+        scriptObjectFactory,
+        getContext(),
+        errorRecordHandler,
+        userParams,
+        log,
+        state
+    );
     bindings.put("sdc", spb);
 
     // Add deprecated bindings

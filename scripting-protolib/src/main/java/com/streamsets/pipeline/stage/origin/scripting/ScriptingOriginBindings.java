@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.origin.scripting;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.util.scripting.ScriptObjectFactory;
 import com.streamsets.pipeline.stage.util.scripting.ScriptRecord;
@@ -36,32 +37,37 @@ public class ScriptingOriginBindings extends ScriptingStageBindings {
   public final int numThreads;
   public final int batchSize;
   public final Map<String, String> lastOffsets;
+  public ErrorRecordHandler errorRecordHandler;
 
-  public class PushSourceScriptBatch {
-    private int batchSize;
+  public final class PushSourceScriptBatch {
+    private int size = 0;
+    private int errorCount = 0;
     private BatchContext batchContext;
     private String[] allLanes;
 
     private PushSourceScriptBatch () {
       batchContext = context.startBatch();
-      batchSize = 0;
       allLanes = batchContext.getBatchMaker().getLanes().toArray(new String[0]);
     }
 
     public int size() {
-      return batchSize;
+      return size;
+    }
+
+    public int errorCount() {
+      return errorCount;
     }
 
     public boolean process(String entityName, String entityOffset) {
       if (entityName == null) {
         entityName = "";
       }
-      batchSize = 0;
+      size = 0;
       return context.processBatch(batchContext, entityName, entityOffset);
     }
 
     public void add(ScriptRecord scriptRecord) {
-      batchSize++;
+      size++;
       Record record = scriptObjectFactory.getRecord(scriptRecord);
       batchContext.getBatchMaker().addRecord(record, allLanes);
     }
@@ -79,6 +85,12 @@ public class ScriptingOriginBindings extends ScriptingStageBindings {
       }
     }
 
+    public void addError(ScriptRecord scriptRecord, String errorMsg) {
+      errorCount++;
+      Record record = scriptObjectFactory.getRecord(scriptRecord);
+      batchContext.toError(record, errorMsg);
+    }
+
     public List<ScriptRecord> getSourceResponseRecords() {
       List<Record> records = batchContext.getSourceResponseRecords();
       List<ScriptRecord> scriptRecords = new ArrayList<>();
@@ -92,14 +104,13 @@ public class ScriptingOriginBindings extends ScriptingStageBindings {
   public ScriptingOriginBindings(
       ScriptObjectFactory scriptObjectFactory,
       PushSource.Context context,
-      ErrorRecordHandler errorRecordHandler,
       Map<String, String> userParams,
       Logger log,
       int numThreads,
       int batchSize,
       Map<String, String> lastOffsets
       ) {
-    super(scriptObjectFactory, context, errorRecordHandler, userParams, log);
+    super(scriptObjectFactory, context, userParams, log);
     this.context = context;
     this.numThreads = numThreads;
     this.batchSize = batchSize;
@@ -107,7 +118,9 @@ public class ScriptingOriginBindings extends ScriptingStageBindings {
   }
 
   public PushSourceScriptBatch createBatch() {
-    return new PushSourceScriptBatch();
+    PushSourceScriptBatch curBatch = new PushSourceScriptBatch();
+    errorRecordHandler = new DefaultErrorRecordHandler(context, curBatch.batchContext);
+    return curBatch;
   }
 
   public void commitOffset(String entityName, String entityOffset) {

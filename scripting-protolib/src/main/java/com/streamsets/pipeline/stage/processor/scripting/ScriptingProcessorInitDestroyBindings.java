@@ -16,8 +16,12 @@
 package com.streamsets.pipeline.stage.processor.scripting;
 
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.util.scripting.Errors;
 import com.streamsets.pipeline.stage.util.scripting.ScriptObjectFactory;
+import com.streamsets.pipeline.stage.util.scripting.ScriptRecord;
 import com.streamsets.pipeline.stage.util.scripting.ScriptingStageBindings;
 import org.slf4j.Logger;
 
@@ -26,6 +30,9 @@ import java.util.Map;
 public class ScriptingProcessorInitDestroyBindings extends ScriptingStageBindings {
 
   public final Object state;
+  private final ErrorRecordHandler errorRecordHandler;
+  public final Err error;
+
 
   public ScriptingProcessorInitDestroyBindings(
       ScriptObjectFactory scriptObjectFactory,
@@ -34,9 +41,20 @@ public class ScriptingProcessorInitDestroyBindings extends ScriptingStageBinding
       Map<String, String> userParams,
       Logger log,
       Object state
-      ) {
-    super(scriptObjectFactory, context, errorRecordHandler, userParams, log);
+  ) {
+    super(scriptObjectFactory, context, userParams, log);
     this.state = state;
+    this.errorRecordHandler = errorRecordHandler;
+    this.error = new Err();
   }
 
+  public class Err {
+    public void write(ScriptRecord scriptRecord, String errMsg) throws StageException {
+      errorRecordHandler.onError(new OnRecordErrorException(
+          scriptObjectFactory.getRecord(scriptRecord),
+          Errors.SCRIPTING_04,
+          errMsg
+      ));
+    }
+  }
 }

@@ -19,7 +19,9 @@
  *       the record and include enough information to track down the record source.
  *   Batch.add(record): Append a record to the batch.
  *   Batch.add(record[]): Append a list of records to the batch.
+ *   Batch.addError(record, msg): Add an error record to the batch with the associated error message.
  *   Batch.size(): Return the number of records in the batch.
+ *   Batch.errorCount(): Return the number of error records in the batch.
  *   Batch.process(entityName, entityOffSet): Process the batch through the rest of
  *       the pipeline and commit the offset in accordance with the pipeline's
  *       delivery guarantee.
@@ -31,7 +33,6 @@
  *       used to circumvent a known bug with the thread-safety of Jython imports. (https://bugs.jython.org/issue2642)
  *   sdc.log.<loglevel>(msg, obj...): Use instead of print to send log messages to the log4j log instead of stdout.
  *       loglevel is any log4j level: e.g. info, error, warn, trace.
- *   sdc.error.write(record, message): Send a record to error.
  *   sdc.getFieldNull(Record, 'field path'): Receive a constant defined above
  *       to check if the field is a typed field with value null.
  *   sdc.createMap(boolean listMap): Create a map for use as a field in a record.
@@ -81,7 +82,12 @@ while (hasNext) {
             }
         }
     } catch (e) {
-        sdc.error.write(record, e.toString());
+        cur_batch.addError(record, e.toString());
+        cur_batch.process(entityName, offset.toString());
         hasNext = false;
     }
+}
+
+if (cur_batch.size() + cur_batch.errorCount() > 0) {
+    cur_batch.process(entityName, offset.toString())
 }
