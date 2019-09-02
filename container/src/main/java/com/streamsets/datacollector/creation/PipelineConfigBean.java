@@ -63,7 +63,7 @@ import java.util.Map;
 @ConfigGroups(PipelineGroups.class)
 public class PipelineConfigBean implements Stage {
 
-  public static final int VERSION = 15;
+  public static final int VERSION = 16;
 
   public static final String DEFAULT_STATS_AGGREGATOR_LIBRARY_NAME = "streamsets-datacollector-basic-lib";
 
@@ -495,6 +495,33 @@ public class PipelineConfigBean implements Stage {
       triggeredByValue = {"CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "BATCH", "STREAMING"}
   )
   public Map<String, String> sparkConfigs;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.TEXT,
+      mode = ConfigDef.Mode.SCALA,
+      defaultValue = "" +
+          "/*\n" +
+          "The following script define a method\n" +
+          "that increments an integer by 1 \n" +
+          "and registers it as a UDF with \n" +
+          "the SparkSession, which can be accessed\n" +
+          "using the variable named \"spark\":\n" +
+          "def inc(i: Integer): Integer = {\n" +
+          "  i + 1\n" +
+          "}\n" +
+          "spark.udf.register (\"inc\", inc _)\n" +
+          "\n" +
+          "*/",
+      label = "Preprocessing Script",
+      description = "Scala script to run on the driver before starting the pipeline. " +
+          "Can be used to register user defined functions, etc. Use the 'spark' variable to access the Spark session",
+      displayPosition = 10,
+      group = "ADVANCED",
+      dependsOn = "executionMode",
+      triggeredByValue = {"BATCH", "STREAMING"}
+  )
+  public String preprocessScript;
 
   @ConfigDefBean
   public ClusterConfig clusterConfig = new ClusterConfig();

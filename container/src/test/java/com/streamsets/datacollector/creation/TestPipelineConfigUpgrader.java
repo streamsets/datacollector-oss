@@ -219,4 +219,16 @@ public class TestPipelineConfigUpgrader {
     Assert.assertEquals("triggerInterval", upgrade.get(3).getName());
     Assert.assertEquals(2000, upgrade.get(3).getValue());
   }
+
+  @Test
+  public void testPipelineConfigUpgradeV15ToV16() throws StageException {
+    PipelineConfigUpgrader pipelineConfigUpgrader = new PipelineConfigUpgrader();
+    TestUpgraderContext context = new TestUpgraderContext("x", "y", "z", 15, 16);
+
+    List<Config> upgrade = pipelineConfigUpgrader.upgrade(new ArrayList<>(), context);
+
+    Assert.assertEquals("preprocessScript", upgrade.get(0).getName());
+    Assert.assertEquals("", upgrade.get(0).getValue());
+  }
+
 }

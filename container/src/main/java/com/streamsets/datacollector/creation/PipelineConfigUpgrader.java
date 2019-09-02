@@ -83,6 +83,9 @@ public class PipelineConfigUpgrader implements StageUpgrader {
         // fall through
       case 14:
         upgradeV14ToV15(configs);
+        // fall through
+      case 15:
+        upgradeV15ToV16(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", context.getFromVersion()));
@@ -304,6 +307,10 @@ public class PipelineConfigUpgrader implements StageUpgrader {
     configs.add(new Config("ludicrousModeInputCount", false));
     configs.add(new Config("advancedErrorHandling", false));
     configs.add(new Config("triggerInterval", 2000));
+  }
+
+  private void upgradeV15ToV16(List<Config> configs) {
+    configs.add(new Config("preprocessScript", ""));
   }
 
 }
