@@ -273,7 +273,6 @@ public class ThycoticCredentialStore implements CredentialStore {
     private volatile long currentInterval;
     private long refreshSeconds = getCredentialRefreshSeconds();
     private long retrySeconds = getCredentialRetrySeconds();
-    private boolean throwException;
 
     private ThycoticCredentialValue(String encodedStr) {
       String[] params = decode(encodedStr);
@@ -328,26 +327,30 @@ public class ThycoticCredentialStore implements CredentialStore {
     public String get() throws StageException {
       long now = now();
       if (now - lastFetch > currentInterval) {
-        try {
-          LOG.debug("Store '{}' credential '{}' fetching value", getContext().getId(), name);
-          secret = getSecret().getSecretField(getClient(),
-              getAuth().getAccessToken(),
-              secretServerUrl,
-              secretId,
-              secretField,
-              group
+        LOG.debug("Store '{}' credential '{}' fetching value", getContext().getId(), name);
+        // In case we have trouble getting the value from the server, keep re-using the previously acquired value
+        String updatedSecret = getSecret().getSecretField(getClient(),
+            getAuth().getAccessToken(),
+            secretServerUrl,
+            secretId,
+            secretField,
+            group
+        );
+        if (updatedSecret != null) {
+          secret = updatedSecret;
+          currentInterval = getRefreshSeconds() * 1000;
+        } else if (secret == null) {
+          // There's no previously acquired value to fall back on - probably a more permanent issue, so let's give up
+          throw new StageException(Errors.THYCOTIC_01, name, credentialRetry);
+        } else {
+          LOG.debug(
+              "Store '{}' credential '{}' using cached value due to previous exception",
+              getContext().getId(),
+              name
           );
-          lastFetch = now();
-          currentInterval = getRefreshSeconds();
-          throwException = false;
-        } catch (Exception ex) {
-          LOG.warn("Store '{}' credential '{}' error fetching value: {}", getContext().getId(), name, ex);
-          lastFetch = now();
-          currentInterval = getRetrySeconds();
-          throwException = true;
+          currentInterval = getRetrySeconds() * 1000;
         }
-      } else if (throwException) {
-        throw new StageException(Errors.THYCOTIC_01, name, credentialRetry);
+        lastFetch = now();
       } else {
         LOG.debug("Store '{}' credential '{}' using cached value", getContext().getId(), name);
       }

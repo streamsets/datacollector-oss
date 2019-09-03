@@ -205,4 +205,137 @@ public class TestThycoticCredentialStore {
             .DELIMITER_FOR_CACHE_KEY + "o")
     );
   }
+
+  @Test
+  public void testCacheTiming() {
+    ThycoticCredentialStore store = new ThycoticCredentialStore();
+    store = Mockito.spy(store);
+
+    CloseableHttpClient closeableHttpClient = Mockito.mock(CloseableHttpClient.class);
+    Mockito.when(store.getClient()).thenReturn(closeableHttpClient);
+
+    AuthRenewalTask auth = Mockito.mock(AuthRenewalTask.class);
+    Mockito.when(store.getAuth()).thenReturn(auth);
+    Mockito.when(auth.getAccessToken()).thenReturn("t");
+
+    GetThycoticSecrets secret = Mockito.mock(GetThycoticSecrets.class);
+    Mockito.when(secret.getSecretField((Mockito.eq(closeableHttpClient)),
+        Mockito.eq("t"),
+        Mockito.eq("h"),
+        Mockito.eq(1),
+        Mockito.eq("n"),
+        Mockito.eq("g")
+    )).thenReturn("secret");
+    Mockito.doReturn(secret).when(store).getSecret();
+
+    CredentialStore.Context context = Mockito.mock(CredentialStore.Context.class);
+    Mockito.when(context.getConfig(ThycoticCredentialStore.THYCOTIC_SECRET_SERVER_URL)).thenReturn("h");
+    Mockito.when(context.getConfig(ThycoticCredentialStore.THYCOTIC_SECRET_SERVER_USERNAME)).thenReturn("u");
+    Mockito.when(context.getConfig(ThycoticCredentialStore.THYCOTIC_SECRET_SERVER_PASSWORD)).thenReturn("p");
+
+    Mockito.when(context.getConfig(Mockito.eq(ThycoticCredentialStore.CACHE_EXPIRATION_PROP))).thenReturn("200");
+    Mockito.doReturn(true).when(store).checkSecretServerConnection();
+    Assert.assertTrue(store.init(context).isEmpty());
+
+    CredentialValue cred = store.get("g", "1-n", "");
+    Assert.assertEquals("secret", cred.get());
+    Mockito.verify(store, Mockito.times(1)).getSecret();
+    // We don't hit the server the second time because of the cache
+    Assert.assertEquals("secret", cred.get());
+    Mockito.verify(store, Mockito.times(1)).getSecret();
+    // Now try in > 300 seconds and we'll hit the server again because the cache expired
+    long now = System.currentTimeMillis() + 301 * 1000;
+    Mockito.doReturn(now).when(store).now();
+    Assert.assertEquals("secret", cred.get());
+    Mockito.verify(store, Mockito.times(2)).getSecret();
+    // As before, we don't hit the server this time because the cache hasn't expired yet
+    Assert.assertEquals("secret", cred.get());
+    Mockito.verify(store, Mockito.times(2)).getSecret();
+
+    // Now the value has changed, but we won't notice until 300 seconds (when the cache expires again)
+    Mockito.when(secret.getSecretField((Mockito.eq(closeableHttpClient)),
+        Mockito.eq("t"),
+        Mockito.eq("h"),
+        Mockito.eq(1),
+        Mockito.eq("n"),
+        Mockito.eq("g")
+    )).thenReturn("new-secret");
+    Assert.assertEquals("secret", cred.get());
+    Mockito.verify(store, Mockito.times(2)).getSecret();
+    now = now + 301 * 1000;
+    Mockito.doReturn(now).when(store).now();
+    Assert.assertEquals("new-secret", cred.get());
+    Mockito.verify(store, Mockito.times(3)).getSecret();
+  }
+
+  @Test
+  public void testCacheTimingServerProblem() {
+    ThycoticCredentialStore store = new ThycoticCredentialStore();
+    store = Mockito.spy(store);
+
+    CloseableHttpClient closeableHttpClient = Mockito.mock(CloseableHttpClient.class);
+    Mockito.when(store.getClient()).thenReturn(closeableHttpClient);
+
+    AuthRenewalTask auth = Mockito.mock(AuthRenewalTask.class);
+    Mockito.when(store.getAuth()).thenReturn(auth);
+    Mockito.when(auth.getAccessToken()).thenReturn("t");
+
+    GetThycoticSecrets secret = Mockito.mock(GetThycoticSecrets.class);
+    Mockito.when(secret.getSecretField((Mockito.eq(closeableHttpClient)),
+        Mockito.eq("t"),
+        Mockito.eq("h"),
+        Mockito.eq(1),
+        Mockito.eq("n"),
+        Mockito.eq("g")
+    )).thenReturn("secret");
+    Mockito.doReturn(secret).when(store).getSecret();
+
+    CredentialStore.Context context = Mockito.mock(CredentialStore.Context.class);
+    Mockito.when(context.getConfig(ThycoticCredentialStore.THYCOTIC_SECRET_SERVER_URL)).thenReturn("h");
+    Mockito.when(context.getConfig(ThycoticCredentialStore.THYCOTIC_SECRET_SERVER_USERNAME)).thenReturn("u");
+    Mockito.when(context.getConfig(ThycoticCredentialStore.THYCOTIC_SECRET_SERVER_PASSWORD)).thenReturn("p");
+
+    Mockito.when(context.getConfig(Mockito.eq(ThycoticCredentialStore.CACHE_EXPIRATION_PROP))).thenReturn("200");
+    Mockito.when(context.getConfig(Mockito.eq(ThycoticCredentialStore.CREDENTIAL_REFRESH_PROP))).thenReturn("300");
+    Mockito.doReturn(true).when(store).checkSecretServerConnection();
+    Assert.assertTrue(store.init(context).isEmpty());
+    Assert.assertEquals(300L, store.getCredentialRefreshSeconds());
+    Assert.assertEquals(15L, store.getCredentialRetrySeconds());
+
+    CredentialValue cred = store.get("g", "1-n", "");
+    Assert.assertEquals("secret", cred.get());
+    Mockito.verify(store, Mockito.times(1)).getSecret();
+    // Simulate a problem occurring when talking to the server (after we've already retrieved and cached a value)
+    Mockito.when(secret.getSecretField((Mockito.eq(closeableHttpClient)),
+        Mockito.eq("t"),
+        Mockito.eq("h"),
+        Mockito.eq(1),
+        Mockito.eq("n"),
+        Mockito.eq("g")
+    )).thenReturn(null);
+    // Getting the value should still work (hits the cache)
+    Assert.assertEquals("secret", cred.get());
+    Mockito.verify(store, Mockito.times(1)).getSecret();
+    // Now try in > 300 seconds and we'll hit the server again because the cache expired, but this time the server
+    // had a problem; though the caller won't notice because we'll continue using the old cached value anyway
+    long now = System.currentTimeMillis() + 301 * 1000;
+    Mockito.doReturn(now).when(store).now();
+    Assert.assertEquals("secret", cred.get());
+    Mockito.verify(store, Mockito.times(2)).getSecret();
+    // Instead of having to wait 300 seconds, we only have to wait 15 seconds now (retry interval) to hit the server
+    // again
+    now = now + 16 * 1000;
+    Mockito.doReturn(now).when(store).now();
+    Assert.assertEquals("secret", cred.get());
+    Mockito.verify(store, Mockito.times(3)).getSecret();
+    // Try again < 15 seconds and it won't have hit the server again yet
+    Mockito.doReturn(now + 5 * 1000).when(store).now();
+    Assert.assertEquals("secret", cred.get());
+    Mockito.verify(store, Mockito.times(3)).getSecret();
+    // Try the server again > 15 seconds and we'll have reached the retry threshold so it will try the server again
+    now = now + 16 * 1000;
+    Mockito.doReturn(now).when(store).now();
+    Assert.assertEquals("secret", cred.get());
+    Mockito.verify(store, Mockito.times(4)).getSecret();
+  }
 }
