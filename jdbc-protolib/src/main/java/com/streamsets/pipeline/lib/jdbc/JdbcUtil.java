@@ -1231,7 +1231,7 @@ public class JdbcUtil {
     return query;
   }
 
-  protected PreparedStatement getPreparedStatement(
+  public PreparedStatement getPreparedStatement(
       List<JdbcFieldColumnMapping> generatedColumnMappings,
       String query,
       Connection connection

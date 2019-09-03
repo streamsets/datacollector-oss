@@ -80,7 +80,7 @@ public class JdbcMySqlBinLogRecordReader extends JdbcRecordReader {
    * @return
    */
   @Override
-  String getFieldPath(String columnName, Map<String, String> columnsToField, int op) {
+  public String getFieldPath(String columnName, Map<String, String> columnsToField, int op) {
     if (op == OperationType.DELETE_CODE){
       String fieldPath = columnsToField.get(columnName);
       if (fieldPath == null){

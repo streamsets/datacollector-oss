@@ -66,7 +66,7 @@ public class JdbcRecordReader {
    * @param errorRecords the list to take error records
    * @return the numeric operation code or -1 for unsupported operation
    */
-  int getOperationFromRecord(
+  public int getOperationFromRecord(
       Record record,
       int defaultOpCode,
       UnsupportedOperationAction unsupportedAction,
@@ -125,8 +125,7 @@ public class JdbcRecordReader {
     return getColumnsToParameters(record, op, parameters, columnsToFields, true);
   }
 
-  @VisibleForTesting
-  <T extends Map<String, String>> T getColumnsToParameters(
+  public <T extends Map<String, String>> T getColumnsToParameters(
       final Record record,
       int op,
       Map<String, String> parameters,
@@ -161,7 +160,7 @@ public class JdbcRecordReader {
    * @param op  Not used here but is used in subclass.
    * @return
    */
-  String getFieldPath(String columnName, Map<String, String> columnsToField, int op){
+  public String getFieldPath(String columnName, Map<String, String> columnsToField, int op){
     return columnsToField.get(columnName);
   }
 }

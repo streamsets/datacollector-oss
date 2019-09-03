@@ -44,8 +44,7 @@ public class JdbcMicrosoftRecordReader extends JdbcRecordReader {
    * @throws StageException
    */
   @Override
-  @VisibleForTesting
-  int getOperationFromRecord(
+  public int getOperationFromRecord(
       Record record,
       int defaultOpCode,
       UnsupportedOperationAction unsupportedAction,
