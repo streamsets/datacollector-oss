@@ -471,20 +471,41 @@ public class PipelineConfigurationUpgrader {
 
     // if ownIssues > 0 we had an issue upgrading, we wont touch the pipelineConf and return null
     if (ownIssues.isEmpty()) {
-      pipelineConf.setConfiguration(pipelineConfs.getConfiguration());
-      pipelineConf.setVersion(pipelineConfs.getStageVersion());
       pipelineConf.setErrorStage(errorStageConf);
       pipelineConf.setStatsAggregatorStage(statsAggregatorStageConf);
       pipelineConf.setStartEventStages(startEventStages);
       pipelineConf.setStopEventStages(stopEventStages);
       pipelineConf.setTestOriginStage(testOrigin);
       pipelineConf.setStages(stageConfs);
+
+      if(errorStageConf != null) {
+        pipelineConfs.addConfig(new Config("badRecordsHandling", stageToUISelect(errorStageConf)));
+      }
+      if(statsAggregatorStageConf != null) {
+        pipelineConfs.addConfig(new Config("statsAggregatorStage", stageToUISelect(statsAggregatorStageConf)));
+      }
+      if(startEventStages.size() == 1) {
+        pipelineConfs.addConfig(new Config("startEventStage", stageToUISelect(startEventStages.get(0))));
+      }
+      if(stopEventStages.size() == 1) {
+        pipelineConfs.addConfig(new Config("stopEventStage", stageToUISelect(stopEventStages.get(0))));
+      }
+      if(testOrigin != null) {
+        pipelineConfs.addConfig(new Config("testOriginStage", stageToUISelect(testOrigin)));
+      }
+
+      pipelineConf.setConfiguration(pipelineConfs.getConfiguration());
+      pipelineConf.setVersion(pipelineConfs.getStageVersion());
     } else {
       issues.addAll(ownIssues);
       pipelineConf = null;
     }
 
     return pipelineConf;
+  }
+
+  private static String stageToUISelect(StageConfiguration stageConf) {
+    return stageConf.getLibrary() + "::" + stageConf.getStageName() + "::" + stageConf.getStageVersion();
   }
 
   /**
