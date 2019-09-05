@@ -30,7 +30,7 @@ import com.streamsets.pipeline.stage.origin.multikafka.MultiKafkaDSource;
 import com.streamsets.pipeline.stage.origin.multikafka.MultiKafkaRawSourcePreviewer;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "MapR Multitopic Streams Consumer",
     description = "Reads data from multiple topics of a MapR streams",
     execution = ExecutionMode.STANDALONE,

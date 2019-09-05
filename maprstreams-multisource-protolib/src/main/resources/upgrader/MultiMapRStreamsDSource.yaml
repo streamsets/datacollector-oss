@@ -16,5 +16,15 @@
 
 upgraderVersion: 1
 
-# No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 3
+    actions:
+      - setConfig:
+          name: conf.keyCaptureMode
+          value: NONE
+      - setConfig:
+          name: conf.keyCaptureAttribute
+          value: kafkaMessageKey
+      - setConfig:
+          name: conf.keyCaptureField
+          value: /kafkaMessageKey
