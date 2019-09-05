@@ -247,7 +247,7 @@ public class TestAmazonS3Source extends AmazonS3TestSuite {
   public void testGetOffsetNoOrphanThreads() throws Exception {
     AmazonS3SourceImpl amazonS3Source = new AmazonS3SourceImpl(createConfigTimestamp());
 
-    String emptyOffsetString = "::0::::0";
+    String emptyOffsetString = "::-1::::0";
 
     Assert.assertEquals(emptyOffsetString, amazonS3Source.getOffset(0).toString());
 

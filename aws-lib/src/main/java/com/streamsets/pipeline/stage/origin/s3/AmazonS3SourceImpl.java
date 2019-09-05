@@ -173,7 +173,7 @@ public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements Amazon
       offsetsMap.put(runnerId, offset);
     } else {
       offset = offsetsMap.computeIfAbsent(runnerId,
-          k -> new S3Offset(S3Constants.EMPTY, S3Constants.ZERO, S3Constants.EMPTY, S3Constants.ZERO)
+          k -> new S3Offset(S3Constants.EMPTY, S3Constants.MINUS_ONE, S3Constants.EMPTY, S3Constants.ZERO)
       );
     }
     return new S3Offset(offset);
