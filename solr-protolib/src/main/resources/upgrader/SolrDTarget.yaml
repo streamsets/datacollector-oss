@@ -17,4 +17,11 @@
 upgraderVersion: 1
 
 # No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 6                          # upgrades up to version 6
+    actions:
+
+      - renameConfig:                       # Configurations were moved to a ConfigBean in version 6
+          oldNamePattern: ^(?!stage)(.*$)     # Configs which start with "stage" are not in the configBean
+          newNamePattern: conf.(0)
+
