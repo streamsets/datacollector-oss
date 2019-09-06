@@ -102,6 +102,8 @@ public class StartPipelineCommon {
             Field pipelineIdField = fields.get("pipelineId");
             outputField.put(pipelineIdField.getValueAsString(), startPipelineOutputField);
             success &= fields.get("success").getValueAsBoolean();
+          } else {
+            success = false;
           }
         } catch (Exception ex) {
           context.reportError(ex);

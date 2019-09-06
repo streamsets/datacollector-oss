@@ -21,7 +21,11 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.startPipeline.PipelineIdConfig;
 import com.streamsets.pipeline.lib.startPipeline.StartPipelineCommon;
 import com.streamsets.pipeline.lib.startPipeline.StartPipelineConfig;
@@ -30,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -43,6 +48,10 @@ public class StartPipelineProcessor extends SingleLaneProcessor {
   private StartPipelineCommon startPipelineCommon;
   private StartPipelineConfig conf;
 
+  private ELVars pipelineIdConfigVars;
+  private ELEval pipelineIdEval;
+  private ELEval runtimeParametersEval;
+
   StartPipelineProcessor(StartPipelineConfig conf) {
     this.startPipelineCommon = new StartPipelineCommon(conf);
     this.conf = conf;
@@ -51,6 +60,9 @@ public class StartPipelineProcessor extends SingleLaneProcessor {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+    pipelineIdConfigVars = getContext().createELVars();
+    pipelineIdEval = getContext().createELEval("pipelineId");
+    runtimeParametersEval = getContext().createELEval("runtimeParameters");
     return this.startPipelineCommon.init(issues, getContext());
   }
 
@@ -66,11 +78,25 @@ public class StartPipelineProcessor extends SingleLaneProcessor {
       }
       try {
         for(PipelineIdConfig pipelineIdConfig: conf.pipelineIdConfigList) {
+          PipelineIdConfig resolvedPipelineIdConfig = new PipelineIdConfig();
+          RecordEL.setRecordInContext(pipelineIdConfigVars, record);
+          TimeNowEL.setTimeNowInContext(pipelineIdConfigVars, new Date());
+          resolvedPipelineIdConfig.pipelineId = pipelineIdEval.eval(
+              pipelineIdConfigVars,
+              pipelineIdConfig.pipelineId,
+              String.class
+          );
+          resolvedPipelineIdConfig.runtimeParameters = runtimeParametersEval.eval(
+              pipelineIdConfigVars,
+              pipelineIdConfig.runtimeParameters,
+              String.class
+          );
+
           CompletableFuture<Field> future = CompletableFuture.supplyAsync(new StartPipelineSupplier(
               this.startPipelineCommon.managerApi,
               this.startPipelineCommon.storeApi,
               conf,
-              pipelineIdConfig,
+              resolvedPipelineIdConfig,
               getContext()
           ), executor);
           startPipelineFutures.add(future);

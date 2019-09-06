@@ -16,6 +16,8 @@
 package com.streamsets.pipeline.lib.startPipeline;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 
 public class PipelineIdConfig {
 
@@ -25,7 +27,9 @@ public class PipelineIdConfig {
       label = "Pipeline ID",
       description = "ID of the pipeline to start",
       displayPosition = 20,
-      group = "PIPELINE"
+      group = "PIPELINE",
+      elDefs = {RecordEL.class, TimeNowEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String pipelineId = "";
 
@@ -36,7 +40,9 @@ public class PipelineIdConfig {
       label = "Runtime Parameters",
       description = "Runtime parameters to pass to the pipeline",
       displayPosition = 30,
-      group = "PIPELINE"
+      group = "PIPELINE",
+      elDefs = {RecordEL.class, TimeNowEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String runtimeParameters;
 
