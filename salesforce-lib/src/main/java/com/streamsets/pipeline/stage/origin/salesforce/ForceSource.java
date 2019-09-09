@@ -136,7 +136,9 @@ public class ForceSource extends BaseSource {
   private ForceStreamConsumer forceConsumer;
   private ForceRecordCreator recordCreator;
 
-  private boolean shouldSendNoMoreDataEvent = false;
+  private boolean queryComplete = false;   // true if there are no more records to read from the current query
+  private boolean noRecordsCreated = true; // true if we haven't created any records from the current query
+  private boolean eventFired = false;      // true if we have fired an event since the last query
   private AtomicBoolean destroyed = new AtomicBoolean(false);
   private XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();
 
@@ -313,6 +315,10 @@ public class ForceSource extends BaseSource {
       }
     }
 
+    queryComplete = false;
+    noRecordsCreated = true;
+    eventFired = false;
+
     // If issues is not empty, the UI will inform the user of each configuration issue in the list.
     return issues;
   }
@@ -465,13 +471,6 @@ public class ForceSource extends BaseSource {
 
     LOG.debug("lastSourceOffset: {}", lastSourceOffset);
 
-    // send event only once for each time we run out of data.
-    if(shouldSendNoMoreDataEvent) {
-      NoMoreDataEvent.EVENT_CREATOR.create(getContext()).createAndSend();
-      shouldSendNoMoreDataEvent = false;
-      return lastSourceOffset;
-    }
-
     int batchSize = Math.min(conf.basicConfig.maxBatchSize, maxBatchSize);
 
     if (!conf.queryExistingData ||
@@ -506,6 +505,13 @@ public class ForceSource extends BaseSource {
       nextSourceOffset = READ_EVENTS_FROM_NOW;
     }
 
+    // If we're not repeating the query, then send the event
+    // If we ARE repeating, wait for a query with no records (SDC-12418)
+    if (queryComplete && !eventFired && (conf.repeatQuery == ForceRepeatQuery.NO_REPEAT || noRecordsCreated)) {
+      NoMoreDataEvent.EVENT_CREATOR.create(getContext()).createAndSend();
+      eventFired = true;
+    }
+
     LOG.debug("nextSourceOffset: {}", nextSourceOffset);
 
     return nextSourceOffset;
@@ -522,6 +528,9 @@ public class ForceSource extends BaseSource {
     if (job == null) {
       // No job in progress - start from scratch
       try {
+        noRecordsCreated = true;
+        queryComplete = false;
+
         String id = (lastSourceOffset == null) ? null : lastSourceOffset.substring(lastSourceOffset.indexOf(':') + 1);
         final String preparedQuery = prepareQuery(conf.soqlQuery, id);
         LOG.info("SOQL Query is: {}", preparedQuery);
@@ -640,6 +649,8 @@ public class ForceSource extends BaseSource {
             String offset = ((BulkRecordCreator) recordCreator).createRecord(xmlEventReader, batchMaker, numRecords);
             nextSourceOffset = RECORD_ID_OFFSET_PREFIX + offset;
             ++numRecords;
+            noRecordsCreated = false;
+            eventFired = false;
           }
         } catch (XMLStreamException e) {
           throw new StageException(Errors.FORCE_37, e);
@@ -670,7 +681,7 @@ public class ForceSource extends BaseSource {
             }
             LOG.info("Partial batch of {} records", numRecords);
             job = null;
-            shouldSendNoMoreDataEvent = true;
+            queryComplete = true;
             if (conf.subscribeToStreaming) {
               // Switch to processing events
               nextSourceOffset = READ_EVENTS_FROM_NOW;
@@ -715,6 +726,8 @@ public class ForceSource extends BaseSource {
             ? partnerConnection.queryAll(preparedQuery)
             : partnerConnection.query(preparedQuery);
         recordIndex = 0;
+        noRecordsCreated = true;
+        queryComplete = false;
       } catch (ConnectionException e) {
         throw new StageException(Errors.FORCE_08, e);
       }
@@ -731,6 +744,8 @@ public class ForceSource extends BaseSource {
       map.put(COUNT, Field.create(Field.Type.INTEGER, queryResult.getSize()));
       rec.set(Field.createListMap(map));
       rec.getHeader().setAttribute(ForceRecordCreator.SOBJECT_TYPE_ATTRIBUTE, sobjectType);
+      noRecordsCreated = false;
+      eventFired = false;
 
       batchMaker.addRecord(rec);
     } else {
@@ -754,6 +769,8 @@ public class ForceSource extends BaseSource {
         }
         final String sourceId = StringUtils.substring(conf.soqlQuery.replaceAll("[\n\r]", " "), 0, 100) + "::rowCount:" + recordIndex + (StringUtils.isEmpty(conf.offsetColumn) ? "" : ":" + offset);
         Record rec = recordCreator.createRecord(sourceId, record);
+        noRecordsCreated = false;
+        eventFired = false;
 
         batchMaker.addRecord(rec);
       }
@@ -766,7 +783,7 @@ public class ForceSource extends BaseSource {
           queryResult = null;
           lastQueryCompletedTime = System.currentTimeMillis();
           LOG.info("Query completed at: {}", lastQueryCompletedTime);
-          shouldSendNoMoreDataEvent = true;
+          queryComplete = true;
           if (conf.subscribeToStreaming) {
             // Switch to processing events
             nextSourceOffset = READ_EVENTS_FROM_NOW;
