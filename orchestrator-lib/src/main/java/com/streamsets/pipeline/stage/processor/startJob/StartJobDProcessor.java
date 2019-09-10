@@ -22,6 +22,8 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
+import com.streamsets.pipeline.lib.startJob.Groups;
+import com.streamsets.pipeline.lib.startJob.StartJobConfig;
 
 @StageDef(
     version = 1,

@@ -13,14 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.processor.startJob;
+package com.streamsets.pipeline.lib.startJob;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ListBeanModel;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 
-import java.util.Map;
+import java.util.List;
 
 public class StartJobConfig {
 
@@ -36,24 +40,79 @@ public class StartJobConfig {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
-      label = "Job ID",
-      description = "ID of the job to start",
-      displayPosition = 20,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Job Template",
+      defaultValue = "false",
+      displayPosition = 11,
       group = "JOB"
   )
-  public String jobId = "";
+  public boolean jobTemplate = false;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Job Template ID",
+      description = "ID of the job template to start",
+      displayPosition = 12,
+      group = "JOB",
+      elDefs = {RecordEL.class, TimeNowEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      dependsOn = "jobTemplate",
+      triggeredByValue = { "true" }
+  )
+  public String templateJobId = "";
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Instance Name Suffix",
+      defaultValue = "COUNTER",
+      description = "Job Instances name suffix",
+      displayPosition = 13,
+      group = "JOB",
+      dependsOn = "jobTemplate",
+      triggeredByValue = { "true" }
+  )
+  @ValueChooserModel(InstanceNameSuffixChooserValues.class)
+  public InstanceNameSuffix instanceNameSuffix = InstanceNameSuffix.COUNTER;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Parameter Name",
+      description = "Name of the parameter",
+      displayPosition = 14,
+      group = "JOB",
+      dependsOn = "instanceNameSuffix",
+      triggeredByValue = { "PARAM_VALUE" }
+  )
+  public String parameterName = "";
 
   @ConfigDef(
       required = false,
-      defaultValue = "{}",
-      type = ConfigDef.Type.MAP,
-      label = "Runtime Parameters",
-      description = "Runtime parameters to pass to the job",
+      defaultValue = "[{}]",
+      type = ConfigDef.Type.TEXT,
+      label = "Runtime Parameters for Each Instance",
       displayPosition = 30,
-      group = "JOB"
+      group = "JOB",
+      elDefs = {RecordEL.class, TimeNowEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
   )
-  public Map<String, Object> runtimeParameters;
+  public String runtimeParametersList;
+
+  @ConfigDef(
+      label = "Jobs",
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue="",
+      description="Jobs to start in parallel",
+      displayPosition = 20,
+      group = "JOB",
+      dependsOn = "jobTemplate",
+      triggeredByValue = { "false" }
+  )
+  @ListBeanModel
+  public List<JobIdConfig> jobIdConfigList;
 
   @ConfigDef(
       required = true,
@@ -62,7 +121,9 @@ public class StartJobConfig {
       description = "Reset the origin before starting the job",
       defaultValue = "false",
       displayPosition = 40,
-      group = "JOB"
+      group = "JOB",
+      dependsOn = "jobTemplate",
+      triggeredByValue = { "false" }
   )
   public boolean resetOrigin = false;
 
@@ -92,17 +153,6 @@ public class StartJobConfig {
       triggeredByValue = { "false" }
   )
   public int waitTime;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "/output",
-      label = "Output Field Path",
-      description = "Writes the pipeline status, offset, and metrics to the specified field",
-      displayPosition = 70,
-      group = "JOB"
-  )
-  public String outputFieldPath = "/output";
 
   @ConfigDef(
       required = true,

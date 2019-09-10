@@ -15,142 +15,155 @@
  */
 package com.streamsets.pipeline.stage.processor.startJob;
 
-import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.api.base.SingleLaneProcessor;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.util.ThreadUtil;
-import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.lib.startJob.JobIdConfig;
+import com.streamsets.pipeline.lib.startJob.StartJobCommon;
+import com.streamsets.pipeline.lib.startJob.StartJobConfig;
+import com.streamsets.pipeline.lib.startJob.StartJobSupplier;
+import com.streamsets.pipeline.lib.startJob.StartJobTemplateSupplier;
 
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Response;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 @SuppressWarnings("unchecked")
-public class StartJobProcessor extends SingleLaneRecordProcessor {
+public class StartJobProcessor extends SingleLaneProcessor {
 
-  private static final Logger LOG = LoggerFactory.getLogger(StartJobProcessor.class);
-  private String X_USER_AUTH_TOKEN = "X-SS-User-Auth-Token";
+  private StartJobCommon startJobCommon;
   private StartJobConfig conf;
-  private String userAuthToken;
+
+  private ELVars jobIdConfigVars;
+  private ELEval jobIdEval;
+  private ELEval runtimeParametersEval;
 
   StartJobProcessor(StartJobConfig conf) {
     this.conf = conf;
+    this.startJobCommon = new StartJobCommon(conf);
   }
 
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
-    if (!conf.baseUrl.endsWith("/")) {
-      conf.baseUrl += "/";
-    }
-    return issues;
+    jobIdConfigVars = getContext().createELVars();
+    jobIdEval = getContext().createELEval("jobId");
+    runtimeParametersEval = getContext().createELEval("runtimeParameters");
+    return this.startJobCommon.init(issues);
   }
 
-  @Override
-  protected void process(Record record, SingleLaneBatchMaker batchMaker) {
-    try {
-      getUserAuthToken();
-      if (conf.resetOrigin) {
-        resetOffset();
+  public void process(Batch batch, SingleLaneBatchMaker batchMaker) throws StageException {
+    List<CompletableFuture<Field>> startJobFutures = new ArrayList<>();
+    Executor executor = Executors.newCachedThreadPool();
+    Iterator<Record> it = batch.getRecords();
+    Record firstRecord = null;
+    while (it.hasNext()) {
+      Record record = it.next();
+      if (firstRecord == null) {
+        firstRecord = record;
       }
-      startJob();
-      if (conf.runInBackground) {
-        batchMaker.addRecord(record);
+      try {
+        if (conf.jobTemplate) {
+          RecordEL.setRecordInContext(jobIdConfigVars, record);
+          TimeNowEL.setTimeNowInContext(jobIdConfigVars, new Date());
+          String templateJobId = jobIdEval.eval(
+              jobIdConfigVars,
+              conf.templateJobId,
+              String.class
+          );
+          String runtimeParametersList = runtimeParametersEval.eval(
+              jobIdConfigVars,
+              conf.runtimeParametersList,
+              String.class
+          );
+          CompletableFuture<Field> future = CompletableFuture.supplyAsync(new StartJobTemplateSupplier(
+              conf,
+              templateJobId,
+              runtimeParametersList,
+              getContext()
+          ), executor);
+          startJobFutures.add(future);
+        } else {
+          for(JobIdConfig jobIdConfig: conf.jobIdConfigList) {
+            JobIdConfig resolvedJobIdConfig = new JobIdConfig();
+            RecordEL.setRecordInContext(jobIdConfigVars, record);
+            TimeNowEL.setTimeNowInContext(jobIdConfigVars, new Date());
+            resolvedJobIdConfig.jobId = jobIdEval.eval(
+                jobIdConfigVars,
+                jobIdConfig.jobId,
+                String.class
+            );
+            resolvedJobIdConfig.runtimeParameters = runtimeParametersEval.eval(
+                jobIdConfigVars,
+                jobIdConfig.runtimeParameters,
+                String.class
+            );
+            CompletableFuture<Field> future = CompletableFuture.supplyAsync(new StartJobSupplier(
+                conf,
+                resolvedJobIdConfig,
+                getContext()
+            ), executor);
+            startJobFutures.add(future);
+          }
+        }
+      } catch (OnRecordErrorException ex) {
+        switch (this.getContext().getOnErrorRecord()) {
+          case DISCARD:
+            break;
+          case TO_ERROR:
+            this.getContext().toError(record, ex);
+            break;
+          case STOP_PIPELINE:
+            throw ex;
+          default:
+            throw new IllegalStateException(Utils.format(
+                "It should never happen. OnError '{}'",
+                this.getContext().getOnErrorRecord(),
+                ex
+            ));
+        }
+      }
+    }
+
+    if (startJobFutures.isEmpty()) {
+      return;
+    }
+
+    try {
+      LinkedHashMap<String, Field> outputField = startJobCommon.startJobInParallel(
+          startJobFutures,
+          getContext()
+      );
+
+      if (firstRecord == null) {
+        firstRecord = getContext().createRecord("startJobProcessor");
+        firstRecord.set(Field.createListMap(outputField));
       } else {
-        waitForJobCompletion(record, batchMaker);
+        Field rootField = firstRecord.get();
+        if (rootField.getType() == Field.Type.LIST_MAP) {
+          // If the root field merge results with existing record
+          LinkedHashMap<String, Field> currentField = rootField.getValueAsListMap();
+          currentField.putAll(outputField);
+        } else {
+          firstRecord.set(Field.createListMap(outputField));
+        }
       }
-    } catch (Exception e) {
-      getContext().toError(record, e);
-    }
-  }
-
-  private void waitForJobCompletion(Record record, SingleLaneBatchMaker batchMaker) {
-    ThreadUtil.sleep(conf.waitTime);
-    Map<String, Object> jobStatus = getJobStatus();
-    String status = jobStatus.containsKey("status") ? (String) jobStatus.get("status") : null;
-    if  (status != null && !status.equalsIgnoreCase("active")) {
-      batchMaker.addRecord(record);
-    } else {
-      waitForJobCompletion(record, batchMaker);
-    }
-  }
-
-  private void getUserAuthToken() throws StageException {
-    // 1. Login to DPM to get user auth token
-    Response response = null;
-    try {
-      Map<String, String> loginJson = new HashMap<>();
-      loginJson.put("userName", conf.username.get());
-      loginJson.put("password", conf.password.get());
-      response = ClientBuilder.newClient()
-          .target(conf.baseUrl + "security/public-rest/v1/authentication/login")
-          .register(new CsrfProtectionFilter("CSRF"))
-          .request()
-          .post(Entity.json(loginJson));
-      if (response.getStatus() != Response.Status.OK.getStatusCode()) {
-        throw new RuntimeException(Utils.format("DPM Login failed, status code '{}': {}",
-            response.getStatus(),
-            response.readEntity(String.class)
-        ));
-      }
-
-      userAuthToken = response.getHeaderString(X_USER_AUTH_TOKEN);
-    } finally {
-      if (response != null) {
-        response.close();
-      }
-    }
-  }
-
-  private void resetOffset() {
-    String resetOffsetUrl = conf.baseUrl + "jobrunner/rest/v1/jobs/resetOffset";
-    try (Response response = ClientBuilder.newClient()
-        .target(resetOffsetUrl)
-        .register(new CsrfProtectionFilter("CSRF"))
-        .request()
-        .header(X_USER_AUTH_TOKEN, userAuthToken)
-        .post(Entity.json(ImmutableList.of(conf.jobId)))) {
-      if (response.getStatus() != Response.Status.OK.getStatusCode()) {
-        throw new RuntimeException(Utils.format("Reset failed, status code '{}': {}",
-            response.getStatus(),
-            response.readEntity(String.class)
-        ));
-      }
-    }
-  }
-
-  private void startJob() {
-    String jobStartUrl = conf.baseUrl + "jobrunner/rest/v1/job/" + conf.jobId + "/start";
-    try (Response response = ClientBuilder.newClient()
-        .target(jobStartUrl)
-        .register(new CsrfProtectionFilter("CSRF"))
-        .request()
-        .header(X_USER_AUTH_TOKEN, userAuthToken)
-        .post(Entity.json(conf.runtimeParameters))) {
-      if (response.getStatus() != Response.Status.OK.getStatusCode()) {
-        throw new RuntimeException(Utils.format("Job Start failed, status code '{}': {}",
-            response.getStatus(),
-            response.readEntity(String.class)
-        ));
-      }
-    }
-  }
-
-  private Map<String, Object> getJobStatus() {
-    String jobStatusUrl = conf.baseUrl + "jobrunner/rest/v1/job/" + conf.jobId + "/currentStatus";
-    try (Response response = ClientBuilder.newClient()
-        .target(jobStatusUrl)
-        .request()
-        .header(X_USER_AUTH_TOKEN, userAuthToken)
-        .get()) {
-      return (Map<String, Object>)response.readEntity(Map.class);
+      batchMaker.addRecord(firstRecord);
+    } catch (Exception ex) {
+      getContext().reportError(ex);
     }
   }
 
