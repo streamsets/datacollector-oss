@@ -74,7 +74,8 @@ upgrades:
         elseValue: 5
 
     - renameConfig:                       # renames configurations
-        oldNamePattern: prefix\.(.*$)     # Java regex, () can be used to define groups
+        oldNamePattern: prefix\.(.*$)     # Java regex, () can be used to define groups. CAUTION: this may accidentally capture "stage.*"
+                                          # configurations, e.g. when using "(.*$)" as oldNamePattern. Use something like "^(?!stage)(.*$)" to avoid it.
         newNamePattern: newPrefix.(0)     # new pattern, it can reference groups from the old pattern using (#)
 
     - removeConfigs:
