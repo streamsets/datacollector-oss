@@ -33,7 +33,9 @@ public enum Errors implements ErrorCode {
   SOLR_10("Record does not contain any value in path: {}"),
   SOLR_11("Fields path cannot be empty"),
   SOLR_12("Mapping is missing Solr required fields: {}"),
-  SOLR_13("Mapping is missing Solr optional fields: {}")
+  SOLR_13("Mapping is missing Solr optional fields: {}"),
+  SOLR_14("Connection timeout cannot be negative"),
+  SOLR_15("Socket timeout cannot be negative")
   ;
   private final String msg;
 

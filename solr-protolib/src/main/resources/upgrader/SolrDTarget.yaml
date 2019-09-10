@@ -25,3 +25,14 @@ upgrades:
           oldNamePattern: ^(?!stage)(.*$)     # Configs which start with "stage" are not in the configBean
           newNamePattern: conf.(0)
 
+
+  - toVersion: 7
+    actions:
+
+      - setConfig:
+          name: conf.connectionTimeout
+          value: 0
+
+      - setConfig:
+          name: conf.socketTimeout
+          value: 0

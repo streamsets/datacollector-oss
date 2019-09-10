@@ -54,6 +54,8 @@ public class SolrTarget07 implements SdcSolrTarget {
   private final boolean waitFlush;
   private final boolean waitSearcher;
   private final boolean softCommit;
+  private final int connectionTimeout;
+  private final int socketTimeout;
   private List<String> requiredFieldNamesMap;
   private List<String> optionalFieldNamesMap;
 
@@ -67,7 +69,9 @@ public class SolrTarget07 implements SdcSolrTarget {
       boolean waitFlush,
       boolean waitSearcher,
       boolean softCommit,
-      boolean ignoreOptionalFields
+      boolean ignoreOptionalFields,
+      int connectionTimeout,
+      int socketTimeout
   ) {
     this.instanceType = instanceType;
     this.solrURI = solrURI;
@@ -81,6 +85,8 @@ public class SolrTarget07 implements SdcSolrTarget {
     this.ignoreOptionalFields = ignoreOptionalFields;
     this.requiredFieldNamesMap = new ArrayList<>();
     this.optionalFieldNamesMap = new ArrayList<>();
+    this.connectionTimeout = connectionTimeout;
+    this.socketTimeout = socketTimeout;
   }
 
   @Override
@@ -135,7 +141,8 @@ public class SolrTarget07 implements SdcSolrTarget {
     }
 
     if (SolrInstanceAPIType.SINGLE_NODE.toString().equals(this.instanceType)) {
-      return new HttpSolrClient.Builder(this.solrURI).build();
+      return new HttpSolrClient.Builder(this.solrURI).withConnectionTimeout(this.connectionTimeout).
+              withSocketTimeout(this.socketTimeout).build();
     } else {
       CloudSolrClient cloudSolrClient = new CloudSolrClient.Builder().withZkHost(this.zookeeperConnect).build();
       cloudSolrClient.setDefaultCollection(this.defaultCollection);

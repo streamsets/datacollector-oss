@@ -43,7 +43,9 @@ public class Solr07TargetFactory extends SdcSolrTargetFactory {
         settings.isWaitFlush(),
         settings.isWaitSearcher(),
         settings.isSoftCommit(),
-        settings.getIgnoreOptionalFields()
+        settings.getIgnoreOptionalFields(),
+        settings.getConnectionTimeout(),
+        settings.getSocketTimeout()
     );
   }
 }

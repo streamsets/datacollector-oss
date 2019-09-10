@@ -221,4 +221,28 @@ public class SolrConfigBean {
   )
   public boolean softCommit = false;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      min = 0,
+      defaultValue = "0",
+      label = "Connection Timeout (ms)",
+      description = "Connection timeout in milliseconds. 0 indicates no timeout",
+      displayPosition = 1030,
+      group = "SOLR"
+  )
+  public int connectionTimeout = 0;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      min = 0,
+      defaultValue = "0",
+      label = "Socket Timeout (ms)",
+      description = "Socket timeout (in milliseconds. 0 indicates no timeout",
+      displayPosition = 1040,
+      group = "SOLR"
+  )
+  public int socketTimeout = 0;
+
 }

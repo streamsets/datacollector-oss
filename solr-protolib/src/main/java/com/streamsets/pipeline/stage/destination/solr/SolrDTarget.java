@@ -16,23 +16,15 @@
 package com.streamsets.pipeline.stage.destination.solr;
 
 import com.streamsets.pipeline.api.ConfigDefBean;
-import com.streamsets.pipeline.api.Dependency;
-import com.streamsets.pipeline.api.ListBeanModel;
-import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.configurablestage.DTarget;
-import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
-import com.streamsets.pipeline.stage.processor.scripting.ProcessingModeChooserValues;
-
-import java.util.List;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 6,
+    version = 7,
     label = "Solr",
     description = "Upload data to an Apache Solr",
     icon = "solr.png",

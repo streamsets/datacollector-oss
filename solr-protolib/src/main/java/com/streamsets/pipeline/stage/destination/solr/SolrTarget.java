@@ -19,6 +19,7 @@ package com.streamsets.pipeline.stage.destination.solr;
 import com.esotericsoftware.minlog.Log;
 import com.google.common.base.Joiner;
 import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -61,31 +62,75 @@ public class SolrTarget extends BaseTarget {
     this.conf = conf;
   }
 
+  protected ConfigIssue createSolrConfigIssue(String configName, ErrorCode errorMessage, Object... objects) {
+    return getContext().createConfigIssue(
+        Groups.SOLR.name(),
+        configName,
+        errorMessage,
+        objects
+    );
+  }
+
+  protected void validateRecordSolrFieldsPath(List<ConfigIssue> issues) {
+    if (StringUtils.isBlank(conf.recordSolrFieldsPath)) {
+      issues.add(createSolrConfigIssue("conf.recordSolrFieldsPath", Errors.SOLR_11));
+    }
+  }
+
+  protected boolean inSingleNode() {
+    return SolrInstanceType.SINGLE_NODE.equals(conf.instanceType.getInstanceType());
+  }
+
+  protected boolean inCloud() {
+    return SolrInstanceType.SOLR_CLOUD.equals(conf.instanceType.getInstanceType());
+  }
+
+  protected boolean validateSolrURI(List<ConfigIssue> issues) {
+    boolean solrInstanceInfo = true;
+    if((conf.solrURI == null || conf.solrURI.isEmpty()) && inSingleNode()) {
+      solrInstanceInfo = false;
+      issues.add(createSolrConfigIssue("conf.solrURI", Errors.SOLR_00));
+    } else if((conf.zookeeperConnect == null || conf.zookeeperConnect.isEmpty()) && inCloud()) {
+      solrInstanceInfo = false;
+      issues.add(createSolrConfigIssue("conf.zookeeperConnect", Errors.SOLR_01));
+    }
+    return solrInstanceInfo;
+  }
+
+  protected void validateFieldsNamesMap(List<ConfigIssue> issues) {
+    if (conf.fieldNamesMap == null || conf.fieldNamesMap.isEmpty() &&
+      !conf.fieldsAlreadyMappedInRecord) {
+    issues.add(createSolrConfigIssue("conf.fieldNamesMap", Errors.SOLR_02));
+    }
+  }
+
+  protected void validateConnectionTimeout(List<ConfigIssue> issues) {
+    if (conf.connectionTimeout < 0) {
+      issues.add(createSolrConfigIssue("conf.connectionTimeout", Errors.SOLR_14));
+    }
+  }
+
+  protected void validateSocketConnection(List<ConfigIssue> issues) {
+    if (conf.socketTimeout < 0) {
+      issues.add(createSolrConfigIssue("conf.socketTimeout", Errors.SOLR_15));
+    }
+  }
+
+  protected boolean validateConfigs(List<ConfigIssue> issues) {
+    validateRecordSolrFieldsPath(issues);
+    boolean solrInstanceInfo = validateSolrURI(issues);
+    validateFieldsNamesMap(issues);
+    validateConnectionTimeout(issues);
+    validateSocketConnection(issues);
+    return solrInstanceInfo;
+  }
+
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
-    boolean solrInstanceInfo = true;
-
-    if (StringUtils.isBlank(conf.recordSolrFieldsPath)) {
-      issues.add(getContext().createConfigIssue(Groups.SOLR.name(), "conf.recordSolrFieldsPath", Errors.SOLR_11));
-    }
-
-    if(SolrInstanceType.SINGLE_NODE.equals(conf.instanceType.getInstanceType()) &&
-        (conf.solrURI == null || conf.solrURI.isEmpty())) {
-      solrInstanceInfo = false;
-      issues.add(getContext().createConfigIssue(Groups.SOLR.name(), "conf.solrURI", Errors.SOLR_00));
-    } else if(SolrInstanceType.SOLR_CLOUD.equals(conf.instanceType.getInstanceType()) &&
-      (conf.zookeeperConnect == null || conf.zookeeperConnect.isEmpty())) {
-      solrInstanceInfo = false;
-      issues.add(getContext().createConfigIssue(Groups.SOLR.name(), "conf.zookeeperConnect", Errors.SOLR_01));
-    }
-
-    if (conf.fieldNamesMap == null || conf.fieldNamesMap.isEmpty() &&
-        !conf.fieldsAlreadyMappedInRecord) {
-      issues.add(getContext().createConfigIssue(Groups.SOLR.name(), "conf.fieldNamesMap", Errors.SOLR_02));
-    }
+    boolean solrInstanceInfo = validateConfigs(issues);
 
     if (solrInstanceInfo) {
       TargetFactorySettings settings = new TargetFactorySettings(
@@ -98,7 +143,9 @@ public class SolrTarget extends BaseTarget {
           conf.waitFlush,
           conf.waitSearcher,
           conf.softCommit,
-          conf.ignoreOptionalFields
+          conf.ignoreOptionalFields,
+          conf.connectionTimeout,
+          conf.socketTimeout
       );
       sdcSolrTarget = SdcSolrTargetFactory.create(settings).create();
       try {
@@ -114,13 +161,13 @@ public class SolrTarget extends BaseTarget {
         if (!conf.fieldsAlreadyMappedInRecord) {
           List<String> missingFields = checkMissingFields(conf.fieldNamesMap, requiredFieldNamesMap);
           if (!missingFields.isEmpty()) {
-            issues.add(getContext().createConfigIssue(Groups.SOLR.name(), "conf.fieldNamesMap", Errors.SOLR_12,
+            issues.add(createSolrConfigIssue("conf.fieldNamesMap", Errors.SOLR_12,
                 Joiner.on(", ").join(missingFields)));
           }
           if (!conf.ignoreOptionalFields) {
             missingFields = checkMissingFields(conf.fieldNamesMap, optionalFieldNamesMap);
             if (!missingFields.isEmpty()) {
-              issues.add(getContext().createConfigIssue(Groups.SOLR.name(), "conf.fieldNamesMap", Errors.SOLR_13,
+              issues.add(createSolrConfigIssue("conf.fieldNamesMap", Errors.SOLR_13,
                   Joiner.on(", ").join(missingFields)));
             }
           }
@@ -130,7 +177,7 @@ public class SolrTarget extends BaseTarget {
         if(InstanceTypeOptions.SOLR_CLOUD.equals(conf.instanceType.getInstanceType())) {
           configName = "conf.zookeeperConnect";
         }
-        issues.add(getContext().createConfigIssue(Groups.SOLR.name(), configName, Errors.SOLR_03, ex.toString(), ex));
+        issues.add(createSolrConfigIssue(configName, Errors.SOLR_03, ex.toString(), ex));
       }
     }
 

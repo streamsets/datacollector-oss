@@ -214,6 +214,11 @@
       <artifactId>streamsets-datacollector-stagesupport</artifactId>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-api-mockito</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>

@@ -39,7 +39,7 @@ import java.util.Map;
 
 public class SolrTarget06 implements SdcSolrTarget {
   private final static Logger LOG = LoggerFactory.getLogger(SolrTarget06.class);
-  private final static String VERSION ="6.1.0";
+  private final static String VERSION = "6.1.0";
   private SolrClient solrClient;
 
   private final String solrURI;
@@ -52,6 +52,8 @@ public class SolrTarget06 implements SdcSolrTarget {
   private final boolean waitFlush;
   private final boolean waitSearcher;
   private final boolean softCommit;
+  private final int connectionTimeout;
+  private final int socketTimeout;
   private List<String> requiredFieldNamesMap;
   private List<String> optionalFieldNamesMap;
 
@@ -65,7 +67,9 @@ public class SolrTarget06 implements SdcSolrTarget {
       boolean waitFlush,
       boolean waitSearcher,
       boolean softCommit,
-      boolean ignoreOptionalFields
+      boolean ignoreOptionalFields,
+      int connectionTimeout,
+      int socketTimeout
   ) {
     this.instanceType = instanceType;
     this.solrURI = solrURI;
@@ -79,6 +83,8 @@ public class SolrTarget06 implements SdcSolrTarget {
     this.ignoreOptionalFields = ignoreOptionalFields;
     this.requiredFieldNamesMap = new ArrayList<>();
     this.optionalFieldNamesMap = new ArrayList<>();
+    this.connectionTimeout = connectionTimeout;
+    this.socketTimeout = socketTimeout;
   }
 
   public void init() throws Exception {
@@ -131,7 +137,10 @@ public class SolrTarget06 implements SdcSolrTarget {
     }
 
     if (SolrInstanceAPIType.SINGLE_NODE.toString().equals(this.instanceType)) {
-      return new HttpSolrClient.Builder(this.solrURI).build();
+      HttpSolrClient solrClient = new HttpSolrClient.Builder(this.solrURI).build();
+      solrClient.setConnectionTimeout(this.connectionTimeout);
+      solrClient.setSoTimeout(this.socketTimeout);
+      return solrClient;
     } else {
       CloudSolrClient cloudSolrClient = new CloudSolrClient.Builder().withZkHost(this.zookeeperConnect).build();
       cloudSolrClient.setDefaultCollection(this.defaultCollection);
