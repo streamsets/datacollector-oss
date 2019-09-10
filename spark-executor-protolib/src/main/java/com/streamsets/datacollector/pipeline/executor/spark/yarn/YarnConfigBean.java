@@ -206,8 +206,6 @@ public class YarnConfigBean {
       required = false,
       label = "Additional JARs",
       group = "APPLICATION",
-      dependsOn = "language",
-      triggeredByValue = "JVM",
       displayPosition = 60
   )
   public List<String> additionalJars = new ArrayList<>();
