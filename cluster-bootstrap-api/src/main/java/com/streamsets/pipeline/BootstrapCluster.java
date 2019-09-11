@@ -195,8 +195,7 @@ public class BootstrapCluster {
     if (sparkLib == null) {
       throw new IllegalStateException("Couldn't find the source library in pipeline file");
     }
-    String lookupLib = STREAMSETS_LIBS_PREFIX + sparkLib;
-    System.err.println("\n Cluster lib is " + lookupLib);
+    System.err.println("\n Cluster lib is " + sparkLib);
     for (Map.Entry<String,List<URL>> entry : libsUrls.entrySet()) {
       String[] parts = entry.getKey().split(System.getProperty("file.separator"));
       if (parts.length != 2) {
@@ -207,9 +206,9 @@ public class BootstrapCluster {
       String name = parts[1];
       SDCClassLoader sdcClassLoader = SDCClassLoader.getStageClassLoader(type, name, entry.getValue(), apiCL); //NOSONAR
       // TODO add spark, scala, etc to blacklist
-      if (lookupLib.equals(entry.getKey())) {
+      if (entry.getKey().endsWith(sparkLib)) {
         if (sparkCL != null) {
-          throw new IllegalStateException("Found two classloaders for " + lookupLib);
+          throw new IllegalStateException("Found two classloaders for " + sparkLib);
         }
         sparkCL = sdcClassLoader;
       }
@@ -223,7 +222,7 @@ public class BootstrapCluster {
       stageLibrariesCLs.add(sdcClassLoader);
     }
     if (sparkCL == null) {
-      throw new IllegalStateException("Could not find classloader for " + lookupLib);
+      throw new IllegalStateException("Could not find classloader for " + sparkLib);
     }
     try {
       Class<?> runtimeModuleClz = Class.forName("com.streamsets.datacollector.main.SlaveRuntimeModule", true,
