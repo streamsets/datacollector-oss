@@ -37,7 +37,7 @@ public class HdfsSource extends SpoolDirBaseSource {
   public static final String OFFSET_VERSION =
       "$com.streamsets.pipeline.stage.origin.hdfs.HdfsSource.offset.version$";
 
-  private final HdfsSourceConfigBean hdfsSourceConfigBean;
+  protected final HdfsSourceConfigBean hdfsSourceConfigBean;
 
   public HdfsSource(SpoolDirConfigBean conf, HdfsSourceConfigBean hdfsSourceConfigBean) {
     this.conf = conf;

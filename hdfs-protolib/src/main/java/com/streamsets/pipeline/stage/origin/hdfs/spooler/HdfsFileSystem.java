@@ -40,7 +40,7 @@ import static com.streamsets.pipeline.lib.dirspooler.PathMatcherMode.REGEX;
 
 public class HdfsFileSystem implements WrappedFileSystem {
   private final static Logger LOG = LoggerFactory.getLogger(HdfsFileSystem.class);
-  private final FileSystem fs;
+  protected final FileSystem fs;
   private final String filePattern;
   private final boolean processSubdirectories;
   private PathFilter filter;

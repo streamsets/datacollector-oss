@@ -38,6 +38,8 @@
     <azure-eventhubs.version>1.0.1</azure-eventhubs.version>
     <azure-eventhubs-eph.version>1.0.0</azure-eventhubs-eph.version>
     <azure-iot-device-client.version>1.3.32</azure-iot-device-client.version>
+
+    <!-- WARNING: Updating hadoop version requires SDC-12302: Rollback of SDC-12465 temporary fix -->
     <hadoop.version>3.2.0</hadoop.version>
   </properties>
 
