@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.pipeline.executor.spark;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.datacollector.event.dto.Event;
 import com.streamsets.datacollector.pipeline.executor.spark.yarn.YarnAppLauncher;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
@@ -37,15 +38,22 @@ public class SparkExecutor extends BaseExecutor {
   private static final Logger LOG = LoggerFactory.getLogger(SparkExecutor.class);
   public static final String APP_SUBMITTED_EVENT = "AppSubmittedEvent";
   public static final String APP_ID = "app-id";
+  public static final String SUBMITTER = "submitter";
+  public static final String TIMESTAMP = "timestamp";
 
   private final SparkExecutorConfigBean configBean;
   private AppLauncher appLauncher;
 
+  private static final String DEFAULT_USER = "default user (sdc)";
+  private String user;
+
   /**
    * Issued for every submitted Spark job.
    */
-  public static final EventCreator JOB_CREATED = new EventCreator.Builder(APP_SUBMITTED_EVENT, 1)
-      .withRequiredField(APP_ID)
+  public static final EventCreator JOB_CREATED = new EventCreator.Builder(APP_SUBMITTED_EVENT, 2)
+      .withOptionalField(APP_ID)
+      .withRequiredField(SUBMITTER)
+      .withRequiredField(TIMESTAMP)
       .build();
 
   public SparkExecutor(SparkExecutorConfigBean conf) {
@@ -57,6 +65,9 @@ public class SparkExecutor extends BaseExecutor {
     List<ConfigIssue> issues = super.init();
     appLauncher = getLauncher();
     Optional.ofNullable(appLauncher.init(getContext(), configBean)).ifPresent(issues::addAll);
+
+    user = configBean.yarnConfigBean.proxyUser.isEmpty() ? DEFAULT_USER : configBean.yarnConfigBean.proxyUser;
+
     return issues;
   }
 
@@ -68,22 +79,27 @@ public class SparkExecutor extends BaseExecutor {
   @Override
   public void write(Batch batch) throws StageException {
     Iterator<Record> records = batch.getRecords();
-    while(records.hasNext()) {
+    while (records.hasNext()) {
       Record record = records.next();
       try {
+
         Optional<String> appIdOpt = appLauncher.launchApp(record);
-        appIdOpt.ifPresent(
-            (String appId) -> {
-              LOG.info(Utils.format("Spark application launched with app id: '{}'", appId));
-              JOB_CREATED.create(getContext()).with(APP_ID, appId).createAndSend();
-            }
+        EventCreator.EventBuilder event =
+            JOB_CREATED.create(getContext()).with(SUBMITTER, user).with(TIMESTAMP, System.currentTimeMillis()
         );
+
+        appIdOpt.ifPresent((String appId) -> {
+          LOG.info(Utils.format("Spark application launched with app id: '{}'", appId));
+          event.with(APP_ID, appId);
+        });
+        event.createAndSend();
+
         if (!appLauncher.waitForCompletion()) {
           LOG.info("Spark app has been submitted, but it has not completed yet");
         }
       } catch (ApplicationLaunchFailureException ex) {
         throw new StageException(SPARK_EXEC_00, ex.getMessage(), ex);
-      } catch(InterruptedException ex) { //NOSONAR
+      } catch (InterruptedException ex) { //NOSONAR
         LOG.error(SPARK_EXEC_06.getMessage(), ex);
         throw new StageException(SPARK_EXEC_06, ex.getMessage(), ex);
       }
