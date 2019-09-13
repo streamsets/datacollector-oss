@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.Label;
 public enum CredentialsProviderType implements Label {
   DEFAULT_PROVIDER("Default Credentials Provider"),
   JSON_PROVIDER("Service Account Credentials File (JSON)"),
+  JSON("Service Account Credentials (JSON)"),
   ;
 
   private final String label;

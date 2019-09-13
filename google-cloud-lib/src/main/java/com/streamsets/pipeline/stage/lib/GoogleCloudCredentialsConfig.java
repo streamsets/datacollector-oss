@@ -20,6 +20,7 @@ import com.google.api.gax.core.FixedCredentialsProvider;
 import com.google.auth.Credentials;
 import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.pubsub.v1.SubscriptionAdminSettings;
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
@@ -28,8 +29,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
@@ -76,6 +79,17 @@ public class GoogleCloudCredentialsConfig {
   )
   public String path = "";
 
+  @ConfigDef(required = true,
+      type = ConfigDef.Type.CREDENTIAL,
+      mode = ConfigDef.Mode.JSON,
+      label = "Credentials File Content (JSON)",
+      description = "Content of the credentials file",
+      dependsOn = "credentialsProvider",
+      triggeredByValue = "JSON",
+      displayPosition = 30,
+      group = "CREDENTIALS")
+  public String credentialsFileContent = "";
+
   /**
    * Tries to create a {@link CredentialsProvider} for the appropriate type of credentials supplied.
    *
@@ -88,7 +102,8 @@ public class GoogleCloudCredentialsConfig {
 
     if (credentialsProvider.equals(CredentialsProviderType.DEFAULT_PROVIDER)) {
       return Optional.of(SubscriptionAdminSettings.defaultCredentialsProviderBuilder().build());
-    } else if (credentialsProvider.equals(CredentialsProviderType.JSON_PROVIDER)) {
+    } else if (credentialsProvider.equals(CredentialsProviderType.JSON_PROVIDER) || credentialsProvider.equals(
+        CredentialsProviderType.JSON)) {
       Credentials credentials = getCredentials(context, issues);
       provider = new FixedCredentialsProvider() {
         @Nullable
@@ -111,33 +126,45 @@ public class GoogleCloudCredentialsConfig {
   private Credentials getCredentials(Stage.Context context, List<Stage.ConfigIssue> issues) {
     Credentials credentials = null;
 
-    File credentialsFile;
-    if (Paths.get(path).isAbsolute()) {
-      credentialsFile = new File(path);
-    } else {
-      credentialsFile = new File(context.getResourcesDirectory(), path);
-    }
-
-    if (!credentialsFile.exists() || !credentialsFile.isFile()) {
-      LOG.error(GOOGLE_01.getMessage(), credentialsFile.getPath());
-      issues.add(context.createConfigIssue(
-          Groups.CREDENTIALS.name(), CONF_CREDENTIALS_CREDENTIALS_PROVIDER,
-          GOOGLE_01,
-          credentialsFile.getPath()
-      ));
-      return null;
-    }
-
-    try (InputStream in = new FileInputStream(credentialsFile)) {
-      credentials = ServiceAccountCredentials.fromStream(in);
+    try (InputStream in = getCredentialsInputStream(context, issues)) {
+      if (in != null) {
+        credentials = ServiceAccountCredentials.fromStream(in);
+      }
     } catch (IOException | IllegalArgumentException e) {
       LOG.error(GOOGLE_02.getMessage(), e);
-      issues.add(context.createConfigIssue(
-          Groups.CREDENTIALS.name(), CONF_CREDENTIALS_CREDENTIALS_PROVIDER,
+      issues.add(context.createConfigIssue(Groups.CREDENTIALS.name(),
+          CONF_CREDENTIALS_CREDENTIALS_PROVIDER,
           GOOGLE_02
       ));
     }
 
     return credentials;
+  }
+
+  @VisibleForTesting
+  InputStream getCredentialsInputStream(Stage.Context context, List<Stage.ConfigIssue> issues)
+      throws FileNotFoundException {
+    if (credentialsProvider.equals(CredentialsProviderType.JSON_PROVIDER)) {
+      File credentialsFile;
+      if (Paths.get(path).isAbsolute()) {
+        credentialsFile = new File(path);
+      } else {
+        credentialsFile = new File(context.getResourcesDirectory(), path);
+      }
+
+      if (!credentialsFile.exists() || !credentialsFile.isFile()) {
+        LOG.error(GOOGLE_01.getMessage(), credentialsFile.getPath());
+        issues.add(context.createConfigIssue(Groups.CREDENTIALS.name(),
+            CONF_CREDENTIALS_CREDENTIALS_PROVIDER,
+            GOOGLE_01,
+            credentialsFile.getPath()
+        ));
+        return null;
+      }
+      return new FileInputStream(credentialsFile);
+    } else if (credentialsProvider.equals(CredentialsProviderType.JSON) && !credentialsFileContent.isEmpty()) {
+      return new ByteArrayInputStream(credentialsFileContent.getBytes());
+    }
+    return null;
   }
 }

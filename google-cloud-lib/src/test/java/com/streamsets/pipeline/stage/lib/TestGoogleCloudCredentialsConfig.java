@@ -21,7 +21,11 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.stage.pubsub.origin.PubSubDSource;
 import org.junit.Test;
+import org.mockito.Mockito;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -30,6 +34,7 @@ import java.util.List;
 import static com.streamsets.pipeline.stage.lib.Errors.GOOGLE_01;
 import static com.streamsets.pipeline.stage.lib.Errors.GOOGLE_02;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class TestGoogleCloudCredentialsConfig {
@@ -60,6 +65,41 @@ public class TestGoogleCloudCredentialsConfig {
 
     assertEquals(1, issues.size());
     assertTrue(issues.get(0).toString().contains(GOOGLE_02.getCode()));
+  }
+
+  @Test
+  public void testGetCredentialInputStream_CredentialsFile() throws Exception {
+    Path tempFile = Files.createTempFile("creds", "json");
+    GoogleCloudCredentialsConfig credentialsConfig = new GoogleCloudCredentialsConfig();
+    credentialsConfig.projectId = "test";
+    credentialsConfig.credentialsProvider = CredentialsProviderType.JSON_PROVIDER;
+    credentialsConfig.path = tempFile.toString();
+
+    InputStream in = credentialsConfig.getCredentialsInputStream(createContext(), new ArrayList<>());
+
+    assertTrue(in instanceof FileInputStream);
+
+    Path invalidPath = Mockito.mock(Path.class);
+    credentialsConfig.path = invalidPath.toString();
+
+    in = credentialsConfig.getCredentialsInputStream(createContext(), new ArrayList<>());
+    assertNull(in);
+  }
+
+  @Test
+  public void testGetCredentialInputStream_CredentialsJSONContent() throws Exception {
+    GoogleCloudCredentialsConfig credentialsConfig = new GoogleCloudCredentialsConfig();
+    credentialsConfig.projectId = "test";
+    credentialsConfig.credentialsProvider = CredentialsProviderType.JSON;
+    credentialsConfig.credentialsFileContent = "{JSON}";
+
+    InputStream in = credentialsConfig.getCredentialsInputStream(createContext(), new ArrayList<>());
+    assertTrue(in instanceof ByteArrayInputStream);
+
+    credentialsConfig.credentialsFileContent = "";
+
+    in = credentialsConfig.getCredentialsInputStream(createContext(), new ArrayList<>());
+    assertNull(in);
   }
 
   private Stage.Context createContext() {
