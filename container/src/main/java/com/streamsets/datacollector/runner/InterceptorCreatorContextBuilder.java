@@ -42,43 +42,25 @@ import java.util.Set;
  */
 public class InterceptorCreatorContextBuilder {
 
-  /**
-   * Actual Context implementation that will be returned when build.
-   */
-  private static class ContextImpl implements InterceptorCreator.Context {
+  private static class BaseContextImpl implements InterceptorCreator.BaseContext {
     private final BlobStore blobStore;
     private final Configuration configuration;
-    private final InterceptorCreator.InterceptorType interceptorType;
     private final Map<String, String> parameters;
     private final ExecutionMode executionMode;
     private final DeliveryGuarantee deliveryGuarantee;
-    private final StageConfiguration stageConfiguration;
-    private final StageDefinition stageDefinition;
-    private final Set<StageBehaviorFlags> stageBehaviorFlags;
 
-    ContextImpl(
+    BaseContextImpl(
       BlobStore blobStore,
       Configuration configuration,
-      StageConfiguration stageConfiguration,
-      StageDefinition stageDefinition,
-      InterceptorCreator.InterceptorType interceptorType,
       Map<String, String> parameters,
       ExecutionMode executionMode,
       DeliveryGuarantee deliveryGuarantee
     ) {
       this.blobStore = blobStore;
       this.configuration = configuration;
-      this.stageConfiguration = stageConfiguration;
-      this.stageDefinition = stageDefinition;
-      this.interceptorType = interceptorType;
       this.parameters = parameters;
       this.executionMode = executionMode;
       this.deliveryGuarantee = deliveryGuarantee;
-      if(stageDefinition.getStageDef() == null) {
-        this.stageBehaviorFlags = Collections.emptySet();
-      } else {
-        this.stageBehaviorFlags = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(stageDefinition.getStageDef().flags())));
-      }
     }
 
     @Override
@@ -89,16 +71,6 @@ public class InterceptorCreatorContextBuilder {
     @Override
     public BlobStore getBlobStore() {
       return blobStore;
-    }
-
-    @Override
-    public StageType getStageType() {
-      return stageDefinition.getType();
-    }
-
-    @Override
-    public InterceptorCreator.InterceptorType getInterceptorType() {
-      return interceptorType;
     }
 
     @Override
@@ -114,6 +86,48 @@ public class InterceptorCreatorContextBuilder {
     @Override
     public DeliveryGuarantee getDeliveryGuarantee() {
       return deliveryGuarantee;
+    }
+
+  }
+
+  /**
+   * Actual Context implementation that will be returned when build.
+   */
+  private static class ContextImpl extends BaseContextImpl implements InterceptorCreator.Context {
+    private final InterceptorCreator.InterceptorType interceptorType;
+    private final StageConfiguration stageConfiguration;
+    private final StageDefinition stageDefinition;
+    private final Set<StageBehaviorFlags> stageBehaviorFlags;
+
+    ContextImpl(
+      BlobStore blobStore,
+      Configuration configuration,
+      StageConfiguration stageConfiguration,
+      StageDefinition stageDefinition,
+      InterceptorCreator.InterceptorType interceptorType,
+      Map<String, String> parameters,
+      ExecutionMode executionMode,
+      DeliveryGuarantee deliveryGuarantee
+    ) {
+      super(blobStore, configuration, parameters, executionMode, deliveryGuarantee);
+      this.stageConfiguration = stageConfiguration;
+      this.stageDefinition = stageDefinition;
+      this.interceptorType = interceptorType;
+      if(stageDefinition.getStageDef() == null) {
+        this.stageBehaviorFlags = Collections.emptySet();
+      } else {
+        this.stageBehaviorFlags = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(stageDefinition.getStageDef().flags())));
+      }
+    }
+
+    @Override
+    public StageType getStageType() {
+      return stageDefinition.getType();
+    }
+
+    @Override
+    public InterceptorCreator.InterceptorType getInterceptorType() {
+      return interceptorType;
     }
 
     @Override
@@ -165,6 +179,16 @@ public class InterceptorCreatorContextBuilder {
     return this;
   }
 
+  public InterceptorCreator.BaseContext buildBaseContext(String stageLibrary, String className) {
+    return new BaseContextImpl(
+      new BlobStoreRuntime(Thread.currentThread().getContextClassLoader(), blobStore),
+      sdcConf,
+      getActualParameters(stageLibrary, className),
+      executionMode,
+      deliveryGuarantee
+    );
+  }
+
   public InterceptorCreator.Context buildFor(
     String stageLibrary,
     String className,
@@ -172,28 +196,29 @@ public class InterceptorCreatorContextBuilder {
     StageDefinition stageDefinition,
     InterceptorCreator.InterceptorType interceptorType
   ) {
-    Map<String, String> actualParameters = null;
-
-    if (interceptorConf != null) {
-      // See if this particular interceptor have configuration available
-      for(PipelineStartEvent.InterceptorConfiguration conf : interceptorConf) {
-        if(conf.getStageLibrary().equals(stageLibrary) && conf.getInterceptorClassName().equals(className)) {
-          actualParameters = conf.getParameters();
-          break;
-        }
-      }
-    }
-
     return new ContextImpl(
         new BlobStoreRuntime(Thread.currentThread().getContextClassLoader(), blobStore),
         sdcConf,
         stageConfiguration,
         stageDefinition,
         interceptorType,
-        actualParameters,
+        getActualParameters(stageLibrary, className),
         executionMode,
         deliveryGuarantee
     );
+  }
+
+  private Map<String, String> getActualParameters(String stageLibrary, String className) {
+    if (interceptorConf != null) {
+      // See if this particular interceptor have configuration available
+      for(PipelineStartEvent.InterceptorConfiguration conf : interceptorConf) {
+        if(conf.getStageLibrary().equals(stageLibrary) && conf.getInterceptorClassName().equals(className)) {
+          return conf.getParameters();
+        }
+      }
+    }
+
+    return null;
   }
 
 }

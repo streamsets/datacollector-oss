@@ -515,29 +515,20 @@ public class ClusterRunner extends AbstractRunner {
       ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
       // Give chance for each registered interceptor to push whatever it needs to the cluster
       for (InterceptorDefinition def : getStageLibrary().getInterceptorDefinitions()) {
-        Map<String, String> parameters = null;
+        String className = def.getKlass().getName();
+        String stageLib = def.getLibraryDefinition().getName();
 
-        // Find parameters if they exists for this interceptor
-        for(PipelineStartEvent.InterceptorConfiguration conf : context.getInterceptorConfigurations()) {
-          String className = def.getKlass().getName();
-          String stageLib = def.getLibraryDefinition().getName();
-          if (conf.getStageLibrary().equals(stageLib) && conf.getInterceptorClassName().equals(className)) {
-            parameters = conf.getParameters();
-          }
-        }
-
-        // And finally extract the individual blob objects that are needed
         try {
           Thread.currentThread().setContextClassLoader(def.getStageClassLoader());
           InterceptorCreator creator = def.getDefaultCreator().newInstance();
-          listOfResources.addAll(creator.blobStoreResource(parameters));
+          listOfResources.addAll(creator.blobStoreResource(contextBuilder.buildBaseContext(stageLib, className)));
         } catch (IllegalAccessException | InstantiationException ex) {
           throw new RuntimeException("Error while getting BlobStore resource from Interceptor ", ex);
         } finally {
           Thread.currentThread().setContextClassLoader(classLoader);
         }
-
       }
+
       List<String> files = null;
       if (!listOfResources.isEmpty()) {
         files = new ArrayList<>();

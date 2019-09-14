@@ -371,7 +371,7 @@ public class TestPipelineBeanCreator {
     }
 
     @Override
-    public List<BlobStoreDef> blobStoreResource(Map<String, String> ids){
+    public List<BlobStoreDef> blobStoreResource(BaseContext context){
       return new ArrayList<>();
     }
   }
