@@ -40,7 +40,7 @@ public class TestRemoteSSOService {
     service.setConfiguration(conf);
     Assert.assertEquals(RemoteSSOService.DPM_BASE_URL_DEFAULT + "/security/login", service.getLoginPageUrl());
     Assert.assertEquals(RemoteSSOService.DPM_BASE_URL_DEFAULT + "/security/_logout", service.getLogoutUrl());
-    Assert.assertEquals(10000, service.getConnectionTimeout());
+    Assert.assertEquals(60000, service.getConnectionTimeout());
   }
 
 

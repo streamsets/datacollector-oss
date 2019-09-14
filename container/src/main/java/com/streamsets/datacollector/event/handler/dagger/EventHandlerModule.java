@@ -62,7 +62,7 @@ public class EventHandlerModule {
       String targetURL = remoteBaseURL + "messaging/rest/v1/events";
       eventHandlerTask = new RemoteEventHandlerTask(
           new PipelineIdEncodedRemoteDatacollector(new ColonCompatibleRemoteDataCollector(remoteDataCollector)),
-          new EventClientImpl(targetURL),
+          new EventClientImpl(targetURL, conf),
           eventHandlerExecutor,
           stageLibraryTask,
           runtimeInfo,

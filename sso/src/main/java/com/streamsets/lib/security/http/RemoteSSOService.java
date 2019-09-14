@@ -43,8 +43,9 @@ public class RemoteSSOService extends AbstractSSOService {
   public static final String DPM_DEPLOYMENT_ID = "dpm.remote.deployment.id";
   public static final boolean DPM_USER_ALIAS_NAME_ENABLED_DEFAULT = false;
   public static final String DPM_USER_ALIAS_NAME_ENABLED = CONFIG_PREFIX + "alias.name.enabled";
-
-  public static final int DEFAULT_SECURITY_SERVICE_CONNECTION_TIMEOUT = 10000;
+  // Make the timeout consistent with SCH's default query timeout of 60 secs
+  // TODO - Separate connect and read timeout configs
+  public static final int DEFAULT_SECURITY_SERVICE_CONNECTION_TIMEOUT = 60000;
   public static final String DPM_ENABLED = CONFIG_PREFIX + "enabled";
   public static final boolean DPM_ENABLED_DEFAULT = false;
   public static final String DPM_REGISTRATION_RETRY_ATTEMPTS = "registration.retry.attempts";
