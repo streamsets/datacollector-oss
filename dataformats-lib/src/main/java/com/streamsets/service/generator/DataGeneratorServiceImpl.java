@@ -146,7 +146,7 @@ public class DataGeneratorServiceImpl extends BaseService implements DataFormatG
    * Temporary wrapper to change DataGeneratorException from the *.lib.* to *.api.* as it's expected in the
    * service world. This will be removed once all stages gets migrated off the older code to services.
    */
-  class DataGeneratorWraper implements DataGenerator {
+  public static class DataGeneratorWraper implements DataGenerator {
 
     private final com.streamsets.pipeline.lib.generator.DataGenerator generator;
 
