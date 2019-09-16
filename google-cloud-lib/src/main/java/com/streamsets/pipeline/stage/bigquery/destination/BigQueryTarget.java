@@ -145,17 +145,25 @@ public class BigQueryTarget extends BaseTarget {
           String datasetName = dataSetEval.eval(elVars, conf.datasetEL, String.class);
           String tableName = tableNameELEval.eval(elVars, conf.tableNameEL, String.class);
           TableId tableId = TableId.of(datasetName, tableName);
-          if (tableIdExistsCache.get(tableId)) {
+
+          // BigQuery.getTable(tableId) throws a NullPointerException if the table name is empty
+          // This has been reported to Google and they marked it as a bug in their issue tracker
+          // Send the record to error and show a more friendly message instead
+          if(tableName.isEmpty()) {
+            getContext().toError(record, Errors.BIGQUERY_18);
+          }
+          else if(!tableIdExistsCache.get(tableId)) {
+            getContext().toError(record, Errors.BIGQUERY_17, datasetName, tableName, conf.credentials.projectId);
+          }
+          else {
             List<Record> tableIdRecords = tableIdToRecords.computeIfAbsent(tableId, t -> new ArrayList<>());
             tableIdRecords.add(record);
-          } else {
-            getContext().toError(record, Errors.BIGQUERY_17, datasetName, tableName, conf.credentials.projectId);
           }
         } catch (ELEvalException e) {
           LOG.error("Error evaluating DataSet/TableName EL", e);
           getContext().toError(record, Errors.BIGQUERY_10, e);
         } catch (ExecutionException e){
-          LOG.error("Error when checking exists for tableId, Reason : {}", e);
+          LOG.error("Error when checking exists for tableId, Reason : {}", e.getMessage(), e);
           Throwable rootCause = Throwables.getRootCause(e);
           getContext().toError(record, Errors.BIGQUERY_13, rootCause);
         }
