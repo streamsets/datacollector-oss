@@ -48,7 +48,7 @@ public class ClusterConfig {
       defaultValue = "local[*]",
       displayPosition = 102,
       dependsOn = "clusterType",
-      triggeredByValue = "LOCAL"
+      triggeredByValue = {"LOCAL", "STANDALONE_SPARK_CLUSTER"}
   )
   public String sparkMasterUrl = "local[*]";
 
@@ -61,7 +61,7 @@ public class ClusterConfig {
       defaultValue = "CLIENT",
       displayPosition = 103,
       dependsOn = "clusterType",
-      triggeredByValue = "YARN"
+      triggeredByValue = {"YARN", "STANDALONE_SPARK_CLUSTER"}
   )
   @ValueChooserModel(SparkDeployModeChooserValues.class)
   public SparkDeployMode deployMode = SparkDeployMode.CLIENT;

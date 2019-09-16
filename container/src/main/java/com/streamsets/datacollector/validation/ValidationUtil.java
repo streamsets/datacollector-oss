@@ -1061,6 +1061,9 @@ public class ValidationUtil {
             );
             validateYarnClusterConfigs(dataCollectorConfiguration, securityConfiguration, issueCreator, errors, config);
             break;
+          case STANDALONE_SPARK_CLUSTER:
+            validateStandaloneClusterConfigs(issueCreator, errors, config);
+            break;
           default:
             //nothing to validate for now
             break;
@@ -1144,6 +1147,20 @@ public class ValidationUtil {
             IMPERSONATION_ALWAYS_CURRENT_USER
         ));
       }
+    }
+  }
+
+  private static void validateStandaloneClusterConfigs(
+      IssueCreator issueCreator,
+      List<Issue> errors,
+      PipelineConfigBean config
+  ) {
+    if (!config.clusterConfig.sparkMasterUrl.startsWith("spark://")) {
+      errors.add(issueCreator.create(
+          PipelineGroups.CLUSTER.name(),
+          "clusterConfig.sparkMasterUrl",
+          ValidationError.VALIDATION_0306
+      ));
     }
   }
 }
