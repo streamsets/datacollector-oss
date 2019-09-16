@@ -61,6 +61,7 @@ public enum Errors implements ErrorCode {
   HIVE_39("Cannot evaluate expression '{}' for record '{}': {}"),
   HIVE_40("Column '{}' is used for partition column and at the same time appears in input data"),
   HIVE_41("Incorrect field type '{}', cannot convert field value of that type to date for specific time zone"),
+  HIVE_42("Current user impersonation is enabled. Hive proxy user property in the JDBC URL {} is not required"),
   ;
   private final String msg;
 
