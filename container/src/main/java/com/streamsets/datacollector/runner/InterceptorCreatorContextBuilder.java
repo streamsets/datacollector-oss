@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.runner;
 
+import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.blobstore.BlobStoreRuntime;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.StageConfiguration;
@@ -31,6 +32,7 @@ import com.streamsets.pipeline.api.interceptor.InterceptorCreator;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -49,7 +51,7 @@ public class InterceptorCreatorContextBuilder {
     private final ExecutionMode executionMode;
     private final DeliveryGuarantee deliveryGuarantee;
 
-    BaseContextImpl(
+    private BaseContextImpl(
       BlobStore blobStore,
       Configuration configuration,
       Map<String, String> parameters,
@@ -99,7 +101,7 @@ public class InterceptorCreatorContextBuilder {
     private final StageDefinition stageDefinition;
     private final Set<StageBehaviorFlags> stageBehaviorFlags;
 
-    ContextImpl(
+    private ContextImpl(
       BlobStore blobStore,
       Configuration configuration,
       StageConfiguration stageConfiguration,
@@ -148,7 +150,7 @@ public class InterceptorCreatorContextBuilder {
 
   private final BlobStore blobStore;
   private final Configuration sdcConf;
-  private final List<PipelineStartEvent.InterceptorConfiguration> interceptorConf;
+  private final Map<String, Map<String, String>> interceptorConf;
   private ExecutionMode executionMode;
   private DeliveryGuarantee deliveryGuarantee;
 
@@ -160,13 +162,29 @@ public class InterceptorCreatorContextBuilder {
   }
 
   public InterceptorCreatorContextBuilder(
-      BlobStore blobStore,
+    BlobStore blobStore,
     Configuration configuration,
     List<PipelineStartEvent.InterceptorConfiguration> interceptorConf
   ) {
     this.blobStore = blobStore;
     this.sdcConf = configuration;
-    this.interceptorConf = interceptorConf;
+    this.interceptorConf = convertToLookUpMap(interceptorConf);
+  }
+
+  private Map<String, Map<String, String>> convertToLookUpMap(List<PipelineStartEvent.InterceptorConfiguration> interceptorConf) {
+    Map<String, Map<String, String>> output = new HashMap<>();
+    if(interceptorConf == null) {
+      return output;
+    }
+
+    // Convert the list to map while ensuring uniqueness
+    for(PipelineStartEvent.InterceptorConfiguration startEvent : interceptorConf) {
+      String key = lookupKey(startEvent.getStageLibrary(), startEvent.getInterceptorClassName());
+      Preconditions.checkArgument(!output.containsKey(key), "Duplicate interceptor configuration for: " + key);
+      output.put(key, startEvent.getParameters());
+    }
+
+    return output;
   }
 
   public InterceptorCreatorContextBuilder withExecutionMode(ExecutionMode executionMode) {
@@ -183,7 +201,7 @@ public class InterceptorCreatorContextBuilder {
     return new BaseContextImpl(
       new BlobStoreRuntime(Thread.currentThread().getContextClassLoader(), blobStore),
       sdcConf,
-      getActualParameters(stageLibrary, className),
+      interceptorConf.get(lookupKey(stageLibrary, className)),
       executionMode,
       deliveryGuarantee
     );
@@ -202,23 +220,17 @@ public class InterceptorCreatorContextBuilder {
         stageConfiguration,
         stageDefinition,
         interceptorType,
-        getActualParameters(stageLibrary, className),
+        interceptorConf.get(lookupKey(stageLibrary, className)),
         executionMode,
         deliveryGuarantee
     );
   }
 
-  private Map<String, String> getActualParameters(String stageLibrary, String className) {
-    if (interceptorConf != null) {
-      // See if this particular interceptor have configuration available
-      for(PipelineStartEvent.InterceptorConfiguration conf : interceptorConf) {
-        if(conf.getStageLibrary().equals(stageLibrary) && conf.getInterceptorClassName().equals(className)) {
-          return conf.getParameters();
-        }
-      }
-    }
-
-    return null;
+  /**
+   * Generate lookup key interceptor configuration. This key is only used within this class.
+   */
+  private static String lookupKey(String stageLib, String className) {
+    return stageLib + "::" + className;
   }
 
 }
