@@ -23,12 +23,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root-lib</artifactId>
-    <version>3.8.1</version>
+    <version>3.8.1-0013</version>
     <relativePath>../root-lib</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-sdc-kafka-08</artifactId>
-  <version>3.8.1</version>
+  <version>3.8.1-0013</version>
   <description>StreamSets Data Collector SDC Kafka 08</description>
   <name>StreamSets Data Collector SDC kafka 08</name>
   <packaging>jar</packaging>
