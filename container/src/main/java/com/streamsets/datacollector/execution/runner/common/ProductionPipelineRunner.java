@@ -498,6 +498,8 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     Map<String, Object> stageBatchMetrics = new HashMap<>();
 
     try {
+      batchContext.ensureState();
+
       Map<String, Object> batchMetrics = originPipe.finishBatchContext(batchContext);
 
       if (isStatsAggregationEnabled()) {
@@ -536,6 +538,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       // Returning false so that origin can properly communicate back that this request wasn't processed
       return false;
     } finally {
+      batchContext.setProcessed(true);
       PipelineEL.unsetConstantsInContext();
       JobEL.unsetConstantsInContext();
     }

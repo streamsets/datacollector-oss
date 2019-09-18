@@ -60,8 +60,14 @@ public class BatchContextImpl implements BatchContext {
    */
   private String originStageLabel;
 
+  /**
+   * Flag identifying whether this batch was already processed or not.
+   */
+  private boolean processed;
+
   public BatchContextImpl(FullPipeBatch pipeBatch) {
     this.pipeBatch = pipeBatch;
+    this.processed = false;
     this.startTime = System.currentTimeMillis();
   }
 
@@ -147,5 +153,13 @@ public class BatchContextImpl implements BatchContext {
   @Override
   public List<Record> getSourceResponseRecords() {
     return pipeBatch.getSourceResponseSink().getResponseRecords();
+  }
+
+  public void setProcessed(boolean processed) {
+    this.processed = processed;
+  }
+
+  public void ensureState() {
+    Preconditions.checkState(!processed, "Batch was already processed and can't be processed again.");
   }
 }

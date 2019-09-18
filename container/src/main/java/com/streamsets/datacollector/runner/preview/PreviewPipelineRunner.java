@@ -264,8 +264,9 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
 
   @Override
   public boolean processBatch(BatchContext batchCtx, String entityName, String entityOffset) {
+    BatchContextImpl batchContext = (BatchContextImpl) batchCtx;
     try {
-      BatchContextImpl batchContext = (BatchContextImpl) batchCtx;
+      batchContext.ensureState();
 
       // Finish origin processing
       originPipe.finishBatchContext(batchContext);
@@ -299,6 +300,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
 
       return  false;
     } finally {
+      batchContext.setProcessed(true);
       PipelineEL.unsetConstantsInContext();
       JobEL.unsetConstantsInContext();
     }
