@@ -141,7 +141,7 @@ public class ProductionPipeline {
         try {
           // Determine the reason why we got all the way here
           PipelineStopReason stopReason;
-          if(errorWhileRunning) {
+          if(errorWhileRunning || errorWhileInitializing) {
             stopReason = PipelineStopReason.FAILURE;
           } else if(wasStopped()) {
             stopReason = PipelineStopReason.USER_ACTION;
