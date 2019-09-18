@@ -34,8 +34,7 @@ import com.streamsets.pipeline.stage.metadata.DataLakeMetadataGroups;
   privateClassLoader = true,
   upgraderDef = "upgrader/DataLakeMetadataDExecutor.yaml",
   onlineHelpRefUrl ="index.html?contextID=task_vpx_ys5_5hb",
-  producesEvents = true,
-  beta = true
+  producesEvents = true
 )
 @ConfigGroups(value = DataLakeMetadataGroups.class)
 @HideConfigs(value = {

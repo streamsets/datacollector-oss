@@ -36,8 +36,7 @@ import com.streamsets.pipeline.lib.dirspooler.SpoolDirConfigBean;
     resetOffset = true,
     producesEvents = true,
     upgraderDef = "upgrader/DataLakeGen2DSource.yaml",
-    onlineHelpRefUrl ="index.html?contextID=task_sh1_d45_rhb",
-    beta = true
+    onlineHelpRefUrl ="index.html?contextID=task_sh1_d45_rhb"
 )
 @ConfigGroups(DataLakeGen2SourceGroups.class)
 @HideConfigs(value = {

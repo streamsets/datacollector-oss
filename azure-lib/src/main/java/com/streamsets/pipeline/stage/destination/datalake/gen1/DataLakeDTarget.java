@@ -30,8 +30,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
     icon = "data-lake-store-gen1.png",
     producesEvents = true,
     upgraderDef = "upgrader/DataLakeDTarget.yaml",
-    onlineHelpRefUrl = "index.html?contextID=task_nx5_4t5_5hb",
-    beta = true
+    onlineHelpRefUrl = "index.html?contextID=task_nx5_4t5_5hb"
 )
 
 @ConfigGroups(value = DataLakeTargetGroups.class)

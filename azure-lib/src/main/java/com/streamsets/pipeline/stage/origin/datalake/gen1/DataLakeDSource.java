@@ -36,8 +36,7 @@ import com.streamsets.pipeline.stage.conf.DataLakeSourceGroups;
     recordsByRef = true,
     resetOffset = true,
     upgraderDef = "upgrader/DataLakeDSource.yaml",
-    onlineHelpRefUrl = "index.html?contextID=task_t13_ht5_5hb",
-    beta = true
+    onlineHelpRefUrl = "index.html?contextID=task_t13_ht5_5hb"
 )
 @ConfigGroups(value = DataLakeSourceGroups.class)
 @HideConfigs(value = {

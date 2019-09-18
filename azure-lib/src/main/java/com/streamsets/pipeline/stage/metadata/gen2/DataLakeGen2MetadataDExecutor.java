@@ -33,8 +33,7 @@ import com.streamsets.pipeline.stage.destination.hdfs.metadataexecutor.HdfsActio
   privateClassLoader = true,
   upgraderDef = "upgrader/DataLakeGen2MetadataDExecutor.yaml",
   onlineHelpRefUrl ="index.html?contextID=task_uwz_m45_rhb",
-  producesEvents = true,
-  beta = true
+  producesEvents = true
 )
 @ConfigGroups(value = DataLakeGen2MetadataGroups.class)
 @HideConfigs(value = {
