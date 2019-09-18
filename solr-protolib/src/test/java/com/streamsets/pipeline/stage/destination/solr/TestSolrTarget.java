@@ -227,6 +227,11 @@ public class TestSolrTarget {
     }
 
     @Override
+    public String getEnvironmentVersion() {
+      return null;
+    }
+
+    @Override
     public ExecutionMode getExecutionMode() {
       return null;
     }

@@ -24,6 +24,7 @@ import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.lineage.LineageEventImpl;
 import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
+import com.streamsets.datacollector.main.DataCollectorBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.record.EventRecordImpl;
 import com.streamsets.datacollector.record.HeaderImpl;
@@ -302,6 +303,11 @@ public class StageContext extends ProtoContext implements
   @Override
   public Stage.Info getStageInfo() {
     return stageInfo;
+  }
+
+  @Override
+  public String getEnvironmentVersion() {
+    return new DataCollectorBuildInfo().getVersion();
   }
 
   @Override
