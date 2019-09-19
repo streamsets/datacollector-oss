@@ -96,7 +96,9 @@ public class StartJobConfig {
       displayPosition = 30,
       group = "JOB",
       elDefs = {RecordEL.class, TimeNowEL.class},
-      evaluation = ConfigDef.Evaluation.EXPLICIT
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      dependsOn = "jobTemplate",
+      triggeredByValue = { "true" }
   )
   public String runtimeParametersList;
 
