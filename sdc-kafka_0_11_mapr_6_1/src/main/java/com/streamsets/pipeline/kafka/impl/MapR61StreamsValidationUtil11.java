@@ -16,23 +16,24 @@
 package com.streamsets.pipeline.kafka.impl;
 
 import com.google.common.net.HostAndPort;
+import com.mapr.db.exceptions.TableNotFoundException;
 import com.mapr.streams.Admin;
 import com.mapr.streams.Streams;
-import com.mapr.db.exceptions.TableNotFoundException;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtil;
 import com.streamsets.pipeline.lib.kafka.BaseKafkaValidationUtil;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.lib.maprstreams.MapRStreamsErrors;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.PartitionInfo;
-import org.apache.hadoop.conf.Configuration;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -94,7 +95,7 @@ public class MapR61StreamsValidationUtil11 extends BaseKafkaValidationUtil imple
   ) throws StageException {
     int partitionCount = -1;
     try {
-      KafkaConsumer<String, String> kafkaConsumer = createTopicMetadataClient();
+      Consumer<String, String> kafkaConsumer = createTopicMetadataClient();
       List<PartitionInfo> partitionInfoList = kafkaConsumer.partitionsFor(topic);
       if(partitionInfoList != null) {
         partitionCount = partitionInfoList.size();
@@ -126,8 +127,8 @@ public class MapR61StreamsValidationUtil11 extends BaseKafkaValidationUtil imple
       List<PartitionInfo> partitionInfos;
       try {
         // Use KafkaConsumer to check the topic existance
-        // Using KafkaProducer causes creating a topic if not exist, even if runtime topic resolution is set to false.
-        KafkaConsumer<String, String> kafkaConsumer = createTopicMetadataClient();
+        // Using Producer causes creating a topic if not exist, even if runtime topic resolution is set to false.
+        Consumer<String, String> kafkaConsumer = createTopicMetadataClient();
         partitionInfos = kafkaConsumer.partitionsFor(topic);
         if (null == partitionInfos || partitionInfos.isEmpty()) {
           issues.add(
@@ -158,7 +159,7 @@ public class MapR61StreamsValidationUtil11 extends BaseKafkaValidationUtil imple
   }
 
   /**
-   * Should be called only by MapR Streams Producer. It creates a topic using KafkaProducer.
+   * Should be called only by MapR Streams Producer. It creates a topic using Producer.
    * @param topic
    * @param kafkaClientConfigs
    * @param metadataBrokerList
@@ -206,12 +207,12 @@ public class MapR61StreamsValidationUtil11 extends BaseKafkaValidationUtil imple
       }
     }
 
-    // Stream topic can be created through KafkaProducer if Stream Path exists already
-    KafkaProducer<String, String> kafkaProducer = createProducerTopicMetadataClient(kafkaClientConfigs);
+    // Stream topic can be created through Producer if Stream Path exists already
+    Producer<String, String> kafkaProducer = createProducerTopicMetadataClient(kafkaClientConfigs);
     kafkaProducer.partitionsFor(topic);
   }
 
-  protected KafkaConsumer<String, String> createTopicMetadataClient() {
+  protected Consumer<String, String> createTopicMetadataClient() {
     Properties props = new Properties();
     props.put(ConsumerConfig.GROUP_ID_CONFIG, "sdcTopicMetadataClient");
     props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
@@ -220,7 +221,7 @@ public class MapR61StreamsValidationUtil11 extends BaseKafkaValidationUtil imple
     return new KafkaConsumer<>(props);
   }
 
-  protected KafkaProducer<String, String> createProducerTopicMetadataClient(Map<String, Object> kafkaClientConfigs) {
+  protected Producer<String, String> createProducerTopicMetadataClient(Map<String, Object> kafkaClientConfigs) {
     Properties props = new Properties();
     props.put(ProducerConfig.CLIENT_ID_CONFIG, "topicMetadataClient");
     props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, ORG_APACHE_KAFKA_COMMON_SERIALIZATION_STRING_SERIALIZER);

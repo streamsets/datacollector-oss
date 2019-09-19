@@ -28,6 +28,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.clients.consumer.CommitFailedException;
@@ -63,7 +64,7 @@ public abstract class BaseKafkaConsumer09 implements SdcKafkaConsumer, ConsumerR
   public static final String TIMESTAMPS = "timestamps.";
   public static final String KAFKA_AUTO_OFFSET_RESET = "kafkaAutoOffsetReset";
 
-  protected KafkaConsumer<Object, byte[]> kafkaConsumer;
+  protected Consumer<Object, byte[]> kafkaConsumer;
 
   protected final String topic;
   private volatile long rebalanceTime;

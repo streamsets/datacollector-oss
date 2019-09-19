@@ -23,7 +23,7 @@ import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.utils.CircularIterator;
 import org.junit.Assert;
@@ -111,10 +111,10 @@ public class TestMapRDBCDCSource {
   }
 
   @SuppressWarnings("unchecked")
-  private MapRDBCDCSource createSource(MapRDBCDCBeanConfig conf, Iterator<KafkaConsumer> iter) {
+  private MapRDBCDCSource createSource(MapRDBCDCBeanConfig conf, Iterator<Consumer> iter) {
     return new MapRDBCDCSource(conf, new MapRDBCDCKafkaConsumerFactory() {
       @Override
-      public KafkaConsumer<byte[], ChangeDataRecord> create(Properties props) {
+      public Consumer<byte[], ChangeDataRecord> create(Properties props) {
         return iter.next();
       }
     });
@@ -140,8 +140,8 @@ public class TestMapRDBCDCSource {
     ConsumerRecords<byte[], ChangeDataRecord> consumerRecords = generateConsumerRecords(5, 1, "topic", 0, ChangeDataRecordType.RECORD_INSERT);
     ConsumerRecords<byte[], ChangeDataRecord> emptyRecords = generateConsumerRecords(0, 1, "topic", 0, ChangeDataRecordType.RECORD_INSERT);
 
-    KafkaConsumer mockConsumer = Mockito.mock(KafkaConsumer.class);
-    List<KafkaConsumer> consumerList = Collections.singletonList(mockConsumer);
+    Consumer mockConsumer = Mockito.mock(Consumer.class);
+    List<Consumer> consumerList = Collections.singletonList(mockConsumer);
     Mockito.when(mockConsumer.poll(conf.batchWaitTime)).thenReturn(consumerRecords).thenReturn(emptyRecords);
 
     MapRDBCDCSource source = createSource(conf, consumerList.iterator());
@@ -175,8 +175,8 @@ public class TestMapRDBCDCSource {
     ConsumerRecords<byte[], ChangeDataRecord> consumerRecords = generateConsumerRecords(5, 1, "topic", 0, ChangeDataRecordType.RECORD_DELETE);
     ConsumerRecords<byte[], ChangeDataRecord> emptyRecords = generateConsumerRecords(0, 1, "topic", 0, ChangeDataRecordType.RECORD_DELETE);
 
-    KafkaConsumer mockConsumer = Mockito.mock(KafkaConsumer.class);
-    List<KafkaConsumer> consumerList = Collections.singletonList(mockConsumer);
+    Consumer mockConsumer = Mockito.mock(Consumer.class);
+    List<Consumer> consumerList = Collections.singletonList(mockConsumer);
     Mockito.when(mockConsumer.poll(conf.batchWaitTime)).thenReturn(consumerRecords).thenReturn(emptyRecords);
 
     MapRDBCDCSource source = createSource(conf, consumerList.iterator());
@@ -211,8 +211,8 @@ public class TestMapRDBCDCSource {
     ConsumerRecords<byte[], ChangeDataRecord> consumerRecords2 = generateConsumerRecords(5, 1, "topic", 1, ChangeDataRecordType.RECORD_INSERT);
     ConsumerRecords<byte[], ChangeDataRecord> emptyRecords = generateConsumerRecords(0, 1, "topic", 0, ChangeDataRecordType.RECORD_INSERT);
 
-    KafkaConsumer mockConsumer = Mockito.mock(KafkaConsumer.class);
-    List<KafkaConsumer> consumerList = Collections.singletonList(mockConsumer);
+    Consumer mockConsumer = Mockito.mock(Consumer.class);
+    List<Consumer> consumerList = Collections.singletonList(mockConsumer);
     Mockito
         .when(mockConsumer.poll(conf.batchWaitTime))
         .thenReturn(consumerRecords1)
@@ -251,7 +251,7 @@ public class TestMapRDBCDCSource {
 
     Map<String, String> topicTableList = new HashMap<>(numTopics);
 //    List<String> topicNames = new ArrayList<>(numTopics);
-    List<KafkaConsumer> consumerList = new ArrayList<>(numTopics);
+    List<Consumer> consumerList = new ArrayList<>(numTopics);
 
     for(int i=0; i<numTopics; i++) {
       topicTableList.put("topic-" + i, "table-" + i);
@@ -266,7 +266,7 @@ public class TestMapRDBCDCSource {
       ConsumerRecords<byte[], ChangeDataRecord> emptyRecords =
           generateConsumerRecords(1, 0, "topic-"+rand.nextInt(numTopics), 0, ChangeDataRecordType.RECORD_UPDATE);
 
-      KafkaConsumer mockConsumer = Mockito.mock(KafkaConsumer.class);
+      Consumer mockConsumer = Mockito.mock(Consumer.class);
       consumerList.add(mockConsumer);
 
       Mockito.when(mockConsumer.poll(conf.batchWaitTime)).thenReturn(consumerRecords).thenReturn(emptyRecords);
@@ -300,8 +300,8 @@ public class TestMapRDBCDCSource {
     conf.topicTableList = Collections.singletonMap("topic", "table");
     conf.numberOfThreads = 1;
 
-    KafkaConsumer mockConsumer = Mockito.mock(KafkaConsumer.class);
-    List<KafkaConsumer> consumerList = Collections.singletonList(mockConsumer);
+    Consumer mockConsumer = Mockito.mock(Consumer.class);
+    List<Consumer> consumerList = Collections.singletonList(mockConsumer);
     Mockito
         .when(mockConsumer.poll(conf.batchWaitTime))
         .thenThrow(new IllegalStateException());
@@ -340,7 +340,7 @@ public class TestMapRDBCDCSource {
 
     int numTopics = conf.numberOfThreads;
     Map<String, String> topicTableNames = new HashMap<>(numTopics);
-    List<KafkaConsumer> consumerList = new ArrayList<>(numTopics);
+    List<Consumer> consumerList = new ArrayList<>(numTopics);
 
     for(int i=0; i<numTopics; i++) {
       String topic =  "topic-" + i;
@@ -348,7 +348,7 @@ public class TestMapRDBCDCSource {
       ConsumerRecords<byte[], ChangeDataRecord> consumerRecords = generateConsumerRecords(5, 1, topic, 0, ChangeDataRecordType.RECORD_DELETE);
       ConsumerRecords<byte[], ChangeDataRecord> emptyRecords = generateConsumerRecords(0, 1, topic, 0, ChangeDataRecordType.RECORD_DELETE);
 
-      KafkaConsumer mockConsumer = Mockito.mock(KafkaConsumer.class);
+      Consumer mockConsumer = Mockito.mock(Consumer.class);
       consumerList.add(mockConsumer);
 
       Mockito.when(mockConsumer.poll(conf.batchWaitTime)).thenReturn(consumerRecords).thenReturn(emptyRecords);

@@ -35,6 +35,7 @@ import kafka.utils.ZkUtils;
 import kafka.zk.EmbeddedZookeeper;
 import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.security.JaasUtils;
@@ -226,7 +227,7 @@ public abstract class KafkaNewConsumerITBase {
     props.put(KafkaConstants.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
     props.put(KafkaConstants.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 
-    KafkaProducer<String, String> producer = new KafkaProducer<>(props);
+    Producer<String, String> producer = new KafkaProducer<>(props);
     for(int i = 0; i < NUM_MESSAGES; i++) {
       ProducerRecord<String, String> record;
       if (partition != null) {

@@ -22,9 +22,11 @@ import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtil;
 import com.streamsets.pipeline.lib.kafka.BaseKafkaValidationUtil;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.lib.maprstreams.MapRStreamsErrors;
+import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.PartitionInfo;
@@ -60,7 +62,7 @@ public class MapRStreamsValidationUtil09 extends BaseKafkaValidationUtil impleme
   ) throws StageException {
     int partitionCount = -1;
     try {
-      KafkaConsumer<String, String> kafkaConsumer = createTopicMetadataClient();
+      Consumer<String, String> kafkaConsumer = createTopicMetadataClient();
       List<PartitionInfo> partitionInfoList = kafkaConsumer.partitionsFor(topic);
       if(partitionInfoList != null) {
         partitionCount = partitionInfoList.size();
@@ -92,10 +94,10 @@ public class MapRStreamsValidationUtil09 extends BaseKafkaValidationUtil impleme
       List<PartitionInfo> partitionInfos;
       try {
         if (producer) {
-          KafkaProducer<String, String> kafkaProducer = createProducerTopicMetadataClient(kafkaClientConfigs);
+          Producer<String, String> kafkaProducer = createProducerTopicMetadataClient(kafkaClientConfigs);
           partitionInfos = kafkaProducer.partitionsFor(topic);
         } else {
-          KafkaConsumer<String, String> kafkaConsumer = createTopicMetadataClient();
+          Consumer<String, String> kafkaConsumer = createTopicMetadataClient();
           partitionInfos = kafkaConsumer.partitionsFor(topic);
         }
         if (null == partitionInfos || partitionInfos.isEmpty()) {
@@ -127,7 +129,7 @@ public class MapRStreamsValidationUtil09 extends BaseKafkaValidationUtil impleme
   }
 
   /**
-   * Should be called only by MapR Streams Producer. It creates a topic using KafkaProducer.
+   * Should be called only by MapR Streams Producer. It creates a topic using Producer.
    * @param topic
    * @param kafkaClientConfigs
    * @param metadataBrokerList
@@ -136,8 +138,8 @@ public class MapRStreamsValidationUtil09 extends BaseKafkaValidationUtil impleme
   @Override
   public void createTopicIfNotExists(String topic, Map<String, Object> kafkaClientConfigs, String metadataBrokerList)
       throws StageException {
-    // Stream topic can be created through KafkaProducer if Stream Path exists already
-    KafkaProducer<String, String> kafkaProducer = createProducerTopicMetadataClient(kafkaClientConfigs);
+    // Stream topic can be created through Producer if Stream Path exists already
+    Producer<String, String> kafkaProducer = createProducerTopicMetadataClient(kafkaClientConfigs);
     kafkaProducer.partitionsFor(topic);
   }
 
@@ -165,7 +167,7 @@ public class MapRStreamsValidationUtil09 extends BaseKafkaValidationUtil impleme
     return kafkaBrokers;
   }
 
-  protected KafkaConsumer<String, String> createTopicMetadataClient() {
+  protected Consumer<String, String> createTopicMetadataClient() {
     Properties props = new Properties();
     props.put(ConsumerConfig.GROUP_ID_CONFIG, "sdcTopicMetadataClient");
     props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
@@ -174,7 +176,7 @@ public class MapRStreamsValidationUtil09 extends BaseKafkaValidationUtil impleme
     return new KafkaConsumer<>(props);
   }
 
-  protected KafkaProducer<String, String> createProducerTopicMetadataClient(Map<String, Object> kafkaClientConfigs) {
+  protected Producer<String, String> createProducerTopicMetadataClient(Map<String, Object> kafkaClientConfigs) {
     Properties props = new Properties();
     props.put(ProducerConfig.CLIENT_ID_CONFIG, "topicMetadataClient");
     props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, ORG_APACHE_KAFKA_COMMON_SERIALIZATION_STRING_SERIALIZER);

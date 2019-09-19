@@ -21,8 +21,10 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtil;
 import com.streamsets.pipeline.lib.kafka.BaseKafkaValidationUtil;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
+import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.PartitionInfo;
@@ -53,7 +55,7 @@ public class KafkaValidationUtil09 extends BaseKafkaValidationUtil implements Sd
       long retryBackoffMs
   ) throws StageException {
     int partitionCount = -1;
-    KafkaConsumer<String, String> kafkaConsumer = null;
+    Consumer<String, String> kafkaConsumer = null;
     try {
       kafkaConsumer = createTopicMetadataClient(metadataBrokerList, kafkaClientConfigs);
       List<PartitionInfo> partitionInfoList = kafkaConsumer.partitionsFor(topic);
@@ -89,9 +91,9 @@ public class KafkaValidationUtil09 extends BaseKafkaValidationUtil implements Sd
       valid = false;
     } else {
       List<PartitionInfo> partitionInfos;
-      // Use KafkaConsumer to check if topic exists.
+      // Use Consumer to check if topic exists.
       // Using producer causes unintentionally creating a topic if not exist.
-      KafkaConsumer<String, String> kafkaConsumer = null;
+      Consumer<String, String> kafkaConsumer = null;
       try {
           kafkaConsumer = createTopicMetadataClient(
               metadataBrokerList,
@@ -125,14 +127,14 @@ public class KafkaValidationUtil09 extends BaseKafkaValidationUtil implements Sd
 
   @Override
   public void createTopicIfNotExists(String topic, Map<String, Object> kafkaClientConfigs, String metadataBrokerList) throws StageException {
-    KafkaProducer<String, String> kafkaProducer = createProducerTopicMetadataClient(
+    Producer<String, String> kafkaProducer = createProducerTopicMetadataClient(
         metadataBrokerList,
         kafkaClientConfigs
     );
     kafkaProducer.partitionsFor(topic);
   }
 
-  private KafkaConsumer<String, String> createTopicMetadataClient(
+  private Consumer<String, String> createTopicMetadataClient(
       String metadataBrokerList,
       Map<String, Object> kafkaClientConfigs
   ) {
@@ -150,7 +152,7 @@ public class KafkaValidationUtil09 extends BaseKafkaValidationUtil implements Sd
     return new KafkaConsumer<>(props);
   }
 
-  private KafkaProducer<String, String> createProducerTopicMetadataClient(
+  private Producer<String, String> createProducerTopicMetadataClient(
     String metadataBrokerList,
     Map<String, Object> kafkaClientConfigs
   ) {

@@ -32,6 +32,7 @@ import kafka.zk.EmbeddedZookeeper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.security.JaasUtils;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
@@ -197,7 +198,7 @@ public class KafkaProducer09IT {
     props.put("session.timeout.ms", "30000");
     props.put(KafkaConstants.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
     props.put(KafkaConstants.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-    KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
+    Consumer<String, String> consumer = new KafkaConsumer<>(props);
     consumer.subscribe(Collections.singletonList(topic));
     List<ConsumerRecord<String, String>> buffer = new ArrayList<>();
     while (buffer.size() < 1) {

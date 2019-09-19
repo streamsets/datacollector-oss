@@ -30,7 +30,7 @@ import com.streamsets.pipeline.stage.origin.multikafka.loader.KafkaConsumerLoade
 import com.streamsets.pipeline.stage.origin.multikafka.loader.MockKafkaConsumerLoader;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.common.TopicPartition;
 import org.junit.After;
 import org.junit.Assert;
@@ -89,8 +89,8 @@ public class TestMultiKafkaSource {
     ConsumerRecords<String, byte[]> consumerRecords = generateConsumerRecords(5, "topic", 0);
     ConsumerRecords<String, byte[]> emptyRecords = generateConsumerRecords(0, "topic", 0);
 
-    KafkaConsumer mockConsumer = Mockito.mock(KafkaConsumer.class);
-    List<KafkaConsumer> consumerList = Collections.singletonList(mockConsumer);
+    Consumer mockConsumer = Mockito.mock(Consumer.class);
+    List<Consumer> consumerList = Collections.singletonList(mockConsumer);
     Mockito.when(mockConsumer.poll(Mockito.anyInt())).thenReturn(consumerRecords).thenReturn(emptyRecords);
 
     MockKafkaConsumerLoader.consumers = consumerList.iterator();
@@ -125,8 +125,8 @@ public class TestMultiKafkaSource {
     ConsumerRecords<String, byte[]> consumerRecords2 = generateConsumerRecords(5, "topic", 1);
     ConsumerRecords<String, byte[]> emptyRecords = generateConsumerRecords(0, "topic", 0);
 
-    KafkaConsumer mockConsumer = Mockito.mock(KafkaConsumer.class);
-    List<KafkaConsumer> consumerList = Collections.singletonList(mockConsumer);
+    Consumer mockConsumer = Mockito.mock(Consumer.class);
+    List<Consumer> consumerList = Collections.singletonList(mockConsumer);
     Mockito
         .when(mockConsumer.poll(Mockito.anyInt()))
         .thenReturn(consumerRecords1)
@@ -173,7 +173,7 @@ public class TestMultiKafkaSource {
     Random rand = new Random();
 
     List<String> topicNames = new ArrayList<>(numTopics);
-    List<KafkaConsumer> consumerList = new ArrayList<>(numTopics);
+    List<Consumer> consumerList = new ArrayList<>(numTopics);
 
     for (int i = 0; i < numTopics; i++) {
       String topic = "topic-" + i;
@@ -195,7 +195,7 @@ public class TestMultiKafkaSource {
           0
       );
 
-      KafkaConsumer mockConsumer = Mockito.mock(KafkaConsumer.class);
+      Consumer mockConsumer = Mockito.mock(Consumer.class);
       consumerList.add(mockConsumer);
 
       Mockito.when(mockConsumer.poll(Mockito.anyInt())).thenReturn(consumerRecords).thenReturn(emptyRecords);
@@ -232,8 +232,8 @@ public class TestMultiKafkaSource {
     conf.topicList = Collections.singletonList("topic");
     conf.numberOfThreads = 1;
 
-    KafkaConsumer mockConsumer = Mockito.mock(KafkaConsumer.class);
-    List<KafkaConsumer> consumerList = Collections.singletonList(mockConsumer);
+    Consumer mockConsumer = Mockito.mock(Consumer.class);
+    List<Consumer> consumerList = Collections.singletonList(mockConsumer);
     Mockito
         .when(mockConsumer.poll(Mockito.anyInt()))
         .thenThrow(new IllegalStateException());
@@ -278,7 +278,7 @@ public class TestMultiKafkaSource {
 
     int numTopics = conf.numberOfThreads;
     List<String> topicNames = new ArrayList<>(numTopics);
-    List<KafkaConsumer> consumerList = new ArrayList<>(numTopics);
+    List<Consumer> consumerList = new ArrayList<>(numTopics);
 
     for (int i = 0; i < numTopics; i++) {
       String topic = "topic-" + i;
@@ -286,7 +286,7 @@ public class TestMultiKafkaSource {
       ConsumerRecords<String, byte[]> consumerRecords = generateConsumerRecords(5, topic, 0);
       ConsumerRecords<String, byte[]> emptyRecords = generateConsumerRecords(0, topic, 0);
 
-      KafkaConsumer mockConsumer = Mockito.mock(KafkaConsumer.class);
+      Consumer mockConsumer = Mockito.mock(Consumer.class);
       consumerList.add(mockConsumer);
 
       Mockito.when(mockConsumer.poll(Mockito.anyInt())).thenReturn(consumerRecords).thenReturn(emptyRecords);
@@ -377,7 +377,7 @@ public class TestMultiKafkaSource {
     Random rand = new Random();
 
     List<String> topicNames = new ArrayList<>(numTopics);
-    List<KafkaConsumer> consumerList = new ArrayList<>(numTopics);
+    List<Consumer> consumerList = new ArrayList<>(numTopics);
 
     for (int i = 0; i < numTopics; i++) {
       String topic = "topic-" + i;
@@ -400,7 +400,7 @@ public class TestMultiKafkaSource {
           0
       );
 
-      KafkaConsumer mockConsumer = Mockito.mock(KafkaConsumer.class);
+      Consumer mockConsumer = Mockito.mock(Consumer.class);
       consumerList.add(mockConsumer);
 
       Mockito.when(mockConsumer.poll(Mockito.anyInt())).thenReturn(consumerRecords).thenReturn(emptyRecords);

@@ -15,13 +15,14 @@
  */
 package com.streamsets.pipeline.stage.origin.cdc.maprdb;
 
+import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.ojai.store.cdc.ChangeDataRecord;
 
 import java.util.Properties;
 
 public class MapRDBCDCKafkaConsumerFactory {
-  public KafkaConsumer<byte[], ChangeDataRecord> create(Properties props) {
+  public Consumer<byte[], ChangeDataRecord> create(Properties props) {
     return new KafkaConsumer<>(props);
   }
 }

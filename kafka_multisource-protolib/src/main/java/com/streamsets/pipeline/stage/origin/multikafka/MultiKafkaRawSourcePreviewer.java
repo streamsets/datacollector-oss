@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.RawSourcePreviewer;
 import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 
 import java.io.ByteArrayInputStream;
@@ -90,7 +91,7 @@ public class MultiKafkaRawSourcePreviewer implements RawSourcePreviewer {
     props.put("value.deserializer", KAFKA_STRING_DESERIALIZER);
     ByteArrayOutputStream baos;
 
-    try(KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props)) {
+    try(Consumer<String, String> consumer = new KafkaConsumer<>(props)) {
       baos = new ByteArrayOutputStream(maxLength);
       if(topic.isEmpty()) {
         baos.write(convertToRawListString(consumer.listTopics().keySet()).getBytes());

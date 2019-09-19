@@ -29,7 +29,7 @@ import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.Consumer;
 import org.ojai.FieldPath;
 import org.ojai.KeyValue;
 import org.ojai.Value;
@@ -81,13 +81,13 @@ public class MapRDBCDCSource extends BasePushSource {
   }
 
   public class MapRDBCDCCallable implements Callable<Long> {
-    private KafkaConsumer<byte[], ChangeDataRecord> consumer;
+    private Consumer<byte[], ChangeDataRecord> consumer;
     private final long threadID;
     private final List<String> topicList;
     private final CountDownLatch startProcessingGate;
 
     public MapRDBCDCCallable(
-        long threadID, List<String> topicList, KafkaConsumer<byte[], ChangeDataRecord> consumer, CountDownLatch startProcessingGate
+        long threadID, List<String> topicList, Consumer<byte[], ChangeDataRecord> consumer, CountDownLatch startProcessingGate
     ) {
       Thread.currentThread().setName("maprKafkaConsumerThread-" + threadID);
       LOG.trace("MapRDBCDC thread {} begin", Thread.currentThread().getName());

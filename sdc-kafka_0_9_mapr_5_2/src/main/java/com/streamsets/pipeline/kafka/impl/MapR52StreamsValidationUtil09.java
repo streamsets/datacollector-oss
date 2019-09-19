@@ -16,19 +16,18 @@
 package com.streamsets.pipeline.kafka.impl;
 
 import com.google.common.net.HostAndPort;
+import com.mapr.db.exceptions.TableNotFoundException;
 import com.mapr.streams.Admin;
 import com.mapr.streams.Streams;
-import com.mapr.db.exceptions.TableNotFoundException;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.lib.maprstreams.MapRStreamsErrors;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.kafka.clients.consumer.Consumer;
+import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.PartitionInfo;
-import org.apache.hadoop.conf.Configuration;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,7 +63,7 @@ public class MapR52StreamsValidationUtil09 extends MapRStreamsValidationUtil09  
       try {
         // Use KafkaConsumer to check the topic existance
         // Using KafkaProducer causes creating a topic if not exist, even if runtime topic resolution is set to false.
-        KafkaConsumer<String, String> kafkaConsumer = createTopicMetadataClient();
+        Consumer<String, String> kafkaConsumer = createTopicMetadataClient();
         partitionInfos = kafkaConsumer.partitionsFor(topic);
         if (null == partitionInfos || partitionInfos.isEmpty()) {
           issues.add(
@@ -144,7 +143,7 @@ public class MapR52StreamsValidationUtil09 extends MapRStreamsValidationUtil09  
     }
 
     // Stream topic can be created through KafkaProducer if Stream Path exists already
-    KafkaProducer<String, String> kafkaProducer = createProducerTopicMetadataClient(kafkaClientConfigs);
+    Producer<String, String> kafkaProducer = createProducerTopicMetadataClient(kafkaClientConfigs);
     kafkaProducer.partitionsFor(topic);
   }
 

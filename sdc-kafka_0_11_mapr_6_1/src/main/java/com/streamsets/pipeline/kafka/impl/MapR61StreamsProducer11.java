@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.kafka.api.PartitionStrategy;
 import com.streamsets.pipeline.lib.maprstreams.MapRStreamsErrors;
 import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,7 +78,7 @@ public class MapR61StreamsProducer11 extends KafkaProducer09 {
   }
 
   @Override
-  protected KafkaProducer<String, byte[]> createKafkaProducer() {
+  protected Producer<String, byte[]> createKafkaProducer() {
     Properties props = new Properties();
     // Following are the supported list of kafka producer options
     //  1. key.serializer

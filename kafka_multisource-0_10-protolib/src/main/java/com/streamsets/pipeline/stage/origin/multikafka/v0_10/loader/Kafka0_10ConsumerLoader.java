@@ -21,6 +21,7 @@ import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetReset;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.stage.origin.multikafka.MultiSdcKafkaConsumer;
 import com.streamsets.pipeline.stage.origin.multikafka.loader.KafkaConsumerLoader;
+import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -148,9 +149,9 @@ public class Kafka0_10ConsumerLoader extends KafkaConsumerLoader {
    */
   private class WrapperKafkaConsumer implements MultiSdcKafkaConsumer {
 
-    private KafkaConsumer delegate;
+    private Consumer delegate;
 
-    public WrapperKafkaConsumer(KafkaConsumer consumer) {
+    public WrapperKafkaConsumer(Consumer consumer) {
       this.delegate = consumer;
     }
 
