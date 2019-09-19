@@ -59,7 +59,6 @@ import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -72,6 +71,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -84,7 +84,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedMap;
 
 import static com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean.MILLISECONDS;
 
@@ -384,6 +383,14 @@ public class JdbcUtil {
     );
   }
 
+  private static long getEpochMillisFromSqlDate(java.sql.Date date) {
+    return date.toLocalDate().atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
+  }
+
+  private static long getEpochMillisFromSqlTime(java.sql.Time time) {
+    return time.toLocalTime().toSecondOfDay() * 1000L;
+  }
+
   private static Map<String, String> getMinMaxOffsetValueHelper(
       String minMaxQuery,
       DatabaseVendor vendor,
@@ -431,13 +438,17 @@ public class JdbcUtil {
               case Types.DATE:
                 java.sql.Date date = rs.getDate(MIN_MAX_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
                 if (date != null) {
-                  minMaxValue = String.valueOf(date.toInstant().toEpochMilli());
+                  minMaxValue = String.valueOf(
+                      getEpochMillisFromSqlDate(date)
+                  );
                 }
                 break;
               case Types.TIME:
                 java.sql.Time time = rs.getTime(MIN_MAX_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
                 if (time != null) {
-                  minMaxValue = String.valueOf(time.toInstant().toEpochMilli());
+                  minMaxValue = String.valueOf(
+                      getEpochMillisFromSqlTime(time)
+                  );
                 }
                 break;
               case Types.TIMESTAMP:

@@ -49,6 +49,8 @@ import static org.junit.Assert.assertThat;
 public class TestJdbcUtil {
 
   private static final long MINUS_2HRS_OFFSET = -7200000L;
+  private static final long WHOLE_DAY_MILLIS = 60 * 60 * 24 * 1000;
+
   private final String username = "sa";
   private final String password = "sa";
   private final String database = "test";
@@ -106,11 +108,11 @@ public class TestJdbcUtil {
       );
       statement.addBatch(
           "CREATE TABLE IF NOT EXISTS " + schema + "." + dataTypesTestTable +
-              "(P_ID INT NOT NULL, TS_WITH_TZ TIMESTAMP WITH TIME ZONE NOT NULL);"
+              "(P_ID INT NOT NULL, TS_WITH_TZ TIMESTAMP WITH TIME ZONE NOT NULL, MY_DATE DATE, MY_TIME TIME);"
       );
       statement.addBatch(
           "INSERT INTO " + schema + "." + dataTypesTestTable + " VALUES (1, CAST('1970-01-01 00:00:00+02:00' " +
-              "AS TIMESTAMP WITH TIME ZONE));"
+              "AS TIMESTAMP WITH TIME ZONE), '1970-01-02', '23:59:59');"
       );
       statement.addBatch(
           "CREATE TABLE IF NOT EXISTS " + schema + "." + "\"" + emptyTableName + "\"" +
@@ -228,6 +230,46 @@ public class TestJdbcUtil {
     );
     assertThat(typedTableMin.size(), equalTo(1));
     assertThat(typedTableMin, hasEntry("P_ID", "1"));
+  }
+
+  @Test
+  public void testGetMinValuesDate() throws SQLException {
+
+    HikariPoolConfigBean config = createConfigBean();
+
+    HikariDataSource dataSource = jdbcUtil.createDataSourceForRead(config);
+    Connection connection = dataSource.getConnection();
+
+    Map<String, String> dataTableMin = jdbcUtil.getMinimumOffsetValues(
+        DatabaseVendor.UNKNOWN,
+        connection,
+        schema,
+        dataTypesTestTable,
+        QuoteChar.NONE,
+        Arrays.asList("MY_DATE")
+    );
+    assertThat(dataTableMin.size(), equalTo(1));
+    assertThat(dataTableMin, hasEntry("MY_DATE", String.valueOf(WHOLE_DAY_MILLIS)));
+  }
+
+  @Test
+  public void testGetMinValuesTime() throws SQLException {
+
+    HikariPoolConfigBean config = createConfigBean();
+
+    HikariDataSource dataSource = jdbcUtil.createDataSourceForRead(config);
+    Connection connection = dataSource.getConnection();
+
+    Map<String, String> dataTableMin = jdbcUtil.getMinimumOffsetValues(
+        DatabaseVendor.UNKNOWN,
+        connection,
+        schema,
+        dataTypesTestTable,
+        QuoteChar.NONE,
+        Arrays.asList("MY_TIME")
+    );
+    assertThat(dataTableMin.size(), equalTo(1));
+    assertThat(dataTableMin, hasEntry("MY_TIME", String.valueOf(WHOLE_DAY_MILLIS - 1000L)));
   }
 
 }
