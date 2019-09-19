@@ -24,6 +24,7 @@ public enum Groups implements Label {
   CREDENTIALS("Credentials"),
   LEGACY("Legacy Drivers"),
   ADVANCED("Advanced"),
+  ENCRYPTION("Connection Encryption"),
   ;
 
   private final String label;

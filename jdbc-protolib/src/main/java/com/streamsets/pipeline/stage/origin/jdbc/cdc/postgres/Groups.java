@@ -24,7 +24,8 @@ public enum Groups implements Label {
   JDBC("JDBC"),
   CREDENTIALS("Credentials"),
   LEGACY("Legacy"),
-  ADVANCED("Advanced")
+  ADVANCED("Advanced"),
+  ENCRYPTION("Connection Encryption"),
   ;
 
   private final String label;

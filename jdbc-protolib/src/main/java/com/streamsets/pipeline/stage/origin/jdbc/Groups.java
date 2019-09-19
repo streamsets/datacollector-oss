@@ -25,6 +25,7 @@ public enum Groups implements Label {
   CDC("Change Data Capture"),
   LEGACY("Legacy Drivers"),
   ADVANCED("Advanced"),
+  ENCRYPTION("Connection Encryption"),
   ;
 
   private final String label;
