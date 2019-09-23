@@ -647,6 +647,42 @@ public class TestConfigDefinitionExtractor {
     Assert.assertEquals(expectedFieldNames, gotFieldNames);
   }
 
+  public static class BeanA {
+
+    @ConfigDef(
+        label = "L",
+        required = true,
+        type = ConfigDef.Type.STRING
+    )
+    public String prop;
+
+  }
+
+  public static class BeanASubClass extends BeanA {
+
+    @ConfigDef(
+        label = "LShadow",
+        required = false,
+        type = ConfigDef.Type.STRING
+    )
+    public String prop;
+  }
+
+  @Test
+  public void testConfigBeanSubclassPropertyShadowing() {
+    List<ErrorMessage> errors = ConfigDefinitionExtractor.get().validate(BeanASubClass.class, ImmutableList.of(), "x");
+    Assert.assertTrue(errors.isEmpty());
+    List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(
+        BeanASubClass.class,
+        ImmutableList.of(),
+        "x"
+    );
+    Assert.assertEquals(1, configs.size());
+    Assert.assertEquals("prop", configs.get(0).getFieldName());
+    Assert.assertEquals("LShadow", configs.get(0).getLabel());
+    Assert.assertEquals(false, configs.get(0).isRequired());
+  }
+
   @Test
   public void testGroupsResolution() {
     Assert.assertTrue(ConfigDefinitionExtractor.get().validate(Bean.class, ImmutableList.of("bar", "foo"),

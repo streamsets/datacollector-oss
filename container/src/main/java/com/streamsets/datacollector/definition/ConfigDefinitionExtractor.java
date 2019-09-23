@@ -46,6 +46,7 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -75,11 +76,25 @@ public abstract class ConfigDefinitionExtractor {
     return cycles;
   }
 
+  /**
+   * We remove all shadowed fields, taking always the first one. The first is  the last shadowed occurrence
+   * as the Field.getFields() method traverses recursively first current then parent class (while the Javadocs
+   * clearly state the order is no guaranteed, given the implementation it is (we ride on that, if necessary we
+   * could do an implementation that does the class-superclass ordering).
+   */
+  List<Field> removeShadowedProperties(Field[] fields) {
+    Map<String, Field> map = new LinkedHashMap<>();
+    for (Field field : fields) {
+      map.putIfAbsent(field.getName(), field);
+    }
+    return new ArrayList<>(map.values());
+  }
+
   private List<ErrorMessage> validate(String configPrefix, Class klass, List<String> stageGroups,
       boolean validateDependencies, boolean isBean, boolean isComplexField, Object contextMsg) {
     List<ErrorMessage> errors = new ArrayList<>();
     boolean noConfigs = true;
-    for (Field field : klass.getFields()) {
+    for (Field field : removeShadowedProperties(klass.getFields())) {
       if (field.getAnnotation(ConfigDef.class) != null && field.getAnnotation(ConfigDefBean.class) != null) {
         errors.add(new ErrorMessage(DefinitionError.DEF_152, contextMsg, field.getName()));
       } else {
@@ -158,7 +173,7 @@ public abstract class ConfigDefinitionExtractor {
   private List<ConfigDefinition> getConfigDefinitions(String configPrefix, Class klass, List<String> stageGroups,
       Object contextMsg, Dependency[] parentDependency) {
     List<ConfigDefinition> defs = new ArrayList<>();
-    for (Field field : klass.getFields()) {
+    for (Field field : removeShadowedProperties(klass.getFields())) {
       if (field.getAnnotation(ConfigDef.class) != null) {
         defs.add(extractConfigDef(configPrefix, stageGroups, field, Utils.formatL("{} Field='{}'", contextMsg,
                                                                                   field.getName()), parentDependency));
