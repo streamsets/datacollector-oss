@@ -21,8 +21,8 @@ import com.microsoft.azure.eventhubs.EventHubClient;
 import com.microsoft.azure.eventhubs.EventHubException;
 
 import java.io.IOException;
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class EventHubCommon {
 
@@ -40,11 +40,12 @@ public class EventHubCommon {
         .setSasKey(commonConf.sasKey)
         .setSasKeyName(commonConf.sasKeyName);
 
-    final Executor executor = Executors.newCachedThreadPool(
+
+    final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor(
         new ThreadFactoryBuilder().setNameFormat(threadNamePattern).build()
     );
 
-    return EventHubClient.createSync(connStr.toString(), executor);
+    return EventHubClient.createSync(connStr.toString(), scheduledExecutorService);
   }
 
 }
