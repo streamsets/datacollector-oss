@@ -24,6 +24,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.stage.pubsub.lib.Groups;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,7 +89,7 @@ public class GoogleCloudCredentialsConfig {
       triggeredByValue = "JSON",
       displayPosition = 30,
       group = "CREDENTIALS")
-  public String credentialsFileContent = "";
+  public CredentialValue credentialsFileContent;
 
   /**
    * Tries to create a {@link CredentialsProvider} for the appropriate type of credentials supplied.
@@ -162,8 +163,8 @@ public class GoogleCloudCredentialsConfig {
         return null;
       }
       return new FileInputStream(credentialsFile);
-    } else if (credentialsProvider.equals(CredentialsProviderType.JSON) && !credentialsFileContent.isEmpty()) {
-      return new ByteArrayInputStream(credentialsFileContent.getBytes());
+    } else if (credentialsProvider.equals(CredentialsProviderType.JSON) && !credentialsFileContent.get().isEmpty()) {
+      return new ByteArrayInputStream(credentialsFileContent.get().getBytes());
     }
     return null;
   }
