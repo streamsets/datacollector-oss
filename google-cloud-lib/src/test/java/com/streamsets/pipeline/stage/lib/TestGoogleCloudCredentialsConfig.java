@@ -18,9 +18,11 @@ package com.streamsets.pipeline.stage.lib;
 
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.stage.pubsub.origin.PubSubDSource;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.io.ByteArrayInputStream;
@@ -36,6 +38,7 @@ import static com.streamsets.pipeline.stage.lib.Errors.GOOGLE_02;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 public class TestGoogleCloudCredentialsConfig {
   @Test
@@ -88,15 +91,19 @@ public class TestGoogleCloudCredentialsConfig {
 
   @Test
   public void testGetCredentialInputStream_CredentialsJSONContent() throws Exception {
+    CredentialValue cred = Mockito.mock(CredentialValue.class);
+
+    when(cred.get()).thenReturn("{JSON}");
+
     GoogleCloudCredentialsConfig credentialsConfig = new GoogleCloudCredentialsConfig();
     credentialsConfig.projectId = "test";
     credentialsConfig.credentialsProvider = CredentialsProviderType.JSON;
-    credentialsConfig.credentialsFileContent = "{JSON}";
+    credentialsConfig.credentialsFileContent = cred;
 
     InputStream in = credentialsConfig.getCredentialsInputStream(createContext(), new ArrayList<>());
     assertTrue(in instanceof ByteArrayInputStream);
 
-    credentialsConfig.credentialsFileContent = "";
+    when(cred.get()).thenReturn("");
 
     in = credentialsConfig.getCredentialsInputStream(createContext(), new ArrayList<>());
     assertNull(in);
