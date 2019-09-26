@@ -404,7 +404,7 @@ public class HttpProcessor extends SingleLaneProcessor {
         responseBody = response.readEntity(InputStream.class);
       }
       int responseStatus = response.getStatus();
-      if (conf.client.useOAuth2 && response.getStatus() == 403 && !failOn403) {
+      if (conf.client.useOAuth2 && (response.getStatus() == 403 || response.getStatus() == 401) && !failOn403) {
         HttpStageUtil.getNewOAuth2Token(conf.client.oauth2, httpClientCommon.getClient());
         return null;
       } else if (responseStatus < 200 || responseStatus >= 300) {
