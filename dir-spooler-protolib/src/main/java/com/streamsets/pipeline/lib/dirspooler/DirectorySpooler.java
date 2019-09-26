@@ -65,6 +65,7 @@ public class DirectorySpooler {
   private final ReadWriteLock closeLock = new ReentrantReadWriteLock();
 
   private final long intervalMillis;
+  private Exception destroyCauseException;
 
   public enum FilePostProcessing {NONE, DELETE, ARCHIVE}
 
@@ -382,6 +383,11 @@ public class DirectorySpooler {
     }
   }
 
+  public void destroy(Exception causeDestroy){
+    destroyCauseException = causeDestroy;
+    destroy();
+  }
+
   public void destroy() {
     running = false;
     try {
@@ -669,8 +675,10 @@ public class DirectorySpooler {
             closeLock.writeLock().unlock();
           }
         }
-      } catch (Exception ex) {
+
+      } catch(IOException ex) {
         LOG.error("findAndQueueFiles(): newDirectoryStream failed. " + ex.getMessage(), ex);
+        destroy(ex);
       }
     }
 
@@ -783,5 +791,9 @@ public class DirectorySpooler {
       }
       LOG.debug("Finished archived files purging, deleted '{}' files", purged);
     }
+  }
+
+  public Exception getDestroyCause(){
+    return destroyCauseException;
   }
 }
