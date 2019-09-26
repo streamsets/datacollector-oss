@@ -26,6 +26,7 @@ import com.google.common.base.Throwables;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -145,14 +146,7 @@ public class BigQueryTarget extends BaseTarget {
           String datasetName = dataSetEval.eval(elVars, conf.datasetEL, String.class);
           String tableName = tableNameELEval.eval(elVars, conf.tableNameEL, String.class);
           TableId tableId = TableId.of(datasetName, tableName);
-
-          // BigQuery.getTable(tableId) throws a NullPointerException if the table name is empty
-          // This has been reported to Google and they marked it as a bug in their issue tracker
-          // Send the record to error and show a more friendly message instead
-          if(tableName.isEmpty()) {
-            getContext().toError(record, Errors.BIGQUERY_18);
-          }
-          else if(!tableIdExistsCache.get(tableId)) {
+          if(!tableIdExistsCache.get(tableId)) {
             getContext().toError(record, Errors.BIGQUERY_17, datasetName, tableName, conf.credentials.projectId);
           }
           else {
@@ -166,6 +160,8 @@ public class BigQueryTarget extends BaseTarget {
           LOG.error("Error when checking exists for tableId, Reason : {}", e.getMessage(), e);
           Throwable rootCause = Throwables.getRootCause(e);
           getContext().toError(record, Errors.BIGQUERY_13, rootCause);
+        } catch (IllegalArgumentException | BigQueryException | UncheckedExecutionException e) {
+          getContext().toError(record, Errors.BIGQUERY_18, e.getMessage());
         }
       });
 
