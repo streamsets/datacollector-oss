@@ -26,11 +26,11 @@ import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
 @StageDef(
     version = 1,
     label = "Cron Scheduler",
-    description = "Generates a record with the current datetime based on a Cron expression",
+    description = "Generates a record with the current datetime based on a cron expression",
     icon="scheduler.png",
     execution = {ExecutionMode.STANDALONE},
     beta = true,
-    onlineHelpRefUrl =""
+    onlineHelpRefUrl ="index.html?contextID=task_hcz_x4r_2jb"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

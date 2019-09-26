@@ -26,13 +26,13 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
 @StageDef(
     version = 1,
     label = "Control Hub API",
-    description = "Calls Control Hub APIs",
+    description = "Calls a Control Hub API",
     icon="streamsets.png",
     execution = {
         ExecutionMode.STANDALONE
     },
     beta = true,
-    onlineHelpRefUrl =""
+    onlineHelpRefUrl ="index.html?contextID=task_oqs_4tr_2jb"
 )
 @GenerateResourceBundle
 @ConfigGroups(Groups.class)

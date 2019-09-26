@@ -28,13 +28,13 @@ import com.streamsets.pipeline.lib.startPipeline.StartPipelineConfig;
 @StageDef(
     version = 1,
     label = "Start Pipeline",
-    description = "Starts a Data Collector, Transformer or Edge pipeline",
+    description = "Starts a Data Collector, Transformer, or Edge pipeline",
     icon="pipeline.png",
     execution = {
         ExecutionMode.STANDALONE
     },
     beta = true,
-    onlineHelpRefUrl =""
+    onlineHelpRefUrl ="index.html?contextID=task_yh1_wxr_2jb"
 )
 @GenerateResourceBundle
 @ConfigGroups(Groups.class)
