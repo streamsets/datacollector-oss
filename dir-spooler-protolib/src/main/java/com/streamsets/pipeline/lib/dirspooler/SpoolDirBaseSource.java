@@ -330,7 +330,10 @@ public abstract class SpoolDirBaseSource extends BasePushSource {
               e.getMessage(),
               e
           );
-          final Throwable rootCause = Throwables.getRootCause(e);
+          Throwable rootCause = Throwables.getRootCause(e);
+          if(spooler!=null && spooler.getDestroyCause() != null)
+            rootCause = spooler.getDestroyCause();
+
           if (rootCause instanceof StageException) {
             throw (StageException) rootCause;
           }
