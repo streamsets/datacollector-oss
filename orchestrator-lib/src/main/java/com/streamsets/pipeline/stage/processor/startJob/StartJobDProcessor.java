@@ -34,7 +34,7 @@ import com.streamsets.pipeline.lib.startJob.StartJobConfig;
         ExecutionMode.STANDALONE
     },
     beta = true,
-    onlineHelpRefUrl =""
+    onlineHelpRefUrl ="index.html?contextID=task_l3t_fvr_2jb"
 )
 @GenerateResourceBundle
 @ConfigGroups(Groups.class)
