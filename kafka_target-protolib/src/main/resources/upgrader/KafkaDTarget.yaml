@@ -21,4 +21,4 @@ upgrades:
     actions:
       - setConfig:
           name: conf.messageKeyFormat
-          value: ProducerKeyFormat.STRING
+          value: STRING

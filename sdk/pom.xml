@@ -286,6 +286,7 @@
                     <exclude>com.streamsets.pipeline.api.service.dataformats.*</exclude>
                     <exclude>com.streamsets.pipeline.sdk.*</exclude>
                     <exclude>com.streamsets.pipeline.sdk.service.*</exclude>
+                    <exclude>com.streamsets.pipeline.upgrader.*</exclude>
                   </excludes>
                 </relocation>
               </relocations>

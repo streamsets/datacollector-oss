@@ -24,7 +24,6 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
 import com.streamsets.pipeline.kafka.api.PartitionStrategy;
-import com.streamsets.pipeline.kafka.api.ProducerKeyFormat;
 import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Assert;
 import org.junit.Test;
@@ -207,6 +206,6 @@ public class TestKafkaTargetUpgrader {
 
     configs = upgrader.upgrade(configs, context);
 
-    UpgraderTestUtils.assertExists(configs, "conf.messageKeyFormat", "ProducerKeyFormat.STRING");
+    UpgraderTestUtils.assertExists(configs, "conf.messageKeyFormat", "STRING");
   }
 }
