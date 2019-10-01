@@ -303,10 +303,10 @@ public class CassandraTarget extends BaseTarget {
   @Override
   @SuppressWarnings("unchecked")
   public void write(Batch batch) throws StageException {
-    if (conf.disableBatchInsert) {
-      writeUnbatchedInsert(batch);
-    } else {
+    if (conf.enableBatches) {
       writeBatchInsert(batch);
+    } else {
+      writeUnbatchedInsert(batch);
     }
   }
 
@@ -341,15 +341,15 @@ public class CassandraTarget extends BaseTarget {
   private void getTaskResult(Map<ResultSetFuture, Record> tasks) {
     for (ResultSetFuture task : tasks.keySet()) {
       try {
-        task.getUninterruptibly(conf.readTimeout, TimeUnit.MILLISECONDS);
+        task.getUninterruptibly(conf.writeTimeout, TimeUnit.MILLISECONDS);
       } catch (TimeoutException e) {
-        LOG.debug(Errors.CASSANDRA_11.getMessage(), conf.requestTimeout, e);
+        LOG.debug(Errors.CASSANDRA_11.getMessage(), conf.writeTimeout, e);
         Record errorRecord = tasks.get(task);
         errorRecordHandler.onError(
             new OnRecordErrorException(
                 errorRecord,
                 Errors.CASSANDRA_11,
-                conf.requestTimeout,
+                conf.writeTimeout,
                 e.toString(),
                 e
             )

@@ -88,12 +88,40 @@ public class CassandraTargetConfig {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Enable Batches",
+      description = "Enables the use of Cassandra batches",
+      displayPosition = 51,
+      group = "CASSANDRA"
+  )
+  public boolean enableBatches = true;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "5000", // from SocketOptions.DEFAULT_CONNECT_TIMEOUT_MILLIS
+      min = 1,
+      max = Integer.MAX_VALUE,
+      label = "Write Timeout",
+      description = "The timeout for each write request (in milliseconds)",
+      displayPosition = 52,
+      group = "CASSANDRA",
+      dependsOn = "enableBatches",
+      triggeredByValue = "false"
+  )
+  public int writeTimeout = 5000;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "LOGGED",
       label = "Batch Type",
       description = "Un-logged batches do not use the Cassandra distributed batch log and as such as nonatomic.",
       displayPosition = 60,
-      group = "CASSANDRA"
+      group = "CASSANDRA",
+      dependsOn = "enableBatches",
+      triggeredByValue = "true"
   )
   @ValueChooserModel(BatchTypeChooserValues.class)
   public BatchStatement.Type batchType = BatchStatement.Type.LOGGED;
@@ -195,32 +223,6 @@ public class CassandraTargetConfig {
       triggeredByValue = "true"
   )
   public long slowQueryThreshold = 5000;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      label = "Disable Batch Insert",
-      description = "Disables inserting into Cassandra using batches",
-      displayPosition = 150,
-      group = "CASSANDRA"
-  )
-  public boolean disableBatchInsert;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.NUMBER,
-      defaultValue = "5000", // from SocketOptions.DEFAULT_CONNECT_TIMEOUT_MILLIS
-      min = 1,
-      max = Integer.MAX_VALUE,
-      label = "Request Timeout",
-      description = "The timeout for each insert request (in milliseconds)",
-      displayPosition = 160,
-      group = "CASSANDRA",
-      dependsOn = "disableBatchInsert",
-      triggeredByValue = "true"
-  )
-  public int requestTimeout = 5000;
 
   /** Credentials group **/
   @ConfigDef(
