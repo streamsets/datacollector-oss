@@ -38,12 +38,12 @@ public class DependencyParser {
   /**
    * Classifiers that are not interesting.
    */
-  private static String CLASSIFIERS = "(-hadoop2|-shaded-protobuf|-tests|-native|\\.Final(-linux-x86_64)?|-shaded|-bin|\\.jre[0-9]|-api)?";
+  private static String CLASSIFIERS = "(-hadoop2|-shaded-protobuf|-tests|-native|\\.Final(-linux-x86_64)?|-shaded|-bin|\\.jre[0-9]|-api|-empty-to-avoid-conflict-with-guava)?";
 
   /**
    * Various version suffixes that we support.
    */
-  private static String VERSION_SUFFIXES = "-b[0-9]+|-M[0-9]+|-m[0-9]|_[0-9]|-pre[0-9]+|\\.RELEASE|-incubating|-beta|-indy|-SNAPSHOT|\\.GA|-GA|\\.hwx|[-\\.]cloudera\\.?[0-9]|-jhyde|a|-cubrid|\\.Fork[0-9]+|m|-jre|-spark[0-9]\\.[0-9]+|-patched";
+  private static String VERSION_SUFFIXES = "-b[0-9]+|-M[0-9]+|-m[0-9]|_[0-9]|-pre[0-9]+|\\.RELEASE|-incubating|-beta|-indy|-SNAPSHOT|\\.GA|-GA|\\.hwx|[-\\.]cloudera\\.?[0-9]|-jhyde|a|-cubrid|\\.Fork[0-9]+|m|-jre|-spark[0-9]\\.[0-9]+|-patched|-android";
 
   /**
    * Various supported version specifications
