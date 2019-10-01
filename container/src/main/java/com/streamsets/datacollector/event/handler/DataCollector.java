@@ -23,6 +23,7 @@ import java.util.concurrent.Future;
 import java.util.function.Function;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.event.dto.AckEvent;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
@@ -134,4 +135,11 @@ public interface DataCollector {
    * Store new configuration from control hub inside this data collector in a persistent manner.
    */
   void storeConfiguration(Map<String, String> newConfiguration) throws IOException;
+
+  /**
+   * Get runner for a pipeline
+   */
+  Runner getRunner(String runner, String rev) throws PipelineException;
+
+  List<PipelineState> getRemotePipelines() throws PipelineException;
 }

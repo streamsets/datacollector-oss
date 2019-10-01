@@ -18,6 +18,7 @@ package com.streamsets.datacollector.event.handler.remote;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.event.dto.AckEvent;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
@@ -216,4 +217,15 @@ public class ColonCompatibleRemoteDataCollector implements DataCollector {
   public void storeConfiguration(Map<String, String> newConfiguration) throws IOException {
     remoteDataCollector.storeConfiguration(newConfiguration);
   }
+
+  @Override
+  public Runner getRunner(String name, String rev) throws PipelineException  {
+    return remoteDataCollector.getRunner(name, rev);
+  }
+
+  @Override
+  public List<PipelineState> getRemotePipelines() throws PipelineException {
+    return remoteDataCollector.getRemotePipelines();
+  }
+
 }

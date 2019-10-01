@@ -21,6 +21,7 @@ import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.event.dto.AckEvent;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.event.handler.DataCollector;
+import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.runner.production.SourceOffset;
@@ -197,5 +198,15 @@ public class PipelineIdEncodedRemoteDatacollector implements DataCollector {
 
   static String replaceColonWithDoubleUnderscore(String name) {
     return name.replaceAll(":", "__");
+  }
+
+  @Override
+  public Runner getRunner(String name, String rev) throws PipelineException  {
+    return remoteDataCollector.getRunner(replaceColonWithDoubleUnderscore(name), rev);
+  }
+
+  @Override
+  public List<PipelineState> getRemotePipelines() throws PipelineException {
+    return remoteDataCollector.getRemotePipelines();
   }
 }

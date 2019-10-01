@@ -35,10 +35,10 @@ import com.streamsets.datacollector.execution.runner.standalone.StandaloneRunner
 import com.streamsets.datacollector.http.SnappyWriterInterceptor;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
-import com.streamsets.datacollector.restapi.bean.CounterJson;
-import com.streamsets.datacollector.restapi.bean.MeterJson;
-import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
-import com.streamsets.datacollector.restapi.bean.SDCMetricsJson;
+import com.streamsets.datacollector.event.json.CounterJson;
+import com.streamsets.datacollector.event.json.MeterJson;
+import com.streamsets.datacollector.event.json.MetricRegistryJson;
+import com.streamsets.datacollector.event.json.SDCMetricsJson;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.util.AggregatorUtil;
 import com.streamsets.datacollector.util.Configuration;

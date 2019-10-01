@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.streamsets.datacollector.event.json.ClientEventJson;
+import com.streamsets.datacollector.event.json.SDCMetricsJson;
 import com.streamsets.datacollector.event.json.ServerEventJson;
 
 public interface EventClient {
@@ -29,5 +30,12 @@ public interface EventClient {
     Map<String, String> headerParams,
     boolean compression,
     List<ClientEventJson> clientEventJson) throws EventException;
+
+  void submit(
+      String targetUrl,
+      Map<String, String> queryParams,
+      Map<String, String> headerParams,
+      List<SDCMetricsJson> clientEventJson,
+      long retryAttempts);
 
 }

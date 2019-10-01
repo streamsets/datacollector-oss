@@ -17,7 +17,7 @@ package com.streamsets.datacollector.callback;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
-import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
+import com.streamsets.datacollector.event.json.MetricRegistryJson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -15,12 +15,16 @@
  */
 package com.streamsets.datacollector.event.handler.remote;
 
+import com.codahale.metrics.Counter;
+import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.datacollector.callback.CallbackInfo;
+import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.config.DataRuleDefinition;
 import com.streamsets.datacollector.config.DriftRuleDefinition;
 import com.streamsets.datacollector.config.MetricElement;
@@ -52,7 +56,9 @@ import com.streamsets.datacollector.event.handler.remote.RemoteEventHandlerTask.
 import com.streamsets.datacollector.event.json.BlobDeleteVersionEventJson;
 import com.streamsets.datacollector.event.json.BlobStoreEventJson;
 import com.streamsets.datacollector.event.json.ClientEventJson;
+import com.streamsets.datacollector.event.json.CounterJson;
 import com.streamsets.datacollector.event.json.DisconnectedSsoCredentialsEventJson;
+import com.streamsets.datacollector.event.json.MetricRegistryJson;
 import com.streamsets.datacollector.event.json.PingFrequencyAdjustmentEventJson;
 import com.streamsets.datacollector.event.json.PipelineBaseEventJson;
 import com.streamsets.datacollector.event.json.PipelineDeleteEventJson;
@@ -67,19 +73,28 @@ import com.streamsets.datacollector.event.json.PipelineStopAndDeleteEventJson;
 import com.streamsets.datacollector.event.json.PipelineStopEventJson;
 import com.streamsets.datacollector.event.json.PipelineValidateEventJson;
 import com.streamsets.datacollector.event.json.SDCInfoEventJson;
+import com.streamsets.datacollector.event.json.SDCMetricsJson;
 import com.streamsets.datacollector.event.json.SaveConfigurationEventJson;
 import com.streamsets.datacollector.event.json.ServerEventJson;
 import com.streamsets.datacollector.event.json.StageInfoJson;
 import com.streamsets.datacollector.event.json.SyncAclEventJson;
+import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.Runner;
+import com.streamsets.datacollector.execution.Snapshot;
+import com.streamsets.datacollector.execution.SnapshotInfo;
+import com.streamsets.datacollector.execution.alerts.AlertInfo;
 import com.streamsets.datacollector.execution.manager.PipelineManagerException;
+import com.streamsets.datacollector.execution.manager.PipelineStateImpl;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
+import com.streamsets.datacollector.execution.runner.common.SampledRecord;
 import com.streamsets.datacollector.io.DataStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
 import com.streamsets.datacollector.runner.MockStages;
+import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -92,7 +107,9 @@ import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.lib.security.acl.json.AclJson;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -290,6 +307,16 @@ public class TestRemoteEventHandler {
       }
       return serverEventJsonList;
     }
+
+    @Override
+    public void submit(
+        String targetURL,
+        Map<String, String> queryParams,
+        Map<String, String> headerParams,
+        List<SDCMetricsJson> sdcMetricsJsonList,
+        long retryAttempts
+    ) {
+    }
   }
 
   private static PipelineStartEventJson createStartEvent(String name, String rev, String user) {
@@ -399,6 +426,16 @@ public class TestRemoteEventHandler {
       return Arrays.asList(serverEventJson1);
     }
 
+    @Override
+    public void submit(
+        String targetURL,
+        Map<String, String> queryParams,
+        Map<String, String> headerParams,
+        List<SDCMetricsJson> sdcMetricsJsonList,
+        long retryAttempts
+    ) {
+    }
+
   }
 
   private static class MockSaveEventSenderReceiver implements EventClient {
@@ -504,6 +541,16 @@ public class TestRemoteEventHandler {
       } catch (Exception e) {
         throw new EventException("Cannot create event for test case " + e.getMessage());
       }
+    }
+
+    @Override
+    public void submit(
+        String targetURL,
+        Map<String, String> queryParams,
+        Map<String, String> headerParams,
+        List<SDCMetricsJson> sdcMetricsJsonList,
+        long retryAttempts
+    ) {
     }
 
   }
@@ -715,10 +762,51 @@ public class TestRemoteEventHandler {
       stopDeletePipelineCalled = true;
       return null;
     }
+
+    @Override
+    public Runner getRunner(String name, String rev) throws PipelineException {
+      return new MockMetricsRunner();
+    }
+
+    @Override
+    public List<PipelineState> getRemotePipelines() throws PipelineException {
+      return new ArrayList<>();
+    }
+  }
+
+  public static class MockMetricsRunner extends TestRemoteDataCollector.MockRunner {
+
+    @Override
+    public PipelineConfiguration getPipelineConfiguration() throws PipelineException {
+      return new PipelineConfiguration(
+          1,
+          1,
+          "pipelineId",
+          UUID.randomUUID(),
+          "label",
+          "",
+          Arrays.asList(new Config("", "")),
+          null,
+          null,
+          null,
+          null,
+          Collections.emptyList(),
+          Collections.emptyList()
+      );
+    }
+
+    @Override
+    public Object getMetrics() {
+      // TODO Auto-generated method stub
+      MetricRegistry metricRegistry = new MetricRegistry();
+      Counter counter = metricRegistry.counter("batchInputRecords");
+      counter.inc(100);
+      return metricRegistry;
+    }
   }
 
   @Test
-  public void testPipelineBaseEventTriggered() {
+  public void testPipelineBaseEventTriggered() throws Exception {
     MessagingJsonToFromDto jsonToFromDto = MessagingJsonToFromDto.INSTANCE;
     List<ClientEvent> ackEventJsonList = new ArrayList<ClientEvent>();
     final MockRemoteDataCollector mockRemoteDataCollector = new MockRemoteDataCollector();
@@ -745,6 +833,7 @@ public class TestRemoteEventHandler {
         ImmutableList.of("jobrunner-app", "timeseries-app"),
         new HashMap<String, String>(),
         Stopwatch.createStarted(),
+        -1,
         -1,
         new HashMap<>(),
         mockRuntimeInfo
@@ -836,6 +925,7 @@ public class TestRemoteEventHandler {
         new HashMap<String, String>(),
         Stopwatch.createStarted(),
         -1,
+        -1,
         new HashMap<>(),
         mockRuntimeInfo
     );
@@ -879,6 +969,7 @@ public class TestRemoteEventHandler {
         ImmutableList.of("jobrunner-app", "timeseries-app"),
         new HashMap<String, String>(),
         Stopwatch.createStarted(),
+        -1,
         -1,
         new HashMap<>(),
         mockRuntimeInfo
@@ -924,6 +1015,7 @@ public class TestRemoteEventHandler {
         ImmutableList.of("jobrunner-app", "timeseries-app"),
         new HashMap<>(),
         Stopwatch.createStarted(),
+        -1,
         -1,
         new HashMap<>(),
         mockRuntimeInfo
@@ -974,6 +1066,7 @@ public class TestRemoteEventHandler {
         new HashMap<>(),
         stopwatch,
         60000,
+        -1,
         new HashMap<>(),
         mockRuntimeInfo
     );
@@ -1002,6 +1095,7 @@ public class TestRemoteEventHandler {
         new HashMap<>(),
         stopwatch,
         5,
+        -1,
         new HashMap<>(),
         mockRuntimeInfo
     );
@@ -1081,6 +1175,7 @@ public class TestRemoteEventHandler {
         new HashMap<>(),
         Stopwatch.createStarted(),
         -1,
+        -1,
         new HashMap<>(),
         mockRuntimeInfo
     );
@@ -1147,6 +1242,7 @@ public class TestRemoteEventHandler {
         new HashMap<>(),
         Stopwatch.createStarted(),
         -1,
+        -1,
         new HashMap<>(),
         mockRuntimeInfo
     );
@@ -1185,6 +1281,7 @@ public class TestRemoteEventHandler {
         ImmutableList.of("jobrunner-app", "timeseries-app"),
         new HashMap<>(),
         Stopwatch.createStarted(),
+        -1,
         -1,
         new HashMap<>(),
         mockRuntimeInfo
@@ -1250,5 +1347,32 @@ public class TestRemoteEventHandler {
     assertThat(result.isError(), equalTo(false));
     assertThat(result.getImmediateResult(), notNullValue());
     assertThat(result.getImmediateResult(), equalTo(previewerId));
+  }
+
+  @Test
+  public void testSendPipelineMetrics() throws Exception {
+    PipelineState pipelineState = new PipelineStateImpl("user1",
+        "ns:name2",
+        "rev1",
+        PipelineStatus.RUNNING,
+        null,
+        System.currentTimeMillis(),
+        null,
+        ExecutionMode.STANDALONE,
+        null,
+        0,
+        -1
+    );
+    MockRemoteDataCollector remoteDataCollector = Mockito.spy(new MockRemoteDataCollector());
+    Mockito.when(remoteDataCollector.getRemotePipelines()).thenReturn(Arrays.asList(pipelineState));
+    MockPingFrequencyAdjustmentSenderReceiver eventClient = Mockito.spy(new MockPingFrequencyAdjustmentSenderReceiver());
+    String jobRunnerUrl = "fakeUrl";
+    HashMap<String, String> requestHeader = new HashMap<>();
+    RemoteEventHandlerTask.sendPipelineMetrics(remoteDataCollector,
+        eventClient,
+        jobRunnerUrl,
+        requestHeader,
+        5);
+    Mockito.verify(eventClient, Mockito.times(1)).submit(Mockito.anyString(), Mockito.anyMap(), Mockito.anyMap(), Mockito.anyList(), Mockito.anyInt());
   }
 }

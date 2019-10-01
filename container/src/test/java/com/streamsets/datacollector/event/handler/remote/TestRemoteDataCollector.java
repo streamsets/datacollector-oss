@@ -22,6 +22,7 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.dto.ValidationStatus;
+import com.streamsets.datacollector.event.client.api.EventClient;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineState;
@@ -284,7 +285,7 @@ public class TestRemoteDataCollector {
     }
   }
 
-  private static class MockRunner implements Runner {
+  public static class MockRunner implements Runner {
 
     public static int stopCalled;
 
@@ -919,6 +920,9 @@ public class TestRemoteDataCollector {
   @Test
   public void testValidateConfigs() throws Exception {
     try {
+      RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+      Mockito.when(runtimeInfo.getAppAuthToken()).thenReturn("");
+      Mockito.when(runtimeInfo.getId()).thenReturn("fakeId");
       AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);
       RemoteDataCollector dataCollector = new RemoteDataCollector(
           new Configuration(),
@@ -927,7 +931,7 @@ public class TestRemoteDataCollector {
           new MockPipelineStateStore(),
           aclStoreTask,
           new RemoteStateEventListener(new Configuration()),
-          null,
+          runtimeInfo,
           Mockito.mock(AclCacheHelper.class),
           Mockito.mock(StageLibraryTask.class),
           Mockito.mock(BlobStoreTask.class),
@@ -946,6 +950,9 @@ public class TestRemoteDataCollector {
   @Test
   public void testStopAndDelete() throws Exception {
     try {
+      RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+      Mockito.when(runtimeInfo.getAppAuthToken()).thenReturn("");
+      Mockito.when(runtimeInfo.getId()).thenReturn("fakeId");
       AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);
       RemoteDataCollector dataCollector = new RemoteDataCollector(
           new Configuration(),
@@ -954,20 +961,23 @@ public class TestRemoteDataCollector {
           new MockPipelineStateStore(),
           aclStoreTask,
           new RemoteStateEventListener(new Configuration()),
-          null,
+          runtimeInfo,
           Mockito.mock(AclCacheHelper.class),
           Mockito.mock(StageLibraryTask.class),
           Mockito.mock(BlobStoreTask.class),
           new SafeScheduledExecutorService(1, "supportBundleExecutor")
       );
+      dataCollector = Mockito.spy(dataCollector);
+      Mockito.when(dataCollector.getRemotePipelines()).thenReturn(new ArrayList<>());
       RemoteDataCollector.StopAndDeleteCallable stopAndDeleteCallable = new RemoteDataCollector.StopAndDeleteCallable(
-          dataCollector, "user", "ns:name", "rev", 600000
+          dataCollector, "user", "ns:name", "rev", 600000, Mockito.mock(EventClient.class), "fakeUrl", new HashMap<>()
       );
       stopAndDeleteCallable.call();
 
       assertEquals(1, MockRunner.stopCalled);
       assertEquals(1, MockPipelineStoreTask.deleteCalled);
       assertEquals(1, MockPipelineStoreTask.deleteRulesCalled);
+      Mockito.verify(dataCollector, Mockito.times(1)).getRemotePipelines();
     } finally {
       MockRunner.stopCalled = 0;
       MockPipelineStateStore.getStateCalled = 0;

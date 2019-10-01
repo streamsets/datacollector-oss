@@ -25,7 +25,7 @@ import com.streamsets.datacollector.config.RuleDefinition;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.execution.alerts.AlertManagerHelper;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
-import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
+import com.streamsets.datacollector.event.json.MetricRegistryJson;
 import com.streamsets.datacollector.util.AggregatorUtil;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;

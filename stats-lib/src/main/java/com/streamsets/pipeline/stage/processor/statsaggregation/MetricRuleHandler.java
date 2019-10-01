@@ -29,7 +29,7 @@ import com.streamsets.datacollector.el.PipelineEL;
 import com.streamsets.datacollector.execution.alerts.AlertManagerHelper;
 import com.streamsets.datacollector.execution.alerts.MetricRuleEvaluatorHelper;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
-import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
+import com.streamsets.datacollector.event.json.MetricRegistryJson;
 import com.streamsets.datacollector.util.AggregatorUtil;
 import com.streamsets.datacollector.util.ObserverException;
 import com.streamsets.pipeline.api.Field;

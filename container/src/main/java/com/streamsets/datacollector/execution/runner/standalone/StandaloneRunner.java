@@ -60,7 +60,7 @@ import com.streamsets.datacollector.execution.runner.common.ThreadHealthReporter
 import com.streamsets.datacollector.execution.runner.common.dagger.PipelineProviderModule;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
-import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
+import com.streamsets.datacollector.event.json.MetricRegistryJson;
 import com.streamsets.datacollector.runner.Observer;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRunner;

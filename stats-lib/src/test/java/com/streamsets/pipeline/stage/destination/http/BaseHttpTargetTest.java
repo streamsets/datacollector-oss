@@ -15,7 +15,7 @@
  */
 package com.streamsets.pipeline.stage.destination.http;
 
-import com.streamsets.datacollector.restapi.bean.SDCMetricsJson;
+import com.streamsets.datacollector.event.json.SDCMetricsJson;
 import com.streamsets.datacollector.util.AggregatorUtil;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;

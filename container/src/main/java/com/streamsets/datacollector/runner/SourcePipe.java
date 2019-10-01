@@ -15,7 +15,7 @@
  */
 package com.streamsets.datacollector.runner;
 
-import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
+import com.streamsets.datacollector.event.json.MetricRegistryJson;
 import com.streamsets.datacollector.runner.production.ReportErrorDelegate;
 import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.pipeline.api.StageException;

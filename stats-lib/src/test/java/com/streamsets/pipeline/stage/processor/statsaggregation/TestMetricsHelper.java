@@ -21,11 +21,11 @@ import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
-import com.streamsets.datacollector.restapi.bean.CounterJson;
-import com.streamsets.datacollector.restapi.bean.HistogramJson;
-import com.streamsets.datacollector.restapi.bean.MeterJson;
-import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
-import com.streamsets.datacollector.restapi.bean.TimerJson;
+import com.streamsets.datacollector.event.json.CounterJson;
+import com.streamsets.datacollector.event.json.HistogramJson;
+import com.streamsets.datacollector.event.json.MeterJson;
+import com.streamsets.datacollector.event.json.MetricRegistryJson;
+import com.streamsets.datacollector.event.json.TimerJson;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.restapi.bean;
+package com.streamsets.datacollector.event.json;
 
 public class HistogramJson {
   private long count;
