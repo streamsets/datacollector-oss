@@ -20,6 +20,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.streamsets.datacollector.config.ConfigDefinition;
+import com.streamsets.datacollector.config.KeytabSource;
 import com.streamsets.datacollector.config.PipelineGroups;
 import com.streamsets.datacollector.config.ServiceConfiguration;
 import com.streamsets.datacollector.config.ServiceDefinition;
@@ -1126,12 +1127,11 @@ public class ValidationUtil {
       }
     } else {
       // Kerberos is disabled via configuration
-      if (keytabEnabled) {
-        // make sure keytab option is not selected, since Kerberos is disabled
+      if (config.clusterConfig.yarnKerberosKeytabSource != KeytabSource.PIPELINE) {
         errors.add(issueCreator.create(
             PipelineGroups.CLUSTER.name(),
-            "clusterConfig.useYarnKerberosKeytab",
-            ValidationError.VALIDATION_0301,
+            "clusterConfig.yarnKerberosKeytabSource",
+            ValidationError.VALIDATION_0307,
             SecurityConfiguration.KERBEROS_ENABLED_KEY
         ));
       }

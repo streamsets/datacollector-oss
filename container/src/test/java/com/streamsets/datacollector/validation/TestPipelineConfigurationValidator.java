@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 
@@ -480,14 +481,14 @@ public class TestPipelineConfigurationValidator {
   }
 
   @Test
-  public void testYarnKerbEnabledButDisabledInSDC() {
+  public void testKerberosDisabledInSystemWithPropertiesSource() {
     PipelineConfigurationValidator validator = createClusterPropertiesValidator(
         false,
         conf -> {
           conf.addConfiguration(new Config("executionMode", "BATCH"));
           conf.addConfiguration(new Config("clusterConfig.clusterType", "YARN"));
           conf.addConfiguration(new Config("clusterConfig.useYarnKerberosKeytab", true));
-          conf.addConfiguration(new Config("clusterConfig.yarnKerberosKeytab", "/path/to/a/keytab"));
+          conf.addConfiguration(new Config("clusterConfig.yarnKerberosKeytabSource", KeytabSource.PROPERTIES_FILE));
           return null;
         }
     );
@@ -495,7 +496,26 @@ public class TestPipelineConfigurationValidator {
     Assert.assertTrue(conf.getIssues().hasIssues());
     List<Issue> issues = conf.getIssues().getIssues();
     Assert.assertThat(issues, hasSize(1));
-    Assert.assertEquals(ValidationError.VALIDATION_0301.name(), issues.get(0).getErrorCode());
+    Assert.assertEquals(ValidationError.VALIDATION_0307.name(), issues.get(0).getErrorCode());
+  }
+
+  @Test
+  public void testKerberosDisabledInSystemWithPipelineSource() {
+    PipelineConfigurationValidator validator = createClusterPropertiesValidator(
+        false,
+        conf -> {
+          conf.addConfiguration(new Config("executionMode", "BATCH"));
+          conf.addConfiguration(new Config("clusterConfig.clusterType", "YARN"));
+          conf.addConfiguration(new Config("clusterConfig.useYarnKerberosKeytab", true));
+          conf.addConfiguration(new Config("clusterConfig.yarnKerberosKeytabSource", KeytabSource.PIPELINE));
+          conf.addConfiguration(new Config("clusterConfig.yarnKerberosKeytab", "/path/to/a/keytab"));
+          return null;
+        }
+    );
+    final PipelineConfiguration conf = validator.validate();
+    Assert.assertFalse(conf.getIssues().hasIssues());
+    List<Issue> issues = conf.getIssues().getIssues();
+    Assert.assertThat(issues, empty());
   }
 
   @Test
