@@ -126,6 +126,7 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0304("{} was not a regular file; please double check the keytab path{}"),
   VALIDATION_0305("Impersonation is required by {} configuration property, so an explicit user may not be specified."),
   VALIDATION_0306("Invalid URL for Standalone Spark Cluster Type, The Master URL must use the following format: 'spark://HOST:PORT'"),
+  VALIDATION_0307("If Kerberos is disabled via the {} configuration property, then the keytab source must be pipeline"),
   ;
 
   private final String msg;
