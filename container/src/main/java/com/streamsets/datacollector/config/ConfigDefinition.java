@@ -63,17 +63,19 @@ public class ConfigDefinition {
   private final ConfigDef.Evaluation evaluation;
   private Map<String, List<Object>> dependsOnMap;
   private String prefix;
+  private ConfigDef.DisplayMode displayMode;
 
   public ConfigDefinition(String name, ConfigDef.Type type, String label, String description,
       Object defaultValue,
       boolean required, String group, String fieldName, ModelDefinition model, String dependsOn,
       List<Object> triggeredByValues, int displayPosition, List<ElFunctionDefinition> elFunctionDefinitions,
       List<ElConstantDefinition> elConstantDefinitions, long min, long max, String mode, int lines,
-      List<Class> elDefs, ConfigDef.Evaluation evaluation, Map<String, List<Object>> dependsOnMap) {
+      List<Class> elDefs, ConfigDef.Evaluation evaluation, Map<String, List<Object>> dependsOnMap,
+                          ConfigDef.DisplayMode displayMode) {
     this(null, name, type, label, description, defaultValue, "",
         required, group, fieldName,
         model, dependsOn, triggeredByValues, displayPosition, elFunctionDefinitions,
-        elConstantDefinitions, min, max, mode, lines, elDefs, evaluation, dependsOnMap);
+        elConstantDefinitions, min, max, mode, lines, elDefs, evaluation, dependsOnMap, displayMode);
   }
 
   public ConfigDefinition(Field configField, String name, ConfigDef.Type type, String label, String description,
@@ -81,7 +83,8 @@ public class ConfigDefinition {
       boolean required, String group, String fieldName, ModelDefinition model, String dependsOn,
       List<Object> triggeredByValues, int displayPosition, List<ElFunctionDefinition> elFunctionDefinitions,
       List<ElConstantDefinition> elConstantDefinitions, long min, long max, String mode, int lines,
-      List<Class> elDefs, ConfigDef.Evaluation evaluation, Map<String, List<Object>> dependsOnMap) {
+      List<Class> elDefs, ConfigDef.Evaluation evaluation, Map<String, List<Object>> dependsOnMap,
+      ConfigDef.DisplayMode displayMode) {
     this.configField = configField;
     this.name = name;
     this.type = type;
@@ -115,6 +118,8 @@ public class ConfigDefinition {
     this.lines = lines;
     this.dependsOnMap = dependsOnMap;
     this.evaluation = evaluation;
+
+    this.displayMode = displayMode;
 
     // if getDefaultValueFromResources is a valid resource path we'll read that into String and use it as defaultValue
     if (defaultValueFromResource != null && !defaultValueFromResource.equals("")) {
@@ -363,7 +368,9 @@ public class ConfigDefinition {
                                 "", isRequired(), getGroup(), getFieldName(), model,
                                 getDependsOn(), getTriggeredByValues(), getDisplayPosition(),
                                 getElFunctionDefinitions(), getElConstantDefinitions(), getMin(),
-                                getMax(), getMode(), getLines(), getElDefs(), getEvaluation(), getDependsOnMap());
+                                getMax(), getMode(), getLines(), getElDefs(), getEvaluation(), getDependsOnMap(),
+                                getDisplayMode()
+    );
   }
 
   public String getPrefix() {
@@ -373,6 +380,11 @@ public class ConfigDefinition {
   public void setPrefix(String prefix) {
     this.prefix = prefix;
   }
+
+  public ConfigDef.DisplayMode getDisplayMode() {
+    return displayMode;
+  }
+
   @Override
   public String toString() {
     return Utils.format("ConfigDefinition[name='{}' type='{}' required='{}' default='{}']", getName(), getType(),

@@ -115,4 +115,8 @@ public class ConfigDefinitionJson {
     return configDefinition.getDependsOnMap();
   }
 
+  public ConfigDef.DisplayMode getDisplayMode() {
+    return configDefinition.getDisplayMode();
+  }
+
 }

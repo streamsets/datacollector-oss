@@ -57,6 +57,10 @@ public class ConfigDefinitionJson   {
     }
   }
 
+  public enum DisplayModeEnum {
+    BASIC,
+    ADVANCED
+  }
   private TypeEnum type = null;
   private Object defaultValue = null;
   private String label = null;
@@ -74,6 +78,7 @@ public class ConfigDefinitionJson   {
   private List<Object> triggeredByValues = new ArrayList<Object>();
   private BigInteger min;
   private String group = null;
+  private DisplayModeEnum displayMode = DisplayModeEnum.BASIC;
 
 public enum EvaluationEnum {
   IMPLICIT("IMPLICIT"),
@@ -347,7 +352,18 @@ public enum EvaluationEnum {
     this.fieldName = fieldName;
   }
 
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("displayMode")
+  public DisplayModeEnum getDisplayMode() {
+    return displayMode;
+  }
 
+  public ConfigDefinitionJson setDisplayMode(DisplayModeEnum displayMode) {
+    this.displayMode = displayMode;
+    return this;
+  }
 
   @Override
   public String toString()  {

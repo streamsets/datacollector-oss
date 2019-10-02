@@ -102,7 +102,8 @@ public class TestConfigDefinitionExtractor {
         lines = 2,
         evaluation = ConfigDef.Evaluation.EXPLICIT,
         mode = ConfigDef.Mode.JAVA,
-        elDefs = ELs.class
+        elDefs = ELs.class,
+        displayMode = ConfigDef.DisplayMode.ADVANCED
     )
     public String config;
   }
@@ -158,6 +159,7 @@ public class TestConfigDefinitionExtractor {
     Assert.assertNull(config.getModel());
     Assert.assertEquals("", config.getDependsOn());
     Assert.assertNull(config.getTriggeredByValues());
+    Assert.assertEquals(ConfigDef.DisplayMode.BASIC, config.getDisplayMode());
   }
 
   @Test
@@ -170,6 +172,8 @@ public class TestConfigDefinitionExtractor {
     Assert.assertNull(config.getDefaultValue());
     Assert.assertTrue(config.getElFunctionDefinitions().isEmpty());
     Assert.assertTrue(config.getElConstantDefinitions().isEmpty());
+
+    Assert.assertEquals(ConfigDef.DisplayMode.ADVANCED, config.getDisplayMode());
   }
 
   @Test

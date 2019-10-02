@@ -480,7 +480,7 @@ public abstract class ConfigDefinitionExtractor {
                                    defaultValueFromResource, required, group,
                                    fieldName, model, dependsOn, triggeredByValues, displayPosition,
                                    elFunctionDefinitions, elConstantDefinitions, min, max, mode, lines, elDefs,
-                                   evaluation, dependsOnMap);
+                                   evaluation, dependsOnMap, annotation.displayMode());
       }
       return def;
     } else {
