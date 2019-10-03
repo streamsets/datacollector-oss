@@ -113,4 +113,42 @@ public class TestDelimitedDataParserFactory {
     Assert.assertNull(record);
     parser.close();
   }
+
+  @Test
+  public void testGetParserBOM() throws Exception {
+    Stage.Context context = ContextInfoCreator.createSourceContext("", false,
+        OnRecordError.DISCARD, Collections.<String>emptyList());
+
+    DataParserFactoryBuilder builder = new DataParserFactoryBuilder(context, DataParserFormat.DELIMITED);
+
+    DataParserFactory factory = builder
+        .setMaxDataLen(100)
+        .setMode(CsvMode.CSV)
+        .setMode(CsvHeader.NO_HEADER)
+        .setMode(CsvRecordType.LIST)
+        .setConfig(DelimitedDataConstants.DELIMITER_CONFIG, '^')
+        .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, '!')
+        .setConfig(DelimitedDataConstants.QUOTE_CONFIG, '\'')
+        .setConfig(DelimitedDataConstants.ALLOW_EXTRA_COLUMNS, true)
+        .build();
+
+    byte[] bom = {(byte)0xef, (byte)0xbb, (byte)0xbf};
+    byte[] stringBytes = "abc,def,xyz".getBytes();
+    byte[] bomPlusString = new byte[bom.length + stringBytes.length];
+
+    System.arraycopy(bom, 0, bomPlusString, 0, bom.length);
+    System.arraycopy(stringBytes, 0, bomPlusString, bom.length, stringBytes.length);
+
+    DataParser parser = factory.getParser("id", bomPlusString);
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
+
+    Record record = parser.parse();
+    Assert.assertNotNull(record);
+    Assert.assertEquals("abc", record.get().getValueAsList().get(0).getValueAsMap().get("value").getValueAsString());
+    Assert.assertEquals("def", record.get().getValueAsList().get(1).getValueAsMap().get("value").getValueAsString());
+    Assert.assertEquals("xyz", record.get().getValueAsList().get(2).getValueAsMap().get("value").getValueAsString());
+
+    Assert.assertEquals(12, Long.parseLong(parser.getOffset()));
+    parser.close();
+  }
 }

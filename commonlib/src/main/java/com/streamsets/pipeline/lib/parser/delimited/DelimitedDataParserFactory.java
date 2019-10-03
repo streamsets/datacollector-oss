@@ -61,6 +61,9 @@ public class DelimitedDataParserFactory extends DataParserFactory {
   public static final Set<Class<? extends Enum>> MODES =
       ImmutableSet.of((Class<? extends Enum>) CsvMode.class, CsvHeader.class, CsvRecordType.class);
 
+  // Note - Java Reader translates the 3 byte UTF-8 0xef 0xbb 0xbf prefix to a single character, \ufeff
+  static final char BOM = '\ufeff';
+
   public DelimitedDataParserFactory(Settings settings) {
     super(settings);
   }
@@ -124,6 +127,14 @@ public class DelimitedDataParserFactory extends DataParserFactory {
           .withAllowExtraColumns(getSettings().getConfig(DelimitedDataConstants.ALLOW_EXTRA_COLUMNS))
           .withExtraColumnPrefix(getSettings().getConfig(DelimitedDataConstants.EXTRA_COLUMN_PREFIX))
           .build();
+
+      if (getSettings().getCharset().name().equals("UTF-8")) {
+        // Consume BOM if it's there
+        reader.mark(1);
+        if (BOM != (char) reader.read()) {
+          reader.reset();
+        }
+      }
 
       return new DelimitedCharDataParser(getSettings().getContext(), id, reader, offset, settings);
     } catch (IOException ex) {
