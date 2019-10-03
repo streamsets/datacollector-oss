@@ -22,3 +22,11 @@ upgrades:
       - setConfig:
           name: conf.messageKeyFormat
           value: STRING
+  - toVersion: 6
+    actions:
+      - setConfig:
+          name: conf.dataGeneratorFormatConfig.basicAuthUserInfo
+          value: ""
+      - setConfig:
+          name: conf.dataGeneratorFormatConfig.basicAuthUserInfoForRegistration
+          value: ""

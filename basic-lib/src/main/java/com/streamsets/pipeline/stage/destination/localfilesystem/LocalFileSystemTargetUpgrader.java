@@ -32,6 +32,9 @@ public class LocalFileSystemTargetUpgrader implements StageUpgrader {
       case 2:
         upgradeV2toV3(configs);
         break;
+      case 3:
+        // handled by yaml upgrader
+        break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }

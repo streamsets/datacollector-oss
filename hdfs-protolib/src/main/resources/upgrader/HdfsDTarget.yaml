@@ -16,5 +16,12 @@
 
 upgraderVersion: 1
 
-# No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 5
+    actions:
+      - setConfig:
+          name: hdfsTargetConfigBean.dataGeneratorFormatConfig.basicAuthUserInfo
+          value: ""
+      - setConfig:
+          name: hdfsTargetConfigBean.dataGeneratorFormatConfig.basicAuthUserInfoForRegistration
+          value: ""

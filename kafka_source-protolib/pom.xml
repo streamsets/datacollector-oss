@@ -35,7 +35,6 @@
 
   <properties>
     <kafka.version>0.8.1.1</kafka.version>
-    <confluent.version>2.0.1</confluent.version>
     <tec.version>0.3</tec.version>
   </properties>
 

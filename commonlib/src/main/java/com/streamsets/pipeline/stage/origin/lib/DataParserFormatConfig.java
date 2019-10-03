@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.common.DataFormatConstants;
 import com.streamsets.pipeline.config.AvroSchemaLookupMode;
 import com.streamsets.pipeline.config.CharsetChooserValues;
@@ -767,6 +768,19 @@ public class DataParserFormatConfig implements DataFormatConfig {
 
   )
   public List<String> schemaRegistryUrls = new ArrayList<>();
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.CREDENTIAL,
+      label = "Basic Auth User Info",
+      dependencies = {
+          @Dependency(configName = "dataFormat^", triggeredByValues = "AVRO"),
+          @Dependency(configName = "avroSchemaSource", triggeredByValues = "REGISTRY")
+      },
+      displayPosition = 421,
+      group = "DATA_FORMAT"
+  )
+  public CredentialValue basicAuth = () -> "";
 
   @ConfigDef(
       required = true,
@@ -1615,7 +1629,8 @@ public class DataParserFormatConfig implements DataFormatConfig {
         .setConfig(SCHEMA_KEY, avroSchema)
         .setConfig(SCHEMA_SOURCE_KEY, avroSchemaSource)
         .setConfig(SCHEMA_REPO_URLS_KEY, schemaRegistryUrls)
-        .setConfig(SCHEMA_SKIP_AVRO_INDEXES, avroSkipUnionIndex);
+        .setConfig(SCHEMA_SKIP_AVRO_INDEXES, avroSkipUnionIndex)
+        .setConfig(BASIC_AUTH_USER_INFO, basicAuth.get());
     if (schemaLookupMode == AvroSchemaLookupMode.SUBJECT) {
       // Subject used for looking up schema
       builder.setConfig(SUBJECT_KEY, subject);

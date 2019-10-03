@@ -184,6 +184,13 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
       kafkaConsumerConfigs.put(KafkaConstants.CONFLUENT_SCHEMA_REGISTRY_URL_CONFIG,
           conf.dataFormatConfig.schemaRegistryUrls
       );
+
+      String userInfo = conf.dataFormatConfig.basicAuth.get();
+      if (!userInfo.isEmpty()) {
+        kafkaConsumerConfigs.put(KafkaConstants.BASIC_AUTH_CREDENTIAL_SOURCE, KafkaConstants.USER_INFO);
+        kafkaConsumerConfigs.put(KafkaConstants.BASIC_AUTH_USER_INFO, userInfo);
+      }
+
       ConsumerFactorySettings settings = new ConsumerFactorySettings(
           conf.zookeeperConnect,
           conf.metadataBrokerList,

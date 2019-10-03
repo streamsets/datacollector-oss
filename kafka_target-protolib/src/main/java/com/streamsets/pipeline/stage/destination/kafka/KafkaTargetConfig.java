@@ -333,18 +333,26 @@ public class KafkaTargetConfig {
     kafkaProducerConfigs.put(KafkaConstants.VALUE_SERIALIZER_CLASS_CONFIG, valueSerializer.getValueClass());
 
     List<String> schemaRegistryUrls = new ArrayList<>();
+    String userInfo = "";
     if (dataGeneratorFormatConfig.avroSchemaSource == REGISTRY &&
         !dataGeneratorFormatConfig.schemaRegistryUrls.isEmpty()) {
       schemaRegistryUrls = dataGeneratorFormatConfig.schemaRegistryUrls;
+      userInfo = dataGeneratorFormatConfig.basicAuthUserInfo.get();
     } else if (dataGeneratorFormatConfig.registerSchema &&
         !dataGeneratorFormatConfig.schemaRegistryUrlsForRegistration.isEmpty()) {
       schemaRegistryUrls = dataGeneratorFormatConfig.schemaRegistryUrlsForRegistration;
+      userInfo = dataGeneratorFormatConfig.basicAuthUserInfoForRegistration.get();
     }
 
     kafkaProducerConfigs.put(
         KafkaConstants.CONFLUENT_SCHEMA_REGISTRY_URL_CONFIG,
         Joiner.on(",").join(schemaRegistryUrls)
     );
+
+    if (userInfo != null && !userInfo.isEmpty()) {
+      kafkaProducerConfigs.put(KafkaConstants.BASIC_AUTH_CREDENTIAL_SOURCE, KafkaConstants.USER_INFO);
+      kafkaProducerConfigs.put(KafkaConstants.BASIC_AUTH_USER_INFO, userInfo);
+    }
 
     this.topicPartitionMap = new HashMap<>();
     this.allowedTopics = new HashSet<>();

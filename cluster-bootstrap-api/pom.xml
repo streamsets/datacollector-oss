@@ -34,7 +34,7 @@
 
   <properties>
     <avro.version>1.7.7</avro.version>
-    <confluent.version>2.0.1</confluent.version>
+    <confluent.version>5.3.1</confluent.version>
     <spark.version>2.1.0</spark.version>
     <kafka.version>0.8.2.0</kafka.version>
   </properties>

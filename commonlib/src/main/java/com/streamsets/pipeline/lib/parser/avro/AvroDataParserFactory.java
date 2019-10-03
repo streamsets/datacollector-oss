@@ -44,6 +44,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.BASIC_AUTH_USER_INFO;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.BASIC_AUTH_USER_INFO_DEFAULT;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.ID_SIZE;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.MAGIC_BYTE_SIZE;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.REGISTER_SCHEMA_DEFAULT;
@@ -74,6 +76,7 @@ public class AvroDataParserFactory extends DataParserFactory {
     configs.put(SCHEMA_REPO_URLS_KEY, new ArrayList<>());
     configs.put(REGISTER_SCHEMA_KEY, REGISTER_SCHEMA_DEFAULT);
     configs.put(SCHEMA_SKIP_AVRO_INDEXES, SCHEMA_DEFAULT_SKIP_AVRO_INDEXES);
+    configs.put(BASIC_AUTH_USER_INFO, BASIC_AUTH_USER_INFO_DEFAULT);
     CONFIGS = Collections.unmodifiableMap(configs);
   }
 

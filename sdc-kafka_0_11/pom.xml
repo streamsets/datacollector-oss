@@ -34,7 +34,6 @@
     <packaging>jar</packaging>
 
   <properties>
-    <confluent.version>3.0.1</confluent.version>
     <kafka.version>0.11.0.0</kafka.version>
     <tec.version>0.7</tec.version>
     <scala.version>2.11.8</scala.version>

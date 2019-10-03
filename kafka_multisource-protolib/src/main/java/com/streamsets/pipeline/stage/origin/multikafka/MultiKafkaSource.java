@@ -371,6 +371,13 @@ public class MultiKafkaSource extends BasePushSource {
     props.setProperty(KafkaConstants.CONFLUENT_SCHEMA_REGISTRY_URL_CONFIG,
         StringUtils.join(conf.dataFormatConfig.schemaRegistryUrls, ",")
     );
+
+    String userInfo = conf.dataFormatConfig.basicAuth.get();
+    if (!userInfo.isEmpty()) {
+      props.put(KafkaConstants.BASIC_AUTH_CREDENTIAL_SOURCE, KafkaConstants.USER_INFO);
+      props.put(KafkaConstants.BASIC_AUTH_USER_INFO, userInfo);
+    }
+
     props.setProperty(KafkaConstants.AUTO_COMMIT_OFFEST, "false");
 
     if (context.isPreview()) {

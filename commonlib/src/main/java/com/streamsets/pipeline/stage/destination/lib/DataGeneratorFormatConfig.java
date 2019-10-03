@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.config.AvroCompression;
 import com.streamsets.pipeline.config.AvroCompressionChooserValues;
 import com.streamsets.pipeline.config.AvroSchemaLookupMode;
@@ -74,6 +75,7 @@ import java.util.Map;
 
 import static com.streamsets.pipeline.config.DestinationAvroSchemaSource.HEADER;
 import static com.streamsets.pipeline.config.DestinationAvroSchemaSource.INLINE;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.BASIC_AUTH_USER_INFO;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.COMPRESSION_CODEC_KEY;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.DEFAULT_VALUES_KEY;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.INCLUDE_SCHEMA_KEY;
@@ -361,6 +363,19 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
   public List<String> schemaRegistryUrls = new ArrayList<>();
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.CREDENTIAL,
+      label = "Basic Auth User Info",
+      dependencies = {
+          @Dependency(configName = "dataFormat^", triggeredByValues = "AVRO"),
+          @Dependency(configName = "avroSchemaSource", triggeredByValues = "REGISTRY")
+      },
+      displayPosition = 432,
+      group = "DATA_FORMAT"
+  )
+  public CredentialValue basicAuthUserInfo = () -> "";
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Lookup Schema By",
@@ -404,6 +419,19 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
   // We can't do an AND+OR relationship with dependencies so this is a workaround.
   // See JIRA for API-55
   public String subjectToRegister;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.CREDENTIAL,
+      label = "Basic Auth User Info",
+      dependencies = {
+          @Dependency(configName = "dataFormat^", triggeredByValues = "AVRO"),
+          @Dependency(configName = "registerSchema", triggeredByValues = "true")
+      },
+      displayPosition = 452,
+      group = "DATA_FORMAT"
+  )
+  public CredentialValue basicAuthUserInfoForRegistration = () -> "";
 
   @ConfigDef(
       required = true,
@@ -788,11 +816,13 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
 
     builder.setConfig(SCHEMA_SOURCE_KEY, avroSchemaSource);
     builder.setConfig(SCHEMA_REPO_URLS_KEY, schemaRegistryUrls);
+    builder.setConfig(BASIC_AUTH_USER_INFO, basicAuthUserInfo.get());
 
     if ((avroSchemaSource == INLINE || avroSchemaSource == HEADER) && registerSchema) {
       // Subject used for registering schema
       builder.setConfig(SUBJECT_KEY, subjectToRegister);
       builder.setConfig(SCHEMA_REPO_URLS_KEY, schemaRegistryUrlsForRegistration);
+      builder.setConfig(BASIC_AUTH_USER_INFO, basicAuthUserInfoForRegistration.get());
     } else if (schemaLookupMode == AvroSchemaLookupMode.SUBJECT) {
       // Subject used for looking up schema
       builder.setConfig(SUBJECT_KEY, subject);

@@ -59,6 +59,8 @@ import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
         "conf.dataGeneratorFormatConfig.subject",
         "conf.dataGeneratorFormatConfig.subjectToRegister",
         "conf.dataGeneratorFormatConfig.schemaRegistryUrlsForRegistration",
+        "conf.dataGeneratorFormatConfig.basicAuthUserInfo",
+        "conf.dataGeneratorFormatConfig.basicAuthUserInfoForRegistration",
         "conf.dataGeneratorFormatConfig.registerSchema",
         "conf.dataGeneratorFormatConfig.schemaId",
         "conf.dataGeneratorFormatConfig.includeSchema",

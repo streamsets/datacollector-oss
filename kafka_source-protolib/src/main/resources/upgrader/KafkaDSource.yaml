@@ -28,3 +28,8 @@ upgrades:
       - setConfig:
           name: kafkaConfigBean.keyCaptureField
           value: /kafkaMessageKey
+  - toVersion: 9
+    actions:
+      - setConfig:
+          name: kafkaConfigBean.dataFormatConfig.basicAuth
+            value: ""

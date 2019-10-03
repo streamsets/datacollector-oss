@@ -21,6 +21,9 @@ public class KafkaConstants {
   public static final String KEY_SERIALIZER_CLASS_CONFIG = "key.serializer";
   public static final String VALUE_SERIALIZER_CLASS_CONFIG = "value.serializer";
   public static final String CONFLUENT_SCHEMA_REGISTRY_URL_CONFIG = "schema.registry.url";
+  public static final String BASIC_AUTH_CREDENTIAL_SOURCE = "basic.auth.credentials.source";
+  public static final String BASIC_AUTH_USER_INFO = "basic.auth.user.info";
+  public static final String USER_INFO = "USER_INFO";
 
   // Constants specific for new consumer/producer library
   public static final String AUTO_OFFSET_RESET_CONFIG = "auto.offset.reset";

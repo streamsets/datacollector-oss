@@ -76,6 +76,9 @@ public class AvroSchemaHelper {
   public static final String COMPRESSION_CODEC_KEY = KEY_PREFIX + "compressionCodec";
   public static final String COMPRESSION_CODEC_DEFAULT = "null";
 
+  public static final String BASIC_AUTH_USER_INFO = KEY_PREFIX + "basicAuthUserInfo";
+  public static final String BASIC_AUTH_USER_INFO_DEFAULT = "";
+
   private final SchemaRegistryClient registryClient;
 
   private final Cache<String, Integer> schemaIdCache;
@@ -95,7 +98,16 @@ public class AvroSchemaHelper {
     // KafkaTargetConfig passes schema repo URLs in SCHEMA_REPO_URLS_KEY regardless of whether they are
     // for schema source or schema registration, since the two are mutually exclusive
     if ((schemaFromRegistry || registerSchema) && !schemaRepoUrls.isEmpty()) {
-      registryClient = new CachedSchemaRegistryClient(schemaRepoUrls, 1000);
+      Map<String, String> configs = new HashMap<>();
+
+      String userInfo = settings.getConfig(BASIC_AUTH_USER_INFO);
+      if (userInfo != null &&  !userInfo.isEmpty()) {
+        configs.put("basic.auth.credentials.source", "USER_INFO");
+        configs.put("basic.auth.user.info", userInfo);
+        registryClient = new CachedSchemaRegistryClient(schemaRepoUrls, 1000, configs);
+      } else {
+        registryClient = new CachedSchemaRegistryClient(schemaRepoUrls, 1000);
+      }
     } else {
       registryClient = null;
     }

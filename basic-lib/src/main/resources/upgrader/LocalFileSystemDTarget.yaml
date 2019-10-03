@@ -16,5 +16,12 @@
 
 upgraderVersion: 1
 
-# No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 3
+    actions:
+      - setConfig:
+          name: configs.dataGeneratorFormatConfig.basicAuthUserInfo
+          value: ""
+      - setConfig:
+          name: configs.dataGeneratorFormatConfig.basicAuthUserInfoForRegistration
+          value: ""

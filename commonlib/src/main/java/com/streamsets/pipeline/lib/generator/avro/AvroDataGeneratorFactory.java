@@ -33,6 +33,8 @@ import java.util.Map;
 import java.util.Set;
 
 import static com.streamsets.pipeline.config.DestinationAvroSchemaSource.INLINE;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.BASIC_AUTH_USER_INFO;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.BASIC_AUTH_USER_INFO_DEFAULT;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.COMPRESSION_CODEC_DEFAULT;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.COMPRESSION_CODEC_KEY;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.DEFAULT_VALUES_KEY;
@@ -64,6 +66,7 @@ public class AvroDataGeneratorFactory extends DataGeneratorFactory {
     configs.put(DEFAULT_VALUES_KEY, new HashMap<>());
     configs.put(COMPRESSION_CODEC_KEY, COMPRESSION_CODEC_DEFAULT);
     configs.put(REGISTER_SCHEMA_KEY, REGISTER_SCHEMA_DEFAULT);
+    configs.put(BASIC_AUTH_USER_INFO, BASIC_AUTH_USER_INFO_DEFAULT);
     CONFIGS = Collections.unmodifiableMap(configs);
   }
 

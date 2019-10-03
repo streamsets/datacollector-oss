@@ -51,6 +51,9 @@ public class HdfsTargetUpgrader implements StageUpgrader {
       case 3:
         upgradeV3ToV4(configs);
         break;
+      case 4:
+      // handled by yaml upgrader
+        break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
