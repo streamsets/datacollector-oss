@@ -178,6 +178,5 @@ public class HttpProcessorUpgrader implements StageUpgrader {
   }
 
   private void upgradeV11ToV12(List<Config> configs) {
-    configs.add(new Config(joiner.join(CONF, "parsedFieldPath"), "/"));
   }
 }
