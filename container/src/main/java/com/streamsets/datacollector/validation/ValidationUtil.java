@@ -1127,7 +1127,9 @@ public class ValidationUtil {
       }
     } else {
       // Kerberos is disabled via configuration
-      if (config.clusterConfig.yarnKerberosKeytabSource != KeytabSource.PIPELINE) {
+      // therefore, if using a keytab, it MUST come from pipeline configuration
+      if (config.clusterConfig.useYarnKerberosKeytab &&
+          config.clusterConfig.yarnKerberosKeytabSource != KeytabSource.PIPELINE) {
         errors.add(issueCreator.create(
             PipelineGroups.CLUSTER.name(),
             "clusterConfig.yarnKerberosKeytabSource",
