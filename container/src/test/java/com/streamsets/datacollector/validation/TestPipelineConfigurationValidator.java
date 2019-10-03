@@ -481,6 +481,24 @@ public class TestPipelineConfigurationValidator {
   }
 
   @Test
+  public void testKerberosDisabledInSystemWithPropertiesSourceNoKeytab() {
+    PipelineConfigurationValidator validator = createClusterPropertiesValidator(
+        false,
+        conf -> {
+          conf.addConfiguration(new Config("executionMode", "BATCH"));
+          conf.addConfiguration(new Config("clusterConfig.clusterType", "YARN"));
+          conf.addConfiguration(new Config("clusterConfig.useYarnKerberosKeytab", false));
+          conf.addConfiguration(new Config("clusterConfig.yarnKerberosKeytabSource", KeytabSource.PROPERTIES_FILE));
+          return null;
+        }
+    );
+    final PipelineConfiguration conf = validator.validate();
+    Assert.assertFalse(conf.getIssues().hasIssues());
+    List<Issue> issues = conf.getIssues().getIssues();
+    Assert.assertThat(issues, empty());
+  }
+
+  @Test
   public void testKerberosDisabledInSystemWithPropertiesSource() {
     PipelineConfigurationValidator validator = createClusterPropertiesValidator(
         false,
