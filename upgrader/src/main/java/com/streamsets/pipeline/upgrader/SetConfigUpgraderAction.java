@@ -15,8 +15,7 @@
  */
 package com.streamsets.pipeline.upgrader;
 
-import com.streamsets.pipeline.api.impl.Utils;
-
+import java.util.Map;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
@@ -82,7 +81,7 @@ public class SetConfigUpgraderAction<T> extends UpgraderAction<SetConfigUpgrader
   }
 
   @Override
-  public void upgrade(T configs) {
+  public void upgrade(Map<String, Object> originalConfigs, T configs) {
     if (getName() == null && getElseName() == null) {
       throw new NullPointerException("either name or elseName must be not null");
     } else if (getName() != null && getValue() == null) {
@@ -94,13 +93,13 @@ public class SetConfigUpgraderAction<T> extends UpgraderAction<SetConfigUpgrader
     ConfigsAdapter configsAdapter = wrap(configs);
 
     if (getLookForName() == null) {
-      configsAdapter.set(getName(), getValue());
+      configsAdapter.set(getName(), resolveValueIfEL(originalConfigs, getValue()));
     } else {
       boolean configFound = existsConfigWithValue(getLookForName(), getIfValueMatches(), configsAdapter);
       if (getName() != null && configFound) {
-        configsAdapter.set(getName(), getValue());
+        configsAdapter.set(getName(), resolveValueIfEL(originalConfigs, getValue()));
       } else if (getElseName() != null && !configFound) {
-        configsAdapter.set(getElseName(), getElseValue());
+        configsAdapter.set(getElseName(), resolveValueIfEL(originalConfigs, getElseValue()));
       }
     }
   }

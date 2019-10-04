@@ -16,8 +16,14 @@
 package com.streamsets.pipeline.upgrader;
 
 import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.api.el.ELEvalException;
+import org.apache.commons.el.ExpressionEvaluatorImpl;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.servlet.jsp.el.ELException;
+import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +32,56 @@ import java.util.stream.Collectors;
 
 
 public abstract class UpgraderAction<U extends UpgraderAction, T> {
+  private static final Logger LOG = LoggerFactory.getLogger(UpgraderAction.class);
+
+  private final static ExpressionEvaluatorImpl EVALUATOR = new ExpressionEvaluatorImpl();
+
+
+  private static ThreadLocal<Map<String, Object>> CONFIGS_TL = new ThreadLocal<>();
+
+  public static Object valueElFunction(String configName) {
+    return CONFIGS_TL.get().get(configName);
+  }
+
+  private static Method CONFIG_VALUE_FUNCTION = null;
+
+  static {
+    try {
+      CONFIG_VALUE_FUNCTION = UpgraderAction.class.getMethod("valueElFunction", String.class);
+    } catch (Exception ex) {
+      throw new RuntimeException("Should never happen: " + ex.toString(), ex);
+    }
+  }
+
+  private String evaluate (final Map<String, Object> configs, String expression) throws
+      ELEvalException {
+    try {
+      CONFIGS_TL.set(configs);
+      return (String) EVALUATOR.evaluate(
+          expression,
+          String.class,
+          name -> null,
+          (prefix, name) -> (prefix.equals("") && name.equals("value")) ? CONFIG_VALUE_FUNCTION : null
+      );
+    } catch (ELException e) {
+      // Apache evaluator is not using the getCause exception chaining that is available in Java but rather a custom
+      // chaining mechanism. This doesn't work well for us as we're effectively swallowing the cause that is not
+      // available in log, ...
+      Throwable t = e;
+      if(e.getRootCause() != null) {
+        t = e.getRootCause();
+        if(e.getCause() == null) {
+          e.initCause(t);
+        }
+      }
+      LOG.debug(Errors.YAML_UPGRADER_12.getMessage(), getName(), expression, t.toString(), e);
+      throw new ELEvalException(Errors.YAML_UPGRADER_12, getName(), expression, t.toString());
+    } finally {
+      CONFIGS_TL.remove();
+    }
+  }
+
+
 
   protected interface ConfigsAdapter extends Iterable<ConfigsAdapter.Pair> {
     interface Pair {
@@ -186,7 +242,14 @@ public abstract class UpgraderAction<U extends UpgraderAction, T> {
     return wrapper.apply(configs);
   }
 
-  public abstract void upgrade(T configs);
+  protected Object resolveValueIfEL(Map<String, Object> originalConfigs, Object value) {
+    if (value instanceof String) {
+      value = evaluate(originalConfigs, (String) value);
+    }
+    return value;
+  }
+
+  public abstract void upgrade(Map<String, Object> originalConfigs, T configs);
 
   public String getName() {
     return name;

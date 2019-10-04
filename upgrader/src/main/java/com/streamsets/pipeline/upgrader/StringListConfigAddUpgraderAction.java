@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 public class StringListConfigAddUpgraderAction<T> extends UpgraderAction<StringListConfigAddUpgraderAction, T> {
@@ -39,7 +40,7 @@ public class StringListConfigAddUpgraderAction<T> extends UpgraderAction<StringL
   }
 
   @Override
-  public void upgrade(T configs) {
+  public void upgrade(Map<String, Object> originalConfigs, T configs) {
     Utils.checkNotNull(getName(), "name");
     Utils.checkNotNull(getValue(), "value");
     ConfigsAdapter configsAdapter = wrap(configs);

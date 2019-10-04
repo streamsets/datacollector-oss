@@ -18,6 +18,7 @@ package com.streamsets.pipeline.upgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.Iterator;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,7 +41,7 @@ public class RemoveConfigUpgraderAction<T> extends UpgraderAction<IterateConfigL
   }
 
   @Override
-  public void upgrade(T configs) {
+  public void upgrade(Map<String, Object> originalConfigs, T configs) {
     Utils.checkNotNull(getNamePattern(), "namePattern");
     Pattern pattern = Pattern.compile(getNamePattern());
     ConfigsAdapter configsAdapter = wrap(configs);

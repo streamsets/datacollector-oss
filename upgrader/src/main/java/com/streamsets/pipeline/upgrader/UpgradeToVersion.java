@@ -18,7 +18,10 @@ package com.streamsets.pipeline.upgrader;
 import com.streamsets.pipeline.api.Config;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class UpgradeToVersion {
   List<UpgraderAction<?, List<Config>>> actions = Collections.emptyList();
@@ -33,8 +36,13 @@ public class UpgradeToVersion {
   }
 
   public void upgrade(List<Config> configs) {
+    // we are not doing Java8 streams magic because value can be NULL and streams list to map fails with NPE
+    Map<String, Object> originalConfigs = new HashMap<>();
+    for (Config config : configs) {
+      originalConfigs.put(config.getName(), config.getValue());
+    }
     for (UpgraderAction<?, List<Config>> action : actions) {
-      action.upgrade(configs);
+      action.upgrade(originalConfigs, configs);
     }
   }
 

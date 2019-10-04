@@ -21,7 +21,7 @@ upgrades:
   actions:
   - setConfig:
       name: set1
-      value: SET
+      value: ${value("set2")}/${value("set3")}
   - setConfig:
       name: set2
       value: true
@@ -144,7 +144,7 @@ upgrades:
   actions:
   - replaceConfig:
       name: a
-      newValue: AA
+      newValue: ${value("x")}/AA
   - replaceConfig:
       name: aa
       ifOldValueMatches: A
@@ -162,7 +162,7 @@ upgrades:
       name: aaaaa
       ifOldValueMatches: true
       newValue: C
-      elseNewValue: true
+      elseNewValue: ${value("x")}/CC
   - replaceConfig:
       name: b
       ifOldValueMatches: .*FOO.*

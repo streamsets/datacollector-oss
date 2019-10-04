@@ -35,6 +35,19 @@ upgrades:
     - setConfig:                          # sets a configuration
         name: foo
         value: bar                        # value is a string or JSON
+                                          # If the value is a string it can be an EL expression using the
+                                          # value(configName) EL function. For example:
+                                          #
+                                          #     - setConfig:
+                                          #         name: server.hostPort
+                                          #         value: ${value("server.host")}:${${value("server.port")}
+                                          #
+                                          # The value(<configName>) function gives access to the value of the 'configName'
+                                          # configuration value before the upgrade to 'toVersion' started.
+                                          #
+                                          # EL expressions are supported in setConfig#value, replaceConfig#newValue &
+                                          # replaceConfig#elseNewValue
+
 
     - setConfig:                          # sets a configuration if a given config exists
         lookForName: found                # name of the configuration to look for

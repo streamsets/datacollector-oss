@@ -51,7 +51,7 @@ public class StringMapConfigPutUpgraderAction<T> extends UpgraderAction<StringLi
   }
 
   @Override
-  public void upgrade(T configs) {
+  public void upgrade(Map<String, Object> originalConfigs, T configs) {
     Utils.checkNotNull(getName(), "name");
     Utils.checkNotNull(getKey(), "key");
     Utils.checkNotNull(getValue(), "value");

@@ -51,7 +51,7 @@ public class StringMapConfigRemoveUpgraderAction<T> extends UpgraderAction<Strin
   }
 
   @Override
-  public void upgrade(T configs) {
+  public void upgrade(Map<String, Object> originalConfigs, T configs) {
     Utils.checkNotNull(getName(), "name");
     Utils.checkArgument(getKey() != null || getValue() != null, "key and value cannot be both NULL");
     ConfigsAdapter configsAdapter = wrap(configs);

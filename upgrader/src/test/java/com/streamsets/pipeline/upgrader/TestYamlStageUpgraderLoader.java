@@ -69,10 +69,13 @@ public class TestYamlStageUpgraderLoader {
     YamlStageUpgrader upgrader = loader.get();
 
     List<Config> configs = new ArrayList<>();
+    configs.add(new Config("set2", false));
     configs.add(new Config("listConfig", ImmutableList.of(ImmutableMap.of())));
     configs = upgrader.upgrade("lib", "stage", "instance", 0, 1, configs);
     Assert.assertEquals(5, configs.size());
-    Assert.assertEquals("SET", find(configs, "set1").getValue());
+
+    //testing EL
+    Assert.assertEquals("false/", find(configs, "set1").getValue());
     Assert.assertEquals(true, find(configs, "set2").getValue());
     Assert.assertEquals(1, find(configs, "set3").getValue());
     Assert.assertEquals(Collections.emptyList(), find(configs, "set4").getValue());
@@ -185,11 +188,13 @@ public class TestYamlStageUpgraderLoader {
     configs = upgrader.upgrade("lib", "stage", "instance", 5, 6, configs);
     Assert.assertEquals(11, configs.size());
     Assert.assertEquals("X", find(configs, "x").getValue());
-    Assert.assertEquals("AA", find(configs, "a").getValue());
+    // testing EL
+    Assert.assertEquals("X/AA", find(configs, "a").getValue());
     Assert.assertEquals("AA", find(configs, "aa").getValue());
     Assert.assertEquals("B", find(configs, "aaa").getValue());
     Assert.assertEquals("C", find(configs, "aaaa").getValue());
-    Assert.assertEquals(true, find(configs, "aaaaa").getValue());
+    // testing EL
+    Assert.assertEquals("X/CC", find(configs, "aaaaa").getValue());
     Assert.assertEquals("BAR", find(configs, "b").getValue());
     Assert.assertEquals("NOFOO", find(configs, "bb").getValue());
     Assert.assertEquals("oldvalue=foo", find(configs, "bbb").getValue());
