@@ -90,6 +90,7 @@ SDC_JAVA_OPTS=${SDC_JAVA_OPTS:="-Xmx1024m"}
 SDC_MAIN_CLASS=${SDC_MAIN_CLASS:="com.streamsets.datacollector.main.DataCollectorMain"}
 SDC_SECURITY_MANAGER_ENABLED=${SDC_SECURITY_MANAGER_ENABLED:="true"}
 SDC_HEAPDUMP_PATH=${SDC_HEAPDUMP_PATH:=${SDC_LOG}/sdc_heapdump_`date +%s`.hprof}
+SDC_JVMFATAL_PATH=${SDC_JVMFATAL_PATH:=${SDC_LOG}/hs_err_`date +%s`.log}
 
 SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.dist.dir=${SDC_DIST}"
 SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.resources.dir=${SDC_RESOURCES}"
@@ -190,6 +191,9 @@ if [ "${SDC_GC_LOGGING}" = "true" ]
 then
   SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -XX:+PrintGCDetails -XX:+PrintGCDateStamps -Xloggc:${SDC_LOG}/gc.log"
 fi
+
+# Adding JVM Fatal Error Log file path
+SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -XX:ErrorFile=${SDC_JVMFATAL_PATH}"
 
 SDC_POLICY_FILE=""
 if [ "${SDC_SECURITY_MANAGER_ENABLED}" = "true" ]
