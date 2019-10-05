@@ -78,7 +78,6 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -590,6 +589,9 @@ public class OracleCDCSource extends BaseSource {
             String rowId = resultSet.getString(17);
             SchemaAndTable schemaAndTable = new SchemaAndTable(schema, table);
             TransactionIdKey key = new TransactionIdKey(xid);
+
+            int bufferedRecordsSize = 0;
+            int totRecs = 0;
             bufferedRecordsLock.lock();
             try {
               if (useLocalBuffering &&
@@ -597,13 +599,30 @@ public class OracleCDCSource extends BaseSource {
                   bufferedRecords.get(key).contains(new RecordSequence(null, null, 0, 0, rsId, ssn, null))) {
                 continue;
               }
+              if (LOG.isDebugEnabled()) {
+                bufferedRecordsSize = bufferedRecords.size();
+                for (Map.Entry<OracleCDCSource.TransactionIdKey, HashQueue<RecordSequence>> r :
+                    bufferedRecords.entrySet()) {
+                  totRecs += r.getValue().size();
+                }
+              }
             } finally {
               bufferedRecordsLock.unlock();
             }
             Offset offset = null;
             if (LOG.isDebugEnabled()) {
-              LOG.debug("Commit SCN = {}, SCN = {}, Operation = {}, Txn Id = {}, Timestamp = {}, Row Id = {}, Redo SQL = {}",
-                  commitSCN, scn, op, xid, tsDate, rowId, queryString
+              LOG.debug(
+                  "Num Active Txns = {} Total Cached Records = {} Commit SCN = {}, SCN = {}, Operation = {}, Txn Id =" +
+                      " {}, Timestamp = {}, Row Id = {}, Redo SQL = {}",
+                  bufferedRecordsSize,
+                  totRecs,
+                  commitSCN,
+                  scn,
+                  op,
+                  xid,
+                  tsDate,
+                  rowId,
+                  queryString
               );
             }
 
@@ -661,7 +680,11 @@ public class OracleCDCSource extends BaseSource {
                   // find the last one with the matching rowId.
                   // save it's position if and only if, it has
                   // not previously been marked as a record to SKIP.
-                  if(node.headers.get(ROLLBACK).equals(ONE)) {
+                  //
+                  // ONLY use this code when we are using the new version of addRecordsToQueue()
+                  // the old version of addRecordsToQueue() includes the rollback code
+                  // and does not support "SKIP"ping Records.
+                  if(node.headers.get(ROLLBACK).equals(ONE) && useNewAddRecordsToQueue) {
                     int lastOne = -1;
                     int count = 0;
                     for(RecordSequence rs : records) {
