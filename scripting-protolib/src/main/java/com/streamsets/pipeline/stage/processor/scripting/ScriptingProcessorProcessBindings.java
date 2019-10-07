@@ -15,7 +15,7 @@
  */
 package com.streamsets.pipeline.stage.processor.scripting;
 
-import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.util.scripting.ScriptObjectFactory;
 import com.streamsets.pipeline.stage.util.scripting.ScriptRecord;
@@ -32,7 +32,7 @@ public class ScriptingProcessorProcessBindings extends ScriptingProcessorInitDes
 
   public ScriptingProcessorProcessBindings(
       ScriptObjectFactory scriptObjectFactory,
-      Stage.Context context,
+      Processor.Context context,
       ErrorRecordHandler errorRecordHandler,
       Map<String, String> userParams,
       Logger log,

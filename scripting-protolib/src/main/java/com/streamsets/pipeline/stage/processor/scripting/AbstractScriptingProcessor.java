@@ -309,6 +309,7 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
         scriptObjectFactory,
         getContext(),
         errorRecordHandler,
+
         userParams,
         log,
         state

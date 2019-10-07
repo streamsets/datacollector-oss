@@ -81,4 +81,13 @@ public class TestJythonSource {
         "GeneratorOriginScriptErrors.py"
     );
   }
+
+  @Test
+  public void testGenerateEvents() throws Exception {
+    ScriptingOriginTestUtil.testGenerateEvents(
+        DSOURCECLASS,
+        getDSource(),
+        "GeneratorOriginScriptEvents.py"
+    );
+  }
 }

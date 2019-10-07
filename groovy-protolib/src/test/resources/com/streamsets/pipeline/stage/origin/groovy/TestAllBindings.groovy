@@ -33,19 +33,24 @@ record.value['createListMap()'] = sdc.createMap(true)
 record.value['getFieldNull()-false'] = sdc.getFieldNull(record, '/isStopped()')
 record.value['getFieldNull()-null'] = sdc.getFieldNull(record, '/not-a-real-fieldpath')
 
-// Test batch methods
-record.value['actualBatchSize'] = batch.size()
-
 records_list = [record]
+
+// Error
+batch.addError(record, "this is only a test");
+
+// Event
+eventRecord = sdc.createEvent('new test event', 123)
+batch.addEvent(eventRecord)
+
+// Test batch methods
+record.value['batch.size()'] = batch.size()
+record.value['batch.errorCount()'] = batch.errorCount()
+record.value['batch.eventCount()'] = batch.eventCount()
 
 // public void add(ScriptRecord scriptRecord)
 batch.add(record)
 // public void add(ScriptRecord[] scriptRecords)
 batch.add(records_list)
-
-// Event
-eventRecord = sdc.createEvent('new test event', 123)
-sdc.toEvent(eventRecord)
 
 // Process the batch and commit new offset
 batch.process('newEntityName', 'newEntityOffset')

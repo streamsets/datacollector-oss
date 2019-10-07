@@ -21,12 +21,11 @@ hasNext = True
 while hasNext:
 
     offset = offset + 1
-    record = sdc.createRecord('record souce id')
-    record.value = "record value"
-    cur_batch.addError(record, "error msg")
+    event = sdc.createEvent("event-type", 1)
+    cur_batch.addEvent(event)
 
     # if the batch is full, process it and start a new one
-    if cur_batch.errorCount() >= sdc.batchSize:
+    if cur_batch.eventCount() >= sdc.batchSize:
 
         # blocks until all records are written to all destinations
         # (or failure) and updates offset

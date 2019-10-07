@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.origin.scripting;
 
 import com.streamsets.pipeline.api.BatchContext;
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
@@ -42,6 +43,7 @@ public class ScriptingOriginBindings extends ScriptingStageBindings {
   public final class PushSourceScriptBatch {
     private int size = 0;
     private int errorCount = 0;
+    private int eventCount = 0;
     private BatchContext batchContext;
     private String[] allLanes;
 
@@ -58,11 +60,17 @@ public class ScriptingOriginBindings extends ScriptingStageBindings {
       return errorCount;
     }
 
+    public int eventCount() {
+      return eventCount;
+    }
+
     public boolean process(String entityName, String entityOffset) {
       if (entityName == null) {
         entityName = "";
       }
       size = 0;
+      errorCount = 0;
+      eventCount = 0;
       return context.processBatch(batchContext, entityName, entityOffset);
     }
 
@@ -89,6 +97,13 @@ public class ScriptingOriginBindings extends ScriptingStageBindings {
       errorCount++;
       Record record = scriptObjectFactory.getRecord(scriptRecord);
       batchContext.toError(record, errorMsg);
+    }
+
+    public void addEvent(ScriptRecord scriptRecord) {
+      eventCount++;
+      Record record = scriptObjectFactory.getRecord(scriptRecord);
+      EventRecord eventRecord = (EventRecord) record;
+      batchContext.toEvent(eventRecord);
     }
 
     public List<ScriptRecord> getSourceResponseRecords() {

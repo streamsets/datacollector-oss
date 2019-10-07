@@ -221,6 +221,19 @@ public class ScriptingOriginTestUtil<T extends AbstractScriptingSource> {
         Field.create(Field.Type.STRING, null, null),
         record.get("/getFieldNull()-null")
     );
+    assertEquals(
+        // Note - size() is called before records are added to batch so should be 0 not 2
+        Field.create(Field.Type.INTEGER, 0, null),
+        record.get("/batch.size()")
+    );
+    assertEquals(
+        Field.create(Field.Type.INTEGER, 1, null),
+        record.get("/batch.eventCount()")
+    );
+    assertEquals(
+        Field.create(Field.Type.INTEGER, 1, null),
+        record.get("/batch.errorCount()")
+    );
   }
 
   public static <C extends AbstractScriptingDSource> void testMultiThreadedOffset(
@@ -436,6 +449,7 @@ public class ScriptingOriginTestUtil<T extends AbstractScriptingSource> {
         record.get("/null_map")
     );
   }
+
   public static <C extends AbstractScriptingDSource> void testGenerateErrorRecords(
       Class<C> clazz,
       AbstractScriptingDSource scriptingDSource,
@@ -445,7 +459,7 @@ public class ScriptingOriginTestUtil<T extends AbstractScriptingSource> {
     scriptConf.scriptRecordType = ScriptRecordType.NATIVE_OBJECTS;
     scriptConf.params = Collections.unmodifiableMap(new HashMap<>());
     scriptConf.numThreads = 1;
-    scriptConf.batchSize = 234;
+    scriptConf.batchSize = 23;
     scriptingDSource.scriptConf = scriptConf;
     final PushSourceRunner runner = new PushSourceRunner.Builder(clazz, scriptingDSource)
         .addConfiguration("script", getScript(scriptName, clazz))
@@ -463,8 +477,37 @@ public class ScriptingOriginTestUtil<T extends AbstractScriptingSource> {
       }
     });
     runner.waitOnProduce();
-    assertEquals(234, runner.getErrorRecords().size());
-    assertEquals(234, records.size());
+    assertEquals(scriptConf.batchSize, runner.getErrorRecords().size());
+    runner.runDestroy();
+  }
+
+  public static <C extends AbstractScriptingDSource> void testGenerateEvents(
+      Class<C> clazz,
+      AbstractScriptingDSource scriptingDSource,
+      String scriptName)
+      throws Exception {
+    ScriptSourceConfigBean scriptConf = new ScriptSourceConfigBean();
+    scriptConf.scriptRecordType = ScriptRecordType.NATIVE_OBJECTS;
+    scriptConf.params = Collections.unmodifiableMap(new HashMap<>());
+    scriptConf.numThreads = 1;
+    scriptConf.batchSize = 19;
+    scriptingDSource.scriptConf = scriptConf;
+    final PushSourceRunner runner = new PushSourceRunner.Builder(clazz, scriptingDSource)
+        .addConfiguration("script", getScript(scriptName, clazz))
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+    Map<String, String> offsets = Collections.unmodifiableMap(new HashMap<>());
+    final List<Record> records = Collections.synchronizedList(new ArrayList<>());
+    runner.runProduce(offsets, scriptConf.batchSize, new PushSourceRunner.Callback() {
+      @Override
+      public void processBatch(StageRunner.Output output) {
+        records.addAll(output.getRecords().get("lane"));
+        runner.setStop();
+      }
+    });
+    runner.waitOnProduce();
+    assertEquals(scriptConf.batchSize, runner.getEventRecords().size());
     runner.runDestroy();
   }
 

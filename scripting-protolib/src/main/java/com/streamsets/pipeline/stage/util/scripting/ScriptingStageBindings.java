@@ -81,26 +81,11 @@ public abstract class ScriptingStageBindings {
 
   public ScriptRecord createEvent(String type, int version) {
     String recordSourceId = Utils.format("event:{}:{}:{}", type, version, System.currentTimeMillis());
-    EventRecord er = context.createEventRecord(type, version, recordSourceId);
-    ScriptRecord sr = scriptObjectFactory.createScriptRecord(er);
-    return sr;
+    EventRecord eventRecord = context.createEventRecord(type, version, recordSourceId);
+    ScriptRecord scriptRecord = scriptObjectFactory.createScriptRecord(eventRecord);
+    return scriptRecord;
   }
 
-  public void toEvent(ScriptRecord event) throws StageException {
-    Record eventRecord = null;
-    if(event instanceof SdcScriptRecord) {
-      eventRecord = ((SdcScriptRecord) event).sdcRecord;
-    } else {
-      eventRecord = ((NativeScriptRecord) event).sdcRecord;
-    }
-
-    if(!(eventRecord instanceof EventRecord)) {
-      log.error("Can't send normal record to event stream: {}", eventRecord);
-      throw new StageException(Errors.SCRIPTING_07, eventRecord.getHeader().getSourceId());
-    }
-
-    ((ToEventContext) context).toEvent((EventRecord)scriptObjectFactory.getRecord(event));
-  }
 
   public boolean isPreview() { return context.isPreview(); }
 

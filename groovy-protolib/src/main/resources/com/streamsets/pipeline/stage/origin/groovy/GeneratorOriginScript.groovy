@@ -17,9 +17,12 @@
  *   sdc.createBatch(): Return a new batch.
  *   sdc.createRecord(String recordId): Return a new record. Pass a recordId to uniquely identify
  *       the record and include enough information to track down the record source.
+ *   sdc.createEvent(String type, int version): Return a new empty event with standard headers.
  *   Batch.add(record): Append a record to the batch.
  *   Batch.add(record[]): Append a list of records to the batch.
  *   Batch.addError(record, msg): Add an error record to the batch with the associated error message.
+ *   Batch.addEvent(event): Append an event to the batch.
+ *       Only events created with sdc.createEvent() are supported.
  *   Batch.size(): Return the number of records in the batch.
  *   Batch.errorCount(): Return the number of error records in the batch.
  *   Batch.process(entityName, entityOffSet): Process the batch through the rest of
@@ -37,9 +40,6 @@
  *       to check if the field is a typed field with value null.
  *   sdc.createMap(boolean listMap): Create a map for use as a field in a record.
  *       Pass true to this function to create a list map (ordered map).
- *   sdc.createEvent(String type, int version): Create a new empty event with standard headers.
- *   sdc.toEvent(Record): Send event to event stream.
- *       Only events created with sdc.createEvent are supported.
  *
  * Available Record Header Variables:
  *   record.attributes: A map of record header attributes.
@@ -92,6 +92,6 @@ while (hasNext) {
     }
 }
 
-if (cur_batch.size() + cur_batch.errorCount() > 0) {
+if (cur_batch.size() + cur_batch.errorCount() + cur_batch.eventCount() > 0) {
     cur_batch.process(entityName, offset.toString())
 }

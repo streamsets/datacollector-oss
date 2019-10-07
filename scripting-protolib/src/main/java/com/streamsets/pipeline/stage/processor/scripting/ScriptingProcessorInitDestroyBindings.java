@@ -15,14 +15,18 @@
  */
 package com.streamsets.pipeline.stage.processor.scripting;
 
-import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.EventRecord;
+import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.util.scripting.Errors;
+import com.streamsets.pipeline.stage.util.scripting.NativeScriptRecord;
 import com.streamsets.pipeline.stage.util.scripting.ScriptObjectFactory;
 import com.streamsets.pipeline.stage.util.scripting.ScriptRecord;
 import com.streamsets.pipeline.stage.util.scripting.ScriptingStageBindings;
+import com.streamsets.pipeline.stage.util.scripting.SdcScriptRecord;
 import org.slf4j.Logger;
 
 import java.util.Map;
@@ -32,17 +36,19 @@ public class ScriptingProcessorInitDestroyBindings extends ScriptingStageBinding
   public final Object state;
   private final ErrorRecordHandler errorRecordHandler;
   public final Err error;
+  public final Processor.Context context;
 
 
   public ScriptingProcessorInitDestroyBindings(
       ScriptObjectFactory scriptObjectFactory,
-      Stage.Context context,
+      Processor.Context context,
       ErrorRecordHandler errorRecordHandler,
       Map<String, String> userParams,
       Logger log,
       Object state
   ) {
     super(scriptObjectFactory, context, userParams, log);
+    this.context = context;
     this.state = state;
     this.errorRecordHandler = errorRecordHandler;
     this.error = new Err();
@@ -56,5 +62,21 @@ public class ScriptingProcessorInitDestroyBindings extends ScriptingStageBinding
           errMsg
       ));
     }
+  }
+
+  public void toEvent(ScriptRecord scriptRecord) throws StageException {
+    Record record = null;
+    if(scriptRecord instanceof SdcScriptRecord) {
+      record = ((SdcScriptRecord) scriptRecord).sdcRecord;
+    } else {
+      record = ((NativeScriptRecord) scriptRecord).sdcRecord;
+    }
+
+    if(!(record instanceof EventRecord)) {
+      log.error("Can't send normal record to event stream: {}", record);
+      throw new StageException(Errors.SCRIPTING_07, record.getHeader().getSourceId());
+    }
+
+    context.toEvent((EventRecord) scriptObjectFactory.getRecord(scriptRecord));
   }
 }
