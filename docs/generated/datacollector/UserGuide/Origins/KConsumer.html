@@ -2,7 +2,7 @@
 <!DOCTYPE html
   PUBLIC "" "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
-    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="Supported pipeline types: Data Collector The Kafka Consumer origin reads data from a single topic in an Apache Kafka cluster. To use multiple threads to read from multiple topics, use the Kafka ..." /><meta name="copyright" content="(C) Copyright 2019" /><meta name="DC.rights.owner" content="(C) Copyright 2019" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Kafka Consumer" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/Origins_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/JythonScripting.html#concept_fxz_35t_m3b" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/KafkaMultiConsumer.html#concept_ccs_fn4_x1b" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_msz_wnr_5q" /><title>Kafka Consumer</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_msz_wnr_5q-d46e63708" />         
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="Supported pipeline types: Data Collector The Kafka Consumer origin reads data from a single topic in an Apache Kafka cluster. To use multiple threads to read from multiple topics, use the Kafka ..." /><meta name="copyright" content="(C) Copyright 2019" /><meta name="DC.rights.owner" content="(C) Copyright 2019" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Kafka Consumer" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/Origins_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/JythonScripting.html#concept_fxz_35t_m3b" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/KafkaMultiConsumer.html#concept_ccs_fn4_x1b" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_msz_wnr_5q" /><title>Kafka Consumer</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_msz_wnr_5q-d46e64139" />         
         
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <!-- Latest compiled and minified Bootstrap CSS -->
@@ -103,58 +103,59 @@
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_l4q_flb_kr-d46e7596" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
-   <li><span data-tocid="concept_ylh_yyz_ky-d46e9858" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
-   <li><span data-tocid="concept_ejk_f1f_5v-d46e19588" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
-   <li><span data-tocid="concept_qsw_cjy_bt-d46e26847" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
-   <li><span data-tocid="concept_qn1_wn4_kq-d46e28593" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
-   <li><span data-tocid="concept_hdr_gyw_41b-d46e31306" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_l4q_flb_kr-d46e7973" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e10235" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e19965" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e27224" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e28970" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e31683" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e33420" class="topicref" data-id="concept_yjl_nc5_jq" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span><ul class="nav nav-list">
-         <li><span data-tocid="concept_hpr_twm_jq-d46e33442" class="topicref" data-id="concept_hpr_twm_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_overview.html#concept_hpr_twm_jq">Origins</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e33797" class="topicref" data-id="concept_yjl_nc5_jq" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_hpr_twm_jq-d46e33819" class="topicref" data-id="concept_hpr_twm_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_overview.html#concept_hpr_twm_jq">Origins</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">An origin stage represents the source for the pipeline. You can use a single origin     stage in a pipeline.</p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_kvs_3hh_ht-d46e33906" class="topicref" data-id="concept_kvs_3hh_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/AmazonS3.html#concept_kvs_3hh_ht">Amazon S3</a></span></span></li>
-         <li><span data-tocid="concept_xsh_knm_5bb-d46e34991" class="topicref" data-id="concept_xsh_knm_5bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/AmazonSQS.html#concept_xsh_knm_5bb">Amazon SQS Consumer</a></span></span></li>
-         <li><span data-tocid="concept_osx_qgz_xhb-d46e35455" class="topicref" data-id="concept_osx_qgz_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/ADLS-G1.html#concept_osx_qgz_xhb">Azure Data Lake Storage Gen1</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_kvs_3hh_ht-d46e34283" class="topicref" data-id="concept_kvs_3hh_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/AmazonS3.html#concept_kvs_3hh_ht">Amazon S3</a></span></span></li>
+         <li><span data-tocid="concept_xsh_knm_5bb-d46e35368" class="topicref" data-id="concept_xsh_knm_5bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/AmazonSQS.html#concept_xsh_knm_5bb">Amazon SQS Consumer</a></span></span></li>
+         <li><span data-tocid="concept_osx_qgz_xhb-d46e35832" class="topicref" data-id="concept_osx_qgz_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/ADLS-G1.html#concept_osx_qgz_xhb">Azure Data Lake Storage Gen1</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_osx_qgz_xhb-d46e38237" class="topicref" data-id="concept_osx_qgz_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/ADLS-G2.html#concept_osx_qgz_xhb">Azure Data Lake Storage Gen2</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_osx_qgz_xhb-d46e38614" class="topicref" data-id="concept_osx_qgz_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/ADLS-G2.html#concept_osx_qgz_xhb">Azure Data Lake Storage Gen2</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_c1z_15q_1bb-d46e41019" class="topicref" data-id="concept_c1z_15q_1bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/AzureEventHub.html#concept_c1z_15q_1bb">Azure IoT/Event Hub Consumer</a></span></span></li>
-         <li><span data-tocid="concept_wfy_ghn_sz-d46e41301" class="topicref" data-id="concept_wfy_ghn_sz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/CoAPServer.html#concept_wfy_ghn_sz">CoAP Server</a></span></span></li>
-         <li><span data-tocid="concept_qcq_54n_jq-d46e41592" class="topicref" data-id="concept_qcq_54n_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Directory.html#concept_qcq_54n_jq">Directory</a></span></span></li>
-         <li><span data-tocid="concept_f1q_vpm_2z-d46e42980" class="topicref" data-id="concept_f1q_vpm_2z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Elasticsearch.html#concept_f1q_vpm_2z">Elasticsearch </a></span></span></li>
-         <li><span data-tocid="concept_n1y_qyp_5q-d46e43455" class="topicref" data-id="concept_n1y_qyp_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/FileTail.html#concept_n1y_qyp_5q">File Tail</a></span></span></li>
-         <li><span data-tocid="concept_cg3_y3v_q1b-d46e44702" class="topicref" data-id="concept_cg3_y3v_q1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/BigQuery.html#concept_cg3_y3v_q1b">Google BigQuery</a></span></span></li>
-         <li><span data-tocid="concept_iyd_wql_nbb-d46e45275" class="topicref" data-id="concept_iyd_wql_nbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/GCS.html#concept_iyd_wql_nbb">Google Cloud Storage</a></span></span></li>
-         <li><span data-tocid="concept_pjw_qtl_r1b-d46e45836" class="topicref" data-id="concept_pjw_qtl_r1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/PubSub.html#concept_pjw_qtl_r1b">Google Pub/Sub Subscriber</a></span></span></li>
-         <li><span data-tocid="concept_chr_zjj_l3b-d46e46303" class="topicref" data-id="concept_chr_zjj_l3b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/GroovyScripting.html#concept_chr_zjj_l3b">Groovy Scripting</a></span></span></li>
-         <li><span data-tocid="concept_yp1_4zs_yfb-d46e47103" class="topicref" data-id="concept_yp1_4zs_yfb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/gRPCClient.html#concept_yp1_4zs_yfb">gRPC Client</a></span></span></li>
-         <li><span data-tocid="concept_lw2_tnm_vs-d46e47319" class="topicref" data-id="concept_lw2_tnm_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HadoopFS-origin.html#concept_lw2_tnm_vs">Hadoop FS</a></span></span></li>
-         <li><span data-tocid="concept_djz_pdm_hdb-d46e47895" class="topicref" data-id="concept_djz_pdm_hdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HDFSStandalone.html#concept_djz_pdm_hdb">Hadoop FS Standalone</a></span></span></li>
-         <li><span data-tocid="concept_wk4_bjz_5r-d46e51827" class="topicref" data-id="concept_wk4_bjz_5r" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HTTPClient.html#concept_wk4_bjz_5r">HTTP Client</a></span></span></li>
-         <li><span data-tocid="concept_s2p_5hb_4y-d46e54215" class="topicref" data-id="concept_s2p_5hb_4y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HTTPServer.html#concept_s2p_5hb_4y">HTTP Server</a></span></span></li>
-         <li><span data-tocid="concept_izh_mqd_dy-d46e54679" class="topicref" data-id="concept_izh_mqd_dy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HTTPtoKafka.html#concept_izh_mqd_dy">HTTP to Kafka (Deprecated)</a></span></span></li>
-         <li><span data-tocid="concept_kn5_bvt_m3b-d46e55240" class="topicref" data-id="concept_kn5_bvt_m3b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JavaScriptScripting.html#concept_kn5_bvt_m3b">JavaScript Scripting</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_c1z_15q_1bb-d46e41396" class="topicref" data-id="concept_c1z_15q_1bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/AzureEventHub.html#concept_c1z_15q_1bb">Azure IoT/Event Hub Consumer</a></span></span></li>
+         <li><span data-tocid="concept_wfy_ghn_sz-d46e41678" class="topicref" data-id="concept_wfy_ghn_sz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/CoAPServer.html#concept_wfy_ghn_sz">CoAP Server</a></span></span></li>
+         <li><span data-tocid="concept_nsz_mnr_2jb-d46e41969" class="topicref" data-id="concept_nsz_mnr_2jb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/CronScheduler.html#concept_nsz_mnr_2jb">Cron Scheduler</a></span></span></li>
+         <li><span data-tocid="concept_qcq_54n_jq-d46e42023" class="topicref" data-id="concept_qcq_54n_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Directory.html#concept_qcq_54n_jq">Directory</a></span></span></li>
+         <li><span data-tocid="concept_f1q_vpm_2z-d46e43411" class="topicref" data-id="concept_f1q_vpm_2z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Elasticsearch.html#concept_f1q_vpm_2z">Elasticsearch </a></span></span></li>
+         <li><span data-tocid="concept_n1y_qyp_5q-d46e43887" class="topicref" data-id="concept_n1y_qyp_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/FileTail.html#concept_n1y_qyp_5q">File Tail</a></span></span></li>
+         <li><span data-tocid="concept_cg3_y3v_q1b-d46e45133" class="topicref" data-id="concept_cg3_y3v_q1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/BigQuery.html#concept_cg3_y3v_q1b">Google BigQuery</a></span></span></li>
+         <li><span data-tocid="concept_iyd_wql_nbb-d46e45706" class="topicref" data-id="concept_iyd_wql_nbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/GCS.html#concept_iyd_wql_nbb">Google Cloud Storage</a></span></span></li>
+         <li><span data-tocid="concept_pjw_qtl_r1b-d46e46267" class="topicref" data-id="concept_pjw_qtl_r1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/PubSub.html#concept_pjw_qtl_r1b">Google Pub/Sub Subscriber</a></span></span></li>
+         <li><span data-tocid="concept_chr_zjj_l3b-d46e46734" class="topicref" data-id="concept_chr_zjj_l3b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/GroovyScripting.html#concept_chr_zjj_l3b">Groovy Scripting</a></span></span></li>
+         <li><span data-tocid="concept_yp1_4zs_yfb-d46e47534" class="topicref" data-id="concept_yp1_4zs_yfb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/gRPCClient.html#concept_yp1_4zs_yfb">gRPC Client</a></span></span></li>
+         <li><span data-tocid="concept_lw2_tnm_vs-d46e47750" class="topicref" data-id="concept_lw2_tnm_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HadoopFS-origin.html#concept_lw2_tnm_vs">Hadoop FS (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_djz_pdm_hdb-d46e48326" class="topicref" data-id="concept_djz_pdm_hdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HDFSStandalone.html#concept_djz_pdm_hdb">Hadoop FS Standalone</a></span></span></li>
+         <li><span data-tocid="concept_wk4_bjz_5r-d46e52258" class="topicref" data-id="concept_wk4_bjz_5r" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HTTPClient.html#concept_wk4_bjz_5r">HTTP Client</a></span></span></li>
+         <li><span data-tocid="concept_s2p_5hb_4y-d46e54646" class="topicref" data-id="concept_s2p_5hb_4y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HTTPServer.html#concept_s2p_5hb_4y">HTTP Server</a></span></span></li>
+         <li><span data-tocid="concept_izh_mqd_dy-d46e55110" class="topicref" data-id="concept_izh_mqd_dy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HTTPtoKafka.html#concept_izh_mqd_dy">HTTP to Kafka (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_kn5_bvt_m3b-d46e55672" class="topicref" data-id="concept_kn5_bvt_m3b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JavaScriptScripting.html#concept_kn5_bvt_m3b">JavaScript Scripting</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_zp3_wnw_4y-d46e55922" class="topicref" data-id="concept_zp3_wnw_4y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y">JDBC Multitable Consumer</a></span></span></li>
-         <li><span data-tocid="concept_qhf_hjr_bs-d46e60371" class="topicref" data-id="concept_qhf_hjr_bs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JDBCConsumer.html#concept_qhf_hjr_bs">JDBC Query Consumer</a></span></span></li>
-         <li><span data-tocid="concept_rhh_4nj_dt-d46e62535" class="topicref" data-id="concept_rhh_4nj_dt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JMS.html#concept_rhh_4nj_dt">JMS Consumer</a></span></span></li>
-         <li><span data-tocid="concept_fxz_35t_m3b-d46e62903" class="topicref" data-id="concept_fxz_35t_m3b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JythonScripting.html#concept_fxz_35t_m3b">Jython Scripting</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_zp3_wnw_4y-d46e56353" class="topicref" data-id="concept_zp3_wnw_4y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y">JDBC Multitable Consumer</a></span></span></li>
+         <li><span data-tocid="concept_qhf_hjr_bs-d46e60802" class="topicref" data-id="concept_qhf_hjr_bs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JDBCConsumer.html#concept_qhf_hjr_bs">JDBC Query Consumer</a></span></span></li>
+         <li><span data-tocid="concept_rhh_4nj_dt-d46e62966" class="topicref" data-id="concept_rhh_4nj_dt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JMS.html#concept_rhh_4nj_dt">JMS Consumer</a></span></span></li>
+         <li><span data-tocid="concept_fxz_35t_m3b-d46e63334" class="topicref" data-id="concept_fxz_35t_m3b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JythonScripting.html#concept_fxz_35t_m3b">Jython Scripting</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li class="active"><span data-tocid="concept_msz_wnr_5q-d46e63708" class="topicref" data-id="concept_msz_wnr_5q" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KConsumer.html#concept_msz_wnr_5q">Kafka Consumer</a></span></span><ul class="nav nav-list">
-               <li><span data-tocid="concept_zlc_ppn_js-d46e63821" class="topicref" data-id="concept_zlc_ppn_js" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KConsumer.html#concept_zlc_ppn_js">Offset Management</a><span class="wh-tooltip">
+         <li class="active"><span data-tocid="concept_msz_wnr_5q-d46e64139" class="topicref" data-id="concept_msz_wnr_5q" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KConsumer.html#concept_msz_wnr_5q">Kafka Consumer</a></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_zlc_ppn_js-d46e64252" class="topicref" data-id="concept_zlc_ppn_js" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KConsumer.html#concept_zlc_ppn_js">Offset Management</a><span class="wh-tooltip">
                            
                            <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The first time that a Kafka Consumer origin identified by a consumer group receives     messages from a topic, an offset entry
                               is created for that consumer group and topic. The offset     entry is created in ZooKeeper or Kafka, depending on your Kafka
@@ -162,106 +163,107 @@
                               
                            </p>
                            </span></span></span></li>
-               <li><span data-tocid="concept_d5f_n2g_vq-d46e63846" class="topicref" data-id="concept_d5f_n2g_vq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KConsumer.html#concept_d5f_n2g_vq">Additional Kafka Properties</a><span class="wh-tooltip">
+               <li><span data-tocid="concept_d5f_n2g_vq-d46e64277" class="topicref" data-id="concept_d5f_n2g_vq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KConsumer.html#concept_d5f_n2g_vq">Additional Kafka Properties</a><span class="wh-tooltip">
                            
                            <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can add custom Kafka configuration properties to the Kafka Consumer.</p>
                            </span></span></span></li>
-               <li><span data-tocid="concept_tlj_3g1_2z-d46e63881" class="topicref" data-id="concept_tlj_3g1_2z" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KConsumer.html#concept_tlj_3g1_2z">Record Header Attributes</a></span></span></li>
-               <li><span data-tocid="concept_yg3_k31_t5-d46e63923" class="topicref" data-id="concept_yg3_k31_t5" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KConsumer.html#concept_yg3_k31_t5">Enabling Security</a></span></span></li>
-               <li><span data-tocid="concept_xgs_nlc_wr-d46e64192" class="topicref" data-id="concept_xgs_nlc_wr" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KConsumer.html#concept_xgs_nlc_wr">Data Formats</a></span></span></li>
-               <li><span data-tocid="task_npx_xgf_vq-d46e64285" class="topicref" data-id="task_npx_xgf_vq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KConsumer.html#task_npx_xgf_vq">Configuring a Kafka Consumer</a><span class="wh-tooltip">
+               <li><span data-tocid="concept_tlj_3g1_2z-d46e64312" class="topicref" data-id="concept_tlj_3g1_2z" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KConsumer.html#concept_tlj_3g1_2z">Record Header Attributes</a></span></span></li>
+               <li><span data-tocid="concept_yg3_k31_t5-d46e64354" class="topicref" data-id="concept_yg3_k31_t5" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KConsumer.html#concept_yg3_k31_t5">Enabling Security</a></span></span></li>
+               <li><span data-tocid="concept_xgs_nlc_wr-d46e64623" class="topicref" data-id="concept_xgs_nlc_wr" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KConsumer.html#concept_xgs_nlc_wr">Data Formats</a></span></span></li>
+               <li><span data-tocid="task_npx_xgf_vq-d46e64716" class="topicref" data-id="task_npx_xgf_vq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KConsumer.html#task_npx_xgf_vq">Configuring a Kafka Consumer</a><span class="wh-tooltip">
                            
                            <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Configure a Kafka Consumer origin to read messages from a Kafka cluster. </p>
                            </span></span></span></li>
             </ul>
          </li>
-         <li><span data-tocid="concept_ccs_fn4_x1b-d46e64391" class="topicref" data-id="concept_ccs_fn4_x1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KafkaMultiConsumer.html#concept_ccs_fn4_x1b">Kafka Multitopic Consumer</a></span></span></li>
-         <li><span data-tocid="concept_anh_4y3_yr-d46e65194" class="topicref" data-id="concept_anh_4y3_yr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KinConsumer.html#concept_anh_4y3_yr">Kinesis Consumer</a></span></span></li>
-         <li><span data-tocid="concept_qwj_5vm_pbb-d46e65664" class="topicref" data-id="concept_qwj_5vm_pbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRdbCDC.html#concept_qwj_5vm_pbb">MapR DB CDC</a></span></span></li>
-         <li><span data-tocid="concept_ywh_k15_3y-d46e65946" class="topicref" data-id="concept_ywh_k15_3y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRDBJSON.html#concept_ywh_k15_3y">MapR DB JSON</a></span></span></li>
-         <li><span data-tocid="concept_psz_db4_lx-d46e66045" class="topicref" data-id="concept_psz_db4_lx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRFS.html#concept_psz_db4_lx">MapR FS</a></span></span></li>
-         <li><span data-tocid="concept_b43_3qc_mdb-d46e66428" class="topicref" data-id="concept_b43_3qc_mdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRFSStandalone.html#concept_b43_3qc_mdb">MapR FS Standalone</a></span></span></li>
-         <li><span data-tocid="concept_hvd_hww_lbb-d46e68038" class="topicref" data-id="concept_hvd_hww_lbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRStreamsMultiConsumer.html#concept_hvd_hww_lbb">MapR Multitopic Streams Consumer</a></span></span></li>
-         <li><span data-tocid="concept_cvy_xsf_2v-d46e68499" class="topicref" data-id="concept_cvy_xsf_2v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRStreamsCons.html#concept_cvy_xsf_2v">MapR Streams Consumer</a></span></span></li>
-         <li><span data-tocid="concept_bk4_2rs_ns-d46e68787" class="topicref" data-id="concept_bk4_2rs_ns" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDB.html#concept_bk4_2rs_ns">MongoDB</a></span></span></li>
-         <li><span data-tocid="concept_mjn_yqw_4y-d46e69348" class="topicref" data-id="concept_mjn_yqw_4y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDBOplog.html#concept_mjn_yqw_4y">MongoDB Oplog</a></span></span></li>
-         <li><span data-tocid="concept_ukz_3vt_lz-d46e69806" class="topicref" data-id="concept_ukz_3vt_lz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MQTTSubscriber.html#concept_ukz_3vt_lz">MQTT Subscriber</a></span></span></li>
-         <li><span data-tocid="concept_kqg_1yh_xx-d46e70091" class="topicref" data-id="concept_kqg_1yh_xx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MySQLBinaryLog.html#concept_kqg_1yh_xx">MySQL Binary Log</a></span></span></li>
-         <li><span data-tocid="concept_ynn_vdb_p3b-d46e70661" class="topicref" data-id="concept_ynn_vdb_p3b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/NiFi.html#concept_ynn_vdb_p3b">NiFi HTTP Server</a></span></span></li>
-         <li><span data-tocid="concept_dsr_xmw_1s-d46e70717" class="topicref" data-id="concept_dsr_xmw_1s" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Omniture.html#concept_dsr_xmw_1s">Omniture</a></span></span></li>
-         <li><span data-tocid="concept_nmf_1ly_f1b-d46e70771" class="topicref" data-id="concept_nmf_1ly_f1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/OPCUAClient.html#concept_nmf_1ly_f1b">OPC UA Client </a></span></span></li>
-         <li><span data-tocid="concept_lnz_kzp_zgb-d46e70983" class="topicref" data-id="concept_lnz_kzp_zgb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/OracleBulk.html#concept_lnz_kzp_zgb">Oracle Bulkload</a></span></span></li>
-         <li><span data-tocid="concept_rs5_hjj_tw-d46e72230" class="topicref" data-id="concept_rs5_hjj_tw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/OracleCDC.html#concept_rs5_hjj_tw">Oracle CDC Client</a></span></span></li>
-         <li><span data-tocid="concept_cfs_4m4_n2b-d46e76373" class="topicref" data-id="concept_cfs_4m4_n2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/PostgreSQL.html#concept_cfs_4m4_n2b">PostgreSQL CDC Client</a></span></span></li>
-         <li><span data-tocid="concept_o2b_1pc_r2b-d46e76841" class="topicref" data-id="concept_o2b_1pc_r2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/PulsarConsumer.html#concept_o2b_1pc_r2b">Pulsar Consumer</a></span></span></li>
-         <li><span data-tocid="concept_dyg_lq1_h5-d46e77315" class="topicref" data-id="concept_dyg_lq1_h5" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/RabbitMQ.html#concept_dyg_lq1_h5">RabbitMQ Consumer</a></span></span></li>
-         <li><span data-tocid="concept_plr_t3v_jw-d46e77531" class="topicref" data-id="concept_plr_t3v_jw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Redis.html#concept_plr_t3v_jw">Redis Consumer</a></span></span></li>
-         <li><span data-tocid="concept_hfg_2sn_p2b-d46e77682" class="topicref" data-id="concept_hfg_2sn_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/RESTService.html#concept_hfg_2sn_p2b">REST Service </a></span></span></li>
-         <li><span data-tocid="concept_odf_vr3_rx-d46e78362" class="topicref" data-id="concept_odf_vr3_rx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Salesforce.html#concept_odf_vr3_rx">Salesforce</a></span></span></li>
-         <li><span data-tocid="concept_agb_5c1_ct-d46e81440" class="topicref" data-id="concept_agb_5c1_ct" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SDC_RPCorigin.html#concept_agb_5c1_ct">SDC RPC </a></span></span></li>
-         <li><span data-tocid="concept_tdk_slk_pw-d46e81494" class="topicref" data-id="concept_tdk_slk_pw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SDCRPCtoKafka.html#concept_tdk_slk_pw">SDC RPC to Kafka (Deprecated)</a></span></span></li>
-         <li><span data-tocid="concept_ic5_bzd_5v-d46e82174" class="topicref" data-id="concept_ic5_bzd_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SFTP.html#concept_ic5_bzd_5v">SFTP/FTP/FTPS Client</a></span></span></li>
-         <li><span data-tocid="concept_ut3_ywc_v1b-d46e82978" class="topicref" data-id="concept_ut3_ywc_v1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SQLServerCDC.html#concept_ut3_ywc_v1b">SQL Server CDC Client</a></span></span></li>
-         <li><span data-tocid="concept_ewq_b2s_r1b-d46e84548" class="topicref" data-id="concept_ewq_b2s_r1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SQLServerChange.html#concept_ewq_b2s_r1b">SQL Server Change Tracking</a></span></span></li>
-         <li><span data-tocid="concept_gzy_gmv_32b-d46e85628" class="topicref" data-id="concept_gzy_gmv_32b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SystemMetrics.html#concept_gzy_gmv_32b">System Metrics</a></span></span></li>
-         <li><span data-tocid="concept_ppm_xb1_4z-d46e85782" class="topicref" data-id="concept_ppm_xb1_4z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/TCPServer.html#concept_ppm_xb1_4z">TCP Server</a></span></span></li>
-         <li><span data-tocid="concept_zp3_wnw_4y-d46e86240" class="topicref" data-id="concept_zp3_wnw_4y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Teradata.html#concept_zp3_wnw_4y">Teradata Consumer</a></span></span></li>
-         <li><span data-tocid="concept_wng_g5f_5bb-d46e90457" class="topicref" data-id="concept_wng_g5f_5bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/UDPMulti.html#concept_wng_g5f_5bb">UDP Multithreaded Source</a></span></span></li>
-         <li><span data-tocid="concept_rst_2y5_1s-d46e90822" class="topicref" data-id="concept_rst_2y5_1s" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/UDP.html#concept_rst_2y5_1s">UDP Source</a></span></span></li>
-         <li><span data-tocid="concept_jzq_jcz_pw-d46e90970" class="topicref" data-id="concept_jzq_jcz_pw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/UDPtoKafka.html#concept_jzq_jcz_pw">UDP to Kafka (Deprecated)</a></span></span></li>
-         <li><span data-tocid="concept_unk_nzk_fbb-d46e91431" class="topicref" data-id="concept_unk_nzk_fbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/WebSocketClient.html#concept_unk_nzk_fbb">WebSocket Client</a></span></span></li>
-         <li><span data-tocid="concept_u2r_gpc_3z-d46e91665" class="topicref" data-id="concept_u2r_gpc_3z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/WebSocketServer.html#concept_u2r_gpc_3z">WebSocket Server</a></span></span></li>
-         <li><span data-tocid="concept_agf_5jv_sbb-d46e92154" class="topicref" data-id="concept_agf_5jv_sbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/WindowsLog.html#concept_agf_5jv_sbb">Windows Event Log</a></span></span></li>
+         <li><span data-tocid="concept_ccs_fn4_x1b-d46e64822" class="topicref" data-id="concept_ccs_fn4_x1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KafkaMultiConsumer.html#concept_ccs_fn4_x1b">Kafka Multitopic Consumer</a></span></span></li>
+         <li><span data-tocid="concept_anh_4y3_yr-d46e65625" class="topicref" data-id="concept_anh_4y3_yr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KinConsumer.html#concept_anh_4y3_yr">Kinesis Consumer</a></span></span></li>
+         <li><span data-tocid="concept_qwj_5vm_pbb-d46e66095" class="topicref" data-id="concept_qwj_5vm_pbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRdbCDC.html#concept_qwj_5vm_pbb">MapR DB CDC</a></span></span></li>
+         <li><span data-tocid="concept_ywh_k15_3y-d46e66377" class="topicref" data-id="concept_ywh_k15_3y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRDBJSON.html#concept_ywh_k15_3y">MapR DB JSON</a></span></span></li>
+         <li><span data-tocid="concept_psz_db4_lx-d46e66476" class="topicref" data-id="concept_psz_db4_lx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRFS.html#concept_psz_db4_lx">MapR FS (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_b43_3qc_mdb-d46e66860" class="topicref" data-id="concept_b43_3qc_mdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRFSStandalone.html#concept_b43_3qc_mdb">MapR FS Standalone</a></span></span></li>
+         <li><span data-tocid="concept_hvd_hww_lbb-d46e68469" class="topicref" data-id="concept_hvd_hww_lbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRStreamsMultiConsumer.html#concept_hvd_hww_lbb">MapR Multitopic Streams Consumer</a></span></span></li>
+         <li><span data-tocid="concept_cvy_xsf_2v-d46e68930" class="topicref" data-id="concept_cvy_xsf_2v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRStreamsCons.html#concept_cvy_xsf_2v">MapR Streams Consumer</a></span></span></li>
+         <li><span data-tocid="concept_bk4_2rs_ns-d46e69218" class="topicref" data-id="concept_bk4_2rs_ns" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDB.html#concept_bk4_2rs_ns">MongoDB</a></span></span></li>
+         <li><span data-tocid="concept_mjn_yqw_4y-d46e69779" class="topicref" data-id="concept_mjn_yqw_4y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDBOplog.html#concept_mjn_yqw_4y">MongoDB Oplog</a></span></span></li>
+         <li><span data-tocid="concept_ukz_3vt_lz-d46e70237" class="topicref" data-id="concept_ukz_3vt_lz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MQTTSubscriber.html#concept_ukz_3vt_lz">MQTT Subscriber</a></span></span></li>
+         <li><span data-tocid="concept_kqg_1yh_xx-d46e70522" class="topicref" data-id="concept_kqg_1yh_xx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MySQLBinaryLog.html#concept_kqg_1yh_xx">MySQL Binary Log</a></span></span></li>
+         <li><span data-tocid="concept_ynn_vdb_p3b-d46e71092" class="topicref" data-id="concept_ynn_vdb_p3b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/NiFi.html#concept_ynn_vdb_p3b">NiFi HTTP Server</a></span></span></li>
+         <li><span data-tocid="concept_dsr_xmw_1s-d46e71148" class="topicref" data-id="concept_dsr_xmw_1s" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Omniture.html#concept_dsr_xmw_1s">Omniture</a></span></span></li>
+         <li><span data-tocid="concept_nmf_1ly_f1b-d46e71202" class="topicref" data-id="concept_nmf_1ly_f1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/OPCUAClient.html#concept_nmf_1ly_f1b">OPC UA Client </a></span></span></li>
+         <li><span data-tocid="concept_lnz_kzp_zgb-d46e71414" class="topicref" data-id="concept_lnz_kzp_zgb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/OracleBulk.html#concept_lnz_kzp_zgb">Oracle Bulkload</a></span></span></li>
+         <li><span data-tocid="concept_rs5_hjj_tw-d46e72662" class="topicref" data-id="concept_rs5_hjj_tw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/OracleCDC.html#concept_rs5_hjj_tw">Oracle CDC Client</a></span></span></li>
+         <li><span data-tocid="concept_cfs_4m4_n2b-d46e76804" class="topicref" data-id="concept_cfs_4m4_n2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/PostgreSQL.html#concept_cfs_4m4_n2b">PostgreSQL CDC Client</a></span></span></li>
+         <li><span data-tocid="concept_o2b_1pc_r2b-d46e77272" class="topicref" data-id="concept_o2b_1pc_r2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/PulsarConsumer.html#concept_o2b_1pc_r2b">Pulsar Consumer</a></span></span></li>
+         <li><span data-tocid="concept_dyg_lq1_h5-d46e77746" class="topicref" data-id="concept_dyg_lq1_h5" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/RabbitMQ.html#concept_dyg_lq1_h5">RabbitMQ Consumer</a></span></span></li>
+         <li><span data-tocid="concept_plr_t3v_jw-d46e77962" class="topicref" data-id="concept_plr_t3v_jw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Redis.html#concept_plr_t3v_jw">Redis Consumer</a></span></span></li>
+         <li><span data-tocid="concept_hfg_2sn_p2b-d46e78113" class="topicref" data-id="concept_hfg_2sn_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/RESTService.html#concept_hfg_2sn_p2b">REST Service </a></span></span></li>
+         <li><span data-tocid="concept_odf_vr3_rx-d46e78793" class="topicref" data-id="concept_odf_vr3_rx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Salesforce.html#concept_odf_vr3_rx">Salesforce</a></span></span></li>
+         <li><span data-tocid="concept_agb_5c1_ct-d46e81871" class="topicref" data-id="concept_agb_5c1_ct" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SDC_RPCorigin.html#concept_agb_5c1_ct">SDC RPC </a></span></span></li>
+         <li><span data-tocid="concept_tdk_slk_pw-d46e81925" class="topicref" data-id="concept_tdk_slk_pw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SDCRPCtoKafka.html#concept_tdk_slk_pw">SDC RPC to Kafka (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_ic5_bzd_5v-d46e82605" class="topicref" data-id="concept_ic5_bzd_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SFTP.html#concept_ic5_bzd_5v">SFTP/FTP/FTPS Client</a></span></span></li>
+         <li><span data-tocid="concept_ut3_ywc_v1b-d46e83409" class="topicref" data-id="concept_ut3_ywc_v1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SQLServerCDC.html#concept_ut3_ywc_v1b">SQL Server CDC Client</a></span></span></li>
+         <li><span data-tocid="concept_ewq_b2s_r1b-d46e84980" class="topicref" data-id="concept_ewq_b2s_r1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SQLServerChange.html#concept_ewq_b2s_r1b">SQL Server Change Tracking</a></span></span></li>
+         <li><span data-tocid="concept_h1l_xpr_2jb-d46e86059" class="topicref" data-id="concept_h1l_xpr_2jb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/StartPipeline.html#concept_h1l_xpr_2jb">Start Pipeline</a></span></span></li>
+         <li><span data-tocid="concept_gzy_gmv_32b-d46e86113" class="topicref" data-id="concept_gzy_gmv_32b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SystemMetrics.html#concept_gzy_gmv_32b">System Metrics</a></span></span></li>
+         <li><span data-tocid="concept_ppm_xb1_4z-d46e86267" class="topicref" data-id="concept_ppm_xb1_4z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/TCPServer.html#concept_ppm_xb1_4z">TCP Server</a></span></span></li>
+         <li><span data-tocid="concept_zp3_wnw_4y-d46e86725" class="topicref" data-id="concept_zp3_wnw_4y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Teradata.html#concept_zp3_wnw_4y">Teradata Consumer</a></span></span></li>
+         <li><span data-tocid="concept_wng_g5f_5bb-d46e90942" class="topicref" data-id="concept_wng_g5f_5bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/UDPMulti.html#concept_wng_g5f_5bb">UDP Multithreaded Source</a></span></span></li>
+         <li><span data-tocid="concept_rst_2y5_1s-d46e91307" class="topicref" data-id="concept_rst_2y5_1s" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/UDP.html#concept_rst_2y5_1s">UDP Source</a></span></span></li>
+         <li><span data-tocid="concept_jzq_jcz_pw-d46e91455" class="topicref" data-id="concept_jzq_jcz_pw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/UDPtoKafka.html#concept_jzq_jcz_pw">UDP to Kafka (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_unk_nzk_fbb-d46e91916" class="topicref" data-id="concept_unk_nzk_fbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/WebSocketClient.html#concept_unk_nzk_fbb">WebSocket Client</a></span></span></li>
+         <li><span data-tocid="concept_u2r_gpc_3z-d46e92150" class="topicref" data-id="concept_u2r_gpc_3z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/WebSocketServer.html#concept_u2r_gpc_3z">WebSocket Server</a></span></span></li>
+         <li><span data-tocid="concept_agf_5jv_sbb-d46e92639" class="topicref" data-id="concept_agf_5jv_sbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/WindowsLog.html#concept_agf_5jv_sbb">Windows Event Log</a></span></span></li>
       </ul>
    </li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e92251" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
-   <li><span data-tocid="concept_agj_cfj_br-d46e108902" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
-   <li><span data-tocid="concept_umc_1lk_fx-d46e131011" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
-   <li><span data-tocid="concept_fyf_gkq_4bb-d46e139072" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
-   <li><span data-tocid="concept_ugp_kwf_xw-d46e141675" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
-   <li><span data-tocid="concept_xxd_f5r_kx-d46e145244" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e92736" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e109549" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e131658" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e139857" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e142460" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e146029" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_fjj_zcf_2w-d46e149158" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
-   <li><span data-tocid="concept_kgt_pnr_4cb-d46e151984" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
-   <li><span data-tocid="concept_wwq_gxc_py-d46e152783" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e149943" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e152769" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e153568" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_gzw_tdm_p2b-d46e153365" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_wr1_ktz_bt-d46e153741" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_fpz_5r4_vs-d46e154223" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_jjk_23z_sq-d46e155688" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
-   <li><span data-tocid="concept_pgk_brx_rr-d46e156657" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_gzw_tdm_p2b-d46e154150" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e154526" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e155008" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines (Deprecated)</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e156473" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e157442" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_asx_fdz_sq-d46e159285" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_asx_fdz_sq-d46e160070" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_o3l_dtr_5q-d46e160542" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
-   <li><span data-tocid="concept_yms_ftm_sq-d46e162195" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e161327" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e162980" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_nls_w1r_ks-d46e166999" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
-   <li><span data-tocid="concept_sh3_frm_tq-d46e168212" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_nls_w1r_ks-d46e167784" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e168997" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_xbx_rs1_tq-d46e173328" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
-   <li><span data-tocid="concept_jn1_nzb_kv-d46e173383" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e174113" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e174168" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_pvm_yt3_wq-d46e173605" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
-   <li><span data-tocid="concept_vcj_1ws_js-d46e177306" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e174390" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e178091" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_chv_vmj_wr-d46e177529" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_chv_vmj_wr-d46e178314" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
@@ -275,9 +277,9 @@
 
   <div class="body conbody">
     <div class="p"><div class="simpletable-container"><table cellpadding="4" cellspacing="0" summary="" id="concept_msz_wnr_5q__simpletable_q22_rqb_sgb" border="0" class="simpletable"><col style="width:100%" /><thead></thead><tbody><tr class="strow">
-                <td style="vertical-align:top;" class="stentry"><a class="xref" href="../Pipeline_Configuration/ProductIcons_Doc.html#concept_mjg_ly5_pgb" title="In Data Collector, you can configure pipelines that are run by Data Collector and pipelines that are run by Data Collector Edge.">Supported pipeline types:</a><ul class="ul" id="concept_msz_wnr_5q__d23e103">
+                <td style="vertical-align:top;" class="stentry"><a class="xref" href="../Pipeline_Configuration/ProductIcons_Doc.html#concept_mjg_ly5_pgb" title="In Data Collector, you can configure pipelines that are run by Data Collector and pipelines that are run by Data Collector Edge.">Supported pipeline types:</a><ul class="ul" id="concept_msz_wnr_5q__d23e96">
                         <li class="li">
-                            <p class="p"><img class="image" id="concept_msz_wnr_5q__d23e108" src="../../../reusable-content/shared-graphics/icon-SDC.png" height="21" width="21" /> Data Collector</p>
+                            <p class="p"><img class="image" id="concept_msz_wnr_5q__d23e101" src="../../../reusable-content/shared-graphics/icon-SDC.png" height="21" width="21" /> Data Collector</p>
 
                         </li>
 
@@ -289,6 +291,16 @@
 </div>The Kafka Consumer origin reads data from a single topic
       in an Apache Kafka cluster. To use multiple threads to read from multiple topics, use the
         <a class="xref" href="KafkaMultiConsumer.html#concept_ccs_fn4_x1b">Kafka Multitopic Consumer</a>. </div>
+
+    <div class="p">
+      <div class="note important"><span class="importanttitle">Important:</span> Though you can use the Kafka Consumer origin in standalone or cluster
+        pipelines, cluster execution mode is now deprecated and will be removed in a future release.
+          <span class="ph">StreamSets</span>
+        recommends using StreamSets Transformer to replace cluster pipelines. The Transformer
+        execution engine runs data processing pipelines on Apache Spark, an open-source
+        cluster-computing framework. For more information, see the <a class="xref" href="https://streamsets.com/documentation/controlhub/latest/help/transformer/GettingStarted/GettingStarted-Title.html#concept_a1b_zf4_pgb" target="_blank">Transformer documentation</a>.</div>
+
+    </div>
 
     <p class="p">When you configure a Kafka Consumer, you configure the consumer group name, topic, and
       ZooKeeper connection information. </p>
@@ -1055,41 +1067,41 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_npx_xgf_vq__d84e999" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_npx_xgf_vq__d84e1002" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d366465e1303">General Property</th>
+                                    <th class="entry cellrowborder" id="d367775e1317">General Property</th>
 
-                                    <th class="entry cellrowborder" id="d366465e1306">Description</th>
+                                    <th class="entry cellrowborder" id="d367775e1320">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e1303 ">Name</td>
+                                    <td class="entry cellrowborder" headers="d367775e1317 ">Name</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e1306 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry cellrowborder" headers="d366465e1303 ">Description</td>
-
-                                    <td class="entry cellrowborder" headers="d366465e1306 ">Optional description.</td>
+                                    <td class="entry cellrowborder" headers="d367775e1320 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e1303 ">Stage Library</td>
+                                    <td class="entry cellrowborder" headers="d367775e1317 ">Description</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e1306 ">Library version that you want to use. </td>
+                                    <td class="entry cellrowborder" headers="d367775e1320 ">Optional description.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e1303 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
+                                    <td class="entry cellrowborder" headers="d367775e1317 ">Stage Library</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e1306 ">Error record handling for the stage: <ul class="ul" id="task_npx_xgf_vq__d84e1056">
+                                    <td class="entry cellrowborder" headers="d367775e1320 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d367775e1317 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
+
+                                    <td class="entry cellrowborder" headers="d367775e1320 ">Error record handling for the stage: <ul class="ul" id="task_npx_xgf_vq__d84e1059">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -1116,18 +1128,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_npx_xgf_vq__table_v4j_qhw_yq" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:27.77777777777778%" /><col style="width:72.22222222222221%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d366465e1388">Kafka Property</th>
+                                    <th class="entry cellrowborder" id="d367775e1402">Kafka Property</th>
 
-                                    <th class="entry cellrowborder" id="d366465e1391">Description</th>
+                                    <th class="entry cellrowborder" id="d367775e1405">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e1388 ">Broker URI</td>
+                                    <td class="entry cellrowborder" headers="d367775e1402 ">Broker URI</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e1391 ">Connection string for the Kafka broker. Use the following
+                                    <td class="entry cellrowborder" headers="d367775e1405 ">Connection string for the Kafka broker. Use the following
                                         format: <code class="ph codeph">&lt;host&gt;:&lt;port&gt;</code>. <p class="p">To ensure a
                                             connection, enter a comma-separated list of additional
                                             broker URIs.</p>
@@ -1136,9 +1148,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e1388 ">ZooKeeper URI</td>
+                                    <td class="entry cellrowborder" headers="d367775e1402 ">ZooKeeper URI</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e1391 ">Connection string for the ZooKeeper of the Kafka cluster.
+                                    <td class="entry cellrowborder" headers="d367775e1405 ">Connection string for the ZooKeeper of the Kafka cluster.
                                         Use the following format:
                                             <code class="ph codeph">&lt;host&gt;:&lt;port&gt;</code>. <p class="p">To use a
                                             ZooKeeper quorum, enter a comma-separated list.
@@ -1150,23 +1162,23 @@
 
                                 </tr>
   <tr>
-                                    <td class="entry cellrowborder" headers="d366465e1388 ">Consumer Group</td>
+                                    <td class="entry cellrowborder" headers="d367775e1402 ">Consumer Group</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e1391 ">Kafka consumer group that the <span class="ph">Data Collector</span> belongs to.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry cellrowborder" headers="d366465e1388 ">Topic</td>
-
-                                    <td class="entry cellrowborder" headers="d366465e1391 ">Kafka topic to read.</td>
+                                    <td class="entry cellrowborder" headers="d367775e1405 ">Kafka consumer group that the <span class="ph">Data Collector</span> belongs to.</td>
 
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d366465e1388 ">Produce Single Record</td>
+                                    <td class="entry cellrowborder" headers="d367775e1402 ">Topic</td>
 
-              <td class="entry cellrowborder" headers="d366465e1391 ">For each partition, generates a single record for records that include multiple
+                                    <td class="entry cellrowborder" headers="d367775e1405 ">Kafka topic to read.</td>
+
+                                </tr>
+
+                                <tr>
+              <td class="entry cellrowborder" headers="d367775e1402 ">Produce Single Record</td>
+
+              <td class="entry cellrowborder" headers="d367775e1405 ">For each partition, generates a single record for records that include multiple
                 objects. <p class="p">When not selected, the origin generates multiple records when a record
                   includes multiple objects.</p>
 </td>
@@ -1174,9 +1186,9 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d366465e1388 ">Max Batch Size (records)</td>
+              <td class="entry cellrowborder" headers="d367775e1402 ">Max Batch Size (records)</td>
 
-              <td class="entry cellrowborder" headers="d366465e1391 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data Collector</span> maximum batch size.
+              <td class="entry cellrowborder" headers="d367775e1405 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data Collector</span> maximum batch size.
                   <p class="p">Default is 1000. The <span class="ph">Data Collector</span> default is
                 1000.</p>
 </td>
@@ -1184,36 +1196,33 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d366465e1388 ">
+              <td class="entry cellrowborder" headers="d367775e1402 ">
                 <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q">Batch Wait Time (ms)</a></td>
 
-              <td class="entry cellrowborder" headers="d366465e1391 ">Number of milliseconds to wait before sending a partial or empty batch.
+              <td class="entry cellrowborder" headers="d367775e1405 ">Number of milliseconds to wait before sending a partial or empty batch.
               </td>
 
             </tr>
 <tr>
-              <td class="entry cellrowborder" headers="d366465e1388 ">
+              <td class="entry cellrowborder" headers="d367775e1402 ">
                 <a class="xref" href="../Cluster_Mode/KafkaRequirements.html#concept_al2_cxh_cdb">Rate Limit
                   Per Partition (Kafka messages)</a></td>
 
-              <td class="entry cellrowborder" headers="d366465e1391 ">
-                <p class="p">The maximum number of messages to read per batch per partition. This property is
-                  used only in cluster mode and helps to approximate the effective batch size for a
-                  Kafka origin. </p>
-
-              </td>
+              <td class="entry cellrowborder" headers="d367775e1405 ">The maximum number of messages to read per batch per partition. This property
+                is used only in cluster mode and helps to approximate the effective batch size for a
+                Kafka origin. </td>
 
             </tr>
 
                                 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e1388 "><a class="xref" href="KConsumer.html#concept_zlc_ppn_js" title="The first time that a Kafka Consumer origin identified by a consumer group receives messages from a topic, an offset entry is created for that consumer group and topic. The offset entry is created in ZooKeeper or Kafka, depending on your Kafka version and broker configuration.">Auto Offset Reset</a></td>
+                                    <td class="entry cellrowborder" headers="d367775e1402 "><a class="xref" href="KConsumer.html#concept_zlc_ppn_js" title="The first time that a Kafka Consumer origin identified by a consumer group receives messages from a topic, an offset entry is created for that consumer group and topic. The offset entry is created in ZooKeeper or Kafka, depending on your Kafka version and broker configuration.">Auto Offset Reset</a></td>
 
-                                    <td class="entry cellrowborder" headers="d366465e1391 ">
-                <p class="p" id="task_npx_xgf_vq__d56e928">Method to determine first message to read when no offset
+                                    <td class="entry cellrowborder" headers="d367775e1405 ">
+                <p class="p" id="task_npx_xgf_vq__d56e921">Method to determine first message to read when no offset
                   exists for the combination of consumer group and topic: </p>
 
-                <ul class="ul" id="task_npx_xgf_vq__d56e931">
+                <ul class="ul" id="task_npx_xgf_vq__d56e924">
                   <li class="li">Earliest - Reads messages starting with the first messages in the topic. </li>
 
                   <li class="li">Latest - Reads messages starting with the last message in the topic.</li>
@@ -1227,35 +1236,35 @@
 
                 </ul>
 
-                <p class="p" id="task_npx_xgf_vq__d56e948">Default is Earliest.</p>
+                <p class="p" id="task_npx_xgf_vq__d56e941">Default is Earliest.</p>
 
               </td>
 
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d366465e1388 ">Auto Offset Reset Timestamp (ms)</td>
+              <td class="entry cellrowborder" headers="d367775e1402 ">Auto Offset Reset Timestamp (ms)</td>
 
-              <td class="entry cellrowborder" headers="d366465e1391 ">Timestamp of earliest message read when no offset exists for the origin.
+              <td class="entry cellrowborder" headers="d367775e1405 ">Timestamp of earliest message read when no offset exists for the origin.
                 Specify in milliseconds since epoch (January 1, 1970). Available when using the
                 Timestamp method to determine first message to read. </td>
 
             </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e1388 "><a class="xref" href="KConsumer.html#concept_d5f_n2g_vq" title="You can add custom Kafka configuration properties to the Kafka Consumer.">Kafka Configuration </a>
+                                    <td class="entry cellrowborder" headers="d367775e1402 "><a class="xref" href="KConsumer.html#concept_d5f_n2g_vq" title="You can add custom Kafka configuration properties to the Kafka Consumer.">Kafka Configuration </a>
                                     </td>
 
-                                    <td class="entry cellrowborder" id="task_npx_xgf_vq__d84e5486" headers="d366465e1391 ">
-                                        <p class="p" id="task_npx_xgf_vq__d84e5488">Additional Kafka configuration
+                                    <td class="entry cellrowborder" id="task_npx_xgf_vq__d84e5487" headers="d367775e1405 ">
+                                        <p class="p" id="task_npx_xgf_vq__d84e5489">Additional Kafka configuration
                                             properties to use. Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                                 <span class="ph uicontrol">Add</span> icon to add properties.
                                             Define the Kafka property name and value.</p>
 
-                                        <p class="p" id="task_npx_xgf_vq__d84e5497">Use the property names and values as
+                                        <p class="p" id="task_npx_xgf_vq__d84e5498">Use the property names and values as
                                             expected by Kafka.</p>
 
-                                        <p class="p" id="task_npx_xgf_vq__d84e5500">For information about enabling secure
+                                        <p class="p" id="task_npx_xgf_vq__d84e5501">For information about enabling secure
                                             connections to Kafka, see <a class="xref" href="KConsumer.html#concept_yg3_k31_t5">Enabling Security</a>.</p>
 
                                     </td>
@@ -1263,9 +1272,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e1388 ">Include Timestamps</td>
+                                    <td class="entry cellrowborder" headers="d367775e1402 ">Include Timestamps</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e1391 ">Includes Kafka timestamps in the record header. The
+                                    <td class="entry cellrowborder" headers="d367775e1405 ">Includes Kafka timestamps in the record header. The
                                         origin retrieves the timestamp from Kafka. If the Kafka
                                         message does not have timestamps, the origin leaves the
                                         timestamp attribute in the record header empty. When the
@@ -1292,19 +1301,19 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_npx_xgf_vq__table_hvy_pt3_vx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d366465e1626">Data Format Property</th>
+                                    <th class="entry cellrowborder" id="d367775e1637">Data Format Property</th>
 
-                                    <th class="entry cellrowborder" id="d366465e1629">Description</th>
+                                    <th class="entry cellrowborder" id="d367775e1640">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e1626 ">Data Format <a class="xref" href="KConsumer.html#concept_xgs_nlc_wr">
-                                            <img class="image" id="task_npx_xgf_vq__image_bmy_h5q_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry cellrowborder" headers="d367775e1637 "><a class="xref" href="KConsumer.html#concept_xgs_nlc_wr">Data
+                                            Format</a></td>
 
-                                    <td class="entry cellrowborder" headers="d366465e1629 ">Type of data to be read. Use one of the following
+                                    <td class="entry cellrowborder" headers="d367775e1640 ">Type of data to be read. Use one of the following
                                             options:<ul class="ul" id="task_npx_xgf_vq__ul_l1j_hnf_qw">
                         <li class="li">Avro</li>
 
@@ -1345,19 +1354,19 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_npx_xgf_vq__table_acd_2qd_3t" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d366465e1722">Avro Property</th>
+                                    <th class="entry cellrowborder" id="d367775e1731">Avro Property</th>
 
-                                    <th class="entry cellrowborder" id="d366465e1725">Description</th>
+                                    <th class="entry cellrowborder" id="d367775e1734">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e1722 ">Avro Schema Location</td>
+                                    <td class="entry cellrowborder" headers="d367775e1731 ">Avro Schema Location</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e1725 ">Location of the Avro schema definition to use when
-                                        processing data:<ul class="ul" id="task_npx_xgf_vq__d84e1262">
+                                    <td class="entry cellrowborder" headers="d367775e1734 ">Location of the Avro schema definition to use when
+                                        processing data:<ul class="ul" id="task_npx_xgf_vq__d84e1265">
                                             <li class="li">Message/Data Includes Schema - Use the schema in the
                                                 message.</li>
 
@@ -1376,9 +1385,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e1722 ">Avro Schema</td>
+                                    <td class="entry cellrowborder" headers="d367775e1731 ">Avro Schema</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e1725 ">Avro schema definition used to process the data.
+                                    <td class="entry cellrowborder" headers="d367775e1734 ">Avro schema definition used to process the data.
                                         Overrides any existing schema definitions associated with
                                         the data. <p class="p">You can optionally use the runtime:loadResource
                                             function to use a schema definition stored in a runtime
@@ -1388,9 +1397,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e1722 ">Schema Registry URLs</td>
+                                    <td class="entry cellrowborder" headers="d367775e1731 ">Schema Registry URLs</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e1725 ">Confluent Schema Registry URLs used to look up the
+                                    <td class="entry cellrowborder" headers="d367775e1734 ">Confluent Schema Registry URLs used to look up the
                                         schema. To add a URL, click <span class="ph uicontrol">Add</span>. Use
                                         the following format to enter the
                                         URL:<pre class="pre codeblock"><code>http://&lt;host name&gt;:&lt;port number&gt;</code></pre></td>
@@ -1398,10 +1407,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e1722 ">Lookup Schema By</td>
+                                    <td class="entry cellrowborder" headers="d367775e1731 ">Lookup Schema By</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e1725 ">Method used to look up the schema in the Confluent Schema
-                                            Registry:<ul class="ul" id="task_npx_xgf_vq__d84e1309">
+                                    <td class="entry cellrowborder" headers="d367775e1734 ">Method used to look up the schema in the Confluent Schema
+                                            Registry:<ul class="ul" id="task_npx_xgf_vq__d84e1312">
                                             <li class="li">Subject - Look up the specified Avro schema
                                                 subject.</li>
 
@@ -1417,9 +1426,9 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e1722 ">Schema Subject</td>
+                                    <td class="entry cellrowborder" headers="d367775e1731 ">Schema Subject</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e1725 ">Avro schema subject to look up in the Confluent Schema
+                                    <td class="entry cellrowborder" headers="d367775e1734 ">Avro schema subject to look up in the Confluent Schema
                                             Registry.<p class="p">If the specified subject has multiple schema
                                             versions, the origin uses the latest schema version for
                                             that subject. To use an older version, find the
@@ -1431,9 +1440,9 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e1722 ">Schema ID</td>
+                                    <td class="entry cellrowborder" headers="d367775e1731 ">Schema ID</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e1725 ">Avro schema ID to look up in the Confluent Schema
+                                    <td class="entry cellrowborder" headers="d367775e1734 ">Avro schema ID to look up in the Confluent Schema
                                         Registry.</td>
 
                                 </tr>
@@ -1451,18 +1460,18 @@ Overrides any existing schema definitions associated
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_npx_xgf_vq__table_dpx_kdm_35" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d366465e1851">Binary Property</th>
+                                    <th class="entry cellrowborder" id="d367775e1860">Binary Property</th>
 
-                                    <th class="entry cellrowborder" id="d366465e1854">Description</th>
+                                    <th class="entry cellrowborder" id="d367775e1863">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e1851 ">Max Data Size (bytes)</td>
+                                    <td class="entry cellrowborder" headers="d367775e1860 ">Max Data Size (bytes)</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e1854 ">Maximum number of bytes in the message. Larger messages
+                                    <td class="entry cellrowborder" headers="d367775e1863 ">Maximum number of bytes in the message. Larger messages
                                         cannot be processed or written to error. </td>
 
                                 </tr>
@@ -1478,20 +1487,20 @@ Overrides any existing schema definitions associated
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_npx_xgf_vq__d84e1676" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_npx_xgf_vq__d84e1679" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d366465e1897">Datagram Properties</th>
+                                    <th class="entry cellrowborder" id="d367775e1906">Datagram Properties</th>
 
-                                    <th class="entry cellrowborder" id="d366465e1900">Description</th>
+                                    <th class="entry cellrowborder" id="d367775e1909">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e1897 ">Datagram Packet Format</td>
+                                    <td class="entry cellrowborder" headers="d367775e1906 ">Datagram Packet Format</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e1900 ">Packet format of the data: <ul class="ul" id="task_npx_xgf_vq__ul_q1q_yp4_4x">
+                                    <td class="entry cellrowborder" headers="d367775e1909 ">Packet format of the data: <ul class="ul" id="task_npx_xgf_vq__ul_q1q_yp4_4x">
                                             <li class="li">collectd</li>
 
                                             <li class="li">NetFlow</li>
@@ -1506,19 +1515,19 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e1897 ">TypesDB File Path</td>
+                                    <td class="entry cellrowborder" headers="d367775e1906 ">TypesDB File Path</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e1900 "><span class="ph">Path to a user-provided types.db
+                                    <td class="entry cellrowborder" headers="d367775e1909 "><span class="ph">Path to a user-provided types.db
                                             file. Overrides the default types.db file.</span><p class="p">For collectd data only.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e1897 ">Convert Hi-Res Time &amp;
+                                    <td class="entry cellrowborder" headers="d367775e1906 ">Convert Hi-Res Time &amp;
                                         Interval</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e1900 "><span class="ph">Converts the collectd high
+                                    <td class="entry cellrowborder" headers="d367775e1909 "><span class="ph">Converts the collectd high
                                             resolution time format interval and timestamp to UNIX
                                             time, in milliseconds.</span><p class="p">For collectd data only.</p>
 </td>
@@ -1526,18 +1535,18 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e1897 ">Exclude Interval</td>
+                                    <td class="entry cellrowborder" headers="d367775e1906 ">Exclude Interval</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e1900 "><span class="ph">Excludes the interval field from
+                                    <td class="entry cellrowborder" headers="d367775e1909 "><span class="ph">Excludes the interval field from
                                             output record.</span><p class="p">For collectd data only.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e1897 ">Auth File</td>
+                                    <td class="entry cellrowborder" headers="d367775e1906 ">Auth File</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e1900 "><span class="ph">Path to an optional authentication
+                                    <td class="entry cellrowborder" headers="d367775e1909 "><span class="ph">Path to an optional authentication
                                             file. Use an authentication file to accept signed and
                                             encrypted data.</span><p class="p">For collectd data only.</p>
 </td>
@@ -1545,10 +1554,10 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e1897 "><span class="ph"><a class="xref" href="../Data_Formats/NetFlow_Overview.html#concept_jdh_hxk_3bb">Record Generation Mode </a></span>
+                                    <td class="entry cellrowborder" headers="d367775e1906 "><span class="ph"><a class="xref" href="../Data_Formats/NetFlow_Overview.html#concept_jdh_hxk_3bb">Record Generation Mode </a></span>
                                     </td>
 
-                                    <td class="entry cellrowborder" headers="d366465e1900 "><span class="ph">Determines the type of
+                                    <td class="entry cellrowborder" headers="d367775e1909 "><span class="ph">Determines the type of
                                             values to include in the record. Select one of the
                                             following options:</span><ul class="ul" id="task_npx_xgf_vq__ul_zgh_m4l_3bb">
                                             <li class="li">Raw Only</li>
@@ -1564,10 +1573,10 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e1897 "><span class="ph">Max Templates in
+                                    <td class="entry cellrowborder" headers="d367775e1906 "><span class="ph">Max Templates in
                                             Cache</span></td>
 
-                                    <td class="entry cellrowborder" headers="d366465e1900 "><span class="ph">The maximum number of
+                                    <td class="entry cellrowborder" headers="d367775e1909 "><span class="ph">The maximum number of
                                             templates to store in the template cache. For more
                                             information about templates, see <a class="xref" href="../Data_Formats/NetFlow_Overview.html#concept_ivr_j1l_3bb">Caching NetFlow 9 Templates</a>.</span><p class="p"><span class="ph">Default is -1
                                                 for an unlimited cache size.</span></p>
@@ -1577,10 +1586,10 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e1897 "><span class="ph">Template Cache
+                                    <td class="entry cellrowborder" headers="d367775e1906 "><span class="ph">Template Cache
                                             Timeout (ms)</span></td>
 
-                                    <td class="entry cellrowborder" headers="d366465e1900 "><span class="ph">The maximum number
+                                    <td class="entry cellrowborder" headers="d367775e1909 "><span class="ph">The maximum number
                                             of milliseconds to cache an idle template. Templates
                                             unused for more than the specified time are evicted from
                                             the cache. For more information about templates, see
@@ -1592,16 +1601,16 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d366465e1897 ">Charset</td>
+              <td class="entry cellrowborder" headers="d367775e1906 ">Charset</td>
 
-              <td class="entry cellrowborder" headers="d366465e1900 ">Character encoding of the messages to be processed.</td>
+              <td class="entry cellrowborder" headers="d367775e1909 ">Character encoding of the messages to be processed.</td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d366465e1897 "><a class="xref" href="../Pipeline_Design/ControlCharacters.html#concept_hfs_dkm_js" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">Ignore Control Characters</a></td>
+              <td class="entry cellrowborder" headers="d367775e1906 "><a class="xref" href="../Pipeline_Design/ControlCharacters.html#concept_hfs_dkm_js" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">Ignore Control Characters</a></td>
 
-              <td class="entry cellrowborder" headers="d366465e1900 ">Removes all ASCII control characters except for the tab, line feed, and
+              <td class="entry cellrowborder" headers="d367775e1909 ">Removes all ASCII control characters except for the tab, line feed, and
                 carriage return characters.</td>
 
             </tr>
@@ -1619,18 +1628,18 @@ Overrides any existing schema definitions associated
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_npx_xgf_vq__table_wbk_jvs_wx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d366465e2097">Delimited Property</th>
+                                    <th class="entry cellrowborder" id="d367775e2106">Delimited Property</th>
 
-                                    <th class="entry cellrowborder" id="d366465e2100">Description</th>
+                                    <th class="entry cellrowborder" id="d367775e2109">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2097 ">Delimiter Format Type</td>
+                                    <td class="entry cellrowborder" headers="d367775e2106 ">Delimiter Format Type</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2100 ">Delimiter format type. Use one of the following options:
+                                    <td class="entry cellrowborder" headers="d367775e2109 ">Delimiter format type. Use one of the following options:
                                             <ul class="ul" id="task_npx_xgf_vq__ul_s5z_b3z_3r">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
@@ -1664,26 +1673,26 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2097 ">Header Line</td>
+                                    <td class="entry cellrowborder" headers="d367775e2106 ">Header Line</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2100 ">Indicates whether a file contains a header line, and
+                                    <td class="entry cellrowborder" headers="d367775e2109 ">Indicates whether a file contains a header line, and
                                         whether to use the header line.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2097 ">Allow Extra Columns</td>
+                                    <td class="entry cellrowborder" headers="d367775e2106 ">Allow Extra Columns</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2100 ">When processing data with a header line, allows
+                                    <td class="entry cellrowborder" headers="d367775e2109 ">When processing data with a header line, allows
                                         processing records with more columns than exist in the
                                         header line.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2097 ">Extra Column Prefix</td>
+                                    <td class="entry cellrowborder" headers="d367775e2106 ">Extra Column Prefix</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2100 ">Prefix to use for any additional columns. Extra columns
+                                    <td class="entry cellrowborder" headers="d367775e2109 ">Prefix to use for any additional columns. Extra columns
                                         are named using the prefix and sequential increasing
                                         integers as follows:
                                             <code class="ph codeph">&lt;prefix&gt;&lt;integer&gt;</code>. <p class="p">For
@@ -1694,9 +1703,9 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2097 ">Max Record Length (chars)</td>
+                                    <td class="entry cellrowborder" headers="d367775e2106 ">Max Record Length (chars)</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2100 ">Maximum length of a record in characters. Longer records
+                                    <td class="entry cellrowborder" headers="d367775e2109 ">Maximum length of a record in characters. Longer records
                                         are not read. <p class="p"><span class="ph">This property can be limited by the <span class="ph">Data Collector</span> parser
                         buffer size. For more information, see <a class="xref" href="Origins_overview.html#concept_svg_2zl_d1b">Maximum Record Size</a>.</span></p>
 </td>
@@ -1704,9 +1713,9 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2097 ">Delimiter Character</td>
+                                    <td class="entry cellrowborder" headers="d367775e2106 ">Delimiter Character</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2100 ">Delimiter character for a custom delimiter format. Select
+                                    <td class="entry cellrowborder" headers="d367775e2109 ">Delimiter character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                             character.<p class="p">You can enter a Unicode control character
                                             using the format <kbd class="ph userinput">\uNNNN</kbd>, where
@@ -1723,18 +1732,18 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2097 ">Multi Character Field Delimiter</td>
+                                    <td class="entry cellrowborder" headers="d367775e2106 ">Multi Character Field Delimiter</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2100 ">Characters that delimit fields for multi-character
+                                    <td class="entry cellrowborder" headers="d367775e2109 ">Characters that delimit fields for multi-character
                                         delimiter format.<p class="p">Default is two pipe characters
                                         (||).</p>
 </td>
 
                                 </tr>
 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2097 ">Multi Character Line Delimiter</td>
+                                    <td class="entry cellrowborder" headers="d367775e2106 ">Multi Character Line Delimiter</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2100 ">Characters that delimit lines or records for
+                                    <td class="entry cellrowborder" headers="d367775e2109 ">Characters that delimit lines or records for
                                         multi-character delimiter format.<p class="p">Default is the newline
                                             character (\n).</p>
 </td>
@@ -1742,49 +1751,49 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2097 ">Escape Character</td>
+                                    <td class="entry cellrowborder" headers="d367775e2106 ">Escape Character</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2100 ">Escape character for a custom or multi-character
+                                    <td class="entry cellrowborder" headers="d367775e2109 ">Escape character for a custom or multi-character
                                         delimiter format.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2097 ">Quote Character</td>
+                                    <td class="entry cellrowborder" headers="d367775e2106 ">Quote Character</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2100 ">Quote character for a custom or multi-character delimiter
+                                    <td class="entry cellrowborder" headers="d367775e2109 ">Quote character for a custom or multi-character delimiter
                                         format.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2097 ">Enable Comments</td>
+                                    <td class="entry cellrowborder" headers="d367775e2106 ">Enable Comments</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2100 ">Allows commented data to be ignored for custom delimiter
+                                    <td class="entry cellrowborder" headers="d367775e2109 ">Allows commented data to be ignored for custom delimiter
                                         format.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2097 ">Comment Marker</td>
+                                    <td class="entry cellrowborder" headers="d367775e2106 ">Comment Marker</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2100 ">Character that marks a comment when comments are enabled
+                                    <td class="entry cellrowborder" headers="d367775e2109 ">Character that marks a comment when comments are enabled
                                         for custom delimiter format.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2097 ">Ignore Empty Lines</td>
+                                    <td class="entry cellrowborder" headers="d367775e2106 ">Ignore Empty Lines</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2100 ">Allows empty lines to be ignored for custom delimiter
+                                    <td class="entry cellrowborder" headers="d367775e2109 ">Allows empty lines to be ignored for custom delimiter
                                         format.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2097 "><a class="xref" href="../Data_Formats/Delimited.html#concept_zcg_bm4_fs">Root Field Type</a></td>
+                                    <td class="entry cellrowborder" headers="d367775e2106 "><a class="xref" href="../Data_Formats/Delimited.html#concept_zcg_bm4_fs">Root Field Type</a></td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2100 ">Root field type to use:<ul class="ul" id="task_npx_xgf_vq__d84e2029">
+                                    <td class="entry cellrowborder" headers="d367775e2109 ">Root field type to use:<ul class="ul" id="task_npx_xgf_vq__d84e2032">
                                             <li class="li">List-Map - Generates an indexed list of data.
                                                 Enables you to use standard functions to process
                                                 data. Use for new pipelines.</li>
@@ -1800,38 +1809,38 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2097 ">Lines to Skip</td>
+                                    <td class="entry cellrowborder" headers="d367775e2106 ">Lines to Skip</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2100 ">Number of lines to skip before reading data. </td>
+                                    <td class="entry cellrowborder" headers="d367775e2109 ">Number of lines to skip before reading data. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2097 ">Parse NULLs</td>
+                                    <td class="entry cellrowborder" headers="d367775e2106 ">Parse NULLs</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2100 ">Replaces the specified string constant with null
+                                    <td class="entry cellrowborder" headers="d367775e2109 ">Replaces the specified string constant with null
                                         values.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2097 ">NULL Constant</td>
+                                    <td class="entry cellrowborder" headers="d367775e2106 ">NULL Constant</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2100 ">String constant to replace with null values.</td>
+                                    <td class="entry cellrowborder" headers="d367775e2109 ">String constant to replace with null values.</td>
 
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d366465e2097 ">Charset</td>
+              <td class="entry cellrowborder" headers="d367775e2106 ">Charset</td>
 
-              <td class="entry cellrowborder" headers="d366465e2100 ">Character encoding of the files to be processed.</td>
+              <td class="entry cellrowborder" headers="d367775e2109 ">Character encoding of the files to be processed.</td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d366465e2097 "><a class="xref" href="../Pipeline_Design/ControlCharacters.html#concept_hfs_dkm_js" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">Ignore Control Characters</a></td>
+              <td class="entry cellrowborder" headers="d367775e2106 "><a class="xref" href="../Pipeline_Design/ControlCharacters.html#concept_hfs_dkm_js" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">Ignore Control Characters</a></td>
 
-              <td class="entry cellrowborder" headers="d366465e2100 ">Removes all ASCII control characters except for the tab, line feed, and
+              <td class="entry cellrowborder" headers="d367775e2109 ">Removes all ASCII control characters except for the tab, line feed, and
                 carriage return characters.</td>
 
             </tr>
@@ -1849,19 +1858,19 @@ Overrides any existing schema definitions associated
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_npx_xgf_vq__table_c1h_wls_wx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d366465e2411">JSON Property</th>
+                                    <th class="entry cellrowborder" id="d367775e2420">JSON Property</th>
 
-                                    <th class="entry cellrowborder" id="d366465e2414">Description</th>
+                                    <th class="entry cellrowborder" id="d367775e2423">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2411 ">JSON Content</td>
+                                    <td class="entry cellrowborder" headers="d367775e2420 ">JSON Content</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2414 ">Type of JSON content. Use one of the following options: <div class="p">
-                                            <ul class="ul" id="task_npx_xgf_vq__d84e2471">
+                                    <td class="entry cellrowborder" headers="d367775e2423 ">Type of JSON content. Use one of the following options: <div class="p">
+                                            <ul class="ul" id="task_npx_xgf_vq__d84e2474">
                                                 <li class="li">Array of Objects </li>
 
                                                 <li class="li">Multiple Objects</li>
@@ -1874,9 +1883,9 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2411 ">Max Object Length (chars)</td>
+                                    <td class="entry cellrowborder" headers="d367775e2420 ">Max Object Length (chars)</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2414 ">Maximum number of characters in a JSON object. <p class="p">Longer
+                                    <td class="entry cellrowborder" headers="d367775e2423 ">Maximum number of characters in a JSON object. <p class="p">Longer
                                             objects are diverted to the pipeline for error handling.
                                                 </p>
 <p class="p"><span class="ph">This property can be limited by the <span class="ph">Data Collector</span> parser
@@ -1886,16 +1895,16 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d366465e2411 ">Charset</td>
+              <td class="entry cellrowborder" headers="d367775e2420 ">Charset</td>
 
-              <td class="entry cellrowborder" headers="d366465e2414 ">Character encoding of the files to be processed.</td>
+              <td class="entry cellrowborder" headers="d367775e2423 ">Character encoding of the files to be processed.</td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d366465e2411 "><a class="xref" href="../Pipeline_Design/ControlCharacters.html#concept_hfs_dkm_js" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">Ignore Control Characters</a></td>
+              <td class="entry cellrowborder" headers="d367775e2420 "><a class="xref" href="../Pipeline_Design/ControlCharacters.html#concept_hfs_dkm_js" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">Ignore Control Characters</a></td>
 
-              <td class="entry cellrowborder" headers="d366465e2414 ">Removes all ASCII control characters except for the tab, line feed, and
+              <td class="entry cellrowborder" headers="d367775e2423 ">Removes all ASCII control characters except for the tab, line feed, and
                 carriage return characters.</td>
 
             </tr>
@@ -1913,19 +1922,19 @@ Overrides any existing schema definitions associated
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_npx_xgf_vq__table_mgz_ydm_wx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d366465e2512">Log Property</th>
+                                    <th class="entry cellrowborder" id="d367775e2521">Log Property</th>
 
-                                    <th class="entry cellrowborder" id="d366465e2515">Description</th>
+                                    <th class="entry cellrowborder" id="d367775e2524">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2512 "><a class="xref" href="../Data_Formats/LogFormats.html" title="When you use an origin to read log data, you define the format of the log files to be read.">Log Format</a></td>
+                                    <td class="entry cellrowborder" headers="d367775e2521 "><a class="xref" href="../Data_Formats/LogFormats.html" title="When you use an origin to read log data, you define the format of the log files to be read.">Log Format</a></td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2515 ">Format of the log files. Use one of the following
-                                            options:<ul class="ul" id="task_npx_xgf_vq__d84e2684">
+                                    <td class="entry cellrowborder" headers="d367775e2524 ">Format of the log files. Use one of the following
+                                            options:<ul class="ul" id="task_npx_xgf_vq__d84e2687">
                                             <li class="li">Common Log Format</li>
 
                                             <li class="li">Combined Log Format</li>
@@ -1950,9 +1959,9 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2512 ">Max Line Length</td>
+                                    <td class="entry cellrowborder" headers="d367775e2521 ">Max Line Length</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2515 ">Maximum length of a log line. The origin truncates longer
+                                    <td class="entry cellrowborder" headers="d367775e2524 ">Maximum length of a log line. The origin truncates longer
                                         lines. <p class="p"><span class="ph">This property can be limited by the <span class="ph">Data Collector</span> parser
                         buffer size. For more information, see <a class="xref" href="Origins_overview.html#concept_svg_2zl_d1b">Maximum Record Size</a>.</span></p>
 </td>
@@ -1960,9 +1969,9 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2512 ">Retain Original Line</td>
+                                    <td class="entry cellrowborder" headers="d367775e2521 ">Retain Original Line</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2515 ">Determines how to treat the original log line. Select to
+                                    <td class="entry cellrowborder" headers="d367775e2524 ">Determines how to treat the original log line. Select to
                                         include the original log line as a field in the resulting
                                             record.<p class="p">By default, the original line is
                                             discarded.</p>
@@ -1971,16 +1980,16 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d366465e2512 ">Charset</td>
+              <td class="entry cellrowborder" headers="d367775e2521 ">Charset</td>
 
-              <td class="entry cellrowborder" headers="d366465e2515 ">Character encoding of the files to be processed.</td>
+              <td class="entry cellrowborder" headers="d367775e2524 ">Character encoding of the files to be processed.</td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d366465e2512 "><a class="xref" href="../Pipeline_Design/ControlCharacters.html#concept_hfs_dkm_js" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">Ignore Control Characters</a></td>
+              <td class="entry cellrowborder" headers="d367775e2521 "><a class="xref" href="../Pipeline_Design/ControlCharacters.html#concept_hfs_dkm_js" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">Ignore Control Characters</a></td>
 
-              <td class="entry cellrowborder" headers="d366465e2515 ">Removes all ASCII control characters except for the tab, line feed, and
+              <td class="entry cellrowborder" headers="d367775e2524 ">Removes all ASCII control characters except for the tab, line feed, and
                 carriage return characters.</td>
 
             </tr>
@@ -2012,21 +2021,21 @@ Overrides any existing schema definitions associated
 
                         <li class="li">When you select <span class="ph uicontrol">Log4j</span>, define the following properties:<div class="p">
                                 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_npx_xgf_vq__d84e2797" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:22.22222222222222%" /><col style="width:77.77777777777779%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_npx_xgf_vq__d84e2800" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:22.22222222222222%" /><col style="width:77.77777777777779%" /></colgroup><thead class="thead" style="text-align:left;">
                                             <tr>
-                                                <th class="entry cellrowborder" id="d366465e2684">Log4j Property</th>
+                                                <th class="entry cellrowborder" id="d367775e2693">Log4j Property</th>
 
-                                                <th class="entry cellrowborder" id="d366465e2687">Description</th>
+                                                <th class="entry cellrowborder" id="d367775e2696">Description</th>
 
                                             </tr>
 
                                         </thead>
 <tbody class="tbody">
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d366465e2684 ">On Parse Error</td>
+                                                <td class="entry cellrowborder" headers="d367775e2693 ">On Parse Error</td>
 
-                                                <td class="entry cellrowborder" headers="d366465e2687 ">Determines how to handle information that
-                                                  cannot be parsed:<ul class="ul" id="task_npx_xgf_vq__d84e2826">
+                                                <td class="entry cellrowborder" headers="d367775e2696 ">Determines how to handle information that
+                                                  cannot be parsed:<ul class="ul" id="task_npx_xgf_vq__d84e2829">
                                                   <li class="li">Skip and Log Error - Skips reading the line
                                                   and logs a stage error.</li>
 
@@ -2045,17 +2054,17 @@ Overrides any existing schema definitions associated
                                             </tr>
 
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d366465e2684 ">Use Custom Log Format</td>
+                                                <td class="entry cellrowborder" headers="d367775e2693 ">Use Custom Log Format</td>
 
-                                                <td class="entry cellrowborder" headers="d366465e2687 ">Allows you to define a custom log
+                                                <td class="entry cellrowborder" headers="d367775e2696 ">Allows you to define a custom log
                                                   format.</td>
 
                                             </tr>
 
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d366465e2684 ">Custom Log4J Format</td>
+                                                <td class="entry cellrowborder" headers="d367775e2693 ">Custom Log4J Format</td>
 
-                                                <td class="entry cellrowborder" headers="d366465e2687 ">Use log4j variables to define a custom log
+                                                <td class="entry cellrowborder" headers="d367775e2696 ">Use log4j variables to define a custom log
                                                   format. </td>
 
                                             </tr>
@@ -2078,18 +2087,18 @@ Overrides any existing schema definitions associated
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_npx_xgf_vq__table_s3c_mz4_45" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d366465e2761">Protobuf Property</th>
+                                    <th class="entry cellrowborder" id="d367775e2770">Protobuf Property</th>
 
-                                    <th class="entry cellrowborder" id="d366465e2764">Description</th>
+                                    <th class="entry cellrowborder" id="d367775e2773">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2761 ">Protobuf Descriptor File </td>
+                                    <td class="entry cellrowborder" headers="d367775e2770 ">Protobuf Descriptor File </td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2764 ">Descriptor file (.desc) to use. The descriptor file must
+                                    <td class="entry cellrowborder" headers="d367775e2773 ">Descriptor file (.desc) to use. The descriptor file must
                                         be in the <span class="ph">Data Collector</span> resources directory,
                                             <code class="ph codeph">$SDC_RESOURCES</code>.<p class="p">For information about
                                             generating the descriptor file, see <a class="xref" href="../Data_Formats/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>. <span class="ph">For more information about environment variables, see
@@ -2099,9 +2108,9 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2761 ">Message Type</td>
+                                    <td class="entry cellrowborder" headers="d367775e2770 ">Message Type</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2764 ">The fully-qualified name for the message type to use when
+                                    <td class="entry cellrowborder" headers="d367775e2773 ">The fully-qualified name for the message type to use when
                                         reading data.<p class="p">Use the following format:
                                                 <code class="ph codeph">&lt;package name&gt;.&lt;message
                                             type&gt;</code>. </p>
@@ -2111,9 +2120,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2761 ">Delimited Messages</td>
+                                    <td class="entry cellrowborder" headers="d367775e2770 ">Delimited Messages</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2764 ">Indicates if a message might include more than one
+                                    <td class="entry cellrowborder" headers="d367775e2773 ">Indicates if a message might include more than one
                                         protobuf message.</td>
 
                                 </tr>
@@ -2131,18 +2140,18 @@ Use a message type defined in the
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_npx_xgf_vq__table_ngy_vcc_fv" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d366465e2852">Text Property</th>
+                                    <th class="entry cellrowborder" id="d367775e2861">Text Property</th>
 
-                                    <th class="entry cellrowborder" id="d366465e2855">Description</th>
+                                    <th class="entry cellrowborder" id="d367775e2864">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2852 ">Max Line Length</td>
+                                    <td class="entry cellrowborder" headers="d367775e2861 ">Max Line Length</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2855 ">Maximum number of characters allowed for a line. Longer
+                                    <td class="entry cellrowborder" headers="d367775e2864 ">Maximum number of characters allowed for a line. Longer
                                         lines are truncated.<p class="p">Adds a boolean field to the record to
                                             indicate if it was truncated. The field name is
                                             Truncated. </p>
@@ -2153,38 +2162,38 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2852 "><a class="xref" href="../Data_Formats/TextCDelim.html#concept_lg2_gcg_jx">Use Custom Delimiter</a></td>
+                                    <td class="entry cellrowborder" headers="d367775e2861 "><a class="xref" href="../Data_Formats/TextCDelim.html#concept_lg2_gcg_jx">Use Custom Delimiter</a></td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2855 ">Uses custom delimiters to define records instead of line
+                                    <td class="entry cellrowborder" headers="d367775e2864 ">Uses custom delimiters to define records instead of line
                                         breaks. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2852 ">Custom Delimiter</td>
+                                    <td class="entry cellrowborder" headers="d367775e2861 ">Custom Delimiter</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2855 ">One or more characters to use to define records. </td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2852 ">Include Custom Delimiter</td>
-
-                                    <td class="entry cellrowborder" headers="d366465e2855 ">Includes delimiter characters in the record.</td>
+                                    <td class="entry cellrowborder" headers="d367775e2864 ">One or more characters to use to define records. </td>
 
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d366465e2852 ">Charset</td>
+                                    <td class="entry cellrowborder" headers="d367775e2861 ">Include Custom Delimiter</td>
 
-              <td class="entry cellrowborder" headers="d366465e2855 ">Character encoding of the files to be processed.</td>
+                                    <td class="entry cellrowborder" headers="d367775e2864 ">Includes delimiter characters in the record.</td>
+
+                                </tr>
+
+                                <tr>
+              <td class="entry cellrowborder" headers="d367775e2861 ">Charset</td>
+
+              <td class="entry cellrowborder" headers="d367775e2864 ">Character encoding of the files to be processed.</td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d366465e2852 "><a class="xref" href="../Pipeline_Design/ControlCharacters.html#concept_hfs_dkm_js" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">Ignore Control Characters</a></td>
+              <td class="entry cellrowborder" headers="d367775e2861 "><a class="xref" href="../Pipeline_Design/ControlCharacters.html#concept_hfs_dkm_js" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">Ignore Control Characters</a></td>
 
-              <td class="entry cellrowborder" headers="d366465e2855 ">Removes all ASCII control characters except for the tab, line feed, and
+              <td class="entry cellrowborder" headers="d367775e2864 ">Removes all ASCII control characters except for the tab, line feed, and
                 carriage return characters.</td>
 
             </tr>
@@ -2202,21 +2211,21 @@ Use a message type defined in the
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_npx_xgf_vq__table_pmz_mcj_45" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d366465e2963">XML Property</th>
+                                    <th class="entry cellrowborder" id="d367775e2972">XML Property</th>
 
-                                    <th class="entry cellrowborder" id="d366465e2966">Description</th>
+                                    <th class="entry cellrowborder" id="d367775e2975">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2963 "><a class="xref" href="../Data_Formats/XMLDFormat.html#concept_tmc_4bc_dy">Delimiter Element</a></td>
+                                    <td class="entry cellrowborder" headers="d367775e2972 "><a class="xref" href="../Data_Formats/XMLDFormat.html#concept_tmc_4bc_dy">Delimiter Element</a></td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2966 ">
+                                    <td class="entry cellrowborder" headers="d367775e2975 ">
                                         <div class="p">Delimiter to use to generate records. Omit a delimiter to
                                             treat the entire XML document as one record. Use one of
-                                            the following:<ul class="ul" id="task_npx_xgf_vq__d84e3721">
+                                            the following:<ul class="ul" id="task_npx_xgf_vq__d84e3722">
                                                 <li class="li">An XML element directly under the root element.
                                                   <p class="p">Use the XML element name without surrounding
                                                   angle brackets ( &lt; &gt; ) . For example, msg
@@ -2240,9 +2249,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2963 "><a class="xref" href="../Data_Formats/XMLDFormat.html#concept_w3k_1ch_qz">Include Field XPaths</a></td>
+                                    <td class="entry cellrowborder" headers="d367775e2972 "><a class="xref" href="../Data_Formats/XMLDFormat.html#concept_w3k_1ch_qz">Include Field XPaths</a></td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2966 ">Includes the XPath to each parsed XML element and XML
+                                    <td class="entry cellrowborder" headers="d367775e2975 ">Includes the XPath to each parsed XML element and XML
                                         attribute in field attributes. Also includes each namespace
                                         in an xmlns record header attribute. <p class="p">When not selected,
                                             this information is not included in the record. By
@@ -2260,9 +2269,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2963 ">Namespaces </td>
+                                    <td class="entry cellrowborder" headers="d367775e2972 ">Namespaces </td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2966 ">Namespace prefix and URI to use when parsing the XML
+                                    <td class="entry cellrowborder" headers="d367775e2975 ">Namespace prefix and URI to use when parsing the XML
                                         document. Define namespaces when the XML element being used
                                         includes a namespace prefix or when the XPath expression
                                         includes namespaces.<p class="p">For information about using
@@ -2277,9 +2286,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2963 ">Output Field Attributes</td>
+                                    <td class="entry cellrowborder" headers="d367775e2972 ">Output Field Attributes</td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2966 ">Includes XML attributes and namespace declarations in the
+                                    <td class="entry cellrowborder" headers="d367775e2975 ">Includes XML attributes and namespace declarations in the
                                         record as field attributes. When not selected, XML
                                         attributes and namespace declarations are included in the
                                         record as fields.<div class="note note"><span class="notetitle">Note:</span> <span class="ph">Field attributes are automatically included in
@@ -2293,9 +2302,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d366465e2963 ">Max Record Length (chars) </td>
+                                    <td class="entry cellrowborder" headers="d367775e2972 ">Max Record Length (chars) </td>
 
-                                    <td class="entry cellrowborder" headers="d366465e2966 ">
+                                    <td class="entry cellrowborder" headers="d367775e2975 ">
                                         <p class="p">The maximum number of characters in a record. Longer
                                             records are diverted to the pipeline for error handling. </p>
 
@@ -2307,16 +2316,16 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d366465e2963 ">Charset</td>
+              <td class="entry cellrowborder" headers="d367775e2972 ">Charset</td>
 
-              <td class="entry cellrowborder" headers="d366465e2966 ">Character encoding of the files to be processed.</td>
+              <td class="entry cellrowborder" headers="d367775e2975 ">Character encoding of the files to be processed.</td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d366465e2963 "><a class="xref" href="../Pipeline_Design/ControlCharacters.html#concept_hfs_dkm_js" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">Ignore Control Characters</a></td>
+              <td class="entry cellrowborder" headers="d367775e2972 "><a class="xref" href="../Pipeline_Design/ControlCharacters.html#concept_hfs_dkm_js" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">Ignore Control Characters</a></td>
 
-              <td class="entry cellrowborder" headers="d366465e2966 ">Removes all ASCII control characters except for the tab, line feed, and
+              <td class="entry cellrowborder" headers="d367775e2975 ">Removes all ASCII control characters except for the tab, line feed, and
                 carriage return characters.</td>
 
             </tr>

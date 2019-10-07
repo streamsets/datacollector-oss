@@ -3,7 +3,7 @@
   PUBLIC "" "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
     <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link>        
-      <meta name="copyright" content="(C) Copyright 2019" /><meta name="DC.rights.owner" content="(C) Copyright 2019" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Basic Tutorial" /><meta name="abstract" content="The basic tutorial creates a pipeline that reads a file from a directory, processes the data in two branches, and writes all data to a file system. You'll use data preview to help configure the pipeline, and you'll create a data alert and run the pipeline." /><meta name="description" content="The basic tutorial creates a pipeline that reads a file from a directory, processes the data in two branches, and writes all data to a file system. You'll use data preview to help configure the pipeline, and you'll create a data alert and run the pipeline." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Tutorial/BeforeYouBegin.html#concept_hg5_j2p_ms" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Tutorial/ExtendedTutorial.html#concept_w4n_gjt_ls" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_phf_cjt_ls" /><title>Basic Tutorial</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_phf_cjt_ls-d46e167069" />         
+      <meta name="copyright" content="(C) Copyright 2019" /><meta name="DC.rights.owner" content="(C) Copyright 2019" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Basic Tutorial" /><meta name="abstract" content="The basic tutorial creates a pipeline that reads a file from a directory, processes the data in two branches, and writes all data to a file system. You'll use data preview to help configure the pipeline, and you'll create a data alert and run the pipeline." /><meta name="description" content="The basic tutorial creates a pipeline that reads a file from a directory, processes the data in two branches, and writes all data to a file system. You'll use data preview to help configure the pipeline, and you'll create a data alert and run the pipeline." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Tutorial/BeforeYouBegin.html#concept_hg5_j2p_ms" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Tutorial/ExtendedTutorial.html#concept_w4n_gjt_ls" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_phf_cjt_ls" /><title>Basic Tutorial</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_phf_cjt_ls-d46e167854" />         
         
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <!-- Latest compiled and minified Bootstrap CSS -->
@@ -111,58 +111,58 @@
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_l4q_flb_kr-d46e7596" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
-   <li><span data-tocid="concept_ylh_yyz_ky-d46e9858" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
-   <li><span data-tocid="concept_ejk_f1f_5v-d46e19588" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
-   <li><span data-tocid="concept_qsw_cjy_bt-d46e26847" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
-   <li><span data-tocid="concept_qn1_wn4_kq-d46e28593" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
-   <li><span data-tocid="concept_hdr_gyw_41b-d46e31306" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_l4q_flb_kr-d46e7973" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e10235" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e19965" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e27224" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e28970" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e31683" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e33420" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e92251" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
-   <li><span data-tocid="concept_agj_cfj_br-d46e108902" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
-   <li><span data-tocid="concept_umc_1lk_fx-d46e131011" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
-   <li><span data-tocid="concept_fyf_gkq_4bb-d46e139072" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
-   <li><span data-tocid="concept_ugp_kwf_xw-d46e141675" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
-   <li><span data-tocid="concept_xxd_f5r_kx-d46e145244" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e33797" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e92736" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e109549" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e131658" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e139857" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e142460" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e146029" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_fjj_zcf_2w-d46e149158" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
-   <li><span data-tocid="concept_kgt_pnr_4cb-d46e151984" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
-   <li><span data-tocid="concept_wwq_gxc_py-d46e152783" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_fjj_zcf_2w-d46e149943" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
+   <li><span data-tocid="concept_kgt_pnr_4cb-d46e152769" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e153568" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_gzw_tdm_p2b-d46e153365" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_wr1_ktz_bt-d46e153741" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_fpz_5r4_vs-d46e154223" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_jjk_23z_sq-d46e155688" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
-   <li><span data-tocid="concept_pgk_brx_rr-d46e156657" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_gzw_tdm_p2b-d46e154150" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e154526" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e155008" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines (Deprecated)</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e156473" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e157442" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_asx_fdz_sq-d46e159285" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_asx_fdz_sq-d46e160070" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_o3l_dtr_5q-d46e160542" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
-   <li><span data-tocid="concept_yms_ftm_sq-d46e162195" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e161327" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e162980" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_nls_w1r_ks-d46e166999" class="topicref" data-id="concept_nls_w1r_ks" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span><ul class="nav nav-list">
-         <li><span data-tocid="concept_is5_lrq_ks-d46e167021" class="topicref" data-id="concept_is5_lrq_ks" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Overview.html">Tutorial Overview</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_nls_w1r_ks-d46e167784" class="topicref" data-id="concept_nls_w1r_ks" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_is5_lrq_ks-d46e167806" class="topicref" data-id="concept_is5_lrq_ks" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Overview.html">Tutorial Overview</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_hg5_j2p_ms-d46e167045" class="topicref" data-id="concept_hg5_j2p_ms" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BeforeYouBegin.html#concept_hg5_j2p_ms">Before You Begin</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_hg5_j2p_ms-d46e167830" class="topicref" data-id="concept_hg5_j2p_ms" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BeforeYouBegin.html#concept_hg5_j2p_ms">Before You Begin</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li class="active"><span data-tocid="concept_phf_cjt_ls-d46e167069" class="topicref" data-id="concept_phf_cjt_ls" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#concept_phf_cjt_ls">Basic Tutorial</a><span class="wh-tooltip">
+         <li class="active"><span data-tocid="concept_phf_cjt_ls-d46e167854" class="topicref" data-id="concept_phf_cjt_ls" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#concept_phf_cjt_ls">Basic Tutorial</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The basic tutorial creates a pipeline that reads a file from a directory, processes the   data in two branches, and writes
                         all data to a file system. You'll use data preview to help   configure the pipeline, and you'll create a data alert and run
@@ -170,66 +170,66 @@
                         
                      </p>
                      </span></span></span><ul class="nav nav-list">
-               <li><span data-tocid="task_jmz_3dn_ls-d46e167195" class="topicref" data-id="task_jmz_3dn_ls" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_jmz_3dn_ls">Create a Pipeline and Define Pipeline Properties</a><span class="wh-tooltip">
+               <li><span data-tocid="task_jmz_3dn_ls-d46e167980" class="topicref" data-id="task_jmz_3dn_ls" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_jmz_3dn_ls">Create a Pipeline and Define Pipeline Properties</a><span class="wh-tooltip">
                            
                            <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">When you configure a pipeline, you need to decide what to do with error records. You         can discard them or - more productively
                               - write them to file, another pipeline, or to Kafka. 
                               
                            </p>
                            </span></span></span></li>
-               <li><span data-tocid="task_ftt_2vq_ks-d46e167220" class="topicref" data-id="task_ftt_2vq_ks" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_ftt_2vq_ks">Configure the Origin</a><span class="wh-tooltip">
+               <li><span data-tocid="task_ftt_2vq_ks-d46e168005" class="topicref" data-id="task_ftt_2vq_ks" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_ftt_2vq_ks">Configure the Origin</a><span class="wh-tooltip">
                            
                            <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The origin represents the incoming data for the pipeline. When you configure the         origin, you define how to connect
                               to the origin system, the type of data to be processed,         and other properties specific to the origin.
                               
                            </p>
                            </span></span></span></li>
-               <li><span data-tocid="task_xb5_2sf_4s-d46e167255" class="topicref" data-id="task_xb5_2sf_4s" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_xb5_2sf_4s">Preview Data </a><span class="wh-tooltip">
+               <li><span data-tocid="task_xb5_2sf_4s-d46e168040" class="topicref" data-id="task_xb5_2sf_4s" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_xb5_2sf_4s">Preview Data </a><span class="wh-tooltip">
                            
                            <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">To become more familiar with the data set and gather some important details for         pipeline configuration, let's preview
                               the source data.
                               
                            </p>
                            </span></span></span></li>
-               <li><span data-tocid="task_br5_rzq_ks-d46e167300" class="topicref" data-id="task_br5_rzq_ks" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_br5_rzq_ks">Route Data with the Stream Selector</a><span class="wh-tooltip">
+               <li><span data-tocid="task_br5_rzq_ks-d46e168085" class="topicref" data-id="task_br5_rzq_ks" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_br5_rzq_ks">Route Data with the Stream Selector</a><span class="wh-tooltip">
                            
                            <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">To route data to different streams for processing, we use the Stream Selector         processor.</p>
                            </span></span></span></li>
-               <li><span data-tocid="task_cdx_kfm_ls-d46e167355" class="topicref" data-id="task_cdx_kfm_ls" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_cdx_kfm_ls">Use Jython for Card Typing</a><span class="wh-tooltip">
+               <li><span data-tocid="task_cdx_kfm_ls-d46e168140" class="topicref" data-id="task_cdx_kfm_ls" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_cdx_kfm_ls">Use Jython for Card Typing</a><span class="wh-tooltip">
                            
                            <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"> Next, we'll evaluate credit card numbers to determine the credit card type. You can         use an Expression Evaluator to
                               do the same calculations, but with a short script, the Jython         Evaluator is easier.
                               
                            </p>
                            </span></span></span></li>
-               <li><span data-tocid="task_qbw_d3m_ls-d46e167421" class="topicref" data-id="task_qbw_d3m_ls" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_qbw_d3m_ls">Mask Credit Card Numbers</a><span class="wh-tooltip">
+               <li><span data-tocid="task_qbw_d3m_ls-d46e168206" class="topicref" data-id="task_qbw_d3m_ls" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_qbw_d3m_ls">Mask Credit Card Numbers</a><span class="wh-tooltip">
                            
                            <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"> Now let's prevent sensitive information from reaching internal databases by using a         Field Masker to mask the credit
                               card numbers. 
                               
                            </p>
                            </span></span></span></li>
-               <li><span data-tocid="task_wsj_5tm_ls-d46e167497" class="topicref" data-id="task_wsj_5tm_ls" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_wsj_5tm_ls">Write to the Destination</a><span class="wh-tooltip">
+               <li><span data-tocid="task_wsj_5tm_ls-d46e168282" class="topicref" data-id="task_wsj_5tm_ls" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_wsj_5tm_ls">Write to the Destination</a><span class="wh-tooltip">
                            
                            <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The <span class="ph">Data Collector</span> can         write data to many destinations. The Local FS destination writes to files in a local file         system. 
                               
                            </p>
                            </span></span></span></li>
-               <li><span data-tocid="task_wgb_t4p_ms-d46e167586" class="topicref" data-id="task_wgb_t4p_ms" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_wgb_t4p_ms">Add a Corresponding Field with the Expression Evaluator</a><span class="wh-tooltip">
+               <li><span data-tocid="task_wgb_t4p_ms-d46e168371" class="topicref" data-id="task_wgb_t4p_ms" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_wgb_t4p_ms">Add a Corresponding Field with the Expression Evaluator</a><span class="wh-tooltip">
                            
                            <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Jython Evaluator script added a new field to the credit payments branch. To         ensure all records have the same structure,
                               we'll use the Expression Evaluator to add the         same field to the non-credit branch. 
                               
                            </p>
                            </span></span></span></li>
-               <li><span data-tocid="task_ets_dkj_ps-d46e167682" class="topicref" data-id="task_ets_dkj_ps" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_ets_dkj_ps">Create a Data Rule and Alert</a><span class="wh-tooltip">
+               <li><span data-tocid="task_ets_dkj_ps-d46e168467" class="topicref" data-id="task_ets_dkj_ps" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_ets_dkj_ps">Create a Data Rule and Alert</a><span class="wh-tooltip">
                            
                            <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Now before we run the basic pipeline, let's add a data rule and alert. Data rules are         user-defined rules used to inspect
                               data moving between two stages. They are a powerful way         to look for outliers and anomalous data. 
                               
                            </p>
                            </span></span></span></li>
-               <li><span data-tocid="task_m21_dyj_ps-d46e167788" class="topicref" data-id="task_m21_dyj_ps" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_m21_dyj_ps">Run the Basic Pipeline</a><span class="wh-tooltip">
+               <li><span data-tocid="task_m21_dyj_ps-d46e168573" class="topicref" data-id="task_m21_dyj_ps" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/BasicTutorial.html#task_m21_dyj_ps">Run the Basic Pipeline</a><span class="wh-tooltip">
                            
                            <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Now that the basic pipeline is complete, you can start it by clicking the             <span class="ph uicontrol">Start</span> icon: <img class="image" src="datacollector/UserGuide/Tutorial/datacollector/UserGuide/Graphics/icon_ConfigStartPipeline.png" height="NaN" width="NaN" />.
                               
@@ -237,7 +237,7 @@
                            </span></span></span></li>
             </ul>
          </li>
-         <li><span data-tocid="concept_w4n_gjt_ls-d46e167909" class="topicref" data-id="concept_w4n_gjt_ls" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/ExtendedTutorial.html#concept_w4n_gjt_ls">Extended Tutorial</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_w4n_gjt_ls-d46e168694" class="topicref" data-id="concept_w4n_gjt_ls" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/ExtendedTutorial.html#concept_w4n_gjt_ls">Extended Tutorial</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The extended tutorial builds on the basic tutorial, using an additional set of stages to         perform some data transformations
                         and write to the Trash development destination. We'll also         use data preview to test stage configuration. 
@@ -246,21 +246,21 @@
                      </span></span></span></li>
       </ul>
    </li>
-   <li><span data-tocid="concept_sh3_frm_tq-d46e168212" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_sh3_frm_tq-d46e168997" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_xbx_rs1_tq-d46e173328" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
-   <li><span data-tocid="concept_jn1_nzb_kv-d46e173383" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e174113" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e174168" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_pvm_yt3_wq-d46e173605" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
-   <li><span data-tocid="concept_vcj_1ws_js-d46e177306" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e174390" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e178091" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_chv_vmj_wr-d46e177529" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_chv_vmj_wr-d46e178314" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
@@ -350,22 +350,22 @@
                 <div class="itemgroup info">Note a few helpful areas: 
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jmz_3dn_ls__table_ezq_5ys_lt" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:9.090909090909092%" /><col style="width:18.181818181818183%" /><col style="width:72.72727272727273%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d611343e302">Number</th>
+                                    <th class="entry cellrowborder" id="d614621e302">Number</th>
 
-                                    <th class="entry cellrowborder" id="d611343e305">Name</th>
+                                    <th class="entry cellrowborder" id="d614621e305">Name</th>
 
-                                    <th class="entry cellrowborder" id="d611343e308">Description</th>
+                                    <th class="entry cellrowborder" id="d614621e308">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d611343e302 ">1</td>
+                                    <td class="entry cellrowborder" headers="d614621e302 ">1</td>
 
-                                    <td class="entry cellrowborder" headers="d611343e305 ">Pipeline Creation Help Bar </td>
+                                    <td class="entry cellrowborder" headers="d614621e305 ">Pipeline Creation Help Bar </td>
 
-                                    <td class="entry cellrowborder" headers="d611343e308 ">Indicates that the origin is missing and offers a list of
+                                    <td class="entry cellrowborder" headers="d614621e308 ">Indicates that the origin is missing and offers a list of
                                         origins to choose from. <p class="p">If the Pipeline Creation Help Bar
                                             does not display, you might have disabled it. To enable
                                             it, in the top right corner of the <span class="ph">Data Collector</span> window, click the <span class="ph menucascade"><span class="ph uicontrol">Help</span><abbr title="and then"> &gt; </abbr><span class="ph uicontrol">Settings</span></span>. Clear the <span class="ph uicontrol">Hide Pipeline
@@ -375,40 +375,40 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d611343e302 ">2</td>
+                                    <td class="entry cellrowborder" headers="d614621e302 ">2</td>
 
-                                    <td class="entry cellrowborder" headers="d611343e305 ">Issues icon</td>
+                                    <td class="entry cellrowborder" headers="d614621e305 ">Issues icon</td>
 
-                                    <td class="entry cellrowborder" headers="d611343e308 ">Click to display the list of pipeline issues found by
+                                    <td class="entry cellrowborder" headers="d614621e308 ">Click to display the list of pipeline issues found by
                                         implicit validation.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d611343e302 ">3</td>
+                                    <td class="entry cellrowborder" headers="d614621e302 ">3</td>
 
-                                    <td class="entry cellrowborder" headers="d611343e305 ">Stage library panel</td>
+                                    <td class="entry cellrowborder" headers="d614621e305 ">Stage library panel</td>
 
-                                    <td class="entry cellrowborder" headers="d611343e308 ">Displays a list of available origins by default.</td>
+                                    <td class="entry cellrowborder" headers="d614621e308 ">Displays a list of available origins by default.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d611343e302 ">4</td>
+                                    <td class="entry cellrowborder" headers="d614621e302 ">4</td>
 
-                                    <td class="entry cellrowborder" headers="d611343e305 ">Stage menu</td>
+                                    <td class="entry cellrowborder" headers="d614621e305 ">Stage menu</td>
 
-                                    <td class="entry cellrowborder" headers="d611343e308 ">Changes the stages that display in the stage library.
+                                    <td class="entry cellrowborder" headers="d614621e308 ">Changes the stages that display in the stage library.
                                         Displays all stages by default.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d611343e302 ">5</td>
+                                    <td class="entry cellrowborder" headers="d614621e302 ">5</td>
 
-                                    <td class="entry cellrowborder" headers="d611343e305 ">Properties panel / Preview panel / Monitor panel </td>
+                                    <td class="entry cellrowborder" headers="d614621e305 ">Properties panel / Preview panel / Monitor panel </td>
 
-                                    <td class="entry cellrowborder" headers="d611343e308 ">When you configure a pipeline, the Properties panel
+                                    <td class="entry cellrowborder" headers="d614621e308 ">When you configure a pipeline, the Properties panel
                                         displays the properties of the pipeline or selected stage.
                                         You can resize, minimize and maximize the panel. <p class="p">When you
                                             preview data, the Preview panel displays the input and
@@ -426,11 +426,11 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d611343e302 "><img class="image" id="task_jmz_3dn_ls__image_ryw_gzs_lt" src="../Graphics/icon_ConfigStageLibrary.png" height="19" width="22" /></td>
+                                    <td class="entry cellrowborder" headers="d614621e302 "><img class="image" id="task_jmz_3dn_ls__image_ryw_gzs_lt" src="../Graphics/icon_ConfigStageLibrary.png" height="19" width="22" /></td>
 
-                                    <td class="entry cellrowborder" headers="d611343e305 ">Stage Library icon</td>
+                                    <td class="entry cellrowborder" headers="d614621e305 ">Stage Library icon</td>
 
-                                    <td class="entry cellrowborder" headers="d611343e308 ">Toggles the display of the Stage Library panel.</td>
+                                    <td class="entry cellrowborder" headers="d614621e308 ">Toggles the display of the Stage Library panel.</td>
 
                                 </tr>
 
@@ -455,18 +455,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jmz_3dn_ls__table_zvy_kfn_ls" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:27.47252747252747%" /><col style="width:72.52747252747253%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d611343e459">Write to File Property</th>
+                                    <th class="entry cellrowborder" id="d614621e459">Write to File Property</th>
 
-                                    <th class="entry cellrowborder" id="d611343e462">Description</th>
+                                    <th class="entry cellrowborder" id="d614621e462">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d611343e459 ">Directory</td>
+                                    <td class="entry cellrowborder" headers="d614621e459 ">Directory</td>
 
-                                    <td class="entry cellrowborder" headers="d611343e462 ">Directory for error record files. Enter the directory
+                                    <td class="entry cellrowborder" headers="d614621e462 ">Directory for error record files. Enter the directory
                                         that you set up for the tutorial. We recommended:
                                             <pre class="pre codeblock"><code>/&lt;base directory&gt;/tutorial/error</code></pre><div class="note note"><span class="notetitle">Note:</span> To
                                             prevent validation errors, the directory must already
@@ -476,9 +476,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d611343e459 ">Files Prefix</td>
+                                    <td class="entry cellrowborder" headers="d614621e459 ">Files Prefix</td>
 
-                                    <td class="entry cellrowborder" headers="d611343e462 ">This defines a prefix for error record files. <p class="p">By default, the files are prefixed with "SDC" and an expression that
+                                    <td class="entry cellrowborder" headers="d614621e462 ">This defines a prefix for error record files. <p class="p">By default, the files are prefixed with "SDC" and an expression that
                   returns the <span class="ph">Data Collector</span> ID, but
                   that's more than we need here. </p>
 <p class="p">Delete the default and enter the following prefix:
@@ -488,9 +488,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d611343e459 ">Max File Size</td>
+                                    <td class="entry cellrowborder" headers="d614621e459 ">Max File Size</td>
 
-                                    <td class="entry cellrowborder" headers="d611343e462 ">For the tutorial, reduce the files size to something more
+                                    <td class="entry cellrowborder" headers="d614621e462 ">For the tutorial, reduce the files size to something more
                                         manageable, such as 5 or 1 MB.</td>
 
                                 </tr>
@@ -538,18 +538,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ftt_2vq_ks__table_w5c_jyq_ks" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d611343e593">Directory Property</th>
+                                    <th class="entry cellrowborder" id="d614621e593">Directory Property</th>
 
-                                    <th class="entry cellrowborder" id="d611343e596">Value</th>
+                                    <th class="entry cellrowborder" id="d614621e596">Value</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d611343e593 ">Files Directory</td>
+                                    <td class="entry cellrowborder" headers="d614621e593 ">Files Directory</td>
 
-                                    <td class="entry cellrowborder" headers="d611343e596 ">Directory where you saved the sample file. Enter an
+                                    <td class="entry cellrowborder" headers="d614621e596 ">Directory where you saved the sample file. Enter an
                                         absolute path.<p class="p">We recommended: <code class="ph codeph">/&lt;base
                                                 directory&gt;/tutorial/origin</code>.</p>
 </td>
@@ -557,9 +557,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d611343e593 ">File Name Pattern</td>
+                                    <td class="entry cellrowborder" headers="d614621e593 ">File Name Pattern</td>
 
-                                    <td class="entry cellrowborder" headers="d611343e596 ">The Directory origin processes only the files in the
+                                    <td class="entry cellrowborder" headers="d614621e596 ">The Directory origin processes only the files in the
                                         directory that match the file name pattern. <p class="p">The tutorial
                                             sample file name is <code class="ph codeph">nyc_taxi_data.csv</code>.
                                             Since the file is the only file in the directory, you
@@ -577,9 +577,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d611343e593 ">Read Order</td>
+                                    <td class="entry cellrowborder" headers="d614621e593 ">Read Order</td>
 
-                                    <td class="entry cellrowborder" headers="d611343e596 ">This determines the read order when the directory
+                                    <td class="entry cellrowborder" headers="d614621e596 ">This determines the read order when the directory
                                         includes multiple files. You can read based on the
                                         last-modified timestamp or file name. Because it's simpler,
                                         let's use <span class="ph uicontrol">Last Modified Timestamp</span>.
@@ -602,43 +602,43 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ftt_2vq_ks__table_hnn_d15_lt" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d611343e683">Delimited Property</th>
+                                    <th class="entry cellrowborder" id="d614621e683">Delimited Property</th>
 
-                                    <th class="entry cellrowborder" id="d611343e686">Description</th>
+                                    <th class="entry cellrowborder" id="d614621e686">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d611343e683 ">Data Format</td>
+                                    <td class="entry cellrowborder" headers="d614621e683 ">Data Format</td>
 
-                                    <td class="entry cellrowborder" headers="d611343e686 ">The data in the sample file is delimited, so select
+                                    <td class="entry cellrowborder" headers="d614621e686 ">The data in the sample file is delimited, so select
                                             <span class="ph uicontrol">Delimited</span>.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d611343e683 ">Delimiter Format Type</td>
+                                    <td class="entry cellrowborder" headers="d614621e683 ">Delimiter Format Type</td>
 
-                                    <td class="entry cellrowborder" headers="d611343e686 ">Since the sample file is a standard CSV file, use the
+                                    <td class="entry cellrowborder" headers="d614621e686 ">Since the sample file is a standard CSV file, use the
                                         default: <span class="ph uicontrol">Default CSV (ignores empty
                                             lines)</span>.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d611343e683 ">Header Line</td>
+                                    <td class="entry cellrowborder" headers="d614621e683 ">Header Line</td>
 
-                                    <td class="entry cellrowborder" headers="d611343e686 ">The sample file includes a header, so select
+                                    <td class="entry cellrowborder" headers="d614621e686 ">The sample file includes a header, so select
                                             <span class="ph uicontrol">With Header Line</span>.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d611343e683 ">Root Field Type</td>
+                                    <td class="entry cellrowborder" headers="d614621e683 ">Root Field Type</td>
 
-                                    <td class="entry cellrowborder" headers="d611343e686 ">This property determines how the <span class="ph">Data Collector</span> processes delimited data. Use the default
+                                    <td class="entry cellrowborder" headers="d614621e686 ">This property determines how the <span class="ph">Data Collector</span> processes delimited data. Use the default
                                             <span class="ph uicontrol">List-Map</span>. <p class="p">This allows you to
                                             use standard functions to process delimited data. With
                                             the List root field type, you need to use delimited data
@@ -716,26 +716,26 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xb5_2sf_4s__table_z2x_325_lt" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d611343e851">Data Preview Property</th>
+                                    <th class="entry cellrowborder" id="d614621e851">Data Preview Property</th>
 
-                                    <th class="entry cellrowborder" id="d611343e854">Description</th>
+                                    <th class="entry cellrowborder" id="d614621e854">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d611343e851 ">Preview Source</td>
+                                    <td class="entry cellrowborder" headers="d614621e851 ">Preview Source</td>
 
-                                    <td class="entry cellrowborder" headers="d611343e854 ">Use the default <span class="ph uicontrol">Configured Source</span>
+                                    <td class="entry cellrowborder" headers="d614621e854 ">Use the default <span class="ph uicontrol">Configured Source</span>
                                         to use the sample source data.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d611343e851 ">Write to Destinations and Executors</td>
+                                    <td class="entry cellrowborder" headers="d614621e851 ">Write to Destinations and Executors</td>
 
-                                    <td class="entry cellrowborder" headers="d611343e854 ">By default, this property is not selected. In general,
+                                    <td class="entry cellrowborder" headers="d614621e854 ">By default, this property is not selected. In general,
                                         you should keep this property clear to avoid writing data to
                                         destination systems or triggering tasks in destination
                                         systems.</td>
@@ -743,17 +743,17 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d611343e851 ">Show Field Type</td>
+                                    <td class="entry cellrowborder" headers="d614621e851 ">Show Field Type</td>
 
-                                    <td class="entry cellrowborder" headers="d611343e854 ">By default, this property is selected. Keep it selected
+                                    <td class="entry cellrowborder" headers="d614621e854 ">By default, this property is selected. Keep it selected
                                         to see the data type of fields in the record. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d611343e851 ">Remember the Configuration</td>
+                                    <td class="entry cellrowborder" headers="d614621e851 ">Remember the Configuration</td>
 
-                                    <td class="entry cellrowborder" headers="d611343e854 ">Select to use these properties each time you run data
+                                    <td class="entry cellrowborder" headers="d614621e854 ">Select to use these properties each time you run data
                                         preview. <p class="p">When you select this option, the UI enters data
                                             preview without showing this dialog box again.
                                         </p>
@@ -1062,33 +1062,33 @@ except Exception as e:
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_qbw_d3m_ls__table_ejl_msm_ls" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:28.49002849002849%" /><col style="width:71.5099715099715%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d611343e1408">Field Masker Property</th>
+                                    <th class="entry cellrowborder" id="d614621e1408">Field Masker Property</th>
 
-                                    <th class="entry cellrowborder" id="d611343e1411">Configuration</th>
+                                    <th class="entry cellrowborder" id="d614621e1411">Configuration</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d611343e1408 ">Mask Type</td>
+                                    <td class="entry cellrowborder" headers="d614621e1408 ">Mask Type</td>
 
-                                    <td class="entry cellrowborder" headers="d611343e1411 ">Regular Expression</td>
+                                    <td class="entry cellrowborder" headers="d614621e1411 ">Regular Expression</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d611343e1408 ">Regular Expression</td>
+                                    <td class="entry cellrowborder" headers="d614621e1408 ">Regular Expression</td>
 
-                                    <td class="entry cellrowborder" headers="d611343e1411 ">
+                                    <td class="entry cellrowborder" headers="d614621e1411 ">
                                         <code class="ph codeph">(.*)([0-9]{4})</code></td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d611343e1408 ">Groups to Show</td>
+                                    <td class="entry cellrowborder" headers="d614621e1408 ">Groups to Show</td>
 
-                                    <td class="entry cellrowborder" headers="d611343e1411 ">2</td>
+                                    <td class="entry cellrowborder" headers="d614621e1411 ">2</td>
 
                                 </tr>
 
@@ -1133,18 +1133,18 @@ except Exception as e:
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wsj_5tm_ls__table_kcy_5bn_ls" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:29.49852507374631%" /><col style="width:70.50147492625369%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d611343e1520">Local FS Property</th>
+                                    <th class="entry cellrowborder" id="d614621e1520">Local FS Property</th>
 
-                                    <th class="entry cellrowborder" id="d611343e1523">Configuration</th>
+                                    <th class="entry cellrowborder" id="d614621e1523">Configuration</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d611343e1520 ">Files Prefix</td>
+                                    <td class="entry cellrowborder" headers="d614621e1520 ">Files Prefix</td>
 
-                                    <td class="entry cellrowborder" headers="d611343e1523 ">Defines a prefix for output file names.<p class="p">By default, the files are prefixed with "SDC" and an expression that
+                                    <td class="entry cellrowborder" headers="d614621e1523 ">Defines a prefix for output file names.<p class="p">By default, the files are prefixed with "SDC" and an expression that
                   returns the <span class="ph">Data Collector</span> ID, but
                   that's more than we need here. </p>
 Let's simplify and use "out_" instead.</td>
@@ -1152,9 +1152,9 @@ Let's simplify and use "out_" instead.</td>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d611343e1520 ">Directory Template</td>
+                                    <td class="entry cellrowborder" headers="d614621e1520 ">Directory Template</td>
 
-                                    <td class="entry cellrowborder" headers="d611343e1523 ">By default, the directory template includes datetime
+                                    <td class="entry cellrowborder" headers="d614621e1523 ">By default, the directory template includes datetime
                                         variables to create a directory structure for output files.
                                         This is intended for writing large volumes of data. <p class="p">Since
                                             we only have the sample file to process, we don't need
@@ -1168,9 +1168,9 @@ Let's simplify and use "out_" instead.</td>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d611343e1520 ">Max File Size (MB)</td>
+                                    <td class="entry cellrowborder" headers="d614621e1520 ">Max File Size (MB)</td>
 
-                                    <td class="entry cellrowborder" headers="d611343e1523 ">For the tutorial, let's lower the file size to something
+                                    <td class="entry cellrowborder" headers="d614621e1523 ">For the tutorial, let's lower the file size to something
                                         manageable, like 5 or 1.</td>
 
                                 </tr>
@@ -1188,21 +1188,21 @@ Let's simplify and use "out_" instead.</td>
                     <p class="p">Use the defaults for properties that aren't listed:</p>
 
                     <div class="simpletable-container"><table cellpadding="4" cellspacing="0" summary="" id="task_wsj_5tm_ls__simpletable_jyj_2vq_ps" border="1" class="simpletable"><col style="width:50%" /><col style="width:50%" /><thead><tr class="sthead">
-                            <th style="vertical-align:bottom;text-align:left;" id="d611343e1592" class="stentry">Delimited Property</th>
+                            <th style="vertical-align:bottom;text-align:left;" id="d614621e1592" class="stentry">Delimited Property</th>
 
-                            <th style="vertical-align:bottom;text-align:left;" id="d611343e1595" class="stentry">Configuration</th>
+                            <th style="vertical-align:bottom;text-align:left;" id="d614621e1595" class="stentry">Configuration</th>
 
                         </tr>
 </thead><tbody><tr class="strow">
-                            <td style="vertical-align:top;" headers="d611343e1592" class="stentry">Data Format</td>
+                            <td style="vertical-align:top;" headers="d614621e1592" class="stentry">Data Format</td>
 
-                            <td style="vertical-align:top;" headers="d611343e1595" class="stentry">Delimited</td>
+                            <td style="vertical-align:top;" headers="d614621e1595" class="stentry">Delimited</td>
 
                         </tr>
 <tr class="strow">
-                            <td style="vertical-align:top;" headers="d611343e1592" class="stentry">Header Line</td>
+                            <td style="vertical-align:top;" headers="d614621e1592" class="stentry">Header Line</td>
 
-                            <td style="vertical-align:top;" headers="d611343e1595" class="stentry">With Header Line</td>
+                            <td style="vertical-align:top;" headers="d614621e1595" class="stentry">With Header Line</td>
 
                         </tr>
 </tbody></table>
@@ -1264,15 +1264,15 @@ Let's simplify and use "out_" instead.</td>
                     properties:</span>
                 <div class="itemgroup info">
                     <div class="simpletable-container"><table cellpadding="4" cellspacing="0" summary="" id="task_wgb_t4p_ms__simpletable_xdm_rcr_ps" border="1" class="simpletable"><col style="width:50%" /><col style="width:50%" /><thead><tr class="sthead">
-                            <th style="vertical-align:bottom;text-align:left;" id="d611343e1730" class="stentry">Output Field</th>
+                            <th style="vertical-align:bottom;text-align:left;" id="d614621e1730" class="stentry">Output Field</th>
 
-                            <th style="vertical-align:bottom;text-align:left;" id="d611343e1733" class="stentry">Expression</th>
+                            <th style="vertical-align:bottom;text-align:left;" id="d614621e1733" class="stentry">Expression</th>
 
                         </tr>
 </thead><tbody><tr class="strow">
-                            <td style="vertical-align:top;" headers="d611343e1730" class="stentry">/credit_card_type</td>
+                            <td style="vertical-align:top;" headers="d614621e1730" class="stentry">/credit_card_type</td>
 
-                            <td style="vertical-align:top;" headers="d611343e1733" class="stentry">n/a</td>
+                            <td style="vertical-align:top;" headers="d614621e1733" class="stentry">n/a</td>
 
                         </tr>
 </tbody></table>
@@ -1333,39 +1333,39 @@ Let's simplify and use "out_" instead.</td>
                     <p class="p">Use the defaults for properties that aren't listed:</p>
 
                     <div class="simpletable-container"><table cellpadding="4" cellspacing="0" summary="" id="task_ets_dkj_ps__simpletable_z34_ctj_ps" border="1" class="simpletable"><col style="width:30.3951367781155%" /><col style="width:69.6048632218845%" /><thead><tr class="sthead">
-                            <th style="vertical-align:bottom;text-align:left;" id="d611343e1847" class="stentry">Data Rule Property</th>
+                            <th style="vertical-align:bottom;text-align:left;" id="d614621e1847" class="stentry">Data Rule Property</th>
 
-                            <th style="vertical-align:bottom;text-align:left;" id="d611343e1850" class="stentry">Description</th>
+                            <th style="vertical-align:bottom;text-align:left;" id="d614621e1850" class="stentry">Description</th>
 
                         </tr>
 </thead><tbody><tr class="strow">
-                            <td style="vertical-align:top;" headers="d611343e1847" class="stentry">Label</td>
+                            <td style="vertical-align:top;" headers="d614621e1847" class="stentry">Label</td>
 
-                            <td style="vertical-align:top;" headers="d611343e1850" class="stentry">Missing Card Numbers</td>
-
-                        </tr>
-<tr class="strow">
-                            <td style="vertical-align:top;" headers="d611343e1847" class="stentry">Condition</td>
-
-                            <td style="vertical-align:top;" headers="d611343e1850" class="stentry">${record:value("/credit_card") == ""}</td>
+                            <td style="vertical-align:top;" headers="d614621e1850" class="stentry">Missing Card Numbers</td>
 
                         </tr>
 <tr class="strow">
-                            <td style="vertical-align:top;" headers="d611343e1847" class="stentry">Sampling Percentage</td>
+                            <td style="vertical-align:top;" headers="d614621e1847" class="stentry">Condition</td>
 
-                            <td style="vertical-align:top;" headers="d611343e1850" class="stentry">35</td>
-
-                        </tr>
-<tr class="strow">
-                            <td style="vertical-align:top;" headers="d611343e1847" class="stentry">Alert Text</td>
-
-                            <td style="vertical-align:top;" headers="d611343e1850" class="stentry">At least 10 missing credit card numbers!</td>
+                            <td style="vertical-align:top;" headers="d614621e1850" class="stentry">${record:value("/credit_card") == ""}</td>
 
                         </tr>
 <tr class="strow">
-                            <td style="vertical-align:top;" headers="d611343e1847" class="stentry">Threshold Value</td>
+                            <td style="vertical-align:top;" headers="d614621e1847" class="stentry">Sampling Percentage</td>
 
-                            <td style="vertical-align:top;" headers="d611343e1850" class="stentry">10</td>
+                            <td style="vertical-align:top;" headers="d614621e1850" class="stentry">35</td>
+
+                        </tr>
+<tr class="strow">
+                            <td style="vertical-align:top;" headers="d614621e1847" class="stentry">Alert Text</td>
+
+                            <td style="vertical-align:top;" headers="d614621e1850" class="stentry">At least 10 missing credit card numbers!</td>
+
+                        </tr>
+<tr class="strow">
+                            <td style="vertical-align:top;" headers="d614621e1847" class="stentry">Threshold Value</td>
+
+                            <td style="vertical-align:top;" headers="d614621e1850" class="stentry">10</td>
 
                         </tr>
 </tbody></table>
