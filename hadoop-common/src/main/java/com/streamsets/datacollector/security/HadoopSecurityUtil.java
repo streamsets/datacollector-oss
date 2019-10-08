@@ -65,7 +65,13 @@ public class HadoopSecurityUtil {
     String configGroup,
     String configName
   ) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("getProxyUser called with user={}, loginUser={}", user, loginUser.toString());
+    }
     final String currentUser = getCurrentUser(context);
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("currentUser calculated as {}", currentUser);
+    }
     try {
       return getProxyUser(user, currentUser, context.getConfiguration(),loginUser);
     } catch (IllegalImpersonationException e) {
@@ -108,11 +114,22 @@ public class HadoopSecurityUtil {
       com.streamsets.pipeline.api.Configuration configuration,
       UserGroupInformation loginUser
   ) throws IllegalImpersonationException {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug(
+          "getProxyUser called with requestedUser={}, currentUser={}, loginUser={}",
+          requestedUser,
+          currentUser,
+          loginUser.toString()
+      );
+    }
     // Should we always impersonate current user?
     boolean alwaysImpersonate = configuration.get(
         HadoopConfigConstants.IMPERSONATION_ALWAYS_CURRENT_USER,
         false
     );
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("alwaysImpersonate calculated as {}", alwaysImpersonate);
+    }
 
     // If so, propagate current user to "user" (the one to be impersonated)
     if(alwaysImpersonate) {
@@ -124,6 +141,9 @@ public class HadoopSecurityUtil {
 
     // If impersonated user is empty, simply return login UGI (no impersonation performed)
     if(StringUtils.isEmpty(requestedUser)) {
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("requestedUser was empty, thus returning the login UGI of {}", loginUser);
+      }
       return loginUser;
     }
 
@@ -132,8 +152,18 @@ public class HadoopSecurityUtil {
         HadoopConfigConstants.LOWERCASE_USER,
         false
     );
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("lowerCase calculated as {}", lowerCase);
+    }
     if(lowerCase) {
       requestedUser = requestedUser.toLowerCase();
+    }
+    if (LOG.isDebugEnabled()) {
+      LOG.debug(
+          "About to create proxy user for requestedUser={}, loginUser={} calculated as {}",
+          requestedUser,
+          loginUser
+      );
     }
     return UserGroupInformation.createProxyUser(requestedUser, loginUser);
   }
