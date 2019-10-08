@@ -239,7 +239,7 @@ public class SolrConfigBean {
       min = 0,
       defaultValue = "0",
       label = "Socket Timeout (ms)",
-      description = "Socket timeout (in milliseconds. 0 indicates no timeout",
+      description = "Socket timeout in milliseconds. 0 indicates no timeout",
       displayPosition = 1040,
       group = "SOLR"
   )
