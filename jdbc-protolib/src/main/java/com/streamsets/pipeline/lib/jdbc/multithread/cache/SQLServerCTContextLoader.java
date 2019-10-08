@@ -23,6 +23,7 @@ import com.streamsets.pipeline.lib.jdbc.multithread.TableReadContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableRuntimeContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.MSQueryUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.sql.Connection;
@@ -48,6 +49,18 @@ public class SQLServerCTContextLoader extends CacheLoader<TableRuntimeContext, T
     this.includeJoin = includeJoin;
   }
 
+  /**
+   * Returns qualified table name (schema.table name) for the MSSQL Server. It uses the [] chars
+   * to allow reserved words as table names.
+   * @param schema schema name, can be null
+   * @param tableName table name
+   * @return qualified table name if schema is not null and tableName alone if schema is null.
+   */
+  public static String getMSSQLQualifiedTableName(String schema, String tableName) {
+    tableName = "["+tableName+"]";
+    return StringUtils.isEmpty(schema) ? tableName : "[" + schema + "]" + "." + tableName ;
+  }
+
   @Override
   public TableReadContext load(TableRuntimeContext tableRuntimeContext) throws Exception {
     TableContext tableContext = tableRuntimeContext.getSourceTableContext();
@@ -57,7 +70,7 @@ public class SQLServerCTContextLoader extends CacheLoader<TableRuntimeContext, T
     String query = MSQueryUtil.buildQuery(
         offset,
         fetchSize,
-        tableContext.getQualifiedName(),
+        getMSSQLQualifiedTableName(tableContext.getSchema(),tableContext.getTableName()),
         tableContext.getOffsetColumns(),
         tableContext.getOffsetColumnToStartOffset(),
         includeJoin,

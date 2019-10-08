@@ -19,6 +19,7 @@ import com.google.common.cache.CacheLoader;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.jdbc.multithread.ConnectionManager;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContext;
@@ -112,4 +113,28 @@ public class SQLServerCTSource extends AbstractTableJdbcSource {
         ctTableJdbcConfigBean.includeJoin
     );
   }
+
+  @Override
+  public void updateMaxOffsetsForTable(TableContext tableContext) {
+    try {
+      String schema = "[" + tableContext.getSchema() + "]";
+      String tableName = "[" + tableContext.getTableName() + "]";
+      tableContext.updateOffsetColumnToMaxValues(JdbcUtil.getMaximumOffsetValues(
+          tableContext.getVendor(),
+          connectionManager.getConnection(),
+          schema,
+          tableName,
+          tableContext.getQuoteChar(),
+          tableContext.getOffsetColumns()
+      ));
+    } catch (SQLException e) {
+      LOG.error(
+          "SQLException attempting to update max offsets for TableContext {}: {}",
+          tableContext,
+          e.getMessage(),
+          e
+      );
+    }
+  }
+
 }
