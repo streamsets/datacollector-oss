@@ -104,6 +104,11 @@
       <artifactId>streamsets-datacollector-kafka_target-protolib</artifactId>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
