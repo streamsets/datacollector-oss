@@ -288,7 +288,7 @@ public abstract class StageDefinitionExtractor {
           }
         } catch (Exception ex) {
           throw new IllegalArgumentException(Utils.format(
-              "Could not instantiate StageUpgrader for StageDefinition '{}': {}", name, ex.toString(), ex));
+              "Could not instantiate StageUpgrader for StageDefinition '{}': {}", name, ex.toString()), ex);
         }
 
         boolean resetOffset = sDef.resetOffset();
