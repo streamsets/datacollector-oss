@@ -19,6 +19,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.sforce.soap.partner.DeleteResult;
+import com.sforce.soap.partner.DescribeSObjectResult;
 import com.sforce.soap.partner.Error;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.soap.partner.SaveResult;
@@ -58,10 +59,38 @@ public class ForceSoapWriter extends ForceWriter {
   private static final int MAX_RECORDS_CREATE = 200;
   private static final Logger LOG = LoggerFactory.getLogger(ForceSoapWriter.class);
 
+  private DescribeSObjectResult describeResult = null;
+  private Map<String, String> fieldTypeMap = new HashMap<>();
+
   public ForceSoapWriter(
       PartnerConnection partnerConnection, String sObject, Map<String, String> customMappings
   ) throws ConnectionException {
     super(partnerConnection, sObject, customMappings);
+  }
+
+  private String getTypeForRelationship(String fieldName) throws StageException {
+    String ret = fieldTypeMap.get(fieldName);
+    if (ret != null) {
+      return ret;
+    }
+
+    if (describeResult == null) {
+      try {
+        describeResult = partnerConnection.describeSObject(sObject);
+      } catch (ConnectionException e) {
+        throw new StageException(Errors.FORCE_08, e);
+      }
+    }
+
+    for (com.sforce.soap.partner.Field field : describeResult.getFields()) {
+      if (fieldName.equalsIgnoreCase(field.getRelationshipName())) {
+        String type = field.getReferenceTo()[0];
+        fieldTypeMap.put(fieldName, type);
+        return type;
+      }
+    }
+
+    throw new StageException(Errors.FORCE_43, fieldName);
   }
 
   private String[] sObjectsToIds(SObject[] sobjects) {
@@ -149,7 +178,7 @@ public class ForceSoapWriter extends ForceWriter {
         LOG.debug("Expression '{}' is evaluated to '{}' : ", target.conf.externalIdField, partitionName);
         partitions.put(partitionName, sobject);
       } catch (ELEvalException e) {
-        LOG.error("Failed to evaluate expression '{}' : ", target.conf.externalIdField, e.toString(), e);
+        LOG.error("Failed to evaluate expression '{}' : {}", target.conf.externalIdField, e.toString(), e);
         errorRecords.add(new OnRecordErrorException(record, e.getErrorCode(), e.getParams()));
       }
     }
@@ -258,14 +287,26 @@ public class ForceSoapWriter extends ForceWriter {
               (opCode == OperationType.UPDATE_CODE || opCode == OperationType.UPSERT_CODE)) {
             fieldsToNull.add(sFieldName);
           } else {
-            Field.Type type = field.getType();
-            // Salesforce WSC does not work correctly with Date type for times or datetimes
-            if (type == TIME || type == DATETIME) {
-              Calendar cal = Calendar.getInstance();
-              cal.setTime((Date)value);
-              value = cal;
+            if (sFieldName.contains(".")) {
+              String[] parts = sFieldName.split("\\.");
+              if (parts.length > 2) {
+                throw new StageException(Errors.FORCE_42, sFieldName);
+              }
+              SObject parent = new SObject();
+              parent.setType(getTypeForRelationship(parts[0]));
+              parent.setField(parts[1], value);
+
+              so.setField(parts[0], parent);
+            } else {
+              Field.Type type = field.getType();
+              // Salesforce WSC does not work correctly with Date type for times or datetimes
+              if (type == TIME || type == DATETIME) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime((Date)value);
+                value = cal;
+              }
+              so.setField(sFieldName, value);
             }
-            so.setField(sFieldName, value);
           }
         }
         if (fieldsToNull.size() > 0) {

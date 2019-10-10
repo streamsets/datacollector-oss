@@ -63,6 +63,8 @@ public enum Errors implements ErrorCode {
   FORCE_39("Unexpected end of XML Stream"),
   FORCE_40("CDC record is missing ChangeEventHeader"),
   FORCE_41("Unexpected event type in XML Stream: {}"),
+  FORCE_42("Can only follow one level of external ID relationship: {}"),
+  FORCE_43("Can't find type for field name: {}"),
   ;
   private final String msg;
 
