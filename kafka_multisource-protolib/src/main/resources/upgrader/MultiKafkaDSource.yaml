@@ -30,6 +30,6 @@ upgrades:
           value: /kafkaMessageKey
   - toVersion: 4
     actions:
-      -setConfig:
-        name: conf.dataFormatConfig.basicAuth
-        value: ""
+      - setConfig:
+          name: conf.dataFormatConfig.basicAuth
+          value: ""

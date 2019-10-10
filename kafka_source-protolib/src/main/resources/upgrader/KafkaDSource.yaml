@@ -32,4 +32,4 @@ upgrades:
     actions:
       - setConfig:
           name: kafkaConfigBean.dataFormatConfig.basicAuth
-            value: ""
+          value: ""
