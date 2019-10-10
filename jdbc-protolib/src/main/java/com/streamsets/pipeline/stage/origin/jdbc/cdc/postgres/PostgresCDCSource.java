@@ -196,9 +196,12 @@ public class PostgresCDCSource extends BaseSource {
     PostgresWalRecord postgresWalRecord;
     maxBatchSize = Math.min(configBean.baseConfigBean.maxBatchSize, maxBatchSize);
     int currentBatchSize = 0;
+    int recordGenerationAttempts = 0;
+
     while (generationStarted &&
           !getContext().isStopped() &&
-          currentBatchSize < maxBatchSize) {
+          currentBatchSize < maxBatchSize &&
+          recordGenerationAttempts++ < MAX_RECORD_GENERATION_ATTEMPTS) {
 
       postgresWalRecord = cdcQueue.poll();
 
