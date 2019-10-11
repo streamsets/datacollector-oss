@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.lib.io.fileref.AbstractSpoolerFileRef;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -95,6 +96,23 @@ public interface WrappedFileSystem {
    * @return  {@code true} if, and only if, the file exists
    */
   void addDirectory(WrappedFile dirPath, List<WrappedFile> directories) throws Exception;
+
+  /**
+   * Walk through a directory and collect all the files contained inside that are pending to read. Glob patterns
+   * are supported; in which case the walk will be performed for each directory that matches the pattern, and the
+   * resulting list will be a concatenation of the files found for each directory.
+   *
+   * @param dirPath Directory or glob pattern taken as the root path for the walk.
+   * @param startingFile Employed to filter out any file already read, according to the read order criteria. If null
+   *     or empty, no file will be discarded.
+   * @param includeStartingFile Discard or not the startingFile from the returned list.
+   * @param useLastModified Define the read order criteria: last modified timestamp or lexicographical order.
+   * @return A list containing all the files found which are pending to read.
+   */
+  default List<WrappedFile> walkDirectory(WrappedFile dirPath, WrappedFile startingFile,
+      boolean includeStartingFile, boolean useLastModified) {
+    return new ArrayList<>();
+  }
 
   /**
    * Tells whether or not the file exists.

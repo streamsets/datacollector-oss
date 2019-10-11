@@ -171,7 +171,7 @@ public abstract class SpoolDirBaseSource extends BasePushSource {
         conf.poolingTimeoutSecs = 1;
       }
 
-      DirectorySpooler.Builder builder = DirectorySpooler.builder()
+      DirectorySpooler.Builder builder = getDirectorySpoolerBuilder()
           .setWrappedFileSystem(getFs())
           .setDir(conf.spoolDir)
           .setFilePattern(conf.filePattern)
@@ -197,6 +197,10 @@ public abstract class SpoolDirBaseSource extends BasePushSource {
     }
 
     return issues;
+  }
+
+  protected DirectorySpooler.Builder getDirectorySpoolerBuilder() {
+    return new DirectorySpooler.Builder();
   }
 
   private boolean validateDir(

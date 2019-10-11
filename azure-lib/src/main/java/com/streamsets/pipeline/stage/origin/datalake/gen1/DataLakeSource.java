@@ -16,8 +16,10 @@
 
 package com.streamsets.pipeline.stage.origin.datalake.gen1;
 
+import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
 import com.streamsets.pipeline.lib.dirspooler.SpoolDirConfigBean;
 import com.streamsets.pipeline.lib.dirspooler.WrappedFileSystem;
+import com.streamsets.pipeline.stage.origin.datalake.AzureDirectorySpooler;
 import com.streamsets.pipeline.stage.origin.datalake.AzureHdfsFileSystem;
 import com.streamsets.pipeline.stage.origin.hdfs.HdfsSource;
 
@@ -40,5 +42,10 @@ public class DataLakeSource extends HdfsSource {
   public WrappedFileSystem getFs() {
     return new AzureHdfsFileSystem(super.conf.filePattern, super.conf.pathMatcherMode,
         super.conf.processSubdirectories, hdfsSourceConfigBean.getFileSystem());
+  }
+
+  @Override
+  protected DirectorySpooler.Builder getDirectorySpoolerBuilder() {
+    return new AzureDirectorySpooler.Builder();
   }
 }

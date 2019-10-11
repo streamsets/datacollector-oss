@@ -75,7 +75,7 @@ public class TestDirectorySpoolerSubDirectories {
   }
 
   private DirectorySpooler.Builder initializeAndGetBuilder() {
-    return DirectorySpooler.builder()
+    return new DirectorySpooler.Builder()
         .setContext(context)
         .setWrappedFileSystem(fs)
         .setDir(spoolDir.getAbsolutePath())

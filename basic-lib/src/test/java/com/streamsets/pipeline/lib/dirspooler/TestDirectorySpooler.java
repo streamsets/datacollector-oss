@@ -71,7 +71,7 @@ public class TestDirectorySpooler {
   }
 
   private DirectorySpooler.Builder initializeAndGetBuilder() {
-    return DirectorySpooler.builder()
+    return new DirectorySpooler.Builder()
         .setContext(context)
         .setWrappedFileSystem(new LocalFileSystem("x[0-9]*.log", GLOB))
         .setDir(spoolDir.getAbsolutePath())
