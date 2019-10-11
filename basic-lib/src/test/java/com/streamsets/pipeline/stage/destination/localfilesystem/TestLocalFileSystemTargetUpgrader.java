@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 StreamSets Inc.
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.streamsets.pipeline.stage.origin.multikafka;
+package com.streamsets.pipeline.stage.destination.localfilesystem;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageUpgrader;
@@ -27,16 +26,15 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestMultiKafkaSourceUpgrader {
-
+public class TestLocalFileSystemTargetUpgrader {
   @Test
   public void testV2ToV3() {
     List<Config> configs = new ArrayList<>();
 
-    final URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/MultiKafkaDSource.yaml");
+    final URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/LocalFileSystemDTarget.yaml");
     final SelectorStageUpgrader upgrader = new SelectorStageUpgrader(
         "stage",
-        new MultiKafkaSourceUpgrader(),
+        new LocalFileSystemTargetUpgrader(),
         yamlResource
     );
 
@@ -46,28 +44,15 @@ public class TestMultiKafkaSourceUpgrader {
 
     configs = upgrader.upgrade(configs, context);
 
-    UpgraderTestUtils.assertExists(configs, "conf.keyCaptureMode", "NONE");
-    UpgraderTestUtils.assertExists(configs, "conf.keyCaptureAttribute", "kafkaMessageKey");
-    UpgraderTestUtils.assertExists(configs, "conf.keyCaptureField", "/kafkaMessageKey");
-  }
-
-  @Test
-  public void testV3ToV4() {
-    List<Config> configs = new ArrayList<>();
-
-    final URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/MultiKafkaDSource.yaml");
-    final SelectorStageUpgrader upgrader = new SelectorStageUpgrader(
-        "stage",
-        new MultiKafkaSourceUpgrader(),
-        yamlResource
+    UpgraderTestUtils.assertExists(
+        configs,
+        "configs.dataGeneratorFormatConfig.basicAuthUserInfo",
+        ""
     );
-
-    StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
-    Mockito.doReturn(3).when(context).getFromVersion();
-    Mockito.doReturn(4).when(context).getToVersion();
-
-    configs = upgrader.upgrade(configs, context);
-
-    UpgraderTestUtils.assertExists(configs, "conf.dataFormatConfig.basicAuth", "");
+    UpgraderTestUtils.assertExists(
+        configs,
+        "configs.dataGeneratorFormatConfig.basicAuthUserInfoForRegistration",
+        ""
+    );
   }
 }

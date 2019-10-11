@@ -17,13 +17,18 @@ package com.streamsets.pipeline.stage.destination.hdfs;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
+import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -209,5 +214,34 @@ public class TestHdfsTargetUpgrader {
 
     Assert.assertTrue(configValues.containsKey("hdfsTargetConfigBean.rollHeaderName"));
     Assert.assertEquals("roll", configValues.get("hdfsTargetConfigBean.rollHeaderName"));
+  }
+
+  @Test
+  public void testUpgradeV4ToV5() throws StageException {
+    List<Config> configs = new ArrayList<>();
+
+    final URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/HdfsDTarget.yaml");
+    final SelectorStageUpgrader upgrader = new SelectorStageUpgrader(
+        "stage",
+        new HdfsTargetUpgrader(),
+        yamlResource
+    );
+
+    StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
+    Mockito.doReturn(4).when(context).getFromVersion();
+    Mockito.doReturn(5).when(context).getToVersion();
+
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(
+        configs,
+        "hdfsTargetConfigBean.dataGeneratorFormatConfig.basicAuthUserInfo",
+        ""
+    );
+    UpgraderTestUtils.assertExists(
+        configs,
+        "hdfsTargetConfigBean.dataGeneratorFormatConfig.basicAuthUserInfoForRegistration",
+        ""
+    );
   }
 }
