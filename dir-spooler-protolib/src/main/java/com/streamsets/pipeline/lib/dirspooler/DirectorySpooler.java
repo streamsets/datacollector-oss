@@ -50,46 +50,42 @@ public class DirectorySpooler {
 
   private final PushSource.Context context;
   private final String spoolDir;
-  private final int maxSpoolFiles;
+  protected final int maxSpoolFiles;
   private final String pattern;
   private final PathMatcherMode pathMatcherMode;
   private final FilePostProcessing postProcessing;
   private final String archiveDir;
   private final long archiveRetentionMillis;
   private final String errorArchiveDir;
-  private final boolean useLastModified;
+  protected final boolean useLastModified;
   private final Comparator<WrappedFile> pathComparator;
-  private final boolean processSubdirectories;
+  protected final boolean processSubdirectories;
   private final long spoolingPeriodSec;
-  private final WrappedFileSystem fs;
-  private final ReadWriteLock closeLock = new ReentrantReadWriteLock();
+  protected final WrappedFileSystem fs;
+  protected final ReadWriteLock closeLock = new ReentrantReadWriteLock();
 
   private final long intervalMillis;
   private Exception destroyCauseException;
 
   public enum FilePostProcessing {NONE, DELETE, ARCHIVE}
 
-  public static Builder builder() {
-    return new Builder();
-  }
-
   public static class Builder {
-    private PushSource.Context context;
-    private String spoolDir;
-    private int maxSpoolFiles;
-    private String pattern;
-    private PathMatcherMode pathMatcherMode = PathMatcherMode.GLOB;
-    private FilePostProcessing postProcessing;
-    private String archiveDir;
-    private long archiveRetentionMillis;
-    private String errorArchiveDir;
-    private boolean waitForPathAppearance;
-    private boolean useLastModifiedTimestamp;
-    private boolean processSubdirectories;
-    private long spoolingPeriodSec = 5;
-    private WrappedFileSystem fs;
+    protected PushSource.Context context;
+    protected String spoolDir;
+    protected int maxSpoolFiles;
+    protected String pattern;
+    protected PathMatcherMode pathMatcherMode = PathMatcherMode.GLOB;
+    protected FilePostProcessing postProcessing;
+    protected String archiveDir;
+    protected long archiveRetentionMillis;
+    protected String errorArchiveDir;
+    protected boolean waitForPathAppearance;
+    protected boolean useLastModifiedTimestamp;
+    protected boolean processSubdirectories;
+    protected long spoolingPeriodSec = 5;
+    protected WrappedFileSystem fs;
 
-    private Builder() {
+    public Builder() {
       postProcessing = FilePostProcessing.NONE;
     }
 
@@ -178,7 +174,11 @@ public class DirectorySpooler {
       return this;
     }
 
-    public DirectorySpooler build() {
+    /**
+     * Check builder attributes are correctly set to properly build a DirectorySpooler through the
+     * {@link Builder#build()} method.
+     */
+    protected void checkArguments() {
       Preconditions.checkArgument(context != null, "context not specified");
       Preconditions.checkArgument(spoolDir != null, "spool dir not specified");
       Preconditions.checkArgument(maxSpoolFiles > 0, "max spool files not specified");
@@ -186,7 +186,10 @@ public class DirectorySpooler {
       if (postProcessing == FilePostProcessing.ARCHIVE) {
         Preconditions.checkArgument(archiveDir != null, "archive dir not specified");
       }
+    }
 
+    public DirectorySpooler build() {
+      checkArguments();
       return new DirectorySpooler(
           context,
           spoolDir,
@@ -272,22 +275,22 @@ public class DirectorySpooler {
     intervalMillis = 5000;
   }
 
-  private volatile WrappedFile currentFile;
-  private WrappedFile initialFile;
+  protected volatile WrappedFile currentFile;
+  protected WrappedFile initialFile;
 
-  private WrappedFile spoolDirPath;
+  protected WrappedFile spoolDirPath;
   private WrappedFile archiveDirPath;
   private WrappedFile errorArchiveDirPath;
-  private PriorityBlockingQueue<WrappedFile> filesQueue;
+  protected PriorityBlockingQueue<WrappedFile> filesQueue;
   private Set<WrappedFile> filesSet;
   private WrappedFile previousFile;
   private ScheduledExecutorService scheduledExecutor;
   private boolean waitForPathAppearance;
 
-  private Meter spoolQueueMeter;
-  private Counter pendingFilesCounter;
+  protected Meter spoolQueueMeter;
+  protected Counter pendingFilesCounter;
 
-  private volatile boolean running;
+  protected volatile boolean running;
 
   volatile FilePurger purger;
   volatile FileFinder finder;
@@ -464,7 +467,7 @@ public class DirectorySpooler {
     }
   }
 
-  private void addFileToQueue(WrappedFile file, boolean checkCurrent) {
+  protected void addFileToQueue(WrappedFile file, boolean checkCurrent) {
     Preconditions.checkNotNull(file, "file cannot be null");
     if (checkCurrent) {
       final boolean currentFileExists = currentFile != null && StringUtils.isNotEmpty(currentFile.toString());
@@ -615,13 +618,10 @@ public class DirectorySpooler {
     }
   }
 
-  private List<WrappedFile> findAndQueueFiles(
-      final boolean includeStartingFile,
-      boolean checkCurrent
-  ) throws IOException {
+  protected void findAndQueueFiles(final boolean includeStartingFile, boolean checkCurrent) throws IOException {
     if (filesQueue.size() >= maxSpoolFiles) {
       LOG.debug(Utils.format("Exceeded max number '{}' of spool files in directory", maxSpoolFiles));
-      return null;
+      return;
     }
 
     final List<WrappedFile> directories = new ArrayList<>();
@@ -643,7 +643,6 @@ public class DirectorySpooler {
       directories.add(spoolDirPath);
     }
 
-
     for (WrappedFile dir : directories) {
       try {
         List<WrappedFile> matchingFile = new ArrayList<>();
@@ -657,7 +656,7 @@ public class DirectorySpooler {
 
             for (WrappedFile file : matchingFile) {
               if (!running) {
-                return null;
+                return;
               }
 
               if (this.currentFile == null
@@ -685,7 +684,6 @@ public class DirectorySpooler {
     spoolQueueMeter.mark(filesQueue.size());
     pendingFilesCounter.inc(filesQueue.size() - pendingFilesCounter.getCount());
     LOG.debug("Found '{}' files", filesQueue.size());
-    return directories;
   }
 
   void handleOlderFiles(final WrappedFile startingFile) throws IOException {

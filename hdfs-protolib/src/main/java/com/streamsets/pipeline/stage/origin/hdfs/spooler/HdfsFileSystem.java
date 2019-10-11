@@ -42,7 +42,7 @@ public class HdfsFileSystem implements WrappedFileSystem {
   private final static Logger LOG = LoggerFactory.getLogger(HdfsFileSystem.class);
   protected final FileSystem fs;
   private final String filePattern;
-  private final boolean processSubdirectories;
+  protected final boolean processSubdirectories;
   private PathFilter filter;
 
   public HdfsFileSystem(String filePattern, PathMatcherMode mode, boolean processSubdirectories, FileSystem fs) {
