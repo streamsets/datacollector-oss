@@ -208,4 +208,33 @@ public class TestKafkaTargetUpgrader {
 
     UpgraderTestUtils.assertExists(configs, "conf.messageKeyFormat", "STRING");
   }
+
+  @Test
+  public void testUpgradeV5ToV6() throws Exception{
+    List<Config> configs = new ArrayList<>();
+
+    final URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/KafkaDTarget.yaml");
+    final SelectorStageUpgrader upgrader = new SelectorStageUpgrader(
+        "stage",
+        new KafkaTargetUpgrader(),
+        yamlResource
+    );
+
+    StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
+    Mockito.doReturn(5).when(context).getFromVersion();
+    Mockito.doReturn(6).when(context).getToVersion();
+
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(
+        configs,
+        "conf.dataGeneratorFormatConfig.basicAuthUserInfo",
+        ""
+    );
+    UpgraderTestUtils.assertExists(
+        configs,
+        "conf.dataGeneratorFormatConfig.basicAuthUserInfoForRegistration",
+        ""
+    );
+  }
 }

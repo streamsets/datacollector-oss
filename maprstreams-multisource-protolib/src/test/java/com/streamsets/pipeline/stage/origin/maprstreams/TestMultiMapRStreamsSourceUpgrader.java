@@ -51,4 +51,24 @@ public class TestMultiMapRStreamsSourceUpgrader {
     UpgraderTestUtils.assertExists(configs, "conf.keyCaptureAttribute", "kafkaMessageKey");
     UpgraderTestUtils.assertExists(configs, "conf.keyCaptureField", "/kafkaMessageKey");
   }
+
+  @Test
+  public void testV3ToV4() {
+    List<Config> configs = new ArrayList<>();
+
+    final URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/MultiMapRStreamsDSource.yaml");
+    final SelectorStageUpgrader upgrader = new SelectorStageUpgrader(
+        "stage",
+        null,
+        yamlResource
+    );
+
+    StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
+    Mockito.doReturn(3).when(context).getFromVersion();
+    Mockito.doReturn(4).when(context).getToVersion();
+
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, "conf.dataFormatConfig.basicAuth", "");
+  }
 }
