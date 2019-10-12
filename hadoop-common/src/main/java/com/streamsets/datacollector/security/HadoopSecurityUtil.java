@@ -134,7 +134,7 @@ public class HadoopSecurityUtil {
     // If so, propagate current user to "user" (the one to be impersonated)
     if(alwaysImpersonate) {
       if(!StringUtils.isEmpty(requestedUser)) {
-        throw new IllegalImpersonationException(currentUser, requestedUser);
+        throw new IllegalImpersonationException(requestedUser, currentUser);
       }
       requestedUser = currentUser;
     }
