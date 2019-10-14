@@ -21,11 +21,11 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum Groups implements Label {
   JDBC("JDBC"),
+  ENCRYPTION("Connection Encryption"),
   CREDENTIALS("Credentials"),
   CDC("Change Data Capture"),
   LEGACY("Legacy Drivers"),
   ADVANCED("Advanced"),
-  ENCRYPTION("Connection Encryption"),
   ;
 
   private final String label;
