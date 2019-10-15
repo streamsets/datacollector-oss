@@ -105,7 +105,7 @@ public class ClusterConfig {
       defaultValue = "/streamsets",
       displayPosition = 106,
       dependsOn = "clusterType",
-      triggeredByValue = "DATABRICKS"
+      triggeredByValue = {"DATABRICKS", "SQL_SERVER_BIG_DATA_CLUSTER"}
   )
   public String stagingDir = "/streamsets";
 
