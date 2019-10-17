@@ -27,6 +27,7 @@ import com.streamsets.pipeline.lib.http.SslConfigBean;
 import com.streamsets.pipeline.lib.http.logging.JulLogLevelChooserValues;
 import com.streamsets.pipeline.lib.http.logging.RequestLoggingConfigBean;
 import com.streamsets.pipeline.lib.http.logging.VerbosityChooserValues;
+import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
 import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgraderTestUtil;
 import org.glassfish.jersey.client.RequestEntityProcessing;
 import org.junit.Assert;
@@ -335,9 +336,10 @@ public class TestHttpProcessorUpgrader {
     HttpProcessorUpgrader upgrader = new HttpProcessorUpgrader();
     upgrader.upgrade("lib", "stage", "inst", 11, 12, configs);
 
-    UpgraderTestUtils.assertAllExist(
+    UpgraderTestUtils.assertExists(
         configs,
-        "conf.parsedFieldPath"
+        "conf.multipleValuesBehavior",
+        MultipleValuesBehavior.FIRST_ONLY
     );
   }
 }

@@ -24,6 +24,7 @@ import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
 import com.streamsets.pipeline.lib.http.HttpCompressionType;
 import com.streamsets.pipeline.lib.http.JerseyClientUtil;
 import com.streamsets.pipeline.lib.http.logging.HttpConfigUpgraderUtil;
+import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
 import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgradeUtil;
 
 import java.util.ArrayList;
@@ -178,5 +179,6 @@ public class HttpProcessorUpgrader implements StageUpgrader {
   }
 
   private void upgradeV11ToV12(List<Config> configs) {
+    configs.add(new Config(joiner.join(CONF, "multipleValuesBehavior"), MultipleValuesBehavior.FIRST_ONLY));
   }
 }
