@@ -51,6 +51,37 @@
   </developers>
 
   <properties>
+
+    <!-- #ALEX# BEGIN: VERIFY THESE PROPS ARE CORRECT IN THE CONTEXT OF SDC -->
+
+    <!-- Required JDK version -->
+    <javaVersion>1.8</javaVersion>
+
+    <!-- Dependency versions -->
+    <datacollector-api.version>3.12.0-SNAPSHOT</datacollector-api.version>
+    <connector-common.version>1.2.0-SNAPSHOT</connector-common.version>
+    <datacollector-executor.version>1.0.0-SNAPSHOT</datacollector-executor.version>
+    <guava.version>18.0</guava.version>
+    <hamcrest.version>1.3</hamcrest.version>
+    <hikaricp.version>3.2.0</hikaricp.version>
+    <jackson.version>2.8.9</jackson.version>
+    <joda.version>2.8</joda.version>
+    <junit.version>4.12</junit.version>
+    <slf4j.version>1.7.7</slf4j.version>
+
+    <!-- Maven plugins -->
+    <dependency-check-maven.version>3.1.2</dependency-check-maven.version>
+    <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
+    <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
+    <maven-assembly-plugin.version>2.6</maven-assembly-plugin.version>
+    <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
+    <maven-deploy.version>2.8.2</maven-deploy.version>
+    <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+    <maven-project-info-reports-plugin.version>2.8</maven-project-info-reports-plugin.version>
+    <maven-source-plugin.version>2.4</maven-source-plugin.version>
+
+    <!-- #ALEX# END: VERIFY THESE PROPS ARE CORRECT IN THE CONTEXT OF SDC -->
+
     <rat-plugin.version>0.12</rat-plugin.version>
 
     <!--

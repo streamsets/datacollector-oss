@@ -77,6 +77,7 @@ public class HikariPoolConfigBean {
   private Properties additionalProperties = new Properties();
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.BASIC,
       required = true,
       type = ConfigDef.Type.STRING,
       label = "JDBC Connection String",
@@ -86,6 +87,7 @@ public class HikariPoolConfigBean {
   public String connectionString = "";
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.BASIC,
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "true",
@@ -93,9 +95,10 @@ public class HikariPoolConfigBean {
       displayPosition = 15,
       group = "JDBC"
   )
-  public boolean useCredentials;
+  public boolean useCredentials = true;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.BASIC,
       required = true,
       type = ConfigDef.Type.CREDENTIAL,
       dependsOn = "useCredentials",
@@ -107,6 +110,7 @@ public class HikariPoolConfigBean {
   public CredentialValue username;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.BASIC,
       required = true,
       type = ConfigDef.Type.CREDENTIAL,
       dependsOn = "useCredentials",
@@ -118,6 +122,7 @@ public class HikariPoolConfigBean {
   public CredentialValue password;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = false,
       type = ConfigDef.Type.MODEL,
       defaultValue = "[]",
@@ -130,6 +135,7 @@ public class HikariPoolConfigBean {
   public List<ConnectionPropertyBean> driverProperties = new ArrayList<>();
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = false,
       type = ConfigDef.Type.STRING,
       label = "JDBC Driver Class Name",
@@ -140,6 +146,7 @@ public class HikariPoolConfigBean {
   public String driverClassName = "";
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = false,
       type = ConfigDef.Type.TEXT,
       mode = ConfigDef.Mode.SQL,
@@ -151,6 +158,7 @@ public class HikariPoolConfigBean {
   public String connectionTestQuery = "";
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Maximum Pool Size",
@@ -163,6 +171,7 @@ public class HikariPoolConfigBean {
   public int maximumPoolSize = DEFAULT_MAX_POOL_SIZE;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Minimum Idle Connections",
@@ -176,6 +185,7 @@ public class HikariPoolConfigBean {
   public int minIdle = DEFAULT_MIN_IDLE;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Connection Timeout (Seconds)",
@@ -189,6 +199,7 @@ public class HikariPoolConfigBean {
   public int connectionTimeout = DEFAULT_CONNECTION_TIMEOUT;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Idle Timeout (Seconds)",
@@ -204,6 +215,7 @@ public class HikariPoolConfigBean {
   public int idleTimeout = DEFAULT_IDLE_TIMEOUT;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Max Connection Lifetime (Seconds)",
@@ -218,6 +230,7 @@ public class HikariPoolConfigBean {
   public int maxLifetime = DEFAULT_MAX_LIFETIME;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Auto Commit",
@@ -229,6 +242,7 @@ public class HikariPoolConfigBean {
   public boolean autoCommit = false;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Enforce Read-only Connection",
@@ -241,6 +255,7 @@ public class HikariPoolConfigBean {
   public boolean readOnly = true;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = false,
       type = ConfigDef.Type.TEXT,
       mode = ConfigDef.Mode.SQL,
@@ -253,6 +268,7 @@ public class HikariPoolConfigBean {
   public String initialQuery = "";
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Transaction Isolation",

@@ -55,7 +55,12 @@ import com.streamsets.pipeline.lib.jdbc.UnknownTypeActionChooserValues;
 })
 public class JdbcDSource extends DSource {
 
+  private static final String PRIMARY_KEY_PLACEHOLDER = "<primary_key>";
+  private static final String SQL_QUERY_DEFAULT = "SELECT * FROM <table_name> WHERE <primaryKey> > ${offset} ORDER BY" +
+      " <primaryKey>";
+
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.BASIC,
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "true",
@@ -65,26 +70,30 @@ public class JdbcDSource extends DSource {
       displayPosition = 15,
       group = "JDBC"
   )
-  public boolean isIncrementalMode;
+  public boolean isIncrementalMode = true;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.BASIC,
       required = true,
       type = ConfigDef.Type.TEXT,
       mode = ConfigDef.Mode.SQL,
       label = "SQL Query",
+      defaultValue = SQL_QUERY_DEFAULT,
       description =
           "SELECT <offset column>, ... FROM <table name> WHERE <offset column>  >  ${OFFSET} ORDER BY <offset column>",
       elDefs = {OffsetEL.class},
-      evaluation = ConfigDef.Evaluation.IMPLICIT,
+      //evaluation = ConfigDef.Evaluation.IMPLICIT,
       displayPosition = 20,
       group = "JDBC"
   )
   public String query;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.BASIC,
       required = false,
       type = ConfigDef.Type.STRING,
       label = "Initial Offset",
+      defaultValue = "0",
       description = "Initial value to insert for ${offset}." +
           " Subsequent queries will use the result of the Next Offset Query",
       displayPosition = 40,
@@ -93,9 +102,11 @@ public class JdbcDSource extends DSource {
   public String initialOffset;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.BASIC,
       required = false,
       type = ConfigDef.Type.STRING,
       label = "Offset Column",
+      defaultValue = PRIMARY_KEY_PLACEHOLDER,
       description = "Column checked to track current offset.",
       displayPosition = 50,
       group = "JDBC"
@@ -103,6 +114,7 @@ public class JdbcDSource extends DSource {
   public String offsetColumn;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "LIST_MAP",
@@ -114,6 +126,7 @@ public class JdbcDSource extends DSource {
   public JdbcRecordType jdbcRecordType;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "${10 * SECONDS}",
@@ -129,6 +142,7 @@ public class JdbcDSource extends DSource {
   public CommonSourceConfigBean commonSourceConfigBean;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = false,
       type = ConfigDef.Type.STRING,
       label = "Transaction ID Column Name",
@@ -139,6 +153,7 @@ public class JdbcDSource extends DSource {
   public String txnIdColumnName;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Max Transaction Size",
@@ -168,6 +183,7 @@ public class JdbcDSource extends DSource {
   }
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Create JDBC Header Attributes",
@@ -179,6 +195,7 @@ public class JdbcDSource extends DSource {
   public boolean createJDBCNsHeaders = true;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = false,
       type = ConfigDef.Type.STRING,
       label = "JDBC Header Prefix",
@@ -192,6 +209,7 @@ public class JdbcDSource extends DSource {
   public String jdbcNsHeaderPrefix = "jdbc.";
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = false,
       type = ConfigDef.Type.BOOLEAN,
       label = "Disable Query Validation",
@@ -204,6 +222,7 @@ public class JdbcDSource extends DSource {
   public boolean disableValidation = false;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "On Unknown Type",

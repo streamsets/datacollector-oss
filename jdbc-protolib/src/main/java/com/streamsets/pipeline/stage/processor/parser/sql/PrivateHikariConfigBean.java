@@ -29,6 +29,7 @@ import java.util.List;
 public class PrivateHikariConfigBean {
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.BASIC,
       required = true,
       type = ConfigDef.Type.STRING,
       label = "JDBC Connection String",
@@ -40,6 +41,7 @@ public class PrivateHikariConfigBean {
   public String connectionString = "";
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.BASIC,
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "true",
@@ -52,6 +54,7 @@ public class PrivateHikariConfigBean {
   public boolean useCredentials;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.BASIC,
       required = true,
       type = ConfigDef.Type.CREDENTIAL,
       dependsOn = "useCredentials",
@@ -63,6 +66,7 @@ public class PrivateHikariConfigBean {
   public CredentialValue username;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.BASIC,
       required = true,
       type = ConfigDef.Type.CREDENTIAL,
       dependsOn = "useCredentials",
@@ -74,6 +78,7 @@ public class PrivateHikariConfigBean {
   public CredentialValue password;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = false,
       type = ConfigDef.Type.MODEL,
       defaultValue = "[]",
