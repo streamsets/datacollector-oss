@@ -37,7 +37,7 @@ public class WinEventLogConfigBean {
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "60",
-      label = "Maximum Wait Time(Secs)",
+      label = "Maximum Wait Time (secs)",
       description = "Maximum wait time to generate batch",
       displayPosition = 110,
       group = "#0",

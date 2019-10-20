@@ -149,7 +149,7 @@ public class PulsarTargetConfig extends BasePulsarConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      label = "Batch Max Publish Latency(ms)",
+      label = "Batch Max Publish Latency (ms)",
       description = "Maximum milliseconds to wait before sending the next batch",
       displayPosition = 90,
       defaultValue = "1000",

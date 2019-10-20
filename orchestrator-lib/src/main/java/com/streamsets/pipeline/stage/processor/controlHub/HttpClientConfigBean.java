@@ -48,7 +48,7 @@ public class HttpClientConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      label = "Read Timeout(ms)",
+      label = "Read Timeout (ms)",
       defaultValue = "0",
       description = "HTTP read timeout in milliseconds. Use 0 for no timeout.",
       displayPosition = 130,
