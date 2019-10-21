@@ -46,6 +46,17 @@ public abstract class AbstractCommand implements Runnable {
   )
   public boolean stackTrace;
 
+  @Option(
+      name = {"--product"},
+      description = "Product name (ex: sdc, transformer, etc.)",
+      allowedValues = {"sdc", "transformer"}
+  )
+  public String productName = "sdc";
+
+  protected String getProductName() {
+    return productName;
+  }
+
   protected CredentialStore.Context createContext(Configuration configuration) {
     return new CredentialStore.Context() {
       @Override
@@ -71,12 +82,14 @@ public abstract class AbstractCommand implements Runnable {
   }
 
   protected Configuration loadConfiguration() {
-     String dirName = System.getProperty("sdc.conf.dir");
-    Preconditions.checkNotNull(dirName, "sdc.conf.dir system property not defined");
+    final String product = getProductName();
+    final String confDir = String.format("%s.conf.dir", product);
+    String dirName = System.getProperty(confDir);
+    Preconditions.checkNotNull(dirName, String.format("%s system property not defined", confDir));
     File dir = new File(dirName).getAbsoluteFile();
     Preconditions.checkState(dir.exists(), Utils.format("Directory '{}' does not exist", dir));
     Configuration.setFileRefsBaseDir(new File(dirName));
-    File file = new File(dir, "sdc.properties");
+    File file = new File(dir, String.format("%s.properties", product));
     Preconditions.checkState(file.exists(), Utils.format("File '{}' does not exist", file));
     Configuration conf = new Configuration();
     try (Reader reader = new FileReader(file)) {

@@ -24,16 +24,33 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.Properties;
 import java.util.UUID;
 
+@RunWith(Parameterized.class)
 public class TestAbstractCommand {
+  private final String productName;
+  public TestAbstractCommand(String productName) {
+    this.productName = productName;
+  }
+
+  @Parameterized.Parameters(name = "Product name: {0}")
+  public static Collection<Object[]> data() throws Exception {
+    final LinkedList<Object[]> params = new LinkedList<>();
+    params.add(new Object[] {"sdc"});
+    params.add(new Object[] {"transformer"});
+    return params;
+  }
 
   @Before
   public void setup() throws Exception {
@@ -44,15 +61,15 @@ public class TestAbstractCommand {
     properties.setProperty("credentialStore.id.config.keystore.type", "PKCS12");
     properties.setProperty("credentialStore.id.config.keystore.file", "credentialStore");
     properties.setProperty("credentialStore.id.config.keystore.storePassword", "1234567890A");
-    try (OutputStream os = new FileOutputStream(new File(dir, "sdc.properties"))) {
+    try (OutputStream os = new FileOutputStream(new File(dir, String.format("%s.properties", productName)))) {
       properties.store(os, "");
     }
-    System.setProperty("sdc.conf.dir", dir.getAbsolutePath());
+    System.setProperty(String.format("%s.conf.dir", productName), dir.getAbsolutePath());
   }
 
   @After
   public void cleanup() {
-    System.getProperties().remove("sdc.conf.dir");
+    System.getProperties().remove(String.format("%s.conf.dir", productName));
     Configuration.setFileRefsBaseDir(null);
   }
 
@@ -66,6 +83,7 @@ public class TestAbstractCommand {
 
       }
     };
+    command.productName = productName;
     command.storeId = "id";
     CredentialStore.Context context = command.createContext(configuration);
 
@@ -82,6 +100,7 @@ public class TestAbstractCommand {
 
       }
     };
+    command.productName = productName;
     command.storeId = "id";
     Configuration configuration = command.loadConfiguration();
     Assert.assertEquals(3, configuration.getValues().size());
@@ -98,6 +117,7 @@ public class TestAbstractCommand {
   @Test
   public void testRunOK() {
     AbstractCommand command = new DummyCommand();
+    command.productName = productName;
     command.storeId = "id";
 
     command = Mockito.spy(command);
@@ -119,6 +139,7 @@ public class TestAbstractCommand {
   @Test
   public void testRunInitFail() {
     AbstractCommand command = new DummyCommand();
+    command.productName = productName;
     command.storeId = "id";
 
     command = Mockito.spy(command);
