@@ -25,7 +25,8 @@ public class DestinationDataFormatChooserValues extends BaseEnumChooserValues<Da
         DataFormat.BINARY,
         DataFormat.JSON,
         DataFormat.SDC_JSON,
-        DataFormat.TEXT
+        DataFormat.TEXT,
+        DataFormat.XML
     );
   }
 
