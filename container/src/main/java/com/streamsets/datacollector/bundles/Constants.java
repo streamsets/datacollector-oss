@@ -64,6 +64,12 @@ public final class Constants {
   public static final String LOG_GC_MAX_SIZE = "bundle.log.gc_max_size";
   public static final long DEFAULT_LOG_GC_MAX_SIZE = (50 * 1024 * 1024);
 
+  /**
+   * For JVM FATAL error file, we want last ~10 MBs (random constant at this point).
+   */
+  public static final String LOG_HS_MAX_SIZE = "bundle.log.hs_max_size";
+  public static final long DEFAULT_LOG_HS_MAX_SIZE = (10 * 1024 * 1024);
+
   // Pipeline Generator
 
   /**

@@ -30,6 +30,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.io.FilenameFilter;
 
 @BundleContentGeneratorDef(
   name = "Logs",
@@ -65,5 +66,28 @@ public class LogContentGenerator implements BundleContentGenerator {
     if(Files.exists(gcLog)) {
       writer.write("", gcLog, Files.size(gcLog) - availableGcSpace);
     }
+    //JVM crash File
+
+    long availableHsSpace = context.getConfiguration().get(Constants.LOG_HS_MAX_SIZE, Constants.DEFAULT_LOG_HS_MAX_SIZE);
+    File dir = new File(context.getRuntimeInfo().getLogDir());
+    File[] hsFiles = dir.listFiles(new FilenameFilter() {
+      public boolean accept(File dir, String name) {
+        return name.startsWith("hs_err");
+      }
+    });
+
+    if (hsFiles != null) {
+      for(File hsFile : hsFiles) {
+        // As long as we have not exhausted quota for logs
+        if(availableHsSpace <= 0) {
+          break;
+        }
+        writer.write("", hsFile.toPath(), hsFile.length() - availableHsSpace);
+        availableHsSpace -= hsFile.length();
+
+      }
+    }
+
   }
 }
+
