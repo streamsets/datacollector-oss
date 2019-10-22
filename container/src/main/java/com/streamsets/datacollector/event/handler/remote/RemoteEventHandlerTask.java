@@ -119,7 +119,8 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   private static final long DEFAULT_PING_FREQUENCY = 5000;
   private static final long SYSTEM_LIMIT_MIN_PING_FREQUENCY = 5000;
   private static final long DEFAULT_STATUS_EVENTS_INTERVAL = 60000;
-  private static final long DEFAULT_PIPELINE_METRICS_INTERVAL = 300000;
+  // Default pipeline metrics interval is set to -1 because we are disabling this feature by default
+  private static final long DEFAULT_PIPELINE_METRICS_INTERVAL = -1;
   private static final long SYSTEM_LIMIT_MIN_STATUS_EVENTS_INTERVAL = 30000;
   private static final String REMOTE_CONTROL = AbstractSSOService.CONFIG_PREFIX + "remote.control.";
   public static final String REMOTE_JOB_LABELS = REMOTE_CONTROL + "job.labels";
@@ -152,7 +153,6 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   private final long sendAllStatusEventsInterval;
   private final DataStore dataStore;
   private final long sendAllPipelineMetricsInterval;
-  private final int retryAttempts = 5;
   private String jobRunnerUrl;
 
 
@@ -209,6 +209,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     stopWatch = Stopwatch.createUnstarted();
 
     File storeFile = new File(runtimeInfo.getDataDir(), DisconnectedSSOManager.DISCONNECTED_SSO_AUTHENTICATION_FILE);
+    remoteDataCollector.init();
     if (disconnectedSsoCredentialsDataStore != null) {
       dataStore = disconnectedSsoCredentialsDataStore;
     } else {
@@ -731,8 +732,10 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       clientEventList.addAll(remoteEventList);
       List<ServerEventJson> serverEventJsonList;
       try {
-        if (!stopWatch.isRunning() || stopWatch.elapsed(TimeUnit.MILLISECONDS) > waitBetweenSendingPipelineMetrics) {
-          sendPipelineMetrics(remoteDataCollector, eventClient, jobRunnerUrl, requestHeader, retryAttempts);
+        // If waitBetweenSendingPipelineMetrics is set to -1, pipeline metrics sending is disabled
+        if (waitBetweenSendingPipelineMetrics != -1 && (!stopWatch.isRunning() || stopWatch.elapsed(TimeUnit.MILLISECONDS) > waitBetweenSendingPipelineMetrics)) {
+          // We're currently sending with attempts set to 0 because we are disabling this function by default
+          sendPipelineMetrics(remoteDataCollector, eventClient, jobRunnerUrl, requestHeader, 0);
         }
       } catch (IOException | PipelineException e) {
         LOG.warn("Error while sending metrics to server:  " + e, e);
@@ -894,7 +897,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       EventClient eventClient,
       String jobRunnerUrl,
       Map<String, String> requestHeader,
-      long retryAttempts
+      long attempts
   ) throws IOException, PipelineException {
     ObjectMapper objectMapper = ObjectMapperFactory.get();
     List<SDCMetricsJson> sdcMetricsJsonList = new ArrayList<>();
@@ -915,7 +918,8 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       }
     }
     if (sdcMetricsJsonList.size() != 0) {
-      eventClient.submit(jobRunnerUrl, new HashMap<>(), requestHeader, sdcMetricsJsonList, retryAttempts);
+      // We're currently sending with attempts set to 0 because we are disabling this function by default
+      eventClient.submit(jobRunnerUrl, new HashMap<>(), requestHeader, sdcMetricsJsonList, attempts);
     }
   }
 

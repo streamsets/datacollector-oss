@@ -970,7 +970,7 @@ public class TestRemoteDataCollector {
       dataCollector = Mockito.spy(dataCollector);
       Mockito.when(dataCollector.getRemotePipelines()).thenReturn(new ArrayList<>());
       RemoteDataCollector.StopAndDeleteCallable stopAndDeleteCallable = new RemoteDataCollector.StopAndDeleteCallable(
-          dataCollector, "user", "ns:name", "rev", 600000, Mockito.mock(EventClient.class), "fakeUrl", new HashMap<>()
+          dataCollector, "user", "ns:name", "rev", 600000, Mockito.mock(EventClient.class), "fakeUrl", new HashMap<>(), new Configuration()
       );
       stopAndDeleteCallable.call();
 

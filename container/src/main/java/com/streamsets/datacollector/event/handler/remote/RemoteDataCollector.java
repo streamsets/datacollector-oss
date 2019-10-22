@@ -112,6 +112,9 @@ public class RemoteDataCollector implements DataCollector {
   private final EventClient eventClient;
   private String jobRunnerUrl;
   private final Map<String, String> requestHeader;
+  private static final String SEND_METRIC_ATTEMPTS =  "pipeline.metrics.attempts";
+  private static final int DEFAULT_SEND_METRIC_ATTEMPTS = 0;
+
 
   @Inject
   public RemoteDataCollector(
@@ -342,14 +345,14 @@ public class RemoteDataCollector implements DataCollector {
     private final String rev;
     private final String user;
     private final long forceStopMillis;
-    private final int retryAttempts = 5;
+    private final int attempts;
     private final EventClient eventClient;
     private String jobRunnerUrl;
     private final Map<String, String> requestHeader;
 
     public StopAndDeleteCallable(
         RemoteDataCollector remoteDataCollector, String user, String pipelineName, String rev, long forceStopMillis,
-        EventClient eventClient, String jobRunnerUrl, Map<String, String> requestHeader
+        EventClient eventClient, String jobRunnerUrl, Map<String, String> requestHeader, Configuration configuration
     ) {
       this.remoteDataCollector = remoteDataCollector;
       this.pipelineName = pipelineName;
@@ -359,6 +362,7 @@ public class RemoteDataCollector implements DataCollector {
       this.requestHeader = requestHeader;
       this.jobRunnerUrl = jobRunnerUrl;
       this.eventClient = eventClient;
+      this.attempts = configuration.get(SEND_METRIC_ATTEMPTS, DEFAULT_SEND_METRIC_ATTEMPTS);
     }
 
     private boolean waitForInactiveState(
@@ -431,7 +435,8 @@ public class RemoteDataCollector implements DataCollector {
               pipelineState.getNextRetryTimeStamp()
           );
         }
-        sendPipelineMetrics(remoteDataCollector, eventClient, jobRunnerUrl, requestHeader, retryAttempts);
+        // We're currently sending with attempts set to 0 because we are disabling this function by default
+        sendPipelineMetrics(remoteDataCollector, eventClient, jobRunnerUrl, requestHeader, attempts);
         remoteDataCollector.delete(pipelineName, rev);
       } catch (Exception ex) {
         ackStatus = AckEventStatus.ERROR;
@@ -457,7 +462,8 @@ public class RemoteDataCollector implements DataCollector {
         forceTimeoutMillis,
         eventClient,
         jobRunnerUrl,
-        requestHeader
+        requestHeader,
+        configuration
     ));
     return ackEventFuture;
   }
