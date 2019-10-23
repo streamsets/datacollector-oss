@@ -65,7 +65,7 @@ public class ForceSoapWriter extends ForceWriter {
   private static final Pattern POLYMORPHIC_REFERENCE_PATTERN = Pattern.compile(POLYMORPHIC_REFERENCE_SYNTAX);
 
   private DescribeSObjectResult describeResult = null;
-  private Map<String, String> fieldTypeMap = new HashMap<>();
+  private Map<String, com.sforce.soap.partner.Field> relationshipMap = new HashMap<>();
 
   public ForceSoapWriter(
       PartnerConnection partnerConnection, String sObject, Map<String, String> customMappings
@@ -74,28 +74,40 @@ public class ForceSoapWriter extends ForceWriter {
   }
 
   private String getTypeForRelationship(String fieldName) throws StageException {
-    String ret = fieldTypeMap.get(fieldName);
-    if (ret != null) {
-      return ret;
+    getRelationshipNames();
+
+    if (relationshipMap.containsKey(fieldName)) {
+      return relationshipMap.get(fieldName).getReferenceTo()[0];
     }
 
+    throw new StageException(Errors.FORCE_43, fieldName);
+  }
+
+  private String getIdFieldForRelationship(String fieldName) throws StageException {
+    getRelationshipNames();
+
+    if (relationshipMap.containsKey(fieldName)) {
+      return relationshipMap.get(fieldName).getName();
+    }
+
+    throw new StageException(Errors.FORCE_44, fieldName);
+  }
+
+  private void getRelationshipNames() {
     if (describeResult == null) {
       try {
         describeResult = partnerConnection.describeSObject(sObject);
       } catch (ConnectionException e) {
         throw new StageException(Errors.FORCE_08, e);
       }
-    }
 
-    for (com.sforce.soap.partner.Field field : describeResult.getFields()) {
-      if (fieldName.equalsIgnoreCase(field.getRelationshipName())) {
-        String type = field.getReferenceTo()[0];
-        fieldTypeMap.put(fieldName, type);
-        return type;
+      for (com.sforce.soap.partner.Field field : describeResult.getFields()) {
+        String relName = field.getRelationshipName();
+        if (relName != null) {
+          relationshipMap.put(relName, field);
+        }
       }
     }
-
-    throw new StageException(Errors.FORCE_43, fieldName);
   }
 
   private String[] sObjectsToIds(SObject[] sobjects) {
@@ -272,7 +284,6 @@ public class ForceSoapWriter extends ForceWriter {
         List<SObject> sRecords = sRecordsByOp.computeIfAbsent(opCode, k -> new ArrayList<>());
 
         SObject so = writeRecord(sObjectName, record, opCode);
-
         sRecords.add(so);
         recordMap.put(so, record);
 
@@ -332,8 +343,14 @@ public class ForceSoapWriter extends ForceWriter {
       final Field field = record.get(fieldPath);
       Object value = field.getValue();
 
-      if (value == null &&
+      if (fieldIsEmpty(value) &&
           (opCode == OperationType.UPDATE_CODE || opCode == OperationType.UPSERT_CODE)) {
+        // If we're trying to clear Parent__r.Field__c, then
+        // we need to add Parent__c to fieldsToNull
+        if (sFieldName.contains(".")) {
+          String[] parts = splitFieldName(sFieldName);
+          sFieldName = getIdFieldForRelationship(parts[0]);
+        }
         fieldsToNull.add(sFieldName);
       } else {
         String parentType = null;
@@ -345,10 +362,7 @@ public class ForceSoapWriter extends ForceWriter {
         }
 
         if (sFieldName.contains(".")) {
-          String[] parts = sFieldName.split("\\.");
-          if (parts.length > 2) {
-            throw new StageException(Errors.FORCE_42, sFieldName);
-          }
+          String[] parts = splitFieldName(sFieldName);
           SObject parent = new SObject();
           parent.setType((parentType != null) ? parentType : getTypeForRelationship(parts[0]));
           parent.setField(parts[1], value);
@@ -359,7 +373,7 @@ public class ForceSoapWriter extends ForceWriter {
           // Salesforce WSC does not work correctly with Date type for times or datetimes
           if (type == TIME || type == DATETIME) {
             Calendar cal = Calendar.getInstance();
-            cal.setTime((Date)value);
+            cal.setTime((Date) value);
             value = cal;
           }
           so.setField(sFieldName, value);
@@ -370,5 +384,17 @@ public class ForceSoapWriter extends ForceWriter {
       so.setFieldsToNull(fieldsToNull.toArray(new String[0]));
     }
     return so;
+  }
+
+  private String[] splitFieldName(String sFieldName) throws StageException {
+    String[] parts = sFieldName.split("\\.");
+    if (parts.length > 2) {
+      throw new StageException(Errors.FORCE_42, sFieldName);
+    }
+    return parts;
+  }
+
+  private boolean fieldIsEmpty(Object value) {
+    return (value == null) || (value instanceof String && ((String)value).isEmpty());
   }
 }

@@ -65,6 +65,7 @@ public enum Errors implements ErrorCode {
   FORCE_41("Unexpected event type in XML Stream: {}"),
   FORCE_42("Can only follow one level of external ID relationship: {}"),
   FORCE_43("Can't find type for field name: {}"),
+  FORCE_44("Can't find Id field for field name: {}"),
   ;
   private final String msg;
 
