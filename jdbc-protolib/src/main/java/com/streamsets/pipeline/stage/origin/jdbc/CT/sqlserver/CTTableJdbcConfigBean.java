@@ -22,6 +22,8 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.TimeZoneChooserValues;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
+import com.streamsets.pipeline.lib.jdbc.UnknownTypeAction;
+import com.streamsets.pipeline.lib.jdbc.UnknownTypeActionChooserValues;
 import com.streamsets.pipeline.lib.jdbc.multithread.BatchTableStrategy;
 import com.streamsets.pipeline.lib.jdbc.multithread.BatchTableStrategyChooserValues;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableOrderStrategy;
@@ -131,11 +133,23 @@ public class CTTableJdbcConfigBean {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "On Unknown Type",
+      description = "Action that should be performed when an unknown type is detected in the result set.",
+      defaultValue = "STOP_PIPELINE",
+      displayPosition = 220,
+      group = "ADVANCED"
+  )
+  @ValueChooserModel(UnknownTypeActionChooserValues.class)
+  public UnknownTypeAction unknownTypeAction = UnknownTypeAction.STOP_PIPELINE;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "1000",
       label = "Fetch Size",
       description = "Fetch Size for the JDBC Statement. Should not be 0",
-      displayPosition = 220,
+      displayPosition = 230,
       group = "JDBC"
   )
   public int fetchSize;
