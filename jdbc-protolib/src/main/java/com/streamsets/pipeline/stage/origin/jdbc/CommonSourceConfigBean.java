@@ -55,6 +55,7 @@ public final class CommonSourceConfigBean {
   }
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = DEFAULT_QUERIES_PER_SECONDS,
@@ -66,6 +67,7 @@ public final class CommonSourceConfigBean {
   public String queriesPerSecond = DEFAULT_QUERIES_PER_SECONDS;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "1000",
@@ -76,6 +78,7 @@ public final class CommonSourceConfigBean {
   public int maxBatchSize;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "1000",
@@ -86,6 +89,7 @@ public final class CommonSourceConfigBean {
   public int maxClobSize;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "1000",
@@ -96,6 +100,7 @@ public final class CommonSourceConfigBean {
   public int maxBlobSize;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "0",
@@ -111,6 +116,7 @@ public final class CommonSourceConfigBean {
   public int numSQLErrorRetries;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Allow Late Tables",
@@ -121,6 +127,7 @@ public final class CommonSourceConfigBean {
   public boolean allowLateTable = false;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "${10 * SECONDS}",
@@ -135,6 +142,7 @@ public final class CommonSourceConfigBean {
   public long newTableQueryInterval;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
@@ -145,6 +153,7 @@ public final class CommonSourceConfigBean {
   public boolean enableSchemaChanges;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Maximum Transaction Length",
@@ -157,6 +166,7 @@ public final class CommonSourceConfigBean {
   public int txnWindow;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "0",
@@ -170,6 +180,7 @@ public final class CommonSourceConfigBean {
   public int noMoreDataEventDelay;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
