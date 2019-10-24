@@ -66,6 +66,7 @@ public class JdbcTeeDProcessor extends DProcessor {
   public String schema;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.BASIC,
       required = true,
       type = ConfigDef.Type.STRING,
       elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},

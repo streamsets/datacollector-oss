@@ -58,6 +58,7 @@ import java.util.List;
 public class JdbcDTarget extends DTarget {
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.BASIC,
       required = false,
       type = ConfigDef.Type.STRING,
       elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
@@ -71,6 +72,7 @@ public class JdbcDTarget extends DTarget {
   public String schema;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.BASIC,
       required = true,
       type = ConfigDef.Type.STRING,
       elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
@@ -85,6 +87,7 @@ public class JdbcDTarget extends DTarget {
   public String tableNameTemplate;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.BASIC,
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "",
@@ -97,6 +100,7 @@ public class JdbcDTarget extends DTarget {
   public List<JdbcFieldColumnParamMapping> columnNames;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Enclose Object Names",
@@ -109,6 +113,7 @@ public class JdbcDTarget extends DTarget {
   public boolean encloseTableName;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = false,
       type = ConfigDef.Type.MODEL,
       label = "Change Log Format",
@@ -121,18 +126,20 @@ public class JdbcDTarget extends DTarget {
   public ChangeLogFormat changeLogFormat;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "",
+      defaultValue = "INSERT",
       label = "Default Operation",
       description = "Default operation to perform if sdc.operation.type is not set in record header.",
       displayPosition = 50,
       group = "JDBC"
   )
   @ValueChooserModel(JDBCOperationChooserValues.class)
-  public JDBCOperationType defaultOperation;
+  public JDBCOperationType defaultOperation = JDBCOperationType.INSERT;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue= "DISCARD",
@@ -145,6 +152,7 @@ public class JdbcDTarget extends DTarget {
   public UnsupportedOperationAction unsupportedAction;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
@@ -156,6 +164,7 @@ public class JdbcDTarget extends DTarget {
   public boolean useMultiRowInsert;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "-1",
@@ -170,6 +179,7 @@ public class JdbcDTarget extends DTarget {
   public int maxPrepStmtParameters;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
@@ -200,6 +210,7 @@ public class JdbcDTarget extends DTarget {
   }
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = false,
       type = ConfigDef.Type.LIST,
       label = "Data SQLSTATE Codes",

@@ -33,6 +33,7 @@ import java.util.List;
 
 public class TableJdbcConfigBean {
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.BASIC,
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Table Configs",
@@ -43,6 +44,7 @@ public class TableJdbcConfigBean {
   public List<TableConfigBean> tableConfigs;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "1",
@@ -55,6 +57,7 @@ public class TableJdbcConfigBean {
   public int numberOfThreads;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "SWITCH_TABLES",
@@ -67,6 +70,7 @@ public class TableJdbcConfigBean {
   public BatchTableStrategy batchTableStrategy;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "-1",
@@ -83,6 +87,7 @@ public class TableJdbcConfigBean {
   public int numberOfBatchesFromRs;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "-1",
@@ -98,6 +103,7 @@ public class TableJdbcConfigBean {
   public int resultCacheSize;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "UTC",
@@ -110,6 +116,7 @@ public class TableJdbcConfigBean {
   public String timeZoneID;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "NONE",
@@ -122,6 +129,7 @@ public class TableJdbcConfigBean {
   public QuoteChar quoteChar;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "NONE",
@@ -134,6 +142,7 @@ public class TableJdbcConfigBean {
   public TableOrderStrategy tableOrderStrategy;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "On Unknown Type",
@@ -146,6 +155,7 @@ public class TableJdbcConfigBean {
   public UnknownTypeAction unknownTypeAction = UnknownTypeAction.STOP_PIPELINE;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "1000",

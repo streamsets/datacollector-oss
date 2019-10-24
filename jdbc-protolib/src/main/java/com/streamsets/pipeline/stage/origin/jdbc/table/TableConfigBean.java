@@ -47,6 +47,7 @@ public final class TableConfigBean {
   public static final String QUERIES_PER_SECOND_FIELD = "commonSourceConfigBean.queriesPerSecond";
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.BASIC,
       required = false,
       type = ConfigDef.Type.STRING,
       label = "Schema",
@@ -57,6 +58,7 @@ public final class TableConfigBean {
   public String schema;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.BASIC,
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Table Name Pattern",
@@ -68,6 +70,7 @@ public final class TableConfigBean {
   public String tablePattern;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = false,
       type = ConfigDef.Type.STRING,
       label = "Table Exclusion Pattern",
@@ -79,6 +82,7 @@ public final class TableConfigBean {
   public String tableExclusionPattern;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = false,
       type = ConfigDef.Type.STRING,
       label = "Schema Exclusion Pattern",
@@ -90,6 +94,7 @@ public final class TableConfigBean {
   public String schemaExclusionPattern;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Override Offset Columns",
@@ -101,6 +106,7 @@ public final class TableConfigBean {
   public boolean overrideDefaultOffsetColumns;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.LIST,
       label = "Offset Columns",
@@ -114,6 +120,7 @@ public final class TableConfigBean {
   public List<String> offsetColumns = new ArrayList<>();
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = false,
       type = ConfigDef.Type.MAP,
       label = "Initial Offset",
@@ -126,6 +133,7 @@ public final class TableConfigBean {
   public Map<String, String> offsetColumnToInitialOffsetValue = new LinkedHashMap<>();
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Enable Non-Incremental Load",
@@ -138,6 +146,7 @@ public final class TableConfigBean {
   public boolean enableNonIncremental = ENABLE_NON_INCREMENTAL_DEFAULT_VALUE;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Multithreaded Partition Processing Mode",
@@ -151,6 +160,7 @@ public final class TableConfigBean {
   public PartitioningMode partitioningMode = PARTITIONING_MODE_DEFAULT_VALUE;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = false,
       type = ConfigDef.Type.STRING,
       label = "Partition Size",
@@ -165,6 +175,7 @@ public final class TableConfigBean {
   public String partitionSize = DEFAULT_PARTITION_SIZE;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = false,
       type = ConfigDef.Type.NUMBER,
       label = "Max Partitions",
@@ -180,6 +191,7 @@ public final class TableConfigBean {
   public int maxNumActivePartitions = DEFAULT_MAX_NUM_ACTIVE_PARTITIONS;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Offset Column Conditions",

@@ -46,13 +46,13 @@ public class JdbcFieldColumnParamMapping extends JdbcFieldColumnMapping {
   public JdbcFieldColumnParamMapping() {}
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.BASIC,
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "?",
       label = "Parameterized Value",
       description = "A parameterized value to use in the JDBC insert statement. Must include a ?.",
       displayPosition = 30
-      // TODO: Have this depend on a checkbox in the JdbcDTarget. Blocked by SDC-1704
   )
   public String paramValue;
 }

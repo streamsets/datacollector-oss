@@ -60,7 +60,7 @@ public class JdbcDSource extends DSource {
       " <primaryKey>";
 
   @ConfigDef(
-      displayMode = ConfigDef.DisplayMode.BASIC,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "true",
