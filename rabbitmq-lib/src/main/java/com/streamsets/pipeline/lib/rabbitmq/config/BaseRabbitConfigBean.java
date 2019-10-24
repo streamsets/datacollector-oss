@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 import com.streamsets.pipeline.stage.common.CredentialsConfig;
 
 import java.util.ArrayList;
@@ -67,6 +68,10 @@ public class BaseRabbitConfigBean {
       group = "#0"
   )
   public Map<String, Object> rabbitmqProperties = new HashMap<>();
+
+  /** TLS Configuration Properties */
+  @ConfigDefBean(groups = "TLS")
+  public TlsConfigBean tlsConfig = new TlsConfigBean();
 
   /** Advanced Configuration Properties */
   @ConfigDefBean(groups = "ADVANCED")

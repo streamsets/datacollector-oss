@@ -24,6 +24,7 @@ public enum Groups implements Label {
   CREDENTIALS("Credentials"),
   QUEUE("Queue"),
   EXCHANGE("Exchange"),
+  TLS("TLS"),
   ADVANCED("Advanced"),
   DATA_FORMAT("Data Format"),
   ;

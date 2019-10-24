@@ -16,5 +16,45 @@
 
 upgraderVersion: 1
 
-# No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 4
+    actions:
+    - setConfig:
+        name: conf.tlsConfig.tlsEnabled
+        value: false
+    - setConfig:
+        name: conf.tlsConfig.keyStoreFilePath
+        value: ""
+    - setConfig:
+        name: conf.tlsConfig.keyStoreType
+        value: JKS
+    - setConfig:
+        name: conf.tlsConfig.keyStorePassword
+        value: ""
+    - setConfig:
+        name: conf.tlsConfig.keyStoreAlgorithm
+        value: SunX509
+    - setConfig:
+        name: conf.tlsConfig.trustStoreFilePath
+        value: ""
+    - setConfig:
+        name: conf.tlsConfig.trustStoreType
+        value: JKS
+    - setConfig:
+        name: conf.tlsConfig.trustStorePassword
+        value: ""
+    - setConfig:
+        name: conf.tlsConfig.trustStoreAlgorithm
+        value: SunX509
+    - setConfig:
+        name: conf.tlsConfig.useDefaultProtocols
+        value: true
+    - setConfig:
+        name: conf.tlsConfig.protocols
+        value: []
+    - setConfig:
+        name: conf.tlsConfig.useDefaultCiperSuites
+        value: true
+    - setConfig:
+        name: conf.tlsConfig.cipherSuites
+        value: []

@@ -23,7 +23,7 @@ import com.streamsets.pipeline.lib.rabbitmq.config.BaseRabbitConfigBean;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
-public class RabbitSourceConfigBean extends BaseRabbitConfigBean{
+public class RabbitSourceConfigBean extends BaseRabbitConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,

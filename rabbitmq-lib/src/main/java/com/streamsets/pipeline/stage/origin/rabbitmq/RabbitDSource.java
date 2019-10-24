@@ -26,7 +26,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DSourceOffsetCommitter
 import com.streamsets.pipeline.lib.rabbitmq.config.Groups;
 
 @StageDef(
-    version = 3,
+    version = 4,
     label = "RabbitMQ Consumer",
     description = "Reads data from a RabbitMQ source.",
     icon = "rabbitmq.png",
@@ -41,7 +41,7 @@ import com.streamsets.pipeline.lib.rabbitmq.config.Groups;
 @GenerateResourceBundle
 public class RabbitDSource extends DSourceOffsetCommitter {
 
-  @ConfigDefBean(groups = {"RABBITMQ", "QUEUE", "EXCHANGE", "ADVANCED"})
+  @ConfigDefBean(groups = {"RABBITMQ", "QUEUE", "EXCHANGE", "TLS", "ADVANCED"})
   public RabbitSourceConfigBean conf;
 
   @Override
