@@ -136,6 +136,7 @@ public class DependencyParserExhaustiveTest {
       {"kafka-clients-0.10.0-kafka-2.1.1.jar", new Dependency("kafka", "0.10.0-kafka-2.1.1")},
       {"kafka-clients-0.10.0.2.5.0.0-1245.jar", new Dependency("kafka", "0.10.0.2.5.0.0-1245")},
       {"kafka-clients-0.9.0.0-mapr-1707-beta.jar", new Dependency("kafka", "0.9.0.0-mapr-1707-beta")},
+      {"kafka-clients-5.3.1-ccs.jar", new Dependency("kafka", "5.3.1")},
       {"kafka-schema-registry-client-3.0.1.jar", new Dependency("kafka-schema-registry-client", "3.0.1")},
       {"log4j-1.2-api-2.6.2.jar", new Dependency("log4j", "2.6.2")},
       {"mail.jar", new Dependency("mail", "")},
