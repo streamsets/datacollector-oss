@@ -105,7 +105,7 @@ public class ClusterConfig {
       defaultValue = "/streamsets",
       displayPosition = 106,
       dependsOn = "clusterType",
-      triggeredByValue = {"DATABRICKS", "SQL_SERVER_BIG_DATA_CLUSTER"}
+      triggeredByValue = {"DATABRICKS", "SQL_SERVER_BIG_DATA_CLUSTER", "AZURE_HD_INSIGHT"}
   )
   public String stagingDir = "/streamsets";
 

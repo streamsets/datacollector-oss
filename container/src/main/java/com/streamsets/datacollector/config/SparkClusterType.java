@@ -28,6 +28,7 @@ public enum SparkClusterType implements Label {
   DATABRICKS("Databricks"),
   STANDALONE_SPARK_CLUSTER("Standalone Spark Cluster"),
   SQL_SERVER_BIG_DATA_CLUSTER("SQL Server Big Data Cluster"),
+  AZURE_HD_INSIGHT("Azure HDInsight"),
   ;
 
   private final String label;

@@ -32,7 +32,7 @@ public class LivyConfig {
       dependencies = {
           @Dependency(
               configName = "^clusterConfig.clusterType",
-              triggeredByValues = {"SQL_SERVER_BIG_DATA_CLUSTER"}
+              triggeredByValues = {"SQL_SERVER_BIG_DATA_CLUSTER", "AZURE_HD_INSIGHT"}
           )
       }
   )
@@ -48,7 +48,7 @@ public class LivyConfig {
       dependencies = {
           @Dependency(
               configName = "^clusterConfig.clusterType",
-              triggeredByValues = {"SQL_SERVER_BIG_DATA_CLUSTER"}
+              triggeredByValues = {"SQL_SERVER_BIG_DATA_CLUSTER", "AZURE_HD_INSIGHT"}
           )
       }
   )
@@ -64,7 +64,7 @@ public class LivyConfig {
       dependencies = {
           @Dependency(
               configName = "^clusterConfig.clusterType",
-              triggeredByValues = {"SQL_SERVER_BIG_DATA_CLUSTER"}
+              triggeredByValues = {"SQL_SERVER_BIG_DATA_CLUSTER", "AZURE_HD_INSIGHT"}
           )
       }
   )
