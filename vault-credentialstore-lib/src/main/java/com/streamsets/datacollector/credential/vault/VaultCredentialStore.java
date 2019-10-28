@@ -40,9 +40,11 @@ public class VaultCredentialStore implements CredentialStore {
   public static final String PATH_KEY_SEPARATOR_DEFAULT = "&";
   public static final String SEPARATOR_OPTION = "separator";
   public static final String DELAY_OPTION = "delay";
+  public static final String VERSION_OPTION = "version";
 
   private String pathKeySeparator;
   private Vault vault;
+
 
   @Override
   public List<ConfigIssue> init(Context context) {
@@ -81,6 +83,11 @@ public class VaultCredentialStore implements CredentialStore {
       return vault.read(path, key, delay);
     }
 
+    public String getWithOpts(int version) throws StageException {
+      LOG.debug("Getting '{}' delay '{}'", this, delay);
+      return vault.read(path, key, delay, version);
+    }
+
     @Override
     public String toString() {
       return "VaultCredentialValue{" + "path='" + path + '\'' + ", key='" + key + '\'' + '}';
@@ -111,8 +118,14 @@ public class VaultCredentialStore implements CredentialStore {
       String delayStr = optionsMap.get(DELAY_OPTION);
       long delay = (delayStr == null) ? 0 : Long.parseLong(delayStr);
 
-      CredentialValue credential = new VaultCredentialValue(splits[0], splits[1], delay);
-      credential.get();
+      VaultCredentialValue credential = new VaultCredentialValue(splits[0], splits[1], delay);
+
+      if (!optionsMap.containsKey(VERSION_OPTION)) {
+        credential.get();
+      } else {
+        credential.getWithOpts(Integer.parseInt(optionsMap.get(VERSION_OPTION)));
+      }
+
       return credential;
     } catch (Exception ex) {
       throw new StageException(Errors.VAULT_001, name, ex);

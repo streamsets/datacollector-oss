@@ -308,7 +308,6 @@ public class Vault {
   /**
    * Reads a secret from the local cache if it hasn't expired and returns the value for the specified key.
    * If the secret isn't cached or has expired, it requests it from Vault again.
-   *
    * @param path path in Vault to read
    * @param key key of the property of the secret represented by the path to return
    * @return value of the specified key for the requested secret.
@@ -321,17 +320,50 @@ public class Vault {
    * Reads a secret from the local cache if it hasn't expired and returns the value for the specified key.
    * If the secret isn't cached or has expired, it requests it from Vault again.
    *
-   * This version of the method will also add the specified delay in milliseconds before returning, but only
-   * if the value wasn't already locally cached. This is because certain backends such as AWS will return
-   * a secret (access keys for example) before they have propagated to all AWS services. For AWS a delay of up to 5
-   * or 10 seconds may be necessary. If you receive a 403 from AWS services you probably need to increase the delay.
-   *
    * @param path path in Vault to read
    * @param key key of the property of the secret represented by the path to return
    * @param delay delay in milliseconds to wait before returning the value if it wasn't already cached.
    * @return value of the specified key for the requested secret.
    */
   public String read(String path, String key, long delay) {
+    return read(path, key, delay, getConfig().getVersion());
+  }
+
+  /**
+   * Reads a secret from the local cache if it hasn't expired and returns the value for the specified key.
+   * If the secret isn't cached or has expired, it requests it from Vault again.
+   *
+   * This version of the method will also add the specified delay in milliseconds before returning, but only
+   * if the value wasn't already locally cached. This is because certain backends such as AWS will return
+   * a secret (access keys for example) before they have propagated to all AWS services. For AWS a delay of up to 5
+   * or 10 seconds may be necessary. If you receive a 403 from AWS services you probably need to increase the delay.
+   *
+   * The function handle KV Secret Engine v1 and v2. When v2, the expected endpoint for the secret will be
+   * /secret/data/<path> instead of /secret/<path>.
+   *
+   * @param path path in Vault to read
+   * @param key key of the property of the secret represented by the path to return
+   * @param delay delay in milliseconds to wait before returning the value if it wasn't already cached.
+   * @param version version of KV Secret Engine. Allowed values: 0, 1 or 2. When 0, the function takes the version
+   * from credential-stores.properties file.
+   * @return value of the specified key for the requested secret.
+   */
+  public String read(String path, String key, long delay, int version) {
+
+    if (version == 2) {
+      boolean isData = false;
+      for (String part : mapSplitter.split(path)) {
+        if (isData) {
+          path = path.concat("/").concat(part);
+        } else {
+          path = part.concat("/data");
+          isData = true;
+        }
+      }
+    } else if (version != 1) {
+      throw new VaultRuntimeException(Utils.format("Version not allowed: {}", version));
+    }
+
     if (!secrets.containsKey(path)) {
       VaultClient vault = new VaultClient(getConfig());
       Secret secret;
@@ -364,6 +396,9 @@ public class Vault {
     }
 
     Map<String, Object> data = secrets.get(path).getData();
+    if (version == 2) {
+      data = (Map<String, Object>) data.get("data");
+    }
     String value = getSecretValue(data, key).orElseThrow(() -> new VaultRuntimeException("Value not found for key"));
     LOG.trace("CredentialStore '{}' Vault, retrieved value for key '{}'", csId, key);
     return value;
@@ -449,6 +484,7 @@ public class Vault {
     }
 
     config = VaultConfigurationBuilder.newVaultConfiguration()
+        .withVersion(configuration.get("version", 1))
         .withAddress(configuration.get("addr", VaultConfigurationBuilder.DEFAULT_ADDRESS))
         .withOpenTimeout(configuration.get("open.timeout", 0))
         .withProxyOptions(

@@ -35,15 +35,16 @@ import org.testcontainers.containers.GenericContainer;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
-public class VaultIT {
-  private static final Logger LOG = LoggerFactory.getLogger(VaultIT.class);
+public class VaultITVersion2Test {
+  private static final Logger LOG = LoggerFactory.getLogger(VaultITVersion2Test.class);
 
-  private static final String VAULT_VERSION = "0.9.6"; // Latest version defaults to APIv2 which we do not support yet
+  private static final String VAULT_VERSION = "1.1.0"; // Version tested which supports kv2
   private static final int VAULT_PORT = 8200;
   private static final String VAULT_DEV_ROOT_TOKEN_ID = "root-token";
   private static final String VAULT_DEV_LISTEN_ADDRESS = "0.0.0.0:" + VAULT_PORT;
@@ -52,6 +53,8 @@ public class VaultIT {
   private static VaultConfiguration conf;
   private static String roleId;
   private static String secretId;
+
+
 
   @Parameterized.Parameters
   public static Collection<Object> authBackends() {
@@ -107,7 +110,11 @@ public class VaultIT {
 
     LOG.info("Using Role & Secret: '{}':'{}'", roleId, secretId);
 
-    client.logical().write("secret/hello", ImmutableMap.of("value", "world!"));
+    // Create nested keys for test version 2
+    Map<String, Object> kv = ImmutableMap.of("value","world!");
+    Map<String, Object> nestedKey = ImmutableMap.of("data", kv);
+
+    client.logical().write("secret/data/hello", nestedKey);
     client.logical().write("transit/keys/sdc", ImmutableMap.of("exportable", true));
     Secret key = client.logical().read("transit/keys/sdc");
   }
@@ -139,7 +146,7 @@ public class VaultIT {
 
   @Test
   public void testRead() throws Exception {
-    assertEquals("world!", vault.read("secret/hello", "value"));
+    assertEquals("world!", vault.read("secret/hello", "value", 0L, 2));
   }
 
   @Test

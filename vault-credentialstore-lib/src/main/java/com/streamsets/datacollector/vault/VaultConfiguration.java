@@ -18,6 +18,7 @@ package com.streamsets.datacollector.vault;
 public class VaultConfiguration {
   private final String address;
   private final String token;
+  private final int version;
   private final int openTimeout;
   private final ProxyOptions proxyOptions;
   private final int readTimeout;
@@ -27,6 +28,7 @@ public class VaultConfiguration {
   public VaultConfiguration(
       String address,
       String token,
+      int version,
       int openTimeout,
       ProxyOptions proxyOptions,
       int readTimeout,
@@ -35,6 +37,7 @@ public class VaultConfiguration {
   ) {
     this.address = address;
     this.token = token;
+    this.version = version;
     this.openTimeout = openTimeout;
     this.proxyOptions = proxyOptions;
     this.readTimeout = readTimeout;
@@ -48,6 +51,10 @@ public class VaultConfiguration {
 
   public String getToken() {
     return token;
+  }
+
+  public int getVersion() {
+    return version;
   }
 
   public int getOpenTimeout() {
