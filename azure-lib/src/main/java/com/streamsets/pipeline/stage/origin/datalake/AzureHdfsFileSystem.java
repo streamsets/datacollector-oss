@@ -18,21 +18,22 @@ package com.streamsets.pipeline.stage.origin.datalake;
 
 import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
 import com.streamsets.pipeline.lib.dirspooler.WrappedFile;
-import com.streamsets.pipeline.stage.origin.hdfs.spooler.HdfsFile;
+import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import com.streamsets.pipeline.stage.origin.hdfs.spooler.HdfsFileSystem;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.LocatedFileStatus;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.PathFilter;
 import org.apache.hadoop.fs.RemoteIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 
@@ -44,6 +45,10 @@ import java.util.TimeZone;
  *
  * SDC-12642: Improve the performance when scanning Azure directories to collect the pending files to be included in the
  * batches. To that end, the walkDirectory function is provided.
+ *
+ * SDC-12740: Improve the performance when populating the pending files queue by storing the metadata information of the
+ * files to avoid unnecessary requests to ADLS service. To that end, metadata is stored in the AzureFile objects and
+ * consulted when inserting a new file into the queue (see walkDirectory and getLastModifiedTime).
  *
  * @return An instance of the temporary AzureHdfsFileSystem
  */
@@ -97,9 +102,8 @@ public class AzureHdfsFileSystem extends HdfsFileSystem {
   public List<WrappedFile> walkDirectory(WrappedFile dirPath, WrappedFile startingFile, boolean includeStartingFile,
       boolean useLastModified) {
 
-    // Azure DataLake Gen1/Gen2 implementations of Filesystem#listFiles could traverse the same file twice under some
-    // circumstances (observed for subdirs deeper than 10 nested levels). Using a set to workaround the problem of
-    // duplicated files.
+    // Azure DataLake Gen1/Gen2 implementations of Filesystem#listFiles could traverse the same file twice for some
+    // (unknown) reason. Using a set to workaround the problem of duplicated files.
     Set<WrappedFile> filesSet = new HashSet<>();
     List<FileStatus> dirs = expandGlobPattern(dirPath, false, true);
     long scanTime = System.currentTimeMillis();
@@ -114,21 +118,21 @@ public class AzureHdfsFileSystem extends HdfsFileSystem {
             continue;
           }
 
-          HdfsFile hdfsFile = new HdfsFile(fs, fileStatus.getPath());
+          WrappedFile file = new AzureFile(fs, fileStatus);
           // SDC-12302: Method that temporarily reverts the effects of HADOOP-16479 until version 3.3.0 is available
           long fixedModificationTime = patchLastModifiedTime(fileStatus.getModificationTime());
           if (fixedModificationTime < scanTime) {
             if (startingFile == null || startingFile.toString().isEmpty()) {
-              filesSet.add(hdfsFile);
+              filesSet.add(file);
             } else {
-              int compares = compare(hdfsFile, startingFile, useLastModified);
+              int compares = compare(file, startingFile, useLastModified);
               if (includeStartingFile) {
                 if (compares >= 0) {
-                  filesSet.add(hdfsFile);
+                  filesSet.add(file);
                 }
               } else {
                 if (compares > 0) {
-                  filesSet.add(hdfsFile);
+                  filesSet.add(file);
                 }
               }
             }
@@ -140,5 +144,96 @@ public class AzureHdfsFileSystem extends HdfsFileSystem {
     }
     return new ArrayList<>(filesSet);
   }
+
+  @Override
+  public long getLastModifiedTime(WrappedFile file) throws IOException {
+    Map<String, Object> metadata = file.getCustomMetadata();
+
+    return (metadata != null && metadata.containsKey(HeaderAttributeConstants.LAST_MODIFIED_TIME))
+           ? (long) metadata.get(HeaderAttributeConstants.LAST_MODIFIED_TIME)
+           : fs.getFileStatus(new Path(file.getAbsolutePath())).getModificationTime();
+  }
+
+  @Override
+  public Comparator<WrappedFile> getComparator(boolean useLastModified) {
+    return (WrappedFile file1, WrappedFile file2) -> {
+      String filePath1 = file1.getAbsolutePath();
+      String filePath2 = file2.getAbsolutePath();
+
+      if (useLastModified) {
+        if (filePath1.isEmpty() || filePath2.isEmpty()) {
+          return 1;
+        }
+
+        try {
+          long mtime1 = getLastModifiedTime(file1);
+          long mtime2 = getLastModifiedTime(file2);
+
+          int compares = Long.compare(mtime1, mtime2);
+          if (compares != 0) {
+            return compares;
+          }
+
+        } catch (IOException ex) {
+          LOG.error("Could not sort files due to IO Exception", ex);
+          throw new RuntimeException(ex);
+        }
+      }
+
+      return filePath1.compareTo(filePath2);
+    };
+  }
+
+  @Override
+  public int compare(WrappedFile path1, WrappedFile path2, boolean useLastModified) {
+    if (path1 == null || path2 == null) {
+      return 1;
+    }
+
+    String filePath1 = path1.getAbsolutePath();
+    String filePath2 = path2.getAbsolutePath();
+
+    if (useLastModified) {
+      if (filePath1.isEmpty() || filePath2.isEmpty()) {
+        return 1;
+      }
+
+      try {
+        long mtime1 = getLastModifiedTime(path1);
+        long mtime2 = getLastModifiedTime(path2);
+
+        int compares = Long.compare(mtime1, mtime2);
+        if (compares != 0) {
+          return compares;
+        }
+
+      } catch (IOException ex) {
+        LOG.debug("Starting file may have already been archived.", ex);
+        return 1;
+      } catch (RuntimeException ex) {
+        LOG.error("Error while comparing files", ex);
+        throw ex;
+      }
+    }
+
+    return filePath1.compareTo(filePath2);
+  }
+
+  @Override
+  public boolean isDirectory(WrappedFile file) {
+    Map<String, Object> metadata = file.getCustomMetadata();
+
+    if (metadata != null && metadata.containsKey(HeaderAttributeConstants.IS_DIRECTORY)) {
+      return (boolean) metadata.get(HeaderAttributeConstants.IS_DIRECTORY);
+    } else {
+      try {
+        return fs.isDirectory(new Path(file.getAbsolutePath()));
+      } catch (IOException ex) {
+        LOG.error("failed to open file: '{}'", file.getFileName(), ex);
+        return false;
+      }
+    }
+  }
+
 
 }
