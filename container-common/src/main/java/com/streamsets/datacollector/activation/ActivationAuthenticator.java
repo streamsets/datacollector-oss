@@ -134,7 +134,12 @@ public class ActivationAuthenticator implements Authenticator {
 
     @Override
     public void logout() {
-      user.logout();
+      logout(null);
+    }
+
+    @Override
+    public Authentication logout(ServletRequest request) {
+      return user.logout(request);
     }
   }
 

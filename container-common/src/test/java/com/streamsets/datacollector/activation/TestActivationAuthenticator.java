@@ -112,8 +112,9 @@ public class TestActivationAuthenticator {
     Assert.assertEquals("foo", expiredAuthUser.getAuthMethod());
     Mockito.verify(authUser, Mockito.times(1)).getAuthMethod();
 
+    // Call to expiredAuthUser calls Jetty logout implementation that takes (null) request
     expiredAuthUser.logout();
-    Mockito.verify(authUser, Mockito.times(1)).logout();
+    Mockito.verify(authUser, Mockito.times(1)).logout(null);
 
     // non admin user
     Assert.assertTrue(expiredAuthUser.isUserInRole(null, "user"));

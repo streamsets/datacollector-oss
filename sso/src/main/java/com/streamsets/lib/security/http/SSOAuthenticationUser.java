@@ -21,6 +21,7 @@ import org.eclipse.jetty.server.Authentication;
 import org.eclipse.jetty.server.UserIdentity;
 
 import javax.security.auth.Subject;
+import javax.servlet.ServletRequest;
 import java.security.Principal;
 import java.util.Collections;
 
@@ -70,7 +71,7 @@ public class SSOAuthenticationUser implements Authentication.User {
 
   @Override
   public void logout() {
-    valid = false;
+    logout(null);
   }
 
   public SSOPrincipal getSSOUserPrincipal() {
@@ -99,4 +100,9 @@ public class SSOAuthenticationUser implements Authentication.User {
     return eq;
   }
 
+  @Override
+  public Authentication logout(ServletRequest request) {
+    valid = false;
+    return null;
+  }
 }
