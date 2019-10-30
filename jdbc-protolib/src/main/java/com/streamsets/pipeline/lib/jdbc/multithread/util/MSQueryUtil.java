@@ -115,18 +115,16 @@ public final class MSQueryUtil {
 
   public static String buildQuery(
       Map<String, String> offsetMap,
-      int maxBatchSize, String tableName,
-      Collection<String> offsetColumns,
-      Map<String, String> startOffset,
-      boolean includeJoin,
+      int fetchSize,
+      String tableName,
+      Collection<String> offsetColumns, boolean includeJoin,
       long offset
   ) {
-    boolean isInitial = true;
 
+    boolean isInitial = true;
     List<String> greaterCondition = new ArrayList<>();
     List<String> equalCondition = new ArrayList<>();
     List<String> orderCondition = new ArrayList<>();
-    String greater = "";
 
     orderCondition.add(SYS_CHANGE_VERSION);
 
@@ -143,34 +141,53 @@ public final class MSQueryUtil {
     }
 
     String equal = String.format(ON_CLAUSE, AND_JOINER.join(equalCondition));
-    String orderby = String.format(ORDER_BY_CLAUSE, COMMA_SPACE_JOINER.join(orderCondition));
+    String greater = "";
+    String orderby = "";
 
-    long lastSysChangeVersion = offsetMap.get(SYS_CHANGE_VERSION) == null ? 0 : Long.parseLong(offsetMap.get(SYS_CHANGE_VERSION));
+    /*
+      Per Microsoft documentation, setting the fetchSize in a preparedStatementQuery is a hint to the DB as to
+      the number of rows to return in each ROW-SET of a RESULT-SET. This can impact the amount of network traffic
+      to/from the DB, and hence latency. Given we operate at a batch level:
+      - it makes sense to only ever set this to be batchSize or
+      - ignore and send all.
 
+      Setting to 0 (ZERO) tells SQLServer to use it's default value. For this use-case we will not be using
+      any special WHERE or ORDER BY clauses for pagination.
+
+      Setting to non-zero (THIS CASE) means that we require "pagination" meaning ordering and specific groups of
+      results based on ID.
+      */
     if (!isInitial) {
       greaterCondition.add(String.format(COLUMN_EQUALS_VALUE, CT_TABLE_NAME + "." + SYS_CHANGE_VERSION, offsetMap.get(SYS_CHANGE_VERSION)));
       String condition1 = AND_JOINER.join(greaterCondition);
       String condition2 = String.format(COLUMN_GREATER_THAN_VALUE, CT_TABLE_NAME + "." + SYS_CHANGE_VERSION, offsetMap.get(SYS_CHANGE_VERSION));
-      greater = String.format(WHERE_CLAUSE, String.format(OR_CLAUSE, condition1, condition2));
+
+      // If fetchSize is 0, then WHERE only interested in SYS_CHANGE_VERSION ie condition 2 and no ordering
+      greater = String.format(WHERE_CLAUSE, condition2);
+
+      if (fetchSize != 0) {
+        orderby = String.format(ORDER_BY_CLAUSE, COMMA_SPACE_JOINER.join(orderCondition));
+        greater = String.format(WHERE_CLAUSE, String.format(OR_CLAUSE, condition1, condition2));
+      }
 
       if (includeJoin) {
         return String.format(
             CHANGE_TRACKING_QUERY,
             tableName,
             offset,
-            equal,
-            greater,
-            orderby
-        );
+            equal.trim(),
+            greater.trim(),
+            orderby.trim()
+        ).trim();
 
       } else {
         return String.format(
             SELECT_CT_CLAUSE,
             tableName,
             offset,
-            greater,
-            orderby
-        );
+            greater.trim(),
+            orderby.trim()
+        ).trim();
       }
     }
 
@@ -179,17 +196,17 @@ public final class MSQueryUtil {
           INIT_CHANGE_TRACKING_QUERY,
           offset,
           tableName,
-          equal,
-          orderby
-      );
+          equal.trim(),
+          orderby.trim()
+      ).trim();
     } else {
       return String.format(
           SELECT_CT_CLAUSE,
           tableName,
           offset,
-          greater,
-          orderby
-      );
+          greater.trim(),
+          orderby.trim()
+      ).trim();
     }
   }
 

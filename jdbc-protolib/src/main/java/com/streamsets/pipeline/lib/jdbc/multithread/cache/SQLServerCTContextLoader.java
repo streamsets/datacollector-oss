@@ -72,7 +72,6 @@ public class SQLServerCTContextLoader extends CacheLoader<TableRuntimeContext, T
         fetchSize,
         getMSSQLQualifiedTableName(tableContext.getSchema(),tableContext.getTableName()),
         tableContext.getOffsetColumns(),
-        tableContext.getOffsetColumnToStartOffset(),
         includeJoin,
         tableContext.getOffset()
     );

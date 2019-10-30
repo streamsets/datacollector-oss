@@ -148,7 +148,7 @@ public class CTTableJdbcConfigBean {
       type = ConfigDef.Type.NUMBER,
       defaultValue = "1000",
       label = "Fetch Size",
-      description = "Fetch Size for the JDBC Statement. Should not be 0",
+      description = "Fetch size for the JDBC statement. Set to 0 to use the database default.",
       displayPosition = 230,
       group = "JDBC"
   )
