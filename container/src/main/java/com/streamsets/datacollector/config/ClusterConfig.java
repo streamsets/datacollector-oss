@@ -100,7 +100,7 @@ public class ClusterConfig {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Staging Directory",
-      description = "Staging directory path for copying StreamSets resources",
+      description = "Staging directory on the remote system for copying StreamSets resources",
       group = "CLUSTER",
       defaultValue = "/streamsets",
       displayPosition = 106,
