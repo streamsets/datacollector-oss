@@ -63,6 +63,7 @@ import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -229,7 +230,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
       runtimeInfo.getMetrics(),
       "manager-previewer-cache",
         CacheBuilder.newBuilder()
-          .expireAfterAccess(30, TimeUnit.MINUTES).removalListener((RemovalListener<String, Previewer>) removal -> {
+          .expireAfterAccess(5, TimeUnit.MINUTES).removalListener((RemovalListener<String, Previewer>) removal -> {
             Previewer previewer = removal.getValue();
             LOG.warn(
                 "Evicting idle previewer '{}::{}'::'{}' in status '{}'",
@@ -250,6 +251,12 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
             }
           }).build()
     );
+
+    // Create a background thread to cleanup the previewerCache because guava doesn't always want to do it on its own
+    Executors.newSingleThreadScheduledExecutor().scheduleWithFixedDelay(() -> {
+      LOG.debug("Triggering previewer cache cleanup");
+      previewerCache.cleanUp();
+    }, 5, 5, TimeUnit.MINUTES);
 
     runnerCache = new MetricsCache<>(
       runtimeInfo.getMetrics(),
