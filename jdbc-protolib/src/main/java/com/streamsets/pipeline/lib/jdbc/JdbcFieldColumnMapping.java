@@ -50,6 +50,7 @@ public class JdbcFieldColumnMapping {
   public JdbcFieldColumnMapping() {}
 
   @ConfigDef(
+          displayMode = ConfigDef.DisplayMode.ADVANCED,
           required = true,
           type = ConfigDef.Type.STRING,
           defaultValue="",
@@ -60,6 +61,7 @@ public class JdbcFieldColumnMapping {
   public String columnName;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "",
@@ -71,6 +73,7 @@ public class JdbcFieldColumnMapping {
   public String field;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = false,
       type = ConfigDef.Type.STRING,
       defaultValue = "",
@@ -82,6 +85,7 @@ public class JdbcFieldColumnMapping {
   public String defaultValue;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "USE_COLUMN_TYPE",

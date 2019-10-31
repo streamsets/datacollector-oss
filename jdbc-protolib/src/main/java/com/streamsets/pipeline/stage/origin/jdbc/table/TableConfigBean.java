@@ -26,7 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class TableConfigBean {
+public class TableConfigBean {
   public static final String DEFAULT_PARTITION_SIZE = "1000000";
   public static final int DEFAULT_MAX_NUM_ACTIVE_PARTITIONS = -1;
 
@@ -40,22 +40,24 @@ public final class TableConfigBean {
   );
 
   public static final String ENABLE_NON_INCREMENTAL_FIELD = "enableNonIncremental";
-  public static final boolean ENABLE_NON_INCREMENTAL_DEFAULT_VALUE = false;
+  public static final boolean ENABLE_NON_INCREMENTAL_DEFAULT_VALUE = true;
 
   public static final String ALLOW_LATE_TABLE = "commonSourceConfigBean.allowLateTable";
   public static final String QUERY_INTERVAL_FIELD = "commonSourceConfigBean.queryInterval";
   public static final String QUERIES_PER_SECOND_FIELD = "commonSourceConfigBean.queriesPerSecond";
+  public static final String DBO = "dbo";
 
   @ConfigDef(
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       required = false,
       type = ConfigDef.Type.STRING,
       label = "Schema",
+      defaultValue = DBO,
       description = "Schema Name",
       displayPosition = 20,
       group = "TABLE"
   )
-  public String schema;
+  public String schema = "";
 
   @ConfigDef(
       displayMode = ConfigDef.DisplayMode.BASIC,

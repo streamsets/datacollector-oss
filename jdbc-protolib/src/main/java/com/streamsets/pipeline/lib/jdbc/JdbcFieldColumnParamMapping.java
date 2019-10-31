@@ -46,7 +46,7 @@ public class JdbcFieldColumnParamMapping extends JdbcFieldColumnMapping {
   public JdbcFieldColumnParamMapping() {}
 
   @ConfigDef(
-      displayMode = ConfigDef.DisplayMode.BASIC,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "?",

@@ -77,7 +77,7 @@ public class JdbcDTarget extends DTarget {
       type = ConfigDef.Type.STRING,
       elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      defaultValue = "${record:attribute('tableName')}",
+      defaultValue = "<tableName>",
       label = "Table Name",
       description = "Table Names should contain only table names. Schema should be defined in the connection string or " +
           "schema configuration",
@@ -87,10 +87,9 @@ public class JdbcDTarget extends DTarget {
   public String tableNameTemplate;
 
   @ConfigDef(
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      required = true,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      required = false,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "",
       label = "Field to Column Mapping",
       description = "Optionally specify additional field mappings when input field name and column name don't match.",
       displayPosition = 40,

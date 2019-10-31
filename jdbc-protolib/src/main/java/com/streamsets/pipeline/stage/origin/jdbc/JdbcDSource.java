@@ -56,7 +56,7 @@ import com.streamsets.pipeline.lib.jdbc.UnknownTypeActionChooserValues;
 public class JdbcDSource extends DSource {
 
   private static final String PRIMARY_KEY_PLACEHOLDER = "<primaryKey>";
-  private static final String SQL_QUERY_DEFAULT = "SELECT * FROM <table_name> WHERE <primaryKey> > ${offset} ORDER BY" +
+  private static final String SQL_QUERY_DEFAULT = "SELECT * FROM <table_name> WHERE <primaryKey> > ${OFFSET} ORDER BY" +
       " <primaryKey>";
 
   @ConfigDef(
