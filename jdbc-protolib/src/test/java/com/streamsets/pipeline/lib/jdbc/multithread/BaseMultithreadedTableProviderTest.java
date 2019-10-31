@@ -325,7 +325,7 @@ public abstract class BaseMultithreadedTableProviderTest {
         minOffsetColValue,
         maxActivePartitions,
         enablePartitioning,
-        TableConfigBean.ENABLE_NON_INCREMENTAL_DEFAULT_VALUE,
+        false,
         new Long(0)
     );
   }
