@@ -62,6 +62,7 @@ public class SQLServerCDCDSource extends DPushSource {
     tableJdbcConfigBean.timeZoneID = "UTC";
     tableJdbcConfigBean.numberOfThreads = cdcTableJdbcConfigBean.numberOfThreads;
     tableJdbcConfigBean.tableOrderStrategy = cdcTableJdbcConfigBean.tableOrderStrategy;
+    tableJdbcConfigBean.unknownTypeAction = cdcTableJdbcConfigBean.unknownTypeAction;
 
     return tableJdbcConfigBean;
   }

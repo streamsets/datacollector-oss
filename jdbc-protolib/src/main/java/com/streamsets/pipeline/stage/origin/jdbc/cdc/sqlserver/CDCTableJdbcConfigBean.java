@@ -22,6 +22,8 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
+import com.streamsets.pipeline.lib.jdbc.UnknownTypeAction;
+import com.streamsets.pipeline.lib.jdbc.UnknownTypeActionChooserValues;
 import com.streamsets.pipeline.lib.jdbc.multithread.BatchTableStrategy;
 import com.streamsets.pipeline.lib.jdbc.multithread.BatchTableStrategyChooserValues;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableOrderStrategy;
@@ -138,6 +140,18 @@ public class CDCTableJdbcConfigBean {
       group = "ADVANCED"
   )
   public boolean isReconnect;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "On Unknown Type",
+      description = "Action that should be performed when an unknown type is detected in the result set.",
+      defaultValue = "STOP_PIPELINE",
+      displayPosition = 240,
+      group = "ADVANCED"
+  )
+  @ValueChooserModel(UnknownTypeActionChooserValues.class)
+  public UnknownTypeAction unknownTypeAction = UnknownTypeAction.STOP_PIPELINE;
 
   public static final String TABLE_JDBC_CONFIG_BEAN_PREFIX = "tableJdbcConfigBean.";
   public static final String TABLE_CONFIG = TABLE_JDBC_CONFIG_BEAN_PREFIX + "tableConfigs";
