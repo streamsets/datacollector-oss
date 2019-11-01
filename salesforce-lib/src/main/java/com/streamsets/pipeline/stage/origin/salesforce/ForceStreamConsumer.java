@@ -243,6 +243,7 @@ public class ForceStreamConsumer {
 
     Map<String, Object> options = new HashMap<>();
     options.put(ClientTransport.MAX_NETWORK_DELAY_OPTION, READ_TIMEOUT);
+    options.put(LongPollingTransport.MAX_BUFFER_SIZE_OPTION, conf.streamingBufferSize);
     LongPollingTransport transport = new LongPollingTransport(options, httpClient) {
 
       @Override

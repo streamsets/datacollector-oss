@@ -837,6 +837,9 @@ public class ForceSource extends BaseSource {
       }
     } else if (!message.isSuccessful()) {
       String error = (String) message.get("error");
+      if (error == null) {
+        error = message.get("failure").toString();
+      }
       LOG.info("Bayeux error message: {}", error);
 
       if (AUTHENTICATION_INVALID.equals(error)) {
