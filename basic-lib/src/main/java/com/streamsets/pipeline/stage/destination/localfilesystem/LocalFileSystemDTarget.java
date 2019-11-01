@@ -26,7 +26,7 @@ import com.streamsets.pipeline.lib.event.WholeFileProcessedEvent;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsTarget;
 
 @StageDef(
-    version = 3,
+    version = 4,
     label = "Local FS",
     description = "Writes to the local file system",
     icon = "localfilesystem.png",
