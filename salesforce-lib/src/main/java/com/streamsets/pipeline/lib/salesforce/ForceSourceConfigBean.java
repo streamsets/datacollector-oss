@@ -268,6 +268,20 @@ public class ForceSourceConfigBean extends ForceInputConfigBean {
   public ReplayOption replayOption = ReplayOption.NEW_EVENTS;
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = "Streaming Buffer Size",
+      description = "Streaming buffer size, in bytes. Increase this if you see 'buffering capacity exceeded' errors.",
+      defaultValue = "1048576",
+      displayPosition = 128,
+      dependencies = {
+          @Dependency(configName = "subscribeToStreaming", triggeredByValues = "true"),
+      },
+      group = "SUBSCRIBE"
+  )
+  public long streamingBufferSize;
+
+  @ConfigDef(
       required = false,
       type = ConfigDef.Type.BOOLEAN,
       label = "Disable Query Validation",
