@@ -28,7 +28,7 @@ import java.util.List;
 
 public class TestLocalFileSystemTargetUpgrader {
   @Test
-  public void testV2ToV3() {
+  public void testV3ToV4() {
     List<Config> configs = new ArrayList<>();
 
     final URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/LocalFileSystemDTarget.yaml");
@@ -39,8 +39,8 @@ public class TestLocalFileSystemTargetUpgrader {
     );
 
     StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
-    Mockito.doReturn(2).when(context).getFromVersion();
-    Mockito.doReturn(3).when(context).getToVersion();
+    Mockito.doReturn(3).when(context).getFromVersion();
+    Mockito.doReturn(4).when(context).getToVersion();
 
     configs = upgrader.upgrade(configs, context);
 

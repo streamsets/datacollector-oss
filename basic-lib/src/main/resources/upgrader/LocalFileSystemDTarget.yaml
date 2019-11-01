@@ -17,7 +17,7 @@
 upgraderVersion: 1
 
 upgrades:
-  - toVersion: 3
+  - toVersion: 4
     actions:
       - setConfig:
           name: configs.dataGeneratorFormatConfig.basicAuthUserInfo
