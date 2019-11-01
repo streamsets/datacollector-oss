@@ -222,7 +222,7 @@ public class JdbcDTarget extends DTarget {
   @Override
   protected Target createTarget() {
     return new JdbcTarget(
-        schema,
+        getSchema(),
         tableNameTemplate,
         columnNames, encloseTableName,
         rollbackOnError,
@@ -234,5 +234,9 @@ public class JdbcDTarget extends DTarget {
         getHikariConfigBean(),
         customDataSqlStateCodes
     );
+  }
+
+  public String getSchema() {
+    return schema;
   }
 }
