@@ -38,6 +38,11 @@ public class JdbcQueryExecutorUpgrader extends JdbcBaseUpgrader{
         upgradeV2toV3(configs);
         break;
         // fall through
+
+// ALEX
+
+        //TODO when we use this class call JdbcBaseUpgrader.removeDriverClassNameAndTestQuery();
+
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }

@@ -37,6 +37,7 @@ public class JdbcTeeUpgrader extends JdbcBaseUpgrader{
       case 2:
         upgradeV2toV3(configs);
         break;
+      //TODO when we use this class call JdbcBaseUpgrader.removeDriverClassNameAndTestQuery();
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }

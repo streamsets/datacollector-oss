@@ -58,15 +58,25 @@ public class JdbcSourceUpgrader extends JdbcBaseUpgrader {
         if (toVersion == 9) {
           break;
         }
-        // fall through
       case 9:
         upgradeV9toV10(configs);
+        if (toVersion == 10) {
+          break;
+        }
+        // fall through
+      case 10:
+        //fall through
+      case 11:
+        //We bumped the Sql server source to 11, so making it consistent
+        removeDriverClassNameAndTestQuery(configs);
+        upgradeV11ToV12(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
     return configs;
   }
+
 
   private void upgradeV3ToV4(List<Config> configs) {
     configs.add(new Config("maxBatchSize", 1000));
@@ -115,4 +125,15 @@ public class JdbcSourceUpgrader extends JdbcBaseUpgrader {
   private void upgradeV9toV10(List<Config> configs) {
     UpgraderUtils.moveAllTo(configs, "commonSourceConfigBean.queryInterval", "queryInterval");
   }
+
+  private void upgradeV11ToV12(List<Config> configs) {
+    List<Config> configsToRemove = new ArrayList<>();
+    for (Config config : configs) {
+      if (config.getName().equals("jdbcRecordType")) {
+        configsToRemove.add(config);
+      }
+    }
+    configs.removeAll(configsToRemove);
+  }
+
 }

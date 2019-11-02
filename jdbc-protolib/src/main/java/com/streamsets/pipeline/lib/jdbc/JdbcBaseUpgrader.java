@@ -79,4 +79,17 @@ public abstract class JdbcBaseUpgrader implements StageUpgrader {
     configs.add(new Config(HIKARI_BEAN_NAME + MAX_LIFETIME_NAME, DEFAULT_MAX_LIFETIME));
     configs.add(new Config(HIKARI_BEAN_NAME + READ_ONLY_NAME, DEFAULT_READ_ONLY));
   }
+
+  public void removeDriverClassNameAndTestQuery(List<Config> configs) {
+    for (Config config : configs) {
+      switch (config.getName()) {
+        case HIKARI_BEAN_NAME +  "driverClassName":
+          // fall through
+        case HIKARI_BEAN_NAME + "connectionTestQuery":
+          configsToRemove.add(config);
+      }
+    }
+    configs.removeAll(configsToRemove);
+  }
+
 }

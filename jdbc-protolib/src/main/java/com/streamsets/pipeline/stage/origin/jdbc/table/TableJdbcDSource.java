@@ -30,7 +30,8 @@ import com.streamsets.pipeline.lib.jdbc.multithread.TableFinishedEvent;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 
 @StageDef(
-    version = 5,
+    //We bumped to 7, so we keep this in sync with other repos -> mysql, postgres, sqlserver
+    version = 7,
     label = "JDBC Multitable Consumer",
     description = "Reads data from a JDBC source using table names.",
     icon = "rdbms_multithreaded.png",

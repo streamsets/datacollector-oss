@@ -33,7 +33,7 @@ public class TableConfigBeanImpl implements TableConfigBean {
       required = false,
       type = ConfigDef.Type.STRING,
       label = "Schema",
-      defaultValue = DBO,
+      defaultValue = "",
       description = "Schema Name",
       displayPosition = 20,
       group = "TABLE"

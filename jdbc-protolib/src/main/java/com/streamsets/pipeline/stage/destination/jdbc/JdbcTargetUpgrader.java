@@ -18,8 +18,10 @@ package com.streamsets.pipeline.stage.destination.jdbc;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.jdbc.JDBCOperationType;
 import com.streamsets.pipeline.lib.jdbc.JdbcBaseUpgrader;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -61,12 +63,25 @@ public class JdbcTargetUpgrader extends JdbcBaseUpgrader{
         // fall through
       case 6:
         upgradeV6toV7(configs);
+        if(toVersion == 7) {
+          break;
+        }
+        //fall through
+      case 7:
+        //fall through
+      case 8:
+        //fall through
+        //We bumped the Sql server source to 10, so making it consistent
+      case 9:
+        removeDriverClassNameAndTestQuery(configs);
+        upgradeV8ToV9(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
     return configs;
   }
+
 
   private void upgradeV4toV5(List<Config> configs) {
     // added new max parameters feature - set to default
@@ -150,4 +165,18 @@ public class JdbcTargetUpgrader extends JdbcBaseUpgrader{
       configs.remove(maxPrepStmtCache);
     }
   }
+
+  private void upgradeV8ToV9(List<Config> configs) {
+    List<Config> configsToRemove = new ArrayList<>();
+    List<Config> configsToAdd = new ArrayList<>();
+    for (Config config : configs) {
+     if (config.getName().equals("defaultOperation") && config.getValue() != null) {
+       configsToRemove.add(config);
+       configsToAdd.add(new Config(config.getName(), JDBCOperationType.INSERT));
+     }
+    }
+    configs.removeAll(configsToRemove);
+    configs.addAll(configsToAdd);
+  }
+
 }

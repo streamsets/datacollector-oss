@@ -33,7 +33,8 @@ import com.streamsets.pipeline.lib.jdbc.UnknownTypeAction;
 import com.streamsets.pipeline.lib.jdbc.UnknownTypeActionChooserValues;
 
 @StageDef(
-    version = 10,
+    //We bumped to 12, so we keep this in sync with other repos -> mysql, postgres, sqlserver
+    version = 12,
     label = "JDBC Query Consumer",
     description = "Reads data from a JDBC source using a query.",
     icon = "rdbms.png",

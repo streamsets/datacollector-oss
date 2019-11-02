@@ -42,7 +42,8 @@ import java.util.List;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 7,
+    //We bumped to 10, so we keep this in sync with other repos -> mysql, postgres, sqlserver
+    version = 10,
     label = "JDBC Producer",
     description = "Insert, update, and delete data to a JDBC destination.",
     upgrader = JdbcTargetUpgrader.class,
@@ -64,7 +65,7 @@ public class JdbcDTarget extends DTarget {
       elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       label = "Schema Name",
-      defaultValue = "dbo",
+      defaultValue = "",
       description = "You can use an expression with time and record functions to specify multiple schema names.",
       displayPosition = 20,
       group = "JDBC"

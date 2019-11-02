@@ -24,6 +24,7 @@ import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -60,6 +61,15 @@ public class TableJdbcSourceUpgrader implements StageUpgrader{
         // fall through
       case 4:
         upgradeV4ToV5(configs);
+        if (toVersion == 5) {
+          break;
+        }
+        //fall through
+      case 5:
+        //fall through
+        //We bumped the Sql server source to 7, so making it consistent
+      case 6:
+        removeDriverClassNameAndTestQuery(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -164,5 +174,18 @@ public class TableJdbcSourceUpgrader implements StageUpgrader{
     }
 
     CommonSourceConfigBean.upgradeRateLimitConfigs(configs, "commonSourceConfigBean", numThreads);
+  }
+
+  public void removeDriverClassNameAndTestQuery(List<Config> configs) {
+    List<Config> configsToRemove = new ArrayList<>();
+    for (Config config : configs) {
+      switch (config.getName()) {
+        case "hikariConfigBean.driverClassName":
+          // fall through
+        case "hikariConfigBean.connectionTestQuery":
+          configsToRemove.add(config);
+      }
+    }
+    configs.removeAll(configsToRemove);
   }
 }
