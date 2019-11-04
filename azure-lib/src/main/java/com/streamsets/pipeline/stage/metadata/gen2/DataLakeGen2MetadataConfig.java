@@ -22,16 +22,15 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
-import com.streamsets.pipeline.lib.hdfs.common.HdfsBaseConfigBean;
 import com.streamsets.pipeline.stage.conf.AuthMethodGen2;
 import com.streamsets.pipeline.stage.conf.AuthMethodGen2ChooserValues;
+import com.streamsets.pipeline.stage.conf.DataLakeConnectionProtocol;
 import com.streamsets.pipeline.stage.destination.datalake.Errors;
 import com.streamsets.pipeline.stage.destination.datalake.Groups;
 import com.streamsets.pipeline.stage.destination.hdfs.HadoopConfigBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +59,6 @@ public class DataLakeGen2MetadataConfig {
   private static final String ADLS_CONFIG_CLIENT_SECRET_KEY = "fs.azure.account.oauth2.client.secret";
 
   private static final String ABFS_CONFIG_ACCOUNT_PREFIX = "fs.azure.account.key.";
-  private static final String ABFS_PROTOCOL = "abfs://";
 
   @ConfigDef(
       required = true,
@@ -149,6 +147,17 @@ public class DataLakeGen2MetadataConfig {
   public CredentialValue accountKey;
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Secure Connection",
+      defaultValue = "false",
+      description = "Enable a secure connection using abfss",
+      displayPosition = 75,
+      group = "DATALAKE"
+  )
+  public boolean secureConnection;
+
+  @ConfigDef(
       required = false,
       type = ConfigDef.Type.MODEL,
       label = "Advanced Configuration",
@@ -177,7 +186,10 @@ public class DataLakeGen2MetadataConfig {
   }
 
   private String buildAbfsUri(String container, String accountFQDN) {
-    return ABFS_PROTOCOL + container + "@" + accountFQDN;
+    String abfsProtocol = secureConnection ?
+        DataLakeConnectionProtocol.ABFS_PROTOCOL_SECURE.getProtocol() :
+        DataLakeConnectionProtocol.ABFS_PROTOCOL.getProtocol();
+    return abfsProtocol + container + "@" + accountFQDN;
   }
 
   public String getAbfsUri(final Stage.Context context, List<Stage.ConfigIssue> issues) {

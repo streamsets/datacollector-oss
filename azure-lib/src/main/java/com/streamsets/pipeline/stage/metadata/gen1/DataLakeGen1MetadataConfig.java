@@ -20,7 +20,9 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.stage.conf.DataLakeConnectionProtocol;
 import com.streamsets.pipeline.stage.conf.DataLakeSourceGroups;
 import com.streamsets.pipeline.stage.destination.datalake.Errors;
 import com.streamsets.pipeline.stage.destination.hdfs.HadoopConfigBean;
@@ -49,8 +51,6 @@ public class DataLakeGen1MetadataConfig {
   private static final String ADLS_GEN1_REFRESH_URL_KEY = "dfs.adls.oauth2.refresh.url";
   private static final String ADLS_GEN1_CLIENT_ID_KEY = "dfs.adls.oauth2.client.id";
   private static final String ADLS_GEN1_CLIENT_SECRET_KEY = "dfs.adls.oauth2.credential";
-
-  private static final String ADL_PROTOCOL = "adl://";
 
   @ConfigDef(
       required = true,
@@ -140,6 +140,6 @@ public class DataLakeGen1MetadataConfig {
 
   public String getAdlUri(final Stage.Context context, List<Stage.ConfigIssue> issues) {
     String accountFQDN = resolveCredentialValue(context, this.accountFQDN, ADLS_CONFIG_ACCOUNT_FQDN, issues);
-    return ADL_PROTOCOL + accountFQDN;
+    return DataLakeConnectionProtocol.ADL_PROTOCOL_SECURE.getProtocol() + accountFQDN;
   }
 }
