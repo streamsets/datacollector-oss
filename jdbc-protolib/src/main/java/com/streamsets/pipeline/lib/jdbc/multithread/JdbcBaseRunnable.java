@@ -333,6 +333,9 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
           handleSqlException((SQLException)th);
         } else if (e instanceof InterruptedException) {
           LOG.error("Thread {} interrupted", gaugeMap.get(THREAD_NAME));
+        } else if (e instanceof StageException) {
+          // Let the framework handle the StageException instead of handling it yourself. The default behavior for which is to stop pipeline
+          throw (StageException) e;
         } else {
           handleStageError(JdbcErrors.JDBC_67, e);
         }
