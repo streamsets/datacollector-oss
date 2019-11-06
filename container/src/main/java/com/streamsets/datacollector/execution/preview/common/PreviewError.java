@@ -31,7 +31,8 @@ public enum PreviewError implements ErrorCode {
   PREVIEW_0102("Error executing preview event for dynamic preview; no immediate result available from which to fetch" +
       " previewer ID"),
   PREVIEW_0103("Error executing dynamic preview: could not detect generated pipeline ID after running before actions"),
-
+  PREVIEW_0104("Error executing dynamic preview: could not fetch policies for the preview."),
+  PREVIEW_0105("Error executing dynamic preview: previewer is unavailable"),
   ;
 
   private final String msg;

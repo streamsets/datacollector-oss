@@ -339,6 +339,10 @@ public class PreviewResource {
         dynamicPreviewRequest
     );
 
+    if (dynamicPreviewEvent == null) {
+      throw new StageException(PreviewError.PREVIEW_0104);
+    }
+
     String generatedPipelineId = null;
     try {
       generatedPipelineId = handlePreviewEvents(
@@ -389,6 +393,9 @@ public class PreviewResource {
       previewerId = (String) previewEventResult.getImmediateResult();
     }
     final Previewer previewer = manager.getPreviewer(previewerId);
+    if (previewer == null) {
+      throw new StageException(PreviewError.PREVIEW_0105);
+    }
     final PreviewInfoJson previewInfoJson = new PreviewInfoJson(
         previewer.getId(),
         previewer.getStatus(),
