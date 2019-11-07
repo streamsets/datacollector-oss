@@ -40,6 +40,8 @@ import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
@@ -666,6 +668,37 @@ public class TestPipelineConfigurationValidator {
     Assert.assertEquals(ValidationError.VALIDATION_0304.name(), issue.getErrorCode());
     // error message should mention the configuration property
     assertThat(issue.getMessage(), containsString(SecurityConfiguration.KERBEROS_KEYTAB_KEY));
+  }
+
+  @Test
+  public void testKeytabDisallowed() {
+    PipelineConfigurationValidator validator = createClusterPropertiesValidator(
+        false,
+        conf -> {
+          conf.addConfiguration(new Config("executionMode", "BATCH"));
+          conf.addConfiguration(new Config("clusterConfig.clusterType", "YARN"));
+          conf.addConfiguration(new Config("clusterConfig.useYarnKerberosKeytab", true));
+          conf.addConfiguration(new Config("clusterConfig.yarnKerberosKeytabSource", KeytabSource.PROPERTIES_FILE));
+          return null;
+        },
+        conf -> {
+          conf.set(ValidationUtil.ALLOW_KEYTAB_PROPERTY, false);
+          conf.set(SecurityConfiguration.KERBEROS_ENABLED_KEY, true);
+          try {
+            final Path dummyKeytabFile = Files.createTempFile("dummyKeytabFile", "keytab");
+            dummyKeytabFile.toFile().deleteOnExit();
+            conf.set(SecurityConfiguration.KERBEROS_KEYTAB_KEY, dummyKeytabFile.toString());
+          } catch (IOException e) {
+            throw new RuntimeException(e);
+          }
+          return null;
+        }
+    );
+    final PipelineConfiguration conf = validator.validate();
+    Assert.assertTrue(conf.getIssues().hasIssues());
+    List<Issue> issues = conf.getIssues().getIssues();
+    Assert.assertThat(issues, hasSize(1));
+    Assert.assertEquals(ValidationError.VALIDATION_0401.name(), issues.get(0).getErrorCode());
   }
 
   @Test

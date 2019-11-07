@@ -76,6 +76,9 @@ public class ValidationUtil {
   //This is to avoid adding a dependency to hadoop-common
   public static final String IMPERSONATION_ALWAYS_CURRENT_USER = "hadoop.always.impersonate.current.user";
 
+  public static final String ALLOW_KEYTAB_PROPERTY = "kerberos.pipeline.keytab.allowed";
+  public static final boolean ALLOW_KEYTAB_DEFAULT = true;
+
   private static final Pattern CONTAINS_EXPRESSION_PATTERN = Pattern.compile(".*\\$\\{.*}.*");
 
   /**
@@ -1082,6 +1085,21 @@ public class ValidationUtil {
   ) {
     final boolean kerbConfigEnabled = securityConfig.isKerberosEnabled();
     final boolean keytabEnabled = config.clusterConfig.useYarnKerberosKeytab;
+    final boolean keytabAllowed = dataCollectorConfiguration.get(
+        ALLOW_KEYTAB_PROPERTY,
+        ALLOW_KEYTAB_DEFAULT
+    );
+
+    if (keytabEnabled && !keytabAllowed) {
+      errors.add(issueCreator.create(
+          PipelineGroups.CLUSTER.name(),
+          "clusterConfig.useYarnKerberosKeytab",
+          ValidationError.VALIDATION_0401,
+          ALLOW_KEYTAB_PROPERTY,
+          keytabAllowed
+      ));
+    }
+
     if (kerbConfigEnabled) {
       if (keytabEnabled) {
         String keytabPathStr = null;
