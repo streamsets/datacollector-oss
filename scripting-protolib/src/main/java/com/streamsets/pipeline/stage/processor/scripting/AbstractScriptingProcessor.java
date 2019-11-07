@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.stage.processor.scripting;
 
-import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
@@ -29,6 +28,7 @@ import com.streamsets.pipeline.stage.util.scripting.DeprecatedBindings;
 import com.streamsets.pipeline.stage.util.scripting.Errors;
 import com.streamsets.pipeline.stage.util.scripting.ScriptObjectFactory;
 import com.streamsets.pipeline.stage.util.scripting.ScriptRecord;
+import com.streamsets.pipeline.stage.util.scripting.ScriptStageUtil;
 import org.slf4j.Logger;
 
 import javax.script.Compilable;
@@ -37,6 +37,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import javax.script.SimpleBindings;
+import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -156,6 +157,8 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     } catch (ScriptException e) {
       log.error(Errors.SCRIPTING_09.getMessage(), e.toString(), e);
     }
+    ScriptStageUtil.closeEngine(engine, getInfo(), log);
+    engine = null;
     super.destroy();
   }
 

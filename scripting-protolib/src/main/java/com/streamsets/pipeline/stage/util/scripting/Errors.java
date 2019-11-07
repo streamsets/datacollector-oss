@@ -31,6 +31,7 @@ public enum Errors implements ErrorCode {
   SCRIPTING_08("Script error while running init script: {}"),
   SCRIPTING_09("Script error while running destroy script: {}"),
   SCRIPTING_10("Script error in user script: {}"),
+  SCRIPTING_11("{} while trying to close engine: {}"),
   ;
   private final String msg;
 

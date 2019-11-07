@@ -24,6 +24,7 @@ import com.streamsets.pipeline.stage.origin.scripting.config.ScriptSourceConfigB
 
 import com.streamsets.pipeline.stage.util.scripting.Errors;
 import com.streamsets.pipeline.stage.util.scripting.ScriptObjectFactory;
+import com.streamsets.pipeline.stage.util.scripting.ScriptStageUtil;
 import org.slf4j.Logger;
 
 import javax.script.Compilable;
@@ -139,6 +140,8 @@ public abstract class AbstractScriptingSource extends BasePushSource {
   @Override
   public void destroy() {
     super.destroy();
+    ScriptStageUtil.closeEngine(engine, getInfo(), log);
+    engine = null;
   }
 
 }
