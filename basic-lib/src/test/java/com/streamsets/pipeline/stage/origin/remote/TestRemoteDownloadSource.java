@@ -56,11 +56,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Path;
@@ -1798,6 +1800,73 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
         Assert.assertEquals(!shouldExist, new File(archiveDataDir, file.getName()).exists());
       }
     }
+    destroyAndValidate(runner);
+  }
+
+  @Test
+  public void testCreateOffsetExceptionMINUS_ONE() throws Exception {
+    // SDC-12746: If there's a problem creating the offset of the first file, then we will have an offset of "-1"
+    // (RemoteDownloadSource#MINUS_ONE), which isn't a normal offset, and currentOffset will be null.  Subsequent calls
+    // to RemoteDownloadSource#produce, even with that offset, should succeed on subsequent files
+    String originPath =
+        currentThread().getContextClassLoader().getResource("remote-download-source/parseSameTimestamp").getPath();
+    File tempDir = testFolder.newFolder();
+    for (File originDirFile : new File(originPath).listFiles()) {
+      File copied = new File(tempDir, originDirFile.getName());
+      Files.copy(originDirFile, copied);
+      if (copied.getName().equals("panda.txt")) {
+        Assert.assertTrue(copied.setLastModified(18000000000L));
+      } else if (copied.getName().equals("polarbear.txt")) {
+        Assert.assertTrue(copied.setLastModified(16000000000L));
+      } else if (copied.getName().equals("sloth.txt")) {
+        Assert.assertTrue(copied.setLastModified(17000000000L));
+      }
+    }
+    setupServer(tempDir.toString(), true);
+    RemoteDownloadSource origin =
+        new RemoteDownloadSource(getBean(
+            scheme.name() + "://localhost:" + port + "/",
+            true,
+            DataFormat.JSON,
+            null,
+            false,
+            "*"
+        ));
+    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadDSource.class, origin)
+        .addOutputLane("lane")
+        // Make sure to just throw away the bad record instead of stopping the pipeline when we get the Exception
+        .setOnRecordError(OnRecordError.DISCARD)
+        .build();
+    runner.runInit();
+    // Cause an IOException to occur when trying to create the offset for the first file (polarbear.txt)
+    RemoteDownloadSourceDelegate delegate = Mockito.spy(origin.getDelegate());
+    Mockito.doThrow(new IOException("Something bad happened!")).when(delegate).createOffset("/polarbear.txt");
+    origin.setDelegate(delegate);
+    List<Record> expected = getExpectedRecords();
+    String[] expectedOffsets = new String[]{"/sloth.txt::17000000000::-1", "/panda.txt::18000000000::-1"};
+    String offset = RemoteDownloadSource.NOTHING_READ;
+    StageRunner.Output op = runner.runProduce(offset, 1);
+    offset = op.getNewOffset();
+    List<Record> actual = op.getRecords().get("lane");
+    // The IOException was thrown as described, and now we got a "-1" offset and no records
+    Assert.assertEquals("-1", offset);
+    Assert.assertEquals(0, actual.size());
+    // Subsequent calls should work correctly (assuming no other problems) and read the remaining two files
+    // (sloth.txt and panda.txt)
+    for (int i = 0; i < 2; i++) {
+      op = runner.runProduce(offset, 1000);
+      offset = op.getNewOffset();
+      actual = op.getRecords().get("lane");
+      Assert.assertEquals(expectedOffsets[i], offset);
+      Assert.assertEquals(1, actual.size());
+      Assert.assertEquals(expected.get(i).get(), actual.get(0).get());
+    }
+    // Double check that we're not going to read anymore files (i.e. polarbear.txt is skipped and everything worked)
+    op = runner.runProduce(offset, 1000);
+    offset = op.getNewOffset();
+    actual = op.getRecords().get("lane");
+    Assert.assertEquals(expectedOffsets[1], offset);
+    Assert.assertEquals(0, actual.size());
     destroyAndValidate(runner);
   }
 

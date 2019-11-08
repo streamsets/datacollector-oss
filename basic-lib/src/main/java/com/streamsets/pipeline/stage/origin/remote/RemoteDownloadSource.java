@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.origin.remote;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.FileRef;
@@ -214,10 +215,12 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-    final int batchSize = Math.min(maxBatchSize, conf.basic.maxBatchSize);
-    // Just started up, currentOffset has not yet been set.
     // This method returns NOTHING_READ when only no events have ever been read
-    if (currentOffset == null) {
+    final int batchSize = Math.min(maxBatchSize, conf.basic.maxBatchSize);
+    // currentOffset is null when we've just started and we haven't processed any files yet.
+    // currentOffset can also be null in the case where we had a problem creating the offset for the first file had (in
+    // which case lastSourceOffset would be MINUS_ONE) and we've already dealt with it.
+    if (currentOffset == null && !MINUS_ONE.equals(lastSourceOffset)) {
       if(StringUtils.isEmpty(lastSourceOffset) || NOTHING_READ.equals(lastSourceOffset)) {
         LOG.debug("Detected invalid source offset '{}'", lastSourceOffset);
 
@@ -601,4 +604,13 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
     getContext().publishLineageEvent(event);
   }
 
+  @VisibleForTesting
+  RemoteDownloadSourceDelegate getDelegate() {
+    return delegate;
+  }
+
+  @VisibleForTesting
+  void setDelegate(RemoteDownloadSourceDelegate delegate) {
+    this.delegate = delegate;
+  }
 }
