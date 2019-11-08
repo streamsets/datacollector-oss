@@ -28,6 +28,7 @@ import org.apache.kudu.client.RowResult;
 
 import java.util.Date;
 import java.util.List;
+import java.nio.ByteBuffer;
 
 public class KuduUtils {
 
@@ -103,7 +104,11 @@ public class KuduUtils {
         return Field.create(Field.Type.LONG, result.getLong(fieldName));
       case BINARY:
         try {
-          return Field.create(Field.Type.BYTE_ARRAY, result.getBinary(fieldName));
+          ByteBuffer bBuffer = result.getBinary(fieldName);
+          byte[] bArray = new byte[bBuffer.remaining()];
+          bBuffer.get(bArray);
+
+          return Field.create(Field.Type.BYTE_ARRAY, bArray);
         } catch (IllegalArgumentException ex) {
           throw new OnRecordErrorException(Errors.KUDU_35, fieldName);
         }
