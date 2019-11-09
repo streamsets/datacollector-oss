@@ -112,8 +112,8 @@ public class RemoteDataCollector implements DataCollector {
   private final EventClient eventClient;
   private String jobRunnerUrl;
   private final Map<String, String> requestHeader;
-  private static final String SEND_METRIC_ATTEMPTS =  "pipeline.metrics.attempts";
-  private static final int DEFAULT_SEND_METRIC_ATTEMPTS = 0;
+  protected static final String SEND_METRIC_ATTEMPTS =  "pipeline.metrics.attempts";
+  protected static final int DEFAULT_SEND_METRIC_ATTEMPTS = 0;
 
 
   @Inject

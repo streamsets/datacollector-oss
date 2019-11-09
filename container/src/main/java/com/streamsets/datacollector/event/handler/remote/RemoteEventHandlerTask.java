@@ -113,6 +113,9 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static com.streamsets.datacollector.event.handler.remote.RemoteDataCollector.DEFAULT_SEND_METRIC_ATTEMPTS;
+import static com.streamsets.datacollector.event.handler.remote.RemoteDataCollector.SEND_METRIC_ATTEMPTS;
+
 
 public class RemoteEventHandlerTask extends AbstractTask implements EventHandlerTask {
   private static final Logger LOG = LoggerFactory.getLogger(RemoteEventHandlerTask.class);
@@ -154,6 +157,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   private final DataStore dataStore;
   private final long sendAllPipelineMetricsInterval;
   private String jobRunnerUrl;
+  private final int attempts;
 
 
   public RemoteEventHandlerTask(
@@ -183,6 +187,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     this.eventSenderReceiver = eventSenderReceiver;
     this.stageLibrary = stageLibrary;
     this.runtimeInfo = runtimeInfo;
+    this.attempts = conf.get(SEND_METRIC_ATTEMPTS, DEFAULT_SEND_METRIC_ATTEMPTS);
     appDestinationList = Arrays.asList(conf.get(
         REMOTE_CONTROL_EVENTS_RECIPIENT,
         DEFAULT_REMOTE_CONTROL_EVENTS_RECIPIENT
@@ -735,7 +740,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         // If waitBetweenSendingPipelineMetrics is set to -1, pipeline metrics sending is disabled
         if (waitBetweenSendingPipelineMetrics != -1 && (!stopWatch.isRunning() || stopWatch.elapsed(TimeUnit.MILLISECONDS) > waitBetweenSendingPipelineMetrics)) {
           // We're currently sending with attempts set to 0 because we are disabling this function by default
-          sendPipelineMetrics(remoteDataCollector, eventClient, jobRunnerUrl, requestHeader, 0);
+          sendPipelineMetrics(remoteDataCollector, eventClient, jobRunnerUrl, requestHeader, attempts);
         }
       } catch (IOException | PipelineException e) {
         LOG.warn("Error while sending metrics to server:  " + e, e);
