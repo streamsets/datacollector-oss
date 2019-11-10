@@ -98,7 +98,7 @@ public class TlsConfigBean {
       type = ConfigDef.Type.MODEL,
       defaultValue = "JKS",
       label = "Keystore Type",
-      description = "The type of certificate/key scheme to use for the key tore.",
+      description = "The type of certificate/key scheme to use for the keystore.",
       displayPosition = DISPLAY_POSITION_OFFSET + 50,
       group = "#0",
       dependsOn = "tlsEnabled",
