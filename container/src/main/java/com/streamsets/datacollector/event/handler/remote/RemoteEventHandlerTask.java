@@ -911,10 +911,16 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       if (runner != null) {
         PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get()
             .create(runner.getPipelineConfiguration(), new ArrayList<>(), null);
-        MetricRegistry metricRegistry = (MetricRegistry) runner.getMetrics();
         SDCMetricsJson sdcMetricsJson = new SDCMetricsJson();
-        sdcMetricsJson.setMetrics(ObjectMapperFactory.get()
-            .readValue(objectMapper.writer().writeValueAsString(metricRegistry), MetricRegistryJson.class));
+
+        Object metrics = runner.getMetrics();
+        if (metrics instanceof MetricRegistry) {
+          MetricRegistry metricRegistry = (MetricRegistry) metrics ;
+          sdcMetricsJson.setMetrics(ObjectMapperFactory.get()
+              .readValue(objectMapper.writer().writeValueAsString(metricRegistry), MetricRegistryJson.class));
+        } else if (metrics instanceof MetricRegistryJson) {
+          sdcMetricsJson.setMetrics((MetricRegistryJson) metrics);
+        }
 
         Map<String, String> metadata = new HashMap<>();
         metadata.put(DPM_JOB_ID, (String) pipelineConfigBean.constants.get(JOB_ID));

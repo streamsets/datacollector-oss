@@ -442,6 +442,7 @@ public class RemoteDataCollector implements DataCollector {
         ackStatus = AckEventStatus.ERROR;
         ackEventMessage = Utils.format("Remote event type {} encountered error {}", EventType.STOP_DELETE_PIPELINE,
             ex);
+        LOG.error(ex.getMessage(), ex);
       }
       long endTime = System.currentTimeMillis();
       LOG.info("Time in secs to stop and delete pipeline {} is {}", pipelineName, (endTime - startTime)/1000);
