@@ -92,11 +92,7 @@ public class FilterRecordBatch implements Batch {
           passed = predicate.evaluate(record);
           if (!passed) {
             rejectedMessage = predicate.getRejectedMessage();
-            try {
-              errorHandler.onError(new OnRecordErrorException(record, Errors.COMMON_0001, rejectedMessage.toString()));
-            } catch (StageException e) {
-              throw new RuntimeException(e.getMessage(), e);
-            }
+            errorHandler.onError(new OnRecordErrorException(record, Errors.COMMON_0001, rejectedMessage.toString()));
             break;
           }
         }

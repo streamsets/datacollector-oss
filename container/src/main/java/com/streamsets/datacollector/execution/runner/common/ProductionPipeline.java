@@ -32,6 +32,7 @@ import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.ClusterSource;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import org.slf4j.Logger;
@@ -84,6 +85,7 @@ public class ProductionPipeline {
     boolean finishing = false;
     boolean errorWhileInitializing = false;
     boolean errorWhileRunning = false;
+    Throwable runningException = null;
     boolean errorWhileDestroying = false;
     boolean isRecoverable = true;
     executionFailed = false;
@@ -129,6 +131,7 @@ public class ProductionPipeline {
 
               stateChanged(PipelineStatus.RUNNING_ERROR, runningErrorMsg, extraAttributes);
               errorWhileRunning = true;
+              runningException = e;
               isRecoverable = isRecoverableThrowable(e);
             }
             throw e;
@@ -150,7 +153,6 @@ public class ProductionPipeline {
         }
       } finally {
         LOG.debug("Destroying");
-
         try {
           // Determine the reason why we got all the way here
           PipelineStopReason stopReason;
@@ -175,11 +177,19 @@ public class ProductionPipeline {
           throw e;
         } finally {
           if(errorWhileInitializing || errorWhileRunning || errorWhileDestroying) {
+              boolean retry = true;
+            // Check if the exception is an onRecordErrorException
+            // The DefaultErrorRecordHandler throws this exception back when the value is set to STOP PIPELINE.
+            // In such case, do not retry the pipeline. Let it transition to a error state and stop.
+            if (errorWhileRunning && runningException instanceof OnRecordErrorException) {
+              retry = false;
+            }
+
             // In case of any error, persist that information
             executionFailed = true;
 
             // If there was any problem, we will consider retry
-            if (shouldRetry && !pipeline.shouldStopOnStageError() && !isExecutingInSlave && isRecoverable && !wasStopped()) {
+            if (shouldRetry && retry && !isExecutingInSlave && isRecoverable && !wasStopped()) {
               stateChanged(PipelineStatus.RETRY, runningErrorMsg, null);
             } else if(errorWhileInitializing) {
               stateChanged(PipelineStatus.START_ERROR, runningErrorMsg, null);
