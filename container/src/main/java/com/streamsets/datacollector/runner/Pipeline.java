@@ -95,7 +95,6 @@ public class Pipeline {
   private final StatsAggregationHandler statsAggregationHandler;
   private final ResourceControlledScheduledExecutor scheduledExecutorService;
   private volatile boolean running;
-  private boolean shouldStopOnStageError = false;
   private final ResourceControlledScheduledExecutor scheduledExecutor;
   private final List<Stage.Info> stageInfos;
   private final UserContext userContext;
@@ -151,7 +150,6 @@ public class Pipeline {
     this.scheduledExecutorService = scheduledExecutorService;
     this.running = false;
     this.statsAggregationHandler = statsAggregationHandler;
-    this.shouldStopOnStageError = calculateShouldStopOnStageError();
     this.scheduledExecutor = scheduledExecutor;
     this.stageInfos = stageInfos;
     this.runnerSharedMaps = runnerSharedMaps;
@@ -191,21 +189,6 @@ public class Pipeline {
   }
   public int getNumOfRunners() {
     return pipes.size();
-  }
-
-  private boolean calculateShouldStopOnStageError() {
-    // Check origin
-    StageContext stageContext = originPipe.getStage().getContext();
-    if(stageContext.getOnErrorRecord() == OnRecordError.STOP_PIPELINE) {
-      return true;
-    }
-
-    // Working with only first runner is sufficient here as all runners share the same configuration
-    return pipes.get(0).onRecordErrorStopPipeline();
-  }
-
-  public boolean shouldStopOnStageError() {
-    return shouldStopOnStageError;
   }
 
   public ProtoSource getSource() {
