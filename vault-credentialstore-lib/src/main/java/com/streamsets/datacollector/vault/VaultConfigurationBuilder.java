@@ -20,7 +20,6 @@ public final class VaultConfigurationBuilder {
 
   private String address = DEFAULT_ADDRESS;
   private String token = "";
-  private int version = 1;
   private int openTimeout = 0;
   private ProxyOptions proxyOptions = ProxyOptionsBuilder.newProxyOptions().build();
   private int readTimeout = 0;
@@ -38,7 +37,6 @@ public final class VaultConfigurationBuilder {
     return new VaultConfigurationBuilder()
         .withAddress(conf.getAddress())
         .withToken(conf.getToken())
-        .withVersion(conf.getVersion())
         .withOpenTimeout(conf.getOpenTimeout())
         .withProxyOptions(conf.getProxyOptions())
         .withReadTimeout(conf.getReadTimeout())
@@ -53,11 +51,6 @@ public final class VaultConfigurationBuilder {
 
   public VaultConfigurationBuilder withToken(String token) {
     this.token = token;
-    return this;
-  }
-  
-  public VaultConfigurationBuilder withVersion(int version) {
-    this.version = version;
     return this;
   }
 
@@ -87,6 +80,6 @@ public final class VaultConfigurationBuilder {
   }
 
   public VaultConfiguration build() {
-    return new VaultConfiguration(address, token, version, openTimeout, proxyOptions, readTimeout, sslOptions, timeout);
+    return new VaultConfiguration(address, token, openTimeout, proxyOptions, readTimeout, sslOptions, timeout);
   }
 }
